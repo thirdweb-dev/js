@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://test.fibochain.org/faucets"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidiedaz3jugxmh2ylzlc4nympbd5iwab33adhwkcnblyop6vvj25y",
     "width": 1494,
@@ -26,9 +25,10 @@ export default {
     "symbol": "FIBO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1230,
   "rpc": [
     "https://fibonacci.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12306.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.fibo-api.asia",
     "https://node2.fibo-api.asia",
     "https://node3.fibo-api.asia",

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
@@ -11,19 +11,22 @@ import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
 import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
-import { OauthOptions } from "../../connectors/embedded-wallet/types";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
+import { EmbeddedWalletConfig } from "./embedded-wallet";
+import { AuthProvider } from "@thirdweb-dev/wallets";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
 export const EmailSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    oauthOptions?: OauthOptions;
-    email?: boolean;
+    auth?: EmbeddedWalletConfig["auth"];
   }
-> = ({ onSelect, walletConfig, oauthOptions, email }) => {
+> = ({ onSelect, walletConfig, auth }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -31,7 +34,8 @@ export const EmailSelectionUI: React.FC<
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
 
-  const isEmailEnabled = email === false ? false : true;
+  const isEmailEnabled = auth?.options.includes("email");
+  const isGoogleEnabled = auth?.options.includes("google");
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -50,15 +54,16 @@ export const EmailSelectionUI: React.FC<
     if (validateEmail(emailInput)) {
       setErrorMessage("");
       setIsFetching(true);
+      Keyboard.dismiss();
 
       emailWallet
-        ?.sendEmailOTP(emailInput)
+        ?.sendVerificationEmail(emailInput)
         .then((response) => {
           onSelect({
             ...response,
             email: emailInput,
             emailWallet,
-            oauthOptions: undefined,
+            oauthOptions: undefined, // TODO (ews) clean up types
           });
         })
         .catch((error) => {
@@ -79,15 +84,15 @@ export const EmailSelectionUI: React.FC<
       email: emailInput,
       emailWallet,
       oauthOptions: {
-        provider: oauthOptions?.providers[0],
-        redirectUrl: oauthOptions?.redirectUrl,
+        provider: AuthProvider.GOOGLE,
+        redirectUrl: auth?.redirectUrl,
       },
     });
   };
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      {oauthOptions?.providers.includes(AuthProvider.GOOGLE) ? (
+      {isGoogleEnabled ? (
         <Box justifyContent="center">
           <WalletButton
             iconHeight={28}
@@ -98,7 +103,7 @@ export const EmailSelectionUI: React.FC<
             backgroundColor="buttonBackgroundColor"
             nameColor="buttonTextColor"
             justifyContent="center"
-            name="Sign in with Google"
+            name={l.embedded_wallet.sign_in_google}
             walletIconUrl={GOOGLE_ICON}
             onPress={onGoogleSignInPress}
           />
@@ -116,7 +121,7 @@ export const EmailSelectionUI: React.FC<
                 textAlign="center"
                 marginHorizontal="xxs"
               >
-                OR
+                {l.common.or}
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
@@ -127,7 +132,7 @@ export const EmailSelectionUI: React.FC<
         <>
           <TextInput
             textInputProps={{
-              placeholder: "Enter your email address",
+              placeholder: l.embedded_wallet.enter_your_email,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: setEmailInput,
               style: {
@@ -138,6 +143,7 @@ export const EmailSelectionUI: React.FC<
                 padding: 0,
                 flex: 1,
               },
+              onSubmitEditing: handleNetworkCall,
               value: emailInput,
               keyboardType: "email-address",
               returnKeyType: "done",
@@ -168,7 +174,7 @@ export const EmailSelectionUI: React.FC<
               />
             ) : (
               <Text variant="bodySmallBold" color="accentButtonTextColor">
-                Continue
+                {l.common.continue}
               </Text>
             )}
           </BaseButton>

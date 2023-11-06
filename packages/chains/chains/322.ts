@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet-testnet.kcc.network"
   ],
-  "features": [],
   "infoURL": "https://scan-testnet.kcc.network",
   "name": "KCC Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tKCS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 322,
   "rpc": [
     "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://322.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.kcc.network"
   ],
   "shortName": "kcst",

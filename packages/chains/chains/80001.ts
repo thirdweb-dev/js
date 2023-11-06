@@ -26,9 +26,11 @@ export default {
     "symbol": "MATIC",
     "decimals": 18
   },
+  "networkId": 80001,
   "redFlags": [],
   "rpc": [
     "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://80001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}",
     "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://rpc-mumbai.maticvigil.com",
@@ -39,5 +41,6 @@ export default {
   ],
   "shortName": "maticmum",
   "slug": "mumbai",
-  "testnet": true
+  "testnet": false,
+  "title": "Polygon Testnet Mumbai"
 } as const satisfies Chain;

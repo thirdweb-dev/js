@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://moonbeam.network/networks/moonriver/",
   "name": "Moonriver",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "MOVR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1285,
   "rpc": [
     "https://moonriver.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1285.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonriver.moonbeam.network",
     "wss://wss.api.moonriver.moonbeam.network",
     "https://moonriver.publicnode.com",

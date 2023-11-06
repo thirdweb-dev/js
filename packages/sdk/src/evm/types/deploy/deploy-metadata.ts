@@ -1,7 +1,7 @@
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { FileOrBufferOrString } from "@thirdweb-dev/storage";
 import type { BigNumberish, Bytes } from "ethers";
-import { CommonContractSchemaInput } from "../../schema";
+import { CommonContractSchemaInput } from "../../schema/contracts/common";
 
 /**
  * Options for deploying an NFT contract

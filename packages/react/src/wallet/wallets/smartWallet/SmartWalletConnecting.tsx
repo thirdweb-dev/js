@@ -88,6 +88,10 @@ export const SmartWalletConnecting: React.FC<{
           minHeight: "300px",
         }}
       >
+        <Text color="primaryText" multiline center>
+          Connecting to Smart Wallet
+        </Text>
+        <Spacer y="lg" />
         <Spinner color="accentText" size="xl" />
       </Container>
     );

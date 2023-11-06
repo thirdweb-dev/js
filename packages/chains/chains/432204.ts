@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfVxdrWjtUKiGzqFDzAxHH2FqwP2aRuZTGcYWdWg519Xy",
     "width": 256,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ALOT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 432204,
   "rpc": [
     "https://dexalot-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://432204.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/dexalot/mainnet/rpc"
   ],
   "shortName": "dexalot",

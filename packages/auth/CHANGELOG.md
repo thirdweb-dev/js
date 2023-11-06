@@ -1,5 +1,45 @@
 # @thirdweb-dev/auth
 
+## 4.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/wallets@2.1.0
+
+## 4.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4)]:
+  - @thirdweb-dev/wallets@2.0.10
+
+## 4.1.1
+
+### Patch Changes
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- Updated dependencies [[`4fa09df6`](https://github.com/thirdweb-dev/js/commit/4fa09df6d0ece89e5e6f1c8f9b530a4bd6c266d7), [`4cb6e287`](https://github.com/thirdweb-dev/js/commit/4cb6e287c857e3597ae9f3c92c9c3961ca7a9f4e), [`5917e626`](https://github.com/thirdweb-dev/js/commit/5917e626b0744af369b67a2e44d9361422a8045d), [`44f258d6`](https://github.com/thirdweb-dev/js/commit/44f258d6bf801b553ca67a5dcebe213a4772e8a1), [`7ff0b4d5`](https://github.com/thirdweb-dev/js/commit/7ff0b4d54715afc86fc72e297a4d8bbe6897e49c), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`042459fe`](https://github.com/thirdweb-dev/js/commit/042459fe3424add527209ac273913b494b5e426c)]:
+  - @thirdweb-dev/wallets@2.0.9
+
+## 4.1.0
+
+### Minor Changes
+
+- [#1801](https://github.com/thirdweb-dev/js/pull/1801) [`99d7ec06`](https://github.com/thirdweb-dev/js/commit/99d7ec06ec4f31308627edc87d3122c21a884b5a) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for fastify
+
+### Patch Changes
+
+- [#1812](https://github.com/thirdweb-dev/js/pull/1812) [`c238fde8`](https://github.com/thirdweb-dev/js/commit/c238fde8777fd14b39837117e2d3fda1dd301029) Thanks [@adam-maj](https://github.com/adam-maj)! - Update to call uuidv4 to generate jti
+
+- [#1811](https://github.com/thirdweb-dev/js/pull/1811) [`54860198`](https://github.com/thirdweb-dev/js/commit/548601981f6dd8706d7a9bd4ca48e4abc7723a1d) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose buildJWT function
+
+- [#1812](https://github.com/thirdweb-dev/js/pull/1812) [`c238fde8`](https://github.com/thirdweb-dev/js/commit/c238fde8777fd14b39837117e2d3fda1dd301029) Thanks [@adam-maj](https://github.com/adam-maj)! - Update to use uuidv4 for default jti
+
+- Updated dependencies [[`5ffbcfc3`](https://github.com/thirdweb-dev/js/commit/5ffbcfc302f74167768b196d93a328f979344036), [`d27a3dee`](https://github.com/thirdweb-dev/js/commit/d27a3dee8398d5707d2d1343c428abf8e03f67e3), [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522), [`aa9f48d1`](https://github.com/thirdweb-dev/js/commit/aa9f48d1361194fc81146da530c95a3409bd0799), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`2307f11a`](https://github.com/thirdweb-dev/js/commit/2307f11ab311aa4a775edd23e777d10f8015ce86), [`64138642`](https://github.com/thirdweb-dev/js/commit/64138642e84d8b56b254762eca613d443cca292b)]:
+  - @thirdweb-dev/wallets@2.0.8
+
 ## 4.0.7
 
 ### Patch Changes

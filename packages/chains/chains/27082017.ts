@@ -6,13 +6,18 @@ export default {
     {
       "name": "exlscan",
       "url": "https://testnet-explorer.exlscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.exlscan.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
     "width": 400,
@@ -25,9 +30,10 @@ export default {
     "symbol": "TEXL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 27082017,
   "rpc": [
     "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://27082017.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.exlscan.com"
   ],
   "shortName": "exlvolta",

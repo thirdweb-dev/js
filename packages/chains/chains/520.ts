@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://xsc.pub/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
     "width": 98,
@@ -26,9 +25,10 @@ export default {
     "symbol": "XT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1024,
   "rpc": [
     "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://datarpc1.xsc.pub",
     "https://datarpc2.xsc.pub",
     "https://datarpc3.xsc.pub"

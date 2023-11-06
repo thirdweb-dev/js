@@ -6,13 +6,18 @@ export default {
     {
       "name": "blockscout",
       "url": "https://gnosis-chiado.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://gnosisfaucet.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
     "width": 1800,
@@ -26,9 +31,10 @@ export default {
     "symbol": "XDAI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10200,
   "rpc": [
     "https://gnosis-chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
     "https://rpc.chiado.gnosis.gateway.fm",
     "wss://rpc.chiadochain.net/wss",

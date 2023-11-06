@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
     "width": 2000,
@@ -24,12 +23,14 @@ export default {
     "symbol": "RPG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2025,
   "rpc": [
     "https://rangers-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2025.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.rangersprotocol.com/api/jsonrpc"
   ],
   "shortName": "rpg",
+  "slip44": 1008,
   "slug": "rangers-protocol",
   "testnet": false
 } as const satisfies Chain;

@@ -4,7 +4,6 @@ export default {
   "chainId": 8086,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://biteth.org",
   "name": "BitEth",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "BTE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8086,
   "rpc": [
     "https://biteth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8086.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.biteth.org"
   ],
   "shortName": "BitEth",

@@ -15,8 +15,8 @@ import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
-import { GenericRequest } from "../../schema/contracts/common";
 import {
+  GenericRequest,
   TieredDropPayloadInput,
   TieredDropPayloadOutput,
   TieredDropPayloadSchema,

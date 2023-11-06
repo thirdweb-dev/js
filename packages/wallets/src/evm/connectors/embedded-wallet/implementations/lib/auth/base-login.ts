@@ -4,14 +4,12 @@ import type {
   AuthLoginReturnType,
   GetHeadlessLoginLinkReturnType,
 } from "../../interfaces/auth";
-import { AbstractLogin } from "./abstract-login";
+import { AbstractLogin, LoginQuerierTypes } from "./abstract-login";
 
 export class BaseLogin extends AbstractLogin<
-  {
-    getRecoveryCode: (userWalletId: string) => Promise<string | undefined>;
-  },
+  void,
   { email: string },
-  { email: string; otp: string }
+  { email: string; otp: string; recoveryCode?: string }
 > {
   private async getGoogleLoginUrl(): Promise<GetHeadlessLoginLinkReturnType> {
     const result = await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>(
@@ -32,6 +30,7 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
+
   override async loginWithEmailOtp({
     email,
   }: {
@@ -70,7 +69,6 @@ export class BaseLogin extends AbstractLogin<
     openedWindow?: Window | null;
     closeOpenedWindow?: (openedWindow: Window) => void;
   }): Promise<AuthLoginReturnType> {
-    await this.preLogin();
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
     if (!win) {
@@ -80,10 +78,12 @@ export class BaseLogin extends AbstractLogin<
     if (!win) {
       throw new Error("Something went wrong opening pop-up");
     }
-    await this.preLogin();
+    // logout the user
     // fetch the url to open the login window from iframe
-    const { loginLink } = await this.getGoogleLoginUrl();
-
+    const [{ loginLink }] = await Promise.all([
+      this.getGoogleLoginUrl(),
+      this.preLogin(),
+    ]);
     win.location.href = loginLink;
 
     // listen to result from the login window
@@ -163,16 +163,25 @@ export class BaseLogin extends AbstractLogin<
     });
   }
 
+  override async loginWithCustomJwt({
+    encryptionKey,
+    jwt,
+  }: LoginQuerierTypes["loginWithCustomJwt"]): Promise<AuthLoginReturnType> {
+    const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithCustomJwt",
+      params: { encryptionKey, jwt },
+    });
+    return this.postLogin(result);
+  }
+
   override async verifyEmailLoginOtp({
     email,
     otp,
-  }: {
-    email: string;
-    otp: string;
-  }): Promise<AuthLoginReturnType> {
+    recoveryCode,
+  }: LoginQuerierTypes["verifyThirdwebEmailLoginOtp"]): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "verifyThirdwebEmailLoginOtp",
-      params: { email, otp },
+      params: { email, otp, recoveryCode },
     });
     return this.postLogin(result);
   }

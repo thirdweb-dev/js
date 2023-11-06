@@ -199,7 +199,7 @@ export function ThirdwebWalletProvider(
 
       const walletInfo: LastConnectedWalletInfo = {
         walletId: walletConfig.id,
-        connectParams,
+        connectParams: connectParams || wallet.getConnectParams(),
       };
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version

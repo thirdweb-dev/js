@@ -1,13 +1,25 @@
 import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
+export type OAuthProvider = "google";
+
 export type PaperConfig = Omit<
   PaperWalletAdditionalOptions,
   "chain" | "clientId"
 > & {
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recomended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Enable or Disable OAuth logins and specify which providers to use for OAuth
+   * @default { providers: ["google"] }
+   */
+  oauthOptions?:
+    | {
+        providers: OAuthProvider[];
+      }
+    | false;
 };
 
 export type RecoveryShareManagement = Exclude<

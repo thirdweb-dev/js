@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://amax.network",
   "name": "Armonia Eva Chain Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "AMAX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 161,
   "rpc": [
     "https://armonia-eva-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://161.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.evascan.io/api/eth-rpc/"
   ],
   "shortName": "wall-e",

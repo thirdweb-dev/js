@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSXLXqyr2H6Ja5XrmznXbWTEvF2gFaL8RXNXgyLmDHjAF",
     "width": 896,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 416,
   "rpc": [
     "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://416.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sx.technology"
   ],
   "shortName": "SX",

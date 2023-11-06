@@ -1,5 +1,200 @@
 # @thirdweb-dev/react-native
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.1.1
+
+## 0.4.0
+
+### Minor Changes
+
+- [#1846](https://github.com/thirdweb-dev/js/pull/1846) [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New API to configure authentication options on `embeddedWallet`
+
+  ```ts
+  // default - google sign in is enabled
+  embeddedWallet();
+
+  // this is same as
+  embeddedWallet({
+    auth: {
+      options: ["email"],
+    },
+  });
+
+  // add google sign in
+  embeddedWallet({
+    auth: {
+      options: ["email", "google"],
+      redirectUrl: "your_app://deeplink",
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#1885](https://github.com/thirdweb-dev/js/pull/1885) [`961ef644`](https://github.com/thirdweb-dev/js/commit/961ef644d1b1adaad08c071903cd53aacac50bb4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improved `useSmartWallet()` hook
+
+  Example with metamask:
+
+  ```ts
+  const { connect } = useSmartWallet(metamaskWallet(), {
+    factoryAddress: factoryAddress,
+    gasless: true,
+  });
+
+  const onClick = async () => {
+    // nothing to do here, all handled internally
+    await connect();
+  };
+  ```
+
+  ```ts
+  Example with localWallet:
+
+  const { connect } = useSmartWallet(localWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'load' the local wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              await w.generate();
+              await w.connect();
+          }
+      });
+  }
+  ```
+
+  ```ts
+  Example with embeddedWallet:
+
+  const { connect } = useSmartWallet(embeddedWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'auth' the embedded wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              const authResult = await w.authenticate({ strategy: "google" });
+              await w.connect({ authResult });
+          }
+      });
+  }
+  ```
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79), [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/sdk@4.0.10
+  - @thirdweb-dev/wallets@2.1.0
+  - @thirdweb-dev/react-core@4.1.0
+
+## 0.3.16
+
+### Patch Changes
+
+- [#1880](https://github.com/thirdweb-dev/js/pull/1880) [`7461e2a9`](https://github.com/thirdweb-dev/js/commit/7461e2a9145549b7e08bc34d87d44be9bcff2c07) Thanks [@iketw](https://github.com/iketw)! - Fixes wallet icons borders bug
+
+- [#1878](https://github.com/thirdweb-dev/js/pull/1878) [`178609a0`](https://github.com/thirdweb-dev/js/commit/178609a0622b571560188a4266247eb342759ea1) Thanks [@iketw](https://github.com/iketw)! - Adds support for Japanese and Spanish
+
+  You can now pass 'ja' or 'es' to our ThirdwebProvider:
+
+  ```
+  import { ThirdwebProvider } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider locale={'ja'}>
+    <App />
+  </ ThirdwebProvider>
+  ```
+
+## 0.3.15
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618), [`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4)]:
+  - @thirdweb-dev/chains@0.1.57
+  - @thirdweb-dev/wallets@2.0.10
+  - @thirdweb-dev/react-core@4.0.10
+  - @thirdweb-dev/sdk@4.0.9
+
+## 0.3.14
+
+### Patch Changes
+
+- [#1806](https://github.com/thirdweb-dev/js/pull/1806) [`4374bd4e`](https://github.com/thirdweb-dev/js/commit/4374bd4e160e04d919980efd8e73ff7cafe473d2) Thanks [@iketw](https://github.com/iketw)! - Custom JWT support in React Native
+
+  Enables passing a custom JWT to the embeddedWallet:
+
+  ```javascript
+  import { embeddedWallet, useConnect } from "@thirdweb-dev/react-native";
+  import { Button } from "react-native";
+  import React from "react";
+
+  const AppInner = () => {
+    const connect = useConnect();
+
+    const triggerConnect = async () => {
+      connect(embeddedWallet(), {
+        loginType: "jwt",
+        password: "strong-password",
+        jwt: "your-jwt",
+      });
+    };
+
+    return (
+      <Button title={"Connect with custom JWT"} onPress={triggerConnect} />
+    );
+  };
+  ```
+
+- [#1844](https://github.com/thirdweb-dev/js/pull/1844) [`0b748f31`](https://github.com/thirdweb-dev/js/commit/0b748f31ce9b4c2776d9bfea32fd7ed927baf44c) Thanks [@iketw](https://github.com/iketw)! - Migrate embedded wallet to new API in React Native
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1839](https://github.com/thirdweb-dev/js/pull/1839) [`1934ef5f`](https://github.com/thirdweb-dev/js/commit/1934ef5fac339dab2b1fda39f00f5268daa2168a) Thanks [@vuittont60](https://github.com/vuittont60)! - Fix typo in comments
+
+- [#1841](https://github.com/thirdweb-dev/js/pull/1841) [`b6267599`](https://github.com/thirdweb-dev/js/commit/b6267599f5f86132cc7390972547d716d33a1969) Thanks [@iketw](https://github.com/iketw)! - Update naming for embeddedWallet custom jwt setup
+
+- Updated dependencies [[`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36), [`4fa09df6`](https://github.com/thirdweb-dev/js/commit/4fa09df6d0ece89e5e6f1c8f9b530a4bd6c266d7), [`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93), [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a), [`4cb6e287`](https://github.com/thirdweb-dev/js/commit/4cb6e287c857e3597ae9f3c92c9c3961ca7a9f4e), [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264), [`5917e626`](https://github.com/thirdweb-dev/js/commit/5917e626b0744af369b67a2e44d9361422a8045d), [`44f258d6`](https://github.com/thirdweb-dev/js/commit/44f258d6bf801b553ca67a5dcebe213a4772e8a1), [`7ff0b4d5`](https://github.com/thirdweb-dev/js/commit/7ff0b4d54715afc86fc72e297a4d8bbe6897e49c), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`042459fe`](https://github.com/thirdweb-dev/js/commit/042459fe3424add527209ac273913b494b5e426c), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4), [`1934ef5f`](https://github.com/thirdweb-dev/js/commit/1934ef5fac339dab2b1fda39f00f5268daa2168a)]:
+  - @thirdweb-dev/sdk@4.0.8
+  - @thirdweb-dev/wallets@2.0.9
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/react-core@4.0.9
+  - @thirdweb-dev/storage@2.0.2
+
+## 0.3.13
+
+### Patch Changes
+
+- [#1803](https://github.com/thirdweb-dev/js/pull/1803) [`a63f5dc7`](https://github.com/thirdweb-dev/js/commit/a63f5dc7cb173bcb4dc5d17ccb0936411f9973e6) Thanks [@iketw](https://github.com/iketw)! - React Native UI/theme improvements
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+- [#1799](https://github.com/thirdweb-dev/js/pull/1799) [`1cc26e43`](https://github.com/thirdweb-dev/js/commit/1cc26e43e533440abdb5c9df24ccd2ace671f413) Thanks [@iketw](https://github.com/iketw)! - Adds localization for the React Native SDK
+
+  You can now pass a Locale object to the ThirdwebProvider with your translations:
+
+  ```javascript
+  import { ThirdwebProvicer, en } from @thirdweb-dev/react-native;
+
+  <ThirdwebProvider locale={{
+      ...your-translated-strings
+  }}>
+      <App />
+  </ThirdwebProvider>
+  ```
+
+- Updated dependencies [[`5ffbcfc3`](https://github.com/thirdweb-dev/js/commit/5ffbcfc302f74167768b196d93a328f979344036), [`42ba15f2`](https://github.com/thirdweb-dev/js/commit/42ba15f2c0e77e23e62650119dfaaa5c0dbe4481), [`d27a3dee`](https://github.com/thirdweb-dev/js/commit/d27a3dee8398d5707d2d1343c428abf8e03f67e3), [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522), [`d8d48a95`](https://github.com/thirdweb-dev/js/commit/d8d48a9516fc8fdd173fbb91a858fe7ec0725ddd), [`aa9f48d1`](https://github.com/thirdweb-dev/js/commit/aa9f48d1361194fc81146da530c95a3409bd0799), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`2307f11a`](https://github.com/thirdweb-dev/js/commit/2307f11ab311aa4a775edd23e777d10f8015ce86), [`64138642`](https://github.com/thirdweb-dev/js/commit/64138642e84d8b56b254762eca613d443cca292b), [`6d1eabe9`](https://github.com/thirdweb-dev/js/commit/6d1eabe9f9818ee2a79ce5bf6aa74417dbfd0558)]:
+  - @thirdweb-dev/wallets@2.0.8
+  - @thirdweb-dev/sdk@4.0.7
+  - @thirdweb-dev/react-core@4.0.8
+  - @thirdweb-dev/storage@2.0.1
+
 ## 0.3.12
 
 ### Patch Changes

@@ -29,13 +29,14 @@ import { utils } from "ethers";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
 import CheckIcon from "../../assets/check";
 import { TokenSelector } from "./TokenSelector";
-import { useGlobalTheme } from "../../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SendButton = ({
   supportedTokens,
 }: {
   supportedTokens: SupportedTokens;
 }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -51,7 +52,7 @@ export const SendButton = ({
     <>
       <IconTextButton
         flex={1}
-        text="Send"
+        text={l.common.send}
         justifyContent="center"
         icon={
           <SendIcon height={16} width={16} color={theme.colors.textPrimary} />
@@ -139,6 +140,7 @@ const SendFundsForm = ({
   onTokenSelectorPress: () => void;
   token?: TokenInfo;
 }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const chain = useChain();
   const wallet = useWallet();
@@ -219,9 +221,12 @@ const SendFundsForm = ({
       borderRadius="md"
       p="lg"
     >
-      <ModalHeaderTextClose onClose={onCloseInternal} headerText="Send Funds" />
+      <ModalHeaderTextClose
+        onClose={onCloseInternal}
+        headerText={l.connect_wallet_details.send_funds}
+      />
       <Text mt="lg" variant="bodySmallSecondary">
-        Select Token
+        {l.connect_wallet_details.select_token}
       </Text>
 
       <BaseButton
@@ -251,7 +256,7 @@ const SendFundsForm = ({
             <Text variant="bodySmall">{tokenName}</Text>
             {!balanceQuery.data ? (
               <LoadingTextAnimation
-                text="Fetching..."
+                text={l.common.fetching}
                 textVariant={"bodySmallSecondary"}
               />
             ) : (
@@ -265,7 +270,7 @@ const SendFundsForm = ({
       </BaseButton>
 
       <Text mt="md" variant="bodySmallSecondary">
-        Send to
+        {l.connect_wallet_details.send_to}
       </Text>
       <Box
         mt="xs"
@@ -298,7 +303,7 @@ const SendFundsForm = ({
         />
       </Box>
       <Text mt="md" variant="bodySmallSecondary">
-        Amount
+        {l.common.amount}
       </Text>
       <Box
         mt="xs"
@@ -318,6 +323,7 @@ const SendFundsForm = ({
           clearTextOnFocus={false}
           style={{
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             textAlign: "left",
             flex: 1,
             height: 40,
@@ -360,7 +366,7 @@ const SendFundsForm = ({
           />
         ) : (
           <Text variant="bodySmall" color="accentButtonTextColor" mr="sm">
-            Send
+            {l.common.send}
           </Text>
         )}
       </BaseButton>

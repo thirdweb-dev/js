@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.com/poa/core",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://poa.network",
   "name": "POA Network Core",
   "nativeCurrency": {
@@ -18,12 +23,14 @@ export default {
     "symbol": "POA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 99,
   "rpc": [
     "https://poa-network-core.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://99.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.poa.network"
   ],
   "shortName": "poa",
+  "slip44": 178,
   "slug": "poa-network-core",
   "testnet": false
 } as const satisfies Chain;

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://developer.ont.io/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
     "width": 400,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ONG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5851,
   "rpc": [
     "https://ontology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5851.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://polaris1.ont.io:20339",
     "http://polaris2.ont.io:20339",
     "http://polaris3.ont.io:20339",

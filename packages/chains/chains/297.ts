@@ -33,12 +33,14 @@ export default {
     "symbol": "HBAR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 297,
   "rpc": [
     "https://hedera-previewnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://297.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://previewnet.hashio.io/api"
   ],
   "shortName": "hedera-previewnet",
+  "slip44": 3030,
   "slug": "hedera-previewnet",
   "testnet": false
 } as const satisfies Chain;

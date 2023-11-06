@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://rei.network/",
   "name": "REI Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "REI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 47805,
   "rpc": [
     "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://47805.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rei.network",
     "wss://rpc.rei.network"
   ],

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQqhH28QpUrreoRw5Gj8YShzdHxxVGMjfVrx3TqJNLSLv",
     "width": 1067,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BRNKC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 641230,
   "rpc": [
     "https://bear-network-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://641230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://brnkc-mainnet.bearnetwork.net",
     "https://brnkc-mainnet1.bearnetwork.net"
   ],

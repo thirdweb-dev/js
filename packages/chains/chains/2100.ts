@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ecoball.org",
   "name": "Ecoball Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ECO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2100,
   "rpc": [
     "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ecoball.org/ecoball/"
   ],
   "shortName": "eco",

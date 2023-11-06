@@ -19,8 +19,20 @@ import { useMagicLink } from "../../providers/context-provider";
 import BaseButton from "../../components/base/BaseButton";
 import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
-import { useGlobalTheme } from "../../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
+/**
+ *
+ * @param magicLinkOptions Options available to create a magic link wallet
+ * @returns A WalletConfig<MagicLink> object
+ *
+ * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.
+ * To learn more, please see:
+ *
+ * Our release notes: https://portal.thirdweb.com/embedded-wallet
+ *
+ * Our documentation: https://portal.thirdweb.com/react-native/react-native.embeddedwallet
+ */
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
 ): WalletConfig<MagicLink> => {
@@ -54,6 +66,7 @@ export const magicLink = (
 };
 
 const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [email, setEmail] = React.useState("");
 
@@ -68,7 +81,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
     <Box paddingHorizontal="xl" mt="lg">
       <TextInput
         textInputProps={{
-          placeholder: "Enter your email address",
+          placeholder: l.embedded_wallet.enter_your_email,
           placeholderTextColor: theme.colors.textSecondary,
           onChangeText: (text: string) => {
             setEmail(text);
@@ -100,7 +113,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
           color="accentButtonTextColor"
           fontWeight="700"
         >
-          Continue
+          {l.common.continue}
         </Text>
       </BaseButton>
     </Box>

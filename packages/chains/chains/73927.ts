@@ -6,11 +6,16 @@ export default {
     {
       "name": "mvmscan",
       "url": "https://scan.mvm.dev",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
+        "width": 471,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
     "width": 471,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 73927,
   "rpc": [
     "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://73927.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.mvm.dev"
   ],
   "shortName": "mvm",

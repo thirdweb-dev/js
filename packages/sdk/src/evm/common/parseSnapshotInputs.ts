@@ -9,8 +9,11 @@ export async function parseSnapshotInputs(inputs: SnapshotInput) {
   );
 
   const results = [];
-  for (const chunk of chunks) {
-    results.push(...(await SnapshotInputSchema.parseAsync(chunk)));
+  const parsedChunks = await Promise.all(
+    chunks.map((chunk) => SnapshotInputSchema.parseAsync(chunk)),
+  );
+  for (const chunk of parsedChunks) {
+    results.push(...chunk);
   }
 
   return results;

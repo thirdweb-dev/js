@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
     "width": 2000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TEST",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 23295,
   "rpc": [
     "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://23295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.sapphire.oasis.dev",
     "wss://testnet.sapphire.oasis.dev/ws"
   ],

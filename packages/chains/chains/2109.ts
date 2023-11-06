@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.exosama.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
     "width": 468,
@@ -24,13 +29,15 @@ export default {
     "symbol": "SAMA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2109,
   "rpc": [
     "https://exosama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.exosama.com",
     "wss://rpc.exosama.com"
   ],
   "shortName": "exn",
+  "slip44": 2109,
   "slug": "exosama-network",
   "testnet": false
 } as const satisfies Chain;

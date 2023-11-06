@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://optimism-goerli.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -26,9 +32,11 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 420,
   "redFlags": [],
   "rpc": [
     "https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli.optimism.io",
@@ -39,5 +47,5 @@ export default {
   ],
   "shortName": "ogor",
   "slug": "optimism-goerli",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

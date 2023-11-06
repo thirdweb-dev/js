@@ -4,7 +4,6 @@ export default {
   "chainId": 28945486,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://auxilium.global",
   "name": "Auxilium Network Mainnet",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "AUX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 28945486,
   "rpc": [
     "https://auxilium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://28945486.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.auxilium.global"
   ],
   "shortName": "auxi",
+  "slip44": 344,
   "slug": "auxilium-network",
   "testnet": false
 } as const satisfies Chain;

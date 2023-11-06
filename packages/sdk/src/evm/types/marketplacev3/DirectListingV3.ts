@@ -1,5 +1,5 @@
 import { NFTMetadata } from "../../../core/schema/nft";
-import { Status } from "../../enums";
+import { Status } from "../../enums/marketplace/Status";
 import { Address } from "../../schema/shared/Address";
 import { CurrencyValue } from "../currency";
 

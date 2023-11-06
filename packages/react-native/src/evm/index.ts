@@ -30,6 +30,9 @@ export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
+export { useEmbeddedWallet } from "./wallets/hooks/useEmbeddedWallet";
+export { useSmartWallet } from "./wallets/hooks/useSmartWallet";
+export { useEmbeddedWalletSendVerificationEmail } from "./wallets/hooks/useEmbeddedWalletSendVerificationEmail";
 
 export {
   ConnectWallet,
@@ -44,6 +47,9 @@ export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 export { ThirdwebStorage } from "../core/storage/storage";
+
+export * from "./i18n/strings";
+export * from "./i18n/types";
 
 // ui components
 export * from "./components/base";

@@ -10,19 +10,20 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "name": "BeanEco SmartChain",
   "nativeCurrency": {
     "name": "BeanEco SmartChain",
     "symbol": "BESC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 535037,
   "rpc": [
     "https://beaneco-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://535037.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.bescscan.io"
   ],
   "shortName": "BESC",
   "slug": "beaneco-smartchain",
-  "testnet": false
+  "testnet": false,
+  "title": "BESC Mainnet"
 } as const satisfies Chain;

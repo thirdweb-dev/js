@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://shibchain.org",
   "name": "ShibaChain",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "SHIB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 27,
   "rpc": [
     "https://shibachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://27.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shibchain.org"
   ],
   "shortName": "shib",

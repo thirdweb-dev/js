@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://blockchain.or.th",
   "name": "TBSI Mainnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "JINDA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1707,
   "rpc": [
     "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1707.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blockchain.or.th"
   ],
   "shortName": "TBSI",
   "slug": "tbsi",
-  "testnet": false
+  "testnet": false,
+  "title": "Thai Blockchain Service Infrastructure Mainnet"
 } as const satisfies Chain;

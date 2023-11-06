@@ -4,7 +4,6 @@ export default {
   "chainId": 13,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://diode.io/staging",
   "name": "Diode Testnet Staging",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "sDIODE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 13,
   "rpc": [
     "https://diode-testnet-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging.diode.io:8443/",
     "wss://staging.diode.io:8443/ws"
   ],

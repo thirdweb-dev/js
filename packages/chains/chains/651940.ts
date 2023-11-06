@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibqe2mgiqezi24sx272kunqt6pv7uzxhpkxuobvpbsptce3q6nn5i",
     "width": 1000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ALL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 651940,
   "rpc": [
     "https://all.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://651940.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.alltra.global"
   ],
   "shortName": "ALL",

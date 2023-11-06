@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://jfinchain.com",
   "name": "JFIN Chain",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "jfin",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3501,
   "rpc": [
     "https://jfin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jfinchain.com"
   ],
   "shortName": "jfin",

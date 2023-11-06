@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
     "width": 64,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BITCI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1907,
   "rpc": [
     "https://bitcichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1907.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitci.com"
   ],
   "shortName": "bitci",

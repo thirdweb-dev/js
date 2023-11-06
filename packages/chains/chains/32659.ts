@@ -6,7 +6,13 @@ export default {
     {
       "name": "fsnscan",
       "url": "https://fsnscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSAFx34SKNi7a139agX12f68oBMo2Ktt9c8yD8aFa14gd",
+        "width": 48,
+        "height": 51,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -31,13 +37,15 @@ export default {
     "symbol": "FSN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 32659,
   "rpc": [
     "https://fusion.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://32659.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.fusionnetwork.io",
     "wss://mainnet.fusionnetwork.io"
   ],
   "shortName": "fsn",
+  "slip44": 288,
   "slug": "fusion",
   "testnet": false
 } as const satisfies Chain;
