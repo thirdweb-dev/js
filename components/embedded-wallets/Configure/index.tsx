@@ -34,9 +34,13 @@ import { useTrack } from "hooks/analytics/useTrack";
 
 interface ConfigureProps {
   apiKey: ApiKey;
+  trackingCategory: string;
 }
 
-export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
+export const Configure: React.FC<ConfigureProps> = ({
+  apiKey,
+  trackingCategory,
+}) => {
   // safe to type assert here as this component only renders
   // for an api key with an active embeddedWallets service
   const services = apiKey.services as ApiKeyService[];
@@ -85,7 +89,7 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
     }
 
     trackEvent({
-      category: "embedded-wallet",
+      category: trackingCategory,
       action: "configuration-update",
       label: "attempt",
     });
@@ -115,7 +119,7 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
       onSuccess: () => {
         onSuccess();
         trackEvent({
-          category: "embedded-wallet",
+          category: trackingCategory,
           action: "configuration-update",
           label: "success",
           data: {
@@ -126,7 +130,7 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
       onError: (err) => {
         onError(err);
         trackEvent({
-          category: "embedded-wallet",
+          category: trackingCategory,
           action: "configuration-update",
           label: "error",
           error: err,

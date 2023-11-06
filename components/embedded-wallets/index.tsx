@@ -38,7 +38,7 @@ export const EmbeddedWallets: React.FC<EmbeddedWalletsProps> = ({
         </TabPanel>
         {/* <TabPanel px={0}></TabPanel> */}
         <TabPanel px={0}>
-          <Configure apiKey={apiKey} />
+          <Configure apiKey={apiKey} trackingCategory={trackingCategory} />
         </TabPanel>
       </TabPanels>
     </Tabs>
