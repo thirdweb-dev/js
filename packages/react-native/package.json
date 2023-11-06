@@ -58,7 +58,7 @@
     "@react-native-community/eslint-config": "^3.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
-    "@types/react": "^18.2.17",
+    "@types/react": "^18.2.36",
     "@types/react-native": "^0.71.8",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
