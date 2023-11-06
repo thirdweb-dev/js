@@ -917,19 +917,23 @@ export async function engineSendFunction(
     storage,
   );
 
-  const res = await fetch(gaslessOptions.engine.relayerUrl, request);
+  const res = await fetch(gaslessOptions.engine.relayerUrl, {
+    ...request,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   const data = await res.json();
 
   if (data.error) {
-    throw new Error(data.error);
+    throw new Error(data.error?.message || JSON.stringify(data.error));
   }
 
-  const engineUrl = gaslessOptions.engine.relayerUrl.split("/relayer/")[0];
   const queueId = data.result.queueId as string;
-
+  const engineUrl = gaslessOptions.engine.relayerUrl.split("/relayer/")[0];
   const startTime = Date.now();
   while (true) {
-    const txRes = await fetch(`${engineUrl}/transaction/${queueId}/status`);
+    const txRes = await fetch(`${engineUrl}/transaction/status/${queueId}`);
     const txData = await txRes.json();
 
     if (txData.result.transactionHash) {
@@ -941,7 +945,7 @@ export async function engineSendFunction(
       throw new Error("timeout");
     }
 
-    // Poll to check if the transaction was
+    // Poll to check if the transaction was mined
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 }
