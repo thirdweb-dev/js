@@ -6,6 +6,7 @@ import { Button, InputButton } from "../../../../components/buttons";
 import { InputContainer, Input } from "../../../../components/formElements";
 import { Text } from "../../../../components/text";
 import { Spinner } from "../../../../components/Spinner";
+import { useTWLocale } from "../../../../evm/providers/locale-provider";
 
 export function EnterPasswordOrRecovery(props: {
   goBack: () => void;
@@ -13,6 +14,7 @@ export function EnterPasswordOrRecovery(props: {
   email: string;
   modalSize: "wide" | "compact";
 }) {
+  const locale = useTWLocale().wallets.embeddedWallet.enterPassword;
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -21,7 +23,7 @@ export function EnterPasswordOrRecovery(props: {
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Enter Password" onBack={props.goBack} />
+        <ModalHeader title={locale.title} onBack={props.goBack} />
       </Container>
 
       <Line />
@@ -50,7 +52,7 @@ export function EnterPasswordOrRecovery(props: {
             setLoading(false);
           }}
         >
-          <Text center>Enter the password for your account</Text>
+          <Text center>{locale.instruction}</Text>
           <Spacer y="sm" />
           <Text center color="primaryText">
             {props.email}
@@ -71,7 +73,7 @@ export function EnterPasswordOrRecovery(props: {
               }}
               value={password}
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder={locale.inputPlaceholder}
             />
 
             <InputButton
@@ -86,7 +88,7 @@ export function EnterPasswordOrRecovery(props: {
             <>
               <Spacer y="sm" />
               <Text color="danger" size="sm">
-                Wrong password
+                {locale.wrongPassword}
               </Text>
             </>
           )}
@@ -99,7 +101,7 @@ export function EnterPasswordOrRecovery(props: {
                 <Spinner size="md" color="accentButtonText" />
               </>
             ) : (
-              <>Verify</>
+              <>{locale.submitButton}</>
             )}
           </Button>
         </form>

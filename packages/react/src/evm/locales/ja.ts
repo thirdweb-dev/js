@@ -128,6 +128,7 @@ export function jaDefault(): ThirdwebLocale {
           "接続するためにウォレットアプリでこちらをスキャンしてください",
       },
       smartWallet: {
+        connecting: "Connecting to Smart Wallet", // TODO
         failedToConnect: "スマートウォレットに接続できませんでした",
         wrongNetworkScreen: {
           title: "異なるネットワーク",
@@ -221,6 +222,25 @@ export function jaDefault(): ThirdwebLocale {
           failedToSendCode: "確認コードの送信に失敗しました",
           sendingCode: "確認コードを送信中",
           resendCode: "確認コードを再送",
+        },
+        // TODO
+        createPassword: {
+          title: "Create Password",
+          instruction:
+            "Set a password for your account. You will need this password when connecting from a new device.",
+          saveInstruction: "Make sure to save it",
+          inputPlaceholder: "Enter your password",
+          confirmation: "I have saved my password",
+          submitButton: "Set Password",
+          failedToSetPassword: "Failed to set password",
+        },
+        // TODO
+        enterPassword: {
+          title: "Enter Password",
+          instruction: "Enter the password for your account",
+          inputPlaceholder: "Enter your password",
+          submitButton: "Verify",
+          wrongPassword: "Wrong password",
         },
       },
       magicLink: {

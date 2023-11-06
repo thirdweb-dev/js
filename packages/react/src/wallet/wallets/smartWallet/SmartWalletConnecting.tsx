@@ -82,7 +82,7 @@ export const SmartWalletConnecting: React.FC<{
         }}
       >
         <Text color="primaryText" multiline center>
-          Connecting to Smart Wallet
+          {locale.connecting}
         </Text>
         <Spacer y="lg" />
         <Spinner color="accentText" size="xl" />

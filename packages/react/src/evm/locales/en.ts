@@ -125,6 +125,7 @@ export function enDefault() {
         scanInstruction: "Scan this with your wallet app to connect",
       },
       smartWallet: {
+        connecting: "Connecting to Smart Wallet",
         failedToConnect: "Failed to connect to Smart Wallet",
         wrongNetworkScreen: {
           title: "Wrong Network",
@@ -219,6 +220,23 @@ export function enDefault() {
           failedToSendCode: "Failed to send verification code",
           sendingCode: "Sending verification code",
           resendCode: "Resend verification code",
+        },
+        createPassword: {
+          title: "Create Password",
+          instruction:
+            "Set a password for your account. You will need this password when connecting from a new device.",
+          saveInstruction: "Make sure to save it",
+          inputPlaceholder: "Enter your password",
+          confirmation: "I have saved my password",
+          submitButton: "Set Password",
+          failedToSetPassword: "Failed to set password",
+        },
+        enterPassword: {
+          title: "Enter Password",
+          instruction: "Enter the password for your account",
+          inputPlaceholder: "Enter your password",
+          submitButton: "Verify",
+          wrongPassword: "Wrong password",
         },
       },
       magicLink: {

@@ -149,7 +149,7 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   box-shadow: ${shadow.lg};
   position: relative;
   border: 1px solid ${(p) => p.theme.colors.borderColor};
-  line-height: 1;
+  line-height: normal;
   overflow: hidden;
   font-family: ${(p) => p.theme.fontFamily};
   & *::selection {
