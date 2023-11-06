@@ -1,16 +1,41 @@
 import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
-import { Flex, Grid, Icon, LightMode } from "@chakra-ui/react";
+import {
+  Flex,
+  Grid,
+  GridItem,
+  Icon,
+  LightMode,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
-import Hero from "public/assets/landingpage/hero.png";
-import HeroMobile from "public/assets/landingpage/hero-mobile.png";
 import { BsLightningCharge } from "react-icons/bs";
-import { Heading, LinkButton } from "tw-components";
+import { ChakraNextLink, Heading, LinkButton } from "tw-components";
 
 export const HeroSection = () => {
   const trackEvent = useTrack();
+
+  const images = [
+    {
+      src: require("public/assets/landingpage/homepage-wallets.png"),
+      href: "/connect",
+    },
+    {
+      src: require("public/assets/landingpage/homepage-contracts.png"),
+      href: "/explore",
+    },
+    {
+      src: require("public/assets/landingpage/homepage-payments.png"),
+      href: "/checkout",
+    },
+    {
+      src: require("public/assets/landingpage/homepage-infra.png"),
+      href: "/engine",
+    },
+  ];
+
   return (
     <HomepageSection id="home" bottomPattern>
       {/* right */}
@@ -102,33 +127,38 @@ export const HeroSection = () => {
           </LightMode>
         </Flex>
 
-        <ChakraNextImage
-          display={{ base: "none", lg: "flex" }}
-          alt=""
-          maxW="100%"
-          w={96}
-          src={Hero}
-          priority
-          quality={95}
-          justifySelf="flex-end"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
-        />
-        <Flex
-          w="full"
-          justifyContent="center"
-          display={{ base: "flex", lg: "none" }}
+        <SimpleGrid
+          columns={2}
+          gap={6}
+          justifyItems={"center"}
+          maxW={{ base: "384px", lg: "100%" }}
+          mx="auto"
+          marginTop={{ base: 5, lg: "0" }}
         >
-          <ChakraNextImage
-            alt=""
-            maxW="100%"
-            w={96}
-            src={HeroMobile}
-            priority
-            quality={95}
-            justifySelf="flex-end"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
-          />
-        </Flex>
+          {images.map((image, index) => {
+            return (
+              <GridItem key={index} maxW={{ base: "100%", lg: "180px" }}>
+                <ChakraNextLink href={image.href}>
+                  <ChakraNextImage
+                    alt=""
+                    w={96}
+                    src={image.src}
+                    priority
+                    quality={95}
+                    justifySelf="flex-end"
+                    transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
+                    _hover={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
+                      transform: "scale(1.01)",
+                    }}
+                    borderRadius={"12px"}
+                  />
+                </ChakraNextLink>
+              </GridItem>
+            );
+          })}
+        </SimpleGrid>
       </Grid>
     </HomepageSection>
   );
