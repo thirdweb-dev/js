@@ -49,6 +49,7 @@ export { createSecureStorage } from "../core/SecureStorage";
 export { ThirdwebStorage } from "../core/storage/storage";
 
 export * from "./i18n/strings";
+export * from "./i18n/types";
 
 // ui components
 export * from "./components/base";
