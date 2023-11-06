@@ -20,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function jaDefault() {
+export function jaDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "サインイン",
@@ -101,6 +101,8 @@ export function jaDefault() {
         transactionFailed: "取引に失敗しました",
         transactionRejected: "取引が拒否されました",
         insufficientFunds: "資金が不足しています",
+        selectTokenTitle: "Select a Token", // TODO
+        sending: "Sending", // TODO
       },
       signatureScreen: {
         instructionScreen: {

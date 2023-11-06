@@ -21,7 +21,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function esDefault() {
+export function esDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "Iniciar sesión",
@@ -102,6 +102,8 @@ export function esDefault() {
         transactionFailed: "Transacción fallida",
         transactionRejected: "Transacción rechazada",
         insufficientFunds: "Fondos insuficientes",
+        selectTokenTitle: "Select a Token", // TODO
+        sending: "Sending", // TODO
       },
       signatureScreen: {
         instructionScreen: {
@@ -272,6 +274,7 @@ export function esDefault() {
             "Puedes usar este archivo JSON para importar la cuenta en MetaMask usando la misma contraseña",
           walletAddress: "Dirección de la cartera",
           download: "Descargar",
+          title: "Backup Wallet", // TODO
         },
         importScreen: {
           title: "Importar cartera",
@@ -283,16 +286,15 @@ export function esDefault() {
           uploadJSON: "Por favor sube un archivo JSON",
           uploadedSuccessfully: "Subido con éxito",
         },
-        frameWallet: {
-          '...extensionAndQRScanScreens("Frame")':
-            '...extensionAndQRScanScreens("Frame")',
-          connectionFailedScreen: {
-            title: "Fallo al conectar con Frame",
-            description:
-              "Asegúrate de que la aplicación de escritorio esté instalada y en funcionamiento. Puedes descargar Frame desde el enlace de abajo. Asegúrate de actualizar esta página una vez que Frame esté funcionando.",
-            downloadFrame: "Descargar Frame",
-            supportLink: "¿Sigues teniendo problemas para conectar?",
-          },
+      },
+      frameWallet: {
+        ...extensionAndQRScanScreens("Frame"),
+        connectionFailedScreen: {
+          title: "Fallo al conectar con Frame",
+          description:
+            "Asegúrate de que la aplicación de escritorio esté instalada y en funcionamiento. Puedes descargar Frame desde el enlace de abajo. Asegúrate de actualizar esta página una vez que Frame esté funcionando.",
+          downloadFrame: "Descargar Frame",
+          supportLink: "¿Sigues teniendo problemas para conectar?",
         },
       },
     },

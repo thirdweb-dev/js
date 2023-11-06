@@ -99,6 +99,8 @@ export function enDefault() {
         transactionFailed: "Transaction Failed",
         transactionRejected: "Transaction Rejected",
         insufficientFunds: "Insufficient Funds",
+        selectTokenTitle: "Select a Token",
+        sending: "Sending",
       },
       signatureScreen: {
         instructionScreen: {

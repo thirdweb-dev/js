@@ -23,7 +23,8 @@ export const EmbeddedWalletFormUI = (props: {
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
 }) => {
-  const locale = useTWLocale().wallets.embeddedWallet.signInWithGoogle;
+  const twLocale = useTWLocale();
+  const locale = twLocale.wallets.embeddedWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -72,17 +73,17 @@ export const EmbeddedWalletFormUI = (props: {
             }}
           >
             <GoogleIcon size={iconSize.md} />
-            {locale}
+            {locale.signInWithGoogle}
           </SocialButton>
         </>
       )}
       {enableGoogleLogin && enableEmailLogin && (
-        <TextDivider text="OR" py="lg" />
+        <TextDivider text={twLocale.connectWallet.or} py="lg" />
       )}
       {enableEmailLogin && (
         <InputSelectionUI
           onSelect={(email) => props.onSelect({ email })}
-          placeholder="Enter your email address"
+          placeholder={locale.emailPlaceholder}
           name="email"
           type="email"
           errorMessage={(_input) => {
@@ -91,11 +92,11 @@ export const EmbeddedWalletFormUI = (props: {
               /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
             const isValidEmail = emailRegex.test(input);
             if (!isValidEmail) {
-              return "Invalid email address";
+              return locale.invalidEmail;
             }
           }}
-          emptyErrorMessage="email address is required"
-          submitButtonText={""}
+          emptyErrorMessage={locale.emailRequired}
+          submitButtonText={locale.submitEmail}
         />
       )}
     </div>
@@ -109,6 +110,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
 }> = (props) => {
+  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
   return (
     <Container
@@ -120,7 +122,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.title} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container

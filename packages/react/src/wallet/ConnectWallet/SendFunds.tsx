@@ -324,7 +324,7 @@ export function SendFundsForm(props: {
             padding: spacing.md,
           }}
         >
-          {sendTokenMutation.isLoading ? "Sending" : "Send"}
+          {sendTokenMutation.isLoading ? locale.sending : locale.submitButton}
           {sendTokenMutation.isLoading && (
             <Spinner size="sm" color="accentButtonText" />
           )}
@@ -422,7 +422,7 @@ export function TokenSelector(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title="Select a Token" />
+        <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
         <Spacer y="xl" />
         <Input
           placeholder={locale.searchToken}
