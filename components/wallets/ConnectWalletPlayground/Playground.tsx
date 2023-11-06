@@ -372,7 +372,6 @@ export const ConnectWalletPlayground: React.FC<{
             setWalletSelection({
               ...walletSelection,
               "Email Wallet": current === "recommended" ? true : "recommended",
-              "Magic Link": false,
             });
           }}
           recommended={walletSelection["Email Wallet"] === "recommended"}
@@ -387,48 +386,6 @@ export const ConnectWalletPlayground: React.FC<{
             setWalletSelection({
               ...walletSelection,
               "Email Wallet": selected,
-              "Magic Link": selected
-                ? !selected
-                : walletSelection["Magic Link"],
-            });
-          }}
-        />
-
-        {/* Magic Link */}
-        <WalletButton
-          subtitle="Phone number & Social Logins"
-          name="Magic Link"
-          icon={walletInfoRecord["Magic Link"].component.meta.iconURL}
-          onRecommendedClick={() => {
-            const current = walletSelection["Magic Link"];
-            const newState = current === "recommended" ? true : "recommended";
-
-            if (newState === "recommended") {
-              trackCustomize("recommend-wallet", {
-                walletName: "Magic Link",
-              });
-            }
-
-            setWalletSelection({
-              ...walletSelection,
-              "Magic Link": current === "recommended" ? true : "recommended",
-              "Email Wallet": false,
-            });
-          }}
-          recommended={walletSelection["Magic Link"] === "recommended"}
-          isChecked={!!walletSelection["Magic Link"]}
-          onSelect={() => {
-            trackCustomize("wallet", {
-              walletName: "Magic Link",
-            });
-
-            const selected = !walletSelection["Magic Link"];
-            setWalletSelection({
-              ...walletSelection,
-              "Magic Link": selected,
-              "Email Wallet": selected
-                ? false
-                : walletSelection["Email Wallet"],
             });
           }}
         />

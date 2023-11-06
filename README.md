@@ -6,24 +6,22 @@ This repo contains the full source for all of thirdweb.com and the thirdweb dash
 
 ### Install dependencies
 
-We use `bun`.
-
-_You can install bun on your machine by following the instructions on: [bun.sh](https://bun.sh)_
+We use `yarn`.
 
 ```sh
-bun install
+yarn install
 ```
 
 ### Starting local dev server.
 
 ```sh
-bun run dev
+yarn dev
 ```
 
 ### Building for production
 
 ```sh
-bun run build
+yarn build
 ```
 
 ### Environment Variables
