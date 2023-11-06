@@ -46,7 +46,7 @@ const TooltipContent = /* @__PURE__ */ (() => styled(RadixTooltip.Content)<{
   background: ${(p) => p.theme.colors.tooltipBg};
   color: ${(p) => p.theme.colors.tooltipText};
   border-radius: ${radius.sm};
-  line-height: 1;
+  line-height: normal;
   padding: ${spacing.sm} ${spacing.md};
   font-size: ${fontSize.sm};
   box-shadow: ${shadow.sm};

@@ -166,7 +166,7 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
 
-      <Container flex="column" gap="xs">
+      <Container flex="column" gap="xxs">
         {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
           <Text
@@ -608,7 +608,7 @@ const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
   background-color: ${(props) => props.theme.colors.dropdownBg};
   --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
-  line-height: 1;
+  line-height: normal;
 `)();
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
@@ -624,7 +624,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   gap: ${spacing.sm};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1;
+  line-height: normal;
   animation: ${fadeInAnimation} 300ms ease;
 
   ${media.mobile} {

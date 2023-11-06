@@ -174,7 +174,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
-  line-height: 1;
+  line-height: normal;
   border: 1px solid ${(p) => p.theme.colors.borderColor};
   outline: none;
   overflow: hidden;
