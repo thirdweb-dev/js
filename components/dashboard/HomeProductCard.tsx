@@ -48,7 +48,7 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
               </Heading>
             </LinkOverlay>
           </Flex>
-          <Text>{product.description}</Text>
+          <Text color="faded">{product.description}</Text>
         </Flex>
       </Card>
     </LinkBox>

@@ -36,7 +36,7 @@ const Dashboard: ThirdwebNextPage = (
               ) : (
                 <VStack gap={10}>
                   <OnboardingSteps />
-                  <Flex flexDir="column" gap={6}>
+                  <Flex flexDir="column" gap={10}>
                     {["wallets", "contracts", "infrastructure", "payments"].map(
                       (section) => {
                         const products = PRODUCTS.filter(
