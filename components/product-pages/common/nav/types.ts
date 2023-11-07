@@ -13,6 +13,7 @@ export interface SectionItemProps {
   label: string;
   description: string;
   link: string;
+  dashboardLink?: string;
   icon?: StaticImageData;
   iconType?: IconType;
   comingSoon?: boolean;

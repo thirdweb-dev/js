@@ -1,18 +1,12 @@
-import {
-  DarkMode,
-  Flex,
-  GridItem,
-  SimpleGrid,
-  VStack,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
 import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
-import { NavigationCard } from "components/dashboard/NavigationCard";
+import { HomeProductCard } from "components/dashboard/HomeProductCard";
 import { OnboardingSteps } from "components/onboarding/Steps";
+import { PRODUCTS } from "components/product-pages/common/nav/data";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
@@ -20,50 +14,10 @@ import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "dashboard";
 
-const GET_STARTED_SECTIONS = [
-  {
-    title: "Deploy a contract",
-    description:
-      "Explore contracts from world-class web3 protocols & engineers- all deployable with 1-click to any chain.",
-    image: require("public/assets/dashboard/home-contracts.png"),
-    href: "/dashboard/contracts/deploy",
-    badge: "Contracts",
-    badgeColor: "#6820CB",
-  },
-  {
-    title: "Onboard users",
-    description:
-      "A complete toolkit for connecting wallets to apps. UI components that work out of the box.",
-    image: require("public/assets/dashboard/home-wallets.png"),
-    href: "/dashboard/wallets/connect",
-    badge: "Wallets",
-    badgeColor: "blue.500",
-  },
-  {
-    title: "Create a checkout link",
-    description:
-      "Create pre-built checkout links or embedded checkouts to sell NFTs.",
-    image: require("public/assets/dashboard/home-payments.png"),
-    href: "https://withpaper.com/product/checkouts",
-    badge: "Payments",
-    badgeColor: "green.500",
-  },
-  {
-    title: "Run Engine",
-    description:
-      "Engine is a backend HTTP server that calls smart contracts with your managed backend wallets.",
-    badge: "Web3 Backend",
-    badgeColor: "gray.700",
-    image: require("public/assets/dashboard/home-infra.png"),
-    href: "/dashboard/engine",
-  },
-];
-
 const Dashboard: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const connectionStatus = useConnectionStatus();
-  const { colorMode } = useColorMode();
 
   const showFTUX =
     connectionStatus !== "connected" && connectionStatus !== "connecting";
@@ -82,32 +36,36 @@ const Dashboard: ThirdwebNextPage = (
               ) : (
                 <VStack gap={10}>
                   <OnboardingSteps />
-                  <DarkMode>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
-                      {GET_STARTED_SECTIONS.map(
-                        ({
-                          title,
-                          description,
-                          badge,
-                          badgeColor,
-                          image,
-                          href,
-                        }) => (
-                          <NavigationCard
-                            key={title}
-                            title={title}
-                            description={description}
-                            badge={badge}
-                            badgeColor={badgeColor}
-                            image={image}
-                            href={href}
-                            TRACKING_CATEGORY={TRACKING_CATEGORY}
-                            colorMode={colorMode}
-                          />
-                        ),
-                      )}
-                    </SimpleGrid>
-                  </DarkMode>
+                  <Flex flexDir="column" gap={6}>
+                    {["wallets", "contracts", "infrastructure", "payments"].map(
+                      (section) => {
+                        const products = PRODUCTS.filter(
+                          (p) => p.section === section && !!p.dashboardLink,
+                        );
+
+                        return (
+                          <Flex key={section} gap={4} flexDir="column">
+                            <Heading
+                              size="title.sm"
+                              textTransform="capitalize"
+                              color="faded"
+                            >
+                              {section}
+                            </Heading>
+                            <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+                              {products.map((product) => (
+                                <HomeProductCard
+                                  key={product.name}
+                                  product={product}
+                                  TRACKING_CATEGORY={TRACKING_CATEGORY}
+                                />
+                              ))}
+                            </SimpleGrid>
+                          </Flex>
+                        );
+                      },
+                    )}
+                  </Flex>
                 </VStack>
               )}
             </ClientOnly>

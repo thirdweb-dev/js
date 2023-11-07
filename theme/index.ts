@@ -383,7 +383,7 @@ const chakraTheme: Theme = extendTheme({
       bgWhite: { default: "#fff", _dark: "black" },
       backgroundBody: { default: "backgroundLight", _dark: "backgroundDark" },
       backgroundHighlight: { default: "white", _dark: "#131417" },
-      backgroundCardHighlight: { default: "white", _dark: "#232429" },
+      backgroundCardHighlight: { default: "white", _dark: "#131417" },
       wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
       heading: { default: "#262A36", _dark: "#ECECEC" },
       paragraph: { default: "rgba(39, 46, 54, 0.9)", _dark: "#b2b2b2" },
@@ -393,7 +393,7 @@ const chakraTheme: Theme = extendTheme({
         default: "rgba(242, 251, 255, 0.8)",
         _dark: "rgba(39, 46, 54, 0.9)",
       },
-      borderColor: { default: "gray.200", _dark: "#272B30" },
+      borderColor: { default: "gray.200", _dark: "#2B2B2B" },
       opaqueBg: {
         default: "whiteAlpha.500",
         _dark: "blackAlpha.600",
