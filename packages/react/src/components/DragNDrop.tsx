@@ -12,6 +12,10 @@ export const DragNDrop: React.FC<{
   extension: string;
   accept: string;
   onUpload: (file: File) => void;
+  locale: {
+    wrongFileError: string;
+    uploadedSuccessfully: string;
+  };
 }> = (props) => {
   const [error, setError] = useState(false);
   const [uploaded, setUploaded] = useState<File | undefined>();
@@ -105,8 +109,7 @@ export const DragNDrop: React.FC<{
               <Spacer y="lg" />
               {error ? (
                 <Text color="danger" size="sm">
-                  {" "}
-                  Please upload a {props.extension} file{" "}
+                  {props.locale.wrongFileError}
                 </Text>
               ) : (
                 <Text size="sm"> {props.extension} </Text>
@@ -115,7 +118,7 @@ export const DragNDrop: React.FC<{
           ) : (
             <>
               <Text weight={600} color="primaryText" center multiline>
-                {uploaded.name} uploaded successfully
+                {uploaded.name} {props.locale.uploadedSuccessfully}
               </Text>
               <Spacer y="md" />
               <Container color="success">
