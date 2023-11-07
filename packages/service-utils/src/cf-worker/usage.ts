@@ -22,6 +22,7 @@ const usageEventSchema = z.object({
     "paymaster",
     "relayer",
     "connectWallet",
+    "checkout",
   ]),
   action: z.string(),
 
