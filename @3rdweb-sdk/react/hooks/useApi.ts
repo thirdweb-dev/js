@@ -256,9 +256,11 @@ export function useUpdateAccount() {
         },
         body: JSON.stringify(input),
       });
+
       const json = await res.json();
 
       if (json.error) {
+        console.error("ERROR: ", json);
         throw new Error(json.message);
       }
 
