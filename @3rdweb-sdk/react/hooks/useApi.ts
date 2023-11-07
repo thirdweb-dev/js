@@ -178,7 +178,7 @@ export function useAccount() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as Account;
@@ -203,7 +203,7 @@ export function useAccountUsage() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as UsageBillableByService;
@@ -231,7 +231,7 @@ export function useWalletStats(clientId: string | undefined) {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as WalletStats;
@@ -260,8 +260,7 @@ export function useUpdateAccount() {
       const json = await res.json();
 
       if (json.error) {
-        console.error("ERROR: ", json);
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -295,7 +294,7 @@ export function useUpdateNotifications() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -326,7 +325,7 @@ export function useCreateBillingSession() {
     const json = await res.json();
 
     if (json.error) {
-      throw new Error(json.message);
+      throw new Error(json.error.message);
     }
 
     return json.data;
@@ -352,7 +351,7 @@ export function useConfirmEmail() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -389,7 +388,7 @@ export function useConfirmPaperEmail() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -426,7 +425,7 @@ export function useResendEmailConfirmation() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -462,7 +461,7 @@ export function useCreatePaymentMethod() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -493,7 +492,7 @@ export function useApiKeys() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as ApiKey[];
@@ -521,7 +520,7 @@ export function useCreateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as ApiKey;
@@ -555,7 +554,7 @@ export function useUpdateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -589,7 +588,7 @@ export function useRevokeApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -623,7 +622,7 @@ export function useGenerateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -659,7 +658,7 @@ export function useAuthorizeWalletWithAccount() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -691,7 +690,7 @@ export function useRevokeAuthorizedWallet() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data;
@@ -722,7 +721,7 @@ export function useAuthorizedWallets() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.message);
+        throw new Error(json.error.message);
       }
 
       return json.data as AuthorizedWallet[];
@@ -755,7 +754,7 @@ async function fetchAuthToken(
       .then((res) => res.json())
       .then((json) => {
         if (json.error) {
-          throw new Error(json.message);
+          throw new Error(json.error.message);
         }
         return json.data.jwt as string;
       })
@@ -837,7 +836,7 @@ export async function fetchApiKeyAvailability(name: string) {
   const json = await res.json();
 
   if (json.error) {
-    throw new Error(json.message);
+    throw new Error(json.error.message);
   }
 
   return !!json.data.available;
@@ -857,7 +856,7 @@ export async function fetchChainsFromApi() {
   const json = await res.json();
 
   if (json.error) {
-    throw new Error(json.message);
+    throw new Error(json.error.message);
   }
 
   return json.data as Chain[];

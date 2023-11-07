@@ -114,13 +114,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         });
       },
       onError: (error) => {
-        const err = error as Error;
-
-        if (err?.message?.match(/already exists/)) {
-          form.setError("email", { type: "required", message: err.message });
-        } else {
-          onError(error);
-        }
+        onError(error);
 
         trackEvent({
           category: "account",
