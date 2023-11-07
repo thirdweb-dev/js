@@ -1,12 +1,12 @@
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Container, Divider, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { Card, Heading, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SettingsDevicesPage: ThirdwebNextPage = () => {
@@ -14,20 +14,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
   const authorizedWalletsQuery = useAuthorizedWallets();
 
   if (!isLoggedIn) {
-    return (
-      <Container maxW="lg">
-        <Card p={6} as={Flex} flexDir="column" gap={2}>
-          <Heading as="h2" size="title.sm">
-            Connect your wallet to get started
-          </Heading>
-          <Text>
-            In order to manage your account, you need to sign-in with a wallet.
-          </Text>
-          <Divider my={4} />
-          <CustomConnectWallet />
-        </Card>
-      </Container>
-    );
+    return <ConnectWalletPrompt description="view your authorized devices" />;
   }
 
   return (

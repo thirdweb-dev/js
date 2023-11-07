@@ -122,7 +122,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [router]);
 
   if (!isLoggedIn) {
-    return <ConnectWalletPrompt />;
+    return <ConnectWalletPrompt description="manage your billing account" />;
   }
 
   if (!account) {

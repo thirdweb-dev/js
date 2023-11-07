@@ -2,16 +2,25 @@ import { Container, Divider, Flex } from "@chakra-ui/react";
 import { Card, Heading, Text } from "tw-components";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
-export const ConnectWalletPrompt = () => {
+interface ConnectWalletPromptProps {
+  title?: string;
+  prefix?: string;
+  description?: string;
+}
+
+export const ConnectWalletPrompt: React.FC<ConnectWalletPromptProps> = ({
+  title = "Connect your wallet",
+  prefix = "Sign-in with your wallet to",
+  description = "",
+}) => {
   return (
     <Container maxW="lg">
       <Card p={6} as={Flex} flexDir="column" gap={2}>
         <Heading as="h2" size="title.sm">
-          Connect your wallet to get started
+          {title}
         </Heading>
         <Text>
-          In order to manage your developer API keys and Billing Account, you
-          need to sign-in with a wallet.
+          {prefix} {description || "get started"}.
         </Text>
         <Divider my={4} />
         <CustomConnectWallet />

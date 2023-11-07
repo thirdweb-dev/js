@@ -9,9 +9,11 @@ import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { LoggedInOnlyView } from "components/dashboard/LoggedInOnlyView";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
+  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
 
@@ -31,46 +33,48 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
-  return (
-    <LoggedInOnlyView>
-      <Flex flexDir="column" gap={8}>
-        <Flex direction="column" gap={2}>
-          <Flex
-            justifyContent="space-between"
-            direction={{ base: "column", md: "row" }}
-            gap={4}
-          >
-            <Heading size="title.lg" as="h1">
-              API Keys
-            </Heading>
-            <CreateApiKeyButton />
-          </Flex>
+  if (!isLoggedIn) {
+    return <ConnectWalletPrompt description="manage your developer API keys" />;
+  }
 
-          <Text>
-            An API key is required to use thirdweb&apos;s services through the
-            SDK and CLI. {` `}
-            <Link
-              target="_blank"
-              color="blue.500"
-              href="https://portal.thirdweb.com/api-keys"
-              isExternal
-            >
-              Learn more
-            </Link>
-          </Text>
+  return (
+    <Flex flexDir="column" gap={8}>
+      <Flex direction="column" gap={2}>
+        <Flex
+          justifyContent="space-between"
+          direction={{ base: "column", md: "row" }}
+          gap={4}
+        >
+          <Heading size="title.lg" as="h1">
+            API Keys
+          </Heading>
+          <CreateApiKeyButton />
         </Flex>
 
-        {hasSmartWalletsWithoutBilling && (
-          <SmartWalletsBillingAlert dismissable />
-        )}
-
-        <ApiKeys
-          keys={apiKeys || []}
-          isLoading={keysQuery.isLoading}
-          isFetched={keysQuery.isFetched}
-        />
+        <Text>
+          An API key is required to use thirdweb&apos;s services through the SDK
+          and CLI. {` `}
+          <Link
+            target="_blank"
+            color="blue.500"
+            href="https://portal.thirdweb.com/api-keys"
+            isExternal
+          >
+            Learn more
+          </Link>
+        </Text>
       </Flex>
-    </LoggedInOnlyView>
+
+      {hasSmartWalletsWithoutBilling && (
+        <SmartWalletsBillingAlert dismissable />
+      )}
+
+      <ApiKeys
+        keys={apiKeys || []}
+        isLoading={keysQuery.isLoading}
+        isFetched={keysQuery.isFetched}
+      />
+    </Flex>
   );
 };
 

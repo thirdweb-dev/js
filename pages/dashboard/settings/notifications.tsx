@@ -14,7 +14,9 @@ const SettingsNotificationsPage: ThirdwebNextPage = () => {
   const meQuery = useAccount();
 
   if (!isLoggedIn) {
-    return <ConnectWalletPrompt />;
+    return (
+      <ConnectWalletPrompt description="configure your notification preferences" />
+    );
   }
 
   if (meQuery.isLoading || !meQuery.data) {

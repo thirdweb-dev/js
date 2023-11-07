@@ -17,7 +17,7 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
   const usageQuery = useAccountUsage();
 
   if (!isLoggedIn) {
-    return <ConnectWalletPrompt />;
+    return <ConnectWalletPrompt description="view usage analytics" />;
   }
 
   if (meQuery.isLoading || !meQuery.data) {
