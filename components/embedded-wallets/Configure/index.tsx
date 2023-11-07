@@ -28,6 +28,7 @@ import {
   FormErrorMessage,
   FormHelperText,
   Button,
+  TrackedLink,
 } from "tw-components";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -36,6 +37,8 @@ interface ConfigureProps {
   apiKey: ApiKey;
   trackingCategory: string;
 }
+
+const TRACKING_CATEGORY = "embedded-wallet";
 
 export const Configure: React.FC<ConfigureProps> = ({
   apiKey,
@@ -157,7 +160,16 @@ export const Configure: React.FC<ConfigureProps> = ({
                 <Box>
                   <FormLabel mt={3}>Custom JSON Web Token</FormLabel>
                   <Text>
-                    Optionally allow users to authenticate with a custom JWT.
+                    Optionally allow users to authenticate with a custom JWT.{" "}
+                    <TrackedLink
+                      isExternal
+                      href="https://portal.thirdweb.com/embedded-wallet/custom-auth"
+                      label="learn-more"
+                      category={TRACKING_CATEGORY}
+                      color="primary.500"
+                    >
+                      Learn more
+                    </TrackedLink>
                   </Text>
                 </Box>
 
