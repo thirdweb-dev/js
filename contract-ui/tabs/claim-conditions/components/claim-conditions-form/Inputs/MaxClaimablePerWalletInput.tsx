@@ -1,3 +1,4 @@
+import { Link } from "tw-components";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
@@ -36,14 +37,26 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
         ).error
       }
       helperText={
-        !isClaimPhaseV1 ? (
-          <>
-            This value applies for <strong>all</strong> wallets
-            {claimConditionType !== "public" &&
-              ", and can be overridden for specific wallets in the snapshot"}
-            .
-          </>
-        ) : null
+        <>
+          {!isClaimPhaseV1 ? (
+            <>
+              This value applies for <strong>all</strong> wallets
+              {claimConditionType !== "public"
+                ? ", and can be overridden for specific wallets in the snapshot. "
+                : ". "}
+            </>
+          ) : null}
+          Limits are set per wallets and not per user, sophisticated actors
+          could get around wallet restrictions.{" "}
+          <Link
+            isExternal
+            color="blue.500"
+            href="https://portal.thirdweb.com/contracts/design/Drop#sybil-attacks"
+          >
+            Learn more
+          </Link>
+          .
+        </>
       }
     >
       <QuantityInputWithUnlimited
