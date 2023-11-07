@@ -1,5 +1,109 @@
 # @thirdweb-dev/react
 
+## 4.1.1
+
+### Patch Changes
+
+- [#1888](https://github.com/thirdweb-dev/js/pull/1888) [`789700cf`](https://github.com/thirdweb-dev/js/commit/789700cf60ac40d4cc2742c8aa735a225089c522) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign in connect button display logic
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.1.1
+
+## 4.1.0
+
+### Minor Changes
+
+- [#1846](https://github.com/thirdweb-dev/js/pull/1846) [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New API to configure authentication options on `embeddedWallet`
+
+  ```ts
+  // default - google sign in is enabled
+  embeddedWallet();
+
+  // this is same as
+  embeddedWallet({
+    auth: {
+      options: ["email", "google"],
+    },
+  });
+
+  // only email
+  embeddedWallet({
+    auth: {
+      options: ["email"],
+    },
+  });
+
+  // only google sign in
+  embeddedWallet({
+    auth: {
+      options: ["google"],
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#1885](https://github.com/thirdweb-dev/js/pull/1885) [`961ef644`](https://github.com/thirdweb-dev/js/commit/961ef644d1b1adaad08c071903cd53aacac50bb4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improved `useSmartWallet()` hook
+
+  Example with metamask:
+
+  ```ts
+  const { connect } = useSmartWallet(metamaskWallet(), {
+    factoryAddress: factoryAddress,
+    gasless: true,
+  });
+
+  const onClick = async () => {
+    // nothing to do here, all handled internally
+    await connect();
+  };
+  ```
+
+  ```ts
+  Example with localWallet:
+
+  const { connect } = useSmartWallet(localWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'load' the local wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              await w.generate();
+              await w.connect();
+          }
+      });
+  }
+  ```
+
+  ```ts
+  Example with embeddedWallet:
+
+  const { connect } = useSmartWallet(embeddedWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'auth' the embedded wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              const authResult = await w.authenticate({ strategy: "google" });
+              await w.connect({ authResult });
+          }
+      });
+  }
+  ```
+
+- [#1886](https://github.com/thirdweb-dev/js/pull/1886) [`6fcd09dd`](https://github.com/thirdweb-dev/js/commit/6fcd09ddbdad2c5e02fad9c3d2c61348ebd987de) Thanks [@edwardysun](https://github.com/edwardysun)! - Fix for user address and active wallet address out of sync
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79), [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/sdk@4.0.10
+  - @thirdweb-dev/wallets@2.1.0
+  - @thirdweb-dev/react-core@4.1.0
+
 ## 4.0.10
 
 ### Patch Changes

@@ -61,7 +61,7 @@ export const ConnectWalletHeader = ({
           </Text>
         ) : null}
         {subHeaderText ? (
-          <Text variant="subHeader" mt="md">
+          <Text variant="subHeader" mt="md" textAlign="center">
             {subHeaderText}
           </Text>
         ) : null}

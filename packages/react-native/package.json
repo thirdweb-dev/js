@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.3.15",
+  "version": "0.4.1",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -31,7 +31,6 @@
     "@magic-sdk/provider": "17.2.0",
     "@magic-sdk/react-native-bare": "^18.5.0",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
-    "@react-native-community/checkbox": "^0.5.16",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",

@@ -12,19 +12,26 @@ import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType } from "./types";
+import type { EmbeddedWalletLoginType, AuthOption } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
+  authOptions: AuthOption[];
 }) => {
+  const twLocale = useTWLocale();
+  const locale = twLocale.wallets.embeddedWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const themeObj = useTheme() as Theme;
+
+  const enableGoogleLogin = props.authOptions.includes("google");
+  const enableEmailLogin = props.authOptions.includes("email");
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
@@ -36,14 +43,16 @@ export const EmbeddedWalletFormUI = (props: {
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
-      await embeddedWallet.connect({
-        loginType: "headless_google_oauth",
+      const authResult = await embeddedWallet.authenticate({
+        strategy: "google",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
       });
-
+      await embeddedWallet.connect({
+        authResult,
+      });
       setConnectedWallet(embeddedWallet);
     } catch (e) {
       setConnectionStatus("disconnected");
@@ -53,33 +62,43 @@ export const EmbeddedWalletFormUI = (props: {
 
   return (
     <div>
-      <SocialButton
-        variant="secondary"
-        fullWidth
-        onClick={() => {
-          googleLogin();
-          props.onSelect({ google: true });
-        }}
-      >
-        <GoogleIcon size={iconSize.md} />
-        Sign in with Google
-      </SocialButton>
-      <TextDivider text="OR" py="lg" />
-      <InputSelectionUI
-        onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
-        name="email"
-        type="email"
-        errorMessage={(_input) => {
-          const input = _input.replace(/\+/g, "");
-          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-          const isValidEmail = emailRegex.test(input);
-          if (!isValidEmail) {
-            return "Invalid email address";
-          }
-        }}
-        emptyErrorMessage="email address is required"
-      />
+      {enableGoogleLogin && (
+        <>
+          <SocialButton
+            variant="secondary"
+            fullWidth
+            onClick={() => {
+              googleLogin();
+              props.onSelect({ google: true });
+            }}
+          >
+            <GoogleIcon size={iconSize.md} />
+            {locale.signInWithGoogle}
+          </SocialButton>
+        </>
+      )}
+      {enableGoogleLogin && enableEmailLogin && (
+        <TextDivider text={twLocale.connectWallet.or} py="lg" />
+      )}
+      {enableEmailLogin && (
+        <InputSelectionUI
+          onSelect={(email) => props.onSelect({ email })}
+          placeholder={locale.emailPlaceholder}
+          name="email"
+          type="email"
+          errorMessage={(_input) => {
+            const input = _input.replace(/\+/g, "");
+            const emailRegex =
+              /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+            const isValidEmail = emailRegex.test(input);
+            if (!isValidEmail) {
+              return locale.invalidEmail;
+            }
+          }}
+          emptyErrorMessage={locale.emailRequired}
+          submitButtonText={locale.submitEmail}
+        />
+      )}
     </div>
   );
 };
@@ -89,7 +108,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
+  authOptions: AuthOption[];
 }> = (props) => {
+  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
   return (
     <Container
@@ -101,7 +122,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.title} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
@@ -111,6 +132,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         p={isCompact ? undefined : "lg"}
       >
         <EmbeddedWalletFormUI
+          authOptions={props.authOptions}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
         />

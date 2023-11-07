@@ -16,12 +16,15 @@ import { PaperLoginType } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
 }) => {
+  const cwLocale = useTWLocale().connectWallet;
+  const locale = useTWLocale().wallets.paperWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -64,16 +67,16 @@ export const PaperFormUI = (props: {
             }}
           >
             <GoogleIcon size={iconSize.md} />
-            Sign in with Google
+            {locale.signInWithGoogle}
           </SocialButton>
 
-          <TextDivider text="OR" py="lg" />
+          <TextDivider text={cwLocale.or} py="lg" />
         </>
       )}
 
       <InputSelectionUI
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
+        placeholder={locale.emailPlaceholder}
         name="email"
         type="email"
         errorMessage={(_input) => {
@@ -81,10 +84,11 @@ export const PaperFormUI = (props: {
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
           const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
-            return "Invalid email address";
+            return locale.invalidEmail;
           }
         }}
-        emptyErrorMessage="email address is required"
+        emptyErrorMessage={locale.emailRequired}
+        submitButtonText={locale.submitEmail}
       />
     </div>
   );
@@ -98,6 +102,7 @@ export const PaperFormUIScreen: React.FC<{
   walletConfig: WalletConfig<PaperWallet>;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
+  const locale = useTWLocale().wallets.paperWallet;
   return (
     <Container
       fullHeight
@@ -108,7 +113,7 @@ export const PaperFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.signIn} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container

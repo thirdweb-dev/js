@@ -16,9 +16,12 @@ export const Text = styled.span<{
   margin: 0;
   display: ${(p) => (p.inline ? "inline" : "block")};
   font-weight: ${(p) => p.weight || 500};
-  line-height: ${(p) => (p.multiline ? 1.5 : 1)};
+  line-height: ${(p) => (p.multiline ? 1.5 : "normal")};
   ${(p) => (p.center ? `text-align: center;` : "")};
   text-wrap: ${(p) => (p.balance ? "balance" : "inherit")};
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const Link = styled.a<{
@@ -38,7 +41,7 @@ export const Link = styled.a<{
   text-align: ${(p) => (p.center ? "center" : "left")};
   display: ${(p) => (p.inline ? "inline" : "block")};
   font-weight: ${(p) => p.weight || 500};
-  line-height: 1;
+  line-height: normal;
   transition: color 0.2s ease;
 
   &:hover {

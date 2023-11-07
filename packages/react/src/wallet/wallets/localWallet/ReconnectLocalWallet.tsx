@@ -15,6 +15,7 @@ import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -32,6 +33,7 @@ type ReconnectLocalWalletProps = {
 export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   props,
 ) => {
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -134,12 +136,12 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Container p="lg" expand>
         <Text multiline size="lg" color="primaryText">
-          Connect to saved wallet
+          {locale.reconnectScreen.title}
         </Text>
 
         <Spacer y="xl" />
 
-        <Label>Saved Wallet</Label>
+        <Label>{locale.reconnectScreen.savedWallet}</Label>
         <Spacer y="sm" />
 
         <Text>
@@ -178,12 +180,12 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
               onClick: () => setShowPassword(!showPassword),
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
             }}
-            label="Password"
+            label={locale.passwordLabel}
             type={showPassword ? "text" : "password"}
             value={password}
             error={isWrongPassword ? "Wrong Password" : ""}
             dataTest="current-password"
-            placeholder="Enter your password"
+            placeholder={locale.enterYourPassword}
           />
 
           <Spacer y="md" />
@@ -198,7 +200,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
               gap: spacing.sm,
             }}
           >
-            Continue
+            {locale.reconnectScreen.continue}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
@@ -217,7 +219,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
             setShowBackupConfirmation(true);
           }}
         >
-          Create a new wallet
+          {locale.reconnectScreen.createNewWallet}
         </Button>
       </Container>
     </Container>
