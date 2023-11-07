@@ -135,6 +135,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to either Smart Wallet or Safe
+   *
+   * @default false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -339,6 +346,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 props?.auth?.onLogout?.();
               }
             }}
+            hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
           />
         );
       })()}

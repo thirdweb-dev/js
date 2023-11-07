@@ -34,6 +34,7 @@ export const ConnectModalInline = (
     | "hideTestnetFaucet"
     | "switchToActiveChain"
     | "supportedTokens"
+    | "hideSwitchToPersonalWallet"
   > & {
     onModalHide?: () => void;
   },
