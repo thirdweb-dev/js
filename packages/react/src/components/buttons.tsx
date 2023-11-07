@@ -18,7 +18,7 @@ export const Button = styled.button<{
   font-weight: 500;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1;
+  line-height: normal;
   flex-shrink: 0;
   transition: border 200ms ease;
   gap: ${(p) => (p.gap && spacing[p.gap]) || 0};

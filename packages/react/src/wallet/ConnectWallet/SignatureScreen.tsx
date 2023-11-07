@@ -28,6 +28,7 @@ import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
 import { TOS } from "./Modal/TOS";
 import { keyframes } from "@emotion/react";
 import { Spinner } from "../../components/Spinner";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 type Status = "signing" | "failed" | "idle";
 
@@ -37,6 +38,7 @@ export const SignatureScreen: React.FC<{
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
 }> = ({ onDone, modalSize, termsOfServiceUrl, privacyPolicyUrl }) => {
+  const locale = useTWLocale().connectWallet.signatureScreen;
   const walletConfig = useWalletConfig();
   const wallet = useWallet();
   const { auth } = useContext(ModalConfigCtx);
@@ -99,7 +101,7 @@ export const SignatureScreen: React.FC<{
           paddingBottom: 0,
         }}
       >
-        <ModalHeader title="Sign in" />
+        <ModalHeader title={locale.instructionScreen.title} />
       </Container>
 
       <Container
@@ -126,9 +128,8 @@ export const SignatureScreen: React.FC<{
               </Container>
             )}
 
-            <Text center multiline>
-              Please sign the message request <br />
-              in your wallet to continue
+            <Text center multiline balance>
+              {locale.instructionScreen.instruction}
             </Text>
             <Spacer y="md" />
             <Button
@@ -141,7 +142,7 @@ export const SignatureScreen: React.FC<{
                 padding: spacing.md,
               }}
             >
-              Sign in
+              {locale.instructionScreen.signInButton}
             </Button>
           </>
         ) : (
@@ -164,13 +165,11 @@ export const SignatureScreen: React.FC<{
               </Text>
 
               {status === "signing" && (
-                <Text center multiline>
+                <Text center multiline balance>
                   {isSafeWallet ? (
                     <SafeWalletInstruction />
                   ) : (
-                    <>
-                      Sign the signature request <br /> in your wallet
-                    </>
+                    <>{locale.signingScreen.prompt}</>
                   )}
                 </Text>
               )}
@@ -193,7 +192,7 @@ export const SignatureScreen: React.FC<{
                     }}
                   >
                     {" "}
-                    Approve transaction in Safe{" "}
+                    {locale.signingScreen.approveTransactionInSafe}
                     <ExternalLinkIcon
                       width={iconSize.sm}
                       height={iconSize.sm}
@@ -216,7 +215,7 @@ export const SignatureScreen: React.FC<{
                     }}
                   >
                     <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
-                    Try Again
+                    {locale.signingScreen.tryAgain}
                   </Button>
                 </Container>
               )}
@@ -238,6 +237,7 @@ export const SignatureScreen: React.FC<{
 };
 
 function SafeWalletInstruction() {
+  const locale = useTWLocale().connectWallet.signatureScreen.signingScreen;
   const { getWalletConfig } = useWalletContext();
   const wallet = useWallet();
   const personalWallet = wallet?.getPersonalWallet() as
@@ -249,12 +249,9 @@ function SafeWalletInstruction() {
   return (
     <>
       {isSafePersonalWalletHeadless ? (
-        <>Approve transaction in Safe</>
+        <>{locale.approveTransactionInSafe}</>
       ) : (
-        <>
-          Sign signature request in your wallet <br /> & approve transaction in
-          Safe
-        </>
+        <>{locale.promptForSafe}</>
       )}
     </>
   );
@@ -267,6 +264,7 @@ function HeadlessSignIn({
   signIn: () => void;
   status: Status;
 }) {
+  const locale = useTWLocale().connectWallet.signatureScreen.signingScreen;
   const mounted = useRef(false);
   useEffect(() => {
     if (mounted.current) {
@@ -278,7 +276,7 @@ function HeadlessSignIn({
 
   return (
     <Container p="lg" fullHeight flex="column" animate="fadein">
-      <ModalHeader title="Signing in" />
+      <ModalHeader title={locale.title} />
       <Container
         expand
         flex="row"
@@ -296,7 +294,7 @@ function HeadlessSignIn({
             animate="fadein"
           >
             <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-            <Text color="danger"> Failed to Sign in </Text>
+            <Text color="danger"> {locale.failedToSignIn} </Text>
           </Container>
         ) : (
           <Spinner size="xl" color="accentText" />

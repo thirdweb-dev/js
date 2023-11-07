@@ -16,6 +16,8 @@ export const QRCode: React.FC<{
     <div
       style={{
         position: "relative",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       {props.qrCodeUri ? (

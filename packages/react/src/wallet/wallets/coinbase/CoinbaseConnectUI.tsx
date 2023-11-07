@@ -6,6 +6,7 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { CoinbaseScan } from "./CoinbaseScan";
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CoinbaseConnectUI = ({
   walletConfig,
@@ -18,6 +19,7 @@ export const CoinbaseConnectUI = ({
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
+  const locale = useTWLocale().wallets.coinbaseWallet;
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const hideBackButton = supportedWallets.length === 1;
@@ -71,6 +73,13 @@ export const CoinbaseConnectUI = ({
   if (screen === "connecting" || screen === "loading") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
+        }}
         errorConnecting={errorConnecting}
         onGetStarted={() => setScreen("get-started")}
         onRetry={connectToExtension}
@@ -85,6 +94,9 @@ export const CoinbaseConnectUI = ({
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={meta.iconURL}
         walletName={meta.name}
         chromeExtensionLink={meta.urls?.chrome}

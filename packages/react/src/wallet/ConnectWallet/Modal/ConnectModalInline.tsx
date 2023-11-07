@@ -9,10 +9,9 @@ import {
   WalletUIStatesProvider,
 } from "../../../evm/providers/wallet-ui-states-provider";
 import {
-  widemodalMaxHeight,
+  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  defaultModalTitle,
   defaultTheme,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
@@ -23,6 +22,7 @@ import { DynamicHeight } from "../../../components/DynamicHeight";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ConnectModalInline = (
   props: Omit<
@@ -87,7 +87,7 @@ export const ConnectModalInline = (
         <ConnectModalInlineContainer
           className={props.className}
           style={{
-            height: modalSize === "compact" ? "auto" : widemodalMaxHeight,
+            height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
             maxWidth:
               modalSize === "compact"
                 ? modalMaxWidthCompact
@@ -110,12 +110,13 @@ function SyncedWalletUIStates(
   props: ComponentProps<typeof WalletUIStatesProvider>,
 ) {
   const setModalConfig = useContext(SetModalConfigCtx);
+  const locale = useTWLocale();
 
   // update modalConfig on props change
   useEffect(() => {
     setModalConfig((c) => ({
       ...c,
-      title: props.title || defaultModalTitle,
+      title: props.title || locale.connectWallet.defaultModalTitle,
       theme: props.theme || "dark",
       modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
@@ -132,6 +133,7 @@ function SyncedWalletUIStates(
     props.welcomeScreen,
     props.titleIconUrl,
     setModalConfig,
+    locale.connectWallet.defaultModalTitle,
   ]);
 
   return <WalletUIStatesProvider {...props} />;
@@ -147,7 +149,7 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   box-shadow: ${shadow.lg};
   position: relative;
   border: 1px solid ${(p) => p.theme.colors.borderColor};
-  line-height: 1;
+  line-height: normal;
   overflow: hidden;
   font-family: ${(p) => p.theme.fontFamily};
   & *::selection {

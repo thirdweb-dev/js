@@ -22,6 +22,7 @@ import { PropsWithChildren, useState } from "react";
 import invariant from "tiny-invariant";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../providers/locale-provider";
 
 type ActionFn = (contract: SmartContract) => any;
 
@@ -104,6 +105,8 @@ export const Web3Button = <TAction extends ActionFn>(
   const contextTheme = useTheme() as ThemeObjectOrType;
   const theme = props.theme || contextTheme || "dark";
 
+  const locale = useTWLocale();
+
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
   );
@@ -185,7 +188,7 @@ export const Web3Button = <TAction extends ActionFn>(
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
-          "Switch Network"
+          locale.connectWallet.switchNetwork
         )}
       </Button>
     );
@@ -193,7 +196,7 @@ export const Web3Button = <TAction extends ActionFn>(
     if (requiresConfirmation) {
       button = (
         <Popover
-          content={<span>Confirm in Wallet</span>}
+          content={<span>{locale.connectWallet.confirmInWallet}</span>}
           open={confirmStatus === "waiting"}
           onOpenChange={(isOpen) => {
             if (!isOpen) {

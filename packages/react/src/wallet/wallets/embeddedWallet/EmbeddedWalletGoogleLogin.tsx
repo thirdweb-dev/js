@@ -17,10 +17,12 @@ import { Theme, iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
 ) => {
+  const locale = useTWLocale().wallets.embeddedWallet.googleLoginScreen;
   const { goBack, modalSize } = props;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -76,7 +78,7 @@ export const EmbeddedWalletGoogleLogin = (
           title={
             <Container flex="row" center="both" gap="xs">
               <GoogleIcon size={iconSize.md} />
-              <ModalTitle> Sign in </ModalTitle>
+              <ModalTitle> {locale.title} </ModalTitle>
             </Container>
           }
           onBack={goBack}
@@ -102,7 +104,7 @@ export const EmbeddedWalletGoogleLogin = (
                   maxWidth: "250px",
                 }}
               >
-                Select your Google account in the pop-up
+                {locale.instruction}
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
@@ -115,11 +117,10 @@ export const EmbeddedWalletGoogleLogin = (
 
           {connectionStatus === "disconnected" && (
             <Container animate="fadein">
-              <Text color="danger">Failed to sign in</Text>
+              <Text color="danger">{locale.failed}</Text>
               <Spacer y="lg" />
               <Button variant="primary" onClick={googleLogin}>
-                {" "}
-                Retry{" "}
+                {locale.retry}
               </Button>
               <Spacer y="xxl" />
             </Container>
