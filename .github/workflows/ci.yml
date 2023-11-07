@@ -38,6 +38,7 @@ jobs:
 
       - name: Run CI
         run: |
+          yarn global add node-gyp
           yarn install
           yarn lint
           yarn test
