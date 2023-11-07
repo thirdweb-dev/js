@@ -18,7 +18,7 @@ import {
 import { useCallback, useEffect, useContext, useState } from "react";
 import {
   reservedScreens,
-  compactmodalMaxHeight,
+  compactModalMaxHeight as compactModalMaxHeight,
   onModalUnmount,
 } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
@@ -173,7 +173,7 @@ export const ConnectModalContent = (props: {
           scrollY
           relative
           style={{
-            maxHeight: compactmodalMaxHeight,
+            maxHeight: compactModalMaxHeight,
           }}
         >
           {screen === reservedScreens.signIn && (

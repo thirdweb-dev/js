@@ -26,11 +26,12 @@ import { TextDivider } from "../../../components/TextDivider";
 import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { reservedScreens } from "../../ConnectWallet/constants";
 import { Spacer } from "../../../components/Spacer";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export function magicLink(
   config: MagicLinkAdditionalOptions & {
     /**
-     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+     * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
      */
     recommended?: boolean;
   },
@@ -121,7 +122,7 @@ const MagicSelectUI = (
   props: SelectUIProps<MagicLink> & {
     emailLoginEnabled: boolean;
     smsLoginEnabled: boolean;
-    oauthProviders?: OuthProvider[];
+    oauthProviders?: OauthProvider[];
   },
 ) => {
   const screen = useScreenContext();
@@ -148,33 +149,35 @@ const MagicSelectUI = (
   );
 };
 
-type OuthProvider = Exclude<
+type OauthProvider = Exclude<
   MagicLinkAdditionalOptions["oauthOptions"],
   undefined
 >["providers"][number];
 
-type SelectionData = string | { provider: OuthProvider };
+type SelectionData = string | { provider: OauthProvider };
 
 const MagicUI: React.FC<{
-  onSelect: (selection: string | { provider: OuthProvider }) => void;
+  onSelect: (selection: string | { provider: OauthProvider }) => void;
   emailLogin: boolean;
   smsLogin: boolean;
-  oauthProviders?: OuthProvider[];
+  oauthProviders?: OauthProvider[];
   modalSize: "compact" | "wide";
 }> = (props) => {
+  const cwLocale = useTWLocale().connectWallet;
+  const locale = useTWLocale().wallets.magicLink;
   const isEmailEnabled = props.emailLogin !== false;
   const isSMSEnabled = props.smsLogin !== false;
 
-  let placeholder = "Login with email or phone number";
+  let placeholder = locale.loginWithEmailOrPhone;
   let type = "text";
-  let emptyErrorMessage = "email or phone number is required";
+  let emptyErrorMessage = locale.emailOrPhoneRequired;
   if (isEmailEnabled && !isSMSEnabled) {
-    placeholder = "Login with email address";
-    emptyErrorMessage = "email address is required";
+    placeholder = locale.emailPlaceholder;
+    emptyErrorMessage = locale.emailRequired;
     type = "email";
   } else if (!isEmailEnabled && isSMSEnabled) {
-    placeholder = "Login with phone number";
-    emptyErrorMessage = "phone number is required";
+    placeholder = locale.loginWithPhone;
+    emptyErrorMessage = locale.phoneRequired;
     type = "tel";
   }
 
@@ -212,7 +215,9 @@ const MagicUI: React.FC<{
                     }}
                   >
                     <ToolTip
-                      tip={`Login with ${upperCaseFirstLetter(provider)}`}
+                      tip={`${locale.loginWith} ${upperCaseFirstLetter(
+                        provider,
+                      )}`}
                       sideOffset={15}
                     >
                       <div>
@@ -245,7 +250,9 @@ const MagicUI: React.FC<{
                       height={iconSize.md}
                       alt=""
                     />
-                    <span>Login with {upperCaseFirstLetter(provider)}</span>
+                    <span>
+                      {locale.loginWith} {upperCaseFirstLetter(provider)}
+                    </span>
                   </SocialButtonLarge>
                 );
               })}
@@ -256,8 +263,9 @@ const MagicUI: React.FC<{
 
       {showInputUI && (
         <>
-          {showSeparator && <TextDivider text="OR" />}
+          {showSeparator && <TextDivider text={cwLocale.or} />}
           <InputSelectionUI
+            submitButtonText={locale.submitEmail}
             onSelect={props.onSelect}
             placeholder={placeholder}
             name="magic-input"
@@ -272,21 +280,21 @@ const MagicUI: React.FC<{
                   /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
                 const isValidEmail = emailRegex.test(input.replace(/\+/g, ""));
                 if (!isValidEmail) {
-                  return "Invalid email address";
+                  return locale.invalidEmail;
                 }
               } else if (isPhone && isSMSEnabled) {
                 if (!input.startsWith("+")) {
-                  return "Phone number must start with a country code";
+                  return locale.countryCodeMissing;
                 }
               } else {
                 if (isEmailEnabled && isSMSEnabled) {
-                  return "Invalid email address or phone number";
+                  return locale.invalidEmailOrPhone;
                 }
                 if (isEmailEnabled) {
-                  return "Invalid email address";
+                  return locale.invalidEmail;
                 }
                 if (isSMSEnabled) {
-                  return "Invalid phone number";
+                  return locale.invalidPhone;
                 }
               }
             }}
@@ -426,9 +434,10 @@ const MagicConnectionUIScreen: React.FC<
     type: "auth" | "connect";
     emailLogin: boolean;
     smsLogin: boolean;
-    oauthProviders?: OuthProvider[];
+    oauthProviders?: OauthProvider[];
   }
 > = (props) => {
+  const locale = useTWLocale().wallets.magicLink;
   const connectMagic = useConnectMagic();
 
   return (
@@ -440,7 +449,7 @@ const MagicConnectionUIScreen: React.FC<
         minHeight: "300px",
       }}
     >
-      <ModalHeader onBack={props.goBack} title="Sign in" />
+      <ModalHeader onBack={props.goBack} title={locale.signIn} />
       <Spacer y="xl" />
       <Container
         expand
@@ -467,7 +476,7 @@ const MagicConnectionUIScreen: React.FC<
   );
 };
 
-const providerImages: Record<OuthProvider, string> = {
+const providerImages: Record<OauthProvider, string> = {
   google:
     "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MDUuNiIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxODYuNjkgMTkwLjUiIHhtbG5zOnY9Imh0dHBzOi8vdmVjdGEuaW8vbmFubyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTE4NC41ODMgNzY1LjE3MSkiPjxwYXRoIGNsaXAtcGF0aD0ibm9uZSIgbWFzaz0ibm9uZSIgZD0iTS0xMDg5LjMzMy02ODcuMjM5djM2Ljg4OGg1MS4yNjJjLTIuMjUxIDExLjg2My05LjAwNiAyMS45MDgtMTkuMTM3IDI4LjY2MmwzMC45MTMgMjMuOTg2YzE4LjAxMS0xNi42MjUgMjguNDAyLTQxLjA0NCAyOC40MDItNzAuMDUyIDAtNi43NTQtLjYwNi0xMy4yNDktMS43MzItMTkuNDgzeiIgZmlsbD0iIzQyODVmNCIvPjxwYXRoIGNsaXAtcGF0aD0ibm9uZSIgbWFzaz0ibm9uZSIgZD0iTS0xMTQyLjcxNC02NTEuNzkxbC02Ljk3MiA1LjMzNy0yNC42NzkgMTkuMjIzaDBjMTUuNjczIDMxLjA4NiA0Ny43OTYgNTIuNTYxIDg1LjAzIDUyLjU2MSAyNS43MTcgMCA0Ny4yNzgtOC40ODYgNjMuMDM4LTIzLjAzM2wtMzAuOTEzLTIzLjk4NmMtOC40ODYgNS43MTUtMTkuMzEgOS4xNzktMzIuMTI1IDkuMTc5LTI0Ljc2NSAwLTQ1LjgwNi0xNi43MTItNTMuMzQtMzkuMjI2eiIgZmlsbD0iIzM0YTg1MyIvPjxwYXRoIGNsaXAtcGF0aD0ibm9uZSIgbWFzaz0ibm9uZSIgZD0iTS0xMTc0LjM2NS03MTIuNjFjLTYuNDk0IDEyLjgxNS0xMC4yMTcgMjcuMjc2LTEwLjIxNyA0Mi42ODlzMy43MjMgMjkuODc0IDEwLjIxNyA0Mi42ODljMCAuMDg2IDMxLjY5My0yNC41OTIgMzEuNjkzLTI0LjU5Mi0xLjkwNS01LjcxNS0zLjAzMS0xMS43NzYtMy4wMzEtMTguMDk4czEuMTI2LTEyLjM4MyAzLjAzMS0xOC4wOTh6IiBmaWxsPSIjZmJiYzA1Ii8+PHBhdGggZD0iTS0xMDg5LjMzMy03MjcuMjQ0YzE0LjAyOCAwIDI2LjQ5NyA0Ljg0OSAzNi40NTUgMTQuMjAxbDI3LjI3Ni0yNy4yNzZjLTE2LjUzOS0xNS40MTMtMzguMDEzLTI0Ljg1Mi02My43MzEtMjQuODUyLTM3LjIzNCAwLTY5LjM1OSAyMS4zODgtODUuMDMyIDUyLjU2MWwzMS42OTIgMjQuNTkyYzcuNTMzLTIyLjUxNCAyOC41NzUtMzkuMjI2IDUzLjM0LTM5LjIyNnoiIGZpbGw9IiNlYTQzMzUiIGNsaXAtcGF0aD0ibm9uZSIgbWFzaz0ibm9uZSIvPjwvZz48L3N2Zz4=",
   facebook:

@@ -17,10 +17,12 @@ import { Theme, iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
 
+  const locale = useTWLocale().wallets.paperWallet.googleLoginScreen;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -73,7 +75,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
           title={
             <Container flex="row" center="both" gap="xs">
               <GoogleIcon size={iconSize.md} />
-              <ModalTitle> Sign in </ModalTitle>
+              <ModalTitle> {locale.title} </ModalTitle>
             </Container>
           }
           onBack={goBack}
@@ -99,7 +101,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
                   maxWidth: "250px",
                 }}
               >
-                Select your Google account in the pop-up
+                {locale.instruction}
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
@@ -112,11 +114,10 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
 
           {connectionStatus === "disconnected" && (
             <Container animate="fadein">
-              <Text color="danger">Failed to sign in</Text>
+              <Text color="danger">{locale.failed}</Text>
               <Spacer y="lg" />
               <Button variant="primary" onClick={googleLogin}>
-                {" "}
-                Retry{" "}
+                {locale.retry}
               </Button>
               <Spacer y="xxl" />
             </Container>

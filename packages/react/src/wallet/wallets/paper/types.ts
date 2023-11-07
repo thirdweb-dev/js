@@ -7,7 +7,7 @@ export type PaperConfig = Omit<
   "chain" | "clientId"
 > & {
   /**
-   * If true, the wallet will be tagged as "recomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 
