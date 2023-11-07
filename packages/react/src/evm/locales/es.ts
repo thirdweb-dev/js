@@ -102,8 +102,8 @@ export function esDefault(): ThirdwebLocale {
         transactionFailed: "Transacción fallida",
         transactionRejected: "Transacción rechazada",
         insufficientFunds: "Fondos insuficientes",
-        selectTokenTitle: "Select a Token", // TODO
-        sending: "Sending", // TODO
+        selectTokenTitle: "Seleccione un Token",
+        sending: "Enviando",
       },
       signatureScreen: {
         instructionScreen: {
@@ -129,7 +129,7 @@ export function esDefault(): ThirdwebLocale {
           "Escanea esto con tu aplicación de cartera para conectar",
       },
       smartWallet: {
-        connecting: "Connecting to Smart Wallet", // TODO
+        connecting: "Conectando a Smart Wallet",
         failedToConnect: "Error al conectar con Smart Wallet",
         wrongNetworkScreen: {
           title: "Red incorrecta",
@@ -225,24 +225,22 @@ export function esDefault(): ThirdwebLocale {
           sendingCode: "Enviando código de verificación",
           resendCode: "Reenviar código de verificación",
         },
-        // TODO
         createPassword: {
-          title: "Create Password",
+          title: "Crear contraseña",
           instruction:
-            "Set a password for your account. You will need this password when connecting from a new device.",
-          saveInstruction: "Make sure to save it",
-          inputPlaceholder: "Enter your password",
-          confirmation: "I have saved my password",
-          submitButton: "Set Password",
-          failedToSetPassword: "Failed to set password",
+            "Establezca una contraseña para su cuenta. Necesitará esta contraseña cuando se conecte desde un nuevo dispositivo.",
+          saveInstruction: "Asegúrese de guardarla",
+          inputPlaceholder: "Ingrese su contraseña",
+          confirmation: "He guardado mi contraseña",
+          submitButton: "Establecer contraseña",
+          failedToSetPassword: "Error al establecer la contraseña",
         },
-        // TODO
         enterPassword: {
-          title: "Enter Password",
-          instruction: "Enter the password for your account",
-          inputPlaceholder: "Enter your password",
-          submitButton: "Verify",
-          wrongPassword: "Wrong password",
+          title: "Ingrese la contraseña",
+          instruction: "Ingrese la contraseña de su cuenta",
+          inputPlaceholder: "Ingrese su contraseña",
+          submitButton: "Verificar",
+          wrongPassword: "Contraseña incorrecta",
         },
       },
       magicLink: {
@@ -294,7 +292,7 @@ export function esDefault(): ThirdwebLocale {
             "Puedes usar este archivo JSON para importar la cuenta en MetaMask usando la misma contraseña",
           walletAddress: "Dirección de la cartera",
           download: "Descargar",
-          title: "Backup Wallet", // TODO
+          title: "Respaldar cartera",
         },
         importScreen: {
           title: "Importar cartera",

@@ -101,8 +101,8 @@ export function jaDefault(): ThirdwebLocale {
         transactionFailed: "取引に失敗しました",
         transactionRejected: "取引が拒否されました",
         insufficientFunds: "資金が不足しています",
-        selectTokenTitle: "Select a Token", // TODO
-        sending: "Sending", // TODO
+        selectTokenTitle: "トークンを選択",
+        sending: "送信中",
       },
       signatureScreen: {
         instructionScreen: {
@@ -128,7 +128,7 @@ export function jaDefault(): ThirdwebLocale {
           "接続するためにウォレットアプリでこちらをスキャンしてください",
       },
       smartWallet: {
-        connecting: "Connecting to Smart Wallet", // TODO
+        connecting: "スマートウォレットに接続中",
         failedToConnect: "スマートウォレットに接続できませんでした",
         wrongNetworkScreen: {
           title: "異なるネットワーク",
@@ -223,24 +223,22 @@ export function jaDefault(): ThirdwebLocale {
           sendingCode: "確認コードを送信中",
           resendCode: "確認コードを再送",
         },
-        // TODO
         createPassword: {
-          title: "Create Password",
+          title: "パスワードを作成",
           instruction:
-            "Set a password for your account. You will need this password when connecting from a new device.",
-          saveInstruction: "Make sure to save it",
-          inputPlaceholder: "Enter your password",
-          confirmation: "I have saved my password",
-          submitButton: "Set Password",
-          failedToSetPassword: "Failed to set password",
+            "アカウントのパスワードを設定してください。新しいデバイスから接続する際にこのパスワードが必要となります。",
+          saveInstruction: "パスワードは必ず保存してください。",
+          inputPlaceholder: "パスワードを入力してください",
+          confirmation: "パスワードを保存しました。",
+          submitButton: "パスワードを設定",
+          failedToSetPassword: "パスワードの設定に失敗しました。",
         },
-        // TODO
         enterPassword: {
-          title: "Enter Password",
-          instruction: "Enter the password for your account",
-          inputPlaceholder: "Enter your password",
-          submitButton: "Verify",
-          wrongPassword: "Wrong password",
+          title: "パスワードを入力",
+          instruction: "アカウントのパスワードを入力してください",
+          inputPlaceholder: "パスワードを入力してください",
+          submitButton: "確認",
+          wrongPassword: "パスワードが違います",
         },
       },
       magicLink: {
