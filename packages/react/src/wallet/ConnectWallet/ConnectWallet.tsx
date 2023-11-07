@@ -136,7 +136,7 @@ export type ConnectWalletProps = {
   displayBalanceToken?: Record<number, string>;
 
   /**
-   * Hide option to switch to Personal wallet in the dropdown (when using Smart wallet)
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to either Smart Wallet or Safe
    *
    * @default false
    */
