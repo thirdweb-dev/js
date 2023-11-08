@@ -127,7 +127,9 @@ export const EmailSelectionUI: React.FC<
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
-          ) : null}
+          ) : (
+            <Box mt="md" />
+          )}
         </Box>
       ) : null}
       {isEmailEnabled ? (
