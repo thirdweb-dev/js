@@ -4,6 +4,7 @@ import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
@@ -33,6 +34,7 @@ export const EmailSelectionUI: React.FC<
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+  const supportedWallets = useWallets();
 
   const isEmailEnabled = auth?.options.includes("email");
   const isGoogleEnabled = auth?.options.includes("google");
@@ -107,7 +109,7 @@ export const EmailSelectionUI: React.FC<
             walletIconUrl={GOOGLE_ICON}
             onPress={onGoogleSignInPress}
           />
-          {isEmailEnabled ? (
+          {isEmailEnabled && supportedWallets.length === 1 ? (
             <Box
               mb="md"
               mt="md"

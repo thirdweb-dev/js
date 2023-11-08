@@ -180,7 +180,7 @@ export const ExportLocalWalletModal = ({
               onPress={onContinuePress}
             >
               {isExporting ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <Text variant="bodySmall" color="black">
                   {l.connect_wallet_details.backup}
