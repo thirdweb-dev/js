@@ -6,11 +6,13 @@ import { CoreWalletScan } from "./CoreWalletScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import type { CoreWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
+  const locale = useTWLocale().wallets.coreWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -65,6 +67,13 @@ export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
+        }}
         errorConnecting={errorConnecting}
         onGetStarted={() => {
           setScreen("get-started");
@@ -81,6 +90,9 @@ export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

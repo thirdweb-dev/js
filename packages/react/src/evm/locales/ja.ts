@@ -166,6 +166,7 @@ export function jaDefault(): ThirdwebLocale {
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
+      coreWallet: extensionAndQRScanScreens("Core"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
