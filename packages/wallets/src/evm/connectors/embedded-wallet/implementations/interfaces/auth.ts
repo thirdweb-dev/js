@@ -14,6 +14,7 @@ export enum AuthProvider {
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
   CUSTOM_JWT = "CustomJWT",
+  FACEBOOK = "Facebook",
 }
 
 export type GetHeadlessLoginLinkReturnType = {
