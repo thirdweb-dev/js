@@ -13,6 +13,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useWallet } from "@thirdweb-dev/react";
 import { GLOBAL_EWS_AUTH_TOKEN_KEY } from "constants/app";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 const skipBilling = (account: Account) => {
   return (
@@ -110,8 +111,8 @@ export const Onboarding: React.FC = () => {
     }
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
-      // if its a paper email wallet, try to confirm it
-      if (wallet.walletId === "embeddedWallet") {
+      // if its an embedded wallet, try to auto-confirm it
+      if (wallet.walletId === walletIds.embeddedWallet) {
         handleEmbeddedWalletConfirmation();
       } else {
         setState("onboarding");
