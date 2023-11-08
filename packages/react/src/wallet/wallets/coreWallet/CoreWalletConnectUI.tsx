@@ -7,12 +7,21 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import type { CoreWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { coreWalletUris } from "./coreWalletUris";
 
 export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const locale = useTWLocale().wallets.coreWallet;
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connectionScreen.instruction,
+    tryAgain: locale.connectionScreen.retry,
+    inProgress: locale.connectionScreen.inProgress,
+    failed: locale.connectionScreen.failed,
+  };
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -51,11 +60,9 @@ export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
 
       // if wallet is not injected
       else {
-        // on mobile, deep link to the Core app
+        // on mobile, open the Core Mobile via wallet connect
         if (isMobile()) {
-          window.open(
-            `core://wallet/dapp/details?dappUrl=${window.location.toString()}`,
-          );
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the Core app scan qr code
           setScreen("scanning");
@@ -83,6 +90,26 @@ export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        locale={connectingLocale}
+        onRetry={() => {
+          // NOOP - TODO make onRetry optional
+        }}
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={connected}
+        walletConfig={walletConfig}
+        appUriPrefix={coreWalletUris}
       />
     );
   }
