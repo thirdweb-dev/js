@@ -6,6 +6,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { CoreWallet } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CoreWalletScan: React.FC<{
   onBack: () => void;
@@ -14,6 +15,7 @@ export const CoreWalletScan: React.FC<{
   walletConfig: WalletConfig<CoreWallet>;
   hideBackButton: boolean;
 }> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
+  const locale = useTWLocale().wallets.coreWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -50,12 +52,14 @@ export const CoreWalletScan: React.FC<{
 
   return (
     <ScanScreen
+      qrScanInstruction={locale.scanScreen.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
       hideBackButton={hideBackButton}
+      getStartedLink={locale.getStartedLink}
     />
   );
 };
