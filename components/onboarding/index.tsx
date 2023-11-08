@@ -1,7 +1,7 @@
 import {
   Account,
   useAccount,
-  useConfirmPaperEmail,
+  useConfirmEmbeddedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useEffect, useState } from "react";
 import { OnboardingModal } from "./Modal";
@@ -12,7 +12,7 @@ import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useWallet } from "@thirdweb-dev/react";
-import { GLOBAL_PAPER_AUTH_TOKEN_KEY } from "constants/app";
+import { GLOBAL_EWS_AUTH_TOKEN_KEY } from "constants/app";
 
 const skipBilling = (account: Account) => {
   return (
@@ -27,7 +27,7 @@ export const Onboarding: React.FC = () => {
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
   const wallet = useWallet();
-  const paperConfirmMutation = useConfirmPaperEmail();
+  const ewsConfirmMutation = useConfirmEmbeddedWallet();
 
   const [state, setState] = useState<
     "onboarding" | "confirming" | "billing" | "skipped" | undefined
@@ -86,18 +86,18 @@ export const Onboarding: React.FC = () => {
     }
   };
 
-  const handlePaperWallet = () => {
-    const paperJwt = (window as any)[GLOBAL_PAPER_AUTH_TOKEN_KEY];
+  const handleEmbeddedWalletConfirmation = () => {
+    const ewsJwt = (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY];
 
-    if (paperJwt) {
-      paperConfirmMutation.mutate(
-        { paperJwt },
+    if (ewsJwt) {
+      ewsConfirmMutation.mutate(
+        { ewsJwt },
         {
           onSuccess: (data) => {
             if (!skipBilling(data as Account)) {
               setState("billing");
             }
-            (window as any)[GLOBAL_PAPER_AUTH_TOKEN_KEY] = undefined;
+            (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY] = undefined;
           },
         },
       );
@@ -111,8 +111,8 @@ export const Onboarding: React.FC = () => {
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its a paper email wallet, try to confirm it
-      if (wallet.walletId === "paper") {
-        handlePaperWallet();
+      if (wallet.walletId === "embeddedWallet") {
+        handleEmbeddedWalletConfirmation();
       } else {
         setState("onboarding");
       }

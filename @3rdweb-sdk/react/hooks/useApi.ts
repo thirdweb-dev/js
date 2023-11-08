@@ -366,15 +366,16 @@ export function useConfirmEmail() {
   );
 }
 
-export function useConfirmPaperEmail() {
+export function useConfirmEmbeddedWallet() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async ({ paperJwt }: { paperJwt: string }) => {
+    async ({ ewsJwt }: { ewsJwt: string }) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(
+        // FIXME: Use confirmEmbeddedWalletEmail
         `${THIRDWEB_API_HOST}/v1/account/confirmPaperEmail`,
         {
           method: "PUT",
@@ -382,7 +383,7 @@ export function useConfirmPaperEmail() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ paperJwt }),
+          body: JSON.stringify({ paperJwt: ewsJwt }),
         },
       );
       const json = await res.json();
