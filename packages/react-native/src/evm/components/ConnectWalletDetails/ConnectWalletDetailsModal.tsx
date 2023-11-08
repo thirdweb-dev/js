@@ -42,6 +42,7 @@ export const ConnectWalletDetailsModal = ({
   hideTestnetFaucet,
   supportedTokens,
   displayBalanceToken,
+  hideSwitchToPersonalWallet,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
@@ -50,6 +51,7 @@ export const ConnectWalletDetailsModal = ({
   hideTestnetFaucet?: boolean;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
+  hideSwitchToPersonalWallet?: boolean;
 }) => {
   const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -131,6 +133,7 @@ export const ConnectWalletDetailsModal = ({
       return (
         <SmartWalletAdditionalActions
           onExportPress={onExportLocalWalletPress}
+          hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
         />
       );
     }

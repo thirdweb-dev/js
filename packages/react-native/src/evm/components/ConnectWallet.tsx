@@ -65,6 +65,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide the "switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe
+   *
+   * @default false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -80,6 +87,7 @@ export const ConnectWallet = ({
   termsOfServiceUrl,
   privacyPolicyUrl,
   supportedTokens,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletProps) => {
   const l = useLocale();
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -155,6 +163,7 @@ export const ConnectWallet = ({
               hideTestnetFaucet={hideTestnetFaucet}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
+              hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
             />
           )
         ) : (
