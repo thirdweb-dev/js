@@ -58,9 +58,9 @@ const CheckoutLanding: ThirdwebNextPage = () => {
       >
         <LandingHeroWithSideImage
           miniTitle="Checkout"
-          title="One-click NFT checkout"
-          titleWithGradient="with just a credit card"
-          subtitle="Let users buy digital assets with a credit card, via a one-click checkout flow. Onboard anyone, even if they've never create a wallet or bought crypto before."
+          title="NFT checkout"
+          titleWithGradient="with a credit card"
+          subtitle="Enable users to buy digital assets with a credit card. Onboard everyone — even if they've never created a web3 wallet or bought crypto before."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://withpaper.com/sign-up"
           contactUsTitle="Book Demo"
@@ -73,18 +73,18 @@ const CheckoutLanding: ThirdwebNextPage = () => {
         <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/payments/icon-global.svg")}
-            title="Available worldwide & for all payment methods"
-            description="Accept credit and debit cards, Apple Pay, Google Pay, iDEAL, and cross-chain crypto (with built-in bridging & swapping). Plus, the option to bring your own payment processor. Available in 190+ countries, all 50 U.S. states, with 10+ currencies and languages supported."
+            title="Available worldwide"
+            description="Available in 190+ countries, all 50 U.S. states, with 10+ currencies and languages supported."
           />
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/payments/icon-smart-wallet.svg")}
-            title="Wallets for those without them"
-            description="Customers don't need wallets to buy your NFTs: we'll create non-custodial wallets for them to store their NFTs securely."
+            title="Accept all payment methods"
+            description="Credit & debit cards, Apple Pay, Google Pay, iDEAL, and cross-chain crypto — or bring your own payment processor."
           />
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/payments/icon-secure.svg")}
             title="Enterprise-grade security"
-            description="Fully compliant & enterprise-ready for ultimate peace of mind — with built-in fraud & AML detection and 90%+ authorization rates, out of the box."
+            description="Fully compliant & enterprise-ready — with built-in fraud & AML detection and 90%+ authorization rates."
           />
         </LandingGridSection>
         <LandingGridSection desktopColumns={2}>
