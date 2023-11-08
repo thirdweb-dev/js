@@ -228,7 +228,7 @@ export const LocalWalletImportModal = ({
               onPress={onImportPress}
             >
               {isImporting ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <Text variant="bodySmall" color="black">
                   {l.common.import}

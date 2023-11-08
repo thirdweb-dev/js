@@ -104,7 +104,10 @@ export const ConnectWalletButton = ({
       >
         <Text variant="bodyLargeBold" color="buttonTextColor">
           {showButtonSpinner ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
+            <ActivityIndicator
+              size="small"
+              color={appTheme.colors.buttonTextColor}
+            />
           ) : buttonTitle ? (
             buttonTitle
           ) : (
