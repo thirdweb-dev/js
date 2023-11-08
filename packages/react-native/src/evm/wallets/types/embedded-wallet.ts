@@ -1,4 +1,4 @@
-import { EMAIL_WALLET_ICON, GOOGLE_ICON } from "../../assets";
+import { EMAIL_WALLET_ICON, FACEBOOK_ICON, GOOGLE_ICON } from "../../assets";
 import { LocaleType } from "../../i18n/types";
 
 export type AuthOption = "email" | SocialLogin;
@@ -9,7 +9,7 @@ export type AuthOptionDictionary = Record<AuthOption, string>;
 
 export const AUTH_OPTIONS_ICONS: AuthOptionDictionary = {
   google: GOOGLE_ICON,
-  facebook: GOOGLE_ICON,
+  facebook: FACEBOOK_ICON,
   email: EMAIL_WALLET_ICON,
 };
 

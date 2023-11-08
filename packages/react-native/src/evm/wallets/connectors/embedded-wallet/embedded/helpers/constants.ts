@@ -19,7 +19,7 @@ export const COGNITO_IDENTITY_POOL_ID =
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
-const BASE_URL_2023 = "https://embedded-wallet.thirdweb.com/";
+const BASE_URL_2023 = "https://embedded-wallet-staging.thirdweb.com/";
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;
 
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;
@@ -35,6 +35,6 @@ export const ROUTE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedde
 export const ROUTE_VALIDATE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-thirdweb-email-otp`;
 export const ROUTE_IS_VALID_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/is-thirdweb-email-otp-valid`;
 
-export const ROUTE_HEADLESS_GOOGLE_LOGIN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/headless-oauth-login-link`;
+export const ROUTE_HEADLESS_OAUTH_LOGIN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/headless-oauth-login-link`;
 
 export const ROUTE_AUTH_COGNITO_ID_TOKEN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/cognito-id-token`;

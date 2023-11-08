@@ -1,4 +1,3 @@
-import { useGlobalTheme } from "../../providers/ui-context-provider";
 import BaseButton from "./BaseButton";
 import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
@@ -16,28 +15,22 @@ export const SquareButton = ({
   iconUrl,
   name,
   size,
+  ...props
 }: SquareButtonProps) => {
-  const theme = useGlobalTheme();
-
-  const marginVertical = theme.spacing.xs;
   return (
     <BaseButton
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      marginVertical="xxs"
       borderWidth={0}
       borderRadius="sm"
-      width={size - marginVertical * 2}
-      height={size - marginVertical * 2}
+      width={size}
+      height={size}
       onPress={onPress}
+      {...props}
     >
       <Box borderWidth={0} borderRadius="lg">
-        <ImageSvgUri
-          imageUrl={iconUrl}
-          width={size * 0.6}
-          height={size * 0.6}
-        />
+        <ImageSvgUri imageUrl={iconUrl} width={size} height={size} />
       </Box>
       {name ? (
         <Text

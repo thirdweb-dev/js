@@ -81,6 +81,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           redirectUrl: params.redirectUrl,
         });
       }
+      case "facebook": {
+        return this.socialLogin({
+          provider: AuthProvider.FACEBOOK,
+          redirectUrl: params.redirectUrl,
+        });
+      }
       case "jwt": {
         return this.customJwt({
           jwt: params.jwt,

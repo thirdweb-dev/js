@@ -16,7 +16,6 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { EmbeddedWalletConfig } from "./embedded-wallet";
-import { AuthProvider } from "@thirdweb-dev/wallets";
 import {
   AUTH_OPTIONS_ICONS,
   AUTH_OPTIONS_TEXT,
@@ -88,22 +87,11 @@ export const EmailSelectionUI: React.FC<
   };
 
   const onProviderPress = (authOption: Omit<AuthOption, "email">) => {
-    let provider = undefined;
-    switch (authOption) {
-      case "google":
-        provider = AuthProvider.GOOGLE;
-        break;
-      case "facebook":
-        provider = AuthProvider.FACEBOOK;
-        break;
-      default:
-        throw new Error(`Invalid provider: ${provider}`);
-    }
     onSelect({
       email: emailInput,
       emailWallet,
       oauthOptions: {
-        provider: provider,
+        provider: authOption,
         redirectUrl: auth?.redirectUrl,
       },
     });
@@ -130,12 +118,13 @@ export const EmailSelectionUI: React.FC<
                 onPress={() => onProviderPress(socialLogins[0])}
               />
             ) : (
-              socialLogins.map((provider) => (
+              socialLogins.map((provider, index) => (
                 <SquareButton
                   key={provider}
+                  ml={index === 0 ? 0 : "md"}
                   onPress={() => onProviderPress(provider)}
                   iconUrl={AUTH_OPTIONS_ICONS[provider]}
-                  size={30}
+                  size={40}
                 />
               ))
             )}

@@ -26,7 +26,7 @@ import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
   ROUTE_AUTH_JWT_CALLBACK,
-  ROUTE_HEADLESS_GOOGLE_LOGIN,
+  ROUTE_HEADLESS_OAUTH_LOGIN,
 } from "./helpers/constants";
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
@@ -171,13 +171,16 @@ export async function validateEmailOTP(options: {
 }
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
-  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
-    oauthOptions.provider,
-  )}&baseUrl=${encodeURIComponent(
-    "https://embedded-wallet.thirdweb.com",
+  const encodedProvider = encodeURIComponent(oauthOptions.provider);
+  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_OAUTH_LOGIN}?authProvider=${encodedProvider}&baseUrl=${encodeURIComponent(
+    `https://embedded-wallet-staging.thirdweb.com`,
   )}&platform=${encodeURIComponent("mobile")}`;
 
+  console.log("headlessLoginLinkWithParams", headlessLoginLinkWithParams);
+
   const resp = await fetch(headlessLoginLinkWithParams);
+
+  console.log("resp", { resp });
 
   if (!resp.ok) {
     const error = await resp.json();
@@ -192,7 +195,9 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     clientId || "",
   )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
     oauthOptions.redirectUrl,
-  )}`;
+  )}&authOption=${encodedProvider}`;
+
+  console.log("completeLoginUrl", completeLoginUrl);
 
   const result = await InAppBrowser.openAuth(
     completeLoginUrl,
