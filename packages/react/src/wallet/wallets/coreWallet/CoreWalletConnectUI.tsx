@@ -54,7 +54,7 @@ export const CoreWalletConnectUI = (props: ConnectUIProps<CoreWallet>) => {
         // on mobile, deep link to the Core app
         if (isMobile()) {
           window.open(
-            `okx://wallet/dapp/details?dappUrl=${window.location.toString()}`,
+            `core://wallet/dapp/details?dappUrl=${window.location.toString()}`,
           );
         } else {
           // on desktop, show the Core app scan qr code
