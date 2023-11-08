@@ -125,8 +125,12 @@ const SolutionsChains: ThirdwebNextPage = () => {
         <LandingGridSection
           desktopColumns={4}
           title={
-            <Center>
-              <Heading fontSize={48}>
+            <Center marginBottom="38px">
+              <Heading
+                fontSize={{ base: 48, md: 56 }}
+                textAlign="center"
+                fontWeight={800}
+              >
                 Your chain&apos;s application layer, solved
               </Heading>
             </Center>
