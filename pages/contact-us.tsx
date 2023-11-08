@@ -266,6 +266,9 @@ const ContactUs: ThirdwebNextPage = () => {
                     <option value="Account Abstraction">
                       Account Abstraction
                     </option>
+                    <option value="Chains & Appchains">
+                      Chains & Appchains
+                    </option>
                     <option value="Other">Other</option>
                   </Select>
                 </FormControl>
