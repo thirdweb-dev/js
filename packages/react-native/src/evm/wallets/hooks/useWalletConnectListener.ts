@@ -15,8 +15,9 @@ export function useWalletConnectListener() {
   const activeWallet = useWallet();
   const { setModalState } = useModalState();
 
-  const onSmartWalletWCMessage = useCallback(
+  const onSmartWalletWCMessageListener = useCallback(
     ({ type, data }: { type: string; data?: unknown }) => {
+      console.log("onSmartWalletWCMessage", type, data);
       switch (type) {
         case "session_proposal":
           setModalState({
@@ -47,18 +48,21 @@ export function useWalletConnectListener() {
   );
 
   useEffect(() => {
+    console.log("useWalletConnectListener");
     if (
       activeWallet &&
       "isWCReceiverEnabled" in activeWallet &&
       (activeWallet as unknown as IWalletConnectReceiver).isWCReceiverEnabled()
     ) {
-      activeWallet.addListener("message", onSmartWalletWCMessage);
+      console.log("useWalletConnectListener.onSmartWalletWCMessage");
+      activeWallet.addListener("message", onSmartWalletWCMessageListener);
     }
 
     return () => {
       if (activeWallet) {
-        activeWallet.removeListener("message", onSmartWalletWCMessage);
+        console.log("useWalletConnectListener.removeListener");
+        activeWallet.removeListener("message", onSmartWalletWCMessageListener);
       }
     };
-  }, [activeWallet, onSmartWalletWCMessage]);
+  }, [activeWallet, onSmartWalletWCMessageListener]);
 }

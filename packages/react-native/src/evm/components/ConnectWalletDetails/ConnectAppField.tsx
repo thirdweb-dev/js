@@ -41,6 +41,7 @@ const ConnectAppField = () => {
 
   const onSmartWalletWCMessage = useCallback(
     ({ type }: { type: string }) => {
+      console.log("ConnectAppField.onSmartWalletWCMessage", type);
       if (type === "session_approved") {
         getAppMeta();
       } else if (type === "session_delete") {
@@ -52,6 +53,7 @@ const ConnectAppField = () => {
 
   useEffect(() => {
     if (wallet) {
+      console.log("ConnectAppField.addListener");
       wallet.addListener("message", onSmartWalletWCMessage);
 
       getAppMeta();
@@ -59,6 +61,7 @@ const ConnectAppField = () => {
 
     return () => {
       if (wallet) {
+        console.log("ConnectAppField.removeListener");
         wallet.removeListener("message", onSmartWalletWCMessage);
       }
     };
@@ -135,6 +138,7 @@ const ConnectAppField = () => {
               style: {
                 color: theme.colors.textPrimary,
                 fontFamily: theme.textVariants.defaults.fontFamily,
+                flex: 1,
               },
             }}
             containerProps={{
