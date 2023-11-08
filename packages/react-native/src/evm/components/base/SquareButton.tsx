@@ -4,19 +4,19 @@ import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
 import Text from "./Text";
 
-type WalletButtonSquareProps = {
+type SquareButtonProps = {
   onPress: () => void;
-  walletIconUrl: string;
+  iconUrl: string;
   size: number;
-  name: string;
+  name?: string;
 } & (typeof BaseButton)["arguments"];
 
-export const WalletButtonSquare = ({
+export const SquareButton = ({
   onPress,
-  walletIconUrl,
+  iconUrl,
   name,
   size,
-}: WalletButtonSquareProps) => {
+}: SquareButtonProps) => {
   const theme = useGlobalTheme();
 
   const marginVertical = theme.spacing.xs;
@@ -34,20 +34,22 @@ export const WalletButtonSquare = ({
     >
       <Box borderWidth={0} borderRadius="lg">
         <ImageSvgUri
-          imageUrl={walletIconUrl}
+          imageUrl={iconUrl}
           width={size * 0.6}
           height={size * 0.6}
         />
       </Box>
-      <Text
-        variant="bodySmallSecondary"
-        numberOfLines={1}
-        mt="xs"
-        fontSize={14}
-        lineHeight={16}
-      >
-        {name}
-      </Text>
+      {name ? (
+        <Text
+          variant="bodySmallSecondary"
+          numberOfLines={1}
+          mt="xs"
+          fontSize={14}
+          lineHeight={16}
+        >
+          {name}
+        </Text>
+      ) : null}
     </BaseButton>
   );
 };
