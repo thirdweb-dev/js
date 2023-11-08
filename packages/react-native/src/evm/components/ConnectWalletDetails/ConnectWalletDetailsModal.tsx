@@ -211,6 +211,7 @@ export const ConnectWalletDetailsModal = ({
     onWalletImported,
     smartWallet,
     l,
+    hideSwitchToPersonalWallet,
   ]);
 
   return (
