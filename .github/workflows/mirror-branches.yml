@@ -1,0 +1,15 @@
+name: Mirror Branch
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  mirror-main-to-dev:
+    name: Mirror main to mirror/main-dev
+    runs-on: ubuntu-latest
+    steps:
+    - uses: zofrex/mirror-branch@v1.0.4
+      with:
+        target-branch: mirror/main-dev
+
