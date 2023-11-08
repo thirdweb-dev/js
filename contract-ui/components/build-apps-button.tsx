@@ -1,22 +1,36 @@
 import { Icon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
 import { BsTerminal } from "react-icons/bs";
 import { LinkButton, LinkButtonProps } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
-
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 interface BuildAppsButtonProps extends Omit<LinkButtonProps, "href"> {}
 
 export const BuildAppsButton: ComponentWithChildren<BuildAppsButtonProps> = ({
   children,
   ...restButtonProps
 }) => {
-  const { query, asPath } = useRouter();
-  const path = useMemo(() => {
-    const [network, address] = query.paths as string[];
+  const { asPath } = useRouter();
+
+  const getPath = () => {
+    const contractInfo = useEVMContractInfo();
+    if (!contractInfo) {
+      return null;
+    }
+
+    const { contractAddress: address, chainSlug: network } = contractInfo;
+
+    if (!address || !network) {
+      return null;
+    }
 
     return `/${network}/${address}/code`;
-  }, [query.paths]);
+  };
+
+  const path = getPath();
+  if (!path) {
+    return null;
+  }
 
   if (asPath.includes("code")) {
     return null;
