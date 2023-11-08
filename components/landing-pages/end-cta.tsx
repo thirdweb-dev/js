@@ -32,9 +32,11 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
       <Flex flexDir="column" gap={12}>
         <Heading pt={{ base: 20, md: 0 }} size="display.md" textAlign="center">
           {title}{" "}
-          <Box as="span" bgGradient={gradient} bgClip="text">
-            {titleWithGradient}
-          </Box>
+          {titleWithGradient && (
+            <Box as="span" bgGradient={gradient} bgClip="text">
+              {titleWithGradient}
+            </Box>
+          )}
         </Heading>
         <Flex justifyContent="center">
           <LandingCTAButtons

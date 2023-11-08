@@ -8,20 +8,26 @@ interface LandingIconSectionItemProps {
   icon: StaticImageData;
   title: string;
   description?: ReactNode;
+  shouldShowNoBorder?: boolean;
 }
 
 export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
   icon,
   title,
   description,
+  shouldShowNoBorder,
 }) => {
   return (
     <Flex flexDir="column" gap={6}>
       <Flex
         p={3.5}
-        border="2px solid"
-        borderColor="borderColor"
-        borderRadius="lg"
+        {...(shouldShowNoBorder
+          ? {}
+          : {
+              border: "2px solid",
+              borderColor: "borderColor",
+              borderRadius: "lg",
+            })}
         w={14}
       >
         <ChakraNextImage src={icon} width="32px" alt="" />
