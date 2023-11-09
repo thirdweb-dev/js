@@ -173,7 +173,7 @@ export async function validateEmailOTP(options: {
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const encodedProvider = encodeURIComponent(oauthOptions.provider);
   const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_OAUTH_LOGIN}?authProvider=${encodedProvider}&baseUrl=${encodeURIComponent(
-    `https://embedded-wallet-staging.thirdweb.com`,
+    `https://embedded-wallet.thirdweb.com`,
   )}&platform=${encodeURIComponent("mobile")}`;
 
   const resp = await fetch(headlessLoginLinkWithParams);
