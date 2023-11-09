@@ -14,7 +14,11 @@ import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
-import { useLocale, useUIContext } from "../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+  useUIContext,
+} from "../providers/ui-context-provider";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
@@ -89,6 +93,7 @@ export const ConnectWallet = ({
   supportedTokens,
   hideSwitchToPersonalWallet,
 }: ConnectWalletProps) => {
+  const globalTheme = useGlobalTheme();
   const l = useLocale();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -148,7 +153,10 @@ export const ConnectWallet = ({
               style={styles.connectWalletButton}
             >
               {switching ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
+                <ActivityIndicator
+                  size="small"
+                  color={globalTheme.colors.buttonTextColor}
+                />
               ) : (
                 <Text variant="bodyLarge" color="buttonTextColor">
                   {l.common.switch_network}
