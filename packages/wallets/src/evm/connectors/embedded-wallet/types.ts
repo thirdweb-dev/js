@@ -26,8 +26,10 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
-type GoogleAuthParams = {
-  strategy: "google";
+export type EmbeddedWalletOauthOptions = "google" | "facebook" | "apple";
+
+type OauthAuthParams = {
+  strategy: EmbeddedWalletOauthOptions;
   openedWindow?: Window;
   closeOpenedWindow?: (window: Window) => void;
 };
@@ -52,7 +54,7 @@ type IframeAuthParams = {
 // this is the input to 'authenticate'
 export type AuthParams =
   | EmailVerificationAuthParams
-  | GoogleAuthParams
+  | OauthAuthParams
   | JwtAuthParams
   | IframeOtpAuthParams
   | IframeAuthParams;

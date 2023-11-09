@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -14,10 +15,9 @@ import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { Theme, iconSize } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
@@ -39,7 +39,7 @@ export const EmbeddedWalletGoogleLogin = (
         throw new Error("Failed to open google login window");
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "google",
+        strategy: "facebook",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();

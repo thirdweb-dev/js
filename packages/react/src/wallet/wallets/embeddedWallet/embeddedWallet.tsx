@@ -10,16 +10,24 @@ import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import { reservedScreens } from "../../ConnectWallet/constants";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
-import { PaperLoginType } from "../paper/types";
 import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
 } from "./EmbeddedWalletFormUI";
 import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
-import { EmbeddedWalletConfig, AuthOption } from "./types";
+import {
+  AuthOption,
+  EmbeddedWalletConfig,
+  EmbeddedWalletLoginType,
+} from "./types";
 
-const DEFAULT_AUTH_OPTIONS: AuthOption[] = ["email", "google"];
+const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
+  "email",
+  "google",
+  "apple",
+  "facebook",
+];
 
 export const embeddedWallet = (
   _config?: EmbeddedWalletConfig,
@@ -112,9 +120,9 @@ const EmbeddedWalletConnectUI = (
     authOptions: AuthOption[];
   },
 ) => {
-  const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
-    props.selectionData as PaperLoginType,
-  );
+  const [loginType, setLoginType] = useState<
+    EmbeddedWalletLoginType | undefined
+  >(props.selectionData as EmbeddedWalletLoginType);
 
   if (loginType) {
     const handleBack = () => {
