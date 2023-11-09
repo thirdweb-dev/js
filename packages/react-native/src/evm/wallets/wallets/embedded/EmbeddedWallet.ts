@@ -6,7 +6,11 @@ import {
   IWalletConnectReceiver,
   WalletConnectHandler,
   WalletConnectReceiverConfig,
+  NoOpWalletConnectHandler,
   WalletConnectV2Handler,
+  WCSession,
+  WCProposal,
+  WCRequest,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import {
@@ -58,7 +62,10 @@ export class EmbeddedWallet
 
     this.setupListeners();
 
+    console.log("EmbeddedWallet", options);
     this.enableConnectApp = options?.enableConnectApp || false;
+
+    console.log("EmbeddedWallet.enableConnectApp", this.enableConnectApp);
     this.wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
           walletConnectWalletMetadata: options?.walletConnectWalletMetadata,

@@ -30,6 +30,8 @@ import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
 import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 import { useLocale } from "../../providers/ui-context-provider";
+import { isWalletConnectReceiverEnabled } from "../../wallets/utils";
+import ConnectAppField from "./ConnectAppField";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -301,6 +303,9 @@ export const ConnectWalletDetailsModal = ({
                 }}
               />
             )}
+            {isWalletConnectReceiverEnabled(activeWallet) ? (
+              <ConnectAppField onConnectAppTriggered={onClosePress} />
+            ) : null}
             {getAdditionalActions()}
             {extraRows ? extraRows({}) : null}
             {addressCopied === true ? (

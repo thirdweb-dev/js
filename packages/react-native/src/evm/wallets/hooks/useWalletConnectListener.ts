@@ -1,11 +1,8 @@
 import { useWallet } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
-import {
-  IWalletConnectReceiver,
-  WCProposal,
-  WCRequest,
-} from "@thirdweb-dev/wallets";
+import { WCProposal, WCRequest } from "@thirdweb-dev/wallets";
+import { isWalletConnectReceiverEnabled } from "../utils";
 
 /**
  * Registers listeners for wallet connect if the active wallet
@@ -49,13 +46,9 @@ export function useWalletConnectListener() {
 
   useEffect(() => {
     console.log("useWalletConnectListener");
-    if (
-      activeWallet &&
-      "isWCReceiverEnabled" in activeWallet &&
-      (activeWallet as unknown as IWalletConnectReceiver).isWCReceiverEnabled()
-    ) {
+    if (isWalletConnectReceiverEnabled(activeWallet)) {
       console.log("useWalletConnectListener.onSmartWalletWCMessage");
-      activeWallet.addListener("message", onSmartWalletWCMessageListener);
+      activeWallet?.addListener("message", onSmartWalletWCMessageListener);
     }
 
     return () => {

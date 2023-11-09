@@ -14,6 +14,7 @@ import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
 import { useLocale } from "../../providers/ui-context-provider";
+import { isWalletConnectReceiverEnabled } from "../../wallets/utils";
 
 const ConnectAppField = ({
   onConnectAppTriggered,
@@ -30,7 +31,7 @@ const ConnectAppField = ({
   const wcUriRef = useRef<string | undefined>();
 
   const getAppMeta = useCallback(() => {
-    if (wallet && "isWCReceiverEnabled" in wallet) {
+    if (isWalletConnectReceiverEnabled(wallet)) {
       const sessions = (
         wallet as unknown as IWalletConnectReceiver
       ).getActiveSessions();
