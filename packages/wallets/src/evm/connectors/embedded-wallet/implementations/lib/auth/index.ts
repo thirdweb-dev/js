@@ -135,10 +135,10 @@ export class Auth {
     return this.BaseLogin.loginWithCustomJwt(args);
   }
 
-  async loginWithGoogle(
-    args?: Parameters<BaseLogin["loginWithGoogle"]>[0],
+  async loginWithOauth(
+    args: Parameters<BaseLogin["loginWithOauth"]>[0],
   ): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithGoogle(args);
+    return this.BaseLogin.loginWithOauth(args);
   }
 
   /**
