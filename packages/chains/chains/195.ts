@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "okbchain",
+  "chain": "xgon",
   "chainId": 195,
   "explorers": [
     {
@@ -14,20 +14,20 @@ export default {
   ],
   "features": [],
   "infoURL": "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
-  "name": "OKBChain Testnet",
+  "name": "Xgon Testnet",
   "nativeCurrency": {
-    "name": "OKBChain Global Utility Token in testnet",
+    "name": "Xgon Global Utility Token in testnet",
     "symbol": "OKB",
     "decimals": 18
   },
   "networkId": 195,
   "rpc": [
-    "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://xgon-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://okbtestrpc.okbchain.org"
+    "https://testrpc.xgon.io"
   ],
   "shortName": "tokb",
-  "slug": "okbchain-testnet",
+  "slug": "xgon-testnet",
   "status": "active",
   "testnet": true
 } as const satisfies Chain;

@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.8
+
+### Patch Changes
+
+- [#1907](https://github.com/thirdweb-dev/js/pull/1907) [`8d1b8a47`](https://github.com/thirdweb-dev/js/commit/8d1b8a47e6d2262ef7e326ff561a30f401cb9834) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: add "checkout" as a usage type
+
 ## 0.4.7
 
 ### Patch Changes
