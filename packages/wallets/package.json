@@ -499,7 +499,7 @@
     "ethers-aws-kms-signer": "^1.3.2",
     "rimraf": "^3.0.2",
     "tweetnacl": "^1.0.3",
-    "typedoc": "^0.25.2",
+    "typedoc": "^0.25.3",
     "typescript": "^5.1.6"
   },
   "scripts": {
