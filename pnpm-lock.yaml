@@ -540,6 +540,9 @@ importers:
       '@thirdweb-dev/react-core':
         specifier: workspace:*
         version: link:../react-core
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@thirdweb-dev/wallets':
         specifier: workspace:*
         version: link:../wallets
@@ -592,9 +595,6 @@ importers:
       '@thirdweb-dev/auth':
         specifier: workspace:*
         version: link:../auth
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig

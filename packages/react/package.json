@@ -124,6 +124,7 @@
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "@thirdweb-dev/payments": "workspace:*",
