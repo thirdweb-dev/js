@@ -75,6 +75,7 @@ export const _es = {
     sign_in: "Iniciar Sesión",
     sign_in_google: "Iniciar sesión con Google",
     sign_in_facebook: "Iniciar sesión con Facebook",
+    sign_in_apple: "Iniciar sesión con Apple",
     sign_in_email: "Iniciar sesión con Email",
     enter_your_email: "Ingresa tu dirección de correo electrónico",
     forgot_password: "Olvidé mi contraseña",

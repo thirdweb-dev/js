@@ -176,11 +176,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     `https://embedded-wallet-staging.thirdweb.com`,
   )}&platform=${encodeURIComponent("mobile")}`;
 
-  console.log("headlessLoginLinkWithParams", headlessLoginLinkWithParams);
-
   const resp = await fetch(headlessLoginLinkWithParams);
-
-  console.log("resp", { resp });
 
   if (!resp.ok) {
     const error = await resp.json();
@@ -197,8 +193,6 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     oauthOptions.redirectUrl,
   )}&authOption=${encodedProvider}`;
 
-  console.log("completeLoginUrl", completeLoginUrl);
-
   const result = await InAppBrowser.openAuth(
     completeLoginUrl,
     oauthOptions.redirectUrl,
@@ -213,15 +207,18 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   );
 
   if (result.type !== "success") {
-    throw new Error("Error signing in. Please try again later.");
+    throw new Error(`Can't log in with ${oauthOptions.provider}: ${result}`);
   }
 
   const decodedUrl = decodeURIComponent(result.url);
 
   const parts = decodedUrl.split("?authResult=");
   if (parts.length < 2) {
-    throw new Error("Malformed response from the login redirect");
+    // assume error
+    const error = decodedUrl.split("?error=")?.[1];
+    throw new Error(`Malformed response from the login redirect: ${error}`);
   }
+
   const authResult = parts[1];
   const { storedToken } = JSON.parse(authResult);
 

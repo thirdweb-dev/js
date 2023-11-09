@@ -75,6 +75,7 @@ export const _en = {
     sign_in: "Sign In",
     sign_in_google: "Sign in with Google",
     sign_in_facebook: "Sign in with Facebook",
+    sign_in_apple: "Sign in with Apple",
     sign_in_email: "Sign in with Email",
     enter_your_email: "Enter your email address",
     forgot_password: "Forgot password",

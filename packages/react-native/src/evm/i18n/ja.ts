@@ -76,6 +76,7 @@ export const _ja = {
     sign_in: "サインイン",
     sign_in_google: "Googleでサインイン",
     sign_in_facebook: "Facebookでサインイン",
+    sign_in_apple: "Appleでサインイン",
     sign_in_email: "メールアドレスでサインイン",
     enter_your_email: "メールアドレスを入力",
     forgot_password: "パスワードを忘れた場合",

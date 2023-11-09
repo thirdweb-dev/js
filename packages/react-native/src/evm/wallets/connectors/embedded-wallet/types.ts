@@ -63,7 +63,7 @@ type EmailVerificationAuthParams = {
 };
 
 type SocialAuthParams = {
-  strategy: "google" | "facebook";
+  strategy: "google" | "facebook" | "apple";
   redirectUrl: string;
 };
 

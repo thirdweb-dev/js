@@ -41,12 +41,15 @@ export const EmbeddedSocialConnection: React.FC<
           }
         } else {
           setErrorMessage(
-            response || "Error login in. Please try again later.",
+            response || "Error signing in. Please try again later.",
           );
         }
       } catch (error) {
-        console.error("Error logging in with google: ", error);
-        setErrorMessage(`Error login in. ${error}`);
+        console.error(
+          `Error signing in with ${selectionData.oauthOptions?.provider}: `,
+          error,
+        );
+        setErrorMessage(`${error}`);
       }
     }, 0);
   }, [
