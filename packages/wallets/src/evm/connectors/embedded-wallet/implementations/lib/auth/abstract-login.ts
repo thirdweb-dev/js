@@ -20,7 +20,6 @@ export type LoginQuerierTypes = {
   };
   injectDeveloperClientId: void;
   getHeadlessOauthLoginLink: { authProvider: AuthProvider };
-  loginWithGoogle: void;
 };
 
 type OauthLoginType = {
