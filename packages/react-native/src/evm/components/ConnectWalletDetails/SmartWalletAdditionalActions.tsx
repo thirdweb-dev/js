@@ -18,8 +18,10 @@ import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
+  hideSwitchToPersonalWallet,
 }: {
   onExportPress: () => void;
+  hideSwitchToPersonalWallet?: boolean;
 }) => {
   const l = useLocale();
   const { setConnectedWallet } = useWalletContext();
@@ -61,22 +63,25 @@ export const SmartWalletAdditionalActions = ({
 
   return (
     <>
-      <IconTextButton
-        mt="xs"
-        text={
-          showSmartWallet
-            ? l.smart_wallet.switch_to_smart
-            : l.smart_wallet.switch_to_personal
-        }
-        icon={
-          <DisconnectIcon
-            width={14}
-            height={14}
-            color={theme.colors.iconPrimary}
-          />
-        }
-        onPress={onWalletPress}
-      />
+      {(showSmartWallet || !hideSwitchToPersonalWallet) && (
+        <IconTextButton
+          mt="xs"
+          text={
+            showSmartWallet
+              ? l.smart_wallet.switch_to_smart
+              : l.smart_wallet.switch_to_personal
+          }
+          icon={
+            <DisconnectIcon
+              width={14}
+              height={14}
+              color={theme.colors.iconPrimary}
+            />
+          }
+          onPress={onWalletPress}
+        />
+      )}
+
       {!showSmartWallet && smartWallet?.enableConnectApp ? (
         <ConnectAppField />
       ) : null}
