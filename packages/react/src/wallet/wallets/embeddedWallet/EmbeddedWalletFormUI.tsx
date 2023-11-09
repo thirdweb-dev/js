@@ -14,7 +14,7 @@ import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
@@ -39,12 +39,12 @@ export const EmbeddedWalletFormUI = (props: {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
 
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "facebook",
+        strategy: "google",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();

@@ -17,7 +17,7 @@ import { Text } from "../../../components/text";
 import { Theme, iconSize } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
@@ -34,7 +34,7 @@ export const EmbeddedWalletGoogleLogin = (
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }

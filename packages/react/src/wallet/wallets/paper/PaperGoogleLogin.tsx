@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -14,10 +15,9 @@ import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { Theme, iconSize } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
@@ -34,7 +34,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }

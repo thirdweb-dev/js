@@ -1,9 +1,9 @@
 import { GET_IFRAME_BASE_URL } from "../../constants/settings";
-import type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
+import {
   AuthProvider,
-  GetHeadlessLoginLinkReturnType,
+  type AuthAndWalletRpcReturnType,
+  type AuthLoginReturnType,
+  type GetHeadlessLoginLinkReturnType,
 } from "../../interfaces/auth";
 import { AbstractLogin, LoginQuerierTypes } from "./abstract-login";
 
@@ -68,6 +68,15 @@ export class BaseLogin extends AbstractLogin<
     }
   };
 
+  private getOauthPopUpSizing(authProvider: AuthProvider) {
+    switch (authProvider) {
+      case AuthProvider.FACEBOOK:
+        return "width=715, height=555";
+      default:
+        return "width=350, height=500";
+    }
+  }
+
   override async loginWithOauth(args: {
     oauthProvider: AuthProvider;
     openedWindow?: Window | null | undefined;
@@ -76,7 +85,11 @@ export class BaseLogin extends AbstractLogin<
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
     if (!win) {
-      win = window.open("", "Login", "width=350, height=500");
+      win = window.open(
+        "",
+        "Login",
+        this.getOauthPopUpSizing(args.oauthProvider),
+      );
       isWindowOpenedByFn = true;
     }
     if (!win) {
