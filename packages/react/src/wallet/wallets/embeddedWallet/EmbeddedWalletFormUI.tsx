@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -7,16 +8,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType, AuthOption } from "./types";
-import { TextDivider } from "../../../components/TextDivider";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { InputSelectionUI } from "../InputSelectionUI";
+import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -44,7 +44,7 @@ export const EmbeddedWalletFormUI = (props: {
         throw new Error("Failed to open google login window");
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "google",
+        strategy: "facebook",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
