@@ -91,9 +91,9 @@ const ConnectAppField = ({
 
   const onQRCodeScan = (data: string) => {
     if (wcUriRef.current !== data && data.startsWith("wc:")) {
+      wcUriRef.current = data;
       setWCUri(data);
       setShowQRCodeScan(false);
-      wcUriRef.current = data;
 
       onWCPress(data);
     }
