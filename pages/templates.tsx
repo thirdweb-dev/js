@@ -35,6 +35,19 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
+    id: "phygital-experience",
+    title: "Phygital Experience",
+    homepage: "https://engine-phygital.vercel.app/qrs",
+    repo: "https://github.com/thirdweb-example/engine-phygital",
+    description:
+      "Allow users to scan a QR code received with a physical product to mint an NFT using thirdweb engine.",
+    img: "/assets/templates/phygital-experience.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Engine", "ERC721"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
     id: "loyalty-card",
     title: "Loyalty Card",
     homepage: "https://loyalty-card.thirdweb-example.com",
