@@ -21,6 +21,8 @@ export const SessionProposalModal = () => {
     setModalState(CLOSE_MODAL_STATE("SessionProposalModal"));
   };
 
+  console.log("SessionProposalModal.modalState", modalState);
+
   return (
     <Box
       flexDirection="column"

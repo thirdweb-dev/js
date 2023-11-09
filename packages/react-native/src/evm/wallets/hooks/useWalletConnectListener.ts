@@ -41,7 +41,7 @@ export function useWalletConnectListener() {
           });
           break;
         default:
-        // method not implemented
+          console.log("useWalletConnectListener.typeNotHandled", type);
       }
     },
     [setModalState],

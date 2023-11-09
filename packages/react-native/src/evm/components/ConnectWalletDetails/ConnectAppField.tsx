@@ -15,7 +15,11 @@ import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
 import { useLocale } from "../../providers/ui-context-provider";
 
-const ConnectAppField = () => {
+const ConnectAppField = ({
+  onConnectAppTriggered,
+}: {
+  onConnectAppTriggered?: () => void;
+}) => {
   const theme = useTheme();
   const l = useLocale();
   const [showWCInput, setShowWCInput] = useState(false);
@@ -106,9 +110,13 @@ const ConnectAppField = () => {
 
     const uriToUse = uri || wcUri;
 
-    if (uriToUse?.startsWith("wc:")) {
-      (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
+    if (!uriToUse?.startsWith("wc:")) {
+      return;
     }
+
+    onConnectAppTriggered?.();
+
+    (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
 
     setWCUri(undefined);
     wcUriRef.current = undefined;

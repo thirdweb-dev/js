@@ -18,8 +18,10 @@ import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
+  onConnectAppTriggered,
 }: {
   onExportPress: () => void;
+  onConnectAppTriggered: () => void;
 }) => {
   const l = useLocale();
   const { setConnectedWallet } = useWalletContext();
@@ -78,7 +80,7 @@ export const SmartWalletAdditionalActions = ({
         onPress={onWalletPress}
       />
       {!showSmartWallet && smartWallet?.enableConnectApp ? (
-        <ConnectAppField />
+        <ConnectAppField onConnectAppTriggered={onConnectAppTriggered} />
       ) : null}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (

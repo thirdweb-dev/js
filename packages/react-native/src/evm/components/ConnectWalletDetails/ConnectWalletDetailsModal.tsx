@@ -131,6 +131,7 @@ export const ConnectWalletDetailsModal = ({
       return (
         <SmartWalletAdditionalActions
           onExportPress={onExportLocalWalletPress}
+          onConnectAppTriggered={onClosePress}
         />
       );
     }
@@ -203,11 +204,15 @@ export const ConnectWalletDetailsModal = ({
     return null;
   }, [
     activeWallet?.walletId,
-    isImportModalVisible,
-    onExportLocalWalletPress,
-    onWalletImported,
     smartWallet,
-    l,
+    onExportLocalWalletPress,
+    onClosePress,
+    l.connect_wallet_details.additional_actions,
+    l.connect_wallet_details.backup_wallet,
+    l.connect_wallet_details.import_wallet,
+    l.local_wallet.this_is_a_temporary_wallet,
+    isImportModalVisible,
+    onWalletImported,
   ]);
 
   return (
