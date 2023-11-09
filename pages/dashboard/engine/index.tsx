@@ -37,12 +37,17 @@ const EngineManage: ThirdwebNextPage = () => {
 
   const enginePermissions = useEnginePermissions(instanceUrl);
 
+  // If able to request the admin list, the logged in user has Engine access.
+  const hasEngineAccess = enginePermissions.data
+    ? enginePermissions.data.length > 0
+    : false;
+
   return (
     <Flex flexDir="column" gap={8}>
       <Flex direction="column" gap={4}>
         <Flex direction="column" gap={2}>
           <Heading size="title.lg" as="h1">
-            Engine
+            Get started with Engine
           </Heading>
           <Text>
             Engine is a backend HTTP server that calls smart contracts with your
@@ -102,10 +107,10 @@ const EngineManage: ThirdwebNextPage = () => {
             instance={instanceUrl}
             disclosure={setInstanceDisclosure}
           />
-        ) : (
+        ) : hasEngineAccess ? (
           // Connected to Engine.
           <EngineNavigation instance={instanceUrl} />
-        )}
+        ) : null}
       </Flex>
     </Flex>
   );

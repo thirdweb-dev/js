@@ -46,7 +46,7 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                {`📧 Embedded wallets — Onboard everyone to web3 with email, google and social logins.`}
+                {`📧 Embedded wallets — Onboard everyone to web3 with email, Google, and social logins.`}
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
