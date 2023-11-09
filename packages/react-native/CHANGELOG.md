@@ -1,5 +1,35 @@
 # @thirdweb-dev/react-native
 
+## 0.4.2
+
+### Patch Changes
+
+- [#1893](https://github.com/thirdweb-dev/js/pull/1893) [`8e104b44`](https://github.com/thirdweb-dev/js/commit/8e104b443e4a11908be660656c525ad237115835) Thanks [@iketw](https://github.com/iketw)! - Updates Japanese translations
+
+- [#1893](https://github.com/thirdweb-dev/js/pull/1893) [`8e104b44`](https://github.com/thirdweb-dev/js/commit/8e104b443e4a11908be660656c525ad237115835) Thanks [@iketw](https://github.com/iketw)! - Adds support for Japanese and Spanish
+
+  You can now pass 'ja' or 'es' to our ThirdwebProvider:
+
+  ```
+  import { ThirdwebProvider } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider locale={'ja'}>
+    <App />
+  </ ThirdwebProvider>
+  ```
+
+- [#1892](https://github.com/thirdweb-dev/js/pull/1892) [`59e55410`](https://github.com/thirdweb-dev/js/commit/59e55410942f3cb08570623f990487868aaed107) Thanks [@iketw](https://github.com/iketw)! - Deprecates magicLink in favor of embedded wallet
+
+- [#1900](https://github.com/thirdweb-dev/js/pull/1900) [`9f454d1e`](https://github.com/thirdweb-dev/js/commit/9f454d1e08ebf5280a3266791d1843ddd7e24242) Thanks [@iketw](https://github.com/iketw)! - Export Locale types and improve modal title customization
+
+- [#1909](https://github.com/thirdweb-dev/js/pull/1909) [`ba49a824`](https://github.com/thirdweb-dev/js/commit/ba49a82463487735dc19bf33ab2f7a3e9cce08ac) Thanks [@iketw](https://github.com/iketw)! - UI improvements
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/react-core@4.1.2
+
 ## 0.4.1
 
 ### Patch Changes

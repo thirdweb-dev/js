@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 2.1.1
+
+### Patch Changes
+
+- [#1891](https://github.com/thirdweb-dev/js/pull/1891) [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Core wallet (Avalanche)
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+
 ## 2.1.0
 
 ### Minor Changes
