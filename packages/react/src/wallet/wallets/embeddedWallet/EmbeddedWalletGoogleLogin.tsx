@@ -39,7 +39,7 @@ export const EmbeddedWalletGoogleLogin = (
         throw new Error("Failed to open google login window");
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "facebook",
+        strategy: "google",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
