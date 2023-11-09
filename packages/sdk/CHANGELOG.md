@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 4.0.11
+
+### Patch Changes
+
+- [#1809](https://github.com/thirdweb-dev/js/pull/1809) [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix publish: clean extra metadata containing old publish flow data
+
+- [#1896](https://github.com/thirdweb-dev/js/pull/1896) [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for relayer endpoint
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e)]:
+  - @thirdweb-dev/chains@0.1.58
+
 ## 4.0.10
 
 ### Patch Changes
