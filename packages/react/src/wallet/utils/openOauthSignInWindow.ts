@@ -7,8 +7,8 @@ function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
       return "Sign In - Google Accounts";
     case "apple":
       return "Sign In - Apple";
-    case "facebook":
-      return "Log in to Facebook";
+    // case "facebook":
+    //   return "Log in to Facebook";
     default:
       throw new Error("Invalid auth option");
   }
@@ -16,8 +16,8 @@ function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
 
 function getWidthAndHeight(authOption: EmbeddedWalletOauthStrategy) {
   switch (authOption) {
-    case "facebook":
-      return { width: 715, height: 555 };
+    // case "facebook":
+    //   return { width: 715, height: 555 };
     default:
       return { width: 350, height: 500 };
   }
