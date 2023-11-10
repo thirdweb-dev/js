@@ -52,6 +52,7 @@ type InjectedProviderFlags = {
   isZerion?: true;
   isOkxWallet?: true;
   isCoreWallet?: true;
+  isRabbyWallet?: true;
 };
 type InjectedProviders = InjectedProviderFlags & {
   isMetaMask: true;
