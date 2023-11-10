@@ -70,4 +70,5 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  Coin98Wallet,
 } from "@thirdweb-dev/wallets";
