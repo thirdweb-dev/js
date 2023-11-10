@@ -1,6 +1,7 @@
-import { Box, Flex, Image } from "@chakra-ui/react";
+import { Box, Flex, Icon, Image } from "@chakra-ui/react";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
-import { Heading, Text } from "tw-components";
+import { BsLightningCharge } from "react-icons/bs";
+import { Heading, LinkButton, Text } from "tw-components";
 
 export const AnyEVMSection = () => {
   return (
@@ -20,7 +21,7 @@ export const AnyEVMSection = () => {
           textAlign="center"
           letterSpacing="-0.04em"
         >
-          Any Contract. Any Chain.
+          Build on 1,000+ EVM chains
         </Heading>
         <Text
           bg="linear-gradient(29.47deg, #FFFFFF -12.61%, rgba(255, 255, 255, 0) 152.49%)"
@@ -31,8 +32,35 @@ export const AnyEVMSection = () => {
           size="label.xl"
           lineHeight={1.2}
         >
-          Our tools work with any contract deployed on any EVM compatible chain.
+          Our tools work with any contract deployed on any EVM-compatible chain.
         </Text>
+
+        <Flex
+          flexDir="column"
+          justifyContent={"center"}
+          alignItems={"center"}
+          marginTop={"16px"}
+          w={"100%"}
+        >
+          <LinkButton
+            href="/chainlist"
+            px={4}
+            py={7}
+            // h={{ base: "48px", md: "68px" }}
+            fontSize="20px"
+            leftIcon={<Icon as={BsLightningCharge} color="black" />}
+            color="black"
+            flexShrink={0}
+            background="rgba(255,255,255,1)"
+            _hover={{
+              background: "rgba(255,255,255,0.9)!important",
+            }}
+            maxW={"320px"}
+            width={"100%"}
+          >
+            See the Chainlist
+          </LinkButton>
+        </Flex>
       </Flex>
       <Box
         pointerEvents="none"
