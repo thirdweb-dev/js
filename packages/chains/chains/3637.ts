@@ -13,9 +13,9 @@ export default {
     "https://faucet.btxtestchain.com"
   ],
   "icon": {
-    "url": "ipfs://Qmf2iSjcrZwUDKhCVY9ZzfbSV2He2HSssbcG2yMz1mDerm",
-    "width": 32,
-    "height": 32,
+    "url": "ipfs://QmVE5s2pXiqdMnAcxhAmWkZYhpFB5CysypeLyPKzT4rGYe",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
   "infoURL": "https://btxtestchain.com",

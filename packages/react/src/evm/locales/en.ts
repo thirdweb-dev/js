@@ -166,6 +166,7 @@ export function enDefault() {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      coreWallet: extensionAndQRScanScreens("Core"),
       paperWallet: {
         signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",
