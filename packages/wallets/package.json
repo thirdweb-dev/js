@@ -78,6 +78,13 @@
       },
       "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.cjs.js"
     },
+    "./evm/wallets/coin98": {
+      "module": {
+        "browser": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.browser.esm.js",
+        "default": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.esm.js"
+      },
+      "default": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.cjs.js"
+    },
     "./evm/wallets/ethers": {
       "module": {
         "browser": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.browser.esm.js",
@@ -238,6 +245,13 @@
         "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.esm.js"
       },
       "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.cjs.js"
+    },
+    "./evm/connectors/coin98": {
+      "module": {
+        "browser": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.browser.esm.js",
+        "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.esm.js"
+      },
+      "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.cjs.js"
     },
     "./evm/connectors/signer": {
       "module": {
