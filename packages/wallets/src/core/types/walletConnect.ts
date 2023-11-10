@@ -67,6 +67,17 @@ export type WCSession = {
   peer: WCPeer;
 };
 
+export interface IWalletConnectReceiver {
+  connectApp(uri: string): Promise<void>;
+  approveSession(): Promise<void>;
+  rejectSession(): Promise<void>;
+  approveRequest(): Promise<void>;
+  rejectRequest(): Promise<void>;
+  getActiveSessions(): WCSession[];
+  disconnectSession(): Promise<void>;
+  isWCReceiverEnabled(): boolean;
+}
+
 export abstract class WalletConnectHandler extends EventEmitter {
   protected wallet: AbstractWallet;
 
