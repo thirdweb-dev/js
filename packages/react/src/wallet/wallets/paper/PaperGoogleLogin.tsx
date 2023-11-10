@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -14,10 +15,10 @@ import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { Theme, iconSize } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
@@ -34,7 +35,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -74,7 +75,11 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
         <ModalHeader
           title={
             <Container flex="row" center="both" gap="xs">
-              <GoogleIcon size={iconSize.md} />
+              <Img
+                src={googleIconUri}
+                width={iconSize.md}
+                height={iconSize.md}
+              />
               <ModalTitle> {locale.title} </ModalTitle>
             </Container>
           }

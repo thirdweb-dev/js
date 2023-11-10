@@ -64,6 +64,14 @@ export const Button = styled.button<{
       }
     `;
     }
+
+    if (p.variant === "secondary") {
+      return `
+      &:hover {
+        background: ${p.theme.colors.secondaryButtonHoverBg};
+      }
+    `;
+    }
   }}
 
   ${(p) => {

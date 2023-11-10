@@ -1,9 +1,32 @@
+import { EmbeddedWalletOauthStrategy } from "@thirdweb-dev/wallets";
 import { Theme } from "../../design-system";
 
-export function openGoogleSignInWindow(themeObj: Theme) {
+function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
+  switch (authOption) {
+    case "google":
+      return "Sign In - Google Accounts";
+    default:
+      return `Sign In - ${authOption
+        .slice(0, 1)
+        .toUpperCase()}${authOption.slice(1)}`;
+  }
+}
+
+function getWidthAndHeight(authOption: EmbeddedWalletOauthStrategy) {
+  switch (authOption) {
+    // case "facebook":
+    //   return { width: 715, height: 555 };
+    default:
+      return { width: 350, height: 500 };
+  }
+}
+
+export function openOauthSignInWindow(
+  authOption: EmbeddedWalletOauthStrategy,
+  themeObj: Theme,
+) {
   // open the popup in the center of the screen
-  const width = 350;
-  const height = 500;
+  const { height, width } = getWidthAndHeight(authOption);
   const top = (window.innerHeight - height) / 2;
   const left = (window.innerWidth - width) / 2;
 
@@ -13,7 +36,8 @@ export function openGoogleSignInWindow(themeObj: Theme) {
     `width=${width}, height=${height}, top=${top}, left=${left}`,
   );
   if (win) {
-    win.document.title = "Sign In - Google Accounts";
+    const title = getBodyTitle(authOption);
+    win.document.title = title;
     win.document.body.innerHTML = spinnerWindowHtml;
     win.document.body.style.background = themeObj.colors.modalBg;
     win.document.body.style.color = themeObj.colors.accentText;
@@ -56,8 +80,8 @@ const spinnerWindowHtml = `
   }
 
   .loader {
-    width: 15vw;
-    height: 15vw;
+    width: 50px;
+    height: 50px;
     animation: spin 2s linear infinite;
   }
 
