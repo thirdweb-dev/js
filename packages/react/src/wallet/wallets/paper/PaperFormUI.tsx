@@ -13,10 +13,11 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -66,7 +67,7 @@ export const PaperFormUI = (props: {
               props.onSelect({ google: true });
             }}
           >
-            <GoogleIcon size={iconSize.md} />
+            <Img src={googleIconUri} width={iconSize.md} height={iconSize.md} />
             {locale.signInWithGoogle}
           </SocialButton>
 

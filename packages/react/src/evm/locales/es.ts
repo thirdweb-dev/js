@@ -201,14 +201,16 @@ export function esDefault(): ThirdwebLocale {
       },
       embeddedWallet: {
         signInWithGoogle: "Iniciar sesión con Google",
+        signInWithFacebook: "Iniciar sesión con Facebook",
+        signInWithApple: "Iniciar sesión con Apple",
         emailPlaceholder: "Ingresa tu dirección de correo electrónico",
         submitEmail: "Continuar",
         signIn: "Iniciar sesión",
         emailRequired: "Se requiere dirección de correo electrónico",
         invalidEmail: "Dirección de correo electrónico inválida",
-        googleLoginScreen: {
+        socialLoginScreen: {
           title: "Iniciar sesión",
-          instruction: "Selecciona tu cuenta de Google en la ventana emergente",
+          instruction: "nicie sesión en su cuenta en la ventana emergente", // TODO: check if this is correct
           failed: "Error al iniciar sesión",
           retry: "Reintentar",
         },

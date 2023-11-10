@@ -1,7 +1,7 @@
-import { EmbeddedWalletOauthOptions } from "@thirdweb-dev/wallets";
+import { EmbeddedWalletOauthStrategy } from "@thirdweb-dev/wallets";
 import { Theme } from "../../design-system";
 
-function getBodyTitle(authOption: EmbeddedWalletOauthOptions) {
+function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
   switch (authOption) {
     case "google":
       return "Sign In - Google Accounts";
@@ -14,7 +14,7 @@ function getBodyTitle(authOption: EmbeddedWalletOauthOptions) {
   }
 }
 
-function getWidthAndHeight(authOption: EmbeddedWalletOauthOptions) {
+function getWidthAndHeight(authOption: EmbeddedWalletOauthStrategy) {
   switch (authOption) {
     case "facebook":
       return { width: 715, height: 555 };
@@ -24,7 +24,7 @@ function getWidthAndHeight(authOption: EmbeddedWalletOauthOptions) {
 }
 
 export function openOauthSignInWindow(
-  authOption: EmbeddedWalletOauthOptions,
+  authOption: EmbeddedWalletOauthStrategy,
   themeObj: Theme,
 ) {
   // open the popup in the center of the screen
@@ -82,8 +82,8 @@ const spinnerWindowHtml = `
   }
 
   .loader {
-    width: 15vw;
-    height: 15vw;
+    width: 50px;
+    height: 50px;
     animation: spin 2s linear infinite;
   }
 

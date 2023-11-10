@@ -14,7 +14,7 @@ import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
 } from "./EmbeddedWalletFormUI";
-import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
+import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletGoogleLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
 import {
   AuthOption,
@@ -137,7 +137,7 @@ const EmbeddedWalletConnectUI = (
       }
     };
 
-    if ("email" in loginType) {
+    if (typeof loginType !== "string") {
       return (
         <EmbeddedWalletOTPLoginUI
           {...props}
@@ -147,20 +147,19 @@ const EmbeddedWalletConnectUI = (
       );
     }
 
-    // google
-    else if (props.authOptions?.includes("google")) {
-      return <EmbeddedWalletGoogleLogin {...props} goBack={handleBack} />;
-    }
-
-    return null;
+    return (
+      <EmbeddedWalletSocialLogin
+        {...props}
+        goBack={handleBack}
+        strategy={loginType}
+      />
+    );
   }
 
   return (
     <EmbeddedWalletFormUIScreen
       modalSize={props.modalSize}
-      onSelect={(_loginType) => {
-        setLoginType(_loginType);
-      }}
+      onSelect={setLoginType}
       walletConfig={props.walletConfig}
       onBack={props.goBack}
       authOptions={props.authOptions}

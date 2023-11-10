@@ -6,17 +6,20 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
-import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
+import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
+import { Img } from "../../../components/Img";
+import { socialIcons } from "./socialIcons";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -30,22 +33,33 @@ export const EmbeddedWalletFormUI = (props: {
   const setConnectedWallet = useSetConnectedWallet();
   const themeObj = useTheme() as Theme;
 
-  const enableGoogleLogin = props.authOptions.includes("google");
+  const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
+    google: locale.signInWithGoogle,
+    facebook: locale.signInWithFacebook,
+    apple: locale.signInWithApple,
+  };
+
   const enableEmailLogin = props.authOptions.includes("email");
 
-  // Need to trigger google login on button click to avoid popup from being blocked
-  const googleLogin = async () => {
+  const socialLogins = props.authOptions.filter(
+    (x) => x !== "email",
+  ) as EmbeddedWalletOauthStrategy[];
+
+  const hasSocialLogins = socialLogins.length > 0;
+
+  // Need to trigger login on button click to avoid popup from being blocked
+  const socialLogin = async (strategy: EmbeddedWalletOauthStrategy) => {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
 
-      const googleWindow = openOauthSignInWindow("google", themeObj);
-      if (!googleWindow) {
-        throw new Error("Failed to open google login window");
+      const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
+      if (!socialLoginWindow) {
+        throw new Error("Failed to open login window");
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "google",
-        openedWindow: googleWindow,
+        strategy: strategy,
+        openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
@@ -60,26 +74,40 @@ export const EmbeddedWalletFormUI = (props: {
     }
   };
 
+  const showOnlyIcons = socialLogins.length > 2;
+
   return (
-    <div>
-      {enableGoogleLogin && (
-        <>
-          <SocialButton
-            variant="secondary"
-            fullWidth
-            onClick={() => {
-              googleLogin();
-              props.onSelect({ google: true });
-            }}
-          >
-            <GoogleIcon size={iconSize.md} />
-            {locale.signInWithGoogle}
-          </SocialButton>
-        </>
+    <Container flex="column" gap="lg">
+      {/* Social Login */}
+      {hasSocialLogins && (
+        <Container flex={showOnlyIcons ? "row" : "column"} center="x" gap="sm">
+          {socialLogins.map((loginMethod) => {
+            const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
+            return (
+              <SocialButton
+                aria-label={`Login with ${loginMethod}`}
+                data-variant={showOnlyIcons ? "icon" : "full"}
+                key={loginMethod}
+                variant={showOnlyIcons ? "outline" : "secondary"}
+                fullWidth={!showOnlyIcons}
+                onClick={() => {
+                  socialLogin(loginMethod);
+                  props.onSelect(loginMethod);
+                }}
+              >
+                <Img
+                  src={socialIcons[loginMethod]}
+                  width={imgIconSize}
+                  height={imgIconSize}
+                />
+                {!showOnlyIcons && loginMethodsLabel[loginMethod]}
+              </SocialButton>
+            );
+          })}
+        </Container>
       )}
-      {enableGoogleLogin && enableEmailLogin && (
-        <TextDivider text={twLocale.connectWallet.or} py="lg" />
-      )}
+
+      {/* Email Login */}
       {enableEmailLogin && (
         <InputSelectionUI
           onSelect={(email) => props.onSelect({ email })}
@@ -99,7 +127,7 @@ export const EmbeddedWalletFormUI = (props: {
           submitButtonText={locale.submitEmail}
         />
       )}
-    </div>
+    </Container>
   );
 };
 
@@ -142,7 +170,18 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
 };
 
 const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  gap: ${spacing.sm};
+  &[data-variant="full"] {
+    display: flex;
+    justify-content: flex-start;
+    gap: ${spacing.md};
+    font-size: ${fontSize.md};
+    transition: background-color 0.2s ease;
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+  &[data-variant="icon"] {
+    padding: ${spacing.sm};
+  }
 `;

@@ -16,8 +16,9 @@ import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { Theme, iconSize } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
@@ -74,7 +75,11 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
         <ModalHeader
           title={
             <Container flex="row" center="both" gap="xs">
-              <GoogleIcon size={iconSize.md} />
+              <Img
+                src={googleIconUri}
+                width={iconSize.md}
+                height={iconSize.md}
+              />
               <ModalTitle> {locale.title} </ModalTitle>
             </Container>
           }

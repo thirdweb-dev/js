@@ -6,23 +6,26 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
 import { useEffect } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { Theme, iconSize } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 
-export const EmbeddedWalletGoogleLogin = (
-  props: ConnectUIProps<EmbeddedWallet>,
+export const EmbeddedWalletSocialLogin = (
+  props: ConnectUIProps<EmbeddedWallet> & {
+    strategy: EmbeddedWalletOauthStrategy;
+  },
 ) => {
-  const locale = useTWLocale().wallets.embeddedWallet.googleLoginScreen;
+  const locale = useTWLocale().wallets.embeddedWallet.socialLoginScreen;
   const { goBack, modalSize } = props;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -74,15 +77,7 @@ export const EmbeddedWalletGoogleLogin = (
           paddingBottom: 0,
         }}
       >
-        <ModalHeader
-          title={
-            <Container flex="row" center="both" gap="xs">
-              <GoogleIcon size={iconSize.md} />
-              <ModalTitle> {locale.title} </ModalTitle>
-            </Container>
-          }
-          onBack={goBack}
-        />
+        <ModalHeader title={locale.title} onBack={goBack} />
 
         {modalSize === "compact" ? <Spacer y="xl" /> : null}
 

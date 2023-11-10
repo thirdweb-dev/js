@@ -17,7 +17,7 @@ export type {
   AuthResult,
   EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs,
-  EmbeddedWalletOauthOptions,
+  EmbeddedWalletOauthStrategy,
 } from "../connectors/embedded-wallet/types";
 
 export class EmbeddedWallet extends AbstractClientWallet<
