@@ -20,11 +20,13 @@ import { InputSelectionUI } from "../InputSelectionUI";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 import { Img } from "../../../components/Img";
 import { socialIcons } from "./socialIcons";
+import { TextDivider } from "../../../components/TextDivider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
+  modalSize?: "compact" | "wide";
 }) => {
   const twLocale = useTWLocale();
   const locale = twLocale.wallets.embeddedWallet;
@@ -107,6 +109,10 @@ export const EmbeddedWalletFormUI = (props: {
         </Container>
       )}
 
+      {props.modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
+        <TextDivider text={twLocale.connectWallet.or} />
+      )}
+
       {/* Email Login */}
       {enableEmailLogin && (
         <InputSelectionUI
@@ -160,6 +166,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         p={isCompact ? undefined : "lg"}
       >
         <EmbeddedWalletFormUI
+          modalSize={props.modalSize}
           authOptions={props.authOptions}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
