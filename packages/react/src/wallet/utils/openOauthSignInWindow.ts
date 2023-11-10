@@ -5,12 +5,10 @@ function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
   switch (authOption) {
     case "google":
       return "Sign In - Google Accounts";
-    case "apple":
-      return "Sign In - Apple";
-    // case "facebook":
-    //   return "Log in to Facebook";
     default:
-      throw new Error("Invalid auth option");
+      return `Sign In - ${authOption
+        .slice(0, 1)
+        .toUpperCase()}${authOption.slice(1)}`;
   }
 }
 
