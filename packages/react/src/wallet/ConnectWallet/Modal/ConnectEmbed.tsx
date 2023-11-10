@@ -1,9 +1,5 @@
-import { Theme } from "../../../design-system";
+import { Theme, radius } from "../../../design-system";
 import styled from "@emotion/styled";
-import { Cross2Icon } from "@radix-ui/react-icons";
-import { CrossContainer } from "../../../components/Modal";
-import { IconButton } from "../../../components/buttons";
-import { iconSize, radius, shadow } from "../../../design-system";
 import {
   SetModalConfigCtx,
   WalletUIStatesProvider,
@@ -17,14 +13,14 @@ import {
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
-import { useWallets } from "@thirdweb-dev/react-core";
+import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 
-export const ConnectModalInline = (
+export const ConnectEmbed = (
   props: Omit<
     ConnectWalletProps,
     | "detailsBtn"
@@ -35,41 +31,25 @@ export const ConnectModalInline = (
     | "switchToActiveChain"
     | "supportedTokens"
     | "hideSwitchToPersonalWallet"
-  > & {
-    onModalHide?: () => void;
-  },
+  >,
 ) => {
+  const connectionStatus = useConnectionStatus();
+
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
   const modalSize =
-    isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+    (isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize) ||
+    "compact";
 
   const content = (
-    <>
-      <ConnectModalContent
-        initialScreen={initialScreen}
-        screen={screen}
-        setScreen={setScreen}
-        setHideModal={() => {
-          if (props.onModalHide) {
-            props.onModalHide();
-          }
-        }}
-      />
-
-      {/* close icon */}
-      <CrossContainer>
-        <IconButton type="button" aria-label="Close">
-          <Cross2Icon
-            style={{
-              width: iconSize.md,
-              height: iconSize.md,
-              color: "inherit",
-            }}
-          />
-        </IconButton>
-      </CrossContainer>
-    </>
+    <ConnectModalContent
+      initialScreen={initialScreen}
+      screen={screen}
+      setScreen={setScreen}
+      setHideModal={() => {
+        // no op
+      }}
+    />
   );
 
   const walletUIStatesProps = {
@@ -80,12 +60,17 @@ export const ConnectModalInline = (
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.modalTitleIconUrl,
+    isEmbed: true,
   };
+
+  if (connectionStatus === "connected") {
+    return;
+  }
 
   return (
     <WalletUIStatesProvider {...walletUIStatesProps}>
       <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <ConnectModalInlineContainer
+        <EmbedContainer
           className={props.className}
           style={{
             height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
@@ -101,7 +86,7 @@ export const ConnectModalInline = (
             content
           )}
           <SyncedWalletUIStates {...walletUIStatesProps} />
-        </ConnectModalInlineContainer>
+        </EmbedContainer>
       </CustomThemeProvider>
     </WalletUIStatesProvider>
   );
@@ -140,17 +125,14 @@ function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.colors.modalBg};
+const EmbedContainer = styled.div<{ theme?: Theme }>`
   color: ${(p) => p.theme.colors.primaryText};
-  transition: background 0.2s ease;
-  border-radius: ${radius.xl};
   width: 100%;
   box-sizing: border-box;
-  box-shadow: ${shadow.lg};
   position: relative;
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
   line-height: normal;
+  border-radius: ${radius.xl};
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
   overflow: hidden;
   font-family: ${(p) => p.theme.fontFamily};
   & *::selection {

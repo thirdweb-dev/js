@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { DAppMetaData } from "../types/dAppMeta";
 import type {
   WalletConfig,
@@ -59,6 +60,15 @@ type ConnectFnArgs<I extends WalletInstance> =
         connectParams: NonNullable<WalletConnectParams<I>>,
       ];
 
+type HiddenConnection = {
+  connectionStatus: ConnectionStatus;
+  signer: Signer | undefined;
+  wallet: WalletInstance | undefined;
+  walletConfig: WalletConfig | undefined;
+  chainId?: number;
+  switchChain: (chainId: number) => Promise<void>;
+};
+
 // maps wallet instance to it's wallet config
 const walletInstanceToConfig: Map<
   WalletInstance,
@@ -92,6 +102,25 @@ type ThirdwebWalletContextData = {
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
   clientId?: string;
+  /**
+   * when this flag is set to true, all wallet connection related states like signer, activeWallet, connectionStatus, activeWalletConfig
+   * will be set to reflect a "disconnected" state
+   * - signer, activeWallet, activeWalletConfig will be set to `undefined`
+   * - connectionStatus will be set to "disconnected"
+   *
+   * the actual values will be stored in `hiddenConnection` object
+   *
+   * This is only useful for connecting wallets like Safe or Smart Wallet
+   */
+  isConnectionHidden: boolean;
+  /**
+   * Set value of `isConnectionHidden` flag
+   */
+  setIsConnectionHidden: (value: boolean) => void;
+  /**
+   * Stores the values of `signer`, `activeWallet`, `activeWalletConfig`, `connectionStatus` when `isConnectionHidden` is set to true
+   */
+  hiddenConnection?: HiddenConnection;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -113,27 +142,105 @@ export function ThirdwebWalletProvider(
     signerWallet?: WalletConfig<SignerWallet>;
   }>,
 ) {
-  const [signer, setSigner] = useState<Signer | undefined>(undefined);
-  const [connectionStatus, setConnectionStatus] =
+  let [isConnectionHidden, setIsConnectionHidden] = useState(false);
+  const [hiddenConnectionChainId, setHiddenConnectionChainId] = useState<
+    number | undefined
+  >(undefined);
+
+  let hiddenConnection: HiddenConnection | undefined;
+
+  let [signer, setSigner] = useState<Signer | undefined>(undefined);
+  let [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("unknown");
 
   const autoConnectTimeout = props.autoConnectTimeout || 15000;
 
-  const [activeWallet, setActiveWallet] = useState<
-    WalletInstance | undefined
-  >();
+  let [activeWallet, setActiveWallet] = useState<WalletInstance | undefined>();
 
   const [createdWalletInstance, setCreatedWalletInstance] = useState<
     WalletInstance | undefined
   >();
 
-  const [activeWalletConfig, setActiveWalletConfig] = useState<
+  let [activeWalletConfig, setActiveWalletConfig] = useState<
     WalletConfig | undefined
   >();
 
   if (!lastConnectedWalletStorage) {
     lastConnectedWalletStorage =
       props.createWalletStorage("coordinatorStorage");
+  }
+
+  const storeLastActiveChainId = useCallback(async (chainId: number) => {
+    const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
+
+    if (!lastConnectedWallet) {
+      return;
+    }
+
+    try {
+      const parsedWallet = JSON.parse(lastConnectedWallet as string);
+      if (parsedWallet.connectParams) {
+        parsedWallet.connectParams.chainId = chainId;
+      } else {
+        parsedWallet.connectParams = { chainId };
+      }
+      await lastConnectedWalletStorage.setItem(
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
+        JSON.stringify(parsedWallet),
+      );
+    } catch (error) {
+      console.error(`Error saving the last active chain: ${error}`);
+    }
+  }, []);
+
+  const hiddenConnectionWallet = isConnectionHidden ? activeWallet : undefined;
+
+  const switchChainHiddenConnection = useCallback(
+    async (chainId: number) => {
+      if (!hiddenConnectionWallet) {
+        throw new Error("No hidden wallet");
+      }
+
+      await hiddenConnectionWallet.switchChain(chainId);
+      const _signer = await hiddenConnectionWallet.getSigner();
+      await storeLastActiveChainId(chainId);
+
+      setSigner(_signer);
+    },
+    [hiddenConnectionWallet, storeLastActiveChainId],
+  );
+
+  useEffect(() => {
+    if (hiddenConnectionWallet) {
+      const update = () => {
+        hiddenConnectionWallet.getChainId().then((_chainId) => {
+          setHiddenConnectionChainId(_chainId);
+        });
+      };
+
+      update();
+      hiddenConnectionWallet.addListener("change", update);
+    } else {
+      setHiddenConnectionChainId(undefined);
+    }
+  }, [hiddenConnectionWallet]);
+
+  if (isConnectionHidden) {
+    hiddenConnection = {
+      connectionStatus,
+      signer,
+      wallet: activeWallet,
+      walletConfig: activeWalletConfig,
+      switchChain: switchChainHiddenConnection,
+      chainId: hiddenConnectionChainId,
+    };
+
+    connectionStatus = "disconnected";
+    signer = undefined;
+    activeWallet = undefined;
+    activeWalletConfig = undefined;
   }
 
   // if autoSwitch is enabled - enforce connection to activeChain
@@ -222,31 +329,6 @@ export function ThirdwebWalletProvider(
     },
     [],
   );
-
-  const storeLastActiveChainId = useCallback(async (chainId: number) => {
-    const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
-      LAST_CONNECTED_WALLET_STORAGE_KEY,
-    );
-
-    if (!lastConnectedWallet) {
-      return;
-    }
-
-    try {
-      const parsedWallet = JSON.parse(lastConnectedWallet as string);
-      if (parsedWallet.connectParams) {
-        parsedWallet.connectParams.chainId = chainId;
-      } else {
-        parsedWallet.connectParams = { chainId };
-      }
-      await lastConnectedWalletStorage.setItem(
-        LAST_CONNECTED_WALLET_STORAGE_KEY,
-        JSON.stringify(parsedWallet),
-      );
-    } catch (error) {
-      console.error(`Error saving the last active chain: ${error}`);
-    }
-  }, []);
 
   const switchChain = useCallback(
     async (chainId: number) => {
@@ -447,26 +529,28 @@ export function ThirdwebWalletProvider(
 
   // when wallet's network or account is changed using the extension, update UI
   useEffect(() => {
-    if (!activeWallet) {
+    const wallet = activeWallet;
+
+    if (!wallet) {
       return;
     }
 
     const update = async () => {
-      const _signer = await activeWallet.getSigner();
+      const _signer = await wallet.getSigner();
       setSigner(_signer);
     };
 
-    activeWallet.addListener("change", () => {
+    wallet.addListener("change", () => {
       update();
     });
 
-    activeWallet.addListener("disconnect", () => {
+    wallet.addListener("disconnect", () => {
       onWalletDisconnect();
     });
 
     return () => {
-      activeWallet.removeListener("change");
-      activeWallet.removeListener("disconnect");
+      wallet.removeListener("change");
+      wallet.removeListener("disconnect");
     };
   }, [activeWallet, onWalletDisconnect]);
 
@@ -520,6 +604,9 @@ export function ThirdwebWalletProvider(
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
         clientId: props.clientId,
+        hiddenConnection: hiddenConnection,
+        isConnectionHidden: isConnectionHidden,
+        setIsConnectionHidden: setIsConnectionHidden,
       }}
     >
       {props.children}

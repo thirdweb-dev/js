@@ -2,12 +2,13 @@ import {
   WalletConfig,
   ConnectUIProps,
   WalletOptions,
-  useWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletConfig, SmartWalletConfigOptions } from "./types";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { HeadlessConnectUI } from "../headlessConnectUI";
+import { useRef, useEffect, useState } from "react";
 
 export const smartWallet = (
   wallet: WalletConfig<any>,
@@ -34,17 +35,28 @@ export const smartWallet = (
 export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWallet: WalletConfig },
 ) => {
-  const activeWallet = useWallet();
+  const { setIsConnectionHidden } = useWalletContext();
   const { walletConfig } = props;
+  const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
+    useState(false);
+
+  // hide the connection of personal wallet
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      setIsConnectionHidden(true);
+      mounted.current = true;
+    }
+  }, [setIsConnectionHidden]);
 
   const PersonalWalletConfig = props.personalWallet;
 
-  if (!activeWallet) {
+  if (!isPersonalWalletConnected) {
     const _props: ConnectUIProps = {
       ...props,
       walletConfig: PersonalWalletConfig,
       connected: () => {
-        // override to no-op
+        setIsPersonalWalletConnected(true);
       },
     };
 
@@ -60,7 +72,7 @@ export const SmartConnectUI = (
       onBack={props.goBack}
       onConnect={props.connected}
       smartWallet={walletConfig}
-      personalWallet={props.personalWallet}
+      personalWalletConfig={props.personalWallet}
     />
   );
 };

@@ -8,7 +8,7 @@ import {
   Line,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
-import { ModalTitle } from "../../components/modalElements";
+import { BackButton, ModalTitle } from "../../components/modalElements";
 import { iconSize, radius, spacing, Theme } from "../../design-system";
 import styled from "@emotion/styled";
 import {
@@ -342,28 +342,54 @@ export const WalletSelector: React.FC<{
   return (
     <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
-      <Container p="lg">
-        {isWalletGroupExpanded ? (
-          <ModalHeader
-            title={twTitle}
-            onBack={() => {
-              setIsWalletGroupExpanded(false);
-            }}
-          />
-        ) : (
-          twTitle
-        )}
-      </Container>
+      {!modalConfig.isEmbed && (
+        <Container p="lg">
+          {isWalletGroupExpanded ? (
+            <ModalHeader
+              title={twTitle}
+              onBack={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+            />
+          ) : (
+            twTitle
+          )}
+        </Container>
+      )}
 
       {/* Body */}
       <Container
         expand
         scrollY
         px="md"
-        style={{
-          paddingTop: "2px",
-        }}
+        style={
+          modalConfig.isEmbed
+            ? {
+                paddingTop: spacing.lg,
+              }
+            : {
+                paddingTop: "2px",
+              }
+        }
       >
+        {modalConfig.isEmbed && isWalletGroupExpanded && (
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              padding: spacing.sm,
+              paddingTop: 0,
+            }}
+          >
+            <BackButton
+              onClick={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+            />
+            <Text>{"Back"}</Text>
+          </Container>
+        )}
+
         {topSection}
       </Container>
 

@@ -11,13 +11,9 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
-  useChain,
-  useChainId,
   useConnect,
-  useConnectionStatus,
   useSupportedChains,
-  useSwitchChain,
-  useWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
@@ -36,22 +32,24 @@ export const SelectAccount: React.FC<{
   renderBackButton?: boolean;
 }> = (props) => {
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
-  const activeWallet = useWallet();
-  const connect = useConnect();
-  const activeChain = useChain();
-  const connectedChainId = useChainId();
 
-  const [safeAddress, setSafeAddress] = useState("");
-  const [safeChainId, setSafeChainId] = useState(-1);
-
-  const [safeConnectError, setSafeConnectError] = useState(false);
+  // personal wallet
+  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
+  const personalWallet = hiddenConnection?.wallet;
+  const personalWalletChainId = hiddenConnection?.chainId;
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  const connectionStatus = useConnectionStatus();
+  // safe
+  const connectSafe = useConnect();
+  const [safeAddress, setSafeAddress] = useState("");
+  const [safeChainId, setSafeChainId] = useState(-1);
+  const [safeConnectError, setSafeConnectError] = useState(false);
+  const [safeConnectionStatus, setSafeConnectionStatus] = useState<
+    "idle" | "connecting" | "failed"
+  >("idle");
   const chains = useSupportedChains();
 
-  // put supported chains first
   const supportedChains = chains.filter((c) =>
     SafeSupportedChainsSet.has(c.chainId),
   );
@@ -67,30 +65,36 @@ export const SelectAccount: React.FC<{
   const useOptGroup = mainnets.length > 0 && testnets.length > 0;
 
   const handleSubmit = async () => {
-    if (!selectedSafeChain || !activeWallet || !activeChain) {
+    if (!selectedSafeChain || !personalWallet) {
       return;
     }
     setSafeConnectError(false);
-
+    setSafeConnectionStatus("connecting");
     try {
-      await connect(props.safeWalletConfig, {
+      await connectSafe(props.safeWalletConfig, {
         chain: selectedSafeChain,
-        personalWallet: activeWallet,
+        personalWallet: personalWallet,
         safeAddress,
       });
+      setIsConnectionHidden(false);
       props.onConnect();
     } catch (e) {
+      setSafeConnectionStatus("failed");
       console.error(e);
       setSafeConnectError(true);
     }
   };
 
-  const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
+  console.log({
+    personalWalletChainId,
+    safeChainId,
+  });
+
+  const mismatch = safeChainId !== -1 && personalWalletChainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
 
-  const switchChain = useSwitchChain();
   const modalConfig = useContext(ModalConfigCtx);
 
   return (
@@ -324,14 +328,14 @@ export const SelectAccount: React.FC<{
                 width: modalConfig.modalSize === "compact" ? "100%" : undefined,
               }}
               onClick={async () => {
-                if (!activeWallet) {
+                if (!personalWallet) {
                   throw new Error("No active wallet");
                 }
                 setSafeConnectError(false);
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await switchChain(safeChainId);
+                  await hiddenConnection.switchChain(safeChainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {
@@ -351,7 +355,7 @@ export const SelectAccount: React.FC<{
             <Button
               variant="accent"
               type="submit"
-              disabled={connectionStatus === "connecting"}
+              disabled={safeConnectionStatus === "connecting"}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -359,10 +363,10 @@ export const SelectAccount: React.FC<{
                 width: modalConfig.modalSize === "compact" ? "100%" : undefined,
               }}
             >
-              {connectionStatus === "connecting"
+              {safeConnectionStatus === "connecting"
                 ? locale.connecting
                 : locale.connectToSafe}
-              {connectionStatus === "connecting" && (
+              {safeConnectionStatus === "connecting" && (
                 <Spinner size="sm" color="accentButtonText" />
               )}
             </Button>

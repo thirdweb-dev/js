@@ -64,6 +64,7 @@ export const ConnectModalContent = (props: {
   };
 
   const { setHideModal } = props;
+
   const handleConnected = useCallback(() => {
     const requiresSignIn = modalConfig.auth?.loginOptional
       ? false

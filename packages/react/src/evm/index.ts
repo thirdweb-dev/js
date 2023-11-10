@@ -1,3 +1,5 @@
+export { ConnectEmbed } from "../wallet/ConnectWallet/Modal/ConnectEmbed";
+
 export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
