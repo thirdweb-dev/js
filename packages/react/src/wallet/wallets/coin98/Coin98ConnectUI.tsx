@@ -12,7 +12,7 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
-  const locale = useTWLocale().wallets.coreWallet;
+  const locale = useTWLocale().wallets.coin98Wallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);

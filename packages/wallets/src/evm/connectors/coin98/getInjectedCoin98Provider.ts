@@ -14,7 +14,7 @@ export function getInjectedCoin98Provider(): Ethereum | undefined {
 
   if (assertWindowEthereum(globalThis.window)) {
     if (globalThis.window.ethereum && window.coin98) {
-      return window.coin98;
+      return window.ethereum;
     }
   }
 }
