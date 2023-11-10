@@ -210,7 +210,7 @@ export function esDefault(): ThirdwebLocale {
         invalidEmail: "Dirección de correo electrónico inválida",
         socialLoginScreen: {
           title: "Iniciar sesión",
-          instruction: "nicie sesión en su cuenta en la ventana emergente", // TODO: check if this is correct
+          instruction: "Inicie sesión en su cuenta en la ventana abierta",
           failed: "Error al iniciar sesión",
           retry: "Reintentar",
         },
