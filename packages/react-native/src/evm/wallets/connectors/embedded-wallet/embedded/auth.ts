@@ -206,6 +206,10 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     },
   );
 
+  if (result.type === "cancel") {
+    throw new Error(`Log in cancelled`);
+  }
+
   if (result.type !== "success") {
     throw new Error(`Can't log in with ${oauthOptions.provider}: ${result}`);
   }
