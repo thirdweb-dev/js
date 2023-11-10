@@ -6,9 +6,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
+import { AuthOption } from "../../types/embedded-wallet";
 import { WalletConnectReceiverConfig } from "@thirdweb-dev/wallets";
-
-type AuthOption = "email" | "google";
 
 export type EmbeddedWalletConfig = {
   auth?: {

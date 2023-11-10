@@ -7,9 +7,9 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { GOOGLE_ICON } from "../../../assets";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, Text, WalletButton } from "../../../components/base";
+import { AUTH_OPTIONS_ICONS, SocialLogin } from "../../types/embedded-wallet";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
@@ -18,19 +18,19 @@ export const EmbeddedSocialConnection: React.FC<
   const setConnectionStatus = useSetConnectionStatus();
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const handleGoogleLogin = useCallback(() => {
+  const handleSocialLogin = useCallback(() => {
     setErrorMessage("");
 
     setTimeout(async () => {
-      const emailWallet = selectionData.emailWallet as EmbeddedWallet;
+      const embeddedWallet = selectionData.emailWallet as EmbeddedWallet;
 
       try {
-        const authResult = await emailWallet.authenticate({
-          strategy: "google",
+        const authResult = await embeddedWallet.authenticate({
+          strategy: selectionData.oauthOptions?.provider as SocialLogin,
           redirectUrl: selectionData.oauthOptions?.redirectUrl,
         });
 
-        const response = await emailWallet.connect({ authResult });
+        const response = await embeddedWallet.connect({ authResult });
 
         if (response) {
           if (onLocallyConnected) {
@@ -41,12 +41,15 @@ export const EmbeddedSocialConnection: React.FC<
           }
         } else {
           setErrorMessage(
-            response || "Error login in. Please try again later.",
+            response || "Error signing in. Please try again later.",
           );
         }
       } catch (error) {
-        console.error("Error logging in with google: ", error);
-        setErrorMessage(`Error login in. ${error}`);
+        console.error(
+          `Error signing in with ${selectionData.oauthOptions?.provider}: `,
+          error,
+        );
+        setErrorMessage(`${error}`);
       }
     }, 0);
   }, [
@@ -58,8 +61,8 @@ export const EmbeddedSocialConnection: React.FC<
   ]);
 
   useEffect(() => {
-    handleGoogleLogin();
-  }, [handleGoogleLogin]);
+    handleSocialLogin();
+  }, [handleSocialLogin]);
 
   return (
     <Box marginHorizontal="xl" height={200}>
@@ -71,7 +74,11 @@ export const EmbeddedSocialConnection: React.FC<
             borderRadius="lg"
             justifyContent="center"
             name="Sign In"
-            walletIconUrl={GOOGLE_ICON}
+            walletIconUrl={
+              AUTH_OPTIONS_ICONS[
+                selectionData.oauthOptions?.provider as SocialLogin
+              ]
+            }
           />
         }
         subHeaderText={""}
