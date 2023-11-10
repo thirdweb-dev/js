@@ -3,6 +3,7 @@ import {
   AbstractClientWallet,
   EmbeddedWalletAdditionalOptions,
   walletIds,
+  WalletConnectReceiverConfig,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import {
@@ -11,8 +12,9 @@ import {
 } from "../../connectors/embedded-wallet/types";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 
-export type EmbeddedWalletOptions =
-  WalletOptions<EmbeddedWalletAdditionalOptions>;
+export type EmbeddedWalletOptions = WalletOptions<
+  EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
+>;
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletOptions,
