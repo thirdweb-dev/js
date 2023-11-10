@@ -180,7 +180,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 
   if (!resp.ok) {
     const error = await resp.json();
-    throw new Error(`Error getting headless login link: ${error.message}`);
+    throw new Error(`Error getting headless sign in link: ${error.message}`);
   }
 
   const json = await resp.json();
@@ -207,11 +207,11 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   );
 
   if (result.type === "cancel") {
-    throw new Error(`Log in cancelled`);
+    throw new Error(`Sign in cancelled`);
   }
 
   if (result.type !== "success") {
-    throw new Error(`Can't log in with ${oauthOptions.provider}: ${result}`);
+    throw new Error(`Can't sign in with ${oauthOptions.provider}: ${result}`);
   }
 
   const decodedUrl = decodeURIComponent(result.url);
@@ -220,7 +220,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   if (parts.length < 2) {
     // assume error
     const error = decodedUrl.split("?error=")?.[1];
-    throw new Error(`Malformed response from the login redirect: ${error}`);
+    throw new Error(`Something went wrong. Please, try again later: ${error}`);
   }
 
   const authResult = parts[1];
