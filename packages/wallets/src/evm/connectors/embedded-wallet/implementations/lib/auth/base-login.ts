@@ -157,10 +157,10 @@ export class BaseLogin extends AbstractLogin<
               reject(new Error(event.data.error));
               break;
             }
-            case "injectHeadlessOauthLoginInfo": {
+            case "injectDeveloperClientId": {
               win?.postMessage(
                 {
-                  eventType: "injectHeadlessOauthLoginInfoResult",
+                  eventType: "injectDeveloperClientIdResult",
                   developerClientId: this.clientId,
                   authOption: args.oauthProvider,
                 },
