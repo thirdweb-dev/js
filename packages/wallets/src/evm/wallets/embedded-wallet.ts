@@ -13,10 +13,11 @@ export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 
 export type {
-  EmbeddedWalletAdditionalOptions,
   AuthParams,
   AuthResult,
+  EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs,
+  EmbeddedWalletOauthStrategy,
 } from "../connectors/embedded-wallet/types";
 
 export class EmbeddedWallet extends AbstractClientWallet<
