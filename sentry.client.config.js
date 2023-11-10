@@ -12,7 +12,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 const isBrowserSupported = matchesUA(navigator.userAgent, {
   ignoreMinor: true,
   ignorePatch: true,
-  browsers: packageJson.browserlist,
+  browsers: packageJson.browserslist,
 });
 
 if (!isBrowserSupported) {
