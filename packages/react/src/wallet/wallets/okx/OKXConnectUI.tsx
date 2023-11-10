@@ -1,12 +1,12 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
-import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { isMobile } from "../../../evm/utils/isMobile";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { OKXScan } from "./OKXScan";
-import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import type { OKXWallet } from "@thirdweb-dev/wallets";
-import { wait } from "../../../utils/wait";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { isMobile } from "../../../evm/utils/isMobile";
+import { wait } from "../../../utils/wait";
+import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
+import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { OKXScan } from "./OKXScan";
 
 export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
   const [screen, setScreen] = useState<

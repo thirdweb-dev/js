@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -7,16 +8,16 @@ import {
 } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
-import { TextDivider } from "../../../components/TextDivider";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -35,7 +36,7 @@ export const PaperFormUI = (props: {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -66,7 +67,7 @@ export const PaperFormUI = (props: {
               props.onSelect({ google: true });
             }}
           >
-            <GoogleIcon size={iconSize.md} />
+            <Img src={googleIconUri} width={iconSize.md} height={iconSize.md} />
             {locale.signInWithGoogle}
           </SocialButton>
 

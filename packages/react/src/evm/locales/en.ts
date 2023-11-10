@@ -197,14 +197,16 @@ export function enDefault() {
       },
       embeddedWallet: {
         signInWithGoogle: "Sign in with Google",
+        signInWithFacebook: "Sign in with Facebook",
+        signInWithApple: "Sign in with Apple",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
-        googleLoginScreen: {
+        socialLoginScreen: {
           title: "Sign in",
-          instruction: "Select your Google account in the pop-up",
+          instruction: "Sign into your account in the pop-up",
           failed: "Failed to sign in",
           retry: "Retry",
         },
