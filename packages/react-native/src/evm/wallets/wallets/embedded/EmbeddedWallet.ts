@@ -3,14 +3,7 @@ import {
   AbstractClientWallet,
   EmbeddedWalletAdditionalOptions,
   walletIds,
-  IWalletConnectReceiver,
-  WalletConnectHandler,
   WalletConnectReceiverConfig,
-  NoOpWalletConnectHandler,
-  WalletConnectV2Handler,
-  WCSession,
-  WCProposal,
-  WCRequest,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import {
@@ -23,18 +16,12 @@ export type EmbeddedWalletOptions = WalletOptions<
   EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
 >;
 
-export class EmbeddedWallet
-  extends AbstractClientWallet<
-    EmbeddedWalletOptions,
-    EmbeddedWalletConnectionArgs
-  >
-  implements IWalletConnectReceiver
-{
+export class EmbeddedWallet extends AbstractClientWallet<
+  EmbeddedWalletOptions,
+  EmbeddedWalletConnectionArgs
+> {
   connector?: EmbeddedWalletConnector;
   options: EmbeddedWalletOptions;
-
-  public enableConnectApp: boolean = false;
-  protected wcWallet: WalletConnectHandler;
 
   static async sendVerificationEmail(options: {
     email: string;
@@ -61,18 +48,6 @@ export class EmbeddedWallet
     this.initializeConnector();
 
     this.setupListeners();
-
-    console.log("EmbeddedWallet", options);
-    this.enableConnectApp = options?.enableConnectApp || false;
-
-    console.log("EmbeddedWallet.enableConnectApp", this.enableConnectApp);
-    this.wcWallet = this.enableConnectApp
-      ? new WalletConnectV2Handler({
-          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-          walletConnectV2ProjectId: options?.walletConnectV2ProjectId,
-          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-        })
-      : new NoOpWalletConnectHandler();
   }
 
   async getConnector(): Promise<EmbeddedWalletConnector> {
@@ -148,87 +123,5 @@ export class EmbeddedWallet
     this.connector.removeListener("connected", this.onConnected);
     this.connector.removeListener("disconnect", this.onDisconnect);
     this.connector.removeListener("change", this.onChange);
-  }
-
-  // wcv2
-  async connectApp(uri: string) {
-    if (!this.enableConnectApp) {
-      throw new Error("enableConnectApp is set to false in this wallet config");
-    }
-
-    this.wcWallet?.connectApp(uri);
-  }
-
-  async approveSession(): Promise<void> {
-    await this.wcWallet.approveSession(this);
-
-    this.emit("message", { type: "session_approved" });
-  }
-
-  rejectSession() {
-    return this.wcWallet.rejectSession();
-  }
-
-  approveRequest() {
-    return this.wcWallet.approveEIP155Request(this);
-  }
-
-  rejectRequest() {
-    return this.wcWallet.rejectEIP155Request();
-  }
-
-  getActiveSessions(): WCSession[] {
-    if (!this.wcWallet) {
-      throw new Error(
-        "Please, init the wallet before making session requests.",
-      );
-    }
-
-    return this.wcWallet.getActiveSessions();
-  }
-
-  disconnectSession(): Promise<void> {
-    return this.wcWallet?.disconnectSession();
-  }
-
-  isWCReceiverEnabled() {
-    return this.enableConnectApp;
-  }
-
-  setupWalletConnectEventsListeners() {
-    if (!this.wcWallet) {
-      throw new Error(
-        "Please, init the wallet before making session requests.",
-      );
-    }
-
-    this.wcWallet.on("session_proposal", (proposal: WCProposal) => {
-      this.emit("message", {
-        type: "session_proposal",
-        data: proposal,
-      });
-    });
-
-    this.wcWallet.on("session_delete", () => {
-      this.emit("message", { type: "session_delete" });
-    });
-
-    this.wcWallet.on("switch_chain", (request: WCRequest) => {
-      const chainId = request.params[0].chainId;
-
-      this.emit("message", {
-        type: "switch_chain",
-        data: { chainId },
-      });
-
-      this.wcWallet.disconnectSession();
-    });
-
-    this.wcWallet.on("session_request", (request: WCRequest) => {
-      this.emit("message", {
-        type: "session_request",
-        data: request,
-      });
-    });
   }
 }

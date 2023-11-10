@@ -11,18 +11,15 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import ConnectAppField from "./ConnectAppField";
 import DisconnectIcon from "../../assets/disconnect";
 import { IconTextButton } from "../base/IconTextButton";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
-  onConnectAppTriggered,
   hideSwitchToPersonalWallet,
 }: {
   onExportPress: () => void;
-  onConnectAppTriggered: () => void;
   hideSwitchToPersonalWallet?: boolean;
 }) => {
   const l = useLocale();
@@ -83,10 +80,6 @@ export const SmartWalletAdditionalActions = ({
           onPress={onWalletPress}
         />
       )}
-
-      {!showSmartWallet && smartWallet?.enableConnectApp ? (
-        <ConnectAppField onConnectAppTriggered={onConnectAppTriggered} />
-      ) : null}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (
         <>

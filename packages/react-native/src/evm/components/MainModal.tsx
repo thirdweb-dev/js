@@ -20,8 +20,6 @@ export const MainModal = () => {
 
   const { isOpen, isSheet } = modalState;
 
-  console.log("MainModal.modalState", modalState);
-
   const view = useMemo(() => {
     switch (modalState?.view) {
       case "ConnectWalletFlow":

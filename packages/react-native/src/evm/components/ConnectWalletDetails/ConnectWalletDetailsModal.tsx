@@ -135,7 +135,6 @@ export const ConnectWalletDetailsModal = ({
       return (
         <SmartWalletAdditionalActions
           onExportPress={onExportLocalWalletPress}
-          onConnectAppTriggered={onClosePress}
           hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
         />
       );
@@ -211,7 +210,6 @@ export const ConnectWalletDetailsModal = ({
     activeWallet?.walletId,
     smartWallet,
     onExportLocalWalletPress,
-    onClosePress,
     l.connect_wallet_details.additional_actions,
     l.connect_wallet_details.backup_wallet,
     l.connect_wallet_details.import_wallet,

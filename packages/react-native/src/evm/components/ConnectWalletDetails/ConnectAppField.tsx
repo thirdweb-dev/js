@@ -1,5 +1,4 @@
 import { useWallet } from "@thirdweb-dev/react-core";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
@@ -14,7 +13,7 @@ import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
 import { useLocale } from "../../providers/ui-context-provider";
-import { isWalletConnectReceiverEnabled } from "../../wallets/utils";
+import { useWalletConnectHandler } from "../../providers/context-provider";
 
 const ConnectAppField = ({
   onConnectAppTriggered,
@@ -29,24 +28,20 @@ const ConnectAppField = ({
   const wallet = useWallet();
   const [showQRCodeScan, setShowQRCodeScan] = useState(false);
   const wcUriRef = useRef<string | undefined>();
+  const walletConnectHandler = useWalletConnectHandler();
 
   const getAppMeta = useCallback(() => {
-    if (isWalletConnectReceiverEnabled(wallet)) {
-      const sessions = (
-        wallet as unknown as IWalletConnectReceiver
-      ).getActiveSessions();
-      if (Object.keys(sessions).length > 0) {
-        setAppMeta({
-          name: sessions[0].peer.metadata.name,
-          iconUrl: sessions[0].peer.metadata.icons[0],
-        });
-      }
+    const sessions = walletConnectHandler?.getActiveSessions();
+    if (sessions && Object.keys(sessions).length > 0) {
+      setAppMeta({
+        name: sessions[0].peer.metadata.name,
+        iconUrl: sessions[0].peer.metadata.icons[0],
+      });
     }
-  }, [wallet]);
+  }, [walletConnectHandler]);
 
-  const onSmartWalletWCMessage = useCallback(
+  const onWalletConnectMessage = useCallback(
     ({ type }: { type: string }) => {
-      console.log("ConnectAppField.onSmartWalletWCMessage", type);
       if (type === "session_approved") {
         getAppMeta();
       } else if (type === "session_delete") {
@@ -58,24 +53,22 @@ const ConnectAppField = ({
 
   useEffect(() => {
     if (wallet) {
-      console.log("ConnectAppField.addListener");
-      wallet.addListener("message", onSmartWalletWCMessage);
+      wallet.addListener("message", onWalletConnectMessage);
 
       getAppMeta();
     }
 
     return () => {
       if (wallet) {
-        console.log("ConnectAppField.removeListener");
-        wallet.removeListener("message", onSmartWalletWCMessage);
+        wallet.removeListener("message", onWalletConnectMessage);
       }
     };
-  }, [getAppMeta, onSmartWalletWCMessage, wallet]);
+  }, [getAppMeta, onWalletConnectMessage, wallet]);
 
   const onConnectDappPress = () => {
     if (appMeta) {
       reset();
-      (wallet as unknown as IWalletConnectReceiver).disconnectSession();
+      walletConnectHandler?.disconnectSession();
     } else {
       setShowWCInput(true);
     }
@@ -117,7 +110,7 @@ const ConnectAppField = ({
 
     onConnectAppTriggered?.();
 
-    (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
+    walletConnectHandler?.connectApp(uriToUse);
 
     setWCUri(undefined);
     wcUriRef.current = undefined;

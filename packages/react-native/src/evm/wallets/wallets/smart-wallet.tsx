@@ -1,6 +1,5 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { SmartWallet, createAsyncLocalStorage } from "@thirdweb-dev/wallets";
-import { createSyncStorage } from "../../../core/AsyncStorage";
 import { SmartWalletConfig } from "../types/smart-wallet";
 import { SmartWalletFlow } from "../../components/ConnectWalletFlow/SmartWallet/SmartWalletFlow";
 
@@ -17,7 +16,6 @@ export const smartWallet = (
         ...options,
         ...config,
         walletStorage: createAsyncLocalStorage("smart-wallet"),
-        wcStorage: createSyncStorage("smart-wallet"),
       }),
     connectUI(props) {
       return <SmartWalletFlow {...props} personalWalletConfig={wallet} />;
