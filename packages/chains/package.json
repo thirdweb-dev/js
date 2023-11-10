@@ -30,7 +30,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "deepmerge": "^4.3.1",
     "eslint-config-thirdweb": "workspace:*",
     "jest": "^29.6.2",
