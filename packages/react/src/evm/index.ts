@@ -70,4 +70,5 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  RabbyWallet,
 } from "@thirdweb-dev/wallets";
