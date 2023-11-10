@@ -10,17 +10,17 @@ import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
+import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
-import type { AuthOption, EmbeddedWalletLoginType } from "./types";
-import { Img } from "../../../components/Img";
 import { socialIcons } from "./socialIcons";
-import { TextDivider } from "../../../components/TextDivider";
+import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -37,7 +37,7 @@ export const EmbeddedWalletFormUI = (props: {
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
     google: locale.signInWithGoogle,
-    facebook: locale.signInWithFacebook,
+    // facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
   };
 
