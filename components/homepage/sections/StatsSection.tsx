@@ -1,4 +1,4 @@
-import { Box, Container, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 const stats: StatBoxProps[] = [
@@ -28,16 +28,17 @@ const Stat: React.FC<StatBoxProps> = ({
   showRightBorder,
 }) => {
   return (
-    <Box
+    <Flex
+      justifyContent="center"
+      flexDir={"column"}
       zIndex={10}
       position="relative"
       textAlign="center"
       p={{ base: 4, md: 6 }}
       alignItems={"center"}
-      borderRight={{
-        base: "none",
-        md: showRightBorder ? "1px solid hsl(0deg 0% 100% / 15%)" : "none",
-      }}
+      border="1px solid #252830"
+      borderRadius="12px"
+      minH={"244px"}
     >
       <Heading
         as="h3"
@@ -45,20 +46,20 @@ const Stat: React.FC<StatBoxProps> = ({
         bgClip="text"
         display={"inline-block"}
         letterSpacing="-0.05em"
-        fontSize={{ md: "56px", base: "48px" }}
+        fontSize={{ md: "80px", base: "72px" }}
         mb={2}
       >
         {title}
       </Heading>
       <Text
-        size="body.lg"
+        fontSize={{ md: "24px", base: "20px" }}
         lineHeight={1.5}
-        fontWeight={400}
+        fontWeight={500}
         color="whiteAlpha.700"
       >
         {description}
       </Text>
-    </Box>
+    </Flex>
   );
 };
 
@@ -71,17 +72,7 @@ export const StatsSection: React.FC = () => {
       mb={{ base: 12, md: 40 }}
       zIndex={10}
     >
-      <SimpleGrid
-        columns={{ md: 3, base: 1 }}
-        px={{ base: 4, md: 0 }}
-        boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
-        borderRadius="12px"
-        background="rgba(0,0,0,0.2)"
-      >
-        {stats.map((stat, i) => (
-          <Stat key={stat.title} {...stat} showRightBorder={i !== 2} />
-        ))}
-      </SimpleGrid>
+      <Stat title="70,000+" description="developers use thirdweb every month" />
     </Container>
   );
 };

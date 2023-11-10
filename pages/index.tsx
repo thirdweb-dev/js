@@ -1,3 +1,4 @@
+import HomePageCard from "components/homepage/sections/HomePageCard";
 import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 import { BuildSection } from "../components/homepage/sections/key-features/BuildSection";
 import { HowItWorksSection } from "../components/homepage/sections/key-features/HowItWorksSection";
@@ -42,7 +43,98 @@ const HomePage: ThirdwebNextPage = () => {
           <HeroSection />
           <PartnerCarousel />
           <StatsSection />
-          <HowItWorksSection />
+          <HomePageCard
+            title="Onboard everyone to web3, instantly"
+            description="The complete web3 wallet stack — with a customizable Connect Wallet modal, embedded wallets for flexible sign-in options, and account abstraction for the smoothest user experiences."
+            introductionTitle="WALLET PRODUCTS"
+            image={require("public/assets/bear-market-airdrop/desktop-wallets.png")}
+            mobileImage={require("public/assets/bear-market-airdrop/mobile-wallets.png")}
+            items={[
+              {
+                title: "Connect",
+                description: "Fully customizable Connect Wallet component",
+                img: require("public/assets/product-icons/wallet-sdk.png"),
+                link: "/connect",
+              },
+              {
+                title: "Smart Wallet",
+                description: "Complete toolkit for Account Abstraction",
+                img: require("public/assets/product-icons/wallet-sdk.png"),
+                link: "/account-abstraction",
+              },
+              {
+                title: "Embedded Wallet",
+                description: "Email & social login wallets for your customers",
+                img: require("public/assets/product-icons/wallet-sdk.png"),
+                link: "/embedded-wallets",
+              },
+            ]}
+          />
+          <HomePageCard
+            title="Build smart contracts, deploy on any EVM"
+            description="The smart contract development toolkit — with a powerful Solidity SDK to build custom contracts, a library of pre-built & audited contracts, and a 1-click deployment flow to any EVM-compatible blockchains."
+            introductionTitle="CONTRACT PRODUCTS"
+            image={require("public/assets/bear-market-airdrop/desktop-contracts.png")}
+            mobileImage={require("public/assets/bear-market-airdrop/mobile-contracts.png")}
+            items={[
+              {
+                title: "Deploy",
+                description: "Contract deployment built for any use-case.",
+                img: require("public/assets/product-icons/deploy.png"),
+                link: "/deploy",
+              },
+              {
+                title: "Interact",
+                description:
+                  "Integrate smart contract interactions directly into your app",
+                img: require("public/assets/product-icons/interact.png"),
+                link: "/interact",
+              },
+              {
+                title: "Build",
+                description: "Write your own smart contracts",
+                img: require("public/assets/product-icons/extensions.png"),
+                link: "/build",
+              },
+              {
+                title: "Explore",
+                description: "Ready-to-deploy contracts",
+                img: require("public/assets/product-icons/contracts.png"),
+                link: "/smart-contracts",
+              },
+            ]}
+          />
+          <HomePageCard
+            title="Scale with enterprise-grade infrastructure"
+            description="The production-grade server for scalable web3 apps — with backend wallet creation, nonce management, smart contract interactions, account abstraction support, gasless transactions, and managed infrastructure."
+            introductionTitle="INFRASTRUCTURE PRODUCT"
+            image={require("public/assets/bear-market-airdrop/desktop-engine.png")}
+            mobileImage={require("public/assets/bear-market-airdrop/mobile-engine.png")}
+            items={[
+              {
+                title: "Engine",
+                description:
+                  "HTTP server with contract APIs and backend wallets",
+                img: require("public/assets/product-icons/engine.png"),
+                link: "/engine",
+              },
+            ]}
+          />
+          <HomePageCard
+            title="Simplify NFT purchases with fiat checkouts"
+            description="The most powerful NFT checkout — with worldwide availability, support for major payment methods, and full compliance for enterprise-grade apps. Built to onboard everyone, even if they've never created a web3 wallet or bought crypto."
+            introductionTitle="CHECKOUT PRODUCT"
+            image={require("public/assets/bear-market-airdrop/desktop-checkout.png")}
+            mobileImage={require("public/assets/bear-market-airdrop/mobile-checkout.png")}
+            items={[
+              {
+                title: "NFT Checkout",
+                description: "Credit card checkout for NFTs",
+                img: require("public/assets/product-icons/payments.png"),
+                link: "/checkout",
+              },
+            ]}
+          />
           <WithoutThirdwebSection />
           <ValuesSection />
           <Suspense>
