@@ -11,7 +11,6 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import ConnectAppField from "./ConnectAppField";
 import DisconnectIcon from "../../assets/disconnect";
 import { IconTextButton } from "../base/IconTextButton";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
@@ -81,10 +80,6 @@ export const SmartWalletAdditionalActions = ({
           onPress={onWalletPress}
         />
       )}
-
-      {!showSmartWallet && smartWallet?.enableConnectApp ? (
-        <ConnectAppField />
-      ) : null}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (
         <>

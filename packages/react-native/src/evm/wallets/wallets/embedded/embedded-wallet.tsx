@@ -6,6 +6,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
+import { WalletConnectReceiverConfig } from "@thirdweb-dev/wallets";
 
 type AuthOption = "email" | "google";
 
@@ -14,7 +15,7 @@ export type EmbeddedWalletConfig = {
     options: AuthOption[];
     redirectUrl?: string;
   };
-};
+} & WalletConnectReceiverConfig;
 
 export const embeddedWallet = (
   config?: EmbeddedWalletConfig,
@@ -36,6 +37,7 @@ export const embeddedWallet = (
     create(options: WalletOptions) {
       return new EmbeddedWallet({
         ...options,
+        ...config,
         clientId: options.clientId || "",
       });
     },

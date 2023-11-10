@@ -30,6 +30,8 @@ import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
 import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 import { useLocale } from "../../providers/ui-context-provider";
+import { isWalletConnectReceiverEnabled } from "../../wallets/utils";
+import ConnectAppField from "./ConnectAppField";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -206,11 +208,14 @@ export const ConnectWalletDetailsModal = ({
     return null;
   }, [
     activeWallet?.walletId,
-    isImportModalVisible,
-    onExportLocalWalletPress,
-    onWalletImported,
     smartWallet,
-    l,
+    onExportLocalWalletPress,
+    l.connect_wallet_details.additional_actions,
+    l.connect_wallet_details.backup_wallet,
+    l.connect_wallet_details.import_wallet,
+    l.local_wallet.this_is_a_temporary_wallet,
+    isImportModalVisible,
+    onWalletImported,
     hideSwitchToPersonalWallet,
   ]);
 
@@ -300,6 +305,9 @@ export const ConnectWalletDetailsModal = ({
                 }}
               />
             )}
+            {isWalletConnectReceiverEnabled(activeWallet) ? (
+              <ConnectAppField onConnectAppTriggered={onClosePress} />
+            ) : null}
             {getAdditionalActions()}
             {extraRows ? extraRows({}) : null}
             {addressCopied === true ? (
