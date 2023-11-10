@@ -17,6 +17,7 @@ import {
   AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  EmbeddedWalletOauthStrategy,
 } from "./types";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
@@ -268,8 +269,11 @@ function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
 }
 
-const oauthStrategyToAuthProvider = {
+const oauthStrategyToAuthProvider: Record<
+  EmbeddedWalletOauthStrategy,
+  AuthProvider
+> = {
   google: AuthProvider.GOOGLE,
-  facebook: AuthProvider.FACEBOOK,
+  // facebook: AuthProvider.FACEBOOK,
   apple: AuthProvider.APPLE,
-} as const;
+};
