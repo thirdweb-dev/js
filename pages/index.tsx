@@ -100,7 +100,7 @@ const HomePage: ThirdwebNextPage = () => {
                 title: "Explore",
                 description: "Ready-to-deploy contracts",
                 img: require("public/assets/product-icons/contracts.png"),
-                link: "/smart-contracts",
+                link: "/explore",
               },
             ]}
           />
