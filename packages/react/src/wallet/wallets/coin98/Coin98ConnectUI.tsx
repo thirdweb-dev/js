@@ -53,7 +53,7 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
       else {
         // on mobile, open the Coin98 Mobile via wallet connect
         if (isMobile()) {
-          window.open(`https://coin98.com/dapp/${window.location.toString()}`);
+          window.open(`core98://${window.location.toString()}`);
         } else {
           // on desktop, show the Coin98 app scan qr code
           setScreen("scanning");
