@@ -1,6 +1,7 @@
 type WalletSetupOptions = {
   imports: string[];
   thirdwebProvider: {
+    locale: string;
     supportedWallets?: string;
     authConfig?: string;
   };
@@ -25,13 +26,18 @@ type WalletSetupOptions = {
 
 export function getCode(options: WalletSetupOptions) {
   const hasThemeOverrides = Object.keys(options.colorOverrides).length > 0;
-  let themeFn = "";
   if (hasThemeOverrides) {
-    themeFn = options.baseTheme === "dark" ? "darkTheme" : "lightTheme";
+    const themeFn = options.baseTheme === "dark" ? "darkTheme" : "lightTheme";
 
     options.connectWallet.theme = `${themeFn}(${JSON.stringify({
       colors: options.colorOverrides,
     })})`;
+
+    options.imports.push(themeFn);
+  }
+
+  if (options.thirdwebProvider.locale !== "en()") {
+    options.imports.push(options.thirdwebProvider.locale.slice(0, -2));
   }
 
   return `\
@@ -39,7 +45,6 @@ import {
   ThirdwebProvider,
   ConnectWallet
   ${options.imports.length > 0 ? `, ${options.imports.join(",")}` : ""},
-${themeFn}
 } from "@thirdweb-dev/react";
 
 ${

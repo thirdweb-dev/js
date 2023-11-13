@@ -10,6 +10,8 @@ import {
   Spacer,
   Switch,
   Icon,
+  Select,
+  FormControl,
 } from "@chakra-ui/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
@@ -82,6 +84,7 @@ export const ConnectWalletPlayground: React.FC<{
   const selectedTheme = colorMode === "light" ? "light" : "dark";
   const [authEnabled, setAuthEnabled] = useState(false);
   const [switchToActiveChain, setSwitchToActiveChain] = useState(false);
+  const [locale, setLocale] = useState<"en" | "ja" | "es">("en");
   const [code, setCode] = useState("");
 
   const { colorOverrides, themeObj, setColorOverrides } =
@@ -142,6 +145,7 @@ export const ConnectWalletPlayground: React.FC<{
 
     const _code = getCode({
       baseTheme: selectedTheme,
+
       colorOverrides,
       imports: enabledWallets.map(
         (walletId) => walletInfoRecord[walletId].import,
@@ -152,6 +156,7 @@ export const ConnectWalletPlayground: React.FC<{
           }
         : undefined,
       thirdwebProvider: {
+        locale: `${locale}()`,
         supportedWallets:
           enabledWallets.length > 0
             ? getSupportedWalletsCode(enabledWallets)
@@ -202,6 +207,7 @@ export const ConnectWalletPlayground: React.FC<{
     colorOverrides,
     tosUrl,
     privacyPolicyUrl,
+    locale,
   ]);
 
   const welcomeScreenContent = (
@@ -491,6 +497,7 @@ export const ConnectWalletPlayground: React.FC<{
       >
         <Box>
           <PreviewThirdwebProvider
+            locale={locale}
             authEnabled={authEnabled}
             supportedWallets={supportedWallets}
           >
@@ -521,6 +528,7 @@ export const ConnectWalletPlayground: React.FC<{
         <Text color="faded">Modal UI</Text>
         <Box height={2} />
         <PreviewThirdwebProvider
+          locale={locale}
           authEnabled={authEnabled}
           supportedWallets={supportedWallets}
         >
@@ -604,6 +612,29 @@ export const ConnectWalletPlayground: React.FC<{
             </Flex>
           </FormItem>
         )}
+
+        {/* Locale */}
+        <FormControl>
+          <Box flex={1}>
+            <FormLabel m={0}> Localization </FormLabel>
+          </Box>
+
+          <Spacer height={3} />
+
+          <Select
+            _focus={{
+              bg: "inputBg",
+            }}
+            value={locale}
+            onChange={(e) => {
+              setLocale(e.target.value as "en" | "ja" | "es");
+            }}
+          >
+            <option value="en">English </option>
+            <option value="ja">Japanese </option>
+            <option value="es">Spanish </option>
+          </Select>
+        </FormControl>
       </Grid>
 
       <Spacer height={8} />
@@ -692,6 +723,10 @@ export const ConnectWalletPlayground: React.FC<{
         }}
         isChecked={switchToActiveChain}
       />
+
+      <Spacer height={5} />
+      <Box borderTop="1px solid" borderColor="borderColor" />
+      <Spacer height={5} />
     </Box>
   );
 
