@@ -4,6 +4,7 @@ import type {
   BloctoWallet,
   CoinbaseWallet,
   CoreWallet,
+  DefiWallet,
   EmbeddedWallet,
   FrameWallet,
   LocalWallet,
@@ -43,6 +44,7 @@ type WalletIdToWalletTypeMap = {
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
   okx: OKXWallet;
+  defiWallet: DefiWallet;
 };
 
 /**

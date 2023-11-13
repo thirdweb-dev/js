@@ -52,6 +52,9 @@ export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider"
 export { CoreWallet, type CoreWalletOptions } from "./wallets/core-wallet";
 export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
 
+export { DefiWallet, type DefiWalletOptions } from "./wallets/defi-wallet";
+export { getInjectedDefiWalletProvider } from "./connectors/defi-wallet/getInjectedDefiWalletProvider";
+
 export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util

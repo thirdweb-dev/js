@@ -70,4 +70,5 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  DefiWallet,
 } from "@thirdweb-dev/wallets";

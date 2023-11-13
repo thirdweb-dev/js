@@ -2,6 +2,7 @@ export const walletIds = {
   blocto: "blocto",
   coinbase: "coinbase",
   coreWallet: "coreWallet",
+  defiWallet: "defiWallet",
   frame: "frame",
   localWallet: "localWallet",
   magicLink: "magicLink",
