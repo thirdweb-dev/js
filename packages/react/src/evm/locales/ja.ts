@@ -201,14 +201,16 @@ export function jaDefault(): ThirdwebLocale {
       },
       embeddedWallet: {
         signInWithGoogle: "Googleでサインイン",
+        signInWithFacebook: "Facebookでサインイン",
+        signInWithApple: "Appleでサインイン",
         emailPlaceholder: "メールアドレスを入力してください",
         submitEmail: "続ける",
         emailRequired: "メールアドレスが必要です",
         invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
-        googleLoginScreen: {
+        socialLoginScreen: {
           title: "サインイン",
-          instruction: "ポップアップ内でGoogleアカウントを選択してください",
+          instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct
           failed: "サインインに失敗しました",
           retry: "再試行",
         },

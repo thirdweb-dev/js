@@ -81,6 +81,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           redirectUrl: params.redirectUrl,
         });
       }
+      case "facebook": {
+        return this.socialLogin({
+          provider: AuthProvider.FACEBOOK,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "apple": {
+        return this.socialLogin({
+          provider: AuthProvider.APPLE,
+          redirectUrl: params.redirectUrl,
+        });
+      }
       case "jwt": {
         return this.customJwt({
           jwt: params.jwt,
@@ -179,11 +191,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       );
       if (error instanceof Error) {
         throw new Error(
-          `Error logging in with ${oauthOption.provider}: ${error.message}`,
+          `Error signing in with ${oauthOption.provider}: ${error.message}`,
         );
       } else {
         throw new Error(
-          `An unknown error occurred logging in with ${oauthOption.provider}`,
+          `An unknown error occurred signing in with ${oauthOption.provider}`,
         );
       }
     }
