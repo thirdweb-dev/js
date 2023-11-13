@@ -49,6 +49,9 @@ export * from "./wallets/token-bound-smart-wallet";
 export { OKXWallet, type OKXWalletOptions } from "./wallets/okx";
 export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider";
 
+export { CoreWallet, type CoreWalletOptions } from "./wallets/core-wallet";
+export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
+
 export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util

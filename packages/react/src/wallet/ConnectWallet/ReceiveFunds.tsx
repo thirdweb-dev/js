@@ -9,14 +9,16 @@ import { Theme, iconSize, radius, spacing } from "../../design-system";
 import { QRCode } from "../../components/QRCode";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
   const { hasCopied, onCopy } = useClipboard(address || "");
+  const locale = useTWLocale().connectWallet.receiveFundsScreen;
 
   return (
     <Container p="lg">
-      <ModalHeader title="Receive Funds" />
+      <ModalHeader title={locale.title} />
 
       <Spacer y="xl" />
 
@@ -35,7 +37,7 @@ export function ReceiveFunds(props: { iconUrl: string }) {
       </Container>
       <Spacer y="xl" />
 
-      <WalletAddressContianer onClick={onCopy}>
+      <WalletAddressContainer onClick={onCopy}>
         <Text color="primaryText" size="md">
           {shortenString(address || "")}
         </Text>
@@ -44,19 +46,18 @@ export function ReceiveFunds(props: { iconUrl: string }) {
           tip="Copy address"
           hasCopied={hasCopied}
         />
-      </WalletAddressContianer>
+      </WalletAddressContainer>
 
       <Spacer y="lg" />
 
-      <Text multiline center>
-        Copy the wallet address to <br />
-        send funds to this wallet
+      <Text multiline center balance>
+        {locale.instruction}
       </Text>
     </Container>
   );
 }
 
-const WalletAddressContianer = styled.button<{ theme?: Theme }>`
+const WalletAddressContainer = styled.button<{ theme?: Theme }>`
   all: unset;
   width: 100%;
   box-sizing: border-box;

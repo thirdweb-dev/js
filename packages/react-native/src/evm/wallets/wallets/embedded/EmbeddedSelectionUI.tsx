@@ -4,19 +4,24 @@ import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
-import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
 import {
   useGlobalTheme,
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { EmbeddedWalletConfig } from "./embedded-wallet";
-import { AuthProvider } from "@thirdweb-dev/wallets";
+import {
+  AUTH_OPTIONS_ICONS,
+  AUTH_OPTIONS_TEXT,
+  AuthOption,
+} from "../../types/embedded-wallet";
+import { SquareButton } from "../../../components/base/SquareButton";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
@@ -33,9 +38,11 @@ export const EmailSelectionUI: React.FC<
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+  const supportedWallets = useWallets();
 
   const isEmailEnabled = auth?.options.includes("email");
-  const isGoogleEnabled = auth?.options.includes("google");
+  const socialLogins = auth?.options.filter((o) => o !== "email");
+  const isSocialLoginsEnabled = socialLogins && socialLogins.length > 0;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -79,12 +86,12 @@ export const EmailSelectionUI: React.FC<
     }
   };
 
-  const onGoogleSignInPress = () => {
+  const onProviderPress = (authOption: Omit<AuthOption, "email">) => {
     onSelect({
       email: emailInput,
       emailWallet,
       oauthOptions: {
-        provider: AuthProvider.GOOGLE,
+        provider: authOption,
         redirectUrl: auth?.redirectUrl,
       },
     });
@@ -92,22 +99,37 @@ export const EmailSelectionUI: React.FC<
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      {isGoogleEnabled ? (
+      {isSocialLoginsEnabled ? (
         <Box justifyContent="center">
-          <WalletButton
-            iconHeight={28}
-            iconWidth={28}
-            borderRadius="lg"
-            borderWidth={1}
-            borderColor="buttonBackgroundColor"
-            backgroundColor="buttonBackgroundColor"
-            nameColor="buttonTextColor"
-            justifyContent="center"
-            name={l.embedded_wallet.sign_in_google}
-            walletIconUrl={GOOGLE_ICON}
-            onPress={onGoogleSignInPress}
-          />
-          {isEmailEnabled ? (
+          <Box justifyContent="center" flexDirection="row">
+            {socialLogins.length === 1 ? (
+              <WalletButton
+                iconHeight={28}
+                iconWidth={28}
+                borderRadius="lg"
+                borderWidth={1}
+                borderColor="buttonBackgroundColor"
+                backgroundColor="buttonBackgroundColor"
+                nameColor="buttonTextColor"
+                flex={1}
+                justifyContent="center"
+                name={l.embedded_wallet[AUTH_OPTIONS_TEXT[socialLogins[0]]]}
+                walletIconUrl={AUTH_OPTIONS_ICONS[socialLogins[0]]}
+                onPress={() => onProviderPress(socialLogins[0])}
+              />
+            ) : (
+              socialLogins.map((provider, index) => (
+                <SquareButton
+                  key={provider}
+                  ml={index === 0 ? 0 : "md"}
+                  onPress={() => onProviderPress(provider)}
+                  iconUrl={AUTH_OPTIONS_ICONS[provider]}
+                  size={40}
+                />
+              ))
+            )}
+          </Box>
+          {isEmailEnabled && supportedWallets.length === 1 ? (
             <Box
               mb="md"
               mt="md"
@@ -125,7 +147,9 @@ export const EmailSelectionUI: React.FC<
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
-          ) : null}
+          ) : (
+            <Box mt="md" />
+          )}
         </Box>
       ) : null}
       {isEmailEnabled ? (

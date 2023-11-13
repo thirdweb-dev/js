@@ -6,6 +6,7 @@ import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
 import {
+  AuthProvider,
   EmbeddedWalletSdk,
   InitializedUser,
   SendEmailOtpReturnType,
@@ -16,6 +17,7 @@ import {
   AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  EmbeddedWalletOauthStrategy,
 } from "./types";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
@@ -232,8 +234,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           recoveryCode: params.recoveryCode,
         });
       }
+      case "apple":
+      // case "facebook":
       case "google": {
-        return ewSDK.auth.loginWithGoogle({
+        const oauthProvider = oauthStrategyToAuthProvider[strategy];
+        return ewSDK.auth.loginWithOauth({
+          oauthProvider,
           closeOpenedWindow: params.closeOpenedWindow,
           openedWindow: params.openedWindow,
         });
@@ -262,3 +268,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
 }
+
+const oauthStrategyToAuthProvider: Record<
+  EmbeddedWalletOauthStrategy,
+  AuthProvider
+> = {
+  google: AuthProvider.GOOGLE,
+  // facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
+};

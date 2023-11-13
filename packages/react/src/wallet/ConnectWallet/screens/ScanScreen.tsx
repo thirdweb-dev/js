@@ -19,11 +19,10 @@ export const ScanScreen: React.FC<{
   walletName: string;
   walletIconURL: string;
   hideBackButton: boolean;
+  qrScanInstruction: string;
+  getStartedLink: string;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
-  const walletName = props.walletName.toLowerCase().includes("wallet")
-    ? props.walletName
-    : `${props.walletName} wallet`;
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -51,8 +50,8 @@ export const ScanScreen: React.FC<{
 
           <Spacer y="lg" />
 
-          <Text center multiline>
-            Scan this with {walletName} <br /> or camera app to connect
+          <Text center multiline balance>
+            {props.qrScanInstruction}
           </Text>
         </div>
       </Container>
@@ -72,7 +71,7 @@ export const ScanScreen: React.FC<{
             textAlign: "center",
           }}
         >
-          {`Don't`} have {walletName}?
+          {props.getStartedLink}
         </Button>
       </ScreenBottomContainer>
     </Container>

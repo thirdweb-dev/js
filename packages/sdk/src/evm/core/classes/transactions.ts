@@ -437,7 +437,8 @@ export class Transaction<
     if (
       this.gaslessOptions &&
       ("openzeppelin" in this.gaslessOptions ||
-        "biconomy" in this.gaslessOptions)
+        "biconomy" in this.gaslessOptions ||
+        "engine" in this.gaslessOptions)
     ) {
       return this.sendGasless();
     }
@@ -545,7 +546,8 @@ export class Transaction<
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
-          "biconomy" in this.gaslessOptions),
+          "biconomy" in this.gaslessOptions ||
+          "engine" in this.gaslessOptions),
       "No gasless options set on this transaction!",
     );
 
@@ -877,14 +879,75 @@ export async function defaultGaslessSendFunction(
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
+  } else if (gaslessOptions && "openzeppelin" in gaslessOptions) {
+    return defenderSendFunction(
+      transaction,
+      signer,
+      provider,
+      storage,
+      gaslessOptions,
+    );
   }
-  return defenderSendFunction(
+
+  return engineSendFunction(
     transaction,
     signer,
     provider,
     storage,
     gaslessOptions,
   );
+}
+
+export async function engineSendFunction(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  invariant(
+    gaslessOptions && "engine" in gaslessOptions,
+    "calling engine gasless transaction without engine config in the SDK options",
+  );
+
+  const request = await enginePrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+  );
+
+  const res = await fetch(gaslessOptions.engine.relayerUrl, {
+    ...request,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error?.message || JSON.stringify(data.error));
+  }
+
+  const queueId = data.result.queueId as string;
+  const engineUrl = gaslessOptions.engine.relayerUrl.split("/relayer/")[0];
+  const startTime = Date.now();
+  while (true) {
+    const txRes = await fetch(`${engineUrl}/transaction/status/${queueId}`);
+    const txData = await txRes.json();
+
+    if (txData.result.transactionHash) {
+      return txData.result.transactionHash as string;
+    }
+
+    // Time out after 30s
+    if (Date.now() - startTime > 30 * 1000) {
+      throw new Error("timeout");
+    }
+
+    // Poll to check if the transaction was mined
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
 }
 
 export async function biconomySendFunction(
@@ -948,6 +1011,61 @@ export async function defenderSendFunction(
   throw new Error(
     `relay transaction failed with status: ${response.status} (${response.statusText})`,
   );
+}
+
+async function enginePrepareRequest(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+) {
+  const forwarderAddress =
+    CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+      .openzeppelinForwarder ||
+    (await computeForwarderAddress(provider, storage));
+  const ForwarderABI = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+  ).default;
+
+  const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
+  const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+    transaction.from,
+  ]);
+
+  const domain = {
+    name: "GSNv2 Forwarder",
+    version: "0.0.1",
+    chainId: transaction.chainId,
+    verifyingContract: forwarderAddress,
+  };
+  const types = {
+    ForwardRequest,
+  };
+  const message: ForwardRequestMessage | PermitRequestMessage = {
+    from: transaction.from,
+    to: transaction.to,
+    value: BigNumber.from(0).toString(),
+    gas: BigNumber.from(transaction.gasLimit).toString(),
+    nonce: BigNumber.from(nonce).toString(),
+    data: transaction.data,
+  };
+
+  const { signature: sig } = await signTypedDataInternal(
+    signer,
+    domain,
+    types,
+    message,
+  );
+  const signature: BytesLike = sig;
+
+  return {
+    method: "POST",
+    body: JSON.stringify({
+      request: message,
+      signature,
+      forwarderAddress,
+    }),
+  };
 }
 
 async function defenderPrepareRequest(

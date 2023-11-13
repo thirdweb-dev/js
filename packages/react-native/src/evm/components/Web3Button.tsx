@@ -18,7 +18,7 @@ import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
-import { useUIContext } from "../providers/ui-context-provider";
+import { useGlobalTheme, useUIContext } from "../providers/ui-context-provider";
 
 type ActionFn = (contract: SmartContract) => Promise<any>;
 
@@ -74,6 +74,7 @@ export const Web3Button = <TAction extends ActionFn>({
   theme,
   connectWalletProps,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
+  const globalTheme = useGlobalTheme();
   const address = useAddress();
   const activeWallet = useWallet();
   const walletChainId = useChainId();
@@ -155,7 +156,12 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
-      content = <ActivityIndicator size="small" color="buttonTextColor" />;
+      content = (
+        <ActivityIndicator
+          size="small"
+          color={globalTheme.colors.buttonTextColor}
+        />
+      );
       buttonLoading = true;
     }
   }

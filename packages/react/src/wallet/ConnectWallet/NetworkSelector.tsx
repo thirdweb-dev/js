@@ -30,6 +30,7 @@ import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -72,6 +73,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const theme = props.theme || themeFromContext || "dark";
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
+  const locale = useTWLocale().connectWallet.networkSelector;
 
   const _recentChains = props.recentChains;
 
@@ -149,7 +151,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
       >
         <Container>
           <Container p="lg">
-            <ModalTitle>Select Network</ModalTitle>
+            <ModalTitle>{locale.title}</ModalTitle>
           </Container>
 
           <Tabs.Root className="TabsRoot" defaultValue="all">
@@ -163,13 +165,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 }}
               >
                 <TabButton className="TabsTrigger" value="all">
-                  All
+                  {locale.allNetworks}
                 </TabButton>
                 <TabButton className="TabsTrigger" value="mainnet">
-                  Mainnets
+                  {locale.mainnets}
                 </TabButton>
                 <TabButton className="TabsTrigger" value="testnet">
-                  Testnets
+                  {locale.testnets}
                 </TabButton>
               </Tabs.List>
             </Container>
@@ -198,7 +200,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                       }}
                       tabIndex={-1}
                       variant="outline"
-                      placeholder="Search Network or Chain ID"
+                      placeholder={locale.inputPlaceholder}
                       value={searchTerm}
                       onChange={(e) => {
                         setSearchTerm(e.target.value);
@@ -296,7 +298,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                       boxShadow: "none",
                     }}
                   >
-                    Add Custom Network
+                    {locale.addCustomNetwork}
                   </Button>
                 </Container>
               </>
@@ -344,6 +346,7 @@ const NetworkTab = (props: {
     () => filterChainByType(props.popularChains || [], props.type),
     [props.type, props.popularChains],
   );
+  const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
 
   return (
     <Container
@@ -356,7 +359,7 @@ const NetworkTab = (props: {
     >
       {recentChains.length > 0 && (
         <div>
-          <SectionLabel>Recently Used</SectionLabel>
+          <SectionLabel>{locale.recentlyUsed}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
             chains={recentChains}
@@ -370,7 +373,7 @@ const NetworkTab = (props: {
 
       {popularChains.length > 0 && (
         <div>
-          <SectionLabel>Popular</SectionLabel>
+          <SectionLabel>{locale.popular}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
             chains={popularChains}
@@ -385,7 +388,7 @@ const NetworkTab = (props: {
       {/* separator  */}
       {(popularChains.length > 0 || recentChains.length > 0) && (
         <>
-          <SectionLabel>All Networks</SectionLabel>
+          <SectionLabel>{locale.others}</SectionLabel>
           <Spacer y="sm" />
         </>
       )}
@@ -410,6 +413,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   const activeChainId = useChainId();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
+  const twLocale = useTWLocale();
+  const locale = twLocale.connectWallet.networkSelector;
 
   const close = props.close;
 
@@ -456,7 +461,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
         }}
       >
         {/* Don't put a spinner here - it's gonna freeze */}
-        <Text>Loading</Text>
+        <Text>{locale.loading}</Text>
       </Container>
     );
   }
@@ -513,7 +518,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     {confirming && (
                       <>
                         <Text size="xs" color="accentText">
-                          Confirm in Wallet
+                          {twLocale.connectWallet.confirmInWallet}
                         </Text>
                         <Spinner size="xs" color="accentText" />
                       </>
@@ -522,7 +527,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     {switchingFailed && (
                       <Container animate="fadein">
                         <Text size="xs" color="danger">
-                          Failed to Switch Network
+                          {locale.failedToSwitch}
                         </Text>
                       </Container>
                     )}

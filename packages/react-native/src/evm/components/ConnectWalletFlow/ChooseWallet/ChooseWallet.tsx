@@ -104,35 +104,31 @@ export function ChooseWallet({
         onBackPress={isConnectAWalletEnabled ? onBackPress : undefined}
         onClose={onClose}
         headerText={
-          headerText ? (
-            headerText
-          ) : (
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              alignContent="center"
-              justifyContent="center"
-            >
-              {modalTitleIconUrl !== undefined ? (
-                modalTitleIconUrl.length === 0 ? null : (
-                  <ImageSvgUri
-                    width={26}
-                    height={15}
-                    imageUrl={modalTitleIconUrl}
-                  />
-                )
-              ) : (
-                <ThirdwebLogo
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            alignContent="center"
+            justifyContent="center"
+          >
+            {modalTitleIconUrl !== undefined ? (
+              modalTitleIconUrl.length === 0 ? null : (
+                <ImageSvgUri
                   width={26}
                   height={15}
-                  color={theme.colors.backgroundInverted}
+                  imageUrl={modalTitleIconUrl}
                 />
-              )}
-              <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
-                {l.connect_wallet_details.connect}
-              </Text>
-            </Box>
-          )
+              )
+            ) : (
+              <ThirdwebLogo
+                width={26}
+                height={15}
+                color={theme.colors.backgroundInverted}
+              />
+            )}
+            <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
+              {headerText ? headerText : l.connect_wallet_details.connect}
+            </Text>
+          </Box>
         }
         subHeaderText={subHeaderText}
       />
