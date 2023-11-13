@@ -4,6 +4,44 @@ import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import invariant from "tiny-invariant";
 import { useApiAuthToken } from "./useApi";
 import { useAddress, useChainId } from "@thirdweb-dev/react";
+import { THIRDWEB_API_HOST } from "constants/urls";
+import { useLoggedInUser } from "./useLoggedInUser";
+
+// Engine instances
+export interface EngineInstance {
+  id: string;
+  accountId: string;
+  name: string;
+  url: string;
+  lastAccessedAt: string;
+}
+
+export function useEngineInstances() {
+  const { token } = useApiAuthToken();
+  const { user } = useLoggedInUser();
+
+  return useQuery(
+    engineKeys.instances(user?.address ?? ""),
+    async (): Promise<EngineInstance[]> => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}`);
+      }
+
+      const json = await res.json();
+      return json.data?.instances || [];
+    },
+    {
+      enabled: !!user && !!token,
+    },
+  );
+}
 
 // GET Requests
 export type BackendWallet = {

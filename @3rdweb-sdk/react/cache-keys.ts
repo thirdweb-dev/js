@@ -46,6 +46,8 @@ export const embeddedWalletsKeys = {
 
 export const engineKeys = {
   all: ["engine"] as const,
+  instances: (address: string) =>
+    [...engineKeys.all, address, "instances"] as const,
   backendWallets: (instance: string) =>
     [...engineKeys.all, instance, "backendWallets"] as const,
   transactions: (instance: string) =>
