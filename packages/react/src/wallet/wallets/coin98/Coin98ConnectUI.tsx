@@ -7,12 +7,21 @@ import type { Coin98Wallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { Coin98Scan } from "./Coin98Scan";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { coin98WalletUris } from "./coin98WalletUris";
 
 export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const locale = useTWLocale().wallets.coin98Wallet;
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connectionScreen.instruction,
+    tryAgain: locale.connectionScreen.retry,
+    inProgress: locale.connectionScreen.inProgress,
+    failed: locale.connectionScreen.failed,
+  };
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -53,7 +62,7 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
       else {
         // on mobile, open the Coin98 Mobile via wallet connect
         if (isMobile()) {
-          window.open(`core98://${window.location.toString()}`);
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the Coin98 app scan qr code
           setScreen("scanning");
@@ -81,6 +90,26 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        locale={connectingLocale}
+        onRetry={() => {
+          // NOOP - TODO make onRetry optional
+        }}
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={connected}
+        walletConfig={walletConfig}
+        appUriPrefix={coin98WalletUris}
       />
     );
   }
