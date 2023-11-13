@@ -87,11 +87,11 @@ export const COMPANY: FooterLinkInfo[] = [
   {
     name: "Privacy Policy",
     label: "privacy",
-    link: "https://thirdweb.com/privacy",
+    link: "/privacy",
   },
   {
     name: "Terms of Service",
     label: "terms",
-    link: "https://thirdweb.com/tos",
+    link: "/tos",
   },
 ];
