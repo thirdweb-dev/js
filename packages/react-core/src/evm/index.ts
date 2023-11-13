@@ -257,6 +257,12 @@ export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // utils
 export { invalidateContractAndBalances } from "./utils/cache-keys";
+export {
+  isEnsName,
+  isPossibleEVMAddress,
+  shortenAddress,
+  shortenIfAddress,
+} from "./utils/addresses";
 
 // types
 export type {

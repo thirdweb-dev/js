@@ -2,7 +2,6 @@ import { useAddress } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
 import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
-import { shortenString } from "../../evm/utils/addresses";
 import { CopyIcon } from "../../components/CopyIcon";
 import styled from "@emotion/styled";
 import { Theme, iconSize, radius, spacing } from "../../design-system";
@@ -10,6 +9,7 @@ import { QRCode } from "../../components/QRCode";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core/dist/declarations/src/evm/utils/addresses";
 
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
