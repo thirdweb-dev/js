@@ -3,8 +3,8 @@ import type { BaseContract } from "ethers";
 
 /**
  * @internal
- * @param contractWrapper
- * @param functionName
+ * @param contractWrapper - The contract wrapper to check
+ * @param functionName - The function name to check
  */
 export function hasFunction<TContract extends BaseContract>(
   functionName: string,

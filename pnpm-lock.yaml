@@ -912,6 +912,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.0.0
         version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+      eslint-plugin-tsdoc:
+        specifier: ^0.2.16
+        version: 0.2.17
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1279,6 +1282,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-tsdoc:
+        specifier: ^0.2.16
+        version: 0.2.17
       esm:
         specifier: ^3.2.25
         version: 3.2.25
@@ -1490,6 +1496,9 @@ importers:
       eslint-plugin-better-tree-shaking:
         specifier: 0.0.4
         version: 0.0.4(eslint@8.45.0)
+      eslint-plugin-tsdoc:
+        specifier: ^0.2.16
+        version: 0.2.17
       ethereum-provider:
         specifier: ^0.7.7
         version: 0.7.7

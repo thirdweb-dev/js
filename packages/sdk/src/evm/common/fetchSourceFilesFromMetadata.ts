@@ -3,8 +3,8 @@ import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @internal
- * @param publishedMetadata
- * @param storage
+ * @param publishedMetadata - The published metadata to fetch the sources for
+ * @param storage - The storage to use
  */
 
 export async function fetchSourceFilesFromMetadata(

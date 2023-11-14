@@ -718,7 +718,7 @@ export function useBurnNFT<TContract extends NFTContract>(
 /**
  * Set shared metadata
  * TODO add docs
- * @private
+ * @internal
  */
 export function useSetSharedMetadata<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,

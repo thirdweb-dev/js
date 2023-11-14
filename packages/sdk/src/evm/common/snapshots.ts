@@ -15,9 +15,9 @@ import { parseSnapshotInputs } from "./parseSnapshotInputs";
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
  * @param snapshotInput - the list of addresses to hash
  * @param tokenDecimals - the token decimals
- * @param provider
+ * @param provider - the provider to use
  * @param storage - the storage to upload to
- * @param snapshotFormatVersion
+ * @param snapshotFormatVersion - the snapshot format version
  * @returns the generated snapshot and URI
  * @internal
  */

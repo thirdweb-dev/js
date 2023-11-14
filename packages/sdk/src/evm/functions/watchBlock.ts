@@ -107,6 +107,7 @@ export type WatchBlockWithTransactionsParams = SharedBlockParams & {
  * });
  * // later on you can call unsubscribe to stop listening for new blocks
  * unsubscribe();
+ * ```
  *
  * @returns an unsubscribe function that will stop listening for new blocks when called
  * @public

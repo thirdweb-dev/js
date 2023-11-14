@@ -647,7 +647,7 @@ async function getContractInfo(address: Address, provider: providers.Provider) {
 }
 
 /**
- * a map from contractType -> contract metadata
+ * a map from contractType - contract metadata
  * @internal
  */
 export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
