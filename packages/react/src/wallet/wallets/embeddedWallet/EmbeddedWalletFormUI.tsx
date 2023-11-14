@@ -37,7 +37,7 @@ export const EmbeddedWalletFormUI = (props: {
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
     google: locale.signInWithGoogle,
-    // facebook: locale.signInWithFacebook,
+    facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
   };
 

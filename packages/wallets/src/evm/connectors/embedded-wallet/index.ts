@@ -235,7 +235,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
       }
       case "apple":
-      // case "facebook":
+      case "facebook":
       case "google": {
         const oauthProvider = oauthStrategyToAuthProvider[strategy];
         return ewSDK.auth.loginWithOauth({
@@ -274,6 +274,6 @@ const oauthStrategyToAuthProvider: Record<
   AuthProvider
 > = {
   google: AuthProvider.GOOGLE,
-  // facebook: AuthProvider.FACEBOOK,
+  facebook: AuthProvider.FACEBOOK,
   apple: AuthProvider.APPLE,
 };

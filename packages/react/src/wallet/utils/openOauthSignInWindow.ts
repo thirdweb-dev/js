@@ -14,8 +14,8 @@ function getBodyTitle(authOption: EmbeddedWalletOauthStrategy) {
 
 function getWidthAndHeight(authOption: EmbeddedWalletOauthStrategy) {
   switch (authOption) {
-    // case "facebook":
-    //   return { width: 715, height: 555 };
+    case "facebook":
+      return { width: 715, height: 555 };
     default:
       return { width: 350, height: 500 };
   }

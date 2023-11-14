@@ -26,7 +26,7 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
   "email",
   "google",
   "apple",
-  // "facebook",
+  "facebook",
 ];
 
 export const embeddedWallet = (
