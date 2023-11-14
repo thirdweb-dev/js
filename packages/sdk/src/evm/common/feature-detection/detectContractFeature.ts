@@ -7,8 +7,8 @@ import { isExtensionEnabled } from "./isFeatureEnabled";
 /**
  * Type guard for contractWrappers depending on passed feature name
  * @internal
- * @param contractWrapper
- * @param featureName
+ * @param contractWrapper - The contract wrapper to check
+ * @param featureName - The feature name to check
  */
 export function detectContractFeature<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,

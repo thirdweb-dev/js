@@ -4,7 +4,7 @@ import { hexToBytes } from "./hexToBytes";
 
 /**
  * @internal
- * @param bytecode
+ * @param bytecode - The bytecode to extract the IPFS hash from
  */
 export function extractIPFSHashFromBytecode(
   bytecode: string,

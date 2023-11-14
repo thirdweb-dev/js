@@ -554,7 +554,7 @@ export class DropClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(
@@ -892,9 +892,9 @@ export class DropClaimConditions<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - The address to claim to
+   * @param quantity - The quantity to claim
+   * @param options - Options to override the claim transaction
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */

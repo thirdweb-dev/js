@@ -4,9 +4,9 @@ import { fetchCurrencyMetadata } from "./fetchCurrencyMetadata";
 
 /**
  *
- * @param providerOrSigner
- * @param asset
- * @param price
+ * @param providerOrSigner - The provider or signer to use
+ * @param asset - The asset to fetch the value for
+ * @param price - The price to fetch the value for
  * @returns
  * @internal
  */

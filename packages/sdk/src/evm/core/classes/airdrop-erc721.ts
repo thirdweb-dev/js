@@ -62,9 +62,9 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
    * //     - array containing failed drops, if any
    *
    * ```
-   * @param tokenAddress
-   * @param tokenOwner
-   * @param contents
+   * @param tokenAddress - Address of the ERC721 token being airdropped
+   * @param tokenOwner - Address of the owner of the tokens being airdropped
+   * @param contents - Array of recipients and tokenIds to airdrop
    *
    * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC721
