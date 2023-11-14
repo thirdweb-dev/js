@@ -3,13 +3,18 @@ import { Address } from "../schema/shared/Address";
 import { resolveContractUriAndBytecode } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
-import { fetchContractMetadata } from "./fetchContractMetadata";
+import {
+  fetchContractMetadata,
+  formatCompilerMetadata,
+} from "./fetchContractMetadata";
 import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
+
+const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -49,6 +54,19 @@ export async function fetchContractMetadataFromAddress(
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
+
+  // try to resolve from DNS first
+  try {
+    const response = await fetch(
+      `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+    );
+    if (response.ok) {
+      const resolvedData = await response.json();
+      return formatCompilerMetadata(resolvedData);
+    }
+  } catch (e) {
+    // fallback to IPFS
+  }
 
   // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([

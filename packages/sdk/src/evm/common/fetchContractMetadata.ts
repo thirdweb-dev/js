@@ -25,6 +25,10 @@ export async function fetchContractMetadata(
       `Could not resolve metadata for contract at ${compilerMetadataUri}`,
     );
   }
+  return formatCompilerMetadata(metadata);
+}
+
+export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
