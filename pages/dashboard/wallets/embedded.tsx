@@ -204,6 +204,13 @@ function ViewDocs() {
         >
           How to Build Your Own UI
         </GuideLink>
+
+        <GuideLink
+          href="https://portal.thirdweb.com/embedded-wallet/custom-auth-server"
+          label="how-to-custom-auth-server"
+        >
+          Create a custom auth server
+        </GuideLink>
       </Flex>
     </Card>
   );
