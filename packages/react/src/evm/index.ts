@@ -70,4 +70,5 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  OneKeyWallet,
 } from "@thirdweb-dev/wallets";

@@ -171,6 +171,7 @@ export function jaDefault(): ThirdwebLocale {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
       paperWallet: {
         signIn: "サインイン",
         signInWithGoogle: "Googleでサインイン",

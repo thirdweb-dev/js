@@ -85,6 +85,13 @@
       },
       "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
     },
+    "./evm/wallets/onekey": {
+      "module": {
+        "browser": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.browser.esm.js",
+        "default": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.esm.js"
+      },
+      "default": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.cjs.js"
+    },
     "./evm/wallets/signer": {
       "module": {
         "browser": "./evm/wallets/signer/dist/thirdweb-dev-wallets-evm-wallets-signer.browser.esm.js",
@@ -238,6 +245,13 @@
         "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.esm.js"
       },
       "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.cjs.js"
+    },
+    "./evm/connectors/onekey": {
+      "module": {
+        "browser": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.browser.esm.js",
+        "default": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.esm.js"
+      },
+      "default": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.cjs.js"
     },
     "./evm/connectors/signer": {
       "module": {

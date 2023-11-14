@@ -171,6 +171,7 @@ export function esDefault(): ThirdwebLocale {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
       paperWallet: {
         signIn: "Iniciar sesión",
         signInWithGoogle: "Iniciar sesión con Google",

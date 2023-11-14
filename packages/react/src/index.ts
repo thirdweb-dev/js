@@ -20,6 +20,7 @@ export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 export { okxWallet } from "./wallet/wallets/okx/okxWallet";
 export { coreWallet } from "./wallet/wallets/coreWallet/coreWallet";
+export { oneKeyWallet } from "./wallet/wallets/oneKey/oneKeyWallet";
 export { darkTheme, lightTheme } from "./design-system/index";
 export type { Theme, ThemeOverrides } from "./design-system/index";
 
