@@ -377,3 +377,14 @@ export const FEATURE_AIRDROP_ERC1155 = {
   abis: [IAirdropERC1155],
   features: {},
 } as const;
+
+export const FEATURE_FALLBACK = {
+  name: "Fallback",
+  namespace: "fallback",
+  docLinks: {
+    sdk: "",
+    contracts: "",
+  },
+  abis: [fallbackAbi],
+  features: {},
+} as const;
