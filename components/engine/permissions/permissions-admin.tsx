@@ -31,7 +31,7 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
         </Text>
       </Flex>
       <AdminsTable
-        instance={instance}
+        instanceUrl={instance}
         admins={admins.data || []}
         isLoading={admins.isLoading}
         isFetched={admins.isFetched}

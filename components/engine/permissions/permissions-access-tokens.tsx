@@ -31,7 +31,7 @@ export const PermissionsAccessTokens: React.FC<
         </Text>
       </Flex>
       <AccessTokensTable
-        instance={instance}
+        instanceUrl={instance}
         accessTokens={accessTokens.data || []}
         isLoading={accessTokens.isLoading}
         isFetched={accessTokens.isFetched}

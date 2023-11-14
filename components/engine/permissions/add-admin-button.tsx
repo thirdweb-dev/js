@@ -15,6 +15,7 @@ import {
   Icon,
   FormControl,
   Input,
+  Stack,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -33,6 +34,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
   const form = useForm<EngineAdmin>({
     defaultValues: {
       permissions: "ADMIN",
+      label: undefined,
     },
   });
 
@@ -88,17 +90,27 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
             });
           })}
         >
-          <ModalHeader>Add New Admin</ModalHeader>
+          <ModalHeader>Add Admin</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl isRequired>
-              <FormLabel>Wallet Address</FormLabel>
-              <Input
-                type="text"
-                placeholder="eg: 0x..."
-                {...form.register("walletAddress", { required: true })}
-              />
-            </FormControl>
+            <Stack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>Wallet Address</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="The wallet address for this admin"
+                  {...form.register("walletAddress", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Label</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Enter a description for this admin"
+                  {...form.register("label")}
+                />
+              </FormControl>
+            </Stack>
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>

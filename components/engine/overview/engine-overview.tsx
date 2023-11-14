@@ -96,7 +96,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
         </Flex>
 
         <BackendWalletsTable
-          instance={instance}
+          instanceUrl={instance}
           wallets={backendWallets.data ?? []}
           isLoading={backendWallets.isLoading}
           isFetched={backendWallets.isFetched}

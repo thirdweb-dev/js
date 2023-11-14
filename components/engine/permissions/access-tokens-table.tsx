@@ -1,6 +1,7 @@
 import {
   AccessToken,
   useEngineRevokeAccessToken,
+  useEngineUpdateAccessToken,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Modal,
@@ -12,18 +13,22 @@ import {
   ModalFooter,
   Flex,
   useDisclosure,
+  UseDisclosureReturn,
+  Stack,
+  FormControl,
+  Input,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Button, Text } from "tw-components";
+import { Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { toDateTimeLocal } from "utils/date-utils";
 
 interface AccessTokensTableProps {
-  instance: string;
+  instanceUrl: string;
   accessTokens: AccessToken[];
   isLoading: boolean;
   isFetched: boolean;
@@ -37,6 +42,16 @@ const columns = [
     cell: (cell) => {
       return (
         <Text fontFamily="mono" fontSize="small">
+          {cell.getValue()}
+        </Text>
+      );
+    },
+  }),
+  columnHelper.accessor("label", {
+    header: "Label",
+    cell: (cell) => {
+      return (
+        <Text isTruncated maxW={300}>
           {cell.getValue()}
         </Text>
       );
@@ -63,54 +78,93 @@ const columns = [
 ];
 
 export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
-  instance,
+  instanceUrl,
   accessTokens,
   isLoading,
   isFetched,
 }) => {
-  const [accessTokenToRevoke, setAccessTokenToRevoke] = useState<AccessToken>();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: revokePermissions } = useEngineRevokeAccessToken(instance);
+  const editDisclosure = useDisclosure();
+  const removeDisclosure = useDisclosure();
+  const [selectedAccessToken, setSelectedAccessToken] = useState<AccessToken>();
+
+  return (
+    <>
+      <TWTable
+        title="Access Tokens"
+        data={accessTokens}
+        columns={columns}
+        isLoading={isLoading}
+        isFetched={isFetched}
+        onEdit={(accessToken) => {
+          setSelectedAccessToken(accessToken);
+          editDisclosure.onOpen();
+        }}
+        onDelete={(accessToken) => {
+          setSelectedAccessToken(accessToken);
+          removeDisclosure.onOpen();
+        }}
+      />
+
+      {selectedAccessToken && editDisclosure.isOpen && (
+        <EditModal
+          accessToken={selectedAccessToken}
+          disclosure={editDisclosure}
+          instanceUrl={instanceUrl}
+        />
+      )}
+      {selectedAccessToken && removeDisclosure.isOpen && (
+        <RemoveModal
+          accessToken={selectedAccessToken}
+          disclosure={removeDisclosure}
+          instanceUrl={instanceUrl}
+        />
+      )}
+    </>
+  );
+};
+
+const EditModal = ({
+  accessToken,
+  disclosure,
+  instanceUrl,
+}: {
+  accessToken: AccessToken;
+  disclosure: UseDisclosureReturn;
+  instanceUrl: string;
+}) => {
+  const { mutate: updateAccessToken } = useEngineUpdateAccessToken(instanceUrl);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully revoked access token",
-    "Failed to revoked access token",
+    "Successfully updated access token",
+    "Failed to update access token",
   );
 
-  const onDelete = (accessToken: AccessToken) => {
-    setAccessTokenToRevoke(accessToken);
-    onOpen();
-  };
+  const [label, setLabel] = useState(accessToken.label ?? "");
 
-  const onRevoke = () => {
-    trackEvent({
-      category: "engine",
-      action: "revoke-access-token",
-      label: "attempt",
-      instance,
-    });
-    revokePermissions(
+  const onClick = () => {
+    updateAccessToken(
       {
-        id: accessTokenToRevoke?.id || "",
+        id: accessToken.id,
+        label,
       },
       {
         onSuccess: () => {
           onSuccess();
-          onClose();
+          disclosure.onClose();
           trackEvent({
             category: "engine",
-            action: "revoke-access-token",
+            action: "update-access-token",
             label: "success",
-            instance,
+            instance: instanceUrl,
           });
         },
         onError: (error) => {
           onError(error);
           trackEvent({
             category: "engine",
-            action: "revoke-access-token",
+            action: "update-access-token",
             label: "error",
-            instance,
+            instance: instanceUrl,
             error,
           });
         },
@@ -119,40 +173,117 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   };
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Revoke Access Token</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Are you sure you want to revoke the access token{" "}
-              <Text fontFamily="mono" display="inline-flex">
-                {accessTokenToRevoke?.tokenMask}
-              </Text>
-              ?
-            </Text>
-          </ModalBody>
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Update Access Token</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack spacing={4}>
+            <FormControl>
+              <FormLabel>Access Token</FormLabel>
+              <Text>{accessToken.tokenMask}</Text>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Label</FormLabel>
+              <Input
+                type="text"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                placeholder="Enter a description for this access token"
+              />
+            </FormControl>
+          </Stack>
+        </ModalBody>
 
-          <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            <Button type="submit" colorScheme="red" onClick={onRevoke}>
-              Revoke
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <TWTable
-        title="access tokens"
-        data={accessTokens}
-        columns={columns}
-        isLoading={isLoading}
-        isFetched={isFetched}
-        onDelete={(accessToken) => onDelete(accessToken)}
-      />
-    </>
+        <ModalFooter as={Flex} gap={3}>
+          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+            Cancel
+          </Button>
+          <Button type="submit" colorScheme="blue" onClick={onClick}>
+            Save
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+const RemoveModal = ({
+  accessToken,
+  disclosure,
+  instanceUrl,
+}: {
+  accessToken: AccessToken;
+  disclosure: UseDisclosureReturn;
+  instanceUrl: string;
+}) => {
+  const { mutate: deleteAccessToken } = useEngineRevokeAccessToken(instanceUrl);
+  const trackEvent = useTrack();
+  const { onSuccess, onError } = useTxNotifications(
+    "Successfully deleted access token",
+    "Failed to delete access token",
+  );
+
+  const onClick = () => {
+    deleteAccessToken(
+      {
+        id: accessToken.id,
+      },
+      {
+        onSuccess: () => {
+          onSuccess();
+          disclosure.onClose();
+          trackEvent({
+            category: "engine",
+            action: "revoke-access-token",
+            label: "success",
+            instance: instanceUrl,
+          });
+        },
+        onError: (error) => {
+          onError(error);
+          trackEvent({
+            category: "engine",
+            action: "revoke-access-token",
+            label: "error",
+            instance: instanceUrl,
+            error,
+          });
+        },
+      },
+    );
+  };
+
+  return (
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Delete Access Token</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack spacing={4}>
+            <Text>Are you sure you want to delete this access token?</Text>
+            <FormControl>
+              <FormLabel>Access Token</FormLabel>
+              <Text>{accessToken.tokenMask}</Text>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Label</FormLabel>
+              <Text>{accessToken.label ?? <em>N/A</em>}</Text>
+            </FormControl>
+          </Stack>
+        </ModalBody>
+
+        <ModalFooter as={Flex} gap={3}>
+          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+            Cancel
+          </Button>
+          <Button type="submit" colorScheme="red" onClick={onClick}>
+            Delete
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };

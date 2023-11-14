@@ -23,6 +23,7 @@ import {
 } from "@tanstack/react-table";
 import pluralize from "pluralize";
 import { SetStateAction, useMemo, useState } from "react";
+import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
 import { Button, TableContainer, Text } from "tw-components";
 
@@ -32,6 +33,7 @@ type TWTableProps<TRowData> = {
   isLoading: boolean;
   isFetched: boolean;
   onRowClick?: (row: TRowData) => void;
+  onEdit?: (row: TRowData) => void;
   onDelete?: (row: TRowData) => void;
   pagination?: {
     pageSize: number;
@@ -133,7 +135,9 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
               ))}
               {/* if the row is clickable we want an arrow to show */}
               {tableProps.onRowClick && <Th border="none" />}
-              {tableProps.onDelete && <Th border="none" />}
+              {(tableProps.onEdit || tableProps.onDelete) && (
+                <Th border="none" />
+              )}
             </Tr>
           ))}
         </Thead>
@@ -185,18 +189,28 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     <Icon as={FiArrowRight} />
                   </Td>
                 )}
-                {tableProps.onDelete && (
+                {(tableProps.onEdit || tableProps.onDelete) && (
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
                     borderBottomColor="accent.100"
                   >
-                    <IconButton
-                      variant="outline"
-                      onClick={() => tableProps.onDelete?.(row.original)}
-                      icon={<Icon as={FiTrash} boxSize={4} />}
-                      aria-label="Remove"
-                    />
+                    <ButtonGroup variant="ghost" gap={2}>
+                      {tableProps.onEdit && (
+                        <IconButton
+                          onClick={() => tableProps.onEdit?.(row.original)}
+                          icon={<Icon as={BiPencil} boxSize={4} />}
+                          aria-label="Edit"
+                        />
+                      )}
+                      {tableProps.onDelete && (
+                        <IconButton
+                          onClick={() => tableProps.onDelete?.(row.original)}
+                          icon={<Icon as={FiTrash} boxSize={4} />}
+                          aria-label="Remove"
+                        />
+                      )}
+                    </ButtonGroup>
                   </Td>
                 )}
               </Tr>
