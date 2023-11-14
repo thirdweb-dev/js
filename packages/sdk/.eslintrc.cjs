@@ -4,7 +4,6 @@ module.exports = {
   plugins: ["better-tree-shaking", "eslint-plugin-tsdoc"],
   rules: {
     "better-tree-shaking/no-top-level-side-effects": "error",
-    "tsdoc/syntax": "warn",
     "no-restricted-imports": [
       "error",
       {
