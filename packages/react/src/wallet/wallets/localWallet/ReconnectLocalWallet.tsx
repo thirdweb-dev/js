@@ -2,12 +2,15 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
+import {
+  WalletConfig,
+  shortenAddress,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
-import { shortenAddress } from "../../../evm/utils/addresses";
 import { Text } from "../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";

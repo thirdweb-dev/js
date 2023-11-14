@@ -14,7 +14,6 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
@@ -61,6 +60,7 @@ import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
