@@ -41,8 +41,8 @@ type RegisterContractSuccessResponse = {
 
 /**
  *
- * @param contractAddress
- * @param chainId
+ * @param contractAddress - the contract address
+ * @param chainId - the chain id
  * @internal
  * @returns the paper xyz contract id
  * @throws if the contract is not registered on paper xyz
