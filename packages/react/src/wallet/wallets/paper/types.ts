@@ -13,7 +13,7 @@ export type PaperConfig = Omit<
 
   /**
    * Enable or Disable OAuth logins and specify which providers to use for OAuth
-   * @default { providers: ["google"] }
+   * @defaultValue `{ providers: ["google"] }`
    */
   oauthOptions?:
     | {

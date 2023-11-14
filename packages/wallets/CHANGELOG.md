@@ -1,5 +1,78 @@
 # @thirdweb-dev/wallets
 
+## 2.1.2
+
+### Patch Changes
+
+- [#1937](https://github.com/thirdweb-dev/js/pull/1937) [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove deprecated fallback for old account factories
+
+- [#1920](https://github.com/thirdweb-dev/js/pull/1920) [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat: add apple auth to embedded wallet.
+
+  To enable simply pass in `apple` as the strategy
+
+  ```
+  const wallet = new EmbeddedWallet({
+    chain: Ethereum, //  chain to connect to
+    clientId: "YOUR_CLIENT_ID", // client ID
+  });
+
+  const authResult = await wallet.authenticate({
+    strategy: "apple",
+  });
+
+  ```
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1925](https://github.com/thirdweb-dev/js/pull/1925) [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8) Thanks [@iketw](https://github.com/iketw)! - [RN] Adds walletConnectReceiver prop to EmbeddedWallet and SmartWallet
+
+  You can pass your own WalletConnect projectId and metadata (highly recommended):
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+  ```
+
+  You can just pass `true` to the prop and these props will default to our internal WalletConnect projectId and metadata.
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: true
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: true
+  }),
+  ```
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/sdk@4.0.12
+
 ## 2.1.1
 
 ### Patch Changes

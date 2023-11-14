@@ -9,7 +9,7 @@ export type LocalWalletConfigOptions = {
    * If `false`, wallet will not be stored, and no password will be required to connect.
    * the wallet will be lost when the user leaves or reloads the page.
    *
-   * @default true
+   * @defaultValue true
    */
   persist?: boolean;
 };
