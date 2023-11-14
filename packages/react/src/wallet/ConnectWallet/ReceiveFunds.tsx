@@ -9,7 +9,7 @@ import { QRCode } from "../../components/QRCode";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
 import { useTWLocale } from "../../evm/providers/locale-provider";
-import { shortenString } from "@thirdweb-dev/react-core/dist/declarations/src/evm/utils/addresses";
+import { shortenString } from "@thirdweb-dev/react-core";
 
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();

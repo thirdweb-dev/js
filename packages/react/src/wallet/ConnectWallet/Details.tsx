@@ -60,7 +60,7 @@ import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
 import { useTWLocale } from "../../evm/providers/locale-provider";
-import { shortenString } from "@thirdweb-dev/react-core/dist/declarations/src/evm/utils/addresses";
+import { shortenString } from "@thirdweb-dev/react-core";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";

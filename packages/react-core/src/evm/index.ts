@@ -262,6 +262,7 @@ export {
   isPossibleEVMAddress,
   shortenAddress,
   shortenIfAddress,
+  shortenString,
 } from "./utils/addresses";
 
 // types
