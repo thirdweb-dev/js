@@ -57,82 +57,79 @@ export class EngineSigner extends ethers.Signer {
     return res.result;
   }
 
-  connect(provider: ethers.providers.Provider): EngineSigner {
-    return new EngineSigner(this.config, provider);
+  async sendTransaction(
+    transaction: ethers.providers.TransactionRequest,
+  ): Promise<ethers.providers.TransactionResponse> {
+    if (!this.provider) {
+      throw new Error("Sending transactions requires a provider!");
+    }
+
+    const chainId = (await this.provider.getNetwork()).chainId;
+    const tx = await ethers.utils.resolveProperties(transaction);
+    const res = await this.fetch({
+      path: `/backend-wallet/${chainId}/send-transaction`,
+      method: "POST",
+      // Most of these are unused by the endpoint for now, but we preserve them anyway
+      // in case we implement more in the future
+      body: {
+        ...tx,
+        nonce: tx.nonce?.toString(),
+        gasLimit: tx.gasLimit?.toString(),
+        gasPrice: tx.gasPrice?.toString(),
+        value: tx.value?.toString(),
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas?.toString(),
+        maxFeePerGas: tx.maxFeePerGas?.toString(),
+      },
+    });
+
+    const queueId = res.result.queueId;
+
+    // We return dummy data from here, since we don't have a transaction hash yet
+    return {
+      hash: queueId,
+      confirmations: 0,
+      from: this.config.backendWalletAddress,
+      nonce: 0,
+      gasLimit: BigNumber.from(0),
+      value: BigNumber.from(0),
+      data: "",
+      chainId,
+      wait: async (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        confirmations?: number,
+      ): Promise<ethers.providers.TransactionReceipt> => {
+        if (!this.provider) {
+          throw new Error("Sending transactions requires a provider!");
+        }
+
+        while (true) {
+          const { result: txRes } = await this.fetch({
+            path: `/transaction/status/${queueId}`,
+            method: "GET",
+          });
+
+          switch (txRes.status) {
+            case "errored":
+              throw new Error(
+                `Transaction errored with reason: ${txRes.errorMessage}`,
+              );
+            case "cancelled":
+              throw new Error(`Transaction execution cancelled.`);
+            case "mined":
+              const receipt = await this.provider.getTransactionReceipt(
+                txRes.transactionHash,
+              );
+              return receipt;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      },
+    };
   }
 
-  private engineProvider(
-    provider: ethers.providers.Provider,
-  ): ethers.providers.Provider {
-    provider.sendTransaction = async (
-      transaction: ethers.providers.TransactionRequest,
-    ): Promise<ethers.providers.TransactionResponse> => {
-      const tx = await ethers.utils.resolveProperties(transaction);
-      const res = await this.fetch({
-        path: "/backend-wallet/send-transaction",
-        method: "POST",
-        // Most of these are unused by the endpoint for now, but we preserve them anyway
-        // in case we implement more in the future
-        body: {
-          ...tx,
-          nonce: tx.nonce?.toString(),
-          gasLimit: tx.gasLimit?.toString(),
-          gasPrice: tx.gasPrice?.toString(),
-          value: tx.value?.toString(),
-          maxPriorityFeePerGas: tx.maxPriorityFeePerGas?.toString(),
-          maxFeePerGas: tx.maxFeePerGas?.toString(),
-        },
-      });
-
-      const queueId = res.result.queueId;
-
-      // Wait for the transaction to be sent
-      while (true) {
-        // TODO: Maybe we should add a timeout here?
-        const { result: txRes } = await this.fetch({
-          path: `/transaction/status/${queueId}`,
-          method: "GET",
-        });
-
-        if (txRes.status === "errored") {
-          throw new Error(
-            `Transaction errored with reason: ${txRes.errorMessage}`,
-          );
-        }
-
-        if (txRes.status === "cancelled") {
-          throw new Error(`Transaction execution cancelled.`);
-        }
-
-        if (txRes.transactionHash) {
-          return {
-            hash: txRes.transactionHash,
-            to: txRes.toAddress,
-            from: txRes.fromAddress,
-            nonce: txRes.nonce,
-            gasLimit: BigNumber.from(txRes.gasLimit),
-            gasPrice: BigNumber.from(txRes.gasPrice),
-            data: txRes.data,
-            value: BigNumber.from(txRes.value),
-            chainId: parseInt(txRes.chainId),
-            type: txRes.transactionType,
-            maxPriorityFeePerGas: BigNumber.from(txRes.maxPriorityFeePerGas),
-            maxFeePerGas: BigNumber.from(txRes.maxFeePerGas),
-            confirmations: 0,
-            wait(confirmations) {
-              return provider.waitForTransaction(
-                txRes.transactionHash,
-                confirmations,
-              );
-            },
-          };
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    };
-
-    return provider;
+  connect(provider: ethers.providers.Provider): EngineSigner {
+    return new EngineSigner(this.config, provider);
   }
 
   private async fetch({
