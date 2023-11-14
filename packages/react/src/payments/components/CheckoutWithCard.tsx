@@ -14,7 +14,7 @@ import { SpinnerWrapper } from "./common/SpinnerWrapper";
 const packageJson = require("../package.json");
 
 interface CheckoutWithCardProps {
-  clientId: string;
+  clientId?: string;
   sdkClientSecret?: string;
   onPaymentSuccess: (result: { transactionId: string }) => void;
   appName?: string;

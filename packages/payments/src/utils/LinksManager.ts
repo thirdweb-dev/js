@@ -44,6 +44,10 @@ export class LinksManager {
     this.link.searchParams.set("sdkClientSecret", sdkClientSecret);
   }
 
+  addClientId(clientId: string) {
+    this.link.searchParams.set("clientId", clientId);
+  }
+
   addLocale(locale?: Locale) {
     if (locale) {
       this.link.searchParams.set("locale", locale.toString());

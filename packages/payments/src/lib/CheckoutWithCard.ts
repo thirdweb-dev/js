@@ -30,6 +30,7 @@ import { PaperPaymentElement } from "./CreatePaymentElement";
 import { Modal } from "./Modal";
 
 export interface CheckoutWithCardLinkArgs {
+  clientId?: string;
   sdkClientSecret?: string;
   appName?: string;
   options?: ICustomizationOptions;
@@ -43,6 +44,7 @@ export interface CheckoutWithCardLinkArgs {
 }
 
 export function createCheckoutWithCardLink({
+  clientId,
   sdkClientSecret,
   appName,
   options = { ...DEFAULT_BRAND_OPTIONS },
@@ -64,7 +66,15 @@ export function createCheckoutWithCardLink({
     return new URL(destination, domain);
   }
 
+  if(!clientId) {
+    const error = `Must have clientId field set. Please add clientId`;
+    const destination = `/error?errorMessage=${error}`;
+    const domain = getPaperOriginUrl();
+    return new URL(destination, domain);
+  }
+
   const checkoutWithCardLink = new LinksManager(CheckoutWithCardUrlBase);
+  checkoutWithCardLink.addClientId(clientId ?? "");
   checkoutWithCardLink.addClientSecret(clientSecret ?? "");
   checkoutWithCardLink.addStylingOptions(options);
   checkoutWithCardLink.addLocale(locale);
@@ -196,11 +206,10 @@ export type CheckoutWithCardElementArgs = Omit<
   "iframe"
 > &
   CheckoutWithCardLinkArgs &
-  PaperPaymentElementConstructorArgs & 
-  { clientId: string };
+  PaperPaymentElementConstructorArgs;
 
 export function createCheckoutWithCardElement({
-  clientId, /* unused */
+  clientId,
   onCloseKycModal,
   onOpenKycModal,
   sdkClientSecret,
@@ -232,6 +241,7 @@ export function createCheckoutWithCardElement({
     });
 
   const checkoutWithCardUrl = createCheckoutWithCardLink({
+    clientId,
     sdkClientSecret,
     appName,
     locale,
