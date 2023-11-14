@@ -531,7 +531,7 @@ export class Erc20<
    * @param destinationAddress - Address you want to send the token to
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData
+   * @param claimData - Optional, claim data
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
@@ -562,7 +562,7 @@ export class Erc20<
    * @param destinationAddress - Address you want to send the token to
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData
+   * @param claimData - Optional, claim data
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
@@ -638,7 +638,7 @@ export class Erc20<
   /**
    * returns the wei amount from a token amount
    * @internal
-   * @param amount
+   * @param amount - The token amount
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
     return normalizeAmount(this.contractWrapper, amount);

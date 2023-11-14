@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Standardize large number formatting
+Fixes all tsdoc comments warnings

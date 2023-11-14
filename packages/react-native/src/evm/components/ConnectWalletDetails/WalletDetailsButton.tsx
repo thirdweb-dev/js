@@ -39,7 +39,7 @@ export type ConnectWalletDetailsProps = {
   /**
    * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to a Smart Wallet
    *
-   * @default false
+   * @defaultValue false
    */
   hideSwitchToPersonalWallet?: boolean;
 };

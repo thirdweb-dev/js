@@ -326,7 +326,7 @@ export class UserWallet {
 
   /**
    * Request funds from a running local node to the currently connected wallet
-   * @param amount the amount in native currency (in ETH) to request
+   * @param amount - the amount in native currency (in ETH) to request
    */
   public async requestFunds(amount: Amount): Promise<TransactionResult> {
     const chainId = await this.getChainId();

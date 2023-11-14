@@ -91,9 +91,9 @@ function createWalletShares(): {
 
 /**
  * Store user's wallet shares. Encrypts authShare and recoveryShare as given clientSide as well.
- * @param {string} walletAddress the user's wallet address. Note that for each logged in user and clientId, we have a single walletAddress. This will error if we attempt to store shares for user's with an existing wallet different from the walletAddress
- * @param {string} authShare the *unencrypted* authShare for the user
- * @param {string} recoveryShare the *unencrypted* recovery share for the user
+ * @param walletAddress - the user's wallet address. Note that for each logged in user and clientId, we have a single walletAddress. This will error if we attempt to store shares for user's with an existing wallet different from the walletAddress
+ * @param authShare - the *unencrypted* authShare for the user
+ * @param recoveryShare - the *unencrypted* recovery share for the user
  * @throws if another walletAddress already exists
  */
 export async function storeShares<R extends string | undefined>({
