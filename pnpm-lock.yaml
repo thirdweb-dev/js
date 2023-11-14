@@ -768,7 +768,7 @@ importers:
         version: 17.2.0(localforage@1.10.0)
       '@magic-sdk/react-native-bare':
         specifier: ^18.5.0
-        version: 18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0)
+        version: 18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.7.4)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0)
       '@paperxyz/embedded-wallet-service-sdk':
         specifier: ^1.2.4
         version: 1.2.4
@@ -852,8 +852,8 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(react-native@0.71.11)(react@18.2.0)
       react-native-safe-area-context:
-        specifier: 4.5.3
-        version: 4.5.3(react-native@0.71.11)(react@18.2.0)
+        specifier: 4.7.4
+        version: 4.7.4(react-native@0.71.11)(react@18.2.0)
       react-native-webview:
         specifier: 12.1.0
         version: 12.1.0(react-native@0.71.11)(react@18.2.0)
@@ -8606,7 +8606,7 @@ packages:
       - supports-color
     dev: false
 
-  /@magic-sdk/react-native-bare@18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0):
+  /@magic-sdk/react-native-bare@18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.7.4)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-DyG6/lkfjD3EXVzOoW3InJkd52mTyIWzDcKb7YU+RXXPGVxJda3W/RTe5OWXB8R48Tm3/elxoUD05+i0v7zXSg==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '>=1.15.5'
@@ -8630,7 +8630,7 @@ packages:
       react: 18.2.0
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
       react-native-device-info: 10.6.0(react-native@0.71.11)
-      react-native-safe-area-context: 4.5.3(react-native@0.71.11)(react@18.2.0)
+      react-native-safe-area-context: 4.7.4(react-native@0.71.11)(react@18.2.0)
       react-native-webview: 12.1.0(react-native@0.71.11)(react@18.2.0)
       tslib: 2.5.0
       whatwg-url: 8.1.0
@@ -25883,8 +25883,8 @@ packages:
     dev: false
     optional: true
 
-  /react-native-safe-area-context@4.5.3(react-native@0.71.11)(react@18.2.0):
-    resolution: {integrity: sha512-ihYeGDEBSkYH+1aWnadNhVtclhppVgd/c0tm4mj0+HV11FoiWJ8N6ocnnZnRLvM5Fxc+hUqxR9bm5AXU3rXiyA==}
+  /react-native-safe-area-context@4.7.4(react-native@0.71.11)(react@18.2.0):
+    resolution: {integrity: sha512-3LR3DCq9pdzlbq6vsHGWBFehXAKDh2Ljug6jWhLWs1QFuJHM6AS2+mH2JfKlB2LqiSFZOBcZfHQFz0sGaA3uqg==}
     requiresBuild: true
     peerDependencies:
       react: '*'
