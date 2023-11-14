@@ -1,5 +1,17 @@
 # thirdweb
 
+## 0.13.13
+
+### Patch Changes
+
+- [#1918](https://github.com/thirdweb-dev/js/pull/1918) [`95c9d56e`](https://github.com/thirdweb-dev/js/commit/95c9d56ea47ef57113679196efe8f9114c6fbb21) Thanks [@saminacodes](https://github.com/saminacodes)! - Fix url redirect for pre-built deploy command
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`05e52114`](https://github.com/thirdweb-dev/js/commit/05e52114bf4f0ee352f393ed20115a904a18c310), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/auth@4.1.5
+  - @thirdweb-dev/storage@2.0.3
+  - @thirdweb-dev/sdk@4.0.12
+
 ## 0.13.12
 
 ### Patch Changes
