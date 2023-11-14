@@ -1,4 +1,5 @@
 import {
+  fallbackAbi,
   getAllExtensionsAbi,
   getAllPluginsAbi,
 } from "../../constants/thirdweb-features";
@@ -10,6 +11,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { joinABIs } from "./joinABIs";
 import { getPluginABI } from "./getPluginABI";
+import { hasMatchingAbi } from "../feature-detection/hasMatchingAbi";
 
 /**
  * @internal
@@ -69,21 +71,23 @@ export async function getCompositeABI(
       // get ABIs of extension contracts
       pluginABIs = await getPluginABI(plugins as any[], provider, storage);
     } else {
-      // check if the contract is diamond pattern
-      const dimaondAbi = [
-        "function facets() external view returns (tuple(address,bytes4[])[])",
-      ];
+      // check if the contract has fallback function - in that case we'll further check for diamond pattern
+      if (hasMatchingAbi(abi, [fallbackAbi])) {
+        // check if diamond pattern
+        const dimaondAbi = [
+          "function facets() external view returns (tuple(address,bytes4[])[])",
+        ];
+        const contract = new Contract(address, dimaondAbi, provider);
 
-      const contract = new Contract(address, dimaondAbi, provider);
+        // get facets
+        const facets = await contract.facets();
 
-      // get facets
-      const facets = await contract.facets();
+        // filter facet addresses
+        const facetAddresses = facets.map((item: any) => item[0]);
 
-      // filter facet addresses
-      const facetAddresses = facets.map((item: any) => item[0]);
-
-      // get ABI of facets
-      pluginABIs = await getPluginABI(facetAddresses, provider, storage);
+        // get ABI of facets
+        pluginABIs = await getPluginABI(facetAddresses, provider, storage);
+      }
     }
   } catch (err) {}
 
