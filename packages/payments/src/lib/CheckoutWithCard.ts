@@ -196,9 +196,11 @@ export type CheckoutWithCardElementArgs = Omit<
   "iframe"
 > &
   CheckoutWithCardLinkArgs &
-  PaperPaymentElementConstructorArgs;
+  PaperPaymentElementConstructorArgs & 
+  { clientId: string };
 
 export function createCheckoutWithCardElement({
+  clientId, /* unused */
   onCloseKycModal,
   onOpenKycModal,
   sdkClientSecret,

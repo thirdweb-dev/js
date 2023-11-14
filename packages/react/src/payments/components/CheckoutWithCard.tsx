@@ -78,6 +78,7 @@ export const CheckoutWithCard = ({
       return;
     }
     createCheckoutWithCardElement({
+      clientId,
       sdkClientSecret,
       appName: appNameToUse,
       elementOrId: CheckoutWithCardIframeContainerRef.current,
