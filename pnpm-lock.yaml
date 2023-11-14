@@ -49,7 +49,7 @@ importers:
         version: 1.31.2
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.2.0
-        version: 4.2.0(prettier@3.0.0)
+        version: 4.2.0(prettier@3.1.0)
       '@types/node':
         specifier: ^18.17.1
         version: 18.17.1
@@ -60,8 +60,8 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       turbo:
         specifier: ^1.10.12
         version: 1.10.12
@@ -167,7 +167,7 @@ importers:
         version: 2.2.0
       eslint-plugin-prettier:
         specifier: ^5.0.0
-        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       eslint-plugin-tsdoc:
         specifier: ^0.2.16
         version: 0.2.17
@@ -190,8 +190,8 @@ importers:
         specifier: ^4.22.3
         version: 4.22.3(next@12.3.4)(react-dom@18.2.0)(react@18.2.0)
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -371,8 +371,8 @@ importers:
         specifier: ^6.3.1
         version: 6.3.1
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       ts-jest:
         specifier: ^29.1.1
         version: 29.1.1(@babel/core@7.22.9)(esbuild@0.17.11)(jest@29.6.2)(typescript@5.1.6)
@@ -611,7 +611,7 @@ importers:
         version: 2.2.0
       eslint-plugin-prettier:
         specifier: ^5.0.0
-        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       eslint-plugin-tsdoc:
         specifier: ^0.2.16
         version: 0.2.17
@@ -619,8 +619,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -735,7 +735,7 @@ importers:
         version: 2.2.0
       eslint-plugin-prettier:
         specifier: ^5.0.0
-        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       eslint-plugin-tsdoc:
         specifier: ^0.2.16
         version: 0.2.17
@@ -743,8 +743,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -869,7 +869,7 @@ importers:
         version: 1.18.2(react-native@0.71.11)
       '@react-native-community/eslint-config':
         specifier: ^3.0.2
-        version: 3.2.0(eslint@8.45.0)(jest@29.6.2)(prettier@3.0.0)(typescript@5.1.6)
+        version: 3.2.0(eslint@8.45.0)(jest@29.6.2)(prettier@3.1.0)(typescript@5.1.6)
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
@@ -911,7 +911,7 @@ importers:
         version: 2.2.0
       eslint-plugin-prettier:
         specifier: ^5.0.0
-        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -922,8 +922,8 @@ importers:
         specifier: ^29.6.2
         version: 29.6.2(@types/node@18.17.1)(ts-node@10.9.1)
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1129,7 +1129,7 @@ importers:
         version: 2.2.0
       eslint-plugin-prettier:
         specifier: ^5.0.0
-        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+        version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       eslint-plugin-tsdoc:
         specifier: ^0.2.16
         version: 0.2.17
@@ -1149,8 +1149,8 @@ importers:
         specifier: ^15.1.0
         version: 15.1.0
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1210,8 +1210,8 @@ importers:
         specifier: ^29.6.2
         version: 29.6.2(@types/node@18.17.1)(ts-node@10.9.1)
       prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       ts-jest:
         specifier: ^29.1.1
         version: 29.1.1(@babel/core@7.22.9)(esbuild@0.17.11)(jest@29.6.2)(typescript@5.1.6)
@@ -10562,7 +10562,7 @@ packages:
       - supports-color
       - utf-8-validate
 
-  /@react-native-community/eslint-config@3.2.0(eslint@8.45.0)(jest@29.6.2)(prettier@3.0.0)(typescript@5.1.6):
+  /@react-native-community/eslint-config@3.2.0(eslint@8.45.0)(jest@29.6.2)(prettier@3.1.0)(typescript@5.1.6):
     resolution: {integrity: sha512-ZjGvoeiBtCbd506hQqwjKmkWPgynGUoJspG8/MuV/EfKnkjCtBmeJvq2n+sWbWEvL9LWXDp2GJmPzmvU5RSvKQ==}
     peerDependencies:
       eslint: '>=8'
@@ -10578,11 +10578,11 @@ packages:
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.45.0)
       eslint-plugin-ft-flow: 2.0.3(@babel/eslint-parser@7.21.3)(eslint@8.45.0)
       eslint-plugin-jest: 26.9.0(@typescript-eslint/eslint-plugin@5.60.1)(eslint@8.45.0)(jest@29.6.2)(typescript@5.1.6)
-      eslint-plugin-prettier: 4.2.1(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
+      eslint-plugin-prettier: 4.2.1(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0)
       eslint-plugin-react: 7.33.0(eslint@8.45.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.45.0)
       eslint-plugin-react-native: 4.0.0(eslint@8.45.0)
-      prettier: 3.0.0
+      prettier: 3.1.0
     transitivePeerDependencies:
       - jest
       - supports-color
@@ -11842,7 +11842,7 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /@trivago/prettier-plugin-sort-imports@4.2.0(prettier@3.0.0):
+  /@trivago/prettier-plugin-sort-imports@4.2.0(prettier@3.1.0):
     resolution: {integrity: sha512-YBepjbt+ZNBVmN3ev1amQH3lWCmHyt5qTbLCp/syXJRu/Kw2koXh44qayB1gMRxcL/gV8egmjN5xWSrYyfUtyw==}
     peerDependencies:
       '@vue/compiler-sfc': 3.x
@@ -11857,7 +11857,7 @@ packages:
       '@babel/types': 7.17.0
       javascript-natural-sort: 0.7.1
       lodash: 4.17.21
-      prettier: 3.0.0
+      prettier: 3.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -17461,7 +17461,7 @@ packages:
       object.fromentries: 2.0.6
       semver: 7.5.4
 
-  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0):
+  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0):
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -17474,11 +17474,11 @@ packages:
     dependencies:
       eslint: 8.45.0
       eslint-config-prettier: 8.9.0(eslint@8.45.0)
-      prettier: 3.0.0
+      prettier: 3.1.0
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-prettier@5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0):
+  /eslint-plugin-prettier@5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.1.0):
     resolution: {integrity: sha512-AgaZCVuYDXHUGxj/ZGu1u8H8CYgDY3iG6w5kUFw4AzMVXzB7VvbKgYR4nATIN+OvUrghMbiDLeimVjVY5ilq3w==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -17494,7 +17494,7 @@ packages:
     dependencies:
       eslint: 8.45.0
       eslint-config-prettier: 8.9.0(eslint@8.45.0)
-      prettier: 3.0.0
+      prettier: 3.1.0
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.5
     dev: true
@@ -25276,8 +25276,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /prettier@3.0.0:
-    resolution: {integrity: sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==}
+  /prettier@3.1.0:
+    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==}
     engines: {node: '>=14'}
     hasBin: true
 
