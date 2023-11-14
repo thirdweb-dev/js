@@ -60,6 +60,7 @@
     "chai": "^4.3.6",
     "eslint": "^8.45.0",
     "eslint-config-thirdweb": "workspace:*",
+    "eslint-plugin-tsdoc": "^0.2.16",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
