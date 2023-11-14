@@ -19,7 +19,7 @@ const TRACKING_CATEGORY = "engine-landing";
 
 const trustedCompanies = [
   {
-    title: "Coinbase",
+    title: "Coinbase Wallet",
     height: 74,
     width: 74,
     src: require("public/assets/partners/coinbase.png"),
