@@ -1,5 +1,4 @@
 import {
-  fallbackAbi,
   getAllExtensionsAbi,
   getAllPluginsAbi,
 } from "../../constants/thirdweb-features";
@@ -11,7 +10,6 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { joinABIs } from "./joinABIs";
 import { getPluginABI } from "./getPluginABI";
-import { hasMatchingAbi } from "../feature-detection/hasMatchingAbi";
 
 /**
  * @internal
