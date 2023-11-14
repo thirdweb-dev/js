@@ -1,5 +1,5 @@
 export const oneKeyWalletUris = {
-  ios: "onkeyx://",
-  android: "onkeyx://",
-  other: "onkeyx://",
+  ios: "onekey-wallet://",
+  android: "onekey-wallet://",
+  other: "onekey-wallet://",
 };
