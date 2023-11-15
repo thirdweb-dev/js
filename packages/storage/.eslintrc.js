@@ -3,6 +3,6 @@ module.exports = {
   extends: ["thirdweb"],
   plugins: ["eslint-plugin-tsdoc"],
   rules: {
-    "tsdoc/syntax": "warn",
+    "tsdoc/syntax": "error",
   },
 };

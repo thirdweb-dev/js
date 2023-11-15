@@ -10,10 +10,10 @@ import { isContractDeployed } from "./isContractDeployed";
  *
  * @public
  *
- * @param signer
- * @param bytecode
- * @param encodedArgs
- * @param create2FactoryAddress
+ * @param signer - The signer to use
+ * @param bytecode - The bytecode to deploy
+ * @param encodedArgs - The encoded constructor args to use
+ * @param create2FactoryAddress - The create2 factory address to use
  */
 export async function deployContractDeterministic(
   signer: Signer,

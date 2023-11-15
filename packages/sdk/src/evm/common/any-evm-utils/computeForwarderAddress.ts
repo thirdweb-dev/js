@@ -6,9 +6,9 @@ import { computeDeploymentInfo } from "./computeDeploymentInfo";
 /**
  *
  * @internal
- * @param provider
- * @param storage
- * @param create2Factory
+ * @param provider - The provider to use
+ * @param storage - The storage to use
+ * @param create2Factory - The create2 factory to use
  */
 export async function computeForwarderAddress(
   provider: providers.Provider,

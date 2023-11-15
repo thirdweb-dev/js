@@ -538,7 +538,7 @@ export class DropErc1155ClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(

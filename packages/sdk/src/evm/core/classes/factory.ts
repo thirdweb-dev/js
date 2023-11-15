@@ -214,9 +214,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   /**
    *
-   * @param contractType
-   * @param metadata
-   * @param contractURI
+   * @param contractType - the contract type to deploy
+   * @param metadata - the metadata for the contract
+   * @param contractURI - the contract URI
    * @returns
    * @internal
    */

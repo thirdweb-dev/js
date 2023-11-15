@@ -209,6 +209,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```javascript
    * const listingId = 0;
    * const isBuyerApproved = await contract.directListings.isBuyerApprovedForListing(listingId, "{{wallet_address}}");
+   * ```
    *
    * @param listingId - the listing id
    * @param buyer - buyer address

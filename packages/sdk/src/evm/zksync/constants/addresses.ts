@@ -62,8 +62,8 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
 
 /**
  * @internal
- * @param chainId
- * @param contractType
+ * @param chainId - chain id
+ * @param contractType - contract type
  */
 export function getImplementation(
   chainId: number,
