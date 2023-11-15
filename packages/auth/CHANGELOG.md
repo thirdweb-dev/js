@@ -1,5 +1,21 @@
 # @thirdweb-dev/auth
 
+## 4.1.5
+
+### Patch Changes
+
+- [#1927](https://github.com/thirdweb-dev/js/pull/1927) [`05e52114`](https://github.com/thirdweb-dev/js/commit/05e52114bf4f0ee352f393ed20115a904a18c310) Thanks [@alecananian](https://github.com/alecananian)! - Update Fastify login route response to match Express/Next
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8)]:
+  - @thirdweb-dev/wallets@2.1.2
+
+## 4.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db)]:
+  - @thirdweb-dev/wallets@2.1.1
+
 ## 4.1.3
 
 ### Patch Changes

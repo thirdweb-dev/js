@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Add support for relayer endpoint
+Fixes all tsdoc comments warnings

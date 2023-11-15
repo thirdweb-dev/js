@@ -1,5 +1,113 @@
 # @thirdweb-dev/react
 
+## 4.1.3
+
+### Patch Changes
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1929](https://github.com/thirdweb-dev/js/pull/1929) [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7) Thanks [@iketw](https://github.com/iketw)! - Move addresses' utils to the core package
+
+- [#1920](https://github.com/thirdweb-dev/js/pull/1920) [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat: add apple auth to embedded wallet
+
+  ```
+  <ThirdwebProvider
+    supportedWallets={[
+      embeddedWallet({
+        auth: {
+          options: ["google", "email", "apple"], // <- new apple option!
+        }
+      })
+    ]}
+  >
+  ```
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/react-core@4.1.3
+  - @thirdweb-dev/sdk@4.0.12
+
+## 4.1.2
+
+### Patch Changes
+
+- [#1906](https://github.com/thirdweb-dev/js/pull/1906) [`b90d3af5`](https://github.com/thirdweb-dev/js/commit/b90d3af5b8cfb762b38a88d7997879be9b5744bf) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `hideSwitchToPersonalWallet` prop on `ConnectWallet` component to hide the "switch to Personal wallet" option in the ConnectWallet dropdown which is shown when wallet is connected to either Smart Wallet or Safe
+
+  ```tsx
+  <ConnectWallet hideSwitchToPersonalWallet={true} > // default: false
+  ```
+
+- [#1891](https://github.com/thirdweb-dev/js/pull/1891) [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Core wallet (Avalanche)
+
+- [#1847](https://github.com/thirdweb-dev/js/pull/1847) [`c34ac468`](https://github.com/thirdweb-dev/js/commit/c34ac468fbf983a6806cd88828c77eb6d7231e78) Thanks [@MananTank](https://github.com/MananTank)! - Add Localization API to change language used in components `ConnectWallet` and `Web3Button` and/or override the default texts
+
+  ### Japanese
+
+  ```tsx
+  import { ja } from "@thirdweb-dev/react";
+
+  const japanese = ja();
+
+  <ThirdwebProvider locale={japanese}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  ### Spanish
+
+  ```tsx
+  import { es } from "@thirdweb-dev/react";
+
+  const spanish = es();
+
+  <ThirdwebProvider locale={spanish}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  ### English ( default )
+
+  ```tsx
+  import { en } from "@thirdweb-dev/react";
+
+  const english = en();
+
+  <ThirdwebProvider locale={english}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  This API also allows overriding the default texts in the locale object. You can override all the texts or just some parts
+
+  ```tsx
+  import { en } from "@thirdweb-dev/react";
+
+  // override some texts
+  const english = en({
+    connectWallet: {
+      confirmInWallet: "Confirm in your wallet",
+    },
+    wallets: {
+      metamaskWallet: {
+        connectionScreen: {
+          inProgress: "Awaiting Confirmation",
+          instruction: "Accept connection request in your MetaMask wallet",
+        },
+      },
+    },
+  });
+
+  <ThirdwebProvider locale={english}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/react-core@4.1.2
+
 ## 4.1.1
 
 ### Patch Changes

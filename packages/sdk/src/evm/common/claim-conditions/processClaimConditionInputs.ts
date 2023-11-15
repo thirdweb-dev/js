@@ -36,11 +36,11 @@ function compare(a: BigNumberish, b: BigNumberish) {
 /**
  * @internal
  * Decorates claim conditions with merkle roots from snapshots if present
- * @param claimConditionInputs
- * @param tokenDecimals
- * @param provider
- * @param storage
- * @param snapshotFormatVersion
+ * @param claimConditionInputs - The claim conditions to process
+ * @param tokenDecimals - The token decimals to use
+ * @param provider - The provider to use
+ * @param storage - The storage to use
+ * @param snapshotFormatVersion - The snapshot format version to use
  */
 export async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
@@ -76,10 +76,10 @@ export async function processSnapshotData(
 
 /**
  * Converts a local SDK model to contract model
- * @param c
- * @param tokenDecimals
- * @param provider
- * @param storage
+ * @param c - The condition input
+ * @param tokenDecimals - The token decimals to use
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  * @internal
  */
 async function convertToContractModel(
@@ -123,11 +123,11 @@ async function convertToContractModel(
 
 /**
  * Create and uploads snapshots + converts claim conditions to contract format
- * @param claimConditionInputs
- * @param tokenDecimals
- * @param provider
- * @param storage
- * @param snapshotFormatVersion
+ * @param claimConditionInputs - The claim conditions to process
+ * @param tokenDecimals - The token decimals to use
+ * @param provider - The provider to use
+ * @param storage - The storage to use
+ * @param snapshotFormatVersion - The snapshot format version to use
  * @internal
  */
 export async function processClaimConditionInputs(

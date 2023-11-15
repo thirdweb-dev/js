@@ -1,6 +1,9 @@
-import type { EmbeddedWalletAdditionalOptions } from "@thirdweb-dev/wallets";
+import type {
+  EmbeddedWalletAdditionalOptions,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
 
-export type AuthOption = "google" | "email";
+export type AuthOption = EmbeddedWalletOauthStrategy | "email";
 
 export type EmbeddedWalletConfig = Omit<
   EmbeddedWalletAdditionalOptions,
@@ -13,11 +16,13 @@ export type EmbeddedWalletConfig = Omit<
 
   /**
    * Choose which auth providers to show in the wallet connection UI
-   * @default { providers: ["email", "google"] }
+   * @defaultValue `auth: { options: ["email", "google", "apple"] }`
    */
   auth?: {
     options: AuthOption[];
   };
 };
 
-export type EmbeddedWalletLoginType = { email: string } | { google: true };
+export type EmbeddedWalletLoginType =
+  | { email: string }
+  | EmbeddedWalletOauthStrategy;

@@ -3,4 +3,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-Add Core wallet (Avalanche)
+Deprecates PaperWallet in favor of EmbeddedWallet

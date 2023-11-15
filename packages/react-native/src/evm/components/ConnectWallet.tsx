@@ -36,7 +36,7 @@ export type ConnectWalletProps = {
   /**
    * Hide option to request testnet funds for testnets in dropdown
    *
-   * @default false
+   * @defaultValue false
    */
   hideTestnetFaucet?: boolean;
 
@@ -47,7 +47,7 @@ export type ConnectWalletProps = {
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
    *
-   * @default false
+   * @defaultValue false
    */
   switchToActiveChain?: boolean;
 
@@ -69,6 +69,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide the "switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to a Smart Wallet
+   *
+   * @defaultValue false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -84,6 +91,7 @@ export const ConnectWallet = ({
   termsOfServiceUrl,
   privacyPolicyUrl,
   supportedTokens,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletProps) => {
   const globalTheme = useGlobalTheme();
   const l = useLocale();
@@ -163,6 +171,7 @@ export const ConnectWallet = ({
               hideTestnetFaucet={hideTestnetFaucet}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
+              hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
             />
           )
         ) : (
