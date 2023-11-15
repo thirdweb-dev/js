@@ -195,7 +195,7 @@ export function useTotalCirculatingSupply(
   return useQueryWithNetwork<BigNumber>(
     cacheKeys.contract.nft.query.totalCirculatingSupply(
       contractAddress,
-      tokenId,
+      tokenId ?? undefined,
     ),
     async () => {
       requiredParamInvariant(contract, "No Contract instance provided");
