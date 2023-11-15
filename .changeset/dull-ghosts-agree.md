@@ -2,4 +2,4 @@
 "@thirdweb-dev/crypto": minor
 ---
 
-initialize lib
+initial release
