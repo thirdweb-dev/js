@@ -15,7 +15,7 @@ import { VerifyOptionsSchema } from "../schema/verify";
  * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
  */
 function createLoginMessage(payload: LoginPayloadData): string {
-  const typeField = payload.type === "evm" ? "Ethereum" : "Solana";
+  const typeField = "Ethereum";
   const header = `${payload.domain} wants you to sign in with your ${typeField} account:`;
   let prefix = [header, payload.address].join("\n");
   prefix = [prefix, payload.statement].join("\n\n");

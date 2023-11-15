@@ -2,11 +2,11 @@ import type { AirdropERC20, IAirdropERC20 } from "@thirdweb-dev/contracts-js";
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
-import { Address } from "../../schema";
-import { Airdrop20Content, Airdrop20Output } from "../../types";
+import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { Airdrop20Content, Airdrop20Output } from "../../types/airdrop/airdrop";
 
 /**
  * @public
@@ -59,9 +59,9 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * //     - array containing failed drops, if any
    *
    * ```
-   * @param tokenAddress
-   * @param tokenOwner
-   * @param contents
+   * @param tokenAddress - Address of the ERC20 token being airdropped
+   * @param tokenOwner - Address of the owner of the tokens being airdropped
+   * @param contents - Array of airdrop contents
    *
    * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC20

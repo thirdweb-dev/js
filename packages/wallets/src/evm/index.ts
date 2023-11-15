@@ -44,6 +44,14 @@ export * from "./wallets/trust";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/zerion";
+export * from "./wallets/token-bound-smart-wallet";
+export * from "./wallets/engine";
+
+export { OKXWallet, type OKXWalletOptions } from "./wallets/okx";
+export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider";
+
+export { CoreWallet, type CoreWalletOptions } from "./wallets/core-wallet";
+export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
 
 export type { Chain } from "@thirdweb-dev/chains";
 
@@ -53,6 +61,10 @@ export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhan
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
 export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export * from "./utils/setWalletAnaltyicsEnabled";
 
 // ThirdwebEmbeddedWalletSdk
 export * from "./connectors/embedded-wallet/implementations";
+
+// EngineSigner
+export { EngineSigner } from "./connectors/engine/signer";

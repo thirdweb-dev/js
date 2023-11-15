@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://scroll.io",
   "name": "Scroll Sepolia Testnet",
   "nativeCurrency": {
@@ -23,9 +22,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 534351,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://scroll.io/bridge"
+      }
+    ]
+  },
   "rpc": [
     "https://scroll-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534351.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rpc.scroll.io",
     "https://rpc.ankr.com/scroll_sepolia_testnet",
     "https://scroll-sepolia.chainstacklabs.com",

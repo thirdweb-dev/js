@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://zero-explorer.alt.technology",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,12 +34,13 @@ export default {
   "name": "AltLayer Zero Gas Network",
   "nativeCurrency": {
     "name": "ZERO",
-    "symbol": "tZERO",
+    "symbol": "ZERO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4000003,
   "rpc": [
     "https://altlayer-zero-gas-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4000003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zero.alt.technology"
   ],
   "shortName": "alt-zerogas",

@@ -205,7 +205,10 @@ export {
 // account
 export {
   useAccountSigners,
-  useSetAccountSigners,
+  useAddAdmin,
+  useRemoveAdmin,
+  useCreateSessionKey,
+  useRevokeSessionKey,
   useAccountAdmins,
   useAccountAdminsAndSigners,
 } from "./hooks/async/account";
@@ -254,6 +257,13 @@ export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // utils
 export { invalidateContractAndBalances } from "./utils/cache-keys";
+export {
+  isEnsName,
+  isPossibleEVMAddress,
+  shortenAddress,
+  shortenIfAddress,
+  shortenString,
+} from "./utils/addresses";
 
 // types
 export type {

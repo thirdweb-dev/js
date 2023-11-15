@@ -10,16 +10,16 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "name": "Zeeth Chain Dev",
   "nativeCurrency": {
     "name": "Zeeth Token",
     "symbol": "ZTH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 859,
   "rpc": [
     "https://zeeth-chain-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://859.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.zeeth.io"
   ],
   "shortName": "zeethdev",

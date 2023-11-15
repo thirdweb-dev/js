@@ -252,7 +252,7 @@ export class AuctionHasNotEndedError extends Error {
 export class ExtensionNotImplementedError extends Error {
   constructor(feature: Feature) {
     super(
-      `This functionality is not available because the contract does not implement the '${feature.docLinks.contracts}' Extension. Learn how to unlock this functionality at https://portal.thirdweb.com/extensions `,
+      `This functionality is not available because the contract does not implement the '${feature.name}' Extension. Learn how to unlock this functionality at https://portal.thirdweb.com/extensions `,
     );
   }
 }
@@ -441,8 +441,8 @@ function parseMessageParts(regex: RegExp, raw: string): string {
 
 /**
  * @internal
- * @param err
- * @param message
+ * @param err - The error to check
+ * @param message - The message to check for
  */
 export function includesErrorMessage(err: any, message: string): boolean {
   if (!err) {

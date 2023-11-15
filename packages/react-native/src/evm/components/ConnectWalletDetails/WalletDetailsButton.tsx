@@ -1,7 +1,6 @@
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { WalletIcon } from "../base/WalletIcon";
 import { useENS, useWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
 import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
@@ -11,6 +10,8 @@ import { useMemo, useState } from "react";
 import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
+import { WalletIcon } from "../base";
+import { useLocale } from "../../providers/ui-context-provider";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
@@ -35,6 +36,12 @@ export type ConnectWalletDetailsProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to a Smart Wallet
+   *
+   * @defaultValue false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -44,7 +51,9 @@ export const WalletDetailsButton = ({
   hideTestnetFaucet,
   supportedTokens,
   displayBalanceToken,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletDetailsProps) => {
+  const l = useLocale();
   const activeWallet = useWallet();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const ensQuery = useENS();
@@ -74,6 +83,7 @@ export const WalletDetailsButton = ({
         hideTestnetFaucet={hideTestnetFaucet}
         supportedTokens={supportedTokens}
         displayBalanceToken={displayBalanceToken}
+        hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
       />
       {detailsButton ? (
         detailsButton({ onPress })
@@ -90,11 +100,11 @@ export const WalletDetailsButton = ({
             alignContent="center"
             justifyContent="flex-start"
           >
-            <WalletIcon size={32} iconUri={avatarUrl || walletIconUrl} />
+            <WalletIcon iconUri={avatarUrl || walletIconUrl} size={32} />
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">
-                  Guest
+                  {l.connect_wallet_details.guest}
                 </Text>
               ) : ens ? (
                 <Text variant="bodySmall">{ens}</Text>

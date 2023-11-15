@@ -6,11 +6,16 @@ export default {
     {
       "name": "BLXq Explorer",
       "url": "https://explorer.blx.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
     "width": 1000,
@@ -24,9 +29,10 @@ export default {
     "symbol": "BLXQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1107,
   "rpc": [
     "https://blxq-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1107.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnetq1.blx.org"
   ],
   "shortName": "tblxq",

@@ -6,13 +6,18 @@ export default {
     {
       "name": "bombscan-testnet",
       "url": "https://explorer.bombchain-testnet.ankr.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.bombchain-testnet.ankr.com/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
     "width": 1024,
@@ -23,12 +28,13 @@ export default {
   "name": "BOMB Chain Testnet",
   "nativeCurrency": {
     "name": "BOMB Token",
-    "symbol": "BOMB",
+    "symbol": "tBOMB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2399,
   "rpc": [
     "https://bomb-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2399.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
   ],
   "shortName": "bombt",

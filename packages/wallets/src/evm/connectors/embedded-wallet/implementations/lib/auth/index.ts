@@ -129,10 +129,16 @@ export class Auth {
     return this.BaseLogin.loginWithEmailOtp(args);
   }
 
-  async loginWithGoogle(
-    args?: Parameters<BaseLogin["loginWithGoogle"]>[0],
+  async loginWithCustomJwt(
+    args: Parameters<BaseLogin["loginWithCustomJwt"]>[0],
   ): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithGoogle(args);
+    return this.BaseLogin.loginWithCustomJwt(args);
+  }
+
+  async loginWithOauth(
+    args: Parameters<BaseLogin["loginWithOauth"]>[0],
+  ): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithOauth(args);
   }
 
   /**

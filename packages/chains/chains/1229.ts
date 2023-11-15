@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeYpc2JfEsHa2Bh11SKRx3sgDtMeg6T8KpXNLepBEKnbJ",
     "width": 128,
@@ -24,9 +23,10 @@ export default {
     "symbol": "XZO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1229,
   "rpc": [
     "https://exzo-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1229.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.exzo.technology"
   ],
   "shortName": "xzo",

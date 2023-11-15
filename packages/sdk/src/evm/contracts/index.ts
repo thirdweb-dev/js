@@ -7,7 +7,7 @@ import {
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../constants/urls";
 import type { NetworkInput } from "../core/types";
@@ -239,14 +239,14 @@ export const MarketplaceV3Initializer = {
 
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
-      return await getCompositePluginABI(address, abi, provider, {}, storage);
+      return await getCompositeABI(address, abi, provider, {}, storage);
     }
 
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
     const localAbi = (
       await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
     ).default;
-    return await getCompositePluginABI(
+    return await getCompositeABI(
       address,
       AbiSchema.parse(localAbi || []),
       provider,
@@ -647,7 +647,7 @@ async function getContractInfo(address: Address, provider: providers.Provider) {
 }
 
 /**
- * a map from contractType -> contract metadata
+ * a map from contractType - contract metadata
  * @internal
  */
 export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {

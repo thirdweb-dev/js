@@ -1,18 +1,18 @@
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
 import EventEmitter from "eventemitter3";
-import { AbstractClientWallet } from "../../evm/wallets/base";
-import { SyncStorage } from "../SyncStorage";
+import { AbstractWallet } from "../../evm/wallets/abstract";
 
 export type WalletConnectMetadata = IWeb3Wallet["metadata"];
 
 // connect dapp support through wcv2 protocol
 export type WalletConnectReceiverConfig = {
-  enableConnectApp?: boolean;
-  wcVersion?: "v1" | "v2";
-  walletConnectWalletMetadata?: WCMetadata;
-  walletConenctV2ProjectId?: string;
-  walletConnectV2RelayUrl?: string;
-  wcStorage?: SyncStorage;
+  walletConnectReceiver?:
+    | {
+        walletConnectWalletMetadata?: WCMetadata;
+        walletConnectV2ProjectId?: string;
+        walletConnectV2RelayUrl?: string;
+      }
+    | true;
 };
 
 export type WCMetadata = {
@@ -79,11 +79,18 @@ export interface IWalletConnectReceiver {
 }
 
 export abstract class WalletConnectHandler extends EventEmitter {
+  protected wallet: AbstractWallet;
+
+  constructor(wallet: AbstractWallet) {
+    super();
+
+    this.wallet = wallet;
+  }
   abstract init(): Promise<void>;
   abstract connectApp(uri: string): Promise<void>;
-  abstract approveSession(wallet: AbstractClientWallet): Promise<void>;
+  abstract approveSession(): Promise<void>;
   abstract rejectSession(): Promise<void>;
-  abstract approveEIP155Request(wallet: AbstractClientWallet): Promise<void>;
+  abstract approveEIP155Request(): Promise<void>;
   abstract rejectEIP155Request(): Promise<void>;
   abstract getActiveSessions(): WCSession[];
   abstract disconnectSession(): Promise<void>;

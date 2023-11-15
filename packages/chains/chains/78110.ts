@@ -4,7 +4,6 @@ export default {
   "chainId": 78110,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://primusmoney.com",
   "name": "Firenze test network",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "FIN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 78110,
   "rpc": [
     "https://firenze-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://78110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethnode.primusmoney.com/firenze"
   ],
   "shortName": "firenze",

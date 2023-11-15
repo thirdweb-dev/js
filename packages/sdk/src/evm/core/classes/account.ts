@@ -6,15 +6,16 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 
 import type { IAccountCore } from "@thirdweb-dev/contracts-js";
-import { assertEnabled, detectContractFeature } from "../../common";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   PermissionSnapshotInput,
   SignerPermissionsInput,
   SignerWithPermissions,
-} from "../../types";
-import { AccountPermissions } from "./account-permissions";
+} from "../../types/account";
 import { buildTransactionFunction } from "../../common/transactions";
+import { AccountPermissions } from "./account-permissions";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class Account<TContract extends IAccountCore>
@@ -34,6 +35,10 @@ export class Account<TContract extends IAccountCore>
       detectContractFeature<IAccountCore>(
         this.contractWrapper,
         "AccountPermissions",
+      ) ||
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        "AccountPermissionsV1",
       )
     ) {
       return new AccountPermissions(this.contractWrapper);

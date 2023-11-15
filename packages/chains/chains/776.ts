@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.openchain.info/"
   ],
-  "features": [],
   "infoURL": "https://testnet.openchain.info/",
   "name": "OpenChain Testnet",
   "nativeCurrency": {
@@ -20,7 +19,7 @@ export default {
     "symbol": "TOPC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 776,
   "rpc": [],
   "shortName": "opc",
   "slug": "openchain-testnet",

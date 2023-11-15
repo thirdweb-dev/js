@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.maxxchain.org"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRhQG9TZrXDdbQeTzBmjg3pqgwaD5TKVZj8k4kaz8AoZx",
     "width": 1021,
@@ -26,9 +25,10 @@ export default {
     "symbol": "PWR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10201,
   "rpc": [
     "https://maxxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.maxxchain.org",
     "https://rpc1.maxxchain.org",
     "https://rpc2.maxxchain.org"

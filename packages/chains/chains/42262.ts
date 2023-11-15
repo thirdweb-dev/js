@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
     "width": 2000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ROSE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 42262,
   "rpc": [
     "https://oasis-emerald.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://42262.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://emerald.oasis.dev",
     "wss://emerald.oasis.dev/ws"
   ],

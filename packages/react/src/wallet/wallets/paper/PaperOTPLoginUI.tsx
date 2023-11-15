@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
@@ -12,6 +11,7 @@ import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 import { RecoveryShareManagement } from "./types";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
   recoveryShareManagement: RecoveryShareManagement;
@@ -24,6 +24,7 @@ type SentEmailInfo = {
 };
 
 export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
+  const locale = useTWLocale().wallets.paperWallet.emailLoginScreen;
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
@@ -101,7 +102,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
       setConnectedWallet(wallet);
       setVerifyStatus("valid");
-      props.close();
+      props.connected();
     } catch (e) {
       setVerifyStatus("invalid");
       console.error(e);
@@ -120,7 +121,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Sign in" onBack={props.goBack} />
+        <ModalHeader title={locale.title} onBack={props.goBack} />
       </Container>
 
       <Container expand flex="column" center="y">
@@ -135,7 +136,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             }}
           >
             {!isWideModal && <Spacer y="lg" />}
-            <Text>Enter the OTP sent to</Text>
+            <Text>{locale.enterCodeSendTo}</Text>
             <Spacer y="sm" />
             <Text color="primaryText">{email}</Text>
             <Spacer y="xl" />
@@ -159,23 +160,24 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
           {recoveryCodeRequired && (
             <Container
+              animate="fadein"
               px="lg"
               style={{
                 textAlign: "center",
               }}
             >
               <Spacer y="xxl" />
-              <Text color="primaryText">New device detected</Text>
+              <Text color="primaryText">{locale.newDeviceDetected}</Text>
               <Spacer y="sm" />
               <Text
+                balance
                 size="sm"
                 multiline
                 style={{
                   maxWidth: "350px",
                 }}
               >
-                Enter the recovery code emailed to you <br /> when you first
-                signed up
+                {locale.enterRecoveryCode}
               </Text>
 
               <Spacer y="lg" />
@@ -191,21 +193,23 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 }}
                 value={recoveryCode}
                 onChange={(e) => setRecoveryCode(e.target.value)}
-                placeholder="Enter your recovery code"
+                placeholder={locale.enterRecoveryCode}
               />
             </Container>
           )}
 
           {verifyStatus === "invalid" && (
-            <FadeIn>
+            <Container animate="fadein">
               <Spacer y="md" />
               <Text size="sm" color="danger" center>
-                Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
+                {recoveryCodeRequired
+                  ? locale.invalidCodeOrRecoveryCode
+                  : locale.invalidCode}
               </Text>
-            </FadeIn>
+            </Container>
           )}
 
-          <Spacer y={recoveryCodeRequired ? "xl" : "xxl"} />
+          <Spacer y="xl" />
 
           <Container px={isWideModal ? "xxl" : "lg"}>
             {verifyStatus === "verifying" ? (
@@ -224,23 +228,22 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                     width: "100%",
                   }}
                 >
-                  Verify
+                  {locale.verify}
                 </Button>
               </Container>
             )}
           </Container>
 
-          <Spacer y={recoveryCodeRequired ? "xl" : "xxl"} />
+          <Spacer y={"xl"} />
 
           {!isWideModal && <Line />}
 
-          <Container p={isWideModal ? undefined : "lg"}>
+          <Container p={isWideModal ? undefined : "lg"} animate="fadein">
             {sendEmailStatus === "error" && (
               <>
                 <Text size="sm" center color="danger">
-                  Failed to send OTP
+                  {locale.failedToSendCode}
                 </Text>
-                <Spacer y="md" />
               </>
             )}
 
@@ -253,14 +256,14 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                   textAlign: "center",
                 }}
               >
-                <Text size="sm">Sending OTP</Text>
+                <Text size="sm">{locale.sendingCode}</Text>
                 <Spinner size="xs" color="secondaryText" />
               </Container>
             )}
 
             {typeof sendEmailStatus !== "string" && (
               <LinkButton onClick={sendEmail} type="button">
-                Resend OTP
+                {locale.resendCode}
               </LinkButton>
             )}
           </Container>

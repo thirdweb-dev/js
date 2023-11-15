@@ -6,13 +6,18 @@ export default {
     {
       "name": "TRITANIUM Testnet Explorer",
       "url": "https://testnet.tritanium.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.tritanium.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
     "width": 512,
@@ -26,9 +31,10 @@ export default {
     "symbol": "tTRN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5353,
   "rpc": [
     "https://tritanium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodetestnet-station-one.tritanium.network/",
     "https://nodetestnet-station-two.tritanium.network/"
   ],

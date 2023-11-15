@@ -9,12 +9,9 @@ import { QRCode } from "../../../components/QRCode";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { ModalHeader, Container } from "../../../components/basic";
-import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { iconSize } from "../../../design-system";
 import { Text } from "../../../components/text";
-import styled from "@emotion/styled";
-import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-import { useClipboard } from "../../../evm/components/hooks/useCopyClipboard";
-import { Button } from "../../../components/buttons";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const WalletConnectScan: React.FC<{
   onBack: () => void;
@@ -23,6 +20,7 @@ export const WalletConnectScan: React.FC<{
   hideBackButton: boolean;
   modalSize: "wide" | "compact";
 }> = ({ onBack, onConnected, walletConfig }) => {
+  const locale = useTWLocale().wallets.walletConnect;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -35,16 +33,16 @@ export const WalletConnectScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const rainbow = createInstance(walletConfig);
+    const walletInstance = createInstance(walletConfig);
 
     setConnectionStatus("connecting");
-    rainbow.connectWithQrCode({
+    walletInstance.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
-        setConnectedWallet(rainbow);
+        setConnectedWallet(walletInstance);
         onConnected();
       },
     });
@@ -58,23 +56,15 @@ export const WalletConnectScan: React.FC<{
   ]);
 
   return (
-    <Container
-      fullHeight
-      animate="fadein"
-      flex="column"
-      style={{
-        minHeight: "450px",
-      }}
-    >
+    <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
-        <ModalHeader onBack={onBack} title="WalletConnect" />
+        <ModalHeader onBack={onBack} title={walletConfig.meta.name} />
       </Container>
 
-      <Spacer y="md" />
+      <Spacer y="sm" />
 
-      <Container flex="column" center={"x"} px="lg" expand>
+      <Container flex="column" center={"both"} px="lg" expand>
         <QRCode
-          size={310}
           qrCodeUri={qrCodeUri}
           QRIcon={
             <Img
@@ -86,7 +76,7 @@ export const WalletConnectScan: React.FC<{
         />
       </Container>
 
-      <Spacer y="sm" />
+      <Spacer y="lg" />
 
       {/* <Spacer y="xl" /> */}
 
@@ -101,41 +91,40 @@ export const WalletConnectScan: React.FC<{
       </Container> */}
 
       <Container p="lg">
-        <Text multiline center>
-          Scan this with your wallet <br />
-          or camera app to connect{" "}
+        <Text multiline center balance>
+          {locale.scanInstruction}
         </Text>
       </Container>
     </Container>
   );
 };
 
-export const CopyButton: React.FC<{
-  text: string;
-  tip: string;
-  side?: "top" | "bottom" | "left" | "right";
-  align?: "start" | "center" | "end";
-  hide?: boolean;
-}> = (props) => {
-  const { hasCopied, onCopy } = useClipboard(props.text);
+// export const CopyButton: React.FC<{
+//   text: string;
+//   tip: string;
+//   side?: "top" | "bottom" | "left" | "right";
+//   align?: "start" | "center" | "end";
+//   hide?: boolean;
+// }> = (props) => {
+//   const { hasCopied, onCopy } = useClipboard(props.text);
 
-  return (
-    <Button
-      variant="outline"
-      onClick={onCopy}
-      style={{
-        padding: spacing.xs,
-        fontSize: fontSize.xs,
-      }}
-    >
-      <Container flex="row" center="both" gap="xs" color="secondaryText">
-        {hasCopied ? <CheckIconStyled /> : <CopyIcon />}
-        Copy
-      </Container>
-    </Button>
-  );
-};
+//   return (
+//     <Button
+//       variant="outline"
+//       onClick={onCopy}
+//       style={{
+//         padding: spacing.xs,
+//         fontSize: fontSize.xs,
+//       }}
+//     >
+//       <Container flex="row" center="both" gap="xs" color="secondaryText">
+//         {hasCopied ? <CheckIconStyled /> : <CopyIcon />}
+//         Copy
+//       </Container>
+//     </Button>
+//   );
+// };
 
-const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.colors.success};
-`;
+// const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
+//   color: ${(p) => p.theme.colors.success};
+// `;

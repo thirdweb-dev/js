@@ -4,7 +4,6 @@ export default {
   "chainId": 1440,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRidubY7BVwC737BQwGEttenP1npAXN7ZNryktE416uUW",
     "width": 500,
@@ -18,9 +17,10 @@ export default {
     "symbol": "LAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1440,
   "rpc": [
     "https://living-assets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1440.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beta.mainnet.livingassets.io/rpc",
     "https://gamma.mainnet.livingassets.io/rpc"
   ],

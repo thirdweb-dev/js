@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.elastos.org/",
   "name": "Elastos Smart Chain",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ELA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 20,
   "rpc": [
     "https://elastos-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.elastos.io/eth"
   ],
   "shortName": "esc",

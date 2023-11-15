@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://sherpax.io/",
   "name": "Sherpax Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "KSX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1506,
   "rpc": [
     "https://sherpax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1506.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.sherpax.io/rpc"
   ],
   "shortName": "Sherpax",

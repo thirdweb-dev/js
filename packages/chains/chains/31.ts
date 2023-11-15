@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.rsk.co/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreigidzbf22dnpmmlfxv6u7oifq6ln33j4n57ox4ipiproalufrheym",
     "width": 3000,
@@ -26,9 +25,10 @@ export default {
     "symbol": "tRBTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 31,
   "rpc": [
     "https://rootstock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://31.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.testnet.rsk.co",
     "https://mycrypto.testnet.rsk.co"
   ],

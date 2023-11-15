@@ -17,9 +17,9 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 1337,
   "redFlags": [],
   "rpc": [
-    "https://localhost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://localhost:8545"
   ],
   "shortName": "local",

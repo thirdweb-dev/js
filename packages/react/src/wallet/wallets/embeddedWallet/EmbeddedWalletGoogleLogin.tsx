@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -5,52 +6,60 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
 import { useEffect } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { iconSize } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { Theme } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 
-export const EmbeddedWalletGoogleLogin = (
-  props: ConnectUIProps<EmbeddedWallet>,
+export const EmbeddedWalletSocialLogin = (
+  props: ConnectUIProps<EmbeddedWallet> & {
+    strategy: EmbeddedWalletOauthStrategy;
+  },
 ) => {
+  const locale = useTWLocale().wallets.embeddedWallet.socialLoginScreen;
   const { goBack, modalSize } = props;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
+  const themeObj = useTheme() as Theme;
 
   const googleLogin = async () => {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = window.open("", "Login", "width=350, height=500");
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
-
-      await embeddedWallet.connect({
-        loginType: "headless_google_oauth",
+      const authResult = await embeddedWallet.authenticate({
+        strategy: "google",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
       });
-
+      await embeddedWallet.connect({
+        authResult,
+      });
       setConnectedWallet(embeddedWallet);
-      props.close();
+      props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error("Error logging into google", e);
     }
   };
 
-  const closeModal = props.close;
+  const closeModal = props.connected;
 
   useEffect(() => {
     if (connectionStatus === "connected") {
@@ -68,15 +77,7 @@ export const EmbeddedWalletGoogleLogin = (
           paddingBottom: 0,
         }}
       >
-        <ModalHeader
-          title={
-            <Container flex="row" center="both" gap="xs">
-              <GoogleIcon size={iconSize.md} />
-              <ModalTitle> Sign in </ModalTitle>
-            </Container>
-          }
-          onBack={goBack}
-        />
+        <ModalHeader title={locale.title} onBack={goBack} />
 
         {modalSize === "compact" ? <Spacer y="xl" /> : null}
 
@@ -98,7 +99,7 @@ export const EmbeddedWalletGoogleLogin = (
                   maxWidth: "250px",
                 }}
               >
-                Select your Google account in the pop-up
+                {locale.instruction}
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
@@ -111,11 +112,10 @@ export const EmbeddedWalletGoogleLogin = (
 
           {connectionStatus === "disconnected" && (
             <Container animate="fadein">
-              <Text color="danger">Failed to sign in</Text>
+              <Text color="danger">{locale.failed}</Text>
               <Spacer y="lg" />
               <Button variant="primary" onClick={googleLogin}>
-                {" "}
-                Retry{" "}
+                {locale.retry}
               </Button>
               <Spacer y="xxl" />
             </Container>

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTAyT3YrW2654CBRqRkec2cCznv6EBsbsRc2y6WQPbvXx",
     "width": 1280,
@@ -24,13 +23,14 @@ export default {
     "symbol": "WIRE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 49049,
   "rpc": [
     "https://wireshape-floripa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-floripa.wireshape.org",
-    "https://wireshape-floripa-testnet.rpc.thirdweb.com"
+    "https://49049.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-floripa.wireshape.org"
   ],
   "shortName": "floripa",
   "slug": "wireshape-floripa-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Wireshape Floripa Testnet"
 } as const satisfies Chain;

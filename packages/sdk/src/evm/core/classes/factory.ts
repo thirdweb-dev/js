@@ -37,7 +37,8 @@ import {
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
-import type { DeployEvents, DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
 import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -61,7 +62,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [VoteInitializer.contractType]: 1,
     [SplitInitializer.contractType]: 1,
     [MarketplaceInitializer.contractType]: 2,
-    [MarketplaceV3Initializer.contractType]: 1,
+    [MarketplaceV3Initializer.contractType]: 3,
     [PackInitializer.contractType]: 2,
   };
 
@@ -213,9 +214,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   /**
    *
-   * @param contractType
-   * @param metadata
-   * @param contractURI
+   * @param contractType - the contract type to deploy
+   * @param metadata - the metadata for the contract
+   * @param contractURI - the contract URI
    * @returns
    * @internal
    */

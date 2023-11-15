@@ -17,7 +17,10 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  type QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
@@ -415,25 +418,35 @@ export class Erc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns) {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.all(walletAddress);
+      return this.query.owned.all(walletAddress, queryParams);
     } else {
       const [address, allOwners] = await Promise.all([
         walletAddress || this.contractWrapper.getSignerAddress(),
         this.getAllOwners(),
       ]);
+      let ownedTokens = (allOwners || []).filter(
+        (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
+      );
+      if (queryParams) {
+        const start = queryParams?.start || 0;
+        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+        ownedTokens = ownedTokens.slice(start, start + count);
+      }
       return await Promise.all(
-        (allOwners || [])
-          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map((i) => this.get(i.tokenId)),
+        ownedTokens.map(async (i) => this.get(i.tokenId)),
       );
     }
   }
@@ -549,7 +562,7 @@ export class Erc721<
    * @remarks Mint many unique NFTs at once to the connected wallet
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
    *   name: "Cool NFT #1",
@@ -583,7 +596,7 @@ export class Erc721<
    * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
-   * ```javascript
+   * ```typescript
    * // Address of the wallet you want to mint the NFT to
    * const walletAddress = "{{wallet_address}}";
    *
@@ -802,7 +815,7 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options
+   * @param options - optional claim options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
@@ -835,9 +848,9 @@ export class Erc721<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param options - optional claim options
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1

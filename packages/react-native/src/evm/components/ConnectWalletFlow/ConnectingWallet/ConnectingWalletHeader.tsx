@@ -1,5 +1,8 @@
 import { Icon } from "../../../assets/icon";
-import { useAppTheme } from "../../../styles/hooks";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 import Text from "../../base/Text";
 import { FlexAlignType, StyleSheet, View } from "react-native";
 
@@ -14,13 +17,20 @@ interface ConnectWalletHeaderProps {
 
 export const ConnectWalletHeader = ({
   headerText,
-  subHeaderText = "Connecting your wallet",
+  subHeaderText,
   alignHeader = "center",
   middleContent,
   onClose,
   onBackPress,
 }: ConnectWalletHeaderProps) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
+
+  subHeaderText =
+    subHeaderText !== undefined
+      ? subHeaderText
+      : l.connecting_wallet.connecting_your_wallet;
+
   return (
     <>
       <View style={styles.header}>
@@ -51,7 +61,7 @@ export const ConnectWalletHeader = ({
           </Text>
         ) : null}
         {subHeaderText ? (
-          <Text variant="subHeader" mt="md">
+          <Text variant="subHeader" mt="md" textAlign="center">
             {subHeaderText}
           </Text>
         ) : null}

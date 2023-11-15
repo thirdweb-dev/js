@@ -16,8 +16,6 @@ chai.use(deepEqualInAnyOrder);
 
 const { expect, assert } = chai;
 
-global.fetch = require("cross-fetch");
-
 describe("Snapshots", async () => {
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

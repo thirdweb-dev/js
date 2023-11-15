@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeib5q4hez37s7b2fx4hqt2q4ji2tuudxjhfdgnp6q3d5mqm6wsxdfq",
     "width": 256,
@@ -24,9 +23,10 @@ export default {
     "symbol": "DB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3306,
   "rpc": [
     "https://debounce-subnet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3306.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-rpc.debounce.network"
   ],
   "shortName": "debounce-devnet",

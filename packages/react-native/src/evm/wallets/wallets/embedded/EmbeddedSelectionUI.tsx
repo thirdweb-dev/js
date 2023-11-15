@@ -1,29 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import { ActivityIndicator } from "react-native";
-import { useAppTheme } from "../../../styles/hooks";
+import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
+import { WalletButton } from "../../../components/base/WalletButton";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
+import { EmbeddedWalletConfig } from "./embedded-wallet";
+import {
+  AUTH_OPTIONS_ICONS,
+  AUTH_OPTIONS_TEXT,
+  AuthOption,
+} from "../../types/embedded-wallet";
+import { SquareButton } from "../../../components/base/SquareButton";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
-export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
-  onSelect,
-  walletConfig,
-}) => {
-  const theme = useAppTheme();
-  const [email, setEmail] = useState<string>("");
+export const EmailSelectionUI: React.FC<
+  SelectUIProps<EmbeddedWallet> & {
+    auth?: EmbeddedWalletConfig["auth"];
+  }
+> = ({ onSelect, walletConfig, auth }) => {
+  const l = useLocale();
+  const theme = useGlobalTheme();
+  const [emailInput, setEmailInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+  const supportedWallets = useWallets();
+
+  const isEmailEnabled = auth?.options.includes("email");
+  const socialLogins = auth?.options.filter((o) => o !== "email");
+  const isSocialLoginsEnabled = socialLogins && socialLogins.length > 0;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -39,17 +58,19 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
   };
 
   const handleNetworkCall = () => {
-    if (validateEmail(email)) {
+    if (validateEmail(emailInput)) {
       setErrorMessage("");
       setIsFetching(true);
+      Keyboard.dismiss();
 
       emailWallet
-        ?.sendEmailOTP(email)
+        ?.sendVerificationEmail(emailInput)
         .then((response) => {
           onSelect({
             ...response,
-            email,
+            email: emailInput,
             emailWallet,
+            oauthOptions: undefined, // TODO (ews) clean up types
           });
         })
         .catch((error) => {
@@ -65,58 +86,124 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
     }
   };
 
+  const onProviderPress = (authOption: Omit<AuthOption, "email">) => {
+    onSelect({
+      email: emailInput,
+      emailWallet,
+      oauthOptions: {
+        provider: authOption,
+        redirectUrl: auth?.redirectUrl,
+      },
+    });
+  };
+
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      <TextInput
-        textInputProps={{
-          placeholder: "Enter your email address",
-          placeholderTextColor: theme.colors.textSecondary,
-          onChangeText: setEmail,
-          style: {
-            fontSize: 14,
-            color: theme.colors.textPrimary,
-            lineHeight: 16,
-            padding: 0,
-            flex: 1,
-          },
-          value: email,
-          keyboardType: "email-address",
-          returnKeyType: "done",
-          autoCapitalize: "none",
-          autoCorrect: false,
-          autoComplete: "off",
-          clearTextOnFocus: false,
-        }}
-        containerProps={{
-          paddingHorizontal: "sm",
-          paddingVertical: "sm",
-          justifyContent: "flex-start",
-        }}
-      />
-      <BaseButton
-        mt="md"
-        paddingVertical="md"
-        borderRadius="lg"
-        borderWidth={1}
-        borderColor="border"
-        backgroundColor="accentButtonColor"
-        onPress={handleNetworkCall}
-      >
-        {isFetching ? (
-          <ActivityIndicator
-            size={"small"}
-            color={theme.colors.accentButtonTextColor}
+      {isSocialLoginsEnabled ? (
+        <Box justifyContent="center">
+          <Box justifyContent="center" flexDirection="row">
+            {socialLogins.length === 1 ? (
+              <WalletButton
+                iconHeight={28}
+                iconWidth={28}
+                borderRadius="lg"
+                borderWidth={1}
+                borderColor="buttonBackgroundColor"
+                backgroundColor="buttonBackgroundColor"
+                nameColor="buttonTextColor"
+                flex={1}
+                justifyContent="center"
+                name={l.embedded_wallet[AUTH_OPTIONS_TEXT[socialLogins[0]]]}
+                walletIconUrl={AUTH_OPTIONS_ICONS[socialLogins[0]]}
+                onPress={() => onProviderPress(socialLogins[0])}
+              />
+            ) : (
+              socialLogins.map((provider, index) => (
+                <SquareButton
+                  key={provider}
+                  ml={index === 0 ? 0 : "md"}
+                  onPress={() => onProviderPress(provider)}
+                  iconUrl={AUTH_OPTIONS_ICONS[provider]}
+                  size={40}
+                />
+              ))
+            )}
+          </Box>
+          {isEmailEnabled && supportedWallets.length === 1 ? (
+            <Box
+              mb="md"
+              mt="md"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Box height={1} flex={1} backgroundColor="border" />
+              <Text
+                variant="subHeader"
+                textAlign="center"
+                marginHorizontal="xxs"
+              >
+                {l.common.or}
+              </Text>
+              <Box height={1} flex={1} backgroundColor="border" />
+            </Box>
+          ) : (
+            <Box mt="md" />
+          )}
+        </Box>
+      ) : null}
+      {isEmailEnabled ? (
+        <>
+          <TextInput
+            textInputProps={{
+              placeholder: l.embedded_wallet.enter_your_email,
+              placeholderTextColor: theme.colors.textSecondary,
+              onChangeText: setEmailInput,
+              style: {
+                fontSize: 14,
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+                lineHeight: 16,
+                padding: 0,
+                flex: 1,
+              },
+              onSubmitEditing: handleNetworkCall,
+              value: emailInput,
+              keyboardType: "email-address",
+              returnKeyType: "done",
+              autoCapitalize: "none",
+              autoCorrect: false,
+              autoComplete: "off",
+              clearTextOnFocus: false,
+            }}
+            containerProps={{
+              paddingHorizontal: "sm",
+              paddingVertical: "sm",
+              justifyContent: "flex-start",
+            }}
           />
-        ) : (
-          <Text
-            variant="bodySmall"
-            color="accentButtonTextColor"
-            fontWeight="700"
+          <BaseButton
+            mt="md"
+            paddingVertical="md"
+            borderRadius="lg"
+            borderWidth={1}
+            borderColor="border"
+            backgroundColor="accentButtonColor"
+            onPress={handleNetworkCall}
           >
-            Continue
-          </Text>
-        )}
-      </BaseButton>
+            {isFetching ? (
+              <ActivityIndicator
+                size={"small"}
+                color={theme.colors.accentButtonTextColor}
+              />
+            ) : (
+              <Text variant="bodySmallBold" color="accentButtonTextColor">
+                {l.common.continue}
+              </Text>
+            )}
+          </BaseButton>
+        </>
+      ) : null}
       {errorMessage ? (
         <Text variant="error" mt="xxs">
           {errorMessage}

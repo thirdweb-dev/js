@@ -28,7 +28,7 @@ import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
- * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons}` hook.
+ * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons} hook.
  *
  * @beta
  */
@@ -308,7 +308,7 @@ export function useClaimIneligibilityReasons(
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param walletAddress - the wallet address to check the active claim condition for
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
- * @returns the active claim conditon for the wallet address or null if there is no active claim condition
+ * @returns the active claim condition for the wallet address or null if there is no active claim condition
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @see {@link https://portal.thirdweb.com/react/react.useactiveclaimconditionforwallet?utm_source=sdk | Documentation}
  * @beta

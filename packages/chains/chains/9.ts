@@ -4,7 +4,6 @@ export default {
   "chainId": 9,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ethersocial.org",
   "name": "Ubiq Network Testnet",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "TUBQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2,
   "rpc": [],
   "shortName": "tubq",
   "slug": "ubiq-network-testnet",

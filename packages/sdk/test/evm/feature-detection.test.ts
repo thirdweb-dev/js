@@ -20,8 +20,6 @@ import { signers, sdk } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("Feature Detection", async () => {
   let adminWallet: SignerWithAddress;
 

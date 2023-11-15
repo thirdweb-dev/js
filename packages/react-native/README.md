@@ -10,13 +10,16 @@
 <a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
 
 </p>
-<p align="center"><strong>Powering react-native dapps.</strong></p>
-<br />
+<p><strong>Powering react-native dapps.</strong></p>
 
-## 👷🚧 Alpha 🚧👷
+The go to library for seamless Web3 integration in React Native apps.
 
 <br />
 
 ## Getting Started
 
-Head over to the [documentation](https://portal.thirdweb.com/react-native) to learn more
+Try it out by running:
+
+`npx thirdweb create --template react-native-typescript-starter`
+
+or head over to the [documentation](https://portal.thirdweb.com/react-native) to learn more

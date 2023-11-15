@@ -1,5 +1,25 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.8
+
+### Patch Changes
+
+- [#1907](https://github.com/thirdweb-dev/js/pull/1907) [`8d1b8a47`](https://github.com/thirdweb-dev/js/commit/8d1b8a47e6d2262ef7e326ff561a30f401cb9834) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: add "checkout" as a usage type
+
+## 0.4.7
+
+### Patch Changes
+
+- [#1752](https://github.com/thirdweb-dev/js/pull/1752) [`1fbbc2d2`](https://github.com/thirdweb-dev/js/commit/1fbbc2d27d88af6029267e6993dd79e077a60ab2) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore(service-utils): add `redirecrUrls` type to `ApiKeyMetadata`
+
+- [#1751](https://github.com/thirdweb-dev/js/pull/1751) [`95380eae`](https://github.com/thirdweb-dev/js/commit/95380eaed4aad93d47ece4da2b45fdbba2d14205) Thanks [@arcoraven](https://github.com/arcoraven)! - Add walletType to usage payload
+
+## 0.4.6
+
+### Patch Changes
+
+- [#1729](https://github.com/thirdweb-dev/js/pull/1729) [`52b1a0fc`](https://github.com/thirdweb-dev/js/commit/52b1a0fcacb136e8da417d883e5365f2ab558d59) Thanks [@arcoraven](https://github.com/arcoraven)! - Make accountId optional in publishUsageEvents. This will be hydrated internally.
+
 ## 0.4.5
 
 ### Patch Changes

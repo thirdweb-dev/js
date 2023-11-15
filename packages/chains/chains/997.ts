@@ -6,13 +6,18 @@ export default {
     {
       "name": "5ireChain Explorer",
       "url": "https://explorer.5ire.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
+        "width": 800,
+        "height": 800,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [
     "https://explorer.5ire.network/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
     "width": 800,
@@ -26,9 +31,10 @@ export default {
     "symbol": "5ire",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 997,
   "rpc": [
     "https://5irechain-thunder.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.5ire.network"
   ],
   "shortName": "5ire",

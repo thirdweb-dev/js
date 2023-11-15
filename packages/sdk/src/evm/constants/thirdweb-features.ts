@@ -16,6 +16,7 @@ import IAirdropERC721 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC721.
 import IAirdropERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC1155.json";
 import IAccountFactoryCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactoryCore.json";
 import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions.json";
+import IAccountPermissionsV1 from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions_V1.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
 export const getAllPluginsAbi = [
@@ -205,7 +206,7 @@ export const FEATURE_GASLESS = {
   docLinks: {
     sdk: "sdk.gaslesstransaction",
     // TODO add the correct name for this once it's added to portal
-    contracts: "",
+    contracts: "IERC2771Context",
   },
   abis: [IERC2771ContextAbi],
   features: {},
@@ -217,7 +218,7 @@ export const FEATURE_PACK_VRF = {
   docLinks: {
     sdk: "sdk.packvrf",
     //TODO
-    contracts: "",
+    contracts: "IPackVRF",
   },
   abis: [IPackVRFAbi],
   features: {},
@@ -229,7 +230,7 @@ export const FEATURE_PLUGIN_ROUTER = {
   docLinks: {
     sdk: "sdk.pluginrouter",
     //TODO
-    contracts: "",
+    contracts: "PluginRouter",
   },
   abis: [getAllPluginsAbi],
   features: {},
@@ -241,7 +242,7 @@ export const FEATURE_DYNAMIC_CONTRACT = {
   docLinks: {
     sdk: "",
     //TODO
-    contracts: "",
+    contracts: "IExtensionsManager",
   },
   abis: [getAllExtensionsAbi],
   features: {},
@@ -253,7 +254,7 @@ export const FEATURE_DIRECT_LISTINGS = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IDirectListings",
   },
   abis: [IDirectListingsAbi],
   features: {},
@@ -265,7 +266,7 @@ export const FEATURE_ENGLISH_AUCTIONS = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IEnglishAuctions",
   },
   abis: [IEnglishAuctionsAbi],
   features: {},
@@ -277,7 +278,7 @@ export const FEATURE_OFFERS = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IOffers",
   },
   abis: [IOffersAbi],
   features: {},
@@ -289,9 +290,21 @@ export const FEATURE_ACCOUNT_FACTORY = {
   docLinks: {
     // TODO
     sdk: "sdk.accountFactory",
-    contracts: "",
+    contracts: "IAccountFactory",
   },
   abis: [IAccountFactoryCore],
+  features: {},
+} as const;
+
+export const FEATURE_ACCOUNT_PERMISSIONS_V1 = {
+  name: "AccountPermissionsV1",
+  namespace: "accountPermissions",
+  docLinks: {
+    // TODO
+    sdk: "sdk.account",
+    contracts: "IAccountPermissions",
+  },
+  abis: [IAccountPermissionsV1],
   features: {},
 } as const;
 
@@ -301,7 +314,7 @@ export const FEATURE_ACCOUNT_PERMISSIONS = {
   docLinks: {
     // TODO
     sdk: "sdk.account",
-    contracts: "",
+    contracts: "IAccountPermissions",
   },
   abis: [IAccountPermissions],
   features: {},
@@ -313,10 +326,13 @@ export const FEATURE_ACCOUNT = {
   docLinks: {
     // TODO
     sdk: "sdk.account",
-    contracts: "",
+    contracts: "IAccount",
   },
   abis: [IAccount],
-  features: { [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS },
+  features: {
+    [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS,
+    [FEATURE_ACCOUNT_PERMISSIONS_V1.name]: FEATURE_ACCOUNT_PERMISSIONS_V1,
+  },
 } as const;
 
 export const FEATURE_AIRDROP_ERC20 = {
@@ -325,7 +341,7 @@ export const FEATURE_AIRDROP_ERC20 = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IAirdropERC20",
   },
   abis: [IAirdropERC20],
   features: {},
@@ -337,7 +353,7 @@ export const FEATURE_AIRDROP_ERC721 = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IAirdropERC721",
   },
   abis: [IAirdropERC721],
   features: {},
@@ -349,7 +365,7 @@ export const FEATURE_AIRDROP_ERC1155 = {
   docLinks: {
     // TODO
     sdk: "",
-    contracts: "",
+    contracts: "IAirdropERC1155",
   },
   abis: [IAirdropERC1155],
   features: {},

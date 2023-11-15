@@ -7,10 +7,11 @@ import {
   iconSize,
 } from "../design-system";
 import {
-  widemodalMaxHeight,
+  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  compactmodalMaxHeight,
+  compactModalMaxHeight,
+  modalCloseFadeOutDuration,
 } from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
 import { noScrollBar } from "./basic";
@@ -20,6 +21,7 @@ import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { DynamicHeight } from "./DynamicHeight";
+import { useEffect, useRef, useState } from "react";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
@@ -29,9 +31,41 @@ export const Modal: React.FC<{
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
   size: "wide" | "compact";
+  hide?: boolean;
 }> = (props) => {
+  const [open, setOpen] = useState(props.open);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!props.open) {
+      if (contentRef.current) {
+        const animationConfig = {
+          duration: modalCloseFadeOutDuration,
+          fill: "forwards",
+          easing: "ease",
+        } as const;
+
+        contentRef.current.animate([{ opacity: 0 }], {
+          ...animationConfig,
+        }).onfinish = () => {
+          setOpen(false);
+        };
+
+        overlayRef.current?.animate([{ opacity: 0 }], {
+          ...animationConfig,
+          duration: modalCloseFadeOutDuration + 100,
+        });
+      } else {
+        setOpen(props.open);
+      }
+    } else {
+      setOpen(props.open);
+    }
+  }, [props.open]);
+
   return (
-    <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
+    <Dialog.Root open={open} onOpenChange={props.setOpen}>
       {/* Trigger */}
       {props.trigger && (
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
@@ -40,21 +74,30 @@ export const Modal: React.FC<{
       {/* Dialog */}
       <Dialog.Portal>
         {/* Overlay */}
-        <Dialog.Overlay asChild>
-          <Overlay />
-        </Dialog.Overlay>
+        {!props.hide && (
+          <Dialog.Overlay asChild>
+            <Overlay ref={overlayRef} />
+          </Dialog.Overlay>
+        )}
+
         <Dialog.Content asChild>
           <DialogContent
-            style={{
-              height: props.size === "compact" ? "auto" : widemodalMaxHeight,
-              maxWidth:
-                props.size === "compact"
-                  ? modalMaxWidthCompact
-                  : modalMaxWidthWide,
-            }}
+            ref={contentRef}
+            style={
+              props.hide
+                ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
+                : {
+                    height:
+                      props.size === "compact" ? "auto" : wideModalMaxHeight,
+                    maxWidth:
+                      props.size === "compact"
+                        ? modalMaxWidthCompact
+                        : modalMaxWidthWide,
+                  }
+            }
           >
             {props.size === "compact" ? (
-              <DynamicHeight maxHeight={compactmodalMaxHeight}>
+              <DynamicHeight maxHeight={compactModalMaxHeight}>
                 {props.children}{" "}
               </DynamicHeight>
             ) : (
@@ -67,9 +110,9 @@ export const Modal: React.FC<{
                 <Dialog.Close asChild>
                   <IconButton type="button" aria-label="Close">
                     <Cross2Icon
+                      width={iconSize.md}
+                      height={iconSize.md}
                       style={{
-                        width: iconSize.md,
-                        height: iconSize.md,
                         color: "inherit",
                       }}
                     />
@@ -88,6 +131,7 @@ export const CrossContainer = styled.div`
   position: absolute;
   top: ${spacing.lg};
   right: ${spacing.lg};
+  transform: translateX(15%);
 
   ${media.mobile} {
     right: ${spacing.md};
@@ -130,7 +174,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
-  line-height: 1;
+  line-height: normal;
   border: 1px solid ${(p) => p.theme.colors.borderColor};
   outline: none;
   overflow: hidden;

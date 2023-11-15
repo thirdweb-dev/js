@@ -6,11 +6,16 @@ export default {
     {
       "name": "Origin Explorer",
       "url": "https://evm-explorer.origin.uptick.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
     "width": 400,
@@ -24,9 +29,10 @@ export default {
     "symbol": "UOC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1170,
   "rpc": [
     "https://origin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1170.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.origin.uptick.network"
   ],
   "shortName": "auoc",

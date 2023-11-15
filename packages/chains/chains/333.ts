@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://web3q.io/home.w3q/",
   "name": "Web3Q Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "W3Q",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 333,
   "rpc": [
     "https://web3q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.web3q.io:8545"
   ],
   "shortName": "w3q",

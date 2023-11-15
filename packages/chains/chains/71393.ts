@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.nervos.org/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZ5gFWUxLFqqT3DkefYfRsVksMwMTc5VvBjkbHpeFMsNe",
     "width": 1001,
@@ -20,9 +19,10 @@ export default {
     "symbol": "CKB",
     "decimals": 8
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://polyjuice-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://71393.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-web3-rpc.ckbapp.dev",
     "ws://godwoken-testnet-web3-rpc.ckbapp.dev/ws"
   ],

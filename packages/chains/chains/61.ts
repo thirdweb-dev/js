@@ -22,14 +22,16 @@ export default {
     "symbol": "ETC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://61.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://etc.rivet.link",
     "https://etc.etcdesktop.com",
     "https://etc.mytokenpocket.vip"
   ],
   "shortName": "etc",
+  "slip44": 61,
   "slug": "ethereum-classic",
   "testnet": false
 } as const satisfies Chain;

@@ -3,6 +3,7 @@ import {
   isContractDeployed,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
+import { BytesLike } from "ethers";
 
 export type AccessibleSmartWallets = {
   owned: string;
@@ -81,11 +82,13 @@ export async function isSmartWalletDeployed(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
   personalWalletAddress: string,
+  data: BytesLike = "0x",
 ) {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
+    data,
   ]);
   const isDeployed = await isContractDeployed(
     accountAddress,
@@ -105,11 +108,13 @@ export async function getSmartWalletAddress(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
   personalWalletAddress: string,
+  data: BytesLike = "0x",
 ): Promise<string> {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
+    data,
   ]);
   return accountAddress;
 }

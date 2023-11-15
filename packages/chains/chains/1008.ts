@@ -6,11 +6,16 @@ export default {
     {
       "name": "eurusexplorer",
       "url": "https://explorer.eurus.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+        "width": 471,
+        "height": 471,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
     "width": 471,
@@ -24,9 +29,10 @@ export default {
     "symbol": "EUN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1008,
   "rpc": [
     "https://eurus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eurus.network/"
   ],
   "shortName": "eun",

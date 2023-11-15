@@ -66,10 +66,10 @@ export class Erc20Mintable implements DetectableFeature {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "mintTo",
-      args: [
-        await resolveAddress(to),
-        await this.erc20.normalizeAmount(amount),
-      ],
+      args: await Promise.all([
+        resolveAddress(to),
+        this.erc20.normalizeAmount(amount),
+      ]),
     });
   }
 

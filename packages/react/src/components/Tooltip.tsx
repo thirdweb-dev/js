@@ -40,15 +40,13 @@ to {
 }
 `;
 
-const TooltipContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ RadixTooltip.Content,
-)<{
+const TooltipContent = /* @__PURE__ */ (() => styled(RadixTooltip.Content)<{
   theme?: Theme;
 }>`
   background: ${(p) => p.theme.colors.tooltipBg};
   color: ${(p) => p.theme.colors.tooltipText};
   border-radius: ${radius.sm};
-  line-height: 1;
+  line-height: normal;
   padding: ${spacing.sm} ${spacing.md};
   font-size: ${fontSize.sm};
   box-shadow: ${shadow.sm};
@@ -58,12 +56,10 @@ const TooltipContent = /* @__PURE__ */ styled(
   z-index: 999999999999999;
   max-width: 300px;
   line-height: 1.5;
-`;
+`)();
 
-const TooltipArrow = /* @__PURE__ */ styled(
-  /* @__PURE__ */ RadixTooltip.Arrow,
-)<{
+const TooltipArrow = /* @__PURE__ */ (() => styled(RadixTooltip.Arrow)<{
   theme?: Theme;
 }>`
   fill: ${(p) => p.theme.colors.tooltipBg};
-`;
+`)();

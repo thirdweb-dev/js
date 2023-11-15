@@ -4,7 +4,6 @@ export default {
   "chainId": 24,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXoHaZXJevc59GuzEgBhwRSH6kio1agMRvL8bD93pARRV",
     "width": 297,
@@ -18,11 +17,13 @@ export default {
     "symbol": "KAI",
     "decimals": 18
   },
+  "networkId": 0,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://kardiachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://24.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kardiachain.io"
   ],
   "shortName": "kardiachain",

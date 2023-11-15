@@ -4,7 +4,6 @@ export default {
   "chainId": 1012,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.newtonproject.org/",
   "name": "Newton",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "NEW",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1012,
   "rpc": [
     "https://newton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1012.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://global.rpc.mainnet.newtonproject.org"
   ],
   "shortName": "new",

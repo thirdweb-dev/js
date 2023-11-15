@@ -6,7 +6,13 @@ export default {
     {
       "name": "DSC Explorer Testnet",
       "url": "https://testnet.explorer.decimalchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,12 +34,13 @@ export default {
   "name": "Decimal Smart Chain Testnet",
   "nativeCurrency": {
     "name": "Decimal",
-    "symbol": "DEL",
+    "symbol": "tDEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 202020,
   "rpc": [
     "https://decimal-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://202020.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-val.decimalchain.com/web3/"
   ],
   "shortName": "tDSC",

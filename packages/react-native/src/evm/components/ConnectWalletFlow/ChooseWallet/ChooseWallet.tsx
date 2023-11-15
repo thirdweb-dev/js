@@ -5,11 +5,14 @@ import { ReactNode, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
-import { useAppTheme } from "../../../styles/hooks";
 import { ChooseWalletContent } from "./ChooseWalletContent";
 import { BaseButton, ImageSvgUri, WalletButton } from "../../base";
 import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
@@ -34,14 +37,17 @@ export function ChooseWallet({
   termsOfServiceUrl,
   privacyPolicyUrl,
 }: ChooseWalletProps) {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const themeLightDark = useTheme();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnectAWalletEnabled, setIsConnectAWalletEnabled] = useState(false);
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) => w.id === walletIds.magicLink || w.id === walletIds.embeddedWallet,
+    (w) =>
+      w.id === walletIds.magicLink ||
+      (w.id === walletIds.embeddedWallet && w.selectUI),
   );
   const connectionWallets = wallets
     .filter(
@@ -98,41 +104,31 @@ export function ChooseWallet({
         onBackPress={isConnectAWalletEnabled ? onBackPress : undefined}
         onClose={onClose}
         headerText={
-          headerText ? (
-            headerText
-          ) : (
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              alignContent="center"
-              justifyContent="center"
-            >
-              {modalTitleIconUrl !== undefined ? (
-                modalTitleIconUrl.length === 0 ? null : (
-                  <ImageSvgUri
-                    width={26}
-                    height={15}
-                    imageUrl={modalTitleIconUrl}
-                  />
-                )
-              ) : (
-                <ThirdwebLogo
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            alignContent="center"
+            justifyContent="center"
+          >
+            {modalTitleIconUrl !== undefined ? (
+              modalTitleIconUrl.length === 0 ? null : (
+                <ImageSvgUri
                   width={26}
                   height={15}
-                  color={theme.colors.backgroundInverted}
+                  imageUrl={modalTitleIconUrl}
                 />
-              )}
-              <Text
-                variant="header"
-                ml="xxs"
-                fontWeight="700"
-                fontSize={20}
-                lineHeight={24}
-              >
-                Connect
-              </Text>
-            </Box>
-          )
+              )
+            ) : (
+              <ThirdwebLogo
+                width={26}
+                height={15}
+                color={theme.colors.backgroundInverted}
+              />
+            )}
+            <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
+              {headerText ? headerText : l.connect_wallet_details.connect}
+            </Text>
+          </Box>
         }
         subHeaderText={subHeaderText}
       />
@@ -159,9 +155,11 @@ export function ChooseWallet({
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text variant="bodySmall">New to wallets?</Text>
+            <Text variant="bodySmall">
+              {l.connect_wallet_details.new_to_wallets}
+            </Text>
             <BaseButton onPress={onGetStartedPress}>
-              <Text variant="link">Get started</Text>
+              <Text variant="link">{l.connect_wallet_details.get_started}</Text>
             </BaseButton>
           </Box>
         </>
@@ -180,7 +178,6 @@ export function ChooseWallet({
       !isConnectAWalletEnabled &&
       (guestWallet || connectionWallets.length > 0) ? (
         <Box
-          mb="md"
           mt="md"
           marginHorizontal="xl"
           flexDirection="row"
@@ -189,7 +186,7 @@ export function ChooseWallet({
         >
           <Box height={1} flex={1} backgroundColor="border" />
           <Text variant="subHeader" textAlign="center" marginHorizontal="xxs">
-            OR
+            {l.common.or}
           </Text>
           <Box height={1} flex={1} backgroundColor="border" />
         </Box>
@@ -202,7 +199,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             paddingHorizontal="none"
             paddingVertical="none"
-            mb="md"
+            mt="md"
             walletIconUrl={connectionWallets[0].meta.iconURL}
             name={connectionWallets[0].meta.name}
             onPress={onSingleWalletPress}
@@ -212,6 +209,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             justifyContent="center"
             borderRadius="lg"
+            mt="md"
             paddingVertical="md"
             borderColor="border"
             flexDirection="row"
@@ -230,8 +228,8 @@ export function ChooseWallet({
                 </Box>
               );
             })}
-            <Text variant="bodySmall" fontWeight="700">
-              Connect a wallet
+            <Text variant="bodySmallBold">
+              {l.connect_wallet_details.connect_a_wallet}
             </Text>
           </BaseButton>
         )
@@ -253,22 +251,20 @@ export function ChooseWallet({
               color={theme.colors.textPrimary}
             />
           ) : (
-            <Text variant="bodySmall" fontWeight="700">
-              Continue as guest
+            <Text variant="bodySmallBold">
+              {l.connect_wallet_details.continue_as_guest}
             </Text>
           )}
         </BaseButton>
       ) : null}
       {showToSPrivacyPolicy ? (
         <Box
-          mt="md"
-          pt="md"
-          height={50}
+          mt="sm"
           marginHorizontal={!isConnectAWalletEnabled ? "xl" : "none"}
           alignItems="center"
         >
           <Text variant="bodySmallSecondary" fontSize={10} lineHeight={14}>
-            By connecting, you agree to the
+            {l.connect_wallet_details.by_connecting_you_agree}
           </Text>
           <Box flexDirection="row" alignItems="center" justifyContent="center">
             {termsOfServiceUrl ? (
@@ -283,7 +279,7 @@ export function ChooseWallet({
                   padding="none"
                   lineHeight={14}
                 >
-                  Terms of Service
+                  {l.connect_wallet_details.tos}
                 </Text>
               </BaseButton>
             ) : null}
@@ -309,7 +305,7 @@ export function ChooseWallet({
                   padding="none"
                   lineHeight={14}
                 >
-                  Privacy Policy
+                  {l.connect_wallet_details.privacy_policy}
                 </Text>
               </BaseButton>
             ) : null}

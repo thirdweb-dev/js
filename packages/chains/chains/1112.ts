@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://wallet.test.wemix.com/faucet"
   ],
-  "features": [],
   "infoURL": "https://wemix.com",
   "name": "WEMIX3.0 Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tWEMIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1112,
   "rpc": [
     "https://wemix3-0-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1112.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.test.wemix.com",
     "wss://ws.test.wemix.com"
   ],

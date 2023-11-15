@@ -4,7 +4,6 @@ export default {
   "chainId": 102,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUc57w3UTHiWapNW9oQb1dP57ymtdemTTbpvGkjVHBRCo",
     "width": 192,
@@ -18,9 +17,10 @@ export default {
     "symbol": "W3G",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 102,
   "rpc": [
     "https://web3games-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc-0.web3games.org/evm",
     "https://testnet-rpc-1.web3games.org/evm",
     "https://testnet-rpc-2.web3games.org/evm"

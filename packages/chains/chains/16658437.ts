@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://plian.org",
   "name": "Plian Testnet Main",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "TPI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16658437,
   "rpc": [
     "https://plian-testnet-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16658437.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/testnet"
   ],
   "shortName": "plian-testnet",

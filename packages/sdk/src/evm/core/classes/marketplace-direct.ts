@@ -5,9 +5,6 @@ import type {
   IMarketplace,
   Marketplace,
 } from "@thirdweb-dev/contracts-js";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
@@ -40,17 +37,15 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../../constants/contract";
-import { ListingType } from "../../enums";
+import { ListingType } from "../../enums/marketplace/ListingType";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
-import {
-  DirectListing,
-  NewDirectListing,
-  Offer,
-} from "../../types/marketplace";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { DirectListing } from "../../types/marketplace/DirectListing";
+import { Offer } from "../../types/marketplace/Offer";
+import { NewDirectListing } from "../../types/marketplace/NewDirectListing";
 
 /**
  * Handles direct listings
@@ -239,12 +234,11 @@ export class MarketplaceDirect {
     async (
       listings: NewDirectListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createListing.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createListing.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -581,6 +575,9 @@ export class MarketplaceDirect {
     }
 
     const provider = this.contractWrapper.getProvider();
+    const ERC165Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+    ).default;
     const erc165 = new Contract(
       listing.assetContractAddress,
       ERC165Abi,
@@ -589,6 +586,9 @@ export class MarketplaceDirect {
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
+      const ERC721Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC721.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC721Abi,
@@ -610,6 +610,9 @@ export class MarketplaceDirect {
           : `Seller is not the owner of Token '${listing.tokenId}' from contract '${listing.assetContractAddress} anymore'`,
       };
     } else if (isERC1155) {
+      const ERC1155Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC1155Abi,

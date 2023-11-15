@@ -1,7 +1,6 @@
 import type { TWRegistry } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { constants, utils } from "ethers";
+import { ContractInterface, constants, utils } from "ethers";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -19,6 +18,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     registryAddress: string,
     network: NetworkInput,
     storage: ThirdwebStorage,
+    TWRegistryABI: ContractInterface,
     options?: SDKOptions,
   ) {
     super(network, registryAddress, TWRegistryABI, options, storage);
@@ -48,15 +48,11 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
       const contractEncoder = new ContractEncoder(this);
-      const encoded: string[] = await Promise.all(
-        contractAddresses.map(async (address) =>
-          contractEncoder.encode("add", [
-            deployerAddress,
-            await resolveAddress(address),
-          ]),
-        ),
+      const encoded = (
+        await Promise.all(contractAddresses.map((addr) => resolveAddress(addr)))
+      ).map((address) =>
+        contractEncoder.encode("add", [deployerAddress, address]),
       );
-
       return Transaction.fromContractWrapper({
         contractWrapper: this,
         method: "multicall",
@@ -79,15 +75,11 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
       const contractEncoder = new ContractEncoder(this);
-      const encoded: string[] = await Promise.all(
-        contractAddresses.map(async (address) =>
-          contractEncoder.encode("remove", [
-            deployerAddress,
-            await resolveAddress(address),
-          ]),
-        ),
+      const encoded = (
+        await Promise.all(contractAddresses.map((addr) => resolveAddress(addr)))
+      ).map((address) =>
+        contractEncoder.encode("remove", [deployerAddress, address]),
       );
-
       return Transaction.fromContractWrapper({
         contractWrapper: this,
         method: "multicall",

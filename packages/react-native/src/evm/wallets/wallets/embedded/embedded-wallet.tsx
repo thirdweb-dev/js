@@ -6,16 +6,28 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
+import { AuthOption } from "../../types/embedded-wallet";
+import { WalletConnectReceiverConfig } from "@thirdweb-dev/wallets";
 
 export type EmbeddedWalletConfig = {
-  recommended?: boolean;
-};
+  auth?: {
+    options: AuthOption[];
+    redirectUrl?: string;
+  };
+} & WalletConnectReceiverConfig;
 
 export const embeddedWallet = (
   config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
-    <EmailSelectionUI {...props} />
+    <EmailSelectionUI
+      {...props}
+      auth={
+        config?.auth || {
+          options: ["email"],
+        }
+      }
+    />
   );
 
   return {
@@ -24,11 +36,11 @@ export const embeddedWallet = (
     create(options: WalletOptions) {
       return new EmbeddedWallet({
         ...options,
+        ...config,
         clientId: options.clientId || "",
       });
     },
     selectUI: selectUI,
     connectUI: EmbeddedConnectionUI,
-    recommended: config?.recommended,
   };
 };

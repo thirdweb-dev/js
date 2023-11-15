@@ -4,7 +4,6 @@ export default {
   "chainId": 78,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://primusmoney.com",
   "name": "PrimusChain mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "PETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 78,
   "rpc": [
     "https://primuschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://78.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethnode.primusmoney.com/mainnet"
   ],
   "shortName": "primuschain",

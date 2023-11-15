@@ -6,13 +6,18 @@ export default {
     {
       "name": "fncy scan",
       "url": "https://fncyscan.fncy.world",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet-testnet.fncy.world"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
     "width": 256,
@@ -26,9 +31,10 @@ export default {
     "symbol": "FNCY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 73,
   "rpc": [
     "https://fncy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://73.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fncy-seed1.fncy.world"
   ],
   "shortName": "FNCY",

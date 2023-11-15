@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreic6tcc6swh5kzljwqnswj6rlemcm7n6ra7xkgttwv5v3fv7ozj5zu",
     "width": 1500,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 761412,
   "rpc": [
     "https://miexs-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://761412.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.miexs.com"
   ],
   "shortName": "Miexs",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ssquad.games/",
   "name": "SPS",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ECG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 13000,
   "rpc": [
     "https://sps.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ssquad.games"
   ],
   "shortName": "SPS",

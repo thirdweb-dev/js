@@ -1,8 +1,13 @@
-import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber, ethers, utils } from "ethers";
+import {
+  LOCAL_NODE_PKEY,
+  SmartContract,
+  ThirdwebSDK,
+  Transaction,
+} from "@thirdweb-dev/sdk";
+import { BigNumberish, BigNumber, ethers, utils, BytesLike } from "ethers";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
-import { MINIMAL_ACCOUNT_ABI } from "./constants";
+import { ACCOUNT_CORE_ABI } from "./constants";
 
 export class AccountAPI extends BaseAccountAPI {
   sdk: ThirdwebSDK;
@@ -42,7 +47,7 @@ export class AccountAPI extends BaseAccountAPI {
       } else {
         this.accountContract = await this.sdk.getContract(
           await this.getAccountAddress(),
-          MINIMAL_ACCOUNT_ABI,
+          ACCOUNT_CORE_ABI,
         );
       }
     }
@@ -103,33 +108,27 @@ export class AccountAPI extends BaseAccountAPI {
     return this.params.accountInfo.getNonce(accountContract);
   }
 
-  async encodeExecute(
+  async prepareExecute(
     target: string,
     value: BigNumberish,
     data: string,
-  ): Promise<string> {
+  ): Promise<Transaction<any>> {
     const accountContract = await this.getAccountContract();
-    const tx = await this.params.accountInfo.execute(
+    return this.params.accountInfo.execute(
       accountContract,
       target,
       value,
       data,
     );
-    return tx.encode();
   }
 
-  async encodeExecuteBatch(
+  async prepareExecuteBatch(
     targets: string[],
     values: BigNumberish[],
-    datas: string[],
-  ): Promise<string> {
+    datas: BytesLike[],
+  ): Promise<Transaction<any>> {
     const accountContract = await this.getAccountContract();
-    const tx = await accountContract.prepare("executeBatch", [
-      targets,
-      values,
-      datas,
-    ]);
-    return tx.encode();
+    return accountContract.prepare("executeBatch", [targets, values, datas]);
   }
 
   async signUserOpHash(userOpHash: string): Promise<string> {

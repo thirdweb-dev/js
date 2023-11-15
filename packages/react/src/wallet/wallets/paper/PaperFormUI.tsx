@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -7,30 +8,35 @@ import {
 } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
-import { TextDivider } from "../../../components/TextDivider";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
-  showOrSeparator?: boolean;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
 }) => {
+  const cwLocale = useTWLocale().connectWallet;
+  const locale = useTWLocale().wallets.paperWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
+  const themeObj = useTheme() as Theme;
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = window.open("", "Login", "width=350, height=500");
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -61,23 +67,17 @@ export const PaperFormUI = (props: {
               props.onSelect({ google: true });
             }}
           >
-            <GoogleIcon size={iconSize.md} />
-            Sign in with Google
+            <Img src={googleIconUri} width={iconSize.md} height={iconSize.md} />
+            {locale.signInWithGoogle}
           </SocialButton>
 
-          <Spacer y="lg" />
-
-          <TextDivider>
-            <span>OR</span>
-          </TextDivider>
-
-          <Spacer y="lg" />
+          <TextDivider text={cwLocale.or} py="lg" />
         </>
       )}
 
       <InputSelectionUI
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
+        placeholder={locale.emailPlaceholder}
         name="email"
         type="email"
         errorMessage={(_input) => {
@@ -85,11 +85,11 @@ export const PaperFormUI = (props: {
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
           const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
-            return "Invalid email address";
+            return locale.invalidEmail;
           }
         }}
-        emptyErrorMessage="email address is required"
-        showOrSeparator={props.showOrSeparator}
+        emptyErrorMessage={locale.emailRequired}
+        submitButtonText={locale.submitEmail}
       />
     </div>
   );
@@ -103,6 +103,7 @@ export const PaperFormUIScreen: React.FC<{
   walletConfig: WalletConfig<PaperWallet>;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
+  const locale = useTWLocale().wallets.paperWallet;
   return (
     <Container
       fullHeight
@@ -113,7 +114,7 @@ export const PaperFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.signIn} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
@@ -126,7 +127,6 @@ export const PaperFormUIScreen: React.FC<{
           walletConfig={props.walletConfig}
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
-          showOrSeparator={false}
         />
       </Container>
     </Container>

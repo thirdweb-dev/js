@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.okex.com/okc",
   "name": "OKXChain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "OKT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 66,
   "rpc": [
     "https://okxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://66.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchainrpc.okex.org",
     "https://okc-mainnet.gateway.pokt.network/v1/lb/6275309bea1b320039c893ff"
   ],

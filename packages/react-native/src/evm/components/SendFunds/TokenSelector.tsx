@@ -15,10 +15,10 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import { useAppTheme } from "../../styles/hooks";
 import { SelectTokenButton } from "./SelectTokenButton";
 import CloseIcon from "../../assets/close";
 import Text from "../base/Text";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export function useToken(tokenAddress: string): {
   isLoading: boolean;
@@ -82,7 +82,8 @@ export function TokenSelector(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
 }) {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const [input, setInput] = useState("");
   const chainId = useChainId();
   const nativeTokenInfo = useNativeToken();
@@ -120,7 +121,7 @@ export function TokenSelector(props: {
       <Box>
         <ModalHeaderTextClose
           onBackPress={props.onBack}
-          headerText="Select a Token"
+          headerText={l.connect_wallet_details.select_token}
         />
 
         <Box
@@ -140,12 +141,13 @@ export function TokenSelector(props: {
             onChangeText={setInput}
             style={{
               color: theme.colors.textPrimary,
+              fontFamily: theme.textVariants.defaults.fontFamily,
               textAlign: "left",
               flex: 1,
               height: 40,
               paddingHorizontal: 16,
             }}
-            placeholder="Search or paste token address"
+            placeholder={l.connect_wallet_details.search_or_paste_token}
             placeholderTextColor={theme.colors.textSecondary}
             autoCapitalize="none"
             autoCorrect={false}
@@ -197,8 +199,10 @@ export function TokenSelector(props: {
           minHeight={150}
           paddingTop="none"
         >
-          <CloseIcon width={16} height={16} />
-          <Text variant="bodySmall">No Tokens found</Text>
+          <CloseIcon width={16} height={16} color={theme.colors.border} />
+          <Text variant="bodySmall">
+            {l.connect_wallet_details.no_tokens_found}
+          </Text>
         </Box>
       )}
     </Box>

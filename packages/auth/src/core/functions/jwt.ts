@@ -38,7 +38,10 @@ function base64decode(data: string): string {
 /**
  * Build JWT token based on the authentication payload
  */
-async function buildJWT({ wallet, payload }: BuildJwtParams): Promise<string> {
+export async function buildJWT({
+  wallet,
+  payload,
+}: BuildJwtParams): Promise<string> {
   const payloadData = AuthenticationPayloadDataSchema.parse(payload);
 
   const message = JSON.stringify(payloadData);

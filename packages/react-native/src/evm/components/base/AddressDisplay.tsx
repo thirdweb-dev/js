@@ -1,5 +1,5 @@
+import { shortenAddress } from "@thirdweb-dev/react-core";
 import { Theme } from "../../styles/theme";
-import { shortenWalletAddress } from "../../utils/addresses";
 import Text from "./Text";
 
 type AddressProps = {
@@ -16,7 +16,7 @@ export const AddressDisplay = ({
 }: AddressProps) => {
   return (
     <Text variant={variant} {...props}>
-      {shortenWalletAddress(address, extraShort)}
+      {shortenAddress(address, extraShort)}
     </Text>
   );
 };

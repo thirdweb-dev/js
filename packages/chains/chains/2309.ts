@@ -4,14 +4,13 @@ export default {
   "chainId": 2309,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "name": "Arevia",
   "nativeCurrency": {
     "name": "Arev",
     "symbol": "ARÉV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2309,
   "rpc": [],
   "shortName": "arevia",
   "slug": "arevia",

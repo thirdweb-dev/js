@@ -6,11 +6,16 @@ export default {
     {
       "name": "expedition",
       "url": "http://expedition.altcoinchain.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmYwHmGC9CRVcKo1LSesqxU31SDj9vk2iQxcFjQArzhix4",
+        "width": 720,
+        "height": 720,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYwHmGC9CRVcKo1LSesqxU31SDj9vk2iQxcFjQArzhix4",
     "width": 720,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ALT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2330,
   "rpc": [
     "https://altcoinchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2330.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc0.altcoinchain.org/rpc"
   ],
   "shortName": "alt",

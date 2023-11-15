@@ -4,14 +4,26 @@ export default {
   "chainId": 592,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://astar.subscan.io",
-      "standard": "none"
-    },
-    {
       "name": "blockscout",
       "url": "https://blockscout.com/astar",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    },
+    {
+      "name": "subscan",
+      "url": "https://astar.subscan.io",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -29,9 +41,11 @@ export default {
     "symbol": "ASTR",
     "decimals": 18
   },
+  "networkId": 592,
   "redFlags": [],
   "rpc": [
     "https://astar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://592.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.astar.network",
     "https://rpc.astar.network:8545"
   ],

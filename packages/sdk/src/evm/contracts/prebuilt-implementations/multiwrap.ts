@@ -238,15 +238,15 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       wrappedTokenMetadata: NFTMetadataOrUri,
       recipientAddress?: AddressOrEns,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
-
-      const recipient = await resolveAddress(
-        recipientAddress
-          ? recipientAddress
-          : await this.contractWrapper.getSignerAddress(),
-      );
-
-      const tokens = await this.toTokenStructList(contents);
+      const [uri, tokens, recipient] = await Promise.all([
+        uploadOrExtractURI(wrappedTokenMetadata, this.storage),
+        this.toTokenStructList(contents),
+        resolveAddress(
+          recipientAddress
+            ? recipientAddress
+            : await this.contractWrapper.getSignerAddress(),
+        ),
+      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://robin-faucet.rangersprotocol.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
     "width": 2000,
@@ -23,12 +22,13 @@ export default {
   "name": "Rangers Protocol Testnet Robin",
   "nativeCurrency": {
     "name": "Rangers Protocol Gas",
-    "symbol": "RPG",
+    "symbol": "tRPG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9527,
   "rpc": [
     "https://rangers-protocol-testnet-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9527.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://robin.rangersprotocol.com/api/jsonrpc"
   ],
   "shortName": "trpg",

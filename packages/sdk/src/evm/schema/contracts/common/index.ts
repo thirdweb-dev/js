@@ -59,12 +59,13 @@ export const CommonRoyaltySchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const CommonPrimarySaleSchema = /* @__PURE__ */ z.object({
-  /**
-   * primary sale recipient address
-   */
-  primary_sale_recipient: AddressOrEnsSchema,
-});
+export const CommonPrimarySaleSchema = /* @__PURE__ */ (() =>
+  z.object({
+    /**
+     * primary sale recipient address
+     */
+    primary_sale_recipient: AddressOrEnsSchema,
+  }))();
 
 /**
  * @internal
@@ -96,8 +97,3 @@ export const CommonSymbolSchema = /* @__PURE__ */ (() =>
   z.object({
     symbol: z.string().default(""),
   }))();
-
-export * from "./claim-conditions";
-export * from "./currency";
-export * from "./signature";
-export * from "./snapshots";

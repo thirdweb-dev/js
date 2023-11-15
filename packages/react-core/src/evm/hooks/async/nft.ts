@@ -225,11 +225,12 @@ export function useTotalCirculatingSupply(
  *
  * @example
  * ```javascript
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, "{{wallet_address}}");
+ * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, "{{wallet_address}}", { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
  * @param ownerWalletAddress - the wallet address to get owned tokens for
+ * @param queryParams - query params to pass to the query for pagination
  * @returns a response object that includes the list of owned tokens
  * @beta
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
@@ -238,6 +239,7 @@ export function useTotalCirculatingSupply(
 export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
+  queryParams?: QueryAllParams,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -248,10 +250,10 @@ export function useOwnedNFTs<TContract extends NFTContract>(
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(ownerWalletAddress, "No wallet address provided");
       if (erc721) {
-        return await erc721.getOwned(ownerWalletAddress);
+        return await erc721.getOwned(ownerWalletAddress, queryParams);
       }
       if (erc1155) {
-        return await erc1155.getOwned(ownerWalletAddress);
+        return await erc1155.getOwned(ownerWalletAddress, queryParams);
       }
       invariant(false, "Unknown NFT type");
     },
@@ -716,7 +718,7 @@ export function useBurnNFT<TContract extends NFTContract>(
 /**
  * Set shared metadata
  * TODO add docs
- * @private
+ * @internal
  */
 export function useSetSharedMetadata<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,

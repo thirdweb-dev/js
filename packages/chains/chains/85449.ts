@@ -4,7 +4,6 @@ export default {
   "chainId": 85449,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://cybertrust.space",
   "name": "CYBERTRUST",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "CYBER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 48501,
   "rpc": [
     "https://cybertrust.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://85449.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.cybertrust.space:48501"
   ],
   "shortName": "Cyber",

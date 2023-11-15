@@ -6,7 +6,13 @@ export default {
     {
       "name": "Reapchain Dashboard",
       "url": "https://dashboard.reapchain.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -24,9 +30,10 @@ export default {
     "symbol": "REAP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 221230,
   "rpc": [
     "https://reapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://221230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth.reapchain.org"
   ],
   "shortName": "reap",

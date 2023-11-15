@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.bit-rock.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfXZCAh3HWS2bJroUStN9TieL4QA9QArMotie3X4pwBfj",
     "width": 72,
@@ -26,9 +25,10 @@ export default {
     "symbol": "BROCK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7771,
   "rpc": [
     "https://bitrock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7771.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bit-rock.io"
   ],
   "shortName": "tbitrock",

@@ -21,15 +21,22 @@ const usageEventSchema = z.object({
     "bundler",
     "paymaster",
     "relayer",
+    "connectWallet",
+    "checkout",
   ]),
   action: z.string(),
-  accountId: z.string(),
 
-  // Optional
+  /**
+   * The following fields are optional.
+   */
+
+  accountId: z.string().optional(),
+  isClientEvent: z.boolean().optional(),
   apiKeyId: z.string().optional(),
   creatorWalletAddress: z.string().optional(),
   clientId: z.string().optional(),
   walletAddress: z.string().optional(),
+  walletType: z.string().optional(),
   chainId: z.number().int().positive().optional(),
   provider: z.string().optional(),
   mimeType: z.string().optional(),
@@ -39,6 +46,7 @@ const usageEventSchema = z.object({
   userOpHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
+  transactionFeeUsd: z.number().optional(),
   transactionHash: z.string().optional(),
   sdkName: z.string().optional(),
   sdkVersion: z.string().optional(),

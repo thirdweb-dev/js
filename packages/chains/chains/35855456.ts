@@ -4,7 +4,6 @@ export default {
   "chainId": 35855456,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://joys.digital",
   "name": "Joys Digital Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "JOYS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 35855456,
   "rpc": [
     "https://joys-digital.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35855456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.joys.digital"
   ],
   "shortName": "JOYS",

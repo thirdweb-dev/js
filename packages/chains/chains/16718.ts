@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSxXjvWng3Diz4YwXDV2VqSPgMyzLYBNfkjJcr7rzkxom",
     "width": 400,
@@ -24,9 +23,10 @@ export default {
     "symbol": "AMB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16718,
   "rpc": [
     "https://airdao.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16718.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.ambrosus.io"
   ],
   "shortName": "airdao",

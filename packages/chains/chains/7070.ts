@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWEy9xK5BoqxPuVs7T48WM4exJrxzkEFt45iHcxWqUy8D",
     "width": 256,
@@ -29,9 +28,10 @@ export default {
     "symbol": "PLQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7070,
   "rpc": [
     "https://planq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7070.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.planq.network"
   ],
   "shortName": "planq",

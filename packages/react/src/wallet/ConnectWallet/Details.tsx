@@ -14,7 +14,6 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
@@ -60,6 +59,8 @@ import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -72,14 +73,19 @@ export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   style?: React.CSSProperties;
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
+  hideSwitchToPersonalWallet?: boolean;
 }> = (props) => {
+  const locale = useTWLocale().connectWallet;
   const chain = useChain();
   const walletChainId = useChainId();
 
@@ -161,7 +167,7 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
 
-      <Container flex="column" gap="xs">
+      <Container flex="column" gap="xxs">
         {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
           <Text
@@ -171,7 +177,7 @@ export const ConnectedWalletDetails: React.FC<{
               minWidth: "70px",
             }}
           >
-            Guest
+            {locale.guest}
           </Text>
         ) : addressOrENS ? (
           <Text
@@ -203,43 +209,43 @@ export const ConnectedWalletDetails: React.FC<{
     </WalletInfoButton>
   );
 
-  const networkSwitcherButton = (
-    <ToolTip
-      tip={
-        disableSwitchChain ? "Network Switching is disabled" : "Switch Network"
-      }
+  let networkSwitcherButton = (
+    <MenuButton
+      type="button"
+      disabled={disableSwitchChain}
+      onClick={() => {
+        setIsDropdownOpen(false);
+        setShowNetworkSelector(true);
+      }}
     >
-      <MenuButton
-        type="button"
-        disabled={disableSwitchChain}
-        onClick={() => {
-          setIsDropdownOpen(false);
-          setShowNetworkSelector(true);
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <ChainIcon chain={chain} size={iconSize.md} active />
-        </div>
-        <Text size="sm" color="primaryText" multiline>
-          {chain?.name || `Unknown chain #${walletChainId}`}
-        </Text>
-        <StyledChevronRightIcon
-          width={iconSize.sm}
-          height={iconSize.sm}
-          style={{
-            flexShrink: 0,
-            marginLeft: "auto",
-          }}
-        />
-      </MenuButton>
-    </ToolTip>
+        <ChainIcon chain={chain} size={iconSize.md} active />
+      </div>
+      <Text size="sm" color="primaryText" multiline>
+        {chain?.name || `Unknown chain #${walletChainId}`}
+      </Text>
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+        }}
+      />
+    </MenuButton>
   );
+
+  if (!disableSwitchChain) {
+    networkSwitcherButton = (
+      <ToolTip tip={locale.switchNetwork}>{networkSwitcherButton}</ToolTip>
+    );
+  }
 
   const content = (
     <div>
@@ -282,14 +288,14 @@ export const ConnectedWalletDetails: React.FC<{
               >
                 <CopyIcon
                   text={address || ""}
-                  tip="Copy Address"
+                  tip={locale.copyAddress}
                   side="bottom"
                 />
               </IconButton>
             </div>
 
             <ToolTip
-              tip="Disconnect Wallet"
+              tip={locale.disconnectWallet}
               side="bottom"
               align={"end"}
               sideOffset={10}
@@ -323,7 +329,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <ConnectedToSmartWallet />
 
-      {/* Send and Recive */}
+      {/* Send and Receive */}
       <Container
         style={{
           display: "grid",
@@ -352,7 +358,7 @@ export const ConnectedWalletDetails: React.FC<{
               transform: "translateY(-10%) rotate(-45deg) ",
             }}
           />
-          Send
+          {locale.send}
         </Button>
 
         <Button
@@ -369,7 +375,8 @@ export const ConnectedWalletDetails: React.FC<{
             setIsDropdownOpen(false);
           }}
         >
-          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
+          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+          {locale.receive}{" "}
         </Button>
       </Container>
 
@@ -377,7 +384,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {/* Network Switcher */}
       <div>
-        <DropdownLabel>Current Network</DropdownLabel>
+        <DropdownLabel>{locale.currentNetwork}</DropdownLabel>
         <Spacer y="xs" />
         {networkSwitcherButton}
       </div>
@@ -386,22 +393,24 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="sm">
         {/* Switch to Personal Wallet for Safe */}
-        {personalWallet && personalWalletConfig && (
-          <WalletSwitcher
-            wallet={personalWallet}
-            name="Personal Wallet"
-            onSwitch={() => {
-              setWrapperWallet(activeWallet);
-            }}
-          />
-        )}
+        {personalWallet &&
+          personalWalletConfig &&
+          !props.hideSwitchToPersonalWallet && (
+            <WalletSwitcher
+              wallet={personalWallet}
+              name={locale.personalWallet}
+              onSwitch={() => {
+                setWrapperWallet(activeWallet);
+              }}
+            />
+          )}
 
         {/* Switch to Wrapper Wallet */}
         {wrapperWalletConfig && wrapperWallet && (
           <WalletSwitcher
             name={
               wrapperWallet.walletId === walletIds.smartWallet
-                ? "Smart Wallet"
+                ? locale.smartWallet
                 : wrapperWalletConfig.meta.name
             }
             wallet={wrapperWallet}
@@ -430,7 +439,7 @@ export const ConnectedWalletDetails: React.FC<{
               <Container color="secondaryText">
                 <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-              Switch Account
+              {locale.switchAccount}
             </MenuButton>
           )}
 
@@ -459,7 +468,7 @@ export const ConnectedWalletDetails: React.FC<{
               <Container flex="row" center="both" color="secondaryText">
                 <FundsIcon size={iconSize.sm} />
               </Container>
-              Request Testnet Funds
+              {locale.requestTestnetFunds}
             </MenuLink>
           )}
 
@@ -478,7 +487,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Container flex="row" center="both" color="secondaryText">
               <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            Transaction History
+            {locale.transactionHistory}
           </MenuLink>
         )}
 
@@ -497,13 +506,11 @@ export const ConnectedWalletDetails: React.FC<{
               <Container flex="row" center="both" color="secondaryText">
                 <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-              Backup wallet{" "}
+              {locale.backupWallet}{" "}
             </MenuButton>
-            <Spacer y="sm" />
-            <Text size="xs" center multiline color="danger">
-              This is a temporary guest wallet <br />
-              Backup if you {`don't `}
-              want to lose access to it
+            <Spacer y="md" />
+            <Text size="xs" center multiline color="danger" balance>
+              {locale.guestWalletWarning}
             </Text>
           </div>
         )}
@@ -542,41 +549,39 @@ export const ConnectedWalletDetails: React.FC<{
         </DropdownMenu.Root>
       )}
 
-      {showNetworkSelector && (
-        <NetworkSelector
-          theme={props.theme}
-          chains={chains}
-          {...props.networkSelector}
-          onClose={() => setShowNetworkSelector(false)}
+      <NetworkSelector
+        open={showNetworkSelector}
+        theme={props.theme}
+        chains={chains}
+        {...props.networkSelector}
+        onClose={() => setShowNetworkSelector(false)}
+      />
+
+      <Modal
+        size={"compact"}
+        open={showExportModal}
+        setOpen={setShowExportModal}
+      >
+        <ExportLocalWallet
+          modalSize="compact"
+          localWalletConfig={activeWalletConfig as LocalWalletConfig}
+          onExport={() => {
+            setShowExportModal(false);
+          }}
         />
-      )}
+      </Modal>
 
-      {showExportModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
-          <ExportLocalWallet
-            modalSize="compact"
-            localWalletConfig={activeWalletConfig as LocalWalletConfig}
-            onBack={() => {
-              setShowExportModal(false);
-            }}
-            onExport={() => {
-              setShowExportModal(false);
-            }}
-          />
-        </Modal>
-      )}
+      <Modal size={"compact"} open={showSendModal} setOpen={setShowSendModal}>
+        <SendFunds supportedTokens={props.supportedTokens} />
+      </Modal>
 
-      {showSendModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
-          <SendFunds supportedTokens={props.supportedTokens} />
-        </Modal>
-      )}
-
-      {showReceiveModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
-          <ReceiveFunds iconUrl={activeWalletIconURL} />
-        </Modal>
-      )}
+      <Modal
+        size={"compact"}
+        open={showReceiveModal}
+        setOpen={setShowReceiveModal}
+      >
+        <ReceiveFunds iconUrl={activeWalletIconURL} />
+      </Modal>
     </>
   );
 };
@@ -592,10 +597,10 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Content,
-)<{ theme?: Theme }>`
-  width: 320px;
+const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
+  theme?: Theme;
+}>`
+  width: 360px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
@@ -606,8 +611,8 @@ const DropDownContent = /* @__PURE__ */ styled(
   background-color: ${(props) => props.theme.colors.dropdownBg};
   --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
-  line-height: 1;
-`;
+  line-height: normal;
+`)();
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
@@ -622,7 +627,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   gap: ${spacing.sm};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1;
+  line-height: normal;
   animation: ${fadeInAnimation} 300ms ease;
 
   ${media.mobile} {
@@ -688,13 +693,13 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const MenuLink = /* @__PURE__ */ MenuButton.withComponent("a");
+const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const DropdownMenuItem = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Item,
+export const DropdownMenuItem = /* @__PURE__ */ (() => styled(
+  DropdownMenu.Item,
 )<{ theme?: Theme }>`
   outline: none;
-`;
+`)();
 
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
@@ -726,6 +731,7 @@ function WalletSwitcher({
   name: string;
 }) {
   const walletContext = useWalletContext();
+  const locale = useTWLocale().connectWallet;
 
   return (
     <MenuButton
@@ -741,7 +747,7 @@ function WalletSwitcher({
       <Container color="secondaryText">
         <EnterIcon width={iconSize.sm} height={iconSize.sm} />
       </Container>
-      Switch to {name}
+      {locale.switchTo} {name}
     </MenuButton>
   );
 }
@@ -757,6 +763,7 @@ function ConnectedToSmartWallet() {
   const activeWallet = useWallet();
   const chain = useChain();
   const address = useAddress();
+  const locale = useTWLocale().connectWallet;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -783,7 +790,7 @@ function ConnectedToSmartWallet() {
     >
       <Container flex="row" gap="xs" center="y">
         <ActiveDot />
-        Connected to Smart Wallet
+        {locale.connectedToSmartWallet}
       </Container>
       {isSmartWalletDeployed && (
         <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />

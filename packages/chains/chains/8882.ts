@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://t.me/unique2faucet_opal_bot"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYJDpmWyjDa3H6BxweFmQXk4fU8b1GU7M9EqYcaUNvXzc",
     "width": 48,
@@ -26,9 +25,10 @@ export default {
     "symbol": "UNQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8882,
   "rpc": [
     "https://opal-testnet-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8882.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-opal.unique.network",
     "https://us-rpc-opal.unique.network",
     "https://eu-rpc-opal.unique.network",

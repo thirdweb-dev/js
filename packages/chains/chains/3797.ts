@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSwczpPLBG6ob1a8WLoujthiCPzwEyJNp7WdKRi52qbWX",
     "width": 310,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ALV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3797,
   "rpc": [
     "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3797.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alveychain.com/rpc",
     "https://rpc2.alvey.io/rpc"
   ],

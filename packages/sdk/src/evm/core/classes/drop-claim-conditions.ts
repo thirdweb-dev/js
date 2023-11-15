@@ -10,7 +10,6 @@ import type {
   IERC20Metadata,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -35,7 +34,6 @@ import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
-import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -57,6 +55,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -100,11 +99,14 @@ export class DropClaimConditions<
   public async getActive(
     options?: ClaimConditionFetchOptions,
   ): Promise<ClaimCondition> {
-    const cc = await this.get();
-    const metadata = await this.metadata.get();
+    const [cc, metadata, tokenDecimals] = await Promise.all([
+      this.get(),
+      this.metadata.get(),
+      this.getTokenDecimals(),
+    ]);
     return await transformResultToClaimCondition(
       cc,
-      await this.getTokenDecimals(),
+      tokenDecimals,
       this.contractWrapper.getProvider(),
       metadata.merkle || {},
       this.storage,
@@ -236,12 +238,6 @@ export class DropClaimConditions<
     let activeConditionIndex: BigNumber;
     let claimCondition: ClaimCondition;
 
-    const decimals = await this.getTokenDecimals();
-    const quantityWithDecimals = utils.parseUnits(
-      AmountSchema.parse(quantity),
-      decimals,
-    );
-
     if (addressToCheck === undefined) {
       try {
         addressToCheck = await this.contractWrapper.getSignerAddress();
@@ -255,7 +251,15 @@ export class DropClaimConditions<
       return [ClaimEligibility.NoWallet];
     }
 
-    const resolvedAddress = await resolveAddress(addressToCheck);
+    const [resolvedAddress, decimals] = await Promise.all([
+      resolveAddress(addressToCheck),
+      this.getTokenDecimals(),
+    ]);
+
+    const quantityWithDecimals = utils.parseUnits(
+      AmountSchema.parse(quantity),
+      decimals,
+    );
 
     try {
       claimCondition = await this.getActive();
@@ -487,7 +491,7 @@ export class DropClaimConditions<
       }
     }
 
-    // if not within a browser conetext, check for wallet balance.
+    // if not within a browser context, check for wallet balance.
     // In browser context, let the wallet do that job
     if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
@@ -498,6 +502,9 @@ export class DropClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const ERC20Abi = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
@@ -528,8 +535,10 @@ export class DropClaimConditions<
     const merkleRoot = claimCondition.merkleRoot;
     const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
-      const metadata = await this.metadata.get();
-      const resolvedAddress = await resolveAddress(claimerAddress);
+      const [metadata, resolvedAddress] = await Promise.all([
+        this.metadata.get(),
+        resolveAddress(claimerAddress),
+      ]);
       return await fetchSnapshotEntryForAddress(
         resolvedAddress,
         merkleRoot.toString(),
@@ -545,7 +554,7 @@ export class DropClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(
@@ -820,13 +829,14 @@ export class DropClaimConditions<
     decimals = 0,
     address?: string,
   ): Promise<ClaimVerification> {
-    const addressToClaim = address
-      ? address
-      : await this.contractWrapper.getSignerAddress();
+    const [addressToClaim, activeClaimConditions] = await Promise.all([
+      address ? address : this.contractWrapper.getSignerAddress(),
+      this.getActive(),
+    ]);
     return prepareClaim(
       addressToClaim,
       quantity,
-      await this.getActive(),
+      activeClaimConditions,
       async () => (await this.metadata.get()).merkle,
       decimals,
       this.contractWrapper,
@@ -882,9 +892,9 @@ export class DropClaimConditions<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - The address to claim to
+   * @param quantity - The quantity to claim
+   * @param options - Options to override the claim transaction
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */

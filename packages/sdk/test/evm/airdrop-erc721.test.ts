@@ -23,8 +23,6 @@ import {
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
 
-global.fetch = require("cross-fetch");
-
 /**
  * Throughout these tests, the admin wallet will be performing the airdrops.
  *
