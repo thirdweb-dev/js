@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/sdk": patch
 ---
 
 Improvements for auto resolving contracts:
