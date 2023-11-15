@@ -2,41 +2,31 @@ import { DeepPartial, deepMerge } from "../types/deepPartial";
 import { _en } from "./en";
 import { _es } from "./es";
 import { _ja } from "./ja";
+import { _tr } from "./tr";
 import { Locale, LocaleType } from "./types";
 
+const locales = { en: _en, es: _es, ja: _ja };
+
 export const setLocale = (locale: Locale): LocaleType => {
-  if (typeof locale === "string") {
-    switch (locale) {
-      case "en":
-        return _en;
-      case "es":
-        return _es;
-      case "ja":
-        return _ja;
-      default:
-        throw new Error(`Locale ${locale} not supported`);
+  if (typeof locale === 'string') {
+    const selectedLocale = locales[locale];
+    if (!selectedLocale) {
+      throw new Error(`Locale ${locale} not supported`);
     }
+    return selectedLocale;
   }
   return locale;
 };
 
-export const en = (locale?: DeepPartial<LocaleType>): LocaleType => {
+export const getLocale = (localeKey: keyof typeof locales, locale?: DeepPartial<LocaleType>): LocaleType => {
+  const defaultLocale = locales[localeKey];
   if (!locale) {
-    return _en;
+    return defaultLocale;
   }
-  return deepMerge(_en, locale);
+  return deepMerge(defaultLocale, locale);
 };
 
-export const ja = (locale?: DeepPartial<LocaleType>): LocaleType => {
-  if (!locale) {
-    return _ja;
-  }
-  return deepMerge(_ja, locale);
-};
-
-export const es = (locale?: DeepPartial<LocaleType>): LocaleType => {
-  if (!locale) {
-    return _es;
-  }
-  return deepMerge(_es, locale);
-};
+export const en = (locale?: DeepPartial<LocaleType>) => getLocale('en', locale);
+export const es = (locale?: DeepPartial<LocaleType>) => getLocale('es', locale);
+export const ja = (locale?: DeepPartial<LocaleType>) => getLocale('ja', locale);
+export const tr = (locale?: DeepPartial<LocaleType>) => getLocale('tr', locale);
