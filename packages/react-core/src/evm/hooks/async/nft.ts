@@ -193,7 +193,10 @@ export function useTotalCirculatingSupply(
   const { erc721, erc1155 } = getErcs(contract);
 
   return useQueryWithNetwork<BigNumber>(
-    cacheKeys.contract.nft.query.totalCirculatingSupply(contractAddress),
+    cacheKeys.contract.nft.query.totalCirculatingSupply(
+      contractAddress,
+      tokenId,
+    ),
     async () => {
       requiredParamInvariant(contract, "No Contract instance provided");
 
