@@ -5,8 +5,8 @@ import { hasMatchingAbi } from "./hasMatchingAbi";
 
 /**
  * @internal
- * @param contractWrapper
- * @param abi
+ * @param contractWrapper - The contract wrapper to check
+ * @param abi - The abi to check
  * @returns
  */
 export function matchesPrebuiltAbi<T extends BaseContract>(

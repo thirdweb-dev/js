@@ -2,7 +2,7 @@ import { AbiInput, AbiSchema } from "../../schema/contracts/custom";
 
 /**
  *
- * @param abi
+ * @param abi - The abi to extract constructor params from
  * @returns
  * @internal
  */

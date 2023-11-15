@@ -6,7 +6,7 @@ import { matchError } from "../any-evm-constants";
  * Ref: https://eips.ethereum.org/EIPS/eip-155
  *
  * @internal
- * @param provider
+ * @param provider - The provider to use
  */
 export async function isEIP155Enforced(
   provider: providers.Provider,

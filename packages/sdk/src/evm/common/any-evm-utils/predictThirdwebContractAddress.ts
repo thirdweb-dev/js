@@ -13,9 +13,9 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 /**
  *
  * @public
- * @param contractName
- * @param chainId
- * @param storage
+ * @param contractName - The name of the contract to predict the address for
+ * @param chainId - The chain id to use
+ * @param storage - The storage to use
  */
 export async function predictThirdwebContractAddress(
   contractName: string,

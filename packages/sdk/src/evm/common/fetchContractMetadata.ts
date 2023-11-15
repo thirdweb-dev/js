@@ -9,8 +9,8 @@ const CONTRACT_METADATA_TIMEOUT_SEC = 2;
 
 /**
  * @internal
- * @param compilerMetadataUri
- * @param storage
+ * @param compilerMetadataUri - The compiler metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadata(
   compilerMetadataUri: string,
