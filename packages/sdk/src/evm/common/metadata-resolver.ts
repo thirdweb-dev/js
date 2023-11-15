@@ -62,12 +62,42 @@ export async function fetchContractMetadataFromAddress(
     );
     if (response.ok) {
       const resolvedData = await response.json();
-      return formatCompilerMetadata(resolvedData);
+      metadata = formatCompilerMetadata(resolvedData);
     }
   } catch (e) {
     // fallback to IPFS
   }
 
+  if (!metadata) {
+    metadata = await fetchContractMetadataFromBytecode(
+      address,
+      chainId,
+      provider,
+      storage,
+      sdkOptions,
+    );
+  }
+
+  if (!metadata) {
+    throw new Error(
+      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
+  }
+
+  if (!metadata.isPartialAbi) {
+    putInCache(address, chainId, metadata);
+  }
+  return metadata;
+}
+
+export async function fetchContractMetadataFromBytecode(
+  address: Address,
+  chainId: number,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  sdkOptions: SDKOptions = {},
+) {
+  let metadata: PublishedMetadata | undefined;
   // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([
     resolveContractUriAndBytecode(address, provider).catch(() => undefined),
@@ -115,13 +145,6 @@ export async function fetchContractMetadataFromAddress(
       return metadata;
     }
   }
-
-  if (!metadata) {
-    throw new Error(
-      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
-    );
-  }
-  putInCache(address, chainId, metadata);
   return metadata;
 }
 
