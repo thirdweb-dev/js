@@ -79,7 +79,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
-    this.aaProvider = await create4337Provider(
+    this.aaProvider = create4337Provider(
       providerConfig,
       accountApi,
       originalProvider,
