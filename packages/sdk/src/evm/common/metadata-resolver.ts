@@ -13,6 +13,7 @@ import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
+import { getProcessEnv } from "../../core/utils/process";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
@@ -56,16 +57,18 @@ export async function fetchContractMetadataFromAddress(
   let metadata: PublishedMetadata | undefined;
 
   // try to resolve from DNS first
-  try {
-    const response = await fetch(
-      `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
-    );
-    if (response.ok) {
-      const resolvedData = await response.json();
-      metadata = formatCompilerMetadata(resolvedData);
+  if (!isRunningInTests()) {
+    try {
+      const response = await fetch(
+        `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+      );
+      if (response.ok) {
+        const resolvedData = await response.json();
+        metadata = formatCompilerMetadata(resolvedData);
+      }
+    } catch (e) {
+      // fallback to IPFS
     }
-  } catch (e) {
-    // fallback to IPFS
   }
 
   if (!metadata) {
@@ -200,4 +203,8 @@ export async function fetchAbiFromAddress(
     // will fallback to embedded ABIs for prebuilts
   }
   return undefined;
+}
+
+function isRunningInTests() {
+  return !!getProcessEnv("factoryAddress");
 }
