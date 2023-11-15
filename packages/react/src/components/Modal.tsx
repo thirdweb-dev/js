@@ -16,12 +16,13 @@ import {
 import { Overlay } from "./Overlay";
 import { noScrollBar } from "./basic";
 import { IconButton } from "./buttons";
-import { keyframes } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { DynamicHeight } from "./DynamicHeight";
 import { useEffect, useRef, useState } from "react";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
@@ -160,46 +161,51 @@ const modalAnimationMobile = keyframes`
   }
 `;
 
-const DialogContent = styled.div<{ theme?: Theme }>`
-  z-index: 10000;
-  background: ${(p) => p.theme.colors.modalBg};
-  --bg: ${(p) => p.theme.colors.modalBg};
-  color: ${(p) => p.theme.colors.primaryText};
-  border-radius: ${radius.xl};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100vw - 40px);
-  box-sizing: border-box;
-  animation: ${modalAnimationDesktop} 300ms ease;
-  box-shadow: ${shadow.lg};
-  line-height: normal;
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  outline: none;
-  overflow: hidden;
-  font-family: ${(p) => p.theme.fontFamily};
+const DialogContent = /* @__PURE__ */ (() =>
+  styled.div(() => {
+    const theme = useCustomTheme();
+    return () => css`
+      z-index: 10000;
+      background: ${theme.colors.modalBg};
+      --bg: ${theme.colors.modalBg};
+      color: ${theme.colors.primaryText};
+      border-radius: ${radius.xl};
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100vw - 40px);
+      box-sizing: border-box;
+      animation: ${modalAnimationDesktop} 300ms ease;
+      box-shadow: ${shadow.lg};
+      line-height: normal;
+      border: 1px solid ${theme.colors.borderColor};
+      outline: none;
+      overflow: hidden;
+      font-family: ${theme.fontFamily};
 
-  ${noScrollBar}
+      ${noScrollBar}
 
-  /* open from bottom on mobile */
-  ${media.mobile} {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: 100vw;
-    transform: none;
-    width: 100vw;
-    animation: ${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1);
-    border-radius: ${radius.xxl};
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    max-width: none !important;
-  }
+      /* open from bottom on mobile */
+      ${media.mobile} {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100vw;
+        transform: none;
+        width: 100vw;
+        animation: ${modalAnimationMobile} 0.35s
+          cubic-bezier(0.15, 1.15, 0.6, 1);
+        border-radius: ${radius.xxl};
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        max-width: none !important;
+      }
 
-  & *::selection {
-    background-color: ${(p) => p.theme.colors.selectedTextBg};
-    color: ${(p) => p.theme.colors.selectedTextColor};
-  }
-`;
+      & *::selection {
+        background-color: ${theme.colors.selectedTextBg};
+        color: ${theme.colors.selectedTextColor};
+      }
+    `;
+  }))();

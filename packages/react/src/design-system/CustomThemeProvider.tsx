@@ -1,5 +1,8 @@
 import { ThemeProvider } from "@emotion/react";
 import { Theme, darkThemeObj, lightThemeObj } from "./index";
+import { createContext, useContext } from "react";
+
+const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
 
 export function CustomThemeProvider(props: {
   children: React.ReactNode;
@@ -14,5 +17,15 @@ export function CustomThemeProvider(props: {
     themeObj = theme;
   }
 
-  return <ThemeProvider theme={themeObj}>{children}</ThemeProvider>;
+  return (
+    <CustomThemeCtx.Provider value={themeObj}>
+      <ThemeProvider theme={themeObj}>{children}</ThemeProvider>
+    </CustomThemeCtx.Provider>
+  );
+}
+
+// TODO: remove ThemeProvider from above when all components are updated to use custom theme context
+
+export function useCustomTheme() {
+  return useContext(CustomThemeCtx);
 }
