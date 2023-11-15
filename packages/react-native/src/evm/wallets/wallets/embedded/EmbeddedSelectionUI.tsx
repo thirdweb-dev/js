@@ -118,15 +118,18 @@ export const EmailSelectionUI: React.FC<
                 onPress={() => onProviderPress(socialLogins[0])}
               />
             ) : (
-              socialLogins.map((provider, index) => (
-                <SquareButton
-                  key={provider}
-                  ml={index === 0 ? 0 : "md"}
-                  onPress={() => onProviderPress(provider)}
-                  iconUrl={AUTH_OPTIONS_ICONS[provider]}
-                  size={40}
-                />
-              ))
+              <Box flexDirection="row" width="100%">
+                {socialLogins.map((provider, index) => (
+                  <SquareButton
+                    key={provider}
+                    ml={index === 0 ? 0 : "md"}
+                    flex={1}
+                    onPress={() => onProviderPress(provider)}
+                    iconUrl={AUTH_OPTIONS_ICONS[provider]}
+                    size={32}
+                  />
+                ))}
+              </Box>
             )}
           </Box>
           {isEmailEnabled && supportedWallets.length === 1 ? (

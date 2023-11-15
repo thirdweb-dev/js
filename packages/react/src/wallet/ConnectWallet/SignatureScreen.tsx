@@ -160,7 +160,7 @@ export const SignatureScreen: React.FC<{
             <Container flex="column" gap="md" animate="fadein" key={status}>
               <Text size="lg" center color="primaryText">
                 {status === "failed"
-                  ? "Failed to sign in"
+                  ? locale.signingScreen.failedToSignIn
                   : "Awaiting Confirmation"}
               </Text>
 
