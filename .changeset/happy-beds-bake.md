@@ -1,5 +1,8 @@
 ---
-"@thirdweb-dev/sdk": patch
+"@thirdweb-dev/sdk": minor
 ---
 
-SDK performance improvement: use CDN caching for resolving contracts
+Improvements for auto resolving contracts:
+
+- ~10x performance improvements using shared caching layer at the edge
+- auto resolves any verified contract on etherscan on supported chains
