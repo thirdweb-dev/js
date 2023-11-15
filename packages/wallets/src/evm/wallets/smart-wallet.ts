@@ -14,7 +14,8 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { providers, utils } from "ethers";
+// import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import { providers, utils, Bytes } from "ethers";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -74,6 +75,57 @@ export class SmartWallet extends AbstractClientWallet<
 
   getPersonalWallet() {
     return this.connector?.personalWallet;
+  }
+
+  /**
+   * @returns the signature of the message
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Get signer
+    let signer = await this.getSigner();
+    if ((signer as any).originalSigner) {
+      signer = (signer as any).originalSigner;
+    }
+
+    // Get signer as provider
+    const provider = signer?.provider as providers.JsonRpcProvider;
+    if (!provider) {
+      throw new Error("missing provider");
+    }
+
+    const chainId = await signer.getChainId();
+    const connector = await this.getConnector();
+    const address = await connector.getAddress();
+    const AccountMessage = [{ name: "message", type: "bytes" }];
+
+    // Sign typed message.
+    try {
+      const signature = await (
+        signer as providers.JsonRpcSigner
+      )._signTypedData(
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage },
+        {
+          message: utils.defaultAbiCoder.encode(
+            ["bytes32"],
+            [utils.hashMessage(message)],
+          ),
+        },
+      );
+
+      if (!signature) {
+        throw new Error("Failed to sign message");
+      }
+
+      return signature;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
