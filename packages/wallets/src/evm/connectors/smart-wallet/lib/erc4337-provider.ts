@@ -11,8 +11,6 @@ import { ERC4337EthersSigner } from "./erc4337-signer";
 import { HttpRpcClient } from "./http-rpc-client";
 
 export class ERC4337EthersProvider extends providers.BaseProvider {
-  initializedBlockNumber!: number;
-
   readonly signer: ERC4337EthersSigner;
 
   constructor(
@@ -35,18 +33,6 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
       httpRpcClient,
       smartAccountAPI,
     );
-  }
-
-  /**
-   * finish intializing the provider.
-   * MUST be called after construction, before using the provider.
-   */
-  async init(): Promise<this> {
-    // await this.httpRpcClient.validateChainId()
-    this.initializedBlockNumber = await this.originalProvider.getBlockNumber();
-    await this.smartAccountAPI.init();
-    // await this.signer.init()
-    return this;
   }
 
   getSigner(): ERC4337EthersSigner {

@@ -6,8 +6,8 @@ import { isNativeToken } from "./isNativeToken";
 
 /**
  *
- * @param provider
- * @param asset
+ * @param provider - The provider to use
+ * @param asset - The asset to fetch the metadata for
  * @returns
  * @internal
  */

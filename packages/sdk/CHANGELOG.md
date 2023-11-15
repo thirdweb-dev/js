@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 4.0.12
+
+### Patch Changes
+
+- [#1937](https://github.com/thirdweb-dev/js/pull/1937) [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Standardize large number formatting
+
+- Updated dependencies [[`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3)]:
+  - @thirdweb-dev/storage@2.0.3
+
 ## 4.0.11
 
 ### Patch Changes

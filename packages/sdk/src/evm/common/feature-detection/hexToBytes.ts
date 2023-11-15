@@ -1,6 +1,6 @@
 /**
  * @internal
- * @param hex
+ * @param hex - The hex string to convert to bytes
  */
 export function hexToBytes(hex: string | number) {
   hex = hex.toString(16);
@@ -20,7 +20,7 @@ export function hexToBytes(hex: string | number) {
 
 /**
  * @internal
- * @param hex
+ * @param hex - The hex string to check
  */
 function isHexStrict(hex: string | number) {
   return (

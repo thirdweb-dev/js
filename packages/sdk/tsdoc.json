@@ -6,5 +6,8 @@
       "tagName": "@twfeature",
       "syntaxKind": "block"
     }
-  ]
+  ],
+  "supportForTags": {
+    "@twfeature": true
+  }
 }

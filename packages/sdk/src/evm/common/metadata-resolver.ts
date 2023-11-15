@@ -38,9 +38,9 @@ function getFromCache(address: string, chainId: number) {
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadataFromAddress(
   address: Address,
@@ -176,9 +176,9 @@ async function getMetadataUriFromMultichainRegistry(
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  * @returns
  */
 export async function fetchAbiFromAddress(

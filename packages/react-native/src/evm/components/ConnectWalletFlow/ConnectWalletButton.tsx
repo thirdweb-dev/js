@@ -13,12 +13,12 @@ export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
   /**
    * Set a custom title for the button
-   * @default "Connect Wallet"
+   * @defaultValue "Connect Wallet"
    */
   buttonTitle?: string;
   /**
    * Set a custom title for the Connect Wallet modal
-   * @default "Choose your wallet"
+   * @defaultValue "Choose your wallet"
    */
   modalTitle?: string;
   /**

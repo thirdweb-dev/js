@@ -12,7 +12,6 @@ import {
 } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { useEffect, useRef, useState } from "react";
-import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Spinner } from "../../../components/Spinner";
@@ -23,6 +22,7 @@ import {
   ScreenBottomContainer,
 } from "../../../components/basic";
 import {
+  shortenAddress,
   useAddress,
   useCreateWalletInstance,
   useWallet,
