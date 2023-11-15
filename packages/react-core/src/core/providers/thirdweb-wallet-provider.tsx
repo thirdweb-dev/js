@@ -366,9 +366,6 @@ export function ThirdwebWalletProvider(
       } catch (e) {
         console.error("Failed to auto connect wallet");
         console.error(e);
-        lastConnectedWalletStorage.removeItem(
-          LAST_CONNECTED_WALLET_STORAGE_KEY,
-        );
         setConnectionStatus("disconnected");
       }
     }

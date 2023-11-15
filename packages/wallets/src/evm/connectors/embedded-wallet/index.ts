@@ -138,15 +138,19 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Chain not configured");
     }
 
-    // update chain in wallet
-    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
-
-    // update signer
-    this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
-    });
-
-    this.emit("change", { chain: { id: chainId, unsupported: false } });
+    if (
+      !this.user ||
+      !this.user.wallet ||
+      typeof this.user.wallet.getEthersJsSigner !== "function"
+    ) {
+      // update chain in wallet
+      await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
+      // update signer
+      this.#signer = await this.user?.wallet.getEthersJsSigner({
+        rpcEndpoint: chain.rpc[0] || "",
+      });
+      this.emit("change", { chain: { id: chainId, unsupported: false } });
+    }
   }
 
   async setupListeners() {
@@ -182,7 +186,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (
       !this.user ||
       !this.user.wallet ||
-      !this.user.wallet.getEthersJsSigner
+      typeof this.user.wallet.getEthersJsSigner !== "function"
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
