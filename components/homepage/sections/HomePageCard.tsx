@@ -1,16 +1,10 @@
 import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
+import { HomeProductCard } from "components/dashboard/HomeProductCard";
 import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
+import { SectionItemProps } from "components/product-pages/common/nav/types";
 import { StaticImageData } from "next/image";
 import React from "react";
-import { ChakraNextLink, Heading, Text } from "tw-components";
-
-interface Item {
-  img: StaticImageData;
-  title: string;
-  link: string;
-  description: string;
-}
+import { Heading, Text } from "tw-components";
 
 interface HomePageCardProps {
   title: string;
@@ -18,58 +12,18 @@ interface HomePageCardProps {
   introductionTitle: string;
   image: StaticImageData;
   mobileImage?: StaticImageData;
-  items: Item[];
+  products: SectionItemProps[];
+  TRACKING_CATEGORY: string;
 }
-
-interface ItemCardProps {
-  item: Item;
-}
-
-const ItemCard = ({ item }: ItemCardProps) => {
-  return (
-    <ChakraNextLink href={item.link} textDecoration={"none!important"}>
-      <Flex
-        padding={"16px"}
-        border={"0.5px solid #2B2B2B"}
-        borderRadius={"12px"}
-        background={"#131417"}
-        flexDir={"column"}
-        minH={"110px"}
-        transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
-        _hover={{
-          borderColor: "blue.500",
-          boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
-          transform: "scale(1.01)",
-        }}
-      >
-        <Flex alignItems={"center"}>
-          <ChakraNextImage maxW={"24px"} src={item.img} alt="item-card-logo" />
-
-          <Text
-            fontSize={"14px"}
-            color={"#fff"}
-            marginLeft={"8px"}
-            fontWeight={600}
-          >
-            {item.title}
-          </Text>
-        </Flex>
-
-        <Text fontSize={"14px"} marginTop={"12px"} color={"#646D7A"}>
-          {item.description}
-        </Text>
-      </Flex>
-    </ChakraNextLink>
-  );
-};
 
 const HomePageCard = ({
   title,
   description,
   image,
   mobileImage,
-  items,
+  products,
   introductionTitle,
+  TRACKING_CATEGORY,
 }: HomePageCardProps) => {
   return (
     <Container
@@ -111,8 +65,15 @@ const HomePageCard = ({
           </Text>
 
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={"26px"}>
-            {items.map((item, idx) => {
-              return <ItemCard key={idx} item={item} />;
+            {products.map((product, idx) => {
+              return (
+                <HomeProductCard
+                  key={idx}
+                  TRACKING_CATEGORY={TRACKING_CATEGORY}
+                  product={product}
+                  isFromLandingPage
+                />
+              );
             })}
           </SimpleGrid>
         </Flex>

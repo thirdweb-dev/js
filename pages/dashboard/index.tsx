@@ -34,9 +34,9 @@ const Dashboard: ThirdwebNextPage = (
               {showFTUX ? (
                 <FTUX />
               ) : (
-                <VStack gap={10}>
+                <VStack gap={10} w="full">
                   <OnboardingSteps />
-                  <Flex flexDir="column" gap={10}>
+                  <Flex flexDir="column" gap={10} w="full">
                     {["wallets", "contracts", "infrastructure", "payments"].map(
                       (section) => {
                         const products = PRODUCTS.filter(

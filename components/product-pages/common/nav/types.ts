@@ -17,6 +17,7 @@ export interface SectionItemProps {
   icon?: StaticImageData;
   iconType?: IconType;
   comingSoon?: boolean;
+  inLandingPage?: boolean;
   section:
     | "contracts"
     | "wallets"

@@ -32,6 +32,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/contracts/deploy",
     icon: require("public/assets/product-icons/deploy.png"),
     section: "contracts",
+    inLandingPage: true,
   },
   {
     name: "Build",
@@ -41,6 +42,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/contracts/build",
     icon: require("public/assets/product-icons/extensions.png"),
     section: "contracts",
+    inLandingPage: true,
   },
   {
     name: "Interact",
@@ -50,6 +52,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "https://portal.thirdweb.com/sdk",
     icon: require("public/assets/product-icons/interact.png"),
     section: "contracts",
+    inLandingPage: true,
   },
   {
     name: "Explore",
@@ -58,6 +61,7 @@ export const PRODUCTS: SectionItemProps[] = [
     link: "/smart-contracts",
     icon: require("public/assets/product-icons/contracts.png"),
     section: "contracts",
+    inLandingPage: true,
   },
   {
     name: "Publish",
@@ -75,6 +79,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/wallets/connect",
     icon: require("public/assets/product-icons/wallet-sdk.png"),
     section: "wallets",
+    inLandingPage: true,
   },
   {
     name: "Smart Wallet",
@@ -84,6 +89,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/wallets/smart-wallet",
     icon: require("public/assets/product-icons/smart-wallet.png"),
     section: "wallets",
+    inLandingPage: true,
   },
   {
     name: "Embedded Wallets",
@@ -93,6 +99,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/wallets/embedded",
     icon: require("public/assets/product-icons/embedded-wallet.png"),
     section: "wallets",
+    inLandingPage: true,
   },
   {
     name: "Auth",
@@ -126,6 +133,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "https://withpaper.com/product/checkouts",
     icon: require("public/assets/product-icons/payments.png"),
     section: "payments",
+    inLandingPage: true,
   },
   {
     name: "Sponsored Transactions",
@@ -143,6 +151,7 @@ export const PRODUCTS: SectionItemProps[] = [
     dashboardLink: "/dashboard/engine",
     icon: require("public/assets/product-icons/engine.png"),
     section: "infrastructure",
+    inLandingPage: true,
   },
 ];
 

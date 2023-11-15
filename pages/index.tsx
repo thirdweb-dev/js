@@ -20,10 +20,17 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
+import { PRODUCTS } from "components/product-pages/common/nav/data";
 
 const TRACKING_CATEGORY = "homepage";
 
 const HomePage: ThirdwebNextPage = () => {
+  const filterProducts = (section: string) => {
+    return PRODUCTS.filter(
+      (p) => p.section === section && !!p.inLandingPage && !!p.link,
+    );
+  };
+
   return (
     <DarkMode>
       <Flex
@@ -49,26 +56,8 @@ const HomePage: ThirdwebNextPage = () => {
             introductionTitle="WALLET PRODUCTS"
             image={require("public/assets/bear-market-airdrop/desktop-wallets.png")}
             mobileImage={require("public/assets/bear-market-airdrop/mobile-wallets.png")}
-            items={[
-              {
-                title: "Connect",
-                description: "Fully customizable Connect Wallet component",
-                img: require("public/assets/product-icons/wallet-sdk.png"),
-                link: "/connect",
-              },
-              {
-                title: "Smart Wallet",
-                description: "Complete toolkit for Account Abstraction",
-                img: require("public/assets/product-icons/wallet-sdk.png"),
-                link: "/account-abstraction",
-              },
-              {
-                title: "Embedded Wallet",
-                description: "Email & social login wallets for your customers",
-                img: require("public/assets/product-icons/wallet-sdk.png"),
-                link: "/embedded-wallets",
-              },
-            ]}
+            products={filterProducts("wallets")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
             title="Build smart contracts, deploy on any EVM"
@@ -76,33 +65,8 @@ const HomePage: ThirdwebNextPage = () => {
             introductionTitle="CONTRACT PRODUCTS"
             image={require("public/assets/bear-market-airdrop/desktop-contracts.png")}
             mobileImage={require("public/assets/bear-market-airdrop/mobile-contracts.png")}
-            items={[
-              {
-                title: "Deploy",
-                description: "Contract deployment built for any use-case.",
-                img: require("public/assets/product-icons/deploy.png"),
-                link: "/deploy",
-              },
-              {
-                title: "Interact",
-                description:
-                  "Integrate smart contract interactions directly into your app",
-                img: require("public/assets/product-icons/interact.png"),
-                link: "/interact",
-              },
-              {
-                title: "Build",
-                description: "Write your own smart contracts",
-                img: require("public/assets/product-icons/extensions.png"),
-                link: "/build",
-              },
-              {
-                title: "Explore",
-                description: "Ready-to-deploy contracts",
-                img: require("public/assets/product-icons/contracts.png"),
-                link: "/explore",
-              },
-            ]}
+            products={filterProducts("contracts")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
             title="Scale with enterprise-grade infrastructure"
@@ -110,15 +74,8 @@ const HomePage: ThirdwebNextPage = () => {
             introductionTitle="INFRASTRUCTURE PRODUCT"
             image={require("public/assets/bear-market-airdrop/desktop-engine.png")}
             mobileImage={require("public/assets/bear-market-airdrop/mobile-engine.png")}
-            items={[
-              {
-                title: "Engine",
-                description:
-                  "HTTP server with contract APIs and backend wallets",
-                img: require("public/assets/product-icons/engine.png"),
-                link: "/engine",
-              },
-            ]}
+            products={filterProducts("infrastructure")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
             title="Simplify NFT purchases with fiat checkouts"
@@ -126,14 +83,8 @@ const HomePage: ThirdwebNextPage = () => {
             introductionTitle="CHECKOUT PRODUCT"
             image={require("public/assets/bear-market-airdrop/desktop-checkout.png")}
             mobileImage={require("public/assets/bear-market-airdrop/mobile-checkout.png")}
-            items={[
-              {
-                title: "NFT Checkout",
-                description: "Credit card checkout for NFTs",
-                img: require("public/assets/product-icons/payments.png"),
-                link: "/checkout",
-              },
-            ]}
+            products={filterProducts("payments")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <WithoutThirdwebSection />
           <ValuesSection />

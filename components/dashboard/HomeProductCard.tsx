@@ -6,12 +6,14 @@ import { Card, Heading, Text } from "tw-components";
 
 interface HomeProductCardProps {
   product: SectionItemProps;
+  isFromLandingPage?: boolean;
   TRACKING_CATEGORY: string;
 }
 
 export const HomeProductCard: React.FC<HomeProductCardProps> = ({
   product,
   TRACKING_CATEGORY,
+  isFromLandingPage,
 }) => {
   const trackEvent = useTrack();
   return (
@@ -26,8 +28,10 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
       }}
     >
       <Card
+        p={4}
         overflow="hidden"
         bgColor="backgroundCardHighlight"
+        borderWidth={0.5}
         borderColor="borderColor"
         transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
         _hover={{
@@ -35,20 +39,25 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
           boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
           transform: "scale(1.01)",
         }}
-        h={{ base: "full", md: 28 }}
+        h="full"
+        minHeight={{ base: "full", md: 28 }}
       >
-        <Flex flexDir="column" gap={2}>
+        <Flex flexDir="column">
           <Flex gap={2} alignItems="center">
             {product.icon && (
               <ChakraNextImage alt="" boxSize={6} src={product.icon} />
             )}
-            <LinkOverlay href={product.dashboardLink}>
-              <Heading size="title.xs" m={0}>
+            <LinkOverlay
+              href={isFromLandingPage ? product.link : product.dashboardLink}
+            >
+              <Text size="label.md" m={0} color="bgBlack">
                 {product.name}
-              </Heading>
+              </Text>
             </LinkOverlay>
           </Flex>
-          <Text color="faded">{product.description}</Text>
+          <Text mt={3} color="faded">
+            {product.description}
+          </Text>
         </Flex>
       </Card>
     </LinkBox>
