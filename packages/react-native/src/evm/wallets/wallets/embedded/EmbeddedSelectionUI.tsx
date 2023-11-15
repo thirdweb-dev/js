@@ -108,9 +108,9 @@ export const EmailSelectionUI: React.FC<
                 iconWidth={28}
                 borderRadius="lg"
                 borderWidth={1}
-                borderColor="buttonBackgroundColor"
-                backgroundColor="buttonBackgroundColor"
-                nameColor="buttonTextColor"
+                borderColor="backgroundHighlight"
+                backgroundColor="backgroundHighlight"
+                nameColor="textPrimary"
                 flex={1}
                 justifyContent="center"
                 name={l.embedded_wallet[AUTH_OPTIONS_TEXT[socialLogins[0]]]}
@@ -151,7 +151,7 @@ export const EmailSelectionUI: React.FC<
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
           ) : (
-            <Box mt="md" />
+            <Box mt={isEmailEnabled ? "md" : "none"} />
           )}
         </Box>
       ) : null}
@@ -190,8 +190,8 @@ export const EmailSelectionUI: React.FC<
             paddingVertical="md"
             borderRadius="lg"
             borderWidth={1}
-            borderColor="border"
             backgroundColor="accentButtonColor"
+            borderColor="accentButtonColor"
             onPress={handleNetworkCall}
           >
             {isFetching ? (
