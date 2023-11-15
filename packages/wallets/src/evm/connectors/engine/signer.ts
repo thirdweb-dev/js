@@ -69,16 +69,10 @@ export class EngineSigner extends ethers.Signer {
     const res = await this.fetch({
       path: `/backend-wallet/${chainId}/send-transaction`,
       method: "POST",
-      // Most of these are unused by the endpoint for now, but we preserve them anyway
-      // in case we implement more in the future
       body: {
-        ...tx,
-        nonce: tx.nonce?.toString(),
-        gasLimit: tx.gasLimit?.toString(),
-        gasPrice: tx.gasPrice?.toString(),
-        value: tx.value?.toString(),
-        maxPriorityFeePerGas: tx.maxPriorityFeePerGas?.toString(),
-        maxFeePerGas: tx.maxFeePerGas?.toString(),
+        toAddress: tx.to,
+        data: tx.data,
+        value: tx.value || "0",
       },
     });
 
@@ -146,6 +140,7 @@ export class EngineSigner extends ethers.Signer {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.config.accessToken}`,
+        "x-backend-wallet-address": this.config.backendWalletAddress,
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
