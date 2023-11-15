@@ -70,7 +70,7 @@ export const PRODUCTS: SectionItemProps[] = [
   {
     name: "Connect",
     label: "connect",
-    description: "Fully customizable Connect Wallet commponent",
+    description: "Fully customizable Connect Wallet component",
     link: "/connect",
     dashboardLink: "/dashboard/wallets/connect",
     icon: require("public/assets/product-icons/wallet-sdk.png"),
