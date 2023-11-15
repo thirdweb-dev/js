@@ -1,5 +1,224 @@
 # @thirdweb-dev/react-native
 
+## 0.4.3
+
+### Patch Changes
+
+- [#1908](https://github.com/thirdweb-dev/js/pull/1908) [`18552f3a`](https://github.com/thirdweb-dev/js/commit/18552f3a225d1c46f0ff19c2b1c9cc44f84e33ac) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `hideSwitchToPersonalWallet` prop on `ConnectWallet` component to hide the "Switch to Personal wallet" option in the ConnectWallet modal which is shown when wallet is connected as a Smart Wallet
+
+- [#1912](https://github.com/thirdweb-dev/js/pull/1912) [`1a421d3b`](https://github.com/thirdweb-dev/js/commit/1a421d3b5d837eade5b7344118a7148ddea35517) Thanks [@iketw](https://github.com/iketw)! - Adds Apple as a social sign in option for EmbeddedWallet
+
+  You can now do:
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['apple'],
+      redirectUrl: 'your-apps-redirect-url://',
+      },
+  }),
+  ```
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1929](https://github.com/thirdweb-dev/js/pull/1929) [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7) Thanks [@iketw](https://github.com/iketw)! - Move addresses' utils to the core package
+
+- [#1925](https://github.com/thirdweb-dev/js/pull/1925) [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8) Thanks [@iketw](https://github.com/iketw)! - [RN] Adds walletConnectReceiver prop to EmbeddedWallet and SmartWallet
+
+  You can pass your own WalletConnect projectId and metadata (highly recommended):
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+  ```
+
+  You can just pass `true` to the prop and these props will default to our internal WalletConnect projectId and metadata.
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: true
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: true
+  }),
+  ```
+
+- [#1942](https://github.com/thirdweb-dev/js/pull/1942) [`6de3a19b`](https://github.com/thirdweb-dev/js/commit/6de3a19b86476cf5f7d67223a366379c4fdb9b74) Thanks [@iketw](https://github.com/iketw)! - Updated react-native-safe-area-context to 4.74
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/react-core@4.1.3
+  - @thirdweb-dev/storage@2.0.3
+  - @thirdweb-dev/sdk@4.0.12
+
+## 0.4.2
+
+### Patch Changes
+
+- [#1893](https://github.com/thirdweb-dev/js/pull/1893) [`8e104b44`](https://github.com/thirdweb-dev/js/commit/8e104b443e4a11908be660656c525ad237115835) Thanks [@iketw](https://github.com/iketw)! - Updates Japanese translations
+
+- [#1893](https://github.com/thirdweb-dev/js/pull/1893) [`8e104b44`](https://github.com/thirdweb-dev/js/commit/8e104b443e4a11908be660656c525ad237115835) Thanks [@iketw](https://github.com/iketw)! - Adds support for Japanese and Spanish
+
+  You can now pass 'ja' or 'es' to our ThirdwebProvider:
+
+  ```
+  import { ThirdwebProvider } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider locale={'ja'}>
+    <App />
+  </ ThirdwebProvider>
+  ```
+
+- [#1892](https://github.com/thirdweb-dev/js/pull/1892) [`59e55410`](https://github.com/thirdweb-dev/js/commit/59e55410942f3cb08570623f990487868aaed107) Thanks [@iketw](https://github.com/iketw)! - Deprecates magicLink in favor of embedded wallet
+
+- [#1900](https://github.com/thirdweb-dev/js/pull/1900) [`9f454d1e`](https://github.com/thirdweb-dev/js/commit/9f454d1e08ebf5280a3266791d1843ddd7e24242) Thanks [@iketw](https://github.com/iketw)! - Export Locale types and improve modal title customization
+
+- [#1909](https://github.com/thirdweb-dev/js/pull/1909) [`ba49a824`](https://github.com/thirdweb-dev/js/commit/ba49a82463487735dc19bf33ab2f7a3e9cce08ac) Thanks [@iketw](https://github.com/iketw)! - UI improvements
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/react-core@4.1.2
+
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.1.1
+
+## 0.4.0
+
+### Minor Changes
+
+- [#1846](https://github.com/thirdweb-dev/js/pull/1846) [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New API to configure authentication options on `embeddedWallet`
+
+  ```ts
+  // default - google sign in is enabled
+  embeddedWallet();
+
+  // this is same as
+  embeddedWallet({
+    auth: {
+      options: ["email"],
+    },
+  });
+
+  // add google sign in
+  embeddedWallet({
+    auth: {
+      options: ["email", "google"],
+      redirectUrl: "your_app://deeplink",
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#1885](https://github.com/thirdweb-dev/js/pull/1885) [`961ef644`](https://github.com/thirdweb-dev/js/commit/961ef644d1b1adaad08c071903cd53aacac50bb4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improved `useSmartWallet()` hook
+
+  Example with metamask:
+
+  ```ts
+  const { connect } = useSmartWallet(metamaskWallet(), {
+    factoryAddress: factoryAddress,
+    gasless: true,
+  });
+
+  const onClick = async () => {
+    // nothing to do here, all handled internally
+    await connect();
+  };
+  ```
+
+  ```ts
+  Example with localWallet:
+
+  const { connect } = useSmartWallet(localWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'load' the local wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              await w.generate();
+              await w.connect();
+          }
+      });
+  }
+  ```
+
+  ```ts
+  Example with embeddedWallet:
+
+  const { connect } = useSmartWallet(embeddedWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'auth' the embedded wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              const authResult = await w.authenticate({ strategy: "google" });
+              await w.connect({ authResult });
+          }
+      });
+  }
+  ```
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79), [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/sdk@4.0.10
+  - @thirdweb-dev/wallets@2.1.0
+  - @thirdweb-dev/react-core@4.1.0
+
+## 0.3.16
+
+### Patch Changes
+
+- [#1880](https://github.com/thirdweb-dev/js/pull/1880) [`7461e2a9`](https://github.com/thirdweb-dev/js/commit/7461e2a9145549b7e08bc34d87d44be9bcff2c07) Thanks [@iketw](https://github.com/iketw)! - Fixes wallet icons borders bug
+
+- [#1878](https://github.com/thirdweb-dev/js/pull/1878) [`178609a0`](https://github.com/thirdweb-dev/js/commit/178609a0622b571560188a4266247eb342759ea1) Thanks [@iketw](https://github.com/iketw)! - Adds support for Japanese and Spanish
+
+  You can now pass 'ja' or 'es' to our ThirdwebProvider:
+
+  ```
+  import { ThirdwebProvider } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider locale={'ja'}>
+    <App />
+  </ ThirdwebProvider>
+  ```
+
 ## 0.3.15
 
 ### Patch Changes

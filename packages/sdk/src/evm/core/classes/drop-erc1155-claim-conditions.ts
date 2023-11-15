@@ -9,7 +9,6 @@ import type {
   IERC20,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants, utils, type BigNumberish } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -486,6 +485,9 @@ export class DropErc1155ClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const IERC20ABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
@@ -536,7 +538,7 @@ export class DropErc1155ClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(

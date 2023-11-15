@@ -1,7 +1,6 @@
 import { resolveAddress } from "../common/ens/resolveAddress";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
-import { SmartContract } from "../contracts/smart-contract";
-import { ContractPublisher } from "../core/classes/contract-publisher";
+import type { SmartContract } from "../contracts/smart-contract";
 import { NetworkInput } from "../core/types";
 import {
   ContractForPrebuiltContractType,
@@ -41,10 +40,12 @@ export async function getContract<TContractType extends PrebuiltContractType>(
     params.network,
     params.sdkOptions,
   );
-  const [resolvedAddress, { chainId }] = await Promise.all([
-    resolveAddress(params.address),
-    provider.getNetwork(),
-  ]);
+  const [resolvedAddress, { chainId }, { ContractPublisher }] =
+    await Promise.all([
+      resolveAddress(params.address),
+      provider.getNetwork(),
+      import("../core/classes/contract-publisher"),
+    ]);
 
   if (inContractCache(resolvedAddress, chainId)) {
     return getCachedContract(

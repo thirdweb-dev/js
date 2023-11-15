@@ -74,7 +74,7 @@ export function LocalWalletFlow({
           data-test="create-new-wallet-button"
         >
           {isCreatingWallet ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
+            <ActivityIndicator size="small" color="black" />
           ) : (
             <Text variant="bodyLarge" color="black">
               {l.local_wallet.create_new_wallet}

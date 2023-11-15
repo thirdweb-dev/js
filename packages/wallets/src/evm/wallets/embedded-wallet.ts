@@ -1,6 +1,7 @@
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
+import { Ethereum, getValidChainRPCs } from "@thirdweb-dev/chains";
+import type { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
+  AuthParams,
   EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs,
 } from "../connectors/embedded-wallet/types";
@@ -11,7 +12,13 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 
-export type { EmbeddedWalletAdditionalOptions } from "../connectors/embedded-wallet/types";
+export type {
+  AuthParams,
+  AuthResult,
+  EmbeddedWalletAdditionalOptions,
+  EmbeddedWalletConnectionArgs,
+  EmbeddedWalletOauthStrategy,
+} from "../connectors/embedded-wallet/types";
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletAdditionalOptions,
@@ -26,6 +33,31 @@ export class EmbeddedWallet extends AbstractClientWallet<
     iconURL:
       "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
   };
+
+  /**
+   * Sends a verification email to the provided email address.
+   *
+   * @param email - The email address to which the verification email will be sent.
+   * @param clientId - Your thirdweb client ID
+   * @returns Information on the user's status and whether they are a new user.
+   *
+   * @example
+   * ```typescript
+   * sendVerificationEmail({ email: 'test@example.com', clientId: 'yourClientId' })
+   *   .then(() => console.log('Verification email sent successfully.'))
+   *   .catch(error => console.error('Failed to send verification email:', error));
+   * ```
+   */
+  static async sendVerificationEmail(options: {
+    email: string;
+    clientId: string;
+  }) {
+    const wallet = new EmbeddedWallet({
+      chain: Ethereum,
+      clientId: options.clientId,
+    });
+    return wallet.sendVerificationEmail({ email: options.email });
+  }
 
   public get walletName() {
     return "Embedded Wallet" as const;
@@ -50,14 +82,29 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
+      // import the connector dynamically
+      const { EmbeddedWalletConnector } = await import(
+        "../connectors/embedded-wallet"
+      );
       this.connector = new EmbeddedWalletConnector({
         clientId: this.options?.clientId ?? "",
         chain: this.chain,
         chains: this.chains,
-        styles: this.options?.styles,
+        onAuthSuccess: this.options?.onAuthSuccess,
       });
     }
     return this.connector;
+  }
+
+  override autoConnect(
+    connectOptions?: ConnectParams<EmbeddedWalletConnectionArgs> | undefined,
+  ): Promise<string> {
+    if (!connectOptions) {
+      throw new Error("Can't autoconnect embedded wallet");
+    }
+    // override autoconnect logic for embedded wallet
+    // can just call connect since we should have the authResult persisted already
+    return this.connect(connectOptions);
   }
 
   getConnectParams(): ConnectParams<EmbeddedWalletConnectionArgs> | undefined {
@@ -67,15 +114,13 @@ export class EmbeddedWallet extends AbstractClientWallet<
       return undefined;
     }
 
-    // do not return non-serializable params to make auto-connect work
-    if (connectParams.loginType === "headless_google_oauth") {
-      return {
-        loginType: connectParams.loginType,
-        chainId: connectParams.chainId,
-      };
-    }
-
-    return connectParams;
+    // omit non serializable/autoconnect-able
+    return {
+      chainId: connectParams.chainId,
+      authResult: {
+        user: connectParams.authResult.user,
+      },
+    };
   }
 
   async getEmail() {
@@ -86,5 +131,21 @@ export class EmbeddedWallet extends AbstractClientWallet<
   async getEmbeddedWalletSDK() {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getEmbeddedWalletSDK();
+  }
+
+  // TODO move to connect/auth callback
+  async getRecoveryInformation() {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.getRecoveryInformation();
+  }
+
+  async sendVerificationEmail({ email }: { email: string }) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.sendVerificationEmail({ email });
+  }
+
+  async authenticate(params: AuthParams) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.authenticate(params);
   }
 }

@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import { Theme } from "../../../design-system";
 import { keyframes } from "@emotion/react";
 import { Img } from "../../../components/Img";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export function StartScreen() {
   const {
@@ -16,6 +17,7 @@ export function StartScreen() {
     privacyPolicyUrl,
     welcomeScreen: WelcomeScreen,
   } = useContext(ModalConfigCtx);
+  const locale = useTWLocale().connectWallet;
 
   if (WelcomeScreen) {
     if (typeof WelcomeScreen === "function") {
@@ -25,11 +27,11 @@ export function StartScreen() {
 
   const title =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
-    "Your gateway to the decentralized world";
+    locale.welcomeScreen.defaultTitle;
 
   const subtitle =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
-    "Connect a wallet to get started";
+    locale.welcomeScreen.defaultSubtitle;
 
   const img =
     typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
@@ -86,7 +88,7 @@ export function StartScreen() {
           center
           href="https://blog.thirdweb.com/web3-wallet/"
         >
-          New to wallets?
+          {locale.newToWallets}
         </Link>
 
         {showTOS && (

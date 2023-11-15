@@ -1,4 +1,3 @@
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BaseContract,
@@ -190,8 +189,8 @@ export class ContractWrapper<
 
   /**
    *
-   * @param functionName The function name on the contract to call
-   * @param args The arguments to be passed to the functionName
+   * @param functionName - The function name on the contract to call
+   * @param args - The arguments to be passed to the functionName
    * @returns The return value of the function call
    */
   public async read<
@@ -759,6 +758,9 @@ export class ContractWrapper<
     const provider = this.getProvider();
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
+    const ForwarderABI = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+    ).default;
     const forwarderAddress =
       this.options.gasless.openzeppelin.relayerForwarderAddress ||
       (this.options.gasless.openzeppelin.useEOAForwarder

@@ -33,10 +33,6 @@ export class TokenBoundSmartWallet extends SmartWallet {
 
   async getConnector(): Promise<TokenBoundSmartWalletConnectorType> {
     if (!this.tbaConnector) {
-      if (this.enableConnectApp) {
-        await this.wcWallet.init();
-        this.setupWalletConnectEventsListeners();
-      }
       const { TokenBoundSmartWalletConnector } = await import(
         "../connectors/token-bound-smart-wallet"
       );

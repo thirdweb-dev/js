@@ -111,9 +111,9 @@ export abstract class BaseAccountAPI {
 
   /**
    * encode the call from entryPoint through our account to the target contract.
-   * @param target
-   * @param value
-   * @param data
+   * @param target - the target contract address
+   * @param value - the value to send to the target contract
+   * @param data - the calldata to send to the target contract
    */
   abstract prepareExecute(
     target: string,
@@ -123,7 +123,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * sign a userOp's hash (userOpHash).
-   * @param userOpHash
+   * @param userOpHash - the hash to sign
    */
   abstract signUserOpHash(userOpHash: string): Promise<string>;
 
@@ -257,7 +257,7 @@ export abstract class BaseAccountAPI {
   /**
    * return userOpHash for signing.
    * This value matches entryPoint.getUserOpHash (calculated off-chain, to avoid a view call)
-   * @param userOp userOperation, (signature field ignored)
+   * @param userOp - userOperation, (signature field ignored)
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
     const chainId = await this.provider.getNetwork().then((net) => net.chainId);
@@ -295,7 +295,7 @@ export abstract class BaseAccountAPI {
    * create a UserOperation, filling all details (except signature)
    * - if account is not yet created, add initCode to deploy it.
    * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
-   * @param info
+   * @param info - transaction details for the userOp
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
@@ -399,7 +399,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * Sign the filled userOp.
-   * @param userOp the UserOperation to sign (with signature field ignored)
+   * @param userOp - the UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
@@ -412,7 +412,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * helper method: create and sign a user operation.
-   * @param info transaction details for the userOp
+   * @param info - transaction details for the userOp
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
@@ -425,10 +425,10 @@ export abstract class BaseAccountAPI {
 
   /**
    * get the transaction that has this userOpHash mined, or null if not found
-   * @param userOpHash returned by sendUserOpToBundler (or by getUserOpHash..)
-   * @param timeout stop waiting after this timeout
-   * @param interval time to wait between polls.
-   * @return the transactionHash this userOp was mined, or null if not found.
+   * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
+   * @param timeout - stop waiting after this timeout
+   * @param interval - time to wait between polls.
+   * @returns the transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,

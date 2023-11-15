@@ -119,7 +119,7 @@ export class AccountFactory<TContract extends IAccountFactory>
    * @param extraData - (Optional) Extra data to be passed to the account on creation.
    *
    * @example
-   *  ```javascript
+   * ```javascript
    * const tx = await contract.accountFactory.createAccount(admin, extraData);
    * const receipt = tx.receipt();
    * const accountAddress = tx.address;

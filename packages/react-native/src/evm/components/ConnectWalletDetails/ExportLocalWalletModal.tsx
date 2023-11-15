@@ -10,12 +10,15 @@ import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
-import { useAddress, useWallet } from "@thirdweb-dev/react-core";
+import {
+  shortenAddress,
+  useAddress,
+  useWallet,
+} from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
-import { shortenWalletAddress } from "../../utils/addresses";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
 import { useLocale } from "../../providers/ui-context-provider";
@@ -162,7 +165,7 @@ export const ExportLocalWalletModal = ({
             {l.local_wallet.wallet_address}
           </Text>
           <Text variant="bodySmallSecondary">
-            {shortenWalletAddress(
+            {shortenAddress(
               personalWalletAddress ? personalWalletAddress : address,
             )}
           </Text>
@@ -180,7 +183,7 @@ export const ExportLocalWalletModal = ({
               onPress={onContinuePress}
             >
               {isExporting ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <Text variant="bodySmall" color="black">
                   {l.connect_wallet_details.backup}

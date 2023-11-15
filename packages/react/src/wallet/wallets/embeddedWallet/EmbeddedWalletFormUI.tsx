@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -5,45 +6,69 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
+import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType } from "./types";
-import { TextDivider } from "../../../components/TextDivider";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
+import { socialIcons } from "./socialIcons";
+import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
+  authOptions: AuthOption[];
+  modalSize?: "compact" | "wide";
 }) => {
+  const twLocale = useTWLocale();
+  const locale = twLocale.wallets.embeddedWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const themeObj = useTheme() as Theme;
 
-  // Need to trigger google login on button click to avoid popup from being blocked
-  const googleLogin = async () => {
+  const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
+    google: locale.signInWithGoogle,
+    // facebook: locale.signInWithFacebook,
+    apple: locale.signInWithApple,
+  };
+
+  const enableEmailLogin = props.authOptions.includes("email");
+
+  const socialLogins = props.authOptions.filter(
+    (x) => x !== "email",
+  ) as EmbeddedWalletOauthStrategy[];
+
+  const hasSocialLogins = socialLogins.length > 0;
+
+  // Need to trigger login on button click to avoid popup from being blocked
+  const socialLogin = async (strategy: EmbeddedWalletOauthStrategy) => {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
 
-      const googleWindow = openGoogleSignInWindow(themeObj);
-      if (!googleWindow) {
-        throw new Error("Failed to open google login window");
+      const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
+      if (!socialLoginWindow) {
+        throw new Error("Failed to open login window");
       }
-      await embeddedWallet.connect({
-        loginType: "headless_google_oauth",
-        openedWindow: googleWindow,
+      const authResult = await embeddedWallet.authenticate({
+        strategy: strategy,
+        openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
       });
-
+      await embeddedWallet.connect({
+        authResult,
+      });
       setConnectedWallet(embeddedWallet);
     } catch (e) {
       setConnectionStatus("disconnected");
@@ -51,36 +76,64 @@ export const EmbeddedWalletFormUI = (props: {
     }
   };
 
+  const showOnlyIcons = socialLogins.length > 2;
+
   return (
-    <div>
-      <SocialButton
-        variant="secondary"
-        fullWidth
-        onClick={() => {
-          googleLogin();
-          props.onSelect({ google: true });
-        }}
-      >
-        <GoogleIcon size={iconSize.md} />
-        Sign in with Google
-      </SocialButton>
-      <TextDivider text="OR" py="lg" />
-      <InputSelectionUI
-        onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
-        name="email"
-        type="email"
-        errorMessage={(_input) => {
-          const input = _input.replace(/\+/g, "");
-          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-          const isValidEmail = emailRegex.test(input);
-          if (!isValidEmail) {
-            return "Invalid email address";
-          }
-        }}
-        emptyErrorMessage="email address is required"
-      />
-    </div>
+    <Container flex="column" gap="lg">
+      {/* Social Login */}
+      {hasSocialLogins && (
+        <Container flex={showOnlyIcons ? "row" : "column"} center="x" gap="sm">
+          {socialLogins.map((loginMethod) => {
+            const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
+            return (
+              <SocialButton
+                aria-label={`Login with ${loginMethod}`}
+                data-variant={showOnlyIcons ? "icon" : "full"}
+                key={loginMethod}
+                variant={showOnlyIcons ? "outline" : "secondary"}
+                fullWidth={!showOnlyIcons}
+                onClick={() => {
+                  socialLogin(loginMethod);
+                  props.onSelect(loginMethod);
+                }}
+              >
+                <Img
+                  src={socialIcons[loginMethod]}
+                  width={imgIconSize}
+                  height={imgIconSize}
+                />
+                {!showOnlyIcons && loginMethodsLabel[loginMethod]}
+              </SocialButton>
+            );
+          })}
+        </Container>
+      )}
+
+      {props.modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
+        <TextDivider text={twLocale.connectWallet.or} />
+      )}
+
+      {/* Email Login */}
+      {enableEmailLogin && (
+        <InputSelectionUI
+          onSelect={(email) => props.onSelect({ email })}
+          placeholder={locale.emailPlaceholder}
+          name="email"
+          type="email"
+          errorMessage={(_input) => {
+            const input = _input.replace(/\+/g, "");
+            const emailRegex =
+              /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+            const isValidEmail = emailRegex.test(input);
+            if (!isValidEmail) {
+              return locale.invalidEmail;
+            }
+          }}
+          emptyErrorMessage={locale.emailRequired}
+          submitButtonText={locale.submitEmail}
+        />
+      )}
+    </Container>
   );
 };
 
@@ -89,7 +142,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
+  authOptions: AuthOption[];
 }> = (props) => {
+  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
   return (
     <Container
@@ -101,7 +156,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.title} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
@@ -111,6 +166,8 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         p={isCompact ? undefined : "lg"}
       >
         <EmbeddedWalletFormUI
+          modalSize={props.modalSize}
+          authOptions={props.authOptions}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
         />
@@ -120,7 +177,18 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
 };
 
 const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  gap: ${spacing.sm};
+  &[data-variant="full"] {
+    display: flex;
+    justify-content: flex-start;
+    gap: ${spacing.md};
+    font-size: ${fontSize.md};
+    transition: background-color 0.2s ease;
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+  &[data-variant="icon"] {
+    padding: ${spacing.sm};
+  }
 `;

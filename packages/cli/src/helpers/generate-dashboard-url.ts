@@ -30,7 +30,7 @@ export default function generateDashboardUrl(
     const foundMapping = mapping[name as keyof typeof mapping];
 
     return foundMapping
-      ? `https://thirdweb.com/dashboard/${foundMapping}`
+      ? `https://thirdweb.com/thirdweb.eth/${foundMapping}`
       : undefined;
   }
 }

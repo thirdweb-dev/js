@@ -10,7 +10,6 @@ import type {
   IERC20Metadata,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -503,6 +502,9 @@ export class DropClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const ERC20Abi = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
@@ -552,7 +554,7 @@ export class DropClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(
@@ -890,9 +892,9 @@ export class DropClaimConditions<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - The address to claim to
+   * @param quantity - The quantity to claim
+   * @param options - Options to override the claim transaction
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */

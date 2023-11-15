@@ -4,7 +4,6 @@ import { resolveContractUriAndBytecode } from "./feature-detection/resolveContra
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
 import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
@@ -34,9 +33,9 @@ function getFromCache(address: string, chainId: number) {
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadataFromAddress(
   address: Address,
@@ -113,6 +112,11 @@ async function getMetadataUriFromMultichainRegistry(
   chainId: number,
   sdkOptions: SDKOptions,
 ) {
+  const TWRegistryABI = (
+    await import(
+      "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json"
+    )
+  ).default;
   if (!multichainRegistry) {
     const polygonChain = sdkOptions?.supportedChains?.find(
       (c) => c.chainId === 137,
@@ -131,9 +135,9 @@ async function getMetadataUriFromMultichainRegistry(
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  * @returns
  */
 export async function fetchAbiFromAddress(

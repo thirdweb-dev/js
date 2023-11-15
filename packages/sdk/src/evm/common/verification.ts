@@ -13,7 +13,6 @@ import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
 import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
 
@@ -48,11 +47,11 @@ const RequestStatus = {
  *   storage // this could be used from the SDK instance, e.g. sdk.storage
  * );
  * ```
- * @param contractName
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param storage
+ * @param contractName - Name of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param storage - Storage instance
  */
 export async function verifyThirdwebPrebuiltImplementation(
   contractName: string,
@@ -118,11 +117,11 @@ export async function verifyThirdwebPrebuiltImplementation(
  *   storage // this could be used from the SDK instance, e.g. sdk.storage
  * );
  * ```
- * @param contractAddress
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param storage
+ * @param contractAddress - Address of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param storage - Storage instance
  */
 export async function verify(
   contractAddress: string,
@@ -237,9 +236,9 @@ export async function verify(
  * @internal
  *
  * Check status of the contract submitted for verification to the explorer
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param guid
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param guid - GUID of the contract verification
  */
 export async function checkVerificationStatus(
   explorerAPIUrl: string,
@@ -272,12 +271,12 @@ export async function checkVerificationStatus(
  * @internal
  *
  * Check if the contract is already verified on etherscan
- * @param contractAddress
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * ClientId get from https://thirdweb.com/create-api-key
- * @param clientId
+ * @param contractAddress - Address of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ *
+ * @param clientId - Client ID: Get from https://thirdweb.com/create-api-key
  */
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
@@ -321,12 +320,12 @@ export async function isVerifiedOnEtherscan(
  * @internal
  *
  * Fetch the deploy transaction from the given contract address and extract the encoded constructor parameters
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param contractAddress
- * @param abi
- * @param provider
- * @param storage
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param contractAddress - Address of the contract to verify
+ * @param abi - ABI of the contract to verify
+ * @param provider - Provider instance
+ * @param storage - Storage instance
  */
 async function fetchConstructorParams(
   explorerAPIUrl: string,
@@ -442,9 +441,9 @@ async function fetchConstructorParams(
  * @internal
  *
  * Fetches the Publish metadata on the ContractPublisher registry (on polygon) for the given contract address (on any chain)
- * @param contractAddress
- * @param provider
- * @param storage
+ * @param contractAddress - Address of the contract to verify
+ * @param provider - Provider instance
+ * @param storage - Storage instance
  * @returns
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(
@@ -457,14 +456,20 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
+    const ContractPublisherAbi = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json"
+      )
+    ).default;
     const contract = new Contract(
       getContractPublisherAddress(),
       ContractPublisherAbi,
       getChainProvider("polygon", {}),
     ) as ContractPublisher;
 
-    const publishedMetadataUri =
-      await contract.getPublishedUriFromCompilerUri(compilerMetaUri);
+    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
+      compilerMetaUri,
+    );
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetaUri}`,

@@ -7,9 +7,9 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @internal
- * @param merkleRoot
- * @param merkleMetadata
- * @param storage
+ * @param merkleRoot - The merkle root to fetch the snapshot for
+ * @param merkleMetadata - The merkle metadata to use
+ * @param storage - The storage to use
  */
 export async function fetchSnapshot(
   merkleRoot: string,
