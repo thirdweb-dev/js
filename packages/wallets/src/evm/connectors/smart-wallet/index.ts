@@ -147,7 +147,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Check whether the connected signer can execute a given transaction using the smart wallet.
-   * @param transaction the transaction to execute using the smart wallet.
+   * @param transaction - the transaction to execute using the smart wallet.
    * @returns whether the connected signer can execute the transaction using the smart wallet.
    */
   async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
@@ -172,7 +172,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Send a single transaction without waiting for confirmations
-   * @param transactions
+   * @param transaction - the transaction to send
    * @returns the awaitable transaction
    */
   async send(transaction: Transaction): Promise<providers.TransactionResponse> {
@@ -186,7 +186,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Execute a single transaction (waiting for confirmations)
-   * @param transactions
+   * @param transaction - the transaction to execute
    * @returns the transaction receipt
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
@@ -217,7 +217,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Execute multiple transactions in a single batch
-   * @param transactions
+   * @param transactions - the transactions to execute
    * @returns the transaction receipt
    */
   async executeBatch(

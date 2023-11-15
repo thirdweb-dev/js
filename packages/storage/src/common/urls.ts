@@ -10,7 +10,7 @@ const TW_GATEWAY_URLS = [
 
 /**
  * @internal
- * @param url
+ * @param url - the url to check
  * @returns
  */
 export function isTwGatewayUrl(url: string): boolean {
