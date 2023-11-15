@@ -439,7 +439,7 @@
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/core": "^2.9.1",
+    "@walletconnect/core": "^2.10.4",
     "@walletconnect/ethereum-provider": "^2.9.1",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.1",
