@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   font-src 'self';
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com vercel.live js.stripe.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
@@ -53,6 +53,10 @@ function determineIpfsGateways() {
       protocol: "https",
       hostname: `${process.env.API_ROUTES_CLIENT_ID}.thirdwebstorage-staging.com`,
     });
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.API_ROUTES_CLIENT_ID}.thirdwebstorage-dev.com`,
+    });
   } else {
     // this should only happen in development
     remotePatterns.push({
@@ -69,6 +73,10 @@ function determineIpfsGateways() {
     remotePatterns.push({
       protocol: "https",
       hostname: `${process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID}.thirdwebstorage-staging.com`,
+    });
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID}.thirdwebstorage-dev.com`,
     });
   }
   return remotePatterns;

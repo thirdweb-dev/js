@@ -1,6 +1,7 @@
 import { WalletConfig, safeWallet, smartWallet } from "@thirdweb-dev/react";
 import { useState } from "react";
 import { walletInfoRecord, WalletId } from "./walletInfoRecord";
+import { isProd } from "constants/rpc";
 
 type WalletSelection = Record<WalletId, boolean | "recommended">;
 
@@ -31,9 +32,13 @@ export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
         ? smartWallet(walletConfig, {
             factoryAddress: smartWalletOptions.factoryAddress,
             gasless: smartWalletOptions.gasless,
-            bundlerUrl: "https://goerli.bundler-staging.thirdweb.com",
+            bundlerUrl: isProd
+              ? "https://goerli.bundler.thirdweb.com"
+              : "https://goerli.bundler.thirdweb-dev.com",
             // eslint-disable-next-line inclusive-language/use-inclusive-words
-            paymasterUrl: "https://goerli.bundler-staging.thirdweb.com",
+            paymasterUrl: isProd
+              ? "https://goerli.bundler.thirdweb.com"
+              : "https://goerli.bundler.thirdweb-dev.com",
           })
         : walletConfig;
     },

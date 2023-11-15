@@ -20,19 +20,16 @@ export function useImportContract() {
         contractAddress,
         network: chain,
       });
-      const res = await fetch(
-        `https://contract.thirdweb.com/import`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contractAddress,
-            chainId: chain.chainId,
-          }),
+      const res = await fetch(`https://contract.thirdweb.com/import`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          contractAddress,
+          chainId: chain.chainId,
+        }),
+      });
       if (res.status >= 400) {
         throw new Error(await res.text().then((r) => r));
       }

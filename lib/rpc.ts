@@ -1,12 +1,14 @@
 import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
-import { DASHBOARD_THIRDWEB_CLIENT_ID, RPC_ENV } from "constants/rpc";
+import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
 
 export function getDashboardChainRpc(chain: Chain) {
   try {
     const rpcUrl = getValidChainRPCs(chain, DASHBOARD_THIRDWEB_CLIENT_ID)[0];
-    // based on the environment hit staging or production
+    // based on the environment hit dev or production
     if (rpcUrl.includes("rpc.thirdweb.com")) {
-      return rpcUrl.replace("rpc.thirdweb.com", `${RPC_ENV}.thirdweb.com`);
+      if (!isProd) {
+        return rpcUrl.replace("rpc.thirdweb.com", "rpc.thirdweb-dev.com");
+      }
     }
     return rpcUrl;
   } catch (e) {

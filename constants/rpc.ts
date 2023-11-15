@@ -7,5 +7,3 @@ export const DASHBOARD_THIRDWEB_SECRET_KEY =
 export const isProd =
   (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
   "production";
-
-export const RPC_ENV = isProd ? "rpc" : "rpc-staging";

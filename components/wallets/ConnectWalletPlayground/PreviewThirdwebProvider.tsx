@@ -37,7 +37,7 @@ export function PreviewThirdwebProvider(props: {
               return {
                 ...chain,
                 rpc: chain.rpc.map((rpc) =>
-                  rpc.replace("rpc.thirdweb.com", "rpc-staging.thirdweb.com"),
+                  rpc.replace("rpc.thirdweb.com", "rpc.thirdweb-dev.com"),
                 ),
               };
             })

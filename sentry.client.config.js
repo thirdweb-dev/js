@@ -39,6 +39,8 @@ if (isBrowserSupported) {
     ignoreErrors: sentryOptions.ignoreErrors,
     denyUrls: sentryOptions.denyUrls,
     // only allow thirdweb.com and thirdweb-preview.com domains
-    allowUrls: [/^(https:\/\/)((thirdweb\.com)|(.*\.thirdweb-preview\.com))/i],
+    allowUrls: [
+      /^(https:\/\/)((thirdweb\.com)|(.*\.thirdweb-preview\.com)|(.*\.thirdweb-dev\.com))/i,
+    ],
   });
 }

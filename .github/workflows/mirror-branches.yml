@@ -9,7 +9,6 @@ jobs:
     name: Mirror main to mirror/main-dev
     runs-on: ubuntu-latest
     steps:
-    - uses: zofrex/mirror-branch@v1.0.4
-      with:
-        target-branch: mirror/main-dev
-
+      - uses: zofrex/mirror-branch@v1.0.4
+        with:
+          target-branch: mirror/main-dev
