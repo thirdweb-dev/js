@@ -1,39 +1,60 @@
-import Benchmark from "benchmark";
+import { Bench } from "tinybench";
 import { keccak256SyncHex } from "../src";
 import { utils } from "ethers";
 import { uint8ArrayToString, uint8ArrayToHex } from "uint8array-extras";
-import { keccak_256 } from "@noble/hashes/sha3";
+import { keccak_256 as noble } from "@noble/hashes/sha3";
+import { keccak256 as viem } from "viem";
+// @ts-expect-error - this function actually does exist
+import { consoleTable } from "js-awe";
 
 const value = crypto.getRandomValues(new Uint8Array(1000));
 const stringValue = uint8ArrayToString(value);
 
-const suite = new Benchmark.Suite();
+const uint8Bench = new Bench({ iterations: 100_000 });
 
-suite
-  .add("keccak256SyncHex", async () => {
+uint8Bench
+  .add("@thirdweb-dev/crypto", async () => {
     keccak256SyncHex(value);
   })
-  .add("string -> keccak256SyncHex", async () => {
-    keccak256SyncHex(stringValue);
-  })
-  .add("ethers: keccak256", async () => {
+  .add("ethers@v5", async () => {
     utils.keccak256(value);
   })
-  .add("string -> ethers: keccak256", async () => {
-    utils.keccak256(Buffer.from(stringValue));
+  .add("@noble/hashes", async () => {
+    uint8ArrayToHex(noble(value));
   })
-  .add("@noble/hashes: keccak_256", async () => {
-    uint8ArrayToHex(keccak_256(value));
-  })
-  .add("string -> @noble/hashes: keccak_256", async () => {
-    uint8ArrayToHex(keccak_256(stringValue));
+  .add("viem", async () => {
+    viem(value);
   });
 
-suite
-  .on("cycle", (event) => {
-    console.log(String(event.target));
+await uint8Bench.warmup();
+await uint8Bench.run();
+
+console.log();
+console.log("keccak256(<Uint8Array>):");
+consoleTable(uint8Bench.table());
+console.log();
+
+const stringBench = new Bench({ iterations: 100_000 });
+
+stringBench
+  .add("@thirdweb-dev/crypto", async () => {
+    keccak256SyncHex(stringValue);
   })
-  .on("complete", function () {
-    console.log("Fastest is " + this.filter("fastest").map("name") + "\n");
+  .add("ethers@5", async () => {
+    // OK because this is benchmark code only
+    // eslint-disable-next-line no-restricted-globals
+    utils.keccak256(Buffer.from(stringValue));
   })
-  .run({ async: true });
+  .add("@noble/hashes", async () => {
+    uint8ArrayToHex(noble(stringValue));
+  })
+  .add("viem", async () => {
+    viem(stringValue as `0x${string}`);
+  });
+
+await stringBench.warmup();
+await stringBench.run();
+
+console.log("keccak256(<string>):");
+consoleTable(stringBench.table());
+console.log();

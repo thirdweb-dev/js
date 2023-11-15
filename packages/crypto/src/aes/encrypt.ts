@@ -23,7 +23,7 @@ export async function aesEncrypt(
   const iv = crypto.getRandomValues(new Uint8Array(12));
 
   // specify algorithm to use
-  const alg = { name: "AES-GCM", iv: iv };
+  const alg = { name: "AES-GCM", iv };
 
   // generate key from pw
   const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [

@@ -23,19 +23,21 @@ export async function aesDecrypt(
   // hash the password
   const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
 
-  // iv as Uint8Array
-  const iv = base64ToUint8Array(ciphertext).slice(0, 12);
+  const cipherUint8Array = base64ToUint8Array(ciphertext);
+
+  // iv
+  const iv = cipherUint8Array.slice(0, 12);
 
   // specify algorithm to use
-  const alg = { name: "AES-GCM", iv: iv };
+  const alg = { name: "AES-GCM", iv };
 
   // generate key from pw
   const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [
     "decrypt",
   ]);
 
-  // ciphertext as Uint8Array
-  const ctUint8 = base64ToUint8Array(ciphertext).slice(12);
+  // ciphertext
+  const ctUint8 = cipherUint8Array.slice(12);
 
   try {
     // decrypt ciphertext using key
