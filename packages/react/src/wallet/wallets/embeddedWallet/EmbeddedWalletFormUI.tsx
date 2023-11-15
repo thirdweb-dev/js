@@ -76,13 +76,20 @@ export const EmbeddedWalletFormUI = (props: {
     }
   };
 
-  const showOnlyIcons = socialLogins.length > 2;
+  const showOnlyIcons = socialLogins.length > 1;
 
   return (
     <Container flex="column" gap="lg">
       {/* Social Login */}
       {hasSocialLogins && (
-        <Container flex={showOnlyIcons ? "row" : "column"} center="x" gap="sm">
+        <Container
+          flex={showOnlyIcons ? "row" : "column"}
+          center="x"
+          gap="sm"
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
           {socialLogins.map((loginMethod) => {
             const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
             return (
@@ -179,7 +186,6 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
 const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
   &[data-variant="full"] {
     display: flex;
-    justify-content: flex-start;
     gap: ${spacing.md};
     font-size: ${fontSize.md};
     transition: background-color 0.2s ease;
@@ -190,5 +196,6 @@ const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
 
   &[data-variant="icon"] {
     padding: ${spacing.sm};
+    flex-grow: 1;
   }
 `;
