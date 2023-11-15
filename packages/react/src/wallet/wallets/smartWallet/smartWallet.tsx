@@ -35,7 +35,7 @@ export const smartWallet = (
 export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWallet: WalletConfig },
 ) => {
-  const { setIsConnectionHidden } = useWalletContext();
+  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
   const { walletConfig } = props;
   const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
     useState(false);
@@ -59,6 +59,7 @@ export const SmartConnectUI = (
         setIsPersonalWalletConnected(true);
       },
       goBack() {
+        hiddenConnection?.disconnect();
         setIsConnectionHidden(false);
         props.goBack();
       },
@@ -73,7 +74,11 @@ export const SmartConnectUI = (
 
   return (
     <SmartWalletConnecting
-      onBack={props.goBack}
+      onBack={() => {
+        hiddenConnection?.disconnect();
+        setIsConnectionHidden(false);
+        props.goBack();
+      }}
       onConnect={props.connected}
       smartWallet={walletConfig}
       personalWalletConfig={props.personalWallet}

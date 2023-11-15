@@ -67,6 +67,7 @@ type HiddenConnection = {
   walletConfig: WalletConfig | undefined;
   chainId?: number;
   switchChain: (chainId: number) => Promise<void>;
+  disconnect: () => void;
 };
 
 // maps wallet instance to it's wallet config
@@ -227,6 +228,16 @@ export function ThirdwebWalletProvider(
     }
   }, [hiddenConnectionWallet]);
 
+  /**
+   * Clear the states of hidden connection
+   */
+  const disconnectHiddenConnection = useCallback(() => {
+    setSigner(undefined);
+    setActiveWallet(undefined);
+    setActiveWalletConfig(undefined);
+    setConnectionStatus("disconnected");
+  }, []);
+
   if (isConnectionHidden) {
     hiddenConnection = {
       connectionStatus,
@@ -235,6 +246,7 @@ export function ThirdwebWalletProvider(
       walletConfig: activeWalletConfig,
       switchChain: switchChainHiddenConnection,
       chainId: hiddenConnectionChainId,
+      disconnect: disconnectHiddenConnection,
     };
 
     connectionStatus = "disconnected";

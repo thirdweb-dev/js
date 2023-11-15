@@ -42,7 +42,7 @@ export const ConnectModalContent = (props: {
   const walletConfigs = useWallets();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
-  const { setIsConnectionHidden } = useWalletContext();
+  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
 
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -59,6 +59,7 @@ export const ConnectModalContent = (props: {
   const authConfig = useThirdwebAuthContext();
 
   const closeModal = () => {
+    hiddenConnection?.disconnect();
     setIsConnectionHidden(false);
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
@@ -263,6 +264,8 @@ export const ConnectModal = () => {
     wallet,
   ]);
 
+  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
+
   return (
     <CustomThemeProvider theme={theme}>
       <Modal
@@ -272,6 +275,8 @@ export const ConnectModal = () => {
         setOpen={(value) => {
           setIsWalletModalOpen(value);
           if (!value) {
+            setIsConnectionHidden(false);
+            hiddenConnection?.disconnect();
             const requiresSignIn = auth?.loginOptional
               ? false
               : !!authConfig?.authUrl && !user?.address;

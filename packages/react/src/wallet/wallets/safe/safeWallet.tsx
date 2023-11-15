@@ -51,9 +51,10 @@ export const SafeConnectUI = (
   const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
     useState(false);
 
-  const { setIsConnectionHidden } = useWalletContext();
+  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
 
   const goBackToMain = () => {
+    hiddenConnection?.disconnect();
     setIsConnectionHidden(false);
     props.goBack();
   };
