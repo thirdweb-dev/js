@@ -9,12 +9,28 @@ import { AuthAndWalletRpcReturnType, RecoveryShareManagement } from "../auth";
 // Class constructor types
 // types for class constructors still a little messy right now.
 // Open to PRs from whoever sees this and knows of a cleaner way to handle things
-export type ClientIdConstructorType = { clientId: string };
+export type ClientIdConstructorType = {
+  /**
+   * the clientId found on the dashboard settings {@link https://thirdweb.com/dashboard/settings}
+   */
+  clientId: string;
+};
 export type EmbeddedWalletConstructorType = ClientIdConstructorType & {
+  /**
+   * sets the default chain that the EmbeddedWallet will live on.
+   */
   chain: Chain;
+  /**
+   * @param authResult - the authResult returned from the EmbeddedWalletSdk auth method
+   * @returns
+   */
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
+  /**
+   * sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
+   */
   styles?: CustomizationOptionsType;
 };
+
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
   querier: EmbeddedWalletIframeCommunicator<any>;
 };
@@ -47,11 +63,23 @@ export enum UserWalletStatus {
 }
 
 export type WalletAddressObjectType = {
+  /**
+   * User's wallet address
+   */
   walletAddress: string;
 };
 
 export type SetUpWalletRpcReturnType = WalletAddressObjectType & {
+  /**
+   * the value that is saved for the user's device share.
+   * We save this into the localStorage on the site itself if we could not save it within the iframe's localStorage.
+   * This happens in incognito mostly
+   */
   deviceShareStored: string;
+  /**
+   * Tells us if we were able to store values in the localStorage in our iframe.
+   * We need to store it under the dev's domain localStorage if we weren't able to store things in the iframe
+   */
   isIframeStorageEnabled: boolean;
 };
 
