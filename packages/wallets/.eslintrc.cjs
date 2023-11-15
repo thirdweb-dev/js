@@ -3,7 +3,7 @@ module.exports = {
   extends: ["thirdweb"],
   plugins: ["better-tree-shaking", "eslint-plugin-tsdoc"],
   rules: {
-    "tsdoc/syntax": "warn",
+    "tsdoc/syntax": "error",
     "better-tree-shaking/no-top-level-side-effects": "error",
     "no-restricted-imports": [
       "error",
