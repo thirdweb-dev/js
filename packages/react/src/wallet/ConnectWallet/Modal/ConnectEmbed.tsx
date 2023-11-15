@@ -64,7 +64,7 @@ export const ConnectEmbed = (
   };
 
   if (connectionStatus === "connected") {
-    return;
+    return null;
   }
 
   return (
