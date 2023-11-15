@@ -1,6 +1,7 @@
 import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
 import {
+  Box,
   Flex,
   Grid,
   GridItem,
@@ -21,18 +22,23 @@ export const HeroSection = () => {
     {
       src: require("public/assets/landingpage/homepage-wallets.png"),
       href: "/connect",
+      background: "linear-gradient(218deg, #95BBF2 -6.46%, #3385FF 93.97%)",
     },
     {
       src: require("public/assets/landingpage/homepage-contracts.png"),
-      href: "/explore",
+      href: "/smart-contracts",
+      background: "linear-gradient(218deg, #F5B7FF -6.46%, #C04DCA 93.97%)",
     },
     {
       src: require("public/assets/landingpage/homepage-payments.png"),
       href: "/checkout",
+      background:
+        "linear-gradient(43deg, #2E938C 14.8%, #4BB8B1 63.81%, #B8EEE8 104.19%)",
     },
     {
       src: require("public/assets/landingpage/homepage-infra.png"),
       href: "/engine",
+      background: "linear-gradient(218deg, #946CBA -6.46%, #9444D3 93.97%)",
     },
   ];
 
@@ -140,21 +146,20 @@ export const HeroSection = () => {
             return (
               <GridItem key={index} maxW={{ base: "100%", lg: "180px" }}>
                 <ChakraNextLink href={image.href}>
-                  <ChakraNextImage
-                    alt=""
-                    w={96}
-                    src={image.src}
-                    priority
-                    quality={95}
-                    justifySelf="flex-end"
+                  <Box
                     transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
                     _hover={{
                       borderColor: "blue.500",
-                      boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
-                      transform: "scale(1.01)",
+                      transform: "scale(1.05)",
+                      boxShadow: "0 0 20px hsl(215deg 100% 60% / 50%)",
                     }}
-                    borderRadius={"12px"}
-                  />
+                    borderWidth="thin"
+                    background={image.background}
+                    borderRadius="lg"
+                    borderColor="borderColor"
+                  >
+                    <ChakraNextImage alt="" src={image.src} />
+                  </Box>
                 </ChakraNextLink>
               </GridItem>
             );
