@@ -1,3 +1,4 @@
+import { getCachedTextEncoder } from "../../utils/cache";
 import { arrayBuffer } from "../lib/md5";
 import { base64ToUint8Array, concatUint8Arrays } from "uint8array-extras";
 
@@ -61,7 +62,7 @@ async function dangerouslyDeriveParameters(
   ivSizeDWORD: number,
   iterations: number,
 ) {
-  const passwordUint8Array = new TextEncoder().encode(password);
+  const passwordUint8Array = getCachedTextEncoder().encode(password);
 
   const keyPlusIV = dangerousEVPKDF(
     passwordUint8Array,

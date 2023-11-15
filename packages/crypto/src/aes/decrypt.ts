@@ -1,3 +1,4 @@
+import { getCachedTextDecoder, getCachedTextEncoder } from "../utils/cache";
 import {
   decryptCryptoJSCipherBase64,
   parseCryptoJSCipherBase64,
@@ -19,7 +20,7 @@ export async function aesDecrypt(
   password: string,
 ): Promise<string> {
   // encode password as UTF-8
-  const pwUtf8 = new TextEncoder().encode(password);
+  const pwUtf8 = getCachedTextEncoder().encode(password);
   // hash the password
   const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
 
@@ -43,7 +44,7 @@ export async function aesDecrypt(
     // decrypt ciphertext using key
     const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
     // return the plaintext from ArrayBuffer
-    return new TextDecoder().decode(plainBuffer);
+    return getCachedTextDecoder().decode(plainBuffer);
   } catch (e) {
     throw new Error("Decrypt failed");
   }

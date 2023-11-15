@@ -1,4 +1,5 @@
 import { concatUint8Arrays, uint8ArrayToBase64 } from "uint8array-extras";
+import { getCachedTextEncoder } from "../utils/cache";
 
 /**
  * Encrypts plaintext using AES-GCM with supplied password, for decryption with aesDecrypt().
@@ -14,8 +15,9 @@ export async function aesEncrypt(
   plaintext: string,
   password: string,
 ): Promise<string> {
+  const textEncoder = getCachedTextEncoder();
   // encode password as UTF-8
-  const pwUtf8 = new TextEncoder().encode(password);
+  const pwUtf8 = textEncoder.encode(password);
   // hash the password
   const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
 
@@ -31,7 +33,7 @@ export async function aesEncrypt(
   ]);
 
   // encode plaintext as UTF-8
-  const ptUint8 = new TextEncoder().encode(plaintext);
+  const ptUint8 = textEncoder.encode(plaintext);
   // encrypt plaintext using key
   const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
 

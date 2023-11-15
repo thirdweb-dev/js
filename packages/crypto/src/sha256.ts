@@ -1,5 +1,6 @@
 import { sha256 as sha256Noble } from "@noble/hashes/sha256";
 import { uint8ArrayToHex } from "uint8array-extras";
+import { getCachedTextEncoder } from "./utils/cache";
 
 /**
  * Hash a string or Uint8Array using sha256.
@@ -9,8 +10,15 @@ import { uint8ArrayToHex } from "uint8array-extras";
 export async function sha256(
   value: string | BufferSource,
 ): Promise<Uint8Array> {
-  const encodedValue =
-    typeof value === "string" ? new TextEncoder().encode(value) : value;
+  let encodedValue;
+  if (typeof value === "string") {
+    // if we do not have a cahced TextEncoder instance, create one
+
+    encodedValue = getCachedTextEncoder().encode(value);
+  } else {
+    encodedValue = value;
+  }
+
   return new Uint8Array(await crypto.subtle.digest("SHA-256", encodedValue));
 }
 
