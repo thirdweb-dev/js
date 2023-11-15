@@ -52,6 +52,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",

@@ -58,6 +58,10 @@ export const SmartConnectUI = (
       connected: () => {
         setIsPersonalWalletConnected(true);
       },
+      goBack() {
+        setIsConnectionHidden(false);
+        props.goBack();
+      },
     };
 
     if (PersonalWalletConfig.connectUI) {

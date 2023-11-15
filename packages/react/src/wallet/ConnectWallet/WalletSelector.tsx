@@ -7,8 +7,8 @@ import {
   ScreenBottomContainer,
   Line,
 } from "../../components/basic";
-import { Button } from "../../components/buttons";
-import { BackButton, ModalTitle } from "../../components/modalElements";
+import { Button, IconButton } from "../../components/buttons";
+import { ModalTitle } from "../../components/modalElements";
 import { iconSize, radius, spacing, Theme } from "../../design-system";
 import styled from "@emotion/styled";
 import {
@@ -27,6 +27,7 @@ import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -381,12 +382,20 @@ export const WalletSelector: React.FC<{
               paddingTop: 0,
             }}
           >
-            <BackButton
+            <IconButton
               onClick={() => {
                 setIsWalletGroupExpanded(false);
               }}
-            />
-            <Text>{"Back"}</Text>
+              style={{
+                gap: spacing.xxs,
+                transform: `translateX(-${spacing.xs})`,
+                paddingBlock: spacing.xxs,
+                paddingRight: spacing.xs,
+              }}
+            >
+              <ChevronLeftIcon width={iconSize.sm} height={iconSize.sm} />
+              {locale.goBackButton}
+            </IconButton>
           </Container>
         )}
 

@@ -142,7 +142,7 @@ export function ThirdwebWalletProvider(
     signerWallet?: WalletConfig<SignerWallet>;
   }>,
 ) {
-  let [isConnectionHidden, setIsConnectionHidden] = useState(false);
+  const [isConnectionHidden, setIsConnectionHidden] = useState(false);
   const [hiddenConnectionChainId, setHiddenConnectionChainId] = useState<
     number | undefined
   >(undefined);

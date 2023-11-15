@@ -7,6 +7,7 @@ import {
   useThirdwebAuthContext,
   useUser,
   useWallet,
+  useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
@@ -41,6 +42,7 @@ export const ConnectModalContent = (props: {
   const walletConfigs = useWallets();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
+  const { setIsConnectionHidden } = useWalletContext();
 
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -57,6 +59,7 @@ export const ConnectModalContent = (props: {
   const authConfig = useThirdwebAuthContext();
 
   const closeModal = () => {
+    setIsConnectionHidden(false);
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
       setScreen(initialScreen);

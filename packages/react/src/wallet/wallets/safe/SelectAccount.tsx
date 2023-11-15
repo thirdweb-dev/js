@@ -85,11 +85,6 @@ export const SelectAccount: React.FC<{
     }
   };
 
-  console.log({
-    personalWalletChainId,
-    safeChainId,
-  });
-
   const mismatch = safeChainId !== -1 && personalWalletChainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);

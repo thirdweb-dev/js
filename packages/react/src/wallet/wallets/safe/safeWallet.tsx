@@ -51,8 +51,12 @@ export const SafeConnectUI = (
   const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
     useState(false);
 
-  const { setIsConnectionHidden: setIgnoreWalletConnection } =
-    useWalletContext();
+  const { setIsConnectionHidden } = useWalletContext();
+
+  const goBackToMain = () => {
+    setIsConnectionHidden(false);
+    props.goBack();
+  };
 
   // ignore wallet connection for personal wallet;
   const mounted = useRef(false);
@@ -61,15 +65,15 @@ export const SafeConnectUI = (
       return;
     }
     mounted.current = true;
-    setIgnoreWalletConnection(true);
-  }, [setIgnoreWalletConnection]);
+    setIsConnectionHidden(true);
+  }, [setIsConnectionHidden]);
 
   // if personal wallet is not selected
   if (!personalWalletConfig) {
     return (
       <SelectpersonalWallet
         personalWallets={props.personalWallets}
-        onBack={props.goBack}
+        onBack={goBackToMain}
         safeWallet={props.walletConfig}
         selectWallet={setPersonalWalletConfig}
         renderBackButton={props.supportedWallets.length > 1}
@@ -109,10 +113,7 @@ export const SafeConnectUI = (
   return (
     <SelectAccount
       renderBackButton={props.supportedWallets.length > 1}
-      onBack={() => {
-        setIsPersonalWalletConnected(false);
-        props.goBack();
-      }}
+      onBack={goBackToMain}
       onConnect={props.connected}
       safeWalletConfig={props.walletConfig}
     />
