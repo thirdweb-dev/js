@@ -1,5 +1,3 @@
-import { Theme } from "../../../design-system";
-import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "../../../components/Modal";
 import { IconButton } from "../../../components/buttons";
@@ -12,17 +10,20 @@ import {
   wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  defaultTheme,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledDiv } from "../../../design-system/elements";
 
 export const ConnectModalInline = (
   props: Omit<
@@ -43,6 +44,7 @@ export const ConnectModalInline = (
   const walletConfigs = useWallets();
   const modalSize =
     isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+  const ctxTheme = useCustomTheme();
 
   const content = (
     <>
@@ -73,7 +75,7 @@ export const ConnectModalInline = (
   );
 
   const walletUIStatesProps = {
-    theme: props.theme || defaultTheme,
+    theme: props.theme || ctxTheme,
     modalSize: modalSize,
     title: props.modalTitle,
     termsOfServiceUrl: props.termsOfServiceUrl,
@@ -140,21 +142,24 @@ function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.colors.modalBg};
-  color: ${(p) => p.theme.colors.primaryText};
-  transition: background 0.2s ease;
-  border-radius: ${radius.xl};
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: ${shadow.lg};
-  position: relative;
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  line-height: normal;
-  overflow: hidden;
-  font-family: ${(p) => p.theme.fontFamily};
-  & *::selection {
-    background-color: ${(p) => p.theme.colors.primaryText};
-    color: ${(p) => p.theme.colors.modalBg};
-  }
-`;
+const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.modalBg,
+    color: theme.colors.primaryText,
+    transition: "background 0.2s ease",
+    borderRadius: radius.xl,
+    width: "100%",
+    boxSizing: "border-box",
+    boxShadow: shadow.lg,
+    position: "relative",
+    border: `1px solid ${theme.colors.borderColor}`,
+    lineHeight: "normal",
+    overflow: "hidden",
+    fontFamily: theme.fontFamily,
+    "& *::selection": {
+      backgroundColor: theme.colors.primaryText,
+      color: theme.colors.modalBg,
+    },
+  };
+});

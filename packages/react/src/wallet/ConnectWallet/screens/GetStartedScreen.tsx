@@ -3,16 +3,16 @@ import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader } from "../../../components/basic";
 import { iconSize, radius, spacing } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
-import styled from "@emotion/styled";
 import { useState } from "react";
 import { AppleIcon } from "../icons/AppleIcon";
 import { ChromeIcon } from "../icons/ChromeIcon";
 import { PlayStoreIcon } from "../icons/PlayStoreIcon";
 import { Text } from "../../../components/text";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const GetStartedScreen: React.FC<{
   onBack?: () => void;
@@ -206,24 +206,27 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-export const ButtonLink = styled.button<{ theme?: Theme }>`
-  all: unset;
-  text-decoration: none;
-  padding: ${spacing.sm} ${spacing.md};
-  border-radius: ${radius.sm};
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  font-weight: 500;
-  color: ${(p) => p.theme.colors.secondaryButtonText};
-  background: ${(p) => p.theme.colors.secondaryButtonBg};
-  transition: 100ms ease;
-  &:hover {
-    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
-    text-decoration: none;
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+export const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    textDecoration: "none",
+    padding: `${spacing.sm} ${spacing.md}`,
+    borderRadius: radius.sm,
+    display: "flex",
+    alignItems: "center",
+    gap: spacing.md,
+    cursor: "pointer",
+    boxSizing: "border-box",
+    width: "100%",
+    fontWeight: 500,
+    color: theme.colors.secondaryButtonText,
+    background: theme.colors.secondaryButtonBg,
+    transition: "100ms ease",
+    "&:hover": {
+      background: theme.colors.secondaryButtonHoverBg,
+      textDecoration: "none",
+      color: theme.colors.primaryText,
+    },
+  };
+});

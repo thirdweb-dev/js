@@ -1,4 +1,4 @@
-import { Theme, ThemeObjectOrType, iconSize } from "../../design-system";
+import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
   useAddress,
@@ -24,9 +24,11 @@ import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
 import { onModalUnmount } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
-import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
-import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
 import { SupportedTokens, defaultTokens } from "./defaultTokens";
 import { Container } from "../../components/basic";
@@ -153,7 +155,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
-  const contextTheme = useTheme() as ThemeObjectOrType;
+  const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useConnectionStatus();
   const locale = useTWLocale();
@@ -397,6 +399,6 @@ function SwitchNetworkButton(props: {
   );
 }
 
-const AnimatedButton = /* @__PURE__ */ styled(Button)`
-  animation: ${fadeInAnimation} 300ms ease;
-`;
+const AnimatedButton = /* @__PURE__ */ styled(Button)({
+  animation: `${fadeInAnimation} 300ms ease`,
+});
