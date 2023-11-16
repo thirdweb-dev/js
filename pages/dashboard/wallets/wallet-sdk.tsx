@@ -287,7 +287,7 @@ public async void ConnectWallet()
     name: "Embedded Wallet",
     description: "Connect with email and social logins",
     iconUrl:
-      "ipfs://QmNrLXtPoFrh4yjZbXui39zUMozS1oetpgU8dvZhFAxfRa/paper-logo-icon.svg",
+      "ipfs://QmTkzaQhAfijzJv8tB2PcyPXHHHBsu698S6D4d1iwK2RFn/embedded-wallet.svg",
     link: "https://portal.thirdweb.com/wallet/embedded-wallet",
     supportedLanguages: {
       javascript: `import { EmbeddedWallet } from "@thirdweb-dev/wallets";
