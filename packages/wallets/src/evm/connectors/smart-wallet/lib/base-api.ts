@@ -89,15 +89,6 @@ export abstract class BaseAccountAPI {
     ).connect(ethers.constants.AddressZero);
   }
 
-  async init(): Promise<this> {
-    if ((await this.provider.getCode(this.entryPointAddress)) === "0x") {
-      throw new Error(`entryPoint not deployed at ${this.entryPointAddress}`);
-    }
-
-    await this.getAccountAddress();
-    return this;
-  }
-
   /**
    * return the value to put into the "initCode" field, if the contract is not yet deployed.
    * this value holds the "factory" address, followed by this account's information
@@ -128,6 +119,11 @@ export abstract class BaseAccountAPI {
   abstract signUserOpHash(userOpHash: string): Promise<string>;
 
   /**
+   * calculate the account address even before it is deployed
+   */
+  abstract getCounterFactualAddress(): Promise<string>;
+
+  /**
    * check if the contract is already deployed.
    */
   async checkAccountPhantom(): Promise<boolean> {
@@ -142,21 +138,6 @@ export abstract class BaseAccountAPI {
       this.isPhantom = false;
     }
     return this.isPhantom;
-  }
-
-  /**
-   * calculate the account address even before it is deployed
-   */
-  async getCounterFactualAddress(): Promise<string> {
-    const initCode = this.getAccountInitCode();
-    // use entryPoint to query account address (factory can provide a helper method to do the same, but
-    // this method attempts to be generic
-    try {
-      await this.entryPointView.callStatic.getSenderAddress(initCode);
-    } catch (e: any) {
-      return e.errorArgs.sender;
-    }
-    throw new Error("must handle revert");
   }
 
   /**
