@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -15,12 +14,13 @@ import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { socialIcons } from "./socialIcons";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -33,7 +33,7 @@ export const EmbeddedWalletFormUI = (props: {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
-  const themeObj = useTheme() as Theme;
+  const themeObj = useCustomTheme();
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
     google: locale.signInWithGoogle,
@@ -183,19 +183,19 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   );
 };
 
-const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  &[data-variant="full"] {
-    display: flex;
-    gap: ${spacing.md};
-    font-size: ${fontSize.md};
-    transition: background-color 0.2s ease;
-    &:active {
-      box-shadow: none;
-    }
-  }
-
-  &[data-variant="icon"] {
-    padding: ${spacing.sm};
-    flex-grow: 1;
-  }
-`;
+const SocialButton = /* @__PURE__ */ styled(Button)({
+  "&[data-variant='full']": {
+    display: "flex",
+    justifyContent: "flex-start",
+    gap: spacing.md,
+    fontSize: fontSize.md,
+    transition: "background-color 0.2s ease",
+    "&:active": {
+      boxShadow: "none",
+    },
+  },
+  "&[data-variant='icon']": {
+    padding: spacing.sm,
+    flexGrow: 1,
+  },
+});
