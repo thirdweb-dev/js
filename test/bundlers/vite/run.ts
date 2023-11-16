@@ -20,7 +20,7 @@ for (const fixture of fixtures) {
 `,
     );
 
-    await execa("parcel", ["build", "fixtures/"]);
+    await execa("vite", ["build", "fixtures/"]);
   } catch (error) {
     if (error.exitCode !== 0) {
       console.error(error);
