@@ -855,9 +855,8 @@ function ConnectedToSmartWallet() {
 
 function EmbeddedWalletEmail() {
   const emailQuery = useEmbeddedWalletUserEmail();
-  const email = emailQuery.data;
 
-  if (email) {
+  if (emailQuery.data) {
     return (
       <Container
         style={{
