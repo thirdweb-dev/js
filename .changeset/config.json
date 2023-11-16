@@ -23,6 +23,7 @@
     "bundlers-vite",
     "bundlers-webpack",
     "bundlers-swc",
+    "bundlers-parcel",
     "runtimes-node-commonjs",
     "runtimes-node-module"
   ],
