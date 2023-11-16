@@ -136,7 +136,7 @@ export const ThirdwebProvider = <
         storageInterface ||
         new ThirdwebStorage({
           clientId: clientId,
-          // @ts-expect-error - TODO: fix this (it does exist)
+          // @ts-expect-error: - TODO: fix this (it does exist)
           gatewayUrls: sdkOptions?.gatewayUrls,
         })
       }
