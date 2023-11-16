@@ -23,7 +23,7 @@ import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 /**
  *
- * @param magicLinkOptions Options available to create a magic link wallet
+ * @param magicLinkOptions - Options available to create a magic link wallet
  * @returns A WalletConfig<MagicLink> object
  *
  * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.

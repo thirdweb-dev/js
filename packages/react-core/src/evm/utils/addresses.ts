@@ -9,8 +9,8 @@ export function shortenString(str: string, extraShort: boolean = true) {
 /**
  * This function shortens an address if it is a valid EVM address.
  *
- * @param address The address to shorten
- * @param extraShort If true, show the first 4 and last 3 characters
+ * @param address - The address to shorten
+ * @param extraShort - If true, show the first 4 and last 3 characters
  * @returns The shortened address
  *
  * @remarks

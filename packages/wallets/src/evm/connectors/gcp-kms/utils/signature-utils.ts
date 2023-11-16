@@ -47,29 +47,36 @@ export function validateVersion(
   }
 }
 
+interface RecoveryOptions<
+  V extends SignTypedDataVersion,
+  T extends MessageTypes,
+> {
+  /**
+   *  The typed data that was signed.
+   */
+  data: V extends "V1" ? TypedDataV1 : TypedMessage<T>;
+  /**
+   *  The '0x-prefixed hex encoded message signature.
+   */
+  signature: string;
+  /**
+   *  The signing version to use.
+   */
+  version: V;
+}
+
 /**
  * Recover the address of the account that created the given EIP-712
  * signature. The version provided must match the version used to
  * create the signature.
  *
  * @param options - The signature recovery options.
- * @param options.data - The typed data that was signed.
- * @param options.signature - The '0x-prefixed hex encoded message signature.
- * @param options.version - The signing version to use.
  * @returns The '0x'-prefixed hex address of the signer.
  */
 export function recoverTypedSignature<
   V extends SignTypedDataVersion,
   T extends MessageTypes,
->({
-  data,
-  signature,
-  version,
-}: {
-  data: V extends "V1" ? TypedDataV1 : TypedMessage<T>;
-  signature: string;
-  version: V;
-}): string {
+>({ data, signature, version }: RecoveryOptions<V, T>): string {
   validateVersion(version);
 
   if (data === null || data === undefined) {

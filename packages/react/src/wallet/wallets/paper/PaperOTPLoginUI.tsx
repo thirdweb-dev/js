@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,9 +8,11 @@ import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
-import { Theme, fontSize } from "../../../design-system";
+import { fontSize } from "../../../design-system";
 import { RecoveryShareManagement } from "./types";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
   recoveryShareManagement: RecoveryShareManagement;
@@ -273,14 +274,17 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   );
 };
 
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.colors.accentText};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  text-align: center;
-  width: 100%;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+const LinkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    color: theme.colors.accentText,
+    fontSize: fontSize.sm,
+    cursor: "pointer",
+    textAlign: "center",
+    width: "100%",
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+  };
+});
