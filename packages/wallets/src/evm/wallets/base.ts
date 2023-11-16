@@ -90,6 +90,10 @@ export abstract class AbstractClientWallet<
     return this.#connectParams;
   }
 
+  getOptions() {
+    return this.options;
+  }
+
   async #connect(
     isAutoConnect: boolean,
     connectOptions?: ConnectParams<TConnectParams>,

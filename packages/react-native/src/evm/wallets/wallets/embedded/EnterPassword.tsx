@@ -50,7 +50,7 @@ export const EnterPassword = ({
   };
 
   const onForgotPress = () => {
-    // console.log("[TODO] Implement", setErrorMessage);
+    // [TODO] Forgot password
   };
 
   return (

@@ -3,6 +3,7 @@ import invariant from "tiny-invariant";
 import type {
   BloctoWallet,
   CoinbaseWallet,
+  CoreWallet,
   EmbeddedWallet,
   FrameWallet,
   LocalWallet,
@@ -27,6 +28,7 @@ export type WalletId = (typeof walletIds)[keyof typeof walletIds];
 type WalletIdToWalletTypeMap = {
   metamask: MetaMaskWallet;
   coinbase: CoinbaseWallet;
+  coreWallet: CoreWallet;
   rainbowWallet: RainbowWallet;
   blocto: BloctoWallet;
   frame: FrameWallet;

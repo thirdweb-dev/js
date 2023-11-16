@@ -71,4 +71,5 @@ export {
   InjectedWallet,
   ComethConnect,
   setWalletAnalyticsEnabled,
+  CoreWallet,
 } from "@thirdweb-dev/wallets";

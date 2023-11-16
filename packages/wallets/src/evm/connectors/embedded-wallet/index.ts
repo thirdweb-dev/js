@@ -6,6 +6,7 @@ import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
 import {
+  AuthProvider,
   EmbeddedWalletSdk,
   InitializedUser,
   SendEmailOtpReturnType,
@@ -16,6 +17,7 @@ import {
   AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  EmbeddedWalletOauthStrategy,
 } from "./types";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
@@ -136,15 +138,19 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Chain not configured");
     }
 
-    // update chain in wallet
-    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
-
-    // update signer
-    this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
-    });
-
-    this.emit("change", { chain: { id: chainId, unsupported: false } });
+    if (
+      !this.user ||
+      !this.user.wallet ||
+      typeof this.user.wallet.getEthersJsSigner !== "function"
+    ) {
+      // update chain in wallet
+      await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
+      // update signer
+      this.#signer = await this.user?.wallet.getEthersJsSigner({
+        rpcEndpoint: chain.rpc[0] || "",
+      });
+      this.emit("change", { chain: { id: chainId, unsupported: false } });
+    }
   }
 
   async setupListeners() {
@@ -180,7 +186,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (
       !this.user ||
       !this.user.wallet ||
-      !this.user.wallet.getEthersJsSigner
+      typeof this.user.wallet.getEthersJsSigner !== "function"
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
@@ -232,8 +238,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           recoveryCode: params.recoveryCode,
         });
       }
+      case "apple":
+      // case "facebook":
       case "google": {
-        return ewSDK.auth.loginWithGoogle({
+        const oauthProvider = oauthStrategyToAuthProvider[strategy];
+        return ewSDK.auth.loginWithOauth({
+          oauthProvider,
           closeOpenedWindow: params.closeOpenedWindow,
           openedWindow: params.openedWindow,
         });
@@ -262,3 +272,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
 }
+
+const oauthStrategyToAuthProvider: Record<
+  EmbeddedWalletOauthStrategy,
+  AuthProvider
+> = {
+  google: AuthProvider.GOOGLE,
+  // facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
+};

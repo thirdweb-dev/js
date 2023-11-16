@@ -9,7 +9,10 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://faucet.avax.network/?subnet=beam",
+    "https://faucet.onbeam.com"
+  ],
   "features": [
     {
       "name": "EIP1559"
@@ -24,15 +27,16 @@ export default {
   "infoURL": "https://www.onbeam.com",
   "name": "Beam Testnet",
   "nativeCurrency": {
-    "name": "Merit Circle",
-    "symbol": "MC",
+    "name": "Beam",
+    "symbol": "BEAM",
     "decimals": 18
   },
   "networkId": 13337,
   "rpc": [
     "https://beam-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/beam/testnet/rpc"
+    "https://subnets.avax.network/beam/testnet/rpc",
+    "wss://subnets.avax.network/beam/testnet/ws"
   ],
   "shortName": "beam-testnet",
   "slug": "beam-testnet",

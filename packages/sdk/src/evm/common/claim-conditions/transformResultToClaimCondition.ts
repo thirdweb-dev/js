@@ -11,12 +11,12 @@ import { convertToReadableQuantity } from "./convertToReadableQuantity";
 
 /**
  * Transforms a contract model to local model
- * @param pm
- * @param tokenDecimals
- * @param provider
- * @param merkleMetadata
- * @param storage
- * @param shouldDownloadSnapshot
+ * @param pm - The contract model to transform
+ * @param tokenDecimals - The token decimals to use
+ * @param provider - The provider to use
+ * @param merkleMetadata - The merkle metadata to use
+ * @param storage - The storage to use
+ * @param shouldDownloadSnapshot - Whether to download the snapshot
  * @internal
  */
 export async function transformResultToClaimCondition(

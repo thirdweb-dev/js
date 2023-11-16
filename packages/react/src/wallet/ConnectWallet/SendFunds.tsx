@@ -23,6 +23,7 @@ import { SupportedTokens, TokenInfo, defaultTokens } from "./defaultTokens";
 import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
 import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 // TODO - use a better way to fetch token Info instead of useBalance
 
@@ -50,7 +51,7 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
   }
 
   const [token, setToken] = useState<TokenInfo | undefined>(defaultToken);
-  const [receieverAddress, setReceieverAddress] = useState("");
+  const [receiverAddress, setReceiverAddress] = useState("");
   const [amount, setAmount] = useState("0");
 
   if (screen === "tokenSelector") {
@@ -74,8 +75,8 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
       onTokenSelect={() => {
         setScreen("tokenSelector");
       }}
-      receieverAddress={receieverAddress}
-      setReceieverAddress={setReceieverAddress}
+      receiverAddress={receiverAddress}
+      setReceiverAddress={setReceiverAddress}
       amount={amount}
       setAmount={setAmount}
     />
@@ -85,37 +86,33 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
 export function SendFundsForm(props: {
   onTokenSelect: () => void;
   token?: TokenInfo;
-  receieverAddress: string;
-  setReceieverAddress: (value: string) => void;
+  receiverAddress: string;
+  setReceiverAddress: (value: string) => void;
   amount: string;
   setAmount: (value: string) => void;
 }) {
+  const locale = useTWLocale().connectWallet.sendFundsScreen;
   const tokenAddress = props.token?.address;
   const balanceQuery = useBalance(tokenAddress);
 
-  const {
-    receieverAddress: receiverAddress,
-    setReceieverAddress,
-    amount,
-    setAmount,
-  } = props;
+  const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
 
   const chain = useChain();
   const chainId = useChainId();
   const wallet = useWallet();
 
   // Ethereum or Rinkeby or Goerli
-  const isENSSupprted = chainId === 1 || chainId === 5 || chainId === 4;
+  const isENSSupported = chainId === 1 || chainId === 5 || chainId === 4;
 
   const isValidReceiverAddress = useMemo(() => {
     const isENS = receiverAddress.endsWith(".eth");
 
-    if (!isENSSupprted && isENS) {
+    if (!isENSSupported && isENS) {
       return false;
     }
 
     return isENS || utils.isAddress(receiverAddress);
-  }, [receiverAddress, isENSSupprted]);
+  }, [receiverAddress, isENSSupported]);
 
   const showInvalidAddressError = receiverAddress && !isValidReceiverAddress;
 
@@ -129,11 +126,29 @@ export function SendFundsForm(props: {
     },
   );
 
+  function getErrorMessage(error?: TXError) {
+    const message = error?.data?.message || error?.message;
+
+    if (!message) {
+      return locale.transactionFailed;
+    }
+
+    if (message.includes("user rejected")) {
+      return locale.transactionRejected;
+    }
+
+    if (message.includes("insufficient funds")) {
+      return locale.insufficientFunds;
+    }
+
+    return locale.transactionFailed;
+  }
+
   if (sendTokenMutation.isError) {
     return (
       <Container p="lg" animate="fadein">
         <ModalHeader
-          title="Send Funds"
+          title={locale.title}
           onBack={() => {
             sendTokenMutation.reset();
           }}
@@ -160,7 +175,7 @@ export function SendFundsForm(props: {
     return (
       <Container p="lg" animate="fadein">
         <ModalHeader
-          title="Send Funds"
+          title={locale.title}
           onBack={() => {
             sendTokenMutation.reset();
           }}
@@ -176,7 +191,7 @@ export function SendFundsForm(props: {
           color="success"
         >
           <CheckCircledIcon width={iconSize.xl} height={iconSize.xl} />
-          <Text color="success"> Transaction Successful </Text>
+          <Text color="success"> {locale.successMessage} </Text>
         </Container>
       </Container>
     );
@@ -187,7 +202,7 @@ export function SendFundsForm(props: {
 
   return (
     <Container p="lg" animate="fadein">
-      <ModalTitle>Send Funds</ModalTitle>
+      <ModalTitle>{locale.title}</ModalTitle>
       <Spacer y="xl" />
 
       <form
@@ -197,7 +212,7 @@ export function SendFundsForm(props: {
       >
         {/* Token  */}
         <Label htmlFor="token" color="secondaryText">
-          Token
+          {locale.token}
         </Label>
         <Spacer y="sm" />
         <Button
@@ -242,18 +257,18 @@ export function SendFundsForm(props: {
 
         {/* Send to  */}
         <Label htmlFor="receiever" color="secondaryText">
-          Send to
+          {locale.sendTo}
         </Label>
         <Spacer y="sm" />
         <Input
           data-error={showInvalidAddressError}
           required
           id="receiever"
-          placeholder={isENSSupprted ? `0x... / ENS name` : "0x..."}
+          placeholder={isENSSupported ? `0x... / ENS name` : "0x..."}
           variant="outline"
           value={receiverAddress}
           onChange={(e) => {
-            setReceieverAddress(e.target.value);
+            setReceiverAddress(e.target.value);
           }}
         />
 
@@ -261,8 +276,7 @@ export function SendFundsForm(props: {
           <>
             <Spacer y="xs" />
             <Text color="danger" size="sm">
-              {" "}
-              Invalid Address{" "}
+              {locale.invalidAddress}
             </Text>
           </>
         )}
@@ -271,7 +285,7 @@ export function SendFundsForm(props: {
 
         {/* Amount  */}
         <Label htmlFor="amount" color="secondaryText">
-          Amount
+          {locale.amount}
         </Label>
         <Spacer y="sm" />
         <Container relative>
@@ -310,7 +324,7 @@ export function SendFundsForm(props: {
             padding: spacing.md,
           }}
         >
-          {sendTokenMutation.isLoading ? "Sending" : "Send"}
+          {sendTokenMutation.isLoading ? locale.sending : locale.submitButton}
           {sendTokenMutation.isLoading && (
             <Spinner size="sm" color="accentButtonText" />
           )}
@@ -318,24 +332,6 @@ export function SendFundsForm(props: {
       </form>
     </Container>
   );
-}
-
-function getErrorMessage(error?: TXError) {
-  const message = error?.data?.message || error?.message;
-
-  if (!message) {
-    return "Transaction Failed";
-  }
-
-  if (message.includes("user rejected")) {
-    return "Transaction Rejected";
-  }
-
-  if (message.includes("insufficient funds")) {
-    return "Insufficient funds";
-  }
-
-  return "Transaction Failed";
 }
 
 function useNativeToken(): TokenInfo | undefined {
@@ -400,6 +396,7 @@ export function TokenSelector(props: {
   const chainId = useChainId();
   const nativeTokenInfo = useNativeToken();
   const { data: foundToken, isLoading: findingToken } = useToken(input);
+  const locale = useTWLocale().connectWallet.sendFundsScreen;
 
   let tokenList = (chainId ? props.supportedTokens[chainId] : undefined) || [];
 
@@ -425,10 +422,10 @@ export function TokenSelector(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title="Select a Token" />
+        <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
         <Spacer y="xl" />
         <Input
-          placeholder="Search or paste token address"
+          placeholder={locale.searchToken}
           variant="outline"
           value={input}
           onChange={(e) => {
@@ -492,7 +489,7 @@ export function TokenSelector(props: {
           color="secondaryText"
         >
           <CrossCircledIcon width={iconSize.lg} height={iconSize.lg} />
-          No Tokens found
+          {locale.noTokensFound}
         </Container>
       )}
     </Container>

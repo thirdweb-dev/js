@@ -36,6 +36,12 @@ export type ConnectWalletDetailsProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to a Smart Wallet
+   *
+   * @defaultValue false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -45,6 +51,7 @@ export const WalletDetailsButton = ({
   hideTestnetFaucet,
   supportedTokens,
   displayBalanceToken,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletDetailsProps) => {
   const l = useLocale();
   const activeWallet = useWallet();
@@ -76,6 +83,7 @@ export const WalletDetailsButton = ({
         hideTestnetFaucet={hideTestnetFaucet}
         supportedTokens={supportedTokens}
         displayBalanceToken={displayBalanceToken}
+        hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
       />
       {detailsButton ? (
         detailsButton({ onPress })

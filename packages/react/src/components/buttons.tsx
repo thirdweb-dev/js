@@ -18,7 +18,7 @@ export const Button = styled.button<{
   font-weight: 500;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1;
+  line-height: normal;
   flex-shrink: 0;
   transition: border 200ms ease;
   gap: ${(p) => (p.gap && spacing[p.gap]) || 0};
@@ -61,6 +61,14 @@ export const Button = styled.button<{
       border: 1.5px solid ${p.theme.colors.borderColor};
       &:hover {
         border-color: ${p.theme.colors.accentText};
+      }
+    `;
+    }
+
+    if (p.variant === "secondary") {
+      return `
+      &:hover {
+        background: ${p.theme.colors.secondaryButtonHoverBg};
       }
     `;
     }

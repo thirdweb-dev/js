@@ -11,15 +11,16 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import ConnectAppField from "./ConnectAppField";
 import DisconnectIcon from "../../assets/disconnect";
 import { IconTextButton } from "../base/IconTextButton";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
+  hideSwitchToPersonalWallet,
 }: {
   onExportPress: () => void;
+  hideSwitchToPersonalWallet?: boolean;
 }) => {
   const l = useLocale();
   const { setConnectedWallet } = useWalletContext();
@@ -61,25 +62,24 @@ export const SmartWalletAdditionalActions = ({
 
   return (
     <>
-      <IconTextButton
-        mt="xs"
-        text={
-          showSmartWallet
-            ? l.smart_wallet.switch_to_smart
-            : l.smart_wallet.switch_to_personal
-        }
-        icon={
-          <DisconnectIcon
-            width={14}
-            height={14}
-            color={theme.colors.iconPrimary}
-          />
-        }
-        onPress={onWalletPress}
-      />
-      {!showSmartWallet && smartWallet?.enableConnectApp ? (
-        <ConnectAppField />
-      ) : null}
+      {(showSmartWallet || !hideSwitchToPersonalWallet) && (
+        <IconTextButton
+          mt="xs"
+          text={
+            showSmartWallet
+              ? l.smart_wallet.switch_to_smart
+              : l.smart_wallet.switch_to_personal
+          }
+          icon={
+            <DisconnectIcon
+              width={14}
+              height={14}
+              color={theme.colors.iconPrimary}
+            />
+          }
+          onPress={onWalletPress}
+        />
+      )}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (
         <>
