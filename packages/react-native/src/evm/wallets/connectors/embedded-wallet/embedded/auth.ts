@@ -220,7 +220,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   if (parts.length < 2) {
     // assume error
     const error = decodedUrl.split("?error=")?.[1];
-    throw new Error(`Something went wrong. Please, try again later: ${error}`);
+    throw new Error(`Something went wrong: ${error}`);
   }
 
   const authResult = parts[1];

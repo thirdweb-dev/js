@@ -11,6 +11,8 @@ import {
   EmbeddedWalletConnectionArgs,
 } from "../../connectors/embedded-wallet/types";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
+import { WalletMeta } from "@thirdweb-dev/wallets/dist/declarations/src/evm/wallets/base";
+import { AUTH_OPTIONS_ICONS } from "../../types/embedded-wallet";
 
 export type EmbeddedWalletOptions = WalletOptions<
   EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
@@ -77,6 +79,22 @@ export class EmbeddedWallet extends AbstractClientWallet<
   async authenticate(params: AuthParams) {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.authenticate(params);
+  }
+
+  getMeta(): WalletMeta {
+    const strategy = this.connector?.getConnectedAuthStrategy();
+    const meta = (this.constructor as typeof AbstractClientWallet).meta;
+    switch (strategy) {
+      case "facebook":
+      case "apple":
+      case "google":
+        return {
+          ...meta,
+          iconURL: AUTH_OPTIONS_ICONS[strategy],
+        };
+      default:
+        return meta;
+    }
   }
 
   onConnected = () => {

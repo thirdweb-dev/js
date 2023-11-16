@@ -14,7 +14,7 @@ import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
 } from "./EmbeddedWalletFormUI";
-import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletGoogleLogin";
+import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletSocialLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
 import {
   AuthOption,
@@ -26,7 +26,7 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
   "email",
   "google",
   "apple",
-  // "facebook",
+  "facebook",
 ];
 
 export const embeddedWallet = (

@@ -1,7 +1,7 @@
 import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { Theme, ThemeObjectOrType } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import {
   ConnectWallet,
   ConnectWalletProps,
@@ -20,8 +20,10 @@ import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useState } from "react";
 import invariant from "tiny-invariant";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { useTheme } from "@emotion/react";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { useTWLocale } from "../../providers/locale-provider";
 
 type ActionFn = (contract: SmartContract) => any;
@@ -106,7 +108,7 @@ export const Web3Button = <TAction extends ActionFn>(
   const requiresConfirmation = !useIsHeadlessWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
-  const contextTheme = useTheme() as ThemeObjectOrType;
+  const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
 
   const locale = useTWLocale();

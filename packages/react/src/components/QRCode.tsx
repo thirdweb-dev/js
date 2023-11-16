@@ -1,9 +1,10 @@
 import { keyframes } from "@emotion/react";
-import { Theme, radius } from "../design-system";
-import styled from "@emotion/styled";
+import { radius } from "../design-system";
 import QRCodeUtil from "qrcode";
 import React, { ReactElement, useMemo } from "react";
 import { fadeInAnimation } from "../design-system/animations";
+import { StyledDiv } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export const QRCode: React.FC<{
   qrCodeUri?: string;
@@ -48,23 +49,26 @@ export const QRCode: React.FC<{
   );
 };
 
-const IconContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  z-index: 1000;
-`;
+const IconContainer = /* @__PURE__ */ StyledDiv({
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  display: "flex",
+  justifyContent: "center",
+  alignContent: "center",
+  zIndex: 1000,
+});
 
-const QRCodeContainer = styled.div<{ theme?: Theme }>`
-  animation: ${fadeInAnimation} 600ms ease;
-  --ck-qr-dot-color: ${(p) => p.theme.colors.primaryText};
-  --ck-body-background: ${(p) => p.theme.colors.modalBg};
-  --ck-qr-background: ${(p) => p.theme.colors.modalBg};
-`;
+const QRCodeContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    animation: `${fadeInAnimation} 600ms ease`,
+    "--ck-qr-dot-color": theme.colors.primaryText,
+    "--ck-body-background": theme.colors.modalBg,
+    "--ck-qr-background": theme.colors.modalBg,
+  };
+});
 
 const generateMatrix = (
   value: string,
@@ -98,82 +102,76 @@ export const PlaceholderKeyframes = keyframes`
   100%{ background-position: -100% 0; }
 `;
 
-export const QRPlaceholder = styled.div<{ theme?: Theme }>`
-  --color: ${(p) => p.theme.colors.skeletonBg};
-  --bg: ${(p) => p.theme.colors.modalBg};
-
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${radius.md};
-
-  > div {
-    z-index: 4;
-    position: relative;
-    width: 28%;
-    height: 28%;
-    border-radius: 5px;
-    background: var(--bg);
-    box-shadow: 0 0 0 7px var(--bg);
-  }
-
-  > span {
-    z-index: 4;
-    position: absolute;
-    background: var(--color);
-    border-radius: 12px;
-    width: 13.25%;
-    height: 13.25%;
-    box-shadow: 0 0 0 4px var(--bg);
-    &:before {
-      content: "";
-      position: absolute;
-      inset: 9px;
-      border-radius: 3px;
-      box-shadow: 0 0 0 4px var(--bg);
-    }
-    &[data-v1] {
-      top: 0;
-      left: 0;
-    }
-    &[data-v2] {
-      top: 0;
-      right: 0;
-    }
-    &[data-v3] {
-      bottom: 0;
-      left: 0;
-    }
-  }
-
-  &:before {
-    z-index: 3;
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeat;
-    background-size: 1.888% 1.888%;
-    background-image: radial-gradient(var(--color) 41%, transparent 41%);
-  }
-
-  &:after {
-    z-index: 100;
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: scale(1.5) rotate(45deg);
-    background-image: linear-gradient(
-      90deg,
-      transparent 50%,
-      ${(p) => p.theme.colors.skeletonBg},
-      transparent
-    );
-    background-size: 200% 100%;
-    animation: ${PlaceholderKeyframes} 1000ms linear infinite both;
-  }
-`;
+export const QRPlaceholder = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    "--color": theme.colors.skeletonBg,
+    "--bg": theme.colors.modalBg,
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radius.md,
+    "> div": {
+      zIndex: 4,
+      position: "relative",
+      width: "28%",
+      height: "28%",
+      borderRadius: "5px",
+      background: "var(--bg)",
+      boxShadow: "0 0 0 7px var(--bg)",
+    },
+    "> span": {
+      zIndex: 4,
+      position: "absolute",
+      background: "var(--color)",
+      borderRadius: "12px",
+      width: "13.25%",
+      height: "13.25%",
+      boxShadow: "0 0 0 4px var(--bg)",
+      "&:before": {
+        content: '""',
+        position: "absolute",
+        inset: "9px",
+        borderRadius: "3px",
+        boxShadow: "0 0 0 4px var(--bg)",
+      },
+      "&[data-v1]": {
+        top: 0,
+        left: 0,
+      },
+      "&[data-v2]": {
+        top: 0,
+        right: 0,
+      },
+      "&[data-v3]": {
+        bottom: 0,
+        left: 0,
+      },
+    },
+    "&:before": {
+      zIndex: 3,
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background: "repeat",
+      backgroundSize: "1.888% 1.888%",
+      backgroundImage: "radial-gradient(var(--color) 41%, transparent 41%)",
+    },
+    "&::after": {
+      zIndex: 100,
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      transform: "scale(1.5) rotate(45deg)",
+      background:
+        "linear-gradient(90deg, transparent 50%, var(--color), transparent)",
+      backgroundSize: "200% 100%",
+      animation: `${PlaceholderKeyframes} 1000ms linear infinite both`,
+    },
+  };
+});
 
 export function QRCodeRenderer({
   ecl = "M",
