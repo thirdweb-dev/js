@@ -30,8 +30,7 @@
     "@thirdweb-dev/crypto": "workspace:*",
     "buffer": "^6.0.3",
     "buffer-reverse": "^1.0.1",
-    "treeify": "^1.1.0",
-    "uint8array-extras": "^0.4.0"
+    "treeify": "^1.1.0"
   },
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
@@ -44,7 +43,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",

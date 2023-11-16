@@ -5,7 +5,7 @@ import {
 } from "../src";
 import { utils } from "ethers";
 import { keccak_256 } from "@noble/hashes/sha3";
-import { uint8ArrayToHex } from "uint8array-extras";
+import { uint8ArrayToHex } from "../src/utils/uint8array-extras";
 
 const STRING_TO_HASH = "hello world";
 

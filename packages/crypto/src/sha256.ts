@@ -1,6 +1,7 @@
 import { sha256 as sha256Noble } from "@noble/hashes/sha256";
-import { uint8ArrayToHex } from "uint8array-extras";
+import { uint8ArrayToHex } from "./utils/uint8array-extras";
 import { getCachedTextEncoder } from "./utils/cache";
+import { universalCrypto } from "./utils/universal-crypto";
 
 /**
  * Hash a string or Uint8Array using sha256.
@@ -19,7 +20,9 @@ export async function sha256(
     encodedValue = value;
   }
 
-  return new Uint8Array(await crypto.subtle.digest("SHA-256", encodedValue));
+  return new Uint8Array(
+    await (await universalCrypto()).subtle.digest("SHA-256", encodedValue),
+  );
 }
 
 /**

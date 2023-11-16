@@ -139,6 +139,7 @@
     "@thirdweb-dev/generated-abis": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/merkletree": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
     "abitype": "^0.2.5",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",

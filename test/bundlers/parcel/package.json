@@ -1,0 +1,21 @@
+{
+  "name": "bundlers-parcel",
+  "private": true,
+  "dependencies": {
+    "@thirdweb-dev/auth": "workspace:*",
+    "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
+    "@thirdweb-dev/merkletree": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
+    "@thirdweb-dev/storage": "workspace:*",
+    "@thirdweb-dev/wallets": "workspace:*"
+  },
+  "scripts": {
+    "e2e": "bun run.ts"
+  },
+  "devDependencies": {
+    "execa": "^8.0.1",
+    "ora": "^6.3.1",
+    "parcel": "^2.10.3"
+  }
+}

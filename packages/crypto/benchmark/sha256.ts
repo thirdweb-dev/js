@@ -1,7 +1,7 @@
 import Bench from "tinybench";
 import { sha256, sha256Hex, sha256Sync, sha256HexSync } from "../src";
 import { SHA256, enc } from "crypto-js";
-import { uint8ArrayToString } from "uint8array-extras";
+import { uint8ArrayToString } from "../src/utils/uint8array-extras";
 // @ts-expect-error - this function actually does exist
 import { consoleTable } from "js-awe";
 

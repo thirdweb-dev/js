@@ -1,6 +1,10 @@
-import { getCachedTextEncoder } from "../../utils/cache";
+import { getCachedTextDecoder, getCachedTextEncoder } from "../../utils/cache";
 import { arrayBuffer } from "../lib/md5";
-import { base64ToUint8Array, concatUint8Arrays } from "uint8array-extras";
+import {
+  base64ToUint8Array,
+  concatUint8Arrays,
+} from "../../utils/uint8array-extras";
+import { universalCrypto } from "../../utils/universal-crypto";
 
 /**
  * This is an implementation of the CryptoJS AES decryption scheme, without actually relying on crypto-js.
@@ -15,6 +19,7 @@ export async function decryptCryptoJSCipherBase64(
   password: string,
   { keySizeDWORD = 256 / 32, ivSizeDWORD = 128 / 32, iterations = 1 } = {},
 ) {
+  const crypto = await universalCrypto();
   const { key, iv } = await dangerouslyDeriveParameters(
     password,
     salt,
@@ -31,7 +36,7 @@ export async function decryptCryptoJSCipherBase64(
       ciphertext,
     );
     // return the plaintext from ArrayBuffer
-    return new TextDecoder().decode(plainBuffer);
+    return getCachedTextDecoder().decode(plainBuffer);
   } catch (e) {
     throw new Error("Decrypt failed");
   }
@@ -62,6 +67,7 @@ async function dangerouslyDeriveParameters(
   ivSizeDWORD: number,
   iterations: number,
 ) {
+  const crypto = await universalCrypto();
   const passwordUint8Array = getCachedTextEncoder().encode(password);
 
   const keyPlusIV = dangerousEVPKDF(

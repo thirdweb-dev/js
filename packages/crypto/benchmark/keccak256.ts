@@ -1,7 +1,10 @@
 import { Bench } from "tinybench";
 import { keccak256SyncHex } from "../src";
 import { utils } from "ethers";
-import { uint8ArrayToString, uint8ArrayToHex } from "uint8array-extras";
+import {
+  uint8ArrayToString,
+  uint8ArrayToHex,
+} from "../src/utils/uint8array-extras";
 import { keccak_256 as noble } from "@noble/hashes/sha3";
 import { keccak256 as viem } from "viem";
 // @ts-expect-error - this function actually does exist

@@ -3,23 +3,12 @@
   "version": "0.1.58",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-chains.esm.js": "./dist/thirdweb-dev-chains.browser.esm.js"
-  },
   "exports": {
     ".": {
-      "module": {
-        "browser": "./dist/thirdweb-dev-chains.browser.esm.js",
-        "default": "./dist/thirdweb-dev-chains.esm.js"
-      },
+      "module": "./dist/thirdweb-dev-chains.esm.js",
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
     "./package.json": "./package.json"
-  },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/chains",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
@@ -39,11 +28,7 @@
     "entrypoints": [
       "index.ts"
     ],
-    "exports": {
-      "envConditions": [
-        "browser"
-      ]
-    }
+    "exports": true
   },
   "sideEffects": false,
   "scripts": {

@@ -3,7 +3,8 @@ import {
   decryptCryptoJSCipherBase64,
   parseCryptoJSCipherBase64,
 } from "./utils/crypto-js-compat";
-import { base64ToUint8Array } from "uint8array-extras";
+import { base64ToUint8Array } from "../utils/uint8array-extras";
+import { universalCrypto } from "../utils/universal-crypto";
 
 /**
  * Decrypts ciphertext encrypted with aesEncrypt() using supplied password.
@@ -19,6 +20,7 @@ export async function aesDecrypt(
   ciphertext: string,
   password: string,
 ): Promise<string> {
+  const crypto = await universalCrypto();
   // encode password as UTF-8
   const pwUtf8 = getCachedTextEncoder().encode(password);
   // hash the password

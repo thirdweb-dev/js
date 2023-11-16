@@ -3,7 +3,6 @@
   "version": "2.1.2",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
-  "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
   "browser": {
     "./dist/thirdweb-dev-wallets.esm.js": "./dist/thirdweb-dev-wallets.browser.esm.js"
   },
@@ -395,6 +394,7 @@
     },
     "./package.json": "./package.json"
   },
+  "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
   "license": "Apache-2.0",
   "bugs": {
@@ -511,7 +511,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
