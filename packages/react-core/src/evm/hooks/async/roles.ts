@@ -10,9 +10,9 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import type { Vote } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk/internal/react-core";
+import type { Vote } from "@thirdweb-dev/sdk/internal/react-core";
+import type { SmartContract } from "@thirdweb-dev/sdk/internal/react-core";
 import { constants } from "ethers";
 import invariant from "tiny-invariant";
 

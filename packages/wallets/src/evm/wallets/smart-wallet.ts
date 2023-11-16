@@ -11,7 +11,7 @@ import {
   SmartContract,
   SignerPermissionsInput,
   SignerWithPermissions,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";

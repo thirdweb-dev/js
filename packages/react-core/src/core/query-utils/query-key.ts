@@ -1,6 +1,6 @@
 import { RequiredParam } from "./required-param";
 import type { QueryKey } from "@tanstack/react-query";
-import type { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk/internal/react-core";
 
 // we prefix all our query keys with this to avoid possible collisions with user-defined queries that share the same query client
 const TW_QUERY_KEY_PREFIX = "__tw__";

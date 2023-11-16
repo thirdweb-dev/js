@@ -13,7 +13,7 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk/internal/react-core";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 

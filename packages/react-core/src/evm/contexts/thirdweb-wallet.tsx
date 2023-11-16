@@ -1,7 +1,7 @@
 import { __DEV__ } from "../../core/constants/runtime";
 import { useThirdwebConfigContext } from "./thirdweb-config";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { UserWallet } from "@thirdweb-dev/sdk";
+import { UserWallet } from "@thirdweb-dev/sdk/internal/react-core";
 import { Signer } from "ethers";
 import React, {
   createContext,

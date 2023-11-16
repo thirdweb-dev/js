@@ -26,7 +26,7 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
-import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+import { type Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk/internal/wallets";
 
 export type BatchData = {
   targets: (string | undefined)[];

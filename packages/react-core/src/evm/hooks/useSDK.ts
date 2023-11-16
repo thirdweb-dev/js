@@ -1,4 +1,4 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/internal/react-core";
 import { useContext } from "react";
 import invariant from "tiny-invariant";
 import { TWSDKContext, ThirdwebSDKContext } from "../contexts/thirdweb-sdk";

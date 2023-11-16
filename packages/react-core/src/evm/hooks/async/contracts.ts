@@ -19,7 +19,10 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract, TransactionResult } from "@thirdweb-dev/sdk";
+import {
+  getCachedAbiForContract,
+  TransactionResult,
+} from "@thirdweb-dev/sdk/internal/react-core";
 import type {
   CommonContractSchemaInput,
   ContractEvent,
@@ -33,7 +36,7 @@ import type {
   ValidContractInstance,
   BaseContractForAddress,
   PublishedMetadata,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";

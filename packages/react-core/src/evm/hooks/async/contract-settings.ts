@@ -18,7 +18,7 @@ import {
 import type {
   CustomContractMetadata,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 

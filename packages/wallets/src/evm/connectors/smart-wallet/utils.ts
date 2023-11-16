@@ -2,7 +2,7 @@ import {
   ChainOrRpcUrl,
   isContractDeployed,
   ThirdwebSDK,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import { BytesLike } from "ethers";
 
 export type AccessibleSmartWallets = {

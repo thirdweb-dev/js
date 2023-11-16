@@ -24,12 +24,26 @@
       },
       "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
     },
+    "./internal/react": {
+      "module": {
+        "browser": "./internal/react/dist/thirdweb-dev-sdk-internal-react.browser.esm.js",
+        "default": "./internal/react/dist/thirdweb-dev-sdk-internal-react.esm.js"
+      },
+      "default": "./internal/react/dist/thirdweb-dev-sdk-internal-react.cjs.js"
+    },
     "./evm/zksync": {
       "module": {
         "browser": "./evm/zksync/dist/thirdweb-dev-sdk-evm-zksync.browser.esm.js",
         "default": "./evm/zksync/dist/thirdweb-dev-sdk-evm-zksync.esm.js"
       },
       "default": "./evm/zksync/dist/thirdweb-dev-sdk-evm-zksync.cjs.js"
+    },
+    "./internal/wallets": {
+      "module": {
+        "browser": "./internal/wallets/dist/thirdweb-dev-sdk-internal-wallets.browser.esm.js",
+        "default": "./internal/wallets/dist/thirdweb-dev-sdk-internal-wallets.esm.js"
+      },
+      "default": "./internal/wallets/dist/thirdweb-dev-sdk-internal-wallets.cjs.js"
     },
     "./evm/functions": {
       "module": {
@@ -38,19 +52,30 @@
       },
       "default": "./evm/functions/dist/thirdweb-dev-sdk-evm-functions.cjs.js"
     },
+    "./internal/react-core": {
+      "module": {
+        "browser": "./internal/react-core/dist/thirdweb-dev-sdk-internal-react-core.browser.esm.js",
+        "default": "./internal/react-core/dist/thirdweb-dev-sdk-internal-react-core.esm.js"
+      },
+      "default": "./internal/react-core/dist/thirdweb-dev-sdk-internal-react-core.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist/",
     "evm/",
-    "server/"
+    "server/",
+    "internal/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
       "evm/index.ts",
       "evm/functions/index.ts",
-      "evm/zksync/index.ts"
+      "evm/zksync/index.ts",
+      "internal/react-core.ts",
+      "internal/react.ts",
+      "internal/wallets.ts"
     ],
     "exports": {
       "envConditions": [

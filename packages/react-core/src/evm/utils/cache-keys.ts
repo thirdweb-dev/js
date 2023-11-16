@@ -6,7 +6,7 @@ import type {
   MarketplaceFilter,
   QueryAllParams,
   SUPPORTED_CHAIN_ID,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
 import { BigNumberish, CallOverrides, constants } from "ethers";
 
 const TW_CACHE_KEY_PREFIX = "tw-cache";

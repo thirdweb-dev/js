@@ -3,7 +3,7 @@ import {
   SmartContract,
   ThirdwebSDK,
   Transaction,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import { BigNumberish, BigNumber, ethers, utils, BytesLike } from "ethers";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";

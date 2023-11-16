@@ -1,4 +1,4 @@
-import type { BasicNFTInput } from "@thirdweb-dev/sdk";
+import type { BasicNFTInput } from "@thirdweb-dev/sdk/internal/react-core";
 import {
   requiredParamInvariant,
   RequiredParam,
@@ -26,7 +26,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
+import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk/internal/react-core";
 import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
 

@@ -1,4 +1,4 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/internal/react-core";
 import { createContext } from "react";
 
 export interface TWSDKContext {

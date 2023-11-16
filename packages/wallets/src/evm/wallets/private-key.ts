@@ -1,6 +1,6 @@
 import { AbstractWallet } from "./abstract";
 import { ethers } from "ethers";
-import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk";
+import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk/internal/wallets";
 
 export class PrivateKeyWallet extends AbstractWallet {
   #signer: ethers.Signer;

@@ -13,7 +13,7 @@ import {
   MagicSDKExtensionsOption,
   SDKBase,
 } from "@magic-sdk/provider";
-import { Address } from "@thirdweb-dev/sdk";
+import { Address } from "@thirdweb-dev/sdk/internal/wallets";
 import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";

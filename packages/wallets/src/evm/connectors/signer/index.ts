@@ -4,7 +4,7 @@ import type { LocalWalletConnectionArgs } from "../../wallets/local-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
-import { getChainProvider } from "@thirdweb-dev/sdk";
+import { getChainProvider } from "@thirdweb-dev/sdk/internal/wallets";
 
 export type SignerWalletConnectorOptions = {
   chain: Chain;

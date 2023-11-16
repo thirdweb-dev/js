@@ -1,7 +1,7 @@
 import type { QueryClientProviderProps } from "../../core/providers/query-client";
 import type { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 import type { Chain } from "@thirdweb-dev/chains";
-import type { SDKOptions } from "@thirdweb-dev/sdk";
+import type { SDKOptions } from "@thirdweb-dev/sdk/internal/react-core";
 import type { IThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 

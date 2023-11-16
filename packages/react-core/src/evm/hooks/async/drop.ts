@@ -28,10 +28,10 @@ import type {
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
-} from "@thirdweb-dev/sdk";
-import type { NFTDrop } from "@thirdweb-dev/sdk";
-import type { SignatureDrop } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
+import type { NFTDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { SignatureDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { SmartContract } from "@thirdweb-dev/sdk/internal/react-core";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 

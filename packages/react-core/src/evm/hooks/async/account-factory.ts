@@ -14,7 +14,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk/internal/react-core";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 

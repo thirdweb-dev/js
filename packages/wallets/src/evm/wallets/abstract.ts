@@ -10,7 +10,7 @@ import {
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import { createErc20 } from "../utils/currency";
 
 // TODO improve this

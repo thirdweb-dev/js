@@ -14,7 +14,7 @@ export type AwsSecretsManagerWalletOptions = {
  *
  *  @example
  * ```javascript
- * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk/internal/wallets"
  * import { AwsSecretsManagerWallet } from "@thirdweb-dev/sdk/evm/wallets"
  *
  * const wallet = new AwsSecretsManagerWallet({

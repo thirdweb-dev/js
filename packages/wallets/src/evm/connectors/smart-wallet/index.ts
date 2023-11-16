@@ -23,7 +23,7 @@ import {
   ThirdwebSDK,
   Transaction,
   TransactionResult,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import { AccountAPI } from "./lib/account";
 import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";

@@ -3,7 +3,7 @@ import type {
   ChainOrRpcUrl,
   SmartContract,
   Transaction,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/wallets";
 import type {
   BigNumber,
   BigNumberish,

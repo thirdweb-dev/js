@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-internal-react.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-internal-react.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-internal-react.esm.js": "./dist/thirdweb-dev-sdk-internal-react.browser.esm.js"
+  }
+}

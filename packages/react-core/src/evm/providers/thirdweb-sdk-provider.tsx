@@ -7,7 +7,7 @@ import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-import { checkClientIdOrSecretKey } from "@thirdweb-dev/sdk";
+import { checkClientIdOrSecretKey } from "@thirdweb-dev/sdk/internal/react-core";
 
 /**
  *

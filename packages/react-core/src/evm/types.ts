@@ -17,14 +17,14 @@ import type {
   Multiwrap,
   Pack,
   AddressOrEns,
-} from "@thirdweb-dev/sdk";
-import type { Edition } from "@thirdweb-dev/sdk";
-import type { EditionDrop } from "@thirdweb-dev/sdk";
-import type { NFTCollection } from "@thirdweb-dev/sdk";
-import type { NFTDrop } from "@thirdweb-dev/sdk";
-import type { SignatureDrop } from "@thirdweb-dev/sdk";
-import type { TokenDrop } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
+import type { Edition } from "@thirdweb-dev/sdk/internal/react-core";
+import type { EditionDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { NFTCollection } from "@thirdweb-dev/sdk/internal/react-core";
+import type { NFTDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { SignatureDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { TokenDrop } from "@thirdweb-dev/sdk/internal/react-core";
+import type { SmartContract } from "@thirdweb-dev/sdk/internal/react-core";
 import type { BigNumberish } from "ethers";
 
 type AddEthereumChainParameter = {

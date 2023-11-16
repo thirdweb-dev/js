@@ -15,14 +15,14 @@ import { Text } from "../../components/text";
 import { Skeleton } from "../../components/Skeleton";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "../../components/Spinner";
-import { TransactionResult } from "@thirdweb-dev/sdk";
+import type { TransactionResult } from "@thirdweb-dev/sdk/internal/react";
 import { ModalTitle } from "../../components/modalElements";
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { utils } from "ethers";
 import { SupportedTokens, TokenInfo, defaultTokens } from "./defaultTokens";
 import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
-import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk/internal/react";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 
 // TODO - use a better way to fetch token Info instead of useBalance

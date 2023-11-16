@@ -22,7 +22,7 @@ import {
   SnapshotEntryWithProof,
   fetchCurrencyValue,
   fetchCurrencyMetadata,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
 import type { BigNumberish, providers } from "ethers";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";

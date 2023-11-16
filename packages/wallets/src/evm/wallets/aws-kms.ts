@@ -7,7 +7,7 @@ import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  *
  *  @example
  * ```javascript
- * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk/internal/wallets"
  * import { AwsKmsWallet } from "@thirdweb-dev/sdk/evm/wallets"
  *
  * const wallet = new AwsKmsWallet({

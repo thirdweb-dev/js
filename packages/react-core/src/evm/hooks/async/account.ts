@@ -14,7 +14,7 @@ import type {
   SmartContract,
   SignerPermissionsInput,
   TransactionResult,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/internal/react-core";
 import invariant from "tiny-invariant";
 import { WalletAddress } from "../../types";
 import { useWallet } from "../../../core/hooks/wallet-hooks";

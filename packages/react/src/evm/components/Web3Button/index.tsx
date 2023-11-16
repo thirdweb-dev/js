@@ -16,7 +16,7 @@ import {
   useSwitchChain,
   useConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk/internal/react";
 import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useState } from "react";
 import invariant from "tiny-invariant";

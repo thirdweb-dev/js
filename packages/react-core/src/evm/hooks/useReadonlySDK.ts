@@ -1,4 +1,4 @@
-import { ChainIdOrName, SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ChainIdOrName, SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/internal/react-core";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { useMemo } from "react";
 

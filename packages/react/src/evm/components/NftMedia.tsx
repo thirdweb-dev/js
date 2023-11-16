@@ -1,4 +1,4 @@
-import { NFTMetadata } from "@thirdweb-dev/sdk";
+import { NFTMetadata } from "@thirdweb-dev/sdk/internal/react";
 import React from "react";
 import type { SharedMediaProps } from "./types";
 import { MediaRenderer } from "./MediaRenderer";

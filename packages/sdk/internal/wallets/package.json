@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-internal-wallets.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-internal-wallets.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-internal-wallets.esm.js": "./dist/thirdweb-dev-sdk-internal-wallets.browser.esm.js"
+  }
+}
