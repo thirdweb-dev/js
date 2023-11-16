@@ -146,6 +146,30 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   async authenticate(params: AuthParams) {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
-    return connector.authenticate(params);
+
+    const authResult = connector.authenticate(params);
+
+    try {
+      await this.walletStorage.setItem(
+        LAST_USED_AUTH_STRATEGY,
+        params.strategy,
+      );
+    } catch {
+      // noop
+    }
+
+    return authResult;
+  }
+
+  async getLastUsedAuthStrategy(): Promise<AuthParams["strategy"] | null> {
+    try {
+      return (await this.walletStorage.getItem(LAST_USED_AUTH_STRATEGY)) as
+        | AuthParams["strategy"]
+        | null;
+    } catch {
+      return null;
+    }
   }
 }
+
+const LAST_USED_AUTH_STRATEGY = "lastUsedAuthStrategy";
