@@ -218,8 +218,15 @@ const MagicUI: React.FC<{
     >
       {props.oauthProviders && (
         <>
-          {props.oauthProviders.length >= 3 ? (
-            <Container gap="md" flex="row" center="x">
+          {props.oauthProviders.length > 1 ? (
+            <Container
+              gap="md"
+              flex="row"
+              style={{
+                justifyContent: "space-between",
+              }}
+              center="x"
+            >
               {props.oauthProviders.map((provider) => {
                 return (
                   <SocialIconButton
@@ -512,7 +519,7 @@ const SocialButtonLarge = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
     display: "flex",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     gap: spacing.md,
     fontSize: fontSize.md,
     transition: "background-color 0.2s ease",
@@ -535,5 +542,6 @@ const SocialIconButton = /* @__PURE__ */ styled(IconButton)(() => {
       borderColor: theme.colors.accentText,
       background: "transparent",
     },
+    flexGrow: 1,
   };
 });
