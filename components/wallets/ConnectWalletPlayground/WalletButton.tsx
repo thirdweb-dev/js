@@ -147,7 +147,11 @@ export function SocialButton(props: {
           src={socialIconMap[props.icon]}
         />
 
-        <Text fontWeight={500} fontSize={14} color={"heading"}>
+        <Text
+          fontWeight={500}
+          fontSize={14}
+          color={props.isSelected ? "heading" : "paragraph"}
+        >
           {props.name}
         </Text>
       </Flex>
