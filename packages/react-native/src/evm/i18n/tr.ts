@@ -1,6 +1,6 @@
 export const _tr = {
   connect_wallet: {
-    label: "Connect Wallet",
+    label: "Cüzdanı Bağla",
   },
   connect_wallet_details: {
     additional_actions: "Ek İşlemler",
@@ -38,8 +38,7 @@ export const _tr = {
     switch_to: "Geçiş Yap",
     no_supported_chains_detected: "Desteklenen bir ağ tespit edilemedi",
     recommended: "Önerilir",
-    network_mismatch:
-      "Kontrat ve cüzdanınız arasında bir ağ uyuşmazlığı var",
+    network_mismatch: "Kontrat ve cüzdanınız arasında bir ağ uyuşmazlığı var",
   },
   connecting_wallet: {
     creating_encrypting:
@@ -56,7 +55,8 @@ export const _tr = {
     private_key_mnemonic_placeholder: "Özel anahtar / Kelimeler",
     application_can_authorize_transactions:
       "Bu uygulama cüzdanınız adına herhangi bir izin olmadan işlem başlatabilir. Yalnızca güvenilir uygulamalara giriş yapmanızı öneriyoruz.",
-    double_check_password: "Lütfen, parolanızı veya gizli anahtarınızı kontrol edin.",
+    double_check_password:
+      "Lütfen, parolanızı veya gizli anahtarınızı kontrol edin.",
     error_accessing_file: "Dosyaya erişirken hata. Lütfen tekrar deneyin.",
     wallet_address: "Cüzdan Adresi",
     this_will_download_json:
