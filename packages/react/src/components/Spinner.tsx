@@ -1,6 +1,6 @@
 import { iconSize, type Theme } from "../design-system";
 import { keyframes, useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
+import { StyledCircle, StyledSvg } from "../design-system/elements";
 
 export const Spinner: React.FC<{
   color: keyof Theme["colors"];
@@ -29,7 +29,7 @@ export const Spinner: React.FC<{
 
 // animations
 const dashAnimation = keyframes`
- 0% {
+  0% {
     stroke-dasharray: 1, 150;
     stroke-dashoffset: 0;
   }
@@ -44,19 +44,18 @@ const dashAnimation = keyframes`
 `;
 
 const rotateAnimation = keyframes`
-100% {
+  100% {
     transform: rotate(360deg);
   }
 `;
 
-// styles
-const Svg = styled.svg`
-  animation: ${rotateAnimation} 2s linear infinite;
-  width: 1em;
-  height: 1em;
-`;
+const Svg = /* @__PURE__ */ StyledSvg({
+  animation: `${rotateAnimation} 2s linear infinite`,
+  width: "1em",
+  height: "1em",
+});
 
-const Circle = styled.circle`
-  stroke-linecap: round;
-  animation: ${dashAnimation} 1.5s ease-in-out infinite;
-`;
+const Circle = /* @__PURE__ */ StyledCircle({
+  strokeLinecap: "round",
+  animation: `${dashAnimation} 1.5s ease-in-out infinite`,
+});
