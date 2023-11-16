@@ -1,12 +1,13 @@
 import { iconSize, type Theme } from "../design-system";
-import { keyframes, useTheme } from "@emotion/react";
+import { keyframes } from "@emotion/react";
 import { StyledCircle, StyledSvg } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export const Spinner: React.FC<{
   color: keyof Theme["colors"];
   size: keyof typeof iconSize;
 }> = (props) => {
-  const theme = useTheme() as Theme;
+  const theme = useCustomTheme();
   return (
     <Svg
       style={{
