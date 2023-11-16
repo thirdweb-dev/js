@@ -30,6 +30,7 @@ import CheckIcon from "../../assets/check";
 import { TokenSelector } from "./TokenSelector";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 import { TransactionResult } from "@thirdweb-dev/sdk";
+
 export const SendButton = ({
   supportedTokens,
 }: {
