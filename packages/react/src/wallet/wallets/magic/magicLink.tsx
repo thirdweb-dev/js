@@ -529,6 +529,11 @@ const SocialIconButton = /* @__PURE__ */ styled(IconButton)(() => {
   const theme = useCustomTheme();
   return {
     border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: spacing.xs,
+    padding: spacing.sm,
+    transition: "border-color 0.2s ease",
+    "&:hover": {
+      borderColor: theme.colors.accentText,
+      background: "transparent",
+    },
   };
 });
