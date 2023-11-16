@@ -1,4 +1,4 @@
-export const _fil = {
+export const _tl = {
   connect_wallet: {
     label: "Ikonekta ang Wallet",
   },
