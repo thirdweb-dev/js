@@ -114,7 +114,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
       localStorage.setItem("IS_PAPER_DEV", "true");
       localStorage.setItem(
         "PAPER_DEV_URL",
-        "http://embedded-wallet.thirdweb-dev.com",
+        "https://embedded-wallet.thirdweb-dev.com",
       );
     }
   }, []);

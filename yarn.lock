@@ -3628,13 +3628,13 @@
   resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.10.7.tgz#577e8a635048875de4c9d6d6a3c21d26ff9f9d08"
   integrity sha512-KQk5OMg5OH6rmbHZxuNROvdI+hKDIUxANaHlV+dPlNN7ED3qYQ/WkpY2qlXww1SIdeMlkIhpN/2L00rof0fXFw==
 
-"@thirdweb-dev/auth@0.0.0-dev-8b6ffeb-20231116101855":
-  version "0.0.0-dev-8b6ffeb-20231116101855"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/auth/-/auth-0.0.0-dev-8b6ffeb-20231116101855.tgz#32874a514b90b284138d8450b4b84e1c3a52f2c1"
-  integrity sha512-xHWL63vOBLoYMU7IMOYetVZLVB6SEXd4ajp8D429LBOVJeTbvleAwj4tBHYL9UHagqmN9KEIyqqZswRhZOQpEw==
+"@thirdweb-dev/auth@4.1.8-nightly-7912c263-20231116180046":
+  version "4.1.8-nightly-7912c263-20231116180046"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/auth/-/auth-4.1.8-nightly-7912c263-20231116180046.tgz#cc2e7fc300b7d4e7f80350574e4d7f51705f27a7"
+  integrity sha512-LpqgtgkAoahbl4+3Ceeufa7y6VKGOtR0WZmn9jHqwMP5kxolkXaT5jzvpOy0Y5aEoKa9/K3YwTcCEO4t5zxkpg==
   dependencies:
     "@fastify/cookie" "^9.1.0"
-    "@thirdweb-dev/wallets" "0.0.0-dev-8b6ffeb-20231116101855"
+    "@thirdweb-dev/wallets" "2.1.5-nightly-7912c263-20231116180046"
     cookie "^0.5.0"
     fastify-type-provider-zod "^1.1.9"
     uuid "^9.0.1"
@@ -3673,25 +3673,25 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/generated-abis/-/generated-abis-0.0.1.tgz#0d788d6aff0ac08f11e9eeb9ae4c8321845272a8"
   integrity sha512-vO9/3lSLO8smyyH1QVeYravSTzFwV1nf1C/Im1NBDPdH8//YvcbhtETGGiNfHWpyCvSi0vRYwvf+/7FKdwpDGQ==
 
-"@thirdweb-dev/react-core@0.0.0-dev-8b6ffeb-20231116101855":
-  version "0.0.0-dev-8b6ffeb-20231116101855"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react-core/-/react-core-0.0.0-dev-8b6ffeb-20231116101855.tgz#e5afdc7dde12591e0277a551545348beabab4fb1"
-  integrity sha512-kyK2IwuTOaqBRaMcFTAbx8DjaUCqc/jc4JPdV4FmN/sdAI5hivcVILhT8XX9v8JwF0wjLZFIUHnmIMppAGMitQ==
+"@thirdweb-dev/react-core@4.1.6-nightly-7912c263-20231116180046":
+  version "4.1.6-nightly-7912c263-20231116180046"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react-core/-/react-core-4.1.6-nightly-7912c263-20231116180046.tgz#ddf43121a5169cf9dbff1a2f47e431f1c8b588fc"
+  integrity sha512-aDUS1mkHYKco8upy8sq9cMiFHfkkQgBe3P4+XQbZ6VolnJN8rXaLIA5rGfGyQhBVXgrAvWHgc0msCErdn50skA==
   dependencies:
     "@tanstack/react-query" "^4.33.0"
-    "@thirdweb-dev/auth" "0.0.0-dev-8b6ffeb-20231116101855"
+    "@thirdweb-dev/auth" "4.1.8-nightly-7912c263-20231116180046"
     "@thirdweb-dev/chains" "0.1.58"
     "@thirdweb-dev/generated-abis" "^0.0.1"
     "@thirdweb-dev/sdk" "4.0.13"
     "@thirdweb-dev/storage" "2.0.4"
-    "@thirdweb-dev/wallets" "0.0.0-dev-8b6ffeb-20231116101855"
+    "@thirdweb-dev/wallets" "2.1.5-nightly-7912c263-20231116180046"
     mime "3.0.0"
     tiny-invariant "^1.2.0"
 
-"@thirdweb-dev/react@0.0.0-dev-8b6ffeb-20231116101855":
-  version "0.0.0-dev-8b6ffeb-20231116101855"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-0.0.0-dev-8b6ffeb-20231116101855.tgz#ef8d98bf3b0699829aa124722e32245eca6f3cd8"
-  integrity sha512-iUcYST8VdxlCg7Lfa+ZU35wIIl2T4ncIBlXGuXEqmpSeO131Ok4Ju3qWwUaqdGZp6gBpChmOHtmmErluI4Ru4w==
+"@thirdweb-dev/react@4.1.6-nightly-7912c263-20231116180046":
+  version "4.1.6-nightly-7912c263-20231116180046"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-4.1.6-nightly-7912c263-20231116180046.tgz#60681c7345f693ea5ead75f7956e2e02216a3a43"
+  integrity sha512-45gjccY+ExFOlVvrqVqn/c5RoPb5YnluaS2+G94TTU7Tk6r8SUrlWktX9SaM7hEA0w691a5rsK1D8pwIVHjCuw==
   dependencies:
     "@emotion/react" "^11.11.1"
     "@emotion/styled" "^11.11.0"
@@ -3706,8 +3706,8 @@
     "@react-icons/all-files" "^4.1.0"
     "@tanstack/react-query" "^4.33.0"
     "@thirdweb-dev/chains" "0.1.58"
-    "@thirdweb-dev/react-core" "0.0.0-dev-8b6ffeb-20231116101855"
-    "@thirdweb-dev/wallets" "0.0.0-dev-8b6ffeb-20231116101855"
+    "@thirdweb-dev/react-core" "4.1.6-nightly-7912c263-20231116180046"
+    "@thirdweb-dev/wallets" "2.1.5-nightly-7912c263-20231116180046"
     buffer "^6.0.3"
     copy-to-clipboard "^3.3.2"
     detect-browser "^5.3.0"
@@ -3754,10 +3754,10 @@
     form-data "^4.0.0"
     uuid "^9.0.1"
 
-"@thirdweb-dev/wallets@0.0.0-dev-8b6ffeb-20231116101855":
-  version "0.0.0-dev-8b6ffeb-20231116101855"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/wallets/-/wallets-0.0.0-dev-8b6ffeb-20231116101855.tgz#86e3cfab1145b5be64a15fd4a892f9c9dc47db75"
-  integrity sha512-yiJqVGzzKmi1Jy/6I0Yt4pWFOBYOWyX/MgWbOeshnVG/cu+BoCBL0qoaAfqxHyPRpxu/+q7ZJG/boQY2/CiUJw==
+"@thirdweb-dev/wallets@2.1.5-nightly-7912c263-20231116180046":
+  version "2.1.5-nightly-7912c263-20231116180046"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/wallets/-/wallets-2.1.5-nightly-7912c263-20231116180046.tgz#b9d68919691028389deac002e3b2eb28562128dc"
+  integrity sha512-liBDtJHq07wRxWkFW9W+1HbL9F2zypH9C2TUmYwTDEWp8lBXgbe8TnDOq72mnD7kjooDHZHj4bx7RlOrMzAOMw==
   dependencies:
     "@account-abstraction/contracts" "^0.5.0"
     "@account-abstraction/sdk" "^0.5.0"
