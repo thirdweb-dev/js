@@ -1,5 +1,11 @@
 # @thirdweb-dev/wallets
 
+## 2.1.4
+
+### Patch Changes
+
+- [#1958](https://github.com/thirdweb-dev/js/pull/1958) [`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix switch chain logic for embedded wallets
+
 ## 2.1.3
 
 ### Patch Changes
