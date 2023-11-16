@@ -5,7 +5,7 @@ import { _ja } from "./ja";
 import { _tr } from "./tr";
 import { Locale, LocaleType } from "./types";
 
-const locales = { en: _en, es: _es, ja: _ja };
+const locales = { en: _en, es: _es, ja: _ja, tr: _tr };
 
 export const setLocale = (locale: Locale): LocaleType => {
   if (typeof locale === 'string') {
