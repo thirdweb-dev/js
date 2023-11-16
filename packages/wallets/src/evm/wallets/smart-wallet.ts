@@ -1,4 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
+import { checkContractWalletSignature } from "./abstract";
 import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
@@ -15,7 +16,7 @@ import {
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
 // import { signTypedDataInternal } from "@thirdweb-dev/sdk";
-import { providers, utils, Bytes, Signer, Contract } from "ethers";
+import { providers, utils, Bytes, Signer } from "ethers";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -28,27 +29,6 @@ export {
 } from "../connectors/smart-wallet/utils";
 
 export type { PaymasterAPI } from "@account-abstraction/sdk";
-
-const EIP1271_ABI = [
-  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)",
-];
-const EIP1271_MAGICVALUE = "0x1626ba7e";
-
-async function checkSmartWalletSignature(
-  message: string,
-  signature: string,
-  address: string,
-  provider: providers.JsonRpcSigner,
-): Promise<boolean> {
-  const walletContract = new Contract(address, EIP1271_ABI, provider);
-  const _hashMessage = utils.hashMessage(message);
-  try {
-    const res = await walletContract.isValidSignature(_hashMessage, signature);
-    return res === EIP1271_MAGICVALUE;
-  } catch {
-    return false;
-  }
-}
 
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
@@ -124,7 +104,7 @@ export class SmartWallet extends AbstractClientWallet<
       signer = (signer as any).originalSigner;
     }
 
-    const chainId = await signer.getChainId();
+    const chainId = await erc4337Signer.getChainId();
     const address = await connector.getAddress();
     const AccountMessage = [{ name: "message", type: "bytes" }];
 
@@ -155,11 +135,11 @@ export class SmartWallet extends AbstractClientWallet<
         throw new Error("Failed to sign message");
       }
 
-      const isValid = await checkSmartWalletSignature(
+      const isValid = await checkContractWalletSignature(
         message as string,
         signature,
         address,
-        signer as providers.JsonRpcSigner,
+        chainId,
       );
 
       if (!isValid) {
