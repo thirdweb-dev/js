@@ -36,9 +36,10 @@ export const SelectAccount: React.FC<{
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
 
   // personal wallet
-  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
-  const personalWallet = hiddenConnection?.wallet;
-  const personalWalletChainId = hiddenConnection?.chainId;
+  const { personalWalletInfo } = useWalletContext();
+  const personalWallet = personalWalletInfo?.wallet;
+  const personalWalletChainId = personalWalletInfo?.chainId;
+  const switchChainPersonalWallet = personalWalletInfo?.switchChain;
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
@@ -72,13 +73,13 @@ export const SelectAccount: React.FC<{
     }
     setSafeConnectError(false);
     setSafeConnectionStatus("connecting");
+    console.log("not connection to personal wallet");
     try {
       await connectSafe(props.safeWalletConfig, {
         chain: selectedSafeChain,
         personalWallet: personalWallet,
         safeAddress,
       });
-      setIsConnectionHidden(false);
       props.onConnect();
     } catch (e) {
       setSafeConnectionStatus("failed");
@@ -332,7 +333,7 @@ export const SelectAccount: React.FC<{
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await hiddenConnection.switchChain(safeChainId);
+                  await switchChainPersonalWallet(safeChainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

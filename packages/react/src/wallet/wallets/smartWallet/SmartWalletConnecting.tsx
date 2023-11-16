@@ -24,10 +24,11 @@ export const SmartWalletConnecting: React.FC<{
   const locale = useTWLocale().wallets.smartWallet;
 
   // personal wallet
-  const { setIsConnectionHidden, hiddenConnection } = useWalletContext();
-  const personalWallet = hiddenConnection?.wallet;
-  const personalWalletChainId = hiddenConnection?.chainId;
+  const { personalWalletInfo } = useWalletContext();
+  const personalWallet = personalWalletInfo?.wallet;
+  const personalWalletChainId = personalWalletInfo?.chainId;
   const [switchError, setSwitchError] = useState(false);
+  const switchPersonalWalletChain = personalWalletInfo.switchChain;
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   // smart wallet
@@ -54,7 +55,6 @@ export const SmartWalletConnecting: React.FC<{
       await connect(props.smartWallet, {
         personalWallet: personalWallet,
       });
-      setIsConnectionHidden(false);
       onConnect();
     } catch (e) {
       console.error(e);
@@ -66,7 +66,6 @@ export const SmartWalletConnecting: React.FC<{
     connect,
     props.smartWallet,
     onConnect,
-    setIsConnectionHidden,
   ]);
 
   useEffect(() => {
@@ -161,7 +160,7 @@ export const SmartWalletConnecting: React.FC<{
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await hiddenConnection.switchChain(targetChain.chainId);
+                  await switchPersonalWalletChain(targetChain.chainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

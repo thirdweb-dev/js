@@ -27,7 +27,7 @@ import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { StyledButton, StyledUl, StyledUl } from "../../design-system/elements";
+import { StyledButton, StyledUl } from "../../design-system/elements";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 export const WalletSelector: React.FC<{

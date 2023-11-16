@@ -1,5 +1,3 @@
-import { Theme, radius } from "../../../design-system";
-import styled from "@emotion/styled";
 import {
   SetModalConfigCtx,
   WalletUIStatesProvider,
@@ -15,10 +13,15 @@ import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledDiv } from "../../../design-system/elements";
+import { radius } from "../../../design-system";
 
 export const ConnectEmbed = (
   props: Omit<
@@ -125,18 +128,21 @@ function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const EmbedContainer = styled.div<{ theme?: Theme }>`
-  color: ${(p) => p.theme.colors.primaryText};
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  line-height: normal;
-  border-radius: ${radius.xl};
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  overflow: hidden;
-  font-family: ${(p) => p.theme.fontFamily};
-  & *::selection {
-    background-color: ${(p) => p.theme.colors.primaryText};
-    color: ${(p) => p.theme.colors.modalBg};
-  }
-`;
+const EmbedContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.primaryText,
+    width: "100%",
+    boxSizing: "border-box",
+    position: "relative",
+    lineHeight: "normal",
+    borderRadius: radius.xl,
+    border: `1px solid ${theme.colors.borderColor}`,
+    overflow: "hidden",
+    fontFamily: theme.fontFamily,
+    "& *::selection": {
+      backgroundColor: theme.colors.primaryText,
+      color: theme.colors.modalBg,
+    },
+  };
+});
