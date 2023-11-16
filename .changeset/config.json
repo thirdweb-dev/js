@@ -23,8 +23,8 @@
     "bundlers-vite",
     "bundlers-webpack",
     "bundlers-swc",
-    "runtimes-node-cjs",
-    "runtimes-node-commonjs"
+    "runtimes-node-commonjs",
+    "runtimes-node-module"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
