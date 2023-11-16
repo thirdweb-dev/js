@@ -67,6 +67,7 @@ import {
   facebookIconUri,
   googleIconUri,
 } from "./icons/socialLogins";
+import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -356,6 +357,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <ConnectedToSmartWallet />
+      <EmbeddedWalletEmail />
 
       {/* Send and Receive */}
       <Container
@@ -849,4 +851,23 @@ function ConnectedToSmartWallet() {
   }
 
   return null;
+}
+
+function EmbeddedWalletEmail() {
+  const emailQuery = useEmbeddedWalletUserEmail();
+  const email = emailQuery.data;
+
+  if (email) {
+    return (
+      <Container
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text color="primaryText">{emailQuery.data}</Text>
+      </Container>
+    );
+  }
+
+  return undefined;
 }
