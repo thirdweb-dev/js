@@ -120,6 +120,12 @@ jobs:
           node-version: 20
           check-latest: true
 
+      # we use bun for some test suites
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
