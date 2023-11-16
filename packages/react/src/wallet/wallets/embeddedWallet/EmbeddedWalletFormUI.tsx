@@ -37,7 +37,7 @@ export const EmbeddedWalletFormUI = (props: {
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
     google: locale.signInWithGoogle,
-    // facebook: locale.signInWithFacebook,
+    facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
   };
 
@@ -76,13 +76,20 @@ export const EmbeddedWalletFormUI = (props: {
     }
   };
 
-  const showOnlyIcons = socialLogins.length > 2;
+  const showOnlyIcons = socialLogins.length > 1;
 
   return (
     <Container flex="column" gap="lg">
       {/* Social Login */}
       {hasSocialLogins && (
-        <Container flex={showOnlyIcons ? "row" : "column"} center="x" gap="sm">
+        <Container
+          flex={showOnlyIcons ? "row" : "column"}
+          center="x"
+          gap="sm"
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
           {socialLogins.map((loginMethod) => {
             const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
             return (
@@ -189,5 +196,6 @@ const SocialButton = /* @__PURE__ */ styled(Button)({
   },
   "&[data-variant='icon']": {
     padding: spacing.sm,
+    flexGrow: 1,
   },
 });

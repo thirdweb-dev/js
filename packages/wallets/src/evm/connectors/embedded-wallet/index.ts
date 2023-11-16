@@ -138,11 +138,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Chain not configured");
     }
 
-    if (
-      !this.user ||
-      !this.user.wallet ||
-      typeof this.user.wallet.getEthersJsSigner !== "function"
-    ) {
+    try {
       // update chain in wallet
       await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
       // update signer
@@ -150,6 +146,8 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         rpcEndpoint: chain.rpc[0] || "",
       });
       this.emit("change", { chain: { id: chainId, unsupported: false } });
+    } catch (e) {
+      console.warn("Failed to switch chain", e);
     }
   }
 
@@ -239,7 +237,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
       }
       case "apple":
-      // case "facebook":
+      case "facebook":
       case "google": {
         const oauthProvider = oauthStrategyToAuthProvider[strategy];
         return ewSDK.auth.loginWithOauth({
@@ -278,6 +276,6 @@ const oauthStrategyToAuthProvider: Record<
   AuthProvider
 > = {
   google: AuthProvider.GOOGLE,
-  // facebook: AuthProvider.FACEBOOK,
+  facebook: AuthProvider.FACEBOOK,
   apple: AuthProvider.APPLE,
 };

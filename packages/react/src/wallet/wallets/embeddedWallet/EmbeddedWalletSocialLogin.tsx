@@ -32,17 +32,17 @@ export const EmbeddedWalletSocialLogin = (
   const connectionStatus = useConnectionStatus();
   const themeObj = useCustomTheme();
 
-  const googleLogin = async () => {
+  const socialLogin = async () => {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openOauthSignInWindow("google", themeObj);
-      if (!googleWindow) {
-        throw new Error("Failed to open google login window");
+      const socialWindow = openOauthSignInWindow(props.strategy, themeObj);
+      if (!socialWindow) {
+        throw new Error(`Failed to open ${props.strategy} login window`);
       }
       const authResult = await embeddedWallet.authenticate({
-        strategy: "google",
-        openedWindow: googleWindow,
+        strategy: props.strategy,
+        openedWindow: socialWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
@@ -54,7 +54,7 @@ export const EmbeddedWalletSocialLogin = (
       props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
-      console.error("Error logging into google", e);
+      console.error(`Error sign in with ${props.strategy}`, e);
     }
   };
 
@@ -114,7 +114,7 @@ export const EmbeddedWalletSocialLogin = (
             <Container animate="fadein">
               <Text color="danger">{locale.failed}</Text>
               <Spacer y="lg" />
-              <Button variant="primary" onClick={googleLogin}>
+              <Button variant="primary" onClick={socialLogin}>
                 {locale.retry}
               </Button>
               <Spacer y="xxl" />
