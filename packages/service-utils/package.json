@@ -57,7 +57,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",

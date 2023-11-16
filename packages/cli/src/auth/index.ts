@@ -1,4 +1,3 @@
-import { LocalWallet } from "@thirdweb-dev/wallets";
 import assert from "assert";
 import chalk from "chalk";
 import fs from "fs";
@@ -30,7 +29,7 @@ type ConfigPaths = {
   credsConfigPath: string;
   cliWalletPath: string;
   tokenPath: string;
-}
+};
 
 export async function loginUser(
   configPaths: ConfigPaths,
@@ -56,12 +55,21 @@ export async function loginUser(
   }
 }
 
-export async function logoutUser(credsConfigPath: string, tokenPath: string, cliWalletPath: string) {
+export async function logoutUser(
+  credsConfigPath: string,
+  tokenPath: string,
+  cliWalletPath: string,
+) {
   try {
     ora("Logging out...").start();
-    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
+    const dirExists =
+      fs.existsSync(credsConfigPath) &&
+      fs.existsSync(tokenPath) &&
+      fs.existsSync(cliWalletPath);
     if (!dirExists) {
-      ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
+      ora().warn(
+        chalk.yellow("You are already logged out, did you mean to login?"),
+      );
       return;
     }
     fs.unlinkSync(credsConfigPath);
@@ -89,7 +97,9 @@ export const authenticateUser = async (
   props: LoginProps = defaultLoginProps,
 ) => {
   const { credsConfigPath, cliWalletPath, tokenPath } = props.configPaths;
-  const waitForDashboard = spinner("Waiting for a response from the dashboard").clear();
+  const waitForDashboard = spinner(
+    "Waiting for a response from the dashboard",
+  ).clear();
 
   // Get or generate a localwallet.
   const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
@@ -112,10 +122,16 @@ export const authenticateUser = async (
   let loginTimeoutHandle: NodeJS.Timeout;
   const timerPromise = new Promise<void>((resolve, reject) => {
     loginTimeoutHandle = setTimeout(() => {
-      logger.error("Login session timed out, server didn't receive a response in 5 minutes. Please try again.");
+      logger.error(
+        "Login session timed out, server didn't receive a response in 5 minutes. Please try again.",
+      );
       server.close();
       clearTimeout(loginTimeoutHandle);
-      reject(new Error("Login session timed out, server didn't receive a response in 5 minutes. Please try again."));
+      reject(
+        new Error(
+          "Login session timed out, server didn't receive a response in 5 minutes. Please try again.",
+        ),
+      );
     }, 300000);
   });
 
@@ -129,12 +145,15 @@ export const authenticateUser = async (
           }
         });
       }
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.setHeader('Access-Control-Allow-Origin', "https://thirdweb.com");
-      res.setHeader('Access-Control-Allow-Methods', 'POST');
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Origin", "https://thirdweb.com");
+      res.setHeader("Access-Control-Allow-Methods", "POST");
 
-      if (req.method === 'OPTIONS') {
-        res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
+      if (req.method === "OPTIONS") {
+        res.setHeader(
+          "Access-Control-Allow-Headers",
+          "content-type, baggage, sentry-trace",
+        );
         res.writeHead(200);
         res.end();
         return;
@@ -148,12 +167,18 @@ export const authenticateUser = async (
             res.writeHead(500, "Unable to authenticate with the dashboard!");
             res.end("Unable to authenticate with the dashboard!", () => {
               finish(new Error("Unable to authenticate with the dashboard!"));
-            })
-            reject(chalk.red("Something went wrong! Unable to authenticate with the dashboard."));
+            });
+            reject(
+              chalk.red(
+                "Something went wrong! Unable to authenticate with the dashboard.",
+              ),
+            );
             waitForDashboard.stop();
           }
           if (query.token) {
-            const token = Array.isArray(query.token) ? query.token[0] : query.token;
+            const token = Array.isArray(query.token)
+              ? query.token[0]
+              : query.token;
             const theirState = Array.isArray(query.state)
               ? query.state[0]
               : query.state;
@@ -171,13 +196,18 @@ export const authenticateUser = async (
             } else {
               // Save the token to the config file.
               // eslint-disable-next-line no-unused-expressions
-              fs.writeFileSync(tokenPath, token), {
-                encoding: "utf8",
-                mode: 0o600,
-              };
+              fs.writeFileSync(tokenPath, token),
+                {
+                  encoding: "utf8",
+                  mode: 0o600,
+                };
               res.end(() => {
                 waitForDashboard.clear();
-                console.log(chalk.green(`Successfully linked your account to this device`));
+                console.log(
+                  chalk.green(
+                    `Successfully linked your account to this device`,
+                  ),
+                );
                 finish();
               });
               logger.info(chalk.green(`\nSuccessfully logged in.`));
@@ -197,15 +227,21 @@ export const authenticateUser = async (
 
     server.listen(8976);
   });
-  console.log(`Automatically attempting to open a link to authenticate with our dashboard...\n`);
+  console.log(
+    `Automatically attempting to open a link to authenticate with our dashboard...\n`,
+  );
   waitForDashboard.start();
   // Adding this timeout since it feels weird for the browser to open before the spinner.
   setTimeout(async () => {
     await open(urlToOpen);
   }, 2000);
 
-  console.log(chalk.yellow(`If the browser doesn't open, please use this link to authenticate:\n`));
-  console.log(chalk.yellow(urlToOpen + '\n'));
+  console.log(
+    chalk.yellow(
+      `If the browser doesn't open, please use this link to authenticate:\n`,
+    ),
+  );
+  console.log(chalk.yellow(urlToOpen + "\n"));
 
   return Promise.race([timerPromise, loginPromise]);
 };
@@ -229,9 +265,13 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
   }
 }
 
-async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
+async function getOrGenerateLocalWallet(
+  configCredsPath: string,
+  cliWalletPath: string,
+) {
   // Get or prompt for password.
   const password = await getOrCreatePassword(configCredsPath);
+  const { LocalWallet } = await import("@thirdweb-dev/wallets");
   const wallet = new LocalWallet();
   const foundWallet = fs.existsSync(cliWalletPath);
 
@@ -265,9 +305,13 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
   });
 
   // write password
-  fs.writeFileSync(configCredsPath, JSON.stringify({
-    password: password,
-  }), "utf8");
+  fs.writeFileSync(
+    configCredsPath,
+    JSON.stringify({
+      password: password,
+    }),
+    "utf8",
+  );
 
   return wallet;
 }
@@ -280,13 +324,12 @@ export const validateKey = async (apiSecretKey: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-secret-key": apiSecretKey,
-      }
-    })
+      },
+    });
 
     if (response.status !== 200) {
       throw new Error("Unauthorized key");
     }
-
   } catch (error) {
     throw new Error(chalk.red("Unauthorized key"));
   }
