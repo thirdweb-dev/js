@@ -1,5 +1,17 @@
 # @thirdweb-dev/react
 
+## 4.1.6
+
+### Patch Changes
+
+- [#1954](https://github.com/thirdweb-dev/js/pull/1954) [`7912c263`](https://github.com/thirdweb-dev/js/commit/7912c263237708e9d2e9471873db7679e783b6f8) Thanks [@MananTank](https://github.com/MananTank)! - use Custom Theme context in styled components to prevent theme conflicts
+
+- [#1945](https://github.com/thirdweb-dev/js/pull/1945) [`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091) Thanks [@iketw](https://github.com/iketw)! - Enable Facebook Sign In for embedded wallet
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+  - @thirdweb-dev/react-core@4.1.6
+
 ## 4.1.5
 
 ### Patch Changes
