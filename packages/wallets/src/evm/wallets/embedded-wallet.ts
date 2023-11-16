@@ -114,7 +114,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
       return undefined;
     }
 
-    // omit non serializable/autoconnect-able
+    // TODO (ews) omit non serializable/autoconnect-able
     return {
       chainId: connectParams.chainId,
       authResult: {
