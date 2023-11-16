@@ -29,7 +29,11 @@ import estree from "prettier/plugins/estree";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { walletInfoRecord, WalletId } from "./walletInfoRecord";
 import { getCode } from "./getCode";
-import { WalletButton } from "./WalletButton";
+import {
+  RecommendedIconButton,
+  SocialButton,
+  WalletButton,
+} from "./WalletButton";
 import {
   ConnectModalInlinePreview,
   WelcomeScreen,
@@ -97,6 +101,8 @@ export const ConnectWalletPlayground: React.FC<{
     smartWalletOptions,
     setSmartWalletOptions,
     supportedWallets,
+    socialOptions,
+    setSocialOptions,
   } = usePlaygroundWallets({
     MetaMask: true,
     Coinbase: "recommended",
@@ -118,6 +124,7 @@ export const ConnectWalletPlayground: React.FC<{
       return `[${walletIds
         .map((walletId) => {
           const recommended = walletInfoRecord[walletId].component.recommended;
+          let walletCode = walletInfoRecord[walletId].code(recommended);
 
           if (walletId === "Safe") {
             const personalWalletIds = walletIds.filter((w) => w !== "Safe");
@@ -134,7 +141,27 @@ export const ConnectWalletPlayground: React.FC<{
             })`;
           }
 
-          const walletCode = walletInfoRecord[walletId].code(recommended);
+          if (walletId === "Email Wallet") {
+            if (!recommended && !socialOptions.length) {
+              walletCode = `embeddedWallet()`;
+            } else {
+              const options: Record<string, any> = {};
+              if (recommended) {
+                options.recommended = true;
+              }
+              if (socialOptions.length) {
+                options.auth = {
+                  options: socialOptions,
+                };
+              }
+
+              walletCode = `embeddedWallet(${JSON.stringify(
+                options,
+                null,
+                2,
+              )})`;
+            }
+          }
 
           return smartWalletOptions.enabled
             ? `smartWallet(${walletCode}, smartWalletOptions)`
@@ -208,6 +235,7 @@ export const ConnectWalletPlayground: React.FC<{
     tosUrl,
     privacyPolicyUrl,
     locale,
+    socialOptions,
   ]);
 
   const welcomeScreenContent = (
@@ -353,48 +381,98 @@ export const ConnectWalletPlayground: React.FC<{
     </Flex>
   );
 
+  const socialLoginMethods = [
+    {
+      name: "Sign in with Email",
+      key: "email",
+    },
+    {
+      name: "Sign in with Google",
+      key: "google",
+    },
+    {
+      name: "Sign in with Apple",
+      key: "apple",
+    },
+    {
+      name: "Sign in with Facebook",
+      key: "facebook",
+    },
+  ] as const;
+
   const socialLogins = (
     <>
-      <Heading size="label.md" color="heading">
-        Email & Social Logins
-      </Heading>
-      <Spacer height={3} />
-      <Grid gap={2} flexDir="column" templateColumns="1fr">
-        {/* Email Wallet */}
-        <WalletButton
-          name="Embedded Wallet"
-          subtitle="Email and Google sign in"
-          icon={walletInfoRecord["Email Wallet"].component.meta.iconURL}
-          onRecommendedClick={() => {
-            const current = walletSelection["Email Wallet"];
-            const newState = current === "recommended" ? true : "recommended";
+      <Flex justifyContent={"space-between"}>
+        <Flex gap={3} alignItems="center">
+          <Heading size="label.md" color="heading">
+            Email & Social Logins
+          </Heading>
+          <RecommendedIconButton
+            onClick={() => {
+              const current = walletSelection["Email Wallet"];
+              const newState = current === "recommended" ? true : "recommended";
 
-            if (newState === "recommended") {
-              trackCustomize("recommend-wallet", {
-                walletName: "Embedded Wallet",
+              if (newState === "recommended") {
+                trackCustomize("recommend-wallet", {
+                  walletName: "Embedded Wallet",
+                });
+              }
+
+              setWalletSelection({
+                ...walletSelection,
+                "Email Wallet":
+                  current === "recommended" ? true : "recommended",
               });
-            }
+            }}
+            isRecommended={walletSelection["Email Wallet"] === "recommended"}
+          />
+        </Flex>
 
-            setWalletSelection({
-              ...walletSelection,
-              "Email Wallet": current === "recommended" ? true : "recommended",
-            });
-          }}
-          recommended={walletSelection["Email Wallet"] === "recommended"}
+        <Switch
+          size="lg"
           isChecked={!!walletSelection["Email Wallet"]}
-          onSelect={() => {
-            const selected = !walletSelection["Email Wallet"];
-
+          onChange={() => {
             trackCustomize("wallet", {
               walletName: "Embedded Wallet",
             });
 
             setWalletSelection({
               ...walletSelection,
-              "Email Wallet": selected,
+              "Email Wallet": !walletSelection["Email Wallet"],
             });
           }}
         />
+      </Flex>
+
+      <Spacer height={3} />
+      <Grid
+        gap={2}
+        flexDir="column"
+        templateColumns="1fr"
+        opacity={walletSelection["Email Wallet"] ? 1 : 0.4}
+        pointerEvents={walletSelection["Email Wallet"] ? "auto" : "none"}
+      >
+        {socialLoginMethods.map((x) => {
+          return (
+            <SocialButton
+              key={x.key}
+              icon={x.key}
+              name={x.name}
+              isSelected={socialOptions.includes(x.key)}
+              onClick={() => {
+                trackCustomize("socialLogin", {
+                  option: x.key,
+                });
+
+                // do not allow to unselect all
+                if (socialOptions.length === 1 && socialOptions[0] === x.key) {
+                  return;
+                }
+                setSocialOptions(addOrRemoveFromList(socialOptions, x.key));
+              }}
+            />
+          );
+        })}
       </Grid>
     </>
   );
@@ -642,7 +720,10 @@ export const ConnectWalletPlayground: React.FC<{
       {eoalWallets}
       <Spacer height={8} />
       {socialLogins}
-      <Spacer height={10} />
+
+      <Spacer height={5} />
+      <Box borderTop="1px solid" borderColor="borderColor" />
+      <Spacer height={5} />
 
       {/* Guest Mode */}
       <SwitchFormItem
@@ -1183,4 +1264,11 @@ function CustomTab(props: {
       {props.label}
     </Button>
   );
+}
+
+function addOrRemoveFromList<T>(list: T[], item: T) {
+  if (list.includes(item)) {
+    return list.filter((x) => x !== item);
+  }
+  return [...list, item];
 }
