@@ -64,6 +64,11 @@ jobs:
           node-version: 20
           check-latest: true
 
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
