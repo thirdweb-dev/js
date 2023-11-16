@@ -36,6 +36,7 @@ const Goerli: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.Goerli].wrapped,
   },
+  // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-ethereum-goerli
   {
     address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
     name: "USD Coin",
@@ -52,10 +53,17 @@ const Polygon: CurrencyMetadata[] = [
     name: "Wrapped Ether",
     symbol: "WETH",
   },
+  // Source: https://www.circle.com/blog/native-usdc-now-available-on-polygon-pos
   {
-    address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
     name: "USD Coin",
     symbol: "USDC",
+  },
+  // Source: https://www.circle.com/blog/native-usdc-now-available-on-polygon-pos
+  {
+    address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    name: "USD Coin (Bridged)",
+    symbol: "USDC.e",
   },
   {
     address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
@@ -147,6 +155,7 @@ const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.AvalancheFujiTestnet].wrapped,
   },
+  // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-avalanche-testnet
   {
     address: "0x5425890298aed601595a70AB815c96711a31Bc65",
     name: "USD Coin",
@@ -157,6 +166,18 @@ const AvalancheFujiTestnet: CurrencyMetadata[] = [
 const Optimism: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.Optimism].wrapped,
+  },
+  // Source: https://www.circle.com/blog/now-available-usdc-on-op-mainnet
+  {
+    address: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+    name: "USD Coin",
+    symbol: "USDC",
+  },
+  // Source: https://www.circle.com/blog/now-available-usdc-on-op-mainnet
+  {
+    address: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+    name: "USD Coin (Bridged)",
+    symbol: "USDC.e",
   },
 ];
 
@@ -170,10 +191,17 @@ const Arbitrum: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.Arbitrum].wrapped,
   },
+  // Source: https://www.circle.com/blog/arbitrum-usdc-now-available
   {
     address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
     name: "USD Coin",
     symbol: "USDC",
+  },
+  // Source: https://www.circle.com/blog/arbitrum-usdc-now-available
+  {
+    address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+    name: "USD Coin (Bridged)",
+    symbol: "USDC.e",
   },
 ];
 
@@ -181,6 +209,7 @@ const ArbitrumGoerli: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.ArbitrumGoerli].wrapped,
   },
+  // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-arbitrum-goerli
   {
     address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
     name: "USD Coin",
