@@ -10,7 +10,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { ChainIcon } from "../../components/ChainIcon";
-import { Theme, fontSize, iconSize, spacing } from "../../design-system";
+import { fontSize, iconSize, spacing } from "../../design-system";
 import { Text } from "../../components/text";
 import { Skeleton } from "../../components/Skeleton";
 import { useMutation } from "@tanstack/react-query";
@@ -24,6 +24,8 @@ import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
 import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { StyledDiv } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 // TODO - use a better way to fetch token Info instead of useBalance
 
@@ -529,19 +531,20 @@ function SelectTokenButton(props: { token?: TokenInfo; onClick: () => void }) {
   );
 }
 
-const SelectTokenBtn = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  background: transparent;
-  justify-content: flex-start;
-  gap: ${spacing.sm};
-  padding: ${fontSize.xs};
-  &:hover {
-    background: ${(p) => p.theme.colors.secondaryButtonBg};
-    transform: scale(1.01);
-  }
-  transition:
-    background 200ms ease,
-    transform 150ms ease;
-`;
+const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    background: "transparent",
+    justifyContent: "flex-start",
+    gap: spacing.sm,
+    padding: spacing.sm,
+    "&:hover": {
+      background: theme.colors.secondaryButtonBg,
+      transform: "scale(1.01)",
+    },
+    transition: "background 200ms ease, transform 150ms ease",
+  };
+});
 
 function formatBalance(balanceData: {
   symbol: string;
@@ -552,9 +555,9 @@ function formatBalance(balanceData: {
   return Number(balanceData.displayValue).toFixed(3) + " " + balanceData.symbol;
 }
 
-const CurrencyBadge = styled.div<{ theme?: Theme }>`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: ${spacing.sm};
-`;
+const CurrencyBadge = /* @__PURE__ */ StyledDiv({
+  position: "absolute",
+  top: "50%",
+  transform: "translateY(-50%)",
+  right: spacing.sm,
+});

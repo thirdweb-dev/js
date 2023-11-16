@@ -120,6 +120,7 @@ export function jaDefault(): ThirdwebLocale {
           approveTransactionInSafe: "Safeで取引を承認",
           tryAgain: "再試行",
           failedToSignIn: "サインインに失敗しました",
+          inProgress: "確認待ち",
         },
       },
     },

@@ -118,6 +118,7 @@ export function enDefault() {
           approveTransactionInSafe: "Approve transaction in Safe",
           tryAgain: "Try Again",
           failedToSignIn: "Failed to Sign in",
+          inProgress: "Awaiting Confirmation",
         },
       },
     },

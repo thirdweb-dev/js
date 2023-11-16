@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   WalletConfig,
@@ -11,13 +10,14 @@ import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
 import { Img } from "../../../components/Img";
 import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -29,7 +29,7 @@ export const PaperFormUI = (props: {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
-  const themeObj = useTheme() as Theme;
+  const themeObj = useCustomTheme();
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
@@ -133,8 +133,8 @@ export const PaperFormUIScreen: React.FC<{
   );
 };
 
-const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  gap: ${spacing.sm};
-`;
+const SocialButton = /* @__PURE__ */ styled(Button)({
+  display: "flex",
+  justifyContent: "center",
+  gap: spacing.sm,
+});

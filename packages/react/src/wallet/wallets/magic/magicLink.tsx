@@ -12,7 +12,7 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { Img } from "../../../components/Img";
-import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
 import styled from "@emotion/styled";
@@ -40,6 +40,7 @@ import {
   twitchIconUri,
   twitterIconUri,
 } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export function magicLink(
   config: MagicLinkAdditionalOptions & {
@@ -507,21 +508,32 @@ function upperCaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: flex-start;
-  gap: ${spacing.md};
-  font-size: ${fontSize.md};
-  transition: background-color 0.2s ease;
-  &:hover {
-    background-color: ${(p) => p.theme.colors.secondaryButtonBg};
-  }
-  &:active {
-    box-shadow: none;
-  }
-`;
+const SocialButtonLarge = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    justifyContent: "flex-start",
+    gap: spacing.md,
+    fontSize: fontSize.md,
+    transition: "background-color 0.2s ease",
+    "&:hover": {
+      backgroundColor: theme.colors.secondaryButtonBg,
+    },
+    "&:active": {
+      boxShadow: "none",
+    },
+  };
+});
 
-const SocialIconButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  padding: ${spacing.xs};
-`;
+const SocialIconButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `1px solid ${theme.colors.borderColor}`,
+    padding: spacing.sm,
+    transition: "border-color 0.2s ease",
+    "&:hover": {
+      borderColor: theme.colors.accentText,
+      background: "transparent",
+    },
+  };
+});

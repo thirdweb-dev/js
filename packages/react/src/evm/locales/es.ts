@@ -121,6 +121,7 @@ export function esDefault(): ThirdwebLocale {
           approveTransactionInSafe: "Aprobar transacción en Safe",
           tryAgain: "Intentar de nuevo",
           failedToSignIn: "Error al iniciar sesión",
+          inProgress: "Esperando confirmación",
         },
       },
     },
