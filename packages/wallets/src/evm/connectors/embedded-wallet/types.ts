@@ -26,7 +26,7 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
-export type EmbeddedWalletOauthStrategy = "google" | "apple"; // | "facebook"
+export type EmbeddedWalletOauthStrategy = "google" | "apple" | "facebook";
 
 type OauthAuthParams = {
   strategy: EmbeddedWalletOauthStrategy;

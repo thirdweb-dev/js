@@ -46,6 +46,7 @@ import {
   MetaMaskWallet,
   type SmartWallet,
   walletIds,
+  type EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
@@ -61,6 +62,12 @@ import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { shortenString } from "@thirdweb-dev/react-core";
+import {
+  appleIconUri,
+  facebookIconUri,
+  googleIconUri,
+} from "./icons/socialLogins";
+import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -108,7 +115,9 @@ export const ConnectedWalletDetails: React.FC<{
   >();
   const walletContext = useWalletContext();
 
-  let activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
+  const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
+    string | undefined
+  >(undefined);
 
   // modals
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
@@ -137,14 +146,34 @@ export const ConnectedWalletDetails: React.FC<{
 
   const shortAddress = address ? shortenString(address) : "";
 
-  const isSmartWallet = activeWallet?.walletId === walletIds.smartWallet;
-
-  if (isSmartWallet) {
-    activeWalletIconURL = smartWalletIcon;
-  }
-
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
+
+  useEffect(() => {
+    if (activeWallet) {
+      if (activeWallet.walletId === walletIds.embeddedWallet) {
+        (activeWallet as EmbeddedWallet)
+          .getLastUsedAuthStrategy()
+          .then((auth) => {
+            if (auth === "apple") {
+              setOverrideWalletIconUrl(appleIconUri);
+            } else if (auth === "google") {
+              setOverrideWalletIconUrl(googleIconUri);
+            } else if (auth === "facebook") {
+              setOverrideWalletIconUrl(facebookIconUri);
+            }
+          });
+      } else if (activeWallet.walletId === walletIds.smartWallet) {
+        setOverrideWalletIconUrl(smartWalletIcon);
+      }
+    } else {
+      setOverrideWalletIconUrl(undefined);
+    }
+  }, [activeWallet]);
+
+  const walletIconUrl =
+    overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
+  const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -160,7 +189,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Img
         width={iconSize.lg}
         height={iconSize.lg}
-        src={avatarUrl || activeWalletIconURL}
+        src={avatarOrWalletIconUrl}
         className={`${TW_CONNECTED_WALLET}__wallet-icon`}
         style={{
           borderRadius: radius.sm,
@@ -254,7 +283,7 @@ export const ConnectedWalletDetails: React.FC<{
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
-          src={avatarUrl || activeWalletIconURL}
+          src={avatarOrWalletIconUrl}
           alt=""
           style={{
             borderRadius: radius.sm,
@@ -328,6 +357,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <ConnectedToSmartWallet />
+      <EmbeddedWalletEmail />
 
       {/* Send and Receive */}
       <Container
@@ -580,7 +610,7 @@ export const ConnectedWalletDetails: React.FC<{
         open={showReceiveModal}
         setOpen={setShowReceiveModal}
       >
-        <ReceiveFunds iconUrl={activeWalletIconURL} />
+        <ReceiveFunds iconUrl={walletIconUrl} />
       </Modal>
     </>
   );
@@ -821,4 +851,22 @@ function ConnectedToSmartWallet() {
   }
 
   return null;
+}
+
+function EmbeddedWalletEmail() {
+  const emailQuery = useEmbeddedWalletUserEmail();
+
+  if (emailQuery.data) {
+    return (
+      <Container
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text color="primaryText">{emailQuery.data}</Text>
+      </Container>
+    );
+  }
+
+  return undefined;
 }
