@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,10 +8,12 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
-import { Theme, fontSize } from "../../../design-system";
+import { fontSize } from "../../../design-system";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
 import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -28,7 +29,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 > = (props) => {
   const email = props.selectionData;
   const isWideModal = props.modalSize === "wide";
-  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
+  const locale = useTWLocale().wallets.embeddedWallet;
 
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
@@ -212,7 +213,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     return (
       <Container fullHeight flex="column" animate="fadein">
         <Container p="lg">
-          <ModalHeader title="Sign in" onBack={props.goBack} />
+          <ModalHeader title={locale.signIn} onBack={props.goBack} />
         </Container>
 
         <Container expand flex="column" center="y">
@@ -227,7 +228,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               }}
             >
               {!isWideModal && <Spacer y="xl" />}
-              <Text>{locale.enterCodeSendTo}</Text>
+              <Text>{locale.emailLoginScreen.enterCodeSendTo}</Text>
               <Spacer y="sm" />
               <Text color="primaryText">{email}</Text>
               <Spacer y="xl" />
@@ -251,7 +252,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               <FadeIn>
                 <Spacer y="md" />
                 <Text size="sm" color="danger" center>
-                  {locale.invalidCode}
+                  {locale.emailLoginScreen.invalidCode}
                 </Text>
               </FadeIn>
             )}
@@ -275,7 +276,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                       width: "100%",
                     }}
                   >
-                    {locale.verify}
+                    {locale.emailLoginScreen.verify}
                   </Button>
                 </Container>
               )}
@@ -289,7 +290,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               {emailStatus === "error" && (
                 <>
                   <Text size="sm" center color="danger">
-                    {locale.failedToSendCode}
+                    {locale.emailLoginScreen.failedToSendCode}
                   </Text>
                 </>
               )}
@@ -303,14 +304,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                     textAlign: "center",
                   }}
                 >
-                  <Text size="sm">{locale.sendingCode}</Text>
+                  <Text size="sm">{locale.emailLoginScreen.sendingCode}</Text>
                   <Spinner size="xs" color="secondaryText" />
                 </Container>
               )}
 
               {typeof emailStatus === "object" && (
                 <LinkButton onClick={sendEmail} type="button">
-                  {locale.resendCode}
+                  {locale.emailLoginScreen.resendCode}
                 </LinkButton>
               )}
             </Container>
@@ -323,15 +324,18 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   return null;
 };
 
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.colors.accentText};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  text-align: center;
-  font-weight: 500;
-  width: 100%;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+const LinkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    color: theme.colors.accentText,
+    fontSize: fontSize.sm,
+    cursor: "pointer",
+    textAlign: "center",
+    fontWeight: 500,
+    width: "100%",
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+  };
+});

@@ -11,7 +11,7 @@ import {
   InputButton,
 } from "../../../../components/buttons";
 import { Input, InputContainer } from "../../../../components/formElements";
-import { Theme, iconSize } from "../../../../design-system";
+import { iconSize } from "../../../../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Text } from "../../../../components/text";
@@ -19,6 +19,8 @@ import { useState } from "react";
 import { Spinner } from "../../../../components/Spinner";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useTWLocale } from "../../../../evm/providers/locale-provider";
+import { StyledDiv } from "../../../../design-system/elements";
+import { useCustomTheme } from "../../../../design-system/CustomThemeProvider";
 
 export function CreatePassword(props: {
   goBack: () => void;
@@ -173,16 +175,18 @@ export function CreatePassword(props: {
   );
 }
 
-const CheckboxButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.colors.accentText};
-  color: ${(p) => p.theme.colors.accentText} !important;
-  padding: 0;
-
-  &[aria-checked="true"] {
-    background: ${(p) => p.theme.colors.accentText};
-    color: ${(p) => p.theme.colors.modalBg} !important;
-  }
-`;
+const CheckboxButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `2px solid ${theme.colors.accentText}`,
+    color: `${theme.colors.accentText} !important`,
+    padding: 0,
+    "&[aria-checked='true']": {
+      background: theme.colors.accentText,
+      color: `${theme.colors.modalBg} !important`,
+    },
+  };
+});
 
 const bounceAnimation = keyframes`
 from {
@@ -193,6 +197,6 @@ to {
 }
 `;
 
-const BounceContainer = styled.div`
-  animation: ${bounceAnimation} 1s ease-in-out infinite alternate;
-`;
+const BounceContainer = /* @__PURE__ */ StyledDiv({
+  animation: `${bounceAnimation} 1s ease-in-out infinite alternate`,
+});
