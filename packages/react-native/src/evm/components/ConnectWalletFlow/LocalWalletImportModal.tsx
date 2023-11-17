@@ -188,14 +188,21 @@ export const LocalWalletImportModal = ({
             {l.common.password}
           </Text>
           <PasswordInput onChangeText={onChangeText} />
-          <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
-            {error}
-          </Text>
+          {error ? (
+            <Text
+              variant="bodySmall"
+              color="red"
+              marginVertical="xxs"
+              textAlign="left"
+            >
+              {error}
+            </Text>
+          ) : null}
           <Box
-            mb="xs"
             flexDirection="row"
             justifyContent="center"
             alignItems="center"
+            mt="sm"
           >
             <Box height={1} flex={1} backgroundColor="border" />
             <Text variant="bodySmall" textAlign="center" marginHorizontal="xxs">
@@ -214,23 +221,19 @@ export const LocalWalletImportModal = ({
                 fontFamily: theme.textVariants.defaults.fontFamily,
               },
             }}
-            containerProps={{ pl: "xxs" }}
+            containerProps={{ pl: "xxs", mt: "sm" }}
           />
-          <Box
-            flexDirection="row"
-            justifyContent="center"
-            paddingHorizontal="md"
-            mt="lg"
-          >
+          <Box flexDirection="row" justifyContent="flex-end" mt="lg">
             <BaseButton
-              backgroundColor="white"
+              backgroundColor="accentButtonColor"
+              borderColor="accentButtonColor"
               style={styles.modalButton}
               onPress={onImportPress}
             >
               {isImporting ? (
-                <ActivityIndicator size="small" color="black" />
+                <ActivityIndicator size="small" color="accentButtonTextColor" />
               ) : (
-                <Text variant="bodySmall" color="black">
+                <Text variant="bodySmall" color="accentButtonTextColor">
                   {l.common.import}
                 </Text>
               )}

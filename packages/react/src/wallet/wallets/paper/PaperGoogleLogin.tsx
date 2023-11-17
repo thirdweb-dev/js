@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -14,11 +13,12 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { Theme, iconSize } from "../../../design-system";
+import { iconSize } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { Img } from "../../../components/Img";
 import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
@@ -28,7 +28,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
-  const themeObj = useTheme() as Theme;
+  const themeObj = useCustomTheme();
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {

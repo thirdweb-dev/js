@@ -1041,31 +1041,72 @@ async function enginePrepareRequest(
   const types = {
     ForwardRequest,
   };
-  const message: ForwardRequestMessage | PermitRequestMessage = {
-    from: transaction.from,
-    to: transaction.to,
-    value: BigNumber.from(0).toString(),
-    gas: BigNumber.from(transaction.gasLimit).toString(),
-    nonce: BigNumber.from(nonce).toString(),
-    data: transaction.data,
-  };
+  let message: ForwardRequestMessage | PermitRequestMessage;
 
-  const { signature: sig } = await signTypedDataInternal(
-    signer,
-    domain,
-    types,
-    message,
-  );
-  const signature: BytesLike = sig;
+  if (
+    transaction.functionName === "approve" &&
+    transaction.functionArgs.length === 2
+  ) {
+    const spender = transaction.functionArgs[0];
+    const amount = transaction.functionArgs[1];
+    // TODO: support DAI permit by signDAIPermit
+    const { message: permit, signature: sig } = await signEIP2612Permit(
+      signer,
+      transaction.to,
+      transaction.from,
+      spender,
+      amount,
+    );
 
-  return {
-    method: "POST",
-    body: JSON.stringify({
-      request: message,
-      signature,
-      forwarderAddress,
-    }),
-  };
+    const { r, s, v } = utils.splitSignature(sig);
+
+    message = {
+      to: transaction.to,
+      owner: permit.owner,
+      spender: permit.spender,
+      value: BigNumber.from(permit.value).toString(),
+      nonce: BigNumber.from(permit.nonce).toString(),
+      deadline: BigNumber.from(permit.deadline).toString(),
+      r,
+      s,
+      v,
+    };
+
+    return {
+      method: "POST",
+      body: JSON.stringify({
+        type: "permit",
+        request: message,
+      }),
+    };
+  } else {
+    message = {
+      from: transaction.from,
+      to: transaction.to,
+      value: BigNumber.from(0).toString(),
+      gas: BigNumber.from(transaction.gasLimit).toString(),
+      nonce: BigNumber.from(nonce).toString(),
+      data: transaction.data,
+    };
+
+    const { signature: sig } = await signTypedDataInternal(
+      signer,
+      domain,
+      types,
+      message,
+    );
+    const signature: BytesLike = sig;
+
+    return {
+      method: "POST",
+      body: JSON.stringify({
+        type: "forward",
+        request: message,
+        signature,
+        forwarderAddress,
+      }),
+    };
+  }
 }
 
 async function defenderPrepareRequest(

@@ -1,5 +1,4 @@
 import BaseButton from "./BaseButton";
-import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
 import Text from "./Text";
 
@@ -22,16 +21,14 @@ export const SquareButton = ({
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      borderWidth={0}
+      borderWidth={1}
       borderRadius="sm"
-      width={size}
-      height={size}
+      borderColor="border"
+      padding="sm"
       onPress={onPress}
       {...props}
     >
-      <Box borderWidth={0} borderRadius="lg">
-        <ImageSvgUri imageUrl={iconUrl} width={size} height={size} />
-      </Box>
+      <ImageSvgUri imageUrl={iconUrl} width={size} height={size} />
       {name ? (
         <Text
           variant="bodySmallSecondary"
