@@ -74,16 +74,18 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const [chainNotFound, setChainNotFound] = useState(false);
   const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
 
-  // contractInfo is never undefined on this page
-  const { chain, chainSlug, contractAddress } =
-    useEVMContractInfo() as EVMContractInfo;
+  const contractInfo = useEVMContractInfo();
+
+  const chain = contractInfo?.chain || null;
+  const chainSlug = contractInfo?.chainSlug;
+  const contractAddress = contractInfo?.contractAddress || "";
 
   const setContractInfo = useSetEVMContractInfo();
   const supportedChainsSlugRecord = useSupportedChainsSlugRecord();
   const configuredChainsRecord = useSupportedChainsRecord();
 
   useEffect(() => {
-    if (!isSupportedChainsReady) {
+    if (!isSupportedChainsReady || !chainSlug) {
       return;
     }
 
@@ -266,7 +268,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
     client,
     toast,
   ]);
-
   if (chainNotFound) {
     return (
       <HomepageSection maxW="container.md" mx="auto">
