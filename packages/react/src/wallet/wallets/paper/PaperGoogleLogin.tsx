@@ -102,6 +102,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
               <Text
                 color="primaryText"
                 multiline
+                center
                 style={{
                   maxWidth: "250px",
                 }}
