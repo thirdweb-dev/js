@@ -152,7 +152,7 @@ export default async function handler(req: NextRequest) {
           src={imageData}
           width="1200px"
           height="630px"
-          tw="absolute object-cover"
+          tw="absolute"
         />
         {/* the actual component starts here */}
 
