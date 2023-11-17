@@ -1,6 +1,6 @@
-import { useWallet } from "@thirdweb-dev/react-core";
 import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
 import { useEffect, useState } from "react";
+import { useWallet } from "../../core/hooks/wallet-hooks";
 
 export const usePersonalWalletAddress = () => {
   const [personalWalletAddress, setPersonalWalletAddress] = useState<
