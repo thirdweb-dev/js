@@ -108,11 +108,12 @@ type ThirdwebWalletContextData = {
    */
   isConnectingToPersonalWallet: boolean;
   /**
-   * Set value of `connectingToPersonalWallet` flag
+   * Set value of `isConnectingToPersonalWallet` flag
    */
   setIsConnectingToPersonalWallet: (value: boolean) => void;
   /**
-   * wallet connection states of personal wallet
+   * object containing info about the connected personal wallet
+   * When `isConnectingToPersonalWallet` is set to true, and a wallet is connected after that, all the info about the connected wallet will be available here instead
    */
   personalWalletInfo: PersonalWalletInfo;
 };
@@ -174,31 +175,6 @@ export function ThirdwebWalletProvider(
   const [activeWalletConfig, setActiveWalletConfig] = useState<
     WalletConfig | undefined
   >();
-
-  const storeLastActiveChainId = useCallback(async (chainId: number) => {
-    const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
-      LAST_CONNECTED_WALLET_STORAGE_KEY,
-    );
-
-    if (!lastConnectedWallet) {
-      return;
-    }
-
-    try {
-      const parsedWallet = JSON.parse(lastConnectedWallet as string);
-      if (parsedWallet.connectParams) {
-        parsedWallet.connectParams.chainId = chainId;
-      } else {
-        parsedWallet.connectParams = { chainId };
-      }
-      await lastConnectedWalletStorage.setItem(
-        LAST_CONNECTED_WALLET_STORAGE_KEY,
-        JSON.stringify(parsedWallet),
-      );
-    } catch (error) {
-      console.error(`Error saving the last active chain: ${error}`);
-    }
-  }, []);
 
   const walletParams: WalletOptions = useMemo(() => {
     return {
@@ -326,6 +302,31 @@ export function ThirdwebWalletProvider(
       setPersonalWalletSigner,
     ],
   );
+
+  const storeLastActiveChainId = useCallback(async (chainId: number) => {
+    const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
+
+    if (!lastConnectedWallet) {
+      return;
+    }
+
+    try {
+      const parsedWallet = JSON.parse(lastConnectedWallet as string);
+      if (parsedWallet.connectParams) {
+        parsedWallet.connectParams.chainId = chainId;
+      } else {
+        parsedWallet.connectParams = { chainId };
+      }
+      await lastConnectedWalletStorage.setItem(
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
+        JSON.stringify(parsedWallet),
+      );
+    } catch (error) {
+      console.error(`Error saving the last active chain: ${error}`);
+    }
+  }, []);
 
   const switchChain = useCallback(
     async (chainId: number) => {
