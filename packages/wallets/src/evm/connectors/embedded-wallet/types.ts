@@ -1,15 +1,10 @@
 import type { Chain } from "@thirdweb-dev/chains";
-import {
-  AuthAndWalletRpcReturnType,
-  EmbeddedWalletConstructorType,
-  InitializedUser,
-} from "./implementations";
+import { AuthAndWalletRpcReturnType, InitializedUser } from "./implementations";
 
 export type EmbeddedWalletAdditionalOptions = {
   chain: Pick<Chain, "chainId" | "rpc">;
   clientId: string;
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
-  styles?: EmbeddedWalletConstructorType["styles"];
 };
 
 export interface EmbeddedWalletConnectorOptions {
@@ -17,7 +12,6 @@ export interface EmbeddedWalletConnectorOptions {
   chains: Chain[];
   chain: Pick<Chain, "chainId" | "rpc">;
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
-  styles?: EmbeddedWalletConstructorType["styles"];
 }
 
 export type EmbeddedWalletConnectionArgs = {

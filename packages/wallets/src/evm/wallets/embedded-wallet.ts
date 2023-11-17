@@ -91,7 +91,6 @@ export class EmbeddedWallet extends AbstractClientWallet<
         chain: this.chain,
         chains: this.chains,
         onAuthSuccess: this.options?.onAuthSuccess,
-        styles: this.options?.styles,
       });
     }
     return this.connector;
