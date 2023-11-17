@@ -2,10 +2,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "../../../components/Modal";
 import { IconButton } from "../../../components/buttons";
 import { iconSize, radius, shadow } from "../../../design-system";
-import {
-  SetModalConfigCtx,
-  WalletUIStatesProvider,
-} from "../../../evm/providers/wallet-ui-states-provider";
+import { WalletUIStatesProvider } from "../../../evm/providers/wallet-ui-states-provider";
 import {
   wideModalMaxHeight,
   modalMaxWidthCompact,
@@ -20,10 +17,9 @@ import {
   CustomThemeProvider,
   useCustomTheme,
 } from "../../../design-system/CustomThemeProvider";
-import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
+import { SyncedWalletUIStates } from "./ConnectEmbed";
 
 export const ConnectModalInline = (
   props: Omit<
@@ -108,39 +104,6 @@ export const ConnectModalInline = (
     </WalletUIStatesProvider>
   );
 };
-
-function SyncedWalletUIStates(
-  props: ComponentProps<typeof WalletUIStatesProvider>,
-) {
-  const setModalConfig = useContext(SetModalConfigCtx);
-  const locale = useTWLocale();
-
-  // update modalConfig on props change
-  useEffect(() => {
-    setModalConfig((c) => ({
-      ...c,
-      title: props.title || locale.connectWallet.defaultModalTitle,
-      theme: props.theme || "dark",
-      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
-      termsOfServiceUrl: props.termsOfServiceUrl,
-      privacyPolicyUrl: props.privacyPolicyUrl,
-      welcomeScreen: props.welcomeScreen,
-      titleIconUrl: props.titleIconUrl,
-    }));
-  }, [
-    props.title,
-    props.theme,
-    props.modalSize,
-    props.termsOfServiceUrl,
-    props.privacyPolicyUrl,
-    props.welcomeScreen,
-    props.titleIconUrl,
-    setModalConfig,
-    locale.connectWallet.defaultModalTitle,
-  ]);
-
-  return <WalletUIStatesProvider {...props} />;
-}
 
 const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();

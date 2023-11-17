@@ -95,7 +95,7 @@ export const ConnectEmbed = (
   );
 };
 
-function SyncedWalletUIStates(
+export function SyncedWalletUIStates(
   props: ComponentProps<typeof WalletUIStatesProvider>,
 ) {
   const setModalConfig = useContext(SetModalConfigCtx);
