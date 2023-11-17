@@ -61,7 +61,9 @@ export async function getUser<
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken(req);
 
+  console.log("************************************");
   if (!token) {
+    console.log("NO TOKEN");
     return null;
   }
 
@@ -75,6 +77,7 @@ export async function getUser<
       },
     });
   } catch (err) {
+    console.log(JSON.stringify(err, null, 2));
     return null;
   }
 
