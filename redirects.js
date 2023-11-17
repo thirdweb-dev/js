@@ -17,11 +17,6 @@ function redirects() {
       permanent: false,
     },
     {
-      source: "/tos",
-      destination: "/Thirdweb_Terms_of_Service.pdf",
-      permanent: false,
-    },
-    {
       source: "/contracts/release",
       destination: "/contracts/publish",
       permanent: false,

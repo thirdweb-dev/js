@@ -31,6 +31,9 @@ export enum PageId {
   // thirdweb..com/privacy
   Privacy = "privacy-page",
 
+  // thirdweb..com/tos
+  ToS = "tos-page",
+
   // thirdweb.com/cli/login
   CliLoginPage = "cli-login-page",
 
