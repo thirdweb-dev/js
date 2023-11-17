@@ -15,8 +15,8 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-// import { signTypedDataInternal } from "@thirdweb-dev/sdk";
 import { providers, utils, Bytes, Signer } from "ethers";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -82,47 +82,28 @@ export class SmartWallet extends AbstractClientWallet<
    * @returns the signature of the message
    */
   public async signMessage(message: Bytes | string): Promise<string> {
-    const erc4337Signer = await this.getSigner();
+    // Deploy smart wallet if needed
     const connector = await this.getConnector();
+    await connector.deployIfNeeded();
 
-    // Deploy smart wallet if not already deployed.
-    const isDeployed = await connector.isDeployed();
-    if (!isDeployed) {
-      console.log(
-        "Account contract not deployed yet. Deploying account before signing message",
-      );
-      const tx = await erc4337Signer.sendTransaction({
-        to: await this.getAddress(),
-        data: "0x",
-      });
-      await tx.wait();
-    }
-
-    // Get underlying signer
-    let signer = erc4337Signer;
-    if ((signer as any).originalSigner) {
-      signer = (signer as any).originalSigner;
-    }
-
+    const erc4337Signer = await this.getSigner();
     const chainId = await erc4337Signer.getChainId();
     const address = await connector.getAddress();
-    const AccountMessage = [{ name: "message", type: "bytes" }];
 
     /**
      * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
      * If this fails, we fallback to the legacy signing method.
      */
     try {
-      const signature = await (
-        signer as providers.JsonRpcSigner
-      )._signTypedData(
+      const result = await signTypedDataInternal(
+        erc4337Signer,
         {
           name: "Account",
           version: "1",
           chainId,
           verifyingContract: address,
         },
-        { AccountMessage },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
         {
           message: utils.defaultAbiCoder.encode(
             ["bytes32"],
@@ -131,13 +112,9 @@ export class SmartWallet extends AbstractClientWallet<
         },
       );
 
-      if (!signature) {
-        throw new Error("Failed to sign message");
-      }
-
       const isValid = await checkContractWalletSignature(
         message as string,
-        signature,
+        result.signature,
         address,
         chainId,
       );
@@ -146,9 +123,9 @@ export class SmartWallet extends AbstractClientWallet<
         throw new Error("Invalid signature");
       }
 
-      return signature;
+      return result.signature;
     } catch {
-      return await this.signMessageLegacy(signer, message);
+      return await this.signMessageLegacy(erc4337Signer, message);
     }
   }
 
