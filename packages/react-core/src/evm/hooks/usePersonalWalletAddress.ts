@@ -1,4 +1,4 @@
-import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 import { useEffect, useState } from "react";
 import { useWallet } from "../../core/hooks/wallet-hooks";
 
@@ -12,8 +12,8 @@ export const usePersonalWalletAddress = () => {
     (async () => {
       if (activeWallet?.walletId === SmartWallet.id) {
         const address = await (
-          activeWallet.getPersonalWallet() as AbstractClientWallet
-        ).getAddress();
+          await activeWallet.getPersonalWallet()?.getSigner()
+        )?.getAddress();
         setPersonalWalletAddress(address);
       }
     })();
