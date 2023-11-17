@@ -756,27 +756,27 @@ function usePersonalWalletConnection() {
   }, []);
 
   const disconnect = useCallback(async () => {
-    handleDisconnect();
     if (wallet) {
       await wallet.disconnect();
     }
+    handleDisconnect();
   }, [wallet, handleDisconnect]);
 
   useEffect(() => {
     if (wallet) {
-      const update = async () => {
+      const updateChainId = () => {
         wallet?.getChainId().then((_chainId) => {
           setChainId(_chainId);
         });
-        wallet.getSigner().then((_signer) => {
-          setSigner(_signer);
-        });
       };
 
-      wallet?.getChainId().then((_chainId) => {
-        setChainId(_chainId);
-      });
+      const update = async () => {
+        updateChainId();
+        const _signer = await wallet.getSigner();
+        setSigner(_signer);
+      };
 
+      updateChainId();
       wallet.addListener("change", update);
       wallet.addListener("disconnect", handleDisconnect);
 
