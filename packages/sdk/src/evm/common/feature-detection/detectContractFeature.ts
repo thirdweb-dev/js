@@ -1,7 +1,7 @@
 import { FeatureName } from "../../constants/contract-features";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { AbiSchema } from "../../schema/contracts/custom";
-import { BaseContract } from "ethers";
+import type { BaseContract } from "ethers";
 import { isExtensionEnabled } from "./isFeatureEnabled";
 
 /**
