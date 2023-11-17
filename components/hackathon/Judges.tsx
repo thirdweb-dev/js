@@ -1,9 +1,12 @@
-import { Box, Flex, SimpleGrid, VStack } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
+import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
-export const Judges: React.FC = () => {
+interface JudgesProps {
+  TRACKING_CATEGORY: string;
+}
+
+export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
   const judges = [
     {
       name: "Furqan Rhydan",
@@ -15,7 +18,7 @@ export const Judges: React.FC = () => {
       name: "Chris Ahn",
       twitter: "ahnchrisj",
       description: "Partner, Haun Ventures",
-      image: "/assets/landingpage/chris.jpg",
+      image: "/assets/landingpage/chris.png",
     },
     {
       name: "Michael Anderson",
@@ -58,7 +61,7 @@ export const Judges: React.FC = () => {
             <TrackedLink
               href={`https://twitter.com/${judge.twitter}`}
               isExternal
-              category="solanathon"
+              category={TRACKING_CATEGORY}
               label={judge.name}
               textAlign="center"
             >

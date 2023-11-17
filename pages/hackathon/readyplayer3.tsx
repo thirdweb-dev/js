@@ -485,7 +485,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
 
           {/* Schedule */}
           <HomepageSection zIndex={1} my={20}>
-            <ScheduleSection scheduleItems={scheduleItems} />
+            <ScheduleSection
+              TRACKING_CATEGORY="readyplayer3"
+              scheduleItems={scheduleItems}
+            />
 
             <Box
               pointerEvents={"none"}

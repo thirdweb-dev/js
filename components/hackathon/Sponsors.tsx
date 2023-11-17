@@ -1,4 +1,4 @@
-import { Flex, Image, SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Text, TrackedLink } from "tw-components";
 
@@ -23,9 +23,13 @@ const sponsors = [
     logo: require("public/assets/landingpage/framework.svg"),
     link: "https://framework.ventures/",
   },
-] as const;
+];
 
-export const Sponsors: React.FC = () => {
+interface SponsorsProps {
+  TRACKING_CATEGORY: string;
+}
+
+export const Sponsors = ({ TRACKING_CATEGORY }: SponsorsProps) => {
   return (
     <Flex w="full" pb={20} flexDir="column" mx="auto" gap={4} mt={24}>
       <Text size="label.lg" textAlign="center">
@@ -42,7 +46,7 @@ export const Sponsors: React.FC = () => {
             key={sponsor.name}
             href={sponsor.link}
             isExternal
-            category="solanathon"
+            category={TRACKING_CATEGORY}
             label={sponsor.name}
           >
             <ChakraNextImage

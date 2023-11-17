@@ -14,11 +14,13 @@ interface ScheduleItem {
 interface ScheduleSectionProps {
   scheduleItems: ScheduleItem[];
   addToCalendar?: string;
+  TRACKING_CATEGORY: string;
 }
 
 export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
   scheduleItems,
   addToCalendar,
+  TRACKING_CATEGORY,
 }) => {
   const trackEvent = useTrack();
 
@@ -86,7 +88,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                 isExternal
                 onClick={() =>
                   trackEvent({
-                    category: "solanathon",
+                    category: TRACKING_CATEGORY,
                     action: "event",
                     label: title,
                   })

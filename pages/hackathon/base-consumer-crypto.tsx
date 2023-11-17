@@ -28,7 +28,7 @@ const Timer = dynamic(() => import("components/hackathon/Timer"), {
   ssr: false,
 });
 
-const TRACKING_CATEGORY = "hackathon";
+const TRACKING_CATEGORY = "base-thirdweb-hacakthon";
 
 const Hackathon = () => {
   const trackEvent = useTrack();
@@ -151,7 +151,7 @@ const Hackathon = () => {
           </Flex>
         </HomepageSection>
         <HomepageSection>
-          <Sponsors />
+          <Sponsors TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </HomepageSection>
         <Divider mt={16} />
 
@@ -280,11 +280,11 @@ const Hackathon = () => {
             </Flex>
           </HomepageSection>
 
-          <Judges />
+          <Judges TRACKING_CATEGORY={TRACKING_CATEGORY} />
 
           <FAQ TRACKING_CATEGORY={TRACKING_CATEGORY} />
 
-          <HackathonFooter />
+          <HackathonFooter TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </Flex>
       </Flex>
     </DarkMode>

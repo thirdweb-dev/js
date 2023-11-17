@@ -1,11 +1,16 @@
-import { Flex, Icon, Image, VStack } from "@chakra-ui/react";
+import { Icon, VStack } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
-import type { FC } from "react";
 import { Heading, LinkButton } from "tw-components";
 
-export const HackathonFooter: FC = () => {
+interface HackathonFooterProps {
+  TRACKING_CATEGORY: string;
+}
+
+export const HackathonFooter = ({
+  TRACKING_CATEGORY,
+}: HackathonFooterProps) => {
   const trackEvent = useTrack();
 
   return (
@@ -46,7 +51,7 @@ export const HackathonFooter: FC = () => {
         href="https://docs.google.com/forms/d/1CT8LPG1DrcpTKAW38ScVzTcyBNwS6ANOk6xpfjpXLAs/edit"
         onClick={() =>
           trackEvent({
-            category: "solanathon",
+            category: TRACKING_CATEGORY,
             action: "click",
             label: "register-now",
           })
