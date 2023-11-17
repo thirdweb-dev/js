@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 import { DAppMetaData } from "../types/dAppMeta";
 import type {
   WalletConfig,
@@ -104,7 +103,8 @@ type ThirdwebWalletContextData = {
   activeChainSetExplicitly: boolean;
   clientId?: string;
   /**
-   * flag indicating whether to treat any connection that happens as a personal wallet connection or not
+   * flag indicating whether to treat any wallet that gets connected after setting this flag as a "personal" wallet
+   * If a wallet is treated as a "personal" wallet, It's details like signer, connectionStatus, wallet, walletConfig will be saved in `personalWalletInfo` object instead of the main context
    */
   isConnectingToPersonalWallet: boolean;
   /**
@@ -113,7 +113,7 @@ type ThirdwebWalletContextData = {
   setIsConnectingToPersonalWallet: (value: boolean) => void;
   /**
    * object containing info about the connected personal wallet
-   * When `isConnectingToPersonalWallet` is set to true, and a wallet is connected after that, all the info about the connected wallet will be available here instead
+   * When `isConnectingToPersonalWallet` is set to true, and a wallet is connected after that, all the info about the connected wallet will be stored in this object
    */
   personalWalletInfo: PersonalWalletInfo;
 };
@@ -566,7 +566,6 @@ export function ThirdwebWalletProvider(
         await _personalWallet.disconnect();
       }
     }
-    console.log("disconnect the", { wallet, isConnectingToPersonalWallet });
     onWalletDisconnect();
   }, [
     activeWallet,

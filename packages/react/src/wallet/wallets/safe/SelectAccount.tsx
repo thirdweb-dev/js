@@ -73,7 +73,6 @@ export const SelectAccount: React.FC<{
     }
     setSafeConnectError(false);
     setSafeConnectionStatus("connecting");
-    console.log("not connection to personal wallet");
     try {
       await connectSafe(props.safeWalletConfig, {
         chain: selectedSafeChain,
