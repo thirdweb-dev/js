@@ -12,6 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import {
   useConnect,
+  useConnectionStatus,
   useSupportedChains,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
@@ -48,9 +49,8 @@ export const SelectAccount: React.FC<{
   const [safeAddress, setSafeAddress] = useState("");
   const [safeChainId, setSafeChainId] = useState(-1);
   const [safeConnectError, setSafeConnectError] = useState(false);
-  const [safeConnectionStatus, setSafeConnectionStatus] = useState<
-    "idle" | "connecting" | "failed"
-  >("idle");
+  const connectionStatus = useConnectionStatus();
+
   const chains = useSupportedChains();
 
   const supportedChains = chains.filter((c) =>
@@ -72,7 +72,6 @@ export const SelectAccount: React.FC<{
       return;
     }
     setSafeConnectError(false);
-    setSafeConnectionStatus("connecting");
     try {
       await connectSafe(props.safeWalletConfig, {
         chain: selectedSafeChain,
@@ -81,7 +80,6 @@ export const SelectAccount: React.FC<{
       });
       props.onConnect();
     } catch (e) {
-      setSafeConnectionStatus("failed");
       console.error(e);
       setSafeConnectError(true);
     }
@@ -326,7 +324,7 @@ export const SelectAccount: React.FC<{
               }}
               onClick={async () => {
                 if (!personalWallet) {
-                  throw new Error("No active wallet");
+                  throw new Error("No personal wallet connected");
                 }
                 setSafeConnectError(false);
                 setSwitchError(false);
@@ -352,7 +350,7 @@ export const SelectAccount: React.FC<{
             <Button
               variant="accent"
               type="submit"
-              disabled={safeConnectionStatus === "connecting"}
+              disabled={connectionStatus === "connecting"}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -360,10 +358,10 @@ export const SelectAccount: React.FC<{
                 width: modalConfig.modalSize === "compact" ? "100%" : undefined,
               }}
             >
-              {safeConnectionStatus === "connecting"
+              {connectionStatus === "connecting"
                 ? locale.connecting
                 : locale.connectToSafe}
-              {safeConnectionStatus === "connecting" && (
+              {connectionStatus === "connecting" && (
                 <Spinner size="sm" color="accentButtonText" />
               )}
             </Button>

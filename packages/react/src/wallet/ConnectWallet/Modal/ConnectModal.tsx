@@ -62,8 +62,9 @@ export const ConnectModalContent = (props: {
   const authConfig = useThirdwebAuthContext();
 
   const closeModal = () => {
-    personalWalletInfo?.disconnect();
+    personalWalletInfo.disconnect();
     setIsConnectingToPersonalWallet(false);
+
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
       setScreen(initialScreen);
@@ -280,7 +281,8 @@ export const ConnectModal = () => {
           setIsWalletModalOpen(value);
           if (!value) {
             setIsConnectingToPersonalWallet(false);
-            personalWalletInfo?.disconnect();
+            personalWalletInfo.disconnect();
+
             const requiresSignIn = auth?.loginOptional
               ? false
               : !!authConfig?.authUrl && !user?.address;

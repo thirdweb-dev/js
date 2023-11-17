@@ -5,6 +5,7 @@ import { iconSize, spacing, fontSize } from "../../../design-system";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
   useConnect,
+  useConnectionStatus,
   useWalletContext,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
@@ -36,7 +37,7 @@ export const SmartWalletConnecting: React.FC<{
   const targetChain = useWalletContext().activeChain;
   const mismatch = targetChain.chainId !== personalWalletChainId;
   const [connectError, setConnectError] = useState(false);
-  const [isConnectingSafe, setIsConnectingSafe] = useState(false);
+  const connectionStatus = useConnectionStatus();
 
   const { onConnect } = props;
   const connectStarted = useRef(false);
@@ -48,7 +49,6 @@ export const SmartWalletConnecting: React.FC<{
       return;
     }
     setConnectError(false);
-    setIsConnectingSafe(true);
 
     try {
       connectStarted.current = true;
@@ -74,7 +74,7 @@ export const SmartWalletConnecting: React.FC<{
     }
   }, [mismatch, handleConnect, personalWallet, personalWalletChainId]);
 
-  if (!connectError && (isConnectingSafe || !mismatch)) {
+  if (!connectError && (connectionStatus === "connecting" || !mismatch)) {
     return (
       <Container
         fullHeight
