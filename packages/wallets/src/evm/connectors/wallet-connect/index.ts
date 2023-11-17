@@ -361,6 +361,7 @@ export class WalletConnectConnector extends WagmiConnector<
           ]),
         ),
 
+        // @ts-expect-error - WalletConnect types are incorrect
         qrModalOptions: this.options.qrModalOptions,
       });
     }

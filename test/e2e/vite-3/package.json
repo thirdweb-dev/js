@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@playwright/test": "1.31.2",
-    "@vitejs/plugin-react": "^2",
-    "serve": "^14.0.1",
+    "@vitejs/plugin-react": "^2.2.0",
+    "serve": "^14.2.1",
     "vite": "^3.2.7",
     "vite-plugin-node-polyfills": "^0.7.0"
   },

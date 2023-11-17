@@ -8,7 +8,7 @@
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "^5"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.31.2",
-    "serve": "^14.0.1"
+    "serve": "^14.2.1"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/cra-5"
 }
