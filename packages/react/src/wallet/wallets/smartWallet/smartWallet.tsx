@@ -81,7 +81,7 @@ export const SmartConnectUI = (
         setIsConnectingToPersonalWallet(false);
       },
       goBack() {
-        personalWalletInfo?.disconnect();
+        personalWalletInfo.disconnect();
         setIsConnectingToPersonalWallet(false);
         props.goBack();
       },
@@ -97,7 +97,7 @@ export const SmartConnectUI = (
   return (
     <SmartWalletConnecting
       onBack={() => {
-        personalWalletInfo?.disconnect();
+        personalWalletInfo.disconnect();
         setIsConnectingToPersonalWallet(false);
         props.goBack();
       }}
