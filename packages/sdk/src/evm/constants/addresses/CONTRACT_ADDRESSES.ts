@@ -107,11 +107,11 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: AddressZero,
   },
   [ChainId.ArbitrumSepolia]: {
-    openzeppelinForwarder: "",
-    openzeppelinForwarderEOA: "",
+    openzeppelinForwarder: AddressZero,
+    openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
-    twFactory: "",
-    twRegistry: TWRegistry_address,
+    twFactory: AddressZero,
+    twRegistry: AddressZero,
     twBYOCRegistry: AddressZero,
   },
   [ChainId.Optimism]: {
