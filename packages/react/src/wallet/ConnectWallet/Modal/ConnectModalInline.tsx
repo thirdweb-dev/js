@@ -63,9 +63,9 @@ export const ConnectModalInline = (
       <CrossContainer>
         <IconButton type="button" aria-label="Close">
           <Cross2Icon
+            width={iconSize.md}
+            height={iconSize.md}
             style={{
-              width: iconSize.md,
-              height: iconSize.md,
               color: "inherit",
             }}
           />

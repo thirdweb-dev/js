@@ -186,7 +186,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
 const SocialButton = /* @__PURE__ */ styled(Button)({
   "&[data-variant='full']": {
     display: "flex",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     gap: spacing.md,
     fontSize: fontSize.md,
     transition: "background-color 0.2s ease",

@@ -1,4 +1,4 @@
-import got from "got/dist/source";
+import got from "got";
 
 export const getStartOrDev = async (name: string) => {
   try {
