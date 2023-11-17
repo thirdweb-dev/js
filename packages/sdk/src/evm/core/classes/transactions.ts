@@ -1041,7 +1041,9 @@ async function enginePrepareRequest(
   const types = {
     ForwardRequest,
   };
-  let message: ForwardRequestMessage | PermitRequestMessage;
+  let message:
+    | ForwardRequestMessage
+    | Omit<PermitRequestMessage, "r" | "s" | "v">;
 
   if (
     transaction.functionName === "approve" &&
@@ -1058,8 +1060,6 @@ async function enginePrepareRequest(
       amount,
     );
 
-    const { r, s, v } = utils.splitSignature(sig);
-
     message = {
       to: transaction.to,
       owner: permit.owner,
@@ -1067,9 +1067,6 @@ async function enginePrepareRequest(
       value: BigNumber.from(permit.value).toString(),
       nonce: BigNumber.from(permit.nonce).toString(),
       deadline: BigNumber.from(permit.deadline).toString(),
-      r,
-      s,
-      v,
     };
 
     return {
@@ -1077,6 +1074,7 @@ async function enginePrepareRequest(
       body: JSON.stringify({
         type: "permit",
         request: message,
+        signature: sig,
       }),
     };
   } else {
