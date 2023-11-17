@@ -1,18 +1,15 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 
-// ignore assets, api - only intercept page routes
+// only match the routes we actually care about (profile and publish pages)
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - assets/
+    /**
+     * Matches:
+     * - /<address|ens>
+     * - /<address|ens>/<slug>
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|assets).*)",
+    "/((?:0x[a-fA-F0-9]{40}|\\S+.eth).*)",
   ],
 };
 
