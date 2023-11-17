@@ -123,6 +123,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
               modalSize === "compact"
                 ? modalMaxWidthCompact
                 : modalMaxWidthWide,
+            ...props.style,
           }}
         >
           {modalSize === "compact" ? (
