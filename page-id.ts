@@ -103,8 +103,8 @@ export enum PageId {
   // thirdweb.com/chainlist
   ChainsLanding = "chains-landing",
 
-  // thirdweb.com/hackathon/solanathon
-  // SolanaHackathonLanding = "solanathon",
+  // thirdweb.com/hackathon
+  HackathonLanding = "hackathon",
   ReadyPlayer3Landing = "readyplayer3",
 
   // thirdweb.com/404

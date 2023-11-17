@@ -22,7 +22,7 @@ interface StatBoxProps {
   showRightBorder?: boolean;
 }
 
-const Stat: React.FC<StatBoxProps> = ({
+export const Stat: React.FC<StatBoxProps> = ({
   title,
   description,
   showRightBorder,

@@ -8,11 +8,14 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { HeadingSizes } from "theme/typography";
 import { Heading, Text } from "tw-components";
 
 interface LandingFAQProps {
   TRACKING_CATEGORY: string;
   title: string;
+  hideMarginTop?: boolean;
+  titleSize?: HeadingSizes;
   faqs: {
     title: string;
     description: React.ReactNode;
@@ -22,6 +25,8 @@ interface LandingFAQProps {
 export const LandingFAQ: React.FC<LandingFAQProps> = ({
   TRACKING_CATEGORY,
   title = "FAQ",
+  hideMarginTop,
+  titleSize,
   faqs,
 }) => {
   const trackEvent = useTrack();
@@ -36,7 +41,7 @@ export const LandingFAQ: React.FC<LandingFAQProps> = ({
 
   return (
     <Flex
-      mt={12}
+      mt={hideMarginTop ? 0 : 12}
       flexDirection="column"
       w="full"
       maxW={{
@@ -44,7 +49,7 @@ export const LandingFAQ: React.FC<LandingFAQProps> = ({
         lg: "container.md",
       }}
     >
-      <Heading size="title.md" alignSelf="center">
+      <Heading size={titleSize || "title.md"} alignSelf="center">
         {title}
       </Heading>
       <Accordion mt={8} allowMultiple rounded="xl">
