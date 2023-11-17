@@ -156,13 +156,12 @@ export function ThirdwebWalletProvider(
     wallet: personalWallet,
     setWallet: setPersonalWallet,
     setSigner: setPersonalWalletSigner,
-    setConnectionStatus: setPersonalWalletConnectionStatus,
+    setStatus: setPersonalWalletStatus,
     setWalletConfig: setPersonalWalletConfig,
   } = personalWalletConnection;
 
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
-  const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("unknown");
+  const [status, setStatus] = useState<ConnectionStatus>("unknown");
 
   const [activeWallet, setActiveWallet] = useState<
     WalletInstance | undefined
@@ -243,10 +242,10 @@ export function ThirdwebWalletProvider(
 
       if (isConnectingToPersonalWallet) {
         setPersonalWalletConfig(walletConfig);
-        setPersonalWalletConnectionStatus("connected");
+        setPersonalWalletStatus("connected");
       } else {
         setActiveWalletConfig(walletConfig);
-        setConnectionStatus("connected");
+        setStatus("connected");
       }
 
       const _signer = await wallet.getSigner();
@@ -298,7 +297,7 @@ export function ThirdwebWalletProvider(
       isConnectingToPersonalWallet,
       setPersonalWallet,
       setPersonalWalletConfig,
-      setPersonalWalletConnectionStatus,
+      setPersonalWalletStatus,
       setPersonalWalletSigner,
     ],
   );
@@ -371,7 +370,7 @@ export function ThirdwebWalletProvider(
     // if explicitly set to false, don't auto connect
     // by default, auto connect
     if (props.shouldAutoConnect === false) {
-      setConnectionStatus("disconnected");
+      setStatus("disconnected");
       return;
     }
 
@@ -380,7 +379,7 @@ export function ThirdwebWalletProvider(
       return;
     }
 
-    if (connectionStatus !== "unknown") {
+    if (status !== "unknown") {
       // only try to auto connect if we're in the unknown state
       return;
     }
@@ -391,7 +390,7 @@ export function ThirdwebWalletProvider(
       const walletInfo = await getLastConnectedWalletInfo();
 
       if (!walletInfo) {
-        setConnectionStatus("disconnected");
+        setStatus("disconnected");
         return;
       }
 
@@ -401,7 +400,7 @@ export function ThirdwebWalletProvider(
 
       if (!walletObj) {
         // last connected wallet is no longer present in the supported wallets
-        setConnectionStatus("disconnected");
+        setStatus("disconnected");
         return;
       }
 
@@ -431,7 +430,7 @@ export function ThirdwebWalletProvider(
           } catch (e) {
             console.error("Failed to auto connect personal wallet");
             console.error(e);
-            setConnectionStatus("disconnected");
+            setStatus("disconnected");
             return;
           }
 
@@ -442,7 +441,7 @@ export function ThirdwebWalletProvider(
           };
         } else {
           // last used personal wallet is no longer present in the supported wallets
-          setConnectionStatus("disconnected");
+          setStatus("disconnected");
           return;
         }
       }
@@ -451,7 +450,7 @@ export function ThirdwebWalletProvider(
       const wallet = createWalletInstance(walletObj);
 
       try {
-        setConnectionStatus("connecting");
+        setStatus("connecting");
         await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
           ms: autoConnectTimeout,
           message: autoConnectTimeoutErrorMessage,
@@ -468,7 +467,7 @@ export function ThirdwebWalletProvider(
             LAST_CONNECTED_WALLET_STORAGE_KEY,
           );
         }
-        setConnectionStatus("disconnected");
+        setStatus("disconnected");
       }
     }
 
@@ -479,10 +478,10 @@ export function ThirdwebWalletProvider(
     setConnectedWallet,
     props.shouldAutoConnect,
     activeWallet,
-    connectionStatus,
+    status,
     autoConnectTimeout,
     props.signerWallet,
-    setConnectionStatus,
+    setStatus,
   ]);
 
   const connectWallet = useCallback(
@@ -496,9 +495,9 @@ export function ThirdwebWalletProvider(
 
       const wallet = createWalletInstance(WalletObj);
       if (isConnectingToPersonalWallet) {
-        setPersonalWalletConnectionStatus("connecting");
+        setPersonalWalletStatus("connecting");
       } else {
-        setConnectionStatus("connecting");
+        setStatus("connecting");
       }
 
       try {
@@ -515,9 +514,9 @@ export function ThirdwebWalletProvider(
       } catch (e: any) {
         console.error(`Error connecting to wallet: ${e}`);
         if (isConnectingToPersonalWallet) {
-          setPersonalWalletConnectionStatus("disconnected");
+          setPersonalWalletStatus("disconnected");
         } else {
-          setConnectionStatus("disconnected");
+          setStatus("disconnected");
         }
         throw e;
       }
@@ -528,7 +527,7 @@ export function ThirdwebWalletProvider(
       chainToConnect?.chainId,
       createWalletInstance,
       isConnectingToPersonalWallet,
-      setPersonalWalletConnectionStatus,
+      setPersonalWalletStatus,
       setConnectedWallet,
     ],
   );
@@ -538,12 +537,12 @@ export function ThirdwebWalletProvider(
       LAST_CONNECTED_WALLET_STORAGE_KEY,
     );
     if (isConnectingToPersonalWallet) {
-      setPersonalWalletConnectionStatus("disconnected");
+      setPersonalWalletStatus("disconnected");
       setPersonalWalletSigner(undefined);
       setPersonalWallet(undefined);
       setPersonalWalletConfig(undefined);
     } else {
-      setConnectionStatus("disconnected");
+      setStatus("disconnected");
       setSigner(undefined);
       setActiveWallet(undefined);
       setActiveWalletConfig(undefined);
@@ -551,7 +550,7 @@ export function ThirdwebWalletProvider(
   }, [
     isConnectingToPersonalWallet,
     setPersonalWallet,
-    setPersonalWalletConnectionStatus,
+    setPersonalWalletStatus,
     setPersonalWalletSigner,
     setPersonalWalletConfig,
   ]);
@@ -627,6 +626,17 @@ export function ThirdwebWalletProvider(
     disconnectWallet,
   ]);
 
+  const setConnectionStatus = useCallback(
+    (value: ConnectionStatus) => {
+      if (isConnectingToPersonalWallet) {
+        setPersonalWalletStatus(value);
+      } else {
+        setStatus(value);
+      }
+    },
+    [isConnectingToPersonalWallet, setPersonalWalletStatus],
+  );
+
   return (
     <ThirdwebWalletContext.Provider
       value={{
@@ -636,8 +646,8 @@ export function ThirdwebWalletProvider(
         signer,
         activeWallet,
         activeWalletConfig,
-        connectionStatus,
-        setConnectionStatus,
+        connectionStatus: status,
+        setConnectionStatus: setConnectionStatus,
         createWalletInstance: createWalletInstance,
         createdWalletInstance: createdWalletInstance,
         createWalletStorage: props.createWalletStorage,
@@ -656,7 +666,7 @@ export function ThirdwebWalletProvider(
           wallet: personalWalletConnection.wallet,
           signer: personalWalletConnection.signer,
           walletConfig: personalWalletConnection.walletConfig,
-          connectionStatus: personalWalletConnection.connectionStatus,
+          connectionStatus: personalWalletConnection.status,
           chainId: personalWalletConnection.chainId,
           disconnect: personalWalletConnection.disconnect,
           switchChain: personalWalletConnection.switchChain,
@@ -742,14 +752,13 @@ const autoConnectTimeoutErrorMessage = `Failed to Auto connect. Auto connect tim
 
 function usePersonalWalletConnection() {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
-  const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("unknown");
+  const [status, setStatus] = useState<ConnectionStatus>("unknown");
   const [wallet, setWallet] = useState<WalletInstance | undefined>();
   const [walletConfig, setWalletConfig] = useState<WalletConfig | undefined>();
   const [chainId, setChainId] = useState<number | undefined>(undefined);
 
   const handleDisconnect = useCallback(async () => {
-    setConnectionStatus("disconnected");
+    setStatus("disconnected");
     setSigner(undefined);
     setWallet(undefined);
     setWalletConfig(undefined);
@@ -809,8 +818,8 @@ function usePersonalWalletConnection() {
     setWallet: setWallet,
     walletConfig: walletConfig,
     setWalletConfig: setWalletConfig,
-    connectionStatus: connectionStatus,
-    setConnectionStatus: setConnectionStatus,
+    status: status,
+    setStatus: setStatus,
     chainId: chainId,
     disconnect,
     switchChain,
