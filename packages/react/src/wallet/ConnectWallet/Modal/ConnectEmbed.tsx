@@ -2,47 +2,43 @@ import {
   SetModalConfigCtx,
   WalletUIStatesProvider,
 } from "../../../evm/providers/wallet-ui-states-provider";
-import {
-  wideModalMaxHeight,
-  modalMaxWidthCompact,
-  modalMaxWidthWide,
-  defaultTheme,
-} from "../constants";
+import { modalMaxWidthCompact, defaultTheme } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
-import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
+import { useConnectionStatus } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
   CustomThemeProvider,
   useCustomTheme,
 } from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
-import { ConnectWalletProps } from "../ConnectWallet";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
-import { radius } from "../../../design-system";
+import { Theme, radius } from "../../../design-system";
 
-export const ConnectEmbed = (
-  props: Omit<
-    ConnectWalletProps,
-    | "detailsBtn"
-    | "dropdownPosition"
-    | "auth"
-    | "networkSelector"
-    | "hideTestnetFaucet"
-    | "switchToActiveChain"
-    | "supportedTokens"
-    | "hideSwitchToPersonalWallet"
-  >,
-) => {
+export type ConnectEmbedProps = {
+  className?: string;
+  theme?: "dark" | "light" | Theme;
+
+  style?: React.CSSProperties;
+
+  /**
+   * If provided, Embed will show a Terms of Service message at the bottom with below link
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * If provided, Embed will show a Privacy Policy message at the bottom with below link
+   */
+  privacyPolicyUrl?: string;
+};
+
+export const ConnectEmbed = (props: ConnectEmbedProps) => {
   const connectionStatus = useConnectionStatus();
 
   const { screen, setScreen, initialScreen } = useScreen();
-  const walletConfigs = useWallets();
-  const modalSize =
-    (isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize) ||
-    "compact";
+  const modalSize = "compact" as const;
 
   const content = (
     <ConnectModalContent
@@ -58,11 +54,9 @@ export const ConnectEmbed = (
   const walletUIStatesProps = {
     theme: props.theme || defaultTheme,
     modalSize: modalSize,
-    title: props.modalTitle,
+    title: undefined,
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
-    welcomeScreen: props.welcomeScreen,
-    titleIconUrl: props.modalTitleIconUrl,
     isEmbed: true,
   };
 
@@ -76,18 +70,12 @@ export const ConnectEmbed = (
         <EmbedContainer
           className={props.className}
           style={{
-            height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
-            maxWidth:
-              modalSize === "compact"
-                ? modalMaxWidthCompact
-                : modalMaxWidthWide,
+            height: "auto",
+            maxWidth: modalMaxWidthCompact,
+            ...props.style,
           }}
         >
-          {modalSize === "compact" ? (
-            <DynamicHeight> {content} </DynamicHeight>
-          ) : (
-            content
-          )}
+          <DynamicHeight> {content} </DynamicHeight>
           <SyncedWalletUIStates {...walletUIStatesProps} />
         </EmbedContainer>
       </CustomThemeProvider>
@@ -132,6 +120,7 @@ const EmbedContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.primaryText,
+    background: theme.colors.modalBg,
     width: "100%",
     boxSizing: "border-box",
     position: "relative",
