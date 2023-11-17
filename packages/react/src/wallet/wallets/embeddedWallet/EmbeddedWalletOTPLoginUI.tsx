@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,10 +8,12 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
-import { Theme, fontSize } from "../../../design-system";
+import { fontSize } from "../../../design-system";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
 import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -221,17 +222,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               e.preventDefault();
             }}
           >
-            <div
-              style={{
-                textAlign: "center",
-              }}
-            >
+            <Container flex="column" center="x" px="lg">
               {!isWideModal && <Spacer y="xl" />}
               <Text>{locale.emailLoginScreen.enterCodeSendTo}</Text>
               <Spacer y="sm" />
               <Text color="primaryText">{email}</Text>
               <Spacer y="xl" />
-            </div>
+            </Container>
 
             <OTPInput
               isInvalid={verifyStatus === "invalid"}
@@ -323,15 +320,18 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   return null;
 };
 
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.colors.accentText};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  text-align: center;
-  font-weight: 500;
-  width: 100%;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+const LinkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    color: theme.colors.accentText,
+    fontSize: fontSize.sm,
+    cursor: "pointer",
+    textAlign: "center",
+    fontWeight: 500,
+    width: "100%",
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+  };
+});

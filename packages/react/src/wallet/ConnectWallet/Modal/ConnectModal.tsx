@@ -22,13 +22,15 @@ import {
   onModalUnmount,
 } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
-import styled from "@emotion/styled";
 import { Container, noScrollBar } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { Theme } from "../../../design-system";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { SignatureScreen } from "../SignatureScreen";
+import { StyledDiv } from "../../../design-system/elements";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -293,13 +295,14 @@ export const ConnectModal = () => {
   );
 };
 
-const LeftContainer = /* @__PURE__ */ styled.div<{
-  theme?: Theme;
-}>`
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  ${noScrollBar}
-  position: relative;
-  border-right: 1px solid ${(p) => p.theme.colors.separatorLine};
-`;
+const LeftContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto",
+    ...noScrollBar,
+    position: "relative",
+    borderRight: `1px solid ${theme.colors.separatorLine}`,
+  };
+});

@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import {
   ConnectUIProps,
   useConnectionStatus,
@@ -16,9 +15,9 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
-import { Theme } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const EmbeddedWalletSocialLogin = (
   props: ConnectUIProps<EmbeddedWallet> & {
@@ -31,7 +30,7 @@ export const EmbeddedWalletSocialLogin = (
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
-  const themeObj = useTheme() as Theme;
+  const themeObj = useCustomTheme();
 
   const socialLogin = async () => {
     try {
@@ -94,6 +93,7 @@ export const EmbeddedWalletSocialLogin = (
             <Container animate="fadein">
               <Text
                 color="primaryText"
+                center
                 multiline
                 style={{
                   maxWidth: "250px",

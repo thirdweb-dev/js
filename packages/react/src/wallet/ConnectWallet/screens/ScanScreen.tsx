@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { fontSize, iconSize } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { Text } from "../../../components/text";
 import { Button } from "../../../components/buttons";
@@ -50,7 +50,14 @@ export const ScanScreen: React.FC<{
 
           <Spacer y="lg" />
 
-          <Text center multiline balance>
+          <Text
+            center
+            multiline
+            balance
+            style={{
+              paddingInline: spacing.lg,
+            }}
+          >
             {props.qrScanInstruction}
           </Text>
         </div>

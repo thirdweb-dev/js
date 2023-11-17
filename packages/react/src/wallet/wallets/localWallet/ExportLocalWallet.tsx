@@ -2,8 +2,7 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { ModalDescription } from "../../../components/modalElements";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import styled from "@emotion/styled";
+import { iconSize, spacing } from "../../../design-system";
 import { fontSize } from "../../../design-system";
 import {
   EyeClosedIcon,
@@ -29,6 +28,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledP } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const ExportLocalWallet: React.FC<{
   onBack?: () => void;
@@ -259,8 +260,11 @@ function downloadJsonWalletFile(data: string) {
   URL.revokeObjectURL(a.href);
 }
 
-const SavedWalletAddress = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  color: ${(props) => props.theme.colors.secondaryText};
-  margin: 0;
-`;
+const SavedWalletAddress = /* @__PURE__ */ StyledP(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.md,
+    color: theme.colors.secondaryText,
+    margin: 0,
+  };
+});

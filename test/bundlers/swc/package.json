@@ -1,0 +1,22 @@
+{
+  "name": "bundlers-swc",
+  "private": true,
+  "dependencies": {
+    "@thirdweb-dev/auth": "workspace:*",
+    "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
+    "@thirdweb-dev/merkletree": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
+    "@thirdweb-dev/storage": "workspace:*",
+    "@thirdweb-dev/wallets": "workspace:*"
+  },
+  "scripts": {
+    "e2e": "bun run.ts"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.63",
+    "@swc/core": "^1.3.71",
+    "execa": "^8.0.1",
+    "ora": "^6.3.1"
+  }
+}

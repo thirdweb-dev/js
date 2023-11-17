@@ -1,5 +1,40 @@
 # @thirdweb-dev/react
 
+## 4.1.7
+
+### Patch Changes
+
+- [#1969](https://github.com/thirdweb-dev/js/pull/1969) [`4c5e40ae`](https://github.com/thirdweb-dev/js/commit/4c5e40ae4eccdca9158a52ec0d677dec4c72ed00) Thanks [@MananTank](https://github.com/MananTank)! - Fix text alignment issue in embedded-wallet/paper
+
+- [#1965](https://github.com/thirdweb-dev/js/pull/1965) [`13029e32`](https://github.com/thirdweb-dev/js/commit/13029e328609eecfd3f0a180d6003c03c67caac1) Thanks [@MananTank](https://github.com/MananTank)! - - Fix Minor Safari / iOS UI issues
+
+  - Adjust Magic Link's social icons UI to match EmbeddedWallet's social icons UI
+  - expose hook `useEmbeddedWalletUserEmail` for fetching email from connected embeddedWallet. The hook returns the `react-query` query object. See example below:
+
+  ```tsx
+  const emailQuery = useEmbeddedWalletUserEmail();
+
+  const email = emailQuery.data;
+  const isFetchingEmail = emailQuery.isFetching;
+  ```
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/sdk@4.0.14
+  - @thirdweb-dev/wallets@2.1.6
+  - @thirdweb-dev/react-core@4.1.7
+
+## 4.1.6
+
+### Patch Changes
+
+- [#1954](https://github.com/thirdweb-dev/js/pull/1954) [`7912c263`](https://github.com/thirdweb-dev/js/commit/7912c263237708e9d2e9471873db7679e783b6f8) Thanks [@MananTank](https://github.com/MananTank)! - use Custom Theme context in styled components to prevent theme conflicts
+
+- [#1945](https://github.com/thirdweb-dev/js/pull/1945) [`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091) Thanks [@iketw](https://github.com/iketw)! - Enable Facebook Sign In for embedded wallet
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+  - @thirdweb-dev/react-core@4.1.6
+
 ## 4.1.5
 
 ### Patch Changes
