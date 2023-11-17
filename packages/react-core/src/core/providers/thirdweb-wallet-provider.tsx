@@ -576,32 +576,20 @@ export function ThirdwebWalletProvider(
 
   // when wallet's network or account is changed using the extension, update UI
   useEffect(() => {
-    const wallet = isConnectingToPersonalWallet ? personalWallet : activeWallet;
-
-    if (!wallet) {
+    if (!activeWallet) {
       return;
     }
 
     const update = async () => {
-      const _signer = await wallet.getSigner();
-      if (isConnectingToPersonalWallet) {
-        setPersonalWalletSigner(_signer);
-      } else {
-        setSigner(_signer);
-      }
+      const _signer = await activeWallet.getSigner();
+      setSigner(_signer);
     };
 
-    wallet.addListener("change", () => {
-      update();
-    });
-
-    wallet.addListener("disconnect", () => {
-      onWalletDisconnect();
-    });
-
+    activeWallet.addListener("change", update);
+    activeWallet.addListener("disconnect", onWalletDisconnect);
     return () => {
-      wallet.removeListener("change");
-      wallet.removeListener("disconnect");
+      activeWallet.removeListener("change", update);
+      activeWallet.removeListener("disconnect", onWalletDisconnect);
     };
   }, [
     activeWallet,
@@ -760,30 +748,46 @@ function usePersonalWalletConnection() {
   const [walletConfig, setWalletConfig] = useState<WalletConfig | undefined>();
   const [chainId, setChainId] = useState<number | undefined>(undefined);
 
-  useEffect(() => {
-    if (wallet) {
-      const update = () => {
-        wallet?.getChainId().then((_chainId) => {
-          setChainId(_chainId);
-        });
-      };
-
-      update();
-      wallet.addListener("change", update);
-    } else {
-      setChainId(undefined);
-    }
-  }, [wallet]);
-
-  const disconnect = useCallback(async () => {
+  const handleDisconnect = useCallback(async () => {
     setConnectionStatus("disconnected");
     setSigner(undefined);
     setWallet(undefined);
     setWalletConfig(undefined);
+  }, []);
+
+  const disconnect = useCallback(async () => {
+    handleDisconnect();
     if (wallet) {
       await wallet.disconnect();
     }
-  }, [wallet]);
+  }, [wallet, handleDisconnect]);
+
+  useEffect(() => {
+    if (wallet) {
+      const update = async () => {
+        wallet?.getChainId().then((_chainId) => {
+          setChainId(_chainId);
+        });
+        wallet.getSigner().then((_signer) => {
+          setSigner(_signer);
+        });
+      };
+
+      wallet?.getChainId().then((_chainId) => {
+        setChainId(_chainId);
+      });
+
+      wallet.addListener("change", update);
+      wallet.addListener("disconnect", handleDisconnect);
+
+      return () => {
+        wallet.removeListener("change", update);
+        wallet.removeListener("disconnect", handleDisconnect);
+      };
+    } else {
+      setChainId(undefined);
+    }
+  }, [disconnect, handleDisconnect, wallet]);
 
   const switchChain = useCallback(
     async (_chainId: number) => {
