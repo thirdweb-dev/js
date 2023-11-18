@@ -109,17 +109,16 @@ export async function fetchAccountFromApi(
       authorization: `Bearer ${jwt}`,
     },
   });
-  let json: ApiAccountResponse;
+
+  let text = "";
   try {
-    json = await response.json();
+    text = await response.text();
+    return JSON.parse(text);
   } catch (e) {
     throw new Error(
-      `Error fetching account from API: ${response.status} - ${
-        response.statusText
-      } - ${await response.text()}`,
+      `Error fetching account from API: ${response.status} - ${text}`,
     );
   }
-  return json;
 }
 
 export async function updateRateLimitedAt(
