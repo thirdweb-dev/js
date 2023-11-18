@@ -1,10 +1,25 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
-import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
-import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { isRouterContract } from "../../common/plugin/isRouterContract";
-import { ContractSource } from "../../schema/contracts/custom";
-import { SDKOptionsOutput } from "../../schema/sdk-options";
+import {
+  CallOverrides,
+  Contract,
+  providers,
+  constants,
+  BigNumber,
+} from "ethers";
+import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import {
+  type ConnectionInfo,
+  concat,
+  hexlify,
+  solidityPack,
+  splitSignature,
+} from "ethers/lib/utils";
+
+// ========================= Types =========================
+import type EventEmitter from "eventemitter3";
+import type { ContractSource } from "../../schema/contracts/custom";
+import type { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
   DeployTransactionOptions,
   ParseTransactionReceipt,
@@ -13,37 +28,17 @@ import type {
   TransactionOptionsWithContractInfo,
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
-import { GaslessTransaction, TransactionResult } from "../types";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
+import type { GaslessTransaction, TransactionResult } from "../types";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
+import type { ForwardRequestMessage, PermitRequestMessage } from "../types";
+import type {
   BaseContract,
-  CallOverrides,
-  Contract,
   ContractFactory,
   ContractTransaction,
-  providers,
   Signer,
-  utils,
-  constants,
+  BytesLike,
 } from "ethers";
-import { BigNumber } from "ethers";
-import invariant from "tiny-invariant";
-import EventEmitter from "eventemitter3";
-import type { DeployEvents } from "../../types/deploy/deploy-events";
-import { ForwardRequestMessage, PermitRequestMessage } from "../types";
-import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
-import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
-import {
-  BiconomyForwarderAbi,
-  ChainAwareForwardRequest,
-  ForwardRequest,
-  getAndIncrementNonce,
-} from "../../common/forwarder";
-import { signEIP2612Permit } from "../../common/permit";
-import { signTypedDataInternal } from "../../common/sign";
-import { BytesLike } from "ethers";
-import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
-import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -187,14 +182,15 @@ abstract class TransactionContext {
    * Estimate the total gas cost of this transaction (in both ether and wei)
    */
   public async estimateGasCost() {
-    const [gasLimit, gasPrice] = await Promise.all([
+    const [gasLimit, gasPrice, { formatEther }] = await Promise.all([
       this.estimateGasLimit(),
       this.getGasPrice(),
+      import("ethers/lib/utils"),
     ]);
     const gasCost = gasLimit.mul(gasPrice);
 
     return {
-      ether: utils.formatEther(gasCost),
+      ether: formatEther(gasCost),
       wei: gasCost,
     };
   }
@@ -203,6 +199,7 @@ abstract class TransactionContext {
    * Calculates the gas price for transactions (adding a 10% tip buffer)
    */
   public async getGasPrice(): Promise<BigNumber> {
+    const { getGasPrice } = await import("../../common/gas-price");
     return getGasPrice(this.provider);
   }
 
@@ -217,6 +214,7 @@ abstract class TransactionContext {
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
+    const { getDefaultGasOverrides } = await import("../../common/gas-price");
     return getDefaultGasOverrides(this.provider);
   }
 
@@ -273,6 +271,9 @@ export class Transaction<
     let contractAbi = options.contractAbi;
     if (!contractAbi) {
       try {
+        const { fetchContractMetadataFromAddress } = await import(
+          "../../common/metadata-resolver"
+        );
         const metadata = await fetchContractMetadataFromAddress(
           options.contractAddress,
           options.provider,
@@ -449,6 +450,9 @@ export class Transaction<
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
+      const { isRouterContract } = await import(
+        "../../common/plugin/isRouterContract"
+      );
       try {
         // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
         const abi = JSON.parse(
@@ -560,7 +564,7 @@ export class Transaction<
       args[0].length > 0
     ) {
       args[0] = args[0].map((tx: any) =>
-        utils.solidityPack(["bytes", "address"], [tx, signerAddress]),
+        solidityPack(["bytes", "address"], [tx, signerAddress]),
       );
     }
 
@@ -631,14 +635,15 @@ export class Transaction<
    */
   private async transactionError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: utils.ConnectionInfo;
+      connection?: ConnectionInfo;
     };
-
     // Get metadata for transaction to populate into error
-    const [network, from] = await Promise.all([
-      provider.getNetwork(),
-      this.overrides.from || this.getSignerAddress(),
-    ]);
+    const [network, from, { fetchContractMetadataFromAddress }] =
+      await Promise.all([
+        provider.getNetwork(),
+        this.overrides.from || this.getSignerAddress(),
+        import("../../common/metadata-resolver"),
+      ]);
     const to = this.contract.address;
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
@@ -684,6 +689,9 @@ export class Transaction<
       }
 
       if (metadata.metadata.sources) {
+        const { fetchSourceFilesFromMetadata } = await import(
+          "../../common/fetchSourceFilesFromMetadata"
+        );
         sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
@@ -720,8 +728,8 @@ export class DeployTransaction extends TransactionContext {
   }
 
   encode(): string {
-    return utils.hexlify(
-      utils.concat([
+    return hexlify(
+      concat([
         this.factory.bytecode,
         this.factory.interface.encodeDeploy(this.args),
       ]),
@@ -773,7 +781,7 @@ export class DeployTransaction extends TransactionContext {
 
   async execute(): Promise<string> {
     const tx = await this.send();
-
+    const { getContractAddress } = await import("ethers/lib/utils");
     try {
       await tx.wait();
     } catch (err) {
@@ -785,7 +793,7 @@ export class DeployTransaction extends TransactionContext {
       throw await this.deployError(err);
     }
 
-    const contractAddress = utils.getContractAddress({
+    const contractAddress = getContractAddress({
       from: tx.from,
       nonce: tx.nonce,
     });
@@ -819,7 +827,7 @@ export class DeployTransaction extends TransactionContext {
    */
   private async deployError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: utils.ConnectionInfo;
+      connection?: ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -1019,13 +1027,24 @@ async function enginePrepareRequest(
   provider: providers.Provider,
   storage: ThirdwebStorage,
 ) {
+  const [
+    { computeForwarderAddress },
+    { signTypedDataInternal },
+    { signEIP2612Permit },
+    { getAndIncrementNonce, ForwardRequest },
+    ForwarderABIModule,
+  ] = await Promise.all([
+    import("../../common/any-evm-utils/computeForwarderAddress"),
+    import("../../common/sign"),
+    import("../../common/permit"),
+    import("../../common/forwarder"),
+    import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json"),
+  ]);
   const forwarderAddress =
     CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
       .openzeppelinForwarder ||
     (await computeForwarderAddress(provider, storage));
-  const ForwarderABI = (
-    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
-  ).default;
+  const ForwarderABI = ForwarderABIModule.default;
 
   const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -1058,7 +1077,7 @@ async function enginePrepareRequest(
       amount,
     );
 
-    const { r, s, v } = utils.splitSignature(sig);
+    const { r, s, v } = splitSignature(sig);
 
     message = {
       to: transaction.to,
@@ -1122,6 +1141,21 @@ async function defenderPrepareRequest(
   );
   invariant(signer, "provider is not set");
   invariant(provider, "provider is not set");
+  const [
+    { computeEOAForwarderAddress },
+    { computeForwarderAddress },
+    { signTypedDataInternal },
+    { signEIP2612Permit },
+    { getAndIncrementNonce, ChainAwareForwardRequest, ForwardRequest },
+    ForwarderABIModule,
+  ] = await Promise.all([
+    import("../../common/any-evm-utils/computeEOAForwarderAddress"),
+    import("../../common/any-evm-utils/computeForwarderAddress"),
+    import("../../common/sign"),
+    import("../../common/permit"),
+    import("../../common/forwarder"),
+    import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json"),
+  ]);
   const forwarderAddress =
     gaslessOptions.openzeppelin.relayerForwarderAddress ||
     (gaslessOptions.openzeppelin.useEOAForwarder
@@ -1133,9 +1167,7 @@ async function defenderPrepareRequest(
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
         ].openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
-  const ForwarderABI = (
-    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
-  ).default;
+  const ForwarderABI = ForwarderABIModule.default;
   const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,
@@ -1200,7 +1232,7 @@ async function defenderPrepareRequest(
       amount,
     );
 
-    const { r, s, v } = utils.splitSignature(sig);
+    const { r, s, v } = splitSignature(sig);
 
     message = {
       to: transaction.to,
@@ -1290,7 +1322,17 @@ async function biconomyPrepareRequest(
     "calling biconomySendFunction without biconomy",
   );
   invariant(signer && provider, "signer and provider must be set");
-
+  const [
+    { getContractAddressByChainId },
+    { BiconomyForwarderAbi },
+    { getAndIncrementNonce },
+    utils,
+  ] = await Promise.all([
+    import("../../constants/addresses/getContractAddressByChainId"),
+    import("../../common/forwarder"),
+    import("../../common/forwarder"),
+    import("ethers/lib/utils"),
+  ]);
   const forwarder = new Contract(
     getContractAddressByChainId(
       transaction.chainId,
