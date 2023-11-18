@@ -1,5 +1,18 @@
 # @thirdweb-dev/wallets
 
+## 2.1.7
+
+### Patch Changes
+
+- [#1977](https://github.com/thirdweb-dev/js/pull/1977) [`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix potential auto connection race condition
+
+- [#1978](https://github.com/thirdweb-dev/js/pull/1978) [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enforce authenticated users when getting embedded wallet signers
+
+- [#1953](https://github.com/thirdweb-dev/js/pull/1953) [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96) Thanks [@nkrishang](https://github.com/nkrishang)! - Patched smart wallet signatures for updated eip-1271 sig verification
+
+- Updated dependencies [[`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec)]:
+  - @thirdweb-dev/sdk@4.0.15
+
 ## 2.1.6
 
 ### Patch Changes
