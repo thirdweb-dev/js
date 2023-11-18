@@ -104,7 +104,7 @@ export enum PageId {
   ChainsLanding = "chains-landing",
 
   // thirdweb.com/hackathon
-  HackathonLanding = "hackathon",
+  HackathonLanding = "base-thirdweb-hacakthon",
   ReadyPlayer3Landing = "readyplayer3",
 
   // thirdweb.com/404
