@@ -4,10 +4,7 @@ import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { WalletConfig } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
-import {
-  ThirdwebWalletProvider,
-  useWalletContext,
-} from "./thirdweb-wallet-provider";
+import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
   createAsyncLocalStorage,
@@ -15,7 +12,8 @@ import {
   DAppMetaData,
   SignerWallet,
 } from "@thirdweb-dev/wallets";
-import React, { useMemo } from "react";
+import { PropsWithChildren, useMemo } from "react";
+import { useWalletContext } from "./wallet-context";
 
 /**
  * The possible props for the ThirdwebProvider.
@@ -78,7 +76,7 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
-}: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
+}: PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const { activeChain } = props;
 
   const supportedChains = (props.supportedChains || defaultChains) as Chain[];
@@ -180,9 +178,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
   children,
   ...props
-}: React.PropsWithChildren<
-  Omit<ThirdwebSDKProviderProps<TChains>, "signer">
->) => {
+}: PropsWithChildren<Omit<ThirdwebSDKProviderProps<TChains>, "signer">>) => {
   const signer = useWalletContext()?.signer;
 
   return (
