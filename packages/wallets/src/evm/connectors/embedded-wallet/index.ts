@@ -89,7 +89,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (!this.user) {
       throw new Error("Embedded Wallet is not connected");
     }
-    return this.user.walletAddress;
+    return await this.getSigner().then((signer) => signer.getAddress());
   }
 
   async isConnected(): Promise<boolean> {
@@ -115,7 +115,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     const user = await this.getUser();
-    const signer = await user?.wallet.getEthersJsSigner({
+    const signer = await user.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
@@ -180,11 +180,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
-  async getUser(): Promise<InitializedUser | null> {
+  private async getUser(): Promise<InitializedUser> {
     if (
       !this.user ||
       !this.user.wallet ||
-      typeof this.user.wallet.getEthersJsSigner !== "function"
+      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
@@ -195,25 +195,22 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         }
       }
     }
+    if (!this.user) {
+      throw new Error(
+        "No user found, Embedded Wallet is not authenticated, please authenticate first",
+      );
+    }
     return this.user;
   }
 
   async getEmail() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails.email;
+    const user = await this.getUser();
+    return user.authDetails.email;
   }
 
   async getRecoveryInformation() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails;
+    const user = await this.getUser();
+    return user.authDetails;
   }
 
   async sendVerificationEmail({
