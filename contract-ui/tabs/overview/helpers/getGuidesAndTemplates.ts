@@ -277,6 +277,7 @@ const GUIDES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   AirdropERC20: [],
   AirdropERC721: [],
   AirdropERC1155: [],
+  Fallback: [],
 };
 
 const ALL_TEMPLATES: Record<string, Item> = {
@@ -440,6 +441,7 @@ const TEMPLATES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   AirdropERC20: [],
   AirdropERC721: [],
   AirdropERC1155: [],
+  Fallback: [],
 };
 
 export function getGuidesAndTemplates(
