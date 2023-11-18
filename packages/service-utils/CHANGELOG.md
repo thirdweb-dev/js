@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.9
+
+### Patch Changes
+
+- [#1976](https://github.com/thirdweb-dev/js/pull/1976) [`8ff87be6`](https://github.com/thirdweb-dev/js/commit/8ff87be631f1754b15e7ec4556d51e8eec5cbd18) Thanks [@arcoraven](https://github.com/arcoraven)! - Handle if error parsing JSON response in authorization helper
+
 ## 0.4.8
 
 ### Patch Changes
