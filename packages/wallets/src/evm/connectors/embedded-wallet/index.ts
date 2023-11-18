@@ -184,7 +184,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (
       !this.user ||
       !this.user.wallet ||
-      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost
+      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost, need to rehydrate
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
@@ -193,12 +193,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           this.user = user;
           break;
         }
+        default: {
+          // if logged out or unitialized, we can't get a signer, so throw an error
+          throw new Error(
+            "Embedded Wallet is not authenticated, please authenticate first",
+          );
+        }
       }
-    }
-    if (!this.user) {
-      throw new Error(
-        "No user found, Embedded Wallet is not authenticated, please authenticate first",
-      );
     }
     return this.user;
   }
