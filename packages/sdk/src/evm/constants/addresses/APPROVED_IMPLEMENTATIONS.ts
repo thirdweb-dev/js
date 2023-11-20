@@ -90,12 +90,6 @@ export const APPROVED_IMPLEMENTATIONS: Record<
     "token-drop": "0x1d47526C3292B0130ef0afD5F02c1DA052A017B3",
     "signature-drop": "0xE1eE43D23f247b6A9aF81fcE2766E76709482728",
   },
-  [ChainId.ArbitrumSepolia]: {
-    "nft-drop": "",
-    "edition-drop": "",
-    "token-drop": "",
-    "signature-drop": "", // TODO
-  },
   [ChainId.BinanceSmartChainTestnet]: {
     "nft-drop": "",
     "edition-drop": "",
