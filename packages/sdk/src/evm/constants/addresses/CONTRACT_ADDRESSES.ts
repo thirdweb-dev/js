@@ -98,20 +98,13 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: TWRegistry_address,
     twBYOCRegistry: AddressZero,
   },
+
   [ChainId.ArbitrumGoerli]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310",
     biconomyForwarder: AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: AddressZero,
-  },
-  [ChainId.ArbitrumSepolia]: {
-    openzeppelinForwarder: AddressZero,
-    openzeppelinForwarderEOA: AddressZero,
-    biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
     twBYOCRegistry: AddressZero,
   },
   [ChainId.Optimism]: {
