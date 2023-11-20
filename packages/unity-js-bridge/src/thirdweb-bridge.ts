@@ -274,22 +274,38 @@ class ThirdwebBridge implements TWBridge {
             throw new Error("Email is required for EmbeddedWallet");
           }
           const authResult = await embeddedWallet.authenticate({
-            strategy: "iframe_email_verification",
+            strategy: "iframe_otp",
             email,
           });
           await embeddedWallet.connect({
             chainId: chainIdNumber,
             authResult,
           });
-        } else if (authOptionsParsed.authProvider === 1) {
-          // GoogleManaged
-          const googleWindow = this.openGoogleSignInWindow();
-          if (!googleWindow) {
-            throw new Error("Failed to open google login window");
+        } else if (authOptionsParsed.authProvider < 4) {
+          // OAuth
+          let authProvider;
+          switch (authOptionsParsed.authProvider) {
+            case 1:
+              authProvider = "google";
+              break;
+            case 2:
+              authProvider = "apple";
+              break;
+            case 3:
+              authProvider = "facebook";
+              break;
+            default:
+              throw new Error(
+                "Invalid auth provider: " + authOptionsParsed.authProvider,
+              );
+          }
+          const popupWindow = this.openPopupWindow();
+          if (!popupWindow) {
+            throw new Error("Failed to open login window");
           }
           const authResult = await embeddedWallet.authenticate({
-            strategy: "google",
-            openedWindow: googleWindow,
+            strategy: authProvider,
+            openedWindow: popupWindow,
             closeOpenedWindow: (openedWindow) => {
               openedWindow.close();
             },
@@ -298,7 +314,7 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-        } else if (authOptionsParsed.authProvider === 2) {
+        } else if (authOptionsParsed.authProvider === 4) {
           // CustomAuth
           const authResult = await embeddedWallet.authenticate({
             strategy: "jwt",
@@ -627,10 +643,10 @@ class ThirdwebBridge implements TWBridge {
     return localWallet;
   }
 
-  public openGoogleSignInWindow() {
+  public openPopupWindow() {
     const win = window.open("", undefined, "width=350, height=500");
     if (win) {
-      win.document.title = "Sign In - Google Accounts";
+      win.document.title = "Sign In - OAuth";
       win.document.body.innerHTML = `
       <svg class="loader" viewBox="0 0 50 50">
         <circle
