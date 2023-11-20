@@ -52,12 +52,7 @@ export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
       // if wallet is not injected
       else {
         // No Rabby mobile app yet
-        if (isMobile()) {
-          window.open(downloadLink);
-        } else {
-          // on desktop, show the Rabby app scan qr code
-          setScreen("scanning");
-        }
+        setScreen("get-started");
       }
     })();
   }, [connectToExtension, walletConfig]);
