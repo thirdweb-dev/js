@@ -338,6 +338,7 @@ const SendFundsForm = ({
       <BaseButton
         mt="md"
         backgroundColor="accentButtonColor"
+        borderColor="accentButtonColor"
         flexDirection="row"
         alignItems="center"
         justifyContent="center"

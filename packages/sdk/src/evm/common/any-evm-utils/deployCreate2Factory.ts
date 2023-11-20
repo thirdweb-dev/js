@@ -13,7 +13,7 @@ import { getCreate2FactoryDeploymentInfo } from "./getCreate2FactoryDeploymentIn
  * Ref: https://github.com/Arachnid/deterministic-deployment-proxy
  *
  * @public
- * @param signer
+ * @param signer - The signer to use
  */
 export async function deployCreate2Factory(
   signer: Signer,

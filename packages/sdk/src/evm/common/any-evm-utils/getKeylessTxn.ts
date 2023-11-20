@@ -5,8 +5,8 @@ import { KeylessTransaction } from "../../types/any-evm/deploy-data";
  * Generate a transaction to be sent with a keyless signer.
  *
  * @public
- * @param transaction: Unsigned transaction object
- * @param signature: Signature bytes
+ * @param transaction - Unsigned transaction object
+ * @param signature - Signature bytes
  */
 export function getKeylessTxn(
   transaction: UnsignedTransaction,

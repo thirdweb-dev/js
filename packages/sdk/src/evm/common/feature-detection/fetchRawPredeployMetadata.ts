@@ -3,8 +3,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @internal
- * @param publishMetadataUri
- * @param storage
+ * @param publishMetadataUri - The publish metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function fetchRawPredeployMetadata(
   publishMetadataUri: string,

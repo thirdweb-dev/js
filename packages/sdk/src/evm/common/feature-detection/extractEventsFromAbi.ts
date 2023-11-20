@@ -3,8 +3,8 @@ import { extractCommentFromMetadata } from "./extractCommentFromMetadata";
 
 /**
  * @internal
- * @param abi
- * @param metadata
+ * @param abi - The abi to extract events from
+ * @param metadata - The metadata to extract comments from
  */
 export function extractEventsFromAbi(
   abi: AbiInput,

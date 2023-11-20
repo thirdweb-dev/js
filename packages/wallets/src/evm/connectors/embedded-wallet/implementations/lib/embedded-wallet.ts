@@ -28,10 +28,8 @@ export class EmbeddedWalletSdk {
 
   /**
    * @example
-   * const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({ clientId: "", chain: "Goerli" });
-   * @param {string} initParams.clientId the clientId found on the {@link https://thirdweb.com/dashboard/settings dashboard settings}
-   * @param {Chain} initParams.chain sets the default chain that the EmbeddedWallet will live on.
-   * @param {CustomizationOptionsType} initParams.styles sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
+   * `const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({ clientId: "", chain: "Goerli" });`
+   * @param param0 - EmbeddedWalletConstructorType
    */
   constructor({
     clientId,
@@ -88,6 +86,7 @@ export class EmbeddedWalletSdk {
   /**
    * Gets the usr if they are logged in
    * @example
+   * ```js
    *  const user = await thirdwebEmbeddedWallet.getUser();
    *  switch (user.status) {
    *     case UserWalletStatus.LOGGED_OUT: {
@@ -103,8 +102,9 @@ export class EmbeddedWalletSdk {
    *       user.wallet;
    *       break;
    *     }
-   *}
-   * @returns {GetUser} an object to containing various information on the user statuses
+   * }
+   * ```
+   * @returns GetUser - an object to containing various information on the user statuses
    */
   async getUser(): Promise<GetUser> {
     return this.wallet.getUserWalletStatus();

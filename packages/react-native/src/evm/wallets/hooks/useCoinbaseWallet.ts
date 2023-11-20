@@ -8,7 +8,7 @@ import { useCoinbaseWalletListener } from "./useCoinbaseWalletListener";
  * const connect = useCoinbaseWallet('org.reactjs.native.example.test15://');
  * connect();
  *
- * @param callbackURL The Universal Link used by Coinbase Wallet to return responses to your application.
+ * @param callbackURL - The Universal Link used by Coinbase Wallet to return responses to your application.
  * @returns connect function to connect to the Coinbase wallet
  */
 export function useCoinbaseWallet(callbackURL: URL) {

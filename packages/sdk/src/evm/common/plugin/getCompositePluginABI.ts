@@ -7,7 +7,7 @@ import { Abi, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { isExtensionEnabled } from "../feature-detection/isFeatureEnabled";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers } from "ethers";
+import { Contract, providers } from "ethers";
 import { joinABIs } from "./joinABIs";
 import { getPluginABI } from "./getPluginABI";
 
@@ -24,7 +24,7 @@ export async function getCompositeABI(
   let pluginABIs: Abi[] = [];
 
   try {
-    // check if contract is plugin-pattern
+    // check if contract is plugin-pattern / dynamic
     const isPluginRouter: boolean = isExtensionEnabled(
       AbiSchema.parse(abi),
       "PluginRouter",
@@ -33,6 +33,13 @@ export async function getCompositeABI(
       AbiSchema.parse(abi),
       "DynamicContract",
     );
+
+    // check if the contract has fallback function - we'll further check for diamond pattern if needed
+    const isFallback: boolean = isExtensionEnabled(
+      AbiSchema.parse(abi),
+      "Fallback",
+    );
+
     if (isbaseRouter) {
       const contract = new ContractWrapper(
         provider,
@@ -68,6 +75,21 @@ export async function getCompositeABI(
 
       // get ABIs of extension contracts
       pluginABIs = await getPluginABI(plugins as any[], provider, storage);
+    } else if (isFallback) {
+      // check if diamond pattern
+      const dimaondAbi = [
+        "function facets() external view returns (tuple(address,bytes4[])[])",
+      ];
+      const contract = new Contract(address, dimaondAbi, provider);
+
+      // get facets
+      const facets = await contract.facets();
+
+      // filter facet addresses
+      const facetAddresses = facets.map((item: any) => item[0]);
+
+      // get ABI of facets
+      pluginABIs = await getPluginABI(facetAddresses, provider, storage);
     }
   } catch (err) {}
 

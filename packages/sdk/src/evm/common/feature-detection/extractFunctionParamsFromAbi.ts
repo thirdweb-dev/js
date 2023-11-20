@@ -2,8 +2,8 @@ import { AbiInput, AbiSchema } from "../../schema/contracts/custom";
 
 /**
  *
- * @param abi
- * @param functionName
+ * @param abi - The abi to extract params from
+ * @param functionName - The function name to extract params from
  * @returns
  * @internal
  */
