@@ -33,10 +33,17 @@ export type ConnectEmbedProps = {
    */
   privacyPolicyUrl?: string;
 };
-
 export const ConnectEmbed = (props: ConnectEmbedProps) => {
   const connectionStatus = useConnectionStatus();
 
+  if (connectionStatus === "connected") {
+    return null;
+  }
+
+  return <ConnectEmbedContent {...props} />;
+};
+
+const ConnectEmbedContent = (props: ConnectEmbedProps) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const modalSize = "compact" as const;
 
@@ -59,10 +66,6 @@ export const ConnectEmbed = (props: ConnectEmbedProps) => {
     privacyPolicyUrl: props.privacyPolicyUrl,
     isEmbed: true,
   };
-
-  if (connectionStatus === "connected") {
-    return null;
-  }
 
   return (
     <WalletUIStatesProvider {...walletUIStatesProps}>
