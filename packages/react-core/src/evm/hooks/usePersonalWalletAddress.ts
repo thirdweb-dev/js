@@ -9,19 +9,17 @@ export const usePersonalWalletAddress = () => {
 
   useEffect(() => {
     (async () => {
-      if (activeWallet) {
-        const possiblePersonalWallet = activeWallet?.getPersonalWallet();
-        if (possiblePersonalWallet) {
-          const address = await (
-            await possiblePersonalWallet?.getSigner()
-          )?.getAddress();
-          setPersonalWalletAddress(address);
-        } else {
-          setPersonalWalletAddress(undefined);
-        }
-      } else {
+      const possiblePersonalWallet = activeWallet?.getPersonalWallet();
+
+      if (!possiblePersonalWallet) {
         setPersonalWalletAddress(undefined);
+        return;
       }
+
+      const address = await (
+        await possiblePersonalWallet?.getSigner()
+      )?.getAddress();
+      setPersonalWalletAddress(address);
     })();
   }, [activeWallet]);
 
