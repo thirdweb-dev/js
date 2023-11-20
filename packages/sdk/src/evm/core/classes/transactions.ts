@@ -44,6 +44,8 @@ import { signTypedDataInternal } from "../../common/sign";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
+import { getCompositeABI } from "../../common/plugin/getCompositePluginABI";
+import { ContractWrapper } from "./contract-wrapper";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -1019,29 +1021,76 @@ async function enginePrepareRequest(
   provider: providers.Provider,
   storage: ThirdwebStorage,
 ) {
-  const forwarderAddress =
-    CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
-      .openzeppelinForwarder ||
-    (await computeForwarderAddress(provider, storage));
-  const ForwarderABI = (
-    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
-  ).default;
+  try {
+    const metadata = await fetchContractMetadataFromAddress(
+      transaction.to,
+      provider,
+      storage,
+    );
 
-  const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
-  const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
-    transaction.from,
-  ]);
+    const chainId = (await provider.getNetwork()).chainId;
+    const abi = await getCompositeABI(
+      transaction.to,
+      metadata.abi,
+      provider,
+      {},
+      storage,
+    );
+    const contract = new ContractWrapper(
+      signer,
+      transaction.to,
+      abi,
+      {},
+      storage,
+    );
+    if (abi.find((item) => item.name === "executeMetaTransaction")) {
+      const name: string = await contract.call("name", []);
 
-  const domain = {
-    name: "GSNv2 Forwarder",
-    version: "0.0.1",
-    chainId: transaction.chainId,
-    verifyingContract: forwarderAddress,
-  };
-  const types = {
-    ForwardRequest,
-  };
-  let message: ForwardRequestMessage | PermitRequestMessage;
+      const domain = {
+        name,
+        version: "1",
+        salt: "0x" + chainId.toString(16).padStart(64, "0"), // Use 64 length hex chain id as salt
+        verifyingContract: transaction.to,
+      };
+
+      const types = {
+        MetaTransaction: [
+          { name: "nonce", type: "uint256" },
+          { name: "from", type: "address" },
+          { name: "functionSignature", type: "bytes" },
+        ],
+      };
+
+      const nonce = await contract.call("getNonce", [transaction.from]);
+      const message = {
+        nonce: nonce,
+        from: transaction.from,
+        functionSignature: transaction.data,
+      };
+
+      const { signature } = await signTypedDataInternal(
+        signer,
+        domain,
+        types,
+        message,
+      );
+
+      return {
+        method: "POST",
+        body: JSON.stringify({
+          type: "execute-meta-transaction",
+          request: {
+            from: transaction.from,
+            to: transaction.to,
+            data: transaction.data,
+          },
+          signature,
+        }),
+      };
+    }
+  } catch {
+    // no-op
+  }
 
   if (
     transaction.functionName === "approve" &&
@@ -1058,18 +1107,13 @@ async function enginePrepareRequest(
       amount,
     );
 
-    const { r, s, v } = utils.splitSignature(sig);
-
-    message = {
+    const message = {
       to: transaction.to,
       owner: permit.owner,
       spender: permit.spender,
       value: BigNumber.from(permit.value).toString(),
       nonce: BigNumber.from(permit.nonce).toString(),
       deadline: BigNumber.from(permit.deadline).toString(),
-      r,
-      s,
-      v,
     };
 
     return {
@@ -1077,10 +1121,34 @@ async function enginePrepareRequest(
       body: JSON.stringify({
         type: "permit",
         request: message,
+        signature: sig,
       }),
     };
   } else {
-    message = {
+    const forwarderAddress =
+      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+        .openzeppelinForwarder ||
+      (await computeForwarderAddress(provider, storage));
+    const ForwarderABI = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+    ).default;
+
+    const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
+    const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+      transaction.from,
+    ]);
+
+    const domain = {
+      name: "GSNv2 Forwarder",
+      version: "0.0.1",
+      chainId: transaction.chainId,
+      verifyingContract: forwarderAddress,
+    };
+    const types = {
+      ForwardRequest,
+    };
+
+    const message = {
       from: transaction.from,
       to: transaction.to,
       value: BigNumber.from(0).toString(),
