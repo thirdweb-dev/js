@@ -2,6 +2,7 @@ import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
 import type {
   BloctoWallet,
+  Coin98Wallet,
   CoinbaseWallet,
   CoreWallet,
   DefiWallet,
@@ -27,6 +28,7 @@ export type WalletId = (typeof walletIds)[keyof typeof walletIds];
 
 type WalletIdToWalletTypeMap = {
   metamask: MetaMaskWallet;
+  coin98: Coin98Wallet;
   coinbase: CoinbaseWallet;
   coreWallet: CoreWallet;
   rainbowWallet: RainbowWallet;

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { UploadIcon } from "@radix-ui/react-icons";
-import { Theme, iconSize, radius, spacing } from "../design-system";
+import { iconSize, radius, spacing } from "../design-system";
 import styled from "@emotion/styled";
 import { Spacer } from "./Spacer";
 import { isMobile } from "../evm/utils/isMobile";
 import type { IconFC } from "../wallet/ConnectWallet/icons/types";
 import { Text } from "./text";
 import { Container } from "./basic";
+import { StyledDiv } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export const DragNDrop: React.FC<{
   extension: string;
@@ -132,37 +134,38 @@ export const DragNDrop: React.FC<{
   );
 };
 
-const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(props) => props.theme.colors.secondaryIconColor};
-  transition:
-    transform 200ms ease,
-    color 200ms ease;
-`;
+const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryIconColor,
+    transition: "transform 200ms ease, color 200ms ease",
+  };
+});
 
-const DropContainer = styled.div<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.colors.borderColor};
-  border-radius: ${radius.md};
-  padding: ${spacing.xl} ${spacing.md};
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  cursor: pointer;
-  transition: border-color 200ms ease;
+const DropContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `2px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.md,
+    padding: `${spacing.xl} ${spacing.md}`,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    cursor: "pointer",
+    transition: "border-color 200ms ease",
 
-  &:hover,
-  &[data-is-dragging="true"] {
-    border-color: ${(p) => p.theme.colors.accentText};
-    svg {
-      color: ${(p) => p.theme.colors.accentText};
-    }
-  }
+    "&:hover, &[data-is-dragging='true']": {
+      borderColor: theme.colors.accentText,
+      svg: {
+        color: theme.colors.accentText,
+      },
+    },
 
-  &[data-error="true"] {
-    border-color: ${(p) => p.theme.colors.danger};
-  }
-`;
+    "&[data-error='true']": {
+      borderColor: theme.colors.danger,
+    },
+  };
+});
 
 const CheckCircleIcon: IconFC = (props) => (
   <svg

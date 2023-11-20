@@ -23,10 +23,10 @@ import invariant from "tiny-invariant";
  *
  * @internal
  *
- * @param metadataUri
- * @param storage
- * @param provider
- * @param create2Factory
+ * @param metadataUri - The metadata uri to use
+ * @param storage - The storage to use
+ * @param provider - The provider to use
+ * @param create2Factory - The create2 factory to use
  */
 export async function getDeploymentInfo(
   metadataUri: string,

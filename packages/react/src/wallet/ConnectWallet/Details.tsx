@@ -14,7 +14,6 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
@@ -47,6 +46,7 @@ import {
   MetaMaskWallet,
   type SmartWallet,
   walletIds,
+  type EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
@@ -61,6 +61,19 @@ import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core";
+import {
+  StyledButton,
+  StyledDiv,
+  StyledLabel,
+} from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import {
+  appleIconUri,
+  facebookIconUri,
+  googleIconUri,
+} from "./icons/socialLogins";
+import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -108,7 +121,9 @@ export const ConnectedWalletDetails: React.FC<{
   >();
   const walletContext = useWalletContext();
 
-  let activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
+  const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
+    string | undefined
+  >(undefined);
 
   // modals
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
@@ -137,14 +152,34 @@ export const ConnectedWalletDetails: React.FC<{
 
   const shortAddress = address ? shortenString(address) : "";
 
-  const isSmartWallet = activeWallet?.walletId === walletIds.smartWallet;
-
-  if (isSmartWallet) {
-    activeWalletIconURL = smartWalletIcon;
-  }
-
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
+
+  useEffect(() => {
+    if (activeWallet) {
+      if (activeWallet.walletId === walletIds.embeddedWallet) {
+        (activeWallet as EmbeddedWallet)
+          .getLastUsedAuthStrategy()
+          .then((auth) => {
+            if (auth === "apple") {
+              setOverrideWalletIconUrl(appleIconUri);
+            } else if (auth === "google") {
+              setOverrideWalletIconUrl(googleIconUri);
+            } else if (auth === "facebook") {
+              setOverrideWalletIconUrl(facebookIconUri);
+            }
+          });
+      } else if (activeWallet.walletId === walletIds.smartWallet) {
+        setOverrideWalletIconUrl(smartWalletIcon);
+      }
+    } else {
+      setOverrideWalletIconUrl(undefined);
+    }
+  }, [activeWallet]);
+
+  const walletIconUrl =
+    overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
+  const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -160,7 +195,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Img
         width={iconSize.lg}
         height={iconSize.lg}
-        src={avatarUrl || activeWalletIconURL}
+        src={avatarOrWalletIconUrl}
         className={`${TW_CONNECTED_WALLET}__wallet-icon`}
         style={{
           borderRadius: radius.sm,
@@ -254,7 +289,7 @@ export const ConnectedWalletDetails: React.FC<{
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
-          src={avatarUrl || activeWalletIconURL}
+          src={avatarOrWalletIconUrl}
           alt=""
           style={{
             borderRadius: radius.sm,
@@ -328,6 +363,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <ConnectedToSmartWallet />
+      <EmbeddedWalletEmail />
 
       {/* Send and Receive */}
       <Container
@@ -580,7 +616,7 @@ export const ConnectedWalletDetails: React.FC<{
         open={showReceiveModal}
         setOpen={setShowReceiveModal}
       >
-        <ReceiveFunds iconUrl={activeWalletIconURL} />
+        <ReceiveFunds iconUrl={walletIconUrl} />
       </Modal>
     </>
   );
@@ -597,129 +633,127 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
-  theme?: Theme;
-}>`
-  width: 360px;
-  box-sizing: border-box;
-  max-width: 100%;
-  border-radius: ${radius.lg};
-  padding: ${spacing.lg};
-  animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  background-color: ${(props) => props.theme.colors.dropdownBg};
-  --bg: ${(props) => props.theme.colors.dropdownBg};
-  z-index: 1000000;
-  line-height: normal;
-`)();
+const DropDownContent = /* @__PURE__ */ (() =>
+  styled(DropdownMenu.Content)(() => {
+    const theme = useCustomTheme();
+    return {
+      width: "360px",
+      boxSizing: "border-box",
+      maxWidth: "100%",
+      borderRadius: radius.lg,
+      padding: spacing.lg,
+      animation: `${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      willChange: "transform, opacity",
+      border: `1px solid ${theme.colors.borderColor}`,
+      backgroundColor: theme.colors.dropdownBg,
+      "--bg": theme.colors.dropdownBg,
+      zIndex: 1000000,
+      lineHeight: "normal",
+    };
+  }))();
 
-const WalletInfoButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  background: ${(props) => props.theme.colors.connectedButtonBg};
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  padding: ${spacing.sm} ${spacing.sm};
-  border-radius: ${radius.lg};
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  min-width: 180px;
-  gap: ${spacing.sm};
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  line-height: normal;
-  animation: ${fadeInAnimation} 300ms ease;
+const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    background: theme.colors.connectedButtonBg,
+    border: `1px solid ${theme.colors.borderColor}`,
+    padding: `${spacing.sm} ${spacing.sm}`,
+    borderRadius: radius.lg,
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    minWidth: "180px",
+    gap: spacing.sm,
+    boxSizing: "border-box",
+    WebkitTapHighlightColor: "transparent",
+    lineHeight: "normal",
+    animation: `${fadeInAnimation} 300ms ease`,
+    [media.mobile]: {
+      gap: spacing.sm,
+      padding: `${spacing.xs} ${spacing.sm}`,
+      img: {
+        width: `${iconSize.md}px`,
+        height: `${iconSize.md}px`,
+      },
+    },
+    "&:hover": {
+      transition: "background 250ms ease",
+      background: theme.colors.connectedButtonBgHover,
+    },
+  };
+});
 
-  ${media.mobile} {
-    gap: ${spacing.sm};
-    padding: ${spacing.xs} ${spacing.sm};
-    img {
-      width: ${iconSize.md}px;
-      height: ${iconSize.md}px;
-    }
-  }
+const DropdownLabel = /* @__PURE__ */ StyledLabel(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.sm,
+    color: theme.colors.secondaryText,
+    fontWeight: 500,
+  };
+});
 
-  &:hover {
-    transition: background 250ms ease;
-    background: ${(props) => props.theme.colors.connectedButtonBgHover};
-  }
-`;
-
-const DropdownLabel = styled.label<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.colors.secondaryText};
-  font-weight: 500;
-`;
-
-const MenuButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  padding: ${spacing.sm} ${spacing.sm};
-  border-radius: ${radius.md};
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  cursor: pointer;
-  font-size: ${fontSize.md};
-  font-weight: 500;
-  color: ${(props) => props.theme.colors.primaryText} !important;
-  gap: ${spacing.sm};
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1.3;
-
-  &:not([disabled]):hover {
-    transition:
-      box-shadow 250ms ease,
-      border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.colors.accentText};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.accentText};
-  }
-
-  &[disabled] {
-    cursor: not-allowed;
-    svg {
-      display: none;
-    }
-  }
-
-  &[disabled]:hover {
-    transition:
-      box-shadow 250ms ease,
-      border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.colors.danger};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.danger};
-  }
-`;
+const MenuButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    padding: `${spacing.sm} ${spacing.sm}`,
+    borderRadius: radius.md,
+    backgroundColor: "transparent",
+    border: `1px solid ${theme.colors.borderColor}`,
+    boxSizing: "border-box",
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    cursor: "pointer",
+    fontSize: fontSize.md,
+    fontWeight: 500,
+    color: `${theme.colors.primaryText} !important`,
+    gap: spacing.sm,
+    WebkitTapHighlightColor: "transparent",
+    lineHeight: 1.3,
+    "&:not([disabled]):hover": {
+      transition: "box-shadow 250ms ease, border-color 250ms ease",
+      border: `1px solid ${theme.colors.accentText}`,
+      boxShadow: `0 0 0 1px ${theme.colors.accentText}`,
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
+      svg: {
+        display: "none",
+      },
+    },
+    "&[disabled]:hover": {
+      transition: "box-shadow 250ms ease, border-color 250ms ease",
+      border: `1px solid ${theme.colors.danger}`,
+      boxShadow: `0 0 0 1px ${theme.colors.danger}`,
+    },
+  };
+});
 
 const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const DropdownMenuItem = /* @__PURE__ */ (() => styled(
-  DropdownMenu.Item,
-)<{ theme?: Theme }>`
-  outline: none;
-`)();
-
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
-)<{
-  theme?: Theme;
-}>`
-  color: ${(props) => props.theme.colors.secondaryText};
-`;
+)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+  };
+});
 
-const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
-  theme?: Theme;
-}>`
-  margin-right: -${spacing.xxs};
-  margin-left: auto;
-  color: ${(props) => props.theme.colors.secondaryText};
-  &:hover {
-    color: ${(props) => props.theme.colors.danger};
-    background: none;
-  }
-`;
+const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    marginRight: `-${spacing.xxs}`,
+    marginLeft: "auto",
+    color: theme.colors.secondaryText,
+    "&:hover": {
+      color: theme.colors.danger,
+      background: "none",
+    },
+  };
+});
 
 function WalletSwitcher({
   wallet,
@@ -752,12 +786,15 @@ function WalletSwitcher({
   );
 }
 
-const ActiveDot = styled.div<{ theme?: Theme }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.colors.success};
-`;
+const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    backgroundColor: theme.colors.success,
+  };
+});
 
 function ConnectedToSmartWallet() {
   const activeWallet = useWallet();
@@ -821,4 +858,22 @@ function ConnectedToSmartWallet() {
   }
 
   return null;
+}
+
+function EmbeddedWalletEmail() {
+  const emailQuery = useEmbeddedWalletUserEmail();
+
+  if (emailQuery.data) {
+    return (
+      <Container
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text color="primaryText">{emailQuery.data}</Text>
+      </Container>
+    );
+  }
+
+  return undefined;
 }

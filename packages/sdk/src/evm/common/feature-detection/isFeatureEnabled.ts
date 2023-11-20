@@ -8,8 +8,8 @@ import { detectFeatures } from "./detectFeatures";
 /**
  * Checks whether the given ABI supports a given feature
  * @deprecated use isExtensionEnabled instead
- * @param abi
- * @param featureName
+ * @param abi - The abi to check
+ * @param featureName - The feature name to check
  */
 export function isFeatureEnabled(
   abi: AbiInput,
@@ -22,8 +22,8 @@ export function isFeatureEnabled(
 /**
  * Checks whether the given ABI supports a given extension
  * @public
- * @param abi
- * @param featureName
+ * @param abi - The abi to check
+ * @param featureName - The feature name to check
  */
 export function isExtensionEnabled(abi: AbiInput, featureName: FeatureName) {
   return isFeatureEnabled(abi, featureName);
@@ -32,8 +32,8 @@ export function isExtensionEnabled(abi: AbiInput, featureName: FeatureName) {
 /**
  * Searches the feature map for featureName and returns whether its enabled
  * @internal
- * @param features
- * @param featureName
+ * @param features - The feature map to search
+ * @param featureName - The feature name to search for
  */
 function _featureEnabled(
   features: Record<string, FeatureWithEnabled>,

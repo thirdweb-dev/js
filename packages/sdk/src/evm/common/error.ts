@@ -441,8 +441,8 @@ function parseMessageParts(regex: RegExp, raw: string): string {
 
 /**
  * @internal
- * @param err
- * @param message
+ * @param err - The error to check
+ * @param message - The message to check for
  */
 export function includesErrorMessage(err: any, message: string): boolean {
   if (!err) {

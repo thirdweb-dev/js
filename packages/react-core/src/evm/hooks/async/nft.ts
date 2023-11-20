@@ -193,7 +193,10 @@ export function useTotalCirculatingSupply(
   const { erc721, erc1155 } = getErcs(contract);
 
   return useQueryWithNetwork<BigNumber>(
-    cacheKeys.contract.nft.query.totalCirculatingSupply(contractAddress),
+    cacheKeys.contract.nft.query.totalCirculatingSupply(
+      contractAddress,
+      tokenId ?? undefined,
+    ),
     async () => {
       requiredParamInvariant(contract, "No Contract instance provided");
 
@@ -718,7 +721,7 @@ export function useBurnNFT<TContract extends NFTContract>(
 /**
  * Set shared metadata
  * TODO add docs
- * @private
+ * @internal
  */
 export function useSetSharedMetadata<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,

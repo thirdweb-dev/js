@@ -189,8 +189,8 @@ export class ContractWrapper<
 
   /**
    *
-   * @param functionName The function name on the contract to call
-   * @param args The arguments to be passed to the functionName
+   * @param functionName - The function name on the contract to call
+   * @param args - The arguments to be passed to the functionName
    * @returns The return value of the function call
    */
   public async read<

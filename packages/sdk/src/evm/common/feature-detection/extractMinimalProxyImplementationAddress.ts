@@ -1,6 +1,6 @@
 /**
  * @internal
- * @param bytecode
+ * @param bytecode - The bytecode to check
  */
 export function extractMinimalProxyImplementationAddress(
   bytecode: string,

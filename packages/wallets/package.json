@@ -1,9 +1,8 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.1.1",
+  "version": "2.1.7",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
-  "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
   "browser": {
     "./dist/thirdweb-dev-wallets.esm.js": "./dist/thirdweb-dev-wallets.browser.esm.js"
   },
@@ -77,6 +76,20 @@
         "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.esm.js"
       },
       "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.cjs.js"
+    },
+    "./evm/wallets/coin98": {
+      "module": {
+        "browser": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.browser.esm.js",
+        "default": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.esm.js"
+      },
+      "default": "./evm/wallets/coin98/dist/thirdweb-dev-wallets-evm-wallets-coin98.cjs.js"
+    },
+    "./evm/wallets/engine": {
+      "module": {
+        "browser": "./evm/wallets/engine/dist/thirdweb-dev-wallets-evm-wallets-engine.browser.esm.js",
+        "default": "./evm/wallets/engine/dist/thirdweb-dev-wallets-evm-wallets-engine.esm.js"
+      },
+      "default": "./evm/wallets/engine/dist/thirdweb-dev-wallets-evm-wallets-engine.cjs.js"
     },
     "./evm/wallets/ethers": {
       "module": {
@@ -246,6 +259,13 @@
       },
       "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.cjs.js"
     },
+    "./evm/connectors/coin98": {
+      "module": {
+        "browser": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.browser.esm.js",
+        "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.esm.js"
+      },
+      "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.cjs.js"
+    },
     "./evm/connectors/signer": {
       "module": {
         "browser": "./evm/connectors/signer/dist/thirdweb-dev-wallets-evm-connectors-signer.browser.esm.js",
@@ -402,6 +422,7 @@
     },
     "./package.json": "./package.json"
   },
+  "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
   "license": "Apache-2.0",
   "bugs": {
@@ -444,6 +465,7 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
     "@safe-global/safe-ethers-lib": "^1.9.4",
     "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@walletconnect/core": "^2.9.1",
@@ -456,7 +478,6 @@
     "asn1.js": "5.4.1",
     "bn.js": "5.2.0",
     "buffer": "^6.0.3",
-    "crypto-js": "^4.1.1",
     "eth-provider": "^0.13.6",
     "ethereumjs-util": "^7.1.3",
     "eventemitter3": "^5.0.1",
@@ -501,13 +522,13 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.1",
-    "@types/crypto-js": "^4.1.1",
     "abitype": "^0.2.5",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "bs58": "^5.0.0",
     "cross-env": "^7.0.3",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
+    "eslint-plugin-tsdoc": "^0.2.16",
     "ethereum-provider": "^0.7.7",
     "ethers": "^5.7.2",
     "ethers-aws-kms-signer": "^1.3.2",
@@ -518,7 +539,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
