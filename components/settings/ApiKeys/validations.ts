@@ -32,6 +32,25 @@ const recoverManagementValidation = z
   .enum(["AWS_MANAGED", "USER_MANAGED"])
   .optional();
 
+const applicationNameValidation = z.union([z.undefined(), z.string()]);
+
+const applicationImageUrlValidation = z.union([
+  z.undefined(),
+  z.string().refine(
+    (str) => {
+      try {
+        new URL(str);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "Please, enter a valid image url.",
+    },
+  ),
+]);
+
 const servicesValidation = z.optional(
   z
     .array(
@@ -46,6 +65,8 @@ const servicesValidation = z.optional(
         actions: z.array(z.string()),
         recoveryShareManagement: recoverManagementValidation,
         customAuthentication: customAuthValidation,
+        applicationName: applicationNameValidation,
+        applicationImageUrl: applicationImageUrlValidation,
       }),
     )
     .optional(),
@@ -82,6 +103,8 @@ export const apiKeyValidationSchema = z.object({
 export const apiKeyEmbeddedWalletsValidationSchema = z.object({
   recoveryShareManagement: recoverManagementValidation,
   customAuthentication: customAuthValidation,
+  applicationName: applicationNameValidation,
+  applicationImageUrl: applicationImageUrlValidation,
 });
 
 export type ApiKeyCreateValidationSchema = z.infer<

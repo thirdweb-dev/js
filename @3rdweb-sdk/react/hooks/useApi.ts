@@ -69,6 +69,8 @@ export type ApiKeyService = {
   // If updating here, need to update validation logic in `validation.ts` as well for recoveryShareManagement
   recoveryShareManagement?: ApiKeyRecoverShareManagement;
   customAuthentication?: ApiKeyCustomAuthentication;
+  applicationName?: string;
+  applicationImageUrl?: string;
 };
 
 export type ApiKey = {

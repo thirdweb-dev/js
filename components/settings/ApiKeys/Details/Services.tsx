@@ -21,7 +21,7 @@ interface ServicesDetailsProps {
 }
 
 export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
-  const { redirectUrls, services } = apiKey;
+  const { name, redirectUrls, services } = apiKey;
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
 
   const redirectUrlContent = useMemo(() => {
@@ -35,6 +35,24 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
 
     return <CodeBlock code={redirectUrls.join("\n")} canCopy={false} />;
   }, [redirectUrls]);
+
+  const applicationNameContent = ({ applicationName }: ApiKeyService) => {
+    if (!applicationName) {
+      return name;
+    }
+
+    return <CodeBlock code={applicationName} canCopy={true} />;
+  };
+
+  const applicationImageUrlContent = ({
+    applicationImageUrl,
+  }: ApiKeyService) => {
+    if (!applicationImageUrl) {
+      return "None";
+    }
+
+    return <CodeBlock code={applicationImageUrl} canCopy={true} />;
+  };
 
   const renderCustomAuthContent = ({ customAuthentication }: ApiKeyService) => {
     if (
@@ -116,6 +134,16 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                 )}
                 {service.name === "embeddedWallets" && (
                   <Flex flexDir="column" gap={4}>
+                    <DetailsRow
+                      title="Application Name"
+                      content={applicationNameContent(srv)}
+                    />
+
+                    <DetailsRow
+                      title="Application Image URL"
+                      content={applicationImageUrlContent(srv)}
+                    />
+
                     <DetailsRow
                       title="Redirect URIs"
                       tooltip={`Prevent phishing attacks restricting redirect URIs to your application deep links. Currently only relevant on Unity and React Native platforms.`}

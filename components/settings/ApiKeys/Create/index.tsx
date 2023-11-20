@@ -73,6 +73,7 @@ export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
         actions: srv.actions.map((sa) => sa.name),
         recoveryShareManagement: "AWS_MANAGED",
         customAuthentication: undefined,
+        applicationName: srv.name,
       })),
     };
 

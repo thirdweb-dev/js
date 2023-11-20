@@ -48,6 +48,8 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
                 ...existingService.customAuthentication,
               }
             : undefined,
+          applicationName: existingService?.applicationName,
+          applicationImageUrl: existingService?.applicationImageUrl,
         };
       }),
     },

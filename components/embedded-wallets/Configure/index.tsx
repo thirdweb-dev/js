@@ -63,6 +63,8 @@ export const Configure: React.FC<ConfigureProps> = ({
     defaultValues: {
       recoveryShareManagement: config.recoveryShareManagement,
       customAuthentication: config.customAuthentication,
+      applicationName: config.applicationName,
+      applicationImageUrl: config.applicationImageUrl,
     },
   });
 
