@@ -70,6 +70,10 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/avacloud.png"),
     filter: "grayscale(1)",
   },
+  courtyard: {
+    img: require("./logos/courtyard.png"),
+    filter: "brightness(0) invert(1)",
+  },
 } as const;
 
 export type Partner = keyof typeof PARTNER_LOGO_MAP;
