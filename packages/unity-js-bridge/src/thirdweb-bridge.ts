@@ -5,6 +5,7 @@ import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   DAppMetaData,
+  EmbeddedWalletOauthStrategy,
   SmartWalletConfig,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -274,7 +275,7 @@ class ThirdwebBridge implements TWBridge {
             throw new Error("Email is required for EmbeddedWallet");
           }
           const authResult = await embeddedWallet.authenticate({
-            strategy: "iframe_otp",
+            strategy: "iframe_email_verification",
             email,
           });
           await embeddedWallet.connect({
@@ -283,7 +284,7 @@ class ThirdwebBridge implements TWBridge {
           });
         } else if (authOptionsParsed.authProvider < 4) {
           // OAuth
-          let authProvider;
+          let authProvider: EmbeddedWalletOauthStrategy;
           switch (authOptionsParsed.authProvider) {
             case 1:
               authProvider = "google";
