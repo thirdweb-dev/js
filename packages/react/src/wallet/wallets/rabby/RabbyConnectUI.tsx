@@ -1,6 +1,5 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import type { RabbyWallet } from "@thirdweb-dev/wallets";
@@ -16,7 +15,6 @@ export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const downloadLink = "https://rabby.io";
   const hideBackButton = props.supportedWallets.length === 1;
 
   const connectToExtension = useCallback(async () => {
