@@ -16,7 +16,6 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.OptimismGoerli
   | ChainId.Arbitrum
   | ChainId.ArbitrumGoerli
-  | ChainId.ArbitrumSepolia
   | ChainId.BinanceSmartChainMainnet
   | ChainId.BinanceSmartChainTestnet
   | ChainId.Hardhat

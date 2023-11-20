@@ -17,7 +17,6 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.OptimismGoerli,
   ChainId.Arbitrum,
   ChainId.ArbitrumGoerli,
-  ChainId.ArbitrumSepolia,
   ChainId.BinanceSmartChainMainnet,
   ChainId.BinanceSmartChainTestnet,
   ChainId.Hardhat,
