@@ -7,7 +7,7 @@ import {
   ScreenBottomContainer,
   Line,
 } from "../../components/basic";
-import { Button } from "../../components/buttons";
+import { Button, IconButton } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
 import { iconSize, radius, spacing } from "../../design-system";
 import {
@@ -26,6 +26,7 @@ import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { StyledButton, StyledUl } from "../../design-system/elements";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
@@ -343,28 +344,62 @@ export const WalletSelector: React.FC<{
   return (
     <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
-      <Container p="lg">
-        {isWalletGroupExpanded ? (
-          <ModalHeader
-            title={twTitle}
-            onBack={() => {
-              setIsWalletGroupExpanded(false);
-            }}
-          />
-        ) : (
-          twTitle
-        )}
-      </Container>
+      {!modalConfig.isEmbed && (
+        <Container p="lg">
+          {isWalletGroupExpanded ? (
+            <ModalHeader
+              title={twTitle}
+              onBack={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+            />
+          ) : (
+            twTitle
+          )}
+        </Container>
+      )}
 
       {/* Body */}
       <Container
         expand
         scrollY
         px="md"
-        style={{
-          paddingTop: "2px",
-        }}
+        style={
+          modalConfig.isEmbed
+            ? {
+                paddingTop: spacing.lg,
+              }
+            : {
+                paddingTop: "2px",
+              }
+        }
       >
+        {modalConfig.isEmbed && isWalletGroupExpanded && (
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              padding: spacing.sm,
+              paddingTop: 0,
+            }}
+          >
+            <IconButton
+              onClick={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+              style={{
+                gap: spacing.xxs,
+                transform: `translateX(-${spacing.xs})`,
+                paddingBlock: spacing.xxs,
+                paddingRight: spacing.xs,
+              }}
+            >
+              <ChevronLeftIcon width={iconSize.sm} height={iconSize.sm} />
+              {locale.goBackButton}
+            </IconButton>
+          </Container>
+        )}
+
         {topSection}
       </Container>
 

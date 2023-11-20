@@ -22,6 +22,7 @@ export {
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
+export { usePersonalWalletAddress } from "./hooks/usePersonalWalletAddress";
 
 // connected wallet hooks
 export {
