@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.8",
+  "version": "4.1.10",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -58,7 +58,7 @@
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
     "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'",

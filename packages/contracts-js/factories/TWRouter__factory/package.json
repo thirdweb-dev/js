@@ -1,8 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.cjs.js",
-  "module": "dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.cjs.js": "./dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.browser.cjs.js",
-    "./dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.esm.js": "./dist/thirdweb-dev-contracts-js-factories-TWRouter__factory.browser.esm.js"
-  }
-}
