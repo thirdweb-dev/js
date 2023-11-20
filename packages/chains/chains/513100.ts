@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://etherfair.org",
   "name": "ethereum Fair",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ETHF",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 513100,
   "rpc": [
     "https://ethereum-fair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://513100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherfair.org"
   ],
   "shortName": "ethf",

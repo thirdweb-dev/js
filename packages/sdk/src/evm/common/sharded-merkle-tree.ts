@@ -11,8 +11,8 @@ import { convertQuantityToBigNumber } from "./claim-conditions/convertQuantityTo
 import { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils, type providers } from "ethers";
-import { MerkleTree } from "merkletreejs";
 import { parseSnapshotInputs } from "./parseSnapshotInputs";
+import { MerkleTree } from "@thirdweb-dev/merkletree";
 
 // shard using the first 2 hex character of the address
 // this splits the merkle tree into 256 shards
@@ -234,10 +234,11 @@ export class ShardedMerkleTree {
     const currencyDecimalMap: Record<string, number> = {};
     if (shard === undefined) {
       try {
+        const uri = this.baseUri.endsWith("/")
+          ? this.baseUri
+          : `${this.baseUri}/`;
         shard = this.shards[shardId] =
-          await this.storage.downloadJSON<ShardData>(
-            `${this.baseUri}/${shardId}.json`,
-          );
+          await this.storage.downloadJSON<ShardData>(`${uri}${shardId}.json`);
         const hashedEntries = await Promise.all(
           shard.entries.map(async (entry) => {
             // cache decimals for each currency to avoid refetching for every address

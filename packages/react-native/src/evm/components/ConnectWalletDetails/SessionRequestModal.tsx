@@ -1,19 +1,16 @@
-import { useChain, useWallet } from "@thirdweb-dev/react-core";
+import { shortenAddress, useChain, useWallet } from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import {
-  EIP155_SIGNING_METHODS,
-  IWalletConnectReceiver,
-} from "@thirdweb-dev/wallets";
+import { EIP155_SIGNING_METHODS } from "@thirdweb-dev/wallets";
 import { useLocale, useModalState } from "../../providers/ui-context-provider";
 import {
   CLOSE_MODAL_STATE,
   WalletConnectSessionRequestModal,
 } from "../../utils/modalTypes";
 import { ActivityIndicator, Dimensions } from "react-native";
-import { shortenWalletAddress } from "../../utils/addresses";
 import { useCallback, useState } from "react";
+import { useWalletConnectHandler } from "../../providers/context-provider";
 
 const getTitle = (method: string) => {
   switch (method) {
@@ -34,6 +31,7 @@ export const SessionRequestModal = () => {
   const { modalState, setModalState } = useModalState();
   const { data: requestData } = modalState as WalletConnectSessionRequestModal;
   const [approvingRequest, setApprovingRequest] = useState(false);
+  const walletConnectHandler = useWalletConnectHandler();
 
   const wallet = useWallet();
   const chain = useChain();
@@ -48,12 +46,10 @@ export const SessionRequestModal = () => {
     }
 
     setApprovingRequest(true);
-    (wallet as unknown as IWalletConnectReceiver)
-      .approveRequest()
-      .finally(() => {
-        setApprovingRequest(false);
-        onClose();
-      });
+    walletConnectHandler?.approveEIP155Request().finally(() => {
+      setApprovingRequest(false);
+      onClose();
+    });
   };
 
   const getContent = useCallback(() => {
@@ -86,10 +82,10 @@ export const SessionRequestModal = () => {
         return (
           <Box>
             <Text variant="bodySmall" textAlign="left">
-              {`${l.common.from}: ${shortenWalletAddress(from)}`}
+              {`${l.common.from}: ${shortenAddress(from)}`}
             </Text>
             <Text variant="bodySmall" textAlign="left" mt="sm">
-              {`${l.common.to}: ${shortenWalletAddress(to)}`}
+              {`${l.common.to}: ${shortenAddress(to)}`}
             </Text>
           </Box>
         );
@@ -126,7 +122,7 @@ export const SessionRequestModal = () => {
           minWidth={100}
           borderColor="border"
           onPress={async () => {
-            (wallet as unknown as IWalletConnectReceiver).rejectRequest();
+            walletConnectHandler?.rejectEIP155Request();
             onClose();
           }}
         >

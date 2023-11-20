@@ -9,7 +9,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
-import { SmartContract } from "../contracts/smart-contract";
+import type { SmartContract as SmartContractType } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
@@ -26,7 +26,6 @@ import type {
 import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
@@ -520,8 +519,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: TContractAddress,
   ): Promise<
     TContractAddress extends ContractAddress
-      ? SmartContract<BaseContractForAddress<TContractAddress>>
-      : SmartContract<BaseContract>
+      ? SmartContractType<BaseContractForAddress<TContractAddress>>
+      : SmartContractType<BaseContract>
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
@@ -540,7 +539,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): Promise<
     TContractType extends PrebuiltContractType
       ? ContractForPrebuiltContractType<TContractType>
-      : SmartContract
+      : SmartContractType
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
@@ -556,7 +555,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getContract(
     address: AddressOrEns,
     abi: ContractInterface,
-  ): Promise<SmartContract>;
+  ): Promise<SmartContractType>;
   public async getContract(
     address: AddressOrEns,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
@@ -662,6 +661,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     contractAddress: AddressOrEns,
   ): Promise<ContractType> {
     try {
+      const IThirdwebContractABI = (
+        await import(
+          "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json"
+        )
+      ).default;
       const contract = new EthersContract(
         await resolveAddress(contractAddress),
         IThirdwebContractABI,
@@ -825,10 +829,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: AddressOrEns,
     abi: ContractInterface,
   ) {
-    const resolvedAddress = await resolveAddress(address);
+    const [resolvedAddress, { SmartContract }] = await Promise.all([
+      resolveAddress(address),
+      import("../contracts/smart-contract"),
+    ]);
 
     if (this.contractCache.has(resolvedAddress)) {
-      return this.contractCache.get(resolvedAddress) as SmartContract;
+      return this.contractCache.get(resolvedAddress) as SmartContractType;
     }
     const [, provider] = getSignerAndProvider(
       this.getSignerOrProvider(),
@@ -836,7 +843,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
 
     const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
-    // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
@@ -1539,7 +1545,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
-   * @param version
+   * @param version - the version of the contract to deploy
    * @returns a promise of the address of the newly deployed contract
    */
   deployBuiltInContract = /* @__PURE__ */ buildDeployTransactionFunction(
@@ -1622,7 +1628,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param contractType
+   * @param contractType - the type of contract to deploy
    */
   public async getLatestBuiltInContractVersion<
     TContractType extends PrebuiltContractType,
@@ -1636,9 +1642,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy any published contract by its name
-   * @param publisherAddress the address of the publisher
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress - the address of the publisher
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
    *
    * @deprecated use deployPublishedContract instead
    */
@@ -1665,21 +1671,21 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy any published contract by its name
-   * @param publisherAddress the address of the publisher
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param options Optional: the deploy options
+   * @param publisherAddress - the address of the publisher
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param options - Optional: the deploy options
    */
   deployPublishedContract = this.deployReleasedContract;
 
   /**
    * Deploy any published contract by its name
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
-   * @param publisherAddress the address of the publisher
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param publisherAddress - the address of the publisher
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 - Optional: salt for create2 deployment, will determine deployment address
    */
   async deployPublishedContractDeterministic(
     contractName: string,
@@ -1706,11 +1712,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Predict Create2 address of a contract
-   * @param contractName the name of the contract
-   * @param constructorParams the constructor params to pass to the contract
-   * @param publisherAddress the address of the publisher
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   * @param contractName - the name of the contract
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param publisherAddres -s the address of the publisher
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 - Optional: salt for create2 deployment, will determine deployment address
    */
   async predictAddressDeterministic(
     contractName: string,
@@ -1737,11 +1743,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via the given factory
-   * @param factoryAddress
-   * @param implementationAddress
-   * @param implementationAbi
-   * @param initializerFunction
-   * @param initializerArgs
+   * @param factoryAddress - the address of the factory
+   * @param implementationAddress - the address of the implementation
+   * @param implementationAbi - the abi of the implementation
+   * @param initializerFunction - the initializer function to call
+   * @param initializerArgs - the initializer args to pass to the initializer function
    */
   deployViaFactory = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -1783,10 +1789,10 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation directly
-   * @param implementationAddress
-   * @param implementationAbi
-   * @param initializerFunction
-   * @param initializerArgs
+   * @param implementationAddress - the address of the implementation
+   * @param implementationAbi - the abi of the implementation
+   * @param initializerFunction - the initializer function to call
+   * @param initializerArgs - the initializer args to pass to the initializer function
    */
   deployProxy = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1813,11 +1819,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via thirdweb's Clone factory
-   * @param publishMetadataUri
-   * @param constructorParamValues
-   * @param deployMetadata
-   * @param signer
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param constructorParamValues - the constructor param values
+   * @param deployMetadata - the deploy metadata
+   * @param signer - the signer to use
+   * @param options - the deploy options
    */
   deployViaAutoFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1913,10 +1919,10 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via a custom factory
-   * @param constructorParamValues
-   * @param deployMetadata
-   * @param signer
-   * @param chainId
+   * @param constructorParamValues - the constructor param values
+   * @param deployMetadata - the deploy metadata
+   * @param signer - the signer to use
+   * @param chainId - the chain id to deploy to
    */
   deployViaCustomFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2005,10 +2011,14 @@ export class ContractDeployer extends RPCConnectionHandler {
         if (!registryAddress) {
           return undefined;
         }
+        const TWRegistryABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json")
+        ).default;
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
           this.storage,
+          TWRegistryABI,
           this.options,
         );
       }));
@@ -2070,9 +2080,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publishMetadataUri
-   * @param constructorParamValues
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param constructorParamValues - the constructor param values
+   * @param options - the deploy options
    */
   deployContractFromUri = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2215,9 +2225,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param abi
-   * @param bytecode
-   * @param constructorParams
+   * @param abi - the abi of the contract
+   * @param bytecode - the bytecode of the contract
+   * @param constructorParams - the constructor params to pass to the contract
    */
   deployContractWithAbi = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2243,8 +2253,8 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @public
-   * @param publishMetadataUri
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param options - the deploy options
    */
   public async getTransactionsForDeploy(
     publishMetadataUri: string,
@@ -2363,7 +2373,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Listen to all deploy transactions from this deployer
-   * @param listener the listener to add
+   * @param listener - the listener to add
    */
   public addDeployListener(listener: (event: DeployEvent) => void) {
     this.events.on("contractDeployed", listener);
@@ -2371,7 +2381,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Remove a deploy listener
-   * @param listener the listener to remove
+   * @param listener - the listener to remove
    */
   public removeDeployListener(listener: (event: DeployEvent) => void) {
     this.events.off("contractDeployed", listener);

@@ -17,6 +17,7 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 1337,
   "redFlags": [],
   "rpc": [
     "http://localhost:8545"

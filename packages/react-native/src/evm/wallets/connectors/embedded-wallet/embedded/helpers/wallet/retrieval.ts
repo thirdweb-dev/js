@@ -46,9 +46,9 @@ export async function getExistingUserEtherJsWallet(clientId: string) {
 
 /**
  *
- * @param deviceShare retrieves the current share associated with the user's device.
+ * @param deviceShare - retrieves the current share associated with the user's device.
  * @returns the requested shares
- * @throws if attempting to get {@param deviceShare} when it's not present
+ * @throws if attempting to get deviceShare when it's not present
  */
 export async function getShares<
   A extends boolean,
@@ -79,6 +79,8 @@ export async function getShares<
   const queryParams: Record<string, boolean> = {};
   if (authShare.toRetrieve) {
     queryParams.getEncryptedAuthShare = true;
+  } else {
+    queryParams.getEncryptedAuthShare = false;
   }
   if (recoveryShare.toRetrieve) {
     queryParams.getEncryptedRecoveryShare = true;
@@ -86,7 +88,12 @@ export async function getShares<
       // purposely using a vague name to prevent people from inspecting url from figuring out what it does
       // so as to not cause huge debates on the technicality of the custodial // non-custodial
       queryParams.useSealedSecret = true;
+    } else {
+      queryParams.useSealedSecret = false;
     }
+  } else {
+    queryParams.getEncryptedRecoveryShare = false;
+    queryParams.useSealedSecret = false;
   }
 
   const getShareUrl = new URL(ROUTE_GET_USER_SHARES);

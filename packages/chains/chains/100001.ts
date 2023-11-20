@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.quarkchain.io",
   "name": "QuarkChain Mainnet Shard 0",
   "nativeCurrency": {
@@ -18,9 +17,14 @@ export default {
     "symbol": "QKC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 100001,
+  "parent": {
+    "type": "shard",
+    "chain": "eip155-100000"
+  },
   "rpc": [
     "https://quarkchain-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://100001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-s0-ethapi.quarkchain.io",
     "http://eth-jrpc.mainnet.quarkchain.io:39000"
   ],

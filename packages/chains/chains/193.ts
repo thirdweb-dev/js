@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://cemblockchain.com/",
   "name": "Crypto Emergency",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "CEM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 193,
   "rpc": [
     "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://193.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cemchain.com"
   ],
   "shortName": "cem",

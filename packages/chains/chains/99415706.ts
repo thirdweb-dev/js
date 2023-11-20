@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.joys.digital/"
   ],
-  "features": [],
   "infoURL": "https://joys.digital",
   "name": "Joys Digital TestNet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "TOYS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 99415706,
   "rpc": [
     "https://joys-digital-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://99415706.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://toys.joys.cash/"
   ],
   "shortName": "TOYS",

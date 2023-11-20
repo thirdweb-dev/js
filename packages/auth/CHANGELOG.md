@@ -1,5 +1,79 @@
 # @thirdweb-dev/auth
 
+## 4.1.10
+
+### Patch Changes
+
+- Updated dependencies [[`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881), [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863), [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96)]:
+  - @thirdweb-dev/wallets@2.1.7
+
+## 4.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/wallets@2.1.6
+
+## 4.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+
+## 4.1.7
+
+### Patch Changes
+
+- Updated dependencies [[`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5)]:
+  - @thirdweb-dev/wallets@2.1.4
+
+## 4.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd), [`16e9e8b6`](https://github.com/thirdweb-dev/js/commit/16e9e8b64d7d1a97a5b32fc855479e992b7ed3a8), [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c)]:
+  - @thirdweb-dev/wallets@2.1.3
+
+## 4.1.5
+
+### Patch Changes
+
+- [#1927](https://github.com/thirdweb-dev/js/pull/1927) [`05e52114`](https://github.com/thirdweb-dev/js/commit/05e52114bf4f0ee352f393ed20115a904a18c310) Thanks [@alecananian](https://github.com/alecananian)! - Update Fastify login route response to match Express/Next
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8)]:
+  - @thirdweb-dev/wallets@2.1.2
+
+## 4.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db)]:
+  - @thirdweb-dev/wallets@2.1.1
+
+## 4.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/wallets@2.1.0
+
+## 4.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4)]:
+  - @thirdweb-dev/wallets@2.0.10
+
+## 4.1.1
+
+### Patch Changes
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- Updated dependencies [[`4fa09df6`](https://github.com/thirdweb-dev/js/commit/4fa09df6d0ece89e5e6f1c8f9b530a4bd6c266d7), [`4cb6e287`](https://github.com/thirdweb-dev/js/commit/4cb6e287c857e3597ae9f3c92c9c3961ca7a9f4e), [`5917e626`](https://github.com/thirdweb-dev/js/commit/5917e626b0744af369b67a2e44d9361422a8045d), [`44f258d6`](https://github.com/thirdweb-dev/js/commit/44f258d6bf801b553ca67a5dcebe213a4772e8a1), [`7ff0b4d5`](https://github.com/thirdweb-dev/js/commit/7ff0b4d54715afc86fc72e297a4d8bbe6897e49c), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`042459fe`](https://github.com/thirdweb-dev/js/commit/042459fe3424add527209ac273913b494b5e426c)]:
+  - @thirdweb-dev/wallets@2.0.9
+
 ## 4.1.0
 
 ### Minor Changes

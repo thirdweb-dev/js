@@ -6,13 +6,18 @@ export default {
     {
       "name": "Core Scan Testnet",
       "url": "https://scan.test.btcs.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
+        "width": 200,
+        "height": 217,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://scan.test.btcs.network/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
     "width": 200,
@@ -26,9 +31,10 @@ export default {
     "symbol": "tCORE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1115,
   "rpc": [
     "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1115.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.btcs.network/"
   ],
   "shortName": "tcore",

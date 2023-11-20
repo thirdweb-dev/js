@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://linqto.com",
   "name": "Linqto Devnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "XRP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 84,
   "rpc": [
     "https://linqto-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://84.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://linqto-dev.com"
   ],
   "shortName": "linqto-devnet",

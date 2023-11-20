@@ -19,9 +19,8 @@ export default {
     "symbol": "NCFG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2032,
   "rpc": [
-    "https://catalyst.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.catalyst.cntrfg.com"
   ],
   "shortName": "ncfg",

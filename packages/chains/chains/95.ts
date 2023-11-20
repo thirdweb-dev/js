@@ -30,11 +30,13 @@ export default {
     "symbol": "CADL",
     "decimals": 18
   },
+  "networkId": 95,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://95.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.camdl.gov.kh/"
   ],
   "shortName": "camdl",

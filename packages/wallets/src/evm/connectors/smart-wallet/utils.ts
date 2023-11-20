@@ -3,6 +3,7 @@ import {
   isContractDeployed,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
+import { BytesLike } from "ethers";
 
 export type AccessibleSmartWallets = {
   owned: string;
@@ -23,10 +24,10 @@ function getSDK(chain: ChainOrRpcUrl): ThirdwebSDK {
 
 /**
  * Get all the signers added to the given smart wallet (excluding owner)
- * @param chain
- * @param factoryAddress
- * @param smartWalletAddress
- * @returns
+ * @param chain - The chain to use
+ * @param factoryAddress - The factory address
+ * @param smartWalletAddress - The smart wallet address
+ * @returns The list of signers
  */
 export async function getAllSigners(
   chain: ChainOrRpcUrl,
@@ -43,10 +44,10 @@ export async function getAllSigners(
 
 /**
  * Get all the smart wallets associated with a personal wallet address
- * @param chain
- * @param factoryAddress
- * @param personalWalletAddress
- * @returns
+ * @param chain - The chain to use
+ * @param factoryAddress - The factory address
+ * @param personalWalletAddress - The personal wallet address
+ * @returns The list of smart wallets
  */
 export async function getAllSmartWallets(
   chain: ChainOrRpcUrl,
@@ -72,21 +73,22 @@ export async function getAllSmartWallets(
 
 /**
  * Check if a smart wallet is deployed for a given personal wallet address
- * @param chain
- * @param factoryAddress
- * @param personalWalletAddress
- * @returns
+ * @param chain - The chain to use
+ * @param factoryAddress - The factory address
+ * @param personalWalletAddress - The personal wallet address
+ * @returns True if the smart wallet is deployed
  */
 export async function isSmartWalletDeployed(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
   personalWalletAddress: string,
+  data: BytesLike = "0x",
 ) {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
-    "0x",
+    data,
   ]);
   const isDeployed = await isContractDeployed(
     accountAddress,
@@ -97,20 +99,22 @@ export async function isSmartWalletDeployed(
 
 /**
  * Get the associated smart wallet address for a given personal wallet address
- * @param chain
- * @param factoryAddress
- * @param personalWalletAddress
- * @returns
+ * @param chain - The chain to use
+ * @param factoryAddress - The factory address
+ * @param personalWalletAddress - The personal wallet address
+ * @returns The smart wallet address
  */
 export async function getSmartWalletAddress(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
   personalWalletAddress: string,
+  data: BytesLike = "0x",
 ): Promise<string> {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
+    data,
   ]);
   return accountAddress;
 }

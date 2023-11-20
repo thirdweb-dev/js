@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://app-faucet.centrality.me"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
     "width": 112,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CPAY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3001,
   "rpc": [
     "https://cennznet-nikau.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nikau.centrality.me/public"
   ],
   "shortName": "cennz-n",

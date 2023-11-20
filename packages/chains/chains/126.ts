@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXW5T2MaGHznXUmQEXoyJjcdmX7dhLbj5fnqvZZKqeKzA",
     "width": 677,
@@ -24,12 +23,14 @@ export default {
     "symbol": "OY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 126,
   "rpc": [
     "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://126.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oychain.io"
   ],
   "shortName": "OYchainMainnet",
+  "slip44": 126,
   "slug": "oychain",
   "testnet": false
 } as const satisfies Chain;

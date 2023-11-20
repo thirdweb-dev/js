@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.scolcoin.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
     "width": 792,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SCOL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6552,
   "rpc": [
     "https://scolcoin-weichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6552.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.scolcoin.com"
   ],
   "shortName": "SRC-test",

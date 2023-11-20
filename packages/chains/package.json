@@ -1,25 +1,14 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.55",
+  "version": "0.1.58",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-chains.esm.js": "./dist/thirdweb-dev-chains.browser.esm.js"
-  },
   "exports": {
     ".": {
-      "module": {
-        "browser": "./dist/thirdweb-dev-chains.browser.esm.js",
-        "default": "./dist/thirdweb-dev-chains.esm.js"
-      },
+      "module": "./dist/thirdweb-dev-chains.esm.js",
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
     "./package.json": "./package.json"
-  },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/chains",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
@@ -29,11 +18,9 @@
     "@babel/runtime": "^7.22.6",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/jest": "^29.5.3",
     "axios": "^1.4.0",
     "deepmerge": "^4.3.1",
     "eslint-config-thirdweb": "workspace:*",
-    "jest": "^29.6.2",
     "plop": "^3.1.2",
     "typescript": "^5.1.6"
   },
@@ -41,11 +28,7 @@
     "entrypoints": [
       "index.ts"
     ],
-    "exports": {
-      "envConditions": [
-        "browser"
-      ]
-    }
+    "exports": true
   },
   "sideEffects": false,
   "scripts": {
@@ -56,6 +39,9 @@
     "plop": "plop",
     "add-chain": "plop add-chain",
     "override-chain": "plop override-chain",
-    "test": "jest"
+    "test": "bun test"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

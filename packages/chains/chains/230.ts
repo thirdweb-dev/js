@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://swapdex.network/",
   "name": "SwapDEX",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "SDX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 230,
   "rpc": [
     "https://swapdex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.swapdex.network",
     "wss://ss.swapdex.network"
   ],

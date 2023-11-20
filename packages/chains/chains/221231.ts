@@ -6,7 +6,13 @@ export default {
     {
       "name": "Reapchain Testnet Dashboard",
       "url": "https://test-dashboard.reapchain.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -26,9 +32,10 @@ export default {
     "symbol": "tREAP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 221231,
   "rpc": [
     "https://reapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://221231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-eth.reapchain.org"
   ],
   "shortName": "reap-testnet",

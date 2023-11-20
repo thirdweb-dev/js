@@ -1,3 +1,4 @@
+import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
 
 export const WalletIcon = ({
@@ -7,5 +8,9 @@ export const WalletIcon = ({
   iconUri: string;
   size: number;
 }) => {
-  return <ImageSvgUri imageUrl={iconUri} width={size} height={size} />;
+  return (
+    <Box borderRadius="sm" overflow="hidden">
+      <ImageSvgUri imageUrl={iconUri} width={size} height={size} />
+    </Box>
+  );
 };

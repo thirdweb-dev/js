@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://discuss.lightstreams.network/t/request-test-tokens"
   ],
-  "features": [],
   "infoURL": "https://explorer.sirius.lightstreams.io",
   "name": "Lightstreams Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "PHT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 162,
   "rpc": [
     "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://162.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.sirius.lightstreams.io"
   ],
   "shortName": "tpht",

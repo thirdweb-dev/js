@@ -4,7 +4,6 @@ export default {
   "chainId": 2559,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.kortho.io/",
   "name": "Kortho Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "KTO",
     "decimals": 11
   },
-  "redFlags": [],
+  "networkId": 2559,
   "rpc": [
     "https://kortho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.kortho-chain.com"
   ],
   "shortName": "ktoc",

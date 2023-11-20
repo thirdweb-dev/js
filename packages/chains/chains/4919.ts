@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiaplwlym5g27jm4mjhotfqq6al2cxp3fnkmzdusqjg7wnipq5wn2e",
     "width": 1000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "XVM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4919,
   "rpc": [
     "https://venidium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4919.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.venidium.io"
   ],
   "shortName": "xvm",

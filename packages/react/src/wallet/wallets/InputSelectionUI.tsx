@@ -11,6 +11,7 @@ export function InputSelectionUI(props: {
   type: string;
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
+  submitButtonText: string;
 }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
@@ -83,7 +84,7 @@ export function InputSelectionUI(props: {
 
       <Spacer y="md" />
       <Button variant="accent" onClick={handleSelect} fullWidth>
-        Continue
+        {props.submitButtonText}
       </Button>
     </div>
   );

@@ -1,27 +1,39 @@
 import {
   AuthOptions,
+  AuthParams,
+  AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
   OauthOption,
+  SendEmailOtpReturnType,
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
-import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import {
   customJwt,
-  sendEmailOTP,
+  sendVerificationEmail,
   socialLogin,
   validateEmailOTP,
 } from "./embedded/auth";
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
 import {
+  clearConnectedAuthStrategy,
   clearConnectedEmail,
+  getConnectedAuthStrategy,
   getConnectedEmail,
+  saveConnectedAuthStrategy,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+import {
+  AuthProvider,
+  Connector,
+  RecoveryShareManagement,
+  UserWalletStatus,
+  normalizeChainId,
+} from "@thirdweb-dev/wallets";
+import { isValidUserManagedEmailOtp } from "./embedded/helpers/api/fetchers";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -30,153 +42,197 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   email?: string;
 
+  connectedAuthStrategy?: AuthParams["strategy"];
+
   constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
 
     this.email = getConnectedEmail();
+
+    this.connectedAuthStrategy = getConnectedAuthStrategy();
   }
 
-  async connect(options?: { chainId?: number } & EmbeddedWalletConnectionArgs) {
-    const connected = await this.isConnected();
-
-    if (connected) {
-      return this.getAddress();
-    }
-
-    switch (options?.loginType) {
-      case "headless_google_oauth":
-        {
-          await socialLogin(
-            {
-              provider: AuthProvider.GOOGLE,
-              redirectUrl: options.redirectUrl,
-            },
-            this.options.clientId,
-          );
-        }
-        break;
-      case "headless_email_otp_verification": {
-        await this.validateEmailOtp({ otp: options.otp });
-        break;
-      }
-      case "jwt": {
-        await this.customJwt({
-          jwt: options.jwt,
-          password: options.password,
-        });
-        break;
-      }
-      default:
-        throw new Error("Invalid login type");
-    }
-
-    if (options?.chainId) {
-      this.switchChain(options.chainId);
+  async connect(options?: EmbeddedWalletConnectionArgs) {
+    try {
+      await this.getSigner();
+    } catch (error) {
+      throw new Error(`Error fetching the signer: ${error}`);
     }
 
     this.setupListeners();
+
+    if (options?.chainId) {
+      await this.switchChain(options.chainId);
+    }
+
     return this.getAddress();
   }
 
-  async validateEmailOtp(options: { otp: string }) {
-    if (!this.email) {
-      throw new Error("Email is required to connect");
+  async authenticate(params: AuthParams): Promise<AuthResult> {
+    const strategy = params.strategy;
+    this.connectedAuthStrategy = strategy;
+    switch (strategy) {
+      case "email_verification": {
+        return await this.validateEmailOTP({
+          email: params.email,
+          otp: params.verificationCode,
+          recoveryCode: params.recoveryCode,
+        });
+      }
+      case "google": {
+        return this.socialLogin({
+          provider: AuthProvider.GOOGLE,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "facebook": {
+        return this.socialLogin({
+          provider: AuthProvider.FACEBOOK,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "apple": {
+        return this.socialLogin({
+          provider: AuthProvider.APPLE,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "jwt": {
+        return this.customJwt({
+          jwt: params.jwt,
+          password: params.encryptionKey || "",
+        });
+      }
+      default:
+        assertUnreachable(strategy);
     }
+  }
 
+  private async validateEmailOTP(options: {
+    email: string;
+    otp: string;
+    recoveryCode?: string;
+  }): Promise<AuthResult> {
     try {
-      await validateEmailOTP({
+      const { storedToken } = await validateEmailOTP({
+        email: options.email,
         clientId: this.options.clientId,
         otp: options.otp,
+        recoveryCode: options.recoveryCode,
       });
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            storedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: storedToken.isNewUser,
+        needsRecoveryCode:
+          storedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
       if (error instanceof Error) {
-        return { error: error.message };
+        throw new Error(`Error while validating otp: ${error.message}`);
       } else {
-        return { error: "An unknown error occurred" };
+        throw new Error("An unknown error occurred while validating otp");
       }
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
-  async sendEmailOtp(options: { email: string }) {
+  async isValidUserManagedEmailOTP(options: { otp: string }) {
+    try {
+      const result = await isValidUserManagedEmailOtp({
+        clientId: this.options.clientId,
+        email: this.email || "",
+        otp: options.otp,
+      });
+
+      if (result.isValid) {
+        return result;
+      } else {
+        throw new Error("Invalid otp, please try again.");
+      }
+    } catch (error) {
+      throw new Error(`Error validating otp: ${error}`);
+    }
+  }
+
+  async sendVerificationEmail(options: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
     this.email = options.email;
-    saveConnectedEmail(options.email);
-    return sendEmailOTP({
+    return sendVerificationEmail({
       email: options.email,
       clientId: this.options.clientId,
     });
   }
 
-  async socialLogin(oauthOption: OauthOption) {
+  private async socialLogin(oauthOption: OauthOption): Promise<AuthResult> {
     try {
-      const { email } = await socialLogin(oauthOption, this.options.clientId);
+      const { storedToken, email } = await socialLogin(
+        oauthOption,
+        this.options.clientId,
+      );
       this.email = email;
-      saveConnectedEmail(email);
+
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            storedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: storedToken.isNewUser,
+        needsRecoveryCode:
+          storedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(
         `Error while signing in with: ${oauthOption.provider}. ${error}`,
       );
       if (error instanceof Error) {
-        return { error: error.message };
+        throw new Error(
+          `Error signing in with ${oauthOption.provider}: ${error.message}`,
+        );
       } else {
-        return { error: "An unknown error occurred" };
+        throw new Error(
+          `An unknown error occurred signing in with ${oauthOption.provider}`,
+        );
       }
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
-  async customJwt(authOptions: AuthOptions) {
+  private async customJwt(authOptions: AuthOptions): Promise<AuthResult> {
     try {
-      const resp = await customJwt(authOptions, this.options.clientId);
-      this.email = resp.email;
+      const { verifiedToken, email } = await customJwt(
+        authOptions,
+        this.options.clientId,
+      );
+      this.email = email;
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            verifiedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: verifiedToken.isNewUser,
+        needsRecoveryCode:
+          verifiedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(`Error while verifying auth: ${error}`);
       this.disconnect();
       throw error;
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
   async disconnect(): Promise<void> {
     clearConnectedEmail();
+    clearConnectedAuthStrategy();
     await logoutUser(this.options.clientId);
     await this.onDisconnect();
     this.signer = undefined;
@@ -221,6 +277,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.signer = this.signer.connect(
         new providers.JsonRpcProvider(this.options.chain.rpc[0]),
       );
+    }
+
+    if (this.email) {
+      saveConnectedEmail(this.email);
+    }
+    if (this.connectedAuthStrategy) {
+      saveConnectedAuthStrategy(this.connectedAuthStrategy);
     }
 
     return signer;
@@ -296,4 +359,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   getEmail() {
     return this.email;
   }
+
+  getConnectedAuthStrategy() {
+    return this.connectedAuthStrategy;
+  }
+}
+
+function assertUnreachable(x: never): never {
+  throw new Error("Invalid param: " + x);
 }

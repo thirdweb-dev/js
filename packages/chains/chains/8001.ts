@@ -6,18 +6,29 @@ export default {
     {
       "name": "Teleport EVM Explorer (Blockscout)",
       "url": "https://evm-explorer.testnet.teleport.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     },
     {
       "name": "Teleport Cosmos Explorer (Big Dipper)",
       "url": "https://explorer.testnet.teleport.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [
     "https://chain-docs.teleport.network/testnet/faucet.html"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
     "width": 390,
@@ -31,9 +42,10 @@ export default {
     "symbol": "TELE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8001,
   "rpc": [
     "https://teleport-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.testnet.teleport.network"
   ],
   "shortName": "teleport-testnet",

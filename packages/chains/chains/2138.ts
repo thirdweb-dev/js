@@ -2,6 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "dfiometatest",
   "chainId": 2138,
+  "ens": {
+    "registry": "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+  },
   "explorers": [
     {
       "name": "Quorum Explorer",
@@ -31,13 +34,15 @@ export default {
     "symbol": "tETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 21,
   "rpc": [
     "https://defi-oracle-meta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2138.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.public-2138.defi-oracle.io",
     "wss://rpc.public-2138.defi-oracle.io"
   ],
   "shortName": "dfio-meta-test",
+  "slip44": 60,
   "slug": "defi-oracle-meta-testnet",
   "testnet": true
 } as const satisfies Chain;

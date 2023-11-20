@@ -5,9 +5,9 @@ import { fetchCurrencyMetadata } from "./fetchCurrencyMetadata";
 
 /**
  *
- * @param provider
- * @param inputPrice
- * @param currencyAddress
+ * @param provider - The provider to use
+ * @param inputPrice - The input price to normalize
+ * @param currencyAddress - The currency address to normalize the price for
  * @returns
  * @internal
  */

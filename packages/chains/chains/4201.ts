@@ -33,9 +33,10 @@ export default {
     "symbol": "LYXt",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4201,
   "rpc": [
     "https://lukso-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.lukso.network",
     "wss://ws-rpc.testnet.lukso.network"
   ],

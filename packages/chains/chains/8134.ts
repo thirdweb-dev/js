@@ -4,7 +4,6 @@ export default {
   "chainId": 8134,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
@@ -18,7 +17,7 @@ export default {
     "symbol": "MEER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8134,
   "rpc": [],
   "shortName": "amana",
   "slug": "amana",

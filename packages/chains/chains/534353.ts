@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://scroll.io",
   "name": "Scroll Alpha Testnet",
   "nativeCurrency": {
@@ -18,9 +17,15 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 534353,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": []
+  },
   "rpc": [
     "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-rpc.scroll.io/l2"
   ],
   "shortName": "scr-alpha",

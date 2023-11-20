@@ -3,24 +3,37 @@ import {
   AbstractClientWallet,
   EmbeddedWalletAdditionalOptions,
   walletIds,
+  WalletConnectReceiverConfig,
 } from "@thirdweb-dev/wallets";
-import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
+import type { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import {
+  AuthParams,
   EmbeddedWalletConnectionArgs,
-  OauthOption,
 } from "../../connectors/embedded-wallet/types";
-import { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
+import { WalletMeta } from "@thirdweb-dev/wallets/dist/declarations/src/evm/wallets/base";
+import { AUTH_OPTIONS_ICONS } from "../../types/embedded-wallet";
 
-export type EmbeddedWalletOptions =
-  WalletOptions<EmbeddedWalletAdditionalOptions>;
+export type EmbeddedWalletOptions = WalletOptions<
+  EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
+>;
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletOptions,
   EmbeddedWalletConnectionArgs
 > {
-  connector?: EmbeddedConnectorType;
+  connector?: EmbeddedWalletConnector;
   options: EmbeddedWalletOptions;
+
+  static async sendVerificationEmail(options: {
+    email: string;
+    clientId: string;
+  }) {
+    const { sendVerificationEmail } = await import(
+      "../../connectors/embedded-wallet/embedded/auth"
+    );
+    return sendVerificationEmail(options);
+  }
 
   static meta = {
     name: "Embedded Wallet",
@@ -39,14 +52,17 @@ export class EmbeddedWallet extends AbstractClientWallet<
     this.setupListeners();
   }
 
-  async getConnector(): Promise<EmbeddedConnectorType> {
+  async getConnector(): Promise<EmbeddedWalletConnector> {
     if (!this.connector) {
       return await this.initializeConnector();
     }
     return this.connector;
   }
 
-  initializeConnector() {
+  async initializeConnector() {
+    const { EmbeddedWalletConnector } = await import(
+      "../../connectors/embedded-wallet/embedded-connector"
+    );
     this.connector = new EmbeddedWalletConnector({
       ...this.options,
       clientId: this.options.clientId,
@@ -56,16 +72,29 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return this.connector;
   }
 
-  async validateEmailOTP(otp: string) {
-    return this.connector?.validateEmailOtp({ otp });
+  async sendVerificationEmail(email: string) {
+    return this.connector?.sendVerificationEmail({ email });
   }
 
-  async sendEmailOTP(email: string) {
-    return this.connector?.sendEmailOtp({ email });
+  async authenticate(params: AuthParams) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.authenticate(params);
   }
 
-  async socialLogin(oauthOption: OauthOption) {
-    return this.connector?.socialLogin(oauthOption);
+  getMeta(): WalletMeta {
+    const strategy = this.connector?.getConnectedAuthStrategy();
+    const meta = (this.constructor as typeof AbstractClientWallet).meta;
+    switch (strategy) {
+      case "facebook":
+      case "apple":
+      case "google":
+        return {
+          ...meta,
+          iconURL: AUTH_OPTIONS_ICONS[strategy],
+        };
+      default:
+        return meta;
+    }
   }
 
   onConnected = () => {

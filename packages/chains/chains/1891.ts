@@ -6,7 +6,13 @@ export default {
     {
       "name": "pegasus",
       "url": "https://pegasus.lightlink.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmXMDj6iAFn2ducQcUU1M87PMMdT2jfyL3Tp3Lz5uUD5Lv",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -30,9 +36,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1891,
   "rpc": [
     "https://lightlink-pegasus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://replicator-01.pegasus.lightlink.io/rpc/v1",
     "https://replicator-02.pegasus.lightlink.io/rpc/v1"
   ],

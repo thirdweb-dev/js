@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.hazlor.com"
   ],
-  "features": [],
   "infoURL": "https://hazlor.com",
   "name": "Hazlor Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "TSCAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7878,
   "rpc": [
     "https://hazlor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7878.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hatlas.rpc.hazlor.com:8545",
     "wss://hatlas.rpc.hazlor.com:8546"
   ],

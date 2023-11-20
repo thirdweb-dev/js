@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfFK6B4MFLrpSS46aLf7hjpt28poHFeTGEKEuH248Tbyj",
     "width": 200,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ATOS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 167,
   "rpc": [
     "https://atoshi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://167.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.atoshi.io/"
   ],
   "shortName": "atoshi",

@@ -1,5 +1,102 @@
 # thirdweb
 
+## 0.13.18
+
+### Patch Changes
+
+- Updated dependencies [[`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881), [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863), [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96), [`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec)]:
+  - @thirdweb-dev/wallets@2.1.7
+  - @thirdweb-dev/sdk@4.0.15
+  - @thirdweb-dev/auth@4.1.10
+
+## 0.13.17
+
+### Patch Changes
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/sdk@4.0.14
+  - @thirdweb-dev/wallets@2.1.6
+  - @thirdweb-dev/storage@2.0.5
+  - @thirdweb-dev/auth@4.1.9
+
+## 0.13.16
+
+### Patch Changes
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+  - @thirdweb-dev/auth@4.1.8
+
+## 0.13.15
+
+### Patch Changes
+
+- Updated dependencies [[`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5)]:
+  - @thirdweb-dev/wallets@2.1.4
+  - @thirdweb-dev/auth@4.1.7
+
+## 0.13.14
+
+### Patch Changes
+
+- Updated dependencies [[`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4), [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd), [`16e9e8b6`](https://github.com/thirdweb-dev/js/commit/16e9e8b64d7d1a97a5b32fc855479e992b7ed3a8), [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c)]:
+  - @thirdweb-dev/sdk@4.0.13
+  - @thirdweb-dev/storage@2.0.4
+  - @thirdweb-dev/wallets@2.1.3
+  - @thirdweb-dev/auth@4.1.6
+
+## 0.13.13
+
+### Patch Changes
+
+- [#1918](https://github.com/thirdweb-dev/js/pull/1918) [`95c9d56e`](https://github.com/thirdweb-dev/js/commit/95c9d56ea47ef57113679196efe8f9114c6fbb21) Thanks [@saminacodes](https://github.com/saminacodes)! - Fix url redirect for pre-built deploy command
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`05e52114`](https://github.com/thirdweb-dev/js/commit/05e52114bf4f0ee352f393ed20115a904a18c310), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/auth@4.1.5
+  - @thirdweb-dev/storage@2.0.3
+  - @thirdweb-dev/sdk@4.0.12
+
+## 0.13.12
+
+### Patch Changes
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/auth@4.1.4
+
+## 0.13.11
+
+### Patch Changes
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79), [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/sdk@4.0.10
+  - @thirdweb-dev/wallets@2.1.0
+  - @thirdweb-dev/auth@4.1.3
+
+## 0.13.10
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618), [`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4)]:
+  - @thirdweb-dev/chains@0.1.57
+  - @thirdweb-dev/wallets@2.0.10
+  - @thirdweb-dev/sdk@4.0.9
+  - @thirdweb-dev/auth@4.1.2
+
+## 0.13.9
+
+### Patch Changes
+
+- Updated dependencies [[`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36), [`4fa09df6`](https://github.com/thirdweb-dev/js/commit/4fa09df6d0ece89e5e6f1c8f9b530a4bd6c266d7), [`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93), [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a), [`4cb6e287`](https://github.com/thirdweb-dev/js/commit/4cb6e287c857e3597ae9f3c92c9c3961ca7a9f4e), [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264), [`5917e626`](https://github.com/thirdweb-dev/js/commit/5917e626b0744af369b67a2e44d9361422a8045d), [`44f258d6`](https://github.com/thirdweb-dev/js/commit/44f258d6bf801b553ca67a5dcebe213a4772e8a1), [`7ff0b4d5`](https://github.com/thirdweb-dev/js/commit/7ff0b4d54715afc86fc72e297a4d8bbe6897e49c), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`042459fe`](https://github.com/thirdweb-dev/js/commit/042459fe3424add527209ac273913b494b5e426c), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4)]:
+  - @thirdweb-dev/sdk@4.0.8
+  - @thirdweb-dev/wallets@2.0.9
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/storage@2.0.2
+  - @thirdweb-dev/auth@4.1.1
+
 ## 0.13.8
 
 ### Patch Changes

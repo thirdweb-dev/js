@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.zq2-devnet.zilstg.dev"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTREXNgGtUhSoxFsrkhTe5LUnDBTKL5byaX8kpET6UuKp",
     "width": 2048,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ZIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 33469,
   "rpc": [
     "https://zilliqa-2-evm-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://33469.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.zq2-devnet.zilstg.dev"
   ],
   "shortName": "zq2-devnet",

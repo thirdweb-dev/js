@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.antofy.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
     "width": 400,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ABN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2202,
   "rpc": [
     "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.antofy.io"
   ],
   "shortName": "ABNm",

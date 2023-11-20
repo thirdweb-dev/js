@@ -6,21 +6,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
-
-type OAuthProvider = "google"; // currently we only have one
+import { AuthOption } from "../../types/embedded-wallet";
+import { WalletConnectReceiverConfig } from "@thirdweb-dev/wallets";
 
 export type EmbeddedWalletConfig = {
-  // @default true - set false to disable
-  email?: boolean;
-
-  oauthOptions?:
-    | {
-        providers: OAuthProvider[];
-        redirectUrl: string;
-      }
-    | false;
-};
+  auth?: {
+    options: AuthOption[];
+    redirectUrl?: string;
+  };
+} & WalletConnectReceiverConfig;
 
 export const embeddedWallet = (
   config?: EmbeddedWalletConfig,
@@ -28,16 +22,11 @@ export const embeddedWallet = (
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
     <EmailSelectionUI
       {...props}
-      oauthOptions={
-        config?.oauthOptions
-          ? {
-              providers: [AuthProvider.GOOGLE],
-              redirectUrl: config.oauthOptions.redirectUrl,
-            }
-          : undefined
+      auth={
+        config?.auth || {
+          options: ["email"],
+        }
       }
-      // you cannot disable both email and oauth
-      email={!config?.oauthOptions && !config?.email ? true : config?.email}
     />
   );
 
@@ -47,6 +36,7 @@ export const embeddedWallet = (
     create(options: WalletOptions) {
       return new EmbeddedWallet({
         ...options,
+        ...config,
         clientId: options.clientId || "",
       });
     },

@@ -10,18 +10,40 @@ import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import { reservedScreens } from "../../ConnectWallet/constants";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
-import { PaperLoginType } from "../paper/types";
 import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
 } from "./EmbeddedWalletFormUI";
-import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
+import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletSocialLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
-import { EmbeddedWalletConfig } from "./types";
+import {
+  AuthOption,
+  EmbeddedWalletConfig,
+  EmbeddedWalletLoginType,
+} from "./types";
+
+const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
+  "email",
+  "google",
+  "apple",
+  "facebook",
+];
 
 export const embeddedWallet = (
-  config?: EmbeddedWalletConfig,
+  _config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
+  const defaultConfig: EmbeddedWalletConfig = {
+    auth: {
+      options: DEFAULT_AUTH_OPTIONS,
+    },
+  };
+
+  const config: EmbeddedWalletConfig = _config
+    ? { ...defaultConfig, ..._config }
+    : defaultConfig;
+
+  const { auth } = config;
+
   return {
     category: "socialLogin",
     isHeadless: true,
@@ -40,17 +62,29 @@ export const embeddedWallet = (
       });
     },
     selectUI(props) {
-      return <EmbeddedWalletSelectionUI {...props} />;
+      return (
+        <EmbeddedWalletSelectionUI
+          {...props}
+          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
+        />
+      );
     },
     connectUI(props) {
-      return <EmbeddedWalletConnectUI {...props} />;
+      return (
+        <EmbeddedWalletConnectUI
+          {...props}
+          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
+        />
+      );
     },
   };
 };
 
-const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
-  props,
-) => {
+const EmbeddedWalletSelectionUI: React.FC<
+  SelectUIProps<EmbeddedWallet> & {
+    authOptions: AuthOption[];
+  }
+> = (props) => {
   const screen = useScreenContext();
 
   // show the icon + text if
@@ -75,15 +109,20 @@ const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
       <EmbeddedWalletFormUI
         onSelect={props.onSelect}
         walletConfig={props.walletConfig}
+        authOptions={props.authOptions}
       />
     </div>
   );
 };
 
-const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
-  const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
-    props.selectionData as PaperLoginType,
-  );
+const EmbeddedWalletConnectUI = (
+  props: ConnectUIProps<EmbeddedWallet> & {
+    authOptions: AuthOption[];
+  },
+) => {
+  const [loginType, setLoginType] = useState<
+    EmbeddedWalletLoginType | undefined
+  >(props.selectionData as EmbeddedWalletLoginType);
 
   if (loginType) {
     const handleBack = () => {
@@ -98,7 +137,7 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
       }
     };
 
-    if ("email" in loginType) {
+    if (typeof loginType !== "string") {
       return (
         <EmbeddedWalletOTPLoginUI
           {...props}
@@ -108,20 +147,22 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
       );
     }
 
-    // google
-    else {
-      return <EmbeddedWalletGoogleLogin {...props} goBack={handleBack} />;
-    }
+    return (
+      <EmbeddedWalletSocialLogin
+        {...props}
+        goBack={handleBack}
+        strategy={loginType}
+      />
+    );
   }
 
   return (
     <EmbeddedWalletFormUIScreen
       modalSize={props.modalSize}
-      onSelect={(_loginType) => {
-        setLoginType(_loginType);
-      }}
+      onSelect={setLoginType}
       walletConfig={props.walletConfig}
       onBack={props.goBack}
+      authOptions={props.authOptions}
     />
   );
 };

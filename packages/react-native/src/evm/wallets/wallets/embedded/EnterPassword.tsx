@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text } from "../../../components/base";
@@ -7,12 +7,15 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { PasswordInput } from "../../../components/PasswordInput";
+import Checkbox from "../../../components/base/CheckBox";
 
 export type EnterPasswordProps = {
   goBack: () => void;
   close: () => void;
   email: string;
   type: "create_password" | "enter_password";
+  onPassword: (password: string) => void;
+  error: string;
 };
 
 export const EnterPassword = ({
@@ -20,48 +23,67 @@ export const EnterPassword = ({
   goBack,
   email,
   type,
+  onPassword,
+  error,
 }: EnterPasswordProps) => {
   const l = useLocale();
   const theme = useGlobalTheme();
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [checkingPass, setCheckingPass] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const [toggleCheckBox, setToggleCheckBox] = useState<boolean>(false);
 
   const isCreatePassword = type === "create_password";
 
-  const onNextPress = async () => {
-    setCheckingPass(true);
-    if (isCreatePassword) {
-      // Call create password
-      console.log("password", password);
-    } else {
-      // Call enter password
-      setErrorMessage("test");
+  useEffect(() => {
+    if (error) {
+      setCheckingPass(false);
     }
+  }, [error]);
+
+  const onNextPress = async () => {
+    if (!toggleCheckBox) {
+      return;
+    }
+
+    setCheckingPass(true);
+    onPassword(password);
   };
 
-  const onForgotPress = () => {};
-
-  const onLearnMorePress = () => {};
+  const onForgotPress = () => {
+    // [TODO] Forgot password
+  };
 
   return (
-    <Box marginHorizontal="xl">
+    <Box marginHorizontal="xl" mb="sm">
       <ConnectWalletHeader
         middleContent={
           <Text variant="header">
-            {isCreatePassword ? "Create password" : "Enter password"}
+            {isCreatePassword
+              ? l.embedded_wallet.create_password
+              : l.embedded_wallet.enter_password}
           </Text>
         }
         subHeaderText={
           isCreatePassword
-            ? "Set a password for your account"
-            : `Enter the password for email: ${email}`
+            ? l.embedded_wallet.set_password_message
+            : `${l.embedded_wallet.enter_password_for_email}: ${email}`
         }
         onBackPress={goBack}
         onClose={close}
       />
-      <Box mt="sm" flexDirection="column" marginTop="xl" mb="md">
+      <Text variant="bodySmallBold" mt="xs">
+        {l.embedded_wallet.make_sure_you_save_it}
+      </Text>
+      <Box mt="sm" flexDirection="column" marginTop="xl">
         <PasswordInput onChangeText={setPassword} />
+
+        <BaseButton mt="md">
+          <Checkbox
+            label="I have saved my password"
+            color={theme.colors.linkPrimary}
+            onToggle={setToggleCheckBox}
+          />
+        </BaseButton>
 
         {isCreatePassword ? null : (
           <BaseButton
@@ -76,40 +98,38 @@ export const EnterPassword = ({
           </BaseButton>
         )}
       </Box>
-      {errorMessage ? (
-        <Text variant="error" numberOfLines={1}>
-          {errorMessage}
+      {error ? (
+        <Text variant="error" numberOfLines={1} mt="md">
+          {error}
         </Text>
-      ) : (
-        <Box height={20} />
-      )}
-      <Box flex={1} flexDirection="row" justifyContent="flex-end">
-        {isCreatePassword ? (
+      ) : null}
+      {/* {isCreatePassword ? (
           <BaseButton onPress={onLearnMorePress}>
             <Text variant="bodySmallSecondary" color="linkPrimary">
               {l.common.learn_more}
             </Text>
           </BaseButton>
-        ) : null}
-        <BaseButton
-          mt="sm"
-          flexDirection="row"
-          alignItems="center"
-          height={theme.textVariants.bodySmallSecondary.fontSize}
-          onPress={onNextPress}
-        >
-          {checkingPass ? (
-            <ActivityIndicator
-              size={"small"}
-              color={theme.colors.linkPrimary}
-            />
-          ) : (
-            <Text variant="bodySmallSecondary" color="linkPrimary">
-              {l.common.next}
-            </Text>
-          )}
-        </BaseButton>
-      </Box>
+        ) : null} */}
+      <BaseButton
+        mt="md"
+        paddingVertical="md"
+        borderRadius="lg"
+        borderWidth={1}
+        borderColor="border"
+        backgroundColor="accentButtonColor"
+        onPress={onNextPress}
+      >
+        {checkingPass ? (
+          <ActivityIndicator
+            size={"small"}
+            color={theme.colors.accentButtonTextColor}
+          />
+        ) : (
+          <Text variant="bodySmallBold" color="accentButtonTextColor">
+            {l.common.next}
+          </Text>
+        )}
+      </BaseButton>
     </Box>
   );
 };

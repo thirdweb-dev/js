@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://gather.network",
   "name": "Gather Devnet Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "GTH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 486217935,
   "rpc": [
     "https://gather-devnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://486217935.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.gather.network"
   ],
   "shortName": "dGTH",

@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from "react";
-import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
 import { isMobile } from "../utils/isMobile";
 import { Theme } from "../../design-system";
 import { WelcomeScreen } from "../../wallet/ConnectWallet/screens/types";
+import { useTWLocale } from "./locale-provider";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -20,6 +20,7 @@ export type ModalConfig = {
     onLogin?: (token: string) => void;
     onLogout?: () => void;
   };
+  isEmbed?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -47,13 +48,15 @@ export const WalletUIStatesProvider = (
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
     welcomeScreen?: WelcomeScreen;
+    isEmbed?: boolean;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const _isMobile = isMobile();
+  const locale = useTWLocale();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: props.title || defaultModalTitle,
+    title: props.title || locale.connectWallet.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
     modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",
@@ -61,6 +64,7 @@ export const WalletUIStatesProvider = (
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.titleIconUrl,
+    isEmbed: props.isEmbed,
   });
 
   return (

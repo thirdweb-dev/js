@@ -4,8 +4,8 @@ import { SUPPORTED_CHAIN_ID } from "../chains/SUPPORTED_CHAIN_ID";
 
 /**
  * @internal
- * @param chainId
- * @param contractType
+ * @param chainId - The chainId to get the approved implementation for
+ * @param contractType - The contract type to get the approved implementation for
  */
 export function getApprovedImplementation(
   chainId: SUPPORTED_CHAIN_ID, // TODO use SupportedChainId once we deploy to all chains

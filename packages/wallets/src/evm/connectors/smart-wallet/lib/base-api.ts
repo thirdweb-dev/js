@@ -1,4 +1,11 @@
-import { ethers, BigNumber, BigNumberish, providers, utils } from "ethers";
+import {
+  ethers,
+  BigNumber,
+  BigNumberish,
+  providers,
+  utils,
+  BytesLike,
+} from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
@@ -19,7 +26,12 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
-import { getDynamicFeeData } from "@thirdweb-dev/sdk";
+import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+
+export type BatchData = {
+  targets: (string | undefined)[];
+  data: BytesLike[];
+};
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -77,15 +89,6 @@ export abstract class BaseAccountAPI {
     ).connect(ethers.constants.AddressZero);
   }
 
-  async init(): Promise<this> {
-    if ((await this.provider.getCode(this.entryPointAddress)) === "0x") {
-      throw new Error(`entryPoint not deployed at ${this.entryPointAddress}`);
-    }
-
-    await this.getAccountAddress();
-    return this;
-  }
-
   /**
    * return the value to put into the "initCode" field, if the contract is not yet deployed.
    * this value holds the "factory" address, followed by this account's information
@@ -99,21 +102,26 @@ export abstract class BaseAccountAPI {
 
   /**
    * encode the call from entryPoint through our account to the target contract.
-   * @param target
-   * @param value
-   * @param data
+   * @param target - the target contract address
+   * @param value - the value to send to the target contract
+   * @param data - the calldata to send to the target contract
    */
-  abstract encodeExecute(
+  abstract prepareExecute(
     target: string,
     value: BigNumberish,
     data: string,
-  ): Promise<string>;
+  ): Promise<Transaction<any>>;
 
   /**
    * sign a userOp's hash (userOpHash).
-   * @param userOpHash
+   * @param userOpHash - the hash to sign
    */
   abstract signUserOpHash(userOpHash: string): Promise<string>;
+
+  /**
+   * calculate the account address even before it is deployed
+   */
+  abstract getCounterFactualAddress(): Promise<string>;
 
   /**
    * check if the contract is already deployed.
@@ -130,21 +138,6 @@ export abstract class BaseAccountAPI {
       this.isPhantom = false;
     }
     return this.isPhantom;
-  }
-
-  /**
-   * calculate the account address even before it is deployed
-   */
-  async getCounterFactualAddress(): Promise<string> {
-    const initCode = this.getAccountInitCode();
-    // use entryPoint to query account address (factory can provide a helper method to do the same, but
-    // this method attempts to be generic
-    try {
-      await this.entryPointView.callStatic.getSenderAddress(initCode);
-    } catch (e: any) {
-      return e.errorArgs.sender;
-    }
-    throw new Error("must handle revert");
   }
 
   /**
@@ -186,33 +179,40 @@ export abstract class BaseAccountAPI {
 
   async encodeUserOpCallDataAndGasLimit(
     detailsForUserOp: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<{ callData: string; callGasLimit: BigNumber }> {
-    function parseNumber(a: any): BigNumber | null {
-      if (!a || a === "") {
-        return null;
-      }
-      return BigNumber.from(a.toString());
-    }
-
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
-    const callData = batched
+    const callData = batchData
       ? detailsForUserOp.data
-      : await this.encodeExecute(
+      : await this.prepareExecute(
           detailsForUserOp.target,
           value,
           detailsForUserOp.data,
-        );
+        ).then((tx) => tx.encode());
 
-    let callGasLimit;
+    let callGasLimit: BigNumber;
     const isPhantom = await this.checkAccountPhantom();
     if (isPhantom) {
       // when the account is not deployed yet, we simulate the call to the target contract directly
-      callGasLimit = await this.provider.estimateGas({
-        from: this.getAccountAddress(),
-        to: detailsForUserOp.target,
-        data: detailsForUserOp.data,
-      });
+      if (batchData) {
+        const limits = await Promise.all(
+          batchData.targets.map((_, i) =>
+            this.provider.estimateGas({
+              from: this.getAccountAddress(),
+              to: batchData.targets[i],
+              data: batchData.data[i],
+            }),
+          ),
+        );
+        callGasLimit = limits.reduce((a, b) => a.add(b), BigNumber.from(0));
+      } else {
+        callGasLimit = await this.provider.estimateGas({
+          from: this.getAccountAddress(),
+          to: detailsForUserOp.target,
+          data: detailsForUserOp.data,
+        });
+      }
+
       // add 20% overhead for entrypoint checks
       callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
@@ -238,7 +238,7 @@ export abstract class BaseAccountAPI {
   /**
    * return userOpHash for signing.
    * This value matches entryPoint.getUserOpHash (calculated off-chain, to avoid a view call)
-   * @param userOp userOperation, (signature field ignored)
+   * @param userOp - userOperation, (signature field ignored)
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
     const chainId = await this.provider.getNetwork().then((net) => net.chainId);
@@ -276,14 +276,14 @@ export abstract class BaseAccountAPI {
    * create a UserOperation, filling all details (except signature)
    * - if account is not yet created, add initCode to deploy it.
    * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
-   * @param info
+   * @param info - transaction details for the userOp
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<UserOperationStruct> {
     const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info, batched);
+      await this.encodeUserOpCallDataAndGasLimit(info, batchData);
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
@@ -380,7 +380,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * Sign the filled userOp.
-   * @param userOp the UserOperation to sign (with signature field ignored)
+   * @param userOp - the UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
@@ -393,23 +393,23 @@ export abstract class BaseAccountAPI {
 
   /**
    * helper method: create and sign a user operation.
-   * @param info transaction details for the userOp
+   * @param info - transaction details for the userOp
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<UserOperationStruct> {
     return await this.signUserOp(
-      await this.createUnsignedUserOp(info, batched),
+      await this.createUnsignedUserOp(info, batchData),
     );
   }
 
   /**
    * get the transaction that has this userOpHash mined, or null if not found
-   * @param userOpHash returned by sendUserOpToBundler (or by getUserOpHash..)
-   * @param timeout stop waiting after this timeout
-   * @param interval time to wait between polls.
-   * @return the transactionHash this userOp was mined, or null if not found.
+   * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
+   * @param timeout - stop waiting after this timeout
+   * @param interval - time to wait between polls.
+   * @returns the transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,
@@ -428,4 +428,11 @@ export abstract class BaseAccountAPI {
     }
     return null;
   }
+}
+
+function parseNumber(a: any): BigNumber | null {
+  if (!a || a === "") {
+    return null;
+  }
+  return BigNumber.from(a.toString());
 }

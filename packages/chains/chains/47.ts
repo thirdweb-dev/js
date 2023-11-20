@@ -26,11 +26,13 @@ export default {
     "symbol": "XPLA",
     "decimals": 18
   },
+  "networkId": 47,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://xpla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://47.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cube-evm-rpc.xpla.dev"
   ],
   "shortName": "xpla-test",

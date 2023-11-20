@@ -22,6 +22,7 @@ const usageEventSchema = z.object({
     "paymaster",
     "relayer",
     "connectWallet",
+    "checkout",
   ]),
   action: z.string(),
 
@@ -45,6 +46,7 @@ const usageEventSchema = z.object({
   userOpHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
+  transactionFeeUsd: z.number().optional(),
   transactionHash: z.string().optional(),
   sdkName: z.string().optional(),
   sdkVersion: z.string().optional(),

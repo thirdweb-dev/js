@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://rollux.id/faucetapp"
   ],
-  "features": [],
   "infoURL": "https://rollux.com",
   "name": "Rollux Mainnet",
   "nativeCurrency": {
@@ -20,13 +19,13 @@ export default {
     "symbol": "SYS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 570,
   "rpc": [
     "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://570.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
     "https://rollux.public-rpc.com",
-    "wss://rpc.rollux.com/wss",
-    "https://rpc.ankr.com/rollux/${ANKR_API_KEY}"
+    "wss://rpc.rollux.com/wss"
   ],
   "shortName": "sys-rollux",
   "slug": "rollux",

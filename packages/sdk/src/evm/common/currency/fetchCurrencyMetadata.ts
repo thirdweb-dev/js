@@ -1,14 +1,13 @@
 import { getNativeTokenByChainId } from "../../constants/currency";
 import { Currency } from "../../types/currency";
 import type { IERC20Metadata } from "@thirdweb-dev/contracts-js";
-import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json";
 import { Contract, providers } from "ethers";
 import { isNativeToken } from "./isNativeToken";
 
 /**
  *
- * @param provider
- * @param asset
+ * @param provider - The provider to use
+ * @param asset - The asset to fetch the metadata for
  * @returns
  * @internal
  */
@@ -25,6 +24,9 @@ export async function fetchCurrencyMetadata(
       decimals: nativeToken.decimals,
     };
   } else {
+    const ERC20MetadataAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json")
+    ).default;
     const erc20 = new Contract(
       asset,
       ERC20MetadataAbi,

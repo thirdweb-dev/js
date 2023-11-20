@@ -7,6 +7,7 @@ import {
   useThirdwebAuthContext,
   useUser,
   useWallet,
+  useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
@@ -18,17 +19,19 @@ import {
 import { useCallback, useEffect, useContext, useState } from "react";
 import {
   reservedScreens,
-  compactmodalMaxHeight,
+  compactModalMaxHeight as compactModalMaxHeight,
   onModalUnmount,
 } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
-import styled from "@emotion/styled";
 import { Container, noScrollBar } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { Theme } from "../../../design-system";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { SignatureScreen } from "../SignatureScreen";
+import { StyledDiv } from "../../../design-system/elements";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -41,6 +44,8 @@ export const ConnectModalContent = (props: {
   const walletConfigs = useWallets();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
+  const { setIsConnectingToPersonalWallet, personalWalletInfo } =
+    useWalletContext();
 
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -57,6 +62,9 @@ export const ConnectModalContent = (props: {
   const authConfig = useThirdwebAuthContext();
 
   const closeModal = () => {
+    personalWalletInfo.disconnect();
+    setIsConnectingToPersonalWallet(false);
+
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
       setScreen(initialScreen);
@@ -64,6 +72,7 @@ export const ConnectModalContent = (props: {
   };
 
   const { setHideModal } = props;
+
   const handleConnected = useCallback(() => {
     const requiresSignIn = modalConfig.auth?.loginOptional
       ? false
@@ -173,7 +182,7 @@ export const ConnectModalContent = (props: {
           scrollY
           relative
           style={{
-            maxHeight: compactmodalMaxHeight,
+            maxHeight: compactModalMaxHeight,
           }}
         >
           {screen === reservedScreens.signIn && (
@@ -259,6 +268,9 @@ export const ConnectModal = () => {
     wallet,
   ]);
 
+  const { setIsConnectingToPersonalWallet, personalWalletInfo } =
+    useWalletContext();
+
   return (
     <CustomThemeProvider theme={theme}>
       <Modal
@@ -268,6 +280,9 @@ export const ConnectModal = () => {
         setOpen={(value) => {
           setIsWalletModalOpen(value);
           if (!value) {
+            setIsConnectingToPersonalWallet(false);
+            personalWalletInfo.disconnect();
+
             const requiresSignIn = auth?.loginOptional
               ? false
               : !!authConfig?.authUrl && !user?.address;
@@ -293,13 +308,14 @@ export const ConnectModal = () => {
   );
 };
 
-const LeftContainer = /* @__PURE__ */ styled.div<{
-  theme?: Theme;
-}>`
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  ${noScrollBar}
-  position: relative;
-  border-right: 1px solid ${(p) => p.theme.colors.separatorLine};
-`;
+const LeftContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto",
+    ...noScrollBar,
+    position: "relative",
+    borderRight: `1px solid ${theme.colors.separatorLine}`,
+  };
+});

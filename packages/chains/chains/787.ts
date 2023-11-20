@@ -25,13 +25,15 @@ export default {
     "symbol": "ACA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 787,
   "rpc": [
     "https://acala-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://787.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-acala.aca-api.network",
     "wss://eth-rpc-acala.aca-api.network"
   ],
   "shortName": "aca",
+  "slip44": 787,
   "slug": "acala-network",
   "testnet": false
 } as const satisfies Chain;

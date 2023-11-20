@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdbPhiB5W2gbHZGkYsN7i2VTKKP9casmAN2hRnpDaL9W4",
     "width": 96,
@@ -24,9 +23,10 @@ export default {
     "symbol": "YCC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3999,
   "rpc": [
     "https://yuanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.yuan.org/eth"
   ],
   "shortName": "ycc",

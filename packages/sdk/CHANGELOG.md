@@ -1,5 +1,93 @@
 # @thirdweb-dev/sdk
 
+## 4.0.15
+
+### Patch Changes
+
+- [#1935](https://github.com/thirdweb-dev/js/pull/1935) [`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve diamond pattern facets ABIs
+
+## 4.0.14
+
+### Patch Changes
+
+- [#1861](https://github.com/thirdweb-dev/js/pull/1861) [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4) Thanks [@jnsdls](https://github.com/jnsdls)! - remove `crypto-js` dependency
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/crypto@0.2.0
+  - @thirdweb-dev/merkletree@0.2.0
+  - @thirdweb-dev/storage@2.0.5
+
+## 4.0.13
+
+### Patch Changes
+
+- [#1947](https://github.com/thirdweb-dev/js/pull/1947) [`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for EIP-2612 permit to engine relayer
+
+- [#1936](https://github.com/thirdweb-dev/js/pull/1936) [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improvements for auto resolving contracts:
+
+  - ~10x performance improvements using shared caching layer at the edge
+  - auto resolves any verified contract on etherscan on supported chains
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Fixes all tsdoc comments warnings
+
+- [#1949](https://github.com/thirdweb-dev/js/pull/1949) [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd) Thanks [@iketw](https://github.com/iketw)! - Enforces the tsdoc/syntax rule
+
+- Updated dependencies [[`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd)]:
+  - @thirdweb-dev/storage@2.0.4
+
+## 4.0.12
+
+### Patch Changes
+
+- [#1937](https://github.com/thirdweb-dev/js/pull/1937) [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Standardize large number formatting
+
+- Updated dependencies [[`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3)]:
+  - @thirdweb-dev/storage@2.0.3
+
+## 4.0.11
+
+### Patch Changes
+
+- [#1809](https://github.com/thirdweb-dev/js/pull/1809) [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix publish: clean extra metadata containing old publish flow data
+
+- [#1896](https://github.com/thirdweb-dev/js/pull/1896) [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for relayer endpoint
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e)]:
+  - @thirdweb-dev/chains@0.1.58
+
+## 4.0.10
+
+### Patch Changes
+
+- [#1871](https://github.com/thirdweb-dev/js/pull/1871) [`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Reduce bundle size by lazy loading some large modules
+
+## 4.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618)]:
+  - @thirdweb-dev/chains@0.1.57
+
+## 4.0.8
+
+### Patch Changes
+
+- [#1798](https://github.com/thirdweb-dev/js/pull/1798) [`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve performance for contract-roles methods
+
+- [#1827](https://github.com/thirdweb-dev/js/pull/1827) [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove barrel files
+
+- [#1814](https://github.com/thirdweb-dev/js/pull/1814) [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Perf inmprovement for erc-20 methods
+
+- [#1850](https://github.com/thirdweb-dev/js/pull/1850) [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix double trailing slash when downloading merkle data
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1805](https://github.com/thirdweb-dev/js/pull/1805) [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Spicy Chain deployments
+
+- Updated dependencies [[`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4)]:
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/storage@2.0.2
+
 ## 4.0.7
 
 ### Patch Changes

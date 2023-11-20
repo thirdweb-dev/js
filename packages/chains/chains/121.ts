@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.rclsidechain.com/",
   "name": "Realchain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "REAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 121,
   "rpc": [
     "https://realchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://121.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rcl-dataseed1.rclsidechain.com",
     "https://rcl-dataseed2.rclsidechain.com",
     "https://rcl-dataseed3.rclsidechain.com",
@@ -31,6 +31,7 @@ export default {
     "wss://rcl-dataseed4.rclsidechain.com/v1/"
   ],
   "shortName": "REAL",
+  "slip44": 714,
   "slug": "realchain",
   "testnet": false
 } as const satisfies Chain;

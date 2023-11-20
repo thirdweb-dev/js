@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
-import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
-import { OauthOptions } from "../../connectors/embedded-wallet/types";
 import {
   useGlobalTheme,
   useLocale,
 } from "../../../providers/ui-context-provider";
+import { EmbeddedWalletConfig } from "./embedded-wallet";
+import {
+  AUTH_OPTIONS_ICONS,
+  AUTH_OPTIONS_TEXT,
+  AuthOption,
+} from "../../types/embedded-wallet";
+import { SquareButton } from "../../../components/base/SquareButton";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
 export const EmailSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    oauthOptions?: OauthOptions;
-    email?: boolean;
+    auth?: EmbeddedWalletConfig["auth"];
   }
-> = ({ onSelect, walletConfig, oauthOptions, email }) => {
+> = ({ onSelect, walletConfig, auth }) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
@@ -34,8 +38,11 @@ export const EmailSelectionUI: React.FC<
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+  const supportedWallets = useWallets();
 
-  const isEmailEnabled = email === false ? false : true;
+  const isEmailEnabled = auth?.options.includes("email");
+  const socialLogins = auth?.options.filter((o) => o !== "email");
+  const isSocialLoginsEnabled = socialLogins && socialLogins.length > 0;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -54,15 +61,16 @@ export const EmailSelectionUI: React.FC<
     if (validateEmail(emailInput)) {
       setErrorMessage("");
       setIsFetching(true);
+      Keyboard.dismiss();
 
       emailWallet
-        ?.sendEmailOTP(emailInput)
+        ?.sendVerificationEmail(emailInput)
         .then((response) => {
           onSelect({
             ...response,
             email: emailInput,
             emailWallet,
-            oauthOptions: undefined,
+            oauthOptions: undefined, // TODO (ews) clean up types
           });
         })
         .catch((error) => {
@@ -78,35 +86,53 @@ export const EmailSelectionUI: React.FC<
     }
   };
 
-  const onGoogleSignInPress = () => {
+  const onProviderPress = (authOption: Omit<AuthOption, "email">) => {
     onSelect({
       email: emailInput,
       emailWallet,
       oauthOptions: {
-        provider: oauthOptions?.providers[0],
-        redirectUrl: oauthOptions?.redirectUrl,
+        provider: authOption,
+        redirectUrl: auth?.redirectUrl,
       },
     });
   };
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      {oauthOptions?.providers.includes(AuthProvider.GOOGLE) ? (
+      {isSocialLoginsEnabled ? (
         <Box justifyContent="center">
-          <WalletButton
-            iconHeight={28}
-            iconWidth={28}
-            borderRadius="lg"
-            borderWidth={1}
-            borderColor="buttonBackgroundColor"
-            backgroundColor="buttonBackgroundColor"
-            nameColor="buttonTextColor"
-            justifyContent="center"
-            name={l.embedded_wallet.sign_in_google}
-            walletIconUrl={GOOGLE_ICON}
-            onPress={onGoogleSignInPress}
-          />
-          {isEmailEnabled ? (
+          <Box justifyContent="center" flexDirection="row">
+            {socialLogins.length === 1 ? (
+              <WalletButton
+                iconHeight={28}
+                iconWidth={28}
+                borderRadius="lg"
+                borderWidth={1}
+                borderColor="backgroundHighlight"
+                backgroundColor="backgroundHighlight"
+                nameColor="textPrimary"
+                flex={1}
+                justifyContent="center"
+                name={l.embedded_wallet[AUTH_OPTIONS_TEXT[socialLogins[0]]]}
+                walletIconUrl={AUTH_OPTIONS_ICONS[socialLogins[0]]}
+                onPress={() => onProviderPress(socialLogins[0])}
+              />
+            ) : (
+              <Box flexDirection="row" width="100%">
+                {socialLogins.map((provider, index) => (
+                  <SquareButton
+                    key={provider}
+                    ml={index === 0 ? 0 : "md"}
+                    flex={1}
+                    onPress={() => onProviderPress(provider)}
+                    iconUrl={AUTH_OPTIONS_ICONS[provider]}
+                    size={32}
+                  />
+                ))}
+              </Box>
+            )}
+          </Box>
+          {isEmailEnabled && supportedWallets.length === 1 ? (
             <Box
               mb="md"
               mt="md"
@@ -124,7 +150,9 @@ export const EmailSelectionUI: React.FC<
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
-          ) : null}
+          ) : (
+            <Box mt={isEmailEnabled ? "md" : "none"} />
+          )}
         </Box>
       ) : null}
       {isEmailEnabled ? (
@@ -142,6 +170,7 @@ export const EmailSelectionUI: React.FC<
                 padding: 0,
                 flex: 1,
               },
+              onSubmitEditing: handleNetworkCall,
               value: emailInput,
               keyboardType: "email-address",
               returnKeyType: "done",
@@ -161,8 +190,8 @@ export const EmailSelectionUI: React.FC<
             paddingVertical="md"
             borderRadius="lg"
             borderWidth={1}
-            borderColor="border"
             backgroundColor="accentButtonColor"
+            borderColor="accentButtonColor"
             onPress={handleNetworkCall}
           >
             {isFetching ? (

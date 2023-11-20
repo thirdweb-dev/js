@@ -37,6 +37,20 @@ export interface GcpKmsSignerCredentials {
   applicationCredentialPrivateKey?: string;
 }
 
+interface SigningOptions<
+  V extends SignTypedDataVersion,
+  T extends MessageTypes,
+> {
+  /**
+   * The typed data to sign.
+   */
+  data: V extends "V1" ? TypedDataV1 : TypedMessage<T>;
+  /**
+   * The signing version to use.
+   */
+  version: V;
+}
+
 export class GcpKmsSigner extends ethers.Signer {
   // @ts-expect-error Allow defineReadOnly to set this property
   kmsCredentials: GcpKmsSignerCredentials;
@@ -95,17 +109,12 @@ export class GcpKmsSigner extends ethers.Signer {
    * arrays and recursive data structures.
    *
    * @param options - The signing options.
-   * @param options.data - The typed data to sign.
-   * @param options.version - The signing version to use.
    * @returns The '0x'-prefixed hex encoded signature.
    */
   async signTypedData<V extends SignTypedDataVersion, T extends MessageTypes>({
     data,
     version,
-  }: {
-    data: V extends "V1" ? TypedDataV1 : TypedMessage<T>;
-    version: V;
-  }): Promise<string> {
+  }: SigningOptions<V, T>): Promise<string> {
     validateVersion(version);
 
     if (data === null || data === undefined) {

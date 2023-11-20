@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.dynoscan.io"
   ],
-  "features": [],
   "infoURL": "https://dynoprotocol.com",
   "name": "DYNO Mainnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "DYNO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3966,
   "rpc": [
     "https://dyno.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3966.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.dynoprotocol.com"
   ],
   "shortName": "dyno",

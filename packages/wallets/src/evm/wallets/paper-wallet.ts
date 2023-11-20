@@ -12,6 +12,11 @@ export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions_>;
 
+/**
+ * Paper Wallet
+ *
+ * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
+ */
 export class PaperWallet extends AbstractClientWallet<
   PaperWalletAdditionalOptions_,
   PaperWalletConnectionArgs

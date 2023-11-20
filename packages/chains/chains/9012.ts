@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://t.me/BerylBit"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeDXHkpranzqGN1BmQqZSrFp4vGXf4JfaB5iq8WHHiwDi",
     "width": 162,
@@ -26,9 +25,10 @@ export default {
     "symbol": "BRB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9012,
   "rpc": [
     "https://berylbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9012.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.berylbit.io"
   ],
   "shortName": "brb",

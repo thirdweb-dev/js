@@ -4,7 +4,6 @@ export default {
   "chainId": 9790,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQUHqi1gyuTuKmJQHqt9EyhN1FPmmmLNUK8u93nMGrxAy",
     "width": 1600,
@@ -18,9 +17,10 @@ export default {
     "symbol": "SWTH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9790,
   "rpc": [
     "https://carbon-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9790.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-api.carbon.network/"
   ],
   "shortName": "carbon",

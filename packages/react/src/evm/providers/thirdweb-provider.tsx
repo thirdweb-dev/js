@@ -6,12 +6,15 @@ import {
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeObjectOrType } from "../../design-system";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { signerWallet } from "../../wallet/wallets/signerWallet";
 import { Signer } from "ethers";
+import { ThirdwebLocale, en } from "../locales/en";
+import { ThirdwebLocaleContext } from "./locale-provider";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -40,6 +43,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   theme?: ThemeObjectOrType;
 
   signer?: Signer;
+
+  locale?: ThirdwebLocale;
 }
 
 /**
@@ -80,19 +85,44 @@ export const ThirdwebProvider = <
     [signer],
   );
 
+  // preload the embeddedWallet SDK if present in supportedWallets
+  const ewsRef = useRef(false);
+  useEffect(() => {
+    if (ewsRef.current) {
+      return;
+    }
+    ewsRef.current = true;
+    const preloadEmbeddedWallet = async () => {
+      const hasEmbeddedWallet = wallets.find(
+        (w) => w.id === walletIds.embeddedWallet,
+      );
+      if (hasEmbeddedWallet && restProps.clientId) {
+        // TODO only preload the iframe instead of creating the SDK
+        const { EmbeddedWalletSdk } = await import("@thirdweb-dev/wallets");
+        new EmbeddedWalletSdk({
+          clientId: restProps.clientId,
+          chain: "Ethereum",
+        });
+      }
+    };
+    preloadEmbeddedWallet();
+  }, [restProps.clientId, wallets]);
+
   return (
-    <WalletUIStatesProvider theme={theme}>
-      <CustomThemeProvider theme={theme}>
-        <ThirdwebProviderCore
-          {...restProps}
-          theme={typeof theme === "string" ? theme : theme.type}
-          supportedWallets={wallets}
-          signerWallet={signerWalletConfig}
-        >
-          {children}
-          <ConnectModal />
-        </ThirdwebProviderCore>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <ThirdwebLocaleContext.Provider value={restProps.locale || en()}>
+      <WalletUIStatesProvider theme={theme}>
+        <CustomThemeProvider theme={theme}>
+          <ThirdwebProviderCore
+            {...restProps}
+            theme={typeof theme === "string" ? theme : theme.type}
+            supportedWallets={wallets}
+            signerWallet={signerWalletConfig}
+          >
+            {children}
+            <ConnectModal />
+          </ThirdwebProviderCore>
+        </CustomThemeProvider>
+      </WalletUIStatesProvider>
+    </ThirdwebLocaleContext.Provider>
   );
 };

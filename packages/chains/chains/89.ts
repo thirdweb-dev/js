@@ -4,7 +4,6 @@ export default {
   "chainId": 89,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://tomochain.com",
   "name": "TomoChain Testnet",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "TOMO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 89,
   "rpc": [
     "https://tomochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://89.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.tomochain.com"
   ],
   "shortName": "tomot",
+  "slip44": 889,
   "slug": "tomochain-testnet",
   "testnet": true
 } as const satisfies Chain;

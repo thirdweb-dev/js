@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://tombchain.com/",
   "name": "Tomb Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,19 @@ export default {
     "symbol": "TOMB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6969,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-250",
+    "bridges": [
+      {
+        "url": "https://lif3.com/bridge"
+      }
+    ]
+  },
   "rpc": [
     "https://tomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6969.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tombchain.com/"
   ],
   "shortName": "tombchain",

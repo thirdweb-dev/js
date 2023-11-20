@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.confluxnetwork.org"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
     "width": 460,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CFX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 71,
   "rpc": [
     "https://conflux-espace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://71.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmtestnet.confluxrpc.com"
   ],
   "shortName": "cfxtest",

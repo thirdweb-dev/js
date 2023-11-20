@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://testnet.hashkeychain/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNU11AqYB2htrrSyBSP9ct7bPtuZTP7Hrz21PrEcB9nYE",
     "width": 1440,
@@ -26,9 +25,10 @@ export default {
     "symbol": "tHSK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 230315,
   "rpc": [
     "https://hashkey-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://230315.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.hashkeychain/rpc"
   ],
   "shortName": "hsktest",
