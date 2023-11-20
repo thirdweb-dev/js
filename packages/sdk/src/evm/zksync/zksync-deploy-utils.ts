@@ -1,4 +1,5 @@
 import {
+  Provider,
   ContractFactory as ZkContractFactory,
   type Signer as ZkSigner,
 } from "zksync-web3";
@@ -9,10 +10,78 @@ import { extractConstructorParamsFromAbi } from "../common/feature-detection/ext
 import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
 import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { DeployOptions } from "../types/deploy/deploy-options";
+import type {
+  DeployMetadata,
+  DeployOptions,
+} from "../types/deploy/deploy-options";
 import { ThirdwebSDK } from "../core/sdk";
 import { getImplementation } from "./constants/addresses";
 import { DeploymentTransaction } from "../types/any-evm/deploy-data";
+import { zkDeployCreate2Factory } from "./zkDeployCreate2Factory";
+import { getZkDeploymentInfo } from "./getZkDeploymentInfo";
+import { zkDeployContractDeterministic } from "./zkDeployContractDeterministic";
+import invariant from "tiny-invariant";
+
+/**
+ * Deploy a proxy contract of a given implementation via thirdweb's Clone factory
+ * @param publishMetadataUri - the uri of the publish metadata
+ * @param constructorParamValues - the constructor param values
+ * @param deployMetadata - the deploy metadata
+ * @param signer - the signer to use
+ * @param options - the deploy options
+ */
+async function zkDeployViaAutoFactory(
+  deployMetadata: DeployMetadata,
+  signer: Signer,
+  initializerFunction: string,
+  paramValues: any[],
+  storage: ThirdwebStorage,
+  options?: DeployOptions,
+  clientId?: string,
+  secretKey?: string,
+): Promise<string> {
+  // any evm deployment flow
+
+  // 1. Deploy CREATE2 factory (if not already exists)
+  const create2Factory = await zkDeployCreate2Factory(signer as ZkSigner);
+
+  // 2. get deployment info for any evm
+  const deploymentInfo = await getZkDeploymentInfo(
+    deployMetadata,
+    storage,
+    signer.provider as Provider,
+    create2Factory,
+    clientId,
+    secretKey,
+  );
+
+  const implementationAddress = deploymentInfo.find(
+    (i) => i.type === "implementation",
+  )?.transaction.predictedAddress as string;
+
+  // filter out already deployed contracts (data is empty)
+  const transactionsToSend = deploymentInfo.filter(
+    (i) => i.transaction.bytecodeHash && i.transaction.bytecodeHash.length > 0,
+  );
+  const transactionsforDirectDeploy = transactionsToSend.map(
+    (i) => i.transaction,
+  );
+
+  // send each transaction directly to Create2 factory
+  // process txns one at a time
+  for (const tx of transactionsforDirectDeploy) {
+    try {
+      await zkDeployContractDeterministic(signer as ZkSigner, tx, options);
+    } catch (e) {
+      console.debug(
+        `Error deploying contract at ${tx.predictedAddress}`,
+        (e as any)?.message,
+      );
+    }
+  }
+
+  return implementationAddress;
+}
 
 export async function zkDeployContractFromUri(
   publishMetadataUri: string,
@@ -21,9 +90,24 @@ export async function zkDeployContractFromUri(
   storage: ThirdwebStorage,
   chainId: number,
   options?: DeployOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<string> {
+  let deterministicDeployment = false;
+
+  if (options?.compilerOptions) {
+    if (options.compilerOptions.compilerType !== "zksolc") {
+      throw Error("Invalid compiler type");
+    }
+    deterministicDeployment = true;
+  }
+
   const { compilerMetadata, extendedMetadata } =
-    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+    await fetchAndCacheDeployMetadata(
+      publishMetadataUri,
+      storage,
+      options?.compilerOptions,
+    );
   const forceDirectDeploy = options?.forceDirectDeploy || false;
 
   const isNetworkEnabled =
@@ -48,11 +132,40 @@ export async function zkDeployContractFromUri(
       extendedMetadata.isDeployableViaFactory ||
       extendedMetadata.deployType === "autoFactory"
     ) {
-      const implementationAddress = getImplementation(
-        chainId,
-        compilerMetadata.name,
-        extendedMetadata.version,
-      );
+      let implementationAddress;
+      if (deterministicDeployment) {
+        invariant(
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
+          `implementationInitializerFunction not set'`,
+        );
+        const initializerParamTypes = extractFunctionParamsFromAbi(
+          compilerMetadata.abi,
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
+        ).map((p) => p.type);
+        const paramValues = convertParamValues(
+          initializerParamTypes,
+          constructorParamValues,
+        );
+        implementationAddress = zkDeployViaAutoFactory(
+          { compilerMetadata, extendedMetadata },
+          signer,
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
+          paramValues,
+          storage,
+          options,
+          clientId,
+          secretKey,
+        );
+      } else {
+        implementationAddress = getImplementation(
+          chainId,
+          compilerMetadata.name,
+          extendedMetadata.version,
+        );
+      }
       if (!implementationAddress) {
         throw new Error("Contract not supported yet.");
       }
