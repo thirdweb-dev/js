@@ -20,6 +20,15 @@ import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { PaperGoogleLogin } from "./PaperGoogleLogin";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
 
+/**
+ * Paper Wallet
+ *
+ * @param _config - Options available to create a paper wallet
+ * @returns The WalletConfig<PaperWallet> object
+ *
+ * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
+ * Learn more here: https://portal.thirdweb.com/embedded-wallet
+ */
 export const paperWallet = (
   _config?: PaperConfig,
 ): WalletConfig<PaperWallet> => {

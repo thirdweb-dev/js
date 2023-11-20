@@ -705,8 +705,8 @@ export class AccountPermissions implements DetectableFeature {
        * - Add new scoped :check:
        * - Remove current scoped :check:
        * - Update current scoped :check:
-       * - Current admin -> new scoped :check:
-       * - Current scoped -> new admin :check:
+       * - Current admin - new scoped :check:
+       * - Current scoped - new admin :check:
        **/
 
       // No duplicate signers in input!

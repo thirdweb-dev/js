@@ -23,12 +23,12 @@ export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {
     /**
      * Fallback Ethereum JSON RPC URL
-     * @default ""
+     * @defaultValue ""
      */
     jsonRpcUrl?: string;
     /**
      * Fallback Ethereum Chain ID
-     * @default 1
+     * @defaultValue 1
      */
     chainId?: number;
   };

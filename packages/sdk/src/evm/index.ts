@@ -173,6 +173,7 @@ export { fetchSnapshotEntryForAddress } from "./common/claim-conditions/fetchSna
 export { getCachedAbiForContract } from "./common/abi";
 export * from "./common/ens/resolveEns";
 export * from "./common/ens/resolveAddress";
+export * from "./common/sign";
 //#endregion @r/packages/sdk/src/evm/common/*
 
 //#region @r/packages/sdk/src/evm/constants/*

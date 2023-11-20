@@ -7,8 +7,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 /**
  * Fetch and parse the full metadata AFTER publishing a contract, with all the extra information (version, readme, etc)
  * @internal
- * @param publishMetadataUri
- * @param storage
+ * @param publishMetadataUri - The publish metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function fetchExtendedReleaseMetadata(
   publishMetadataUri: string,

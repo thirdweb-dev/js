@@ -848,7 +848,7 @@ export class MarketplaceV3EnglishAuctions<
    * Maps an auction-bid to the strict interface
    *
    * @internal
-   * @param bid
+   * @param bid - The bid to map, as returned from the contract.
    * @returns - A `Bid` object
    */
   private async mapBid(

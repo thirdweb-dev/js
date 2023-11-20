@@ -16,7 +16,7 @@ export type EmbeddedWalletConfig = Omit<
 
   /**
    * Choose which auth providers to show in the wallet connection UI
-   * @default { options: ["email", "google", "apple"] }
+   * @defaultValue `auth: { options: ["email", "google", "apple", "facebook"] }`
    */
   auth?: {
     options: AuthOption[];

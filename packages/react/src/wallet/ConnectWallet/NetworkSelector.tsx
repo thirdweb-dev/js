@@ -10,7 +10,6 @@ import {
   radius,
   spacing,
   Theme,
-  ThemeObjectOrType,
 } from "../../design-system";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -28,9 +27,12 @@ import { useEffect } from "react";
 import { Container, Line } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
-import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
-import { useTheme } from "@emotion/react";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../design-system/CustomThemeProvider";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -69,7 +71,7 @@ const fuseConfig = {
 export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
-  const themeFromContext = useTheme() as ThemeObjectOrType;
+  const themeFromContext = useCustomTheme();
   const theme = props.theme || themeFromContext || "dark";
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
@@ -544,72 +546,81 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   );
 });
 
-const TabButton = /* @__PURE__ */ (() => styled(Tabs.Trigger)<{
-  theme?: Theme;
-}>`
-  all: unset;
-  font-size: ${fontSize.sm};
-  font-weight: 500;
-  color: ${(p) => p.theme.colors.secondaryText};
-  cursor: pointer;
-  padding: ${spacing.sm} ${spacing.sm};
-  -webkit-tap-highlight-color: transparent;
-  border-radius: ${radius.lg};
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+const TabButton = /* @__PURE__ */ (() =>
+  styled(Tabs.Trigger)(() => {
+    const theme = useCustomTheme();
+    return {
+      all: "unset",
+      fontSize: fontSize.sm,
+      fontWeight: 500,
+      color: theme.colors.secondaryText,
+      cursor: "pointer",
+      padding: `${spacing.sm} ${spacing.sm}`,
+      WebkitTapHighlightColor: "transparent",
+      borderRadius: radius.lg,
+      transition: "background 0.2s ease, color 0.2s ease",
 
-  &[data-state="active"] {
-    background: ${(p) => p.theme.colors.secondaryButtonBg};
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`)();
+      "&[data-state='active']": {
+        background: theme.colors.secondaryButtonBg,
+        color: theme.colors.primaryText,
+      },
+    };
+  }))();
 
-const SectionLabel = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.colors.secondaryText};
-  margin: 0;
-  display: block;
-  padding: 0 ${spacing.xs};
-`;
+const SectionLabel = /* @__PURE__ */ StyledP(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.sm,
+    color: theme.colors.secondaryText,
+    margin: 0,
+    display: "block",
+    padding: `0 ${spacing.xs}`,
+  };
+});
 
-const NetworkListUl = styled.ul<{ theme?: Theme }>`
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.xs};
-  box-sizing: border-box;
-`;
+const NetworkListUl = /* @__PURE__ */ StyledUl({
+  padding: 0,
+  margin: 0,
+  listStyle: "none",
+  display: "flex",
+  flexDirection: "column",
+  gap: spacing.xs,
+  boxSizing: "border-box",
+});
 
-const NetworkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-  align-items: center;
-  gap: ${spacing.md};
-  padding: ${spacing.xs} ${spacing.sm};
-  border-radius: ${radius.md};
-  cursor: pointer;
-  transition: background 0.2s ease;
-  color: ${(p) => p.theme.colors.primaryText};
-  font-weight: 500;
-  font-size: ${fontSize.md};
-  &:hover {
-    background: ${(p) => p.theme.colors.secondaryButtonBg};
-  }
+const NetworkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    display: "flex",
+    width: "100%",
+    boxSizing: "border-box",
+    alignItems: "center",
+    gap: spacing.md,
+    padding: `${spacing.xs} ${spacing.sm}`,
+    borderRadius: radius.md,
+    cursor: "pointer",
+    transition: "background 0.2s ease",
+    color: theme.colors.primaryText,
+    fontWeight: 500,
+    fontSize: fontSize.md,
+    "&:hover": {
+      background: theme.colors.secondaryButtonBg,
+    },
 
-  ${media.mobile} {
-    font-size: ${fontSize.sm};
-  }
-`;
+    [media.mobile]: {
+      fontSize: fontSize.sm,
+    },
+  };
+});
 
-const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(p) => p.theme.colors.secondaryText};
-  position: absolute;
-  left: ${spacing.sm};
-`;
+const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
+  () => {
+    const theme = useCustomTheme();
+    return {
+      color: theme.colors.secondaryText,
+      position: "absolute",
+      left: spacing.sm,
+    };
+  },
+);

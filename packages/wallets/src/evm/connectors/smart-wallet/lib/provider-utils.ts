@@ -7,16 +7,16 @@ import { ProviderConfig } from "../types";
 
 /**
  * wrap an existing provider to tunnel requests through Account Abstraction.
- * @param originalProvider the normal provider
- * @param config see ClientConfig for more info
- * @param originalSigner use this signer as the owner. of this wallet. By default, use the provider's signer
+ * @param originalProvider - the normal provider
+ * @param config - see {@link ClientConfig} for more info
+ * @param originalSigner - use this signer as the owner. of this wallet. By default, use the provider's signer
  */
-export async function create4337Provider(
+export function create4337Provider(
   config: ProviderConfig,
   accountApi: AccountAPI,
   originalProvider: providers.BaseProvider,
   chainId: number,
-): Promise<ERC4337EthersProvider> {
+): ERC4337EthersProvider {
   const entryPoint = EntryPoint__factory.connect(
     config.entryPointAddress,
     originalProvider,
@@ -29,7 +29,7 @@ export async function create4337Provider(
     config.clientId,
     config.secretKey,
   );
-  return await new ERC4337EthersProvider(
+  return new ERC4337EthersProvider(
     chainId,
     config,
     config.localSigner,
@@ -37,5 +37,5 @@ export async function create4337Provider(
     httpRpcClient,
     entryPoint,
     accountApi,
-  ).init();
+  );
 }

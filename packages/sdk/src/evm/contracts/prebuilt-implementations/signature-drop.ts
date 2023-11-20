@@ -409,9 +409,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param checkERC20Allowance
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */

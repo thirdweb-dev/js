@@ -26,6 +26,7 @@ export type Palette = {
   black: string;
   white: string;
   red: string;
+  transparent: string;
 
   warning: string;
 
@@ -38,6 +39,7 @@ export const paletteBase = {
   red: "red",
   warning: "#F46565",
   error: "#D85252",
+  transparent: "transparent",
 };
 
 export const paletteLight: Palette = {
