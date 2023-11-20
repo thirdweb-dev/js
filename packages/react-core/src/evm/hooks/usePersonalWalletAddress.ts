@@ -16,6 +16,8 @@ export const usePersonalWalletAddress = () => {
             await possiblePersonalWallet?.getSigner()
           )?.getAddress();
           setPersonalWalletAddress(address);
+        } else {
+          setPersonalWalletAddress(undefined);
         }
       } else {
         setPersonalWalletAddress(undefined);
