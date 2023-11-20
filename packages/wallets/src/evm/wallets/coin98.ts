@@ -136,12 +136,4 @@ export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
-
-  async switchAccount() {
-    if (!this.Coin98Connector) {
-      throw new Error("Can not switch Account");
-    }
-
-    await this.Coin98Connector.switchAccount();
-  }
 }

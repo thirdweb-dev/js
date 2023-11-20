@@ -4,4 +4,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-Add Coin98 wallet to React
+Add Coin98 wallet
