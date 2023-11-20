@@ -1,4 +1,3 @@
-import { SmartWallet } from "@thirdweb-dev/wallets";
 import { useEffect, useState } from "react";
 import { useWallet } from "../../core/hooks/wallet-hooks";
 
@@ -10,11 +9,16 @@ export const usePersonalWalletAddress = () => {
 
   useEffect(() => {
     (async () => {
-      if (activeWallet?.walletId === SmartWallet.id) {
-        const address = await (
-          await activeWallet.getPersonalWallet()?.getSigner()
-        )?.getAddress();
-        setPersonalWalletAddress(address);
+      if (activeWallet) {
+        const possiblePersonalWallet = activeWallet?.getPersonalWallet();
+        if (possiblePersonalWallet) {
+          const address = await (
+            await possiblePersonalWallet?.getSigner()
+          )?.getAddress();
+          setPersonalWalletAddress(address);
+        }
+      } else {
+        setPersonalWalletAddress(undefined);
       }
     })();
   }, [activeWallet]);
