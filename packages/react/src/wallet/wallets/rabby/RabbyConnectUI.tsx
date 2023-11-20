@@ -8,9 +8,9 @@ import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { RabbyScan } from "./RabbyScan";
 
 export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
-  const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
-  >("connecting");
+  const [screen, setScreen] = useState<"connecting" | "get-started">(
+    "connecting",
+  );
   const locale = useTWLocale().wallets.rabbyWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
