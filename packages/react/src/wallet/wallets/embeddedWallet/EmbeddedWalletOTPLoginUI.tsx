@@ -222,17 +222,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               e.preventDefault();
             }}
           >
-            <div
-              style={{
-                textAlign: "center",
-              }}
-            >
+            <Container flex="column" center="x" px="lg">
               {!isWideModal && <Spacer y="xl" />}
               <Text>{locale.emailLoginScreen.enterCodeSendTo}</Text>
               <Spacer y="sm" />
               <Text color="primaryText">{email}</Text>
               <Spacer y="xl" />
-            </div>
+            </Container>
 
             <OTPInput
               isInvalid={verifyStatus === "invalid"}

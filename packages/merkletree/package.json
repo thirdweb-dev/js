@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/merkletree",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/thirdweb-dev-merkletree.cjs.js",
   "module": "dist/thirdweb-dev-merkletree.esm.js",
   "exports": {
