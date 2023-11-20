@@ -21,6 +21,9 @@ import { StyledDiv } from "../../../design-system/elements";
 import { SyncedWalletUIStates } from "./ConnectEmbed";
 import { WelcomeScreen } from "../screens/types";
 
+/**
+ * @internal
+ */
 export type ConnectModalInlineProps = {
   className?: string;
   theme?: "dark" | "light" | Theme;
@@ -69,6 +72,9 @@ export type ConnectModalInlineProps = {
   welcomeScreen?: WelcomeScreen;
 };
 
+/**
+ * @internal
+ */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
