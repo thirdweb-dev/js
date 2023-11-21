@@ -18,7 +18,7 @@ import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Ethereum,
   defaultChains,
@@ -88,6 +88,9 @@ interface TWBridge {
   ) => void;
   fundWallet: (options: string) => Promise<void>;
   exportWallet: (password: string) => Promise<string>;
+  smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
 }
 
 const w = window;
@@ -642,6 +645,45 @@ class ThirdwebBridge implements TWBridge {
       password,
     });
     return localWallet;
+  }
+
+  public async smartWalletAddAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.addAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletRemoveAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.removeAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletCreateSessionKey(options: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const optionsParsed = JSON.parse(options);
+    const approvedCallTargets = optionsParsed.approvedCallTargets;
+    const nativeTokenLimitPerTransaction = ethers.utils.formatEther(
+      optionsParsed.nativeTokenLimitPerTransactionInWei,
+    );
+    const startDate = BigNumber.from(optionsParsed.startDate).toNumber();
+    const expirationDate = BigNumber.from(optionsParsed.expirationDate).toNumber();
+    const result = await smartWallet.createSessionKey(optionsParsed.signerAddress, {
+      approvedCallTargets: approvedCallTargets,
+      nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
+      startDate: startDate,
+      expirationDate: expirationDate,
+    });
+    return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
   public openPopupWindow() {
