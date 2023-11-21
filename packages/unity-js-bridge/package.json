@@ -25,7 +25,7 @@
     "esbuild": "0.15.17",
     "eslint-config-thirdweb": "workspace:*",
     "node-stdlib-browser": "^1.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "sideEffects": false,
   "scripts": {

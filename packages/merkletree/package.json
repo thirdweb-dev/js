@@ -39,7 +39,7 @@
     "@types/treeify": "^1.0.3",
     "benchmark": "^2.1.4",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

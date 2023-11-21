@@ -447,7 +447,7 @@
     "@metamask/eth-sig-util": "^4.0.1",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@paperxyz/sdk-common-utilities": "^0.1.0",
-    "@safe-global/safe-core-sdk": "^3.3.4",
+    "@safe-global/safe-core-sdk": "^3.3.5",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
     "@safe-global/safe-ethers-lib": "^1.9.4",
     "@thirdweb-dev/chains": "workspace:*",
@@ -500,7 +500,7 @@
     }
   },
   "devDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.451.0",
+    "@aws-sdk/client-secrets-manager": "^3.454.0",
     "@babel/plugin-transform-flow-strip-types": "^7.23.3",
     "@babel/plugin-transform-private-methods": "7.22.5",
     "@noble/ed25519": "^1.7.3",
@@ -520,7 +520,7 @@
     "rimraf": "^3.0.2",
     "tweetnacl": "^1.0.3",
     "typedoc": "^0.25.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

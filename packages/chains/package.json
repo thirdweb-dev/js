@@ -15,14 +15,14 @@
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@babel/runtime": "^7.23.2",
+    "@babel/runtime": "^7.23.4",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "axios": "^1.6.2",
     "deepmerge": "^4.3.1",
     "eslint-config-thirdweb": "workspace:*",
     "plop": "^3.1.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "preconstruct": {
     "entrypoints": [
