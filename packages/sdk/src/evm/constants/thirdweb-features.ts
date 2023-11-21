@@ -19,6 +19,13 @@ import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPe
 import IAccountPermissionsV1 from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions_V1.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
+export const fallbackAbi = [
+  {
+    stateMutability: "payable",
+    type: "fallback",
+  },
+];
+
 export const getAllPluginsAbi = [
   {
     inputs: [],
@@ -368,5 +375,16 @@ export const FEATURE_AIRDROP_ERC1155 = {
     contracts: "IAirdropERC1155",
   },
   abis: [IAirdropERC1155],
+  features: {},
+} as const;
+
+export const FEATURE_FALLBACK = {
+  name: "Fallback",
+  namespace: "fallback",
+  docLinks: {
+    sdk: "",
+    contracts: "",
+  },
+  abis: [fallbackAbi],
   features: {},
 } as const;

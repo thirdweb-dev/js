@@ -85,7 +85,7 @@ export const NetworkButton = ({
       >
         <Box flexDirection="row" alignItems="center">
           <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
-          <Box ml="md" alignItems="flex-start" justifyContent="center">
+          <Box ml="sm" alignItems="flex-start" justifyContent="center">
             <Text variant="bodyLarge">
               {chain?.name || l.common.unknown_network}
             </Text>
@@ -161,8 +161,10 @@ export const SwitchChainModal = ({
                 return (
                   <NetworkButton
                     mt="xxs"
+                    padding="none"
                     key={chain.chainId}
-                    backgroundColor="backgroundHighlight"
+                    backgroundColor="transparent"
+                    borderColor="transparent"
                     chain={chain}
                     enableSwitchModal={false}
                     switchChainOnPress={true}

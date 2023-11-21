@@ -6,6 +6,7 @@ import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
 import {
+  AuthProvider,
   EmbeddedWalletSdk,
   InitializedUser,
   SendEmailOtpReturnType,
@@ -16,6 +17,7 @@ import {
   AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  EmbeddedWalletOauthStrategy,
 } from "./types";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
@@ -87,7 +89,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (!this.user) {
       throw new Error("Embedded Wallet is not connected");
     }
-    return this.user.walletAddress;
+    return await this.getSigner().then((signer) => signer.getAddress());
   }
 
   async isConnected(): Promise<boolean> {
@@ -113,7 +115,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     const user = await this.getUser();
-    const signer = await user?.wallet.getEthersJsSigner({
+    const signer = await user.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
@@ -136,15 +138,17 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Chain not configured");
     }
 
-    // update chain in wallet
-    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
-
-    // update signer
-    this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
-    });
-
-    this.emit("change", { chain: { id: chainId, unsupported: false } });
+    try {
+      // update chain in wallet
+      await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
+      // update signer
+      this.#signer = await this.user?.wallet.getEthersJsSigner({
+        rpcEndpoint: chain.rpc[0] || "",
+      });
+      this.emit("change", { chain: { id: chainId, unsupported: false } });
+    } catch (e) {
+      console.warn("Failed to switch chain", e);
+    }
   }
 
   async setupListeners() {
@@ -176,11 +180,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
-  async getUser(): Promise<InitializedUser | null> {
+  private async getUser(): Promise<InitializedUser> {
     if (
       !this.user ||
       !this.user.wallet ||
-      !this.user.wallet.getEthersJsSigner
+      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost, need to rehydrate
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
@@ -189,27 +193,25 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           this.user = user;
           break;
         }
+        default: {
+          // if logged out or unitialized, we can't get a signer, so throw an error
+          throw new Error(
+            "Embedded Wallet is not authenticated, please authenticate first",
+          );
+        }
       }
     }
     return this.user;
   }
 
   async getEmail() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails.email;
+    const user = await this.getUser();
+    return user.authDetails.email;
   }
 
   async getRecoveryInformation() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails;
+    const user = await this.getUser();
+    return user.authDetails;
   }
 
   async sendVerificationEmail({
@@ -232,8 +234,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           recoveryCode: params.recoveryCode,
         });
       }
+      case "apple":
+      case "facebook":
       case "google": {
-        return ewSDK.auth.loginWithGoogle({
+        const oauthProvider = oauthStrategyToAuthProvider[strategy];
+        return ewSDK.auth.loginWithOauth({
+          oauthProvider,
           closeOpenedWindow: params.closeOpenedWindow,
           openedWindow: params.openedWindow,
         });
@@ -262,3 +268,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
 }
+
+const oauthStrategyToAuthProvider: Record<
+  EmbeddedWalletOauthStrategy,
+  AuthProvider
+> = {
+  google: AuthProvider.GOOGLE,
+  facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
+};

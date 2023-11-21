@@ -6,6 +6,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { defaultChains, updateChainRPCs } from "@thirdweb-dev/chains/utils";
 import Ethereum from "@thirdweb-dev/chains/chains/Ethereum";
 import { Wallet, utils } from "ethers";
+import { aesEncrypt, aesDecryptCompat } from "@thirdweb-dev/crypto";
 
 export type LocalWalletOptions = {
   chain?: Chain;
@@ -472,14 +473,9 @@ type ExportOptions =
       encryption: EncryptOptions;
     };
 
-async function defaultEncrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.encrypt(message, password).toString();
-}
-
-async function defaultDecrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.decrypt(message, password).toString(cryptoJS.enc.Utf8);
+// used in getDecryptor and getEncryptor below
+async function noop(msg: string) {
+  return msg;
 }
 
 /**
@@ -490,10 +486,10 @@ async function defaultDecrypt(message: string, password: string) {
  * @returns
  */
 function getDecryptor(encryption: DecryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-        (encryption.decrypt || defaultDecrypt)(msg, encryption.password)
+        // we're using aesDecryptCompat here because we want to support legacy crypto-js ciphertext for the moment
+        (encryption.decrypt || aesDecryptCompat)(msg, encryption.password)
     : noop;
 }
 
@@ -505,10 +501,9 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  * @returns
  */
 function getEncryptor(encryption: EncryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-        (encryption.encrypt || defaultEncrypt)(msg, encryption.password)
+        (encryption.encrypt || aesEncrypt)(msg, encryption.password)
     : noop;
 }
 

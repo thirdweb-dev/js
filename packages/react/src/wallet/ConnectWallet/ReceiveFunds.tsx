@@ -2,21 +2,24 @@ import { useAddress } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
 import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
-import { shortenString } from "../../evm/utils/addresses";
 import { CopyIcon } from "../../components/CopyIcon";
-import styled from "@emotion/styled";
-import { Theme, iconSize, radius, spacing } from "../../design-system";
+import { iconSize, radius, spacing } from "../../design-system";
 import { QRCode } from "../../components/QRCode";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core";
+import { StyledButton } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
   const { hasCopied, onCopy } = useClipboard(address || "");
+  const locale = useTWLocale().connectWallet.receiveFundsScreen;
 
   return (
     <Container p="lg">
-      <ModalHeader title="Receive Funds" />
+      <ModalHeader title={locale.title} />
 
       <Spacer y="xl" />
 
@@ -35,7 +38,7 @@ export function ReceiveFunds(props: { iconUrl: string }) {
       </Container>
       <Spacer y="xl" />
 
-      <WalletAddressContianer onClick={onCopy}>
+      <WalletAddressContainer onClick={onCopy}>
         <Text color="primaryText" size="md">
           {shortenString(address || "")}
         </Text>
@@ -44,30 +47,32 @@ export function ReceiveFunds(props: { iconUrl: string }) {
           tip="Copy address"
           hasCopied={hasCopied}
         />
-      </WalletAddressContianer>
+      </WalletAddressContainer>
 
       <Spacer y="lg" />
 
-      <Text multiline center>
-        Copy the wallet address to <br />
-        send funds to this wallet
+      <Text multiline center balance>
+        {locale.instruction}
       </Text>
     </Container>
   );
 }
 
-const WalletAddressContianer = styled.button<{ theme?: Theme }>`
-  all: unset;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding: ${spacing.md};
-  display: flex;
-  justify-content: space-between;
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  border-radius: ${radius.md};
-  transition: border-color 200ms ease;
-  &:hover {
-    border-color: ${(p) => p.theme.colors.accentText};
-  }
-`;
+const WalletAddressContainer = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    width: "100%",
+    boxSizing: "border-box",
+    cursor: "pointer",
+    padding: spacing.md,
+    display: "flex",
+    justifyContent: "space-between",
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.md,
+    transition: "border-color 200ms ease",
+    "&:hover": {
+      borderColor: theme.colors.accentText,
+    },
+  };
+});

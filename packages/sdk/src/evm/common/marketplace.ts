@@ -94,11 +94,11 @@ export async function isTokenApprovedForTransfer(
 /**
  * Checks if the marketplace is approved to make transfers on the assetContract
  * If not, it tries to set the approval.
- * @param contractWrapper
- * @param marketplaceAddress
- * @param assetContract
- * @param tokenId
- * @param from
+ * @param contractWrapper - The contract wrapper to use
+ * @param marketplaceAddress - The address of the marketplace contract
+ * @param assetContract - The address of the asset contract.
+ * @param tokenId - The token id of the token.
+ * @param from - The address of the account that owns the token.
  */
 export async function handleTokenApproval(
   contractWrapper: ContractWrapper<any>,
@@ -227,7 +227,7 @@ export function validateNewListingParam(
  * Maps a contract offer to the strict interface
  *
  * @internal
- * @param offer
+ * @param offer - The offer to map
  * @returns - An `Offer` object
  */
 export async function mapOffer(

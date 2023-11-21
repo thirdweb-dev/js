@@ -49,6 +49,14 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
                 .default(3600),
             }),
           }),
+          z.object({
+            engine: z.object({
+              relayerUrl: z
+                .string()
+                .url()
+                .transform((url) => url.replace(/\/$/, "")),
+            }),
+          }),
         ])
         .optional(),
       gatewayUrls: z.array(z.string()).optional(),

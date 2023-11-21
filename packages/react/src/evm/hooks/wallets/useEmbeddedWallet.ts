@@ -2,6 +2,7 @@ import {
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
+  useWallet,
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
@@ -10,8 +11,13 @@ import {
   type AuthParams,
   EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
+import {
+  UseQueryResult,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 /**
  * Hook to authenticate and connect to an embedded wallet
@@ -71,4 +77,31 @@ export function useEmbeddedWallet() {
     connect,
     sendVerificationEmail,
   };
+}
+
+export function useEmbeddedWalletUserEmail(): UseQueryResult<
+  string | undefined
+> {
+  const wallet = useWallet();
+  const queryClient = useQueryClient();
+
+  const emailQuery = useQuery<string | undefined, string>(
+    [wallet?.walletId, "embeddedWallet-email"],
+    () => {
+      if (wallet && wallet.walletId === walletIds.embeddedWallet) {
+        return (wallet as EmbeddedWallet).getEmail();
+      }
+    },
+    {
+      retry: false,
+      enabled: wallet?.walletId === walletIds.embeddedWallet,
+    },
+  );
+
+  // Invalidate the query when the wallet changes
+  useEffect(() => {
+    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
+  }, [wallet, queryClient]);
+
+  return emailQuery;
 }

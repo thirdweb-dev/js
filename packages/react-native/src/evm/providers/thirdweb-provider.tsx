@@ -54,7 +54,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    *
-   * * ```jsx
+   * ```jsx
    * import { en } from "@thirdweb-dev/react-native";
    *
    * <ThirdwebProvider
@@ -88,6 +88,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
  * @example
  * You can wrap your application with the provider as follows:
  *
+ * ```jsx
  * import { ThirdwebProvider } from "@thirdweb-dev/react-native";
  *
  * const App = () => {
@@ -97,7 +98,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
  *     </ThirdwebProvider>
  *   );
  * };
- *
+ * ```
  */
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,

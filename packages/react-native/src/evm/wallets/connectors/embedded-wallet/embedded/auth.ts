@@ -26,7 +26,7 @@ import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
   ROUTE_AUTH_JWT_CALLBACK,
-  ROUTE_HEADLESS_GOOGLE_LOGIN,
+  ROUTE_HEADLESS_OAUTH_LOGIN,
 } from "./helpers/constants";
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
@@ -171,17 +171,16 @@ export async function validateEmailOTP(options: {
 }
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
-  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
-    oauthOptions.provider,
-  )}&baseUrl=${encodeURIComponent(
-    "https://embedded-wallet.thirdweb.com",
+  const encodedProvider = encodeURIComponent(oauthOptions.provider);
+  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_OAUTH_LOGIN}?authProvider=${encodedProvider}&baseUrl=${encodeURIComponent(
+    `https://embedded-wallet.thirdweb.com`,
   )}&platform=${encodeURIComponent("mobile")}`;
 
   const resp = await fetch(headlessLoginLinkWithParams);
 
   if (!resp.ok) {
     const error = await resp.json();
-    throw new Error(`Error getting headless login link: ${error.message}`);
+    throw new Error(`Error getting headless sign in link: ${error.message}`);
   }
 
   const json = await resp.json();
@@ -192,7 +191,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     clientId || "",
   )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
     oauthOptions.redirectUrl,
-  )}`;
+  )}&authOption=${encodedProvider}`;
 
   const result = await InAppBrowser.openAuth(
     completeLoginUrl,
@@ -207,16 +206,23 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     },
   );
 
+  if (result.type === "cancel") {
+    throw new Error(`Sign in cancelled`);
+  }
+
   if (result.type !== "success") {
-    throw new Error("Error signing in. Please try again later.");
+    throw new Error(`Can't sign in with ${oauthOptions.provider}: ${result}`);
   }
 
   const decodedUrl = decodeURIComponent(result.url);
 
   const parts = decodedUrl.split("?authResult=");
   if (parts.length < 2) {
-    throw new Error("Malformed response from the login redirect");
+    // assume error
+    const error = decodedUrl.split("?error=")?.[1];
+    throw new Error(`Something went wrong: ${error}`);
   }
+
   const authResult = parts[1];
   const { storedToken } = JSON.parse(authResult);
 

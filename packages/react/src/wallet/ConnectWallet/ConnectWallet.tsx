@@ -1,4 +1,4 @@
-import { Theme, ThemeObjectOrType, iconSize } from "../../design-system";
+import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
   useAddress,
@@ -22,17 +22,20 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { defaultModalTitle, onModalUnmount } from "./constants";
+import { onModalUnmount } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
-import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
-import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
 import { SupportedTokens, defaultTokens } from "./defaultTokens";
 import { Container } from "../../components/basic";
 import { LockIcon } from "./icons/LockIcon";
 import { SignatureScreen } from "./SignatureScreen";
 import { Modal } from "../../components/Modal";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -41,7 +44,7 @@ export type ConnectWalletProps = {
   btnTitle?: string;
   /**
    * Set a custom title for the modal
-   * @default "Connect"
+   * @defaultValue "Connect"
    */
   modalTitle?: string;
 
@@ -73,7 +76,7 @@ export type ConnectWalletProps = {
   /**
    * Hide option to request testnet funds for testnets in dropdown
    *
-   * @default false
+   * @defaultValue false
    */
   hideTestnetFaucet?: boolean;
 
@@ -84,7 +87,7 @@ export type ConnectWalletProps = {
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
    *
-   * @default false
+   * @defaultValue false
    */
   switchToActiveChain?: boolean;
 
@@ -93,7 +96,7 @@ export type ConnectWalletProps = {
    *
    * Modal size is always `compact` on mobile
    *
-   * @default "wide"
+   * @defaultValue "wide"
    */
   modalSize?: "compact" | "wide";
 
@@ -134,6 +137,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to either Smart Wallet or Safe
+   *
+   * @defaultValue false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -145,15 +155,16 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
-  const contextTheme = useTheme() as ThemeObjectOrType;
+  const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useConnectionStatus();
+  const locale = useTWLocale();
 
   const walletConfigs = useWallets();
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
 
-  const btnTitle = props.btnTitle || "Connect Wallet";
+  const btnTitle = props.btnTitle || locale.connectWallet.defaultButtonTitle;
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
   const setModalConfig = useContext(SetModalConfigCtx);
@@ -241,7 +252,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 ...props.style,
               }}
               aria-label={
-                connectionStatus === "connecting" ? "Connecting" : btnTitle
+                connectionStatus === "connecting"
+                  ? locale.connectWallet.connecting
+                  : btnTitle
               }
               onClick={() => {
                 let modalSize = props.modalSize || "wide";
@@ -251,7 +264,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 }
 
                 setModalConfig({
-                  title: props.modalTitle || defaultModalTitle,
+                  title:
+                    props.modalTitle || locale.connectWallet.defaultModalTitle,
                   theme,
                   data: undefined,
                   modalSize,
@@ -310,7 +324,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             >
               <Container flex="row" center="y" gap="sm">
                 <LockIcon size={iconSize.sm} />
-                <span> Sign in </span>
+                <span> {locale.connectWallet.signIn} </span>
               </Container>
             </Button>
           );
@@ -334,6 +348,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 props?.auth?.onLogout?.();
               }
             }}
+            hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
           />
         );
       })()}
@@ -348,6 +363,7 @@ function SwitchNetworkButton(props: {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
+  const locale = useTWLocale();
 
   return (
     <AnimatedButton
@@ -372,17 +388,17 @@ function SwitchNetworkButton(props: {
         minWidth: "140px",
         ...props.style,
       }}
-      aria-label={switching ? "Switching Network" : undefined}
+      aria-label={switching ? locale.connectWallet.switchingNetwork : undefined}
     >
       {switching ? (
         <Spinner size="sm" color="primaryButtonText" />
       ) : (
-        "Switch Network"
+        locale.connectWallet.switchNetwork
       )}
     </AnimatedButton>
   );
 }
 
-const AnimatedButton = /* @__PURE__ */ styled(Button)`
-  animation: ${fadeInAnimation} 300ms ease;
-`;
+const AnimatedButton = /* @__PURE__ */ styled(Button)({
+  animation: `${fadeInAnimation} 300ms ease`,
+});

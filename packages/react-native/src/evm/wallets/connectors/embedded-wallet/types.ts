@@ -62,8 +62,8 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
-type GoogleAuthParams = {
-  strategy: "google";
+type SocialAuthParams = {
+  strategy: "google" | "facebook" | "apple";
   redirectUrl: string;
 };
 
@@ -76,7 +76,7 @@ type JwtAuthParams = {
 // this is the input to 'authenticate'
 export type AuthParams =
   | EmailVerificationAuthParams
-  | GoogleAuthParams
+  | SocialAuthParams
   | JwtAuthParams;
 
 // TODO typed based off AuthParams["strategy"]

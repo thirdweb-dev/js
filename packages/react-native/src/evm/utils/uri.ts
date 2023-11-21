@@ -5,8 +5,8 @@ import { WCMeta } from "../wallets/types/wc";
 /**
  * Build a WalletConnect display URI from a wc:// uri + a wallet specific link
  *
- * @param uri The wc:// uri
- * @param links The wallet specific links
+ * @param uri - The wc:// uri
+ * @param links - The wallet specific links
  * @returns The WalletConnect display URI
  */
 export function formatWalletConnectDisplayUri(

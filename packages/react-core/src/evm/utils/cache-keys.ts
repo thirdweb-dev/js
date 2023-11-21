@@ -182,10 +182,12 @@ export const cacheKeys = {
           ),
         totalCirculatingSupply: (
           contractAddress: RequiredParam<ContractAddress>,
+          tokenId?: BigNumberish,
         ) =>
           createContractCacheKey(contractAddress, [
             "query",
             "totalCirculatingSupply",
+            tokenId ?? "0",
           ]),
         totalCount: (contractAddress: RequiredParam<ContractAddress>) =>
           createContractCacheKey(contractAddress, ["query", "totalCount"]),

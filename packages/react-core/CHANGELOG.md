@@ -1,5 +1,80 @@
 # @thirdweb-dev/react-core
 
+## 4.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881), [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863), [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96), [`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec)]:
+  - @thirdweb-dev/wallets@2.1.7
+  - @thirdweb-dev/sdk@4.0.15
+  - @thirdweb-dev/auth@4.1.10
+
+## 4.1.7
+
+### Patch Changes
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/sdk@4.0.14
+  - @thirdweb-dev/wallets@2.1.6
+  - @thirdweb-dev/storage@2.0.5
+  - @thirdweb-dev/auth@4.1.9
+
+## 4.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+  - @thirdweb-dev/auth@4.1.8
+
+## 4.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5)]:
+  - @thirdweb-dev/wallets@2.1.4
+  - @thirdweb-dev/auth@4.1.7
+
+## 4.1.4
+
+### Patch Changes
+
+- [#1951](https://github.com/thirdweb-dev/js/pull/1951) [`e79a9520`](https://github.com/thirdweb-dev/js/commit/e79a95206116ea09de0126fdbe30fb4413fdff28) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix caching issue with useTotalCirculatingSupply
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1950](https://github.com/thirdweb-dev/js/pull/1950) [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Smart Wallet autoconnect fixes and performance improvements
+
+- Updated dependencies [[`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4), [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd), [`16e9e8b6`](https://github.com/thirdweb-dev/js/commit/16e9e8b64d7d1a97a5b32fc855479e992b7ed3a8), [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c)]:
+  - @thirdweb-dev/sdk@4.0.13
+  - @thirdweb-dev/storage@2.0.4
+  - @thirdweb-dev/wallets@2.1.3
+  - @thirdweb-dev/auth@4.1.6
+
+## 4.1.3
+
+### Patch Changes
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1929](https://github.com/thirdweb-dev/js/pull/1929) [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7) Thanks [@iketw](https://github.com/iketw)! - Move addresses' utils to the core package
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`05e52114`](https://github.com/thirdweb-dev/js/commit/05e52114bf4f0ee352f393ed20115a904a18c310), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/auth@4.1.5
+  - @thirdweb-dev/storage@2.0.3
+  - @thirdweb-dev/sdk@4.0.12
+
+## 4.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/auth@4.1.4
+
 ## 4.1.1
 
 ## 4.1.0

@@ -11,13 +11,16 @@ import {
   InputButton,
 } from "../../../../components/buttons";
 import { Input, InputContainer } from "../../../../components/formElements";
-import { Theme, iconSize } from "../../../../design-system";
+import { iconSize } from "../../../../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Text } from "../../../../components/text";
 import { useState } from "react";
 import { Spinner } from "../../../../components/Spinner";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { useTWLocale } from "../../../../evm/providers/locale-provider";
+import { StyledDiv } from "../../../../design-system/elements";
+import { useCustomTheme } from "../../../../design-system/CustomThemeProvider";
 
 export function CreatePassword(props: {
   goBack: () => void;
@@ -25,6 +28,7 @@ export function CreatePassword(props: {
   onPassword: (password: string) => Promise<void>;
   modalSize: "wide" | "compact";
 }) {
+  const locale = useTWLocale().wallets.embeddedWallet.createPassword;
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -34,7 +38,7 @@ export function CreatePassword(props: {
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Create Password" onBack={props.goBack} />
+        <ModalHeader title={locale.title} onBack={props.goBack} />
       </Container>
 
       <Line />
@@ -74,12 +78,11 @@ export function CreatePassword(props: {
           }}
         >
           <Text center multiline>
-            Set a password for your account. You will need this password when
-            connecting from a new device.
+            {locale.instruction}
           </Text>
           <Spacer y="xs" />
           <Text center color="primaryText">
-            Make sure to save it.
+            {locale.saveInstruction}
           </Text>
           <Spacer y="xl" />
 
@@ -93,7 +96,7 @@ export function CreatePassword(props: {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder={locale.inputPlaceholder}
             />
 
             <InputButton
@@ -134,7 +137,7 @@ export function CreatePassword(props: {
               }}
             >
               <Text size="sm" color="primaryText">
-                I have saved my password
+                {locale.confirmation}
               </Text>
             </label>
           </Container>
@@ -153,7 +156,7 @@ export function CreatePassword(props: {
             {loading ? (
               <Spinner size="md" color="accentButtonText" />
             ) : (
-              "Set Password"
+              locale.submitButton
             )}
           </Button>
 
@@ -161,7 +164,7 @@ export function CreatePassword(props: {
             <Container>
               <Spacer y="lg" />
               <Text size="sm" color="danger" center>
-                Failed to set password
+                {locale.failedToSetPassword}
               </Text>
             </Container>
           )}
@@ -172,16 +175,18 @@ export function CreatePassword(props: {
   );
 }
 
-const CheckboxButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.colors.accentText};
-  color: ${(p) => p.theme.colors.accentText} !important;
-  padding: 0;
-
-  &[aria-checked="true"] {
-    background: ${(p) => p.theme.colors.accentText};
-    color: ${(p) => p.theme.colors.modalBg} !important;
-  }
-`;
+const CheckboxButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `2px solid ${theme.colors.accentText}`,
+    color: `${theme.colors.accentText} !important`,
+    padding: 0,
+    "&[aria-checked='true']": {
+      background: theme.colors.accentText,
+      color: `${theme.colors.modalBg} !important`,
+    },
+  };
+});
 
 const bounceAnimation = keyframes`
 from {
@@ -192,6 +197,6 @@ to {
 }
 `;
 
-const BounceContainer = styled.div`
-  animation: ${bounceAnimation} 1s ease-in-out infinite alternate;
-`;
+const BounceContainer = /* @__PURE__ */ StyledDiv({
+  animation: `${bounceAnimation} 1s ease-in-out infinite alternate`,
+});

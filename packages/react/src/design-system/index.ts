@@ -142,26 +142,32 @@ export const shadow = {
   xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
 };
 
-export function lightTheme(overrides: ThemeOverrides): Theme {
+export function lightTheme(overrides?: ThemeOverrides): Theme {
+  if (!overrides) {
+    return lightThemeObj;
+  }
   return applyThemeOverrides(lightThemeObj, overrides);
 }
 
-export function darkTheme(overrides: ThemeOverrides): Theme {
+export function darkTheme(overrides?: ThemeOverrides): Theme {
+  if (!overrides) {
+    return darkThemeObj;
+  }
   return applyThemeOverrides(darkThemeObj, overrides);
 }
 
 export function applyThemeOverrides(
   baseTheme: Theme,
-  themeOverides: ThemeOverrides,
+  themeOverrides: ThemeOverrides,
 ): Theme {
   const theme = { ...baseTheme };
 
-  if (themeOverides.colors) {
-    theme.colors = { ...theme.colors, ...themeOverides.colors };
+  if (themeOverrides.colors) {
+    theme.colors = { ...theme.colors, ...themeOverrides.colors };
   }
 
-  if (themeOverides.fontFamily) {
-    theme.fontFamily = themeOverides.fontFamily;
+  if (themeOverrides.fontFamily) {
+    theme.fontFamily = themeOverrides.fontFamily;
   }
 
   return theme;

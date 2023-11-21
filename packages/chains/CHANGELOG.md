@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.58
+
+### Patch Changes
+
+- [#1911](https://github.com/thirdweb-dev/js/pull/1911) [`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e) Thanks [@iketw](https://github.com/iketw)! - Syncs Chains
+
 ## 0.1.57
 
 ### Patch Changes

@@ -10,6 +10,7 @@ import { providers } from "ethers";
 import type { Signer } from "ethers";
 import pkg from "../../../package.json";
 import { isBrowser } from "@thirdweb-dev/storage";
+import { sha256HexSync } from "@thirdweb-dev/crypto";
 
 /**
  * @internal
@@ -200,15 +201,7 @@ export function getProviderFromRpcUrl(
         if (typeof window !== "undefined") {
           throw new Error("Cannot use secretKey in browser context");
         }
-        // this is on purpose because we're using the crypto module only in node
-        // try to trick webpack :)
-        const pto = "pto";
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const crypto = require("cry" + pto);
-        const hashedSecretKey = crypto
-          .createHash("sha256")
-          .update(sdkOptions.secretKey)
-          .digest("hex");
+        const hashedSecretKey = sha256HexSync(sdkOptions.secretKey);
         const derivedClientId = hashedSecretKey.slice(0, 32);
         const utilizedRpcUrl = new URL(rpcUrl);
         // always set the clientId on the path to the derived client id
