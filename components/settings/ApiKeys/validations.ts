@@ -38,10 +38,6 @@ const applicationImageUrlValidation = z.union([
   z.undefined(),
   z.string().refine(
     (str) => {
-      if (!str) {
-        return true;
-      }
-
       try {
         new URL(str);
         return true;
