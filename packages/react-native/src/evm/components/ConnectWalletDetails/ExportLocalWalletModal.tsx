@@ -13,12 +13,12 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import {
   shortenAddress,
   useAddress,
+  usePersonalWalletAddress,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
 import { useLocale } from "../../providers/ui-context-provider";

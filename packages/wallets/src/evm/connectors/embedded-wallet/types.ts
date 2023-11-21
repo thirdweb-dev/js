@@ -64,5 +64,4 @@ export type AuthResult = {
   user?: InitializedUser;
   isNewUser?: boolean;
   needsRecoveryCode?: boolean;
-  verifyOTP?: (otp: string, recoveryCode?: string) => Promise<AuthResult>;
 };

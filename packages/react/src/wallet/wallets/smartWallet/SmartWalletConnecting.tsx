@@ -4,13 +4,9 @@ import { Button } from "../../../components/buttons";
 import { iconSize, spacing, fontSize } from "../../../design-system";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  useChain,
   useConnect,
   useConnectionStatus,
-  useNetworkMismatch,
   useWalletContext,
-  useWallet,
-  useSwitchChain,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -24,31 +20,32 @@ export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   smartWallet: SmartWalletConfig;
-  personalWallet: WalletConfig;
+  personalWalletConfig: WalletConfig;
 }> = (props) => {
   const locale = useTWLocale().wallets.smartWallet;
-  const activeWallet = useWallet(); // personal wallet
 
-  const connect = useConnect();
-  const connectedChain = useChain();
-  const targetChain = useWalletContext().activeChain;
-
-  const mismatch = useNetworkMismatch();
-
-  const [connectError, setConnectError] = useState(false);
+  // personal wallet
+  const { personalWalletInfo } = useWalletContext();
+  const personalWallet = personalWalletInfo?.wallet;
+  const personalWalletChainId = personalWalletInfo?.chainId;
   const [switchError, setSwitchError] = useState(false);
+  const switchPersonalWalletChain = personalWalletInfo.switchChain;
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
+  // smart wallet
+  const connect = useConnect();
+  const targetChain = useWalletContext().activeChain;
+  const mismatch = targetChain.chainId !== personalWalletChainId;
+  const [connectError, setConnectError] = useState(false);
   const connectionStatus = useConnectionStatus();
 
   const { onConnect } = props;
   const connectStarted = useRef(false);
 
-  const switchChain = useSwitchChain();
   const modalSize = useContext(ModalConfigCtx).modalSize;
 
   const handleConnect = useCallback(async () => {
-    if (!activeWallet || !connectedChain || connectStarted.current) {
+    if (!personalWallet || !personalWalletChainId || connectStarted.current) {
       return;
     }
     setConnectError(false);
@@ -56,20 +53,26 @@ export const SmartWalletConnecting: React.FC<{
     try {
       connectStarted.current = true;
       await connect(props.smartWallet, {
-        personalWallet: activeWallet,
+        personalWallet: personalWallet,
       });
       onConnect();
     } catch (e) {
       console.error(e);
       setConnectError(true);
     }
-  }, [activeWallet, connectedChain, connect, props.smartWallet, onConnect]);
+  }, [
+    personalWallet,
+    personalWalletChainId,
+    connect,
+    props.smartWallet,
+    onConnect,
+  ]);
 
   useEffect(() => {
     if (!mismatch) {
       handleConnect();
     }
-  }, [mismatch, handleConnect, activeWallet, connectedChain]);
+  }, [mismatch, handleConnect, personalWallet, personalWalletChainId]);
 
   if (!connectError && (connectionStatus === "connecting" || !mismatch)) {
     return (
@@ -111,8 +114,8 @@ export const SmartWalletConnecting: React.FC<{
     <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
         <ModalHeader
-          title={props.personalWallet.meta.name}
-          imgSrc={props.personalWallet.meta.iconURL}
+          title={props.personalWalletConfig.meta.name}
+          imgSrc={props.personalWalletConfig.meta.iconURL}
           onBack={props.onBack}
         />
       </Container>
@@ -150,14 +153,14 @@ export const SmartWalletConnecting: React.FC<{
                 gap: spacing.sm,
               }}
               onClick={async () => {
-                if (!activeWallet) {
+                if (!personalWallet) {
                   throw new Error("No active wallet");
                 }
                 setConnectError(false);
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await switchChain(targetChain.chainId);
+                  await switchPersonalWalletChain(targetChain.chainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {
