@@ -65,7 +65,7 @@ const Hackathon = () => {
         as="main"
       >
         <HomepageTopNav />
-        <HomepageSection id="header">
+        <HomepageSection id="header" isOverflowXHidden>
           <Flex
             flexDir="column"
             align="center"
@@ -155,7 +155,11 @@ const Hackathon = () => {
         </HomepageSection>
         <Divider mt={16} />
 
-        <Flex flexDir={"column"} gap={{ base: 100, md: 180 }}>
+        <Flex
+          flexDir={"column"}
+          gap={{ base: 100, md: 180 }}
+          overflowX="hidden"
+        >
           <Reason />
 
           <HomepageSection>

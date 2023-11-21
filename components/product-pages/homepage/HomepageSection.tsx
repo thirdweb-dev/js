@@ -4,12 +4,14 @@ import { ComponentWithChildren } from "types/component-with-children";
 interface IHomepageSection extends BoxProps {
   id?: string;
   bottomPattern?: true;
+  isOverflowXHidden?: boolean;
 }
 
 export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
   children,
   id,
   bottomPattern,
+  isOverflowXHidden,
   ...restBoxProps
 }) => {
   return (
@@ -20,6 +22,7 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
       overflow="visible"
       zIndex={2}
       {...restBoxProps}
+      overflowX={isOverflowXHidden ? "hidden" : "visible"}
     >
       <Container zIndex={1} position="relative" maxW="container.page" id={id}>
         {children}
