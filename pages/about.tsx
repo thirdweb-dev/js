@@ -42,10 +42,6 @@ const employees = [
     twitter: "cattybk",
   },
   {
-    name: "Ciara Nightingale",
-    twitter: "ciaranightingal",
-  },
-  {
     name: "Devin Rattray",
     twitter: "dvnsctt",
   },
@@ -67,7 +63,7 @@ const employees = [
   },
   {
     name: "Gerry Saporito",
-    twitter: "SaporitoEth",
+    twitter: "saporito_eth",
   },
   {
     name: "Farhan Khwaja",
@@ -178,10 +174,6 @@ const employees = [
   {
     name: "Winston Yeo",
     twitter: "winston_yeo",
-  },
-  {
-    name: "Yan Giet",
-    twitter: "yangiet_",
   },
   {
     name: "Yash Kumar",
