@@ -20,8 +20,11 @@ export {
   type ConnectModalInlineProps,
 } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
-export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
-export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
+export {
+  NetworkSelector,
+  type NetworkSelectorProps,
+  type NetworkSelectorChain,
+} from "../wallet/ConnectWallet/NetworkSelector";
 
 // UI components
 export * from "./components/MediaRenderer";

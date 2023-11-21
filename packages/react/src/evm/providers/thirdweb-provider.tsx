@@ -70,13 +70,17 @@ export type DefaultChains = typeof defaultChains;
  * ```
  *
  */
-export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>({
-  supportedWallets,
-  children,
-  signer,
-  theme: _theme,
-  ...restProps
-}: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
+  props: PropsWithChildren<ThirdwebProviderProps<TChains>>,
+) => {
+  const {
+    supportedWallets,
+    children,
+    signer,
+    theme: _theme,
+    ...restProps
+  } = props;
+
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";
 
