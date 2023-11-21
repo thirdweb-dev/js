@@ -9,5 +9,5 @@ typedoc({
     "**/packages/react-core/**",
     "**/packages/chains/**",
   ],
-  output: "both",
+  output: "json",
 });
