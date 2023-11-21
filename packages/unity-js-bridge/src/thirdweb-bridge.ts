@@ -18,7 +18,7 @@ import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Ethereum,
   defaultChains,
@@ -642,6 +642,42 @@ class ThirdwebBridge implements TWBridge {
       password,
     });
     return localWallet;
+  }
+
+  public async smartWalletAddAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    return await smartWallet.addAdmin(admin);
+  }
+
+  public async smartWalletRemoveAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    return await smartWallet.removeAdmin(admin);
+  }
+
+  public async smartWalletCreateSessionKey(options: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const optionsParsed = JSON.parse(options);
+    const approvedCallTargets = optionsParsed.approvedCallTargets;
+    const nativeTokenLimitPerTransaction = ethers.utils.formatEther(
+      optionsParsed.nativeTokenLimitPerTransactionInWei,
+    );
+    const startDate = optionsParsed.startDate;
+    const expirationDate = optionsParsed.expirationDate;
+    return await smartWallet.createSessionKey(optionsParsed.signerAddress, {
+      approvedCallTargets: approvedCallTargets,
+      nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
+      startDate: startDate,
+      expirationDate: expirationDate,
+    });
   }
 
   public openPopupWindow() {
