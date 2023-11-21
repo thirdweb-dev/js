@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "CREDIT",
-  "chainId": 13308,
+  "chainId": 4400,
   "explorers": [
     {
       "name": "Creditscan",
@@ -31,19 +31,19 @@ export default {
     "format": "png"
   },
   "infoURL": "https://creditsmartchain.com",
-  "name": "Credit Smart Chain",
+  "name": "Credit Smart Chain Mainnet",
   "nativeCurrency": {
     "name": "Credit",
     "symbol": "CREDIT",
     "decimals": 18
   },
-  "networkId": 13308,
+  "networkId": 4400,
   "rpc": [
-    "https://credit-smart-chain-Credit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://13308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://credit-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.creditsmartchain.com"
   ],
-  "shortName": "Credit",
-  "slug": "credit-smart-chain-Credit",
+  "shortName": "CreditEdge",
+  "slug": "credit-smart-chain",
   "testnet": false
 } as const satisfies Chain;
