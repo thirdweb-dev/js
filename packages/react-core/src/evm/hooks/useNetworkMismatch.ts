@@ -8,7 +8,7 @@ import { useChainId } from "./wallet";
  * import { useNetworkMismatch } from "@thirdweb-dev/react"
  * ```
  *
- * @returns `true` if the chainId of the connected wallet is different from the chainId of the network passed into <ThirdwebProvider />
+ * @returns `true` if the chainId of the connected wallet is different from the chainId of the network passed into `<ThirdwebProvider />`
  *
  * @see {@link https://portal.thirdweb.com/react/react.usenetworkmismatch?utm_source=sdk | Documentation}
  *

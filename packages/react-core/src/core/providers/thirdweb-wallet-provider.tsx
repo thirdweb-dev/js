@@ -678,6 +678,9 @@ export function ThirdwebWalletProvider(
   );
 }
 
+/**
+ * @internal
+ */
 export function useWalletContext() {
   const ctx = useContext(ThirdwebWalletContext);
   if (!ctx) {

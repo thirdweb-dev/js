@@ -30,7 +30,7 @@ type ActionFn = (contract: SmartContract) => any;
 
 const TW_WEB3BUTTON = "tw-web3button";
 
-interface Web3ButtonProps<TActionFn extends ActionFn> {
+export interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
@@ -76,9 +76,6 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
  * )
  * }
  * ```
- *
- *
- * @beta
  */
 export const Web3Button = <TAction extends ActionFn>(
   props: PropsWithChildren<Web3ButtonProps<TAction>>,

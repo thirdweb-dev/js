@@ -307,7 +307,7 @@ export function useContract(
  * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
  * @returns a response object that includes the contract metadata of the deployed contract
  * @twfeature ContractMetadata
- * @beta
+
  */
 export function useContractMetadata<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
@@ -359,7 +359,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
  * @returns a response object that includes the contract metadata of the deployed contract
  * @twfeature ContractMetadata
- * @beta
+
  */
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
@@ -417,7 +417,7 @@ export function useContractMetadataUpdate(
  * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
  * @see {@link https://portal.thirdweb.com/react/react.usecontractevents?utm_source=sdk | Documentation}
- * @beta
+
  */
 export function useContractEvents(
   contract: RequiredParam<ValidContractInstance>,
@@ -515,7 +515,7 @@ export function useContractEvents(
  * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
  * @returns a response object that includes the data returned by the function call
  * @see {@link https://portal.thirdweb.com/react/react.usecontractread?utm_source=sdk | Documentation}
- * @beta
+
  */
 export function useContractRead<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
@@ -592,7 +592,7 @@ export function useContractRead<
  * @param functionName - the name of the function to call
  * @returns a response object that includes the write function to call
  * @see {@link https://portal.thirdweb.com/react/react.usecontractwrite?utm_source=sdk | Documentation}
- * @beta
+
  */
 export function useContractWrite<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
