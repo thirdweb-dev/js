@@ -3,9 +3,15 @@
   "version": "0.1.58",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains.esm.js": "./dist/thirdweb-dev-chains.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-chains.browser.esm.js",
+        "default": "./dist/thirdweb-dev-chains.esm.js"
+      },
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
     "./utils": {
@@ -7891,7 +7897,11 @@
       "utils.ts",
       "chains/**"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "sideEffects": false,
   "scripts": {
