@@ -139,7 +139,10 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
                   >
                     <Box>
                       <FormLabel mt={3}>Application Image URL</FormLabel>
-                      <Text>It will show up in the emails sent to users</Text>
+                      <Text>
+                        It will show up in the emails sent to users. The image
+                        must be squared
+                      </Text>
                     </Box>
                     <Input
                       disabled={!srv.enabled}
