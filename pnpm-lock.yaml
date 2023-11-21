@@ -1386,8 +1386,8 @@ importers:
         specifier: ^0.25.2
         version: 0.25.2(typescript@5.1.6)
       typedoc-better-json:
-        specifier: ^0.3.0
-        version: 0.3.2(typescript@5.1.6)
+        specifier: ^0.4.0
+        version: 0.4.0(typescript@5.1.6)
     devDependencies:
       prettier:
         specifier: ^3.0.0
@@ -29654,8 +29654,8 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc-better-json@0.3.2(typescript@5.1.6):
-    resolution: {integrity: sha512-XuV/+3SE3UqGQbrT7ZMIGjR/ubD/1Njxo5BuuxTGQMaEAgmLUlOFp6siOwo+MBTJoxA+rAES8WyrfttnojhCxA==}
+  /typedoc-better-json@0.4.0(typescript@5.1.6):
+    resolution: {integrity: sha512-fkalavvxhTvgFzwKnXxqAUHGCykNeUXHVTwG2+SuZFsmg9E9/j31HCi92AGwXxi4xzJD0v7VzJLY+hPR9N9G0A==}
     dependencies:
       mdast: 3.0.0
       mdast-util-from-markdown: 2.0.0
