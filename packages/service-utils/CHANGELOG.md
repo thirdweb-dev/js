@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.10
+
+### Patch Changes
+
+- [#1988](https://github.com/thirdweb-dev/js/pull/1988) [`17fe41d4`](https://github.com/thirdweb-dev/js/commit/17fe41d42bf99ccc83669557dc48d6fd22a5a04e) Thanks [@assimovt](https://github.com/assimovt)! - fix api key caching ttl
+
 ## 0.4.9
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.105
+
+### Patch Changes
+
+- [#1985](https://github.com/thirdweb-dev/js/pull/1985) [`62cc785c`](https://github.com/thirdweb-dev/js/commit/62cc785c4ac6886fbc3b117bfb3d85dcf7523df1) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Support Add/Remove Admin and Create Session Key for SW
+
+- [#1986](https://github.com/thirdweb-dev/js/pull/1986) [`e09221f1`](https://github.com/thirdweb-dev/js/commit/e09221f1e0cf89bf4a8b512c107cfa7cb9bcb82e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Support Smart Wallet Account Override
+
+- [#1981](https://github.com/thirdweb-dev/js/pull/1981) [`7a2e0eda`](https://github.com/thirdweb-dev/js/commit/7a2e0edab4e8c11d6c8bfc8970ed2768583a48d6) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Added Facebook and Apple providers
+
+- Updated dependencies [[`36600dec`](https://github.com/thirdweb-dev/js/commit/36600decefca7b9ebb1924757b4186b559e439f6), [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1), [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4)]:
+  - @thirdweb-dev/auth@4.1.11
+  - @thirdweb-dev/wallets@2.1.8
+  - @thirdweb-dev/sdk@4.0.16
+
 ## 0.2.104
 
 ### Patch Changes
