@@ -2,43 +2,43 @@ import { BigNumber, constants, utils } from "ethers";
 import { isBytesLike } from "ethers/lib/utils";
 
 // int and uint
-const intMinValues: Record<string, BigNumber> = {
-  int8: BigNumber.from("-128"),
-  int16: BigNumber.from("-32768"),
-  int32: BigNumber.from("-2147483648"),
-  int64: BigNumber.from("-9223372036854775808"),
-  int128: BigNumber.from("-170141183460469231731687303715884105728"),
-  int256: BigNumber.from(constants.MinInt256),
-  int: BigNumber.from(constants.MinInt256),
-  uint8: BigNumber.from(0),
-  uint16: BigNumber.from(0),
-  uint32: BigNumber.from(0),
-  uint64: BigNumber.from(0),
-  uint128: BigNumber.from(0),
-  uint256: BigNumber.from(0),
-  uint: BigNumber.from(0),
-};
+const calculateIntMinValues = (solidityType: string) => {
+  const isIntType = solidityType.startsWith("int");
+  const isUintType = solidityType.startsWith("uint");
 
-const intMaxValues: Record<string, BigNumber> = {
-  int8: BigNumber.from("127"),
-  int16: BigNumber.from("32767"),
-  int32: BigNumber.from("2147483647"),
-  int64: BigNumber.from("9223372036854775807"),
-  int128: BigNumber.from("170141183460469231731687303715884105727"),
-  int256: constants.MaxInt256,
-  int: constants.MaxInt256,
-  uint8: BigNumber.from("255"),
-  uint16: BigNumber.from("65535"),
-  uint32: BigNumber.from("4294967295"),
-  uint64: BigNumber.from("18446744073709551615"),
-  uint128: BigNumber.from("340282366920938463463374607431768211455"),
-  uint256: constants.MaxUint256,
-  uint: constants.MaxUint256,
-};
+  const bitLength = parseInt(solidityType.replace(/int|uint/g, "") || "256", 10);
+
+  const min = BigNumber.from(2).pow(bitLength);
+
+  if (isIntType) {
+    return min.div(2).mul(-1);
+  } else if (isUintType) {
+    return BigNumber.from(0);
+  } else {
+    return BigNumber.from(0);
+  }
+}
+
+const calculateIntMaxValues = (solidityType: string) => {
+  const isIntType = solidityType.startsWith("int");
+  const isUintType = solidityType.startsWith("uint");
+
+  const bitLength = parseInt(solidityType.replace(/int|uint/g, "") || "256", 10);
+
+  const max = BigNumber.from(2).pow(bitLength);
+
+  if (isIntType) {
+    return max.div(2).sub(1);
+  } else if (isUintType) {
+    return max.sub(1);
+  } else {
+    return BigNumber.from(0);
+  }
+}
 
 export const validateInt = (value = "", solidityType: string) => {
-  const min = intMinValues[solidityType];
-  const max = intMaxValues[solidityType];
+  const min = calculateIntMinValues(solidityType);
+  const max = calculateIntMaxValues(solidityType);
 
   value = value.toString();
 
