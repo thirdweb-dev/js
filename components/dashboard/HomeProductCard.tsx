@@ -2,7 +2,7 @@ import { LinkBox, Flex, LinkOverlay } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { SectionItemProps } from "components/product-pages/common/nav/types";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Card, Heading, Text } from "tw-components";
+import { Card, Text } from "tw-components";
 
 interface HomeProductCardProps {
   product: SectionItemProps;

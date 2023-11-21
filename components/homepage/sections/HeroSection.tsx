@@ -1,4 +1,3 @@
-import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
 import {
   Box,

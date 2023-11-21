@@ -1,7 +1,6 @@
 import HomePageCard from "components/homepage/sections/HomePageCard";
 import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 import { BuildSection } from "../components/homepage/sections/key-features/BuildSection";
-import { HowItWorksSection } from "../components/homepage/sections/key-features/HowItWorksSection";
 import { LaunchSection } from "../components/homepage/sections/key-features/LaunchSection";
 import { ManageSection } from "../components/homepage/sections/key-features/ManageSection";
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
