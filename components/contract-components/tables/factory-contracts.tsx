@@ -5,6 +5,7 @@ import { getChainByChainId } from "@thirdweb-dev/chains";
 import { TWTable } from "components/shared/TWTable";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { AsyncFactoryAccountCell } from "./account-cell";
 
 interface FactoryContractsProps {
   contracts: ContractWithMetadata[];
@@ -27,6 +28,12 @@ const columns = [
     header: "Contract address",
     cell: (cell) => <Text>{shortenIfAddress(cell.getValue())}</Text>,
   }),
+  columnHelper.accessor((row) => row, {
+    header: "Accounts",
+    cell: (cell) => {
+      return <AsyncFactoryAccountCell cell={cell.row.original} />;
+    },
+  }),
 ];
 
 export const FactoryContracts: React.FC<FactoryContractsProps> = ({
@@ -36,7 +43,7 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
 }) => {
   return (
     <TWTable
-      title="smart"
+      title="account factories"
       data={contracts}
       columns={columns}
       isLoading={isLoading}

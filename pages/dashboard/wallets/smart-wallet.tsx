@@ -1,28 +1,42 @@
-import { Flex, ListItem, SimpleGrid, UnorderedList } from "@chakra-ui/react";
+import {
+  Flex,
+  ListItem,
+  SimpleGrid,
+  Spinner,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
-import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ContractWithMetadata } from "@thirdweb-dev/react";
-import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
+import {
+  Card,
+  Heading,
+  Text,
+  TrackedLink,
+  TrackedLinkButton,
+} from "tw-components";
+import { ContractWithMetadata, useSupportedChains } from "@thirdweb-dev/react";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import React, { useMemo } from "react";
-import { ChakraNextImage } from "components/Image";
 import invariant from "tiny-invariant";
-import { ContractCard } from "components/explore/contract-card";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { FactoryContracts } from "components/contract-components/tables/factory-contracts";
 import { NextSeo } from "next-seo";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { FiPlus } from "react-icons/fi";
+import { getEVMThirdwebSDK } from "lib/sdk";
+import { Polygon } from "@thirdweb-dev/chains";
+import { getDashboardChainRpc } from "lib/rpc";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
 const useFactories = () => {
   const { user, isLoggedIn } = useLoggedInUser();
-  const contracts = useMultiChainRegContractList(user?.address);
+  const configuredChains = useSupportedChains();
   return useQuery(
     [
       "dashboard-registry",
@@ -31,10 +45,18 @@ const useFactories = () => {
       "factories",
     ],
     async () => {
-      invariant(contracts.data, "contracts.data should be defined");
+      invariant(user?.address, "user should be logged in");
+      const polygonSDK = getEVMThirdwebSDK(
+        Polygon.chainId,
+        getDashboardChainRpc(Polygon),
+      );
+      const contractList = await polygonSDK.getMultichainContractList(
+        user.address,
+        configuredChains,
+      );
 
       const contractWithExtensions = await Promise.all(
-        contracts.data.map(async (c) => {
+        contractList.map(async (c) => {
           const extensions =
             "extensions" in c ? await c.extensions().catch(() => []) : [];
           return extensions.includes("AccountFactory") ? c : null;
@@ -44,11 +66,7 @@ const useFactories = () => {
       return contractWithExtensions.filter((f) => f !== null);
     },
     {
-      enabled:
-        !!user?.address &&
-        isLoggedIn &&
-        !!contracts.data &&
-        contracts.data.length > 0,
+      enabled: !!user?.address && isLoggedIn,
     },
   );
 };
@@ -56,12 +74,6 @@ export type SmartWalletFormData = {
   chainAndFactoryAddress: string;
   clientId: string;
 };
-
-const accountFactories = [
-  "thirdweb.eth/AccountFactory",
-  "thirdweb.eth/DynamicAccountFactory",
-  "thirdweb.eth/ManagedAccountFactory",
-];
 
 const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();
@@ -89,6 +101,10 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
     desc: "Add smart wallets to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
   };
 
+  if (!isLoggedIn) {
+    return <ConnectWalletPrompt description="manage smart wallets" />;
+  }
+
   return (
     <Flex flexDir="column" gap={10}>
       <NextSeo
@@ -108,117 +124,66 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         }}
       />
 
-      {isLoggedIn && hasSmartWalletsWithoutBilling && (
-        <SmartWalletsBillingAlert />
-      )}
-
       <Flex flexDir="column" gap={4}>
-        <Heading size="title.lg" as="h1">
-          Smart Wallet
-        </Heading>
-
+        <Flex gap={8} alignItems={"center"}>
+          <Heading size="title.lg" as="h1">
+            Smart Wallet
+          </Heading>
+          <TrackedLinkButton
+            category={TRACKING_CATEGORY}
+            variant={"solid"}
+            label="docs-wallets"
+            href="https://portal.thirdweb.com/smart-wallet"
+            isExternal
+          >
+            View Documentation
+          </TrackedLinkButton>
+        </Flex>
         <Text>
           Easily integrate Account abstraction (ERC-4337) compliant smart
           accounts into your apps.
         </Text>
       </Flex>
 
-      {!isLoggedIn && (
-        <SimpleGrid columns={{ base: 1, lg: 2 }} gap={12}>
-          <Flex flexDir="column" gap={8}>
-            <UnorderedList spacing={2}>
-              <Text as={ListItem}>
-                Let users <b>connect to their smart wallet</b> using any
-                personal wallet, including email and local wallets for easy
-                onboarding.
-              </Text>
-              <Text as={ListItem}>
-                Automatically <b>deploy individual account contracts</b> for
-                your users when they do their first onchain transaction.
-              </Text>
-              <Text as={ListItem}>
-                <b>Handle all transaction gas costs</b> via the thirdweb
-                paymaster.
-              </Text>
-            </UnorderedList>
-
-            <TrackedLink
-              category={TRACKING_CATEGORY}
-              label="docs-wallets"
-              href="https://portal.thirdweb.com/smart-wallet"
-              color="blue.500"
-              isExternal
-            >
-              Learn more about Smart Wallets
-            </TrackedLink>
-          </Flex>
-          <ChakraNextImage
-            borderRadius="xl"
-            src={require("public/assets/dashboard/wallets/smart-wallet.png")}
-            alt=""
-          />
-        </SimpleGrid>
-      )}
-
-      {isLoggedIn &&
-        !factories.isLoading &&
-        (factories.data || []).length > 0 && (
-          <Flex flexDir={"column"} gap={4}>
-            <Heading size="title.md" as="h1">
-              Your account factories
-            </Heading>
-
-            <Text>
-              Click into a contract to manage accounts under it and to view
-              contract-specific analytics.
-            </Text>
-
-            <FactoryContracts
-              contracts={factories.data as ContractWithMetadata[]}
-              isLoading={factories.isLoading}
-              isFetched={factories.isFetched}
-            />
-          </Flex>
-        )}
-
-      {isLoggedIn && (
-        <Flex flexDir={"column"} gap={6}>
-          <Heading size="title.md" as="h2">
-            Deploy an Account Factory
+      <Flex
+        flexDir={{ base: "column", lg: "row" }}
+        gap={8}
+        justifyContent={"space-between"}
+        alignItems={"left"}
+      >
+        <Flex flexDir={"column"} gap={4}>
+          <Heading size="title.md" as="h1">
+            Your account factories
           </Heading>
           <Text>
-            Account factories are contracts that spin up ERC-4337 compliant
-            smart accounts. The account will automatically be deployed when the
-            user performs their first on-chain transaction. Learn more about
-            factories and which factory type is right for your use case{" "}
-            <TrackedLink
-              color={"blue.500"}
-              category={TRACKING_CATEGORY}
-              label="account-factory-blog"
-              isExternal
-              href="https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/"
-            >
-              here.
-            </TrackedLink>
+            Click an account factory contract to view analytics and accounts
+            created.
           </Text>
-
-          <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
-            {accountFactories.map((publishedContractId, idx) => {
-              const [publisher, contractId] = publishedContractId.split("/");
-              return (
-                <ContractCard
-                  key={publishedContractId}
-                  publisher={publisher}
-                  contractId={contractId}
-                  tracking={{
-                    source: "smart-wallet-tab",
-                    itemIndex: `${idx}`,
-                  }}
-                />
-              );
-            })}
-          </SimpleGrid>
         </Flex>
+
+        <TrackedLinkButton
+          leftIcon={<FiPlus />}
+          category={TRACKING_CATEGORY}
+          label="create-factory"
+          colorScheme="primary"
+          href="/explore/smart-wallet"
+        >
+          Deploy an Account Factory
+        </TrackedLinkButton>
+      </Flex>
+
+      {factories.isLoading ? (
+        <Spinner />
+      ) : (
+        <FactoryContracts
+          contracts={(factories.data || []) as ContractWithMetadata[]}
+          isLoading={factories.isLoading}
+          isFetched={factories.isFetched}
+        />
+      )}
+
+      {isLoggedIn && hasSmartWalletsWithoutBilling && (
+        <SmartWalletsBillingAlert />
       )}
 
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap={4}>

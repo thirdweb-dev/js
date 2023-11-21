@@ -3,9 +3,14 @@ import { CreateAccountButton } from "./components/create-account-button";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useAccounts, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { Card, Heading, LinkButton, Text } from "tw-components";
+import {
+  Card,
+  Heading,
+  LinkButton,
+  Text,
+  TrackedLinkButton,
+} from "tw-components";
 import { AccountsCount } from "./components/accounts-count";
-import { AccountsNotice } from "./components/accounts-notice";
 
 interface AccountsPageProps {
   contractAddress?: string;
@@ -50,19 +55,32 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align={{ base: "left", md: "center" }}
+        gap={4}
+      >
         <Heading size="title.sm">Accounts</Heading>
         <ButtonGroup
           flexDirection={{ base: "column", md: "row" }}
           gap={2}
           w="inherit"
         >
+          <TrackedLinkButton
+            category={"smart-wallet"}
+            variant={"solid"}
+            label="docs-factory-page"
+            href="https://portal.thirdweb.com/smart-wallet/getting%20started#3-connect-smart-wallets-in-your-application"
+            isExternal
+          >
+            View Documentation
+          </TrackedLinkButton>
           <CreateAccountButton contractQuery={contractQuery} />
         </ButtonGroup>
       </Flex>
       <AccountsCount accountsQuery={accountsQuery} />
       <AccountsTable accountsQuery={accountsQuery} />
-      <AccountsNotice />
     </Flex>
   );
 };
