@@ -75,6 +75,7 @@ interface TWBridge {
     email?: string,
     personalWallet?: PossibleWallet,
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -256,6 +257,7 @@ class ThirdwebBridge implements TWBridge {
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -346,7 +348,7 @@ class ThirdwebBridge implements TWBridge {
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
-          await this.initializeSmartWallet(smartWallet, this.activeWallet);
+          await this.initializeSmartWallet(smartWallet, this.activeWallet, smartWalletAccountOverride);
         } else {
           // If EOA wallet is not connected, throw error
           throw new Error(
@@ -623,11 +625,16 @@ class ThirdwebBridge implements TWBridge {
   public async initializeSmartWallet(
     sw: SmartWallet,
     personalWallet: AbstractClientWallet,
+    accountAddress?: string,
   ) {
+    if(accountAddress) {
+      console.debug("Initializing smart wallet with account address override:", accountAddress);
+    }
     const personalWalletAddress = await personalWallet.getAddress();
     console.debug("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
+      accountAddress: accountAddress,
     });
     if (sw.listenerCount("disconnect") === 1) {
       sw.on("disconnect", () => {
