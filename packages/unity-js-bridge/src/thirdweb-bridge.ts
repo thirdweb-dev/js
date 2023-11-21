@@ -88,6 +88,9 @@ interface TWBridge {
   ) => void;
   fundWallet: (options: string) => Promise<void>;
   exportWallet: (password: string) => Promise<string>;
+  smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
 }
 
 const w = window;
@@ -649,7 +652,8 @@ class ThirdwebBridge implements TWBridge {
       throw new Error("No wallet connected");
     }
     const smartWallet = this.activeWallet as SmartWallet;
-    return await smartWallet.addAdmin(admin);
+    const result = await smartWallet.addAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
   public async smartWalletRemoveAdmin(admin: string) {
@@ -657,7 +661,8 @@ class ThirdwebBridge implements TWBridge {
       throw new Error("No wallet connected");
     }
     const smartWallet = this.activeWallet as SmartWallet;
-    return await smartWallet.removeAdmin(admin);
+    const result = await smartWallet.removeAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
   public async smartWalletCreateSessionKey(options: string) {
@@ -670,14 +675,15 @@ class ThirdwebBridge implements TWBridge {
     const nativeTokenLimitPerTransaction = ethers.utils.formatEther(
       optionsParsed.nativeTokenLimitPerTransactionInWei,
     );
-    const startDate = optionsParsed.startDate;
-    const expirationDate = optionsParsed.expirationDate;
-    return await smartWallet.createSessionKey(optionsParsed.signerAddress, {
+    const startDate = BigNumber.from(optionsParsed.startDate).toNumber();
+    const expirationDate = BigNumber.from(optionsParsed.expirationDate).toNumber();
+    const result = await smartWallet.createSessionKey(optionsParsed.signerAddress, {
       approvedCallTargets: approvedCallTargets,
       nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
       startDate: startDate,
       expirationDate: expirationDate,
     });
+    return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
   public openPopupWindow() {
