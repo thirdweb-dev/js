@@ -18,6 +18,7 @@ import {
   IsValidUserManagedEmailOTPResponse,
   VerifiedTokenResponse,
 } from "../../../types";
+import { createErrorMessage } from "../errors";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
@@ -281,7 +282,7 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
     };
   } catch (e) {
     throw new Error(
-      `Malformed response from the ews user wallet API: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response from the ews user wallet API", e),
     );
   }
 }
