@@ -312,17 +312,39 @@ export function ThirdwebWalletProvider(
         return;
       }
 
-      const personalWalletInfo = walletInfo.connectParams?.personalWallet;
+      let _personalWalletInfo = walletInfo.connectParams?.personalWallet;
+
+      // when connecting to magicLink with social login, it redirects to other page
+      // before redirecting, we save the walletInfo to local storage so that we can auto connect after redirect back to current page
+      // when using smartWallet + magicLink combination - the walletInfo will only contain info about magicLink and not smartWallet because it was never connected
+      // so if smartWallet + magicLink combination is used, we need to connect magicLink first and then connect smartWallet
+      if (
+        walletInfo.walletId === walletIds.magicLink &&
+        walletInfo.connectParams &&
+        "oauthProvider" in walletInfo.connectParams
+      ) {
+        // if the wallet requires a personal wallet (like smartWallet), but the saved data does not have it
+        if (walletObj.personalWallets && !_personalWalletInfo) {
+          // fix the connectParams by adding the personal wallet info
+          _personalWalletInfo = {
+            walletId: walletInfo.walletId,
+            connectParams: walletInfo.connectParams,
+          };
+        }
+      }
+
+      const personalWalletInfo = _personalWalletInfo;
 
       if (personalWalletInfo) {
         const personalWallets = walletObj.personalWallets || [];
 
-        const personalWalleObj = personalWallets.find(
+        const personalWalletObj = personalWallets.find(
           (W) => W.id === personalWalletInfo.walletId,
         );
-        if (personalWalleObj) {
+        if (personalWalletObj) {
           // create a personal wallet instance and auto connect it
-          const personalWalletInstance = createWalletInstance(personalWalleObj);
+          const personalWalletInstance =
+            createWalletInstance(personalWalletObj);
 
           try {
             await timeoutPromise(
