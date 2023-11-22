@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.16
+
+### Patch Changes
+
+- [#1974](https://github.com/thirdweb-dev/js/pull/1974) [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for new relayer and polygon relayer
+
 ## 4.0.15
 
 ### Patch Changes
