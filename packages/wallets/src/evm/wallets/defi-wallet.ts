@@ -138,12 +138,4 @@ export class DefiWallet extends AbstractClientWallet<DefiWalletAdditionalOptions
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
-
-  async switchAccount() {
-    if (!this.DefiWalletConnector) {
-      throw new Error("Can not switch Account");
-    }
-
-    await this.DefiWalletConnector.switchAccount();
-  }
 }
