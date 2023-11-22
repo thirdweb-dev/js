@@ -18,7 +18,7 @@ import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Ethereum,
   defaultChains,
@@ -75,6 +75,7 @@ interface TWBridge {
     email?: string,
     personalWallet?: PossibleWallet,
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -88,6 +89,13 @@ interface TWBridge {
   ) => void;
   fundWallet: (options: string) => Promise<void>;
   exportWallet: (password: string) => Promise<string>;
+  smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
+  waitForTransactionResult: (txHash: string) => Promise<string>;
+  getLatestBlockNumber: () => Promise<string>;
+  getBlock: (blockNumber: string) => Promise<string>;
+  getBlockWithTransactions: (blockNumber: string) => Promise<string>;
 }
 
 const w = window;
@@ -253,6 +261,7 @@ class ThirdwebBridge implements TWBridge {
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -343,7 +352,7 @@ class ThirdwebBridge implements TWBridge {
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
-          await this.initializeSmartWallet(smartWallet, this.activeWallet);
+          await this.initializeSmartWallet(smartWallet, this.activeWallet, smartWalletAccountOverride);
         } else {
           // If EOA wallet is not connected, throw error
           throw new Error(
@@ -620,11 +629,16 @@ class ThirdwebBridge implements TWBridge {
   public async initializeSmartWallet(
     sw: SmartWallet,
     personalWallet: AbstractClientWallet,
+    accountAddress?: string,
   ) {
+    if(accountAddress) {
+      console.debug("Initializing smart wallet with account address override:", accountAddress);
+    }
     const personalWalletAddress = await personalWallet.getAddress();
     console.debug("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
+      accountAddress: accountAddress,
     });
     if (sw.listenerCount("disconnect") === 1) {
       sw.on("disconnect", () => {
@@ -642,6 +656,77 @@ class ThirdwebBridge implements TWBridge {
       password,
     });
     return localWallet;
+  }
+
+  public async smartWalletAddAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.addAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletRemoveAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.removeAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletCreateSessionKey(options: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const optionsParsed = JSON.parse(options);
+    const approvedCallTargets = optionsParsed.approvedCallTargets;
+    const nativeTokenLimitPerTransaction = ethers.utils.formatEther(
+      optionsParsed.nativeTokenLimitPerTransactionInWei,
+    );
+    const startDate = BigNumber.from(optionsParsed.startDate).toNumber();
+    const expirationDate = BigNumber.from(optionsParsed.expirationDate).toNumber();
+    const result = await smartWallet.createSessionKey(optionsParsed.signerAddress, {
+      approvedCallTargets: approvedCallTargets,
+      nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
+      startDate: startDate,
+      expirationDate: expirationDate,
+    });
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async waitForTransactionResult(txHash: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().waitForTransaction(txHash);
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getLatestBlockNumber(){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlockNumber();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlock(blockNumber: string){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlock(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlockWithTransactions(blockNumber: string){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlockWithTransactions(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
   public openPopupWindow() {

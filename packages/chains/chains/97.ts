@@ -42,5 +42,5 @@ export default {
   ],
   "shortName": "bnbt",
   "slug": "binance-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
