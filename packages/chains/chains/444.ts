@@ -45,5 +45,5 @@ export default {
   "shortName": "synapse-sepolia",
   "slug": "synapse-chain-testnet",
   "status": "active",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
