@@ -53,7 +53,6 @@ export function jaDefault(): ThirdwebLocale {
       personalWallet: "パーソナルウォレット",
       smartWallet: "スマートウォレット",
       or: "または",
-      goBackButton: "戻る", // TODO - check translation
       download: {
         chrome: "Chrome拡張をダウンロード",
         android: "Google Playでダウンロード",
