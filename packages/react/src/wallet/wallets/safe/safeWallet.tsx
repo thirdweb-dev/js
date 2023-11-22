@@ -3,10 +3,11 @@ import {
   WalletConfig,
   ConnectUIProps,
   WalletOptions,
-  useWalletContext,
+  useDisconnect,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { defaultWallets } from "../defaultWallets";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
 import type { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
@@ -43,57 +44,19 @@ export const safeWallet = (
 export const SafeConnectUI = (
   props: ConnectUIProps<SafeWallet> & { personalWallets: WalletConfig[] },
 ) => {
-  // selected personal wallet config
+  const activeWallet = useWallet();
   const [personalWalletConfig, setPersonalWalletConfig] = useState<
     WalletConfig | undefined
   >();
+  const disconnect = useDisconnect();
 
-  const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
-    useState(false);
-
-  const { setIsConnectingToPersonalWallet, personalWalletInfo } =
-    useWalletContext();
-
-  const goBackToMain = () => {
-    personalWalletInfo.disconnect();
-    setIsConnectingToPersonalWallet(false);
-    props.goBack();
-  };
-
-  const mounted = useRef(false);
-  useEffect(() => {
-    if (mounted.current) {
-      return;
-    }
-    mounted.current = true;
-    setIsConnectingToPersonalWallet(true);
-  }, [setIsConnectingToPersonalWallet]);
-
-  // if personal wallet is not selected
-  if (!personalWalletConfig) {
-    return (
-      <SelectpersonalWallet
-        personalWallets={props.personalWallets}
-        onBack={goBackToMain}
-        safeWallet={props.walletConfig}
-        selectWallet={(walletConfig) => {
-          setPersonalWalletConfig(walletConfig);
-        }}
-        renderBackButton={props.supportedWallets.length > 1}
-      />
-    );
-  }
-
-  // if the personal wallet is selected, but not connected
-  if (!isPersonalWalletConnected) {
+  if (personalWalletConfig) {
     const _props: ConnectUIProps = {
       goBack: () => {
-        setIsPersonalWalletConnected(false);
         setPersonalWalletConfig(undefined);
       },
       connected() {
-        setIsPersonalWalletConnected(true);
-        setIsConnectingToPersonalWallet(false);
+        setPersonalWalletConfig(undefined);
       },
       isOpen: props.isOpen,
       hide: props.hide,
@@ -113,11 +76,25 @@ export const SafeConnectUI = (
     return <HeadlessConnectUI {..._props} />;
   }
 
-  // if personal wallet is selected and connected
+  if (!activeWallet) {
+    return (
+      <SelectpersonalWallet
+        personalWallets={props.personalWallets}
+        onBack={props.goBack}
+        safeWallet={props.walletConfig}
+        selectWallet={setPersonalWalletConfig}
+        renderBackButton={props.supportedWallets.length > 1}
+      />
+    );
+  }
+
   return (
     <SelectAccount
       renderBackButton={props.supportedWallets.length > 1}
-      onBack={goBackToMain}
+      onBack={() => {
+        disconnect();
+        props.goBack();
+      }}
       onConnect={props.connected}
       safeWalletConfig={props.walletConfig}
     />
