@@ -44,7 +44,6 @@ const NFTS = {
     "unlock-protocol.eth/PublicLock",
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/DropERC1155",
-    "thirdweb.eth/SignatureDrop",
     "thirdweb.eth/Multiwrap",
     "kronickatz.eth/ERC721NESDrop",
   ],
@@ -69,7 +68,6 @@ const DROPS = {
   contracts: [
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/DropERC1155",
-    "thirdweb.eth/SignatureDrop",
     "thirdweb.eth/DropERC20",
   ],
 } as const;
