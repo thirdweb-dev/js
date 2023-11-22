@@ -73,5 +73,6 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  RabbyWallet,
   Coin98Wallet,
 } from "@thirdweb-dev/wallets";
