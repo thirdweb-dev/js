@@ -4195,7 +4195,7 @@ type ChainIdsBySlug = {
 "rikeza-network-testnet": 12715,
 "quantum-chain-testnet": 12890,
 "sps": 13000,
-"credit-smart-chain-Credit": 13308,
+"credit-smart-chain-credit": 13308,
 "beam-testnet": 13337,
 "phoenix": 13381,
 "susono": 13812,
