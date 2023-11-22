@@ -1,0 +1,6 @@
+
+query OAuth($id: uuid!) {
+  oauth_by_pk(id: $id) {
+    ...OAuth
+  }
+}

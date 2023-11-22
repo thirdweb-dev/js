@@ -1,0 +1,5 @@
+mutation UpdateTransactionOnChainAttempt($id: uuid!, $transactionOnChainAttemptValue: transaction_on_chain_attempt_set_input!) {
+  update_transaction_on_chain_attempt_by_pk(pk_columns: { id: $id }, _set: $transactionOnChainAttemptValue) {
+    ...TransactionOnChainAttempt
+  }
+}

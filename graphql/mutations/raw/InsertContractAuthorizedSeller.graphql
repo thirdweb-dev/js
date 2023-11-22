@@ -1,0 +1,7 @@
+mutation InsertContractAuthorizedSeller(
+  $contractAuthorizedSeller: contract_authorized_seller_insert_input!
+) {
+  insert_contract_authorized_seller_one(object: $contractAuthorizedSeller) {
+    ...ContractAuthorizedSeller
+  }
+}

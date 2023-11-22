@@ -1,0 +1,5 @@
+mutation InsertDeveloperAuthSetting($object: developer_auth_setting_insert_input!) {
+  insert_developer_auth_setting_one(object: $object) {
+    ...DeveloperAuthSetting
+  }
+}

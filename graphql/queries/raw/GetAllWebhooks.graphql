@@ -1,0 +1,5 @@
+query GetAllWebhooks {
+  webhook {
+    ...Webhook
+  }
+}

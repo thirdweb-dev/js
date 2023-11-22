@@ -1,0 +1,5 @@
+mutation InsertTransactionOnChainAttempt($transactionOnChainAttempt: transaction_on_chain_attempt_insert_input!) {
+  insert_transaction_on_chain_attempt_one(object: $transactionOnChainAttempt) {
+    ...TransactionOnChainAttempt
+  }
+}

@@ -1,0 +1,5 @@
+mutation InsertAccountInvite($accountInvite: account_invite_insert_input!) {
+  insert_account_invite_one(object: $accountInvite) {
+    ...AccountInvite
+  }
+}

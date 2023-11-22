@@ -33,5 +33,5 @@
     "additional.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next", "lib/__generated__"]
 }

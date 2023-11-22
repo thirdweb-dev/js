@@ -1,0 +1,10 @@
+query CheckoutsByTitleFuzzy($titleQuery: String!) {
+  checkout(
+    where: {
+      collection_title: { _ilike: $titleQuery }
+      deleted_at: { _gt: "now()" }
+    }
+  ) {
+    ...Checkout
+  }
+}

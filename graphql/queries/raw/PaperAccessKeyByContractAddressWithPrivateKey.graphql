@@ -1,0 +1,15 @@
+query PaperAccessKeyByContractAddressWithPrivateKey(
+  $contractAddress: String!
+  $ownerId: String!
+) {
+  paper_access_key(
+    where: {
+      contract_address: { _eq: $contractAddress }
+      revoked_at: { _gte: "now()" }
+      owner_id: { _eq: $ownerId }
+    }
+  ) {
+    ...PaperAccessKey
+    hashed_private_key
+  }
+}

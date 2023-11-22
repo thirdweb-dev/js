@@ -1,0 +1,5 @@
+query GetAllFloatWallets {
+  float_wallet(where: { deleted_at: { _is_null: true } }) {
+    address
+  }
+}

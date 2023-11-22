@@ -1,0 +1,11 @@
+fragment OAuthPlatformMapping on oauth_platform_mapping {
+    created_at
+    revoked_at
+    id
+    owner_id
+    platform_user_id
+    oauth_id
+    oauth {
+     ...OAuth
+    }
+}

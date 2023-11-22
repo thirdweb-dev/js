@@ -1,0 +1,11 @@
+query DeveloperAuthSettingByAuthProvider($developerClientId: uuid!, $authProvider: String!) {
+  developer_auth_setting(
+    where: { 
+      developer_client_id: { _eq: $developerClientId }
+      auth_provider: { _eq: $authProvider }
+      deleted_at: { _gt: "now()" } 
+    }
+  ) {
+    ...DeveloperAuthSetting
+  }
+}

@@ -1,0 +1,5 @@
+query SellerByThirdwebAccountId($thirdwebAccountId: String!) {
+  seller(where: { thirdweb_account_id: { _eq: $thirdwebAccountId } }) {
+    ...Seller
+  }
+}

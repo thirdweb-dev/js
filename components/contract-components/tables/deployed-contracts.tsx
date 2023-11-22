@@ -10,7 +10,6 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  Skeleton,
   Spinner,
   Table,
   Tbody,
@@ -25,8 +24,6 @@ import {
   CommonContractOutputSchema,
   ContractType,
   ContractWithMetadata,
-  PrebuiltContractType,
-  SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { GettingStartedBox } from "components/getting-started/box";
@@ -68,8 +65,7 @@ import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { TableContainer } from "tw-components/table-container";
 import { ComponentWithChildren } from "types/component-with-children";
 import { z } from "zod";
-import { usePublishedContractsFromDeploy } from "../hooks";
-import { AsyncContractNameCell } from "./cells";
+import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 
 interface DeployedContractsProps {
   noHeader?: boolean;
@@ -544,47 +540,3 @@ const ContractTableRow = memo(({ row }: { row: Row<ContractWithMetadata> }) => {
 });
 
 ContractTableRow.displayName = "ContractTableRow";
-
-interface AsyncContractTypeCellProps {
-  cell: {
-    address: string;
-    chainId: number;
-    contractType: (() => Promise<ContractType>) | undefined;
-    metadata: () => Promise<
-      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
-    >;
-    extensions: () => Promise<string[]>;
-  };
-}
-
-const AsyncContractTypeCell = memo(({ cell }: AsyncContractTypeCellProps) => {
-  const publishedContractsFromDeployQuery = usePublishedContractsFromDeploy(
-    cell.address,
-    cell.chainId,
-  );
-
-  const contractType =
-    publishedContractsFromDeployQuery.data?.[0]?.displayName ||
-    publishedContractsFromDeployQuery.data?.[0]?.name;
-
-  return (
-    <Skeleton
-      isLoaded={
-        !publishedContractsFromDeployQuery.isInitialLoading ||
-        publishedContractsFromDeployQuery.isLoadingError
-      }
-    >
-      {contractType ? (
-        <Text noOfLines={1} maxWidth={200} isTruncated>
-          {contractType}
-        </Text>
-      ) : (
-        <Text fontStyle="italic" opacity={0.5}>
-          Custom
-        </Text>
-      )}
-    </Skeleton>
-  );
-});
-
-AsyncContractTypeCell.displayName = "AsyncContractTypeCell";

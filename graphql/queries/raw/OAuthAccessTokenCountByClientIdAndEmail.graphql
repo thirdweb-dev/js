@@ -1,0 +1,16 @@
+query OAuthAccessTokenCountByClientIdAndEmail(
+  $clientId: uuid!
+  $email: String!
+) {
+  oauth_access_token_aggregate(
+    where: {
+      client_id: { _eq: $clientId }
+      email: { _eq: $email }
+      revoked_at: { _gt: "now()" }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

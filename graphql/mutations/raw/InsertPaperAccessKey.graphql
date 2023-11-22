@@ -1,0 +1,6 @@
+mutation InsertPaperAccessKey($object: paper_access_key_insert_input!) {
+  insert_paper_access_key_one(object: $object) {
+    id
+    public_key
+  }
+}

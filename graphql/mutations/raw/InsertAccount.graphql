@@ -1,0 +1,5 @@
+mutation InsertAccount($account: account_insert_input!) {
+  insert_account_one(object: $account) {
+    ...Account
+  }
+}

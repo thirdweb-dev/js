@@ -1,0 +1,8 @@
+fragment DeveloperAuthSetting on developer_auth_setting {
+  id
+  auth_provider
+  developer_client_id
+  created_at
+  deleted_at
+  settings
+}

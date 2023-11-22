@@ -1,0 +1,5 @@
+mutation InsertWebhook($object: webhook_insert_input!) {
+  insert_webhook_one(object: $object) {
+    ...Webhook
+  }
+}

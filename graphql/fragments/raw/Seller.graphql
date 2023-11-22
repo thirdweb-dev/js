@@ -1,0 +1,34 @@
+fragment Seller on seller {
+  id
+  email
+  twitter_handle
+  service_fee_bps
+  stripe_customer_id
+  stripe_default_payment_method_id
+  fee_bearer
+  email_display_name
+  support_email
+  default_float_wallets
+  date_business_documents_verified
+  date_personal_documents_verified
+  created_at
+  deleted_at
+  is_archived
+  native_mint_payout_wallet_address
+  source
+  referrer
+  implementation_status
+  is_enterprise
+  is_sole_proprietor
+  company_logo_url
+  company_name
+  role_in_company
+  estimated_launch_date
+  deposit_amount_usd_cents
+  auto_topup_enabled
+  auto_topup_amount_usd_cents
+  discord_username
+  has_production_access
+  thirdweb_account_id
+  is_trusted
+}

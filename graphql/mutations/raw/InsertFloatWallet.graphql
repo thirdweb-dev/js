@@ -1,0 +1,5 @@
+mutation InsertFloatWallet($float_wallet: float_wallet_insert_input!) {
+  insert_float_wallet_one(object: $float_wallet) {
+    ...FloatWallet
+  }
+}

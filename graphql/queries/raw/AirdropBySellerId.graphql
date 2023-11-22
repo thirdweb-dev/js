@@ -1,0 +1,5 @@
+query AirdropBySellerId($sellerId: String!) {
+  airdrop(where: { seller_id: { _eq: $sellerId } }, order_by: { created_at: desc }) {
+    ...Airdrop
+  }
+}

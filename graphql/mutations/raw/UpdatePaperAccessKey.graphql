@@ -1,0 +1,8 @@
+mutation UpdatePaperAccessKey(
+  $id: uuid!
+  $updateValues: paper_access_key_set_input!
+) {
+  update_paper_access_key_by_pk(pk_columns: { id: $id }, _set: $updateValues) {
+    public_key
+  }
+}

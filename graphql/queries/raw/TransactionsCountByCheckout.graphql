@@ -1,0 +1,18 @@
+query TransactionsCountByCheckout($checkoutId: uuid!, $dynamicFilters: [transaction_bool_exp!]) {
+  transaction_aggregate(
+   where: {
+      checkout_id: {_eq: $checkoutId}, 
+      _and: $dynamicFilters,
+      _or: [
+        {payment_completed_at: {_is_null: false}},
+        {payment_failure_code: {_is_null: false}},
+        {refunded_at: {_is_null: false}},
+        {transfer_completed_at: {_is_null: false}}
+      ]
+    },    
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

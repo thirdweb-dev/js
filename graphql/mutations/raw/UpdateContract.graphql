@@ -1,0 +1,5 @@
+mutation UpdateContract($id: uuid!, $value: contract_set_input!) {
+  update_contract_by_pk(pk_columns: { id: $id }, _set: $value) {
+    ...Contract
+  }
+}

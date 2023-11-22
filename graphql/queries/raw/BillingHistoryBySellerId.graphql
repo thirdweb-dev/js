@@ -1,0 +1,7 @@
+query BillingHistoryBySellerId($sellerId: String!) {
+  billing_history(where: {seller_id: {_eq: $sellerId}}, order_by: {
+      payment_completed_at: desc,
+    },) {
+    ...BillingHistory
+  }
+}

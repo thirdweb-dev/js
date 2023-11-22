@@ -1,0 +1,5 @@
+query CheckoutsByRegisteredContractId($registeredContractId: uuid!) {
+  checkout(where: { registered_contract_id: { _eq: $registeredContractId } }) {
+    ...Checkout
+  }
+}

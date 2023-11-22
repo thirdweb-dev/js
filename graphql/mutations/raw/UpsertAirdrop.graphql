@@ -1,0 +1,10 @@
+mutation UpsertAirdrop(
+  $object: airdrop_insert_input!
+) {
+  insert_airdrop_one(object: $object, on_conflict: {
+    constraint: airdrop_pkey,
+    update_columns: [wallet_address, status, transaction_id, updated_at]
+  }) {
+    ...Airdrop
+  }
+}

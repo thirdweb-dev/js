@@ -1,0 +1,7 @@
+query TransactionByTransactionHash($transactionHash: String!) {
+  transaction(where: {
+    transaction_hash: {_eq: $transactionHash}, 
+  }) {
+    ...Transaction
+  }
+}

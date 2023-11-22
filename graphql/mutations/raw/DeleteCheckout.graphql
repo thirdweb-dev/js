@@ -1,0 +1,5 @@
+mutation DeleteCheckout($id: uuid!) {
+  delete_checkout_by_pk(id: $id) {
+    ...Checkout
+  }
+}

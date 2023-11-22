@@ -1,0 +1,7 @@
+mutation UpdateEwsAuthedUserByEmail($email: String!, $ewsAuthedUserValue: ews_authed_user_set_input!) {
+    update_ews_authed_user(where: { email: { _eq: $email } }, _set: $ewsAuthedUserValue) {
+        returning {
+            ...EwsAuthedUser
+        }
+    }
+}

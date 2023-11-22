@@ -1,0 +1,6 @@
+fragment CheckoutActiveError on checkout_active_error {
+  id
+  condition
+  message
+  display_type
+}

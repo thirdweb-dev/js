@@ -1,0 +1,14 @@
+fragment Airdrop on airdrop {
+  id
+  wallet_address
+  email
+  status
+  transaction_id
+  contract_id
+  created_at
+  updated_at
+  contract_id
+  contract {
+    ...Contract
+  }
+}

@@ -1,0 +1,5 @@
+query CustomerByEmail($email: String!) {
+  customer(where: { email: { _eq: $email } }) {
+    ...Customer
+  }
+}

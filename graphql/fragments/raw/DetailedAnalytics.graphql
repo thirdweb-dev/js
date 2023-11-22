@@ -1,0 +1,9 @@
+fragment DetailedAnalytics on detailed_analytics {
+  checkout_id
+  sales
+  page_visits
+  transaction_created_at
+  network_fee_usd_cents
+  paper_fee_usd_cents
+  revenue_usd_cents
+}

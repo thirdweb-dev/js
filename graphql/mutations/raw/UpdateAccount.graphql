@@ -1,0 +1,5 @@
+mutation UpdateAccount($id: uuid!, $accountValue: account_set_input!) {
+  update_account_by_pk(pk_columns: { id: $id }, _set: $accountValue) {
+    ...Account
+  }
+}

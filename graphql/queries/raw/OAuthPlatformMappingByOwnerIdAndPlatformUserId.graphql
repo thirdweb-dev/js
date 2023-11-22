@@ -1,0 +1,5 @@
+query OAuthPlatformMappingByOwnerIdAndPlatformUserId($ownerId: String!, $platformUserId: String!) {
+  oauth_platform_mapping(where: {owner_id: {_eq: $ownerId}, platform_user_id: {_eq: $platformUserId},revoked_at: {_gt: "now()"}}) {
+    ...OAuthPlatformMapping
+  }
+}

@@ -1,0 +1,14 @@
+query TransactionsBetweenDates(
+  $sellerEmail: String!
+  $startDate: timestamptz!
+  $endDate: timestamptz!
+) {
+  transaction(
+    where: {
+      checkout: { seller: { email: { _eq: $sellerEmail } } }
+      _and: { payment_completed_at: { _gte: $startDate, _lte: $endDate } }
+    }
+  ) {
+    ...Transaction
+  }
+}

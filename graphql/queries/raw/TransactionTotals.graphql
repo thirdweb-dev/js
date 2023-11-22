@@ -1,0 +1,21 @@
+query TransactionTotals(
+  $checkoutId: uuid!
+  $startTimestamp: timestamptz!
+  $endTimestamp: timestamptz!
+) {
+  transaction_aggregate(
+    where: {
+      checkout_id: { _eq: $checkoutId }
+      transfer_completed_at: { _gte: $startTimestamp, _lte: $endTimestamp }
+    }
+  ) {
+    aggregate {
+      sum {
+        total_price_usd_cents
+        service_fee_usd_cents
+        network_fee_usd_cents
+        quantity
+      }
+    }
+  }
+}

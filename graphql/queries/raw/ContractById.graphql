@@ -1,0 +1,5 @@
+query ContractById($contractId: uuid!) {
+  contract_by_pk(id: $contractId) {
+    ...Contract
+  }
+}

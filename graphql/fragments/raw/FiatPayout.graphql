@@ -1,0 +1,14 @@
+fragment FiatPayout on fiat_payout {
+  id
+  created_at
+  seller_id
+  amount_fiat_cents
+  currency_fiat
+  contract_address
+  contract_chain
+  paid_out_at
+  transaction_hash
+  contract_payer_wallet_address
+  amount_crypto
+  currency_crypto
+}

@@ -1,0 +1,6 @@
+
+mutation InsertSellerBillingPlan($object: seller_billing_plan_insert_input!) {
+  insert_seller_billing_plan_one(object: $object) {
+   ...SellerBillingPlan
+  }
+}

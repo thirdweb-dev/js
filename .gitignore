@@ -71,3 +71,6 @@ public/sitemap*.xml
 
 # future_app dir
 future_app/
+
+# generated files
+graphql/**/__generated__/

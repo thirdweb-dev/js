@@ -1,0 +1,5 @@
+query CheckoutByContractAddress($contractAddress: String!) {
+  checkout(where: { contract_address: { _ilike: $contractAddress } }) {
+    ...Checkout
+  }
+}

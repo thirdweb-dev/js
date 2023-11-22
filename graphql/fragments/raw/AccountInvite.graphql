@@ -1,0 +1,9 @@
+fragment AccountInvite on account_invite {
+  id
+  created_at
+  seller_id
+  email
+  role
+  is_invite_accepted
+  invite_expires_at
+}

@@ -1,0 +1,5 @@
+mutation UpdateSellerBalance($_eq: String!, $deposit_amount_usd_cents: Int!) {
+  update_seller(where: {id: {_eq: $_eq}}, _inc: {deposit_amount_usd_cents: $deposit_amount_usd_cents}) {
+    affected_rows
+  }
+}

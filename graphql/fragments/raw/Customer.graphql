@@ -1,0 +1,15 @@
+fragment Customer on customer {
+  id
+  email
+  created_at
+  stripe_customer_id
+  stripe_verification_session_id
+  stripe_verification_session_result
+  stripe_verification_session_result_updated_at
+  stripe_testmode_customer_id
+  stripe_testmode_verification_session_id
+  stripe_testmode_verification_session_result
+  stripe_testmode_verification_session_result_updated_at
+  checkoutcom_customer_id
+  checkoutcom_testmode_customer_id
+}

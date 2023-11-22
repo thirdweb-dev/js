@@ -91,7 +91,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-share.svg")}
-              title="Shareable Checkout Links"
+              title=" Checkout Links"
               description="Public, reusable URLs that allows buyers to complete a purchase with Paper's prebuilt checkout experience."
             />
           </Card>

@@ -1,0 +1,7 @@
+mutation UpdateOAuthPlatformMapping($platformUserId: String!, $clientId: uuid!, $oauthPlatformMappingValues: oauth_platform_mapping_set_input!) {
+  update_oauth_platform_mapping(where: {platform_user_id: {_eq: $platformUserId}, oauth: {client_id: {_eq: $clientId}}}, _set: $oauthPlatformMappingValues) {
+    returning {
+      ...OAuthPlatformMapping
+    }
+  }
+}

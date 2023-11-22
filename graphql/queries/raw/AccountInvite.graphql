@@ -1,0 +1,5 @@
+query AccountInvite($id: uuid!) {
+  account_invite_by_pk(id: $id) {
+    ...AccountInvite
+  }
+}

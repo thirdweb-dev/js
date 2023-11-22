@@ -1,0 +1,5 @@
+query WallerUserByAuthUserIdAndClientId($authUserId: String! , $clientId: uuid!) {
+  wallet_user(where: {authed_user_id: {_eq: $authUserId}, client_id: {_eq: $clientId}}) {
+    ...WalletUser
+  }
+}

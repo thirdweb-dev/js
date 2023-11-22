@@ -1,0 +1,7 @@
+mutation UpdateBuyersByEmail($email: String!, $buyerValue: buyer_set_input!) {
+  update_buyer(where: { email: { _eq: $email } }, _set: $buyerValue) {
+    returning {
+      ...Buyer
+    }
+  }
+}

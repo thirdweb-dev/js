@@ -1,0 +1,14 @@
+fragment OAuth on oauth {
+  application_image_url
+  application_name
+  type
+  allowlisted_domains
+  client_id
+  id
+  owner_id
+  created_at
+  revoked_at
+  seller {
+    company_logo_url
+  }
+}

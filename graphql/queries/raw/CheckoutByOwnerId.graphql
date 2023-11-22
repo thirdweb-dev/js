@@ -1,0 +1,32 @@
+query CheckoutByOwnerId(
+  $ownerId: String!
+  $offset: Int!
+  $limit: Int = 10
+  $contractChains: [String!]!
+) {
+  checkout_aggregate(
+    where: {
+      owner_id: { _eq: $ownerId }
+      deleted_at: { _gt: "now()" }
+      generated_by_registered_contract: { _eq: false }
+      contract_chain: { _in: $contractChains }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  checkout(
+    where: {
+      owner_id: { _eq: $ownerId }
+      deleted_at: { _gt: "now()" }
+      generated_by_registered_contract: { _eq: false }
+      contract_chain: { _in: $contractChains }
+    }
+    order_by: { created_at: desc }
+    offset: $offset
+    limit: $limit
+  ) {
+    ...Checkout
+  }
+}

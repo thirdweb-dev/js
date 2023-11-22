@@ -1,0 +1,8 @@
+mutation UpsertCustomer($customer: customer_insert_input!) {
+  insert_customer_one(
+    object: $customer
+    on_conflict: { constraint: customer_email_key, update_columns: [] }
+  ) {
+    ...Customer
+  }
+}

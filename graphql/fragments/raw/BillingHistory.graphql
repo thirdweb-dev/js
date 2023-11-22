@@ -1,0 +1,10 @@
+fragment BillingHistory on billing_history {
+  id
+  seller_id
+  type
+  description
+  stripe_payment_id
+  price_charged_usd_cents
+  status
+  payment_completed_at
+}

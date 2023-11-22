@@ -24,7 +24,8 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
   const showButton =
     (nameOrInput?.toLowerCase().includes("uri") ||
       nameOrInput?.toLowerCase().includes("ipfs") ||
-      nameOrInput?.toLowerCase().includes("audit")) &&
+      nameOrInput?.toLowerCase().includes("audit") ||
+      nameOrInput === "imageUrl") &&
     nameOrInput !== "_baseURIForTokens";
 
   return (
@@ -47,7 +48,9 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
 
                   // 2. Make sure there's a trailing slash at the end
                   // Otherwise the token URI will become `${uri}${tokenId}` when it should be `${uri}/${tokenId}`
-                  if (!uri.endsWith("/")) uri += "/";
+                  if (!uri.endsWith("/")) {
+                    uri += "/";
+                  }
                 }
               }
               form.setValue(inputName, uri, { shouldDirty: true });

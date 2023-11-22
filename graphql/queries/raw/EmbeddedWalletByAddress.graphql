@@ -1,0 +1,5 @@
+query EmbeddedWalletByAddress($address: String!) {
+  embedded_wallet(where: {address: {_eq: $address}}) {
+    ...EmbeddedWallet
+  }
+}

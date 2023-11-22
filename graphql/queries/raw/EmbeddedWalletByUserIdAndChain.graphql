@@ -1,0 +1,5 @@
+query EmbeddedWalletByUserIdAndChain($userId: uuid!, $chain: String! ) {
+  embedded_wallet(where: {wallet_user_id: {_eq: $userId}, chain: {_eq: $chain}}) {
+   ...EmbeddedWallet
+  }
+}

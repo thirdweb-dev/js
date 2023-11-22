@@ -1,0 +1,10 @@
+mutation UpdateCustomerByEmail(
+  $email: String!
+  $customerValue: customer_set_input!
+) {
+  update_customer(where: { email: { _eq: $email } }, _set: $customerValue) {
+    returning {
+      ...Customer
+    }
+  }
+}

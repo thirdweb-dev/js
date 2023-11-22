@@ -1,0 +1,9 @@
+query ContractByOwnerId($ownerId: String!) {
+  contract(
+    where: {
+      owner_id: { _eq: $ownerId }
+    }
+  ) {
+    ...Contract
+  }
+}

@@ -1,0 +1,5 @@
+query OAuthByOwnerId($ownerId: String!, $type: String!) {
+  oauth(where: { owner_id: { _eq: $ownerId }, type: { _eq: $type }, revoked_at: { _gt: "now()" } }) {
+    ...OAuth
+  }
+}

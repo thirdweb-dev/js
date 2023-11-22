@@ -1,0 +1,9 @@
+query IncompleteTransactions($startDate: timestamptz!) {
+  transaction(where: {
+    transfer_completed_at: {_is_null: true},
+    payment_completed_at: {_gte: $startDate},
+    refunded_at: {_is_null: true},
+  }) {
+    ...Transaction
+  }
+}

@@ -1,0 +1,7 @@
+fragment ContractAuthorizedSeller on contract_authorized_seller {
+  id
+  contract_id
+  authorized_seller_id
+  granted_at
+  revoked_at
+}

@@ -1,0 +1,7 @@
+query CheckoutsByOwnerId($ownerId: String!) {
+  checkout(
+    where: { owner_id: { _eq: $ownerId }, deleted_at: { _gt: "now()" } }
+  ) {
+    ...Checkout
+  }
+}

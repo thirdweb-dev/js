@@ -1,0 +1,17 @@
+query TransactionsProcessing(
+  $contractAddress: String!
+  $fromPaymentCompletedAt: timestamptz!
+) {
+  transaction_aggregate(
+    where: {
+      checkout: { contract_address: { _eq: $contractAddress } }
+      payment_completed_at: { _gt: $fromPaymentCompletedAt }
+      transfer_completed_at: { _is_null: true }
+      refunded_at: { _is_null: true }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

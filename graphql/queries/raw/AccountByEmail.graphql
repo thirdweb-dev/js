@@ -1,0 +1,5 @@
+query AccountByEmail($email: String!) {
+  account(where: { email: { _eq: $email } }) {
+    ...Account
+  }
+}

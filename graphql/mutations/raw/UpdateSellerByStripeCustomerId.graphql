@@ -1,0 +1,13 @@
+mutation UpdateSellerByStripeCustomerId(
+  $stripe_customer_id: String!
+  $sellerValue: seller_set_input!
+) {
+  update_seller(
+    where: { stripe_customer_id: { _eq: $stripe_customer_id } }
+    _set: $sellerValue
+  ) {
+    returning {
+      ...Seller
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation UpdateCheckout($id: uuid!, $checkoutValue: checkout_set_input!) {
+  update_checkout_by_pk(pk_columns: { id: $id }, _set: $checkoutValue) {
+    ...Checkout
+  }
+}

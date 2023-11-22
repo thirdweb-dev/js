@@ -1,0 +1,5 @@
+query FiatPayoutBySeller($sellerId: String!) {
+  fiat_payout(where: { seller_id: { _eq: $sellerId } }) {
+    ...FiatPayout
+  }
+}

@@ -1,0 +1,13 @@
+mutation UpdateAccountInvitesByEmail(
+  $email: String!
+  $accountInviteValue: account_invite_set_input!
+) {
+  update_account_invite(
+    where: { email: { _eq: $email } }
+    _set: $accountInviteValue
+  ) {
+    returning {
+      ...AccountInvite
+    }
+  }
+}

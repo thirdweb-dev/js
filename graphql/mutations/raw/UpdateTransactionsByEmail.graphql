@@ -1,0 +1,10 @@
+mutation UpdateTransactionsByEmail(
+  $email: String!
+  $transactionValue: transaction_set_input!
+) {
+  update_transaction(where: { email: { _eq: $email } }, _set: $transactionValue) {
+    returning {
+      ...Transaction
+    }
+  }
+}

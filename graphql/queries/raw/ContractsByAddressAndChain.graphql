@@ -1,0 +1,11 @@
+query ContractsByAddressAndChain($contractAddress: String!, $chain: String!) {
+  contract(
+    where: {
+      deleted_at: { _gte: "now()" }
+      address: { _eq: $contractAddress }
+      chain: { _eq: $chain }
+    }
+  ) {
+    ...Contract
+  }
+}

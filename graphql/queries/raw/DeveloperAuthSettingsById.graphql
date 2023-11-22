@@ -1,0 +1,5 @@
+query DeveloperAuthSettingById($id: uuid!) {
+    developer_auth_setting(where: {id: {_eq: $id}, deleted_at: {_gt: "now()"}}) {
+        ...DeveloperAuthSetting
+    }
+}

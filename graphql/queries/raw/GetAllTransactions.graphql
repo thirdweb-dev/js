@@ -1,0 +1,24 @@
+query GetAllValidTransactions {
+  transaction(
+    order_by: { created_at: asc }
+    # limit: 10
+    where: {
+      transfer_completed_at: { _is_null: false }
+      payment_completed_at: { _is_null: false }
+      total_price_usd_cents: { _is_null: false }
+      wallet_address: { _is_null: false }
+      # created_at: {
+      #   _lte: "2022-01-01T00:00:00.920Z"
+      #   _gt: "2021-01-01T00:00:00.920Z"
+      # }
+    }
+  ) {
+    checkout {
+      owner_id
+      contract_chain
+    }
+    total_price_usd_cents
+    wallet_address
+    payment_completed_at
+  }
+}

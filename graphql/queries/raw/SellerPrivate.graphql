@@ -1,0 +1,5 @@
+query SellerPrivate($id: String!) {
+  seller_by_pk(id: $id) {
+    ...SellerPrivate
+  }
+}

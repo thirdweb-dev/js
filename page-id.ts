@@ -275,6 +275,15 @@ export enum PageId {
   DropsOptimism = "drops-optimism",
 
   // ---------------------------------------------------------------------------
+  // "payments" product pages
+  // ---------------------------------------------------------------------------
+
+  PaymentsPurchases = "payments-purchases",
+  PaymentsPurchasesDetail = "payments-purchases-detail",
+  PaymentsContracts = "payments-contracts",
+  PaymentsSettings = "payments-settings",
+
+  // ---------------------------------------------------------------------------
   //  community pages
   // ---------------------------------------------------------------------------
   Learn = "learn",

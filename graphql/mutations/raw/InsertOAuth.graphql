@@ -1,0 +1,5 @@
+mutation InsertOAuth($object: oauth_insert_input!) {
+  insert_oauth_one(object: $object) {
+    ...OAuth
+  }
+}

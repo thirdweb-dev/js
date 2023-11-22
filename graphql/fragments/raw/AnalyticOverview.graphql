@@ -1,0 +1,17 @@
+fragment AnalyticOverview on analytics_overview_2 {
+  checkout_id
+  checkout_created_at
+  checkout_deleted_at
+  collection_description
+  collection_title
+  image_url
+  network_fees_cents
+  number_sold
+  owner_id
+  paper_fees_cents
+  payment_method
+  revenue_cents
+  wallet_type
+  fiat_currency
+  num_transactions_made
+}

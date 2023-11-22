@@ -1,0 +1,10 @@
+query CheckoutsBySellerEmail($sellerEmailQuery: String!) {
+  checkout(
+    where: {
+      seller: { email: { _ilike: $sellerEmailQuery } }
+      deleted_at: { _gt: "now()" }
+    }
+  ) {
+    ...Checkout
+  }
+}

@@ -1,0 +1,5 @@
+mutation InsertOAuthPlatformMapping($oauthPlatformMappingInput:oauth_platform_mapping_insert_input!) {
+  insert_oauth_platform_mapping_one(object: $oauthPlatformMappingInput) {
+    ...OAuthPlatformMapping
+  }
+}

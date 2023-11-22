@@ -1,0 +1,5 @@
+query WalletUserByEmail($email: String!) {
+  wallet_user(where: { ews_authed_user: { email: { _ilike: $email } } }) {
+    ...WalletUser
+  }
+}

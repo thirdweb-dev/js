@@ -1,0 +1,8 @@
+query CustomerByDynamicQuery($customerExp: [customer_bool_exp!]) {
+  customer(where: {
+      _or: $customerExp
+    }
+ ) {
+    ...Customer
+  }
+}

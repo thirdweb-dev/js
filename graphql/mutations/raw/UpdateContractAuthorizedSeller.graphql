@@ -1,0 +1,11 @@
+mutation UpdateContractAuthorizedSeller(
+  $id: uuid!
+  $value: contract_authorized_seller_set_input!
+) {
+  update_contract_authorized_seller_by_pk(
+    pk_columns: { id: $id }
+    _set: $value
+  ) {
+    ...ContractAuthorizedSeller
+  }
+}

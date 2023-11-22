@@ -1,0 +1,10 @@
+mutation InsertBillingHistory(
+  $object: billing_history_insert_input!
+) {
+  insert_billing_history_one(object: $object, on_conflict: {
+    constraint: billing_history_stripe_payment_id_key,
+    update_columns: [type, price_charged_usd_cents, status, payment_completed_at]
+  }) {
+    ...BillingHistory
+  }
+}

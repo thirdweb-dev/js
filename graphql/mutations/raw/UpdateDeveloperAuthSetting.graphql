@@ -1,0 +1,5 @@
+mutation UpdateDeveloperAuthSetting($id: uuid!, $object: developer_auth_setting_set_input!) {
+  update_developer_auth_setting_by_pk(pk_columns: { id: $id }, _set: $object) {
+    ...DeveloperAuthSetting
+  }
+}

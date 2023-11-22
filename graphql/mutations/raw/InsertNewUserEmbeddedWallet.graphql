@@ -1,0 +1,13 @@
+
+mutation InsertNewUserEmbeddedWallet($embeddedWallet: embedded_wallet_insert_input!, $shares: [share_insert_input!]!) {
+  insert_embedded_wallet_one(object: $embeddedWallet) {
+    ...EmbeddedWallet
+  }
+  insert_share(objects: $shares) {
+    returning {
+      id
+      type
+      encryption_password
+    }
+  }
+}

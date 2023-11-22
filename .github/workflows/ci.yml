@@ -17,7 +17,7 @@ jobs:
   build:
     name: Build, Lint & Test
     runs-on: ubuntu-latest
-
+    environment: Preview
     strategy:
       matrix:
         node_version: [18]
@@ -42,3 +42,6 @@ jobs:
           yarn install
           yarn lint
           yarn test
+        env:
+          PAYMENTS_ADMIN_SECRET: ${{ secrets.PAYMENTS_ADMIN_SECRET }}
+          NEXT_PUBLIC_PAYMENTS_API: ${{ vars.NEXT_PUBLIC_PAYMENTS_API }}

@@ -6,6 +6,7 @@ dist/
 node_modules/
 typechain/
 .next/
+graphql/
 
 # files
 coverage.json

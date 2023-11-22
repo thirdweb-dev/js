@@ -1,0 +1,10 @@
+query ListCheckouts {
+  checkout(
+    where: {
+      deleted_at: { _gt: "now()" }
+      registered_contract_id: { _is_null: true }
+    }
+  ) {
+    ...Checkout
+  }
+}

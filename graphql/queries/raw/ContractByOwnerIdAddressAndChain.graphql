@@ -1,0 +1,16 @@
+query ContractByOwnerIdAddressAndChain(
+  $contractAddress: String!
+  $ownerId: String!
+  $chain: String!
+) {
+  contract(
+    where: {
+      deleted_at: { _gte: "now()" }
+      address: { _ilike: $contractAddress }
+      owner_id: { _eq: $ownerId }
+      chain: { _eq: $chain }
+    }
+  ) {
+    ...Contract
+  }
+}

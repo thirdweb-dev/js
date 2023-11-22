@@ -1,0 +1,8 @@
+query Transaction($id: uuid!, $includeCustomer: Boolean = false) {
+  transaction_by_pk(id: $id) {
+    ...Transaction
+    customer @include(if: $includeCustomer) {
+      ...Customer
+    }
+  }
+}

@@ -1,0 +1,8 @@
+mutation InsertContract(
+  $contract: contract_insert_input!
+) {
+  insert_contract_one(object: $contract) {
+    ...BaseContract
+  }
+ 
+}

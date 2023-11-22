@@ -1,0 +1,5 @@
+mutation UpdateBuyer($id: String!, $buyerValue: buyer_set_input!) {
+  update_buyer_by_pk(pk_columns: { id: $id }, _set: $buyerValue) {
+    ...Buyer
+  }
+}

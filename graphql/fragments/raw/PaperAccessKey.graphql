@@ -1,0 +1,8 @@
+fragment PaperAccessKey on paper_access_key {
+  id
+  public_key
+  created_at
+  revoked_at
+  owner_id
+  checkout_id
+}

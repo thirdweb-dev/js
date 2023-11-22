@@ -1,0 +1,10 @@
+fragment Account on account {
+  id
+  created_at
+  seller_id
+  email
+  full_name
+  source
+  role
+  convertkit_subscriber_id
+}

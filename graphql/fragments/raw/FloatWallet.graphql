@@ -1,0 +1,6 @@
+fragment FloatWallet on float_wallet {
+  address
+  nickname
+  env_var_key
+  description
+}

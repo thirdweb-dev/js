@@ -1,0 +1,6 @@
+fragment EmbeddedWallet on embedded_wallet {
+    chain
+    id
+    address
+    wallet_user_id
+}

@@ -1,0 +1,7 @@
+query WalletUserCountByClientIdAndLastAccessed($clientId: uuid!, $lastAccessedAt: timestamptz!) {
+  wallet_user_aggregate(where: { client_id: { _eq: $clientId }, last_accessed_at: { _gte: $lastAccessedAt } }) {
+    aggregate {
+      count
+    }
+  }
+}

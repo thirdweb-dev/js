@@ -4,7 +4,6 @@ import { Heading, Text } from "tw-components";
 interface StatBoxProps {
   title: string;
   description: string;
-  showRightBorder?: boolean;
 }
 
 export const Stat: React.FC<StatBoxProps> = ({ title, description }) => {

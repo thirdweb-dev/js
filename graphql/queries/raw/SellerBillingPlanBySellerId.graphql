@@ -1,0 +1,5 @@
+query SellerBillingPlanBySellerId($sellerId: String!) {
+  seller_billing_plan_by_pk(seller_id: $sellerId) {
+    ...SellerBillingPlan
+  }
+}

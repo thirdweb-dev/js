@@ -6,6 +6,7 @@ coverage/
 dist/
 node_modules/
 typechain/
+graphql/
 
 # files
 .solcover.js

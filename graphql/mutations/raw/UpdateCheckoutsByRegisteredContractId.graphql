@@ -1,0 +1,26 @@
+mutation UpdateCheckoutsByRegisteredContractId(
+  $registered_contract_id: uuid!
+  $contract_chain: String!
+  $contract_address: String!
+  $contract_type: String!
+  $custom_abi: jsonb!
+  $deleted_at: timestamptz!
+) {
+  update_checkout_many(
+    updates: {
+      where: { registered_contract_id: { _eq: $registered_contract_id } }
+      _set: {
+        contract_chain: $contract_chain
+        contract_address: $contract_address
+        contract_type: $contract_type
+        custom_abi: $custom_abi
+        deleted_at: $deleted_at
+      }
+    }
+  ) {
+    returning {
+      ...Checkout
+    }
+    affected_rows
+  }
+}

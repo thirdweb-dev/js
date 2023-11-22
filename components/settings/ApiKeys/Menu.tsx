@@ -6,7 +6,7 @@ import { shortenString } from "utils/usedapp-external";
 
 interface ApiKeysMenuProps {
   apiKeys: ApiKey[];
-  selectedKey: ApiKey;
+  selectedKey: ApiKey | undefined;
   onSelect: (apiKey: ApiKey) => void;
 }
 
@@ -25,12 +25,19 @@ export const ApiKeysMenu: React.FC<ApiKeysMenuProps> = ({
             rightIcon={<FiChevronDown />}
             variant="outline"
             minW={60}
+            w="full"
           >
             <Flex gap={2} alignItems="center">
-              <Heading size="label.md" isTruncated>
-                {selectedKey.name}
-              </Heading>
-              <Text isTruncated>({shortenString(selectedKey.key)})</Text>
+              {selectedKey ? (
+                <>
+                  <Heading size="label.md" isTruncated>
+                    {selectedKey.name}
+                  </Heading>
+                  <Text isTruncated>({shortenString(selectedKey.key)})</Text>
+                </>
+              ) : (
+                <Text>Select API Key</Text>
+              )}
             </Flex>
           </MenuButton>
           <MenuList>

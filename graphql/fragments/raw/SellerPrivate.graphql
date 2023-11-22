@@ -1,0 +1,6 @@
+fragment SellerPrivate on seller {
+  ...Seller
+  risk_level
+  paper_private_notes
+  production_checkout_purchase_limit_usd_cents
+}

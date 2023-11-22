@@ -1,0 +1,9 @@
+mutation InsertShares($shares: [share_insert_input!]!) {
+  insert_share(objects: $shares) {
+    returning {
+      id
+      type
+      encryption_password
+    }
+  }
+}

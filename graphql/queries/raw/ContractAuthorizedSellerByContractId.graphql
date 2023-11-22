@@ -1,0 +1,5 @@
+query ContractAuthorizedSellerByContractId($contractId: uuid!) {
+  contract_authorized_seller(where: { contract_id: { _eq: $contractId } }) {
+    ...ContractAuthorizedSeller
+  }
+}

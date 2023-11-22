@@ -1,0 +1,11 @@
+mutation UpdateOAuth(
+  $id: uuid!
+  $updateValue: oauth_set_input!
+) {
+  update_oauth_by_pk(
+    pk_columns: {id: $id}
+    _set: $updateValue
+  ) {
+    ...OAuth
+  }
+}

@@ -1,0 +1,5 @@
+mutation InsertTransaction($transaction: transaction_insert_input!) {
+  insert_transaction_one(object: $transaction) {
+    ...Transaction
+  }
+}

@@ -1,0 +1,10 @@
+mutation UpdateAccountByEmail($email: String!, $accountValue: account_set_input!) {
+  update_account(
+    where: { email: { _eq: $email } }, 
+    _set: $accountValue
+  ) {
+    returning {
+      ...Account
+    }
+  }
+} 

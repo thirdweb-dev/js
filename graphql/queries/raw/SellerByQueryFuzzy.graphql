@@ -1,0 +1,16 @@
+query SellerByQueryFuzzy($query: String!) {
+  seller(
+    where: {
+      _or: [
+        { id: { _ilike: $query } }
+        { email: { _ilike: $query } }
+        { email_display_name: { _ilike: $query } }
+        { company_name: { _ilike: $query } }
+        { twitter_handle: { _ilike: $query } }
+        { support_email: { _ilike: $query } }
+      ]
+    }
+  ) {
+    ...Seller
+  }
+}

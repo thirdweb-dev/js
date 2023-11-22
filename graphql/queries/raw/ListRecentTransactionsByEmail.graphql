@@ -1,0 +1,13 @@
+query ListRecentTransactionsByEmail($email: String!, $limit: Int = 2) {
+  transaction(
+    where: {
+      email: { _eq: $email }
+      transfer_completed_at: { _is_null: false }
+      refunded_at: { _is_null: true }
+    }
+    order_by: { transfer_completed_at: desc }
+    limit: $limit
+  ) {
+    ...Transaction
+  }
+}

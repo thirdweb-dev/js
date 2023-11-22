@@ -1,4 +1,5 @@
 import {
+  ContractType,
   PrebuiltContractType,
   SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk";
@@ -15,6 +16,7 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 
 import { z } from "zod";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { usePublishedContractsFromDeploy } from "../hooks";
 
 interface AsyncContractNameCellProps {
   cell: {
@@ -53,3 +55,49 @@ export const AsyncContractNameCell = memo(
 );
 
 AsyncContractNameCell.displayName = "AsyncContractNameCell";
+
+interface AsyncContractTypeCellProps {
+  cell: {
+    address: string;
+    chainId: number;
+    contractType: (() => Promise<ContractType>) | undefined;
+    metadata: () => Promise<
+      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
+    >;
+    extensions: () => Promise<string[]>;
+  };
+}
+
+export const AsyncContractTypeCell = memo(
+  ({ cell }: AsyncContractTypeCellProps) => {
+    const publishedContractsFromDeployQuery = usePublishedContractsFromDeploy(
+      cell.address,
+      cell.chainId,
+    );
+
+    const contractType =
+      publishedContractsFromDeployQuery.data?.[0]?.displayName ||
+      publishedContractsFromDeployQuery.data?.[0]?.name;
+
+    return (
+      <Skeleton
+        isLoaded={
+          !publishedContractsFromDeployQuery.isInitialLoading ||
+          publishedContractsFromDeployQuery.isLoadingError
+        }
+      >
+        {contractType ? (
+          <Text noOfLines={1} maxWidth={200} isTruncated>
+            {contractType}
+          </Text>
+        ) : (
+          <Text fontStyle="italic" opacity={0.5}>
+            Custom
+          </Text>
+        )}
+      </Skeleton>
+    );
+  },
+);
+
+AsyncContractTypeCell.displayName = "AsyncContractTypeCell";

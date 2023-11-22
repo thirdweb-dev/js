@@ -1,0 +1,7 @@
+mutation UpdateWalletUsersByEmail($email: String!, $walletUserValue: wallet_user_set_input!) {
+  update_wallet_user(where: { email: { _eq: $email } }, _set: $walletUserValue) {
+    returning {
+      ...WalletUser
+    }
+  }
+}

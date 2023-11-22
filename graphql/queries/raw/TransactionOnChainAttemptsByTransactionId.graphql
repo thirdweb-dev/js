@@ -1,0 +1,13 @@
+query TransactionOnChainAttemptsByTransactionId($transactionId: uuid!, $limit: Int = 100) {
+  transaction_on_chain_attempt(
+    where: {
+      transaction_id: {_eq: $transactionId}, 
+    },    
+    order_by: {
+      created_at: desc,
+    }, 
+    limit: $limit
+  ) {
+    ...TransactionOnChainAttempt
+  }
+}
