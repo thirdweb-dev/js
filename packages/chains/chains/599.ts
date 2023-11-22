@@ -44,5 +44,5 @@ export default {
   ],
   "shortName": "metis-goerli",
   "slug": "metis-goerli-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

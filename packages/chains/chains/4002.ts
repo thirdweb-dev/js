@@ -43,5 +43,5 @@ export default {
   ],
   "shortName": "tftm",
   "slug": "fantom-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
