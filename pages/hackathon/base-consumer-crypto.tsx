@@ -65,7 +65,7 @@ const Hackathon = () => {
         as="main"
       >
         <HomepageTopNav />
-        <HomepageSection id="header" isOverflowXHidden>
+        <HomepageSection id="header" overflowY="hidden" isOverflowXHidden>
           <Flex
             flexDir="column"
             align="center"
