@@ -43,7 +43,7 @@
     "@swc-node/register": "^1.6.8",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/chai": "^4.3.11",
-    "@types/mocha": "^10.0.5",
+    "@types/mocha": "^10.0.6",
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
