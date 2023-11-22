@@ -1,5 +1,14 @@
 # @thirdweb-dev/wallets
 
+## 2.1.8
+
+### Patch Changes
+
+- [#1921](https://github.com/thirdweb-dev/js/pull/1921) [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Coin98 wallet
+
+- Updated dependencies [[`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4)]:
+  - @thirdweb-dev/sdk@4.0.16
+
 ## 2.1.7
 
 ### Patch Changes

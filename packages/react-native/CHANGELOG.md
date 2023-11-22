@@ -1,5 +1,32 @@
 # @thirdweb-dev/react-native
 
+## 0.4.9
+
+### Patch Changes
+
+- [#1971](https://github.com/thirdweb-dev/js/pull/1971) [`12d85dec`](https://github.com/thirdweb-dev/js/commit/12d85dec10f47d6520b737a23576e4f832abb47f) Thanks [@iketw](https://github.com/iketw)! - Adds usePersonalWalletAddress hook to React/RN
+
+  ```typescript
+  // React
+  import { usePersonalWalletAddress } from "@thirdweb-dev/react";
+
+  const personalWalletAddress = usePersonalWalletAddress();
+  ```
+
+  ```typescript
+  // React-Native
+  import { usePersonalWalletAddress } from "@thirdweb-dev/react-native";
+
+  const personalWalletAddress = usePersonalWalletAddress();
+  ```
+
+- [#1989](https://github.com/thirdweb-dev/js/pull/1989) [`bf27b887`](https://github.com/thirdweb-dev/js/commit/bf27b8872870c08bb19934d87e574e0477c9550f) Thanks [@iketw](https://github.com/iketw)! - Improves EmbeddedWallet error messages in React Native
+
+- Updated dependencies [[`fb0cb676`](https://github.com/thirdweb-dev/js/commit/fb0cb676b996fe386dcc53b5a6dab03f88e76175), [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1), [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4), [`12d85dec`](https://github.com/thirdweb-dev/js/commit/12d85dec10f47d6520b737a23576e4f832abb47f)]:
+  - @thirdweb-dev/react-core@4.1.9
+  - @thirdweb-dev/wallets@2.1.8
+  - @thirdweb-dev/sdk@4.0.16
+
 ## 0.4.8
 
 ### Patch Changes

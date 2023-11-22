@@ -41,6 +41,7 @@ export default {
     "https://faucet.holesky.ethpandaops.io",
     "https://holesky-faucet.pk910.de"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
     "width": 1000,
@@ -55,6 +56,7 @@ export default {
     "decimals": 18
   },
   "networkId": 17000,
+  "redFlags": [],
   "rpc": [
     "https://holesky.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",

@@ -33,6 +33,6 @@ export default {
   ],
   "shortName": "testnet-zkEVM-mango",
   "slug": "polygon-zkevm-testnet",
-  "testnet": false,
+  "testnet": true,
   "title": "Polygon zkEVM Testnet"
 } as const satisfies Chain;
