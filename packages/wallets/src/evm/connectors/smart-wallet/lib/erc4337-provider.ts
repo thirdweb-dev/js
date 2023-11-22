@@ -117,6 +117,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
   ): Promise<providers.TransactionResponse> {
     const userOp = await utils.resolveProperties(userOp1);
     const userOpHash = await this.smartAccountAPI.getUserOpHash(userOp);
+    console.log("Submitted userOpHash", userOpHash);
     const waitForUserOp = async (): Promise<providers.TransactionReceipt> =>
       await new Promise((resolve, reject) => {
         new UserOperationEventListener(

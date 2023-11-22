@@ -289,7 +289,9 @@ export abstract class BaseAccountAPI {
     const initGas = await this.estimateCreationGas(initCode);
     const verificationGasLimit = BigNumber.from(
       await this.getVerificationGasLimit(),
-    ).add(initGas);
+    )
+      .add(initGas)
+      .mul(2);
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
@@ -384,7 +386,7 @@ export abstract class BaseAccountAPI {
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
-    const signature = this.signUserOpHash(userOpHash);
+    const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
       signature,
@@ -399,9 +401,8 @@ export abstract class BaseAccountAPI {
     info: TransactionDetailsForUserOp,
     batchData?: BatchData,
   ): Promise<UserOperationStruct> {
-    return await this.signUserOp(
-      await this.createUnsignedUserOp(info, batchData),
-    );
+    const userOp = await this.createUnsignedUserOp(info, batchData);
+    return this.signUserOp(userOp);
   }
 
   /**
