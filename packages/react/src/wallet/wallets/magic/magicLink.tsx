@@ -5,6 +5,7 @@ import {
   WalletConfig,
   WalletOptions,
   useConnect,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect, useCallback } from "react";
@@ -328,6 +329,7 @@ const MagicUI: React.FC<{
 
 function useConnectMagic() {
   const connect = useConnect();
+  const { activeChain } = useWalletContext();
 
   const connector = useCallback(
     async (data: {
@@ -339,38 +341,32 @@ function useConnectMagic() {
       connected: () => void;
       hide: () => void;
     }) => {
-      const {
-        selectionData,
-        walletConfig,
-        singleWallet,
-        connected,
-        show,
-        hide,
-      } = data;
+      const { selectionData, walletConfig, connected, show, hide } = data;
 
+      // oauth
       if (typeof selectionData === "object") {
         try {
           hide();
           (async () => {
             await connect(walletConfig, {
               oauthProvider: selectionData.provider,
+              chainId: activeChain.chainId,
             });
           })();
           connected();
-        } catch {
-          if (!singleWallet) {
-            show();
-          }
+        } catch (e) {
+          console.error(e);
         }
 
-        return;
+        show();
       }
 
-      const isEmail = selectionData
-        ? (selectionData as string).includes("@")
-        : false;
+      // email or phone
+      else {
+        const isEmail = selectionData
+          ? (selectionData as string).includes("@")
+          : false;
 
-      (async () => {
         hide();
         try {
           await connect(
@@ -378,19 +374,17 @@ function useConnectMagic() {
             data.type === "connect"
               ? {}
               : isEmail
-              ? { email: selectionData }
-              : { phoneNumber: selectionData },
+              ? { email: selectionData, chainId: activeChain.chainId }
+              : { phoneNumber: selectionData, chainId: activeChain.chainId },
           );
           connected();
         } catch (e) {
-          if (!singleWallet) {
-            show();
-          }
           console.error(e);
         }
-      })();
+        show();
+      }
     },
-    [connect],
+    [connect, activeChain.chainId],
   );
 
   return connector;
