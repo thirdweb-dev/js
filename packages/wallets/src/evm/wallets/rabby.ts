@@ -136,12 +136,4 @@ export class RabbyWallet extends AbstractClientWallet<RabbyAdditionalOptions> {
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
-
-  async switchAccount() {
-    if (!this.RabbyConnector) {
-      throw new Error("Can not switch Account");
-    }
-
-    await this.RabbyConnector.switchAccount();
-  }
 }
