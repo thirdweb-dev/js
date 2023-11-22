@@ -1,5 +1,19 @@
 # @thirdweb-dev/react
 
+## 4.1.10
+
+### Patch Changes
+
+- [#1996](https://github.com/thirdweb-dev/js/pull/1996) [`4bb8f5b1`](https://github.com/thirdweb-dev/js/commit/4bb8f5b15e58de39c5edccc7476da3e4907d7688) Thanks [@MananTank](https://github.com/MananTank)! - Revert commit fb0cb676b996fe386dcc53b5a6dab03f88e76175
+
+- [#1994](https://github.com/thirdweb-dev/js/pull/1994) [`68288436`](https://github.com/thirdweb-dev/js/commit/68288436acd62256be561395743762965888449d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove `overrides` props from Web3ButtonProps
+
+- Updated dependencies [[`4bb8f5b1`](https://github.com/thirdweb-dev/js/commit/4bb8f5b15e58de39c5edccc7476da3e4907d7688), [`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281), [`b5bbe2bd`](https://github.com/thirdweb-dev/js/commit/b5bbe2bd438179c38451bc2cfa20a54fc79e4f3a)]:
+  - @thirdweb-dev/react-core@4.1.10
+  - @thirdweb-dev/chains@0.1.59
+  - @thirdweb-dev/wallets@2.1.9
+  - @thirdweb-dev/sdk@4.0.17
+
 ## 4.1.9
 
 ### Patch Changes

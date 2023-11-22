@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 2.1.9
+
+### Patch Changes
+
+- [#1992](https://github.com/thirdweb-dev/js/pull/1992) [`b5bbe2bd`](https://github.com/thirdweb-dev/js/commit/b5bbe2bd438179c38451bc2cfa20a54fc79e4f3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Look at last 10 blocks for recently submitted userOp
+
+- Updated dependencies [[`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281)]:
+  - @thirdweb-dev/chains@0.1.59
+  - @thirdweb-dev/sdk@4.0.17
+
 ## 2.1.8
 
 ### Patch Changes
