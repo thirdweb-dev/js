@@ -1,5 +1,5 @@
 /// --- Thirdweb Brige ---
-import { JsonSchema, ThirdwebAuth } from "@thirdweb-dev/auth";
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
