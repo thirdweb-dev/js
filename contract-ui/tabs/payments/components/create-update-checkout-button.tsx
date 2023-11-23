@@ -28,12 +28,13 @@ import {
   LinkButton,
 } from "tw-components";
 import {
+  ChainIdToSupportedCurrencies,
   CreateUpdateCheckoutInput,
-  isPaymentsSupported,
+  hasPaymentsDetectedExtensions,
   usePaymentsCreateUpdateCheckout,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo, useState } from "react";
-import { useContract } from "@thirdweb-dev/react";
+import { Abi, NATIVE_TOKEN_ADDRESS, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BiPencil } from "react-icons/bi";
 import { Checkout } from "graphql/generated_types";
@@ -41,6 +42,9 @@ import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { PaymentsSettingsFileUploader } from "components/payments/settings/payment-settings-file-uploader";
 import { PaymentsPreviewButton } from "./preview-button";
+import { CurrencySelector } from "components/shared/CurrencySelector";
+import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
+import { PaymentsMintMethodInput } from "./mint-method-input";
 
 const formInputs = [
   {
@@ -85,20 +89,30 @@ const formInputs = [
       },
     ],
   },
-  /*   {
-    step: "non-tw",
+  {
+    step: "no-detected-extensions",
     fields: [
       {
-        name: "mintMethod",
+        name: "mintFunctionName",
         label: "Mint Method",
-        type: "text",
+        type: "abiSelector",
         placeholder: "",
         required: true,
-        helper: "",
+        helper:
+          "thirdweb's minter wallet calls this method to mint to the buyer's wallet. Note: $WALLET is a required field.",
+        sideField: false,
+      },
+      {
+        name: "priceAndCurrencySymbol",
+        label: "Price per NFT",
+        type: "price",
+        placeholder: "",
+        required: true,
+        helper: "The amount to your Mint Method expects to be paid.",
         sideField: false,
       },
     ],
-  }, */
+  },
   {
     step: "branding",
     fields: [
@@ -274,6 +288,35 @@ const formInputs = [
   },
 ] as const;
 
+type MintMethodInputs = {
+  priceAndCurrencySymbol: {
+    price: string;
+    currencySymbol: string;
+  };
+  mintFunctionName: string;
+  mintFunctionArgs: {
+    [key: string]: string;
+  };
+};
+
+type CreateUpdateCheckoutDashboardInput = CreateUpdateCheckoutInput &
+  MintMethodInputs;
+
+const convertInputsToMintMethod = ({
+  mintFunctionName,
+  mintFunctionArgs,
+  priceAndCurrencySymbol,
+}: MintMethodInputs) => {
+  return {
+    name: mintFunctionName,
+    args: mintFunctionArgs,
+    payment: {
+      currency: priceAndCurrencySymbol.currencySymbol,
+      value: `${priceAndCurrencySymbol.price} * $QUANTITY`,
+    },
+  };
+};
+
 interface CreateUpdateCheckoutButtonProps {
   contractId: string;
   contractAddress: string;
@@ -286,7 +329,7 @@ export const CreateUpdateCheckoutButton: React.FC<
 > = ({ contractId, contractAddress, checkout, checkoutId }) => {
   const { contract } = useContract(contractAddress);
 
-  const isSupportedContract = isPaymentsSupported(contract);
+  const hasDetectedExtensions = hasPaymentsDetectedExtensions(contract);
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
   const keysQuery = useApiKeys();
@@ -298,14 +341,14 @@ export const CreateUpdateCheckoutButton: React.FC<
   }, [keysQuery]);
 
   const [step, setStep] = useState<
-    "info" | /* "non-tw" | */ "branding" | "delivery" | "advanced"
+    "info" | "no-detected-extensions" | "branding" | "delivery" | "advanced"
   >("info");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createOrUpdateCheckout, isLoading } =
     usePaymentsCreateUpdateCheckout(contractAddress);
   const trackEvent = useTrack();
 
-  const values: CreateUpdateCheckoutInput = {
+  const values: CreateUpdateCheckoutDashboardInput = {
     title: checkout?.collection_title || "",
     description: checkout?.collection_description || "",
     successCallbackUrl: checkout?.success_callback_url || "",
@@ -316,8 +359,6 @@ export const CreateUpdateCheckoutButton: React.FC<
     contractArgs: checkout?.contract_args || undefined,
     hideNativeMint: checkout?.hide_native_mint || false,
     listingId: checkout?.listing_id || "",
-    /* mintMethod: checkout?.mint_abi_function_name || {},
-    eligibilityMethod: "",*/
     tokenId: checkout?.token_id || undefined,
     twitterHandleOverride: checkout?.seller_twitter_handle || "",
     imageUrl: checkout?.image_url || "",
@@ -333,9 +374,19 @@ export const CreateUpdateCheckoutButton: React.FC<
     contractId,
     thirdwebClientId:
       checkout?.thirdweb_client_id || (!checkoutId && apiKeys[0]?.key) || "",
+    // dashboard only inputs, parsing mintMethod
+    priceAndCurrencySymbol: {
+      price: parseInt(
+        checkout?.contract_args.mintMethod.payment.value || 0,
+      ).toString(),
+      currencySymbol:
+        checkout?.contract_args.mintMethod.payment.currency || "ETH",
+    },
+    mintFunctionName: checkout?.contract_args.mintMethod.name || "",
+    mintFunctionArgs: checkout?.contract_args.mintMethod.args || {},
   };
 
-  const form = useForm<CreateUpdateCheckoutInput>({
+  const form = useForm<CreateUpdateCheckoutDashboardInput>({
     defaultValues: values,
     values,
     resetOptions: {
@@ -370,11 +421,32 @@ export const CreateUpdateCheckoutButton: React.FC<
       });
 
       form.handleSubmit((data) => {
+        // We need to filter in case an input from a different method has been rendered
+        const filteredFunctionArgs = Object.keys(data.mintFunctionArgs)
+          .filter((key) => {
+            return contract?.abi
+              ?.find((fn) => fn.name === data.mintFunctionName)
+              ?.inputs?.some((input) => input.name === key);
+          })
+          .reduce(
+            (obj: Record<string, any>, key) => {
+              obj[key] = data.mintFunctionArgs[key];
+              return obj;
+            },
+            {} as Record<string, any>,
+          );
+
+        const mintMethod = convertInputsToMintMethod({
+          mintFunctionArgs: filteredFunctionArgs,
+          mintFunctionName: data.mintFunctionName,
+          priceAndCurrencySymbol: data.priceAndCurrencySymbol,
+        });
         createOrUpdateCheckout(
           {
             checkoutId,
             ...data,
             limitPerTransaction: parseInt(String(data.limitPerTransaction)),
+            ...(!hasDetectedExtensions && { mintMethod }),
           },
           {
             onSuccess: () => {
@@ -403,10 +475,13 @@ export const CreateUpdateCheckoutButton: React.FC<
       return;
     }
     setStep((prev) => {
-      /*       if (prev === "info" && !isSupportedContract) {
-        return "non-tw";
-      } */
-      if (prev === "info" && isSupportedContract /* || prev === "non-tw" */) {
+      if (prev === "info" && !hasDetectedExtensions) {
+        return "no-detected-extensions";
+      }
+      if (
+        (prev === "info" && hasDetectedExtensions) ||
+        prev === "no-detected-extensions"
+      ) {
         return "branding";
       }
       if (prev === "branding") {
@@ -426,9 +501,9 @@ export const CreateUpdateCheckoutButton: React.FC<
   };
   const handleBack = () => {
     setStep((prev) => {
-      /*       if (prev === "non-tw") {
+      if (prev === "no-detected-extensions") {
         return "info";
-      } */
+      }
       if (prev === "branding") {
         return "info";
       }
@@ -559,6 +634,57 @@ export const CreateUpdateCheckoutButton: React.FC<
                                   }}
                                 />
                               </Box>
+                            ) : field.type === "abiSelector" ? (
+                              <PaymentsMintMethodInput
+                                form={form}
+                                abi={contract?.abi as Abi}
+                              />
+                            ) : field.type === "price" ? (
+                              <Flex
+                                gap={2}
+                                flexDir={{ base: "column", md: "row" }}
+                              >
+                                <Box
+                                  w={{ base: "100%", md: "50%" }}
+                                  minW="70px"
+                                >
+                                  <PriceInput
+                                    w="full"
+                                    value={form.watch(
+                                      "priceAndCurrencySymbol.price",
+                                    )}
+                                    onChange={(val) =>
+                                      form.setValue(
+                                        `priceAndCurrencySymbol.price`,
+                                        val,
+                                      )
+                                    }
+                                    placeholder="0"
+                                  />
+                                </Box>
+                                <CurrencySelector
+                                  value={
+                                    form.watch(
+                                      "priceAndCurrencySymbol.currencySymbol",
+                                    ) || NATIVE_TOKEN_ADDRESS
+                                  }
+                                  onChange={(e) =>
+                                    form.setValue(
+                                      `priceAndCurrencySymbol.currencySymbol`,
+                                      e.target.value,
+                                    )
+                                  }
+                                  showCustomCurrency={false}
+                                  isPaymentsSelector
+                                  defaultCurrencies={
+                                    contract?.chainId
+                                      ? ChainIdToSupportedCurrencies[
+                                          contract?.chainId
+                                        ]
+                                      : []
+                                  }
+                                />
+                              </Flex>
                             ) : field.type === "clientId" ? (
                               apiKeys.length > 0 ? (
                                 <ApiKeysMenu
@@ -658,7 +784,7 @@ export const CreateUpdateCheckoutButton: React.FC<
                 apiKeys.length === 0 ||
                 !form.watch("thirdwebClientId") ||
                 !form.watch("title") ||
-                !form.watch("tokenId")
+                (isErc1155 && !form.watch("tokenId"))
               }
               isLoading={form.formState.isSubmitting || isLoading}
             >

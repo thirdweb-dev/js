@@ -1,3 +1,4 @@
+import { ArbitrumSepolia as ArbitrumSepoliaChain } from "@thirdweb-dev/chains";
 import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
 
 export interface CurrencyMetadata {
@@ -28,7 +29,7 @@ const Ethereum: CurrencyMetadata[] = [
   {
     address: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
     name: "Polygon",
-    symbol: "WMATIC",
+    symbol: "MATIC",
   },
 ];
 
@@ -92,9 +93,24 @@ const Mumbai: CurrencyMetadata[] = [
     symbol: "USDC",
   },
   {
+    address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
+    name: "USD Coin (Bridged)",
+    symbol: "USDC.e",
+  },
+  {
     name: "Tether USD",
     address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
     symbol: "USDT",
+  },
+  {
+    name: "DERC20",
+    address: "0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1",
+    symbol: "DERC20",
+  },
+  {
+    name: "CDOL",
+    address: "0x4E0068513994fD4526AEc7f558Ee572234AeeFB8",
+    symbol: "CDOL",
   },
 ];
 
@@ -143,6 +159,11 @@ const Avalanche: CurrencyMetadata[] = [
     address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
     name: "USD Coin",
     symbol: "USDC",
+  },
+  {
+    address: "0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
+    name: "USD Coin (Bridged)",
+    symbol: "USDC.e",
   },
   {
     address: "0x50b7545627a5162F82A992c33b87aDc75187B218",
@@ -226,6 +247,16 @@ const BinanceMainnet: CurrencyMetadata[] = [
     name: "Binance USD",
     symbol: "BUSD",
   },
+  {
+    address: "0x55d398326f99059ff775485246999027b3197955",
+    name: "Tether USD",
+    symbol: "USDT",
+  },
+  {
+    address: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    name: "USD Coin",
+    symbol: "USDC",
+  },
 ];
 
 const BinanceTestnet: CurrencyMetadata[] = [
@@ -236,6 +267,19 @@ const BinanceTestnet: CurrencyMetadata[] = [
     address: "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",
     name: "Binance USD",
     symbol: "BUSD",
+  },
+  {
+    address: "0x337610d27c682e347c9cd60bd4b3b107c9d34ddd",
+    name: "Tether USD",
+    symbol: "USDT",
+  },
+];
+
+const ArbitrumSepolia: CurrencyMetadata[] = [
+  {
+    address: "0x56c4BE79A46DF3e18A243AEfECBF42e8634a3d53",
+    name: "DERC20",
+    symbol: "DERC20",
   },
 ];
 
@@ -254,4 +298,5 @@ export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.ArbitrumGoerli]: ArbitrumGoerli,
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
   [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
+  [ArbitrumSepoliaChain.chainId]: ArbitrumSepolia,
 } as const;

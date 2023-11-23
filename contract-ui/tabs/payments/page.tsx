@@ -1,7 +1,7 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react/hooks/useActiveChainId";
-import { usePaymentsContractByAddressAndChain } from "@3rdweb-sdk/react/hooks/usePayments";
+import { usePaymentsEnabledContracts } from "@3rdweb-sdk/react/hooks/usePayments";
 import { Center, Flex, Spinner, Stack } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { PaymentsAnalytics } from "./components/payments-analytics";
 import { PaymentCheckouts } from "./components/payments-checkouts";
 import { Card, Heading, Text } from "tw-components";
@@ -23,14 +23,23 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
   const { user } = useLoggedInUser();
 
   const {
-    data: paymentContract,
+    data: paymentEnabledContracts,
     isLoading,
     isError,
-  } = usePaymentsContractByAddressAndChain(contractAddress, chainId);
-
+  } = usePaymentsEnabledContracts();
   useEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  const paymentContract = useMemo(() => {
+    if (!contractAddress) {
+      return undefined;
+    }
+    return paymentEnabledContracts?.find(
+      (contract) =>
+        contract.address.toLowerCase() === contractAddress.toLowerCase(),
+    );
+  }, [paymentEnabledContracts, contractAddress]);
 
   if (!contractAddress) {
     // TODO build a skeleton for this
@@ -40,7 +49,6 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
   if (!user?.address) {
     return <NoWalletConnectedPayments />;
   }
-
   return (
     <Flex direction="column" gap={6}>
       {isLoading ? (

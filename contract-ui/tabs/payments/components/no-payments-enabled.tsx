@@ -1,11 +1,9 @@
 import {
-  isPaymentsSupported,
   usePaymentsSellerByAccountId,
   validPaymentsChainIds,
   validPaymentsChainIdsMainnets,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { Center, Stack } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 import { EnablePaymentsButton } from "components/payments/enable-payments-button";
 import { Card, Heading, Text, TrackedLinkButton } from "tw-components";
 
@@ -24,8 +22,10 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
   const isMainnet = validPaymentsChainIdsMainnets.includes(chainId ?? 0);
   const isSupportedChain = validPaymentsChainIds.includes(chainId ?? 0);
 
-  const { contract } = useContract(contractAddress);
-  const isValidContract = isPaymentsSupported(contract);
+  const needsVerification =
+    isMainnet &&
+    !sellerData?.date_personal_documents_verified &&
+    !sellerData?.date_business_documents_verified;
 
   return (
     <Card p={8} bgColor="backgroundCardHighlight" my={6}>
@@ -35,16 +35,14 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
             No payments enabled
           </Heading>
           <Text>
-            {!isValidContract
-              ? "We don't currently support this contract, you can contact us if you need payments enabled for this contract."
-              : isMainnet
-              ? "You need to KYC first before being able to enable payments on mainnet."
+            {needsVerification
+              ? "You need to KYC and KYB before being able to enable payments on mainnet."
               : isSupportedChain
               ? "You need to enable payments first to be able to create a checkout."
               : "Payments is not currently supported on this chain, you can contact us if you need this chain enabled."}
           </Text>
         </Stack>
-        {!isSupportedChain || !isValidContract ? (
+        {!isSupportedChain ? (
           <TrackedLinkButton
             href="/contact-us"
             category="payments"
@@ -59,7 +57,7 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
           >
             Contact Us
           </TrackedLinkButton>
-        ) : isMainnet && !sellerData?.date_personal_documents_verified ? (
+        ) : needsVerification ? (
           <TrackedLinkButton
             href="/dashboard/payments/settings"
             category="payments"
@@ -72,7 +70,7 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
             color="bgBlack"
             size="sm"
           >
-            Go to KYC
+            Go to Verification
           </TrackedLinkButton>
         ) : chainId ? (
           <EnablePaymentsButton

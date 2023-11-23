@@ -34,11 +34,6 @@ import {
   useContractsByOwnerIdLazyQuery,
 } from "graphql/queries/__generated__/ContractsByOwnerId.generated";
 import {
-  ContractsByAddressAndChainQuery,
-  ContractsByAddressAndChainQueryVariables,
-  useContractsByAddressAndChainLazyQuery,
-} from "graphql/queries/__generated__/ContractsByAddressAndChain.generated";
-import {
   DetailedAnalyticsQueryVariables,
   useDetailedAnalyticsLazyQuery,
 } from "graphql/queries/__generated__/DetailedAnalytics.generated";
@@ -55,6 +50,8 @@ import {
   useGetSellerByThirdwebAccountIdLazyQuery,
 } from "graphql/mutations/__generated__/GetSellerByThirdwebAccountId.generated";
 import { useUpdateSellerByThirdwebAccountIdMutation } from "graphql/mutations/__generated__/UpdateSellerByThirdwebAccountId.generated";
+import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
+import { OtherAddressZero } from "utils/zeroAddress";
 
 export const paymentsExtensions: FeatureName[] = [
   "ERC721SharedMetadata",
@@ -64,7 +61,7 @@ export const paymentsExtensions: FeatureName[] = [
   "ERC1155ClaimPhasesV2",
 ];
 
-export const isPaymentsSupported = (
+export const hasPaymentsDetectedExtensions = (
   contract: SmartContract<BaseContract> | undefined,
 ) => {
   return detectFeatures(contract, paymentsExtensions);
@@ -143,6 +140,72 @@ export const PaperChainToChainId: Record<string, number> = {
   Base: Base.chainId,
   BaseGoerli: BaseGoerli.chainId,
 };
+
+interface SupportedCurrenciesMap {
+  [key: number]: string[];
+}
+
+const supportedCurrenciesMap: SupportedCurrenciesMap = {
+  [Ethereum.chainId]: ["ETH", "USDC", "WETH", "MATIC"],
+  [Goerli.chainId]: ["ETH", "USDC", "WETH"],
+  [Sepolia.chainId]: ["ETH"],
+  [Polygon.chainId]: ["MATIC", "WETH", "USDC", "USDC.e"],
+  [Mumbai.chainId]: ["MATIC", "USDC", "USDC.e", "DERC20", "CDOL"],
+  [Avalanche.chainId]: ["AVAX", "USDC", "USDC.e"],
+  [AvalancheFuji.chainId]: ["AVAX"],
+  [Optimism.chainId]: ["ETH", "USDC"],
+  [OptimismGoerli.chainId]: ["ETH"],
+  [Arbitrum.chainId]: ["ETH", "USDC"],
+  [ArbitrumNova.chainId]: ["ETH"],
+  [ArbitrumGoerli.chainId]: ["AGOR", "USDC"],
+  [ArbitrumSepolia.chainId]: ["ETH", "DERC20"],
+  [Binance.chainId]: ["BNB", "USDC", "USDT"],
+  [BinanceTestnet.chainId]: ["TBNB", "USDT"],
+  [Base.chainId]: ["ETH"],
+  [BaseGoerli.chainId]: ["ETH"],
+  [Zora.chainId]: ["ETH"],
+  [ZoraTestnet.chainId]: ["ETH"],
+};
+
+const ChainSymbolToChainName: Record<string, string> = {
+  ETH: "Ether",
+  MATIC: "Matic",
+  AVAX: "Avalanche",
+  AGOR: "Arbitrum Goerli Ether",
+};
+
+export const ChainIdToSupportedCurrencies: Record<number, CurrencyMetadata[]> =
+  Object.keys(supportedCurrenciesMap).reduce<
+    Record<number, CurrencyMetadata[]>
+  >((acc, chainIdStr) => {
+    const chainId = parseInt(chainIdStr, 10);
+
+    if (!isNaN(chainId)) {
+      const chainCurrencies = CURRENCIES[chainId] || [];
+      const supportedCurrencies = supportedCurrenciesMap[chainId] || [];
+
+      if (supportedCurrencies.length > 0) {
+        const firstSupportedCurrencyName = supportedCurrencies[0];
+
+        const defaultCurrency: CurrencyMetadata = {
+          address: OtherAddressZero.toLowerCase(),
+          name: ChainSymbolToChainName[firstSupportedCurrencyName] || "Ether",
+          symbol: firstSupportedCurrencyName,
+        };
+
+        acc[chainId] = [
+          defaultCurrency,
+          ...chainCurrencies.filter(
+            (currency) =>
+              supportedCurrencies.includes(currency.symbol) &&
+              currency.symbol !== firstSupportedCurrencyName,
+          ),
+        ] as CurrencyMetadata[];
+      }
+    }
+
+    return acc;
+  }, {});
 
 export type RegisterContractInput = {
   chain: string;
@@ -264,7 +327,14 @@ export type CreateUpdateCheckoutInput = {
   successCallbackUrl?: string;
   redirectAfterPayment?: boolean;
   cancelCallbackUrl?: string;
-  mintMethod?: string;
+  mintMethod?: {
+    name: string;
+    args: { [key: string]: string };
+    payment: {
+      currency: string;
+      value: string;
+    };
+  };
   eligibilityMethod?: {
     name: string;
     args: string[];
@@ -637,43 +707,6 @@ export function usePaymentsCheckoutsByContract(contractAddress: string) {
     },
     {
       enabled: !!paymentsSellerId && !!address && !!contractAddress,
-    },
-  );
-}
-
-export function usePaymentsContractByAddressAndChain(
-  contractAddress: string | undefined,
-  chainId: number | undefined,
-) {
-  invariant(contractAddress, "contractAddress is required");
-  invariant(chainId, "chainId is required");
-  const address = useAddress();
-  const { paymentsSellerId } = useApiAuthToken();
-  const [getContractsByAddressAndChain] =
-    useContractsByAddressAndChainLazyQuery();
-
-  return useQuery(
-    paymentsKeys.contractByAddressAndChain(contractAddress, chainId),
-    async () => {
-      const { data, error } = await getContractsByAddressAndChain({
-        variables: {
-          ownerId: paymentsSellerId,
-          chain: ChainIdToPaperChain[chainId],
-          contractAddress: contractAddress.toLowerCase(),
-        } as ContractsByAddressAndChainQueryVariables,
-      });
-
-      if (error) {
-        console.error(error);
-      }
-
-      return data && (data?.contract || []).length > 0
-        ? data.contract[0]
-        : ({} as ContractsByAddressAndChainQuery["contract"][number]);
-    },
-    {
-      enabled:
-        !!paymentsSellerId && !!address && !!contractAddress && !!chainId,
     },
   );
 }
