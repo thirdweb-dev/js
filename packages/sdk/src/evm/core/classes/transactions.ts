@@ -1127,7 +1127,7 @@ async function enginePrepareRequest(
   } else {
     const forwarderAddress =
       CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
-        .openzeppelinForwarder ||
+        ?.openzeppelinForwarder ||
       (await computeForwarderAddress(provider, storage));
     const ForwarderABI = (
       await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
@@ -1195,11 +1195,11 @@ async function defenderPrepareRequest(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA ||
+        ]?.openzeppelinForwarderEOA ||
         (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder ||
+        ]?.openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
   const ForwarderABI = (
     await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
