@@ -287,11 +287,13 @@ export abstract class BaseAccountAPI {
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
+    let adjusted = BigNumber.from(initGas).mul(3);
+    if (adjusted.lt(500000)) {
+      adjusted = BigNumber.from(500000);
+    }
     const verificationGasLimit = BigNumber.from(
       await this.getVerificationGasLimit(),
-    )
-      .add(initGas)
-      .mul(2);
+    ).add(adjusted);
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
