@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -62,6 +62,13 @@
         "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.esm.js"
       },
       "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.cjs.js"
+    },
+    "./evm/wallets/rabby": {
+      "module": {
+        "browser": "./evm/wallets/rabby/dist/thirdweb-dev-wallets-evm-wallets-rabby.browser.esm.js",
+        "default": "./evm/wallets/rabby/dist/thirdweb-dev-wallets-evm-wallets-rabby.esm.js"
+      },
+      "default": "./evm/wallets/rabby/dist/thirdweb-dev-wallets-evm-wallets-rabby.cjs.js"
     },
     "./evm/wallets/trust": {
       "module": {
@@ -223,6 +230,13 @@
         "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js"
       },
       "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js"
+    },
+    "./evm/connectors/rabby": {
+      "module": {
+        "browser": "./evm/connectors/rabby/dist/thirdweb-dev-wallets-evm-connectors-rabby.browser.esm.js",
+        "default": "./evm/connectors/rabby/dist/thirdweb-dev-wallets-evm-connectors-rabby.esm.js"
+      },
+      "default": "./evm/connectors/rabby/dist/thirdweb-dev-wallets-evm-connectors-rabby.cjs.js"
     },
     "./evm/connectors/trust": {
       "module": {
