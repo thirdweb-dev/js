@@ -53,7 +53,6 @@ export function jaDefault(): ThirdwebLocale {
       personalWallet: "パーソナルウォレット",
       smartWallet: "スマートウォレット",
       or: "または",
-      goBackButton: "戻る", // TODO - check translation
       download: {
         chrome: "Chrome拡張をダウンロード",
         android: "Google Playでダウンロード",
@@ -175,6 +174,7 @@ export function jaDefault(): ThirdwebLocale {
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       defiWallet: extensionAndQRScanScreens("Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "サインイン",
         signInWithGoogle: "Googleでサインイン",

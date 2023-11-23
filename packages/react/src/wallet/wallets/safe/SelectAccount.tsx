@@ -11,10 +11,13 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
+  useChain,
+  useChainId,
   useConnect,
   useConnectionStatus,
   useSupportedChains,
-  useWalletContext,
+  useSwitchChain,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
@@ -35,24 +38,22 @@ export const SelectAccount: React.FC<{
   renderBackButton?: boolean;
 }> = (props) => {
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
+  const activeWallet = useWallet();
+  const connect = useConnect();
+  const activeChain = useChain();
+  const connectedChainId = useChainId();
 
-  // personal wallet
-  const { personalWalletInfo } = useWalletContext();
-  const personalWallet = personalWalletInfo?.wallet;
-  const personalWalletChainId = personalWalletInfo?.chainId;
-  const switchChainPersonalWallet = personalWalletInfo?.switchChain;
+  const [safeAddress, setSafeAddress] = useState("");
+  const [safeChainId, setSafeChainId] = useState(-1);
+
+  const [safeConnectError, setSafeConnectError] = useState(false);
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  // safe
-  const connectSafe = useConnect();
-  const [safeAddress, setSafeAddress] = useState("");
-  const [safeChainId, setSafeChainId] = useState(-1);
-  const [safeConnectError, setSafeConnectError] = useState(false);
   const connectionStatus = useConnectionStatus();
-
   const chains = useSupportedChains();
 
+  // put supported chains first
   const supportedChains = chains.filter((c) =>
     SafeSupportedChainsSet.has(c.chainId),
   );
@@ -68,14 +69,15 @@ export const SelectAccount: React.FC<{
   const useOptGroup = mainnets.length > 0 && testnets.length > 0;
 
   const handleSubmit = async () => {
-    if (!selectedSafeChain || !personalWallet) {
+    if (!selectedSafeChain || !activeWallet || !activeChain) {
       return;
     }
     setSafeConnectError(false);
+
     try {
-      await connectSafe(props.safeWalletConfig, {
+      await connect(props.safeWalletConfig, {
         chain: selectedSafeChain,
-        personalWallet: personalWallet,
+        personalWallet: activeWallet,
         safeAddress,
       });
       props.onConnect();
@@ -85,11 +87,12 @@ export const SelectAccount: React.FC<{
     }
   };
 
-  const mismatch = safeChainId !== -1 && personalWalletChainId !== safeChainId;
+  const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
 
+  const switchChain = useSwitchChain();
   const modalConfig = useContext(ModalConfigCtx);
 
   return (
@@ -323,14 +326,14 @@ export const SelectAccount: React.FC<{
                 width: modalConfig.modalSize === "compact" ? "100%" : undefined,
               }}
               onClick={async () => {
-                if (!personalWallet) {
-                  throw new Error("No personal wallet connected");
+                if (!activeWallet) {
+                  throw new Error("No active wallet");
                 }
                 setSafeConnectError(false);
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await switchChainPersonalWallet(safeChainId);
+                  await switchChain(safeChainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

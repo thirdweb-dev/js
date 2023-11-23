@@ -21,6 +21,7 @@ export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 export { okxWallet } from "./wallet/wallets/okx/okxWallet";
 export { coreWallet } from "./wallet/wallets/coreWallet/coreWallet";
 export { defiWallet } from "./wallet/wallets/defiWallet/defiWallet";
+export { rabbyWallet } from "./wallet/wallets/rabby/rabbyWallet";
 export { coin98Wallet } from "./wallet/wallets/coin98/coin98Wallet";
 export { darkTheme, lightTheme } from "./design-system/index";
 export type { Theme, ThemeOverrides } from "./design-system/index";

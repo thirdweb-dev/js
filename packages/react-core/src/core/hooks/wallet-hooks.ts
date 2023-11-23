@@ -14,6 +14,7 @@ import type {
   OKXWallet,
   PaperWallet,
   PhantomWallet,
+  RabbyWallet,
   RainbowWallet,
   SafeWallet,
   SmartWallet,
@@ -47,6 +48,7 @@ type WalletIdToWalletTypeMap = {
   walletConnectV1: WalletConnect;
   okx: OKXWallet;
   defiWallet: DefiWallet;
+  rabby: RabbyWallet;
 };
 
 /**
