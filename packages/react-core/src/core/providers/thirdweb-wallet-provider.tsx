@@ -275,12 +275,6 @@ export function ThirdwebWalletProvider(
     if (autoConnectTriggered.current) {
       return;
     }
-    // if explicitly set to false, don't auto connect
-    // by default, auto connect
-    if (props.shouldAutoConnect === false) {
-      setConnectionStatus("disconnected");
-      return;
-    }
 
     if (activeWallet) {
       // there's already an active wallet, don't auto connect
@@ -289,6 +283,13 @@ export function ThirdwebWalletProvider(
 
     if (connectionStatus !== "unknown") {
       // only try to auto connect if we're in the unknown state
+      return;
+    }
+
+    // if explicitly set to false, don't auto connect
+    // by default, auto connect
+    if (props.shouldAutoConnect === false) {
+      setConnectionStatus("disconnected");
       return;
     }
 
