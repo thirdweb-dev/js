@@ -272,6 +272,11 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    if (connectionStatus === "connecting") {
+      // if the wallet is connecting, don't auto connect
+      return;
+    }
+
     if (autoConnectTriggered.current) {
       return;
     }
