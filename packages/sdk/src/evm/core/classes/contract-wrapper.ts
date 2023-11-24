@@ -790,7 +790,7 @@ export class ContractWrapper<
       const forwarderAddress =
         CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder ||
+        ]?.openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage));
       const ForwarderABI = (
         await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
