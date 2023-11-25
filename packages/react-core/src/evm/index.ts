@@ -193,6 +193,7 @@ export {
   useTransferToken,
   useTransferBatchToken,
   useBurnToken,
+  useTransferNativeToken,
 } from "./hooks/async/token";
 
 // account factory

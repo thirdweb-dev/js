@@ -24,7 +24,6 @@ import {
 } from "@tanstack/react-query";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
-import { Amount } from "@thirdweb-dev/sdk";
 
 /** **********************/
 /**     READ  HOOKS     **/
@@ -331,6 +330,11 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
   );
 }
 
+/**
+ * A hook to transfer native token (of the active chain) to another wallet
+ * 
+ * @returns a mutation object that can be used to transfer native tokens
+ */
 export function useTransferNativeToken() {
   const sdk = useSDK();
   const activeChainId = useSDKChainId();
