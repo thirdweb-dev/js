@@ -333,6 +333,29 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
 /**
  * A hook to transfer native token (of the active chain) to another wallet
  * 
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: transferNativeToken,
+ *     isLoading,
+ *     error,
+ *   } = useTransferNativeToken();
+ *
+ *   if (error) {
+ *     console.error("failed to transfer tokens", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => transferNativeToken({ to: "{{wallet_address}}", amount: "0.1" })}
+ *     >
+ *       Transfer
+ *     </button>
+ *   );
+ * };
+ * 
  * @returns a mutation object that can be used to transfer native tokens
  */
 export function useTransferNativeToken() {
