@@ -3,13 +3,12 @@ import {
   ThirdwebConnectedWalletContext,
   useThirdwebConnectedWalletContext,
 } from "../contexts/thirdweb-wallet";
-import { ContractAddress, WalletAddress } from "../types";
+import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
-import { RequiredParam } from "../../core/query-utils/required-param";
 import { useSDK } from "./useSDK";
 
 /**
