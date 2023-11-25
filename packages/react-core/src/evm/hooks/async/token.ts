@@ -355,6 +355,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  *     </button>
  *   );
  * };
+ * ```
  * 
  * @returns a mutation object that can be used to transfer native tokens
  */
