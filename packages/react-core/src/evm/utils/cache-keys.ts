@@ -58,10 +58,20 @@ export function invalidateContractAndBalances(
         ),
       ),
     ),
-    queryClient.invalidateQueries(
-      enforceCachePrefix(createCacheKeyWithNetwork(["balance"], chainId)),
-    ),
+    invalidateBalances(queryClient, chainId),
   ]);
+}
+
+/**
+ * @internal
+ */
+export function invalidateBalances(
+  queryClient: QueryClient,
+  chainId: RequiredParam<SUPPORTED_CHAIN_ID>,
+) {
+  return queryClient.invalidateQueries(
+    enforceCachePrefix(createCacheKeyWithNetwork(["balance"], chainId)),
+  );
 }
 
 /**

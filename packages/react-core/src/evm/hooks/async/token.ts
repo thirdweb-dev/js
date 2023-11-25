@@ -2,7 +2,7 @@ import {
   requiredParamInvariant,
   RequiredParam,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../useSDK";
+import { useSDK, useSDKChainId } from "../useSDK";
 import {
   ClaimTokenParams,
   getErc20,
@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import {
   cacheKeys,
+  invalidateBalances,
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
@@ -23,6 +24,7 @@ import {
 } from "@tanstack/react-query";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
+import { Amount } from "@thirdweb-dev/sdk";
 
 /** **********************/
 /**     READ  HOOKS     **/
@@ -325,6 +327,22 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
           contractAddress,
           activeChainId,
         ),
+    },
+  );
+}
+
+export function useTransferNativeToken() {
+  const sdk = useSDK();
+  const activeChainId = useSDKChainId();
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: TokenParams) => {
+      const { to, amount } = data;
+      invariant(sdk, "SDK is not initialized");
+      return sdk.wallet.transfer(to, amount);
+    },
+    {
+      onSettled: () => invalidateBalances(queryClient, activeChainId),
     },
   );
 }
