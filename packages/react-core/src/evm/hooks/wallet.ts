@@ -3,12 +3,14 @@ import {
   ThirdwebConnectedWalletContext,
   useThirdwebConnectedWalletContext,
 } from "../contexts/thirdweb-wallet";
-import { ContractAddress } from "../types";
+import { ContractAddress, WalletAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
+import { RequiredParam } from "../../core/query-utils/required-param";
+import { useSDK } from "./useSDK";
 
 /**
  * A hook to get the native or (optional) ERC20 token balance of the connected wallet.
@@ -38,6 +40,26 @@ export function useBalance(tokenAddress?: ContractAddress) {
       keepPreviousData: false,
     },
   );
+}
+
+/**
+ * A hook to get the native balance from a wallet address
+ *
+ * @param walletAddress - the address of the wallet that you want to get the native balance
+ * @returns the balance of the given wallet address
+ */
+export function useBalanceForAddress(walletAddress: string) {
+  invariant(walletAddress, "wallet address is not provided");
+  const { chainId } = useThirdwebConnectedWalletContext();
+  const sdk = useSDK();
+  const cacheKey = useMemo(() => {
+    return cacheKeys.wallet.balance(chainId || -1, walletAddress);
+  }, [chainId, walletAddress]);
+
+  return useQuery(cacheKey, async () => {
+    invariant(sdk, "SDK is not initialized");
+    return await sdk.getBalance(walletAddress);
+  });
 }
 
 /**
