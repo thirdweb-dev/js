@@ -575,6 +575,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               onChainSelect(chain.chainId);
             }}
             networksEnabled={
+              fullPublishMetadata.data?.name === "AccountFactory" ||
               fullPublishMetadata.data?.networksForDeployment?.allNetworks ||
               !fullPublishMetadata.data?.networksForDeployment
                 ? undefined
