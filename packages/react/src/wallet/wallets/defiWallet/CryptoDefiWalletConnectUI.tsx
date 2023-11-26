@@ -2,19 +2,21 @@ import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DefiWalletScan } from "./DefiWalletScan";
+import { CryptoDefiWalletScan } from "./CryptoDefiWalletScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
-import type { DefiWallet } from "@thirdweb-dev/wallets";
+import type { CryptoDefiWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
-import { defiWalletUris } from "./defiWalletUris";
+import { cryptoDefiWalletUris } from "./cryptoDefiWalletUris";
 
-export const DefiWalletConnectUI = (props: ConnectUIProps<DefiWallet>) => {
+export const CryptoDefiWalletConnectUI = (
+  props: ConnectUIProps<CryptoDefiWallet>,
+) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const locale = useTWLocale().wallets.defiWallet;
+  const locale = useTWLocale().wallets.cryptoDefiWallet;
   const connectingLocale = {
     getStartedLink: locale.getStartedLink,
     instruction: locale.connectionScreen.instruction,
@@ -109,7 +111,7 @@ export const DefiWalletConnectUI = (props: ConnectUIProps<DefiWallet>) => {
         onBack={props.goBack}
         onConnected={connected}
         walletConfig={walletConfig}
-        appUriPrefix={defiWalletUris}
+        appUriPrefix={cryptoDefiWalletUris}
       />
     );
   }
@@ -132,7 +134,7 @@ export const DefiWalletConnectUI = (props: ConnectUIProps<DefiWallet>) => {
 
   if (screen === "scanning") {
     return (
-      <DefiWalletScan
+      <CryptoDefiWalletScan
         onBack={props.goBack}
         onConnected={props.connected}
         onGetStarted={() => {

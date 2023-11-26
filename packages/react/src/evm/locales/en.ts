@@ -168,7 +168,7 @@ export function enDefault() {
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       coreWallet: extensionAndQRScanScreens("Core"),
-      defiWallet: extensionAndQRScanScreens("Defi"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {

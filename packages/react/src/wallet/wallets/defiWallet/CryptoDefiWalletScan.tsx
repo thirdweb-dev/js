@@ -4,18 +4,18 @@ import {
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
-import type { DefiWallet } from "@thirdweb-dev/wallets";
+import type { CryptoDefiWallet } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 
-export const DefiWalletScan: React.FC<{
+export const CryptoDefiWalletScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  walletConfig: WalletConfig<DefiWallet>;
+  walletConfig: WalletConfig<CryptoDefiWallet>;
   hideBackButton: boolean;
 }> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
-  const locale = useTWLocale().wallets.defiWallet;
+  const locale = useTWLocale().wallets.cryptoDefiWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
