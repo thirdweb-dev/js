@@ -790,7 +790,7 @@ export class ContractWrapper<
       const forwarderAddress =
         CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder ||
+        ]?.openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage));
       const ForwarderABI = (
         await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
@@ -970,7 +970,7 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA ||
+          ]?.openzeppelinForwarderEOA ||
           (await computeEOAForwarderAddress(
             this.getProvider(),
             this.storage,
@@ -980,7 +980,7 @@ export class ContractWrapper<
           ))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder ||
+          ]?.openzeppelinForwarder ||
           (await computeForwarderAddress(
             this.getProvider(),
             this.storage,
