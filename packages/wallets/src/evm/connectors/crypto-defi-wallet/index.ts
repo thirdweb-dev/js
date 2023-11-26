@@ -9,25 +9,25 @@ import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
 import type { Chain } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
-import { getInjectedDefiWalletProvider } from "./getInjectedDefiWalletProvider";
+import { getInjectedCryptoDefiWalletProvider } from "./getInjectedCryptoDefiWalletProvider";
 
-export type DefiWalletConnectorOptions = InjectedConnectorOptions;
+export type CryptoDefiWalletConnectorOptions = InjectedConnectorOptions;
 
-type DefiWalletConnectorConstructorArg = {
+type CryptoDefiWalletConnectorConstructorArg = {
   chains?: Chain[];
   connectorStorage: AsyncStorage;
-  options?: DefiWalletConnectorOptions;
+  options?: CryptoDefiWalletConnectorOptions;
 };
 
-export class DefiWalletConnector extends InjectedConnector {
-  readonly id = walletIds.defiWallet;
+export class CryptoDefiWalletConnector extends InjectedConnector {
+  readonly id = walletIds.cryptoDefiWallet;
 
-  constructor(arg: DefiWalletConnectorConstructorArg) {
+  constructor(arg: CryptoDefiWalletConnectorConstructorArg) {
     const defaultOptions = {
       name: "Defi Wallet",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
-      getProvider: getInjectedDefiWalletProvider,
+      getProvider: getInjectedCryptoDefiWalletProvider,
     };
 
     const options = {

@@ -2,12 +2,12 @@ import type { WalletConnectConnector as WalletConnectConnectorType } from "../co
 import type { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { DefiWalletConnector as DefiWalletConnectorType } from "../connectors/defi-wallet";
+import type { CryptoDefiWalletConnector as CryptoDefiWalletConnectorType } from "../connectors/crypto-defi-wallet";
 import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
-import { getInjectedDefiWalletProvider } from "../connectors/defi-wallet/getInjectedDefiWalletProvider";
+import { getInjectedCryptoDefiWalletProvider } from "../connectors/crypto-defi-wallet/getInjectedCryptoDefiWalletProvider";
 
-type DefiWalletAdditionalOptions = {
+type CryptoDefiWalletAdditionalOptions = {
   /**
    * Whether to open the default Wallet Connect QR code Modal for connecting to Defi app on mobile if Defi wallet is not injected when calling connect().
    */
@@ -29,7 +29,8 @@ type DefiWalletAdditionalOptions = {
   qrModalOptions?: QRModalOptions;
 };
 
-export type DefiWalletOptions = WalletOptions<DefiWalletAdditionalOptions>;
+export type CryptoDefiWalletOptions =
+  WalletOptions<CryptoDefiWalletAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -37,21 +38,21 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class DefiWallet extends AbstractClientWallet<DefiWalletAdditionalOptions> {
+export class CryptoDefiWallet extends AbstractClientWallet<CryptoDefiWalletAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;
-  DefiWalletConnector?: DefiWalletConnectorType;
+  CryptoDefiWalletConnector?: CryptoDefiWalletConnectorType;
   isInjected: boolean;
 
   static id = walletIds.coreWallet as string;
 
   public get walletName() {
-    return "Core wallet" as const;
+    return "Defi wallet" as const;
   }
 
-  constructor(options: DefiWalletOptions) {
-    super(DefiWallet.id, options);
-    this.isInjected = !!getInjectedDefiWalletProvider();
+  constructor(options: CryptoDefiWalletOptions) {
+    super(CryptoDefiWallet.id, options);
+    this.isInjected = !!getInjectedCryptoDefiWalletProvider();
   }
 
   protected async getConnector(): Promise<Connector> {
@@ -61,10 +62,10 @@ export class DefiWallet extends AbstractClientWallet<DefiWalletAdditionalOptions
 
       if (this.isInjected) {
         // import the connector dynamically
-        const { DefiWalletConnector } = await import(
-          "../connectors/defi-wallet"
+        const { CryptoDefiWalletConnector } = await import(
+          "../connectors/crypto-defi-wallet"
         );
-        this.DefiWalletConnector = new DefiWalletConnector({
+        this.CryptoDefiWalletConnector = new CryptoDefiWalletConnector({
           chains: this.chains,
           connectorStorage: this.walletStorage,
           options: {
@@ -72,7 +73,7 @@ export class DefiWallet extends AbstractClientWallet<DefiWalletAdditionalOptions
           },
         });
 
-        this.connector = new WagmiAdapter(this.DefiWalletConnector);
+        this.connector = new WagmiAdapter(this.CryptoDefiWalletConnector);
       } else {
         const { WalletConnectConnector } = await import(
           "../connectors/wallet-connect"

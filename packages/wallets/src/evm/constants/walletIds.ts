@@ -3,7 +3,7 @@ export const walletIds = {
   coin98: "coin98",
   coinbase: "coinbase",
   coreWallet: "coreWallet",
-  defiWallet: "defiWallet",
+  cryptoDefiWallet: "cryptoDefiWallet",
   frame: "frame",
   localWallet: "localWallet",
   magicLink: "magicLink",

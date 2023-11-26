@@ -53,8 +53,11 @@ export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider"
 export { CoreWallet, type CoreWalletOptions } from "./wallets/core-wallet";
 export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
 
-export { DefiWallet, type DefiWalletOptions } from "./wallets/crypto-defi-wallet";
-export { getInjectedDefiWalletProvider } from "./connectors/defi-wallet/getInjectedDefiWalletProvider";
+export {
+  CryptoDefiWallet,
+  type CryptoDefiWalletOptions,
+} from "./wallets/crypto-defi-wallet";
+export { getInjectedCryptoDefiWalletProvider } from "./connectors/crypto-defi-wallet/getInjectedCryptoDefiWalletProvider";
 
 export { RabbyWallet, type RabbyOptions } from "./wallets/rabby";
 export { getInjectedRabbyProvider } from "./connectors/rabby/getInjectedRabbyProvider";

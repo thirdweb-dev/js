@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-export function getInjectedDefiWalletProvider(): Ethereum | undefined {
+export function getInjectedCryptoDefiWalletProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;
   }

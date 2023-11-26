@@ -5,7 +5,7 @@ import type {
   Coin98Wallet,
   CoinbaseWallet,
   CoreWallet,
-  DefiWallet,
+  CryptoDefiWallet,
   EmbeddedWallet,
   FrameWallet,
   LocalWallet,
@@ -47,7 +47,7 @@ type WalletIdToWalletTypeMap = {
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
   okx: OKXWallet;
-  defiWallet: DefiWallet;
+  cryptoDefiWallet: CryptoDefiWallet;
   rabby: RabbyWallet;
 };
 
