@@ -352,14 +352,14 @@ export const metrics = [
       },
     ],
     href: "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game",
-    hoverBackground: "#0053FF",
+    hoverBackground: "#622AFF",
   },
   {
     title: "Coinbase",
     description:
       "Bringing onchain experiences to the real world — with seamless NFT creation, delivery, & transaction management via the Coinbase Wallet app.",
-    image: require("public/assets/landingpage/case-study.png"),
-    mobileImage: require("public/assets/landingpage/mobile-case-study.png"),
+    image: require("public/assets/landingpage/coinbase.png"),
+    mobileImage: require("public/assets/landingpage/mobile-coinbase.png"),
     items: [
       {
         title: "1,000+",
@@ -373,7 +373,7 @@ export const metrics = [
       },
     ],
     href: "https://blog.thirdweb.com/case-studies/coinbase-brings-onchain-experiences-to-life",
-    hoverBackground: "#765BFF",
+    hoverBackground: "#0053FF",
   },
   {
     title: "Mirror",
@@ -397,6 +397,6 @@ export const metrics = [
       },
     ],
     href: "https://blog.thirdweb.com/case-studies/mirror-creators-build-loyal-audiences-with-subscriber-nfts",
-    hoverBackground: "#730FE6",
+    hoverBackground: "#007CFF",
   },
 ];

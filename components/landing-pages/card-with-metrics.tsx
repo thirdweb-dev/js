@@ -55,6 +55,7 @@ const CardWithMetric = ({
           background: hoverBackground,
         }}
         rounded="lg"
+        h="full"
       >
         <Flex flex={1}>
           <LandingDesktopMobileImage image={image} mobileImage={mobileImage} />
