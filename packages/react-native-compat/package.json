@@ -34,7 +34,7 @@
     "react-native": ">=0.70.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-env": "^7.23.3",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/node": "^18.17.1",
     "babel-plugin-module-resolver": "^5.0.0",
