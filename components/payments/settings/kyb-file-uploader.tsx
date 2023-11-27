@@ -72,6 +72,7 @@ export const KybFileUploader: React.FC = () => {
         helperText="Document"
         selectOrUpload="Upload"
         showUploadButton
+        showPreview={false}
       />
       <Flex flexDir="column" gap={2}>
         {(form.watch("files") || []).length > 0 &&
