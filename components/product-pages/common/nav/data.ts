@@ -328,3 +328,75 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "sdks",
   },
 ];
+
+export const metrics = [
+  {
+    title: "Pixels",
+    description:
+      "Building a web3 game with a thriving ecosystem — with VIP memberships, in-game tokens, and digital assets that users own, on the blockchain.",
+    image: require("public/assets/landingpage/pixels.png"),
+    mobileImage: require("public/assets/landingpage/mobile-pixels.png"),
+    items: [
+      {
+        title: "100k+",
+        description: "Daily Users",
+      },
+      {
+        title: "1.5M+",
+        description: "Monthly Transactions",
+        colSpan: 2,
+      },
+      {
+        title: "11k+",
+        description: "VIP Members",
+      },
+    ],
+    href: "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game",
+    hoverBackground: "#0053FF",
+  },
+  {
+    title: "Coinbase",
+    description:
+      "Bringing onchain experiences to the real world — with seamless NFT creation, delivery, & transaction management via the Coinbase Wallet app.",
+    image: require("public/assets/landingpage/case-study.png"),
+    mobileImage: require("public/assets/landingpage/mobile-case-study.png"),
+    items: [
+      {
+        title: "1,000+",
+        description: "Real-World Transactions",
+        colSpan: 2,
+      },
+      {
+        title: "4 Weeks",
+        description: "Total Development Time",
+        colSpan: 2,
+      },
+    ],
+    href: "https://blog.thirdweb.com/case-studies/coinbase-brings-onchain-experiences-to-life",
+    hoverBackground: "#765BFF",
+  },
+  {
+    title: "Mirror",
+    description:
+      "Empowering creators to build engaged audiences with 'Subscribe to Mint' NFTs — rewarding loyal fans for subscribing to their publication.",
+    image: require("public/assets/landingpage/mirror.png"),
+    mobileImage: require("public/assets/landingpage/mobile-mirror.png"),
+    items: [
+      {
+        title: "2M+",
+        description: "NFTs Minted",
+      },
+      {
+        title: "1M+",
+        description: "New Subscribers",
+        colSpan: 2,
+      },
+      {
+        title: "120+",
+        description: "Publications",
+      },
+    ],
+    href: "https://blog.thirdweb.com/case-studies/mirror-creators-build-loyal-audiences-with-subscriber-nfts",
+    hoverBackground: "#730FE6",
+  },
+];

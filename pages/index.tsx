@@ -1,9 +1,6 @@
 import HomePageCard from "components/homepage/sections/HomePageCard";
 import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
-import { BuildSection } from "../components/homepage/sections/key-features/BuildSection";
-import { LaunchSection } from "../components/homepage/sections/key-features/LaunchSection";
-import { ManageSection } from "../components/homepage/sections/key-features/ManageSection";
-import { Box, DarkMode, Flex } from "@chakra-ui/react";
+import { Box, Center, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
@@ -19,7 +16,9 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
-import { PRODUCTS } from "components/product-pages/common/nav/data";
+import { PRODUCTS, metrics } from "components/product-pages/common/nav/data";
+import { Heading, Text } from "tw-components";
+import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 
 const TRACKING_CATEGORY = "homepage";
 
@@ -85,13 +84,28 @@ const HomePage: ThirdwebNextPage = () => {
             products={filterProducts("payments")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
+          <LandingCardWithMetrics
+            title={
+              <Center flexDir="column">
+                <Heading size="display.sm" color="white">
+                  Trusted by the best
+                </Heading>
+
+                <Text size="body.lg" mt={6}>
+                  Powering web3 apps across verticals — from onchain games to
+                  creator platforms.
+                </Text>
+              </Center>
+            }
+            desktopColumns={3}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            metrics={metrics}
+          />
+
           <WithoutThirdwebSection />
           <ValuesSection />
           <Suspense>
-            <BuildSection />
             <SDKSection />
-            <LaunchSection />
-            <ManageSection />
             <AnyEVMSection />
             <PricingSection TRACKING_CATEGORY={TRACKING_CATEGORY} onHomepage />
             <SolutionsSection />
