@@ -47,7 +47,7 @@ export class CryptoDefiWallet extends AbstractClientWallet<CryptoDefiWalletAddit
   static id = walletIds.coreWallet as string;
 
   public get walletName() {
-    return "Defi wallet" as const;
+    return "Crypto Defi wallet" as const;
   }
 
   constructor(options: CryptoDefiWalletOptions) {

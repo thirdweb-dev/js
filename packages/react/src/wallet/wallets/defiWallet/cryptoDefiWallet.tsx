@@ -27,7 +27,7 @@ export const cryptoDefiWallet = (
     id: CryptoDefiWallet.id,
     recommended: options?.recommended,
     meta: {
-      name: "Defi Wallet",
+      name: "Crypto Defi Wallet",
       urls: {
         chrome:
           "https://chrome.google.com/webstore/detail/cryptocom-wallet-extensio/hifafgmccdpekplomjjkcfgodnhcellj",

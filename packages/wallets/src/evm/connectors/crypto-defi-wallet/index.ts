@@ -24,7 +24,7 @@ export class CryptoDefiWalletConnector extends InjectedConnector {
 
   constructor(arg: CryptoDefiWalletConnectorConstructorArg) {
     const defaultOptions = {
-      name: "Defi Wallet",
+      name: "Crypto Defi Wallet",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
       getProvider: getInjectedCryptoDefiWalletProvider,
