@@ -43,7 +43,7 @@ export function useBalance(tokenAddress?: ContractAddress) {
 }
 
 /**
- * A hook to get the native balance from a wallet address
+ * Get the native token balance of a wallet address on the `activeChain` network set in the `ThirdwebProvider`
  *
  * @param walletAddress - the address of the wallet that you want to get the native balance
  * @returns the balance of the given wallet address
@@ -54,7 +54,7 @@ export function useBalanceForAddress(walletAddress: string) {
   const chainId = activeChain.chainId;
   const sdk = useSDK();
   const cacheKey = useMemo(() => {
-    return cacheKeys.wallet.balance(chainId || -1, walletAddress);
+    return cacheKeys.wallet.balance(chainId, walletAddress);
   }, [chainId, walletAddress]);
 
   return useQuery(cacheKey, async () => {
