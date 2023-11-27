@@ -29,7 +29,7 @@ export const PaymentsSettingsChecklist: React.FC<
     },
   ];
 
-  if (!sellerData?.id) {
+  if (!sellerData?.id || sellerData?.has_production_access) {
     return null;
   }
 

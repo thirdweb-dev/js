@@ -376,14 +376,16 @@ export const CreateUpdateCheckoutButton: React.FC<
       checkout?.thirdweb_client_id || (!checkoutId && apiKeys[0]?.key) || "",
     // dashboard only inputs, parsing mintMethod
     priceAndCurrencySymbol: {
-      price: parseInt(
-        checkout?.contract_args.mintMethod.payment.value || 0,
-      ).toString(),
+      price: checkout?.contract_args?.mintMethod?.payment
+        ? parseInt(
+            checkout?.contract_args.mintMethod.payment.value || 0,
+          ).toString()
+        : "0",
       currencySymbol:
-        checkout?.contract_args.mintMethod.payment.currency || "ETH",
+        checkout?.contract_args?.mintMethod?.payment?.currency || "ETH",
     },
-    mintFunctionName: checkout?.contract_args.mintMethod.name || "",
-    mintFunctionArgs: checkout?.contract_args.mintMethod.args || {},
+    mintFunctionName: checkout?.contract_args?.mintMethod?.name || "",
+    mintFunctionArgs: checkout?.contract_args?.mintMethod?.args || {},
   };
 
   const form = useForm<CreateUpdateCheckoutDashboardInput>({

@@ -13,10 +13,14 @@ import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";
 import { LinkButton, Text } from "tw-components";
 import { EnablePaymentsButton } from "../enable-payments-button";
-import { validPaymentsChainIdsMainnets } from "@3rdweb-sdk/react/hooks/usePayments";
+import {
+  usePaymentsSellerByAccountId,
+  validPaymentsChainIdsMainnets,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 
 interface PaymentContractsTableProps {
   paymentContracts: ContractWithMetadata[];
+  accountId: string;
   isLoading: boolean;
   isFetched: boolean;
 }
@@ -29,10 +33,12 @@ const columnHelper = createColumnHelper<ContractWithMetadata>();
 
 export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
   paymentContracts,
+  accountId,
   isLoading,
   isFetched,
 }) => {
   const queryClient = useQueryClient();
+  const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
 
   const columns = [
     columnHelper.accessor((row) => row, {
@@ -87,7 +93,7 @@ export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
 
         const isMainnet = validPaymentsChainIdsMainnets.includes(chainId ?? 0);
 
-        if (isMainnet) {
+        if (isMainnet && !sellerData?.has_production_access) {
           return (
             <LinkButton
               colorScheme="blackAlpha"
