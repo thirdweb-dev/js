@@ -96,9 +96,10 @@ export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
-  const biconomyForwarder = CONTRACT_ADDRESSES[chainId].biconomyForwarder;
+  const biconomyForwarder =
+    CONTRACT_ADDRESSES[chainId]?.biconomyForwarder || AddressZero;
   const openzeppelinForwarder =
-    CONTRACT_ADDRESSES[chainId].openzeppelinForwarder;
+    CONTRACT_ADDRESSES[chainId]?.openzeppelinForwarder || AddressZero;
 
   return contractName && contractName === "Pack"
     ? []

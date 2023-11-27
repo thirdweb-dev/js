@@ -171,6 +171,8 @@ export const ConnectedWalletDetails: React.FC<{
           });
       } else if (activeWallet.walletId === walletIds.smartWallet) {
         setOverrideWalletIconUrl(smartWalletIcon);
+      } else {
+        setOverrideWalletIconUrl(undefined);
       }
     } else {
       setOverrideWalletIconUrl(undefined);

@@ -14,10 +14,10 @@ export function getDefaultTrustedForwarders(
 ): string[] {
   const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
   const biconomyForwarder = chainEnum
-    ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
+    ? CONTRACT_ADDRESSES[chainEnum]?.biconomyForwarder
     : AddressZero;
   const openzeppelinForwarder = chainEnum
-    ? CONTRACT_ADDRESSES[chainEnum].openzeppelinForwarder
+    ? CONTRACT_ADDRESSES[chainEnum]?.openzeppelinForwarder
     : AddressZero;
   return [openzeppelinForwarder, biconomyForwarder].filter(
     (a) => a !== AddressZero,
