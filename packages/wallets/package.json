@@ -343,6 +343,13 @@
       },
       "default": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.cjs.js"
     },
+    "./evm/wallets/crypto-defi-wallet": {
+      "module": {
+        "browser": "./evm/wallets/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.browser.esm.js",
+        "default": "./evm/wallets/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.esm.js"
+      },
+      "default": "./evm/wallets/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.cjs.js"
+    },
     "./evm/wallets/aws-secrets-manager": {
       "module": {
         "browser": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.browser.esm.js",
@@ -405,6 +412,13 @@
         "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js"
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
+    },
+    "./evm/connectors/crypto-defi-wallet": {
+      "module": {
+        "browser": "./evm/connectors/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-connectors-crypto-defi-wallet.browser.esm.js",
+        "default": "./evm/connectors/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-connectors-crypto-defi-wallet.esm.js"
+      },
+      "default": "./evm/connectors/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-connectors-crypto-defi-wallet.cjs.js"
     },
     "./evm/connectors/token-bound-smart-wallet": {
       "module": {

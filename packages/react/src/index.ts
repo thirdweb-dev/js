@@ -20,6 +20,7 @@ export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 export { okxWallet } from "./wallet/wallets/okx/okxWallet";
 export { coreWallet } from "./wallet/wallets/coreWallet/coreWallet";
+export { cryptoDefiWallet } from "./wallet/wallets/defiWallet/cryptoDefiWallet";
 export { rabbyWallet } from "./wallet/wallets/rabby/rabbyWallet";
 export { coin98Wallet } from "./wallet/wallets/coin98/coin98Wallet";
 export { darkTheme, lightTheme } from "./design-system/index";
