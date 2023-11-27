@@ -40,7 +40,7 @@
     "js-awe": "^1.0.63",
     "tinybench": "^2.5.1",
     "typescript": "^5.3.2",
-    "viem": "^1.19.6"
+    "viem": "^1.19.9"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
