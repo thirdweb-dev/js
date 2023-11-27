@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
 import { useSDK } from "./useSDK";
+import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
 
 /**
  * A hook to get the native or (optional) ERC20 token balance of the connected wallet.
@@ -49,7 +50,8 @@ export function useBalance(tokenAddress?: ContractAddress) {
  */
 export function useBalanceForAddress(walletAddress: string) {
   invariant(walletAddress, "wallet address is not provided");
-  const { chainId } = useThirdwebConnectedWalletContext();
+  const { activeChain } = useWalletContext();
+  const chainId = activeChain.chainId;
   const sdk = useSDK();
   const cacheKey = useMemo(() => {
     return cacheKeys.wallet.balance(chainId || -1, walletAddress);
