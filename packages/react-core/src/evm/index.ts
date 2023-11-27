@@ -32,6 +32,7 @@ export {
   useChainId,
   useActiveChain,
   useChain,
+  useBalanceForAddress,
 } from "./hooks/wallet";
 
 // Utilities and Others
