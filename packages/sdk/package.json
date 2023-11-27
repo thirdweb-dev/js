@@ -98,7 +98,7 @@
     "deep-equal-in-any-order": "^1.1.18",
     "dotenv-mono": "^1.3.10",
     "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.9.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-import": "^2.26.0",
