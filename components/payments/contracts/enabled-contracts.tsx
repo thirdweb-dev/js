@@ -35,7 +35,11 @@ export const EnabledContracts = () => {
             </Text>
           </Flex>
         </Alert>
-      ) : paymentEnabledContracts?.length === 0 ? (
+      ) : (paymentEnabledContracts || []).length > 0 ? (
+        paymentEnabledContracts?.map((contract) => (
+          <PaymentEnabledCard key={contract.id} contract={contract} />
+        ))
+      ) : (
         <Card p={8} bgColor="backgroundCardHighlight" my={6}>
           <Center as={Stack} spacing={2}>
             <Heading size="title.sm">No payment-enabled contracts</Heading>
@@ -45,10 +49,6 @@ export const EnabledContracts = () => {
             </Text>
           </Center>
         </Card>
-      ) : (
-        paymentEnabledContracts?.map((contract) => (
-          <PaymentEnabledCard key={contract.id} contract={contract} />
-        ))
       )}
     </Flex>
   );

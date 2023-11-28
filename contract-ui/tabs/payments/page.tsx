@@ -27,6 +27,7 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
     isLoading,
     isError,
   } = usePaymentsEnabledContracts();
+
   useEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -86,7 +87,9 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
           chainId={chainId}
           accountId={account.id}
         />
-      ) : null}
+      ) : (
+        <NoWalletConnectedPayments />
+      )}
     </Flex>
   );
 };

@@ -106,7 +106,7 @@ export const PaymentsSettingsAccount: React.FC<
         <Flex flexDir="column" gap={6}>
           <FormControl isInvalid={!!form.formState.errors.company_logo_url}>
             <FormLabel>Company Logo</FormLabel>
-            <Box w={24}>
+            <Box w={28}>
               <PaymentsSettingsFileUploader
                 value={form.watch("company_logo_url")}
                 onUpdate={(value: string) => {

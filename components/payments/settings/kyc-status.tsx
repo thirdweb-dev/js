@@ -17,7 +17,7 @@ export const SellerVerificationStatusRecord: Record<
   },
   sanctions_failure: {
     message:
-      "Your verification failed. Contact support@thirdweb.com for more details.",
+      "Your verification failed. Contact compliance@thirdweb.com for more details.",
     type: "error",
   },
   success: { message: "Verification successful.", type: "success" },
@@ -36,14 +36,17 @@ export const KycStatus: React.FC<KycStatusProps> = ({ sessionId }) => {
 
   return (
     <Alert
-      status={SellerVerificationStatusRecord[kycStatus.status].type}
+      status={
+        SellerVerificationStatusRecord[kycStatus.status]?.type || "warning"
+      }
       variant="left-accent"
       borderRadius="lg"
       mt={2}
     >
       <AlertIcon />
       <Text as={AlertDescription}>
-        {SellerVerificationStatusRecord[kycStatus.status].message}
+        {SellerVerificationStatusRecord[kycStatus.status]?.message ||
+          "Something went wrong. Contact compliance@thirdweb.com for more details."}
       </Text>
     </Alert>
   );
