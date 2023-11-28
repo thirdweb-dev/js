@@ -303,7 +303,7 @@ export function ThirdwebWalletProvider(
         return;
       }
 
-      const walletObj = props.supportedWallets.find(
+      let walletObj = props.supportedWallets.find(
         (W) => W.id === walletInfo.walletId,
       );
 
@@ -373,6 +373,19 @@ export function ThirdwebWalletProvider(
           // last used personal wallet is no longer present in the supported wallets
           setConnectionStatus("disconnected");
           return;
+        }
+      } else {
+        // if walletObj requires a personal wallet, but the saved data does not have it
+        // connect to personal wallet only ( this happens when user switches to personal wallet and reloads the page )
+        if (walletObj.personalWallets) {
+          // connect the personal wallet instead
+          walletObj = walletObj.personalWallets.find(
+            (w) => w.id === walletInfo.walletId,
+          );
+          if (!walletObj) {
+            setConnectionStatus("disconnected");
+            return;
+          }
         }
       }
 
