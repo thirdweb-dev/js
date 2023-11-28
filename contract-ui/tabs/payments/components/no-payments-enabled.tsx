@@ -22,10 +22,7 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
   const isMainnet = validPaymentsChainIdsMainnets.includes(chainId ?? 0);
   const isSupportedChain = validPaymentsChainIds.includes(chainId ?? 0);
 
-  const needsVerification =
-    isMainnet &&
-    !sellerData?.date_personal_documents_verified &&
-    !sellerData?.date_business_documents_verified;
+  const needsVerification = isMainnet && !sellerData?.has_production_access;
 
   return (
     <Card p={8} bgColor="backgroundCardHighlight" my={6}>

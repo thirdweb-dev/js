@@ -30,7 +30,6 @@ import {
 import {
   ChainIdToSupportedCurrencies,
   CreateUpdateCheckoutInput,
-  hasPaymentsDetectedExtensions,
   usePaymentsCreateUpdateCheckout,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo, useState } from "react";
@@ -329,7 +328,8 @@ export const CreateUpdateCheckoutButton: React.FC<
 > = ({ contractId, contractAddress, checkout, checkoutId }) => {
   const { contract } = useContract(contractAddress);
 
-  const hasDetectedExtensions = hasPaymentsDetectedExtensions(contract);
+  const hasDetectedExtensions = checkout?.contract_type !== "CUSTOM_CONTRACT";
+
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
   const keysQuery = useApiKeys();
