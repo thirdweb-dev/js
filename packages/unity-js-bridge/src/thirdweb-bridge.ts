@@ -329,6 +329,7 @@ class ThirdwebBridge implements TWBridge {
           const authResult = await embeddedWallet.authenticate({
             strategy: "jwt",
             jwt: authOptionsParsed.authToken,
+            encryptionKey: authOptionsParsed.encryptionKey,
           });
           await embeddedWallet.connect({
             chainId: chainIdNumber,
@@ -352,7 +353,11 @@ class ThirdwebBridge implements TWBridge {
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
-          await this.initializeSmartWallet(smartWallet, this.activeWallet, smartWalletAccountOverride);
+          await this.initializeSmartWallet(
+            smartWallet,
+            this.activeWallet,
+            smartWalletAccountOverride,
+          );
         } else {
           // If EOA wallet is not connected, throw error
           throw new Error(
@@ -631,8 +636,11 @@ class ThirdwebBridge implements TWBridge {
     personalWallet: AbstractClientWallet,
     accountAddress?: string,
   ) {
-    if(accountAddress) {
-      console.debug("Initializing smart wallet with account address override:", accountAddress);
+    if (accountAddress) {
+      console.debug(
+        "Initializing smart wallet with account address override:",
+        accountAddress,
+      );
     }
     const personalWalletAddress = await personalWallet.getAddress();
     console.debug("Personal wallet address:", personalWalletAddress);
@@ -687,13 +695,18 @@ class ThirdwebBridge implements TWBridge {
       optionsParsed.nativeTokenLimitPerTransactionInWei,
     );
     const startDate = BigNumber.from(optionsParsed.startDate).toNumber();
-    const expirationDate = BigNumber.from(optionsParsed.expirationDate).toNumber();
-    const result = await smartWallet.createSessionKey(optionsParsed.signerAddress, {
-      approvedCallTargets: approvedCallTargets,
-      nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
-      startDate: startDate,
-      expirationDate: expirationDate,
-    });
+    const expirationDate = BigNumber.from(
+      optionsParsed.expirationDate,
+    ).toNumber();
+    const result = await smartWallet.createSessionKey(
+      optionsParsed.signerAddress,
+      {
+        approvedCallTargets: approvedCallTargets,
+        nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
+        startDate: startDate,
+        expirationDate: expirationDate,
+      },
+    );
     return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
@@ -705,7 +718,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getLatestBlockNumber(){
+  public async getLatestBlockNumber() {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
@@ -713,19 +726,23 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getBlock(blockNumber: string){
+  public async getBlock(blockNumber: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
-    const res = await this.activeSDK.getProvider().getBlock(Number(blockNumber));
+    const res = await this.activeSDK
+      .getProvider()
+      .getBlock(Number(blockNumber));
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getBlockWithTransactions(blockNumber: string){
+  public async getBlockWithTransactions(blockNumber: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
-    const res = await this.activeSDK.getProvider().getBlockWithTransactions(Number(blockNumber));
+    const res = await this.activeSDK
+      .getProvider()
+      .getBlockWithTransactions(Number(blockNumber));
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
