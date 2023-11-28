@@ -1,22 +1,18 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import {
-  Container,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { iconSize, radius, spacing } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
-import styled from "@emotion/styled";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AppleIcon } from "../icons/AppleIcon";
 import { ChromeIcon } from "../icons/ChromeIcon";
 import { PlayStoreIcon } from "../icons/PlayStoreIcon";
 import { Text } from "../../../components/text";
-import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const GetStartedScreen: React.FC<{
   onBack?: () => void;
@@ -28,6 +24,9 @@ export const GetStartedScreen: React.FC<{
   header?: React.ReactNode;
   footer?: React.ReactNode;
   showBack?: boolean;
+  locale: {
+    scanToDownload: string;
+  };
 }> = ({
   walletName,
   walletIconURL,
@@ -37,14 +36,16 @@ export const GetStartedScreen: React.FC<{
   header,
   footer,
   onBack,
+  locale: localeProp,
 }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
 
+  const locale = useTWLocale().connectWallet.download;
+
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
-  const isCompact = useContext(ModalConfigCtx).modalSize === "compact";
 
   const handleBack = onBack
     ? () => {
@@ -67,6 +68,9 @@ export const GetStartedScreen: React.FC<{
             walletName={walletName}
             walletIconURL={walletIconURL}
             onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
+            }}
           />
         )}
 
@@ -78,6 +82,9 @@ export const GetStartedScreen: React.FC<{
             walletName={walletName}
             walletIconURL={walletIconURL}
             onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
+            }}
           />
         )}
 
@@ -104,7 +111,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <ChromeIcon size={iconSize.lg} />
-                    <span>Download Chrome Extension</span>
+                    <span>{locale.chrome}</span>
                   </ButtonLink>
                 )}
 
@@ -121,7 +128,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <PlayStoreIcon size={iconSize.lg} />
-                    <span>Download on Google Play</span>
+                    <span>{locale.android}</span>
                   </ButtonLink>
                 )}
 
@@ -138,7 +145,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <AppleIcon size={iconSize.lg} />
-                    <span>Download on App Store</span>
+                    <span>{locale.iOS}</span>
                   </ButtonLink>
                 )}
               </Container>
@@ -148,25 +155,6 @@ export const GetStartedScreen: React.FC<{
 
         {!isScanScreen && footer}
       </Container>
-
-      {showScreen === "base" && (
-        <>
-          {isCompact && <Spacer y="xs" />}
-          <ScreenBottomContainer
-            style={
-              isCompact
-                ? undefined
-                : {
-                    borderTop: "none",
-                  }
-            }
-          >
-            <Text size="sm" center>
-              Get started with {walletName}
-            </Text>
-          </ScreenBottomContainer>
-        </>
-      )}
     </Container>
   );
 };
@@ -178,6 +166,9 @@ const InstallScanScreen: React.FC<{
   platformIcon: React.ReactNode;
   walletIconURL: string;
   onBack?: () => void;
+  locale: {
+    scanToDownload: string;
+  };
 }> = (props) => {
   return (
     <Container animate="fadein" expand>
@@ -205,9 +196,8 @@ const InstallScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <Text multiline center>
-          Scan with your phone to download <br /> {props.walletName} from{" "}
-          {props.platform}
+        <Text multiline center balance>
+          {props.locale.scanToDownload}
         </Text>
 
         <Spacer y="xs" />
@@ -216,24 +206,27 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-export const ButtonLink = styled.button<{ theme?: Theme }>`
-  all: unset;
-  text-decoration: none;
-  padding: ${spacing.sm} ${spacing.md};
-  border-radius: ${radius.sm};
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  font-weight: 500;
-  color: ${(p) => p.theme.colors.secondaryButtonText};
-  background: ${(p) => p.theme.colors.secondaryButtonBg};
-  transition: 100ms ease;
-  &:hover {
-    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
-    text-decoration: none;
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+export const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    textDecoration: "none",
+    padding: `${spacing.sm} ${spacing.md}`,
+    borderRadius: radius.sm,
+    display: "flex",
+    alignItems: "center",
+    gap: spacing.md,
+    cursor: "pointer",
+    boxSizing: "border-box",
+    width: "100%",
+    fontWeight: 500,
+    color: theme.colors.secondaryButtonText,
+    background: theme.colors.secondaryButtonBg,
+    transition: "100ms ease",
+    "&:hover": {
+      background: theme.colors.secondaryButtonHoverBg,
+      textDecoration: "none",
+      color: theme.colors.primaryText,
+    },
+  };
+});

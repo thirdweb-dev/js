@@ -1,5 +1,29 @@
 # @thirdweb-dev/chains
 
+## 0.1.59
+
+### Patch Changes
+
+- [#1967](https://github.com/thirdweb-dev/js/pull/1967) [`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Arbitrum Sepolia to defaultChains
+
+- [#1990](https://github.com/thirdweb-dev/js/pull/1990) [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281) Thanks [@jnsdls](https://github.com/jnsdls)! - deprecate `allChains` `getChainById` and `getChainBySlug`
+
+  all of these would (necessarily) pull in every single chain in the package (>600kb)
+
+  instead these can be replaced with their async variants:
+
+  - `allChains` -> `await fetchChains()`
+  - `getChainById(chainId)` -> `await getChainByIdAsync(chainId)`
+  - `getChainBySlug(chainSlug)` -> `await getChainBySlugAsync(chainSlug)`
+
+  these async functions will return the same data as their sync counterparts, but without having to pull in every single chain at build-time.
+
+## 0.1.58
+
+### Patch Changes
+
+- [#1911](https://github.com/thirdweb-dev/js/pull/1911) [`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e) Thanks [@iketw](https://github.com/iketw)! - Syncs Chains
+
 ## 0.1.57
 
 ### Patch Changes

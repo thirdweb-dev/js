@@ -6,8 +6,8 @@ import { getKeylessTxn } from "./getKeylessTxn";
 /**
  *
  * @public
- * @param transaction: Unsigned transaction object
- * @param signature: Signature bytes
+ * @param transaction - Unsigned transaction object
+ * @param signature - Signature bytes
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,

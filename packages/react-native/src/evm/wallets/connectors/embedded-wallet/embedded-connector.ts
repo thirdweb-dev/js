@@ -19,8 +19,11 @@ import {
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
 import {
+  clearConnectedAuthStrategy,
   clearConnectedEmail,
+  getConnectedAuthStrategy,
   getConnectedEmail,
+  saveConnectedAuthStrategy,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
 import {
@@ -39,11 +42,15 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   email?: string;
 
+  connectedAuthStrategy?: AuthParams["strategy"];
+
   constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
 
     this.email = getConnectedEmail();
+
+    this.connectedAuthStrategy = getConnectedAuthStrategy();
   }
 
   async connect(options?: EmbeddedWalletConnectionArgs) {
@@ -59,14 +66,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       await this.switchChain(options.chainId);
     }
 
-    if (this.email) {
-      saveConnectedEmail(this.email);
-    }
     return this.getAddress();
   }
 
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const strategy = params.strategy;
+    this.connectedAuthStrategy = strategy;
     switch (strategy) {
       case "email_verification": {
         return await this.validateEmailOTP({
@@ -78,6 +83,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       case "google": {
         return this.socialLogin({
           provider: AuthProvider.GOOGLE,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "facebook": {
+        return this.socialLogin({
+          provider: AuthProvider.FACEBOOK,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "apple": {
+        return this.socialLogin({
+          provider: AuthProvider.APPLE,
           redirectUrl: params.redirectUrl,
         });
       }
@@ -160,7 +177,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         this.options.clientId,
       );
       this.email = email;
-      saveConnectedEmail(email);
 
       return {
         user: {
@@ -179,11 +195,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       );
       if (error instanceof Error) {
         throw new Error(
-          `Error logging in with ${oauthOption.provider}: ${error.message}`,
+          `Error signing in with ${oauthOption.provider}: ${error.message}`,
         );
       } else {
         throw new Error(
-          `An unknown error occurred logging in with ${oauthOption.provider}`,
+          `An unknown error occurred signing in with ${oauthOption.provider}`,
         );
       }
     }
@@ -216,6 +232,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   async disconnect(): Promise<void> {
     clearConnectedEmail();
+    clearConnectedAuthStrategy();
     await logoutUser(this.options.clientId);
     await this.onDisconnect();
     this.signer = undefined;
@@ -260,6 +277,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.signer = this.signer.connect(
         new providers.JsonRpcProvider(this.options.chain.rpc[0]),
       );
+    }
+
+    if (this.email) {
+      saveConnectedEmail(this.email);
+    }
+    if (this.connectedAuthStrategy) {
+      saveConnectedAuthStrategy(this.connectedAuthStrategy);
     }
 
     return signer;
@@ -334,6 +358,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   getEmail() {
     return this.email;
+  }
+
+  getConnectedAuthStrategy() {
+    return this.connectedAuthStrategy;
   }
 }
 

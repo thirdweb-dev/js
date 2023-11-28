@@ -26,5 +26,6 @@ export default {
   "shortName": "hmy-s2",
   "slip44": 1023,
   "slug": "harmony-shard-2",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

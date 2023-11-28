@@ -3,6 +3,7 @@ import { Input } from "./formElements";
 import { Container } from "./basic";
 import { media, fontSize, spacing } from "../design-system";
 import styled from "@emotion/styled";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export function OTPInput(props: {
   digits: number;
@@ -115,20 +116,23 @@ export function OTPInput(props: {
   );
 }
 
-const OTPInputBox = /* @__PURE__ */ styled(Input)`
-  appearance: none;
-  -webkit-appearance: none;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: ${fontSize.md};
-  padding: ${spacing.xs};
-  ${media.mobile} {
-    width: 35px;
-    height: 35px;
-  }
-  &[data-verify-status="invalid"] {
-    color: ${(p) => p.theme.colors.danger};
-    border-color: ${(p) => p.theme.colors.danger};
-  }
-`;
+const OTPInputBox = /* @__PURE__ */ styled(Input)(() => {
+  const theme = useCustomTheme();
+  return {
+    appearance: "none",
+    WebkitAppearance: "none",
+    width: "40px",
+    height: "40px",
+    textAlign: "center",
+    fontSize: fontSize.md,
+    padding: spacing.xs,
+    [media.mobile]: {
+      width: "35px",
+      height: "35px",
+    },
+    "&[data-verify-status='invalid']": {
+      color: theme.colors.danger,
+      borderColor: theme.colors.danger,
+    },
+  };
+});

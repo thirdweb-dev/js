@@ -1,8 +1,7 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
 import {
   CLOSE_MODAL_STATE,
   WalletConnectSessionProposalModal,
@@ -14,6 +13,7 @@ export const SessionProposalModal = () => {
   const { modalState, setModalState } = useModalState();
   const { data: proposalData } =
     modalState as WalletConnectSessionProposalModal;
+  const walletConnectHandler = useWalletConnectHandler();
 
   const wallet = useWallet();
 
@@ -41,7 +41,7 @@ export const SessionProposalModal = () => {
           minWidth={100}
           borderColor="border"
           onPress={async () => {
-            (wallet as unknown as IWalletConnectReceiver).rejectSession();
+            walletConnectHandler?.rejectSession();
             onClose();
           }}
         >
@@ -61,9 +61,7 @@ export const SessionProposalModal = () => {
             if (!wallet) {
               throw new Error("Wallet not connected.");
             }
-            await (
-              wallet as unknown as IWalletConnectReceiver
-            ).approveSession();
+            await walletConnectHandler?.approveSession();
             onClose();
           }}
         >

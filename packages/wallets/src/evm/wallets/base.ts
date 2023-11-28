@@ -41,6 +41,7 @@ export abstract class AbstractClientWallet<
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
   #connectParams: ConnectParams<TConnectParams> | undefined;
+
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -88,6 +89,10 @@ export abstract class AbstractClientWallet<
 
   getConnectParams() {
     return this.#connectParams;
+  }
+
+  getOptions() {
+    return this.options;
   }
 
   async #connect(

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.7",
+  "version": "0.4.10",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -57,7 +57,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",

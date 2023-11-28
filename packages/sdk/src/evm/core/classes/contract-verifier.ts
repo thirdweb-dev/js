@@ -51,9 +51,9 @@ export class ContractVerifier extends RPCConnectionHandler {
    *   explorerAPIKey,
    * );
    * ```
-   * @param contractName
-   * @param explorerAPIUrl
-   * @param explorerAPIKey
+   * @param contractName - Name of the contract to verify
+   * @param explorerAPIUrl - Explorer API URL
+   * @param explorerAPIKey - Explorer API key
    */
   public async verifyThirdwebContract(
     contractName: string,
@@ -105,9 +105,9 @@ export class ContractVerifier extends RPCConnectionHandler {
    *   explorerAPIKey,
    * );
    * ```
-   * @param contractAddress
-   * @param explorerAPIUrl
-   * @param explorerAPIKey
+   * @param contractAddress - Address of the contract to verify
+   * @param explorerAPIUrl - Explorer API URL
+   * @param explorerAPIKey - Explorer API key
    */
   public async verifyContract(
     contractAddress: string,
