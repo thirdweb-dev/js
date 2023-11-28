@@ -60,7 +60,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           miniTitle="Checkout"
           title="NFT checkout"
           titleWithGradient="with a credit card"
-          subtitle="Enable users to buy digital assets with a credit card. Onboard everyone — even if they've never created a web3 wallet or bought crypto before."
+          subtitle="Enable users to buy digital assets with a credit card. Onboard everyone, even if they've never created a wallet or bought crypto before."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://withpaper.com/sign-up"
           contactUsTitle="Book Demo"
@@ -130,22 +130,22 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-fundraise.svg")}
               title="Fundraising"
-              description="Make it easy for your users to donate to charitable causes, or fund your business idea with digital collectibles which they can purchase using their credit cards."
+              description="Make it easy for your users to donate to charitable causes, or fund your business idea with digital collectibles."
             />
           </Card>
         </LandingGridSection>
 
         <LandingGuidesShowcase
-          title="The best web3 apps use thirdweb's smart contract tools"
+          title="The best web3 apps use thirdweb"
+          description=""
           category={TRACKING_CATEGORY}
-          description="Seamlessly integrate your smart contracts into any app so you can focus on building a great user experience."
           guides={CASE_STUDIES}
           caseStudies
         />
 
         <LandingEndCTA
-          title="Start building"
-          titleWithGradient="today."
+          title="Integrate checkouts"
+          titleWithGradient="in a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://withpaper.com/sign-up"
           gradient="linear(to-r, #00A876, #75FFD6)"
