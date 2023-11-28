@@ -437,14 +437,9 @@ export class Erc721<
         walletAddress || this.contractWrapper.getSignerAddress(),
         this.getAllOwners(queryParams),
       ]);
-      let ownedTokens = (allOwners || []).filter(
+      const ownedTokens = (allOwners || []).filter(
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
       );
-      if (queryParams) {
-        const start = queryParams?.start || 0;
-        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        ownedTokens = ownedTokens.slice(start, start + count);
-      }
       return await Promise.all(
         ownedTokens.map(async (i) => this.get(i.tokenId)),
       );
