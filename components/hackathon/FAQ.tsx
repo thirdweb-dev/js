@@ -5,7 +5,7 @@ import { LandingFAQ } from "components/landing-pages/faq";
 const faqs = [
   {
     title: "When is the hackathon being held?",
-    description: "The event will be held from December 8 to December 12, 2023",
+    description: "The event will be held from December 8 to December 10, 2023.",
   },
   {
     title: "Where is the hackathon held?",
