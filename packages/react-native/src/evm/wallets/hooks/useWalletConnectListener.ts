@@ -1,21 +1,16 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
-import {
-  WCProposal,
-  WCRequest,
-  WalletConnectHandler,
-} from "@thirdweb-dev/wallets";
+import { WCProposal, WCRequest } from "@thirdweb-dev/wallets";
 
 /**
  * Registers listeners for wallet connect if the active wallet
  * is also a WalletConnectReceiver
  */
-export function useWalletConnectListener(
-  walletConnectHandler?: WalletConnectHandler,
-) {
+export function useWalletConnectListener() {
   const activeWallet = useWallet();
   const { setModalState } = useModalState();
+  const walletConnectHandler = useWalletConnectHandler();
 
   const onSessionProposal = useCallback(
     (proposal: WCProposal) => {

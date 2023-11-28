@@ -11,6 +11,9 @@ import {
   ConnectParams,
   CreateAsyncStorage,
   SignerWallet,
+  WalletConnectHandler,
+  WalletConnectReceiverConfig,
+  WalletConnectV2Handler,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
@@ -24,6 +27,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { isWalletConnectReceiverEnabled } from "../utils/receiver";
 
 const LAST_CONNECTED_WALLET_STORAGE_KEY = "lastConnectedWallet";
 
@@ -92,6 +96,7 @@ type ThirdwebWalletContextData = {
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
   clientId?: string;
+  walletConnectHandler: WalletConnectHandler | undefined;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -130,6 +135,9 @@ export function ThirdwebWalletProvider(
   const [activeWalletConfig, setActiveWalletConfig] = useState<
     WalletConfig | undefined
   >();
+
+  const [walletConnectHandler, setWalletConnectHandler] =
+    useState<WalletConnectHandler>();
 
   if (!lastConnectedWalletStorage) {
     lastConnectedWalletStorage =
@@ -171,6 +179,34 @@ export function ThirdwebWalletProvider(
       activeWallet.updateChains(props.chains);
     }
   }, [activeWallet, props.chains]);
+
+  useEffect(() => {
+    if (!activeWallet) {
+      return;
+    }
+
+    const initWCHandler = async () => {
+      const wcReceiverOptions =
+        activeWallet?.getOptions() as WalletConnectReceiverConfig;
+
+      const handler = new WalletConnectV2Handler(
+        {
+          walletConnectReceiver: {
+            ...(wcReceiverOptions?.walletConnectReceiver === true
+              ? {}
+              : wcReceiverOptions?.walletConnectReceiver),
+          },
+        },
+        activeWallet,
+      );
+      await handler.init();
+      setWalletConnectHandler(handler);
+    };
+
+    if (isWalletConnectReceiverEnabled(activeWallet)) {
+      initWCHandler();
+    }
+  }, [activeWallet]);
 
   const setConnectedWallet = useCallback(
     async (
@@ -548,6 +584,7 @@ export function ThirdwebWalletProvider(
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
         clientId: props.clientId,
+        walletConnectHandler: walletConnectHandler,
       }}
     >
       {props.children}
@@ -563,6 +600,16 @@ export function useWalletContext() {
     );
   }
   return ctx;
+}
+
+export function useWalletConnectHandler() {
+  const ctx = useWalletContext();
+  if (!ctx) {
+    throw new Error(
+      `useWalletConnectHandler() can only be used inside <ThirdwebProvider />`,
+    );
+  }
+  return ctx.walletConnectHandler;
 }
 
 async function getLastConnectedWalletInfo() {
