@@ -383,6 +383,7 @@ export function ThirdwebWalletProvider(
             (w) => w.id === walletInfo.walletId,
           );
           if (!walletObj) {
+            setConnectionStatus("disconnected");
             return;
           }
         }
