@@ -17,10 +17,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  type QueryAllParams,
-} from "../../../core/schema/QueryParams";
+import { type QueryAllParams } from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
