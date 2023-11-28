@@ -43,7 +43,7 @@ export class RpcError<T = undefined> extends Error {
 export class ProviderRpcError<T = undefined> extends RpcError<T> {
   /**
    * Create an Ethereum Provider JSON-RPC error.
-   * `code` must be an integer in the 1000 <= 4999 range.
+   * `code` must be an integer in the `1000 <= 4999` range.
    */
   constructor(
     /** Human-readable string */

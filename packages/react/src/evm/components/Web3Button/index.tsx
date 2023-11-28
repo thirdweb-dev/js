@@ -1,7 +1,7 @@
 import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { Theme, ThemeObjectOrType } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import {
   ConnectWallet,
   ConnectWalletProps,
@@ -17,11 +17,14 @@ import {
   useConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
-import type { CallOverrides, ContractInterface } from "ethers";
+import type { ContractInterface } from "ethers";
 import { PropsWithChildren, useState } from "react";
 import invariant from "tiny-invariant";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { useTheme } from "@emotion/react";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
+import { useTWLocale } from "../../providers/locale-provider";
 
 type ActionFn = (contract: SmartContract) => any;
 
@@ -32,7 +35,6 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
 
-  overrides?: CallOverrides;
   // called with the result
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
@@ -48,7 +50,11 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   style?: React.CSSProperties;
   connectWallet?: Omit<
     ConnectWalletProps,
-    "detailsBtn" | "hideTestnetFaucet" | "switchToActiveChain" | "theme"
+    | "detailsBtn"
+    | "hideTestnetFaucet"
+    | "switchToActiveChain"
+    | "theme"
+    | "hideSwitchToPersonalWallet"
   >;
 }
 
@@ -101,8 +107,10 @@ export const Web3Button = <TAction extends ActionFn>(
   const requiresConfirmation = !useIsHeadlessWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
-  const contextTheme = useTheme() as ThemeObjectOrType;
+  const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
+
+  const locale = useTWLocale();
 
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
@@ -185,7 +193,7 @@ export const Web3Button = <TAction extends ActionFn>(
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
-          "Switch Network"
+          locale.connectWallet.switchNetwork
         )}
       </Button>
     );
@@ -193,7 +201,7 @@ export const Web3Button = <TAction extends ActionFn>(
     if (requiresConfirmation) {
       button = (
         <Popover
-          content={<span>Confirm in Wallet</span>}
+          content={<span>{locale.connectWallet.confirmInWallet}</span>}
           open={confirmStatus === "waiting"}
           onOpenChange={(isOpen) => {
             if (!isOpen) {

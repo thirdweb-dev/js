@@ -40,4 +40,14 @@ export class ContractEncoder<TContract extends BaseContract> {
       encodedArgs,
     );
   }
+
+  public decodeResult(
+    fn: keyof TContract["functions"],
+    encodedArgs: string,
+  ): utils.Result {
+    return this.contractWrapper.readContract.interface.decodeFunctionResult(
+      fn as string,
+      encodedArgs,
+    );
+  }
 }

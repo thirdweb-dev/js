@@ -745,7 +745,7 @@ export class Erc721<
    * // The token ID of the NFT whose metadata you want to update
    * const tokenId = 0;
    * // The new metadata
-   * const metadata = { name: "My NFT", description: "My NFT description""}
+   * const metadata = { name: "My NFT", description: "My NFT description" }
    *
    * await contract.erc721.update(tokenId, metadata);
    * ```
@@ -810,7 +810,7 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options
+   * @param options - optional claim options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
@@ -843,9 +843,9 @@ export class Erc721<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param options - optional claim options
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1

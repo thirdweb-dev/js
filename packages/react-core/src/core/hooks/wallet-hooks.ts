@@ -2,7 +2,10 @@ import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
 import type {
   BloctoWallet,
+  Coin98Wallet,
   CoinbaseWallet,
+  CoreWallet,
+  CryptoDefiWallet,
   EmbeddedWallet,
   FrameWallet,
   LocalWallet,
@@ -11,6 +14,7 @@ import type {
   OKXWallet,
   PaperWallet,
   PhantomWallet,
+  RabbyWallet,
   RainbowWallet,
   SafeWallet,
   SmartWallet,
@@ -25,7 +29,9 @@ export type WalletId = (typeof walletIds)[keyof typeof walletIds];
 
 type WalletIdToWalletTypeMap = {
   metamask: MetaMaskWallet;
+  coin98: Coin98Wallet;
   coinbase: CoinbaseWallet;
+  coreWallet: CoreWallet;
   rainbowWallet: RainbowWallet;
   blocto: BloctoWallet;
   frame: FrameWallet;
@@ -41,6 +47,8 @@ type WalletIdToWalletTypeMap = {
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
   okx: OKXWallet;
+  cryptoDefiWallet: CryptoDefiWallet;
+  rabby: RabbyWallet;
 };
 
 /**

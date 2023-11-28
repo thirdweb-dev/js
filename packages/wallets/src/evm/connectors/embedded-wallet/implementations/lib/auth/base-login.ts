@@ -1,8 +1,9 @@
 import { GET_IFRAME_BASE_URL } from "../../constants/settings";
-import type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
-  GetHeadlessLoginLinkReturnType,
+import {
+  AuthProvider,
+  type AuthAndWalletRpcReturnType,
+  type AuthLoginReturnType,
+  type GetHeadlessLoginLinkReturnType,
 } from "../../interfaces/auth";
 import { AbstractLogin, LoginQuerierTypes } from "./abstract-login";
 
@@ -11,11 +12,13 @@ export class BaseLogin extends AbstractLogin<
   { email: string },
   { email: string; otp: string; recoveryCode?: string }
 > {
-  private async getGoogleLoginUrl(): Promise<GetHeadlessLoginLinkReturnType> {
+  private async getOauthLoginUrl(
+    authProvider: AuthProvider,
+  ): Promise<GetHeadlessLoginLinkReturnType> {
     const result = await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>(
       {
-        procedureName: "getHeadlessGoogleLoginLink",
-        params: undefined,
+        procedureName: "getHeadlessOauthLoginLink",
+        params: { authProvider },
       },
     );
     return result;
@@ -65,14 +68,28 @@ export class BaseLogin extends AbstractLogin<
     }
   };
 
-  override async loginWithGoogle(args?: {
-    openedWindow?: Window | null;
-    closeOpenedWindow?: (openedWindow: Window) => void;
+  private getOauthPopUpSizing(authProvider: AuthProvider) {
+    switch (authProvider) {
+      case AuthProvider.FACEBOOK:
+        return "width=715, height=555";
+      default:
+        return "width=350, height=500";
+    }
+  }
+
+  override async loginWithOauth(args: {
+    oauthProvider: AuthProvider;
+    openedWindow?: Window | null | undefined;
+    closeOpenedWindow?: ((openedWindow: Window) => void) | undefined;
   }): Promise<AuthLoginReturnType> {
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
     if (!win) {
-      win = window.open("", "Login", "width=350, height=500");
+      win = window.open(
+        "",
+        "Login",
+        this.getOauthPopUpSizing(args.oauthProvider),
+      );
       isWindowOpenedByFn = true;
     }
     if (!win) {
@@ -81,11 +98,10 @@ export class BaseLogin extends AbstractLogin<
     // logout the user
     // fetch the url to open the login window from iframe
     const [{ loginLink }] = await Promise.all([
-      this.getGoogleLoginUrl(),
+      this.getOauthLoginUrl(args.oauthProvider),
       this.preLogin(),
     ]);
     win.location.href = loginLink;
-
     // listen to result from the login window
     const result = await new Promise<AuthAndWalletRpcReturnType>(
       (resolve, reject) => {
@@ -146,6 +162,7 @@ export class BaseLogin extends AbstractLogin<
                 {
                   eventType: "injectDeveloperClientIdResult",
                   developerClientId: this.clientId,
+                  authOption: args.oauthProvider,
                 },
                 GET_IFRAME_BASE_URL(),
               );

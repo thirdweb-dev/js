@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from "react";
-import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
 import { isMobile } from "../utils/isMobile";
 import { Theme } from "../../design-system";
 import { WelcomeScreen } from "../../wallet/ConnectWallet/screens/types";
+import { useTWLocale } from "./locale-provider";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -51,9 +51,10 @@ export const WalletUIStatesProvider = (
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const _isMobile = isMobile();
+  const locale = useTWLocale();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: props.title || defaultModalTitle,
+    title: props.title || locale.connectWallet.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
     modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",

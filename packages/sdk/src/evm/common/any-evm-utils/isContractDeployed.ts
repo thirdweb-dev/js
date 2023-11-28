@@ -4,8 +4,8 @@ import { providers } from "ethers";
  * Check if a contract exists at the given address
  *
  * @internal
- * @param address
- * @param provider
+ * @param address - The address to check
+ * @param provider - The provider to use
  */
 export async function isContractDeployed(
   address: string,

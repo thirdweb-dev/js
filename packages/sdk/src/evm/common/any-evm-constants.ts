@@ -27,7 +27,7 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   },
   [71402]: {
     name: "Godwoken Mainnet",
-    gasPrice: 40_000 * 10 ** 9,
+    gasPrice: 40000 * 10 ** 9,
   },
   [1351057110]: {
     name: "Chaos (SKALE Testnet)",
@@ -55,17 +55,17 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   },
   [199]: {
     name: "BitTorrent Chain",
-    gasPrice: 300_000 * 10 ** 9,
+    gasPrice: 300000 * 10 ** 9,
   },
   [88882]: {
     name: "Spicy Chain",
     gasPrice: 2500 * 10 ** 9,
-    gasLimit: 200_000,
+    gasLimit: 200000,
   },
   [88888]: {
     name: "Chiliz Chain",
     gasPrice: 2500 * 10 ** 9,
-    gasLimit: 200_000,
+    gasLimit: 200000,
   },
 };
 /* eslint-enable no-useless-computed-key */

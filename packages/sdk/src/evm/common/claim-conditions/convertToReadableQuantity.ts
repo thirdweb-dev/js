@@ -2,8 +2,8 @@ import { type BigNumberish, constants, utils } from "ethers";
 
 /**
  * @internal
- * @param bn
- * @param tokenDecimals
+ * @param bn - The big number to convert
+ * @param tokenDecimals - The token decimals to use
  */
 export function convertToReadableQuantity(
   bn: BigNumberish,

@@ -13,26 +13,29 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { Theme, iconSize } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
+import { iconSize } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
 
+  const locale = useTWLocale().wallets.paperWallet.googleLoginScreen;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
-  const themeObj = useTheme() as Theme;
+  const themeObj = useCustomTheme();
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -72,8 +75,12 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
         <ModalHeader
           title={
             <Container flex="row" center="both" gap="xs">
-              <GoogleIcon size={iconSize.md} />
-              <ModalTitle> Sign in </ModalTitle>
+              <Img
+                src={googleIconUri}
+                width={iconSize.md}
+                height={iconSize.md}
+              />
+              <ModalTitle> {locale.title} </ModalTitle>
             </Container>
           }
           onBack={goBack}
@@ -95,11 +102,12 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
               <Text
                 color="primaryText"
                 multiline
+                center
                 style={{
                   maxWidth: "250px",
                 }}
               >
-                Select your Google account in the pop-up
+                {locale.instruction}
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
@@ -112,11 +120,10 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
 
           {connectionStatus === "disconnected" && (
             <Container animate="fadein">
-              <Text color="danger">Failed to sign in</Text>
+              <Text color="danger">{locale.failed}</Text>
               <Spacer y="lg" />
               <Button variant="primary" onClick={googleLogin}>
-                {" "}
-                Retry{" "}
+                {locale.retry}
               </Button>
               <Spacer y="xxl" />
             </Container>

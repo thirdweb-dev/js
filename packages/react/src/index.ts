@@ -19,9 +19,17 @@ export { walletConnect } from "./wallet/wallets/walletConnect/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 export { okxWallet } from "./wallet/wallets/okx/okxWallet";
-
+export { coreWallet } from "./wallet/wallets/coreWallet/coreWallet";
+export { cryptoDefiWallet } from "./wallet/wallets/defiWallet/cryptoDefiWallet";
+export { rabbyWallet } from "./wallet/wallets/rabby/rabbyWallet";
+export { coin98Wallet } from "./wallet/wallets/coin98/coin98Wallet";
 export { darkTheme, lightTheme } from "./design-system/index";
 export type { Theme, ThemeOverrides } from "./design-system/index";
 
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";
+
+// locales
+export { en } from "./evm/locales/en";
+export { ja } from "./evm/locales/ja";
+export { es } from "./evm/locales/es";

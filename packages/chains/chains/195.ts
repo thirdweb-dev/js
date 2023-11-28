@@ -1,33 +1,34 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "okbchain",
+  "chain": "X1",
   "chainId": 195,
   "explorers": [
     {
       "name": "OKLink",
-      "url": "https://www.oklink.com/okbc-test",
+      "url": "https://www.oklink.com/x1-test",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://www.oklink.com/okbc-test"
+    "https://www.okx.com/x1/faucet"
   ],
   "features": [],
-  "infoURL": "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
-  "name": "OKBChain Testnet",
+  "infoURL": "https://www.okx.com/x1",
+  "name": "X1 Testnet",
   "nativeCurrency": {
-    "name": "OKBChain Global Utility Token in testnet",
+    "name": "X1 Global Utility Token in testnet",
     "symbol": "OKB",
     "decimals": 18
   },
   "networkId": 195,
   "rpc": [
-    "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://x1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://okbtestrpc.okbchain.org"
+    "https://testrpc.x1.tech",
+    "https://x1testrpc.okx.com"
   ],
   "shortName": "tokb",
-  "slug": "okbchain-testnet",
+  "slug": "x1-testnet",
   "status": "active",
   "testnet": true
 } as const satisfies Chain;
