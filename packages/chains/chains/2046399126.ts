@@ -20,7 +20,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://europahub.network/",
-  "name": "Europa SKALE Chain",
+  "name": "SKALE Europa Hub",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -37,12 +37,12 @@ export default {
     ]
   },
   "rpc": [
-    "https://europa-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://skale-europa-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2046399126.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/elated-tan-skat",
     "wss://mainnet.skalenodes.com/v1/elated-tan-skat"
   ],
   "shortName": "europa",
-  "slug": "europa-skale-chain",
+  "slug": "skale-europa-hub",
   "testnet": false
 } as const satisfies Chain;

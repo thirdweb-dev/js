@@ -67,5 +67,6 @@ export default {
   "shortName": "holesky",
   "slug": "holesky",
   "status": "incubating",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Testnet Holesky"
 } as const satisfies Chain;
