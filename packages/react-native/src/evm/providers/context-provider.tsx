@@ -1,10 +1,4 @@
-import {
-  SmartWallet,
-  WalletConnectHandler,
-  WalletConnectReceiverConfig,
-  WalletConnectV2Handler,
-  walletIds,
-} from "@thirdweb-dev/wallets";
+import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import {
   createContext,
   useCallback,
@@ -14,15 +8,13 @@ import {
 } from "react";
 import { useWalletConnectListener } from "../wallets/hooks/useWalletConnectListener";
 import { MagicLink } from "../wallets/wallets/MagicLink";
-import { useWallet, useWalletContext } from "@thirdweb-dev/react-core";
-import { isWalletConnectReceiverEnabled } from "../wallets/utils";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 
 type DappContextType = {
   smartWallet?: SmartWallet;
   setSmartWallet?: (value?: SmartWallet) => void;
   magicLink?: MagicLink;
   setMagicLink?: (value?: MagicLink) => void;
-  walletConnectHandler?: WalletConnectHandler;
 };
 
 const DappContext = createContext<DappContextType>({});
@@ -30,10 +22,7 @@ const DappContext = createContext<DappContextType>({});
 export const DappContextProvider = (props: React.PropsWithChildren) => {
   const [smartWallet, setSmartWallet] = useState<SmartWallet | undefined>();
   const [magicLink, setMagicLink] = useState<MagicLink | undefined>();
-  const [walletConnectHandler, setWalletConnectHandler] =
-    useState<WalletConnectHandler>();
   const createdWalletInstance = useWalletContext().createdWalletInstance;
-  const activeWallet = useWallet();
 
   useEffect(() => {
     if (!createdWalletInstance) {
@@ -45,35 +34,7 @@ export const DappContextProvider = (props: React.PropsWithChildren) => {
     }
   }, [createdWalletInstance, setMagicLink]);
 
-  useEffect(() => {
-    if (!activeWallet) {
-      return;
-    }
-
-    const initWCHandler = async () => {
-      const wcReceiverOptions =
-        activeWallet?.getOptions() as WalletConnectReceiverConfig;
-
-      const handler = new WalletConnectV2Handler(
-        {
-          walletConnectReceiver: {
-            ...(wcReceiverOptions?.walletConnectReceiver === true
-              ? {}
-              : wcReceiverOptions?.walletConnectReceiver),
-          },
-        },
-        activeWallet,
-      );
-      await handler.init();
-      setWalletConnectHandler(handler);
-    };
-
-    if (isWalletConnectReceiverEnabled(activeWallet)) {
-      initWCHandler();
-    }
-  }, [activeWallet]);
-
-  useWalletConnectListener(walletConnectHandler);
+  useWalletConnectListener();
 
   const magicSDK = useCallback(() => {
     if (magicLink) {
@@ -91,7 +52,6 @@ export const DappContextProvider = (props: React.PropsWithChildren) => {
         setSmartWallet,
         magicLink: magicLink,
         setMagicLink: setMagicLink,
-        walletConnectHandler: walletConnectHandler,
       }}
     >
       {props.children}
@@ -117,10 +77,4 @@ export const useMagicLink = () => {
     magicLink: context.magicLink,
     setMagicLink: context.setMagicLink,
   } as const;
-};
-
-export const useWalletConnectHandler = () => {
-  const context = useContext(DappContext);
-
-  return context.walletConnectHandler;
 };
