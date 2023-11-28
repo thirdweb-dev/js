@@ -109,8 +109,8 @@ const SECTIONS = [
       },
       {
         title: "Sponsored transactons - Bundler",
-        starter: "Free",
-        pro: "Free",
+        starter: "10% premium on top of network fee",
+        pro: "10% premium on top of network fee",
       },
       {
         title: "Sponsored transactons - Paymaster",
