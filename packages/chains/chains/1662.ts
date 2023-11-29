@@ -1,35 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Yuma",
+  "chain": "LQC",
   "chainId": 1662,
-  "explorers": [],
-  "faucets": [],
-  "features": [
+  "explorers": [
     {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
+      "name": "Liquichain Mainnet",
+      "url": "https://mainnet.liquichain.io",
+      "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmSFMBk3rMyu45Sy9KQHjgArFj4HdywANNYrSosLMUdcti",
-    "width": 1213,
-    "height": 1213,
-    "format": "png"
-  },
-  "infoURL": "https://horizen.io/",
-  "name": "Horizen Yuma Testnet Deprecated",
+  "faucets": [],
+  "infoURL": "https://liquichain.io/",
+  "name": "Liquichain",
   "nativeCurrency": {
-    "name": "Testnet Zen",
-    "symbol": "tZEN",
+    "name": "Licoin",
+    "symbol": "LCN",
     "decimals": 18
   },
   "networkId": 1662,
+  "redFlags": [
+    "reusedChainId"
+  ],
   "rpc": [],
-  "shortName": "Yuma",
-  "slip44": 121,
-  "slug": "horizen-yuma-testnet-deprecated",
-  "status": "deprecated",
-  "testnet": true
+  "shortName": "Liquichain",
+  "slug": "liquichain",
+  "testnet": false
 } as const satisfies Chain;
