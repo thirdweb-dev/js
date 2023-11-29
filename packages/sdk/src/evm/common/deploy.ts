@@ -14,7 +14,7 @@ import {
   MarketplaceInitializer,
   MarketplaceV3Initializer,
 } from "../contracts";
-import { BigNumber, Signer, constants, providers } from "ethers";
+import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { SUPPORTED_CHAIN_IDS } from "../constants/chains/SUPPORTED_CHAIN_IDS";
