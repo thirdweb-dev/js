@@ -13,18 +13,22 @@ export const PaymentsSettingsChecklist: React.FC<
 > = ({ accountId }) => {
   const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
 
+  const kycIsInTheFuture = sellerData?.date_personal_documents_verified
+    ? new Date(sellerData.date_personal_documents_verified) > new Date()
+    : false;
+
   const steps = [
     {
       title: "Personal Identity Verification",
       description: "",
       completed: !!sellerData?.date_personal_documents_verified,
-      /*  completed: true, */
       children: sellerData && <PaymentsSettingsKyc sellerId={sellerData.id} />,
     },
     {
       title: "Business Information",
       description: "",
-      completed: !!sellerData?.date_business_documents_verified,
+      completed:
+        !!sellerData?.date_business_documents_verified && !kycIsInTheFuture,
       children: <PaymentsSettingsKyb />,
     },
   ];

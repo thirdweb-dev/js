@@ -10,6 +10,7 @@ import { useAddress } from "@thirdweb-dev/react/evm";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { getDashboardChainRpc } from "lib/rpc";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
@@ -27,6 +28,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   const addContract = useAddContractMutation();
   const trackEvent = useTrack();
   const walletAddress = useAddress();
+  const router = useRouter();
 
   const oldRegistryContractList = useContractList(
     chain?.chainId || -1,
@@ -91,7 +93,12 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     );
   }, [newRegistryContractList.isFetched, oldRegistryContractList.isFetched]);
 
-  if (!walletAddress || !contractAddress || !chain) {
+  if (
+    !walletAddress ||
+    !contractAddress ||
+    !chain ||
+    router.asPath.includes("payments")
+  ) {
     return null;
   }
 

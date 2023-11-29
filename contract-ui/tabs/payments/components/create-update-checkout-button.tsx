@@ -209,16 +209,6 @@ const formInputs = [
         helper: "",
         sideField: true,
       },
-      {
-        name: "hidePayWithIdeal",
-        label: "Allow paying with iDEAL",
-        type: "switch",
-        placeholder: "",
-        required: false,
-        helper:
-          "Allow buyers from paying with iDEAL, a common payment method in the Netherlands.",
-        sideField: true,
-      },
     ],
   },
   {
@@ -319,16 +309,23 @@ const convertInputsToMintMethod = ({
 interface CreateUpdateCheckoutButtonProps {
   contractId: string;
   contractAddress: string;
+  paymentContractType: string;
   checkout?: Checkout;
   checkoutId?: string;
 }
 
 export const CreateUpdateCheckoutButton: React.FC<
   CreateUpdateCheckoutButtonProps
-> = ({ contractId, contractAddress, checkout, checkoutId }) => {
+> = ({
+  contractId,
+  contractAddress,
+  paymentContractType,
+  checkout,
+  checkoutId,
+}) => {
   const { contract } = useContract(contractAddress);
 
-  const hasDetectedExtensions = checkout?.contract_type !== "CUSTOM_CONTRACT";
+  const hasDetectedExtensions = paymentContractType === "CUSTOM_CONTRACT";
 
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
@@ -366,7 +363,7 @@ export const CreateUpdateCheckoutButton: React.FC<
     hideExternalWallet: checkout?.hide_connect_external_wallet || false,
     hidePayWithCard: checkout?.hide_pay_with_card || false,
     hidePayWithCrypto: checkout?.hide_pay_with_crypto || false,
-    hidePayWithIdeal: checkout?.hide_pay_with_ideal || true,
+    hidePayWithIdeal: true,
     limitPerTransaction: checkout?.limit_per_transaction || 5,
     redirectAfterPayment: checkout?.redirect_after_payment || false,
     sendEmailOnTransferSucceeded:
@@ -448,7 +445,7 @@ export const CreateUpdateCheckoutButton: React.FC<
             checkoutId,
             ...data,
             limitPerTransaction: parseInt(String(data.limitPerTransaction)),
-            ...(!hasDetectedExtensions && { mintMethod }),
+            ...(hasDetectedExtensions && { mintMethod }),
           },
           {
             onSuccess: () => {
@@ -480,10 +477,7 @@ export const CreateUpdateCheckoutButton: React.FC<
       if (prev === "info" && !hasDetectedExtensions) {
         return "no-detected-extensions";
       }
-      if (
-        (prev === "info" && hasDetectedExtensions) ||
-        prev === "no-detected-extensions"
-      ) {
+      if (prev === "info" || prev === "no-detected-extensions") {
         return "branding";
       }
       if (prev === "branding") {
@@ -503,10 +497,10 @@ export const CreateUpdateCheckoutButton: React.FC<
   };
   const handleBack = () => {
     setStep((prev) => {
-      if (prev === "no-detected-extensions") {
-        return "info";
+      if (prev === "branding" && !hasDetectedExtensions) {
+        return "no-detected-extensions";
       }
-      if (prev === "branding") {
+      if (prev === "no-detected-extensions" || prev === "branding") {
         return "info";
       }
       if (prev === "delivery") {
@@ -530,7 +524,7 @@ export const CreateUpdateCheckoutButton: React.FC<
         />
       ) : (
         <Button onClick={onOpen} colorScheme="primary">
-          New Checkout Link
+          Create New Checkout
         </Button>
       )}
 

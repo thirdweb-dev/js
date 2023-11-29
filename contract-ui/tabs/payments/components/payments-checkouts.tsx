@@ -21,11 +21,13 @@ import { Checkout } from "graphql/generated_types";
 interface PaymentCheckoutsProps {
   contractId: string;
   contractAddress: string;
+  paymentContractType: string;
 }
 
 export const PaymentCheckouts: React.FC<PaymentCheckoutsProps> = ({
   contractId,
   contractAddress,
+  paymentContractType,
 }) => {
   const { data: checkouts } = usePaymentsCheckoutsByContract(contractAddress);
 
@@ -36,6 +38,7 @@ export const PaymentCheckouts: React.FC<PaymentCheckoutsProps> = ({
         <CreateUpdateCheckoutButton
           contractAddress={contractAddress}
           contractId={contractId}
+          paymentContractType={paymentContractType}
         />
       </Flex>
       <Flex flexDir="column" gap={4}>
@@ -73,6 +76,7 @@ export const PaymentCheckouts: React.FC<PaymentCheckoutsProps> = ({
                   <CreateUpdateCheckoutButton
                     contractAddress={checkout.contract_address}
                     contractId={contractId}
+                    paymentContractType={paymentContractType}
                     checkoutId={checkout.id}
                     checkout={checkout as Checkout}
                   />

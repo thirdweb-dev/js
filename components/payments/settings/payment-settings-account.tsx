@@ -147,7 +147,7 @@ export const PaymentsSettingsAccount: React.FC<
               <FormLabel>X (Twitter) Username</FormLabel>
               <Input
                 placeholder="@handle"
-                {...form.register("twitter_handle", { required: true })}
+                {...form.register("twitter_handle")}
               />
               <FormErrorMessage>
                 {form.formState.errors?.twitter_handle?.message}

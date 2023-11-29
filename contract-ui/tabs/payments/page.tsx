@@ -69,6 +69,7 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
           <PaymentCheckouts
             contractId={paymentContract?.id}
             contractAddress={contractAddress}
+            paymentContractType={paymentContract?.type}
           />
           <PaymentsAnalytics contractId={paymentContract?.id} />
         </Flex>
