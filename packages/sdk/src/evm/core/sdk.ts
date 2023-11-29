@@ -1566,7 +1566,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           contractMetadata,
         )),
       };
-
       if (this.hasLocalFactory()) {
         // old behavior for unit tests, deploy from local factory
         // parse version into the first number of the version string (or undefined if unparseable)
