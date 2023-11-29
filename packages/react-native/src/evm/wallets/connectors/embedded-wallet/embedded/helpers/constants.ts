@@ -12,6 +12,9 @@ export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
 
 export const AWS_REGION = "us-west-2";
 
+export const EWS_VERSION_HEADER = "x-embedded-wallet-version";
+export const BUNDLE_ID_HEADER = "x-bundle-id";
+
 export const COGNITO_USER_POOL_ID = "us-west-2_UFwLcZIpq";
 export const COGNITO_APP_CLIENT_ID = "2e02ha2ce6du13ldk8pai4h3d0";
 export const COGNITO_IDENTITY_POOL_ID =

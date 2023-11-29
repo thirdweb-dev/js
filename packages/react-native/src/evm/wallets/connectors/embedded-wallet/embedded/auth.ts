@@ -25,13 +25,19 @@ import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
+  BUNDLE_ID_HEADER,
   DOMAIN_URL_2023,
+  EWS_VERSION_HEADER,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
 } from "./helpers/constants";
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { createErrorMessage } from "./helpers/errors";
+import {
+  appBundleId,
+  reactNativePackageVersion,
+} from "../../../../utils/version";
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -179,7 +185,12 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     DOMAIN_URL_2023,
   )}&platform=${encodeURIComponent("mobile")}`;
 
-  const resp = await fetch(headlessLoginLinkWithParams);
+  const resp = await fetch(headlessLoginLinkWithParams, {
+    headers: {
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+    },
+  });
 
   if (!resp.ok) {
     const error = await resp.json();
@@ -256,7 +267,11 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+    },
     body: JSON.stringify({
       jwt: jwt,
       developerClientId: clientId,
