@@ -25,7 +25,6 @@ import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
-  BUNDLE_ID_HEADER,
   DOMAIN_URL_2023,
   EWS_VERSION_HEADER,
   ROUTE_AUTH_JWT_CALLBACK,
@@ -38,6 +37,7 @@ import {
   appBundleId,
   reactNativePackageVersion,
 } from "../../../../utils/version";
+import { BUNDLE_ID_HEADER } from "../../../../constants/headers";
 
 export async function sendVerificationEmail(options: {
   email: string;

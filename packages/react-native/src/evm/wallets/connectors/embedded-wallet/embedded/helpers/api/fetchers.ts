@@ -8,7 +8,6 @@ import {
   ROUTE_VALIDATE_USER_MANAGED_OTP,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
   EWS_VERSION_HEADER,
-  BUNDLE_ID_HEADER,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
 import {
@@ -24,6 +23,7 @@ import {
   appBundleId,
   reactNativePackageVersion,
 } from "../../../../../../utils/version";
+import { BUNDLE_ID_HEADER } from "../../../../../../constants/headers";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";

@@ -7,6 +7,7 @@ import {
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
 import { Platform } from "react-native";
 import { appBundleId, packageVersion } from "../../evm/utils/version";
+import { BUNDLE_ID_HEADER } from "../../evm/constants/headers";
 
 const METADATA_NAME = "Storage React Native SDK";
 
@@ -140,7 +141,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", appBundleId || ""); // only empty on web
+        xhr.setRequestHeader(BUNDLE_ID_HEADER, appBundleId || ""); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
@@ -165,7 +166,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             {
               method: "POST",
               headers: {
-                "x-bundle-id": appBundleId || "", // only empty on web
+                [BUNDLE_ID_HEADER]: appBundleId || "", // only empty on web
                 ...(this.clientId ? { "x-client-id": this.clientId } : {}),
                 "Content-Type": "application/json",
                 "x-sdk-version": version,
