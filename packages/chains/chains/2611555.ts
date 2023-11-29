@@ -6,8 +6,8 @@ export default {
   "faucets": [],
   "name": "DPU Chain",
   "nativeCurrency": {
-    "name": "DGS",
-    "symbol": "DGS",
+    "name": "DGC",
+    "symbol": "DGC",
     "decimals": 18
   },
   "networkId": 2611555,
