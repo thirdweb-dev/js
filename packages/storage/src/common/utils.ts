@@ -162,7 +162,17 @@ export function replaceSchemeWithGatewayUrl(
   }
 
   const path = uri.replace(scheme, "");
-  return getGatewayUrlForCid(schemeGatewayUrls[index], path, clientId);
+  try {
+    const gatewayUrl = getGatewayUrlForCid(
+      schemeGatewayUrls[index],
+      path,
+      clientId,
+    );
+    return gatewayUrl;
+  } catch (err) {
+    console.warn(`The CID ${path} is not valid.`);
+    return undefined;
+  }
 }
 
 /**
