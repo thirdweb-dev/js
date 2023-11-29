@@ -170,7 +170,7 @@ export function replaceSchemeWithGatewayUrl(
     );
     return gatewayUrl;
   } catch (err) {
-    console.warn(`The CID ${path} is not valid.`);
+    console.warn(`The IPFS uri: ${path} is not valid.`);
     return undefined;
   }
 }

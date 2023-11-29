@@ -163,7 +163,7 @@ export function convertCidToV1(cid: string) {
     const hash = cid.split("/")[0];
     normalized = CIDTool.base32(hash);
   } catch (e) {
-    throw new Error(`The IPFS uri: ${cid} is not valid.`);
+    throw new Error(`The CID ${cid} is not valid.`);
   }
   return normalized;
 }
