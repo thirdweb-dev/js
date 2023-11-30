@@ -1,4 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
+import { checkContractWalletSignature } from "./abstract";
 import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
@@ -14,7 +15,8 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { providers, utils } from "ethers";
+import { providers, utils, Bytes, Signer } from "ethers";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -77,8 +79,69 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
+   * @returns the signature of the message
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Deploy smart wallet if needed
+    const connector = await this.getConnector();
+    await connector.deployIfNeeded();
+
+    const erc4337Signer = await this.getSigner();
+    const chainId = await erc4337Signer.getChainId();
+    const address = await connector.getAddress();
+
+    /**
+     * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
+     * If this fails, we fallback to the legacy signing method.
+     */
+    try {
+      const result = await signTypedDataInternal(
+        erc4337Signer,
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
+        {
+          message: utils.defaultAbiCoder.encode(
+            ["bytes32"],
+            [utils.hashMessage(message)],
+          ),
+        },
+      );
+
+      const isValid = await checkContractWalletSignature(
+        message as string,
+        result.signature,
+        address,
+        chainId,
+      );
+
+      if (!isValid) {
+        throw new Error("Invalid signature");
+      }
+
+      return result.signature;
+    } catch {
+      return await this.signMessageLegacy(erc4337Signer, message);
+    }
+  }
+
+  /**
+   * @returns the signature of the message (for legacy EIP-1271 signature verification)
+   */
+  private async signMessageLegacy(
+    signer: Signer,
+    message: Bytes | string,
+  ): Promise<string> {
+    return await signer.signMessage(message);
+  }
+
+  /**
    * Check whether the connected signer can execute a given transaction using the smart wallet.
-   * @param transaction the transaction to execute using the smart wallet.
+   * @param transaction - the transaction to execute using the smart wallet.
    * @returns whether the connected signer can execute the transaction using the smart wallet.
    */
   async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
@@ -88,7 +151,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a single transaction without waiting for confirmations
-   * @param transactions
+   * @param transaction - the transaction to send
    * @returns the transaction result
    */
   async send(transaction: Transaction): Promise<providers.TransactionResponse> {
@@ -98,7 +161,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute a single transaction and wait for confirmations
-   * @param transactions
+   * @param transaction - the transaction to execute
    * @returns the transaction receipt
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
@@ -108,7 +171,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
-   * @param transactions
+   * @param transactions - the transactions to send
    * @returns the transaction result
    */
   async sendBatch(
@@ -120,7 +183,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute multiple transactions in a single batch and wait for confirmations
-   * @param transactions
+   * @param transactions - the transactions to execute
    * @returns the transaction receipt
    */
   async executeBatch(
@@ -132,7 +195,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a single raw transaction without waiting for confirmations
-   * @param transaction
+   * @param transaction - the transaction to send
    * @returns the transaction result
    */
   async sendRaw(
@@ -144,7 +207,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute a single raw transaction and wait for confirmations
-   * @param transaction
+   * @param transaction - the transaction to execute
    * @returns the transaction receipt
    */
   async executeRaw(
@@ -156,7 +219,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a single transaction
-   * @param transaction
+   * @param transaction - the transaction to estimate
    * @returns
    */
   async estimate(transaction: Transaction<any>) {
@@ -166,7 +229,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a batch of transactions
-   * @param transaction
+   * @param transactions - the transactions to estimate
    * @returns
    */
   async estimateBatch(transactions: Transaction<any>[]) {
@@ -176,7 +239,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a single raw transaction
-   * @param transaction
+   * @param transactions - the transactions to estimate
    * @returns
    */
   async estimateRaw(
@@ -188,7 +251,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a batch of raw transactions
-   * @param transaction
+   * @param transactions - the transactions to estimate
    * @returns
    */
   async estimateBatchRaw(
@@ -200,7 +263,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
-   * @param transaction
+   * @param transactions - the transactions to send
    * @returns the transaction result
    */
   async sendBatchRaw(
@@ -212,7 +275,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute multiple raw transactions in a single batch and wait for confirmations
-   * @param transaction
+   * @param transactions - the transactions to execute
    * @returns the transaction receipt
    */
   async executeBatchRaw(
@@ -253,8 +316,8 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Create and add a session key to the smart wallet.
-   * @param keyAddress the address of the session key to add.
-   * @param permissions the permissions to grant to the session key.
+   * @param keyAddress - the address of the session key to add.
+   * @param permissions - the permissions to grant to the session key.
    */
   async createSessionKey(
     keyAddress: string,
@@ -266,7 +329,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Remove a session key from the smart wallet.
-   * @param keyAddress the address of the session key to remove.
+   * @param keyAddress - the address of the session key to remove.
    */
   async revokeSessionKey(keyAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -275,7 +338,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Add another admin to the smart wallet.
-   * @param adminAddress the address of the admin to add.
+   * @param adminAddress - the address of the admin to add.
    */
   async addAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -284,7 +347,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Remove an admin from the smart wallet.
-   * @param adminAddress the address of the admin to remove.
+   * @param adminAddress - the address of the admin to remove.
    */
   async removeAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();

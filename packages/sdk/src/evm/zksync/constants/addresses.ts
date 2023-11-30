@@ -62,8 +62,8 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
 
 /**
  * @internal
- * @param chainId
- * @param contractType
+ * @param chainId - chain id
+ * @param contractType - contract type
  */
 export function getImplementation(
   chainId: number,
@@ -96,9 +96,10 @@ export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
-  const biconomyForwarder = CONTRACT_ADDRESSES[chainId].biconomyForwarder;
+  const biconomyForwarder =
+    CONTRACT_ADDRESSES[chainId]?.biconomyForwarder || AddressZero;
   const openzeppelinForwarder =
-    CONTRACT_ADDRESSES[chainId].openzeppelinForwarder;
+    CONTRACT_ADDRESSES[chainId]?.openzeppelinForwarder || AddressZero;
 
   return contractName && contractName === "Pack"
     ? []

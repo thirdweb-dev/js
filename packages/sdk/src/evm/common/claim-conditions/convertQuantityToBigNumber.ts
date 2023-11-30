@@ -3,8 +3,8 @@ import { utils, constants } from "ethers";
 
 /**
  * @internal
- * @param quantity
- * @param tokenDecimals
+ * @param quantity - The quantity to convert
+ * @param tokenDecimals - The token decimals to use
  */
 export function convertQuantityToBigNumber(
   quantity: Quantity,

@@ -38,7 +38,9 @@ export default {
     "https://rpc1.bahamut.io",
     "https://rpc2.bahamut.io",
     "wss://ws1.sahara.bahamutchain.com",
-    "wss://ws2.sahara.bahamutchain.com"
+    "wss://ws2.sahara.bahamutchain.com",
+    "https://bahamut.publicnode.com",
+    "wss://bahamut.publicnode.com"
   ],
   "shortName": "ftn",
   "slug": "bahamut",

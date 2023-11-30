@@ -1,4 +1,9 @@
-import { useChain, useWallet } from "@thirdweb-dev/react-core";
+import {
+  shortenAddress,
+  useChain,
+  useWallet,
+  useWalletConnectHandler,
+} from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
@@ -9,9 +14,7 @@ import {
   WalletConnectSessionRequestModal,
 } from "../../utils/modalTypes";
 import { ActivityIndicator, Dimensions } from "react-native";
-import { shortenWalletAddress } from "../../utils/addresses";
 import { useCallback, useState } from "react";
-import { useWalletConnectHandler } from "../../providers/context-provider";
 
 const getTitle = (method: string) => {
   switch (method) {
@@ -83,10 +86,10 @@ export const SessionRequestModal = () => {
         return (
           <Box>
             <Text variant="bodySmall" textAlign="left">
-              {`${l.common.from}: ${shortenWalletAddress(from)}`}
+              {`${l.common.from}: ${shortenAddress(from)}`}
             </Text>
             <Text variant="bodySmall" textAlign="left" mt="sm">
-              {`${l.common.to}: ${shortenWalletAddress(to)}`}
+              {`${l.common.to}: ${shortenAddress(to)}`}
             </Text>
           </Box>
         );

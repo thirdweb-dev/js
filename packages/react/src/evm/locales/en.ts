@@ -117,6 +117,7 @@ export function enDefault() {
           approveTransactionInSafe: "Approve transaction in Safe",
           tryAgain: "Try Again",
           failedToSignIn: "Failed to Sign in",
+          inProgress: "Awaiting Confirmation",
         },
       },
     },
@@ -168,6 +169,9 @@ export function enDefault() {
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       coreWallet: extensionAndQRScanScreens("Core"),
       oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
+      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {
         signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",

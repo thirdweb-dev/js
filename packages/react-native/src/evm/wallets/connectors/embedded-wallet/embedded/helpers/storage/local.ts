@@ -6,8 +6,11 @@ import {
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { MMKV } from "react-native-mmkv";
 import { DEVICE_SHARE_MISSING_MESSAGE } from "../constants";
+import { AuthParams } from "../../../types";
 
 const CONNECTED_EMAIL_LOCAL_STORAGE_NAME = "embedded-wallet-connected-email";
+const CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME =
+  "embedded-wallet-connected-auth-params";
 
 const storage = new MMKV();
 
@@ -32,6 +35,23 @@ export function saveConnectedEmail(email: string) {
 
 export function clearConnectedEmail() {
   removeItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
+}
+
+export function getConnectedAuthStrategy(): AuthParams["strategy"] | undefined {
+  return getItemFromAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME) as
+    | AuthParams["strategy"]
+    | undefined;
+}
+
+export function saveConnectedAuthStrategy(authStrategy: string) {
+  setItemInAsyncStorage(
+    CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME,
+    authStrategy,
+  );
+}
+
+export function clearConnectedAuthStrategy() {
+  removeItemInAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME);
 }
 
 export async function isDeviceSharePresentForUser(

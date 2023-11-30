@@ -28,7 +28,7 @@ import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
- * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons}` hook.
+ * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons} hook.
  *
  * @beta
  */

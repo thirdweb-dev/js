@@ -7,8 +7,8 @@ import { getSaltHash } from "./getSaltHash";
  * This hex data is intended to be sent to the CREATE2 factory address
  *
  * @internal
- * @param bytecode: Creation bytecode of the contract to deploy
- * @param encodedArgs: Abi-encoded constructor params
+ * @param bytecode - Creation bytecode of the contract to deploy
+ * @param encodedArgs - Abi-encoded constructor params
  */
 export function getInitBytecodeWithSalt(
   bytecode: string,

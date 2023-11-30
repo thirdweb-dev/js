@@ -1,5 +1,149 @@
 # @thirdweb-dev/wallets
 
+## 2.1.9
+
+### Patch Changes
+
+- [#1992](https://github.com/thirdweb-dev/js/pull/1992) [`b5bbe2bd`](https://github.com/thirdweb-dev/js/commit/b5bbe2bd438179c38451bc2cfa20a54fc79e4f3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Look at last 10 blocks for recently submitted userOp
+
+- Updated dependencies [[`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281)]:
+  - @thirdweb-dev/chains@0.1.59
+  - @thirdweb-dev/sdk@4.0.17
+
+## 2.1.8
+
+### Patch Changes
+
+- [#1921](https://github.com/thirdweb-dev/js/pull/1921) [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Coin98 wallet
+
+- Updated dependencies [[`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4)]:
+  - @thirdweb-dev/sdk@4.0.16
+
+## 2.1.7
+
+### Patch Changes
+
+- [#1977](https://github.com/thirdweb-dev/js/pull/1977) [`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix potential auto connection race condition
+
+- [#1978](https://github.com/thirdweb-dev/js/pull/1978) [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enforce authenticated users when getting embedded wallet signers
+
+- [#1953](https://github.com/thirdweb-dev/js/pull/1953) [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96) Thanks [@nkrishang](https://github.com/nkrishang)! - Patched smart wallet signatures for updated eip-1271 sig verification
+
+- Updated dependencies [[`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec)]:
+  - @thirdweb-dev/sdk@4.0.15
+
+## 2.1.6
+
+### Patch Changes
+
+- [#1861](https://github.com/thirdweb-dev/js/pull/1861) [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4) Thanks [@jnsdls](https://github.com/jnsdls)! - remove `crypto-js` dependency
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/crypto@0.2.0
+  - @thirdweb-dev/sdk@4.0.14
+
+## 2.1.5
+
+### Patch Changes
+
+- [#1945](https://github.com/thirdweb-dev/js/pull/1945) [`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091) Thanks [@iketw](https://github.com/iketw)! - Enable Facebook Sign In for embedded wallet
+
+## 2.1.4
+
+### Patch Changes
+
+- [#1958](https://github.com/thirdweb-dev/js/pull/1958) [`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix switch chain logic for embedded wallets
+
+## 2.1.3
+
+### Patch Changes
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1948](https://github.com/thirdweb-dev/js/pull/1948) [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6) Thanks [@iketw](https://github.com/iketw)! - Deprecates PaperWallet in favor of EmbeddedWallet
+
+- [#1949](https://github.com/thirdweb-dev/js/pull/1949) [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd) Thanks [@iketw](https://github.com/iketw)! - Enforces the tsdoc/syntax rule
+
+- [#1939](https://github.com/thirdweb-dev/js/pull/1939) [`16e9e8b6`](https://github.com/thirdweb-dev/js/commit/16e9e8b64d7d1a97a5b32fc855479e992b7ed3a8) Thanks [@adam-maj](https://github.com/adam-maj)! - Add engine wallet and signer
+
+- [#1950](https://github.com/thirdweb-dev/js/pull/1950) [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Smart Wallet autoconnect fixes and performance improvements
+
+- Updated dependencies [[`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4), [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd)]:
+  - @thirdweb-dev/sdk@4.0.13
+
+## 2.1.2
+
+### Patch Changes
+
+- [#1937](https://github.com/thirdweb-dev/js/pull/1937) [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove deprecated fallback for old account factories
+
+- [#1920](https://github.com/thirdweb-dev/js/pull/1920) [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat: add apple auth to embedded wallet.
+
+  To enable simply pass in `apple` as the strategy
+
+  ```
+  const wallet = new EmbeddedWallet({
+    chain: Ethereum, //  chain to connect to
+    clientId: "YOUR_CLIENT_ID", // client ID
+  });
+
+  const authResult = await wallet.authenticate({
+    strategy: "apple",
+  });
+
+  ```
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1925](https://github.com/thirdweb-dev/js/pull/1925) [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8) Thanks [@iketw](https://github.com/iketw)! - [RN] Adds walletConnectReceiver prop to EmbeddedWallet and SmartWallet
+
+  You can pass your own WalletConnect projectId and metadata (highly recommended):
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: {
+          walletConnectWalletMetadata?: WCMetadata;
+          walletConnectV2ProjectId?: string;
+          walletConnectV2RelayUrl?: string;
+      },
+  }),
+  ```
+
+  You can just pass `true` to the prop and these props will default to our internal WalletConnect projectId and metadata.
+
+  ```typescript
+  embeddedWallet({
+      auth: {
+      options: ['email', 'google'],
+      redirectUrl: 'redirect-url',
+      },
+      walletConnectReceiver: true
+  }),
+
+  smartWallet(localWallet(), {
+      factoryAddress: 'factory-address',
+      gasless: true,
+      walletConnectReceiver: true
+  }),
+  ```
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/sdk@4.0.12
+
 ## 2.1.1
 
 ### Patch Changes

@@ -15,20 +15,21 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 import { wait } from "../../utils/wait";
 import { Button } from "../../components/buttons";
-import { Theme, iconSize, radius, spacing } from "../../design-system";
+import { iconSize, radius, spacing } from "../../design-system";
 import {
   CrossCircledIcon,
   ExternalLinkIcon,
   ReloadIcon,
 } from "@radix-ui/react-icons";
 import { Img } from "../../components/Img";
-import styled from "@emotion/styled";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
 import { TOS } from "./Modal/TOS";
 import { keyframes } from "@emotion/react";
 import { Spinner } from "../../components/Spinner";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { StyledDiv } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 type Status = "signing" | "failed" | "idle";
 
@@ -160,8 +161,8 @@ export const SignatureScreen: React.FC<{
             <Container flex="column" gap="md" animate="fadein" key={status}>
               <Text size="lg" center color="primaryText">
                 {status === "failed"
-                  ? "Failed to sign in"
-                  : "Awaiting Confirmation"}
+                  ? locale.signingScreen.failedToSignIn
+                  : locale.signingScreen.inProgress}
               </Text>
 
               {status === "signing" && (
@@ -314,21 +315,22 @@ const plusAnimation = keyframes`
 }
 `;
 
-const PulsatingContainer = styled.div<{ theme?: Theme }>`
-  position: relative;
-
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background: ${(p) => p.theme.colors.accentText};
-    animation: ${plusAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1)
-      infinite;
-    z-index: -1;
-    border-radius: ${radius.xl};
-  }
-`;
+const PulsatingContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    position: "relative",
+    "&::before": {
+      content: '""',
+      display: "block",
+      position: "absolute",
+      left: 0,
+      top: 0,
+      bottom: 0,
+      right: 0,
+      background: theme.colors.accentText,
+      animation: `${plusAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite`,
+      zIndex: -1,
+      borderRadius: radius.xl,
+    },
+  };
+});

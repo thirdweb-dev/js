@@ -26,9 +26,9 @@ import type {
 
 /**
  *
- * @param contractType
- * @param metadata
- * @param contractURI
+ * @param contractType - The contract type to get deploy arguments for
+ * @param metadata - The metadata to get deploy arguments for
+ * @param contractURI - The contract URI to get deploy arguments for
  * @returns
  * @internal
  */

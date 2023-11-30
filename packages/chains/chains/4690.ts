@@ -35,5 +35,5 @@ export default {
   ],
   "shortName": "iotex-testnet",
   "slug": "iotex-network-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

@@ -10,9 +10,9 @@ import { utils } from "ethers";
 
 /**
  * @internal
- * @param index
- * @param claimConditionInput
- * @param existingConditions
+ * @param index - The index of the condition to update
+ * @param claimConditionInput - The input claim condition to update
+ * @param existingConditions - The existing claim conditions
  */
 export async function updateExistingClaimConditions(
   index: number,

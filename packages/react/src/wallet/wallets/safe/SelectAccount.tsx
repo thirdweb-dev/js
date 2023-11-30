@@ -4,7 +4,7 @@ import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
-import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
+import { iconSize, spacing, fontSize } from "../../../design-system";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -28,6 +28,8 @@ import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { safeSlugToChainId } from "./safeChainSlug";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledSelect } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
@@ -373,38 +375,39 @@ export const SelectAccount: React.FC<{
   );
 };
 
-const NetworkSelect = styled.select<{ theme?: Theme }>`
-  width: 100%;
-  padding: ${spacing.sm};
-  box-sizing: border-box;
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  color: ${(p) => p.theme.colors.primaryText};
-  background: none;
-  font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.secondaryButtonBg};
-  appearance: none;
+const NetworkSelect = /* @__PURE__ */ StyledSelect(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "100%",
+    padding: spacing.sm,
+    boxSizing: "border-box",
+    outline: "none",
+    border: "none",
+    borderRadius: "6px",
+    color: theme.colors.primaryText,
+    background: "none",
+    fontSize: fontSize.md,
+    boxShadow: `0 0 0 1.5px ${theme.colors.secondaryButtonBg}`,
+    appearance: "none",
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
+    "&:invalid": {
+      color: theme.colors.secondaryText,
+    },
+    "&[data-error='true']": {
+      boxShadow: `0 0 0 1.5px ${theme.colors.danger}`,
+    },
+    "&[disabled]": {
+      opacity: 1,
+      cursor: "not-allowed",
+    },
+  };
+});
 
-  &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.colors.accentText};
-  }
-
-  &:invalid {
-    color: ${(p) => p.theme.colors.secondaryText};
-  }
-  &[data-error="true"] {
-    box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.danger};
-  }
-
-  &[disabled] {
-    opacity: 1;
-    cursor: not-allowed;
-  }
-`;
-
-const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(p) => p.theme.colors.secondaryText};
-`;
+const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+  };
+});

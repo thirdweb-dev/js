@@ -5,8 +5,8 @@ export type DeepPartial<T extends Record<string, any>> = {
 /**
  * Create a new object with given overrides object applied on top of given base object without mutating the base and overrides object
  *
- * @param defaultObj the object to use as the base object
- * @param overrides the object to use as the overrides
+ * @param defaultObj - the object to use as the base object
+ * @param overrides - the object to use as the overrides
  */
 export function immutableOverride<T extends Record<string, any>>(
   defaultObj: T,
