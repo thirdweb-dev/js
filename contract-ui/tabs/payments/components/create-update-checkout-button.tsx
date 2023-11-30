@@ -325,7 +325,7 @@ export const CreateUpdateCheckoutButton: React.FC<
 }) => {
   const { contract } = useContract(contractAddress);
 
-  const hasDetectedExtensions = paymentContractType === "CUSTOM_CONTRACT";
+  const hasDetectedExtensions = paymentContractType !== "CUSTOM_CONTRACT";
 
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
