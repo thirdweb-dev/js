@@ -4,6 +4,8 @@ import {
   getInjectedMetamaskProvider,
 } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
+import { metamaskUris } from "./metamaskUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type MetamaskWalletOptions = {
   /**
@@ -18,11 +20,23 @@ type MetamaskWalletOptions = {
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Specify how the connection to metamask app should be established if the user is on a mobile device.
+   * There are two options: "walletconnect" and "browser".
+   * 1. "walletconnect" - User will be redirected to MetaMask app and upon successful connection, user can return back to the web page.
+   * 2. "browser" - User will be redirected to MetaMask app and the web page will be opened in MetaMask browser.
+   *
+   * @defaultValue "walletconnect"
+   */
+  connectionMethod?: "walletconnect" | "browser";
 };
 
 export const metamaskWallet = (
   options?: MetamaskWalletOptions,
 ): WalletConfig<MetaMaskWallet> => {
+  const connectionMethod = options?.connectionMethod || "walletconnect";
+
   return {
     id: MetaMaskWallet.id,
     recommended: options?.recommended,
@@ -38,9 +52,17 @@ export const metamaskWallet = (
         qrcode: false,
       });
 
+      if (connectionMethod === "walletconnect") {
+        handelWCSessionRequest(wallet, metamaskUris);
+      }
+
       return wallet;
     },
-    connectUI: MetamaskConnectUI,
+    connectUI(props) {
+      return (
+        <MetamaskConnectUI {...props} connectionMethod={connectionMethod} />
+      );
+    },
     isInstalled() {
       return !!getInjectedMetamaskProvider();
     },
