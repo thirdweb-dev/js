@@ -1,4 +1,5 @@
 export { resolveMimeType } from "../core/utils/ipfs";
+export { isWalletConnectReceiverEnabled } from "../core/utils/receiver";
 
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";

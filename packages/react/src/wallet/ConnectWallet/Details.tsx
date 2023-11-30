@@ -40,6 +40,7 @@ import {
   useWallet,
   WalletInstance,
   useENS,
+  isWalletConnectReceiverEnabled,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import {
@@ -74,6 +75,7 @@ import {
   googleIconUri,
 } from "./icons/socialLogins";
 import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
+import ConnectAppField from "./ConnectAppField";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -480,6 +482,11 @@ export const ConnectedWalletDetails: React.FC<{
               {locale.switchAccount}
             </MenuButton>
           )}
+
+        {/* Connect App Field */}
+        {isWalletConnectReceiverEnabled(activeWallet) ? (
+          <ConnectAppField onConnectAppTriggered={() => {}} />
+        ) : null}
 
         {/* Request Testnet funds */}
         {!props.hideTestnetFaucet &&

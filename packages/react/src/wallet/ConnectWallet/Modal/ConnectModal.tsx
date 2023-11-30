@@ -31,6 +31,7 @@ import {
 } from "../../../design-system/CustomThemeProvider";
 import { SignatureScreen } from "../SignatureScreen";
 import { StyledDiv } from "../../../design-system/elements";
+import { useWalletConnectListener } from "../../../evm/hooks/useWalletConnectListener";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -205,6 +206,8 @@ export const ConnectModal = () => {
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const [hideModal, setHideModal] = useState(false);
   const connectionStatus = useConnectionStatus();
+
+  useWalletConnectListener();
 
   const [prevConnectionStatus, setPrevConnectionStatus] =
     useState(connectionStatus);
