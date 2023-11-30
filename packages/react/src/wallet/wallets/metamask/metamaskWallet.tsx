@@ -29,13 +29,13 @@ type MetamaskWalletOptions = {
    *
    * @defaultValue "walletconnect"
    */
-  connectionMethod?: "walletconnect" | "metamaskBrowser";
+  connectionMethod?: "walletConnect" | "metamaskBrowser";
 };
 
 export const metamaskWallet = (
   options?: MetamaskWalletOptions,
 ): WalletConfig<MetaMaskWallet> => {
-  const connectionMethod = options?.connectionMethod || "walletconnect";
+  const connectionMethod = options?.connectionMethod || "walletConnect";
 
   return {
     id: MetaMaskWallet.id,
@@ -52,7 +52,7 @@ export const metamaskWallet = (
         qrcode: false,
       });
 
-      if (connectionMethod === "walletconnect") {
+      if (connectionMethod === "walletConnect") {
         handelWCSessionRequest(wallet, metamaskUris);
       }
 

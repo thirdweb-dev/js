@@ -12,7 +12,7 @@ import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
 export const MetamaskConnectUI = (
   props: ConnectUIProps<MetaMaskWallet> & {
-    connectionMethod: "walletconnect" | "metamaskBrowser";
+    connectionMethod: "walletConnect" | "metamaskBrowser";
   },
 ) => {
   const [screen, setScreen] = useState<
@@ -67,7 +67,7 @@ export const MetamaskConnectUI = (
       else {
         // on mobile, open metamask app link
         if (isMobile()) {
-          if (props.connectionMethod === "walletconnect") {
+          if (props.connectionMethod === "walletConnect") {
             setScreen("open-wc-uri");
           } else {
             window.open(
