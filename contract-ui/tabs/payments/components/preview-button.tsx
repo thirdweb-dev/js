@@ -66,8 +66,8 @@ export const PaymentsPreviewButton: React.FC<PaymentsPreviewButtonProps> = ({
       >
         <LightOrDarkMode>
           <Button
-            bgColor={colorSchemeLightOrDark[colorScheme].bgColor}
-            color={colorSchemeLightOrDark[colorScheme].color}
+            bgColor={colorSchemeLightOrDark[colorScheme || "red"]?.bgColor}
+            color={colorSchemeLightOrDark[colorScheme || "red"]?.color}
             _hover={{
               opacity: 0.8,
             }}
