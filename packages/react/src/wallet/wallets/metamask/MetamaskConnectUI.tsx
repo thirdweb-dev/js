@@ -12,7 +12,7 @@ import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
 export const MetamaskConnectUI = (
   props: ConnectUIProps<MetaMaskWallet> & {
-    connectionMethod: "walletconnect" | "browser";
+    connectionMethod: "walletconnect" | "metamaskBrowser";
   },
 ) => {
   const [screen, setScreen] = useState<

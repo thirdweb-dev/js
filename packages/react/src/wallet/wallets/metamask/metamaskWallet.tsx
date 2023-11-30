@@ -29,7 +29,7 @@ type MetamaskWalletOptions = {
    *
    * @defaultValue "walletconnect"
    */
-  connectionMethod?: "walletconnect" | "browser";
+  connectionMethod?: "walletconnect" | "metamaskBrowser";
 };
 
 export const metamaskWallet = (
