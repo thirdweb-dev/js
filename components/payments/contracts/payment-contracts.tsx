@@ -4,7 +4,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { PaymentContractsTable } from "./payment-contracts-table";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { NoWalletConnectedPayments } from "contract-ui/tabs/payments/components/no-wallet-connected-payments";
-import { validPaymentsChainIdsMainnets } from "@3rdweb-sdk/react/hooks/usePayments";
+import { validPaymentsChainIds } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo } from "react";
 
 export const PaymentContracts = () => {
@@ -18,7 +18,7 @@ export const PaymentContracts = () => {
     }
 
     return deployedContracts.data.filter((contract) =>
-      validPaymentsChainIdsMainnets.includes(contract.chainId),
+      validPaymentsChainIds.includes(contract.chainId),
     );
   }, [deployedContracts?.data]);
 

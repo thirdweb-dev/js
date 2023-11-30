@@ -445,7 +445,7 @@ export const CreateUpdateCheckoutButton: React.FC<
             checkoutId,
             ...data,
             limitPerTransaction: parseInt(String(data.limitPerTransaction)),
-            ...(hasDetectedExtensions && { mintMethod }),
+            ...(!hasDetectedExtensions && { mintMethod }),
           },
           {
             onSuccess: () => {
