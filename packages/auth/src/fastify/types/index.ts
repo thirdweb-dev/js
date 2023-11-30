@@ -61,6 +61,8 @@ export type ThirdwebAuthConfig<
     path?: string;
     sameSite?: "lax" | "strict" | "none";
     secure?: boolean;
+    tokenPrefix?: string;
+    activeTokenPrefix?: string;
   };
   callbacks?: {
     onLogin?:

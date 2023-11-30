@@ -82,7 +82,9 @@ export const loginHandler = (
       // Securely set httpOnly cookie on request to prevent XSS on frontend
       // And set path to / to enable thirdweb_auth_token usage on all endpoints
       res.setCookie(
-        `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${req.body.payload.payload.address}`,
+        `${
+          ctx.cookieOptions?.tokenPrefix ?? THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX
+        }_${req.body.payload.payload.address}`,
         token,
         {
           domain: ctx.cookieOptions?.domain,
@@ -94,7 +96,8 @@ export const loginHandler = (
         },
       );
       res.setCookie(
-        THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+        ctx.cookieOptions?.activeTokenPrefix ??
+          THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
         req.body.payload.payload.address,
         {
           domain: ctx.cookieOptions?.domain,

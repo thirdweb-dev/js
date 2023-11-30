@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { getActiveCookie, getUser } from "../helpers/user";
+import {
+  getActiveAccountCookie,
+  getActiveCookie,
+  getUser,
+} from "../helpers/user";
 import {
   ErrorResponseSchema,
   FastifyInstanceWithZod,
@@ -22,7 +26,9 @@ export const logoutHandler = (
       },
     },
     handler: async (req, res) => {
-      const activeCookie = getActiveCookie(req);
+      const activeCookie = getActiveCookie(req, ctx);
+      const activeAccountCookie = getActiveAccountCookie(ctx);
+
       if (!activeCookie) {
         return res.status(400).send({
           error: "No logged in user to logout.",
@@ -36,17 +42,22 @@ export const logoutHandler = (
         }
       }
 
-      // Set the access token to 'none' and expire in 5 seconds
-      res.setCookie(activeCookie, "", {
+      const opts = {
         domain: ctx.cookieOptions?.domain,
         path: ctx.cookieOptions?.path || "/",
         sameSite: ctx.cookieOptions?.sameSite || "none",
-        expires: new Date(Date.now() + 5 * 1000),
+        expires: new Date(),
         httpOnly: true,
         secure: ctx.cookieOptions?.secure || true,
-      });
+      };
 
-      return res.status(200).send({ message: "Successfully logged out" });
+      // Set the access token to 'none' and expire immediately
+      res.setCookie(activeCookie, "", opts);
+      res.setCookie(activeAccountCookie, "", opts);
+
+      return res.status(200).send({
+        message: JSON.stringify({ activeCookie, activeAccountCookie }),
+      });
     },
   });
 };

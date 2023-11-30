@@ -13,18 +13,29 @@ export function getCookie(
   return req.cookies[cookie];
 }
 
-export function getActiveCookie(req: FastifyRequest): string | undefined {
+export function getActiveAccountCookie(ctx?: ThirdwebAuthContext): string {
+  return (
+    ctx?.cookieOptions?.activeTokenPrefix ?? THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE
+  );
+}
+
+export function getActiveCookie(
+  req: FastifyRequest,
+  ctx?: ThirdwebAuthContext,
+): string | undefined {
   if (!req.cookies) {
     return undefined;
   }
 
-  const activeAccount = getCookie(req, THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE);
+  const activeAccount = getCookie(req, getActiveAccountCookie(ctx));
   if (activeAccount) {
-    return `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${activeAccount}`;
+    return `${
+      ctx?.cookieOptions?.tokenPrefix ?? THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX
+    }_${activeAccount}`;
   }
 
   // If active account is not present, then use the old default
-  return THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX;
+  return ctx?.cookieOptions?.tokenPrefix ?? THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX;
 }
 
 /**
@@ -32,7 +43,10 @@ export function getActiveCookie(req: FastifyRequest): string | undefined {
  * @param req
  * @returns
  */
-export function getToken(req: FastifyRequest): string | undefined {
+export function getToken(
+  req: FastifyRequest,
+  ctx?: ThirdwebAuthContext,
+): string | undefined {
   if (req.headers.authorization) {
     const authorizationHeader = req.headers.authorization.split(" ");
     if (authorizationHeader?.length === 2) {
@@ -44,7 +58,7 @@ export function getToken(req: FastifyRequest): string | undefined {
     return undefined;
   }
 
-  const activeCookie = getActiveCookie(req);
+  const activeCookie = getActiveCookie(req, ctx);
   if (!activeCookie) {
     return undefined;
   }
@@ -59,7 +73,7 @@ export async function getUser<
   req: FastifyRequest,
   ctx: ThirdwebAuthContext<TData, TSession>,
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
-  const token = getToken(req);
+  const token = getToken(req, ctx as ThirdwebAuthContext);
 
   if (!token) {
     console.error("Error: No auth token found");

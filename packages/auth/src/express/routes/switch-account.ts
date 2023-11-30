@@ -49,14 +49,19 @@ export default async function handler(
   }
 
   res.setHeader("Set-Cookie", [
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, parsedPayload.data.address, {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: cookieExpiration,
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
+    serialize(
+      ctx.cookieOptions?.activeTokenPrefix ??
+        THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+      parsedPayload.data.address,
+      {
+        domain: ctx.cookieOptions?.domain,
+        path: ctx.cookieOptions?.path || "/",
+        sameSite: ctx.cookieOptions?.sameSite || "none",
+        expires: cookieExpiration,
+        httpOnly: true,
+        secure: ctx.cookieOptions?.secure || true,
+      },
+    ),
   ]);
 
   return res.status(200).end();

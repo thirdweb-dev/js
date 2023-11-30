@@ -1,4 +1,8 @@
-import { getActiveCookie, getUser } from "../helpers/user";
+import {
+  getActiveCookie,
+  getActiveAccountCookie,
+  getUser,
+} from "../helpers/user";
 import { ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { Request, Response } from "express";
@@ -14,7 +18,9 @@ export default async function handler(
     });
   }
 
-  const activeCookie = getActiveCookie(req);
+  const activeCookie = getActiveCookie(req, ctx);
+  const activeAccountCookie = getActiveAccountCookie(ctx);
+
   if (!activeCookie) {
     return res.status(400).json({
       error: "No logged in user to logout.",
@@ -28,18 +34,20 @@ export default async function handler(
     }
   }
 
-  // Set the access token to 'none' and expire in 5 seconds
-  res.setHeader(
-    "Set-Cookie",
-    serialize(activeCookie, "", {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: new Date(Date.now() + 5 * 1000),
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
-  );
+  const opts = {
+    domain: ctx.cookieOptions?.domain,
+    path: ctx.cookieOptions?.path || "/",
+    sameSite: ctx.cookieOptions?.sameSite || "none",
+    expires: new Date(),
+    httpOnly: true,
+    secure: ctx.cookieOptions?.secure || true,
+  };
+
+  // Set the access token to 'none' and expire immediately
+  res.setHeader("Set-Cookie", [
+    serialize(activeCookie, "", opts),
+    serialize(activeAccountCookie, "", opts),
+  ]);
 
   return res.status(200).json({ message: "Successfully logged out" });
 }

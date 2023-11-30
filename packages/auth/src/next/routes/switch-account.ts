@@ -27,7 +27,9 @@ export default async function handler(
   let cookieExpiration: Date;
   const cookie = getCookie(
     req,
-    `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`,
+    `${ctx.cookieOptions?.tokenPrefix ?? THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${
+      parsedPayload.data.address
+    }`,
   );
 
   if (cookie) {
@@ -49,14 +51,19 @@ export default async function handler(
   }
 
   res.setHeader("Set-Cookie", [
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, parsedPayload.data.address, {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: cookieExpiration,
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
+    serialize(
+      ctx.cookieOptions?.activeTokenPrefix ??
+        THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+      parsedPayload.data.address,
+      {
+        domain: ctx.cookieOptions?.domain,
+        path: ctx.cookieOptions?.path || "/",
+        sameSite: ctx.cookieOptions?.sameSite || "none",
+        expires: cookieExpiration,
+        httpOnly: true,
+        secure: ctx.cookieOptions?.secure || true,
+      },
+    ),
   ]);
 
   return res.status(200).end();

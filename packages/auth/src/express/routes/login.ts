@@ -80,7 +80,9 @@ export default async function handler(
   // And set path to / to enable thirdweb_auth_token usage on all endpoints
   res.setHeader("Set-Cookie", [
     serialize(
-      `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
+      `${ctx.cookieOptions?.tokenPrefix ?? THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${
+        payload.payload.address
+      }`,
       token,
       {
         domain: ctx.cookieOptions?.domain,
@@ -91,14 +93,19 @@ export default async function handler(
         secure: ctx.cookieOptions?.secure || true,
       },
     ),
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: new Date(exp * 1000),
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
+    serialize(
+      ctx.cookieOptions?.activeTokenPrefix ??
+        THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+      payload.payload.address,
+      {
+        domain: ctx.cookieOptions?.domain,
+        path: ctx.cookieOptions?.path || "/",
+        sameSite: ctx.cookieOptions?.sameSite || "none",
+        expires: new Date(exp * 1000),
+        httpOnly: true,
+        secure: ctx.cookieOptions?.secure || true,
+      },
+    ),
   ]);
 
   // Send token in body and as cookie for frontend and backend use cases

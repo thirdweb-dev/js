@@ -23,7 +23,7 @@ export default async function handler(
 
   // Importantly, make sure the user was actually logged in before refreshing
   if (user) {
-    const token = getToken(req);
+    const token = getToken(req, ctx);
     if (token) {
       const payload = ctx.auth.parseToken(token);
 
@@ -45,7 +45,10 @@ export default async function handler(
         const refreshedPayload = ctx.auth.parseToken(refreshedToken);
         res.setHeader("Set-Cookie", [
           serialize(
-            `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${user.address}`,
+            `${
+              ctx.cookieOptions?.tokenPrefix ??
+              THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX
+            }_${user.address}`,
             refreshedToken,
             {
               domain: ctx.cookieOptions?.domain,
@@ -56,14 +59,19 @@ export default async function handler(
               secure: ctx.cookieOptions?.secure || true,
             },
           ),
-          serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, user.address, {
-            domain: ctx.cookieOptions?.domain,
-            path: ctx.cookieOptions?.path || "/",
-            sameSite: ctx.cookieOptions?.sameSite || "none",
-            expires: new Date(refreshedPayload.payload.exp * 1000),
-            httpOnly: true,
-            secure: ctx.cookieOptions?.secure || true,
-          }),
+          serialize(
+            ctx.cookieOptions?.activeTokenPrefix ??
+              THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+            user.address,
+            {
+              domain: ctx.cookieOptions?.domain,
+              path: ctx.cookieOptions?.path || "/",
+              sameSite: ctx.cookieOptions?.sameSite || "none",
+              expires: new Date(refreshedPayload.payload.exp * 1000),
+              httpOnly: true,
+              secure: ctx.cookieOptions?.secure || true,
+            },
+          ),
         ]);
       }
     }

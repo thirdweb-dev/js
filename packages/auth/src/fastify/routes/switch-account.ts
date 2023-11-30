@@ -53,14 +53,19 @@ export const switchAccountHandler = (
         );
       }
 
-      res.setCookie(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, req.body.address, {
-        domain: ctx.cookieOptions?.domain,
-        path: ctx.cookieOptions?.path || "/",
-        sameSite: ctx.cookieOptions?.sameSite || "none",
-        expires: cookieExpiration,
-        httpOnly: true,
-        secure: ctx.cookieOptions?.secure || true,
-      });
+      res.setCookie(
+        ctx.cookieOptions?.activeTokenPrefix ??
+          THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+        req.body.address,
+        {
+          domain: ctx.cookieOptions?.domain,
+          path: ctx.cookieOptions?.path || "/",
+          sameSite: ctx.cookieOptions?.sameSite || "none",
+          expires: cookieExpiration,
+          httpOnly: true,
+          secure: ctx.cookieOptions?.secure || true,
+        },
+      );
 
       return res.status(200).send();
     },
