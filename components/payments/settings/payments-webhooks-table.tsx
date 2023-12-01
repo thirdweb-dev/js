@@ -84,62 +84,69 @@ export const PaymentsWebhooksTable: React.FC<PaymentsWebhooksTableProps> = ({
     "Webhook updated successfully",
     "Failed to update webhook.",
   );
+
+  const isDelete = form.watch("isDelete");
+
+  const onSuccess = isDelete ? onDeleteSuccess : onEditSuccess;
+  const onError = isDelete ? onDeleteError : onEditError;
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        {form.watch("isDelete") ? (
-          <ModalContent
-            as="form"
-            onSubmit={form.handleSubmit((data) => {
-              trackEvent({
-                category: "payments",
-                action: "delete-webhook",
-                label: "attempt",
-                accountId,
-              });
+        <ModalContent
+          as="form"
+          onSubmit={form.handleSubmit((data) => {
+            const isSubmitDelete = data.isDelete;
 
-              updateWebhook(
-                {
-                  webhookId: data.id,
-                  deletedAt: new Date(),
+            trackEvent({
+              category: "payments",
+              action: `${isDelete ? "delete" : "update"}-webhook`,
+              label: "attempt",
+              accountId,
+            });
+
+            updateWebhook(
+              {
+                webhookId: data.id,
+                ...(isSubmitDelete
+                  ? { deletedAt: new Date() }
+                  : { url: data.url }),
+              },
+              {
+                onSuccess: () => {
+                  onSuccess();
+                  onClose();
+                  form.reset();
+                  trackEvent({
+                    category: "payments",
+                    action: `${isSubmitDelete ? "delete" : "update"}-webhook`,
+                    label: "success",
+                    accountId,
+                  });
                 },
-                {
-                  onSuccess: () => {
-                    onDeleteSuccess();
-                    onClose();
-                    form.reset();
-                    trackEvent({
-                      category: "payments",
-                      action: "delete-webhook",
-                      label: "success",
-                      accountId,
-                    });
-                  },
-                  onError: (error) => {
-                    onDeleteError(error);
-                    trackEvent({
-                      category: "payments",
-                      action: "delete-webhook",
-                      label: "error",
-                      accountId,
-                    });
-                  },
+                onError: (error) => {
+                  onError(error);
+                  trackEvent({
+                    category: "payments",
+                    action: `${isSubmitDelete ? "delete" : "update"}-webhook`,
+                    label: "error",
+                    accountId,
+                  });
                 },
-              );
-            })}
-          >
-            <ModalHeader>Delete webhook</ModalHeader>
-            <ModalCloseButton />
+              },
+            );
+          })}
+        >
+          <ModalHeader>
+            {`${isDelete ? "Delete" : "Update"}`}{" "}
+            {form.watch("isProduction") ? "Mainnets" : "Testnets"} Webhook
+          </ModalHeader>
+          <ModalCloseButton />
+          {isDelete ? (
             <ModalBody>
               <Stack gap={4}>
-                <Text>Are you sure you want to delete this webook?</Text>
-                <FormControl>
-                  <FormLabel>Type</FormLabel>
-                  <Text>
-                    {form.watch("isProduction") ? "Mainnet" : "Testnet"}
-                  </Text>
-                </FormControl>
+                <Text>Are you sure you want to delete this Webhook?</Text>
                 <FormControl>
                   <FormLabel>URL</FormLabel>
                   <Text>{form.watch("url")}</Text>
@@ -152,102 +159,39 @@ export const PaymentsWebhooksTable: React.FC<PaymentsWebhooksTableProps> = ({
                 </FormControl>
               </Stack>
             </ModalBody>
-
-            <ModalFooter as={Flex} gap={3}>
-              <Button type="button" onClick={onClose} variant="ghost">
-                Cancel
-              </Button>
-              <Button type="submit" colorScheme="red">
-                Delete
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        ) : (
-          <ModalContent
-            as="form"
-            onSubmit={form.handleSubmit((data) => {
-              trackEvent({
-                category: "payments",
-                action: "update-webhook",
-                label: "attempt",
-                accountId,
-              });
-              updateWebhook(
-                {
-                  webhookId: data.id,
-                  url: data.url,
-                },
-                {
-                  onSuccess: () => {
-                    onEditSuccess();
-                    onClose();
-                    form.reset();
-                    trackEvent({
-                      category: "payments",
-                      action: "update-webhook",
-                      label: "success",
-                      accountId,
-                    });
+          ) : (
+            <ModalBody
+              as={FormControl}
+              isRequired
+              isInvalid={!!form.getFieldState("url", form.formState).error}
+            >
+              <FormLabel>URL</FormLabel>
+              <Input
+                type="url"
+                placeholder="Webhook URL"
+                {...form.register("url", {
+                  required: "URL is required",
+                  validate: {
+                    validUrl: (value) =>
+                      isValidUrl(value) ||
+                      `Invalid URL, make sure you include https://`,
                   },
-                  onError: (error) => {
-                    onEditError(error);
-                    trackEvent({
-                      category: "payments",
-                      action: "update-webhook",
-                      label: "error",
-                      accountId,
-                      error,
-                    });
-                  },
-                },
-              );
-            })}
-          >
-            <ModalHeader>Update Webhook</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Flex flexDir="column" gap={4}>
-                <FormControl isRequired>
-                  <FormControl>
-                    <FormLabel>Environment</FormLabel>
-                    <Text>
-                      {form.watch("isProduction") ? "Mainnet" : "Testnet"}
-                    </Text>
-                  </FormControl>
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={!!form.getFieldState("url", form.formState).error}
-                >
-                  <FormLabel>URL</FormLabel>
-                  <Input
-                    type="url"
-                    placeholder="Webhook URL"
-                    {...form.register("url", {
-                      required: "URL is required",
-                      validate: {
-                        validUrl: (value) =>
-                          isValidUrl(value) ||
-                          `Invalid URL, make sure you include https://`,
-                      },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {form.formState.errors?.url?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </Flex>
+                })}
+              />
+              <FormErrorMessage>
+                {form.formState.errors?.url?.message}
+              </FormErrorMessage>
             </ModalBody>
-            <ModalFooter as={Flex} gap={3}>
-              <Button type="button" onClick={onClose} variant="ghost">
-                Cancel
-              </Button>
-              <Button type="submit" colorScheme="primary">
-                Update
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        )}
+          )}
+          <ModalFooter as={Flex} gap={3}>
+            <Button type="button" onClick={onClose} variant="ghost">
+              Cancel
+            </Button>
+            <Button type="submit" colorScheme={isDelete ? "red" : "primary"}>
+              {isDelete ? "Delete" : "Update"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
       <TWTable
         title="webhooks"
