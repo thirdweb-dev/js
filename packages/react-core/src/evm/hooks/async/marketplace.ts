@@ -580,7 +580,6 @@ export function useAuctionWinner(
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check (only necessary for marketplace v3)
-
  * @returns a response object that includes an array of listings
  * @twfeature EnglishAuctions
  * @see {@link https://portal.thirdweb.com/react/react.usebidbuffer?utm_source=sdk | Documentation}

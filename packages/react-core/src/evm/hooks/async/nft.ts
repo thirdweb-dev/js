@@ -46,7 +46,6 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a {@link NFTContract}
  * @param tokenId - the tokenId to look up
  * @returns a response object that includes the metadata for the given tokenId
-
  * @twfeature ERC721 | ERC1155
  * @see {@link https://portal.thirdweb.com/react/react.usenft?utm_source=sdk | Documentation}
  */
@@ -90,7 +89,6 @@ export function useNFT<TContract extends NFTContract>(
  * @param queryParams - query params to pass to the query for pagination
  * @returns a response object that includes an array of NFTs
  * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Enumerable
-
  * @see {@link https://portal.thirdweb.com/react/react.usenfts?utm_source=sdk | Documentation}
  */
 export function useNFTs<TContract extends NFTContract>(
@@ -132,7 +130,6 @@ export function useNFTs<TContract extends NFTContract>(
  *
  * @param contract - an instance of a {@link NFTContract}
  * @returns a response object that includes the total count of NFTs
-
  * @twfeature ERC721Supply | ERC1155Enumerable
  * @see {@link https://portal.thirdweb.com/react/react.usetotalcount?utm_source=sdk | Documentation}
  */
@@ -181,7 +178,6 @@ export function useTotalCount<TContract extends NFTContract>(
  * @param contract - an instance of a {@link NFTContract}
  * @param tokenId - required for ERC1155, the tokenId to look up
  * @returns a response object that includes the total minted supply
-
  * @twfeature ERC721Supply | ERC1155Enumerable
  * @see {@link https://portal.thirdweb.com/react/react.usetotalcirculatingsupply?utm_source=sdk | Documentation}
  */
@@ -235,7 +231,6 @@ export function useTotalCirculatingSupply(
  * @param ownerWalletAddress - the wallet address to get owned tokens for
  * @param queryParams - query params to pass to the query for pagination
  * @returns a response object that includes the list of owned tokens
-
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
  * @see {@link https://portal.thirdweb.com/react/react.useownednfts?utm_source=sdk | Documentation}
  */
@@ -395,7 +390,6 @@ export function useSharedMetadata(
  *
  * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
-
  * @twfeature ERC721Mintable | ERC1155Mintable
  * @see {@link https://portal.thirdweb.com/react/react.usemintnft?utm_source=sdk | Documentation}
  */
@@ -468,7 +462,6 @@ export function useMintNFT<TContract extends NFTContract>(
  *
  * @param contract - an instance of a {@link Erc1155}
  * @returns a mutation object that can be used to mint a more supply of a token id to the provided wallet
-
  * @twfeature ERC1155Mintable
  * @see {@link https://portal.thirdweb.com/react/react.usemintnftsupply?utm_source=sdk | Documentation}
  */
@@ -535,7 +528,6 @@ export function useMintNFTSupply(contract: Erc1155) {
  *
  * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to transfer NFTs
-
  * @twfeature ERC721 | ERC1155
  * @see {@link https://portal.thirdweb.com/react/react.usetransfernft?utm_source=sdk | Documentation}
  */
