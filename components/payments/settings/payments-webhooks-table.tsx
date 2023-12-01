@@ -1,20 +1,11 @@
 import {
   PaymentsWebhooksType,
-  isValidWebhookUrl,
+  usePaymentsUpdateWebhook,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import {
-  ButtonGroup,
   FormControl,
-  Icon,
-  IconButton,
   Input,
   Modal,
-  Tr,
-  Td,
-  Th,
-  Thead,
-  Tbody,
-  Table,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -24,279 +15,249 @@ import {
   Flex,
   useDisclosure,
   Stack,
-  Center,
-  Spinner,
 } from "@chakra-ui/react";
-import { forwardRef, useRef, useState } from "react";
-import pluralize from "pluralize";
 import { format } from "date-fns";
-import { Button, Text, TableContainer, FormLabel } from "tw-components";
-import { BiPencil } from "react-icons/bi";
-import { FaCheck } from "react-icons/fa";
-import { FiTrash2 } from "react-icons/fi";
-import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
-import { FaXmark } from "react-icons/fa6";
+import { Button, FormLabel, Text, FormErrorMessage } from "tw-components";
+import { createColumnHelper } from "@tanstack/react-table";
+import { TWTable } from "components/shared/TWTable";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useForm } from "react-hook-form";
 
 export interface PaymentsWebhooksTableProps {
+  accountId: string;
   webhooks: PaymentsWebhooksType[];
-  onCreate: (url: string) => void;
-  onUpdate: (webhook: PaymentsWebhooksType, newUrl: string) => void;
-  onDelete: (webhook: PaymentsWebhooksType) => void;
   isLoading: boolean;
+  isFetched: boolean;
 }
 
-interface UrlInputFieldProps {
-  webhookUrl: string;
-  onChange: (value: string) => void;
-}
-
-const UrlInputField = forwardRef<HTMLInputElement, UrlInputFieldProps>(
-  ({ webhookUrl, onChange }, ref) => {
-    const isValid = isValidWebhookUrl(webhookUrl);
-    return (
-      <FormControl isInvalid={!isValid && !!webhookUrl}>
-        <Input
-          ref={ref}
-          type="url"
-          placeholder="Webhook URL"
-          value={webhookUrl}
-          onChange={(e) => onChange(e.target.value)}
-          autoFocus
-        />
-      </FormControl>
-    );
-  },
-);
-
-UrlInputField.displayName = "UrlInputField";
-
-interface EditTableRowProps {
-  webhook: PaymentsWebhooksType;
-  onEdit: (webhook: PaymentsWebhooksType, newUrl: string) => void;
-  onDelete: (webhook: PaymentsWebhooksType) => void;
-}
-
-const EditTableRow = ({ webhook, onEdit, onDelete }: EditTableRowProps) => {
-  const [editUrl, setEditUrl] = useState(webhook.url ?? "");
-  const [isEdit, setIsEdit] = useState(false);
-
-  const editWebhookRef = useRef<HTMLInputElement>(null);
-
-  const startEdit = () => {
-    setIsEdit(true);
-    setEditUrl(webhook.url);
-    if (editWebhookRef.current) {
-      editWebhookRef.current.focus();
-      editWebhookRef.current.select();
-    }
-  };
-
-  const acceptEdit = () => {
-    onEdit(webhook, editUrl);
-    setIsEdit(false);
-  };
-
-  const rejectEdit = () => {
-    setIsEdit(false);
-  };
-
-  const _onDelete = () => {
-    onDelete(webhook);
-  };
-
-  return (
-    <Tr borderBottomWidth={1} _last={{ borderBottomWidth: 0 }}>
-      <Td borderBottomWidth="inherit" borderBottomColor="accent.100">
-        {isEdit ? (
-          <UrlInputField
-            webhookUrl={editUrl}
-            onChange={setEditUrl}
-            ref={editWebhookRef}
-          />
-        ) : (
-          <Text>{webhook.url}</Text>
-        )}
-      </Td>
-      <Td borderBottomWidth="inherit" borderBottomColor="accent.100">
-        {isEdit ? (
-          <ButtonGroup variant="ghost" gap={2}>
-            <IconButton
-              onClick={acceptEdit}
-              variant="outline"
-              icon={<Icon as={FaCheck} boxSize={4} />}
-              aria-label="Accept"
-            />
-            <IconButton
-              onClick={rejectEdit}
-              variant="outline"
-              icon={<Icon as={FaXmark} boxSize={4} />}
-              aria-label="Cancel"
-            />
-          </ButtonGroup>
-        ) : (
-          <ButtonGroup variant="ghost" gap={2}>
-            <IconButton
-              onClick={startEdit}
-              variant="outline"
-              icon={<Icon as={BiPencil} boxSize={4} />}
-              aria-label="Edit"
-            />
-            <IconButton
-              onClick={_onDelete}
-              variant="outline"
-              icon={<Icon as={FiTrash2} boxSize={4} />}
-              aria-label="Remove"
-            />
-          </ButtonGroup>
-        )}
-      </Td>
-    </Tr>
-  );
+const isValidUrl = (value: string) => {
+  return /^https:\/\/[^\s$.?#].[^\s]*$/gm.test(value);
 };
 
-interface CreateTableRowProps {
-  onCreate: (webhookUrl: string) => void;
-}
+const columnHelper = createColumnHelper<PaymentsWebhooksType>();
 
-const CreateTableRow = ({ onCreate }: CreateTableRowProps) => {
-  const [createUrl, setCreateUrl] = useState("");
-  const createWebhookRef = useRef<HTMLInputElement>(null);
-
-  const _onCreate = () => {
-    onCreate(createUrl);
-    setCreateUrl("");
-  };
-
-  return (
-    <Tr borderBottomWidth={1} _last={{ borderBottomWidth: 0 }}>
-      <Td borderBottomWidth="inherit" borderBottomColor="accent.100">
-        <UrlInputField
-          webhookUrl={createUrl}
-          onChange={setCreateUrl}
-          ref={createWebhookRef}
-        />
-      </Td>
-      <Td borderBottomWidth="inherit" borderBottomColor="accent.100">
-        <Button size="sm" leftIcon={<IoMdAdd />} onClick={_onCreate}>
-          Create Webhook
-        </Button>
-      </Td>
-    </Tr>
-  );
-};
+const columns = [
+  columnHelper.accessor("url", {
+    header: "Url",
+    cell: (cell) => {
+      return <Text>{cell.getValue()}</Text>;
+    },
+  }),
+];
 
 export const PaymentsWebhooksTable: React.FC<PaymentsWebhooksTableProps> = ({
+  accountId,
   webhooks,
-  onUpdate,
-  onDelete,
-  onCreate,
   isLoading,
+  isFetched,
 }) => {
-  const [webhookToRevoke, setWebhookToRevoke] =
-    useState<PaymentsWebhooksType>();
+  const trackEvent = useTrack();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const _onDelete = (webhook: PaymentsWebhooksType) => {
-    setWebhookToRevoke(webhook);
+  const { mutate: updateWebhook } = usePaymentsUpdateWebhook(accountId);
+  const form = useForm<PaymentsWebhooksType & { isDelete: boolean }>();
+
+  const onDelete = (webhook: PaymentsWebhooksType) => {
+    form.reset({
+      ...webhook,
+      isDelete: true,
+    });
+    onOpen();
+  };
+  const onEdit = (webhook: PaymentsWebhooksType) => {
+    form.reset({
+      ...webhook,
+      isDelete: false,
+    });
     onOpen();
   };
 
-  const _onConfirmDelete = () => {
-    onClose();
-    if (webhookToRevoke) {
-      onDelete(webhookToRevoke);
-    }
-  };
+  const { onSuccess: onDeleteSuccess, onError: onDeleteError } =
+    useTxNotifications(
+      "Webhook deleted successfully.",
+      "Failed to delete webhook.",
+    );
 
-  const canAddNewWebhook = webhooks.length < 3;
-
+  const { onSuccess: onEditSuccess, onError: onEditError } = useTxNotifications(
+    "Webhook updated successfully",
+    "Failed to update webhook.",
+  );
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete webhook</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {webhookToRevoke && (
+        {form.watch("isDelete") ? (
+          <ModalContent
+            as="form"
+            onSubmit={form.handleSubmit((data) => {
+              trackEvent({
+                category: "payments",
+                action: "delete-webhook",
+                label: "attempt",
+                accountId,
+              });
+
+              updateWebhook(
+                {
+                  webhookId: data.id,
+                  deletedAt: new Date(),
+                },
+                {
+                  onSuccess: () => {
+                    onDeleteSuccess();
+                    onClose();
+                    form.reset();
+                    trackEvent({
+                      category: "payments",
+                      action: "delete-webhook",
+                      label: "success",
+                      accountId,
+                    });
+                  },
+                  onError: (error) => {
+                    onDeleteError(error);
+                    trackEvent({
+                      category: "payments",
+                      action: "delete-webhook",
+                      label: "error",
+                      accountId,
+                    });
+                  },
+                },
+              );
+            })}
+          >
+            <ModalHeader>Delete webhook</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
               <Stack gap={4}>
                 <Text>Are you sure you want to delete this webook?</Text>
                 <FormControl>
                   <FormLabel>Type</FormLabel>
                   <Text>
-                    {webhookToRevoke?.isProduction ? "Production" : "Testnet"}
+                    {form.watch("isProduction") ? "Mainnet" : "Testnet"}
                   </Text>
                 </FormControl>
                 <FormControl>
                   <FormLabel>URL</FormLabel>
-                  <Text>{webhookToRevoke?.url}</Text>
+                  <Text>{form.watch("url")}</Text>
                 </FormControl>
                 <FormControl>
                   <FormLabel>Created at</FormLabel>
                   <Text>
-                    {format(
-                      new Date(webhookToRevoke?.createdAt ?? ""),
-                      "PP pp z",
-                    )}
+                    {format(new Date(form.watch("createdAt")), "PP pp z")}
                   </Text>
                 </FormControl>
               </Stack>
-            )}
-          </ModalBody>
+            </ModalBody>
 
-          <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            <Button type="submit" colorScheme="red" onClick={_onConfirmDelete}>
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th border="none">
-                <Flex align="center" gap={2}>
-                  <Text as="label" size="label.sm" color="faded">
-                    Url
-                  </Text>
-                </Flex>
-              </Th>
-              <Th border="none">
-                <Flex align="center" gap={2}>
-                  <Text as="label" size="label.sm" color="faded">
-                    Actions
-                  </Text>
-                </Flex>
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {webhooks.map((webhook, index) => {
-              return (
-                <EditTableRow
-                  key={index}
-                  webhook={webhook}
-                  onEdit={onUpdate}
-                  onDelete={_onDelete}
-                />
+            <ModalFooter as={Flex} gap={3}>
+              <Button type="button" onClick={onClose} variant="ghost">
+                Cancel
+              </Button>
+              <Button type="submit" colorScheme="red">
+                Delete
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        ) : (
+          <ModalContent
+            as="form"
+            onSubmit={form.handleSubmit((data) => {
+              trackEvent({
+                category: "payments",
+                action: "update-webhook",
+                label: "attempt",
+                accountId,
+              });
+              updateWebhook(
+                {
+                  webhookId: data.id,
+                  url: data.url,
+                },
+                {
+                  onSuccess: () => {
+                    onEditSuccess();
+                    onClose();
+                    form.reset();
+                    trackEvent({
+                      category: "payments",
+                      action: "update-webhook",
+                      label: "success",
+                      accountId,
+                    });
+                  },
+                  onError: (error) => {
+                    onEditError(error);
+                    trackEvent({
+                      category: "payments",
+                      action: "update-webhook",
+                      label: "error",
+                      accountId,
+                      error,
+                    });
+                  },
+                },
               );
             })}
-            {canAddNewWebhook ? <CreateTableRow onCreate={onCreate} /> : null}
-          </Tbody>
-        </Table>
-        {isLoading && (
-          <Center>
-            <Flex py={4} direction="row" gap={4} align="center">
-              <Spinner size="sm" />
-              <Text>Loading {pluralize("Webhooks Table", 0, false)}</Text>
-            </Flex>
-          </Center>
+          >
+            <ModalHeader>Update Webhook</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex flexDir="column" gap={4}>
+                <FormControl isRequired>
+                  <FormControl>
+                    <FormLabel>Environment</FormLabel>
+                    <Text>
+                      {form.watch("isProduction") ? "Mainnet" : "Testnet"}
+                    </Text>
+                  </FormControl>
+                </FormControl>
+                <FormControl
+                  isRequired
+                  isInvalid={!!form.getFieldState("url", form.formState).error}
+                >
+                  <FormLabel>URL</FormLabel>
+                  <Input
+                    type="url"
+                    placeholder="Webhook URL"
+                    {...form.register("url", {
+                      required: "URL is required",
+                      validate: {
+                        validUrl: (value) =>
+                          isValidUrl(value) ||
+                          `Invalid URL, make sure you include https://`,
+                      },
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {form.formState.errors?.url?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </Flex>
+            </ModalBody>
+            <ModalFooter as={Flex} gap={3}>
+              <Button type="button" onClick={onClose} variant="ghost">
+                Cancel
+              </Button>
+              <Button type="submit" colorScheme="primary">
+                Update
+              </Button>
+            </ModalFooter>
+          </ModalContent>
         )}
-      </TableContainer>
+      </Modal>
+      <TWTable
+        title="webhooks"
+        data={webhooks}
+        columns={columns}
+        isLoading={isLoading}
+        isFetched={isFetched}
+        onDelete={onDelete}
+        onEdit={onEdit}
+      />
     </>
   );
 };

@@ -52,7 +52,6 @@ import {
 import { useUpdateSellerByThirdwebAccountIdMutation } from "graphql/mutations/__generated__/UpdateSellerByThirdwebAccountId.generated";
 import {
   WebhooksBySellerIdDocument,
-  WebhooksBySellerIdQuery,
   WebhooksBySellerIdQueryVariables,
   useWebhooksBySellerIdLazyQuery,
 } from "graphql/queries/__generated__/WebhooksBySellerId.generated";
@@ -60,10 +59,6 @@ import {
   InsertWebhookMutationVariables,
   useInsertWebhookMutation,
 } from "graphql/mutations/__generated__/InsertWebhook.generated";
-import {
-  Webhook_Insert_Input,
-  Webhook_Set_Input,
-} from "graphql/generated_types";
 import {
   UpdateWebhookMutationVariables,
   useUpdateWebhookMutation,
@@ -900,12 +895,10 @@ export type PaymentsWebhooksType = {
 
 export function usePaymentsWebhooksByAccountId(accountId: string) {
   invariant(accountId, "accountId is required");
-
-  const address = useAddress();
   const { paymentsSellerId } = useApiAuthToken();
   const [getWebhooksBySellerId] = useWebhooksBySellerIdLazyQuery();
 
-  const queryInfo = useQuery(
+  return useQuery(
     paymentsKeys.webhooks(accountId),
     async () => {
       invariant(paymentsSellerId, "no payments seller id found");
@@ -929,27 +922,9 @@ export function usePaymentsWebhooksByAccountId(accountId: string) {
           })) as PaymentsWebhooksType[])
         : ([] as PaymentsWebhooksType[]);
     },
-    { enabled: !!paymentsSellerId && !!address },
+    { enabled: !!paymentsSellerId && !!accountId },
   );
-
-  return {
-    ...queryInfo,
-    webhooks: queryInfo.data,
-  };
 }
-
-export const isValidWebhookUrl = (url: string) => {
-  if (!url || !url.startsWith("https://")) {
-    return false;
-  }
-
-  try {
-    const parsedUrl = new URL(url);
-    return !!parsedUrl.href && parsedUrl.protocol === "https:";
-  } catch (e) {
-    return false;
-  }
-};
 
 export type CreateWebhookInput = {
   url: string;
@@ -968,17 +943,14 @@ export function usePaymentsCreateWebhook(accountId: string) {
   return useMutationWithInvalidate(
     async (input: CreateWebhookInput) => {
       invariant(paymentsSellerId, "No seller id found");
-      invariant(isValidWebhookUrl(input.url), "Invalid webhook url");
-
-      const webhookInput: Webhook_Insert_Input = {
-        seller_id: paymentsSellerId,
-        url: input.url,
-        is_production: input.isProduction,
-      };
 
       return createWebhookBySellerId({
         variables: {
-          object: webhookInput,
+          object: {
+            seller_id: paymentsSellerId,
+            url: input.url,
+            is_production: input.isProduction,
+          },
         } as InsertWebhookMutationVariables,
       });
     },
@@ -1015,7 +987,7 @@ export function usePaymentsUpdateWebhook(accountId: string) {
           webhookValue: {
             url: input.url,
             deleted_at: input.deletedAt,
-          } as Webhook_Set_Input,
+          },
         } as UpdateWebhookMutationVariables,
       });
     },
