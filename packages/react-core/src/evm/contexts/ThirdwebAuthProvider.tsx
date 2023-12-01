@@ -10,6 +10,9 @@ import { WalletData } from "@thirdweb-dev/wallets";
 import { useLogout } from "../hooks/auth";
 import { useSwitchAccount } from "../hooks/auth/useSwitchAccount";
 
+/**
+ * @internal
+ */
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {

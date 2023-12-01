@@ -152,23 +152,47 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
 };
 
 /**
- * A basic wrapper around the Thirdweb SDK.
+ * The `ThirdwebSDKProvider` is used when you want to provide your own wallet connection logic and just use the thirdweb SDK to interact with smart contracts and the blockchain.
+ * This means you can use everything in the SDK except for wallet connection-related components and hooks. if you need those please use the `ThirdwebProvider` instead.
  *
- * You can use this in order to be able to pass a provider & signer directly to the SDK.
+ * `ThirdwebSDKProvider` allows you to set a provider & signer to the Thirdweb SDK.
  *
- * @remarks Utilizing this provider will mean hooks for wallet management are not available, if you need those please use the {@link ThirdwebProvider} instead.
+ * @example
+ * Wrap your app in the ThirdwebSDKProvider to access the SDK’s functionality from anywhere in your app.
+ *
+ * ```tsx
+ * import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
+ * import { ethers } from "ethers";
+ *
+ * // Example shows how to get the signer from the injected provider ( wallet extension )
+ * function Example() {
+ *  return (
+ *    <ThirdwebSDKProvider
+ *      activeChain="ethereum"
+ *      clientId="YOUR_CLIENT_ID"
+ *      signer={new ethers.providers.Web3Provider(window.ethereum).getSigner()}
+ *    >
+ *      <App />
+ *    </ThirdwebSDKProvider>
+ *  )
+ * }
+ * ```
  *
  * @public
  */
-export const ThirdwebSDKProvider = <TChains extends Chain[]>({
-  signer,
-  children,
-  queryClient,
-  supportedChains: _supportedChains,
-  activeChain,
-  clientId,
-  ...restProps
-}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+export const ThirdwebSDKProvider = <TChains extends Chain[]>(
+  props: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>,
+) => {
+  const {
+    signer,
+    children,
+    queryClient,
+    supportedChains: _supportedChains,
+    activeChain,
+    clientId,
+    ...restProps
+  } = props;
+
   if (!clientId) {
     checkClientIdOrSecretKey(
       "No API key. Please provide a clientId. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key",

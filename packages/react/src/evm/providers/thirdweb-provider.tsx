@@ -16,7 +16,7 @@ import { ThirdwebLocale, en } from "../locales/en";
 import { ThirdwebLocaleContext } from "./locale-provider";
 import { walletIds } from "@thirdweb-dev/wallets";
 
-interface ThirdwebProviderProps<TChains extends Chain[]>
+export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
     "createWalletStorage" | "supportedWallets" | "theme"
@@ -47,6 +47,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   locale?: ThirdwebLocale;
 }
 
+export type DefaultChains = typeof defaultChains;
+
 /**
  *
  * The `<ThirdwebProvider />` component lets you control what networks you want users to connect to,
@@ -68,15 +70,17 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
  * ```
  *
  */
-export const ThirdwebProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
-  supportedWallets,
-  children,
-  signer,
-  theme: _theme,
-  ...restProps
-}: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
+  props: PropsWithChildren<ThirdwebProviderProps<TChains>>,
+) => {
+  const {
+    supportedWallets,
+    children,
+    signer,
+    theme: _theme,
+    ...restProps
+  } = props;
+
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";
 
