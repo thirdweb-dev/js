@@ -1,5 +1,40 @@
 # @thirdweb-dev/react-core
 
+## 4.1.11
+
+### Patch Changes
+
+- [#2007](https://github.com/thirdweb-dev/js/pull/2007) [`e79b2935`](https://github.com/thirdweb-dev/js/commit/e79b293562bbcf4af6fbcb4829b2acb4cb3e2cb4) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Get the native token balance of a wallet address on the `activeChain` network set in the `ThirdwebProvider`
+
+  ```ts
+  const balanceQuery = useBalanceForAddress(walletAddress);
+
+  console.log(balanceQuery.data);
+  ```
+
+- [#1926](https://github.com/thirdweb-dev/js/pull/1926) [`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Rabby browser extension
+
+- [#2001](https://github.com/thirdweb-dev/js/pull/2001) [`a27b10c5`](https://github.com/thirdweb-dev/js/commit/a27b10c5c3400500ef0138069acc550b3a07ffc6) Thanks [@iketw](https://github.com/iketw)! - Don't disconnect wallet if connecting
+
+- [#2016](https://github.com/thirdweb-dev/js/pull/2016) [`94559129`](https://github.com/thirdweb-dev/js/commit/9455912932c71f3ef9b67461bf5604f1ea1f71e8) Thanks [@iketw](https://github.com/iketw)! - Share WalletConnectHandler between React and RN to support wallets as receivers
+
+- [#1997](https://github.com/thirdweb-dev/js/pull/1997) [`50749662`](https://github.com/thirdweb-dev/js/commit/507496627bcd77b49bb027b24996a31c57e04819) Thanks [@MananTank](https://github.com/MananTank)! - - Fixes issue #1708
+
+  - Fixes smart wallet icon shown even after clicking on "Switch to Personal wallet" in ConnectWallet dropdown
+
+- [#1987](https://github.com/thirdweb-dev/js/pull/1987) [`b3394277`](https://github.com/thirdweb-dev/js/commit/b3394277c77e4af130151111e056e27a28ac893a) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and type exports
+
+- [#1928](https://github.com/thirdweb-dev/js/pull/1928) [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Crypto.com Defi wallet
+
+- [#2015](https://github.com/thirdweb-dev/js/pull/2015) [`4c488aa3`](https://github.com/thirdweb-dev/js/commit/4c488aa31f6fadc13759ff60f30230b929feb314) Thanks [@MananTank](https://github.com/MananTank)! - Fix auto-connecting a personal wallet for smart/safe wallet
+
+- Updated dependencies [[`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b), [`b0ecfd2d`](https://github.com/thirdweb-dev/js/commit/b0ecfd2d8d5cda33dc8f5ea2d20119cb901a0bcb), [`d28097f5`](https://github.com/thirdweb-dev/js/commit/d28097f508739cdbd6625e09c2ed0fe25a922c0f), [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a), [`8bf3be88`](https://github.com/thirdweb-dev/js/commit/8bf3be88be051178a7142618c4371d2f2ef26271), [`b02fb91a`](https://github.com/thirdweb-dev/js/commit/b02fb91a548a3f66f7677ced24be9397e0f9a7ba), [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0), [`2861dff1`](https://github.com/thirdweb-dev/js/commit/2861dff1f013b5150314fdaccaeadddbcf0d21c9), [`61b6a002`](https://github.com/thirdweb-dev/js/commit/61b6a00214716454222e67fe5fdb47edba391070), [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352), [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa), [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c)]:
+  - @thirdweb-dev/wallets@2.1.10
+  - @thirdweb-dev/sdk@4.0.18
+  - @thirdweb-dev/chains@0.1.60
+  - @thirdweb-dev/storage@2.0.6
+  - @thirdweb-dev/auth@4.1.13
+
 ## 4.1.10
 
 ### Patch Changes
