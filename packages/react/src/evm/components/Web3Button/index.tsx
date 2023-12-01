@@ -31,6 +31,13 @@ const TW_WEB3BUTTON = "tw-web3button";
 export interface Web3ButtonProps<TActionFn extends ActionFn> {
   /**
    * the class to apply to the button for adding custom styles
+   *
+   * @example
+   * ```tsx
+   * <Web3Button className="my-custom-class" contractAddress={contractAddress} action={someAction} >
+   * Claim NFT
+   * </Web3Button>
+   * ```
    */
   className?: string;
   /**
