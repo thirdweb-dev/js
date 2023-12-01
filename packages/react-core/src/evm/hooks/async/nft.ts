@@ -283,7 +283,6 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * @returns a response object that includes the total balance of the owner
  * @twfeature ERC721 | ERC1155
  * @see {@link https://portal.thirdweb.com/react/react.usenftbalance?utm_source=sdk | Documentation}
-
  */
 export function useNFTBalance(
   contract: RequiredParam<NFTContract>,
@@ -337,7 +336,6 @@ export function useNFTBalance(
  * @returns a response object that includes the shared metadata of the contract
  * @twfeature ERC721SharedMetadata
  * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
-
  */
 export function useSharedMetadata(
   contract: RequiredParam<NFTContract>,
@@ -624,7 +622,6 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @returns a mutation object that can be used to transfer batch NFTs
  * @twfeature ERC1155
  * @see {@link https://portal.thirdweb.com/react/react.useairdropnft?utm_source=sdk | Documentation}
-
  */
 export function useAirdropNFT(contract: Erc1155) {
   const activeChainId = useSDKChainId();
@@ -681,7 +678,6 @@ export function useAirdropNFT(contract: Erc1155) {
  * @returns a mutation object that can be used to burn an NFT token from the connected wallet
  * @twfeature ERC721Burnable | ERC1155Burnable
  * @see {@link https://portal.thirdweb.com/react/react.useburnnft?utm_source=sdk | Documentation}
-
  */
 export function useBurnNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,

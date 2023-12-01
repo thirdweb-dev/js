@@ -52,7 +52,6 @@ import invariant from "tiny-invariant";
  * @returns a response object that includes an array of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
  * @see {@link https://portal.thirdweb.com/react/react.useunclaimednfts?utm_source=sdk | Documentation}
-
  */
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -89,7 +88,6 @@ export function useUnclaimedNFTs(
  * @returns a response object that includes an array of NFTs that are claimed
  * @twfeature ERC721LazyMintable
  * @see {@link https://portal.thirdweb.com/react/react.useclaimednfts?utm_source=sdk | Documentation}
-
  */
 export function useClaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -226,7 +224,6 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
  * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @see {@link https://portal.thirdweb.com/react/react.useclaimnft?utm_source=sdk | Documentation}
-
  */
 export function useClaimNFT<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
@@ -316,7 +313,6 @@ export function useClaimNFT<TContract extends DropContract>(
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  * @see {@link https://portal.thirdweb.com/react/react.uselazymint?utm_source=sdk | Documentation}
-
  */
 export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
@@ -389,7 +385,6 @@ export function useLazyMint<TContract extends DropContract>(
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @see {@link https://portal.thirdweb.com/react/react.usedelayedreveallazymint?utm_source=sdk | Documentation}
-
  */
 export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -470,7 +465,6 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @see {@link https://portal.thirdweb.com/react/react.usereveallazymint?utm_source=sdk | Documentation}
-
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
