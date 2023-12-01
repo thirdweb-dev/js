@@ -54,20 +54,17 @@ export type Chain = {
 
 /**
  * A wallet address.
- * @beta
  */
 export type WalletAddress = AddressOrEns;
 
 /**
  * A contract address.
- * @beta
  */
 export type ContractAddress = AddressOrEns;
 
 /**
  * The parameters to pass to the mint and transfer functions.
  *
- * @beta
  */
 export type TokenParams = {
   to: WalletAddress;
@@ -77,7 +74,6 @@ export type TokenParams = {
 /**
  * The parameters to pass to the burn function.
  *
- * @beta
  */
 export type TokenBurnParams = {
   amount: Amount;
@@ -91,7 +87,6 @@ export type TokenBurnParams = {
  * ```javascript
  * const { contract } = useContract("{{contract_address}}");
  * ```
- * @beta
  */
 export type NFTContract =
   | NFTCollection
@@ -106,19 +101,16 @@ export type NFTContract =
  * ```javascript
  * const { contract } = useContract("{{contract_address}}");
  * ```
- * @beta
  */
 export type TokenContract = TokenDrop | Token | SmartContract | null;
 
 /**
  * Possible NFT contract types.
- * @beta
  */
 export type Erc721OrErc1155 = Erc721 | Erc1155;
 
 /**
  * The params to pass to `useTransferNFT`.
- * @beta
  */
 export type TransferNFTParams = {
   to: WalletAddress;
@@ -128,7 +120,6 @@ export type TransferNFTParams = {
 
 /**
  * The params to pass to `useTransferBatchNFT`.
- * @beta
  */
 export type AirdropNFTParams = {
   tokenId: BigNumberish;
@@ -137,7 +128,6 @@ export type AirdropNFTParams = {
 
 /**
  * The params to pass to `useMintNFTSupply`.
- * @beta
  */
 export type MintNFTSupplyParams = {
   tokenId: BigNumberish;
@@ -148,7 +138,6 @@ export type MintNFTSupplyParams = {
 /**
  * The params for the {@link useMintNFT} hook mutation.
  *
- * @beta
  */
 export type MintNFTParams = {
   metadata: NFTMetadataOrUri;
@@ -159,7 +148,6 @@ export type MintNFTParams = {
 /**
  * The return type of the {@link useMintNFT} hook.
  *
- * @beta
  */
 export type MintNFTReturnType<TContract> = TContract extends Erc721
   ? Awaited<ReturnType<Erc721Mintable["to"]>>
@@ -170,7 +158,6 @@ export type MintNFTReturnType<TContract> = TContract extends Erc721
 /**
  * The params for the {@link useBurnNFT} hook mutation.
  *
- * @beta
  */
 export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
@@ -178,7 +165,6 @@ export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
 /**
  * The possible DROP contract types.
- * @beta
  */
 export type DropContract =
   | NFTDrop
@@ -190,14 +176,12 @@ export type DropContract =
 
 /**
  * The possible revealable contract types.
- * @beta
  */
 export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
  *
- * @beta
  */
 export type DelayedRevealLazyMintInput = {
   placeholder: NFTMetadataInput;
@@ -208,7 +192,6 @@ export type DelayedRevealLazyMintInput = {
 /**
  * The params for the {@link useRevealLazyMint} hook mutation.
  *
- * @beta
  */
 export type RevealLazyMintInput = {
   batchId: BigNumberish;
@@ -218,7 +201,6 @@ export type RevealLazyMintInput = {
 /**
  * The params for the {@link useClaimNFT} hook mutation.
  *
- * @beta
  */
 export type ClaimNFTParams = {
   to?: WalletAddress;
@@ -233,7 +215,6 @@ export type ClaimNFTParams = {
 /**
  * The return type of the {@link useClaimNFT} hook.
  *
- * @beta
  */
 export type ClaimNFTReturnType =
   | Awaited<ReturnType<Erc721["claimTo"]>>

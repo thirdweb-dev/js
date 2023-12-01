@@ -34,23 +34,93 @@ import {
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
 
-type RenderChain = React.FC<{
+export type NetworkSelectorChain = React.FC<{
+  /**
+   * `Chain` object for the chain to be displayed
+   */
   chain: Chain;
+  /**
+   * function to be called for switching to the given chain
+   */
   switchChain: () => void;
+  /**
+   * flag indicating whether the SDK is currently switching to the given chain
+   */
   switching: boolean;
+  /**
+   * flag indicating whether the SDK failed to switch to the given chain
+   */
   switchFailed: boolean;
+  /**
+   * function to close the modal
+   */
   close?: () => void;
 }>;
 
 export type NetworkSelectorProps = {
-  theme: "dark" | "light" | Theme;
+  /**
+   * Theme to use in Modal
+   *
+   * Either specify string "dark" or "light" to use the default themes, or provide a custom theme object.
+   *
+   * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
+   *
+   * @example
+   * ```tsx
+   * import { darkTheme } from "@thirdweb-dev/react";
+   *
+   * <NetworkSelector
+   *  open={true}
+   *  theme={darkTheme({
+   *    colors: {
+   *      modalBg: "#000000",
+   *    }
+   *  })}
+   * />
+   * ```
+   */
+  theme?: "dark" | "light" | Theme;
+  /**
+   * Callback to be called when modal is closed by the user
+   */
   onClose?: () => void;
+  /**
+   * Specify whether the Modal should be open or closed
+   */
   open: boolean;
+  /**
+   * Array of chains to be displayed in the modal
+   */
   chains?: Chain[];
+  /**
+   * Array of chains to be displayed under "Popular" section
+   */
   popularChains?: Chain[];
+  /**
+   * Array of chains to be displayed under "Recent" section
+   */
   recentChains?: Chain[];
-  renderChain?: RenderChain;
+  /**
+   * Override how the chain button is rendered in the Modal
+   */
+  renderChain?: React.FC<{
+    chain: Chain;
+    switchChain: () => void;
+    switching: boolean;
+    switchFailed: boolean;
+    close?: () => void;
+  }>;
+
+  /**
+   * Callback to be called when a chain is successfully switched
+   * @param chain - the new chain that is switched to
+   */
   onSwitch?: (chain: Chain) => void;
+  /**
+   * Callback to be called when the "Add Custom Network" button is clicked
+   *
+   * The "Add Custom Network" button is displayed at the bottom of the modal - only if this prop is provided
+   */
   onCustomClick?: () => void;
 };
 
@@ -68,6 +138,24 @@ const fuseConfig = {
   ],
 };
 
+/**
+ * Renders a Network Switcher Modal that allows users to switch their wallet to a different network
+ *
+ * @example
+ * ```tsx
+ * import { NetworkSelector } from "@thirdweb-dev/react";
+ *
+ * function Example() {
+ *  const [open, setOpen] = useState(false);
+ *  return (
+ *    <div>
+ *      <button onClick={() => setOpen(true)}>Open Modal</button>
+ *      <NetworkSelector open={open} onClose={() => setOpen(false)} />
+ *    </div>
+ *  )
+ * }
+ * ```
+ */
 export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -333,7 +421,7 @@ const NetworkTab = (props: {
   popularChains?: Chain[];
   type: "testnet" | "mainnet" | "all";
   onSwitch: (chain: Chain) => void;
-  renderChain?: RenderChain;
+  renderChain?: NetworkSelectorChain;
   close?: () => void;
 }) => {
   const allChains = useMemo(
@@ -408,7 +496,7 @@ const NetworkTab = (props: {
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   chains: Chain[];
   onSwitch: (chain: Chain) => void;
-  renderChain?: RenderChain;
+  renderChain?: NetworkSelectorChain;
   close?: () => void;
 }) {
   const switchChain = useSwitchChain();

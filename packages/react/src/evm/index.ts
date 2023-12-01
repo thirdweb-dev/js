@@ -1,9 +1,4 @@
 export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
-} from "../wallet/ConnectWallet/Modal/ConnectEmbed";
-
-export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "./providers/wallet-ui-states-provider";
@@ -15,19 +10,24 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
-export {
-  ConnectModalInline,
-  type ConnectModalInlineProps,
-} from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
+export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
-export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
-export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
+export {
+  NetworkSelector,
+  type NetworkSelectorProps,
+  type NetworkSelectorChain,
+} from "../wallet/ConnectWallet/NetworkSelector";
 
 // UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export * from "./components/Web3Button";
-export { ThirdwebProvider } from "./providers/thirdweb-provider";
+export { Web3Button, type Web3ButtonProps } from "./components/Web3Button";
+export {
+  ThirdwebProvider,
+  type DefaultChains,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider";
 
 export type { MediaRendererProps } from "./components/types";
 
@@ -87,5 +87,7 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  CryptoDefiWallet,
+  RabbyWallet,
   Coin98Wallet,
 } from "@thirdweb-dev/wallets";

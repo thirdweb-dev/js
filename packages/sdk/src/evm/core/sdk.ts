@@ -2102,7 +2102,11 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
         ) || extendedMetadata?.networksForDeployment?.allNetworks;
 
-      if (extendedMetadata?.networksForDeployment && !isNetworkEnabled) {
+      if (
+        extendedMetadata?.networksForDeployment &&
+        !isNetworkEnabled &&
+        compilerMetadata.name !== "AccountFactory" // ignore network restrictions for simple AccountFactory
+      ) {
         throw new Error(
           `Deployments disabled on this network, with chainId: ${chainId}`,
         );

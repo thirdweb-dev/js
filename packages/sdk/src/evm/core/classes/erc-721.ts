@@ -750,7 +750,7 @@ export class Erc721<
    * // The token ID of the NFT whose metadata you want to update
    * const tokenId = 0;
    * // The new metadata
-   * const metadata = { name: "My NFT", description: "My NFT description""}
+   * const metadata = { name: "My NFT", description: "My NFT description" }
    *
    * await contract.erc721.update(tokenId, metadata);
    * ```

@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Roll",
   "chainId": 1748,
-  "explorers": [
-    {
-      "name": "Blockscout",
-      "url": "https://roll.calderaexplorer.xyz/",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "faucets": [],
   "features": [],
   "icon": {
@@ -26,7 +20,11 @@ export default {
   },
   "networkId": 1748,
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://roll-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1748.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://roll.calderachain.xyz/http"
+  ],
   "shortName": "Roll",
   "slug": "roll-testnet",
   "testnet": true,

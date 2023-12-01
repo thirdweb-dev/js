@@ -2,15 +2,12 @@ import {
   WalletConfig,
   ConnectUIProps,
   WalletOptions,
-  useWalletContext,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletConfig, SmartWalletConfigOptions } from "./types";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { HeadlessConnectUI } from "../headlessConnectUI";
-import { useRef, useEffect, useState } from "react";
-import { Container } from "../../../components/basic";
-import { Spinner } from "../../../components/Spinner";
 
 export const smartWallet = (
   wallet: WalletConfig<any>,
@@ -37,53 +34,17 @@ export const smartWallet = (
 export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWallet: WalletConfig },
 ) => {
-  const {
-    setIsConnectingToPersonalWallet,
-    personalWalletInfo,
-    isConnectingToPersonalWallet,
-  } = useWalletContext();
+  const activeWallet = useWallet();
   const { walletConfig } = props;
-  const [isPersonalWalletConnected, setIsPersonalWalletConnected] =
-    useState(false);
-
-  // hide the connection of personal wallet
-  const mounted = useRef(false);
-  useEffect(() => {
-    if (!mounted.current) {
-      setIsConnectingToPersonalWallet(true);
-      mounted.current = true;
-    }
-  }, [setIsConnectingToPersonalWallet]);
 
   const PersonalWalletConfig = props.personalWallet;
 
-  if (!isPersonalWalletConnected) {
-    // if the isConnectingToPersonalWallet is not yet updated
-    if (!isConnectingToPersonalWallet) {
-      return (
-        <Container
-          flex="row"
-          center="both"
-          style={{
-            minHeight: "250px",
-          }}
-        >
-          <Spinner size="xl" color="accentText" />
-        </Container>
-      );
-    }
-
+  if (!activeWallet) {
     const _props: ConnectUIProps = {
       ...props,
       walletConfig: PersonalWalletConfig,
       connected: () => {
-        setIsPersonalWalletConnected(true);
-        setIsConnectingToPersonalWallet(false);
-      },
-      goBack() {
-        personalWalletInfo.disconnect();
-        setIsConnectingToPersonalWallet(false);
-        props.goBack();
+        // override to no-op
       },
     };
 
@@ -96,14 +57,10 @@ export const SmartConnectUI = (
 
   return (
     <SmartWalletConnecting
-      onBack={() => {
-        personalWalletInfo.disconnect();
-        setIsConnectingToPersonalWallet(false);
-        props.goBack();
-      }}
+      onBack={props.goBack}
       onConnect={props.connected}
       smartWallet={walletConfig}
-      personalWalletConfig={props.personalWallet}
+      personalWallet={props.personalWallet}
     />
   );
 };

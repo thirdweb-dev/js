@@ -1,5 +1,48 @@
 # @thirdweb-dev/react-core
 
+## 4.1.10
+
+### Patch Changes
+
+- [#1996](https://github.com/thirdweb-dev/js/pull/1996) [`4bb8f5b1`](https://github.com/thirdweb-dev/js/commit/4bb8f5b15e58de39c5edccc7476da3e4907d7688) Thanks [@MananTank](https://github.com/MananTank)! - Revert commit fb0cb676b996fe386dcc53b5a6dab03f88e76175
+
+- Updated dependencies [[`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281), [`b5bbe2bd`](https://github.com/thirdweb-dev/js/commit/b5bbe2bd438179c38451bc2cfa20a54fc79e4f3a)]:
+  - @thirdweb-dev/chains@0.1.59
+  - @thirdweb-dev/wallets@2.1.9
+  - @thirdweb-dev/sdk@4.0.17
+  - @thirdweb-dev/auth@4.1.12
+
+## 4.1.9
+
+### Patch Changes
+
+- [#1952](https://github.com/thirdweb-dev/js/pull/1952) [`fb0cb676`](https://github.com/thirdweb-dev/js/commit/fb0cb676b996fe386dcc53b5a6dab03f88e76175) Thanks [@MananTank](https://github.com/MananTank)! - - Add `ConnectEmbed`` component to embed the ConnectWallet's Modal UI directly in page
+
+  - Fix `ConnectWallet` component setting personal wallet as "connected" wallet when connecting a Safe / Smart Wallet
+
+- [#1921](https://github.com/thirdweb-dev/js/pull/1921) [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Coin98 wallet
+
+- [#1971](https://github.com/thirdweb-dev/js/pull/1971) [`12d85dec`](https://github.com/thirdweb-dev/js/commit/12d85dec10f47d6520b737a23576e4f832abb47f) Thanks [@iketw](https://github.com/iketw)! - Adds usePersonalWalletAddress hook to React/RN
+
+  ```typescript
+  // React
+  import { usePersonalWalletAddress } from "@thirdweb-dev/react";
+
+  const personalWalletAddress = usePersonalWalletAddress();
+  ```
+
+  ```typescript
+  // React-Native
+  import { usePersonalWalletAddress } from "@thirdweb-dev/react-native";
+
+  const personalWalletAddress = usePersonalWalletAddress();
+  ```
+
+- Updated dependencies [[`36600dec`](https://github.com/thirdweb-dev/js/commit/36600decefca7b9ebb1924757b4186b559e439f6), [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1), [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4)]:
+  - @thirdweb-dev/auth@4.1.11
+  - @thirdweb-dev/wallets@2.1.8
+  - @thirdweb-dev/sdk@4.0.16
+
 ## 4.1.8
 
 ### Patch Changes

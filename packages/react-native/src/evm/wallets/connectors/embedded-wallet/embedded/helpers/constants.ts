@@ -12,6 +12,8 @@ export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
 
 export const AWS_REGION = "us-west-2";
 
+export const EWS_VERSION_HEADER = "x-embedded-wallet-version";
+
 export const COGNITO_USER_POOL_ID = "us-west-2_UFwLcZIpq";
 export const COGNITO_APP_CLIENT_ID = "2e02ha2ce6du13ldk8pai4h3d0";
 export const COGNITO_IDENTITY_POOL_ID =
@@ -19,7 +21,8 @@ export const COGNITO_IDENTITY_POOL_ID =
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
-const BASE_URL_2023 = "https://embedded-wallet.thirdweb.com/";
+export const DOMAIN_URL_2023 = "https://embedded-wallet.thirdweb.com";
+const BASE_URL_2023 = `${DOMAIN_URL_2023}/`;
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;
 
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;

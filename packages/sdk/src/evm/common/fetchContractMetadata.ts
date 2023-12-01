@@ -50,5 +50,6 @@ export function formatCompilerMetadata(metadata: any): PublishedMetadata {
     metadata,
     info,
     licenses,
+    isPartialAbi: metadata.isPartialAbi,
   };
 }

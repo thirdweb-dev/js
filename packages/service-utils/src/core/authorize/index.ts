@@ -76,9 +76,9 @@ export async function authorize(
             // if the difference is greater than the cacheTtl we want to ignore the cached data
             const now = Date.now();
             const diff = now - parsed.updatedAt;
-            const cacheTtl = cacheOptions.cacheTtlSeconds * 1000;
+            const cacheTtlMs = cacheOptions.cacheTtlSeconds * 1000;
             // only if the diff is less than the cacheTtl do we want to use the cached key
-            if (diff < cacheTtl * 1000) {
+            if (diff < cacheTtlMs) {
               accountMeta = parsed.apiKeyMeta;
             }
           } else {
@@ -160,9 +160,9 @@ export async function authorize(
           // if the difference is greater than the cacheTtl we want to ignore the cached data
           const now = Date.now();
           const diff = now - parsed.updatedAt;
-          const cacheTtl = cacheOptions.cacheTtlSeconds * 1000;
+          const cacheTtlMs = cacheOptions.cacheTtlSeconds * 1000;
           // only if the diff is less than the cacheTtl do we want to use the cached key
-          if (diff < cacheTtl * 1000) {
+          if (diff < cacheTtlMs) {
             apiKeyMeta = parsed.apiKeyMeta;
           }
         } else {

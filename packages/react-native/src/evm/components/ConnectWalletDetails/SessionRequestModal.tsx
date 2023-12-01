@@ -1,4 +1,9 @@
-import { shortenAddress, useChain, useWallet } from "@thirdweb-dev/react-core";
+import {
+  shortenAddress,
+  useChain,
+  useWallet,
+  useWalletConnectHandler,
+} from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
@@ -10,7 +15,6 @@ import {
 } from "../../utils/modalTypes";
 import { ActivityIndicator, Dimensions } from "react-native";
 import { useCallback, useState } from "react";
-import { useWalletConnectHandler } from "../../providers/context-provider";
 
 const getTitle = (method: string) => {
   switch (method) {
