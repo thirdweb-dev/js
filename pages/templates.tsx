@@ -12,6 +12,7 @@ import { GetStartedSection } from "components/homepage/sections/GetStartedSectio
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -331,10 +332,21 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     </Flex>
   );
 };
+const title = "Web3 Templates for Websites & Apps";
+const description =
+  "Start building with a library of quick-start templates for web3 apps and websites — for NFTs, marketplaces, and more. Get started.";
 
 const Templates: ThirdwebNextPage = () => {
   return (
     <DarkMode>
+      <NextSeo
+        title={title}
+        description={description}
+        openGraph={{
+          title,
+          description,
+        }}
+      />
       <Flex
         sx={{
           // overwrite the theme colors because the home page is *always* in "dark mode"
