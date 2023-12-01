@@ -1,5 +1,25 @@
 # @thirdweb-dev/sdk
 
+## 4.0.18
+
+### Patch Changes
+
+- [#2012](https://github.com/thirdweb-dev/js/pull/2012) [`b0ecfd2d`](https://github.com/thirdweb-dev/js/commit/b0ecfd2d8d5cda33dc8f5ea2d20119cb901a0bcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Propagate isPartialAbi
+
+- [#2003](https://github.com/thirdweb-dev/js/pull/2003) [`d28097f5`](https://github.com/thirdweb-dev/js/commit/d28097f508739cdbd6625e09c2ed0fe25a922c0f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix undefined error for unknown chains
+
+- [#2005](https://github.com/thirdweb-dev/js/pull/2005) [`8bf3be88`](https://github.com/thirdweb-dev/js/commit/8bf3be88be051178a7142618c4371d2f2ef26271) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable deployments for older AccountFactories
+
+- [#2009](https://github.com/thirdweb-dev/js/pull/2009) [`b02fb91a`](https://github.com/thirdweb-dev/js/commit/b02fb91a548a3f66f7677ced24be9397e0f9a7ba) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add missing roles from new contracts
+
+- [#2011](https://github.com/thirdweb-dev/js/pull/2011) [`2861dff1`](https://github.com/thirdweb-dev/js/commit/2861dff1f013b5150314fdaccaeadddbcf0d21c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Don't fetch metadata from CDN for local nodes
+
+- [#2010](https://github.com/thirdweb-dev/js/pull/2010) [`61b6a002`](https://github.com/thirdweb-dev/js/commit/61b6a00214716454222e67fe5fdb47edba391070) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix code comment
+
+- Updated dependencies [[`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a), [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0), [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352), [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa)]:
+  - @thirdweb-dev/chains@0.1.60
+  - @thirdweb-dev/storage@2.0.6
+
 ## 4.0.17
 
 ### Patch Changes
