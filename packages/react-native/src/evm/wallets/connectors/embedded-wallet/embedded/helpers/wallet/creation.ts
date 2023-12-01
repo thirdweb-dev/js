@@ -12,6 +12,7 @@ import {
 } from "../constants";
 import { setDeviceShare } from "../storage/local";
 import { encryptShareWeb } from "./encryption";
+import { createErrorMessage } from "../errors";
 
 export async function setUpNewUserWallet(
   recoveryCode: string,
@@ -145,9 +146,10 @@ export async function storeShares<R extends string | undefined>({
     }
   } catch (e) {
     throw new Error(
-      `Malformed response from the ews store user share API: ${JSON.stringify(
+      createErrorMessage(
+        "Malformed response from the ews store user share API",
         e,
-      )}`,
+      ),
     );
   }
 }

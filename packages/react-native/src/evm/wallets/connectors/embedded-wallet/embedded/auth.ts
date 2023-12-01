@@ -25,11 +25,19 @@ import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
+  DOMAIN_URL_2023,
+  EWS_VERSION_HEADER,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
 } from "./helpers/constants";
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import { createErrorMessage } from "./helpers/errors";
+import {
+  appBundleId,
+  reactNativePackageVersion,
+} from "../../../../utils/version";
+import { BUNDLE_ID_HEADER } from "../../../../constants/headers";
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -50,7 +58,7 @@ export async function sendVerificationEmail(options: {
     });
   } catch (e) {
     throw new Error(
-      `Malformed response from the send email OTP API: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response from the send email OTP API", e),
     );
   }
 
@@ -102,7 +110,7 @@ export async function validateEmailOTP(options: {
     });
   } catch (e) {
     throw new Error(
-      `Malformed response from the send email OTP API: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response validating the OTP", e),
     );
   }
   let verifiedTokenResponse: VerifiedTokenResponse;
@@ -163,9 +171,10 @@ export async function validateEmailOTP(options: {
     return { storedToken };
   } catch (e) {
     throw new Error(
-      `Malformed response from the verify one time password: ${
-        (e as Error).message
-      }}`,
+      createErrorMessage(
+        "Malformed response from the verify one time password",
+        e,
+      ),
     );
   }
 }
@@ -173,10 +182,15 @@ export async function validateEmailOTP(options: {
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const encodedProvider = encodeURIComponent(oauthOptions.provider);
   const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_OAUTH_LOGIN}?authProvider=${encodedProvider}&baseUrl=${encodeURIComponent(
-    `https://embedded-wallet.thirdweb.com`,
+    DOMAIN_URL_2023,
   )}&platform=${encodeURIComponent("mobile")}`;
 
-  const resp = await fetch(headlessLoginLinkWithParams);
+  const resp = await fetch(headlessLoginLinkWithParams, {
+    headers: {
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+    },
+  });
 
   if (!resp.ok) {
     const error = await resp.json();
@@ -188,7 +202,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const { platformLoginLink } = json;
 
   const completeLoginUrl = `${platformLoginLink}?developerClientId=${encodeURIComponent(
-    clientId || "",
+    clientId,
   )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
     oauthOptions.redirectUrl,
   )}&authOption=${encodedProvider}`;
@@ -243,7 +257,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     return { storedToken, email: storedToken.authDetails.email };
   } catch (e) {
     throw new Error(
-      `Malformed response from post authentication: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response from post authentication", e),
     );
   }
 }
@@ -253,7 +267,11 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+    },
     body: JSON.stringify({
       jwt: jwt,
       developerClientId: clientId,
@@ -285,7 +303,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
-      `Malformed response from post authentication: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response from post authentication", e),
     );
   }
 }

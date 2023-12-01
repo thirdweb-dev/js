@@ -1,4 +1,4 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
@@ -7,7 +7,6 @@ import {
   WalletConnectSessionProposalModal,
 } from "../../utils/modalTypes";
 import { useLocale, useModalState } from "../../providers/ui-context-provider";
-import { useWalletConnectHandler } from "../../providers/context-provider";
 
 export const SessionProposalModal = () => {
   const l = useLocale();

@@ -92,6 +92,10 @@ interface TWBridge {
   smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
   smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
   smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
+  waitForTransactionResult: (txHash: string) => Promise<string>;
+  getLatestBlockNumber: () => Promise<string>;
+  getBlock: (blockNumber: string) => Promise<string>;
+  getBlockWithTransactions: (blockNumber: string) => Promise<string>;
 }
 
 const w = window;
@@ -345,6 +349,7 @@ class ThirdwebBridge implements TWBridge {
           password,
           email,
           personalWallet,
+          authOptions,
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
@@ -691,6 +696,38 @@ class ThirdwebBridge implements TWBridge {
       expirationDate: expirationDate,
     });
     return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async waitForTransactionResult(txHash: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().waitForTransaction(txHash);
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getLatestBlockNumber(){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlockNumber();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlock(blockNumber: string){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlock(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlockWithTransactions(blockNumber: string){
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlockWithTransactions(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
   public openPopupWindow() {

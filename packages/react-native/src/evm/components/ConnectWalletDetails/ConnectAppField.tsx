@@ -1,4 +1,4 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
@@ -13,7 +13,6 @@ import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
 import { useLocale } from "../../providers/ui-context-provider";
-import { useWalletConnectHandler } from "../../providers/context-provider";
 
 const ConnectAppField = ({
   onConnectAppTriggered,

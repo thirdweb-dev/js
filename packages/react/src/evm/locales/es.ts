@@ -54,7 +54,6 @@ export function esDefault(): ThirdwebLocale {
       personalWallet: "Cartera personal",
       smartWallet: "Cartera inteligente",
       or: "O",
-      goBackButton: "Atras",
       download: {
         chrome: "Descargar extensión para Chrome",
         android: "Descargar en Google Play",
@@ -174,6 +173,8 @@ export function esDefault(): ThirdwebLocale {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "Iniciar sesión",
         signInWithGoogle: "Iniciar sesión con Google",

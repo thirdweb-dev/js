@@ -4,4 +4,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-Add Coin98 wallet
+Add Crypto.com Defi wallet

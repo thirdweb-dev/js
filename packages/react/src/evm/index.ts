@@ -1,9 +1,4 @@
 export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
-} from "../wallet/ConnectWallet/Modal/ConnectEmbed";
-
-export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "./providers/wallet-ui-states-provider";
@@ -16,10 +11,7 @@ export {
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
 export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
-export {
-  ConnectModalInline,
-  type ConnectModalInlineProps,
-} from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
 export {
   NetworkSelector,
@@ -94,5 +86,7 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  CryptoDefiWallet,
+  RabbyWallet,
   Coin98Wallet,
 } from "@thirdweb-dev/wallets";

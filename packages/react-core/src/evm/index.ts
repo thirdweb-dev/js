@@ -23,6 +23,7 @@ export {
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 export { usePersonalWalletAddress } from "./hooks/usePersonalWalletAddress";
+export { useWalletConnectHandler } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -32,6 +33,7 @@ export {
   useChainId,
   useActiveChain,
   useChain,
+  useBalanceForAddress,
 } from "./hooks/wallet";
 
 // Utilities and Others
