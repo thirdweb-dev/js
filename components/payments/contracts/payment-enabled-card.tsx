@@ -1,6 +1,5 @@
 import { Flex, LinkBox, LinkOverlay, Skeleton } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
-import { PaperChainToChainId } from "@3rdweb-sdk/react/hooks/usePayments";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useContractMetadataWithChain } from "@3rdweb-sdk/react/hooks/useContractMetadataWithChain";
@@ -12,15 +11,17 @@ interface PaymentEnabledCardProps {
     chain: string;
     display_name: string;
   };
+  chainId: number;
 }
 
 export const PaymentEnabledCard: React.FC<PaymentEnabledCardProps> = ({
   contract: { chain, address, display_name, id },
+  chainId,
 }) => {
-  const chainSlug = useChainSlug(PaperChainToChainId[chain]);
+  const chainSlug = useChainSlug(chainId);
   const { data: contractMetadata, isSuccess } = useContractMetadataWithChain(
     address,
-    PaperChainToChainId[chain],
+    chainId,
   );
 
   return (

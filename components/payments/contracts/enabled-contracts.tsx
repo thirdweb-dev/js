@@ -7,7 +7,10 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Card, Text, Heading } from "tw-components";
-import { usePaymentsEnabledContracts } from "@3rdweb-sdk/react/hooks/usePayments";
+import {
+  PaperChainToChainId,
+  usePaymentsEnabledContracts,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 import { PaymentEnabledCard } from "./payment-enabled-card";
 
 export const EnabledContracts = () => {
@@ -36,9 +39,21 @@ export const EnabledContracts = () => {
           </Flex>
         </Alert>
       ) : (paymentEnabledContracts || []).length > 0 ? (
-        paymentEnabledContracts?.map((contract) => (
-          <PaymentEnabledCard key={contract.id} contract={contract} />
-        ))
+        paymentEnabledContracts?.map((contract) => {
+          const chainId = PaperChainToChainId[contract.chain];
+
+          if (chainId === undefined) {
+            return null;
+          }
+
+          return (
+            <PaymentEnabledCard
+              key={contract.id}
+              chainId={chainId}
+              contract={contract}
+            />
+          );
+        })
       ) : (
         <Card p={8} bgColor="backgroundCardHighlight" my={6}>
           <Center as={Stack} spacing={2}>
