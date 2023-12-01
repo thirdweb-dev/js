@@ -200,14 +200,6 @@ export const SOLUTIONS: SectionItemProps[] = [
     section: "solutions",
   },
   {
-    name: "Appchain API",
-    label: "appchain-api",
-    description: "Instant dev tools for your appchain",
-    link: "/solutions/appchain-api",
-    icon: require("public/assets/solutions-icons/appchain-api.svg"),
-    section: "solutions",
-  },
-  {
     name: "Web2 Onboarding",
     label: "web2-onboarding",
     description: "Seamless Web3 onboarding for everyone",
