@@ -51,6 +51,7 @@ export function useEmbeddedWallet() {
       } catch (e) {
         console.error("Error connecting to embedded wallet", e);
         setStatus("disconnected");
+        throw e;
       }
       return wallet;
     },
