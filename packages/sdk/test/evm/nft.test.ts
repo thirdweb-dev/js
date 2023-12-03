@@ -317,8 +317,8 @@ describe("NFT Contract", async () => {
         start: 0,
       }),
       nftContract.erc721.getOwnedWithoutEnumerableExtension(undefined, {
-        count: 3,
-        start: 2,
+        count: 2,
+        start: 0,
       }),
       nftContract.erc721.getOwned(undefined, {
         count: 3,
