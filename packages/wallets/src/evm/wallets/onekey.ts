@@ -136,12 +136,4 @@ export class OneKeyWallet extends AbstractClientWallet<OneKeyAdditionalOptions> 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
-
-  async switchAccount() {
-    if (!this.OneKeyConnector) {
-      throw new Error("Can not switch Account");
-    }
-
-    await this.OneKeyConnector.switchAccount();
-  }
 }

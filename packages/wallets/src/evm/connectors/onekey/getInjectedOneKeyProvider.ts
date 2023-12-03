@@ -15,12 +15,8 @@ export function getInjectedOneKeyProvider(): Ethereum | undefined {
   }
 
   if (assertWindowEthereum(globalThis.window)) {
-    if (
-      globalThis.window.ethereum &&
-      window.$onekey &&
-      window.$onekey.ethereum
-    ) {
-      return window.$onekey.ethereum;
+    if (globalThis.window.$onekey && globalThis.window.$onekey.ethereum) {
+      return globalThis.window.$onekey.ethereum;
     }
   }
 }
