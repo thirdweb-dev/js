@@ -54,16 +54,15 @@ describe("NFT Contract", async () => {
   });
 
   it("should return owned token ids", async () => {
-    await nftContract.mint({
-      name: "Test1",
-    });
-    await nftContract.mint({
-      name: "Test2",
-    });
-    const ids = await nftContract.getOwnedTokenIds();
-    const nfts = await nftContract.getOwned();
+    await nftContract.mintBatch([{ name: "Test1" }, { name: "Test2" }]);
+    const [ids, nfts, nfts2] = await Promise.all([
+      nftContract.getOwnedTokenIds(),
+      nftContract.getOwned(),
+      nftContract.erc721.getOwnedWithoutEnumerableExtension(),
+    ]);
     expect(ids).to.be.an("array").length(2);
     expect(nfts).to.be.an("array").length(2);
+    expect(nfts2).to.be.an("array").length(2);
   });
 
   it("should respect pagination", async () => {
@@ -312,22 +311,41 @@ describe("NFT Contract", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
-    const nftPage1 = await nftContract.erc721.getOwned(undefined, {
-      count: 2,
-      start: 0,
-    });
+    const [nftPage1, nftPage1A, nftPage2, nftPage2A] = await Promise.all([
+      nftContract.erc721.getOwned(undefined, {
+        count: 2,
+        start: 0,
+      }),
+      nftContract.erc721.getOwnedWithoutEnumerableExtension(undefined, {
+        count: 3,
+        start: 2,
+      }),
+      nftContract.erc721.getOwned(undefined, {
+        count: 3,
+        start: 2,
+      }),
+      nftContract.erc721.getOwnedWithoutEnumerableExtension(undefined, {
+        count: 3,
+        start: 2,
+      }),
+    ]);
     expect(nftPage1).to.be.an("array").length(2);
     expect(nftPage1[0].metadata.id).to.eq("0");
     expect(nftPage1[1].metadata.id).to.eq("1");
 
-    const nftPage2 = await nftContract.erc721.getOwned(undefined, {
-      count: 3,
-      start: 2,
-    });
+    expect(nftPage1A).to.be.an("array").length(2);
+    expect(nftPage1A[0].metadata.id).to.eq("0");
+    expect(nftPage1A[1].metadata.id).to.eq("1");
+
     expect(nftPage2).to.be.an("array").length(3);
     expect(nftPage2[0].metadata.id).to.eq("2");
     expect(nftPage2[1].metadata.id).to.eq("3");
     expect(nftPage2[2].metadata.id).to.eq("4");
+
+    expect(nftPage2A).to.be.an("array").length(3);
+    expect(nftPage2A[0].metadata.id).to.eq("2");
+    expect(nftPage2A[1].metadata.id).to.eq("3");
+    expect(nftPage2A[2].metadata.id).to.eq("4");
   });
 
   it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
@@ -345,10 +363,17 @@ describe("NFT Contract", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
-    const nfts = await nftContract.erc721.getOwned(undefined, {
-      count: 1000,
-      start: 0,
-    });
+    const [nfts, nfts2] = await Promise.all([
+      nftContract.erc721.getOwned(undefined, {
+        count: 1000,
+        start: 0,
+      }),
+      nftContract.erc721.getOwnedWithoutEnumerableExtension(undefined, {
+        count: 1000,
+        start: 0,
+      }),
+    ]);
     expect(nfts).to.be.an("array").length(_tokenIds.length);
+    expect(nfts2).to.be.an("array").length(_tokenIds.length);
   });
 });

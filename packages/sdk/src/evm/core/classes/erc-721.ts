@@ -433,22 +433,39 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress, queryParams);
     } else {
-      const [address, allOwners] = await Promise.all([
-        walletAddress || this.contractWrapper.getSignerAddress(),
-        this.getAllOwners(),
-      ]);
-      let ownedTokens = (allOwners || []).filter(
-        (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
-      );
-      if (queryParams) {
-        const start = queryParams?.start || 0;
-        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        ownedTokens = ownedTokens.slice(start, start + count);
-      }
-      return await Promise.all(
-        ownedTokens.map(async (i) => this.get(i.tokenId)),
+      return await this.getOwnedWithoutEnumerableExtension(
+        walletAddress,
+        queryParams,
       );
     }
+  }
+
+  /**
+   * 
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns 
+   */
+  public async getOwnedWithoutEnumerableExtension(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
+    const [address, allOwners] = await Promise.all([
+      walletAddress || this.contractWrapper.getSignerAddress(),
+      this.getAllOwners(),
+    ]);
+    let ownedTokens = (allOwners || []).filter(
+      (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
+    );
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      ownedTokens = ownedTokens.slice(start, start + count);
+    }
+    return await Promise.all(ownedTokens.map(async (i) => this.get(i.tokenId)));
   }
 
   /**
