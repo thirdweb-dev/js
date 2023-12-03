@@ -173,6 +173,7 @@ export function jaDefault(): ThirdwebLocale {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
       cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {

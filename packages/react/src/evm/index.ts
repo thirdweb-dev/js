@@ -86,6 +86,7 @@ export {
   InjectedWallet,
   setWalletAnalyticsEnabled,
   CoreWallet,
+  OneKeyWallet,
   CryptoDefiWallet,
   RabbyWallet,
   Coin98Wallet,
