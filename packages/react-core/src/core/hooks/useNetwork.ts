@@ -29,9 +29,11 @@ type NetworkMetadata = {
 
 /**
  *
- * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
  *
  * Hook for getting metadata about the network the current wallet is connected to and switching networks
+ *
+ * It's important to note that some wallet apps do not support programmatic network switching and switchNetwork will be undefined.
+ * For those situations, you can typically switch networks in the wallet app this hook will still work.
  *
  * @example
  * ```javascript
@@ -47,12 +49,9 @@ type NetworkMetadata = {
  *     </button>
  *   );
  * };
-```
+ * ```
  *
- * It's important to note that some wallet apps do not support programmatic network switching and switchNetwork will be undefined.
- * For those situations, you can typically switch networks in the wallet app this hook will still work.
- *
- * @public
+ * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
  */
 export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
   const chain = useChain();

@@ -10,16 +10,24 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
+export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
 export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
-export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
-export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
+export {
+  NetworkSelector,
+  type NetworkSelectorProps,
+  type NetworkSelectorChain,
+} from "../wallet/ConnectWallet/NetworkSelector";
 
 // UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export * from "./components/Web3Button";
-export { ThirdwebProvider } from "./providers/thirdweb-provider";
+export { Web3Button, type Web3ButtonProps } from "./components/Web3Button";
+export {
+  ThirdwebProvider,
+  type DefaultChains,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider";
 
 export type { MediaRendererProps } from "./components/types";
 
@@ -48,6 +56,11 @@ export {
   useWalletConnect,
   useWalletConnectV1,
 } from "./hooks/wallets/useWalletConnect";
+
+export {
+  defaultTokens,
+  type SupportedTokens,
+} from "../wallet/ConnectWallet/defaultTokens";
 
 // react-core
 export * from "@thirdweb-dev/react-core";

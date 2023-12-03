@@ -4,6 +4,9 @@ import {
   getInjectedMetamaskProvider,
 } from "@thirdweb-dev/wallets";
 
+/**
+ * @internal
+ */
 export function useInstalledWallets() {
   let isMetamaskInstalled = false;
   let isCoinbaseWalletInstalled = false;

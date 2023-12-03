@@ -10,7 +10,6 @@ import invariant from "tiny-invariant";
  *
  * @see {@link https://portal.thirdweb.com/react/react.useswitchaccount?utm_source=sdk | Documentation}
  *
- * @beta
  */
 export function useSwitchAccount() {
   const queryClient = useQueryClient();

@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 2.0.6
+
+### Patch Changes
+
+- [#2021](https://github.com/thirdweb-dev/js/pull/2021) [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Catch issue when converting invalid IPFS CID to v1
+
 ## 2.0.5
 
 ### Patch Changes
