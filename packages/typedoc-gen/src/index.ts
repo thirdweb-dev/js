@@ -1,6 +1,4 @@
-import TypeDoc, { JSONOutput } from "typedoc";
-import { writeFile, readFile } from "node:fs/promises";
-import { transform } from "typedoc-better-json";
+import TypeDoc from "typedoc";
 
 /**
  *
@@ -29,14 +27,6 @@ export async function typedoc(options: {
   }
 
   if (options.output === "json" || options.output === "both") {
-    // -full file is the typedoc official output, we further process it to make it easy to generate docs
-    await app.generateJson(project, outFile.replace(".json", "-full.json"));
-    const fileContent = await readFile(
-      outFile.replace(".json", "-full.json"),
-      "utf8",
-    );
-
-    const fileData = JSON.parse(fileContent) as JSONOutput.ProjectReflection;
-    await writeFile(outFile, JSON.stringify(transform(fileData), null, 2));
+    await app.generateJson(project, outFile);
   }
 }
