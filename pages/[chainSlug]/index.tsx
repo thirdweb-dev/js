@@ -5,6 +5,7 @@ import {
   DarkMode,
   Divider,
   Flex,
+  Grid,
   GridItem,
   GridItemProps,
   Icon,
@@ -290,7 +291,11 @@ const ChainPage: ThirdwebNextPage = ({
                 </TrackedLink>
               }
             >
-              <SimpleGrid columns={{ base: 6, md: 12 }} gap={6} mt={2}>
+              <Grid
+                templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
+                gap={6}
+                mt={2}
+              >
                 {(isLineaTestnet
                   ? lineaTestnetPopularContracts
                   : category.contracts
@@ -298,24 +303,18 @@ const ChainPage: ThirdwebNextPage = ({
                   const [publisher, contractId] =
                     publishedContractId.split("/");
                   return (
-                    <GridItem
-                      key={contractId}
-                      colSpan={{ base: 6, md: 4 }}
-                      display="grid"
-                    >
-                      <ContractCard
-                        key={publishedContractId}
-                        publisher={publisher}
-                        contractId={contractId}
-                        tracking={{
-                          source: `chain_${chain.slug}`,
-                          itemIndex: `${idx}`,
-                        }}
-                      />
-                    </GridItem>
+                    <ContractCard
+                      key={publishedContractId}
+                      publisher={publisher}
+                      contractId={contractId}
+                      tracking={{
+                        source: `chain_${chain.slug}`,
+                        itemIndex: `${idx}`,
+                      }}
+                    />
                   );
                 })}
-              </SimpleGrid>
+              </Grid>
             </ChainSectionElement>
             <Divider />
           </>

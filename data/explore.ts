@@ -214,7 +214,7 @@ export function prefetchCategory(
   category: ExploreCategory,
   queryClient: QueryClient,
 ) {
-  return Promise.all(
+  return Promise.allSettled(
     category.contracts.map((contract) =>
       queryClient.fetchQuery(
         publishedContractQuery(`${contract}/latest`, queryClient),
