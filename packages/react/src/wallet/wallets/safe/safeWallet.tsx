@@ -9,17 +9,62 @@ import {
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
-import type { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
+import type { SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
+export type SafeWalletConfigOptions = {
+  /**
+   * An array of personalWallets to show in ConnectWallet Modal to use with SafeWallet
+   */
+  personalWallets?: WalletConfig<any>[];
+
+  /**
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
+};
+
+/**
+ * A wallet configurator for [Safe](https://safe.global/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[safeWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const safeWalletConfig = safeWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(safeWalletConfig);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const safeWallet = (
-  config?: SafeWalletConfigOptions & {
-    /**
-     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
-     */
-    recommended?: boolean;
-  },
+  config?: SafeWalletConfigOptions,
 ): SafeWalletConfig => {
   const personalWallets = config?.personalWallets || defaultWallets;
   return {

@@ -43,13 +43,15 @@ import {
 } from "../../ConnectWallet/icons/socialLogins";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
+export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
+  /**
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
+};
+
 export function magicLink(
-  config: MagicLinkAdditionalOptions & {
-    /**
-     * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
-     */
-    recommended?: boolean;
-  },
+  config: MagicWalletConfigOptions,
 ): ConfiguredMagicLinkWallet {
   const emailLoginEnabled = config.emailLogin !== false;
   const smsLoginEnabled = config.smsLogin !== false;

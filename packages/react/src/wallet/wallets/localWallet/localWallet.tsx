@@ -8,6 +8,44 @@ const desktopIcon =
 
 const phoneIcon = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl80NF8yKSIvPgo8cGF0aCBkPSJNNDguNjE1NCAxNkgzMS4zODQ2QzI4LjQxMjMgMTYgMjYgMTguMzkyNyAyNiAyMS4zNDA5VjU3LjY1OTFDMjYgNjAuNjA3MyAyOC40MTIzIDYzIDMxLjM4NDYgNjNINDguNjE1NEM1MS41ODc3IDYzIDU0IDYwLjYwNzMgNTQgNTcuNjU5MVYyMS4zNDA5QzU0IDE4LjM5MjcgNTEuNTg3NyAxNiA0OC42MTU0IDE2Wk00MCA2MC44NjM2QzM4LjIxMjMgNjAuODYzNiAzNi43NjkyIDU5LjQzMjMgMzYuNzY5MiA1Ny42NTkxQzM2Ljc2OTIgNTUuODg1OSAzOC4yMTIzIDU0LjQ1NDUgNDAgNTQuNDU0NUM0MS43ODc3IDU0LjQ1NDUgNDMuMjMwOCA1NS44ODU5IDQzLjIzMDggNTcuNjU5MUM0My4yMzA4IDU5LjQzMjMgNDEuNzg3NyA2MC44NjM2IDQwIDYwLjg2MzZaTTQ5LjY5MjMgNTIuMzE4MkgzMC4zMDc3VjIyLjQwOTFINDkuNjkyM1Y1Mi4zMTgyWiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80NF8yIiB4MT0iNDAiIHkxPSIwIiB4Mj0iNDAiIHkyPSI4MCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjQ0UxMUFCIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzkwMEJCNSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=`;
 
+/**
+ * A wallet configurator for Local wallet which allows integrating a "Guest Login" experience to app.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[localeWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const localeWalletConfig = localeWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(localeWalletConfig);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const localWallet = (
   config?: LocalWalletConfigOptions,
 ): LocalWalletConfig => {

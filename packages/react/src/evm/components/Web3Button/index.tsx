@@ -24,7 +24,7 @@ import {
 import { useTWLocale } from "../../providers/locale-provider";
 import { WelcomeScreen } from "../../../wallet/ConnectWallet/screens/types";
 
-type ActionFn = (contract: SmartContract) => any;
+export type ActionFn = (contract: SmartContract) => any;
 
 const TW_WEB3BUTTON = "tw-web3button";
 

@@ -1,18 +1,18 @@
 import {
-  WalletConfig,
-  ConnectUIProps,
-  WalletOptions,
+  type WalletConfig,
+  type ConnectUIProps,
+  type WalletOptions,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { SmartWalletConfig, SmartWalletConfigOptions } from "./types";
+import { SmartWalletConfigOptions } from "./types";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
 export const smartWallet = (
   wallet: WalletConfig<any>,
   config: SmartWalletConfigOptions,
-): SmartWalletConfig => {
+): WalletConfig<SmartWallet> => {
   const WalletSelectUI = wallet.selectUI;
 
   return {

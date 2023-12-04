@@ -4,7 +4,7 @@ import { ZerionConnectUI } from "./ZerionConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 import { zerionWalletUris } from "./zerionWalletUris";
 
-type ZerionkWalletOptions = {
+export type ZerionkWalletConfigOptions = {
   /**
    * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -19,8 +19,46 @@ type ZerionkWalletOptions = {
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Zerion Wallet](https://zerion.io/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[zerionWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const zerionWalletConfig = zerionWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(zerionWalletConfig);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const zerionWallet = (
-  options?: ZerionkWalletOptions,
+  options?: ZerionkWalletConfigOptions,
 ): WalletConfig<ZerionWallet> => {
   return {
     id: ZerionWallet.id,

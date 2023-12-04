@@ -1,14 +1,8 @@
-import type {
-  EmbeddedWalletAdditionalOptions,
-  EmbeddedWalletOauthStrategy,
-} from "@thirdweb-dev/wallets";
+import type { EmbeddedWalletOauthStrategy } from "@thirdweb-dev/wallets";
 
 export type AuthOption = EmbeddedWalletOauthStrategy | "email";
 
-export type EmbeddedWalletConfig = Omit<
-  EmbeddedWalletAdditionalOptions,
-  "chain" | "clientId"
-> & {
+export type EmbeddedWalletConfigOptions = {
   /**
    * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */

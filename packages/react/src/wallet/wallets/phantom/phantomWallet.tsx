@@ -5,15 +5,53 @@ import {
 } from "@thirdweb-dev/wallets";
 import { PhantomConnectUI } from "./PhantomConnectUI";
 
-type PhantomWalletOptions = {
+export type PhantomWalletConfigOptions = {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Phantom Wallet](https://phantom.app/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[phantomWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const phantomWalletConfig = phantomWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(phantomWalletConfig);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const phantomWallet = (
-  options?: PhantomWalletOptions,
+  options?: PhantomWalletConfigOptions,
 ): WalletConfig<PhantomWallet> => {
   return {
     recommended: options?.recommended,

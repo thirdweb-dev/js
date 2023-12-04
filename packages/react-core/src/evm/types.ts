@@ -265,6 +265,9 @@ export type ClaimTokenParams = {
 
 // Helpers
 
+/**
+ * @internal
+ */
 export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   return {
     erc1155: getErc1155(contract),
@@ -273,6 +276,9 @@ export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   };
 }
 
+/**
+ * @internal
+ */
 export function getErc1155(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc1155 | undefined {
@@ -289,6 +295,9 @@ export function getErc1155(
   return undefined;
 }
 
+/**
+ * @internal
+ */
 export function getErc721(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc721 | undefined {
@@ -305,6 +314,9 @@ export function getErc721(
   return undefined;
 }
 
+/**
+ * @internal
+ */
 export function getErc20(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc20 | undefined {

@@ -510,6 +510,9 @@ function getEncryptor(encryption: EncryptOptions | undefined) {
     : noop;
 }
 
+/**
+ * @internal
+ */
 export function isValidPrivateKey(value: string) {
   return !!value.match(/^(0x)?[0-9a-f]{64}$/i);
 }
