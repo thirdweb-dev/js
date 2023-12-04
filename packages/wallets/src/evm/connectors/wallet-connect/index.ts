@@ -4,14 +4,14 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  WagmiConnector,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { type Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { QRModalOptions } from "./qrModalOptions";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 
 const chainsToRequest = new Set([1, 137, 10, 42161, 56]);
 

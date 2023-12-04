@@ -1,4 +1,4 @@
-import type { WagmiConnector } from "../wagmi-connectors";
+import type { WagmiConnector } from "../wagmi-connectors/WagmiConnector";
 import type { utils } from "ethers";
 
 /**

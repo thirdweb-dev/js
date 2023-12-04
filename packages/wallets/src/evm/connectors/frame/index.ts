@@ -3,7 +3,7 @@ import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
 import type { Chain } from "@thirdweb-dev/chains";
 
-import { WagmiConnector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -11,12 +11,12 @@ import {
   ResourceUnavailableError,
   AddChainError,
   SwitchChainError,
-  normalizeChainId,
   ProviderRpcError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { Ethereum } from "../injected/types";
 import { AsyncStorage } from "../../../core";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 export type FrameConnectorOptions = {
   /**
