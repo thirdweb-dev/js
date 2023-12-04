@@ -10,7 +10,7 @@ export type FrameWalletConfigOptions = {
 };
 
 /**
- * A wallet configurator for [Coinbase Wallet](https://www.coinbase.com/wallet) which allows integrating the wallet with React.
+ * A wallet configurator for [Frame Wallet](https://frame.sh/) which allows integrating the wallet with React.
  *
  * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
  *
