@@ -73,6 +73,9 @@ export function useContractType(
   );
 }
 
+/**
+ * @internal
+ */
 export const contractType = {
   cacheKey: (
     contractAddress: RequiredParam<ContractAddress>,
@@ -121,6 +124,9 @@ export function useCompilerMetadata(
   );
 }
 
+/**
+ * @internal
+ */
 export const compilerMetadata = {
   cacheKey: (
     contractAddress: RequiredParam<ContractAddress>,

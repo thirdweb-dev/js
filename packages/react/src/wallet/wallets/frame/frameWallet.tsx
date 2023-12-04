@@ -2,15 +2,53 @@ import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { FrameWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { FrameConnectUI } from "./FrameConnectUI";
 
-type FrameConfig = {
+export type FrameWalletConfigOptions = {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Frame Wallet](https://frame.sh/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[frameWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const frameWalletConfig = frameWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(frameWalletConfig, options);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const frameWallet = (
-  config?: FrameConfig,
+  config?: FrameWalletConfigOptions,
 ): WalletConfig<FrameWallet> => ({
   id: FrameWallet.id,
   recommended: config?.recommended,

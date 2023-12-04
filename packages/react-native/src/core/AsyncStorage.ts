@@ -33,7 +33,9 @@ export class AsyncLocalStorage implements IAsyncStorage {
     );
   }
 }
-
+/**
+ * @internal
+ */
 export class LocalStorage implements SyncStorage {
   name: string;
   asyncStorage: MMKV;

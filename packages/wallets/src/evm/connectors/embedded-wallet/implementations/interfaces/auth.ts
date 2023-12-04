@@ -18,6 +18,9 @@ export enum AuthProvider {
   APPLE = "Apple",
 }
 
+/**
+ * @internal
+ */
 export type GetHeadlessLoginLinkReturnType = {
   loginLink: string;
 };

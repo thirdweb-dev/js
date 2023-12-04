@@ -5,7 +5,7 @@ import type {
 
 export type AuthOption = EmbeddedWalletOauthStrategy | "email";
 
-export type EmbeddedWalletConfig = Omit<
+export type EmbeddedWalletConfigOptions = Omit<
   EmbeddedWalletAdditionalOptions,
   "chain" | "clientId"
 > & {

@@ -303,12 +303,14 @@ export function ThirdwebWalletProvider(
 
   // Auto Connect
   useEffect(() => {
-    // do not auto connect if signerWallet is given
-    if (props.signerWallet) {
+    if (autoConnectTriggered.current) {
       return;
     }
 
-    if (autoConnectTriggered.current) {
+    autoConnectTriggered.current = true;
+
+    // do not auto connect if signerWallet is given
+    if (props.signerWallet) {
       return;
     }
 
@@ -329,8 +331,6 @@ export function ThirdwebWalletProvider(
       return;
     }
 
-    autoConnectTriggered.current = true;
-
     async function autoconnect() {
       const walletInfo = await getLastConnectedWalletInfo();
 
@@ -339,7 +339,7 @@ export function ThirdwebWalletProvider(
         return;
       }
 
-      let walletObj = props.supportedWallets.find(
+      const walletObj = props.supportedWallets.find(
         (W) => W.id === walletInfo.walletId,
       );
 
@@ -351,23 +351,15 @@ export function ThirdwebWalletProvider(
 
       let _personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
-      // when connecting to magicLink with social login, it redirects to other page
-      // before redirecting, we save the walletInfo to local storage so that we can auto connect after redirect back to current page
-      // when using smartWallet + magicLink combination - the walletInfo will only contain info about magicLink and not smartWallet because it was never connected
-      // so if smartWallet + magicLink combination is used, we need to connect magicLink first and then connect smartWallet
-      if (
-        walletInfo.walletId === walletIds.magicLink &&
-        walletInfo.connectParams &&
-        "oauthProvider" in walletInfo.connectParams
-      ) {
-        // if the wallet requires a personal wallet (like smartWallet), but the saved data does not have it
-        if (walletObj.personalWallets && !_personalWalletInfo) {
-          // fix the connectParams by adding the personal wallet info
-          _personalWalletInfo = {
-            walletId: walletInfo.walletId,
-            connectParams: walletInfo.connectParams,
-          };
-        }
+      // if the wallet requires a personal wallet (like smartWallet), but the saved data does not have it
+      // this can happen when user clicks on "switch to personal wallet" and reloads the page
+      // OR when user clicks on magic link social login
+      if (walletObj.personalWallets && !_personalWalletInfo) {
+        // fix the connectParams by adding the personal wallet info
+        _personalWalletInfo = {
+          walletId: walletInfo.walletId,
+          connectParams: walletInfo.connectParams,
+        };
       }
 
       const personalWalletInfo = _personalWalletInfo;
@@ -409,19 +401,6 @@ export function ThirdwebWalletProvider(
           // last used personal wallet is no longer present in the supported wallets
           setConnectionStatus("disconnected");
           return;
-        }
-      } else {
-        // if walletObj requires a personal wallet, but the saved data does not have it
-        // connect to personal wallet only ( this happens when user switches to personal wallet and reloads the page )
-        if (walletObj.personalWallets) {
-          // connect the personal wallet instead
-          walletObj = walletObj.personalWallets.find(
-            (w) => w.id === walletInfo.walletId,
-          );
-          if (!walletObj) {
-            setConnectionStatus("disconnected");
-            return;
-          }
         }
       }
 

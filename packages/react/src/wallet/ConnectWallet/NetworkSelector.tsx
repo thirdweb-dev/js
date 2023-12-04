@@ -34,7 +34,7 @@ import {
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
 
-export type NetworkSelectorChain = React.FC<{
+export type NetworkSelectorChainProps = {
   /**
    * `Chain` object for the chain to be displayed
    */
@@ -55,7 +55,7 @@ export type NetworkSelectorChain = React.FC<{
    * function to close the modal
    */
   close?: () => void;
-}>;
+};
 
 export type NetworkSelectorProps = {
   /**
@@ -103,13 +103,7 @@ export type NetworkSelectorProps = {
   /**
    * Override how the chain button is rendered in the Modal
    */
-  renderChain?: React.FC<{
-    chain: Chain;
-    switchChain: () => void;
-    switching: boolean;
-    switchFailed: boolean;
-    close?: () => void;
-  }>;
+  renderChain?: React.FC<NetworkSelectorChainProps>;
 
   /**
    * Callback to be called when a chain is successfully switched
@@ -139,7 +133,7 @@ const fuseConfig = {
 };
 
 /**
- * Renders a Network Switcher Modal that allows users to switch their wallet to a different network
+ * Renders a Network Switcher Modal that allows users to switch their wallet to a different network.
  *
  * @example
  * ```tsx
@@ -156,7 +150,7 @@ const fuseConfig = {
  * }
  * ```
  */
-export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
+export function NetworkSelector(props: NetworkSelectorProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const themeFromContext = useCustomTheme();
@@ -398,7 +392,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
       </Modal>
     </CustomThemeProvider>
   );
-};
+}
 
 const filterChainByType = (
   chains: Chain[],
@@ -421,7 +415,7 @@ const NetworkTab = (props: {
   popularChains?: Chain[];
   type: "testnet" | "mainnet" | "all";
   onSwitch: (chain: Chain) => void;
-  renderChain?: NetworkSelectorChain;
+  renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
   const allChains = useMemo(
@@ -496,7 +490,7 @@ const NetworkTab = (props: {
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   chains: Chain[];
   onSwitch: (chain: Chain) => void;
-  renderChain?: NetworkSelectorChain;
+  renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) {
   const switchChain = useSwitchChain();
