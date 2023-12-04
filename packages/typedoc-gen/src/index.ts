@@ -1,4 +1,7 @@
 import TypeDoc from "typedoc";
+import fs from "fs/promises";
+import { existsSync } from "fs";
+import path from "path";
 
 /**
  *
@@ -23,6 +26,14 @@ export async function typedoc(options: {
   }
 
   if (options.output === "html" || options.output === "both") {
+    const docsFolder = path.resolve(process.cwd(), "typedoc/docs");
+
+    if (existsSync(docsFolder)) {
+      await fs.rm(docsFolder, {
+        recursive: true,
+      });
+    }
+
     await app.generateDocs(project, "typedoc/docs");
   }
 
