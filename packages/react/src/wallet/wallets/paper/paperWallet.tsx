@@ -10,7 +10,7 @@ import { PaperFormUI, PaperFormUIScreen } from "./PaperFormUI";
 import { PaperOTPLoginUI } from "./PaperOTPLoginUI";
 import {
   OAuthProvider,
-  PaperConfig,
+  PaperWalletConfigOptions,
   PaperLoginType,
   RecoveryShareManagement,
 } from "./types";
@@ -21,48 +21,45 @@ import { PaperGoogleLogin } from "./PaperGoogleLogin";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
 
 /**
- * Paper Wallet
- *
- * @param _config - Options available to create a paper wallet
- * @returns The WalletConfig<PaperWallet> object
+ * A wallet configurator for [Paper Wallet](https://withpaper.com/) which allows integrating the wallet with React.
  *
  * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
  * Learn more here: https://portal.thirdweb.com/embedded-wallet
  */
 export const paperWallet = (
-  _config?: PaperConfig,
+  options?: PaperWalletConfigOptions,
 ): WalletConfig<PaperWallet> => {
   const defaultRecovery = "AWS_MANAGED";
 
-  const defaultConfig: PaperConfig = {
+  const defaultConfig: PaperWalletConfigOptions = {
     oauthOptions: {
       providers: ["google"],
     },
   };
 
-  const config: PaperConfig = _config
-    ? { ...defaultConfig, ..._config }
+  const finalOptions: PaperWalletConfigOptions = options
+    ? { ...defaultConfig, ...options }
     : defaultConfig;
 
-  const { oauthOptions } = config;
+  const { oauthOptions } = finalOptions;
 
   return {
     category: "socialLogin",
     isHeadless: true,
     id: PaperWallet.id,
-    recommended: config?.recommended,
+    recommended: finalOptions?.recommended,
     meta: {
       ...PaperWallet.meta,
       name: "Email",
       iconURL: emailIcon,
     },
-    create(options: WalletOptions) {
+    create(walletOptions: WalletOptions) {
       return new PaperWallet({
-        ...options,
-        ...config,
+        ...walletOptions,
+        ...finalOptions,
         advancedOptions: {
           recoveryShareManagement: "AWS_MANAGED",
-          ...config?.advancedOptions,
+          ...finalOptions?.advancedOptions,
         },
       });
     },
@@ -71,7 +68,8 @@ export const paperWallet = (
         <PaperSelectionUI
           {...props}
           recoveryShareManagement={
-            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
+            finalOptions?.advancedOptions?.recoveryShareManagement ||
+            defaultRecovery
           }
           providers={oauthOptions ? oauthOptions?.providers : undefined}
         />
@@ -82,7 +80,8 @@ export const paperWallet = (
         <PaperConnectUI
           {...props}
           recoveryShareManagement={
-            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
+            finalOptions?.advancedOptions?.recoveryShareManagement ||
+            defaultRecovery
           }
           providers={oauthOptions ? oauthOptions?.providers : undefined}
         />

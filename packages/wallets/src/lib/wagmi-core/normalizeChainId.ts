@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export function normalizeChainId(chainId: string | number | bigint) {
   if (typeof chainId === "string") {
     return Number.parseInt(

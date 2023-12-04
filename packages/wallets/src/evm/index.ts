@@ -50,7 +50,11 @@ export * from "./wallets/engine";
 export { OKXWallet, type OKXWalletOptions } from "./wallets/okx";
 export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider";
 
-export { CoreWallet, type CoreWalletOptions } from "./wallets/core-wallet";
+export {
+  CoreWallet,
+  type CoreWalletOptions,
+  type CoreWalletAdditionalOptions,
+} from "./wallets/core-wallet";
 export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
 
 export { OneKeyWallet, type OneKeyOptions } from "./wallets/onekey";
@@ -58,13 +62,18 @@ export { getInjectedOneKeyProvider } from "./connectors/onekey/getInjectedOneKey
 export {
   CryptoDefiWallet,
   type CryptoDefiWalletOptions,
+  type CryptoDefiWalletAdditionalOptions,
 } from "./wallets/crypto-defi-wallet";
 export { getInjectedCryptoDefiWalletProvider } from "./connectors/crypto-defi-wallet/getInjectedCryptoDefiWalletProvider";
 
 export { RabbyWallet, type RabbyOptions } from "./wallets/rabby";
 export { getInjectedRabbyProvider } from "./connectors/rabby/getInjectedRabbyProvider";
 
-export { Coin98Wallet, type Coin98Options } from "./wallets/coin98";
+export {
+  Coin98Wallet,
+  type Coin98Options,
+  type Coin98AdditionalOptions,
+} from "./wallets/coin98";
 export { getInjectedCoin98Provider } from "./connectors/coin98/getInjectedCoin98Provider";
 
 export type { Chain } from "@thirdweb-dev/chains";

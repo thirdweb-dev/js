@@ -38,7 +38,7 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
-export { Web3Button } from "./components/Web3Button";
+export { Web3Button, type ActionFn } from "./components/Web3Button";
 
 // utilities
 export * from "./utils/uri";

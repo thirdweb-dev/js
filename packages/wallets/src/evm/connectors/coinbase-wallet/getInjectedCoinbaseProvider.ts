@@ -1,6 +1,9 @@
 import { Ethereum } from "../injected/types";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
+/**
+ * @internal
+ */
 export function getInjectedCoinbaseProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;
