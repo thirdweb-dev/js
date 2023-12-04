@@ -42,7 +42,7 @@ export type PhantomWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(phantomWalletConfig);
+ *     const wallet = await connect(phantomWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

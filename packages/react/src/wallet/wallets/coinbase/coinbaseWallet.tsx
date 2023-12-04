@@ -55,7 +55,7 @@ export type CoinbaseWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(coinbaseWalletConfig);
+ *     const wallet = await connect(coinbaseWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

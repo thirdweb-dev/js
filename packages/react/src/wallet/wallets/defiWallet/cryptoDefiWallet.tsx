@@ -50,7 +50,7 @@ export type CryptoDefiWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(cryptoDefiWalletConfig);
+ *     const wallet = await connect(cryptoDefiWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

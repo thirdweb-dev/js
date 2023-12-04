@@ -50,6 +50,48 @@ export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Magic Link](https://magic.link/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[magicLink({
+ *   apiKey: "MAGIC_API_KEY,
+ * })]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const magicLinkConfig = magicLink({
+ *   apiKey: "MAGIC_API_KEY,
+ * });
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(magicLinkConfig, options);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export function magicLink(
   config: MagicWalletConfigOptions,
 ): ConfiguredMagicLinkWallet {

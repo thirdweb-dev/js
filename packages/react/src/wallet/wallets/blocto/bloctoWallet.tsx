@@ -43,7 +43,7 @@ export type BloctoWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(bloctoWalletConfig);
+ *     const wallet = await connect(bloctoWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

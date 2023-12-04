@@ -39,7 +39,7 @@ export type FrameWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(frameWalletConfig);
+ *     const wallet = await connect(frameWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

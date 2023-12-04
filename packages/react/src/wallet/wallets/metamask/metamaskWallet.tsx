@@ -50,7 +50,7 @@ export type MetamaskWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(metamaskWalletConfig);
+ *     const wallet = await connect(metamaskWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

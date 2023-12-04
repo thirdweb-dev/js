@@ -18,7 +18,7 @@ export type Coin98WalletConfigOptions = {
 };
 
 /**
- * A wallet configurator for Coin98 Wallet which allows integrating the wallet with React.
+ * A wallet configurator for [Coin98 Wallet](https://coin98.com/) which allows integrating the wallet with React.
  *
  * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
  *
@@ -47,7 +47,7 @@ export type Coin98WalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(coin98Config);
+ *     const wallet = await connect(coin98Config, options);
  *     console.log('connected to', wallet);
  *   }
  *

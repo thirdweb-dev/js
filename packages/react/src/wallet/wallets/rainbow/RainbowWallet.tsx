@@ -52,7 +52,7 @@ export type RainbowWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(rainbowWalletConfig);
+ *     const wallet = await connect(rainbowWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

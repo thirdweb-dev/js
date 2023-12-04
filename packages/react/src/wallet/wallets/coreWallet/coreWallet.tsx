@@ -50,7 +50,7 @@ export type CoreWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(coreWalletConfig);
+ *     const wallet = await connect(coreWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

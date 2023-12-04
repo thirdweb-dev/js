@@ -47,7 +47,7 @@ export type RabbyWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(rabbyWalletConfig);
+ *     const wallet = await connect(rabbyWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

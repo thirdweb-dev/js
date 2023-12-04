@@ -38,7 +38,7 @@ const phoneIcon = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODA
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(localeWalletConfig);
+ *     const wallet = await connect(localeWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *

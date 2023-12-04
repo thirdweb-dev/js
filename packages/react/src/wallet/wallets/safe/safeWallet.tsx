@@ -55,7 +55,7 @@ export type SafeWalletConfigOptions = {
  *   const connect = useConnect();
  *
  *   async function handleConnect() {
- *     const wallet = await connect(safeWalletConfig);
+ *     const wallet = await connect(safeWalletConfig, options);
  *     console.log('connected to', wallet);
  *   }
  *
