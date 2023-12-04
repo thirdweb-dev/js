@@ -85,7 +85,7 @@ export const BearMarketBuilderSDK: React.FC<BearMarketBuilderSDKProps> = ({
   children,
 }) => {
   // TODO bring back gasless later
-  // const forwarderAddress = "0xEbc1977d1aC2fe1F6DAaF584E2957F7c436fcdEF";
+  // const forwarderAddress = "0x409D530A6961297ECE29121dbEE2c917c3398659";
 
   return (
     <CustomSDKContext

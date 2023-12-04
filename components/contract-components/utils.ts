@@ -42,7 +42,7 @@ export function getGaslessPolygonSDK(signer?: Signer) {
         openzeppelin: {
           relayerUrl:
             "https://api.defender.openzeppelin.com/autotasks/dad61716-3624-46c9-874f-0e73f15f04d5/runs/webhook/7d6a1834-dd33-4b7b-8af4-b6b4719a0b97/FdHMqyF3p6MGHw6K2nkLsv",
-          relayerForwarderAddress: "0xEbc1977d1aC2fe1F6DAaF584E2957F7c436fcdEF",
+          relayerForwarderAddress: "0x409D530A6961297ECE29121dbEE2c917c3398659",
         },
         experimentalChainlessSupport: true,
       },
