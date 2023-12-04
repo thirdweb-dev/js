@@ -128,20 +128,20 @@ test("sha256 with sort pairs option", (t) => {
 //   t.false(MerkleTree.verify(badProof, leaf, root, sha256));
 // });
 
-// test("sha256 verify with positional hex proof and no pairSort", (t) => {
-//   t.plan(1);
+test("sha256 verify with positional hex proof and no pairSort", (t) => {
+  t.plan(1);
 
-//   const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256);
-//   const tree = new MerkleTree(leaves, sha256, { sortPairs: false });
+  const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256);
+  const tree = new MerkleTree(leaves, sha256, { sortPairs: false });
 
-//   t.true(
-//     tree.verify(
-//       tree.getPositionalHexProof(leaves[1], 1),
-//       leaves[1],
-//       tree.getHexRoot(),
-//     ),
-//   );
-// });
+  t.true(
+    tree.verify(
+      tree.getPositionalHexProof(leaves[1], 1),
+      leaves[1],
+      tree.getHexRoot(),
+    ),
+  );
+});
 
 test("sha256 verify with non-hex proof and no pairSort", (t) => {
   t.plan(1);
