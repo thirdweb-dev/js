@@ -15,7 +15,8 @@ import { useEffect, useRef } from "react";
 export type CoinbaseWalletConfigOptions = {
   /**
    * Whether to use the Coinbase's default QR Code modal or show the custom UI in ConnectWallet Modal
-   * @defaultValue "custom"
+   *
+   * The default is `"custom"`
    */
   qrmodal?: "coinbase" | "custom";
 

@@ -71,7 +71,7 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    *
    * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
    *
-   * @defaultValue 15000
+   * By default, it is set to `15000` milliseconds (15 seconds)
    */
   autoConnectTimeout?: number;
 

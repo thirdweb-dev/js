@@ -13,7 +13,14 @@ export type PaperWalletConfigOptions = Omit<
 
   /**
    * Enable or Disable OAuth logins and specify which providers to use for OAuth
-   * @defaultValue `{ providers: ["google"] }`
+   *
+   * By default, google is enabled which is equivalent to setting the following:
+   *
+   * ```ts
+   * {
+   *  providers: ["google"]
+   * }
+   * ```
    */
   oauthOptions?:
     | {
