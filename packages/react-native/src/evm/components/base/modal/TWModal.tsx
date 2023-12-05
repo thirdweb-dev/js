@@ -3,6 +3,9 @@ import Modal, { ModalProps } from "react-native-modal";
 const MAX_WIDTH = 500;
 
 // Populate with the data...
+/**
+ * @internal
+ */
 export function TWModal(props: Partial<ModalProps>) {
   return (
     <Modal

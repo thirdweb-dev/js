@@ -1,5 +1,8 @@
 import { StyleSheet, View } from "react-native";
 
+/**
+ * @internal
+ */
 export const ActiveDot = ({
   width = 28,
   height = 28,
