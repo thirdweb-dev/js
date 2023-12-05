@@ -1,22 +1,22 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
-import { WagmiConnector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   AddChainError,
   ChainNotConfiguredError,
   ConnectorNotFoundError,
-  normalizeChainId,
   ProviderRpcError,
   ResourceUnavailableError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
 import { getValidPublicRPCUrl } from "../../utils/url";
 import { Ethereum } from "./types";
 import { type Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
