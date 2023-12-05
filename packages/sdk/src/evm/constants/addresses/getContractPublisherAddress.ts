@@ -1,6 +1,6 @@
 import { getProcessEnv } from "../../../core/utils/process";
 
-const ContractPublisher_address = "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7"; // Polygon only
+const ContractPublisher_address = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
 
 /**
  * @internal

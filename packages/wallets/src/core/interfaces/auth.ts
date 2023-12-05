@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export type Ecosystem = "evm";
 export interface GenericAuthWallet {
   type: Ecosystem;

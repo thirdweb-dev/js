@@ -25,6 +25,9 @@ import { ConnectWalletProps } from "../ConnectWallet";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
 
+/**
+ * @internal
+ */
 export const ConnectModalInline = (
   props: Omit<
     ConnectWalletProps,

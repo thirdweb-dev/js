@@ -1,5 +1,5 @@
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
-import { ThirdwebLocale } from "./en";
+import { ThirdwebLocale } from "./types";
 
 // wallets that connect via extension and QR scan
 function extensionAndQRScanScreens(walletName: string) {
@@ -321,6 +321,33 @@ export function jaDefault(): ThirdwebLocale {
   };
 }
 
+/**
+ * Calling this function will return the default Japanese locale object to be set on `ThirdwebProvider` to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ *
+ * ### Use default Japanese Locale
+ * ```tsx
+ * const japanese = ja(); // default English locale object
+ *
+ * <ThirdwebProvider locale={japanese}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Override Japanese Locale
+ * ```tsx
+ * const japanese = ja({
+ *  connectWallet: {
+ *    signIn: "サインイン"
+ *  }
+ * })
+ *
+ * <ThirdwebProvider locale={japanese}> <App /> </ThirdwebProvider>
+ * ```
+ */
 export function ja(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = jaDefault();
   if (!overrides) {

@@ -15,15 +15,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Container, ModalHeader } from "../../../components/basic";
-import { SmartWalletConfig } from "./types";
 import { Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import type { SmartWallet } from "@thirdweb-dev/wallets";
 
 export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  smartWallet: SmartWalletConfig;
+  smartWallet: WalletConfig<SmartWallet>;
   personalWallet: WalletConfig;
 }> = (props) => {
   const locale = useTWLocale().wallets.smartWallet;
