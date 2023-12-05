@@ -2,15 +2,16 @@ export { EIP155_SIGNING_METHODS } from "./constants/wc";
 
 export { walletIds } from "./constants/walletIds";
 
-export { WagmiConnector } from "../lib/wagmi-connectors";
+export { WagmiConnector } from "../lib/wagmi-connectors/WagmiConnector";
 export {
   AddChainError,
   ChainNotConfiguredError,
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  normalizeChainId,
-} from "../lib/wagmi-core";
+} from "../lib/wagmi-core/errors";
+export { normalizeChainId } from "../lib/wagmi-core/normalizeChainId";
+
 export { DEFAULT_DAPP_META } from "./constants/dappMeta";
 export type { EVMWallet } from "./interfaces";
 export { Connector, WagmiAdapter } from "./interfaces/connector";
