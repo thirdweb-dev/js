@@ -53,7 +53,7 @@ export async function zkDeployContractFromUri(
         compilerMetadata.name,
         extendedMetadata.version,
       );
-      if (!implementationAddress) {
+      if (implementationAddress) {
         throw new Error("Contract not supported yet.");
       }
 
