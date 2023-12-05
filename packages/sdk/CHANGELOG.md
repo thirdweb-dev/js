@@ -1,5 +1,24 @@
 # @thirdweb-dev/sdk
 
+## 4.0.19
+
+### Patch Changes
+
+- [#2050](https://github.com/thirdweb-dev/js/pull/2050) [`cfe81b44`](https://github.com/thirdweb-dev/js/commit/cfe81b443205d84e58128b8d7d5f2dc940b12875) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update implementations
+
+- [#2049](https://github.com/thirdweb-dev/js/pull/2049) [`72c0bb10`](https://github.com/thirdweb-dev/js/commit/72c0bb10d6d765d1679b2b22ac63d85db101b5c4) Thanks [@jnsdls](https://github.com/jnsdls)! - contract roles: ensure that the connected wallet address always ends up being removed _last_ in the multi-call to remove/revoke roles
+
+- [#2048](https://github.com/thirdweb-dev/js/pull/2048) [`ca618ea0`](https://github.com/thirdweb-dev/js/commit/ca618ea0c9ac5dc4f65cbfbfd39360e4150c72c7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - metadata role
+
+- [#2051](https://github.com/thirdweb-dev/js/pull/2051) [`aefc4cda`](https://github.com/thirdweb-dev/js/commit/aefc4cda4c4fad81411d3a9485931e28100b5718) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add migration role
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+- [#2044](https://github.com/thirdweb-dev/js/pull/2044) [`d20e7898`](https://github.com/thirdweb-dev/js/commit/d20e7898562a3914841522f2e09f88ca37dfdd4b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update contract publisher
+
+- Updated dependencies [[`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56)]:
+  - @thirdweb-dev/storage@2.0.7
+
 ## 4.0.18
 
 ### Patch Changes

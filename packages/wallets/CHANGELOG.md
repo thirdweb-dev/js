@@ -1,5 +1,20 @@
 # @thirdweb-dev/wallets
 
+## 2.1.11
+
+### Patch Changes
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+- [#1938](https://github.com/thirdweb-dev/js/pull/1938) [`4ae1cd63`](https://github.com/thirdweb-dev/js/commit/4ae1cd63bb7b471cae48a27bf6554c4953c1dc82) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add OneKey wallet
+
+- [#2042](https://github.com/thirdweb-dev/js/pull/2042) [`61c62b3f`](https://github.com/thirdweb-dev/js/commit/61c62b3f07a082ffd7620c949e3bcc6b75c104b5) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and Type exports
+
+- [#2040](https://github.com/thirdweb-dev/js/pull/2040) [`7bb054e4`](https://github.com/thirdweb-dev/js/commit/7bb054e45c75450c8f465809d23eb66371f6ef8e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove barrel files
+
+- Updated dependencies [[`cfe81b44`](https://github.com/thirdweb-dev/js/commit/cfe81b443205d84e58128b8d7d5f2dc940b12875), [`72c0bb10`](https://github.com/thirdweb-dev/js/commit/72c0bb10d6d765d1679b2b22ac63d85db101b5c4), [`ca618ea0`](https://github.com/thirdweb-dev/js/commit/ca618ea0c9ac5dc4f65cbfbfd39360e4150c72c7), [`aefc4cda`](https://github.com/thirdweb-dev/js/commit/aefc4cda4c4fad81411d3a9485931e28100b5718), [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56), [`d20e7898`](https://github.com/thirdweb-dev/js/commit/d20e7898562a3914841522f2e09f88ca37dfdd4b)]:
+  - @thirdweb-dev/sdk@4.0.19
+
 ## 2.1.10
 
 ### Patch Changes
