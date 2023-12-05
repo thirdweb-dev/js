@@ -56,6 +56,9 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
 
   theme?: "light" | "dark";
 
+  /**
+   * @internal
+   */
   createWalletStorage?: CreateAsyncStorage;
 
   /**
@@ -72,6 +75,9 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    */
   autoConnectTimeout?: number;
 
+  /**
+   * @internal
+   */
   signerWallet?: WalletConfig<SignerWallet>;
 }
 

@@ -36,11 +36,6 @@ export interface SharedMediaProps {
   mimeType?: string;
 }
 
-/**
- *
- * The props for the {@link MediaRenderer} component.
- * @public
- */
 export interface MediaRendererProps extends SharedMediaProps {
   /**
    * The media source uri.

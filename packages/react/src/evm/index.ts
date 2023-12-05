@@ -16,20 +16,26 @@ export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalIn
 export {
   NetworkSelector,
   type NetworkSelectorProps,
-  type NetworkSelectorChain,
+  type NetworkSelectorChainProps,
 } from "../wallet/ConnectWallet/NetworkSelector";
+
+export type { DropDownPosition } from "../wallet/ConnectWallet/Details";
 
 // UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export { Web3Button, type Web3ButtonProps } from "./components/Web3Button";
+export {
+  Web3Button,
+  type Web3ButtonProps,
+  type ActionFn,
+} from "./components/Web3Button";
 export {
   ThirdwebProvider,
   type DefaultChains,
   type ThirdwebProviderProps,
 } from "./providers/thirdweb-provider";
 
-export type { MediaRendererProps } from "./components/types";
+export type { MediaRendererProps, SharedMediaProps } from "./components/types";
 
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
@@ -61,6 +67,11 @@ export {
   defaultTokens,
   type SupportedTokens,
 } from "../wallet/ConnectWallet/defaultTokens";
+
+export {
+  oneKeyWallet,
+  type OneKeyWalletConfigOptions,
+} from "../wallet/wallets/oneKey/oneKeyWallet";
 
 // react-core
 export * from "@thirdweb-dev/react-core";

@@ -37,6 +37,7 @@ export class RpcError<T = undefined> extends Error {
 }
 
 /**
+ * @internal
  * Error subclass implementing Ethereum Provider errors per EIP-1193.
  * @see https://eips.ethereum.org/EIPS/eip-1193
  */
@@ -70,11 +71,17 @@ export class ProviderRpcError<T = undefined> extends RpcError<T> {
   }
 }
 
+/**
+ * @internal
+ */
 export class AddChainError extends Error {
   name = "AddChainError";
   message = "Error adding chain";
 }
 
+/**
+ * @internal
+ */
 export class ChainNotConfiguredError extends Error {
   name = "ChainNotConfigured";
 
@@ -101,7 +108,9 @@ export class ResourceUnavailableError extends RpcError {
     super("Resource unavailable", { cause, code: -32002 });
   }
 }
-
+/**
+ * @internal
+ */
 export class SwitchChainError extends ProviderRpcError {
   name = "SwitchChainError";
 
@@ -109,7 +118,9 @@ export class SwitchChainError extends ProviderRpcError {
     super("Error switching chain", { cause, code: 4902 });
   }
 }
-
+/**
+ * @internal
+ */
 export class SwitchChainNotSupportedError extends Error {
   name = "SwitchChainNotSupportedError";
 
@@ -117,7 +128,9 @@ export class SwitchChainNotSupportedError extends Error {
     super(`"${connector.name}" does not support programmatic chain switching.`);
   }
 }
-
+/**
+ * @internal
+ */
 export class UserRejectedRequestError extends ProviderRpcError {
   name = "UserRejectedRequestError";
 
@@ -126,6 +139,9 @@ export class UserRejectedRequestError extends ProviderRpcError {
   }
 }
 
+/**
+ * @internal
+ */
 // Ethers does not have an error type so we can use this for casting
 // https://github.com/ethers-io/ethers.js/blob/main/packages/logger/src.ts/index.ts#L268
 export type EthersError = Error & {

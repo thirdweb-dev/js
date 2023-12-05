@@ -26,6 +26,9 @@ export class LocalStorage implements SyncStorage {
   }
 }
 
+/**
+ * @internal
+ */
 export function createLocalStorage(name: string) {
   return new LocalStorage(name);
 }
