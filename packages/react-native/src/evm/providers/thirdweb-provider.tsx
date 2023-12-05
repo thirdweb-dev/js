@@ -26,8 +26,16 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   > {
   /**
    * Wallets that will be supported by the dApp
-   * @defaultValue [MetaMaskWallet, CoinbaseWallet]
    *
+   * If no wallets are set, default wallets are used which is equivalent to the following:
+   *
+   * ```ts
+   * [
+   *  metamaskWallet(),
+   *  rainbowWallet(),
+   *  trustWallet()
+   * ]
+   *```
    * @example
    * ```jsx
    * import { MetaMaskWallet, CoinbaseWallet } from "@thirdweb-dev/react-native";
@@ -41,7 +49,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 
   /**
    * Locale that the app will be displayed in
-   * @defaultValue en()
+   *
+   * By default it is set to `en()`
    *
    * @example
    * ```jsx

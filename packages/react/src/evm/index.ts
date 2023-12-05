@@ -75,6 +75,7 @@ export {
 
 // react-core
 export * from "@thirdweb-dev/react-core";
+
 // wallets
 export {
   LocalWallet,

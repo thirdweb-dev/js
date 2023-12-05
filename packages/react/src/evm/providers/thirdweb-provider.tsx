@@ -24,14 +24,31 @@ export interface ThirdwebProviderProps<TChains extends Chain[]>
   > {
   /**
    * Wallets supported by the dApp
-   * @defaultValue `[ metamaskWallet(), coinbaseWallet(), walletConnect() ]`
+   *
+   * If no wallets are provided, the default wallets will be used which is equivalent to the following:
+   *
+   * ```tsx
+   * [
+   *  metamaskWallet(),
+   *  coinbaseWallet(),
+   *  walletConnect(),
+   *  trustWallet(),
+   *  rainbowWallet(),
+   *  zerionWallet(),
+   *  phantomWallet(),
+   * ]
+   * ```
    *
    * @example
    * ```jsx
    * import { metamaskWallet, coinbaseWallet, walletConnect } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
+   *  supportedWallets={[
+   *    metamaskWallet(),
+   *    coinbaseWallet(),
+   *    walletConnect()
+   *  ]}
    * />
    * ```
    */

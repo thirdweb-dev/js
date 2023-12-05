@@ -22,7 +22,8 @@ export type FrameConnectorOptions = {
   /**
    * eth-provider and the Frame Companion injected provider do not support programmatic disconnect.
    * This flag simulates the disconnect behavior by keeping track of connection status in storage.
-   * @defaultValue true
+   *
+   * By default, it is set to `true`.
    */
   shimDisconnect?: boolean;
 };

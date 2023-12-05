@@ -20,12 +20,14 @@ import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 type Options = CoinbaseWalletSDKOptions & {
   /**
    * Fallback Ethereum JSON RPC URL
-   * @defaultValue ""
+   *
+   * By default it is set to `""`
    */
   jsonRpcUrl?: string;
   /**
    * Fallback Ethereum Chain ID
-   * @defaultValue 1
+   *
+   * By default it is set to `1`
    */
   chainId?: number;
 };

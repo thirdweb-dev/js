@@ -719,15 +719,12 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       stream:
         specifier: npm:stream-browserify@^3.0.0
         version: /stream-browserify@3.0.0
-      typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.1.6)
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -840,6 +837,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1031,9 +1031,9 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
-      typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.1.6)
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1252,9 +1252,9 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
-      typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.1.6)
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1392,14 +1392,27 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
-      typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.1.6)
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
 
   packages/tw-tsconfig: {}
+
+  packages/typedoc-gen:
+    dependencies:
+      typedoc:
+        specifier: ^0.25.2
+        version: 0.25.2(typescript@5.1.6)
+    devDependencies:
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
+      tsup:
+        specifier: ^6.7.0
+        version: 6.7.0(typescript@5.1.6)
 
   packages/unity-js-bridge:
     dependencies:
@@ -1609,9 +1622,9 @@ importers:
       tweetnacl:
         specifier: ^1.0.3
         version: 1.0.3
-      typedoc:
-        specifier: ^0.25.2
-        version: 0.25.2(typescript@5.1.6)
+      typedoc-gen:
+        specifier: workspace:*
+        version: link:../typedoc-gen
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -14158,7 +14171,7 @@ packages:
 
   /ansi-sequence-parser@1.1.1:
     resolution: {integrity: sha512-vJXt3yiaUL4UU546s3rPXlsry/RnM730G1+HkpKE012AN0sx1eOrxSu95oKDIonskeLTijMgqWZ3uDEe3NFvyg==}
-    dev: true
+    dev: false
 
   /ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -22713,7 +22726,7 @@ packages:
 
   /jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
-    dev: true
+    dev: false
 
   /jsonfile@2.4.0:
     resolution: {integrity: sha512-PKllAqbgLgxHaj8TElYymKCAgrASebJrWpTnEkOaTowt23VKXXN0sUeriJ+eh7y6ufb/CC5ap11pz71/cM0hUw==}
@@ -23231,7 +23244,7 @@ packages:
 
   /lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
-    dev: true
+    dev: false
 
   /magic-sdk@13.6.2:
     resolution: {integrity: sha512-ZjIZM2gqaxxOR+ZAyKVw50akjfdyo0q5hZzrCMiqyCqh4BXulU7yqHgUa/5/nJ+0/4xBgUejoOcDEm+UdmzLjA==}
@@ -23342,6 +23355,7 @@ packages:
     resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
     hasBin: true
+    dev: false
 
   /mcl-wasm@0.7.9:
     resolution: {integrity: sha512-iJIUcQWA88IJB/5L15GnJVnSQJmf/YaxxV6zRavv83HILHaJQb6y0iFyDMdDO0gN8X37tdxmAOrH/P8B6RB8sQ==}
@@ -23949,7 +23963,7 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
+    dev: false
 
   /minimist-options@4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}
@@ -25695,7 +25709,6 @@ packages:
       lilconfig: 2.1.0
       postcss: 8.4.21
       yaml: 1.10.2
-    dev: false
 
   /postcss-load-config@3.1.4(ts-node@10.9.1):
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
@@ -28120,7 +28133,7 @@ packages:
       jsonc-parser: 3.2.0
       vscode-oniguruma: 1.7.0
       vscode-textmate: 8.0.0
-    dev: true
+    dev: false
 
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
@@ -29509,6 +29522,42 @@ packages:
       - ts-node
     dev: true
 
+  /tsup@6.7.0(typescript@5.1.6):
+    resolution: {integrity: sha512-L3o8hGkaHnu5TdJns+mCqFsDBo83bJ44rlK7e6VdanIvpea4ArPcU3swWGsLVbXak1PqQx/V+SSmFPujBK+zEQ==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': ^1
+      postcss: ^8.4.12
+      typescript: '>=4.1.0'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      bundle-require: 4.0.1(esbuild@0.17.11)
+      cac: 6.7.14
+      chokidar: 3.5.3
+      debug: 4.3.4(supports-color@8.1.1)
+      esbuild: 0.17.11
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      postcss-load-config: 3.1.4(postcss@8.4.21)
+      resolve-from: 5.0.0
+      rollup: 3.19.1
+      source-map: 0.8.0-beta.0
+      sucrase: 3.29.0
+      tree-kill: 1.2.2
+      typescript: 5.1.6
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+    dev: true
+
   /tsutils@3.21.0(typescript@5.1.6):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
@@ -29757,7 +29806,7 @@ packages:
       minimatch: 9.0.3
       shiki: 0.14.5
       typescript: 5.1.6
-    dev: true
+    dev: false
 
   /typescript@5.0.4:
     resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
@@ -30314,11 +30363,11 @@ packages:
 
   /vscode-oniguruma@1.7.0:
     resolution: {integrity: sha512-L9WMGRfrjOhgHSdOYgCt/yRMsXzLDJSL7BPrOZt73gU0iWO4mpqzqQzOz5srxqTvMBaR0XZTSrVWo4j55Rc6cA==}
-    dev: true
+    dev: false
 
   /vscode-textmate@8.0.0:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
-    dev: true
+    dev: false
 
   /w3c-hr-time@1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}

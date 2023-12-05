@@ -72,7 +72,7 @@ export type ConnectWalletProps = {
   /**
    * set custom label for the button.
    *
-   * @defaultValue "Connect"
+   * The default is `"Connect"`
    *
    * @example
    * ```tsx
@@ -84,7 +84,7 @@ export type ConnectWalletProps = {
   /**
    * Change the title of ConnectWallet Modal
    *
-   * @defaultValue "Connect"
+   * The default is `"Connect"`
    */
   modalTitle?: string;
 
@@ -137,8 +137,9 @@ export type ConnectWalletProps = {
    */
   auth?: {
     /**
-     * specify whether signing in is optional or not. By default it is `true` if `authConfig` is set on `ThirdWebProvider`
-     * @defaultValue true
+     * specify whether signing in is optional or not.
+     *
+     * By default it is `true` if `authConfig` is set on `ThirdWebProvider`
      */
     loginOptional?: boolean;
     /**
@@ -167,7 +168,7 @@ export type ConnectWalletProps = {
   /**
    * Hide the "Request Testnet funds" link in ConnectWallet dropdown which is shown when user is connected to a testnet.
    *
-   * @defaultValue false
+   * By default it is `false`
    *
    * @example
    * ```tsx
@@ -183,7 +184,7 @@ export type ConnectWalletProps = {
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
    *
-   * @defaultValue false
+   * By default it is `false`
    */
   switchToActiveChain?: boolean;
 
@@ -192,7 +193,7 @@ export type ConnectWalletProps = {
    *
    * Modal size is always `compact` on mobile
    *
-   * @defaultValue "wide"
+   * By default it is `"wide"` for desktop.
    */
   modalSize?: "compact" | "wide";
 
@@ -299,7 +300,7 @@ export type ConnectWalletProps = {
   /**
    * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe.
    *
-   * @defaultValue false
+   * By default it is `false`
    *
    * @example
    * ```tsx

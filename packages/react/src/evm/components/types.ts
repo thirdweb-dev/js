@@ -19,12 +19,14 @@ export interface SharedMediaProps {
   height?: HTMLIFrameElement["height"];
   /**
    * Require user interaction to play the media.
-   * @defaultValue false
+   *
+   * By default it is set to `false`
    */
   requireInteraction?: boolean;
   /**
    * Show the media controls (where applicable)
-   * @defaultValue false
+   *
+   * By default it is set to `false`
    */
   controls?: HTMLVideoElement["controls"];
 

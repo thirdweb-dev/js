@@ -68,7 +68,7 @@
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "sideEffects:": false,
   "devDependencies": {
@@ -103,10 +103,9 @@
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rimraf": "^3.0.2",
     "stream": "npm:stream-browserify@^3.0.0",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "typedoc-gen": "workspace:*"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

@@ -43,13 +43,15 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
 
   /**
    * If true, this wallet will be tagged as "recommended" in ConnectWallet Modal and will be shown at the top of the list
-   * @defaultValue false
+   *
+   * By default is set to `false`
    */
   recommended?: boolean;
 
   /**
    * If the wallet can sign transactions without user interaction, set this to true.
-   * @defaultValue false
+   *
+   * By default is set to `false`
    */
   isHeadless?: boolean;
 };

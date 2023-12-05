@@ -130,13 +130,15 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
 
     /**
      * text to render in ConnectWallet button
-     * @defaultValue "Connect Wallet"
+     *
+     * The default is `"Connect Wallet"`.
      */
     btnTitle?: string;
 
     /**
-     * title of the `ConnectWallet` Modal
-     * @defaultValue "Connect"
+     * title of the `ConnectWallet` Modal.
+     *
+     * The default is `"Connect"`.
      */
     modalTitle?: string;
 
@@ -161,9 +163,9 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
     /**
      * Set the size of the modal - `compact` or `wide` on desktop
      *
-     * Modal size is always `compact` on mobile
+     * Modal size is always `compact` on mobile.
      *
-     * @defaultValue "wide"
+     * By default it is set to `"wide"` for desktop
      */
     modalSize?: "compact" | "wide";
 

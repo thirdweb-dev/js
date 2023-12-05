@@ -6,6 +6,7 @@ import { useSupportedChains } from "./useSupportedChains";
 import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
 
 /**
+ *
  * @internal
  */
 export function useENS() {

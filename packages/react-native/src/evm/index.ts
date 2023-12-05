@@ -52,6 +52,9 @@ export * from "./i18n/types";
 
 // ui components
 export * from "./components/base";
+/**
+ * @internal
+ */
 export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 
 // assets / icons
