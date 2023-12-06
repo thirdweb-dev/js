@@ -1,6 +1,17 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { OneKeyWallet, getInjectedOneKeyProvider } from "@thirdweb-dev/wallets";
-import { OneKeyConnectUI } from "./OneKeyConnectUI";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+export const oneKeyWalletUris = {
+  ios: "onekey-wallet://",
+  android: "onekey-wallet://",
+  other: "onekey-wallet://",
+};
 
 export type OneKeyWalletConfigOptions = {
   /**
@@ -82,9 +93,30 @@ export const oneKeyWallet = (
 
       return wallet;
     },
-    connectUI: OneKeyConnectUI,
-    isInstalled() {
-      return !!getInjectedOneKeyProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  return !!getInjectedOneKeyProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<OneKeyWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as OneKeyWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={oneKeyWalletUris}
+      walletLocale={locale.wallets.oneKeyWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}

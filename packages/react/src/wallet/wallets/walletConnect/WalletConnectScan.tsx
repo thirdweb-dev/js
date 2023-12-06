@@ -1,10 +1,7 @@
-import {
-  useCreateWalletInstance,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { WalletConnect } from "@thirdweb-dev/wallets";
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { QRCode } from "../../../components/QRCode";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
@@ -19,12 +16,23 @@ export const WalletConnectScan: React.FC<{
   walletConfig: WalletConfig<WalletConnect>;
   hideBackButton: boolean;
   modalSize: "wide" | "compact";
-}> = ({ onBack, onConnected, walletConfig }) => {
+  setConnectedWallet: ConnectUIProps<WalletConnect>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<WalletConnect>["setConnectionStatus"];
+  createWalletInstance: ConnectUIProps<WalletConnect>["createWalletInstance"];
+}> = (props) => {
+  const {
+    setConnectedWallet,
+    setConnectionStatus,
+    createWalletInstance,
+    onBack,
+    onConnected,
+    walletConfig,
+  } = props;
+
   const locale = useTWLocale().wallets.walletConnect;
-  const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
   useEffect(() => {
@@ -33,7 +41,7 @@ export const WalletConnectScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const walletInstance = createInstance(walletConfig);
+    const walletInstance = createWalletInstance();
 
     setConnectionStatus("connecting");
     walletInstance.connectWithQrCode({
@@ -47,7 +55,7 @@ export const WalletConnectScan: React.FC<{
       },
     });
   }, [
-    createInstance,
+    createWalletInstance,
     setConnectedWallet,
     chainToConnect,
     onConnected,
@@ -58,7 +66,10 @@ export const WalletConnectScan: React.FC<{
   return (
     <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
-        <ModalHeader onBack={onBack} title={walletConfig.meta.name} />
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : onBack}
+          title={walletConfig.meta.name}
+        />
       </Container>
 
       <Spacer y="sm" />

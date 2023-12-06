@@ -1,8 +1,18 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { ZerionWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
-import { ZerionConnectUI } from "./ZerionConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
-import { zerionWalletUris } from "./zerionWalletUris";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+const zerionWalletUris = {
+  ios: "zerion://",
+  android: "https://link.zerion.io/pt3gdRP0njb/",
+  other: "https://link.zerion.io/pt3gdRP0njb/",
+};
 
 export type ZerionkWalletConfigOptions = {
   /**
@@ -79,12 +89,33 @@ export const zerionWallet = (
 
       return wallet;
     },
-    connectUI: ZerionConnectUI,
-    isInstalled() {
-      if (assertWindowEthereum(globalThis.window)) {
-        return !!globalThis.window.ethereum.isZerion;
-      }
-      return false;
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  if (assertWindowEthereum(globalThis.window)) {
+    return !!globalThis.window.ethereum.isZerion;
+  }
+  return false;
+}
+
+function ConnectUI(props: ConnectUIProps<ZerionWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as ZerionWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={zerionWalletUris}
+      walletLocale={locale.wallets.zerionWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}

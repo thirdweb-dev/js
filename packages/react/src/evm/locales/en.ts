@@ -53,6 +53,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -109,6 +110,7 @@ export function enDefault() {
           instruction:
             "Please sign the message request in your wallet to continue",
           signInButton: "Sign in",
+          disconnectWallet: "Disconnect Wallet",
         },
         signingScreen: {
           title: "Signing In",

@@ -1,34 +1,37 @@
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
-import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
+import type {
+  ConnectionStatus,
+  WalletConfig,
+  WalletInstance,
+} from "@thirdweb-dev/react-core";
+import { WCConnectableWallet } from "./WCConnectableWallet";
+import { ExtensionAndQRScreensLocale } from "../../../evm/locales/types";
 
-export const MetamaskScan: React.FC<{
+export const WalletConnectScanUI: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  walletConfig: WalletConfig<MetaMaskWallet>;
   hideBackButton: boolean;
-  setConnectedWallet: ConnectUIProps<MetaMaskWallet>["setConnectedWallet"];
-  setConnectionStatus: ConnectUIProps<MetaMaskWallet>["setConnectionStatus"];
-  createWalletInstance: () => MetaMaskWallet;
+  setConnectionStatus: (status: ConnectionStatus) => void;
+  setConnectedWallet: (wallet: WalletInstance) => void;
+  walletLocale: ExtensionAndQRScreensLocale;
+  createWalletInstance: () => WCConnectableWallet;
+  meta: WalletConfig["meta"];
 }> = (props) => {
   const {
     onBack,
     onConnected,
     onGetStarted,
-    walletConfig,
     hideBackButton,
-    setConnectedWallet,
     setConnectionStatus,
+    setConnectedWallet,
     createWalletInstance,
   } = props;
-  const locale = useTWLocale().wallets.metamaskWallet;
 
+  const locale = props.walletLocale;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-
   const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
@@ -38,26 +41,25 @@ export const MetamaskScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const metamask = createWalletInstance();
+    const wallet = createWalletInstance();
 
-    metamask.connectWithQrCode({
+    wallet.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
         setConnectionStatus("connecting");
-        setConnectedWallet(metamask);
+        setConnectedWallet(wallet);
         onConnected();
       },
     });
   }, [
+    createWalletInstance,
     setConnectedWallet,
     chainToConnect,
     onConnected,
-    walletConfig,
     setConnectionStatus,
-    createWalletInstance,
   ]);
 
   return (
@@ -66,8 +68,8 @@ export const MetamaskScan: React.FC<{
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName={walletConfig.meta.name}
-      walletIconURL={walletConfig.meta.iconURL}
+      walletName={props.meta.name}
+      walletIconURL={props.meta.iconURL}
       hideBackButton={hideBackButton}
       getStartedLink={locale.getStartedLink}
     />

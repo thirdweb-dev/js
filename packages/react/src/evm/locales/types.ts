@@ -18,6 +18,7 @@ export type ThirdwebLocale = {
       privacyPolicy: string;
       termsOfService: string;
     };
+    goBackButton: string;
     backupWallet: string;
     confirmInWallet: string;
     connectAWallet: string;
@@ -79,6 +80,7 @@ export type ThirdwebLocale = {
         instruction: string;
         signInButton: string;
         title: string;
+        disconnectWallet: string;
       };
       signingScreen: {
         approveTransactionInSafe: string;

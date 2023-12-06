@@ -606,6 +606,8 @@ export const ConnectedWalletDetails: React.FC<{
           onExport={() => {
             setShowExportModal(false);
           }}
+          walletAddress={address}
+          walletInstance={activeWallet}
         />
       </Modal>
 

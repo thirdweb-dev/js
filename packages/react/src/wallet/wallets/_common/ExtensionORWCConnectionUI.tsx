@@ -1,20 +1,49 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
-import type { Coin98Wallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { Coin98Scan } from "./Coin98Scan";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
-import { coin98WalletUris } from "./coin98WalletUris";
+import { WalletConnectScanUI } from "./WalletConnectScanUI";
+import { WCConnectableWallet } from "./WCConnectableWallet";
+import { ExtensionAndQRScreensLocale } from "../../../evm/locales/types";
 
-export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
+export const ExtensionOrWCConnectionUI = (props: {
+  walletConnectUris: {
+    ios: string;
+    android: string;
+    other: string;
+  };
+  walletLocale: ExtensionAndQRScreensLocale;
+  meta: WalletConfig["meta"];
+  isInstalled?: () => boolean;
+  supportedWallets: WalletConfig[];
+  connect: ConnectUIProps<WCConnectableWallet>["connect"];
+  connected: ConnectUIProps<WCConnectableWallet>["connected"];
+  goBack: ConnectUIProps<WCConnectableWallet>["goBack"];
+  setConnectedWallet: ConnectUIProps<WCConnectableWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<WCConnectableWallet>["setConnectionStatus"];
+  createWalletInstance: () => WCConnectableWallet;
+}) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const locale = useTWLocale().wallets.coin98Wallet;
+
+  const {
+    connected,
+    connect,
+    supportedWallets,
+    isInstalled,
+    meta,
+    createWalletInstance,
+    setConnectedWallet,
+    setConnectionStatus,
+    goBack,
+    walletConnectUris,
+    walletLocale: locale,
+  } = props;
+
   const connectingLocale = {
     getStartedLink: locale.getStartedLink,
     instruction: locale.connectionScreen.instruction,
@@ -22,11 +51,9 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
     inProgress: locale.connectionScreen.inProgress,
     failed: locale.connectionScreen.failed,
   };
-  const { walletConfig, connected } = props;
-  const connect = useConnect();
-  const [errorConnecting, setErrorConnecting] = useState(false);
 
-  const hideBackButton = props.supportedWallets.length === 1;
+  const [errorConnecting, setErrorConnecting] = useState(false);
+  const hideBackButton = supportedWallets.length === 1;
 
   const connectToExtension = useCallback(async () => {
     try {
@@ -34,13 +61,13 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
       setErrorConnecting(false);
       setScreen("connecting");
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -48,13 +75,11 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
       return;
     }
 
-    const isInstalled = walletConfig.isInstalled
-      ? walletConfig.isInstalled()
-      : false;
+    const isInstalledVal = isInstalled ? isInstalled() : false;
 
     // if loading
     (async () => {
-      if (isInstalled) {
+      if (isInstalledVal) {
         connectToExtension();
       }
 
@@ -69,27 +94,21 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
         }
       }
     })();
-  }, [connectToExtension, walletConfig]);
+  }, [connectToExtension, isInstalled]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
-        locale={{
-          getStartedLink: locale.getStartedLink,
-          instruction: locale.connectionScreen.instruction,
-          tryAgain: locale.connectionScreen.retry,
-          inProgress: locale.connectionScreen.inProgress,
-          failed: locale.connectionScreen.failed,
-        }}
+        locale={connectingLocale}
         errorConnecting={errorConnecting}
         onGetStarted={() => {
           setScreen("get-started");
         }}
         onRetry={connectToExtension}
         hideBackButton={hideBackButton}
-        onBack={props.goBack}
-        walletName={walletConfig.meta.name}
-        walletIconURL={walletConfig.meta.iconURL}
+        onBack={goBack}
+        walletName={meta.name}
+        walletIconURL={meta.iconURL}
       />
     );
   }
@@ -106,10 +125,15 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
           setScreen("get-started");
         }}
         hideBackButton={hideBackButton}
-        onBack={props.goBack}
+        onBack={goBack}
         onConnected={connected}
-        walletConfig={walletConfig}
-        appUriPrefix={coin98WalletUris}
+        appUriPrefix={walletConnectUris}
+        createWalletInstance={createWalletInstance}
+        meta={meta}
+        setConnectedWallet={(w) => {
+          setConnectedWallet(w as WCConnectableWallet);
+        }}
+        setConnectionStatus={setConnectionStatus}
       />
     );
   }
@@ -120,26 +144,32 @@ export const Coin98ConnectUI = (props: ConnectUIProps<Coin98Wallet>) => {
         locale={{
           scanToDownload: locale.getStartedScreen.instruction,
         }}
-        walletIconURL={walletConfig.meta.iconURL}
-        walletName={walletConfig.meta.name}
-        chromeExtensionLink={walletConfig.meta.urls?.chrome}
-        googlePlayStoreLink={walletConfig.meta.urls?.android}
-        appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={props.goBack}
+        walletIconURL={meta.iconURL}
+        walletName={meta.name}
+        chromeExtensionLink={meta.urls?.chrome}
+        googlePlayStoreLink={meta.urls?.android}
+        appleStoreLink={meta.urls?.ios}
+        onBack={goBack}
       />
     );
   }
 
   if (screen === "scanning") {
     return (
-      <Coin98Scan
-        onBack={props.goBack}
-        onConnected={props.connected}
+      <WalletConnectScanUI
+        onBack={goBack}
+        onConnected={connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}
         hideBackButton={hideBackButton}
-        walletConfig={walletConfig}
+        createWalletInstance={createWalletInstance}
+        meta={meta}
+        setConnectedWallet={(w) => {
+          setConnectedWallet(w as WCConnectableWallet);
+        }}
+        setConnectionStatus={setConnectionStatus}
+        walletLocale={locale}
       />
     );
   }

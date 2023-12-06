@@ -7,6 +7,8 @@ export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provi
 // constants
 export { __DEV__ } from "../core/constants/runtime";
 
+export { useWalletConnectionSetup } from "../core/providers/thirdweb-wallet-provider";
+
 // wallet hooks
 export {
   useWallet,
@@ -42,6 +44,7 @@ export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
   WalletConfig,
   ConnectUIProps,
+  ConnectionStatus,
   SelectUIProps,
   WalletClass,
   WalletInstance,

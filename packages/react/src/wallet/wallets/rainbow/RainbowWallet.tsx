@@ -1,11 +1,21 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import {
   RainbowWallet,
   getInjectedRainbowProvider,
 } from "@thirdweb-dev/wallets";
-import { RainbowConnectUI } from "./RainbowConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
-import { rainbowWalletUris } from "./rainbowWalletUris";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+const rainbowWalletUris = {
+  ios: "rainbow://",
+  android: "https://rnbwapp.com/",
+  other: "https://rnbwapp.com/",
+};
 
 export type RainbowWalletConfigOptions = {
   /**
@@ -83,9 +93,30 @@ export const rainbowWallet = (
 
       return wallet;
     },
-    connectUI: RainbowConnectUI,
-    isInstalled() {
-      return !!getInjectedRainbowProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  return !!getInjectedRainbowProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<RainbowWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as RainbowWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={rainbowWalletUris}
+      walletLocale={locale.wallets.rainbowWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}

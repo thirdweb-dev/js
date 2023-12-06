@@ -1,6 +1,17 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { Coin98Wallet, getInjectedCoin98Provider } from "@thirdweb-dev/wallets";
-import { Coin98ConnectUI } from "./Coin98ConnectUI";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+
+const coin98WalletUris = {
+  ios: "coin98://",
+  android: "coin98://",
+  other: "coin98://",
+};
 
 export type Coin98WalletConfigOptions = {
   /**
@@ -82,9 +93,30 @@ export const coin98Wallet = (
 
       return wallet;
     },
-    connectUI: Coin98ConnectUI,
-    isInstalled() {
-      return !!getInjectedCoin98Provider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isCoin98Installed,
   };
 };
+
+function isCoin98Installed() {
+  return !!getInjectedCoin98Provider();
+}
+
+function ConnectUI(props: ConnectUIProps<Coin98Wallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as Coin98Wallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={coin98WalletUris}
+      walletLocale={locale.wallets.coin98Wallet}
+      isInstalled={isCoin98Installed}
+    />
+  );
+}

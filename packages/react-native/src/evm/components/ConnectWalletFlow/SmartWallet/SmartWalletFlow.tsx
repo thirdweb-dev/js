@@ -3,6 +3,7 @@ import {
   ConnectUIProps,
   WalletConfig,
   WalletInstance,
+  useAddress,
   useConnect,
   useCreateWalletInstance,
   useWalletContext,
@@ -38,6 +39,15 @@ export const SmartWalletFlow = ({
   const createWalletInstance = useCreateWalletInstance();
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
+
+  // TEMP BUILD FIX
+  const address = useAddress();
+  const {
+    setConnectedWallet,
+    setConnectionStatus,
+    connectionStatus,
+    activeWallet,
+  } = useWalletContext();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
@@ -127,6 +137,16 @@ export const SmartWalletFlow = ({
           goBack={goBack}
           walletConfig={personalWalletConfig}
           onLocallyConnected={onPersonalWalletConnected}
+          // TEMPORARY BUILD FIX
+          connect={(options: any) => connect(personalWalletConfig, options)}
+          connectedWallet={activeWallet}
+          connectedWalletAddress={address}
+          connectionStatus={connectionStatus}
+          createWalletInstance={() =>
+            createWalletInstance(personalWalletConfig)
+          }
+          setConnectedWallet={setConnectedWallet}
+          setConnectionStatus={setConnectionStatus}
         />
       ) : (
         <Box paddingHorizontal="xl">

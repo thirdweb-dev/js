@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,10 +13,8 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
     "connecting" | "scanning" | "get-started"
   >("connecting");
   const locale = useTWLocale().wallets.metamaskWallet;
-  const { walletConfig, connected } = props;
-  const connect = useConnect();
+  const { walletConfig, connected, connect } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
-
   const hideBackButton = props.supportedWallets.length === 1;
 
   const connectToExtension = useCallback(async () => {
@@ -25,13 +23,13 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
       setErrorConnecting(false);
       setScreen("connecting");
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -113,6 +111,9 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         }}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
+        setConnectedWallet={(w: MetaMaskWallet) => props.setConnectedWallet(w)}
+        setConnectionStatus={props.setConnectionStatus}
+        createWalletInstance={props.createWalletInstance}
       />
     );
   }
