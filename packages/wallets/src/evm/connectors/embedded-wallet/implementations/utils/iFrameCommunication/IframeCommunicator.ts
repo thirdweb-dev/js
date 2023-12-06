@@ -48,7 +48,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
-    const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION || "2.1.0";
+    const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION;
     if (!sdkVersion) {
       throw new Error("Missing THIRDWEB_EWS_SDK_VERSION env var");
     }
