@@ -1,4 +1,4 @@
-import { WagmiConnector, normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import {
   MagicAuthOptions,
   MagicConnectorBaseOptions,
@@ -17,6 +17,7 @@ import { Address } from "@thirdweb-dev/sdk";
 import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 
 export type MagicAuthConnectOptions = {
   chainId?: number;

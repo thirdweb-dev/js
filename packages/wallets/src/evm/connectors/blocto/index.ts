@@ -1,13 +1,12 @@
 import {
   WagmiConnector,
   WagmiConnectorData,
-} from "../../../lib/wagmi-connectors";
+} from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   UserRejectedRequestError,
   SwitchChainError,
-  normalizeChainId,
   ConnectorNotFoundError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import type {
   EthereumProviderConfig,
   EthereumProviderInterface as BloctoProvider,
@@ -17,6 +16,7 @@ import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import type { Chain } from "@thirdweb-dev/chains";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 type BloctoSigner = providers.JsonRpcSigner;
 type BloctoOptions = Partial<EthereumProviderConfig>;

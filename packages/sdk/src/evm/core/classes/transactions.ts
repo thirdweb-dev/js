@@ -1,6 +1,9 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
 import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import {
+  fetchContractMetadataFromAddress,
+  getContractMetadataFromCache,
+} from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { ContractSource } from "../../schema/contracts/custom";
@@ -675,17 +678,17 @@ export class Transaction<
     let sources: ContractSource[] | undefined = undefined;
     let contractName: string | undefined = undefined;
     try {
-      const metadata = await fetchContractMetadataFromAddress(
+      const chainId = (await provider.getNetwork()).chainId;
+      const metadata = getContractMetadataFromCache(
         this.contract.address,
-        this.provider,
-        this.storage,
+        chainId,
       );
 
-      if (metadata.name) {
+      if (metadata?.name) {
         contractName = metadata.name;
       }
 
-      if (metadata.metadata.sources) {
+      if (metadata?.metadata.sources) {
         sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {

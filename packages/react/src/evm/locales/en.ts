@@ -1,3 +1,4 @@
+import { ThirdwebLocale } from "./types";
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
 
 // wallets that connect via extension and QR scan
@@ -168,6 +169,8 @@ export function enDefault() {
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       coreWallet: extensionAndQRScanScreens("Core"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {
@@ -316,8 +319,33 @@ export function enDefault() {
   };
 }
 
-export type ThirdwebLocale = ReturnType<typeof enDefault>;
-
+/**
+ * Calling this function will return the default English locale object to be set on `ThirdwebProvider` to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ *
+ * ### Use default English Locale
+ * ```tsx
+ * const english = en(); // default English locale object
+ *
+ * <ThirdwebProvider locale={english}> <App /> </ThirdwebProvider>
+ * ```
+ *
+ * ### Override English Locale
+ * ```tsx
+ * const english = en({
+ *  connectWallet: {
+ *    signIn: "Sign in!"
+ *  }
+ * })
+ *
+ * <ThirdwebProvider locale={english}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ */
 export function en(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = enDefault();
   if (!overrides) {

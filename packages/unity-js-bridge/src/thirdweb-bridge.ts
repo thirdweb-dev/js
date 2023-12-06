@@ -349,6 +349,7 @@ class ThirdwebBridge implements TWBridge {
           password,
           email,
           personalWallet,
+          authOptions,
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet

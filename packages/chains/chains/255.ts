@@ -13,9 +13,21 @@ export default {
         "height": 540,
         "format": "png"
       }
+    },
+    {
+      "name": "etherscan",
+      "url": "https://kromascan.com/",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
     "width": 320,
@@ -39,6 +51,7 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://kroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://255.rpc.thirdweb.com/${THIRDWEB_API_KEY}",

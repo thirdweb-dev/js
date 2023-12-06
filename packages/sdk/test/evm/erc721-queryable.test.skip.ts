@@ -147,7 +147,7 @@ describe("ERC721A Queryable NFT Contract", async () => {
 
     // const mockPublisher = process.env.contractPublisherAddress;
     // process.env.contractPublisherAddress =
-    //   "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    //   "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     contract = await deployOpenEdition();
     // process.env.contractPublisherAddress = mockPublisher;
   });

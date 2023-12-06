@@ -1,4 +1,4 @@
-import type { WagmiConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-connectors/WagmiConnector";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";

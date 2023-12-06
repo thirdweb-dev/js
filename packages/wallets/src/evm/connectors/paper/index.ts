@@ -10,7 +10,7 @@ import {
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
-import { normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 import {
