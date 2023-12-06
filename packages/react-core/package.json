@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "4.1.10",
+  "version": "4.1.12",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -52,7 +52,8 @@
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "push": "yalc push"
+    "push": "yalc push",
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "sideEffects:": false,
   "devDependencies": {
@@ -83,7 +84,8 @@
     "ethers": "^5.7.2",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "typedoc-gen": "workspace:*"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.33.0",

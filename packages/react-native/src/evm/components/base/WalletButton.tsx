@@ -18,6 +18,9 @@ type WalletButtonProps = {
   iconHeight?: number;
 } & React.ComponentProps<typeof BaseButton>;
 
+/**
+ * @internal
+ */
 export const WalletButton = ({
   iconWidth = 48,
   iconHeight = 48,

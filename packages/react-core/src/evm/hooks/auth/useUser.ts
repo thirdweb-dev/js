@@ -19,7 +19,6 @@ export interface UserWithData<
  *
  * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
  *
- * @beta
  */
 export function useUser<
   TData extends Json = Json,

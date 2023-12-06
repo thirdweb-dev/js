@@ -1,7 +1,5 @@
 import { useSDK } from "../useSDK";
 
-export { useStorageUpload } from "./useStorageUpload";
-
 /**
  * Get the configured `ThirdwebStorage` instance
  * @returns The `storageInterface` configured on the `ThirdwebProvider`

@@ -24,5 +24,8 @@ export const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   1313161554: "https://safe-transaction-aurora.safe.global",
 } as const;
 
+/**
+ * @internal
+ */
 export const SafeSupportedChainsSet = /* @__PURE__ */ (() =>
   new Set(Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number)))();

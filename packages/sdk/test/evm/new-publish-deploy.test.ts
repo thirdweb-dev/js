@@ -183,7 +183,7 @@ describe("New Publish Flow", async () => {
     it("should deploy with auto factory", async () => {
       const mockPublisher = process.env.contractPublisherAddress;
       process.env.contractPublisherAddress =
-        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+        "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
       const adminAddress = await adminWallet.getAddress();
 
       // mock publish as a autoFactory-deploy contract
@@ -262,7 +262,7 @@ describe("New Publish Flow", async () => {
     it("should deploy via old factory", async () => {
       const mockPublisher = process.env.contractPublisherAddress;
       process.env.contractPublisherAddress =
-        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+        "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
       const adminAddress = await adminWallet.getAddress();
 
       // mock publish as old-style factory deployable -- omit deployType, networksForDeployment etc

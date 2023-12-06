@@ -170,6 +170,18 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
         const toRemove = currentAddresses.filter(
           (address) => !addresses.includes(address),
         );
+        // if we are removing multiple roles, we need to allways remove the connected wallet address *last*
+        // this is so we don't renounce (i.e.)  admin role first and then try to revoke someone else's (i.e.) admin role after (which will revert the entire txn because we are no longer an admin)
+        const connectedWalletAddress =
+          await this.contractWrapper.getSignerAddress();
+        // only need to do this path if the toRemove is longer than 1 (i.e. we are removing multiple addresses from a role)
+        if (toRemove.length > 1) {
+          const index = toRemove.indexOf(connectedWalletAddress);
+          if (index > -1) {
+            toRemove.splice(index, 1);
+            toRemove.push(connectedWalletAddress);
+          }
+        }
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(

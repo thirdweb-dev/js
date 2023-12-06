@@ -34,7 +34,6 @@ import invariant from "tiny-invariant";
  * @returns a response object that includes an array of all accounts with their associated admin
  * @twfeature AccountFactory
  * @see {@link https://portal.thirdweb.com/react/react.useaccounts?utm_source=sdk | Documentation}
- * @beta
  */
 export function useAccounts(
   contract: RequiredParam<SmartContract>,
@@ -66,7 +65,6 @@ export function useAccounts(
  * @returns a response object that includes an array of all accounts associated with the address
  * @twfeature AccountFactory
  * @see {@link https://portal.thirdweb.com/react/react.useaccountsforaddress?utm_source=sdk | Documentation}
- * @beta
  */
 export function useAccountsForAddress(
   contract: RequiredParam<SmartContract>,
@@ -102,7 +100,6 @@ export function useAccountsForAddress(
  * @returns a boolean indicating if a account has been deployed for the given admin
  * @twfeature AccountFactory
  * @see {@link https://portal.thirdweb.com/react/react.useisaccountdeployed?utm_source=sdk | Documentation}
- * @beta
  */
 export function useIsAccountDeployed(
   contract: RequiredParam<SmartContract>,
@@ -160,7 +157,6 @@ export function useIsAccountDeployed(
  * @returns a mutation object that can be used to create a account
  * @twfeature AccountFactory
  * @see {@link https://portal.thirdweb.com/react/react.usecreateaccount?utm_source=sdk | Documentation}
- * @beta
  */
 export function useCreateAccount(contract: RequiredParam<SmartContract>) {
   const activeChainId = useSDKChainId();

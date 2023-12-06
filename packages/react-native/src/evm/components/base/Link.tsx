@@ -8,6 +8,9 @@ type LinkProps = {
   onPress?: () => void;
 } & React.ComponentProps<typeof Text>;
 
+/**
+ * @internal
+ */
 export const Link = ({
   text,
   variant = "link",
