@@ -116,10 +116,11 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWalletConfig = useWalletConfig();
   const ensQuery = useENS();
 
-  const [wrapperWallet, setWrapperWallet] = useState<
-    WalletInstance | undefined
-  >();
   const walletContext = useWalletContext();
+
+  const wrapperWallet = activeWallet
+    ? walletContext.getWrapperWallet(activeWallet)
+    : undefined;
 
   const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
     string | undefined
@@ -437,9 +438,6 @@ export const ConnectedWalletDetails: React.FC<{
             <WalletSwitcher
               wallet={personalWallet}
               name={locale.personalWallet}
-              onSwitch={() => {
-                setWrapperWallet(activeWallet);
-              }}
             />
           )}
 
@@ -452,9 +450,6 @@ export const ConnectedWalletDetails: React.FC<{
                 : wrapperWalletConfig.meta.name
             }
             wallet={wrapperWallet}
-            onSwitch={() => {
-              setWrapperWallet(undefined);
-            }}
           />
         )}
 
@@ -761,11 +756,9 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)(() => {
 
 function WalletSwitcher({
   wallet,
-  onSwitch,
   name,
 }: {
   wallet: WalletInstance;
-  onSwitch: () => void;
   name: string;
 }) {
   const walletContext = useWalletContext();
@@ -776,7 +769,6 @@ function WalletSwitcher({
       type="button"
       onClick={() => {
         walletContext.setConnectedWallet(wallet);
-        onSwitch();
       }}
       style={{
         fontSize: fontSize.sm,

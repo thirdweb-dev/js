@@ -65,6 +65,12 @@ const walletInstanceToConfig: Map<
   WalletConfig<any>
 > = new Map();
 
+/**
+ * Maps a personal wallet instance to it's wrapper wallet instance ( like smartWallet or safeWallet ) to know it's "wrapper" wallet
+ */
+const personalWalletToWrapperWallet: Map<WalletInstance, WalletInstance> =
+  new Map();
+
 type WalletSetupData = {
   chains: Chain[];
   dAppMeta?: DAppMetaData;
@@ -98,6 +104,12 @@ type ThirdwebWalletContextData = {
    * Get wallet config object from wallet instance
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
+  /**
+   * Get the "wrapper wallet" ( safe/smart wallet ) of the given personal wallet instance
+   */
+  getWrapperWallet: (
+    walletInstance: WalletInstance,
+  ) => WalletInstance | undefined;
   activeChainSetExplicitly: boolean;
   clientId?: string;
   walletConnectHandler: WalletConnectHandler | undefined;
@@ -225,6 +237,10 @@ export function useWalletConnectionSetup(
       const _signer = await wallet.getSigner();
       setSigner(_signer);
 
+      // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
+      const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
+      personalWalletToWrapperWallet.set(personalWallet, wallet);
+
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {
         return;
@@ -237,8 +253,6 @@ export function useWalletConnectionSetup(
         connectParams: connectParams || wallet.getConnectParams(),
       };
 
-      // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
-      const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
       const personalWalletConfig = walletInstanceToConfig.get(personalWallet);
 
       if (personalWallet && personalWalletConfig) {
@@ -542,10 +556,13 @@ export function ThirdwebWalletProvider(
 
       let _personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
+      let shouldSetPersonalWalletAsActive = false;
+
       // if the wallet requires a personal wallet (like smartWallet), but the saved data does not have it
       // this can happen when user clicks on "switch to personal wallet" and reloads the page
       // OR when user clicks on magic link social login
       if (walletObj.personalWallets && !_personalWalletInfo) {
+        shouldSetPersonalWalletAsActive = true;
         // fix the connectParams by adding the personal wallet info
         _personalWalletInfo = {
           walletId: walletInfo.walletId,
@@ -554,6 +571,7 @@ export function ThirdwebWalletProvider(
       }
 
       const personalWalletInfo = _personalWalletInfo;
+      let personalWalletInstance: WalletInstance | undefined;
 
       if (personalWalletInfo) {
         const personalWallets = walletObj.personalWallets || [];
@@ -563,8 +581,7 @@ export function ThirdwebWalletProvider(
         );
         if (personalWalletObj) {
           // create a personal wallet instance and auto connect it
-          const personalWalletInstance =
-            createWalletInstance(personalWalletObj);
+          personalWalletInstance = createWalletInstance(personalWalletObj);
 
           try {
             await timeoutPromise(
@@ -576,6 +593,14 @@ export function ThirdwebWalletProvider(
                 message: autoConnectTimeoutErrorMessage,
               },
             );
+
+            if (shouldSetPersonalWalletAsActive) {
+              setConnectedWallet(
+                personalWalletInstance,
+                personalWalletInfo.connectParams,
+                true,
+              );
+            }
           } catch (e) {
             console.error("Failed to auto connect personal wallet");
             console.error(e);
@@ -601,11 +626,19 @@ export function ThirdwebWalletProvider(
       try {
         setIsAutoConnecting(true);
         setConnectionStatus("connecting");
+
+        if (personalWalletInstance) {
+          personalWalletToWrapperWallet.set(personalWalletInstance, wallet);
+        }
+
         await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
           ms: autoConnectTimeout,
           message: autoConnectTimeoutErrorMessage,
         });
-        setConnectedWallet(wallet, walletInfo.connectParams, true);
+
+        if (!shouldSetPersonalWalletAsActive) {
+          setConnectedWallet(wallet, walletInfo.connectParams, true);
+        }
       } catch (e) {
         console.error("Failed to auto connect wallet");
         console.error(e);
@@ -683,6 +716,9 @@ export function ThirdwebWalletProvider(
         chainToConnect,
         getWalletConfig: (walletInstance: WalletInstance) => {
           return walletInstanceToConfig.get(walletInstance);
+        },
+        getWrapperWallet: (personalWallet: WalletInstance) => {
+          return personalWalletToWrapperWallet.get(personalWallet);
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
         clientId: props.clientId,
