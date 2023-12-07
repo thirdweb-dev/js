@@ -34,7 +34,7 @@ describe("Token Drop Contract (v4)", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: adminWallet.address,
         platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
+        platform_fee_recipient: adminWallet.address,
       },
       await sdk.deployer.getLatestBuiltInContractVersion(
         TokenDropInitializer.contractType,
