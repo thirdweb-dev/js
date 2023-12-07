@@ -652,10 +652,16 @@ class ThirdwebBridge implements TWBridge {
     const localWallet = this.walletMap.get(
       walletIds.localWallet,
     ) as LocalWallet;
-    await localWallet.loadOrCreate({
-      strategy: "encryptedJson",
-      password,
-    });
+    try {
+      await localWallet.loadOrCreate({
+        strategy: "encryptedJson",
+        password,
+      });
+    } catch(e) {
+      console.warn(e);
+      return localWallet;
+    }
+    
     return localWallet;
   }
 
