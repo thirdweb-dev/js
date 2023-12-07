@@ -383,8 +383,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.10.3
-        version: 3.10.3(ethers@5.7.2)
+        specifier: 3.10.4-0
+        version: 3.10.4-0(ethers@5.7.2)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -8030,7 +8030,7 @@ packages:
     resolution: {integrity: sha512-tOZfTiIFA5KmMpdW9KF7bc6CFiGjb0xnbieJhTGlHrLL+ps2G0OkqmuZ3pFEXBOMnJYUVpnSy++52LFxvpa5ZQ==}
     dependencies:
       '@babel/code-frame': 7.10.4
-      json5: 2.2.3
+      json5: 1.0.2
       write-file-atomic: 2.4.3
 
   /@expo/json-file@8.2.37:
@@ -12225,8 +12225,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.10.3(ethers@5.7.2):
-    resolution: {integrity: sha512-wSVNaEoosn0AgUtnxlvv7rgK+3EUMzJm2ZasofPgJgqGS3gYH5nDBmK29VMquA2BLc38OAPyYMWc/iQCiCikMg==}
+  /@thirdweb-dev/contracts@3.10.4-0(ethers@5.7.2):
+    resolution: {integrity: sha512-mEszWH6df7RVUL077nPJZJ7EPnUIym+tlobMmdIpqRWuORJ6gKzUFM634YAqe68/Mh2T7ORYR9g7D15FqGJSqg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@chainlink/contracts': 0.6.1(ethers@5.7.2)
@@ -26387,7 +26387,7 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: '>=7.2.4'
+      protobufjs: ^7.0.0
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3
