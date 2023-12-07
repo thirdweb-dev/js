@@ -38,6 +38,7 @@ export const WalletConnectScan: React.FC<{
     setConnectionStatus("connecting");
 
     try {
+      setQrCodeUri(undefined);
       setIsOpeningWCModal(true);
       wait(1000).then(() => {
         setIsOpeningWCModal(false);
@@ -51,10 +52,8 @@ export const WalletConnectScan: React.FC<{
       setConnectedWallet(walletInstance);
       onConnected();
     } catch {
-      // show error
+      show();
     }
-
-    show();
   };
 
   return (
