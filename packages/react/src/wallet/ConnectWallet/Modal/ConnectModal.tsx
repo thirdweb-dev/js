@@ -268,6 +268,10 @@ export const ConnectModal = () => {
         size={modalSize}
         open={isWalletModalOpen}
         setOpen={(value) => {
+          if (hideModal) {
+            return;
+          }
+
           setIsWalletModalOpen(value);
           if (!value) {
             const requiresSignIn = auth?.loginOptional
