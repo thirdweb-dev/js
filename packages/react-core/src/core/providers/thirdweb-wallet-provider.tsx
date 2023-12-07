@@ -562,7 +562,17 @@ export function ThirdwebWalletProvider(
       // this can happen when user clicks on "switch to personal wallet" and reloads the page
       // OR when user clicks on magic link social login
       if (walletObj.personalWallets && !_personalWalletInfo) {
-        shouldSetPersonalWalletAsActive = true;
+        // for magicLink social login - don't switch to personal wallet because smartWallet did not have a chance to connect because of page change
+        if (
+          walletInfo.walletId === walletIds.magicLink &&
+          walletInfo.connectParams &&
+          "oauthProvider" in walletInfo.connectParams
+        ) {
+          shouldSetPersonalWalletAsActive = false;
+        } else {
+          shouldSetPersonalWalletAsActive = true;
+        }
+
         // fix the connectParams by adding the personal wallet info
         _personalWalletInfo = {
           walletId: walletInfo.walletId,
