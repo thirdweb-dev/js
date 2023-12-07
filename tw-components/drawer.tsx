@@ -50,6 +50,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
         customPlacement ? customPlacement : isMobile ? "bottom" : "right"
       }
       closeOnOverlayClick={closeOnOverlayClick ?? false}
+      trapFocus={false}
     >
       <DrawerOverlay zIndex="modal" />
       <DrawerContent
