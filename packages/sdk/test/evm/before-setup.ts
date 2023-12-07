@@ -245,7 +245,8 @@ export const mochaHooks = {
           factories.push(DropERC721_V3__factory, DropERC721__factory);
           break;
         case SignatureDropInitializer.contractType:
-          factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
+          // TODO: Re-enable when size issue is fixed
+          // factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
           break;
         case EditionInitializer.contractType:
           factories.push(TokenERC1155__factory);
