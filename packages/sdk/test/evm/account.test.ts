@@ -64,7 +64,7 @@ describe("Accounts with account factory", function () {
       AccountFactory__factory.abi,
       AccountFactory__factory.bytecode,
       adminWallet,
-      [entrypoint.address],
+      [adminWallet, entrypoint.address],
     );
     accountFactory = (await sdk.getContract(factoryAddress)).accountFactory;
   });

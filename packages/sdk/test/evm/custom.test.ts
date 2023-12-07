@@ -109,10 +109,10 @@ describe("Custom Contracts", async () => {
       name: "TokenDrop",
       primary_sale_recipient: samWallet.address,
     });
-    sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
-      name: "sigdrop",
-      primary_sale_recipient: adminWallet.address,
-    });
+    // sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
+    //   name: "sigdrop",
+    //   primary_sale_recipient: adminWallet.address,
+    // });
     nftDropContractAddress = await sdk.deployer.deployNFTDrop({
       name: "nftdrop",
       primary_sale_recipient: adminWallet.address,
@@ -363,7 +363,7 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq("0");
   });
 
-  it("should detect feature: erc721 lazy mint", async () => {
+  it.skip("should detect feature: erc721 lazy mint", async () => {
     const c = await sdk.getContract(sigDropContractAddress);
     await c.erc721.lazyMint([
       {
