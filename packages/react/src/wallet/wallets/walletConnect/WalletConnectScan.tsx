@@ -30,7 +30,7 @@ export const WalletConnectScan: React.FC<{
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
     useWalletContext();
-  const [isOpeningWCModal, setIsOpeningWCModal] = useState(false);
+  const [isWCModalOpen, setIsWCModalOpen] = useState(false);
 
   const handleWCModalConnect = async () => {
     const walletInstance = createInstance(walletConfig);
@@ -39,9 +39,8 @@ export const WalletConnectScan: React.FC<{
 
     try {
       setQrCodeUri(undefined);
-      setIsOpeningWCModal(true);
+      setIsWCModalOpen(true);
       wait(1000).then(() => {
-        setIsOpeningWCModal(false);
         hide();
       });
 
@@ -51,8 +50,10 @@ export const WalletConnectScan: React.FC<{
 
       setConnectedWallet(walletInstance);
       onConnected();
+      show();
     } catch {
       show();
+      setIsWCModalOpen(false);
     }
   };
 
@@ -65,12 +66,12 @@ export const WalletConnectScan: React.FC<{
       <Spacer y="sm" />
 
       <Container flex="column" center={"both"} px="lg" expand>
-        {isOpeningWCModal ? (
+        {isWCModalOpen ? (
           <Container
             style={{
               minHeight: "300px",
             }}
-            flex="row"
+            flex="column"
             center="both"
           >
             <Spinner size="xl" color="accentText" />
