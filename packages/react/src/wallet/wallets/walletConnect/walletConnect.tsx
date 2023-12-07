@@ -99,6 +99,8 @@ export const walletConnect = (
           walletConfig={props.walletConfig}
           hideBackButton={props.supportedWallets.length > 1}
           modalSize={props.modalSize}
+          hide={props.hide}
+          show={props.show}
         />
       );
     },
