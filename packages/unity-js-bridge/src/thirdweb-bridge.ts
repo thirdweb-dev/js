@@ -96,6 +96,7 @@ interface TWBridge {
   getLatestBlockNumber: () => Promise<string>;
   getBlock: (blockNumber: string) => Promise<string>;
   getBlockWithTransactions: (blockNumber: string) => Promise<string>;
+  getEmail: () => Promise<string>;
 }
 
 const w = window;
@@ -652,10 +653,16 @@ class ThirdwebBridge implements TWBridge {
     const localWallet = this.walletMap.get(
       walletIds.localWallet,
     ) as LocalWallet;
-    await localWallet.loadOrCreate({
-      strategy: "encryptedJson",
-      password,
-    });
+    try {
+      await localWallet.loadOrCreate({
+        strategy: "encryptedJson",
+        password,
+      });
+    } catch(e) {
+      console.warn(e);
+      return localWallet;
+    }
+    
     return localWallet;
   }
 
@@ -728,6 +735,14 @@ class ThirdwebBridge implements TWBridge {
     }
     const res = await this.activeSDK.getProvider().getBlockWithTransactions(Number(blockNumber));
     return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getEmail(){
+    const embeddedWallet = this.walletMap.get(
+      walletIds.embeddedWallet,
+    ) as EmbeddedWallet;
+    const email = await embeddedWallet.getEmail();
+    return JSON.stringify({ result: email });
   }
 
   public openPopupWindow() {

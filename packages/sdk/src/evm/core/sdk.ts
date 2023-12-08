@@ -1887,6 +1887,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             `Error deploying contract at ${tx.predictedAddress}`,
             (e as any)?.message,
           );
+          throw e;
         }
       }
 

@@ -31,6 +31,7 @@ export const HeadlessConnectUI = <T extends WalletInstance>(
       hide();
       await connect();
       connected();
+      show();
     } catch (e) {
       setConnectionStatus("disconnected");
       setConnectionFailed(true);

@@ -14,6 +14,7 @@ export enum AuthProvider {
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
   CUSTOM_JWT = "CustomJWT",
+  CUSTOM_AUTH_ENDPOINT = "CustomAuthEndpoint",
   FACEBOOK = "Facebook",
   APPLE = "Apple",
 }

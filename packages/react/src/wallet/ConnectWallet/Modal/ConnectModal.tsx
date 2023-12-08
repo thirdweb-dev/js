@@ -66,7 +66,10 @@ export const ConnectModalContent = (props: {
       ? false
       : !!authConfig?.authUrl && !user?.address;
 
-    onShow();
+    onModalUnmount(() => {
+      onShow();
+    });
+
     // show sign in screen if required
     if (requiresSignIn) {
       setScreen(reservedScreens.signIn);
@@ -251,7 +254,9 @@ export const ConnectModal = () => {
 
   useEffect(() => {
     if (!isWalletModalOpen) {
-      setHideModal(false);
+      onModalUnmount(() => {
+        setHideModal(false);
+      });
     }
   }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
 
@@ -277,6 +282,10 @@ export const ConnectModal = () => {
         size={modalSize}
         open={isWalletModalOpen}
         setOpen={(value) => {
+          if (hideModal) {
+            return;
+          }
+
           setIsWalletModalOpen(value);
         }}
       >
