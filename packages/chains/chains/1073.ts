@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "ShimmerEVM",
-  "chainId": 1072,
+  "chainId": 1073,
   "explorers": [
     {
       "name": "explorer",
@@ -20,17 +20,20 @@ export default {
     "format": "png"
   },
   "infoURL": "https://shimmer.network",
-  "name": "ShimmerEVM Testnet Deprecated 1072",
+  "name": "ShimmerEVM Testnet",
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
     "decimals": 6
   },
-  "networkId": 1072,
-  "rpc": [],
-  "shortName": "shimmerevm-testnet-deprecated-1072",
-  "slug": "shimmerevm-testnet-deprecated-1072",
-  "status": "deprecated",
+  "networkId": 1073,
+  "rpc": [
+    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1073.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://json-rpc.evm.testnet.shimmer.network"
+  ],
+  "shortName": "shimmerevm-testnet",
+  "slug": "shimmerevm-testnet",
   "testnet": true,
-  "title": "ShimmerEVM Testnet Deprecated 1072"
+  "title": "ShimmerEVM Testnet"
 } as const satisfies Chain;
