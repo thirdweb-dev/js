@@ -16,6 +16,7 @@ import { DynamicHeight } from "./DynamicHeight";
 import { useEffect, useRef, useState } from "react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider";
 import { StyledDiv } from "../design-system/elements";
+import { FocusScope } from "@radix-ui/react-focus-scope";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
@@ -74,48 +75,50 @@ export const Modal: React.FC<{
           </Dialog.Overlay>
         )}
 
-        <Dialog.Content asChild>
-          <DialogContent
-            ref={contentRef}
-            style={
-              props.hide
-                ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
-                : {
-                    height:
-                      props.size === "compact" ? "auto" : wideModalMaxHeight,
-                    maxWidth:
-                      props.size === "compact"
-                        ? modalMaxWidthCompact
-                        : modalMaxWidthWide,
-                  }
-            }
-          >
-            {props.size === "compact" ? (
-              <DynamicHeight maxHeight={compactModalMaxHeight}>
-                {props.children}{" "}
-              </DynamicHeight>
-            ) : (
-              props.children
-            )}
+        <FocusScope trapped={!props.hide}>
+          <Dialog.Content asChild>
+            <DialogContent
+              ref={contentRef}
+              style={
+                props.hide
+                  ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
+                  : {
+                      height:
+                        props.size === "compact" ? "auto" : wideModalMaxHeight,
+                      maxWidth:
+                        props.size === "compact"
+                          ? modalMaxWidthCompact
+                          : modalMaxWidthWide,
+                    }
+              }
+            >
+              {props.size === "compact" ? (
+                <DynamicHeight maxHeight={compactModalMaxHeight}>
+                  {props.children}{" "}
+                </DynamicHeight>
+              ) : (
+                props.children
+              )}
 
-            {/* Close Icon */}
-            {!props.hideCloseIcon && (
-              <CrossContainer>
-                <Dialog.Close asChild>
-                  <IconButton type="button" aria-label="Close">
-                    <Cross2Icon
-                      width={iconSize.md}
-                      height={iconSize.md}
-                      style={{
-                        color: "inherit",
-                      }}
-                    />
-                  </IconButton>
-                </Dialog.Close>
-              </CrossContainer>
-            )}
-          </DialogContent>
-        </Dialog.Content>
+              {/* Close Icon */}
+              {!props.hideCloseIcon && (
+                <CrossContainer>
+                  <Dialog.Close asChild>
+                    <IconButton type="button" aria-label="Close">
+                      <Cross2Icon
+                        width={iconSize.md}
+                        height={iconSize.md}
+                        style={{
+                          color: "inherit",
+                        }}
+                      />
+                    </IconButton>
+                  </Dialog.Close>
+                </CrossContainer>
+              )}
+            </DialogContent>
+          </Dialog.Content>
+        </FocusScope>
       </Dialog.Portal>
     </Dialog.Root>
   );

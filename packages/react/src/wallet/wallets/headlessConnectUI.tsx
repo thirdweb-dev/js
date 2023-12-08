@@ -29,10 +29,11 @@ export const HeadlessConnectUI = ({
       } catch (e) {
         if (!singleWallet) {
           goBack();
-          show();
         }
         console.error(e);
       }
+
+      show();
     })();
   }, [walletConfig, connect, singleWallet, connected, hide, show, goBack]);
 
