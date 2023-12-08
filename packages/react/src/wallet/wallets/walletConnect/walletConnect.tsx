@@ -27,6 +27,15 @@ export type walletConnectConfigOptions = {
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Specify wheher a custom QR Modal or the Official WalletConnect Modal should be used on desktop. The custom screen has an option to open the official WalletConnect Modal too.
+   *
+   * Note that the official WalletConnect Modal is always used on mobile devices.
+   *
+   * The default is `"custom"` ( for desktop )
+   */
+  qrModal?: "custom" | "walletConnect";
 };
 
 /**
@@ -71,6 +80,15 @@ export const walletConnect = (
   config?: walletConnectConfigOptions,
 ): WalletConfig<WalletConnect> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
+
+  // on mobile - always use the official WalletConnect Modal
+  // on desktop - use the official WalletConnect Modal if qrModal is set to "walletconnect"
+  const showOfficialModal = isMobile()
+    ? true
+    : config?.qrModal === "walletConnect"
+    ? true
+    : false;
+
   return {
     recommended: config?.recommended,
     id: WalletConnect.id,
@@ -82,13 +100,14 @@ export const walletConnect = (
     create(options: WalletOptions) {
       return new WalletConnect({
         ...options,
-        qrcode: isMobile() ? true : false,
+
+        qrcode: showOfficialModal,
         projectId,
         qrModalOptions: config?.qrModalOptions,
       });
     },
     connectUI(props) {
-      if (isMobile()) {
+      if (showOfficialModal) {
         return <HeadlessConnectUI {...props} />;
       }
 
