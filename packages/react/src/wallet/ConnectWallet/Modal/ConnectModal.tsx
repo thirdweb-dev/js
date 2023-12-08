@@ -226,6 +226,8 @@ export const ConnectModal = () => {
     setPrevConnectionStatus(connectionStatus);
   }, [connectionStatus]);
 
+  const disconnect = useDisconnect();
+
   const wallet = useWallet();
   const isWrapperConnected = !!wallet?.getPersonalWallet();
 
@@ -287,6 +289,16 @@ export const ConnectModal = () => {
           }
 
           setIsWalletModalOpen(value);
+
+          if (!value) {
+            onModalUnmount(() => {
+              if (connectionStatus === "connecting") {
+                disconnect();
+              }
+
+              setScreen(initialScreen);
+            });
+          }
         }}
       >
         <ConnectModalContent
