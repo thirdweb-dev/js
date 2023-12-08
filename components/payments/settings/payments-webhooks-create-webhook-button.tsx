@@ -81,7 +81,7 @@ export const PaymentsWebhooksCreateButton: React.FC<
           w="fit-content"
           isDisabled={isDisabled}
         >
-          {createTitle}
+          Create Webhook
         </Button>
       </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>

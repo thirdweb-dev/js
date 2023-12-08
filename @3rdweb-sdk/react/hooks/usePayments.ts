@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApiAuthToken } from "./useApi";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
@@ -66,6 +66,7 @@ import {
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { OtherAddressZero } from "utils/zeroAddress";
 import { ApiSecretKeysByOwnerIdQuery } from "graphql/queries/__generated__/ApiSecretKeysByOwnerId.generated";
+import { Webhook } from "./useEngine";
 
 export const paymentsExtensions: FeatureName[] = [
   "ERC721SharedMetadata",
@@ -245,6 +246,7 @@ function usePaymentsApi() {
       isSellerVerificationStatus?: boolean;
       isGetImageUploadLink?: boolean;
       isSellerApiKey?: boolean;
+      isWebhookTest?: boolean;
     },
   ) => {
     const res = await fetch(`${THIRDWEB_PAYMENTS_API_HOST}/api/${endpoint}`, {
@@ -288,6 +290,13 @@ function usePaymentsApi() {
       return json as {
         data: { data: ApiSecretKeysByOwnerIdQuery; decrypted_key: string };
         success: boolean;
+      };
+    }
+
+    if (options?.isWebhookTest) {
+      return json as {
+        status: number;
+        responseBody: string;
       };
     }
 
@@ -1030,4 +1039,63 @@ export function usePaymentsWebhooksSecretKeyByAccountId(accountId: string) {
     },
     { enabled: !!paymentsSellerId && !!accountId },
   );
+}
+
+export enum WebhookEvent {
+  /**
+   * Emitted when the buyer's payment fails.
+   */
+  PAYMENT_FAILED = "payment:failed",
+  /**
+   * Emitted when the buyer's payment is completed.
+   */
+  PAYMENT_SUCCEEDED = "payment:succeeded",
+  /**
+   * Emitted when the buyer's payment method has a hold created.
+   * They are not charged yet.
+   */
+  PAYMENT_HOLD_CREATED = "payment:hold_created",
+  /**
+   * Emitted when the buyer's payment is refunded.
+   */
+  PAYMENT_REFUNDED = "payment:refunded",
+
+  /**
+   * Emitted when the NFT is successfully transferred to the buyer's wallet.
+   */
+  TRANSFER_SUCCEEDED = "transfer:succeeded",
+  /**
+   * Emitted when the NFT failed to transfer to the buyer's wallet.
+   */
+  TRANSFER_FAILED = "transfer:failed",
+
+  /**
+   * Called when the transaction is successfully enqueue on chain
+   */
+  TRANSACTION_ENQUEUED = "transaction:enqueued",
+}
+
+export type PaymentsWebhooksTestInput = {
+  webhookEvent: WebhookEvent;
+  webhookUrl: string;
+};
+
+export function usePaymentsTestWebhook(accountId: string) {
+  invariant(accountId, "accountId is required");
+
+  const fetchFromPaymentsAPI = usePaymentsApi();
+
+  return useMutation(async (input: PaymentsWebhooksTestInput) => {
+    return fetchFromPaymentsAPI(
+      "POST",
+      "checkout/test-webhook-url",
+      {
+        event: input.webhookEvent,
+        webhookUrl: input.webhookUrl,
+      },
+      {
+        isWebhookTest: true,
+      },
+    );
+  });
 }

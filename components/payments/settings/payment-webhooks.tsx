@@ -8,6 +8,7 @@ import { PaymentsWebhooksTable } from "./payments-webhooks-table";
 import { DetailsRow } from "components/settings/ApiKeys/DetailsRow";
 import { useMemo } from "react";
 import { PaymentsWebhooksCreateButton } from "./payments-webhooks-create-webhook-button";
+import { PaymentsWebhooksTestButton } from "./payments-webhooks-test";
 
 const WEBHOOK_LIMIT = 3;
 
@@ -60,15 +61,22 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
         />
 
         <Divider />
-
         <Flex flexDir="column" gap={2}>
           <Flex justifyContent="space-between" alignItems="center" gap={2}>
             <Heading size="title.md">Mainnets</Heading>
-            <PaymentsWebhooksCreateButton
-              accountId={accountId}
-              isMainnets={true}
-              isDisabled={productionWebhooks.length >= WEBHOOK_LIMIT}
-            />
+            <Flex alignItems="center" gap={2}>
+              <PaymentsWebhooksCreateButton
+                accountId={accountId}
+                isMainnets={true}
+                isDisabled={productionWebhooks.length >= WEBHOOK_LIMIT}
+              />
+              <PaymentsWebhooksTestButton
+                accountId={accountId}
+                webhooks={productionWebhooks}
+                isMainnets={true}
+                isDisabled={productionWebhooks.length === 0}
+              />
+            </Flex>
           </Flex>
           <PaymentsWebhooksTable
             accountId={accountId}
@@ -82,11 +90,19 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
         <Flex flexDir="column" gap={2}>
           <Flex justifyContent="space-between" alignItems="center" gap={2}>
             <Heading size="title.md">Testnets</Heading>
-            <PaymentsWebhooksCreateButton
-              accountId={accountId}
-              isMainnets={false}
-              isDisabled={testnetWebhooks.length >= WEBHOOK_LIMIT}
-            />
+            <Flex alignItems="center" gap={2}>
+              <PaymentsWebhooksCreateButton
+                accountId={accountId}
+                isMainnets={false}
+                isDisabled={testnetWebhooks.length >= WEBHOOK_LIMIT}
+              />
+              <PaymentsWebhooksTestButton
+                accountId={accountId}
+                webhooks={testnetWebhooks}
+                isMainnets={false}
+                isDisabled={testnetWebhooks.length === 0}
+              />
+            </Flex>
           </Flex>
           <PaymentsWebhooksTable
             accountId={accountId}
