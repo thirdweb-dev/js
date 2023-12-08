@@ -3,16 +3,38 @@ import { AbstractClientWallet, WalletMeta, WalletOptions } from "./base";
 import { walletIds } from "../constants/walletIds";
 import { Chain, updateChainRPCs } from "@thirdweb-dev/chains";
 
-type BloctoOptions = {
+export type BloctoOptions = {
+  /**
+   * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
+   */
   appId?: string;
+  /**
+   * Network to connect the wallet to
+   */
   chain?: Chain;
 };
 
+/**
+ * Wallet Class to connect to [Blocto Wallet](https://blocto.io/)
+ */
 export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
+  /**
+   * @internal
+   */
   connector?: Connector;
+  /**
+   * @internal
+   */
   name: string = "Blocto";
 
+  /**
+   * @internal
+   */
   static id = walletIds.blocto as string;
+
+  /**
+   * @internal
+   */
   static meta: WalletMeta = {
     name: "Blocto",
     iconURL:
@@ -24,6 +46,10 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
     },
   };
 
+  /**
+   * Create a `BloctoWallet` instance
+   * @param options - options to `BloctoWallet` instance
+   */
   constructor(options?: WalletOptions<BloctoOptions>) {
     if (options?.chain && options.clientId) {
       options.chain = updateChainRPCs(options.chain, options.clientId);
