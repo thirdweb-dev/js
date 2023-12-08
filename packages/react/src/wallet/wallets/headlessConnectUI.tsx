@@ -61,7 +61,7 @@ export const HeadlessConnectUI = <T extends WalletInstance>(
       </>
     );
   } else {
-    content = <Spinner size="lg" color="accentText" />;
+    content = <Spinner size="xl" color="accentText" />;
   }
 
   return (
