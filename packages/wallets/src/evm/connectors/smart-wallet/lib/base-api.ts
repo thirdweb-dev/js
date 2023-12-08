@@ -1,32 +1,32 @@
 import {
-  ethers,
-  BigNumber,
-  BigNumberish,
-  providers,
-  utils,
-  BytesLike,
-} from "ethers";
-import {
   EntryPoint,
   EntryPoint__factory,
   UserOperationStruct,
 } from "@account-abstraction/contracts";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  ethers,
+  providers,
+  utils,
+} from "ethers";
 
-import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
   GasOverheads,
   PaymasterAPI,
   calcPreVerificationGas,
 } from "@account-abstraction/sdk";
-import { TransactionDetailsForUserOp } from "./transaction-details";
-import { getUserOpHashV06 } from "./utils";
-import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
+import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
+  Celo,
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
-  Celo,
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
+import { TransactionDetailsForUserOp } from "./transaction-details";
+import { getUserOpHashV06 } from "./utils";
 
 export type BatchData = {
   targets: (string | undefined)[];
@@ -156,6 +156,10 @@ export abstract class BaseAccountAPI {
    * NOTE: createUnsignedUserOp will add to this value the cost of creation, if the contract is not yet created.
    */
   async getVerificationGasLimit(): Promise<BigNumberish> {
+    const vGasOverride = localStorage.getItem("verificationGasLimit");
+    if (vGasOverride) {
+      return parseInt(vGasOverride);
+    }
     return 100000;
   }
 
@@ -227,6 +231,11 @@ export abstract class BaseAccountAPI {
           to: this.getAccountAddress(),
           data: callData,
         }));
+    }
+
+    const callGasLimitOverride = localStorage.getItem("callGasLimit");
+    if (callGasLimitOverride) {
+      callGasLimit = BigNumber.from(callGasLimitOverride);
     }
 
     return {
@@ -304,12 +313,15 @@ export abstract class BaseAccountAPI {
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        if (
-          chainId === Celo.chainId ||
-          chainId === CeloAlfajoresTestnet.chainId ||
-          chainId === CeloBaklavaTestnet.chainId
-        ) {
-          maxPriorityFeePerGas = maxFeePerGas;
+        const celoOverride = localStorage.getItem("celoOverride");
+        if (celoOverride === "true") {
+          if (
+            chainId === Celo.chainId ||
+            chainId === CeloAlfajoresTestnet.chainId ||
+            chainId === CeloBaklavaTestnet.chainId
+          ) {
+            maxPriorityFeePerGas = maxFeePerGas;
+          }
         }
       }
     }
