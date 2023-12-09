@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
-    "@walletconnect/react-native-compat": "^2.8.6",
+    "@walletconnect/react-native-compat": "^2.10.6",
     "base-64": "^1.0.0",
     "big-integer": "^1.6.51",
     "react-native-get-random-values": "^1.9.0",
