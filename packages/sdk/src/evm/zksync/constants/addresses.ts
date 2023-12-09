@@ -92,6 +92,7 @@ export function getImplementation(
  * @returns the array of trusted forwarders for the given chain id
  * @internal
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
