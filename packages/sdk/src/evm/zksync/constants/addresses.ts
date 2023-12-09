@@ -14,12 +14,12 @@ export const CONTRACT_ADDRESSES: Record<
   }
 > = {
   [280]: {
-    openzeppelinForwarder: "0x12A305cc7168fa3b7B172fE53c57b9a22716F667",
+    openzeppelinForwarder: AddressZero,
     openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
   },
   [324]: {
-    openzeppelinForwarder: "0x4e0C3577335961Ff800FFDA24981EB2F38D94483",
+    openzeppelinForwarder: AddressZero,
     openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
   },
@@ -96,14 +96,5 @@ export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
-  const biconomyForwarder =
-    CONTRACT_ADDRESSES[chainId]?.biconomyForwarder || AddressZero;
-  const openzeppelinForwarder =
-    CONTRACT_ADDRESSES[chainId]?.openzeppelinForwarder || AddressZero;
-
-  return contractName && contractName === "Pack"
-    ? []
-    : [openzeppelinForwarder, biconomyForwarder].filter(
-        (a) => a !== AddressZero,
-      );
+  return [];
 }
