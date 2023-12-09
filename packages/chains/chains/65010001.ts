@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "AUT",
-  "chainId": 65010000,
+  "chainId": 65010001,
   "explorers": [
     {
       "name": "autonity-blockscout",
@@ -19,20 +19,20 @@ export default {
     "format": "png"
   },
   "infoURL": "https://autonity.org/",
-  "name": "Autonity Bakerloo (Thames) Testnet",
+  "name": "Autonity Bakerloo (Barada) Testnet",
   "nativeCurrency": {
     "name": "Bakerloo Auton",
     "symbol": "ATN",
     "decimals": 18
   },
-  "networkId": 65010000,
+  "networkId": 65010001,
   "rpc": [
-    "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://65010000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://autonity-bakerloo-barada-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65010001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bakerloo.autonity.org/",
     "wss://rpc1.bakerloo.autonity.org/ws/"
   ],
-  "shortName": "bakerloo-0",
-  "slug": "autonity-bakerloo-thames-testnet",
+  "shortName": "bakerloo-01",
+  "slug": "autonity-bakerloo-barada-testnet",
   "testnet": true
 } as const satisfies Chain;
