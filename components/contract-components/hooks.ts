@@ -614,19 +614,15 @@ export function useCustomContractDeployMutation(
         const isZkSync =
           chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
         if (
-          data.deployParams?._trustedForwarders?.length === 0 ||
-          data.deployParams?._trustedForwarders === "[]"
+          !isZkSync &&
+          (data.deployParams?._trustedForwarders?.length === 0 ||
+            data.deployParams?._trustedForwarders === "[]")
         ) {
-          const trustedForwarders = isZkSync
-            ? zkGetDefaultTrustedForwarders(
-                chainId,
-                compilerMetadata.data?.name,
-              )
-            : await getTrustedForwarders(
-                sdk.getProvider(),
-                sdk.storage,
-                compilerMetadata.data?.name,
-              );
+          const trustedForwarders = await getTrustedForwarders(
+            sdk.getProvider(),
+            sdk.storage,
+            compilerMetadata.data?.name,
+          );
 
           data.deployParams._trustedForwarders =
             JSON.stringify(trustedForwarders);
@@ -639,6 +635,7 @@ export function useCustomContractDeployMutation(
             window.ethereum as unknown as providers.ExternalProvider,
           ).getSigner();
 
+          data.deployParams._trustedForwarders = JSON.stringify([]);
           contractAddress = await zkDeployContractFromUri(
             ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
             Object.values(data.deployParams),
