@@ -90,7 +90,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.2.0",
+    "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",

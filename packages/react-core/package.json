@@ -72,7 +72,7 @@
     "@types/mime": "3.0.0",
     "@types/react": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.2.0",
+    "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",
