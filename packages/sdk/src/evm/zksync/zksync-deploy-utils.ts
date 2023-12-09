@@ -26,10 +26,6 @@ export async function zkDeployContractFromUri(
     await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
   const forceDirectDeploy = options?.forceDirectDeploy || false;
 
-  if (!forceDirectDeploy) {
-    throw new Error("Deployments disabled temporarily.");
-  }
-
   const isNetworkEnabled =
     extendedMetadata?.networksForDeployment?.networksEnabled.includes(
       chainId,
@@ -57,7 +53,7 @@ export async function zkDeployContractFromUri(
         compilerMetadata.name,
         extendedMetadata.version,
       );
-      if (implementationAddress) {
+      if (!implementationAddress) {
         throw new Error("Contract not supported yet.");
       }
 
