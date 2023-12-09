@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.21
+
+### Patch Changes
+
+- [#2067](https://github.com/thirdweb-dev/js/pull/2067) [`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix deployments
+
 ## 4.0.20
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.13.24
+
+### Patch Changes
+
+- Updated dependencies [[`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173)]:
+  - @thirdweb-dev/sdk@4.0.21
+  - @thirdweb-dev/wallets@2.2.1
+  - @thirdweb-dev/auth@4.1.16
+
 ## 0.13.23
 
 ### Patch Changes
