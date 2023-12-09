@@ -1,5 +1,73 @@
 # @thirdweb-dev/react
 
+## 4.1.13
+
+### Patch Changes
+
+- [#2029](https://github.com/thirdweb-dev/js/pull/2029) [`b50e4a41`](https://github.com/thirdweb-dev/js/commit/b50e4a41b560eb647fec1224d6b6782be7132034) Thanks [@MananTank](https://github.com/MananTank)! - Connect to MetaMask on mobile device using WalletConnect instead of opening the web app in MetaMask browser by default
+
+  This behavior can be changed by setting `connectionMethod` option to `metamaskWallet`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "walletConnect", // default
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  this is same as not setting `connectionMethod` option:
+
+  ```tsx
+  <ThirdwebProvider supportedWallets={[metamaskWallet()]}>
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  If you want to revert to old behavior of opening the web app in Metamask browser, set `connectionMethod` to `metamaskBrowser`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "metamaskBrowser",
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+- [#2063](https://github.com/thirdweb-dev/js/pull/2063) [`c8ba5cf8`](https://github.com/thirdweb-dev/js/commit/c8ba5cf863b7b2a92e0cb2c50776511782d4e2b6) Thanks [@MananTank](https://github.com/MananTank)! - - Add option to only show the Official WalletConnect Modal for `walletConnect` in ConnectWallet Modal
+
+  ```ts
+  walletConnect({
+    qrModal: "walletConnect", // hide the ConnectWallet Modal and only show the WalletConnect Modal
+  });
+  ```
+
+  If no, `qrModal` is set, it defaults to `"custom"` as shown below:
+
+  ```ts
+  walletConnect({
+    qrModal: "custom", // render QR code in ConnectWallet Modal
+  });
+  ```
+
+  - Stop Focus trapping the ConnectWallet Modal when it is rendered but hidden
+
+- [#2058](https://github.com/thirdweb-dev/js/pull/2058) [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d) Thanks [@MananTank](https://github.com/MananTank)! - Add option to open the official wallet connect modal in ConnectWallet
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3), [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794), [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814), [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf), [`94966069`](https://github.com/thirdweb-dev/js/commit/9496606964d65268f8ee6bf9f78b2786e99d33ac), [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d)]:
+  - @thirdweb-dev/chains@0.1.61
+  - @thirdweb-dev/sdk@4.0.20
+  - @thirdweb-dev/wallets@2.2.0
+  - @thirdweb-dev/react-core@4.1.13
+
 ## 4.1.12
 
 ### Patch Changes

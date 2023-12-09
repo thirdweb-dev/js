@@ -1,5 +1,19 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.109
+
+### Patch Changes
+
+- [#2061](https://github.com/thirdweb-dev/js/pull/2061) [`0fb2f1fc`](https://github.com/thirdweb-dev/js/commit/0fb2f1fc5e2241f8b0fff2ad9219eeed40a8d1d0) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Support for sdk.wallet.GetEmail
+
+- [#2056](https://github.com/thirdweb-dev/js/pull/2056) [`5a0283d0`](https://github.com/thirdweb-dev/js/commit/5a0283d083b47a8f26ce61ce59c914e27d60401c) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Reload local wallet in case of reconnection (sw)
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3), [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794), [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814), [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf), [`94966069`](https://github.com/thirdweb-dev/js/commit/9496606964d65268f8ee6bf9f78b2786e99d33ac), [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d)]:
+  - @thirdweb-dev/chains@0.1.61
+  - @thirdweb-dev/sdk@4.0.20
+  - @thirdweb-dev/wallets@2.2.0
+  - @thirdweb-dev/auth@4.1.15
+
 ## 0.2.108
 
 ### Patch Changes
