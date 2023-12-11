@@ -5,7 +5,7 @@ import { getKeylessTxn } from "./getKeylessTxn";
 
 /**
  *
- * @public
+ * @internal
  * @param transaction - Unsigned transaction object
  * @param signature - Signature bytes
  */

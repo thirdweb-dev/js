@@ -53,7 +53,7 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
@@ -931,7 +931,7 @@ export class DropClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
@@ -946,7 +946,7 @@ export class DropClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (
@@ -955,7 +955,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
     return (
@@ -970,7 +970,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
     return (

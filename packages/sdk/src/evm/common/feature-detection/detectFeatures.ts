@@ -31,6 +31,9 @@ export function detectFeatures(
   return results;
 }
 
+/**
+ * @internal
+ */
 export function detectFeaturesFromBytecode(
   bytecode: string,
   features: Record<string, Feature> = SUPPORTED_FEATURES,

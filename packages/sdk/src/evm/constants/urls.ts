@@ -79,6 +79,9 @@ export function getChainProvider(
   return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
+/**
+ * @internal
+ */
 export function getChainIdFromNetwork(
   network: ChainOrRpcUrl,
   options: SDKOptionsOutput,
@@ -109,6 +112,9 @@ export function getChainIdFromNetwork(
   );
 }
 
+/**
+ * @internal
+ */
 export async function getChainIdOrName(
   network: NetworkInput,
 ): Promise<number | string> {
@@ -134,6 +140,7 @@ export async function getChainIdOrName(
 
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
+ * @internal
  */
 export function isChainConfig(
   network: NetworkInput,

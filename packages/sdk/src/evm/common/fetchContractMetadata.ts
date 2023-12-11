@@ -28,6 +28,9 @@ export async function fetchContractMetadata(
   return formatCompilerMetadata(metadata);
 }
 
+/**
+ * @internal
+ */
 export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;

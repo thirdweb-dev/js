@@ -3,9 +3,7 @@ import type {
   AirdropInput,
   Amount,
   Erc721,
-  Erc721Mintable,
   Erc1155,
-  Erc1155Mintable,
   ListingType,
   NFTMetadataInput,
   Price,
@@ -150,9 +148,9 @@ export type MintNFTParams = {
  *
  */
 export type MintNFTReturnType<TContract> = TContract extends Erc721
-  ? Awaited<ReturnType<Erc721Mintable["to"]>>
+  ? Awaited<ReturnType<Erc721["mintTo"]>>
   : TContract extends Erc1155
-  ? Awaited<ReturnType<Erc1155Mintable["to"]>>
+  ? Awaited<ReturnType<Erc1155["mintTo"]>>
   : never;
 
 /**

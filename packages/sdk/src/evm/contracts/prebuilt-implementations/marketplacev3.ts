@@ -20,11 +20,11 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-direct-listings";
-import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
-import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
+import { MarketplaceV3DirectListings } from "../../core/classes/internal/marketplace/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../../core/classes/internal/marketplace/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../../core/classes/internal/marketplace/marketplacev3-offers";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
@@ -46,7 +46,8 @@ import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.directListings / contract.auctions / contract.offers instead
  */
 export class MarketplaceV3 implements UpdateableNetwork {
   static contractRoles = MARKETPLACE_CONTRACT_ROLES;
@@ -58,7 +59,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceV3Contract>;
   public events: ContractEvents<MarketplaceV3Contract>;
   public estimator: GasCostEstimator<MarketplaceV3Contract>;
-  public platformFees: ContractPlatformFee<MarketplaceV3Contract>;
+  public platformFees: ContractPlatformFee;
   public metadata: ContractMetadata<
     MarketplaceV3Contract,
     typeof MarketplaceContractSchema

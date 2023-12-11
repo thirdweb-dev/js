@@ -1,4 +1,4 @@
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { TransactionResult } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

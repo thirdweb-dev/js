@@ -25,7 +25,7 @@ import {
 } from "../../types/eips";
 import type { UploadProgressEvent } from "../../types/events";
 import type { TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**

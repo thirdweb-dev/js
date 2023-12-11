@@ -17,7 +17,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -50,6 +50,7 @@ import { VoteType } from "../../enums/vote/Vote";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;

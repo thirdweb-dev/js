@@ -5,6 +5,9 @@ import type { DeployMetadata } from "../../types/deploy/deploy-options";
 
 const deployMetadataCache: Record<string, any> = {};
 
+/**
+ * @internal
+ */
 export async function fetchAndCacheDeployMetadata(
   publishMetadataUri: string,
   storage: ThirdwebStorage,

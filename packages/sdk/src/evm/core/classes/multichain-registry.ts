@@ -19,7 +19,7 @@ import type {
 } from "../../types/registry";
 import type { NetworkInput, TransactionResult } from "../types";
 import { ContractEncoder } from "./contract-encoder";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
