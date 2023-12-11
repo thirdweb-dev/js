@@ -2,7 +2,7 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { Coin98Wallet, getInjectedCoin98Provider } from "@thirdweb-dev/wallets";
 import { Coin98ConnectUI } from "./Coin98ConnectUI";
 
-type Coin98WalletOptions = {
+export type Coin98WalletConfigOptions = {
   /**
    * When connecting Coin98 using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -17,8 +17,46 @@ type Coin98WalletOptions = {
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Coin98 Wallet](https://coin98.com/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[coin98Wallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const coin98Config = coin98Wallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(coin98Config, options);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const coin98Wallet = (
-  options?: Coin98WalletOptions,
+  options?: Coin98WalletConfigOptions,
 ): WalletConfig<Coin98Wallet> => {
   return {
     id: Coin98Wallet.id,

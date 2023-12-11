@@ -7,6 +7,9 @@ declare global {
   }
 }
 
+/**
+ * @internal
+ */
 export function getInjectedCryptoDefiWalletProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;

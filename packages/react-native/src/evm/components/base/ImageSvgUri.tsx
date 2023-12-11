@@ -5,6 +5,9 @@ import { SvgUri, SvgXml } from "react-native-svg";
 import Box from "./Box";
 import { appBundleId } from "../../utils/version";
 
+/**
+ * @internal
+ */
 const ImageSvgUri = ({
   imageUrl = "",
   width,

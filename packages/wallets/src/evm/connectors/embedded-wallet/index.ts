@@ -1,7 +1,7 @@
 import { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
-import { normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
@@ -250,13 +250,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           encryptionKey: params.encryptionKey,
         });
       }
+      case "auth_endpoint": {
+        return ewSDK.auth.loginWithCustomAuthEndpoint({
+          payload: params.payload,
+          encryptionKey: params.encryptionKey,
+        });
+      }
       case "iframe_email_verification": {
         return ewSDK.auth.loginWithEmailOtp({
           email: params.email,
         });
       }
-      case "iframe":
-      case undefined: {
+      case "iframe": {
         return ewSDK.auth.loginWithModal();
       }
       default:

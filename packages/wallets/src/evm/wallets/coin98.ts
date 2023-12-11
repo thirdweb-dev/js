@@ -7,7 +7,7 @@ import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { getInjectedCoin98Provider } from "../connectors/coin98/getInjectedCoin98Provider";
 
-type Coin98AdditionalOptions = {
+export type Coin98AdditionalOptions = {
   /**
    * Whether to open the default Wallet Connect QR code Modal for connecting to Coin98 app on mobile if Coin98 wallet is not injected when calling connect().
    */

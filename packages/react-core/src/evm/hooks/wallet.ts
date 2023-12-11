@@ -17,7 +17,6 @@ import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider"
  *
  * @param tokenAddress - the address of the token contract, if empty will use the chain's native token
  * @returns the balance of the connected wallet (native or ERC20)
- * @beta
  */
 export function useBalance(tokenAddress?: ContractAddress) {
   const walletAddress = useAddress();

@@ -2,6 +2,9 @@ import { useGlobalTheme } from "../../../providers/ui-context-provider";
 import Text from "../Text";
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 
+/**
+ * @internal
+ */
 export const ModalFooter = ({
   footer,
   isLoading,

@@ -1,5 +1,8 @@
 import { utils } from "ethers";
 
+/**
+ * @internal
+ */
 export function shortenString(str: string, extraShort: boolean = true) {
   return `${str.substring(0, extraShort ? 4 : 6)}...${str.substring(
     str.length - (extraShort ? 3 : 4),
@@ -36,6 +39,9 @@ export function shortenAddress(
   }
 }
 
+/**
+ * @internal
+ */
 export function shortenIfAddress(
   address?: string | null | false,
   extraShort: boolean = true,
@@ -46,10 +52,16 @@ export function shortenIfAddress(
   return address || "";
 }
 
+/**
+ * @internal
+ */
 export function isEnsName(name: string): boolean {
   return name?.endsWith(".eth");
 }
 
+/**
+ * @internal
+ */
 export function isPossibleEVMAddress(address?: string, ignoreEns?: boolean) {
   if (!address) {
     return false;

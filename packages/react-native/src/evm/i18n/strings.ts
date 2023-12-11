@@ -4,6 +4,9 @@ import { _es } from "./es";
 import { _ja } from "./ja";
 import { Locale, LocaleType } from "./types";
 
+/**
+ * @internal
+ */
 export const setLocale = (locale: Locale): LocaleType => {
   if (typeof locale === "string") {
     switch (locale) {
