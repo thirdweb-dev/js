@@ -2,4 +2,12 @@
 "@thirdweb-dev/react-native": patch
 ---
 
-Adds auth_endpoint sign in option to embedded wallets
+Adds the ability to login with any arbitrary login payload
+
+```typescript
+await embeddedWallet.authenticate({
+  strategy: "auth_endpoint",
+  payload: "SOME_STRING",
+  encryptionKey: "",
+});
+```
