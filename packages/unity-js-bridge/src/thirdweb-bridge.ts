@@ -326,10 +326,21 @@ class ThirdwebBridge implements TWBridge {
             authResult,
           });
         } else if (authOptionsParsed.authProvider === 4) {
-          // CustomAuth
+          // JWT
           const authResult = await embeddedWallet.authenticate({
             strategy: "jwt",
-            jwt: authOptionsParsed.authToken,
+            jwt: authOptionsParsed.jwtOrPayload,
+            encryptionKey: authOptionsParsed.encryptionKey,
+          });
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            authResult,
+          });
+        } else if (authOptionsParsed.authProvider === 5) {
+          // AuthEndpoint
+          const authResult = await embeddedWallet.authenticate({
+            strategy: "auth_endpoint",
+            payload: authOptionsParsed.jwtOrPayload,
             encryptionKey: authOptionsParsed.encryptionKey,
           });
           await embeddedWallet.connect({
@@ -666,11 +677,11 @@ class ThirdwebBridge implements TWBridge {
         strategy: "encryptedJson",
         password,
       });
-    } catch(e) {
+    } catch (e) {
       console.warn(e);
       return localWallet;
     }
-    
+
     return localWallet;
   }
 
@@ -754,7 +765,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getEmail(){
+  public async getEmail() {
     const embeddedWallet = this.walletMap.get(
       walletIds.embeddedWallet,
     ) as EmbeddedWallet;
