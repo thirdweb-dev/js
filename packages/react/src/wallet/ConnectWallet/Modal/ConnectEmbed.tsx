@@ -30,9 +30,35 @@ import { Container } from "../../../components/basic";
 import { Spinner } from "../../../components/Spinner";
 
 export type ConnectEmbedProps = {
+  /**
+   * Class name to be added to the root element of ConnectEmbed
+   */
   className?: string;
+
+  /**
+   * theme for the ConnectEmbed
+   *
+   * If a theme is set on the `ThirdWebProvider` component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
+   *
+   * theme can be set to either "dark" or "light" or a custom theme object.
+   *
+   * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+   *
+   * @example
+   * ```ts
+   * import { lightTheme } from "@thirdweb-dev/react";
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   * ```
+   */
   theme?: "dark" | "light" | Theme;
 
+  /**
+   * CSS styles to be applied to the root element of ConnectEmbed
+   */
   style?: React.CSSProperties;
 
   /**
@@ -107,7 +133,6 @@ export const ConnectEmbed = (props: ConnectEmbedProps) => {
   const loginOptional = props.auth?.loginOptional;
   const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
-
   const { screen, setScreen, initialScreen } = useScreen();
 
   // if showing main screen but signIn is required, switch to signIn screen
@@ -145,6 +170,7 @@ const ConnectEmbedContent = (
   const modalSize = "compact" as const;
   const connectionStatus = useConnectionStatus();
   const { isAutoConnecting } = useWalletContext();
+  const contextTheme = useCustomTheme();
 
   let content = (
     <ConnectModalContent
@@ -177,7 +203,7 @@ const ConnectEmbedContent = (
   }
 
   const walletUIStatesProps = {
-    theme: props.theme || defaultTheme,
+    theme: props.theme || contextTheme || defaultTheme,
     modalSize: modalSize,
     title: undefined,
     termsOfServiceUrl: props.termsOfServiceUrl,
