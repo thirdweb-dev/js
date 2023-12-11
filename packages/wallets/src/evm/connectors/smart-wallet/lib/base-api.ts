@@ -295,11 +295,6 @@ export abstract class BaseAccountAPI {
       await this.getVerificationGasLimit(),
     ).add(initGas);
 
-    console.log("initGas", initGas.toString());
-    console.log("initGas", verificationGasLimit.toString());
-
-    // verificationGasLimit = verificationGasLimit.mul(3);
-
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await getDynamicFeeData(
@@ -314,28 +309,13 @@ export abstract class BaseAccountAPI {
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        console.log(
-          "CELO maxFeePerGas",
-          ethers.utils.formatUnits(maxFeePerGas || 0, "gwei"),
-        );
-        console.log(
-          "CELO maxPriorityFeePerGas",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
-
         if (
           chainId === Celo.chainId ||
           chainId === CeloAlfajoresTestnet.chainId ||
           chainId === CeloBaklavaTestnet.chainId
         ) {
-          maxFeePerGas = maxFeePerGas?.mul(50);
           maxPriorityFeePerGas = maxFeePerGas;
         }
-
-        console.log(
-          "CELO final",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
       }
     }
 
@@ -409,7 +389,7 @@ export abstract class BaseAccountAPI {
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
-    const signature = this.signUserOpHash(userOpHash);
+    const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
       signature,
