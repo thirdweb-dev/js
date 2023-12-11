@@ -66,6 +66,8 @@ const walletInstanceToConfig: Map<
 
 /**
  * Maps a personal wallet instance to it's wrapper wallet instance ( like smartWallet or safeWallet ) to know it's "wrapper" wallet
+ *
+ * This is used to implement the "switch to personal wallet" and "switch to smart wallet" feature
  */
 const personalWalletToWrapperWallet: Map<WalletInstance, WalletInstance> =
   new Map();
@@ -140,10 +142,13 @@ export type WalletConnectionSetup = {
     ...args: ConnectFnArgs<I>
   ) => Promise<I>;
   disconnectWallet: () => Promise<void>;
-  connectedChainId: number | undefined;
-  connectedAddress: string | undefined;
+  chainId: number | undefined;
+  address: string | undefined;
 };
 
+/**
+ * setup states and methods for wallet connection
+ */
 export function useWalletConnectionSetup(
   data: WalletSetupData,
   initialValue: {
@@ -169,21 +174,11 @@ export function useWalletConnectionSetup(
     WalletConfig | undefined
   >();
 
-  const [connectedChainId, setConnectedChainId] = useState<number | undefined>(
+  const [chainId, setChainId] = useState<number | undefined>(undefined);
+
+  const [walletAddress, setWalletAddress] = useState<string | undefined>(
     undefined,
   );
-
-  const [connectedAddress, setConnectedAddress] = useState<string | undefined>(
-    undefined,
-  );
-
-  useEffect(() => {
-    if (!activeWallet) {
-      setConnectedAddress(undefined);
-    } else {
-      activeWallet.getAddress().then(setConnectedAddress);
-    }
-  }, [activeWallet]);
 
   const walletParams: WalletOptions = useMemo(() => {
     return {
@@ -210,13 +205,6 @@ export function useWalletConnectionSetup(
     },
     [walletParams],
   );
-
-  // if props.chains is updated, update the active wallet's chains
-  useEffect(() => {
-    if (activeWallet) {
-      activeWallet.updateChains(chains);
-    }
-  }, [activeWallet, chains]);
 
   const setConnectedWallet = useCallback(
     async (
@@ -271,7 +259,7 @@ export function useWalletConnectionSetup(
     [],
   );
 
-  const storeLastActiveChainId = useCallback(async (chainId: number) => {
+  const storeLastActiveChainId = useCallback(async (_chainId: number) => {
     const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
       LAST_CONNECTED_WALLET_STORAGE_KEY,
     );
@@ -283,9 +271,9 @@ export function useWalletConnectionSetup(
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
       if (parsedWallet.connectParams) {
-        parsedWallet.connectParams.chainId = chainId;
+        parsedWallet.connectParams.chainId = _chainId;
       } else {
-        parsedWallet.connectParams = { chainId };
+        parsedWallet.connectParams = { chainId: _chainId };
       }
       await lastConnectedWalletStorage.setItem(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
@@ -297,14 +285,14 @@ export function useWalletConnectionSetup(
   }, []);
 
   const switchChain = useCallback(
-    async (chainId: number) => {
+    async (_chainId: number) => {
       if (!activeWallet) {
         throw new Error("No active wallet");
       }
 
-      await activeWallet.switchChain(chainId);
+      await activeWallet.switchChain(_chainId);
       const _signer = await activeWallet.getSigner();
-      await storeLastActiveChainId(chainId);
+      await storeLastActiveChainId(_chainId);
 
       setSigner(_signer);
     },
@@ -352,6 +340,8 @@ export function useWalletConnectionSetup(
     setSigner(undefined);
     setActiveWallet(undefined);
     setActiveWalletConfig(undefined);
+    setChainId(undefined);
+    setWalletAddress(undefined);
   }, []);
 
   const disconnectWallet = useCallback(async () => {
@@ -371,27 +361,23 @@ export function useWalletConnectionSetup(
     onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 
-  // when wallet's network or account is changed using the extension, update UI
+  // handle wallet change event
   useEffect(() => {
     if (!activeWallet) {
+      setSigner(undefined);
+      setChainId(undefined);
+      setWalletAddress(undefined);
       return;
     }
 
-    const updateChainId = () => {
-      activeWallet?.getChainId().then((_chainId) => {
-        setConnectedChainId(_chainId);
-      });
-    };
-
     const update = async () => {
-      updateChainId();
-      const _signer = await activeWallet.getSigner();
-      setSigner(_signer);
+      activeWallet.getSigner().then(setSigner);
+      activeWallet.getChainId().then(setChainId);
+      activeWallet.getAddress().then(setWalletAddress);
     };
 
-    updateChainId();
+    update();
     activeWallet.addListener("change", update);
-
     activeWallet.addListener("disconnect", onWalletDisconnect);
 
     return () => {
@@ -399,6 +385,13 @@ export function useWalletConnectionSetup(
       activeWallet.removeListener("disconnect", onWalletDisconnect);
     };
   }, [activeWallet, onWalletDisconnect]);
+
+  // if props.chains is updated, update the active wallet's chains
+  useEffect(() => {
+    if (activeWallet) {
+      activeWallet.updateChains(chains);
+    }
+  }, [activeWallet, chains]);
 
   return {
     signer,
@@ -412,8 +405,8 @@ export function useWalletConnectionSetup(
     switchChain,
     connectWallet,
     disconnectWallet,
-    connectedChainId,
-    connectedAddress,
+    chainId,
+    address: walletAddress,
   };
 }
 
@@ -465,6 +458,9 @@ export function ThirdwebWalletProvider(
     connectionStatus: "disconnected",
   });
 
+  /**
+   * This is used to know if auto connect is in progress
+   */
   const [isAutoConnecting, setIsAutoConnecting] = useState(false);
 
   const [walletConnectHandler, setWalletConnectHandler] =

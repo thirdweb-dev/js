@@ -137,7 +137,7 @@ export const SafeConnectUI = (
         );
       },
       connectedWallet: personalWalletConnection.activeWallet,
-      connectedWalletAddress: personalWalletConnection.connectedAddress,
+      connectedWalletAddress: personalWalletConnection.address,
     };
 
     if (personalWalletConfig.connectUI) {

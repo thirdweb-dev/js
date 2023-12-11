@@ -37,8 +37,7 @@ export const SelectAccount: React.FC<{
 }> = (props) => {
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
   const { personalWalletConnection } = useWalletContext();
-  const { activeWallet, connectedChainId, switchChain } =
-    personalWalletConnection;
+  const { activeWallet, chainId, switchChain } = personalWalletConnection;
   const { connect, connectionStatus } = props;
 
   const [safeAddress, setSafeAddress] = useState("");
@@ -84,7 +83,7 @@ export const SelectAccount: React.FC<{
     }
   };
 
-  const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
+  const mismatch = safeChainId !== -1 && chainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;

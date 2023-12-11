@@ -157,7 +157,7 @@ const SmartSelectUI = (
       theme={props.theme}
       onLocallyConnected={props.onLocallyConnected}
       connectedWallet={personalWalletConnection.activeWallet}
-      connectedWalletAddress={personalWalletConnection.connectedAddress}
+      connectedWalletAddress={personalWalletConnection.address}
     />
   );
 };
@@ -204,7 +204,7 @@ export const SmartConnectUI = (
       theme: props.theme,
       onLocallyConnected: props.onLocallyConnected,
       connectedWallet: personalWalletConnection.activeWallet,
-      connectedWalletAddress: personalWalletConnection.connectedAddress,
+      connectedWalletAddress: personalWalletConnection.address,
     };
 
     if (personalWalletConfig.connectUI) {
@@ -223,7 +223,7 @@ export const SmartConnectUI = (
       smartWallet={walletConfig}
       personalWalletConfig={personalWalletConfig}
       personalWallet={personalWalletConnection.activeWallet}
-      personalWalletChainId={personalWalletConnection.connectedChainId || 1}
+      personalWalletChainId={personalWalletConnection.chainId || 1}
       switchChainPersonalWallet={personalWalletConnection.switchChain}
     />
   );

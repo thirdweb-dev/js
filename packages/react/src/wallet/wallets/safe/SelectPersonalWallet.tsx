@@ -101,7 +101,7 @@ export const SelectpersonalWallet: React.FC<{
             setConnectedWallet: personalWalletConnection.setConnectedWallet,
             setConnectionStatus: personalWalletConnection.setConnectionStatus,
             connectedWallet: personalWalletConnection.activeWallet,
-            connectedWalletAddress: personalWalletConnection.connectedAddress,
+            connectedWalletAddress: personalWalletConnection.address,
           }}
         />
       </Container>
