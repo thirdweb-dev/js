@@ -168,6 +168,8 @@ export const ConnectedWalletDetails: React.FC<{
               setOverrideWalletIconUrl(googleIconUri);
             } else if (auth === "facebook") {
               setOverrideWalletIconUrl(facebookIconUri);
+            } else {
+              setOverrideWalletIconUrl(undefined);
             }
           });
       } else if (activeWallet.walletId === walletIds.smartWallet) {
