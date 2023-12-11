@@ -23,6 +23,9 @@ import { extractConstructorParamsFromAbi } from "../feature-detection/extractCon
 import { caches } from "./caches";
 import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
 
+/**
+ * @internal
+ */
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
   provider: providers.Provider,

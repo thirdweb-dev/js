@@ -3,6 +3,9 @@ import { BigNumber } from "ethers";
 import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { isNativeToken } from "./isNativeToken";
 
+/**
+ * @internal
+ */
 export async function setErc20Allowance(
   contractToApprove: ContractWrapper<any>,
   value: BigNumber,

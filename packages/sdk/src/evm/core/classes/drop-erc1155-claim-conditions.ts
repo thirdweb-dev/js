@@ -972,7 +972,7 @@ export class DropErc1155ClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
     return detectContractFeature<DropSinglePhase1155>(
@@ -981,7 +981,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop1155> {
     return detectContractFeature<Drop1155>(
@@ -990,7 +990,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155_V1> {
     return detectContractFeature<DropSinglePhase1155_V1>(
@@ -999,7 +999,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC1155_V2> {
     return detectContractFeature<DropERC1155_V2>(

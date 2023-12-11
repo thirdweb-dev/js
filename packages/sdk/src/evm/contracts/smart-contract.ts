@@ -94,17 +94,17 @@ import { ExtensionManager } from "../core/classes/extension-manager";
  * // call any function in your contract
  * await contract.call("myCustomFunction", [param1, param2]);
  *
- * // if your contract follows the ERC721 standard, contract.nft will be present
- * const allNFTs = await contract.erc721.query.all()
+ * // if your contract follows an ERC standard, contract.ercXYZ will be present
+ * const allNFTs = await contract.erc721.getAll()
  *
- * // if your contract extends IMintableERC721, contract.nft.mint() will be available
+ * // if your contract extends a particular contract extension, the corresponding function will be available
  * const tx = await contract.erc721.mint({
  *     name: "Cool NFT",
  *     image: readFileSync("some_image.png"),
  *   });
  * ```
  *
- * @beta
+ * @public
  */
 export class SmartContract<
   TContract extends BaseContractInterface = BaseContract,

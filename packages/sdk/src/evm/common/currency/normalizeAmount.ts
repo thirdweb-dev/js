@@ -4,6 +4,9 @@ import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Amount } from "../../types/currency";
 import { BaseERC20 } from "../../types/eips";
 
+/**
+ * @internal
+ */
 export async function normalizeAmount(
   contractWrapper: ContractWrapper<BaseERC20>,
   amount: Amount,
