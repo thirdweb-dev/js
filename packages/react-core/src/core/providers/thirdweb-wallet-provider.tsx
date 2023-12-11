@@ -1,4 +1,3 @@
-// update here
 import { DAppMetaData } from "../types/dAppMeta";
 import type {
   ConnectionStatus,
