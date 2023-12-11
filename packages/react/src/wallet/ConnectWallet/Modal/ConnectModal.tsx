@@ -262,6 +262,9 @@ export const ConnectModal = () => {
     }
   }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
 
+  const onHide = useCallback(() => setHideModal(true), []);
+  const onShow = useCallback(() => setHideModal(false), []);
+
   // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
   useEffect(() => {
     if (isWalletModalOpen && screen === reservedScreens.signIn && !wallet) {
@@ -305,8 +308,8 @@ export const ConnectModal = () => {
           initialScreen={initialScreen}
           screen={screen}
           setScreen={setScreen}
-          onHide={() => setHideModal(true)}
-          onShow={() => setHideModal(false)}
+          onHide={onHide}
+          onShow={onShow}
           isOpen={isWalletModalOpen}
           onClose={closeModal}
         />
