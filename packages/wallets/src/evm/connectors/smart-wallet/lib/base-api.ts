@@ -229,6 +229,10 @@ export abstract class BaseAccountAPI {
         }));
     }
 
+    // callGasLimit = callGasLimit.mul(10); // add 100k for entrypoint checks
+
+    console.log("callGasLimit", callGasLimit.toString());
+
     return {
       callData,
       callGasLimit,
@@ -291,6 +295,11 @@ export abstract class BaseAccountAPI {
       await this.getVerificationGasLimit(),
     ).add(initGas);
 
+    console.log("initGas", initGas.toString());
+    console.log("initGas", verificationGasLimit.toString());
+
+    // verificationGasLimit = verificationGasLimit.mul(3);
+
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await getDynamicFeeData(
@@ -301,16 +310,32 @@ export abstract class BaseAccountAPI {
       }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
+
+        console.log(
+          "CELO maxFeePerGas",
+          ethers.utils.formatUnits(maxFeePerGas || 0, "gwei"),
+        );
+        console.log(
+          "CELO maxPriorityFeePerGas",
+          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
+        );
 
         if (
           chainId === Celo.chainId ||
           chainId === CeloAlfajoresTestnet.chainId ||
           chainId === CeloBaklavaTestnet.chainId
         ) {
+          maxFeePerGas = maxFeePerGas?.mul(50);
           maxPriorityFeePerGas = maxFeePerGas;
         }
+
+        console.log(
+          "CELO final",
+          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
+        );
       }
     }
 

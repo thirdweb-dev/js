@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://testnet.torusscan.com",
+      "url": "https://testnet.toruscan.com",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",

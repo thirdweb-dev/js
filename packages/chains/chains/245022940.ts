@@ -36,5 +36,6 @@ export default {
   ],
   "shortName": "neonevm-testnet",
   "slug": "neon-evm-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

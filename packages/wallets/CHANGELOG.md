@@ -1,5 +1,36 @@
 # @thirdweb-dev/wallets
 
+## 2.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173)]:
+  - @thirdweb-dev/sdk@4.0.21
+
+## 2.2.0
+
+### Minor Changes
+
+- [#2052](https://github.com/thirdweb-dev/js/pull/2052) [`94966069`](https://github.com/thirdweb-dev/js/commit/9496606964d65268f8ee6bf9f78b2786e99d33ac) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat: add custom auth endpoint authentication strategy support for embeddedWallet
+
+  Configure the endpoint for where the payload is to be sent too over at thirdweb.com/dashboard.
+
+  ```typsecript
+  await embeddedWallet.authenticate({
+      strategy: "auth_endpoint",
+      payload: "SOME_STRING",
+      encryptionKey: ""
+  });
+  ```
+
+### Patch Changes
+
+- [#2058](https://github.com/thirdweb-dev/js/pull/2058) [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d) Thanks [@MananTank](https://github.com/MananTank)! - Add option to open the official wallet connect modal in ConnectWallet
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3), [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794), [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814), [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf)]:
+  - @thirdweb-dev/chains@0.1.61
+  - @thirdweb-dev/sdk@4.0.20
+
 ## 2.1.11
 
 ### Patch Changes

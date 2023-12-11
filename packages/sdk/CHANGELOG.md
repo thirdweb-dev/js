@@ -1,5 +1,24 @@
 # @thirdweb-dev/sdk
 
+## 4.0.21
+
+### Patch Changes
+
+- [#2067](https://github.com/thirdweb-dev/js/pull/2067) [`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix deployments
+
+## 4.0.20
+
+### Patch Changes
+
+- [#2062](https://github.com/thirdweb-dev/js/pull/2062) [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose baseFee in getDynamicFeeData()
+
+- [#2053](https://github.com/thirdweb-dev/js/pull/2053) [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix error message
+
+- [#2059](https://github.com/thirdweb-dev/js/pull/2059) [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf) Thanks [@jnsdls](https://github.com/jnsdls)! - contract.roles.setAll now allows passing a actingAddress explictly to "prepare()" to correctly prepare the txn when there are multiple roles being removed
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3)]:
+  - @thirdweb-dev/chains@0.1.61
+
 ## 4.0.19
 
 ### Patch Changes
