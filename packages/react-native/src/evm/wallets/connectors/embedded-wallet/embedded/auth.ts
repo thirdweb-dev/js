@@ -330,6 +330,7 @@ export async function authEndpoint(
       "Content-Type": "application/json",
       [EWS_VERSION_HEADER]: reactNativePackageVersion,
       [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
     },
     body: JSON.stringify({
       payload: payload,
