@@ -11,3 +11,10 @@ export function getRandomValues<T extends IntArrayBufferView>(array: T): T {
   // @ts-ignore getRandomValues is polyfilled
   return crypto.getRandomValues(array);
 }
+
+export function getRandomString(bytes: number) {
+  const randomValues = getRandomValues(new Uint8Array(bytes));
+  return Array.from(randomValues)
+    .map((nr) => nr.toString(16).padStart(2, "0"))
+    .join("");
+}

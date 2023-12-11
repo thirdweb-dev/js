@@ -70,7 +70,7 @@ type SocialAuthParams = {
 type JwtAuthParams = {
   strategy: "jwt";
   jwt: string;
-  encryptionKey?: string;
+  encryptionKey: string;
 };
 
 // this is the input to 'authenticate'
