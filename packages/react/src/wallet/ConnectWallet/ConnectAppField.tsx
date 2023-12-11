@@ -35,10 +35,10 @@ const ConnectAppField = ({
 
   const getAppMeta = useCallback(() => {
     const sessions = walletConnectHandler?.getActiveSessions();
-    if (sessions && Object.keys(sessions).length > 0) {
+    if (sessions && sessions.length > 0) {
       setAppMeta({
-        name: sessions[0].peer.metadata.name,
-        iconUrl: sessions[0].peer.metadata.icons[0],
+        name: sessions[0]?.peer.metadata.name || "",
+        iconUrl: sessions[0]?.peer.metadata.icons[0] || "",
       });
     }
   }, [walletConnectHandler]);
