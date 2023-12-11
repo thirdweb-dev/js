@@ -259,7 +259,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           RecoveryShareManagement.USER_MANAGED,
       };
     } catch (error) {
-      console.error(`Error while verifying auth: ${error}`);
+      console.error(`Error while verifying auth_endpoint auth: ${error}`);
       this.disconnect();
       throw error;
     }

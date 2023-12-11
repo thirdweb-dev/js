@@ -313,7 +313,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
-      createErrorMessage("Malformed response from post authentication", e),
+      createErrorMessage("Malformed response from post jwt authentication", e),
     );
   }
 }
@@ -339,7 +339,9 @@ export async function authEndpoint(
   });
   if (!resp.ok) {
     const error = await resp.json();
-    throw new Error(`JWT authentication error: ${error.message}`);
+    throw new Error(
+      `Custom auth endpoint authentication error: ${error.message}`,
+    );
   }
 
   try {
@@ -363,7 +365,10 @@ export async function authEndpoint(
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
-      createErrorMessage("Malformed response from post authentication", e),
+      createErrorMessage(
+        "Malformed response from post auth_endpoint authentication",
+        e,
+      ),
     );
   }
 }
