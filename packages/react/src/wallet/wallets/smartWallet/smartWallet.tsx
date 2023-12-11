@@ -155,7 +155,6 @@ const SmartSelectUI = (
       connectionStatus={personalWalletConnection.connectionStatus}
       supportedWallets={props.supportedWallets}
       theme={props.theme}
-      onLocallyConnected={props.onLocallyConnected}
       connectedWallet={personalWalletConnection.activeWallet}
       connectedWalletAddress={personalWalletConnection.address}
     />
@@ -202,7 +201,6 @@ export const SmartConnectUI = (
       show: props.show,
       supportedWallets: props.supportedWallets,
       theme: props.theme,
-      onLocallyConnected: props.onLocallyConnected,
       connectedWallet: personalWalletConnection.activeWallet,
       connectedWalletAddress: personalWalletConnection.address,
     };

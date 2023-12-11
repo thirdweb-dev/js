@@ -69,7 +69,10 @@ export const WalletConnectScan: React.FC<{
   return (
     <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
-        <ModalHeader onBack={onBack} title={walletConfig.meta.name} />
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : onBack}
+          title={walletConfig.meta.name}
+        />
       </Container>
 
       <Spacer y="sm" />

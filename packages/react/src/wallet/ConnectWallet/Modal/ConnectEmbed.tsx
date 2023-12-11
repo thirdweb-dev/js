@@ -86,7 +86,7 @@ function useSignInRequired(loginOptional?: boolean) {
 }
 
 /**
- * Returns true if the `<ConnectEmbed />` should be rendered.
+ * Returns `true` if the `<ConnectEmbed />` should be rendered.
  * It returns true if either one of the following conditions are met:
  * - the wallet is not connected
  * - the wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )

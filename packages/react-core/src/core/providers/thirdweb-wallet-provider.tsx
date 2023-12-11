@@ -149,7 +149,7 @@ export type WalletConnectionSetup = {
 /**
  * setup states and methods for wallet connection
  */
-export function useWalletConnectionSetup(
+function useWalletConnectionSetup(
   data: WalletSetupData,
   initialValue: {
     connectionStatus: ConnectionStatus;

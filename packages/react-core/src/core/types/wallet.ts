@@ -106,44 +106,7 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   theme: "dark" | "light";
 
   /**
-   * `WalletConfig` object of your wallet
-   *
-   * you can use this to connect to your wallet
-   *
-   * ### 1. Using `useConnect` hook
-   * ```ts
-   *  const connect = useConnect();
-   *
-   *  // call this function to connect to your wallet
-   *  async function handleConnect() {
-   *    await connect(walletConfig, options);
-   *  }
-   *
-   * ```
-   *
-   * OR
-   *
-   * ### 2. Manually creating wallet instance and connecting
-   * ```ts
-   * const createWalletInstance = useCreateWalletInstance();
-   * const setConnectedWallet = useSetConnectedWallet();
-   * const setConnectionStatus = useSetConnectionStatus();
-   *
-   * // call this function to connect to your wallet
-   * async function handleConnect() {
-   *   // create instance
-   *   const walletInstance = createWalletInstance(walletConfig);
-   *   // connect wallet
-   *   setConnectionStatus('connecting);
-   *   try {
-   *     await walletInstance.connect(options);
-   *     // set connected wallet
-   *     setConnectedWallet(walletInstance);
-   *   } catch {
-   *     setConnectionStatus('disconnected');
-   *  }
-   * }
-   * ```
+   * `WalletConfig` object of the wallet
    */
   walletConfig: WalletConfig<I>;
 
@@ -159,7 +122,7 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   setSelectionData: (data: any) => void;
 
   /**
-   * List of all supported wallets including your wallet.
+   * Array of supported wallets including this wallet.
    */
   supportedWallets: WalletConfig[];
 
@@ -171,8 +134,10 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   modalSize: "compact" | "wide";
 
   /**
-   * Called when the wallet is connected but it's
-   * part of another wallet's connection flow.
+   * Called when the wallet is connected but it's part of another wallet's connection flow.
+   *
+   * This is only defined in React Native
+   *
    * @param walletInstance - the instance of the connected wallet
    */
   onLocallyConnected?: (walletInstance: WalletInstance) => void;
@@ -180,24 +145,37 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * connect wallet
    *
+   * @example
+   * ```tsx
+   * const { connect } = props;
+   *
+   * async function handleConnect() {
+   *   const wallet = await connect(someOptions);
+   *   console.log('connected to', wallet);
+   * }
+   * ```
+   *
    * If you need more control over the connection process, you can manually create wallet instance and call the `connect` method of the wallet instance instead and use `setConnectedWallet` and `setConnectionStatus` to set the connected wallet and connection status.
    */
   connect: (...args: ConnectArgs<I>) => Promise<I>;
 
   /**
    * Set the connection status of the wallet.
-   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method.
+   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
    *
    * @example
    * ```ts
-   * const createWalletInstance = useCreateWalletInstance();
-   * const wallet = createWalletInstance(walletConfig);
-   * setConnectionStatus('connecting');
-   * try {
-   *  await wallet.connect(options);
-   *  setConnectedWallet(wallet);
-   * } catch {
-   *  setConnectionStatus('disconnected');
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance();
+   *  setConnectionStatus('connecting'); // <--
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet);
+   *  } catch {
+   *    setConnectionStatus('disconnected'); // <--
+   *  }
    * }
    * ```
    */
@@ -209,32 +187,51 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   connectionStatus: ConnectionStatus;
 
   /**
-   * Set the wallet instance as connected in thirdweb context
-   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method.
+   * Set a wallet instance as connected in thirdweb context
+   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
    *
    * @example
    * ```ts
-   * const createWalletInstance = useCreateWalletInstance();
-   * const wallet = createWalletInstance(walletConfig);
-   * setConnectionStatus('connecting');
-   * try {
-   *  await wallet.connect(options);
-   *  setConnectedWallet(wallet);
-   * } catch {
-   *  setConnectionStatus('disconnected');
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance();
+   *  setConnectionStatus('connecting');
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet); // <--
+   *  } catch {
+   *    setConnectionStatus('disconnected');
+   *  }
    * }
    * ```
    */
   setConnectedWallet: (walletInstance: I) => void;
 
   /**
-   * Create an instance of the wallet
+   * Create an instance of the wallet. This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
+   *
+   * @example
+   * ```ts
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance(); // <--
+   *  setConnectionStatus('connecting');
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet);
+   *  } catch {
+   *    setConnectionStatus('disconnected');
+   *  }
+   * }
+   * ```
    */
   createWalletInstance: () => I;
 
   /**
    * Connected wallet instance
-   * This is set by if `connect` succeeds or it set manually by the `setConnectedWallet` function
+   * This is set by `connect` if connection succeeds or it can be set manually by using `setConnectedWallet`
    */
   connectedWallet?: I;
 
@@ -254,8 +251,6 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
 
   /**
    * `WalletConfig` object of your wallet
-   *
-   * you can use this get metadata of your wallet by doing `walletConfig.meta`
    */
   walletConfig: WalletConfig<I>;
 
@@ -289,24 +284,37 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * connect wallet
    *
+   * @example
+   * ```tsx
+   * const { connect } = props;
+   *
+   * async function handleConnect() {
+   *   const wallet = await connect(someOptions);
+   *   console.log('connected to', wallet);
+   * }
+   * ```
+   *
    * If you need more control over the connection process, you can manually create wallet instance and call the `connect` method of the wallet instance instead and use `setConnectedWallet` and `setConnectionStatus` to set the connected wallet and connection status.
    */
   connect: (...args: ConnectArgs<I>) => Promise<I>;
 
   /**
    * Set the connection status of the wallet.
-   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method.
+   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
    *
    * @example
    * ```ts
-   * const createWalletInstance = useCreateWalletInstance();
-   * const wallet = createWalletInstance(walletConfig);
-   * setConnectionStatus('connecting');
-   * try {
-   *  await wallet.connect(options);
-   *  setConnectedWallet(wallet);
-   * } catch {
-   *  setConnectionStatus('disconnected');
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance();
+   *  setConnectionStatus('connecting'); // <--
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet);
+   *  } catch {
+   *    setConnectionStatus('disconnected'); // <--
+   *  }
    * }
    * ```
    */
@@ -318,32 +326,51 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
   connectionStatus: ConnectionStatus;
 
   /**
-   * Set the wallet instance as connected in thirdweb context
-   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method.
+   * Set a wallet instance as connected in thirdweb context
+   * This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
    *
    * @example
    * ```ts
-   * const createWalletInstance = useCreateWalletInstance();
-   * const wallet = createWalletInstance(walletConfig);
-   * setConnectionStatus('connecting');
-   * try {
-   *  await wallet.connect(options);
-   *  setConnectedWallet(wallet);
-   * } catch {
-   *  setConnectionStatus('disconnected');
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance();
+   *  setConnectionStatus('connecting');
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet); // <--
+   *  } catch {
+   *    setConnectionStatus('disconnected');
+   *  }
    * }
    * ```
    */
   setConnectedWallet: (walletInstance: I) => void;
 
   /**
-   * Create an instance of the wallet
+   * Create an instance of the wallet. This is only relevant if you are manually creating wallet instance and calling the `wallet.connect` method. If you are using the `connect` function, this is done automatically.
+   *
+   * @example
+   * ```ts
+   * const { createWalletInstance, setConnectionStatus, setConnectedWallet  } = props;
+   *
+   * async function handleConnect() {
+   *  const wallet = createWalletInstance(); // <--
+   *  setConnectionStatus('connecting');
+   *  try {
+   *    await wallet.connect(someOptions);
+   *    setConnectedWallet(wallet);
+   *  } catch {
+   *    setConnectionStatus('disconnected');
+   *  }
+   * }
+   * ```
    */
   createWalletInstance: () => I;
 
   /**
    * Connected wallet instance
-   * This is set by if `connect` succeeds or it set manually by the `setConnectedWallet` function
+   * This is set by `connect` if connection succeeds or it can be set manually by using `setConnectedWallet`
    */
   connectedWallet?: I;
 
