@@ -33,6 +33,7 @@ export const ROUTE_STORE_USER_SHARES = `${ROUTE_2023_10_20_API_BASE_PATH}/embedd
 export const ROUTE_GET_USER_SHARES = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-shares`;
 export const ROUTE_VERIFY_THIRDWEB_CLIENT_ID = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/verify-thirdweb-client-id`;
 export const ROUTE_AUTH_JWT_CALLBACK = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-custom-jwt`;
+export const ROUTE_AUTH_ENDPOINT_CALLBACK = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-custom-auth-endpoint`;
 
 export const ROUTE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/send-user-managed-email-otp`;
 export const ROUTE_VALIDATE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-thirdweb-email-otp`;
