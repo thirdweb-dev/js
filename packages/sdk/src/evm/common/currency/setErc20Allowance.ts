@@ -1,6 +1,6 @@
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { isNativeToken } from "./isNativeToken";
 
 export async function setErc20Allowance(

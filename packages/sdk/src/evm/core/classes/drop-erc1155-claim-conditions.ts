@@ -47,7 +47,7 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
 

@@ -48,7 +48,7 @@ import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import { getCompositeABI } from "../../common/plugin/getCompositePluginABI";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 abstract class TransactionContext {
   protected args: any[];

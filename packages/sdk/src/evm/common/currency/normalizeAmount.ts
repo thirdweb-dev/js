@@ -1,6 +1,6 @@
 import { BigNumber, utils } from "ethers";
 import { AmountSchema } from "../../../core/schema/shared";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Amount } from "../../types/currency";
 import { BaseERC20 } from "../../types/eips";
 
