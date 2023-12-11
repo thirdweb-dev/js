@@ -43,10 +43,10 @@ export class OneKeyWallet extends AbstractClientWallet<OneKeyAdditionalOptions> 
   OneKeyConnector?: OneKeyConnectorType;
   isInjected: boolean;
 
-  static id = walletIds.coreWallet as string;
+  static id = walletIds.oneKey as string;
 
   public get walletName() {
-    return "Core wallet" as const;
+    return "OneKey wallet" as const;
   }
 
   constructor(options: OneKeyOptions) {
