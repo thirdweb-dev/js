@@ -18,14 +18,16 @@
     const loginOptional = false;
     const showConnectEmbed = useShowConnectEmbed(loginOptional);
 
+    if (!showConnectEmbed) {
+      return <div> Wallet is connected </div>;
+    }
+
     return (
-      <div>
-        <ConnectEmbed
-          auth={{
-            loginOptional,
-          }}
-        />
-      </div>
+      <ConnectEmbed
+        auth={{
+          loginOptional,
+        }}
+      />
     );
   }
   ```

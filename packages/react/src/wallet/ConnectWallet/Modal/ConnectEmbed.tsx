@@ -117,6 +117,28 @@ function useSignInRequired(loginOptional?: boolean) {
  * - the wallet is not connected
  * - the wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )
  *
+ *  @example
+ * ```tsx
+ * function Example() {
+ *   const loginOptional = false;
+ *   const showConnectEmbed = useShowConnectEmbed(loginOptional);
+ *
+ *   if (!showConnectEmbed) {
+ *     return <div> Wallet is connected </div>
+ *   }
+ *
+ *   return (
+ *     <div>
+ *       <ConnectEmbed
+ *         auth={{
+ *           loginOptional,
+ *         }}
+ *       />
+ *     </div>
+ *   );
+ * }
+ *```
+ *
  * @param loginOptional -
  * Specify whether the `<ConnectEmbed />` you want to render has auth enabled or not.
  * If not specified, it is assumed to be `false` ( login is required )
@@ -129,6 +151,37 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
   return connectionStatus !== "connected" || signInRequired;
 }
 
+/**
+ * A component that allows the user to connect their wallet.
+ *
+ * It only renders UI if either one of the following conditions are met:
+ * - wallet is not connected
+ * - wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )
+ *
+ * `ConnectEmbed` uses the `useShowConnectEmbed` hook internally to determine if it should be rendered or not. You can also use this hook to determine if you should render something else instead of `ConnectEmbed`
+ *
+ * @example
+ * ```tsx
+ * function Example() {
+ *   const loginOptional = false;
+ *   const showConnectEmbed = useShowConnectEmbed(loginOptional);
+ *
+ *   if (!showConnectEmbed) {
+ *     return <div> Wallet is connected </div>
+ *   }
+ *
+ *   return (
+ *     <div>
+ *       <ConnectEmbed
+ *         auth={{
+ *           loginOptional,
+ *         }}
+ *       />
+ *     </div>
+ *   );
+ * }
+ *```
+ */
 export const ConnectEmbed = (props: ConnectEmbedProps) => {
   const loginOptional = props.auth?.loginOptional;
   const requiresSignIn = useSignInRequired(loginOptional);
@@ -172,22 +225,9 @@ const ConnectEmbedContent = (
   const { isAutoConnecting } = useWalletContext();
   const contextTheme = useCustomTheme();
 
-  let content = (
-    <ConnectModalContent
-      initialScreen={props.initialScreen}
-      screen={props.screen}
-      setScreen={props.setScreen}
-      isOpen={true}
-      onClose={props.onClose}
-      onHide={() => {
-        // no op
-      }}
-      onShow={() => {
-        // no op
-      }}
-    />
-  );
+  let content = null;
 
+  // show spinner on page load and during auto connecting a wallet
   if (isAutoConnecting || connectionStatus === "unknown") {
     content = (
       <Container
@@ -199,6 +239,22 @@ const ConnectEmbedContent = (
       >
         <Spinner size="xl" color="accentText" />
       </Container>
+    );
+  } else {
+    content = (
+      <ConnectModalContent
+        initialScreen={props.initialScreen}
+        screen={props.screen}
+        setScreen={props.setScreen}
+        isOpen={true}
+        onClose={props.onClose}
+        onHide={() => {
+          // no op
+        }}
+        onShow={() => {
+          // no op
+        }}
+      />
     );
   }
 
