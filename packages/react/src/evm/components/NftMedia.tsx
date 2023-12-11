@@ -3,15 +3,18 @@ import React from "react";
 import type { SharedMediaProps } from "./types";
 import { MediaRenderer } from "./MediaRenderer";
 
-/**
- * The props for the {@link ThirdwebNftMedia} component.
- */
 export interface ThirdwebNftMediaProps extends SharedMediaProps {
   /**
    * The NFT metadata of the NFT returned by the thirdweb sdk.
    */
   metadata: NFTMetadata;
+  /**
+   * CSS width of the media
+   */
   width?: string;
+  /**
+   * CSS height of the media
+   */
   height?: string;
 }
 

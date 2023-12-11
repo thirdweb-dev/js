@@ -10,6 +10,7 @@ import type {
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 export type LoginQuerierTypes = {
+  loginWithCustomAuthEndpoint: { payload: string; encryptionKey: string };
   loginWithCustomJwt: { jwt: string; encryptionKey?: string };
   loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
@@ -66,6 +67,10 @@ export abstract class AbstractLogin<
 
   abstract loginWithCustomJwt(args: {
     jwt: string;
+    encryptionKey: string;
+  }): Promise<AuthLoginReturnType>;
+  abstract loginWithCustomAuthEndpoint(args: {
+    payload: string;
     encryptionKey: string;
   }): Promise<AuthLoginReturnType>;
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;

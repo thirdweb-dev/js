@@ -2,6 +2,8 @@ import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { WCMeta } from "../wallets/types/wc";
 
 /**
+ * @internal
+ *
  * Build a WalletConnect display URI from a wc:// uri + a wallet specific link
  *
  * @param uri - The wc:// uri
@@ -22,6 +24,9 @@ export function formatWalletConnectDisplayUri(
     : `${uri}`;
 }
 
+/**
+ * @internal
+ */
 export function getValidPublicRPCUrl(chain: Chain) {
   return getValidChainRPCs(chain).map((rpc) => {
     try {

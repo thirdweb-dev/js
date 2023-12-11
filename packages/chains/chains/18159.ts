@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmePhfibWz9jnGUqF9Rven4x734br1h3LxrChYTEjbbQvo",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://proofofmemes.org",
   "name": "Proof Of Memes",
   "nativeCurrency": {

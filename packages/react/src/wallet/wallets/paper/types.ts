@@ -2,7 +2,7 @@ import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
 export type OAuthProvider = "google";
 
-export type PaperConfig = Omit<
+export type PaperWalletConfigOptions = Omit<
   PaperWalletAdditionalOptions,
   "chain" | "clientId"
 > & {
@@ -13,7 +13,14 @@ export type PaperConfig = Omit<
 
   /**
    * Enable or Disable OAuth logins and specify which providers to use for OAuth
-   * @defaultValue `{ providers: ["google"] }`
+   *
+   * By default, google is enabled which is equivalent to setting the following:
+   *
+   * ```ts
+   * {
+   *  providers: ["google"]
+   * }
+   * ```
    */
   oauthOptions?:
     | {

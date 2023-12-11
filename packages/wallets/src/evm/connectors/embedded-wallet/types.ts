@@ -40,6 +40,12 @@ type JwtAuthParams = {
   encryptionKey: string;
 };
 
+type AuthEndpointParams = {
+  strategy: "auth_endpoint";
+  payload: string;
+  encryptionKey: string;
+};
+
 // open iFrame to send and input the OTP
 type IframeOtpAuthParams = {
   strategy: "iframe_email_verification";
@@ -56,6 +62,7 @@ export type AuthParams =
   | EmailVerificationAuthParams
   | OauthAuthParams
   | JwtAuthParams
+  | AuthEndpointParams
   | IframeOtpAuthParams
   | IframeAuthParams;
 

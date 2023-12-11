@@ -31,6 +31,9 @@ export const ThirdwebConnectedWalletContext = /* @__PURE__ */ createContext<
   ThirdwebConnectedWalletContext | undefined
 >(undefined);
 
+/**
+ * @internal
+ */
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
 > = ({ signer, children }) => {

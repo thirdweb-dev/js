@@ -89,6 +89,10 @@ export type SendEmailOtpReturnType = {
   recoveryShareManagement: RecoveryShareManagement;
 };
 export type LogoutReturnType = { success: boolean };
+
+/**
+ * @internal
+ */
 export type GetAuthDetailsReturnType = { authDetails?: AuthDetails };
 
 // ! Types seem repetitive, but the name should identify which goes where

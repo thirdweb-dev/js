@@ -35,7 +35,6 @@ import { useWallet } from "../../../core/hooks/wallet-hooks";
  * @returns a response object that includes an array of all signers of the provided account
  * @twfeature Account
  * @see {@link https://portal.thirdweb.com/react/react.useaccountsigners?utm_source=sdk | Documentation}
- * @beta
  */
 export function useAccountSigners(
   contract: RequiredParam<SmartContract>,
@@ -67,7 +66,6 @@ export function useAccountSigners(
  * @returns a response object that includes an array of all admins of the provided account
  * @twfeature Account
  * @see {@link https://portal.thirdweb.com/react/react.useaccountadmins?utm_source=sdk | Documentation}
- * @beta
  */
 export function useAccountAdmins(
   contract: RequiredParam<SmartContract>,
@@ -99,7 +97,6 @@ export function useAccountAdmins(
  * @returns a response object that includes an array of all admins of the provided account
  * @twfeature Account
  * @see {@link https://portal.thirdweb.com/react/react.useaccountadmins?utm_source=sdk | Documentation}
- * @beta
  */
 export function useAccountAdminsAndSigners(
   contract: RequiredParam<SmartContract>,

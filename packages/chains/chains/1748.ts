@@ -12,7 +12,7 @@ export default {
     "format": ".png"
   },
   "infoURL": "https://tryroll.com/",
-  "name": "Roll Testnet",
+  "name": "Form Testnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -20,13 +20,9 @@ export default {
   },
   "networkId": 1748,
   "redFlags": [],
-  "rpc": [
-    "https://roll-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://1748.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://roll.calderachain.xyz/http"
-  ],
+  "rpc": [],
   "shortName": "Roll",
-  "slug": "roll-testnet",
+  "slug": "form-testnet",
   "testnet": true,
   "title": "Roll Testnet"
 } as const satisfies Chain;

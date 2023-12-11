@@ -41,7 +41,7 @@ describe("Transactions", async () => {
   it("Should succesfully prepare and execute a transaction", async () => {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const address = await sdk.deployer.deployContractFromUri(mockPublishUri, [
       adminWallet.address,
       "NFT",
@@ -87,7 +87,7 @@ describe("Transactions", async () => {
     });
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const address = await sdk.deployer.deployContractFromUri(mockPublishUri, [
       adminWallet.address,
       "NFT",

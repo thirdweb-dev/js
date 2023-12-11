@@ -12,7 +12,6 @@ import invariant from "tiny-invariant";
  *
  * @see {@link https://portal.thirdweb.com/react/react.uselogout?utm_source=sdk | Documentation}
  *
- * @beta
  */
 export function useLogout() {
   const queryClient = useQueryClient();

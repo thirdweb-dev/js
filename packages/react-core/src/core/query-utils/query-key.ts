@@ -18,6 +18,9 @@ export function neverPersist<TKey extends QueryKey>(key: TKey) {
   return [...key, NEVER_PERSIST_QUERY_POSTFIX] as const;
 }
 
+/**
+ * @internal
+ */
 export function shouldNeverPersistQuery<TKey extends QueryKey>(
   key: TKey,
 ): boolean {

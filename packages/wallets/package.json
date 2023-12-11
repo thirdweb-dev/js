@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.1.9",
+  "version": "2.2.1",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -104,6 +104,13 @@
         "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.esm.js"
       },
       "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
+    },
+    "./evm/wallets/onekey": {
+      "module": {
+        "browser": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.browser.esm.js",
+        "default": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.esm.js"
+      },
+      "default": "./evm/wallets/onekey/dist/thirdweb-dev-wallets-evm-wallets-onekey.cjs.js"
     },
     "./evm/wallets/signer": {
       "module": {
@@ -272,6 +279,13 @@
         "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.esm.js"
       },
       "default": "./evm/connectors/coin98/dist/thirdweb-dev-wallets-evm-connectors-coin98.cjs.js"
+    },
+    "./evm/connectors/onekey": {
+      "module": {
+        "browser": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.browser.esm.js",
+        "default": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.esm.js"
+      },
+      "default": "./evm/connectors/onekey/dist/thirdweb-dev-wallets-evm-connectors-onekey.cjs.js"
     },
     "./evm/connectors/signer": {
       "module": {
@@ -548,8 +562,8 @@
     "ethers-aws-kms-signer": "^1.3.2",
     "rimraf": "^3.0.2",
     "tweetnacl": "^1.0.3",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "typedoc-gen": "workspace:*"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
@@ -559,7 +573,7 @@
     "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "engines": {
     "node": ">=18"
