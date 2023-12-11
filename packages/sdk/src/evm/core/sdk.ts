@@ -16,7 +16,7 @@ import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
-import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
+import { RPCConnectionHandler } from "./classes/internal/rpc-connection-handler";
 import type {
   ContractForPrebuiltContractType,
   ContractType,
@@ -78,8 +78,8 @@ import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
-import { ContractFactory } from "./classes/factory";
-import { ContractRegistry } from "./classes/registry";
+import { ContractFactory } from "./classes/internal/factory";
+import { ContractRegistry } from "./classes/internal/registry";
 import { DeployTransaction, Transaction } from "./classes/transactions";
 import {
   type BytesLike,
@@ -2055,6 +2055,9 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
+  /**
+   * @internal
+   */
   public override updateSignerOrProvider(network: NetworkInput) {
     super.updateSignerOrProvider(network);
     this.updateContractSignerOrProvider();

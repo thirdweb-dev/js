@@ -1,4 +1,4 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { BaseContract } from "ethers";
 import { hasMatchingAbi } from "./hasMatchingAbi";

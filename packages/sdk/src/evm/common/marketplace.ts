@@ -13,7 +13,7 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import { NewDirectListing } from "../types/marketplace/NewDirectListing";
 import { NewAuctionListing } from "../types/marketplace/NewAuctionListing";

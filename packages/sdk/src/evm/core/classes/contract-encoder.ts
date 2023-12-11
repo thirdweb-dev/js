@@ -1,4 +1,4 @@
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, utils } from "ethers";
 
 /**

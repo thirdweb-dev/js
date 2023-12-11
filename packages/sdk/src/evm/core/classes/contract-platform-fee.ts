@@ -4,7 +4,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
 import { CommonPlatformFeeSchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -21,10 +21,7 @@ import { Transaction } from "./transactions";
  * ```
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractPlatformFee<TContract extends IPlatformFee>
-  implements DetectableFeature
-{
+export class ContractPlatformFee implements DetectableFeature {
   featureName = FEATURE_PLATFORM_FEE.name;
   private contractWrapper;
 

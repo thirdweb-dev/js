@@ -10,7 +10,10 @@ const DEFAULT_BATCH_OPTIONS = {
 
 export type BatchOptions = Partial<typeof DEFAULT_BATCH_OPTIONS>;
 
-// mostly copied from ethers.js directly but make it a StaticJsonRpcProvider
+/**
+ * mostly copied from ethers.js directly but make it a StaticJsonRpcProvider
+ * @internal
+ */
 export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider {
   private _timeLimitMs: number;
   private _sizeLimit: number;

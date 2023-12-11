@@ -2,6 +2,9 @@ import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-dat
 import { GAS_LIMIT_FOR_DEPLOYER } from "./constants";
 import { estimateGasForDeploy } from "./estimateGasForDeploy";
 
+/**
+ * @internal
+ */
 export function createTransactionBatches(
   transactions: PrecomputedDeploymentTransaction[],
   upperGasLimit: number = GAS_LIMIT_FOR_DEPLOYER,

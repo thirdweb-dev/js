@@ -8,5 +8,5 @@ interface WindowWithEthereum extends Window {
  * @internal
  */
 export function assertWindowEthereum(w: Window): w is WindowWithEthereum {
-  return typeof w !== "undefined" && !!w && "ethereum" in w;
+  return typeof w !== "undefined" && !!w && "ethereum" in w && !!w.ethereum;
 }
