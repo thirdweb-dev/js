@@ -29,6 +29,7 @@ import {
   EWS_VERSION_HEADER,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
+  THIRDWEB_SESSION_NONCE_HEADER,
 } from "./helpers/constants";
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
@@ -38,6 +39,7 @@ import {
   reactNativePackageVersion,
 } from "../../../../utils/version";
 import { BUNDLE_ID_HEADER } from "../../../../constants/headers";
+import { ANALYTICS } from "./helpers/analytics";
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -189,6 +191,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     headers: {
       [EWS_VERSION_HEADER]: reactNativePackageVersion,
       [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
     },
   });
 
@@ -271,6 +274,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
       "Content-Type": "application/json",
       [EWS_VERSION_HEADER]: reactNativePackageVersion,
       [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
     },
     body: JSON.stringify({
       jwt: jwt,
