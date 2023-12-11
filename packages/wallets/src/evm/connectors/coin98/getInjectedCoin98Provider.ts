@@ -7,6 +7,9 @@ declare global {
   }
 }
 
+/**
+ * @internal
+ */
 export function getInjectedCoin98Provider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;

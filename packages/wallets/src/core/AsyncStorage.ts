@@ -39,7 +39,9 @@ export class AsyncLocalStorage implements AsyncStorage {
     });
   }
 }
-
+/**
+ * @internal
+ */
 export function createAsyncLocalStorage(name: string) {
   return new AsyncLocalStorage(name);
 }

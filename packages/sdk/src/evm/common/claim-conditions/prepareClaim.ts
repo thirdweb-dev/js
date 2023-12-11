@@ -1,4 +1,4 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import type {
   ClaimCondition,
   ClaimVerification,

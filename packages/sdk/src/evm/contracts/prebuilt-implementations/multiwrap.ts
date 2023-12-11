@@ -20,8 +20,8 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
+import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
@@ -52,6 +52,7 @@ import { MULTIWRAP_CONTRACT_ROLES } from "../contractRoles";
  *
  * @beta
  */
+// TODO create extension wrappers for this
 export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractRoles = MULTIWRAP_CONTRACT_ROLES;
 
@@ -90,7 +91,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
-  public owner: ContractOwner<MultiwrapContract>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,

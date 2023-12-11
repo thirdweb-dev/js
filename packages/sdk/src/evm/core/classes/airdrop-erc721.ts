@@ -8,7 +8,7 @@ import {
   Airdrop721Output,
 } from "../../types/airdrop/airdrop";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**

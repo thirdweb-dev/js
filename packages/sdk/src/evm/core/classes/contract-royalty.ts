@@ -13,7 +13,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**

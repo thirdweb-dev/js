@@ -33,15 +33,15 @@ import type {
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput } from "../types";
-import type { ContractWrapper } from "./contract-wrapper";
+import type { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 import { normalizeAmount } from "../../common/currency/normalizeAmount";
 import { ContractEncoder } from "./contract-encoder";
-import { Erc20Burnable } from "./erc-20-burnable";
-import { Erc20Droppable } from "./erc-20-droppable";
-import { Erc20Mintable } from "./erc-20-mintable";
-import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { Erc20Burnable } from "./internal/erc20/erc-20-burnable";
+import { Erc20Droppable } from "./internal/erc20/erc-20-droppable";
+import { Erc20Mintable } from "./internal/erc20/erc-20-mintable";
+import { Erc20SignatureMintable } from "./internal/erc20/erc-20-signature-mintable";
 
 /**
  * Standard ERC20 Token functions

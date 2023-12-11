@@ -19,6 +19,7 @@ export const walletIds = {
   walletConnect: "walletConnect",
   phantom: "phantom",
   okx: "okx",
+  oneKey: "oneKey",
   rabby: "rabby",
   // add new ids sorted alphabetically
 } as const;

@@ -11,9 +11,9 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { StandardErc20 } from "../../core/classes/erc-20-standard";
+import { StandardErc20 } from "../../core/classes/internal/erc20/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput } from "../../core/types";
@@ -37,7 +37,8 @@ import { TOKEN_DROP_CONTRACT_ROLES } from "../contractRoles";
  * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = await sdk.getContract("{{contract_address}}", "token-drop");
  * ```
- *
+ * @internal
+ * @deprecated use contract.erc20 instead
  */
 export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   static contractRoles = TOKEN_DROP_CONTRACT_ROLES;
@@ -55,7 +56,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   public encoder: ContractEncoder<PrebuiltTokenDrop>;
   public estimator: GasCostEstimator<PrebuiltTokenDrop>;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<PrebuiltTokenDrop>;
+  public platformFees: ContractPlatformFee;
   public events: ContractEvents<PrebuiltTokenDrop>;
   /**
    * Configure claim conditions

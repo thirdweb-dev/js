@@ -7,7 +7,7 @@ import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { getInjectedCoreWalletProvider } from "../connectors/core-wallet/getInjectedCoreWalletProvider";
 
-type CoreWalletAdditionalOptions = {
+export type CoreWalletAdditionalOptions = {
   /**
    * Whether to open the default Wallet Connect QR code Modal for connecting to Core app on mobile if Core wallet is not injected when calling connect().
    */

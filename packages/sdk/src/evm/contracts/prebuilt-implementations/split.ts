@@ -13,7 +13,7 @@ import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -41,6 +41,7 @@ import { ADMIN_ROLE } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Split implements UpdateableNetwork {
   static contractRoles = ADMIN_ROLE;
 

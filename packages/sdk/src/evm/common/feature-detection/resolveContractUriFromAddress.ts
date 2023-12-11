@@ -15,6 +15,9 @@ export async function resolveContractUriFromAddress(
   return extractIPFSHashFromBytecode(bytecode);
 }
 
+/**
+ * @internal
+ */
 export async function resolveContractUriAndBytecode(
   address: string,
   provider: providers.Provider,

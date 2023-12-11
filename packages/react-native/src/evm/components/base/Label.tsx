@@ -6,6 +6,9 @@ type LabelProps = {
   text: string;
 } & React.ComponentProps<typeof Text>;
 
+/**
+ * @internal
+ */
 export const Label = ({ text, ...props }: LabelProps) => {
   return (
     <Box

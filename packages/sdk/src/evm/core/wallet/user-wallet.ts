@@ -26,8 +26,8 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { Amount, CurrencyValue } from "../../types/currency";
-import { ContractWrapper } from "../classes/contract-wrapper";
-import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
+import { ContractWrapper } from "../classes/internal/contract-wrapper";
+import { RPCConnectionHandler } from "../classes/internal/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
 import { getDefaultGasOverrides } from "../../common/gas-price";
 /**

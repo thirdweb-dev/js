@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-import { ThirdwebLocale, enDefault } from "../locales/en";
+import { enDefault } from "../locales/en";
+import { ThirdwebLocale } from "../locales/types";
 
 export const ThirdwebLocaleContext = /* @__PURE__ */ (() =>
   createContext<ThirdwebLocale>(enDefault()))();
