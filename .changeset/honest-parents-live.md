@@ -2,4 +2,4 @@
 "@thirdweb-dev/react-native": patch
 ---
 
-Adds version header to ews calls
+Adds analytics nonce to embedded wallet
