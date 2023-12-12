@@ -743,8 +743,8 @@ class ThirdwebBridge implements TWBridge {
 
 
   public async smartWalletGetAllActiveSigners(){
-    if (!this.activeSDK) {
-      throw new Error("SDK not initialized");
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
     }
     const smartWallet = this.activeWallet as SmartWallet;
     const res = await smartWallet.getAllActiveSigners();
