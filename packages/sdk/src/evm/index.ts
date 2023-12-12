@@ -63,6 +63,7 @@ export * from "./core/classes/extension-manager";
 export * from "./core/classes/airdrop-erc20";
 export * from "./core/classes/airdrop-erc721";
 export * from "./core/classes/airdrop-erc1155";
+export * from "./core/classes/contract-verifier";
 export * from "./core/wallet/user-wallet";
 export * from "./core/sdk";
 //#endregion @r/packages/sdk/src/evm/core

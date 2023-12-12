@@ -142,8 +142,8 @@ export async function getUserOpReceipt(
     },
   });
 
-  if (pastEvents && pastEvents.length > 0) {
-    return pastEvents[0]?.data.transactionHash;
+  if (pastEvents[0]) {
+    return pastEvents[0].transaction.transactionHash;
   }
 
   // if not found, query the last 100 blocks every 2 seconds for the next 30 seconds
@@ -156,7 +156,7 @@ export async function getUserOpReceipt(
       },
     });
     if (events[0]) {
-      return events[0].data.transactionHash;
+      return events[0].transaction.transactionHash;
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
   }
