@@ -530,19 +530,51 @@ export function useContractEvents(
 }
 
 /**
- * Get data from a contract read-function call
+ * Generic hook for reading any data from a smart contract via it’s function/view/variable name.
  *
- * @example
  * ```javascript
  * const { contract } = useContract("{{contract_address}}");
- * const { data, isLoading, error } = useContractRead(contract, "functionName", ...args);
- *```
+ * const { data, isLoading, error } = useContractRead(contract, "functionName", args);
+ * ```
+ *
+ * @example
+ * Provide your smart contract instance from `useContract`, a function name and the arguments to pass to the function (if any).
+ *
+ * For example, to read the value of a view on your smart contract called getName you would do the following:
+ *
+ * ```tsx
+ * import { useContractRead, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractRead(contract, "getName");
+ * }
+ * ```
+ *
+ * @remarks
+ * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
  *
  * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
- * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
+ *
+ * @param functionName - the name of the function to call in the smart contract. This can be any function, view, variable, etc. that does not require a transaction to occur.
+ *
+ * @param args - The arguments to pass to the function (if any)
+ *
+ * @param overrides - `CallOverrides` object to send with your request.
+ * To include the sender's address (msg.sender) when calling view functions within your smart contract, include the property `{from: 0X123}` passing the relevant address.
+ *
+ * ```ts
+ * const { data, isLoading, error } = useContractRead(contract, "getName", ["arg1", "arg2"], {
+ *     blockTag: 123,
+ *     from: "0x123",
+ *   });
+ * ```
+ *
  * @returns a response object that includes the data returned by the function call
- * @see {@link https://portal.thirdweb.com/react/react.usecontractread?utm_source=sdk | Documentation}
+ *
  */
 export function useContractRead<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
