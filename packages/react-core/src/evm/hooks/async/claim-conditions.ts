@@ -696,7 +696,7 @@ export function useActiveClaimConditionForWallet(
  * When using an ERC1155 contract, you must also provide the token ID of the NFT you want to set claim conditions on as the second parameter to the hook.
  *
  * @example
- * ```jsx
+ * ```tsx
  * import {
  *   useSetClaimConditions,
  *   useContract,
@@ -714,35 +714,35 @@ export function useActiveClaimConditionForWallet(
  *     error,
  *   } = useSetClaimConditions(contract);
  *
+ *   const claimConditions = {
+ *     phases: [
+ *       {
+ *         metadata: {
+ *           name: "Phase 1", // The name of the phase
+ *         },
+ *         currencyAddress: "0x...", // The address of the currency you want users to pay in
+ *         price: 1, // The price of the token in the currency specified above
+ *         maxClaimablePerWallet: 1, // The maximum number of tokens a wallet can claim
+ *         maxClaimableSupply: 100, // The total number of tokens that can be claimed in this phase
+ *         startTime: new Date(), // When the phase starts (i.e. when users can start claiming tokens)
+ *         waitInSeconds: 60 * 60 * 24 * 7, // The period of time users must wait between repeat claims
+ *         snapshot: [
+ *           {
+ *             address: "0x...", // The address of the wallet
+ *             currencyAddress: "0x...", // Override the currency address this wallet pays in
+ *             maxClaimable: 5, // Override the maximum number of tokens this wallet can claim
+ *             price: 0.5, // Override the price this wallet pays
+ *           },
+ *         ],
+ *         merkleRootHash: "0x...", // The merkle root hash of the snapshot
+ *       },
+ *     ],
+ *   }
+ *
  *   return (
  *     <Web3Button
  *       contractAddress={contractAddress}
- *       action={() =>
- *         setClaimConditions({
- *           phases: [
- *             {
- *               metadata: {
- *                 name: "Phase 1", // The name of the phase
- *               },
- *               currencyAddress: "0x...", // The address of the currency you want users to pay in
- *               price: 1, // The price of the token in the currency specified above
- *               maxClaimablePerWallet: 1, // The maximum number of tokens a wallet can claim
- *               maxClaimableSupply: 100, // The total number of tokens that can be claimed in this phase
- *               startTime: new Date(), // When the phase starts (i.e. when users can start claiming tokens)
- *               waitInSeconds: 60 * 60 * 24 * 7, // The period of time users must wait between repeat claims
- *               snapshot: [
- *                 {
- *                   address: "0x...", // The address of the wallet
- *                   currencyAddress: "0x...", // Override the currency address this wallet pays in
- *                   maxClaimable: 5, // Override the maximum number of tokens this wallet can claim
- *                   price: 0.5, // Override the price this wallet pays
- *                 },
- *               ],
- *               merkleRootHash: "0x...", // The merkle root hash of the snapshot
- *             },
- *           ],
- *         })
- *       }
+ *       action={() => setClaimConditions(claimConditions)}
  *     >
  *       Set Claim Conditions
  *     </Web3Button>
