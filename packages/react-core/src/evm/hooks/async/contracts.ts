@@ -150,45 +150,57 @@ export type UseContractResult<
   contract: TContract | undefined;
 };
 
-export function useContract<
-  TContractAddress extends ContractAddress | GeneratedContractAddress,
->(
-  contractAddress: RequiredParam<TContractAddress>,
-): UseContractResult<
-  TContractAddress extends GeneratedContractAddress
-    ? SmartContract<BaseContractForAddress<TContractAddress>>
-    : SmartContract
->;
-
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * Hook for connecting to a smart contract.
+ *
+ * Provide your smart contract address as the first parameter. Once connected, the `contract` will be an instance of your smart contract.
  *
  * @example
  * ```javascript
  * const { contract, isLoading, error } = useContract("{{contract_address}}");
  * ```
  *
+ * @remarks
+ *
+ * To cache the ABI of the smart contract, use [thirdweb generate](https://portal.thirdweb.com/cli/generate). This is recommended to improve performance and provide type-safety when interacting with your smart contract.
+ *
+ *
  * @param contractAddress - the address of the deployed contract
  * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
- * @public
  */
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
 ): UseContractResult<SmartContract>;
 
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * If your contract is a prebuilt contract, it is strongly recommended you provide the contract's name as the second argument to gain access to improved top-level functions and type inference.
+ *
+ * Available contract types are:
+ * - `"nft-drop"`
+ * - `"signature-drop"`
+ * - `"edition-drop"`
+ * - `"nft-collection"`
+ * - `"edition"`
+ * - `"multiwrap"`
+ * - `"pack"`
+ * - `"token-drop"`
+ * - `"token"`
+ * - `"marketplace"`
+ * - `"marketplace-v3"`
+ * - `"split"`
+ * - `"vote"`
+ *
+ * When a contract type is provided, the contract object will be typed as the contract's class.
+ * For example, if you provide the contract type `"pack"`, the contract object will be returned typed as an instance of the `Pack` class, unlocking all of the top-level functions specific to the pack.
  *
  * @example
  * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}", "nft-drop");
+ * const { contract, isLoading, error } = useContract("{{contract_address}}", "pack");
  * ```
  *
  * @param contractAddress - the address of the deployed contract
  * @param _contractType - the type of the contract
  * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 export function useContract<TContractType extends ContractType>(
@@ -201,24 +213,37 @@ export function useContract<TContractType extends ContractType>(
 >;
 
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * Optionally, (if you don’t want to use the dashboard import feature),
+ * you can provide your smart contract’s ABI to the second parameter of the useContract hook.
+ * This is useful when developing on a local node, where it may be faster to use the ABI than to import the contract using the dashboard.
+ *
+ * The ABI is only necessary if you have not deployed your contract with, or imported your contract to the thirdweb dashboard.
  *
  * @example
  * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}", ABI);
+ * const { contract, isLoading, error } = useContract("{{contract_address}}", contractAbi);
  * ```
  *
  * @param contractAddress - the address of the deployed contract
  * @param _abi - the ABI of the contract to use
  * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
- * @public
  */
 
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
   _abi: ContractInterface,
 ): UseContractResult<SmartContract>;
+
+// TODO: add JSDoc for this signature
+export function useContract<
+  TContractAddress extends ContractAddress | GeneratedContractAddress,
+>(
+  contractAddress: RequiredParam<TContractAddress>,
+): UseContractResult<
+  TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : SmartContract
+>;
 
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
