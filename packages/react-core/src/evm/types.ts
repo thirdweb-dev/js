@@ -227,9 +227,18 @@ export type MakeOfferParams = {
   quantity?: Amount;
 };
 export type AcceptDirectOffer = {
+  /**
+   * The `listingId` of the listing you wish to accept. Each listing has a unique `listingId` on the `Marketplace` contract.
+   */
   listingId: BigNumberish;
+  /**
+   * The wallet address of the user who made the offer you wish to accept.
+   *
+   * The `useContractEvents` hook can be used to read all `"NewOffer"` events on your `Marketplace` contract.
+   */
   addressOfOfferor: string;
 };
+
 export type ExecuteAuctionSale = {
   listingId: BigNumberish;
 };

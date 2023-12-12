@@ -1185,38 +1185,51 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Accept a specific offer on a direct listing
+ * Hook for accepting an offer from a direct listing on a Marketplace contract.
  *
- * @remarks will accept the latest offer by the given offeror.
+ * Allows the seller (the user who listed the NFT for sale) to accept an offer on their listing, triggering a sale event, meaning the:
+ * - NFT(s) are transferred from the seller to the buyer.
+ * - Funds from the offeror are sent to the seller.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * ```tsx
+ * import {
+ *   useAcceptDirectListingOffer,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
  *   const {
- *     mutate: acceptOffer,
+ *     mutateAsync: acceptDirectOffer,
  *     isLoading,
  *     error,
  *   } = useAcceptDirectListingOffer(contract);
  *
- *   if (error) {
- *     console.error("failed to accept offer", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => acceptOffer({ listingId: 1, addressOfOfferor: "{{wallet_address}}" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         acceptDirectOffer({
+ *           listingId: "{{listing_id}}",
+ *           addressOfOfferor: "{{offeror_address}}",
+ *         })
+ *       }
  *     >
- *       Accept offer
- *     </button>
+ *       Accept Offer
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a Marketplace contract
- * @returns a mutation object that can be used to accept an offer on a direct listing
- * @see {@link https://portal.thirdweb.com/react/react.useacceptdirectlistingoffer?utm_source=sdk | Documentation}
+ * @returns - Mutation object that can be used to accept an offer on a direct listing
+ *
+ * @tags marketplace
  */
 export function useAcceptDirectListingOffer(
   contract: RequiredParam<Marketplace>,
