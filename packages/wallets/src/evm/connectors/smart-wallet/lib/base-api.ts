@@ -31,6 +31,7 @@ import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
+  values: BigNumberish[];
 };
 
 export interface BaseApiParams {
@@ -201,6 +202,7 @@ export abstract class BaseAccountAPI {
               from: this.getAccountAddress(),
               to: batchData.targets[i],
               data: batchData.data[i],
+              value: batchData.values[i],
             }),
           ),
         );
@@ -210,6 +212,7 @@ export abstract class BaseAccountAPI {
           from: this.getAccountAddress(),
           to: detailsForUserOp.target,
           data: detailsForUserOp.data,
+          value: detailsForUserOp.value,
         });
       }
 
@@ -226,12 +229,9 @@ export abstract class BaseAccountAPI {
           from: this.entryPointAddress,
           to: this.getAccountAddress(),
           data: callData,
+          value: detailsForUserOp.value,
         }));
     }
-
-    // callGasLimit = callGasLimit.mul(10); // add 100k for entrypoint checks
-
-    console.log("callGasLimit", callGasLimit.toString());
 
     return {
       callData,
@@ -419,7 +419,7 @@ export abstract class BaseAccountAPI {
   async getUserOpReceipt(
     userOpHash: string,
     timeout = 30000,
-    interval = 5000,
+    interval = 2000,
   ): Promise<string | null> {
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {

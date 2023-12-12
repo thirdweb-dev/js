@@ -4,6 +4,8 @@ import {
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { BytesLike } from "ethers";
+import { ENTRYPOINT_ADDRESS } from "./lib/constants";
+import { EntryPoint__factory } from "@account-abstraction/contracts";
 
 export type AccessibleSmartWallets = {
   owned: string;
@@ -117,4 +119,46 @@ export async function getSmartWalletAddress(
     data,
   ]);
   return accountAddress;
+}
+
+export async function getUserOpReceipt(
+  chain: ChainOrRpcUrl,
+  userOpHash: string,
+  timeout = 30000,
+  interval = 2000,
+  entryPointAddress?: string,
+): Promise<string | null> {
+  const readOnlySDK = getSDK(chain);
+  const entrypoint = await readOnlySDK.getContract(
+    entryPointAddress || ENTRYPOINT_ADDRESS,
+    EntryPoint__factory.abi,
+  );
+
+  // do a first check for the last 5000 blocks
+  const pastEvents = await entrypoint.events.getEvents("UserOperationEvent", {
+    fromBlock: -9000, // look at the last 9000 blocks
+    filters: {
+      userOpHash,
+    },
+  });
+
+  if (pastEvents && pastEvents.length > 0) {
+    return pastEvents[0]?.data.transactionHash;
+  }
+
+  // if not found, query the last 100 blocks every 2 seconds for the next 30 seconds
+  const endtime = Date.now() + timeout;
+  while (Date.now() < endtime) {
+    const events = await entrypoint.events.getEvents("UserOperationEvent", {
+      fromBlock: -100,
+      filters: {
+        userOpHash,
+      },
+    });
+    if (events[0]) {
+      return events[0].data.transactionHash;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  return null;
 }
