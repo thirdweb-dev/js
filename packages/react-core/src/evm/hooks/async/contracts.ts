@@ -434,18 +434,89 @@ export function useContractMetadataUpdate(
  */
 
 /**
- * Get or subscribe to contract events
+ * Hook for reading events emitted by a smart contract, including new events as they are emitted (optional).
  *
- * @example
+ * By default, it reads all events emitted by the smart contract.
+ *
  * ```javascript
- * const { data: contractEvents, isLoading } = useContractEvents(contract);
+ * const { data, isLoading, error } = useContractEvents(contract);
  * ```
  *
- * @param contract - the {@link ValidContractInstance} instance of the contract to listen to events for
- * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
- * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
+ * @example
+ * ```tsx
+ * import { useContractEvents, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractEvents(contract);
+ * }
+ * ```
+ *
+ * @param contract - the contract instance of the contract to listen to events for
+ *
+ * @param eventName -
+ * The name of the event to query for. For example, if your smart contract emits an event called MyEvent, you would pass "MyEvent" to this parameter.
+ *
+ * Omit this parameter or provide undefined to query for all events emitted by the smart contract.
+ *
+ * @param options -
+ * An object containing options to filter the events being queried.
+ *
+ * Available options include queryFilter to refine which events you want to read, and a boolean `subscribe` flag to subscribe to new events as they are emitted.
+ *
+ * ### Example
+ * ```tsx
+ * import {
+ *   useContractEvents,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractEvents(
+ *     contract,
+ *     "MyEvent",
+ *     {
+ *       queryFilter: {
+ *         filters: {
+ *           tokenId: 123, // e.g. Only events where tokenId = 123
+ *         },
+ *         fromBlock: 0, // Events starting from this block
+ *         toBlock: 100, // Events up to this block
+ *         order: "asc", // Order of events ("asc" or "desc")
+ *       },
+ *       subscribe: true, // Subscribe to new events
+ *     },
+ *   );
+ * ```
+ *
  * @returns a response object that includes the contract events
- * @see {@link https://portal.thirdweb.com/react/react.usecontractevents?utm_source=sdk | Documentation}
+ * The hook's data property, once loaded, contains an array of event objects, each containing the following properties:
+ *
+ * ```ts
+ * {
+ *   eventName: string;
+ *   data: Record<string, any>;
+ *   transaction: {
+ *     blockNumber: number;
+ *     blockHash: string;
+ *     transactionIndex: number;
+ *     removed: boolean;
+ *     address: string;
+ *     data: string;
+ *     topics: Array<string>;
+ *     transactionHash: string;
+ *     logIndex: number;
+ *   }
+ * }
+ * ```
  */
 export function useContractEvents(
   contract: RequiredParam<ValidContractInstance>,
