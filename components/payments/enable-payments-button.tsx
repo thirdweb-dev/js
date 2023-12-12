@@ -50,7 +50,7 @@ export const EnablePaymentsButton: React.FC<EnablePaymentsButtonProps> = ({
         </Button>
       ) : (
         <Button
-          colorScheme="blackAlpha"
+          colorScheme="primary"
           size="sm"
           onClick={() => {
             trackEvent({

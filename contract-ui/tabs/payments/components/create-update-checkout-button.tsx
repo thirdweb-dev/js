@@ -265,9 +265,9 @@ const formInputs = [
       },
       {
         name: "twitterHandleOverride",
-        label: "Seller Twitter username",
+        label: "Seller X (Twitter) Username",
         type: "text",
-        placeholder: "Enter a Twitter username without the @",
+        placeholder: "@username",
         required: false,
         helper:
           "Override your organization's Twitter username for this checkout.",
@@ -420,6 +420,13 @@ export const CreateUpdateCheckoutButton: React.FC<
       });
 
       form.handleSubmit((data) => {
+        if (
+          data.twitterHandleOverride &&
+          data.twitterHandleOverride.startsWith("@")
+        ) {
+          data.twitterHandleOverride = data.twitterHandleOverride.substring(1);
+        }
+
         // We need to filter in case an input from a different method has been rendered
         const filteredFunctionArgs = Object.keys(data.mintFunctionArgs)
           .filter((key) => {

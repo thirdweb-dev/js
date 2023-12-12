@@ -69,6 +69,10 @@ export const PaymentsSettingsAccount: React.FC<
         gap={4}
         flexDir="column"
         onSubmit={form.handleSubmit((data) => {
+          if (data.twitter_handle && !data.twitter_handle.startsWith("@")) {
+            data.twitter_handle = `@${data.twitter_handle}`;
+          }
+
           trackEvent({
             category: "payments",
             action: "update-settings",
@@ -146,7 +150,7 @@ export const PaymentsSettingsAccount: React.FC<
             <FormControl isInvalid={!!form.formState.errors.twitter_handle}>
               <FormLabel>X (Twitter) Username</FormLabel>
               <Input
-                placeholder="@handle"
+                placeholder="@username"
                 {...form.register("twitter_handle")}
               />
               <FormErrorMessage>
