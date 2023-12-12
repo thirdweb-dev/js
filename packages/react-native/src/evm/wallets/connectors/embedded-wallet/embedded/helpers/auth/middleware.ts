@@ -127,7 +127,10 @@ async function getRecoveryCode(
     storedToken.authDetails.recoveryShareManagement ===
     RecoveryShareManagement.CLOUD_MANAGED
   ) {
-    if (storedToken.authProvider === AuthProvider.CUSTOM_JWT) {
+    if (
+      storedToken.authProvider === AuthProvider.CUSTOM_JWT ||
+      storedToken.authProvider === AuthProvider.CUSTOM_AUTH_ENDPOINT
+    ) {
       if (!recoveryCode) {
         throw new Error(
           `GetRecoveryCode error: ${ErrorMessages.missingRecoveryCode}`,
