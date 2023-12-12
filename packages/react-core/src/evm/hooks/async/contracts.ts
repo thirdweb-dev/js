@@ -636,21 +636,57 @@ export function useContractRead<
 }
 
 /**
- * Mke a write call to your contract
+ * Generic hook for calling any smart contract function that requires a transaction to take place.
+ *
+
+ * ```tsx
+ * import { useContractWrite } from "@thirdweb-dev/react";
+ *
+ * const { mutate, mutateAsync, isLoading, error } = useContractWrite(contract, "setName");
+ * ```
+ *
+ * Provide your smart contract instance returned from the `useContract` hook, along with the name of the function you wish to call on your smart contract as arguments to the hook.
+ *
+ * Then call the `mutate` or `mutateAsync` function returned by the hook, providing an array of arguments to send to your smart contract function.
+ *
+ * If you provide too many or too few arguments, the `error` property will be populated with an error message.
+ *
+ * If your function has no arguments, provide an empty array by calling the function with `{ args: [] }`
  *
  * @example
  * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { mutate: myFunction, isLoading, error } = useContractWrite(contract, "myFunction");
+ * import { useContractWrite, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- * // the function can be called as follows:
- * // myFunction(["param 1", "param 2", ...])
- *```
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync, isLoading, error } = useContractWrite(
+ *     contract,
+ *     "setName",
+ *   );
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       // Calls the "setName" function on your smart contract with "My Name" as the first argument
+ *       action={() => mutateAsync({ args: ["My Name"] })}
+ *     >
+ *       Send Transaction
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
+ * @remarks
+ *
+ * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
+ *
  *
  * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
+ * @param functionName - the name of the function to call in the smart contract.
  * @returns a response object that includes the write function to call
- * @see {@link https://portal.thirdweb.com/react/react.usecontractwrite?utm_source=sdk | Documentation}
  */
 export function useContractWrite<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
