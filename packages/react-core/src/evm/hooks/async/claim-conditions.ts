@@ -222,8 +222,8 @@ export function useActiveClaimCondition(
  *
  * @returns a response object with the snapshot for the provided address
  *
+ * @tags claim-conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @see {@link https://portal.thirdweb.com/react/react.useclaimerproofs?utm_source=sdk | Documentation}
  */
 export function useClaimerProofs(
   contract: RequiredParam<DropContract>,
