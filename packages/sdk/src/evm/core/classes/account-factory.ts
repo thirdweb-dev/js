@@ -12,7 +12,8 @@ import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
- * @internal
+ * Interact with ERC-4337 account factory contracts
+ * @public
  */
 export class AccountFactory implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_FACTORY.name;
