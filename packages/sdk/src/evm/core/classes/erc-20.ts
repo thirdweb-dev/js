@@ -41,7 +41,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { Erc20Burnable } from "./internal/erc20/erc-20-burnable";
 import { Erc20Droppable } from "./internal/erc20/erc-20-droppable";
 import { Erc20Mintable } from "./internal/erc20/erc-20-mintable";
-import { Erc20SignatureMintable } from "./internal/erc20/erc-20-signature-mintable";
+import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
 
 /**
  * Standard ERC20 Token functions

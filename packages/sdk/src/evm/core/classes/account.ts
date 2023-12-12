@@ -19,6 +19,12 @@ import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 
 /**
  * Interact with ERC-4337 accounts
+ * @remarks Exposes useful functions available on account contracts.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * await contract.account.getAllAdminsAndSigners();
+ * ```
  * @public
  */
 export class Account implements DetectableFeature {

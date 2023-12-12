@@ -9,13 +9,13 @@ import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, type providers } from "ethers";
 import invariant from "tiny-invariant";
-import { normalizePriceValue } from "../../../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../../../common/currency/setErc20Allowance";
-import { detectContractFeature } from "../../../../common/feature-detection/detectContractFeature";
-import { hasFunction } from "../../../../common/feature-detection/hasFunction";
-import { uploadOrExtractURIs } from "../../../../common/nft";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../../../constants/erc721-features";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";
 import {
   MintRequest721,
   MintRequest721withQuantity,
@@ -24,12 +24,12 @@ import {
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
   SignedPayload721WithQuantitySignature,
-} from "../../../../schema/contracts/common/signature";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../../../types";
-import { ContractEncoder } from "../../contract-encoder";
-import { ContractWrapper } from "../contract-wrapper";
-import { Transaction } from "../../transactions";
+} from "../../schema/contracts/common/signature";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely

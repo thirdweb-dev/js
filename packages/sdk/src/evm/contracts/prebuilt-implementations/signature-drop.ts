@@ -23,7 +23,7 @@ import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
 import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
-import { Erc721WithQuantitySignatureMintable } from "../../core/classes/internal/erc721/erc-721-with-quantity-signature-mintable";
+import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";

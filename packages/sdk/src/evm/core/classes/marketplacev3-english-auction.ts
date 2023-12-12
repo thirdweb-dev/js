@@ -8,39 +8,36 @@ import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/sr
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants, utils, type BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
-import { cleanCurrencyAddress } from "../../../../common/currency/cleanCurrencyAddress";
-import { fetchCurrencyMetadata } from "../../../../common/currency/fetchCurrencyMetadata";
-import { fetchCurrencyValue } from "../../../../common/currency/fetchCurrencyValue";
-import { normalizePriceValue } from "../../../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../../../common/currency/setErc20Allowance";
-import { resolveAddress } from "../../../../common/ens/resolveAddress";
-import { AuctionHasNotEndedError } from "../../../../common/error";
-import {
-  getAllInBatches,
-  handleTokenApproval,
-} from "../../../../common/marketplace";
-import { fetchTokenMetadataForContract } from "../../../../common/nft";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { FEATURE_ENGLISH_AUCTIONS } from "../../../../constants/thirdweb-features";
-import { Status } from "../../../../enums/marketplace/Status";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { AuctionHasNotEndedError } from "../../common/error";
+import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
+import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
+import { Status } from "../../enums/marketplace/Status";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
-} from "../../../../schema/marketplacev3/english-auctions";
-import { Address } from "../../../../schema/shared/Address";
-import { AddressOrEns } from "../../../../schema/shared/AddressOrEnsSchema";
-import { CurrencyValue, Price } from "../../../../types/currency";
-import type { MarketplaceFilterWithoutOfferor } from "../../../../types/marketplace/MarketPlaceFilter";
-import { EnglishAuction } from "../../../../types/marketplacev3/EnglishAuction";
-import { Bid } from "../../../../types/marketplacev3/Bid";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../../../types";
-import { ContractEncoder } from "../../contract-encoder";
-import { ContractEvents } from "../../contract-events";
-import { ContractInterceptor } from "../../contract-interceptor";
-import { ContractWrapper } from "../contract-wrapper";
-import { GasCostEstimator } from "../../gas-cost-estimator";
-import { Transaction } from "../../transactions";
+} from "../../schema/marketplacev3/english-auctions";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { CurrencyValue, Price } from "../../types/currency";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import { EnglishAuction } from "../../types/marketplacev3/EnglishAuction";
+import { Bid } from "../../types/marketplacev3/Bid";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
 
 /**
  * Handles auctions
