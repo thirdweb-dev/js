@@ -921,6 +921,7 @@ export function useSetClaimConditions(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to reset claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @tags nft-drop
  */
 export function useResetClaimConditions(
   contract: RequiredParam<DropContract>,

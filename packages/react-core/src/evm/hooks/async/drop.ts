@@ -51,7 +51,7 @@ import invariant from "tiny-invariant";
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useunclaimednfts?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -87,7 +87,7 @@ export function useUnclaimedNFTs(
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are claimed
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useclaimednfts?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useClaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -114,7 +114,7 @@ export function useClaimedNFTs(
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useunclaimednftsupply?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useUnclaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -141,7 +141,7 @@ export function useUnclaimedNFTSupply(
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are claimed
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useclaimednftsupply?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useClaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -223,7 +223,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
  * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @see {@link https://portal.thirdweb.com/react/react.useclaimnft?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useClaimNFT<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
@@ -312,7 +312,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721LazyMintable | ERC1155LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.uselazymint?utm_source=sdk | Documentation}
+ * @tags nft-drop
  */
 export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
