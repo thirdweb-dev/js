@@ -52,6 +52,7 @@ type NetworkMetadata = {
  * ```
  *
  * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
+ * @tags network-connection
  */
 export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
   const chain = useChain();

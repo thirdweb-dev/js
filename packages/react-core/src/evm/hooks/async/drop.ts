@@ -167,7 +167,7 @@ export function useClaimedNFTSupply(
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usebatchestoreveal?utm_source=sdk | Documentation}
+ * @tags delayed-reveal
  */
 export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -384,7 +384,7 @@ export function useLazyMint<TContract extends DropContract>(
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usedelayedreveallazymint?utm_source=sdk | Documentation}
+ * @tags delayed-reveal
  */
 export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -464,7 +464,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usereveallazymint?utm_source=sdk | Documentation}
+ * @tags delayed-reveal
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,

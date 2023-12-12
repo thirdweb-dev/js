@@ -119,6 +119,7 @@ export function useAddress(): string | undefined {
  * ```
  * @see {@link https://portal.thirdweb.com/react/react.usechainid?utm_source=sdk | Documentation}
  * @public
+ * @tags network-connection
  */
 export function useChainId(): number | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
@@ -148,7 +149,7 @@ export function useChainId(): number | undefined {
  * }
  * ```
  * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
- * @public
+ * @tags network-connection
  */
 export function useChain(): Chain | undefined {
   const chainId = useChainId();

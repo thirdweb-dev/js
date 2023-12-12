@@ -329,7 +329,7 @@ export function useUpdatePlatformFees(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a {@link CustomContractMetadata} object containing the metadata
- * @see {@link https://portal.thirdweb.com/react/react.usemetadata?utm_source=sdk | Documentation}
+ * @tags metadata
  */
 export function useMetadata(
   contract: RequiredParam<ValidContractInstance>,
@@ -382,7 +382,7 @@ export function useMetadata(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
- * @see {@link https://portal.thirdweb.com/react/react.useupdatemetadata?utm_source=sdk | Documentation}
+ * @tags metadata
  */
 export function useUpdateMetadata(
   contract: RequiredParam<ValidContractInstance>,

@@ -185,6 +185,7 @@ export function useCreateWalletInstance() {
 /**
  *
  * @returns a method to connect the wallet to network/chain with given chainId
+ * @tags network-connection
  */
 export function useSwitchChain() {
   const context = useWalletContext();

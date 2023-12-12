@@ -525,6 +525,8 @@ export interface MediaType {
  *   return null;
  * }
  * ```
+ *
+ * @tags metadata
  */
 export function useResolvedMediaType(
   uri?: string,

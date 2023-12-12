@@ -56,6 +56,9 @@ async function fetchContractType(
   }
 }
 
+/**
+ * @tags metadata
+ */
 export function useContractType(
   contractAddress: RequiredParam<ContractAddress>,
 ) {
@@ -107,6 +110,9 @@ function fetchCompilerMetadata(
   }
 }
 
+/**
+ * @tags metadata
+ */
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
 ): UseQueryResult<PublishedMetadata | null> {
