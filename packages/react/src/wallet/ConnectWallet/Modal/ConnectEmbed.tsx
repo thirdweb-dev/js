@@ -102,7 +102,7 @@ function useSignInRequired(loginOptional?: boolean) {
   const { user } = useUser();
   const authConfig = useThirdwebAuthContext();
 
-  if (loginOptional === false) {
+  if (loginOptional === true) {
     return false;
   }
 
