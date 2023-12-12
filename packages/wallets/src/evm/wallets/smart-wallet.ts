@@ -26,6 +26,7 @@ export {
   getAllSmartWallets,
   getSmartWalletAddress,
   isSmartWalletDeployed,
+  getUserOpReceipt,
 } from "../connectors/smart-wallet/utils";
 
 export type { PaymasterAPI } from "@account-abstraction/sdk";
