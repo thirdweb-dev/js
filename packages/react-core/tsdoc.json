@@ -5,9 +5,14 @@
     {
       "tagName": "@twfeature",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@tags",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
-    "@twfeature": true
+    "@twfeature": true,
+    "@tags": true
   }
 }
