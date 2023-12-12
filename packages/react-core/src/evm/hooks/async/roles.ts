@@ -56,7 +56,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * @param contract - an instance of a {@link SmartContract}
  * @returns a list of addresses for all supported roles on the contract.
  * @twfeature PermissionsEnumerable
- * @see {@link https://portal.thirdweb.com/react/react.useallrolemembers?utm_source=sdk | Documentation}
+ * @tags permissions
  */
 export function useAllRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -88,7 +88,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * @param role - the role to get the members of, see {@link Role}
  * @returns a list of addresses that are members of the role
  * @twfeature Permissions
- * @see {@link https://portal.thirdweb.com/react/react.userolemembers?utm_source=sdk | Documentation}
+ * @tags permissions
  */
 export function useRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -121,7 +121,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * @param walletAddress - the address to check
  * @returns true if the address is a member of the role, or false if not
  * @twfeature PermissionsEnumerable
- * @see {@link https://portal.thirdweb.com/react/react.useisaddressrole?utm_source=sdk | Documentation}
+ * @tags permissions
  */
 export function useIsAddressRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -242,7 +242,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to grant a member of a role on the contract
  * @twfeature Permissions | PermissionsEnumerable
- * @see {@link https://portal.thirdweb.com/react/react.usegrantrole?utm_source=sdk | Documentation}
+ * @tags permissions
  */
 export function useGrantRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -302,7 +302,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to revoke a role from a member on the contract
  * @twfeature Permissions | PermissionsEnumerable
- * @see {@link https://portal.thirdweb.com/react/react.userevokerole?utm_source=sdk | Documentation}
+ * @tags permissions
  */
 export function useRevokeRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
