@@ -45,6 +45,8 @@ export * from "./core/classes/drop-erc1155-claim-conditions";
 export * from "./core/classes/erc-20";
 export * from "./core/classes/erc-721";
 export * from "./core/classes/erc-1155";
+export * from "./core/classes/account";
+export * from "./core/classes/account-factory";
 export * from "./core/classes/gas-cost-estimator";
 export * from "./core/classes/delayed-reveal";
 export * from "./core/classes/contract-events";

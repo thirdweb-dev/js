@@ -1,15 +1,15 @@
 import type { IAccountFactory } from "@thirdweb-dev/contracts-js";
-import { FEATURE_ACCOUNT_FACTORY } from "../../../../constants/thirdweb-features";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
+import { FEATURE_ACCOUNT_FACTORY } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 import { utils, type BytesLike } from "ethers";
-import { isContractDeployed } from "../../../../common/any-evm-utils/isContractDeployed";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { TransactionResultWithAddress } from "../../../types";
-import { ContractEvents } from "../../contract-events";
-import { ContractWrapper } from "../contract-wrapper";
-import { Transaction } from "../../transactions";
+import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
+import { buildTransactionFunction } from "../../common/transactions";
+import { TransactionResultWithAddress } from "../types";
+import { ContractEvents } from "./contract-events";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * @internal

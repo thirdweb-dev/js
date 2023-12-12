@@ -1,21 +1,21 @@
 import {
   FEATURE_ACCOUNT,
   FEATURE_ACCOUNT_PERMISSIONS,
-} from "../../../../constants/thirdweb-features";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { ContractWrapper } from "../contract-wrapper";
+} from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 import type { IAccountCore } from "@thirdweb-dev/contracts-js";
-import { AddressOrEns } from "../../../../schema/shared/AddressOrEnsSchema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   PermissionSnapshotInput,
   SignerPermissionsInput,
   SignerWithPermissions,
-} from "../../../../types/account";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { AccountPermissions } from "./account-permissions";
-import { detectContractFeature } from "../../../../common/feature-detection/detectContractFeature";
-import { assertEnabled } from "../../../../common/feature-detection/assertEnabled";
+} from "../../types/account";
+import { buildTransactionFunction } from "../../common/transactions";
+import { AccountPermissions } from "./internal/erc4337/account-permissions";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 
 /**
  * @internal

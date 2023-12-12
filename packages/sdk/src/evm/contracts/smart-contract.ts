@@ -41,8 +41,8 @@ import {
   FEATURE_ROYALTY,
   FEATURE_DYNAMIC_CONTRACT,
 } from "../constants/thirdweb-features";
-import { Account } from "../core/classes/internal/erc4337/account";
-import { AccountFactory } from "../core/classes/internal/erc4337/account-factory";
+import { Account } from "../core/classes/account";
+import { AccountFactory } from "../core/classes/account-factory";
 import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
 import { Airdrop20 } from "../core/classes/airdrop-erc20";
 import { Airdrop721 } from "../core/classes/airdrop-erc721";
