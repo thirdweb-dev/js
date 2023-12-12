@@ -65,7 +65,7 @@ export const KybFileUploader: React.FC = () => {
       })}
     >
       <FileInput
-        accept={{ "image/*": [] }}
+        accept={{ "image/*": [], "application/pdf": [] }}
         setValue={(file) => append({ id: `${file.name}-${Date.now()}`, file })}
         transition="all 200ms ease"
         _hover={{ shadow: "sm" }}
