@@ -497,26 +497,8 @@ export function useContractMetadataUpdate(
  *   );
  * ```
  *
- * @returns a response object that includes the contract events
- * The hook's data property, once loaded, contains an array of event objects, each containing the following properties:
+ * @returns a response object that includes the contract events. The hook's data property, once loaded, contains an array of event objects
  *
- * ```ts
- * {
- *   eventName: string;
- *   data: Record<string, any>;
- *   transaction: {
- *     blockNumber: number;
- *     blockHash: string;
- *     transactionIndex: number;
- *     removed: boolean;
- *     address: string;
- *     data: string;
- *     topics: Array<string>;
- *     transactionHash: string;
- *     logIndex: number;
- *   }
- * }
- * ```
  */
 export function useContractEvents(
   contract: RequiredParam<ValidContractInstance>,
