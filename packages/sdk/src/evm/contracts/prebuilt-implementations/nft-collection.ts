@@ -16,7 +16,7 @@ import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
-import { Erc721WithQuantitySignatureMintable } from "../../core/classes/internal/erc721/erc-721-with-quantity-signature-mintable";
+import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";

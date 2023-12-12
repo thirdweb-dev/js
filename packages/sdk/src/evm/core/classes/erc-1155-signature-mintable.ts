@@ -7,14 +7,14 @@ import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants } from "ethers";
 import invariant from "tiny-invariant";
-import { normalizePriceValue } from "../../../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../../../common/currency/setErc20Allowance";
-import { hasFunction } from "../../../../common/feature-detection/hasFunction";
-import { getPrebuiltInfo } from "../../../../common/legacy";
-import { uploadOrExtractURIs } from "../../../../common/nft";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../../../constants/erc1155-features";
-import { NFT_BASE_CONTRACT_ROLES } from "../../../../contracts/contractRoles";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { getPrebuiltInfo } from "../../common/legacy";
+import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
+import { NFT_BASE_CONTRACT_ROLES } from "../../contracts/contractRoles";
 import {
   FilledSignaturePayload1155WithTokenId,
   MintRequest1155,
@@ -24,14 +24,14 @@ import {
   Signature1155PayloadInputWithTokenId,
   Signature1155PayloadOutput,
   SignedPayload1155,
-} from "../../../../schema/contracts/common/signature";
-import { BaseSignatureMintERC1155 } from "../../../../types/eips";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../../../types";
-import { ContractEncoder } from "../../contract-encoder";
-import { ContractRoles } from "../../contract-roles";
-import { ContractWrapper } from "../contract-wrapper";
-import { Transaction } from "../../transactions";
+} from "../../schema/contracts/common/signature";
+import { BaseSignatureMintERC1155 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractRoles } from "./contract-roles";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely

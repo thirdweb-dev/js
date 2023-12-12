@@ -12,7 +12,14 @@ import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
- * @internal
+ * Interact with ERC-4337 account factory contracts
+ * @remarks Exposes useful functions available on the account factory contract.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * await contract.accountFactory.predictAccountAddress(walletAddress);
+ * ```
+ * @public
  */
 export class AccountFactory implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_FACTORY.name;

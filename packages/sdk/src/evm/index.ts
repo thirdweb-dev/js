@@ -56,6 +56,13 @@ export * from "./core/classes/contract-published-metadata";
 export * from "./core/classes/contract-owner";
 export * from "./core/classes/transactions";
 export * from "./core/classes/contract-appuri";
+export * from "./core/classes/marketplacev3-direct-listings";
+export * from "./core/classes/marketplacev3-english-auction";
+export * from "./core/classes/marketplacev3-offers";
+export * from "./core/classes/extension-manager";
+export * from "./core/classes/airdrop-erc20";
+export * from "./core/classes/airdrop-erc721";
+export * from "./core/classes/airdrop-erc1155";
 export * from "./core/wallet/user-wallet";
 export * from "./core/sdk";
 //#endregion @r/packages/sdk/src/evm/core
