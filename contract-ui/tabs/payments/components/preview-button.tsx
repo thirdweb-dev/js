@@ -1,5 +1,5 @@
 import { Box, DarkMode, Flex, LightMode } from "@chakra-ui/react";
-import { Button, Text } from "tw-components";
+import { Button, FormLabel } from "tw-components";
 
 const ButtonShapeRecord: Record<string, string> = {
   rounded: "lg",
@@ -57,12 +57,16 @@ export const PaymentsPreviewButton: React.FC<PaymentsPreviewButtonProps> = ({
 
   return (
     <Flex flexDir="column" gap={2}>
-      <Text size="body.md">Preview</Text>
-      <Box
+      <FormLabel>Preview</FormLabel>
+      <Flex
         bg={isDarkMode ? BG_COLOR_DARK_MODE : "#fff"}
-        p={3}
+        p={4}
         rounded="lg"
-        w="max-content"
+        w="full"
+        alignItems="center"
+        justifyContent="center"
+        borderWidth={1}
+        borderColor="borderColor"
       >
         <LightOrDarkMode>
           <Button
@@ -80,7 +84,7 @@ export const PaymentsPreviewButton: React.FC<PaymentsPreviewButtonProps> = ({
             </Box>
           </Button>
         </LightOrDarkMode>
-      </Box>
+      </Flex>
     </Flex>
   );
 };

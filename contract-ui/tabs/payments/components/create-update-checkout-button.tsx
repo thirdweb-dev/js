@@ -10,12 +10,15 @@ import {
   useDisclosure,
   FormControl,
   Input,
-  Select,
   Textarea,
   Switch,
   Icon,
   IconButton,
   Box,
+  Progress,
+  Menu,
+  MenuButton,
+  MenuList,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -25,7 +28,10 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Heading,
   LinkButton,
+  Text,
+  MenuItem,
 } from "tw-components";
 import {
   ChainIdToSupportedCurrencies,
@@ -44,10 +50,12 @@ import { PaymentsPreviewButton } from "./preview-button";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
 import { PaymentsMintMethodInput } from "./mint-method-input";
+import { FiChevronDown } from "react-icons/fi";
 
 const formInputs = [
   {
     step: "info",
+    label: "General",
     fields: [
       {
         name: "title",
@@ -90,6 +98,7 @@ const formInputs = [
   },
   {
     step: "no-detected-extensions",
+    label: "Details",
     fields: [
       {
         name: "mintFunctionName",
@@ -114,6 +123,7 @@ const formInputs = [
   },
   {
     step: "branding",
+    label: "Branding",
     fields: [
       {
         name: "imageUrl",
@@ -121,8 +131,8 @@ const formInputs = [
         type: "image",
         placeholder: "https:// or ipfs://",
         required: false,
+        sideField: false,
         helper: "",
-        sideField: true,
       },
       {
         name: "brandDarkMode",
@@ -138,40 +148,37 @@ const formInputs = [
         label: "Color",
         type: "select",
         options: [
-          { label: "Gray", value: "gray" },
-          { label: "Red", value: "red" },
-          { label: "Orange", value: "orange" },
-          { label: "Yellow", value: "yellow" },
-          { label: "Green", value: "green" },
-          { label: "Teal", value: "teal" },
-          { label: "Blue", value: "blue" },
-          { label: "Cyan", value: "cyan" },
-          { label: "Purple", value: "purple" },
-          { label: "Pink", value: "pink" },
+          { value: "gray" },
+          { value: "red" },
+          { value: "orange" },
+          { value: "yellow" },
+          { value: "green" },
+          { value: "teal" },
+          { value: "blue" },
+          { value: "cyan" },
+          { value: "purple" },
+          { value: "pink" },
         ],
         placeholder: "",
         required: false,
         helper: "",
-        sideField: true,
+        sideField: false,
       },
       {
         name: "brandButtonShape",
         label: "Button shape",
         type: "select",
-        options: [
-          { label: "Rounded", value: "rounded" },
-          { label: "Pill", value: "pill" },
-          { label: "Square", value: "square" },
-        ],
+        options: [{ value: "rounded" }, { value: "pill" }, { value: "square" }],
         placeholder: "",
         required: false,
         helper: "",
-        sideField: true,
+        sideField: false,
       },
     ],
   },
   {
     step: "delivery",
+    label: "Delivery & Payment",
     fields: [
       {
         name: "hidePaperWallet",
@@ -213,6 +220,7 @@ const formInputs = [
   },
   {
     step: "advanced",
+    label: "Advanced options",
     fields: [
       {
         name: "limitPerTransaction",
@@ -345,6 +353,15 @@ export const CreateUpdateCheckoutButton: React.FC<
     usePaymentsCreateUpdateCheckout(contractAddress);
   const trackEvent = useTrack();
 
+  const currentStep = useMemo(() => {
+    return formInputs.find((fi) => fi.step === step);
+  }, [step]);
+
+  const progress = useMemo(() => {
+    const idx = formInputs.findIndex((fi) => fi.step === step);
+    return (100 / formInputs.length) * idx || 5;
+  }, [step]);
+
   const values: CreateUpdateCheckoutDashboardInput = {
     title: checkout?.collection_title || "",
     description: checkout?.collection_description || "",
@@ -408,6 +425,31 @@ export const CreateUpdateCheckoutButton: React.FC<
 
   const onSuccess = checkoutId ? onUpdateSuccess : onCreateSuccess;
   const onError = checkoutId ? onUpdateError : onCreateError;
+
+  // FIXME: Use zod validations
+  const isValid = useMemo(() => {
+    if (step === "info") {
+      if (
+        apiKeys.length === 0 ||
+        !form.watch("thirdwebClientId") ||
+        !form.watch("title") ||
+        (isErc1155 && !form.watch("tokenId"))
+      ) {
+        return false;
+      }
+    }
+
+    if (step === "no-detected-extensions") {
+      if (
+        !form.watch("mintFunctionName") ||
+        (!form.watch("priceAndCurrencySymbol.currencySymbol") &&
+          !form.watch("priceAndCurrencySymbol.price"))
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }, [apiKeys, form, isErc1155, step]);
 
   const handleNext = async () => {
     await form.trigger();
@@ -502,6 +544,7 @@ export const CreateUpdateCheckoutButton: React.FC<
     onClose();
     form.reset();
   };
+
   const handleBack = () => {
     setStep((prev) => {
       if (prev === "branding" && !hasDetectedExtensions) {
@@ -538,11 +581,28 @@ export const CreateUpdateCheckoutButton: React.FC<
       <Modal isOpen={isOpen} onClose={handleClose} isCentered>
         <ModalOverlay />
         <ModalContent as="form">
-          <ModalHeader>
-            {checkoutId ? "Update" : "Create New"} Checkout
+          <ModalHeader borderBottomWidth={1} borderBottomColor="borderColor">
+            {checkoutId ? (
+              "Update Checkout"
+            ) : (
+              <Flex flexDir="column" gap={1.5}>
+                {currentStep && (
+                  <Text size="label.sm">{currentStep.label}</Text>
+                )}
+                <Heading size="title.sm">Creating Checkout Link</Heading>
+
+                <Progress
+                  value={progress}
+                  rounded="full"
+                  size="sm"
+                  mt={3}
+                  mb={2}
+                />
+              </Flex>
+            )}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody py={4}>
             <Flex flexDir="column" gap={4}>
               {formInputs.map((input) => {
                 if (input.step !== step) {
@@ -584,31 +644,49 @@ export const CreateUpdateCheckoutButton: React.FC<
                                 placeholder={field.placeholder}
                               />
                             ) : field.type === "select" ? (
-                              <Select
-                                borderRadius="lg"
-                                w="inherit"
-                                size="sm"
-                                value={form.watch(field.name)}
-                                onChange={(e) => {
-                                  form.setValue(
-                                    field.name,
-                                    e.target.value as any,
-                                    {
-                                      shouldDirty: true,
-                                    },
-                                  );
-                                }}
-                                placeholder={field.placeholder}
-                              >
-                                {field.options.map((option) => (
-                                  <option
-                                    key={option.value}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </option>
-                                ))}
-                              </Select>
+                              <>
+                                <Menu>
+                                  {({ isOpen: menuIsOpen }) => (
+                                    <>
+                                      <MenuButton
+                                        as={Button}
+                                        isActive={menuIsOpen}
+                                        variant="outline"
+                                        w="full"
+                                        rightIcon={<FiChevronDown />}
+                                      >
+                                        <Text
+                                          textAlign="left"
+                                          textTransform="capitalize"
+                                        >
+                                          {form.watch(field.name) ||
+                                            field.placeholder}
+                                        </Text>
+                                      </MenuButton>
+                                      <MenuList>
+                                        {field.options.map((option) => (
+                                          <MenuItem
+                                            key={option.value}
+                                            value={option.value}
+                                            textTransform="capitalize"
+                                            onClick={() => {
+                                              form.setValue(
+                                                field.name,
+                                                option.value as any,
+                                                {
+                                                  shouldDirty: true,
+                                                },
+                                              );
+                                            }}
+                                          >
+                                            {option.value}
+                                          </MenuItem>
+                                        ))}
+                                      </MenuList>
+                                    </>
+                                  )}
+                                </Menu>
+                              </>
                             ) : field.type === "switch" ? (
                               <Switch
                                 onChange={(e) => {
@@ -783,12 +861,7 @@ export const CreateUpdateCheckoutButton: React.FC<
               type="button"
               colorScheme="primary"
               onClick={handleNext}
-              isDisabled={
-                apiKeys.length === 0 ||
-                !form.watch("thirdwebClientId") ||
-                !form.watch("title") ||
-                (isErc1155 && !form.watch("tokenId"))
-              }
+              isDisabled={!isValid}
               isLoading={form.formState.isSubmitting || isLoading}
             >
               {step === "advanced"

@@ -5,9 +5,7 @@ import { Button, Text } from "tw-components";
 import { KycStatus } from "./kyc-status";
 import { initialize as initTrench2 } from "@trytrench/sdk";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY as string);
 
 interface PaymentsSettingsKycProps {
   sellerId: string;

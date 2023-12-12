@@ -1,14 +1,24 @@
 import {
+  Box,
   Flex,
   FormControl,
-  InputGroup,
-  InputRightElement,
-  Tooltip,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuList,
 } from "@chakra-ui/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { AbiSelector } from "components/contract-components/contract-publish-form/abi-selector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { Text, Card, FormLabel, Button, FormErrorMessage } from "tw-components";
+import { FiChevronDown } from "react-icons/fi";
+import {
+  Heading,
+  Text,
+  FormLabel,
+  Button,
+  FormErrorMessage,
+  MenuItem,
+} from "tw-components";
 
 interface PaymentsMintMethodInputProps {
   abi: Abi;
@@ -43,87 +53,107 @@ export const PaymentsMintMethodInput: React.FC<
         <Flex flexDir="column" gap={2} mt={2}>
           {abi
             .find((fn) => fn.name === form.watch(`mintFunctionName`))
-            ?.inputs.map((input) => (
-              <FormControl
-                key={input.name}
-                isRequired
-                as={Flex}
-                justifyContent="space-between"
-                alignItems="center"
-                isInvalid={
-                  !!form.formState.errors?.[`mintFunctionArgs.${input.name}`]
-                }
-              >
-                <FormLabel minW={36} mx={0} my={3}>
-                  {input.name}
-                </FormLabel>
-                <InputGroup>
-                  <SolidityInput
-                    {...form.register(`mintFunctionArgs.${input.name}`, {
-                      required: input.type.includes("string"),
-                    })}
-                    type="text"
-                    solidityType={input.type}
-                  />
-
-                  {(input.type === "address" || input.type.includes("int")) && (
-                    <InputRightElement
-                      width={input.type === "address" ? 24 : 28}
-                    >
-                      <Tooltip
-                        bg="transparent"
-                        boxShadow="none"
-                        shouldWrapChildren
-                        label={
-                          <Card
-                            as={Flex}
-                            flexDir="column"
-                            gap={2}
-                            bgColor="backgroundHighlight"
-                          >
-                            <Text>
-                              {input.type === "address"
-                                ? "The buyer's wallet address."
-                                : "The amount of this token to mint."}{" "}
-                              Click to apply.
-                            </Text>
-                          </Card>
-                        }
-                      >
-                        <Button
-                          size="xs"
-                          padding="3"
-                          paddingY="3.5"
-                          onClick={() => {
-                            form.setValue(
-                              `mintFunctionArgs.${input.name}`,
-                              input.type === "address"
-                                ? "$WALLET"
-                                : "$QUANTITY",
-                              {
-                                shouldDirty: true,
-                              },
-                            );
-                          }}
-                          bgColor="gray.700"
-                          _hover={{
-                            bgColor: "gray.800",
-                          }}
-                        >
-                          {input.type === "address" ? "$WALLET" : "$QUANTITY"}
-                        </Button>
-                      </Tooltip>
-                    </InputRightElement>
-                  )}
-                </InputGroup>
-                <FormErrorMessage>
-                  {
-                    form.formState.errors?.[`mintFunctionArgs.${input.name}`]
-                      ?.message
+            ?.inputs.map((input) => {
+              return (
+                <FormControl
+                  key={input.name}
+                  isRequired
+                  as={Flex}
+                  justifyContent="space-between"
+                  alignItems={
+                    input.type.endsWith("[]") ? "flex-start" : "center"
                   }
-                </FormErrorMessage>
-              </FormControl>
-            ))}
+                  isInvalid={
+                    !!form.formState.errors?.[`mintFunctionArgs.${input.name}`]
+                  }
+                >
+                  <FormLabel my={1} minW={36} isTruncated>
+                    {input.name}
+                  </FormLabel>
+
+                  <Box position="relative">
+                    <SolidityInput
+                      {...form.register(`mintFunctionArgs.${input.name}`, {
+                        required: input.type.includes("string"),
+                      })}
+                      type="text"
+                      solidityType={input.type}
+                      pr={16}
+                    />
+                    {(input.type === "address" ||
+                      input.type.includes("int")) && (
+                      <Menu>
+                        {({ isOpen }) => (
+                          <>
+                            <MenuButton
+                              w={8}
+                              h={8}
+                              pt={1}
+                              isActive={isOpen}
+                              as={Button}
+                              position="absolute"
+                              right={1}
+                              top={1}
+                              px={0}
+                            >
+                              <Icon as={FiChevronDown} />
+                            </MenuButton>
+                            <MenuList zIndex={100}>
+                              <Text
+                                maxW={64}
+                                px={3}
+                                py={2}
+                                borderBottomWidth={1}
+                                borderBottomColor="borderColor"
+                              >
+                                Enter <code>{input.name}</code> argument&apos;s
+                                value or select a suggested variable:
+                              </Text>
+                              <MenuItem
+                                onClick={() => {
+                                  form.setValue(
+                                    `mintFunctionArgs.${input.name}`,
+                                    input.type === "address"
+                                      ? "$WALLET"
+                                      : "$QUANTITY",
+                                    {
+                                      shouldDirty: true,
+                                    },
+                                  );
+                                }}
+                              >
+                                <Flex flexDir="column" gap={1}>
+                                  <Heading fontFamily="mono" size="label.md">
+                                    {input.type === "address"
+                                      ? "$WALLET"
+                                      : "$QUANTITY"}
+                                  </Heading>
+                                  <Text>
+                                    {input.type === "address"
+                                      ? "The buyer's wallet address."
+                                      : "The amount of this token to mint."}
+                                  </Text>
+                                </Flex>
+                              </MenuItem>
+                            </MenuList>
+                          </>
+                        )}
+                      </Menu>
+                    )}
+                  </Box>
+                  {form.formState.errors?.[`mintFunctionArgs.${input.name}`]
+                    ?.message && (
+                    <FormErrorMessage>
+                      {
+                        form.formState.errors?.[
+                          `mintFunctionArgs.${input.name}`
+                        ].message
+                      }
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+              );
+            })}
         </Flex>
       )}
     </Flex>

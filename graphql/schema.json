@@ -59792,6 +59792,22 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "date_business_documents_verified",
             "description": null,
             "args": [],
@@ -60447,6 +60463,18 @@
         "fields": [
           {
             "name": "auto_topup_amount_usd_cents",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
             "description": null,
             "args": [],
             "type": {
@@ -62118,6 +62146,16 @@
             "defaultValue": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Int_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "date_business_documents_verified",
             "description": null,
             "type": {
@@ -62533,6 +62571,16 @@
             "defaultValue": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "type": {
@@ -62619,6 +62667,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null
@@ -62972,6 +63030,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "date_business_documents_verified",
             "description": null,
             "args": [],
@@ -63313,6 +63383,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -63812,6 +63894,16 @@
             "defaultValue": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "date_business_documents_verified",
             "description": null,
             "type": {
@@ -64201,6 +64293,12 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "date_business_documents_verified",
             "description": "column name",
             "isDeprecated": false,
@@ -64429,6 +64527,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null
@@ -64746,6 +64854,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "args": [],
@@ -64805,6 +64925,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "args": [],
@@ -64853,6 +64985,18 @@
         "fields": [
           {
             "name": "auto_topup_amount_usd_cents",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
             "description": null,
             "args": [],
             "type": {
@@ -64992,6 +65136,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null
@@ -65309,6 +65463,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "args": [],
@@ -65384,6 +65550,12 @@
           },
           {
             "name": "created_at",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -65678,6 +65850,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "args": [],
@@ -65737,6 +65921,18 @@
             "deprecationReason": null
           },
           {
+            "name": "crypto_service_fee_bps",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "deposit_amount_usd_cents",
             "description": null,
             "args": [],
@@ -65785,6 +65981,18 @@
         "fields": [
           {
             "name": "auto_topup_amount_usd_cents",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "crypto_service_fee_bps",
             "description": null,
             "args": [],
             "type": {

@@ -9701,6 +9701,7 @@ export type Seller = {
   company_logo_url?: Maybe<Scalars['String']['output']>;
   company_name?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['timestamptz']['output'];
+  crypto_service_fee_bps: Scalars['Int']['output'];
   date_business_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   date_personal_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   default_float_wallets?: Maybe<Scalars['jsonb']['output']>;
@@ -9779,6 +9780,7 @@ export type Seller_Append_Input = {
 export type Seller_Avg_Fields = {
   __typename?: 'seller_avg_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10051,6 +10053,7 @@ export type Seller_Bool_Exp = {
   company_logo_url?: InputMaybe<String_Comparison_Exp>;
   company_name?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  crypto_service_fee_bps?: InputMaybe<Int_Comparison_Exp>;
   date_business_documents_verified?: InputMaybe<Timestamptz_Comparison_Exp>;
   date_personal_documents_verified?: InputMaybe<Timestamptz_Comparison_Exp>;
   default_float_wallets?: InputMaybe<Jsonb_Comparison_Exp>;
@@ -10109,6 +10112,7 @@ export type Seller_Delete_Key_Input = {
 /** input type for incrementing numeric columns in table "seller" */
 export type Seller_Inc_Input = {
   auto_topup_amount_usd_cents?: InputMaybe<Scalars['Int']['input']>;
+  crypto_service_fee_bps?: InputMaybe<Scalars['Int']['input']>;
   deposit_amount_usd_cents?: InputMaybe<Scalars['Int']['input']>;
   production_checkout_purchase_limit_usd_cents?: InputMaybe<Scalars['Int']['input']>;
   service_fee_bps?: InputMaybe<Scalars['Int']['input']>;
@@ -10121,6 +10125,7 @@ export type Seller_Insert_Input = {
   company_logo_url?: InputMaybe<Scalars['String']['input']>;
   company_name?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  crypto_service_fee_bps?: InputMaybe<Scalars['Int']['input']>;
   date_business_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   date_personal_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   default_float_wallets?: InputMaybe<Scalars['jsonb']['input']>;
@@ -10159,6 +10164,7 @@ export type Seller_Max_Fields = {
   company_logo_url?: Maybe<Scalars['String']['output']>;
   company_name?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Int']['output']>;
   date_business_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   date_personal_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   deleted_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -10192,6 +10198,7 @@ export type Seller_Min_Fields = {
   company_logo_url?: Maybe<Scalars['String']['output']>;
   company_name?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Int']['output']>;
   date_business_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   date_personal_documents_verified?: Maybe<Scalars['timestamptz']['output']>;
   deleted_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -10248,6 +10255,7 @@ export type Seller_Order_By = {
   company_logo_url?: InputMaybe<Order_By>;
   company_name?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  crypto_service_fee_bps?: InputMaybe<Order_By>;
   date_business_documents_verified?: InputMaybe<Order_By>;
   date_personal_documents_verified?: InputMaybe<Order_By>;
   default_float_wallets?: InputMaybe<Order_By>;
@@ -10302,6 +10310,8 @@ export enum Seller_Select_Column {
   CompanyName = 'company_name',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  CryptoServiceFeeBps = 'crypto_service_fee_bps',
   /** column name */
   DateBusinessDocumentsVerified = 'date_business_documents_verified',
   /** column name */
@@ -10369,6 +10379,7 @@ export type Seller_Set_Input = {
   company_logo_url?: InputMaybe<Scalars['String']['input']>;
   company_name?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  crypto_service_fee_bps?: InputMaybe<Scalars['Int']['input']>;
   date_business_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   date_personal_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   default_float_wallets?: InputMaybe<Scalars['jsonb']['input']>;
@@ -10404,6 +10415,7 @@ export type Seller_Set_Input = {
 export type Seller_Stddev_Fields = {
   __typename?: 'seller_stddev_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10413,6 +10425,7 @@ export type Seller_Stddev_Fields = {
 export type Seller_Stddev_Pop_Fields = {
   __typename?: 'seller_stddev_pop_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10422,6 +10435,7 @@ export type Seller_Stddev_Pop_Fields = {
 export type Seller_Stddev_Samp_Fields = {
   __typename?: 'seller_stddev_samp_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10442,6 +10456,7 @@ export type Seller_Stream_Cursor_Value_Input = {
   company_logo_url?: InputMaybe<Scalars['String']['input']>;
   company_name?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  crypto_service_fee_bps?: InputMaybe<Scalars['Int']['input']>;
   date_business_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   date_personal_documents_verified?: InputMaybe<Scalars['timestamptz']['input']>;
   default_float_wallets?: InputMaybe<Scalars['jsonb']['input']>;
@@ -10477,6 +10492,7 @@ export type Seller_Stream_Cursor_Value_Input = {
 export type Seller_Sum_Fields = {
   __typename?: 'seller_sum_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Int']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Int']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Int']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Int']['output']>;
   service_fee_bps?: Maybe<Scalars['Int']['output']>;
@@ -10494,6 +10510,8 @@ export enum Seller_Update_Column {
   CompanyName = 'company_name',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  CryptoServiceFeeBps = 'crypto_service_fee_bps',
   /** column name */
   DateBusinessDocumentsVerified = 'date_business_documents_verified',
   /** column name */
@@ -10577,6 +10595,7 @@ export type Seller_Updates = {
 export type Seller_Var_Pop_Fields = {
   __typename?: 'seller_var_pop_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10586,6 +10605,7 @@ export type Seller_Var_Pop_Fields = {
 export type Seller_Var_Samp_Fields = {
   __typename?: 'seller_var_samp_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
@@ -10595,6 +10615,7 @@ export type Seller_Var_Samp_Fields = {
 export type Seller_Variance_Fields = {
   __typename?: 'seller_variance_fields';
   auto_topup_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
+  crypto_service_fee_bps?: Maybe<Scalars['Float']['output']>;
   deposit_amount_usd_cents?: Maybe<Scalars['Float']['output']>;
   production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Float']['output']>;
   service_fee_bps?: Maybe<Scalars['Float']['output']>;
