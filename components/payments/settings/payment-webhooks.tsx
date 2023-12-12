@@ -67,6 +67,7 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             <Flex alignItems="center" gap={2}>
               <PaymentsWebhooksCreateButton
                 accountId={accountId}
+                existingWebhooks={productionWebhooks}
                 isMainnets={true}
                 isDisabled={productionWebhooks.length >= WEBHOOK_LIMIT}
               />
@@ -93,6 +94,7 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             <Flex alignItems="center" gap={2}>
               <PaymentsWebhooksCreateButton
                 accountId={accountId}
+                existingWebhooks={testnetWebhooks}
                 isMainnets={false}
                 isDisabled={testnetWebhooks.length >= WEBHOOK_LIMIT}
               />
