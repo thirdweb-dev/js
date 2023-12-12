@@ -4,7 +4,7 @@ import { Text } from "tw-components";
 
 export const SellerVerificationStatusRecord: Record<
   string,
-  { message: string; type: "error" | "success" }
+  { message: string; type: "error" | "info" | "success" }
 > = {
   document_expired: {
     message:
@@ -19,6 +19,11 @@ export const SellerVerificationStatusRecord: Record<
     message:
       "Your verification failed. Contact compliance@thirdweb.com for more details.",
     type: "error",
+  },
+  waiting: {
+    message:
+      "Your verification is pending, thank you for your patience! If not approved within 48 hours, please contact compliance@thirdweb.com.",
+    type: "info",
   },
   success: { message: "Verification successful.", type: "success" },
 };

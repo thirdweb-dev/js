@@ -3,6 +3,7 @@ import { Box, Flex, ListItem, UnorderedList } from "@chakra-ui/react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Button, Text } from "tw-components";
 import { KycStatus } from "./kyc-status";
+import { initialize as initTrench2 } from "@trytrench/sdk";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
@@ -23,6 +24,17 @@ export const PaymentsSettingsKyc: React.FC<PaymentsSettingsKycProps> = ({
     if (!verificationSession?.clientSecret) {
       console.error("Missing client secret.");
       return;
+    }
+
+    if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
+      try {
+        await initTrench2(
+          process.env.NEXT_PUBLIC_TRENCH_2_API_ENDPOINT as string,
+          verificationSession.id,
+        );
+      } catch (e) {
+        console.error(`Failed to initialize trench: ${e}`);
+      }
     }
 
     if (stripe) {

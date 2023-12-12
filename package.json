@@ -39,6 +39,7 @@
     "@thirdweb-dev/react": "4.1.14-nightly-bcfa9463-20231209044446",
     "@thirdweb-dev/sdk": "4.0.21-nightly-bcfa9463-20231209044446",
     "@thirdweb-dev/service-utils": "^0.4.10-nightly-bf27b887-20231121194818",
+    "@trytrench/sdk": "^0.0.5",
     "@vercel/og": "^0.5.20",
     "airtable": "^0.12.2",
     "bn.js": "^5.2.1",
