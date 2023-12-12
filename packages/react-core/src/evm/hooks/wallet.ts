@@ -75,31 +75,20 @@ export function useConnectedWallet() {
 }
 
 /**
- * Hook for accessing the address of the connected wallet
+ * Get the address of the connected wallet.
  *
- * ```javascript
- * import { useAddress } from "@thirdweb-dev/react"
- * ```
- *
+ * Returns `undefined` if no wallet is connected.
  *
  * @example
- * To get the address of the connected wallet, you can use the hook as follows:
- *
- * ```javascript
+ * ```tsx
  * import { useAddress } from "@thirdweb-dev/react"
  *
- * const App = () => {
+ * function Example() {
  *   const address = useAddress()
  *
  *   return <div>{address}</div>
  * }
  * ```
- *
- * The `address` variable will hold the address of the connected wallet if a user has connected using one of the supported wallet connection hooks.
- *
- * @see {@link https://portal.thirdweb.com/react/react.useaddress?utm_source=sdk | Documentation}
- *
- * @public
  */
 export function useAddress(): string | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
