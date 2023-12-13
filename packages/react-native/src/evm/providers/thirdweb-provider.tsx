@@ -18,11 +18,12 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import { useColorScheme } from "react-native";
 import type { Locale } from "../i18n/types";
+import { Theme } from "../styles/theme";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "supportedWallets" | "secretKey" | "signer"
+    "supportedWallets" | "secretKey" | "signer" | "theme"
   > {
   /**
    * Wallets that will be supported by the dApp
@@ -46,6 +47,27 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * ```
    */
   supportedWallets?: WalletConfig<any>[];
+
+  /**
+   * Set the theme for all thirdweb components
+   *
+   * By default it is set to "dark".
+   *
+   * theme can be set to either "dark" or "light" or a custom theme object.
+   *
+   * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react-native` to use the default themes as base and overrides parts of it.
+   *
+   * @example
+   * ```ts
+   * import { darkTheme } from "@thirdweb-dev/react-native";
+   * const customTheme = darkTheme({
+   *  colors: {
+   *      accentButtonColor: 'black',
+   *  },
+   * })
+   * ```
+   */
+  theme?: Theme | "dark" | "light";
 
   /**
    * Locale that the app will be displayed in
@@ -88,9 +110,14 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 }
 
 /**
+ * Array of default supported chains by the thirdweb SDK
+ */
+export type DefaultChains = typeof defaultChains;
+
+/**
  *
  * The `<ThirdwebProvider />` component lets you control what networks you want users to connect to,
- * what types of wallets can connect to your app, and the settings for the [Thirdweb SDK](https://docs.thirdweb.com/typescript).
+ * what types of wallets can connect to your app, and the settings for the Thirdweb SDK.
  *
  * @example
  * You can wrap your application with the provider as follows:
@@ -107,20 +134,22 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
  * };
  * ```
  */
-export const ThirdwebProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
-  children,
-  createWalletStorage = createAsyncLocalStorage,
-  supportedWallets = DEFAULT_WALLETS,
-  authConfig,
-  theme,
-  storageInterface,
-  clientId,
-  sdkOptions,
-  locale = "en",
-  ...restProps
-}: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
+  props: PropsWithChildren<ThirdwebProviderProps<TChains>>,
+) => {
+  const {
+    children,
+    createWalletStorage = createAsyncLocalStorage,
+    supportedWallets = DEFAULT_WALLETS,
+    authConfig,
+    theme,
+    storageInterface,
+    clientId,
+    sdkOptions,
+    locale = "en",
+    ...restProps
+  } = props;
+
   const colorScheme = useColorScheme();
 
   const coinbaseWalletObj = supportedWallets.find(

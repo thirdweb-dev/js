@@ -1,5 +1,10 @@
 import { createContext, useContext } from "react";
 
+/**
+ * Secure storage interface for storing auth tokens.
+ *
+ * The implementation of this interface should provide a secure way to store values. Either by encrypting the values or by storing them in a secure location.
+ */
 export interface ISecureStorage {
   getItem(key: string): Promise<string | null>;
   setItem(key: string, value: string): Promise<void>;
@@ -7,7 +12,7 @@ export interface ISecureStorage {
 }
 
 /**
- * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
+ * The configuration to use by the React and React Native SDKs with an [auth](https://portal.thirdweb.com/auth) server.
  *
  */
 export interface ThirdwebAuthConfig {
