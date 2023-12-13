@@ -20,6 +20,22 @@ export class TrustWallet extends WalletConnectBase {
   }
 }
 
+/**
+ * Wallet config for Trust Wallet.
+ *
+ * @param config - The config for TrustWallet
+ * @returns The wallet config to be used by the ThirdwebProvider
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider, trustWallet } from "@thirdweb-dev/react-native";
+ *
+ * <ThirdwebProvider
+ *    supportedWallets={[trustWallet()]}>
+ *   <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
 export const trustWallet = (config?: WalletConnectConfig) => {
   return {
     id: TrustWallet.id,

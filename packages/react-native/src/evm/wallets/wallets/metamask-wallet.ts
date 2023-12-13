@@ -21,6 +21,22 @@ export class MetaMaskWallet extends WalletConnectBase {
   }
 }
 
+/**
+ * Wallet config for MetaMask Wallet.
+ *
+ * @param config - The config for MetamaskWallet
+ * @returns The wallet config to be used by the ThirdwebProvider
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider, metamaskWallet } from "@thirdweb-dev/react-native";
+ *
+ * <ThirdwebProvider
+ *    supportedWallets={[metamaskWallet()]}>
+ *   <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
 export const metamaskWallet = (config?: WalletConnectConfig) => {
   return {
     id: MetaMaskWallet.id,
