@@ -286,12 +286,22 @@ export function getProviderFromRpcUrl(
           }
 
           // Otherwise, create a new provider on the specific network
+          let _skipFetchSetup = false;
+          if (
+            typeof globalThis !== "undefined" &&
+            "TW_SKIP_FETCH_SETUP" in globalThis &&
+            typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
+          ) {
+            _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
+          }
+
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
               new StaticJsonRpcBatchProvider(
                 {
                   url: rpcUrl,
                   headers,
+                  skipFetchSetup: _skipFetchSetup,
                 },
                 chainId,
               )
@@ -299,6 +309,7 @@ export function getProviderFromRpcUrl(
               new providers.JsonRpcBatchProvider({
                 url: rpcUrl,
                 headers,
+                skipFetchSetup: _skipFetchSetup,
               });
 
           // Save the provider in our cache
