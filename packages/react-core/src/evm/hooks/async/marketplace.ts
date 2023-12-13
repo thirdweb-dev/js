@@ -408,16 +408,151 @@ export function useEnglishAuctionsCount(
 }
 
 /**
- * Get all active listings
+ * Hook for fetching all active listings from a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ *
+ * **Note: This hook is only for Marketplace contracts. For Marketplace V3 contracts, use `useValidDirectListings` or `useValidEnglishAuctions` instead.**
+ *
  *
  * @example
  * ```javascript
- * const { data: listings, isLoading, error } = useActiveListings(contract, { seller: "{{wallet_address}}", tokenContract: "0x...", tokenId: 1, start: 0, count: 100 });
+ * import { useActiveListings, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
+ *   const { data, isLoading, error } = useActiveListings(contract);
+ * }
  * ```
  *
  * @param contract - an instance of a marketplace contract
- * @param filter - filter to pass to the query for the sake of pagination & filtering
- * @returns a response object that includes an array of listings
+ * @param filter -
+ * By default, the hook returns all active listings from the marketplace.
+ *
+ * You can filter the results by providing a filter object as the second argument for the sake of pagination & filtering
+ *
+ * ```tsx
+ * import { useActiveListings, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
+ *
+ *   const { data, isLoading, error } = useActiveListings(
+ *     contract,
+ *     {
+ *       seller: "{{wallet_address}}", // Filter by seller
+ *       tokenContract: "{{contract_address}}", // Filter by token contract
+ *       offeror: "{{wallet_address}}", // Filter by offeror
+ *       tokenId: "{{token_id}}", // Filter by token ID
+ *       count: 10, // Limit the number of results
+ *       start: 0, // Start from the nth result (useful for pagination)
+ *     },
+ *   );
+ * }
+ * ```
+ *
+ * @returns a response object that includes an array of listings.
+ * The hook's `data` property, once loaded, returns an array containing both `AuctionListing` and `DirectListing` objects.
+ * Use the `type` property to determine which type of listing each one is.
+ *
+ * #### AuctionListing
+ *
+ * ```ts
+ * {
+ *     // The id of the listing
+ *     id: string;
+ *
+ *     // The address of the asset being listed.
+ *     assetContractAddress: string;
+ *
+ *     // The ID of the token to list.
+ *     tokenId: BigNumberish;
+ *
+ *     // The asset being listed.
+ *     asset: NFTMetadata;
+ *
+ *     // The start time of the listing.
+ *     startTimeInEpochSeconds: BigNumberish;
+ *
+ *     // Number of seconds until the auction expires.
+ *     endTimeInEpochSeconds: BigNumberish;
+ *
+ *     // The quantity of tokens in the listing.
+ *     // For ERC721s, this value should always be 1
+ *     quantity: BigNumberish;
+ *
+ *     // The address of the currency to accept for the listing.
+ *     currencyContractAddress: string;
+ *
+ *     // The reserve price is the minimum price that a bid must be in order to be accepted.
+ *     reservePrice: BigNumber;
+ *
+ *     // The buyout price of the listing.
+ *     buyoutPrice: BigNumber;
+ *
+ *     // The `CurrencyValue` of the buyout price listing.
+ *     // Useful for displaying the price information.
+ *     buyoutCurrencyValuePerToken: CurrencyValue;
+ *
+ *     // The `CurrencyValue` of the reserve price.
+ *     // Useful for displaying the price information.
+ *     reservePriceCurrencyValuePerToken: CurrencyValue;
+ *
+ *     // The address of the seller.
+ *     sellerAddress: string;
+ *
+ *     // Listing type Enum
+ *     type: ListingType.Auction;
+ * }
+ * ```
+ *
+ * ### DirectListing
+ *
+ * ```ts
+ * {
+ *     // The id of the listing.
+ *     id: string;
+ *
+ *     //The address of the asset being listed.
+ *     assetContractAddress: string;
+ *
+ *     // The ID of the token to list.
+ *     tokenId: BigNumberish;
+ *
+ *     //The asset being listed.
+ *     asset: NFTMetadata;
+ *
+ *     //The start time of the listing.
+ *     startTimeInSeconds: BigNumberish;
+ *
+ *     //Number of seconds until the listing expires.
+ *     secondsUntilEnd: BigNumberish;
+ *
+ *     // The quantity of tokens to include in the listing.
+ *     // For ERC721s, this value should always be 1
+ *     quantity: BigNumberish;
+ *
+ *     // The address of the currency to accept for the listing.
+ *     currencyContractAddress: string;
+ *
+ *     // The `CurrencyValue` of the listing. Useful for displaying the price information.
+ *     buyoutCurrencyValuePerToken: CurrencyValue;
+ *
+ *     // The buyout price of the listing.
+ *     buyoutPrice: BigNumber;
+ *
+ *     // The address of the seller.
+ *     sellerAddress: string;
+ *
+ *     // Listing type Enum
+ *     type: ListingType.Direct;
+ * }
+ * ```
+ *
  * @tags marketplace
  */
 export function useActiveListings(
@@ -519,17 +654,33 @@ export function useEnglishAuctionWinningBid(
 }
 
 /**
- * Get the winner of an english auction
+ * Hook for getting the winner of an auction (or english auction) on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
  * @example
  * ```javascript
- * const listingId = 0;
- * const { data: auctionWinner, isLoading, error } = useAuctionWinner(contract, listingId);
+ * import { useAuctionWinner, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ * const listingId = "{{listing_id}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
+ *   const { data, isLoading, error } = useAuctionWinner(
+ *     contract,
+ *     listingId, // The listing id of the item that you want to get the auction winner for
+ *   );
+ * }
  * ```
  *
  * @param contract - an instance of a marketplace contract
- * @param listingId - the listing id to check
- * @returns a response object that includes the address of the winner of the auction or undefined if there is no winner yet
+ *
+ * @param listingId - The listing ID of the item that you want to get the auction winner for.
+ * The listing must be an auction (or english auction) listing, the hook will populate the error property if it is not.
+ *
+ * @returns
+ * The hook's data property, once loaded, contains a `string` representing the address of the auction winner, or undefined if there is no winner.
+ *
  * @twfeature EnglishAuctions
  * @tags marketplace
  */
@@ -571,16 +722,38 @@ export function useAuctionWinner(
 }
 
 /**
- * Get the bid buffer for an english auction
+ * Hook for determining the current bid buffer on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
+ *
+ * The bid buffer is what percentage higher the next bid must be than the current highest bid, or the starting price if there are no bids.
  *
  * @example
  * ```javascript
- * const { data: bidBuffer, isLoading, error } = useBidBuffer(contract);
+ * import { useBidBuffer, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ * // Listing ID to get the bid buffer for
+ * const listingId = 1;
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
+ *   const {
+ *     data: bidBuffer,
+ *     isLoading,
+ *     error,
+ *   } = useBidBuffer(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
- * @param listingId - the listing id to check (only necessary for marketplace v3)
- * @returns a response object that includes an array of listings
+ *
+ * @param listingId - The listing ID of the item that you want to get the bid buffer for.
+ * The listing must be an auction (or english auction) listing, the hook will populate the `error` property if it is not.
+ *
+ * @returns
+ * The hook's data property, once loaded, returns a BigNumber value representing the current bid buffer.
+ *
+ * The `bidBuffer` value returned is in percentage format. For example, a value of `500` means that the next bid must be 5% higher than the current highest bid.
+ *
  * @twfeature EnglishAuctions
  * @tags marketplace
  */
@@ -945,35 +1118,59 @@ export function useCancelListing(
 }
 
 /**
- * Cancel a direct listing
+ * Hook for canceling a direct listing on a [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
+ *
+ * Direct listings can be canceled at any time, (unless the listing has already been sold).
+ * Only the creator of the listing can cancel it.
+ *
+ * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ *
+ * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * contracts, use [useCancelListing](/react/react.usecancellisting) instead.
+ *
+ *
+ * ```jsx
+ * import { useCancelDirectListing } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useCancelDirectListing(contract);
+ * ```
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useCancelDirectListing,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ * import { ListingType } from "@thirdweb-dev/sdk";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * // The ID of the listing you want to cancel
+ * const listingId = "{{listing_id}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
- *     mutate: cancelDirectListing,
+ *     mutateAsync: cancelDirectListing,
  *     isLoading,
  *     error,
  *   } = useCancelDirectListing(contract);
  *
- *   if (error) {
- *     console.error("failed to cancel direct listing", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={cancelDirectListing}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => cancelDirectListing(listingId)}
  *     >
  *       Cancel Direct Listing
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a Marketplace v3 contract
- * @returns a mutation object that can be used to cancel a direct listing
+ * @returns a mutation object that can be used to cancel a direct listing by passing the ID of the listing you want to cancel.
  * @twfeature DirectListings
  * @tags marketplace
  */
@@ -1316,31 +1513,58 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Buy out an auction listing
+ * Hook for buying a listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) smart contract.
+ *
+ * If the listing is in a currency that is not native to the chain (e.g. not Ether on Ethereum), the hook will prompt the user
+ * to approve the marketplace contract to spend the currency on their behalf before performing the buy.
+ *
+ * **This hook is only for [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contracts.**
+ *
+ * ```jsx
+ * import { useBuyNow } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useBuyNow(contract);
+ * ```
+ *
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: buyNow,
- *     isLoading,
- *     error,
- *   } = useBuyNow(contract);
+ * import { useBuyNow } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to buyout listing", error);
- *   }
+ * const { mutateAsync, isLoading, error } = useBuyNow(contract);
+ * ```
+ *
+ * ## Usage
+ *
+ * Provide your marketplace contract as the argument.
+ *
+ * ```jsx
+ * import { useBuyNow, useContract, Web3Button } from "@thirdweb-dev/react";
+ * import { ListingType } from "@thirdweb-dev/sdk";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace");
+ *   const { mutateAsync: buyNow, isLoading, error } = useBuyNow(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => buyNow({listingId: 1, type: ListingType.Auction})}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         buyNow({
+ *           id: "{{listing_id}}", // ID of the listing to buy
+ *           type: ListingType.Direct, // Direct (0) or Auction (1)
+ *           buyAmount: "{{buy_amount}}", // Amount to buy
+ *           buyForWallet: "{{wallet_address}}", // Wallet to buy for, defaults to current wallet
+ *         })
+ *       }
  *     >
- *       Buy listing!
- *     </button>
+ *       Buy Now
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a Marketplace contract
@@ -1386,31 +1610,52 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Buy a direct listing
+ * Hook for buying a direct listing on a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) smart contract.
+ *
+ * If the listing is in a currency that is not native to the chain (e.g. not Ether on Ethereum), the hook will prompt the user
+ * to approve the marketplace contract to spend the currency on their behalf before performing the buy.
+ *
+ * ```jsx
+ * import { useBuyDirectListing } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useBuyDirectListing(contract);
+ * ```
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}", "marketplace-v3");
+ * import {
+ *   useBuyDirectListing,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ * import { ListingType } from "@thirdweb-dev/sdk";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
- *     mutate: buyNow,
+ *     mutateAsync: buyDirectListing,
  *     isLoading,
  *     error,
  *   } = useBuyDirectListing(contract);
  *
- *   if (error) {
- *     console.error("failed to buy direct listing", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => buyNow({listingId: 1, quantity: 1, buyer: "{{address}}"})}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         buyDirectListing({
+ *           listingId: "{{listing_id}}", // ID of the listing to buy
+ *           quantity: "1",
+ *           buyer: "{{wallet_address}}", // Wallet to buy for
+ *         })
+ *       }
  *     >
- *       Buy listing!
- *     </button>
+ *       Buy Now
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a MarketplaceV3 contract

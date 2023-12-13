@@ -162,10 +162,41 @@ export function useClaimedNFTSupply(
 }
 
 /**
- * Get all unrevealed batches
+ * Hook for fetching batches of lazy-minted NFTs that were set to be revealed at a later date, but have not yet been revealed.
  *
- * @param contract - an instance of a {@link RevealableContract}
- * @returns a response object that gets the batches to still be revealed
+ * Available to use on contracts that implement the [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable) interfaces,
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721)
+ * and [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155) smart contracts.
+ *
+ * @example
+ * ```tsx
+ * import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   // Contract must implement the Delayed reveal interface.
+ *   const { contract } = useContract(contractAddress);
+ *   const { data: batches, isLoading, error } = useBatchesToReveal(contract);
+ * }
+ * ```
+ *
+ * @param contract - an instance of a `RevealableContract`
+ *
+ * @returns The hook's `data` property, once loaded, contains an array of batches that need to be revealed.
+ *
+ * Each batch is an object with the following properties:
+ *
+ * ```ts
+ * {
+ *   batchId: BigNumber;
+ *   batchUri: string;
+ *   placeholderMetadata: NFTMetadata;
+ * }
+ * ```
+ *
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @tags delayed-reveal
  */
@@ -353,31 +384,64 @@ export function useLazyMint<TContract extends DropContract>(
 }
 
 /**
- * Lazy mint NFTs with delayed reveal
+ * Hook to lazy-mint a batch of NFTs with [delayed reveal](https://portal.thirdweb.com/glossary/delayed-reveal);
+ * allowing the owner to set placeholder metadata and reveal the metadata of the NFTs at a later time.
+ *
+ * Available to use on contracts that implement the
+ * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * interfaces.
+ *
+ * ```ts
+ * import { useDelayedRevealLazyMint } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useDelayedRevealLazyMint(contract);
+ * ```
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * ```tsx
+ * import {
+ *   useDelayedRevealLazyMint,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: delayedRevealLazyMint,
+ *     mutateAsync: mintNft,
  *     isLoading,
  *     error,
  *   } = useDelayedRevealLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to lazy mint NFT", error);
- *   }
+ *   const nftData = {
+ *     placeholder: {
+ *       name: "My NFT",
+ *       description: "This is my NFT",
+ *       image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
+ *     },
+ *     metadatas: [
+ *       {
+ *         name: "My NFT",
+ *         description: "This is my NFT",
+ *         image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
+ *       },
+ *     ],
+ *     password: "{{password}}", // Password to be used for encryption
+ *   };
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => delayedRevealLazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => mintNft(nftData)}
  *     >
- *       Delayed Reveal Lazy mint NFT!
- *     </button>
+ *       Mint NFTs
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a {@link DropContract}
@@ -434,31 +498,52 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 }
 
 /**
- * Reveal a batch of delayed reveal NFTs
+ * Hook for revealing a batch of delayed reveal NFTs using [delayed reveal](https://portal.thirdweb.com/glossary/delayed-reveal).
+ *
+ * Available to use on contracts that implement the
+ * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * interfaces.
+ *
+ * ```jsx
+ * import { useRevealLazyMint } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useRevealLazyMint(contract);
+ * ```
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * ```tsx
+ * import {
+ *   useContract,
+ *   useRevealLazyMint,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   // Contract must be an ERC-721 or ERC-1155 contract that implements the ERC721Revealable or ERC1155Revealable interface
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: revealLazyMint,
+ *     mutateAsync: revealLazyMint,
  *     isLoading,
  *     error,
  *   } = useRevealLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to reveal batch", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => revealLazyMint({ batchId: "0", password: "my-password" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         revealLazyMint({
+ *           batchId: "{{batch_id}}", // ID of the batch to reveal (use useBatchesToReveal to get the batch IDs)
+ *           password: "{{password}}", // Password to reveal the batch
+ *         })
+ *       }
  *     >
- *       Reveal batch!
- *     </button>
+ *       Reveal Lazy Mint
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a {@link RevealableContract}

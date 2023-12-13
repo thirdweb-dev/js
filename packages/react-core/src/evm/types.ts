@@ -182,8 +182,21 @@ export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
  *
  */
 export type DelayedRevealLazyMintInput = {
+  /**
+   * The placeholder object represents the metadata the NFTs will have until the owner reveals the metadata.
+   */
   placeholder: NFTMetadataInput;
+  /**
+   * An array of metadata objects, representing the metadata of the NFTs to be lazy-minted.
+   *
+   * Each metadata object must conform to the [standard metadata properties](https://docs.opensea.io/docs/metadata-standards).
+   */
   metadatas: NFTMetadataInput[];
+  /**
+   * The password used to encrypt the metadatas.
+   *
+   * __The password CANNOT be recovered once it is set. If you lose the password, you will not be able to reveal the metadata.__
+   */
   password: string;
 };
 
@@ -246,19 +259,50 @@ export type ExecuteAuctionSale = {
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
     ? {
+        /**
+         * The ID of the listing you want to buy.
+         */
         id: BigNumberish;
+        /**
+         * The type of listing. Either ListingType.Direct (0) or ListingType.Auction (1).
+         */
         type: ListingType.Direct;
+        /**
+         * The amount of tokens you want to buy from the listing.
+         *
+         * Applicable for ERC1155 listings only, should always be `1` for ERC721 listings.
+         */
         buyAmount: BigNumberish;
+        /**
+         * Optionally, specify a different wallet address to buy the listing for.
+         */
         buyForWallet?: WalletAddress;
       }
     : {
+        /**
+         * The ID of the listing you want to buy.
+         */
         id: BigNumberish;
+        /**
+         * The type of listing. Either ListingType.Direct (0) or ListingType.Auction (1).
+         */
         type: ListingType.Auction;
       };
 
 export type BuyFromListingParams = {
+  /**
+   * The ID of the direct listing you want to buy.
+   */
   listingId: string;
+  /**
+   * The amount of tokens you want to buy from the listing.
+   *
+   * Applicable for ERC1155 listings only, should always be `1` for ERC721 listings.
+   */
   quantity: Amount;
+  /**
+   * Specify a different wallet address to buy the listing for.
+   */
   buyer: WalletAddress;
 };
 
