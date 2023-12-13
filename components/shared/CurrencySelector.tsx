@@ -146,9 +146,9 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       >
         {chainId &&
           !hideDefaultCurrencies &&
-          currencyOptions.map((currency: CurrencyMetadata) => (
+          currencyOptions.map((currency: CurrencyMetadata, idx: number) => (
             <option
-              key={currency.address}
+              key={`${currency.address}-${idx}`}
               value={
                 isPaymentsSelector
                   ? currency.symbol

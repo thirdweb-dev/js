@@ -362,6 +362,19 @@ export const CreateUpdateCheckoutButton: React.FC<
     return (100 / formInputs.length) * idx || 5;
   }, [step]);
 
+  const defaultMintFunctionName = useMemo(() => {
+    if (!contract) {
+      return "";
+    }
+    const mintFn = contract.abi.find((f) => {
+      return (
+        (f.name.startsWith("claim") || f.name.startsWith("mint")) &&
+        f.inputs.find((i) => i.type === "address")
+      );
+    });
+    return mintFn?.name || "";
+  }, [contract]);
+
   const values: CreateUpdateCheckoutDashboardInput = {
     title: checkout?.collection_title || "",
     description: checkout?.collection_description || "",
@@ -404,11 +417,15 @@ export const CreateUpdateCheckoutButton: React.FC<
 
   const form = useForm<CreateUpdateCheckoutDashboardInput>({
     defaultValues: values,
-    values,
-    resetOptions: {
-      keepDirty: true,
-      keepDirtyValues: true,
-    },
+    ...(checkoutId
+      ? {
+          values,
+          resetOptions: {
+            keepDirty: true,
+            keepDirtyValues: true,
+          },
+        }
+      : {}),
   });
 
   const { onSuccess: onCreateSuccess, onError: onCreateError } =
@@ -499,9 +516,7 @@ export const CreateUpdateCheckoutButton: React.FC<
           {
             onSuccess: () => {
               onSuccess();
-              onClose();
-              setStep("info");
-              form.reset();
+              handleClose(true);
               trackEvent({
                 category: "payments",
                 action: checkoutId ? "update-checkout" : "create-checkout",
@@ -539,10 +554,14 @@ export const CreateUpdateCheckoutButton: React.FC<
     });
   };
 
-  const handleClose = () => {
+  const handleClose = (reset = false) => {
     setStep("info");
     onClose();
-    form.reset();
+
+    if (reset) {
+      // give time for modal animation to finish
+      setTimeout(() => form.reset(), 300);
+    }
   };
 
   const handleBack = () => {
@@ -717,6 +736,7 @@ export const CreateUpdateCheckoutButton: React.FC<
                               </Box>
                             ) : field.type === "abiSelector" ? (
                               <PaymentsMintMethodInput
+                                defaultValue={defaultMintFunctionName}
                                 form={form}
                                 abi={contract?.abi as Abi}
                               />

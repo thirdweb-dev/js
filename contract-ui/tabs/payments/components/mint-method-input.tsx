@@ -10,6 +10,8 @@ import {
 import { Abi } from "@thirdweb-dev/sdk";
 import { AbiSelector } from "components/contract-components/contract-publish-form/abi-selector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { FiChevronDown } from "react-icons/fi";
 import {
   Heading,
@@ -22,15 +24,23 @@ import {
 
 interface PaymentsMintMethodInputProps {
   abi: Abi;
-  form: any;
+  form: UseFormReturn<any, any>;
+  defaultValue?: string;
 }
 
 export const PaymentsMintMethodInput: React.FC<
   PaymentsMintMethodInputProps
-> = ({ abi, form }) => {
+> = ({ abi, form, defaultValue }) => {
   const filteredAbi = abi.filter((f) =>
     f.inputs.some((i) => i.type === "address"),
   );
+
+  useEffect(() => {
+    if (defaultValue) {
+      form.setValue("mintFunctionName", defaultValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Flex flexDir="column" gap={2} w="full">
@@ -54,6 +64,10 @@ export const PaymentsMintMethodInput: React.FC<
           {abi
             .find((fn) => fn.name === form.watch(`mintFunctionName`))
             ?.inputs.map((input) => {
+              const error =
+                form.formState.errors?.[`mintFunctionArgs.${input.name}`]
+                  ?.message;
+
               return (
                 <FormControl
                   key={input.name}
@@ -63,9 +77,7 @@ export const PaymentsMintMethodInput: React.FC<
                   alignItems={
                     input.type.endsWith("[]") ? "flex-start" : "center"
                   }
-                  isInvalid={
-                    !!form.formState.errors?.[`mintFunctionArgs.${input.name}`]
-                  }
+                  isInvalid={!!error}
                 >
                   <FormLabel my={1} minW={36} isTruncated>
                     {input.name}
@@ -141,15 +153,8 @@ export const PaymentsMintMethodInput: React.FC<
                       </Menu>
                     )}
                   </Box>
-                  {form.formState.errors?.[`mintFunctionArgs.${input.name}`]
-                    ?.message && (
-                    <FormErrorMessage>
-                      {
-                        form.formState.errors?.[
-                          `mintFunctionArgs.${input.name}`
-                        ].message
-                      }
-                    </FormErrorMessage>
+                  {error && (
+                    <FormErrorMessage>{error as string}</FormErrorMessage>
                   )}
                 </FormControl>
               );
