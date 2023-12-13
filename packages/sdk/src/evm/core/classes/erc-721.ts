@@ -76,7 +76,7 @@ import { Erc721Mintable } from "./internal/erc721/erc-721-mintable";
 import { Erc721SharedMetadata } from "./internal/erc721/erc-721-shared-metadata";
 import { Erc721Supply } from "./internal/erc721/erc-721-supply";
 import { Erc721TieredDrop } from "./internal/erc721/erc-721-tiered-drop";
-import { Erc721WithQuantitySignatureMintable } from "./internal/erc721/erc-721-with-quantity-signature-mintable";
+import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import { Transaction } from "./transactions";
 
 /**

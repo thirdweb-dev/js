@@ -13,39 +13,39 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, Contract } from "ethers";
 import invariant from "tiny-invariant";
-import { cleanCurrencyAddress } from "../../../../common/currency/cleanCurrencyAddress";
-import { fetchCurrencyValue } from "../../../../common/currency/fetchCurrencyValue";
-import { normalizePriceValue } from "../../../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../../../common/currency/setErc20Allowance";
-import { resolveAddress } from "../../../../common/ens/resolveAddress";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   getAllInBatches,
   handleTokenApproval,
   isTokenApprovedForTransfer,
-} from "../../../../common/marketplace";
-import { fetchTokenMetadataForContract } from "../../../../common/nft";
-import { buildTransactionFunction } from "../../../../common/transactions";
+} from "../../common/marketplace";
+import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
-} from "../../../../constants/contract";
-import { FEATURE_DIRECT_LISTINGS } from "../../../../constants/thirdweb-features";
+} from "../../constants/contract";
+import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
-} from "../../../../schema/marketplacev3/direct-listings";
-import { AddressOrEns } from "../../../../schema/shared/AddressOrEnsSchema";
-import type { MarketplaceFilterWithoutOfferor } from "../../../../types/marketplace/MarketPlaceFilter";
-import type { DirectListingV3 } from "../../../../types/marketplacev3/DirectListingV3";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../../../types";
-import { ContractEncoder } from "../../contract-encoder";
-import { ContractEvents } from "../../contract-events";
-import { ContractInterceptor } from "../../contract-interceptor";
-import { ContractWrapper } from "../contract-wrapper";
-import { GasCostEstimator } from "../../gas-cost-estimator";
-import { Transaction } from "../../transactions";
-import { Status } from "../../../../enums/marketplace/Status";
+} from "../../schema/marketplacev3/direct-listings";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import type { DirectListingV3 } from "../../types/marketplacev3/DirectListingV3";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
+import { Status } from "../../enums/marketplace/Status";
 
 /**
  * Handles direct listings

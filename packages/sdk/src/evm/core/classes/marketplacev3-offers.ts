@@ -2,35 +2,32 @@ import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
-import { fetchCurrencyValue } from "../../../../common/currency/fetchCurrencyValue";
-import { isNativeToken } from "../../../../common/currency/isNativeToken";
-import { normalizePriceValue } from "../../../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../../../common/currency/setErc20Allowance";
-import { resolveAddress } from "../../../../common/ens/resolveAddress";
-import {
-  getAllInBatches,
-  handleTokenApproval,
-} from "../../../../common/marketplace";
-import { fetchTokenMetadataForContract } from "../../../../common/nft";
-import { buildTransactionFunction } from "../../../../common/transactions";
-import { SUPPORTED_CHAIN_ID } from "../../../../constants/chains/SUPPORTED_CHAIN_ID";
-import { NATIVE_TOKENS } from "../../../../constants/currency";
-import { FEATURE_OFFERS } from "../../../../constants/thirdweb-features";
-import { Status } from "../../../../enums/marketplace/Status";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
+import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../../constants/currency";
+import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
+import { Status } from "../../enums/marketplace/Status";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
-} from "../../../../schema/marketplacev3/offer";
-import type { MarketplaceFilterWithoutSeller } from "../../../../types/marketplace/MarketPlaceFilter";
-import { OfferV3 } from "../../../../types/marketplacev3/OfferV3";
-import { DetectableFeature } from "../../../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../../../types";
-import { ContractEncoder } from "../../contract-encoder";
-import { ContractEvents } from "../../contract-events";
-import { ContractInterceptor } from "../../contract-interceptor";
-import { ContractWrapper } from "../contract-wrapper";
-import { GasCostEstimator } from "../../gas-cost-estimator";
-import { Transaction } from "../../transactions";
+} from "../../schema/marketplacev3/offer";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace/MarketPlaceFilter";
+import { OfferV3 } from "../../types/marketplacev3/OfferV3";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
 
 /**
  * Handles marketplace offers

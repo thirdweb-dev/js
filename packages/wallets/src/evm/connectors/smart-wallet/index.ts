@@ -359,6 +359,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       {
         targets: [],
         data: [],
+        values: [],
       }, // batched tx flag to avoid hitting the Router fallback method
     );
     const receipt = await tx.wait();
@@ -590,6 +591,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       batchData: {
         targets,
         data,
+        values,
       },
     };
   }
@@ -606,6 +608,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       batchData: {
         targets,
         data,
+        values,
       },
     };
   }

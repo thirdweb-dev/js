@@ -1,5 +1,29 @@
 # @thirdweb-dev/wallets
 
+## 2.3.0
+
+### Minor Changes
+
+- [#2018](https://github.com/thirdweb-dev/js/pull/2018) [`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba) Thanks [@iketw](https://github.com/iketw)! - Enforces passing an encryption key for custom jwt auth
+
+  ```typescript
+  const embedded = useEmbeddedWallet();
+
+  embedded.connect({
+    jwt: "<token>",
+    encryptionKey: "<my-key>",
+    strategy: "jwt",
+  });
+  ```
+
+### Patch Changes
+
+- [#2070](https://github.com/thirdweb-dev/js/pull/2070) [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe) Thanks [@MananTank](https://github.com/MananTank)! - Fix assertWindowEthereum - actually check if `window.ethereum` is truthy or not instead of just checking `"ethereum" in window`
+
+- [#2080](https://github.com/thirdweb-dev/js/pull/2080) [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for signTransaction to smart wallets
+
+- [#2077](https://github.com/thirdweb-dev/js/pull/2077) [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect `value` in smart wallet gas estimations + add `getUserOpReceipt` utility function
+
 ## 2.2.1
 
 ### Patch Changes

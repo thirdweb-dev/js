@@ -57,7 +57,7 @@ import { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./internal/contract-wrapper";
 import { ERC1155Claimable } from "./internal/erc1155/erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./internal/erc1155/erc-1155-claimable-with-conditions";
-import { Erc1155SignatureMintable } from "./internal/erc1155/erc-1155-signature-mintable";
+import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 
 import { ContractEncoder } from "./contract-encoder";

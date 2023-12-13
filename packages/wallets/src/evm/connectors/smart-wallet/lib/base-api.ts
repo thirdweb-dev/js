@@ -31,6 +31,7 @@ import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
+  values: BigNumberish[];
 };
 
 export interface BaseApiParams {
@@ -201,6 +202,7 @@ export abstract class BaseAccountAPI {
               from: this.getAccountAddress(),
               to: batchData.targets[i],
               data: batchData.data[i],
+              value: batchData.values[i],
             }),
           ),
         );
@@ -210,6 +212,7 @@ export abstract class BaseAccountAPI {
           from: this.getAccountAddress(),
           to: detailsForUserOp.target,
           data: detailsForUserOp.data,
+          value: detailsForUserOp.value,
         });
       }
 
@@ -226,12 +229,9 @@ export abstract class BaseAccountAPI {
           from: this.entryPointAddress,
           to: this.getAccountAddress(),
           data: callData,
+          value: detailsForUserOp.value,
         }));
     }
-
-    // callGasLimit = callGasLimit.mul(10); // add 100k for entrypoint checks
-
-    console.log("callGasLimit", callGasLimit.toString());
 
     return {
       callData,
@@ -295,11 +295,6 @@ export abstract class BaseAccountAPI {
       await this.getVerificationGasLimit(),
     ).add(initGas);
 
-    console.log("initGas", initGas.toString());
-    console.log("initGas", verificationGasLimit.toString());
-
-    // verificationGasLimit = verificationGasLimit.mul(3);
-
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await getDynamicFeeData(
@@ -314,28 +309,13 @@ export abstract class BaseAccountAPI {
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        console.log(
-          "CELO maxFeePerGas",
-          ethers.utils.formatUnits(maxFeePerGas || 0, "gwei"),
-        );
-        console.log(
-          "CELO maxPriorityFeePerGas",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
-
         if (
           chainId === Celo.chainId ||
           chainId === CeloAlfajoresTestnet.chainId ||
           chainId === CeloBaklavaTestnet.chainId
         ) {
-          maxFeePerGas = maxFeePerGas?.mul(50);
           maxPriorityFeePerGas = maxFeePerGas;
         }
-
-        console.log(
-          "CELO final",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
       }
     }
 
@@ -409,7 +389,7 @@ export abstract class BaseAccountAPI {
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
-    const signature = this.signUserOpHash(userOpHash);
+    const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
       signature,
@@ -439,7 +419,7 @@ export abstract class BaseAccountAPI {
   async getUserOpReceipt(
     userOpHash: string,
     timeout = 30000,
-    interval = 5000,
+    interval = 2000,
   ): Promise<string | null> {
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {

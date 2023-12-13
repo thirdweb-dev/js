@@ -41,8 +41,8 @@ import {
   FEATURE_ROYALTY,
   FEATURE_DYNAMIC_CONTRACT,
 } from "../constants/thirdweb-features";
-import { Account } from "../core/classes/internal/erc4337/account";
-import { AccountFactory } from "../core/classes/internal/erc4337/account-factory";
+import { Account } from "../core/classes/account";
+import { AccountFactory } from "../core/classes/account-factory";
 import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
 import { Airdrop20 } from "../core/classes/airdrop-erc20";
 import { Airdrop721 } from "../core/classes/airdrop-erc721";
@@ -62,9 +62,9 @@ import { Erc1155 } from "../core/classes/erc-1155";
 import { Erc20 } from "../core/classes/erc-20";
 import { Erc721 } from "../core/classes/erc-721";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { MarketplaceV3DirectListings } from "../core/classes/internal/marketplace/marketplacev3-direct-listings";
-import { MarketplaceV3EnglishAuctions } from "../core/classes/internal/marketplace/marketplacev3-english-auction";
-import { MarketplaceV3Offers } from "../core/classes/internal/marketplace/marketplacev3-offers";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 import { Transaction } from "../core/classes/transactions";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { NetworkInput } from "../core/types";

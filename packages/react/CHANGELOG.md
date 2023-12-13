@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 4.1.15
+
+### Patch Changes
+
+- Updated dependencies [[`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba), [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe), [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da), [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275)]:
+  - @thirdweb-dev/wallets@2.3.0
+  - @thirdweb-dev/react-core@4.1.15
+
 ## 4.1.14
 
 ### Patch Changes
