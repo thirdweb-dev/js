@@ -9,6 +9,22 @@ export type WalletConnectConfig = {
   recommended?: boolean;
 };
 
+/**
+ * Wallet config for WalletConnect.
+ *
+ * @param config - The config for WalletConnect
+ * @returns The wallet config to be used by the ThirdwebProvider
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider, walletConnect } from "@thirdweb-dev/react-native";
+ *
+ * <ThirdwebProvider
+ *    supportedWallets={[walletConnect()]}>
+ *   <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
 export const walletConnect = (
   config?: WalletConnectConfig,
 ): WalletConfig<WalletConnect> => {

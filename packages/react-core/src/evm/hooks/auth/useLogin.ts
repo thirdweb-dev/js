@@ -12,8 +12,33 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  *
  * @returns - A function to invoke to login with the connected wallet, and an isLoading state.
  *
- * @see {@link https://portal.thirdweb.com/react/react.uselogin?utm_source=sdk | Documentation}
+ * @example
+ * ```tsx
+ * function App() {
+ * const { isLoading, login } = useLogin();
  *
+ * return (
+ *   <button onClick={() => login()}>
+ *     {isLoading ? "Loading..." : "Sign in with Ethereum"}
+ *   </button>
+ * );
+ * }
+ * ```
+ *
+ * ```tsx
+ * // options
+ * login({
+ *         domain: "https://your-domain.com", // Your dapp domain
+ *         statement: "My statement", // Text that the user will sign
+ *         uri: "https://your-domain.com/login", // RFC 3986 URI referring to the resource that is the subject of the signing
+ *         version: "1.0", // The current version of the message, which MUST be 1 for this specification.
+ *         chainId: "mainnet", // Chain ID to which the session is bound
+ *         nonce: "my-nonce", // randomized token typically used to prevent replay attacks
+ *         expirationTime: new Date(2021, 1, 1), // When this message expires
+ *         invalidBefore: new Date(2020, 12, 1), // When this message becomes valid
+ *         resources: ["balance", "history", "info"], // A list of information or references to information the user wishes to have resolved
+ *       })
+ * ```
  */
 export function useLogin() {
   const queryClient = useQueryClient();
