@@ -61,25 +61,25 @@ const SECTIONS = [
     icon: require("public/assets/product-icons/wallets.png"),
     items: [
       {
-        title: "Email Wallet (Self-Recovery)",
-        starter: "Unlimited",
-        pro: "Unlimited",
+        title: "Connect",
+        starter: "Free",
+        pro: "Free",
       },
       {
-        title: "Email Wallet (Managed Recovery)",
+        title: "Email Wallet with social logins & custom auth",
         starter:
           "Free up to 10,000 Monthly Active Wallets ($0.02 per Wallet after)",
         pro: "Free up to 10,000 Monthly Active Wallets ($0.02 per Wallet after)",
       },
       {
         title: "Device Wallet",
-        starter: "Unlimited",
-        pro: "Unlimited",
+        starter: "Free",
+        pro: "Free",
       },
       {
         title: "Smart Wallet",
-        starter: "Unlimited",
-        pro: "Unlimited",
+        starter: "Free",
+        pro: "Free",
       },
     ],
   },
@@ -108,12 +108,12 @@ const SECTIONS = [
         pro: "$15,000 Per Transaction Limit ",
       },
       {
-        title: "Sponsored transactons - Bundler",
+        title: "Sponsored transactions - Bundler",
         starter: "10% premium on top of network fee",
         pro: "10% premium on top of network fee",
       },
       {
-        title: "Sponsored transactons - Paymaster",
+        title: "Sponsored transactions - Paymaster",
         starter: "10% premium on top of network fee",
         pro: "10% premium on top of network fee",
       },
@@ -280,15 +280,15 @@ const pricingFaqs = [
     ),
   },
   {
-    title: "How is Email Wallet (managed recovery code) calculated?",
+    title: "How is Email Wallet calculated?",
     description: (
       <Text>
-        Email wallet (with managed recovery code) usage is calculated by monthly
-        active wallets (i.e. active as defined by at least 1 user log-in via
-        email or social within the billing period month). For both the starter
-        and pro plan, users receive 10,000 free monthly active wallets + charged
-        $0.02 per incremental monthly active wallet after. Note that wallets
-        with self recovery code is completely free to use.
+        Email wallet usage is calculated by monthly active wallets (i.e. active
+        as defined by at least 1 user log-in via email or social within the
+        billing period month). For both the starter and pro plan, users receive
+        10,000 free monthly active wallets + charged $0.02 per incremental
+        monthly active wallet after. Note that wallets with self recovery code
+        is completely free to use.
       </Text>
     ),
   },
