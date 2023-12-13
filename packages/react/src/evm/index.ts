@@ -37,8 +37,6 @@ export {
 
 export type { MediaRendererProps, SharedMediaProps } from "./components/types";
 
-export type { MediaRendererProps } from "./components/types";
-
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
 
