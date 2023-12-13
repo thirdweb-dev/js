@@ -357,13 +357,14 @@ const LinkPlayer = /* @__PURE__ */ (() =>
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
- * The component falls back to a external link if the media type is not supported.
- * The default size is 300px by 300px, but this can be changed using the `width` and `height` props.
  *
- * Props: {@link MediaRendererProps}
+ * The component falls back to a external link if the media type is not supported.
+ *
+ * The default size is 300px by 300px, but this can be changed using the `width` and `height` props.
  *
  * @example
  * We can take a video file hosted on IPFS and render it using this component as follows
+ *
  * ```jsx
  * const Component = () => {
  *   return <MediaRenderer

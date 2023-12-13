@@ -1,5 +1,129 @@
 # @thirdweb-dev/react
 
+## 4.1.15
+
+### Patch Changes
+
+- Updated dependencies [[`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba), [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe), [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da), [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275)]:
+  - @thirdweb-dev/wallets@2.3.0
+  - @thirdweb-dev/react-core@4.1.15
+
+## 4.1.14
+
+### Patch Changes
+
+- Updated dependencies [[`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173)]:
+  - @thirdweb-dev/sdk@4.0.21
+  - @thirdweb-dev/react-core@4.1.14
+  - @thirdweb-dev/wallets@2.2.1
+
+## 4.1.13
+
+### Patch Changes
+
+- [#2029](https://github.com/thirdweb-dev/js/pull/2029) [`b50e4a41`](https://github.com/thirdweb-dev/js/commit/b50e4a41b560eb647fec1224d6b6782be7132034) Thanks [@MananTank](https://github.com/MananTank)! - Connect to MetaMask on mobile device using WalletConnect instead of opening the web app in MetaMask browser by default
+
+  This behavior can be changed by setting `connectionMethod` option to `metamaskWallet`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "walletConnect", // default
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  this is same as not setting `connectionMethod` option:
+
+  ```tsx
+  <ThirdwebProvider supportedWallets={[metamaskWallet()]}>
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  If you want to revert to old behavior of opening the web app in Metamask browser, set `connectionMethod` to `metamaskBrowser`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "metamaskBrowser",
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+- [#2063](https://github.com/thirdweb-dev/js/pull/2063) [`c8ba5cf8`](https://github.com/thirdweb-dev/js/commit/c8ba5cf863b7b2a92e0cb2c50776511782d4e2b6) Thanks [@MananTank](https://github.com/MananTank)! - - Add option to only show the Official WalletConnect Modal for `walletConnect` in ConnectWallet Modal
+
+  ```ts
+  walletConnect({
+    qrModal: "walletConnect", // hide the ConnectWallet Modal and only show the WalletConnect Modal
+  });
+  ```
+
+  If no, `qrModal` is set, it defaults to `"custom"` as shown below:
+
+  ```ts
+  walletConnect({
+    qrModal: "custom", // render QR code in ConnectWallet Modal
+  });
+  ```
+
+  - Stop Focus trapping the ConnectWallet Modal when it is rendered but hidden
+
+- [#2058](https://github.com/thirdweb-dev/js/pull/2058) [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d) Thanks [@MananTank](https://github.com/MananTank)! - Add option to open the official wallet connect modal in ConnectWallet
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3), [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794), [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814), [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf), [`94966069`](https://github.com/thirdweb-dev/js/commit/9496606964d65268f8ee6bf9f78b2786e99d33ac), [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d)]:
+  - @thirdweb-dev/chains@0.1.61
+  - @thirdweb-dev/sdk@4.0.20
+  - @thirdweb-dev/wallets@2.2.0
+  - @thirdweb-dev/react-core@4.1.13
+
+## 4.1.12
+
+### Patch Changes
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+- [#2045](https://github.com/thirdweb-dev/js/pull/2045) [`a135857c`](https://github.com/thirdweb-dev/js/commit/a135857c7ad73e1a508298858eb0f5fd744ec176) Thanks [@MananTank](https://github.com/MananTank)! - Fix type EmbeddedWalletConfigOptions
+
+- [#1938](https://github.com/thirdweb-dev/js/pull/1938) [`4ae1cd63`](https://github.com/thirdweb-dev/js/commit/4ae1cd63bb7b471cae48a27bf6554c4953c1dc82) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add OneKey wallet
+
+- [#2042](https://github.com/thirdweb-dev/js/pull/2042) [`61c62b3f`](https://github.com/thirdweb-dev/js/commit/61c62b3f07a082ffd7620c949e3bcc6b75c104b5) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and Type exports
+
+- Updated dependencies [[`cfe81b44`](https://github.com/thirdweb-dev/js/commit/cfe81b443205d84e58128b8d7d5f2dc940b12875), [`34546c24`](https://github.com/thirdweb-dev/js/commit/34546c24c74f4e9e1f5e94567ebe1017ad63aea5), [`72c0bb10`](https://github.com/thirdweb-dev/js/commit/72c0bb10d6d765d1679b2b22ac63d85db101b5c4), [`ca618ea0`](https://github.com/thirdweb-dev/js/commit/ca618ea0c9ac5dc4f65cbfbfd39360e4150c72c7), [`aefc4cda`](https://github.com/thirdweb-dev/js/commit/aefc4cda4c4fad81411d3a9485931e28100b5718), [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56), [`4ae1cd63`](https://github.com/thirdweb-dev/js/commit/4ae1cd63bb7b471cae48a27bf6554c4953c1dc82), [`61c62b3f`](https://github.com/thirdweb-dev/js/commit/61c62b3f07a082ffd7620c949e3bcc6b75c104b5), [`7bb054e4`](https://github.com/thirdweb-dev/js/commit/7bb054e45c75450c8f465809d23eb66371f6ef8e), [`cd87be4a`](https://github.com/thirdweb-dev/js/commit/cd87be4a24a9a3a552fbc4f33da6fcb08b7da88b), [`d20e7898`](https://github.com/thirdweb-dev/js/commit/d20e7898562a3914841522f2e09f88ca37dfdd4b)]:
+  - @thirdweb-dev/sdk@4.0.19
+  - @thirdweb-dev/react-core@4.1.12
+  - @thirdweb-dev/wallets@2.1.11
+
+## 4.1.11
+
+### Patch Changes
+
+- [#1926](https://github.com/thirdweb-dev/js/pull/1926) [`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Rabby browser extension
+
+- [#2031](https://github.com/thirdweb-dev/js/pull/2031) [`fdf19b0a`](https://github.com/thirdweb-dev/js/commit/fdf19b0a26be0404ddf5424f26d96719de849627) Thanks [@MananTank](https://github.com/MananTank)! - Do not swallow errors in useEmbeddedWallet().connect
+
+- [#1997](https://github.com/thirdweb-dev/js/pull/1997) [`50749662`](https://github.com/thirdweb-dev/js/commit/507496627bcd77b49bb027b24996a31c57e04819) Thanks [@MananTank](https://github.com/MananTank)! - - Fixes issue #1708
+
+  - Fixes smart wallet icon shown even after clicking on "Switch to Personal wallet" in ConnectWallet dropdown
+
+- [#1987](https://github.com/thirdweb-dev/js/pull/1987) [`b3394277`](https://github.com/thirdweb-dev/js/commit/b3394277c77e4af130151111e056e27a28ac893a) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and type exports
+
+- [#1928](https://github.com/thirdweb-dev/js/pull/1928) [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Crypto.com Defi wallet
+
+- Updated dependencies [[`e79b2935`](https://github.com/thirdweb-dev/js/commit/e79b293562bbcf4af6fbcb4829b2acb4cb3e2cb4), [`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b), [`b0ecfd2d`](https://github.com/thirdweb-dev/js/commit/b0ecfd2d8d5cda33dc8f5ea2d20119cb901a0bcb), [`a27b10c5`](https://github.com/thirdweb-dev/js/commit/a27b10c5c3400500ef0138069acc550b3a07ffc6), [`d28097f5`](https://github.com/thirdweb-dev/js/commit/d28097f508739cdbd6625e09c2ed0fe25a922c0f), [`94559129`](https://github.com/thirdweb-dev/js/commit/9455912932c71f3ef9b67461bf5604f1ea1f71e8), [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a), [`8bf3be88`](https://github.com/thirdweb-dev/js/commit/8bf3be88be051178a7142618c4371d2f2ef26271), [`b02fb91a`](https://github.com/thirdweb-dev/js/commit/b02fb91a548a3f66f7677ced24be9397e0f9a7ba), [`2861dff1`](https://github.com/thirdweb-dev/js/commit/2861dff1f013b5150314fdaccaeadddbcf0d21c9), [`61b6a002`](https://github.com/thirdweb-dev/js/commit/61b6a00214716454222e67fe5fdb47edba391070), [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352), [`50749662`](https://github.com/thirdweb-dev/js/commit/507496627bcd77b49bb027b24996a31c57e04819), [`b3394277`](https://github.com/thirdweb-dev/js/commit/b3394277c77e4af130151111e056e27a28ac893a), [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa), [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c), [`4c488aa3`](https://github.com/thirdweb-dev/js/commit/4c488aa31f6fadc13759ff60f30230b929feb314)]:
+  - @thirdweb-dev/react-core@4.1.11
+  - @thirdweb-dev/wallets@2.1.10
+  - @thirdweb-dev/sdk@4.0.18
+  - @thirdweb-dev/chains@0.1.60
+
 ## 4.1.10
 
 ### Patch Changes

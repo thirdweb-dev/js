@@ -56,7 +56,6 @@ import invariant from "tiny-invariant";
  * @param listingId - the listing id to check
  * @returns a response object that includes the desired listing
  * @see {@link https://portal.thirdweb.com/react/react.uselisting?utm_source=sdk | Documentation}
- * @beta
  */
 export function useListing(
   contract: RequiredParam<Marketplace>,
@@ -163,7 +162,6 @@ export function useEnglishAuction(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of listings
  * @see {@link https://portal.thirdweb.com/react/react.uselistings?utm_source=sdk | Documentation}
- * @beta
  */
 export function useListings(
   contract: RequiredParam<Marketplace>,
@@ -334,7 +332,6 @@ export function useValidEnglishAuctions(
  * @param contract - an instance of a marketplace contract
  * @returns a response object that includes the listing count
  * @see {@link https://portal.thirdweb.com/react/react.uselistingscount?utm_source=sdk | Documentation}
- * @beta
  */
 export function useListingsCount(contract: RequiredParam<Marketplace>) {
   const contractAddress = contract?.getAddress();
@@ -422,7 +419,6 @@ export function useEnglishAuctionsCount(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of listings
  * @see {@link https://portal.thirdweb.com/react/react.useactivelistings?utm_source=sdk | Documentation}
- * @beta
  */
 export function useActiveListings(
   contract: RequiredParam<Marketplace>,
@@ -456,7 +452,6 @@ export function useActiveListings(
  * @param listingId - the listing id to check
  * @returns a response object that includes the {@link Offer} that is winning the auction
  * @see {@link https://portal.thirdweb.com/react/react.usewinningbid?utm_source=sdk | Documentation}
- * @beta
  */
 export function useWinningBid(
   contract: RequiredParam<Marketplace>,
@@ -585,7 +580,6 @@ export function useAuctionWinner(
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check (only necessary for marketplace v3)
-
  * @returns a response object that includes an array of listings
  * @twfeature EnglishAuctions
  * @see {@link https://portal.thirdweb.com/react/react.usebidbuffer?utm_source=sdk | Documentation}
@@ -694,7 +688,6 @@ export function useMinimumNextBid(
  * @param contract - an instance of a Marketplace contract
  * @param listingId - the id of the listing to fetch offers for
  * @see {@link https://portal.thirdweb.com/react/react.useoffers?utm_source=sdk | Documentation}
- * @beta
  */
 export function useOffers(
   contract: RequiredParam<Marketplace>,
@@ -902,7 +895,6 @@ export function useCreateAuctionListing<
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to cancel a listing
  * @see {@link https://portal.thirdweb.com/react/react.usecancellisting?utm_source=sdk | Documentation}
- * @beta
  */
 export function useCancelListing(
   contract: RequiredParam<Marketplace>,
@@ -1107,7 +1099,6 @@ export function useCancelEnglishAuction(
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to make a bid on an auction listing
  * @see {@link https://portal.thirdweb.com/react/react.usemakebid?utm_source=sdk | Documentation}
- * @beta
  */
 export function useMakeBid(contract: RequiredParam<Marketplace>) {
   const activeChainId = useSDKChainId();
@@ -1166,7 +1157,6 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to make a bid on an auction listing
  * @see {@link https://portal.thirdweb.com/react/react.usemakeoffer?utm_source=sdk | Documentation}
- * @beta
  */
 export function useMakeOffer(contract: RequiredParam<Marketplace>) {
   const activeChainId = useSDKChainId();
@@ -1286,7 +1276,6 @@ export function useAcceptDirectListingOffer(
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to accept an offer on a direct listing
  * @see {@link https://portal.thirdweb.com/react/react.useexecuteauctionsale?utm_source=sdk | Documentation}
- * @beta
  */
 export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
   const activeChainId = useSDKChainId();
@@ -1344,7 +1333,6 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to buy out an auction listing
  * @see {@link https://portal.thirdweb.com/react/react.usebuynow?utm_source=sdk | Documentation}
- * @beta
  */
 export function useBuyNow(contract: RequiredParam<Marketplace>) {
   const activeChainId = useSDKChainId();
@@ -1415,7 +1403,6 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  * @param contract - an instance of a MarketplaceV3 contract
  * @returns a mutation object that can be used to buy out a direct listing
  * @see {@link https://portal.thirdweb.com/react/react.useBuyDirectListing?utm_source=sdk | Documentation}
- * @beta
  */
 export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();

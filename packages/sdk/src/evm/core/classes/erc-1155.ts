@@ -54,17 +54,17 @@ import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { ERC1155Claimable } from "./erc-1155-claimable";
-import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { ERC1155Claimable } from "./internal/erc1155/erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./internal/erc1155/erc-1155-claimable-with-conditions";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 
 import { ContractEncoder } from "./contract-encoder";
-import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155LazyMintable } from "./erc-1155-lazy-mintable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
+import { Erc1155Burnable } from "./internal/erc1155/erc-1155-burnable";
+import { Erc1155Enumerable } from "./internal/erc1155/erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./internal/erc1155/erc-1155-lazy-mintable";
+import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
 
 /**
  * Standard ERC1155 NFT functions

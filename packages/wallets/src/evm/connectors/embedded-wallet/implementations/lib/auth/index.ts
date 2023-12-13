@@ -96,8 +96,6 @@ export class Auth {
    * @returns `{{user: InitializedUser}}` An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
    */
   async loginWithModal(): Promise<AuthLoginReturnType> {
-    await this.preLogin();
-
     return this.BaseLogin.loginWithModal();
   }
 
@@ -131,6 +129,12 @@ export class Auth {
     args: Parameters<BaseLogin["loginWithCustomJwt"]>[0],
   ): Promise<AuthLoginReturnType> {
     return this.BaseLogin.loginWithCustomJwt(args);
+  }
+
+  async loginWithCustomAuthEndpoint(
+    args: Parameters<BaseLogin["loginWithCustomAuthEndpoint"]>[0],
+  ): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithCustomAuthEndpoint(args);
   }
 
   async loginWithOauth(

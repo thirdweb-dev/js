@@ -1,5 +1,5 @@
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Address } from "../../schema/shared/Address";
 import type { Price } from "../../types/currency";
 import { BigNumberish, CallOverrides } from "ethers";

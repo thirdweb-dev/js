@@ -19,10 +19,10 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
@@ -51,13 +51,14 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "signature-drop");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc721 instead
  */
 export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
-  public owner: ContractOwner<SignatureDropContract>;
+  public owner: ContractOwner;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
@@ -66,7 +67,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   >;
   public app: ContractAppURI<SignatureDropContract>;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<SignatureDropContract>;
+  public platformFees: ContractPlatformFee;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,

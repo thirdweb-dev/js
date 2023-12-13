@@ -5,8 +5,10 @@ import { PropsWithChildren, useContext } from "react";
 import { useColorScheme } from "react-native";
 import { useUIContext } from "../providers/ui-context-provider";
 
+export type ThemeType = "dark" | "light" | Theme;
+
 export type ThemeProviderProps = {
-  theme?: Theme | "light" | "dark";
+  theme?: ThemeType;
 };
 
 export function ThemeProvider({

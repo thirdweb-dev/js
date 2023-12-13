@@ -16,7 +16,7 @@ import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
-import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
+import { RPCConnectionHandler } from "./classes/internal/rpc-connection-handler";
 import type {
   ContractForPrebuiltContractType,
   ContractType,
@@ -78,8 +78,8 @@ import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
-import { ContractFactory } from "./classes/factory";
-import { ContractRegistry } from "./classes/registry";
+import { ContractFactory } from "./classes/internal/factory";
+import { ContractRegistry } from "./classes/internal/registry";
 import { DeployTransaction, Transaction } from "./classes/transactions";
 import {
   type BytesLike,
@@ -1054,6 +1054,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "LoyaltyCard",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1111,6 +1112,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1472,6 +1474,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC20",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1503,6 +1506,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC721",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1534,15 +1538,16 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC1155",
         deployArgs,
+        "latest",
         options,
       );
     },
   );
 
   /**
-   * Deploys a new contract
+   * Deploys a new prebuilt contract
    *
-   * @internal
+   * @public
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
    * @param version - the version of the contract to deploy
@@ -1647,13 +1652,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param constructorParams - the constructor params to pass to the contract
    *
    * @deprecated use deployPublishedContract instead
+   * @internal
    */
   deployReleasedContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
       publisherAddress: AddressOrEns,
       contractName: string,
       constructorParams: any[],
-      version = "latest",
+      version: string = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       const publishedContract = await this.fetchPublishedContractFromPolygon(
@@ -1824,6 +1830,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param deployMetadata - the deploy metadata
    * @param signer - the signer to use
    * @param options - the deploy options
+   * @internal
    */
   deployViaAutoFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1887,6 +1894,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             `Error deploying contract at ${tx.predictedAddress}`,
             (e as any)?.message,
           );
+          throw e;
         }
       }
 
@@ -1923,6 +1931,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param deployMetadata - the deploy metadata
    * @param signer - the signer to use
    * @param chainId - the chain id to deploy to
+   * @internal
    */
   deployViaCustomFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2054,6 +2063,9 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
+  /**
+   * @internal
+   */
   public override updateSignerOrProvider(network: NetworkInput) {
     super.updateSignerOrProvider(network);
     this.updateContractSignerOrProvider();
@@ -2228,7 +2240,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   );
 
   /**
-   * @internal
+   * @public
    * @param abi - the abi of the contract
    * @param bytecode - the bytecode of the contract
    * @param constructorParams - the constructor params to pass to the contract

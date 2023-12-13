@@ -16,6 +16,7 @@ const roleMap = {
   signer: "SIGNER_ROLE",
   metadata: "METADATA_ROLE",
   revoke: "REVOKE_ROLE",
+  migration: "MIGRATION_ROLE",
 } as const;
 
 /**

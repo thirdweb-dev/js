@@ -18,7 +18,7 @@ import {
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
-import type { ContractWrapper } from "./contract-wrapper";
+import type { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -213,7 +213,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       FilledSignaturePayload20[],
     ] = await Promise.all([
       this.contractWrapper.getChainID(),
-      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155. 
+      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
       Promise.all(
         payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
       ),

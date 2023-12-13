@@ -22,7 +22,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractEvents } from "./contract-events";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Transaction } from "./transactions";
 

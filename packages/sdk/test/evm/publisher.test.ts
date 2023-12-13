@@ -362,7 +362,7 @@ describe("Publishing", async () => {
     // ("ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -415,7 +415,7 @@ describe("Publishing", async () => {
     // ("ipfs://QmXQ2f6qA7FD8uks1hKK1soTn6sbEGBSfDpzN9buYXkGxZ");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -476,7 +476,7 @@ describe("Publishing", async () => {
     ("ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -537,7 +537,7 @@ describe("Publishing", async () => {
     // ("ipfs://QmNuKYGZoiHyumKjT7gPk3vwy3WKt7gTf1hKGZ2eyGZGRd");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",

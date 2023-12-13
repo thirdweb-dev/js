@@ -7,7 +7,7 @@ import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { getInjectedCryptoDefiWalletProvider } from "../connectors/crypto-defi-wallet/getInjectedCryptoDefiWalletProvider";
 
-type CryptoDefiWalletAdditionalOptions = {
+export type CryptoDefiWalletAdditionalOptions = {
   /**
    * Whether to open the default Wallet Connect QR code Modal for connecting to Defi app on mobile if Defi wallet is not injected when calling connect().
    */

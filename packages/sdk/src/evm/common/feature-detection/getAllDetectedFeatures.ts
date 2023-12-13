@@ -20,6 +20,9 @@ export function getAllDetectedFeatures(abi: AbiInput): FeatureWithEnabled[] {
   return features;
 }
 
+/**
+ * @internal
+ */
 export function getAllDetectedExtensionsFromBytecode(
   bytecode: string,
 ): FeatureWithEnabled[] {
@@ -28,6 +31,9 @@ export function getAllDetectedExtensionsFromBytecode(
   return features;
 }
 
+/**
+ * @internal
+ */
 export function constructAbiFromBytecode(bytecode: string): AbiInput {
   let extensions = getAllDetectedExtensionsFromBytecode(bytecode);
   // special deduping for ERC721 and ERC20

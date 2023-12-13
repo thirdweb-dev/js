@@ -2,12 +2,24 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Oort Mainnet",
   "chainId": 970,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Oort Mainnet Explorer",
+      "url": "https://mainnet-scan.oortech.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+        "width": 1440,
+        "height": 1440,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
-    "width": 1043,
-    "height": 1079,
+    "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+    "width": 1440,
+    "height": 1440,
     "format": "png"
   },
   "infoURL": "https://oortech.com",
@@ -21,7 +33,7 @@ export default {
   "rpc": [
     "https://oort.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://970.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.oortech.com"
+    "https://mainnet-rpc.oortech.com"
   ],
   "shortName": "ccn",
   "slug": "oort",

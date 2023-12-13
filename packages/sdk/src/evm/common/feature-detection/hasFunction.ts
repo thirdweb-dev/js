@@ -1,4 +1,4 @@
-import type { ContractWrapper } from "../../core/classes/contract-wrapper";
+import type { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import type { BaseContract } from "ethers";
 
 /**

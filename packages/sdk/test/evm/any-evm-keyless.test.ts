@@ -39,7 +39,7 @@ describe("Any EVM Keyless Deploy", async () => {
   async function deployTieredDrop() {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const walletAddress = await sdk.wallet.getAddress();
 
     // This needs to match the published contract for the currently used ABI
@@ -94,11 +94,11 @@ describe("Any EVM Keyless Deploy", async () => {
   async function deployMarketplaceV3() {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const walletAddress = await sdk.wallet.getAddress();
 
     // IPFS URIs here and below This needs to match the published contract URIs for the contract and extensions
-    // the URI can be found by querying the ContractPublisher for those contracts: https://thirdweb.com/polygon/0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7/explorer
+    // the URI can be found by querying the ContractPublisher for those contracts: https://thirdweb.com/polygon/0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808/explorer
     const publishUri = await mockUploadMetadataWithBytecode(
       "MarketplaceV3",
       marketplaceV3CompilerMetadata.output.abi,
