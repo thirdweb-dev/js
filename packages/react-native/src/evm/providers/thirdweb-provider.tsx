@@ -12,13 +12,11 @@ import { DEFAULT_WALLETS } from "../constants/wallets";
 import { DappContextProvider } from "./context-provider";
 import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
-import { ThemeProvider } from "../styles/ThemeProvider";
+import { ThemeProvider, ThemeType } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
-import { useColorScheme } from "react-native";
 import type { Locale } from "../i18n/types";
-import { Theme } from "../styles/theme";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -67,7 +65,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * })
    * ```
    */
-  theme?: Theme | "dark" | "light";
+  theme?: ThemeType;
 
   /**
    * Locale that the app will be displayed in
@@ -150,8 +148,6 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     ...restProps
   } = props;
 
-  const colorScheme = useColorScheme();
-
   const coinbaseWalletObj = supportedWallets.find(
     (w) => w.id === walletIds.coinbase,
   );
@@ -190,9 +186,7 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
       {...sdkOptions}
       {...restProps}
     >
-      <ThemeProvider
-        theme={theme ? theme : colorScheme === "dark" ? "dark" : "light"}
-      >
+      <ThemeProvider theme={theme ? theme : "dark"}>
         <UIContextProvider locale={locale}>
           {hasMagicConfig ? (
             <SafeAreaProvider>
