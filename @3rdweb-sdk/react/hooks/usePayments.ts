@@ -322,13 +322,26 @@ export function usePaymentsRegisterContract() {
       const contract = await sdk.getContract(input.contractAddress);
       invariant(contract?.abi, "No contract ABI found");
 
+      const hasDetectedExtensions = hasPaymentsDetectedExtensions(contract);
+      const contractType = hasDetectedExtensions
+        ? "THIRDWEB"
+        : "CUSTOM_CONTRACT";
+
+      let displayName;
+      try {
+        const metadata = await contract.metadata.get();
+        displayName = metadata.name;
+      } catch (e) {
+        console.error(`Failed to get contract metadata`);
+      }
+
       const body: RegisterContractInput = {
         ...input,
         contractDefinition: contract.abi,
         contractAddress: input.contractAddress.toLowerCase(),
         chain: ChainIdToPaperChain[parseInt(input.chain)],
-        contractType: input.contractType || "THIRDWEB",
-        displayName: input.displayName,
+        contractType,
+        displayName,
       };
 
       return fetchFromPaymentsAPI<RegisterContractInput>(
