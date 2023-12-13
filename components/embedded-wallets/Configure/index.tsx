@@ -348,7 +348,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       Authentication Endpoint
                     </FormLabel>
                     <Input
-                      placeholder="https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/auth/test-custom-auth-endpoint"
+                      placeholder="https://example.com/your-auth-verifier"
                       type="text"
                       {...form.register("customAuthEndpoint.authEndpoint")}
                     />
