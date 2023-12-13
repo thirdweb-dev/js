@@ -11,7 +11,24 @@ export default {
     {
       "name": "blockscout",
       "url": "https://optimism.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    },
+    {
+      "name": "dexguru",
+      "url": "https://optimism.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -29,9 +46,11 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 10,
   "redFlags": [],
   "rpc": [
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.optimism.io",

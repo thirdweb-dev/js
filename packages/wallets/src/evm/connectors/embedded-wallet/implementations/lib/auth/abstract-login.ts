@@ -1,6 +1,7 @@
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
+  AuthProvider,
 } from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
@@ -8,16 +9,23 @@ import type {
 } from "../../interfaces/embedded-wallets/embedded-wallets";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
-type LoginQuerierTypes = {
+export type LoginQuerierTypes = {
+  loginWithCustomAuthEndpoint: { payload: string; encryptionKey: string };
+  loginWithCustomJwt: { jwt: string; encryptionKey?: string };
   loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
     email: string;
     otp: string;
+    recoveryCode?: string;
   };
   injectDeveloperClientId: void;
-  getHeadlessGoogleLoginLink: void;
-  loginWithGoogle: void;
+  getHeadlessOauthLoginLink: { authProvider: AuthProvider };
+};
+
+type OauthLoginType = {
+  openedWindow?: Window | null;
+  closeOpenedWindow?: (openedWindow: Window) => void;
 };
 
 export abstract class AbstractLogin<
@@ -26,6 +34,7 @@ export abstract class AbstractLogin<
   EMAIL_VERIFICATION extends { email: string; otp: string } = {
     email: string;
     otp: string;
+    recoveryCode?: string;
   },
 > {
   protected LoginQuerier: EmbeddedWalletIframeCommunicator<LoginQuerierTypes>;
@@ -56,12 +65,19 @@ export abstract class AbstractLogin<
     this.clientId = clientId;
   }
 
+  abstract loginWithCustomJwt(args: {
+    jwt: string;
+    encryptionKey: string;
+  }): Promise<AuthLoginReturnType>;
+  abstract loginWithCustomAuthEndpoint(args: {
+    payload: string;
+    encryptionKey: string;
+  }): Promise<AuthLoginReturnType>;
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithGoogle(args?: {
-    openedWindow?: Window | null;
-    closeOpenedWindow?: (openedWindow: Window) => void;
-  }): Promise<AuthLoginReturnType>;
+  abstract loginWithOauth(
+    args: OauthLoginType & { oauthProvider: AuthProvider },
+  ): Promise<AuthLoginReturnType>;
 
   async sendEmailLoginOtp({
     email,

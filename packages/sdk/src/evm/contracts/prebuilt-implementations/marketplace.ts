@@ -18,23 +18,25 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
-import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { MarketplaceAuction } from "../../core/classes/internal/marketplace/marketplace-auction";
+import { MarketplaceDirect } from "../../core/classes/internal/marketplace/marketplace-direct";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { ListingType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
-import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
+import { ListingType } from "../../enums/marketplace/ListingType";
+import { AuctionListing } from "../../types/marketplace/AuctionListing";
+import { DirectListing } from "../../types/marketplace/DirectListing";
+import { Offer } from "../../types/marketplace/Offer";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -48,7 +50,8 @@ import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.directListings / contract.auctions / contract.offers instead
  */
 export class Marketplace implements UpdateableNetwork {
   static contractRoles = MARKETPLACE_CONTRACT_ROLES;
@@ -60,7 +63,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
-  public platformFees: ContractPlatformFee<MarketplaceContract>;
+  public platformFees: ContractPlatformFee;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof MarketplaceContractSchema
@@ -348,8 +351,8 @@ export class Marketplace implements UpdateableNetwork {
     );
     // derive the offers from the events
     return await Promise.all(
-      listingEvents.map(async (e): Promise<Offer> => {
-        return await mapOffer(
+      listingEvents.map((e): Promise<Offer> => {
+        return mapOffer(
           this.contractWrapper.getProvider(),
           BigNumber.from(listingId),
           {

@@ -9,8 +9,7 @@ import {
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
-import { iconSize, radius, spacing, Theme } from "../../design-system";
-import styled from "@emotion/styled";
+import { iconSize, radius, spacing } from "../../design-system";
 import {
   WalletConfig,
   useConnectionStatus,
@@ -26,6 +25,9 @@ import { Link, Text } from "../../components/text";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { StyledButton, StyledUl } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -39,6 +41,7 @@ export const WalletSelector: React.FC<{
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
   const disconnect = useDisconnect();
   const connectionStatus = useConnectionStatus();
+  const locale = useTWLocale().connectWallet;
 
   const localWalletConfig = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
@@ -54,20 +57,6 @@ export const WalletSelector: React.FC<{
 
   const eoaWallets = sortWalletConfigs(
     nonLocalWalletConfigs.filter((w) => w.category !== "socialLogin"),
-  );
-
-  const showNewToWallets =
-    isCompact && (socialWallets.length === 0 || isWalletGroupExpanded);
-
-  // groups UI is showing a social login + grouping all eoa wallets together in a group
-  // do this if there is social login and more than 2 eoa wallets
-  const showGroupsUI =
-    isCompact && socialWallets.length >= 1 && eoaWallets.length >= 2;
-
-  const showTOS = isCompact && (termsOfServiceUrl || privacyPolicyUrl);
-
-  const showFooter = Boolean(
-    (!showGroupsUI && localWalletConfig) || showNewToWallets,
   );
 
   const continueAsGuest = localWalletConfig && (
@@ -87,7 +76,7 @@ export const WalletSelector: React.FC<{
       }}
       data-test="continue-as-guest-button"
     >
-      Continue as Guest
+      {locale.continueAsGuest}
     </Button>
   );
 
@@ -106,7 +95,7 @@ export const WalletSelector: React.FC<{
           color="primaryText"
           hoverColor="accentText"
           target="_blank"
-          href="https://thirdweb.com/dashboard/wallets/connect"
+          href="https://thirdweb.com/connect?utm_source=cw"
           style={{
             display: "flex",
             alignItems: "center",
@@ -138,7 +127,218 @@ export const WalletSelector: React.FC<{
     props.selectWallet(wallet);
   };
 
-  const showSeperatorLine = showNewToWallets && !continueAsGuest && showTOS;
+  const connectAWallet = (
+    <Button
+      fullWidth
+      variant="outline"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: spacing.sm,
+        padding: spacing.md,
+      }}
+      onClick={() => {
+        setIsWalletGroupExpanded(true);
+      }}
+    >
+      <Container flex="row" gap="xxs">
+        {eoaWallets.slice(0, 2).map((w) => (
+          <Img
+            key={w.id}
+            width={iconSize.sm}
+            height={iconSize.sm}
+            src={w.meta.iconURL}
+          />
+        ))}
+      </Container>
+      {locale.connectAWallet}
+    </Button>
+  );
+
+  const newToWallets = (
+    <Container
+      flex="row"
+      style={{
+        justifyContent: "space-between",
+      }}
+    >
+      <Text color="secondaryText" size="sm" weight={500}>
+        {locale.newToWallets}
+      </Text>
+      <Link
+        weight={500}
+        size="sm"
+        target="_blank"
+        href="https://blog.thirdweb.com/web3-wallet/"
+      >
+        {locale.getStarted}
+      </Link>
+    </Container>
+  );
+
+  const tos =
+    termsOfServiceUrl || privacyPolicyUrl ? (
+      <TOS
+        termsOfServiceUrl={termsOfServiceUrl}
+        privacyPolicyUrl={privacyPolicyUrl}
+      />
+    ) : undefined;
+
+  let topSection: React.ReactNode;
+  let bottomSection: React.ReactNode;
+
+  // wide modal
+  if (!isCompact) {
+    topSection = (
+      <WalletSelection
+        walletConfigs={nonLocalWalletConfigs}
+        selectWallet={handleSelect}
+      />
+    );
+
+    if (continueAsGuest) {
+      bottomSection = (
+        <ScreenBottomContainer>{continueAsGuest}</ScreenBottomContainer>
+      );
+    }
+  }
+
+  // compact
+  else {
+    // no social logins
+    if (socialWallets.length === 0) {
+      topSection = (
+        <WalletSelection
+          walletConfigs={nonLocalWalletConfigs}
+          selectWallet={handleSelect}
+        />
+      );
+
+      bottomSection = (
+        <>
+          <Line />
+          <Container flex="column" p="lg" gap="lg">
+            {newToWallets}
+            {continueAsGuest}
+          </Container>
+          {!continueAsGuest && <Line />}
+          {tos && (
+            <Container
+              px="md"
+              style={{
+                paddingBottom: spacing.md,
+                paddingTop: continueAsGuest ? 0 : spacing.md,
+              }}
+            >
+              {tos}
+            </Container>
+          )}
+        </>
+      );
+    }
+
+    // social logins
+    else {
+      // not expanded state
+      if (!isWalletGroupExpanded) {
+        topSection = (
+          <Container px="xs">
+            <WalletSelection
+              walletConfigs={socialWallets}
+              selectWallet={handleSelect}
+            />
+            {eoaWallets.length > 0 && (
+              <>
+                <TextDivider text={locale.or} />
+                <Spacer y="lg" />
+              </>
+            )}
+          </Container>
+        );
+
+        // only social login - no eoa wallets
+        if (eoaWallets.length === 0) {
+          bottomSection =
+            tos || continueAsGuest ? (
+              <>
+                <Spacer y="md" />
+                <Line />
+                {continueAsGuest && (
+                  <Container p="lg"> {continueAsGuest}</Container>
+                )}
+                {tos && <Container p="md"> {tos} </Container>}
+              </>
+            ) : (
+              <Spacer y="sm" />
+            );
+        }
+
+        // social login + eoa wallets
+        else {
+          // social login + More than 1 eoa wallets
+          if (eoaWallets.length > 1) {
+            bottomSection = (
+              <Container flex="column" gap="sm">
+                <Container px="lg" flex="column" gap="md">
+                  {connectAWallet}
+                  {continueAsGuest}
+                </Container>
+
+                {tos ? (
+                  <Container p="md"> {tos} </Container>
+                ) : (
+                  <Spacer y="md" />
+                )}
+              </Container>
+            );
+          }
+
+          // social login + single eoa wallet
+          else {
+            bottomSection = (
+              <>
+                <Container px="lg">
+                  <WalletSelection
+                    walletConfigs={eoaWallets}
+                    selectWallet={handleSelect}
+                  />
+                </Container>
+
+                {continueAsGuest && (
+                  <Container flex="column" px="lg" gap="lg">
+                    {continueAsGuest}
+                  </Container>
+                )}
+
+                {tos ? (
+                  <>
+                    {continueAsGuest ? <Spacer y="md" /> : <Line />}
+                    <Container p="md"> {tos} </Container>
+                  </>
+                ) : (
+                  <>{continueAsGuest && <Spacer y="xl" />}</>
+                )}
+              </>
+            );
+          }
+        }
+      }
+
+      // expanded state
+      else {
+        topSection = (
+          <WalletSelection
+            walletConfigs={eoaWallets}
+            selectWallet={handleSelect}
+          />
+        );
+
+        bottomSection = (
+          <ScreenBottomContainer>{newToWallets}</ScreenBottomContainer>
+        );
+      }
+    }
+  }
 
   return (
     <Container scrollY flex="column" animate="fadein" fullHeight>
@@ -160,130 +360,15 @@ export const WalletSelector: React.FC<{
       <Container
         expand
         scrollY
-        px={nonLocalWalletConfigs.length === 1 ? "lg" : "md"}
+        px="md"
         style={{
           paddingTop: "2px",
         }}
       >
-        {showGroupsUI ? (
-          <>
-            {/* list of EOA wallets */}
-            {isWalletGroupExpanded ? (
-              <WalletSelection
-                walletConfigs={eoaWallets}
-                selectWallet={handleSelect}
-              />
-            ) : (
-              <Container px="xs">
-                <WalletSelection
-                  walletConfigs={socialWallets}
-                  selectWallet={handleSelect}
-                />
-
-                <TextDivider>
-                  <span> OR </span>
-                </TextDivider>
-
-                <Spacer y="lg" />
-
-                {/* connect a wallet */}
-                <Button
-                  fullWidth
-                  variant="outline"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: spacing.sm,
-                    padding: spacing.md,
-                  }}
-                  onClick={() => {
-                    setIsWalletGroupExpanded(true);
-                  }}
-                >
-                  <Container flex="row" gap="xxs">
-                    {eoaWallets.slice(0, 2).map((w) => (
-                      <Img
-                        key={w.id}
-                        width={iconSize.sm}
-                        height={iconSize.sm}
-                        src={w.meta.iconURL}
-                      />
-                    ))}
-                  </Container>
-                  Connect a wallet
-                </Button>
-
-                {continueAsGuest ? (
-                  <>
-                    <Spacer y="md" />
-                    {continueAsGuest}
-                    <Spacer y="xl" />
-                  </>
-                ) : (
-                  <Spacer y="xl" />
-                )}
-              </Container>
-            )}
-          </>
-        ) : (
-          <WalletSelection
-            walletConfigs={nonLocalWalletConfigs}
-            selectWallet={handleSelect}
-          />
-        )}
+        {topSection}
       </Container>
 
-      {/* Footer */}
-      {showFooter && (
-        <ScreenBottomContainer>
-          {showNewToWallets && (
-            <Container
-              flex="row"
-              style={{
-                justifyContent: "space-between",
-              }}
-            >
-              <Text color="secondaryText" size="sm" weight={500}>
-                New to wallets?
-              </Text>
-              <Link
-                weight={500}
-                size="sm"
-                target="_blank"
-                href="https://blog.thirdweb.com/web3-wallet/"
-              >
-                Get started
-              </Link>
-            </Container>
-          )}
-
-          {!showGroupsUI && continueAsGuest}
-        </ScreenBottomContainer>
-      )}
-
-      {showTOS && !isWalletGroupExpanded && (
-        <div>
-          {showSeperatorLine && <Line />}
-
-          <Container
-            p="md"
-            style={
-              !showSeperatorLine
-                ? {
-                    paddingTop: 0,
-                  }
-                : undefined
-            }
-          >
-            {isCompact && (
-              <TOS
-                termsOfServiceUrl={termsOfServiceUrl}
-                privacyPolicyUrl={privacyPolicyUrl}
-              />
-            )}
-          </Container>
-        </div>
-      )}
+      {bottomSection}
     </Container>
   );
 };
@@ -338,6 +423,7 @@ export function WalletEntryButton(props: {
 }) {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
+  const locale = useTWLocale().connectWallet;
   return (
     <WalletButton
       type="button"
@@ -357,60 +443,56 @@ export function WalletEntryButton(props: {
           {walletConfig.meta.name}
         </Text>
 
-        {isRecommended && <Text size="sm">Recommended</Text>}
+        {isRecommended && <Text size="sm">{locale.recommended}</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
-          walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
+          walletConfig.isInstalled() && (
+            <Text size="sm">{locale.installed}</Text>
+          )}
       </Container>
     </WalletButton>
   );
 }
 
-const WalletList = styled.ul<{ theme?: Theme }>`
-  all: unset;
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  flex: 1;
-  ${noScrollBar}
+const WalletList = /* @__PURE__ */ StyledUl({
+  all: "unset",
+  listStyleType: "none",
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+  boxSizing: "border-box",
+  overflowY: "auto",
+  flex: 1,
+  ...noScrollBar,
+  // to show the box-shadow of inputs that overflows
+  padding: "2px",
+  margin: "-2px",
+  marginBottom: 0,
+  paddingBottom: spacing.lg,
+});
 
-  /* to show the box-shadow of inputs that overflows  */
-  padding: 2px;
-  margin: -2px;
-  padding-bottom: 0;
-  margin-bottom: 0;
-  padding-bottom: ${spacing.xl};
-`;
-
-const WalletButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  color: ${(p) => p.theme.colors.secondaryText};
-  position: relative;
-  border-radius: ${radius.md};
-  padding: ${spacing.xs} ${spacing.xs};
-
-  &:hover {
-    background-color: ${(p) => p.theme.colors.walletSelectorButtonHoverBg};
-  }
-
-  transition:
-    background-color 200ms ease,
-    transform 200ms ease;
-
-  &:hover {
-    transform: scale(1.01);
-  }
-`;
+const WalletButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    display: "flex",
+    alignItems: "center",
+    gap: spacing.sm,
+    cursor: "pointer",
+    boxSizing: "border-box",
+    width: "100%",
+    color: theme.colors.secondaryText,
+    position: "relative",
+    borderRadius: radius.md,
+    padding: `${spacing.xs} ${spacing.xs}`,
+    "&:hover": {
+      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      transform: "scale(1.01)",
+    },
+    transition: "background-color 200ms ease, transform 200ms ease",
+  };
+});
 
 function sortWalletConfigs(walletConfigs: WalletConfig[]) {
   return (
@@ -428,7 +510,7 @@ function sortWalletConfigs(walletConfigs: WalletConfig[]) {
         }
         return 0;
       })
-      // show the reccomended wallets even before that
+      // show the recommended wallets even before that
       .sort((a, b) => {
         if (a.recommended && !b.recommended) {
           return -1;

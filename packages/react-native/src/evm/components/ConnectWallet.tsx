@@ -14,7 +14,11 @@ import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
-import { useUIContext } from "../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+  useUIContext,
+} from "../providers/ui-context-provider";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
@@ -32,7 +36,7 @@ export type ConnectWalletProps = {
   /**
    * Hide option to request testnet funds for testnets in dropdown
    *
-   * @default false
+   * The default is `false`
    */
   hideTestnetFaucet?: boolean;
 
@@ -43,7 +47,7 @@ export type ConnectWalletProps = {
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
    *
-   * @default false
+   * The default is `false`
    */
   switchToActiveChain?: boolean;
 
@@ -65,6 +69,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide the "switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to a Smart Wallet
+   *
+   * The default is `false`
+   */
+  hideSwitchToPersonalWallet?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -80,7 +91,10 @@ export const ConnectWallet = ({
   termsOfServiceUrl,
   privacyPolicyUrl,
   supportedTokens,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletProps) => {
+  const globalTheme = useGlobalTheme();
+  const l = useLocale();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
   const isNetworkMismatch = useNetworkMismatch();
@@ -139,10 +153,13 @@ export const ConnectWallet = ({
               style={styles.connectWalletButton}
             >
               {switching ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
+                <ActivityIndicator
+                  size="small"
+                  color={globalTheme.colors.buttonTextColor}
+                />
               ) : (
                 <Text variant="bodyLarge" color="buttonTextColor">
-                  Switch Network
+                  {l.common.switch_network}
                 </Text>
               )}
             </BaseButton>
@@ -154,6 +171,7 @@ export const ConnectWallet = ({
               hideTestnetFaucet={hideTestnetFaucet}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
+              hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
             />
           )
         ) : (

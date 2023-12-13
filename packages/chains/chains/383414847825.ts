@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.zeniq.net/"
   ],
-  "features": [],
   "infoURL": "https://www.zeniq.dev/",
   "name": "Zeniq",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "ZENIQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 383414847825,
   "rpc": [
     "https://zeniq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://383414847825.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smart.zeniq.network:9545"
   ],
   "shortName": "zeniq",

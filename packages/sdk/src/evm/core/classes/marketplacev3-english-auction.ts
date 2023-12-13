@@ -19,7 +19,7 @@ import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
+import { Status } from "../../enums/marketplace/Status";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
@@ -27,14 +27,15 @@ import {
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue, Price } from "../../types/currency";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
-import { Bid, EnglishAuction } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import { EnglishAuction } from "../../types/marketplacev3/EnglishAuction";
+import { Bid } from "../../types/marketplacev3/Bid";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
 
@@ -404,12 +405,11 @@ export class MarketplaceV3EnglishAuctions<
     async (
       listings: EnglishAuctionInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createAuction.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createAuction.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this
@@ -848,7 +848,7 @@ export class MarketplaceV3EnglishAuctions<
    * Maps an auction-bid to the strict interface
    *
    * @internal
-   * @param bid
+   * @param bid - The bid to map, as returned from the contract.
    * @returns - A `Bid` object
    */
   private async mapBid(

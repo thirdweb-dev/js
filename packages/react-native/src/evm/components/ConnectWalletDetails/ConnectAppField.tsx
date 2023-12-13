@@ -1,6 +1,5 @@
-import { useWallet } from "@thirdweb-dev/react-core";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
-import { useCallback, useEffect, useState } from "react";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import DisconnectIcon from "../../assets/disconnect";
@@ -13,30 +12,34 @@ import { WalletIcon } from "../base/WalletIcon";
 import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
+import { useLocale } from "../../providers/ui-context-provider";
 
-const ConnectAppField = () => {
+const ConnectAppField = ({
+  onConnectAppTriggered,
+}: {
+  onConnectAppTriggered?: () => void;
+}) => {
   const theme = useTheme();
+  const l = useLocale();
   const [showWCInput, setShowWCInput] = useState(false);
   const [wcUri, setWCUri] = useState<string | undefined>();
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
   const wallet = useWallet();
   const [showQRCodeScan, setShowQRCodeScan] = useState(false);
+  const wcUriRef = useRef<string | undefined>();
+  const walletConnectHandler = useWalletConnectHandler();
 
   const getAppMeta = useCallback(() => {
-    if (wallet && "isWCReceiverEnabled" in wallet) {
-      const sessions = (
-        wallet as unknown as IWalletConnectReceiver
-      ).getActiveSessions();
-      if (Object.keys(sessions).length > 0) {
-        setAppMeta({
-          name: sessions[0].peer.metadata.name,
-          iconUrl: sessions[0].peer.metadata.icons[0],
-        });
-      }
+    const sessions = walletConnectHandler?.getActiveSessions();
+    if (sessions && Object.keys(sessions).length > 0) {
+      setAppMeta({
+        name: sessions[0].peer.metadata.name,
+        iconUrl: sessions[0].peer.metadata.icons[0],
+      });
     }
-  }, [wallet]);
+  }, [walletConnectHandler]);
 
-  const onSmartWalletWCMessage = useCallback(
+  const onWalletConnectMessage = useCallback(
     ({ type }: { type: string }) => {
       if (type === "session_approved") {
         getAppMeta();
@@ -49,22 +52,22 @@ const ConnectAppField = () => {
 
   useEffect(() => {
     if (wallet) {
-      wallet.addListener("message", onSmartWalletWCMessage);
+      wallet.addListener("message", onWalletConnectMessage);
 
       getAppMeta();
     }
 
     return () => {
       if (wallet) {
-        wallet.removeListener("message", onSmartWalletWCMessage);
+        wallet.removeListener("message", onWalletConnectMessage);
       }
     };
-  }, [getAppMeta, onSmartWalletWCMessage, wallet]);
+  }, [getAppMeta, onWalletConnectMessage, wallet]);
 
   const onConnectDappPress = () => {
     if (appMeta) {
       reset();
-      (wallet as unknown as IWalletConnectReceiver).disconnectSession();
+      walletConnectHandler?.disconnectSession();
     } else {
       setShowWCInput(true);
     }
@@ -80,7 +83,8 @@ const ConnectAppField = () => {
   };
 
   const onQRCodeScan = (data: string) => {
-    if (wcUri !== data && data.startsWith("wc:")) {
+    if (wcUriRef.current !== data && data.startsWith("wc:")) {
+      wcUriRef.current = data;
       setWCUri(data);
       setShowQRCodeScan(false);
 
@@ -99,9 +103,16 @@ const ConnectAppField = () => {
 
     const uriToUse = uri || wcUri;
 
-    if (uriToUse?.startsWith("wc:")) {
-      (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
+    if (!uriToUse?.startsWith("wc:")) {
+      return;
     }
+
+    onConnectAppTriggered?.();
+
+    walletConnectHandler?.connectApp(uriToUse);
+
+    setWCUri(undefined);
+    wcUriRef.current = undefined;
   };
 
   const onScanQRPress = () => {
@@ -124,9 +135,16 @@ const ConnectAppField = () => {
               value: wcUri,
               placeholder: "wc://...",
               placeholderTextColor: theme.colors.textSecondary,
+              numberOfLines: 1,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+                flex: 1,
+              },
             }}
             containerProps={{
               flex: 1,
+              pl: "xxs",
             }}
           />
           <BaseButton
@@ -164,13 +182,13 @@ const ConnectAppField = () => {
         >
           <>
             {appMeta?.iconUrl ? (
-              <WalletIcon size={32} iconUri={appMeta.iconUrl} />
+              <WalletIcon size={24} iconUri={appMeta.iconUrl} />
             ) : (
-              <WalletConnectIcon width={16} height={16} />
+              <WalletConnectIcon width={24} height={24} />
             )}
             <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">
-                {appMeta ? appMeta.name : "Connect app"}
+              <Text variant="bodySmall" numberOfLines={1}>
+                {appMeta ? appMeta.name : l.common.connect_app}
               </Text>
             </View>
           </>
@@ -215,8 +233,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     alignContent: "center",
-    flexDirection: "column",
+    flexDirection: "row",
     marginLeft: 8,
+    marginRight: 8,
   },
   exportWallet: {
     display: "flex",

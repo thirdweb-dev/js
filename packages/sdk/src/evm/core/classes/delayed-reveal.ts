@@ -3,7 +3,6 @@ import type {
   IThirdwebContract,
   SignatureDrop,
 } from "@thirdweb-dev/contracts-js";
-import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, Contract, utils, type BigNumberish } from "ethers";
@@ -26,7 +25,7 @@ import {
 } from "../../types/eips";
 import type { UploadProgressEvent } from "../../types/events";
 import type { TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -353,6 +352,11 @@ export class DelayedReveal<
   }
 
   private async getLegacyEncryptedData(index: BigNumber) {
+    const DeprecatedAbi = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json"
+      )
+    ).default;
     const legacy = new Contract(
       this.contractWrapper.address,
       DeprecatedAbi,

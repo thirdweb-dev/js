@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { Theme, iconSize, spacing } from "../design-system";
 import { BackButton, ModalTitle } from "./modalElements";
 import { Img } from "./Img";
@@ -7,22 +6,28 @@ import {
   floatDownAnimation,
   floatUpAnimation,
 } from "../design-system/animations";
+import { StyledDiv } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import type { CSSObject } from "@emotion/react";
 
-export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
-  border-top: 1px solid ${(p) => p.theme.colors.separatorLine};
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.lg};
-  padding: ${spacing.lg};
-`;
+export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    borderTop: `1px solid ${theme.colors.separatorLine}`,
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.lg,
+    padding: spacing.lg,
+  };
+});
 
-export const noScrollBar = `
-scrollbar-width: none;
-&::-webkit-scrollbar {
-  width: 0px;
-  display: none;
-}
-`;
+export const noScrollBar: CSSObject = /* @__PURE__ */ {
+  scrollbarWidth: "none",
+  "&::-webkit-scrollbar": {
+    width: 0,
+    display: "none",
+  },
+};
 
 export function ModalHeader(props: {
   onBack?: () => void;
@@ -59,12 +64,13 @@ export function ModalHeader(props: {
   );
 }
 
-export const Line = styled.div<{
-  theme?: Theme;
-}>`
-  height: 1px;
-  background: ${(p) => p.theme.colors.separatorLine};
-`;
+export const Line = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    height: "1px",
+    background: theme.colors.separatorLine,
+  };
+});
 
 export function Container(props: {
   animate?: "fadein" | "floatup" | "floatdown";
@@ -77,6 +83,7 @@ export function Container(props: {
   style?: React.CSSProperties;
   p?: keyof typeof spacing;
   px?: keyof typeof spacing;
+  py?: keyof typeof spacing;
   relative?: boolean;
   scrollY?: boolean;
   color?: keyof Theme["colors"];
@@ -139,6 +146,11 @@ export function Container(props: {
     styles.paddingRight = spacing[props.px];
   }
 
+  if (props.py) {
+    styles.paddingTop = spacing[props.py];
+    styles.paddingBottom = spacing[props.py];
+  }
+
   if (props.debug) {
     styles.outline = "1px solid red";
     styles.outlineOffset = "-1px";
@@ -159,26 +171,29 @@ export function Container(props: {
   );
 }
 
-const Box = styled.div<{ theme?: Theme; color?: keyof Theme["colors"] }>`
-  color: ${(p) => (p.color ? p.theme.colors[p.color] : "inherit")};
+type BoxProps = {
+  color?: keyof Theme["colors"];
+};
 
-  &[data-animate="fadein"] {
-    opacity: 0;
-    animation: ${fadeInAnimation} 350ms ease forwards;
-  }
-
-  &[data-animate="floatup"] {
-    opacity: 0;
-    animation: ${floatUpAnimation} 350ms ease forwards;
-  }
-
-  &[data-animate="floatdown"] {
-    opacity: 0;
-    animation: ${floatDownAnimation} 350ms ease forwards;
-  }
-
-  &[data-scrolly="true"] {
-    overflow-y: auto;
-    ${noScrollBar}
-  }
-`;
+const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
+  const theme = useCustomTheme();
+  return {
+    color: props.color ? theme.colors[props.color] : "inherit",
+    "&[data-animate='fadein']": {
+      opacity: 0,
+      animation: `${fadeInAnimation} 350ms ease forwards`,
+    },
+    "&[data-animate='floatup']": {
+      opacity: 0,
+      animation: `${floatUpAnimation} 350ms ease forwards`,
+    },
+    "&[data-animate='floatdown']": {
+      opacity: 0,
+      animation: `${floatDownAnimation} 350ms ease forwards`,
+    },
+    "&[data-scrolly='true']": {
+      overflowY: "auto",
+      ...noScrollBar,
+    },
+  };
+});

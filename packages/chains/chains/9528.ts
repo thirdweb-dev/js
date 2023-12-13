@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "http://faucet.qeasyweb3.com"
   ],
-  "features": [],
   "infoURL": "https://www.qeasyweb3.com",
   "name": "QEasyWeb3 Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "QET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9528,
   "rpc": [
     "https://qeasyweb3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9528.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://qeasyweb3.com"
   ],
   "shortName": "QETTest",

@@ -6,6 +6,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { ZerionWallet } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ZerionScan: React.FC<{
   onBack: () => void;
@@ -14,6 +15,7 @@ export const ZerionScan: React.FC<{
   walletConfig: WalletConfig<ZerionWallet>;
   hideBackButton: boolean;
 }> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
+  const locale = useTWLocale().wallets.zerionWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -50,12 +52,14 @@ export const ZerionScan: React.FC<{
 
   return (
     <ScanScreen
+      qrScanInstruction={locale.scanScreen.instruction}
       hideBackButton={hideBackButton}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
+      getStartedLink={locale.getStartedLink}
     />
   );
 };

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeGb65zSworzoHmwK3jdkPtEsQZMUSJRxf8K8Feg56soU",
     "width": 597,
@@ -24,9 +23,14 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 19011,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-248"
+  },
   "rpc": [
     "https://home-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://19011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oasys.homeverse.games/"
   ],
   "shortName": "HMV",

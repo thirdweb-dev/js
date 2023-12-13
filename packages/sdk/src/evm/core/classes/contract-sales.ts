@@ -3,7 +3,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
 import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**

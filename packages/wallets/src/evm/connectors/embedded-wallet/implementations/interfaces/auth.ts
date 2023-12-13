@@ -6,13 +6,22 @@ import type {
 
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
-  AWS_MANAGED = "AWS_MANAGED",
+  CLOUD_MANAGED = "AWS_MANAGED",
 }
 
 export enum AuthProvider {
   COGNITO = "Cognito",
+  GOOGLE = "Google",
+  EMAIL_OTP = "EmailOtp",
+  CUSTOM_JWT = "CustomJWT",
+  CUSTOM_AUTH_ENDPOINT = "CustomAuthEndpoint",
+  FACEBOOK = "Facebook",
+  APPLE = "Apple",
 }
 
+/**
+ * @internal
+ */
 export type GetHeadlessLoginLinkReturnType = {
   loginLink: string;
 };

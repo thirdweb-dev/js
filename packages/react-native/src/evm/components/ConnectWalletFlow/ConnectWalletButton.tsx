@@ -2,20 +2,25 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { BaseButton, Text } from "../base";
 import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import { ThemeProvider, ThemeProviderProps } from "../../styles/ThemeProvider";
-import { useAppTheme } from "../../styles/hooks";
 
 export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
   /**
    * Set a custom title for the button
-   * @default "Connect Wallet"
+   *
+   * The default is `"Connect Wallet"`
    */
   buttonTitle?: string;
   /**
    * Set a custom title for the Connect Wallet modal
-   * @default "Choose your wallet"
+   *
+   * The default is `"Choose your wallet"`
    */
   modalTitle?: string;
   /**
@@ -43,7 +48,8 @@ export const ConnectWalletButton = ({
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
-  const appTheme = useAppTheme();
+  const l = useLocale();
+  const appTheme = useGlobalTheme();
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
@@ -93,16 +99,21 @@ export const ConnectWalletButton = ({
     <ThemeProvider theme={theme ? theme : appTheme}>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
+        borderColor="buttonBorderColor"
+        borderWidth={1}
         onPress={onConnectWalletPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="buttonTextColor">
+        <Text variant="bodyLargeBold" color="buttonTextColor">
           {showButtonSpinner ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
+            <ActivityIndicator
+              size="small"
+              color={appTheme.colors.buttonTextColor}
+            />
           ) : buttonTitle ? (
             buttonTitle
           ) : (
-            "Connect Wallet"
+            l.connect_wallet.label
           )}
         </Text>
       </BaseButton>

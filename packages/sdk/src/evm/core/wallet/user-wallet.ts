@@ -1,6 +1,5 @@
 import type { BlockTag } from "@ethersproject/abstract-provider";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -10,10 +9,10 @@ import {
   type Signer,
   type TypedDataField,
   type providers,
+  ContractInterface,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
-import { getDefaultGasOverrides } from "../../common";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -27,9 +26,10 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { Amount, CurrencyValue } from "../../types/currency";
-import { ContractWrapper } from "../classes/contract-wrapper";
-import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
+import { ContractWrapper } from "../classes/internal/contract-wrapper";
+import { RPCConnectionHandler } from "../classes/internal/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
+import { getDefaultGasOverrides } from "../../common/gas-price";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -98,15 +98,17 @@ export class UserWallet {
     amount: Amount,
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
-    const resolvedTo = await resolveAddress(to);
-    const resolvedCurrency = await resolveAddress(currencyAddress);
+    const [resolvedTo, resolvedCurrency, amountInWei] = await Promise.all([
+      resolveAddress(to),
+      resolveAddress(currencyAddress),
+      normalizePriceValue(
+        this.connection.getProvider(),
+        amount,
+        currencyAddress,
+      ),
+    ]);
 
     const signer = this.requireWallet();
-    const amountInWei = await normalizePriceValue(
-      this.connection.getProvider(),
-      amount,
-      currencyAddress,
-    );
     if (isNativeToken(resolvedCurrency)) {
       // native token transfer
       const from = await signer.getAddress();
@@ -120,11 +122,14 @@ export class UserWallet {
       };
     } else {
       // ERC20 token transfer
+      const ERC20Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+      ).default;
       return {
-        receipt: await this.createErc20(resolvedCurrency).sendTransaction(
-          "transfer",
-          [resolvedTo, amountInWei],
-        ),
+        receipt: await this.createErc20(
+          resolvedCurrency,
+          ERC20Abi,
+        ).sendTransaction("transfer", [resolvedTo, amountInWei]),
       };
     }
   }
@@ -151,9 +156,13 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      balance = await this.createErc20(resolvedCurrency).read("balanceOf", [
-        await this.getAddress(),
-      ]);
+      const ERC20Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+      ).default;
+      balance = await this.createErc20(resolvedCurrency, ERC20Abi).read(
+        "balanceOf",
+        [await this.getAddress()],
+      );
     }
     return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
@@ -317,7 +326,7 @@ export class UserWallet {
 
   /**
    * Request funds from a running local node to the currently connected wallet
-   * @param amount the amount in native currency (in ETH) to request
+   * @param amount - the amount in native currency (in ETH) to request
    */
   public async requestFunds(amount: Amount): Promise<TransactionResult> {
     const chainId = await this.getChainId();
@@ -348,7 +357,7 @@ export class UserWallet {
     return signer;
   }
 
-  private createErc20(currencyAddress: Address) {
+  private createErc20(currencyAddress: Address, ERC20Abi: ContractInterface) {
     return new ContractWrapper<IERC20>(
       this.connection.getSignerOrProvider(),
       currencyAddress,

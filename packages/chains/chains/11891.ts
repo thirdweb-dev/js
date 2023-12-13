@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://arianee.org",
   "name": "Polygon Supernet Arianee",
   "nativeCurrency": {
@@ -18,9 +17,14 @@ export default {
     "symbol": "ARIA20",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11891,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1"
+  },
   "rpc": [
     "https://polygon-supernet-arianee.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.polygonsupernet.public.arianee.net"
   ],
   "shortName": "Arianee",

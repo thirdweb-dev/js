@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRegpZQBW4o1imYNsW3d27MQjygBSU23Gf6JKje26nvs7",
     "width": 1251,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SATS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12009,
   "rpc": [
     "https://satoshichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12009.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.satoshichain.io"
   ],
   "shortName": "sats",

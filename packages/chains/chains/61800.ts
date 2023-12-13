@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNx8FRacfNeawhkjk5p57EKzDHkLGMaBBmK2VRL5CB2P2",
     "width": 40,
@@ -24,9 +23,10 @@ export default {
     "symbol": "AIUM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 61800,
   "rpc": [
     "https://axelchain-dev-net.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://61800.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://aium-rpc-dev.viacube.com"
   ],
   "shortName": "aium-dev",

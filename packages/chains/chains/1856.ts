@@ -4,7 +4,6 @@ export default {
   "chainId": 1856,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://teslafunds.io",
   "name": "Teslafunds",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "TSF",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1856.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tsfapi.europool.me"
   ],
   "shortName": "tsf",

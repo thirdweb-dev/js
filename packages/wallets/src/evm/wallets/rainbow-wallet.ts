@@ -9,7 +9,7 @@ import { getInjectedRainbowProvider } from "../connectors/rainbow/getInjectedRai
 
 type RainbowAdditionalOptions = {
   /**
-   * Whether to open the default Wallet Connect QR code Modal for connecting to Zerion Wallet on mobile if Zerion is not injected when calling connect().
+   * Whether to open the default Wallet Connect QR code Modal for connecting to Rainbow Wallet on mobile if Rainbow is not injected when calling connect().
    */
   qrcode?: boolean;
 
@@ -55,7 +55,7 @@ export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions
     },
   };
 
-  static id = walletIds.rainbow;
+  static id = walletIds.rainbow as string;
 
   public get walletName() {
     return "Rainbow Wallet" as const;

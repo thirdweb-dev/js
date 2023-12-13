@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { fontSize, iconSize } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { Text } from "../../../components/text";
 import { Button } from "../../../components/buttons";
@@ -19,18 +19,17 @@ export const ScanScreen: React.FC<{
   walletName: string;
   walletIconURL: string;
   hideBackButton: boolean;
+  qrScanInstruction: string;
+  getStartedLink: string;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
-  const walletName = props.walletName.toLowerCase().includes("wallet")
-    ? props.walletName
-    : `${props.walletName} wallet`;
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
 
-      {modalConfig.modalSize === "compact" && <Spacer y="xs" />}
+      <Spacer y="sm" />
 
       <Container expand flex="column" px="lg" center="both">
         <div
@@ -40,7 +39,6 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
-            size={310}
             QRIcon={
               <Img
                 width={iconSize.xxl}
@@ -52,13 +50,20 @@ export const ScanScreen: React.FC<{
 
           <Spacer y="lg" />
 
-          <Text center multiline>
-            Scan this with {walletName} <br /> or camera app to connect
+          <Text
+            center
+            multiline
+            balance
+            style={{
+              paddingInline: spacing.lg,
+            }}
+          >
+            {props.qrScanInstruction}
           </Text>
-
-          <Spacer y="lg" />
         </div>
       </Container>
+
+      <Spacer y="lg" />
 
       <ScreenBottomContainer
         style={{
@@ -73,7 +78,7 @@ export const ScanScreen: React.FC<{
             textAlign: "center",
           }}
         >
-          {`Don't`} have {walletName}?
+          {props.getStartedLink}
         </Button>
       </ScreenBottomContainer>
     </Container>

@@ -10,13 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
-  "icon": {
-    "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://www.etnd.pro",
   "name": "ETND Chain Mainnets",
   "nativeCurrency": {
@@ -24,9 +17,10 @@ export default {
     "symbol": "ETND",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 131419,
   "rpc": [
     "https://etnd-chain-s.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://131419.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.node1.etnd.pro/"
   ],
   "shortName": "ETND",

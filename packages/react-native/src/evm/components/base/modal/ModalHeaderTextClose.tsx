@@ -1,9 +1,9 @@
 import { View } from "react-native";
 import { Icon } from "../../../assets/icon";
-import { useAppTheme } from "../../../styles/hooks";
 import Box from "../Box";
 import Text from "../Text";
 import { ReactNode } from "react";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 interface ModalHeaderTextCloseProps {
   onClose?: () => void;
@@ -12,6 +12,9 @@ interface ModalHeaderTextCloseProps {
   onBackPress?: () => void;
 }
 
+/**
+ * @internal
+ */
 export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,
@@ -19,7 +22,7 @@ export const ModalHeaderTextClose = ({
   onBackPress,
   ...props
 }: ModalHeaderTextCloseProps & React.ComponentProps<typeof Box>) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   return (
     <>

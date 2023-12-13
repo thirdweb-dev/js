@@ -2,7 +2,19 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FUSE",
   "chainId": 122,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.fuse.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -18,9 +30,11 @@ export default {
     "symbol": "FUSE",
     "decimals": 18
   },
+  "networkId": 122,
   "redFlags": [],
   "rpc": [
     "https://fuse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fuse.io"
   ],
   "shortName": "fuse",

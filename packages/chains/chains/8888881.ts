@@ -4,20 +4,19 @@ export default {
   "chainId": 8888881,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
-    "url": "ipfs://QmZmY6xVNzRAGwyT64PuyHaQ33BR84HEWvTVf6YHPW7kvQ",
-    "width": 1024,
-    "height": 1024,
+    "url": "ipfs://QmTw8TyeeNhUFWrck2WCiN17MaHRt5qzRBtaAvmz6L7qq7",
+    "width": 669,
+    "height": 587,
     "format": "png"
   },
   "name": "Quarix Testnet",
   "nativeCurrency": {
-    "name": "Q",
-    "symbol": "Q",
+    "name": "QARE",
+    "symbol": "QARE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8888881,
   "rpc": [],
   "shortName": "quarix-testnet",
   "slug": "quarix-testnet",

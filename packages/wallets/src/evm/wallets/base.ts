@@ -5,6 +5,7 @@ import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
 import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
+import { track } from "../utils/analytics";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
@@ -13,6 +14,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   walletStorage?: AsyncStorage;
   dappMetadata?: DAppMetaData;
   clientId?: string;
+  analytics?: "enabled" | "disabled";
 } & TOpts;
 
 export type WalletMeta = {
@@ -39,6 +41,7 @@ export abstract class AbstractClientWallet<
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
   #connectParams: ConnectParams<TConnectParams> | undefined;
+
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -88,6 +91,10 @@ export abstract class AbstractClientWallet<
     return this.#connectParams;
   }
 
+  getOptions() {
+    return this.options;
+  }
+
   async #connect(
     isAutoConnect: boolean,
     connectOptions?: ConnectParams<TConnectParams>,
@@ -113,6 +120,7 @@ export abstract class AbstractClientWallet<
         chainId: await this.getChainId(),
       });
 
+      this.#trackConnection(address);
       return address;
     }
 
@@ -122,10 +130,21 @@ export abstract class AbstractClientWallet<
 
     try {
       const address = await connector.connect(connectOptions);
+      this.#trackConnection(address);
       return address;
     } catch (error) {
       throw new Error((error as Error).message);
     }
+  }
+
+  #trackConnection(address: string) {
+    track({
+      clientId: this.options?.clientId || "",
+      source: "connectWallet",
+      action: "connect",
+      walletType: this.walletId,
+      walletAddress: address,
+    });
   }
 
   async #subscribeToEvents(connector: Connector) {

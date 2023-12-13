@@ -4,14 +4,13 @@ export default {
   "chainId": 600,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "name": "Meshnyan testnet",
   "nativeCurrency": {
     "name": "Meshnyan Testnet Native Token",
     "symbol": "MESHT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 600,
   "rpc": [],
   "shortName": "mesh-chain-testnet",
   "slug": "meshnyan-testnet",

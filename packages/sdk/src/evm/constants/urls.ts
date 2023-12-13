@@ -10,6 +10,7 @@ import { providers } from "ethers";
 import type { Signer } from "ethers";
 import pkg from "../../../package.json";
 import { isBrowser } from "@thirdweb-dev/storage";
+import { sha256HexSync } from "@thirdweb-dev/crypto";
 
 /**
  * @internal
@@ -44,7 +45,7 @@ export function getChainProvider(
     options.supportedChains = [
       // @ts-expect-error - we know this is a chain and it will work to build the map
       network,
-      ...options.supportedChains.filter((c) => c.chainId !== network.chainId),
+      ...options.supportedChains.filter((c) => c.chainId === network.chainId),
     ];
   }
 
@@ -78,6 +79,9 @@ export function getChainProvider(
   return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
+/**
+ * @internal
+ */
 export function getChainIdFromNetwork(
   network: ChainOrRpcUrl,
   options: SDKOptionsOutput,
@@ -108,6 +112,9 @@ export function getChainIdFromNetwork(
   );
 }
 
+/**
+ * @internal
+ */
 export async function getChainIdOrName(
   network: NetworkInput,
 ): Promise<number | string> {
@@ -133,6 +140,7 @@ export async function getChainIdOrName(
 
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
+ * @internal
  */
 export function isChainConfig(
   network: NetworkInput,
@@ -200,15 +208,7 @@ export function getProviderFromRpcUrl(
         if (typeof window !== "undefined") {
           throw new Error("Cannot use secretKey in browser context");
         }
-        // this is on purpose because we're using the crypto module only in node
-        // try to trick webpack :)
-        const pto = "pto";
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const crypto = require("cry" + pto);
-        const hashedSecretKey = crypto
-          .createHash("sha256")
-          .update(sdkOptions.secretKey)
-          .digest("hex");
+        const hashedSecretKey = sha256HexSync(sdkOptions.secretKey);
         const derivedClientId = hashedSecretKey.slice(0, 32);
         const utilizedRpcUrl = new URL(rpcUrl);
         // always set the clientId on the path to the derived client id

@@ -4,7 +4,7 @@ import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
-import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
+import { iconSize, spacing, fontSize } from "../../../design-system";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -23,23 +23,13 @@ import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useContext, useState } from "react";
 import { SafeWalletConfig } from "./types";
-import {
-  Container,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
-
-export const gnosisAddressPrefixToChainId = {
-  eth: 1,
-  matic: 137,
-  avax: 43114,
-  bnb: 56,
-  oeth: 10,
-  gor: 5,
-  "base-gor": 84531,
-} as const;
+import { safeSlugToChainId } from "./safeChainSlug";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledSelect } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
@@ -47,6 +37,7 @@ export const SelectAccount: React.FC<{
   safeWalletConfig: SafeWalletConfig;
   renderBackButton?: boolean;
 }> = (props) => {
+  const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
   const activeWallet = useWallet();
   const connect = useConnect();
   const activeChain = useChain();
@@ -125,6 +116,8 @@ export const SelectAccount: React.FC<{
           />
         </Container>
 
+        <Line />
+
         <Container
           expand
           flex="column"
@@ -134,15 +127,15 @@ export const SelectAccount: React.FC<{
             paddingTop: 0,
           }}
         >
-          <Spacer y="md" />
+          <Spacer y="xl" />
 
           <Text color="primaryText" size="lg" weight={500}>
-            Enter your safe details
+            {locale.title}
           </Text>
           <Spacer y="sm" />
 
           <ModalDescription>
-            You can find your safe address in{" "}
+            {locale.findSafeAddressIn}{" "}
             <Link
               inline
               target="_blank"
@@ -152,7 +145,7 @@ export const SelectAccount: React.FC<{
                 whiteSpace: "nowrap",
               }}
             >
-              Safe Dashboard
+              {locale.dashboardLink}
             </Link>
           </ModalDescription>
 
@@ -173,11 +166,9 @@ export const SelectAccount: React.FC<{
               if (value.length > 4) {
                 const prefix = value.split(":")[0];
 
-                if (prefix && prefix in gnosisAddressPrefixToChainId) {
+                if (prefix && prefix in safeSlugToChainId) {
                   setSafeChainId(
-                    gnosisAddressPrefixToChainId[
-                      prefix as keyof typeof gnosisAddressPrefixToChainId
-                    ],
+                    safeSlugToChainId[prefix as keyof typeof safeSlugToChainId],
                   );
                   setSafeAddress(value.slice(prefix.length + 1));
                 } else {
@@ -187,7 +178,7 @@ export const SelectAccount: React.FC<{
                 setSafeAddress(value);
               }
             }}
-            label="Safe Address"
+            label={locale.safeAddress}
             type="text"
             value={safeAddress}
             required
@@ -196,8 +187,8 @@ export const SelectAccount: React.FC<{
 
           <Spacer y="lg" />
 
-          {/* Select Safe Netowrk */}
-          <Label htmlFor="safeNetwork">Safe Network</Label>
+          {/* Select Safe Network */}
+          <Label htmlFor="safeNetwork">{locale.network}</Label>
           <Spacer y="sm" />
           <div
             style={{
@@ -211,7 +202,7 @@ export const SelectAccount: React.FC<{
               id="safeNetwork"
               value={safeChainId}
               disabled={disableNetworkSelection}
-              placeholder="Network your safe is deployed to"
+              placeholder={locale.selectNetworkPlaceholder}
               onChange={(e) => {
                 setSafeConnectError(false);
                 setSwitchError(false);
@@ -220,13 +211,13 @@ export const SelectAccount: React.FC<{
             >
               {!disableNetworkSelection && (
                 <option value="" hidden>
-                  Network your safe is deployed to
+                  {locale.selectNetworkPlaceholder}
                 </option>
               )}
 
               {useOptGroup ? (
                 <>
-                  <optgroup label="Mainnets">
+                  <optgroup label={locale.mainnets}>
                     {mainnets.map((chain) => {
                       return (
                         <option value={chain.chainId} key={chain.chainId}>
@@ -236,7 +227,7 @@ export const SelectAccount: React.FC<{
                     })}
                   </optgroup>
 
-                  <optgroup label="Testnets">
+                  <optgroup label={locale.testnets}>
                     {testnets.map((chain) => {
                       return (
                         <option value={chain.chainId} key={chain.chainId}>
@@ -278,7 +269,7 @@ export const SelectAccount: React.FC<{
             <>
               <Text color="danger" multiline size="xs">
                 {" "}
-                Can not use Safe: No Safe supported chains are configured in App
+                {locale.invalidChainConfig}
               </Text>
               <Spacer y="sm" />
             </>
@@ -299,10 +290,7 @@ export const SelectAccount: React.FC<{
                 width={iconSize.sm}
                 height={iconSize.sm}
               />
-              <span>
-                Could not connect to Safe. <br />
-                Make sure safe address and network are correct.
-              </span>
+              <span>{locale.failedToConnect}</span>
             </Text>
           )}
 
@@ -313,117 +301,113 @@ export const SelectAccount: React.FC<{
                   width={iconSize.sm}
                   height={iconSize.sm}
                 />
-                Failed to switch network
+                {locale.failedToSwitch}
               </Container>
             </Text>
           )}
         </Container>
 
-        <ScreenBottomContainer
+        <Container
+          p="lg"
+          flex="row"
           style={{
-            borderTop: modalConfig.modalSize === "wide" ? "none" : undefined,
+            paddingTop: 0,
+            justifyContent: "flex-end",
           }}
         >
-          <div>
-            <div
+          {mismatch ? (
+            <Button
+              type="button"
+              variant="primary"
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: spacing.sm,
+                width: modalConfig.modalSize === "compact" ? "100%" : undefined,
+              }}
+              onClick={async () => {
+                if (!activeWallet) {
+                  throw new Error("No active wallet");
+                }
+                setSafeConnectError(false);
+                setSwitchError(false);
+                setSwitchingNetwork(true);
+                try {
+                  await switchChain(safeChainId);
+                } catch (e) {
+                  setSwitchError(true);
+                } finally {
+                  setSwitchingNetwork(false);
+                }
               }}
             >
-              {mismatch ? (
-                <Button
-                  type="button"
-                  variant="primary"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: spacing.sm,
-                    width:
-                      modalConfig.modalSize === "compact" ? "100%" : undefined,
-                  }}
-                  onClick={async () => {
-                    if (!activeWallet) {
-                      throw new Error("No active wallet");
-                    }
-                    setSafeConnectError(false);
-                    setSwitchError(false);
-                    setSwitchingNetwork(true);
-                    try {
-                      await switchChain(safeChainId);
-                    } catch (e) {
-                      setSwitchError(true);
-                    } finally {
-                      setSwitchingNetwork(false);
-                    }
-                  }}
-                >
-                  {" "}
-                  {switchingNetwork ? "Switching" : "Switch Network"}
-                  {switchingNetwork && (
-                    <Spinner size="sm" color="primaryButtonText" />
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  variant="accent"
-                  type="submit"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: spacing.sm,
-                    width:
-                      modalConfig.modalSize === "compact" ? "100%" : undefined,
-                  }}
-                >
-                  {connectionStatus === "connecting"
-                    ? "Connecting"
-                    : "Connect to Safe"}
-                  {connectionStatus === "connecting" && (
-                    <Spinner size="sm" color="accentButtonText" />
-                  )}
-                </Button>
+              {" "}
+              {switchingNetwork
+                ? locale.switchingNetwork
+                : locale.switchNetwork}
+              {switchingNetwork && (
+                <Spinner size="sm" color="primaryButtonText" />
               )}
-            </div>
-          </div>
-        </ScreenBottomContainer>
+            </Button>
+          ) : (
+            <Button
+              variant="accent"
+              type="submit"
+              disabled={connectionStatus === "connecting"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: spacing.sm,
+                width: modalConfig.modalSize === "compact" ? "100%" : undefined,
+              }}
+            >
+              {connectionStatus === "connecting"
+                ? locale.connecting
+                : locale.connectToSafe}
+              {connectionStatus === "connecting" && (
+                <Spinner size="sm" color="accentButtonText" />
+              )}
+            </Button>
+          )}
+        </Container>
       </form>
     </Container>
   );
 };
 
-const NetworkSelect = styled.select<{ theme?: Theme }>`
-  width: 100%;
-  padding: ${spacing.sm};
-  box-sizing: border-box;
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  color: ${(p) => p.theme.colors.primaryText};
-  background: none;
-  font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.secondaryButtonBg};
-  appearance: none;
+const NetworkSelect = /* @__PURE__ */ StyledSelect(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "100%",
+    padding: spacing.sm,
+    boxSizing: "border-box",
+    outline: "none",
+    border: "none",
+    borderRadius: "6px",
+    color: theme.colors.primaryText,
+    background: "none",
+    fontSize: fontSize.md,
+    boxShadow: `0 0 0 1.5px ${theme.colors.secondaryButtonBg}`,
+    appearance: "none",
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
+    "&:invalid": {
+      color: theme.colors.secondaryText,
+    },
+    "&[data-error='true']": {
+      boxShadow: `0 0 0 1.5px ${theme.colors.danger}`,
+    },
+    "&[disabled]": {
+      opacity: 1,
+      cursor: "not-allowed",
+    },
+  };
+});
 
-  &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.colors.accentText};
-  }
-
-  &:invalid {
-    color: ${(p) => p.theme.colors.secondaryText};
-  }
-  &[data-error="true"] {
-    box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.danger};
-  }
-
-  &[disabled] {
-    opacity: 1;
-    cursor: not-allowed;
-  }
-`;
-
-const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(p) => p.theme.colors.secondaryText};
-`;
+const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+  };
+});

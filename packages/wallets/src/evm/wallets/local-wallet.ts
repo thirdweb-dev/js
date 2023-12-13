@@ -2,8 +2,14 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
+import {
+  Chain,
+  defaultChains,
+  Ethereum,
+  updateChainRPCs,
+} from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
+import { aesEncrypt, aesDecryptCompat } from "@thirdweb-dev/crypto";
 
 export type LocalWalletOptions = {
   chain?: Chain;
@@ -32,7 +38,7 @@ export class LocalWallet extends AbstractClientWallet<
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = walletIds.localWallet;
+  static id = walletIds.localWallet as string;
 
   static meta = {
     name: "Local Wallet",
@@ -46,7 +52,13 @@ export class LocalWallet extends AbstractClientWallet<
 
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
+
+    if (options?.chain && options.clientId) {
+      options.chain = updateChainRPCs(options.chain, options.clientId);
+    }
+
     this.options = options || {};
+
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
@@ -61,14 +73,18 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
-      const defaults = this.options.chain
-        ? [...defaultChains, this.options.chain]
-        : defaultChains;
+      const defaults = (
+        this.options.chain
+          ? [...defaultChains, this.options.chain]
+          : defaultChains
+      ).map((c) => updateChainRPCs(c, this.options.clientId));
 
       this.connector = new LocalWalletConnector({
-        chain: this.options.chain || Ethereum,
+        chain:
+          this.options.chain ||
+          updateChainRPCs(Ethereum, this.options.clientId),
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaults,
+        chains: this.chains || defaults,
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
       });
@@ -460,14 +476,9 @@ type ExportOptions =
       encryption: EncryptOptions;
     };
 
-async function defaultEncrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.encrypt(message, password).toString();
-}
-
-async function defaultDecrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.decrypt(message, password).toString(cryptoJS.enc.Utf8);
+// used in getDecryptor and getEncryptor below
+async function noop(msg: string) {
+  return msg;
 }
 
 /**
@@ -478,10 +489,10 @@ async function defaultDecrypt(message: string, password: string) {
  * @returns
  */
 function getDecryptor(encryption: DecryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-        (encryption.decrypt || defaultDecrypt)(msg, encryption.password)
+        // we're using aesDecryptCompat here because we want to support legacy crypto-js ciphertext for the moment
+        (encryption.decrypt || aesDecryptCompat)(msg, encryption.password)
     : noop;
 }
 
@@ -493,13 +504,15 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  * @returns
  */
 function getEncryptor(encryption: EncryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-        (encryption.encrypt || defaultEncrypt)(msg, encryption.password)
+        (encryption.encrypt || aesEncrypt)(msg, encryption.password)
     : noop;
 }
 
+/**
+ * @internal
+ */
 export function isValidPrivateKey(value: string) {
   return !!value.match(/^(0x)?[0-9a-f]{64}$/i);
 }

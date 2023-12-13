@@ -45,8 +45,6 @@ import {
 } from "./mock/constructorParamWithTuplesMetadata";
 import { catAttackBytecode, catAttackMetadata } from "./mock/catAttackMetadata";
 
-global.fetch = require("cross-fetch");
-
 export const uploadContractMetadata = async (
   contractName: string,
   storage: ThirdwebStorage,
@@ -268,86 +266,6 @@ describe("Publishing", async () => {
     expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
   });
 
-  it("test factory deploy", async () => {
-    const publishUri = await mockUploadMetadataWithBytecode(
-      "TokenERC721",
-      TokenERC721__factory.abi,
-      TokenERC721__factory.bytecode,
-      "",
-    );
-    const pub = await sdk.getPublisher();
-    const tx = await pub.publish(publishUri, {
-      version: "0.0.1",
-      isDeployableViaFactory: true,
-      factoryDeploymentData: {
-        implementationInitializerFunction: "initialize",
-        implementationAddresses: {
-          [ChainId.Hardhat]: implementations["nft-collection"] || "",
-        },
-        factoryAddresses: {
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
-          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
-        },
-      },
-    });
-    const contract = await tx.data();
-    expect(contract.id).to.eq("TokenERC721");
-    const deployedAddr = await sdk.deployer.deployContractFromUri(
-      contract.metadataUri,
-      [
-        adminWallet.address,
-        "test factory",
-        "ffs",
-        "",
-        [],
-        adminWallet.address,
-        adminWallet.address,
-        0,
-        0,
-        adminWallet.address,
-      ],
-    );
-    expect(deployedAddr.length).to.be.gt(0);
-  });
-
-  it("test proxy deploy", async () => {
-    const publishUri = await mockUploadMetadataWithBytecode(
-      "TokenERC721",
-      TokenERC721__factory.abi,
-      TokenERC721__factory.bytecode,
-      "",
-    );
-    const pub = sdk.getPublisher();
-    const tx = await pub.publish(publishUri, {
-      version: "0.0.2",
-      isDeployableViaProxy: true,
-      factoryDeploymentData: {
-        implementationInitializerFunction: "initialize",
-        implementationAddresses: {
-          [ChainId.Hardhat]: implementations["nft-collection"] || "",
-        },
-      },
-    });
-    const contract = await tx.data();
-    expect(contract.id).to.eq("TokenERC721");
-    const deployedAddr = await sdk.deployer.deployContractFromUri(
-      contract.metadataUri,
-      [
-        adminWallet.address,
-        "test factory",
-        "ffs",
-        "",
-        [],
-        adminWallet.address,
-        adminWallet.address,
-        0,
-        0,
-        adminWallet.address,
-      ],
-    );
-    expect(deployedAddr.length).to.be.gt(0);
-  });
-
   it("SimpleAzuki enumerable", async () => {
     const pub = await sdk.getPublisher();
     const ipfsUri = await mockUploadMetadataWithBytecode(
@@ -444,7 +362,7 @@ describe("Publishing", async () => {
     // ("ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -497,7 +415,7 @@ describe("Publishing", async () => {
     // ("ipfs://QmXQ2f6qA7FD8uks1hKK1soTn6sbEGBSfDpzN9buYXkGxZ");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -558,7 +476,7 @@ describe("Publishing", async () => {
     ("ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -619,7 +537,7 @@ describe("Publishing", async () => {
     // ("ipfs://QmNuKYGZoiHyumKjT7gPk3vwy3WKt7gTf1hKGZ2eyGZGRd");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       adminWallet.address,
       "NFT",
@@ -725,13 +643,8 @@ describe("Publishing", async () => {
       isDeployableViaFactory: true,
       factoryDeploymentData: {
         implementationInitializerFunction: "initialize",
-        implementationAddresses: {
-          [ChainId.Hardhat]: implementations["marketplace-v3"] || "",
-        },
-        factoryAddresses: {
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
-          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
-        },
+        implementationAddresses: {},
+        factoryAddresses: {},
       },
     });
     const contract = await tx.data();

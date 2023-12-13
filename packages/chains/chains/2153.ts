@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://findora.org/",
   "name": "Findora Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "FRA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2153,
   "rpc": [
     "https://findora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2153.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-testnet.prod.findora.org:8545/"
   ],
   "shortName": "findora-testnet",

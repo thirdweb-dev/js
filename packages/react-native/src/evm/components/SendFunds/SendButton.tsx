@@ -1,4 +1,3 @@
-import { useAppTheme } from "../../styles/hooks";
 import React, { useEffect, useMemo, useState } from "react";
 import SendIcon from "../../assets/send";
 import {
@@ -30,13 +29,15 @@ import { utils } from "ethers";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
 import CheckIcon from "../../assets/check";
 import { TokenSelector } from "./TokenSelector";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SendButton = ({
   supportedTokens,
 }: {
   supportedTokens: SupportedTokens;
 }) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onClose = () => {
@@ -51,7 +52,7 @@ export const SendButton = ({
     <>
       <IconTextButton
         flex={1}
-        text="Send"
+        text={l.common.send}
         justifyContent="center"
         icon={
           <SendIcon height={16} width={16} color={theme.colors.textPrimary} />
@@ -139,12 +140,13 @@ const SendFundsForm = ({
   onTokenSelectorPress: () => void;
   token?: TokenInfo;
 }) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const chain = useChain();
   const wallet = useWallet();
   const chainId = useChainId();
   const [receiverAddress, setReceiverAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("0");
   const [showIcon, setShowIcon] = useState(false);
   const tokenAddress = token?.address;
 
@@ -219,9 +221,12 @@ const SendFundsForm = ({
       borderRadius="md"
       p="lg"
     >
-      <ModalHeaderTextClose onClose={onCloseInternal} headerText="Send Funds" />
+      <ModalHeaderTextClose
+        onClose={onCloseInternal}
+        headerText={l.connect_wallet_details.send_funds}
+      />
       <Text mt="lg" variant="bodySmallSecondary">
-        Select Token
+        {l.connect_wallet_details.select_token}
       </Text>
 
       <BaseButton
@@ -251,7 +256,7 @@ const SendFundsForm = ({
             <Text variant="bodySmall">{tokenName}</Text>
             {!balanceQuery.data ? (
               <LoadingTextAnimation
-                text="Fetching..."
+                text={l.common.fetching}
                 textVariant={"bodySmallSecondary"}
               />
             ) : (
@@ -265,7 +270,7 @@ const SendFundsForm = ({
       </BaseButton>
 
       <Text mt="md" variant="bodySmallSecondary">
-        Send to
+        {l.connect_wallet_details.send_to}
       </Text>
       <Box
         mt="xs"
@@ -284,6 +289,7 @@ const SendFundsForm = ({
           onChangeText={setReceiverAddress}
           style={{
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             textAlign: "left",
             flex: 1,
             height: 40,
@@ -297,7 +303,7 @@ const SendFundsForm = ({
         />
       </Box>
       <Text mt="md" variant="bodySmallSecondary">
-        Amount
+        {l.common.amount}
       </Text>
       <Box
         mt="xs"
@@ -313,17 +319,17 @@ const SendFundsForm = ({
           editable={!sendTokenMutation.isLoading}
           returnKeyType={"done"}
           keyboardType="numeric"
+          value={amount}
           clearTextOnFocus={false}
           style={{
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             textAlign: "left",
             flex: 1,
             height: 40,
             paddingHorizontal: 16,
           }}
           onChangeText={setAmount}
-          placeholder="0"
-          placeholderTextColor={theme.colors.textPrimary}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -332,6 +338,7 @@ const SendFundsForm = ({
       <BaseButton
         mt="md"
         backgroundColor="accentButtonColor"
+        borderColor="accentButtonColor"
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
@@ -348,12 +355,19 @@ const SendFundsForm = ({
         }}
       >
         {sendTokenMutation.isLoading ? (
-          <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          <ActivityIndicator
+            size="small"
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : showIcon ? (
-          <CheckIcon width={20} height={13} color={theme.colors.textPrimary} />
+          <CheckIcon
+            width={20}
+            height={13}
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : (
-          <Text variant="bodySmall" mr="sm">
-            Send
+          <Text variant="bodySmall" color="accentButtonTextColor" mr="sm">
+            {l.common.send}
           </Text>
         )}
       </BaseButton>

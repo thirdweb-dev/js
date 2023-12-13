@@ -6,11 +6,16 @@ export default {
     {
       "name": "testnetexplorer",
       "url": "https://testnetexplorer.eurus.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+        "width": 471,
+        "height": 471,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
     "width": 471,
@@ -24,9 +29,10 @@ export default {
     "symbol": "EUN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1984,
   "rpc": [
     "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1984.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.eurus.network"
   ],
   "shortName": "euntest",

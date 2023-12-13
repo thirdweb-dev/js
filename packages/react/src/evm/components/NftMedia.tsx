@@ -3,15 +3,18 @@ import React from "react";
 import type { SharedMediaProps } from "./types";
 import { MediaRenderer } from "./MediaRenderer";
 
-/**
- * The props for the {@link ThirdwebNftMedia} component.
- */
 export interface ThirdwebNftMediaProps extends SharedMediaProps {
   /**
    * The NFT metadata of the NFT returned by the thirdweb sdk.
    */
   metadata: NFTMetadata;
+  /**
+   * CSS width of the media
+   */
   width?: string;
+  /**
+   * CSS height of the media
+   */
   height?: string;
 }
 
@@ -41,22 +44,23 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  * }
  * ```
  */
-export const ThirdwebNftMedia = /* @__PURE__ */ React.forwardRef<
-  HTMLMediaElement,
-  ThirdwebNftMediaProps
->(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {
-  return (
-    <MediaRenderer
-      src={metadata.animation_url || metadata.image}
-      poster={metadata.image}
-      alt={metadata.name?.toString() || ""}
-      ref={ref}
-      width={width}
-      height={height}
-      style={{ ...style }}
-      {...props}
-    />
-  );
-});
-
-ThirdwebNftMedia.displayName = "ThirdwebNftMedia";
+export const ThirdwebNftMedia = /* @__PURE__ */ (() =>
+  React.forwardRef<HTMLMediaElement, ThirdwebNftMediaProps>(
+    function Thirdweb_NftMedia(
+      { metadata, width = "300px", height = "300px", style, ...props },
+      ref,
+    ) {
+      return (
+        <MediaRenderer
+          src={metadata.animation_url || metadata.image}
+          poster={metadata.image}
+          alt={metadata.name?.toString() || ""}
+          ref={ref}
+          width={width}
+          height={height}
+          style={{ ...style }}
+          {...props}
+        />
+      );
+    },
+  ))();

@@ -10,13 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
-  "icon": {
-    "url": "ipfs://QmePhfibWz9jnGUqF9Rven4x734br1h3LxrChYTEjbbQvo",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://proofofmemes.org",
   "name": "Proof Of Memes",
   "nativeCurrency": {
@@ -24,9 +17,10 @@ export default {
     "symbol": "POM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 18159,
   "rpc": [
     "https://proof-of-memes.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://18159.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.memescan.io",
     "https://mainnet-rpc2.memescan.io",
     "https://mainnet-rpc3.memescan.io",
@@ -34,5 +28,6 @@ export default {
   ],
   "shortName": "pom",
   "slug": "proof-of-memes",
-  "testnet": false
+  "testnet": false,
+  "title": "Proof Of Memes Mainnet"
 } as const satisfies Chain;

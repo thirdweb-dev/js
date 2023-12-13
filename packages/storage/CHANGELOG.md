@@ -1,5 +1,74 @@
 # @thirdweb-dev/storage
 
+## 2.0.7
+
+### Patch Changes
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+## 2.0.6
+
+### Patch Changes
+
+- [#2021](https://github.com/thirdweb-dev/js/pull/2021) [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Catch issue when converting invalid IPFS CID to v1
+
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/crypto@0.2.0
+
+## 2.0.4
+
+### Patch Changes
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1949](https://github.com/thirdweb-dev/js/pull/1949) [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd) Thanks [@iketw](https://github.com/iketw)! - Enforces the tsdoc/syntax rule
+
+## 2.0.3
+
+### Patch Changes
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+## 2.0.2
+
+### Patch Changes
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+## 2.0.1
+
+### Patch Changes
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+## 2.0.0
+
+### Major Changes
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Solana**:
+
+  - We've decided to drop support for Solana across our SDKs.
+  - Starting with this version of our SDKs all previous solana related functionality will be removed.
+  - Previous versions of our SDKs will continue to work with Solana. However, we will not be providing any further updates or bug fixes for Solana.
+  - You can read a detailed explanation of our decision [on our blog](https://blog.thirdweb.com/discontinuing-solana-support/).
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Node 16**:
+
+  - As part of our commitment to maintain up-to-date with the evolving ecosystem and provide the best support for our users, we have made the decision to cease support for Node 16. Starting with this version, our SDKs will no longer be tested against or guaranteed to work with Node.js version 16.
+  - We encourage users to upgrade to a more recent version of Node.js to continue to benefit from the latest features, improvements, and security updates.
+  - If you are unable to upgrade to a more recent version of Node.js, you can continue to use the previous version of our SDKs. However, we will not be providing any further updates or bug fixes for Node 16.
+  - For more information on EOL status of Node 16, see [Node.js Release Cycle](https://nodejs.dev/en/about/releases/).
+
+## 1.2.11
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
 ## 1.2.10
 
 ### Patch Changes

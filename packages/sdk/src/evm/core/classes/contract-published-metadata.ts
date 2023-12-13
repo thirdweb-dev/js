@@ -7,16 +7,17 @@ import {
   AbiEvent,
   AbiFunction,
   AbiSchema,
+  ContractSource,
   PublishedMetadata,
 } from "../../schema/contracts/custom";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 
 /**
  * Handles publish metadata for a contract
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractPublishedMetadata<TContract extends BaseContract> {
+export class ContractPublishedMetadata {
   private contractWrapper;
   private storage: ThirdwebStorage;
 
@@ -45,6 +46,14 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
       this.contractWrapper.options,
     );
     return this._cachedMetadata;
+  }
+
+  /**
+   * @public
+   */
+  public async extractSources(): Promise<ContractSource[]> {
+    const publishedMetadata = await this.get();
+    return fetchSourceFilesFromMetadata(publishedMetadata, this.storage);
   }
 
   /**

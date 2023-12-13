@@ -1,4 +1,7 @@
-import { useModalState } from "../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useModalState,
+} from "../providers/ui-context-provider";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
@@ -7,13 +10,12 @@ import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal"
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 import { TWModal } from "./base/modal/TWModal";
 import Box from "./base/Box";
-import { useAppTheme } from "../styles/hooks";
 
-const MODAL_HEIGHT = Dimensions.get("window").height * 0.6;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 export const MainModal = () => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const { modalState } = useModalState();
 
   const { isOpen, isSheet } = modalState;
@@ -22,8 +24,6 @@ export const MainModal = () => {
     switch (modalState?.view) {
       case "ConnectWalletFlow":
         return <ConnectWalletFlow />;
-      // case "WalletDetails":
-      //   return <ConnectWalletDetailsModal />;
       case "WalletConnectSessionRequestModal":
         return <SessionRequestModal />;
       case "WalletConnectSessionProposalModal":

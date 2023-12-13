@@ -1,4 +1,4 @@
-import { WagmiConnector, normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import {
   MagicAuthOptions,
   MagicConnectorBaseOptions,
@@ -17,6 +17,7 @@ import { Address } from "@thirdweb-dev/sdk";
 import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 
 export type MagicAuthConnectOptions = {
   chainId?: number;
@@ -98,7 +99,9 @@ export abstract class MagicBaseConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: utils.getAddress(accounts[0]) });
+      if (accounts[0]) {
+        this.emit("change", { account: utils.getAddress(accounts[0]) });
+      }
     }
   }
 
@@ -264,7 +267,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
       const chain = this.chains.find((c) => c.chainId === chainId);
       if (chain) {
         options.network = {
-          rpcUrl: chain.rpc[0],
+          rpcUrl: chain.rpc[0] || "", // TODO handle empty RPC array
           chainId: chain.chainId,
         };
       }

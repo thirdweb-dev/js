@@ -7,15 +7,25 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { TrustScan } from "./TrustScan";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 import { trustWalletUris } from "./trustWalletUris";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const { walletConfig, close } = props;
+  const locale = useTWLocale().wallets.trustWallet;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
   const [errorConnecting, setErrorConnecting] = useState(false);
+
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connectionScreen.instruction,
+    tryAgain: locale.connectionScreen.retry,
+    inProgress: locale.connectionScreen.inProgress,
+    failed: locale.connectionScreen.failed,
+  };
 
   const connectToExtension = useCallback(async () => {
     try {
@@ -23,12 +33,12 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       connectPrompted.current = true;
       setScreen("connecting");
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -66,6 +76,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={connectingLocale}
         onRetry={connectToExtension}
         errorConnecting={errorConnecting}
         onGetStarted={handleGetStarted}
@@ -81,6 +92,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        locale={connectingLocale}
         onRetry={() => {
           // NOOP - TODO make onRetry optional
         }}
@@ -88,7 +100,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         walletConfig={walletConfig}
         appUriPrefix={trustWalletUris}
         // supportLink="https://support.trustwallet.com/en/support/home"
@@ -99,6 +111,9 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
@@ -114,7 +129,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       <TrustScan
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

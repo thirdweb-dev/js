@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.edexa.com/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSgvmLpRsCiu2ySqyceA5xN4nwi7URJRNEZLffwEKXdoR",
     "width": 1028,
@@ -26,9 +25,10 @@ export default {
     "symbol": "EDX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1995,
   "rpc": [
     "https://edexa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.edexa.com/rpc",
     "https://io-dataseed1.testnet.edexa.io-market.com/rpc"
   ],

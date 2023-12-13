@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://voltafaucet.energyweb.org"
   ],
-  "features": [],
   "infoURL": "https://energyweb.org",
   "name": "Energy Web Volta Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "VT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 73799,
   "rpc": [
     "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://73799.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://volta-rpc.energyweb.org",
     "wss://volta-rpc.energyweb.org/ws"
   ],

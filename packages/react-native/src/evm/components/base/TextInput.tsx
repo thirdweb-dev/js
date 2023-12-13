@@ -11,6 +11,9 @@ type TextInputProps = {
   leftElement?: ReactNode;
 };
 
+/**
+ * @internal
+ */
 export const TextInput = ({
   containerProps,
   textInputProps,

@@ -14,7 +14,7 @@ import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractEncoder } from "./contract-encoder";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -68,9 +68,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
     const roles = {} as Record<TRole, string[]>;
-    for (const role of this.roles) {
-      roles[role] = await this.get(role);
-    }
+    const entries = Object.entries(this.roles);
+    (await Promise.all(entries.map(([, role]) => this.get(role)))).forEach(
+      (item, index) => (roles[entries[index][1]] = item),
+    );
     return roles;
   }
 
@@ -134,9 +135,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * */
   setAll = /* @__PURE__ */ buildTransactionFunction(
-    async (rolesWithAddresses: {
-      [key in TRole]?: AddressOrEns[];
-    }): Promise<Transaction> => {
+    async (
+      rolesWithAddresses: {
+        [key in TRole]?: AddressOrEns[];
+      },
+      actingAddress?: string,
+    ): Promise<Transaction> => {
+      // if we are removing multiple roles, we need to allways remove the connected wallet address *last*
+      // this is so we don't renounce (i.e.)  admin role first and then try to revoke someone else's (i.e.) admin role after (which will revert the entire txn because we are no longer an admin)
+      // if it is explicitly passed in (i.e. for estimation) we use that value, otherwise we get it from the connected signer
+      const connectedWalletAddress =
+        actingAddress || (await this.contractWrapper.getSignerAddress());
       const contractEncoder = new ContractEncoder(this.contractWrapper);
 
       const roles = Object.keys(rolesWithAddresses) as TRole[];
@@ -151,23 +160,34 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
       const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
       for (let i = 0; i < sortedRoles.length; i++) {
         const role = sortedRoles[i];
-        const addresses: Address[] = await Promise.all(
-          rolesWithAddresses[role]?.map(
-            async (addressOrEns) => await resolveAddress(addressOrEns),
-          ) || [],
-        );
-        const currentAddresses: Address[] = await Promise.all(
-          currentRoles[role]?.map(
-            async (addressOrEns) =>
-              await resolveAddress(addressOrEns as AddressOrEns),
-          ) || [],
-        );
+        const [addresses, currentAddresses] = await Promise.all([
+          Promise.all(
+            rolesWithAddresses[role]?.map((addressOrEns) =>
+              resolveAddress(addressOrEns),
+            ) || [],
+          ),
+          Promise.all(
+            currentRoles[role]?.map((addressOrEns) =>
+              resolveAddress(addressOrEns as AddressOrEns),
+            ) || [],
+          ),
+        ]);
         const toAdd = addresses.filter(
           (address) => !currentAddresses.includes(address),
         );
         const toRemove = currentAddresses.filter(
           (address) => !addresses.includes(address),
         );
+
+        // if we're removing more than one address we have to make sure we always remove the *connected* (acting) wallet address first
+        // otherwise we'll revoke the connected wallet address and then try to revoke someone else's address which will revert the entire txn
+        if (toRemove.length > 1) {
+          const index = toRemove.indexOf(connectedWalletAddress);
+          if (index > -1) {
+            toRemove.splice(index, 1);
+            toRemove.push(connectedWalletAddress);
+          }
+        }
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(
@@ -176,18 +196,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
           });
         }
         if (toRemove.length) {
-          for (let j = 0; j < toRemove.length; j++) {
-            const address = toRemove[j];
-            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
-              address,
-            )) as any;
+          const revokeFunctionNames = await Promise.all(
+            toRemove.map((address) => this.getRevokeRoleFunctionName(address)),
+          );
+          revokeFunctionNames.forEach((revokeFunctionName, index) =>
             encoded.push(
               contractEncoder.encode(revokeFunctionName, [
                 getRoleHash(role),
-                address,
+                toRemove[index],
               ]),
-            );
-          }
+            ),
+          );
         }
       }
 
@@ -211,8 +230,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   public async verify(roles: TRole[], address: AddressOrEns): Promise<void> {
     await Promise.all(
       roles.map(async (role) => {
-        const members = await this.get(role);
-        const resolvedAddress: Address = await resolveAddress(address);
+        const [members, resolvedAddress] = await Promise.all([
+          this.get(role),
+          resolveAddress(address),
+        ]);
         if (
           !members
             .map((a) => a.toLowerCase())
@@ -310,8 +331,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   private async getRevokeRoleFunctionName(address: AddressOrEns) {
-    const resolvedAddress = await resolveAddress(address);
-    const signerAddress = await this.contractWrapper.getSignerAddress();
+    const [resolvedAddress, signerAddress] = await Promise.all([
+      resolveAddress(address),
+      this.contractWrapper.getSignerAddress(),
+    ]);
     if (signerAddress.toLowerCase() === resolvedAddress.toLowerCase()) {
       return "renounceRole";
     }

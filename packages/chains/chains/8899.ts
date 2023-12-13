@@ -25,10 +25,12 @@ export default {
     "symbol": "JBC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8899,
   "rpc": [
     "https://jibchain-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-l1.jibchain.net"
+    "https://8899.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-l1.jibchain.net",
+    "https://jib-rpc.inan.in.th"
   ],
   "shortName": "jbc",
   "slug": "jibchain-l1",

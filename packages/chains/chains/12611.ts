@@ -4,11 +4,10 @@ export default {
   "chainId": 12611,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
-    "url": "ipfs://QmZm2RfbEfWjnqu7MLSG5ChhAsjnKqTvmHM5eJWvYGAwG8",
-    "width": 800,
-    "height": 264,
+    "url": "ipfs://QmRySLe3su59dE5x5JPm2b1GeZfz6DR9qUzcbp3rt4SD3A",
+    "width": 300,
+    "height": 300,
     "format": "png"
   },
   "infoURL": "https://astar.network",
@@ -18,10 +17,16 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12611,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": []
+  },
   "rpc": [],
   "shortName": "astrzk",
   "slug": "astar-zkevm",
   "status": "incubating",
-  "testnet": false
+  "testnet": false,
+  "title": "Astar zkEVM Mainnet"
 } as const satisfies Chain;

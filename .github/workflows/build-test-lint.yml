@@ -31,6 +31,11 @@ jobs:
         with:
           fetch-depth: 25
 
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
       - name: Install
         uses: ./.github/composite-actions/install
 
@@ -56,8 +61,13 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           check-latest: true
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - uses: pnpm/action-setup@v2
         with:
@@ -81,8 +91,14 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           check-latest: true
+
+      # we use bun for some test suites
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - uses: pnpm/action-setup@v2
         with:
@@ -100,7 +116,7 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/sdk/coverage/evm/lcov.info,./packages/sdk/coverage/solana/lcov.info,
+          files: ./packages/sdk/coverage/evm/lcov.info
 
   e2e:
     timeout-minutes: 15
@@ -111,8 +127,14 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           check-latest: true
+
+      # we use bun for some test suites
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - uses: pnpm/action-setup@v2
         with:

@@ -2,9 +2,12 @@ import { useStorage } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Image } from "react-native";
 import { SvgUri, SvgXml } from "react-native-svg";
-import { isAppBundleIdPresentInGlobal } from "../../utils/global";
 import Box from "./Box";
+import { appBundleId } from "../../utils/version";
 
+/**
+ * @internal
+ */
 const ImageSvgUri = ({
   imageUrl = "",
   width,
@@ -24,10 +27,7 @@ const ImageSvgUri = ({
   }
 
   const resolvedImageUrl = storage
-    ? storage.resolveScheme(imageUrl) +
-      (isAppBundleIdPresentInGlobal()
-        ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
-        : "")
+    ? storage.resolveScheme(imageUrl) + `?bundleId=${appBundleId}`
     : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   if (!resolvedImageUrl || resolvedImageUrl === "") {
@@ -35,7 +35,7 @@ const ImageSvgUri = ({
   }
 
   return (
-    <Box style={{ width: width, height: height }}>
+    <Box width={width} height={height}>
       {error ? (
         <SvgUri width={width} height={height} uri={resolvedImageUrl} />
       ) : (

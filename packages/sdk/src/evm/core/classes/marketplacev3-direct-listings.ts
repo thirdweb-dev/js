@@ -6,9 +6,6 @@ import type {
   IERC721,
   MarketplaceV3,
 } from "@thirdweb-dev/contracts-js";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import {
   NewListingEvent,
   UpdatedListingEvent,
@@ -33,22 +30,22 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
-import type { DirectListingV3 } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import type { DirectListingV3 } from "../../types/marketplacev3/DirectListingV3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
+import { Status } from "../../enums/marketplace/Status";
 
 /**
  * Handles direct listings
@@ -212,6 +209,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```javascript
    * const listingId = 0;
    * const isBuyerApproved = await contract.directListings.isBuyerApprovedForListing(listingId, "{{wallet_address}}");
+   * ```
    *
    * @param listingId - the listing id
    * @param buyer - buyer address
@@ -414,12 +412,11 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     async (
       listings: DirectListingInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createListing.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createListing.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this
@@ -894,6 +891,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     const provider = this.contractWrapper.getProvider();
+    const ERC165Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+    ).default;
     const erc165 = new Contract(
       listing.assetContractAddress,
       ERC165Abi,
@@ -902,6 +902,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
+      const ERC721Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC721.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC721Abi,
@@ -923,6 +926,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
           : `Seller is not the owner of Token '${listing.tokenId}' from contract '${listing.assetContractAddress} anymore'`,
       };
     } else if (isERC1155) {
+      const ERC1155Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC1155Abi,

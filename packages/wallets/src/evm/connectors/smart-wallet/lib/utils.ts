@@ -76,3 +76,31 @@ export async function getUserOpHashV06(
   );
   return utils.keccak256(enc);
 }
+
+const generateRandomUint192 = (): bigint => {
+  const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand2 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand3 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand4 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand5 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand6 = BigInt(Math.floor(Math.random() * 0x100000000));
+  return (
+    (rand1 << BigInt(160)) |
+    (rand2 << BigInt(128)) |
+    (rand3 << BigInt(96)) |
+    (rand4 << BigInt(64)) |
+    (rand5 << BigInt(32)) |
+    rand6
+  );
+};
+
+export const randomNonce = () => {
+  let hexString = generateRandomUint192().toString(16);
+  if (hexString.length % 2 !== 0) {
+    hexString = "0" + hexString;
+  }
+  hexString = "0x" + hexString;
+  return ethers.BigNumber.from(
+    ethers.utils.concat([hexString, "0x0000000000000000"]),
+  );
+};

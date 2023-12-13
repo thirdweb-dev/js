@@ -8,34 +8,58 @@ import {
 import { useState } from "react";
 import { PaperFormUI, PaperFormUIScreen } from "./PaperFormUI";
 import { PaperOTPLoginUI } from "./PaperOTPLoginUI";
-import { PaperConfig, PaperLoginType, RecoveryShareManagement } from "./types";
+import {
+  OAuthProvider,
+  PaperWalletConfigOptions,
+  PaperLoginType,
+  RecoveryShareManagement,
+} from "./types";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import { reservedScreens } from "../../ConnectWallet/constants";
 import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { PaperGoogleLogin } from "./PaperGoogleLogin";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
 
+/**
+ * A wallet configurator for [Paper Wallet](https://withpaper.com/) which allows integrating the wallet with React.
+ *
+ * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
+ * Learn more here: https://portal.thirdweb.com/embedded-wallet
+ */
 export const paperWallet = (
-  config?: PaperConfig,
+  options?: PaperWalletConfigOptions,
 ): WalletConfig<PaperWallet> => {
   const defaultRecovery = "AWS_MANAGED";
 
+  const defaultConfig: PaperWalletConfigOptions = {
+    oauthOptions: {
+      providers: ["google"],
+    },
+  };
+
+  const finalOptions: PaperWalletConfigOptions = options
+    ? { ...defaultConfig, ...options }
+    : defaultConfig;
+
+  const { oauthOptions } = finalOptions;
+
   return {
     category: "socialLogin",
+    isHeadless: true,
     id: PaperWallet.id,
-    recommended: config?.recommended,
+    recommended: finalOptions?.recommended,
     meta: {
       ...PaperWallet.meta,
       name: "Email",
       iconURL: emailIcon,
     },
-    create(options: WalletOptions) {
+    create(walletOptions: WalletOptions) {
       return new PaperWallet({
-        ...options,
-        ...config,
+        ...walletOptions,
+        ...finalOptions,
         advancedOptions: {
           recoveryShareManagement: "AWS_MANAGED",
-          ...config?.advancedOptions,
+          ...finalOptions?.advancedOptions,
         },
       });
     },
@@ -44,8 +68,10 @@ export const paperWallet = (
         <PaperSelectionUI
           {...props}
           recoveryShareManagement={
-            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
+            finalOptions?.advancedOptions?.recoveryShareManagement ||
+            defaultRecovery
           }
+          providers={oauthOptions ? oauthOptions?.providers : undefined}
         />
       );
     },
@@ -54,8 +80,10 @@ export const paperWallet = (
         <PaperConnectUI
           {...props}
           recoveryShareManagement={
-            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
+            finalOptions?.advancedOptions?.recoveryShareManagement ||
+            defaultRecovery
           }
+          providers={oauthOptions ? oauthOptions?.providers : undefined}
         />
       );
     },
@@ -65,6 +93,7 @@ export const paperWallet = (
 const PaperSelectionUI: React.FC<
   SelectUIProps<PaperWallet> & {
     recoveryShareManagement: RecoveryShareManagement;
+    providers?: OAuthProvider[];
   }
 > = (props) => {
   const screen = useScreenContext();
@@ -90,8 +119,10 @@ const PaperSelectionUI: React.FC<
     <div>
       <PaperFormUI
         walletConfig={props.walletConfig}
-        googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
-        showOrSeparator={props.supportedWallets.length > 1}
+        googleLoginSupported={
+          props.recoveryShareManagement !== "USER_MANAGED" &&
+          !!props.providers?.includes("google")
+        }
         onSelect={props.onSelect}
       />
     </div>
@@ -101,6 +132,7 @@ const PaperSelectionUI: React.FC<
 const PaperConnectUI = (
   props: ConnectUIProps<PaperWallet> & {
     recoveryShareManagement: RecoveryShareManagement;
+    providers?: OAuthProvider[];
   },
 ) => {
   const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
@@ -140,7 +172,10 @@ const PaperConnectUI = (
   return (
     <PaperFormUIScreen
       walletConfig={props.walletConfig}
-      googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
+      googleLoginSupported={
+        props.recoveryShareManagement !== "USER_MANAGED" &&
+        !!props.providers?.includes("google")
+      }
       modalSize={props.modalSize}
       onSelect={(_loginType) => {
         setLoginType(_loginType);

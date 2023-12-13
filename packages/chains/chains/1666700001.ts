@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.pops.one"
   ],
-  "features": [],
   "infoURL": "https://www.harmony.one/",
   "name": "Harmony Testnet Shard 1",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "ONE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1666700001,
   "rpc": [
     "https://harmony-testnet-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1666700001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.b.hmny.io"
   ],
   "shortName": "hmy-b-s1",

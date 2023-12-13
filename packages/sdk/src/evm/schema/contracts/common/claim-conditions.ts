@@ -43,15 +43,14 @@ export const ClaimConditionInputSchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const ClaimConditionInputArray = /* @__PURE__ */ z.array(
-  ClaimConditionInputSchema,
-);
+export const ClaimConditionInputArray = /* @__PURE__ */ (() =>
+  z.array(ClaimConditionInputSchema))();
 
 /**
  * @internal
  */
-export const PartialClaimConditionInputSchema =
-  /* @__PURE__ */ ClaimConditionInputSchema.partial();
+export const PartialClaimConditionInputSchema = /* @__PURE__ */ (() =>
+  ClaimConditionInputSchema.partial())();
 
 /**
  * @internal

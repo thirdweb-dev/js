@@ -1,3 +1,4 @@
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 import {
   PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
@@ -11,13 +12,18 @@ export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions_>;
 
+/**
+ * Paper Wallet
+ *
+ * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
+ */
 export class PaperWallet extends AbstractClientWallet<
   PaperWalletAdditionalOptions_,
   PaperWalletConnectionArgs
 > {
   connector?: Connector;
 
-  static id = walletIds.paper;
+  static id = walletIds.paper as string;
 
   static meta = {
     name: "Paper Wallet",
@@ -31,15 +37,24 @@ export class PaperWallet extends AbstractClientWallet<
 
   paperClientId: string;
   chain: PaperWalletAdditionalOptions_["chain"];
+  onAuthSuccess: PaperWalletAdditionalOptions_["onAuthSuccess"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
       ...options,
     });
 
+    try {
+      this.chain = {
+        ...options.chain,
+        rpc: getValidChainRPCs(options.chain, options.clientId),
+      };
+    } catch {
+      this.chain = options.chain;
+    }
+
     if (options.paperClientId && options.paperClientId === "uninitialized") {
       this.paperClientId = "00000000-0000-0000-0000-000000000000";
-      this.chain = options.chain;
       return;
     }
 
@@ -75,7 +90,7 @@ export class PaperWallet extends AbstractClientWallet<
 
     // cast is okay because we assert that either clientId or paperClientId is defined above
     this.paperClientId = (options.paperClientId ?? options.clientId) as string;
-    this.chain = options.chain;
+    this.onAuthSuccess = options.onAuthSuccess;
   }
   private isClientIdLegacyPaper(clientId: string): boolean {
     return clientId.indexOf("-") > 0 && clientId.length === 36;
@@ -88,6 +103,7 @@ export class PaperWallet extends AbstractClientWallet<
         clientId: this.paperClientId,
         chain: this.chain,
         chains: this.chains,
+        onAuthSuccess: this.onAuthSuccess,
         advancedOptions: {
           recoveryShareManagement:
             this.options?.advancedOptions?.recoveryShareManagement,

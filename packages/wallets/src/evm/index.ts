@@ -2,15 +2,16 @@ export { EIP155_SIGNING_METHODS } from "./constants/wc";
 
 export { walletIds } from "./constants/walletIds";
 
-export { WagmiConnector } from "../lib/wagmi-connectors";
+export { WagmiConnector } from "../lib/wagmi-connectors/WagmiConnector";
 export {
   AddChainError,
   ChainNotConfiguredError,
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  normalizeChainId,
-} from "../lib/wagmi-core";
+} from "../lib/wagmi-core/errors";
+export { normalizeChainId } from "../lib/wagmi-core/normalizeChainId";
+
 export { DEFAULT_DAPP_META } from "./constants/dappMeta";
 export type { EVMWallet } from "./interfaces";
 export { Connector, WagmiAdapter } from "./interfaces/connector";
@@ -44,6 +45,37 @@ export * from "./wallets/trust";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/zerion";
+export * from "./wallets/token-bound-smart-wallet";
+export * from "./wallets/engine";
+
+export { OKXWallet, type OKXWalletOptions } from "./wallets/okx";
+export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider";
+
+export {
+  CoreWallet,
+  type CoreWalletOptions,
+  type CoreWalletAdditionalOptions,
+} from "./wallets/core-wallet";
+export { getInjectedCoreWalletProvider } from "./connectors/core-wallet/getInjectedCoreWalletProvider";
+
+export { OneKeyWallet, type OneKeyOptions } from "./wallets/onekey";
+export { getInjectedOneKeyProvider } from "./connectors/onekey/getInjectedOneKeyProvider";
+export {
+  CryptoDefiWallet,
+  type CryptoDefiWalletOptions,
+  type CryptoDefiWalletAdditionalOptions,
+} from "./wallets/crypto-defi-wallet";
+export { getInjectedCryptoDefiWalletProvider } from "./connectors/crypto-defi-wallet/getInjectedCryptoDefiWalletProvider";
+
+export { RabbyWallet, type RabbyOptions } from "./wallets/rabby";
+export { getInjectedRabbyProvider } from "./connectors/rabby/getInjectedRabbyProvider";
+
+export {
+  Coin98Wallet,
+  type Coin98Options,
+  type Coin98AdditionalOptions,
+} from "./wallets/coin98";
+export { getInjectedCoin98Provider } from "./connectors/coin98/getInjectedCoin98Provider";
 
 export type { Chain } from "@thirdweb-dev/chains";
 
@@ -53,6 +85,10 @@ export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhan
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
 export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export * from "./utils/setWalletAnaltyicsEnabled";
 
 // ThirdwebEmbeddedWalletSdk
 export * from "./connectors/embedded-wallet/implementations";
+
+// EngineSigner
+export { EngineSigner } from "./connectors/engine/signer";

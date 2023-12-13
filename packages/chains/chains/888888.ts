@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.v.network",
   "name": "Vision - Mainnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "VS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 888888,
   "rpc": [
     "https://vision.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://infragrid.v.network/ethereum/compatible"
   ],
   "shortName": "vision",
+  "slip44": 60,
   "slug": "vision",
   "testnet": false
 } as const satisfies Chain;

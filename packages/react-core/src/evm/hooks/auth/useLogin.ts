@@ -14,7 +14,6 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  *
  * @see {@link https://portal.thirdweb.com/react/react.uselogin?utm_source=sdk | Documentation}
  *
- * @beta
  */
 export function useLogin() {
   const queryClient = useQueryClient();

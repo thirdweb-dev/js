@@ -10,3 +10,4 @@ export * from "./right-arrow";
 export * from "./wallet";
 export * from "./money";
 export * from "./switch";
+export * from "./svgs";

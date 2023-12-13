@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
     "width": 146,
@@ -24,9 +23,10 @@ export default {
     "symbol": "EZC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2612,
   "rpc": [
     "https://ezchain-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2612.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ezchain.com/ext/bc/C/rpc"
   ],
   "shortName": "EZChain",

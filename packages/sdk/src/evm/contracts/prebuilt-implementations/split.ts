@@ -2,7 +2,6 @@ import type {
   IERC20,
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
@@ -14,7 +13,7 @@ import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -42,6 +41,7 @@ import { ADMIN_ROLE } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Split implements UpdateableNetwork {
   static contractRoles = ADMIN_ROLE;
 
@@ -179,9 +179,11 @@ export class Split implements UpdateableNetwork {
    * @returns A map of recipient addresses to their balances in the specified currency.
    */
   public async balanceOfTokenAllRecipients(tokenAddress: AddressOrEns) {
-    const resolvedToken = await resolveAddress(tokenAddress);
+    const [resolvedToken, recipients] = await Promise.all([
+      resolveAddress(tokenAddress),
+      this.getAllRecipients(),
+    ]);
 
-    const recipients = await this.getAllRecipients();
     const balances: { [key: string]: CurrencyValue } = {};
     for (const recipient of recipients) {
       balances[recipient.address] = await this.balanceOfToken(
@@ -206,14 +208,11 @@ export class Split implements UpdateableNetwork {
    * ```
    */
   public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
-    const resolvedAddress = await resolveAddress(address);
-    const walletBalance = await this.contractWrapper
-      .getProvider()
-      .getBalance(this.getAddress());
-    const totalReleased = await this.contractWrapper.read(
-      "totalReleased" as "totalReleased()",
-      [],
-    );
+    const [resolvedAddress, walletBalance, totalReleased] = await Promise.all([
+      resolveAddress(address),
+      this.contractWrapper.getProvider().getBalance(this.getAddress()),
+      this.contractWrapper.read("totalReleased" as "totalReleased()", []),
+    ]);
     const totalReceived = walletBalance.add(totalReleased);
 
     return this._pendingPayment(
@@ -244,27 +243,33 @@ export class Split implements UpdateableNetwork {
     walletAddress: AddressOrEns,
     tokenAddress: AddressOrEns,
   ): Promise<CurrencyValue> {
-    const resolvedToken = await resolveAddress(tokenAddress);
-    const resolvedWallet = await resolveAddress(walletAddress);
-
+    const [resolvedToken, resolvedWallet] = await Promise.all([
+      resolveAddress(tokenAddress),
+      resolveAddress(walletAddress),
+    ]);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       resolvedToken,
       ERC20Abi,
       this.contractWrapper.getProvider(),
     ) as IERC20;
-    const walletBalance = await erc20.balanceOf(this.getAddress());
-    const totalReleased = await this.contractWrapper.read(
-      "totalReleased" as "totalReleased(address)",
-      [resolvedToken],
-    );
+    const [walletBalance, totalReleased, alreadyReleased] = await Promise.all([
+      erc20.balanceOf(this.getAddress()),
+      this.contractWrapper.read("totalReleased" as "totalReleased(address)", [
+        resolvedToken,
+      ]),
+      this.contractWrapper.read("released" as "released(address,address)", [
+        resolvedToken,
+        resolvedWallet,
+      ]),
+    ]);
     const totalReceived = walletBalance.add(totalReleased);
     const value = await this._pendingPayment(
       resolvedWallet,
       totalReceived,
-      await this.contractWrapper.read(
-        "released" as "released(address,address)",
-        [resolvedToken, resolvedWallet],
-      ),
+      alreadyReleased,
     );
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
@@ -280,9 +285,8 @@ export class Split implements UpdateableNetwork {
   public async getRecipientSplitPercentage(
     address: AddressOrEns,
   ): Promise<SplitRecipient> {
-    const resolvedAddress = await resolveAddress(address);
-
-    const [totalShares, walletsShares] = await Promise.all([
+    const [resolvedAddress, totalShares, walletsShares] = await Promise.all([
+      resolveAddress(address),
       this.contractWrapper.read("totalShares", []),
       this.contractWrapper.read("shares", [address]),
     ]);
@@ -333,10 +337,10 @@ export class Split implements UpdateableNetwork {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "release(address,address)",
-        args: [
-          await resolveAddress(tokenAddress),
-          await resolveAddress(walletAddress),
-        ],
+        args: await Promise.all([
+          resolveAddress(tokenAddress),
+          resolveAddress(walletAddress),
+        ]),
       });
     },
   );
@@ -392,14 +396,14 @@ export class Split implements UpdateableNetwork {
     totalReceived: BigNumber,
     alreadyReleased: BigNumber,
   ): Promise<BigNumber> {
+    const [resolvedAddress, totalShares] = await Promise.all([
+      resolveAddress(address),
+      this.contractWrapper.read("totalShares", []),
+    ]);
     const addressReceived = totalReceived.mul(
-      await this.contractWrapper.read("shares", [
-        await resolveAddress(address),
-      ]),
+      await this.contractWrapper.read("shares", [resolvedAddress]),
     );
-    const totalRoyaltyAvailable = addressReceived.div(
-      await this.contractWrapper.read("totalShares", []),
-    );
+    const totalRoyaltyAvailable = addressReceived.div(totalShares);
     return totalRoyaltyAvailable.sub(alreadyReleased);
   }
 

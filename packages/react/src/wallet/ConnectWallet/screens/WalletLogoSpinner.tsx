@@ -1,59 +1,60 @@
 import { keyframes } from "@emotion/react";
-import styled from "@emotion/styled";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { Img } from "../../../components/Img";
-import { IconButton } from "../../../components/buttons";
-import {
-  iconSize,
-  spacing,
-  radius,
-  shadow,
-  Theme,
-} from "../../../design-system";
+import { radius } from "../../../design-system";
+import { fadeInAnimation } from "../../../design-system/animations";
+import { StyledDiv } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
-export function WalletLogoSpinner(props: {
-  onRetry: () => void;
-  error: boolean;
-  iconUrl: string;
-}) {
+export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
+  const loaderRadius = 20;
+  const radiusFactor = 36 - loaderRadius;
+  const dashArrayStart = 116 + radiusFactor;
+  const dashArrayEnd = 245 + radiusFactor;
+  const dashOffset = -1 * (360 + radiusFactor * 1.75);
+
   return (
     <LogoContainer data-error={props.error}>
       <div
         data-container
         style={{
           position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <div data-gradient data-error={props.error}>
-          <div data-blocker>
-            <Img src={props.iconUrl} width={"80"} height={"80"} />
-          </div>
-        </div>
+        <div data-img-container>
+          <svg
+            viewBox="0 0 110 110"
+            style={{
+              display: props.error ? "none" : "block",
+            }}
+          >
+            <rect
+              x="2"
+              y="2"
+              width="106"
+              height="106"
+              rx={loaderRadius}
+              strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
+              strokeDashoffset={dashOffset}
+              strokeLinecap="round"
+              fill="none"
+              strokeWidth={4}
+            />
+          </svg>
 
-        {props.error && (
-          <RetryButton onClick={props.onRetry} aria-label="retry">
-            <ReloadIcon width={iconSize.md} height={iconSize.md} />
-          </RetryButton>
-        )}
+          <Img src={props.iconUrl} width={"80"} height={"80"} />
+        </div>
       </div>
     </LogoContainer>
   );
 }
 
-const retryFadeIn = keyframes`
-  from {
-    transform: translate(50%, 50%) scale(0.5) rotate(-180deg);
-    opacity: 0;
-  }
-`;
-
-const rotateAnimation = keyframes`
-  0% {
-    transform: scale(1.5) rotate(0deg);
-  }
-  100% {
-    transform: scale(1.5) rotate(360deg);
-  }
+const dashRotateAnimation = keyframes`
+from {
+  stroke-dashoffset: 0px;
+}
 `;
 
 const shakeErrorAnimation = keyframes`
@@ -74,93 +75,62 @@ const shakeErrorAnimation = keyframes`
   }
 `;
 
-const scaleFadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(80px) scale(0.2) ;
-  }
+const plusAnimation = keyframes`
+0% {
+  transform: scale(0.95);
+}
+100% {
+  opacity: 0;
+  transform: scale(1.4);
+}
 `;
 
-const floatingAnimation = keyframes`
-  from {
-    transform: translateY(5px);
-  }
-  to {
-    transform: translateY(-5px);
-  }
-`;
+const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    justifyContent: "center",
+    position: "relative",
+    borderRadius: radius.xl,
 
-const LogoContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  animation: ${scaleFadeIn} 400ms cubic-bezier(0.15, 1.15, 0.6, 1);
-  position: relative;
-  border-radius: ${radius.xl};
+    "[data-img-container]": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+    },
 
-  &[data-error="true"] [data-container] {
-    animation: ${shakeErrorAnimation} 0.25s linear;
-  }
+    "&[data-error='true'] [data-container]": {
+      animation: `${shakeErrorAnimation} 0.25s linear`,
+    },
 
-  [data-gradient] {
-    padding: 2px; /* width of ring */
-    position: relative;
-    overflow: hidden;
-    border-radius: ${radius.xl};
-  }
+    "&[data-error='true'] [data-img-container]::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background: theme.colors.danger,
+      animation: `${plusAnimation} 1.5s ease infinite`,
+      borderRadius: "20px",
+      zIndex: -1,
+    },
 
-  [data-gradient]:not([data-error="true"]) {
-    animation: ${floatingAnimation} 1.2s ease infinite alternate;
-  }
+    svg: {
+      position: "absolute",
+      /* can't use inset because safari doesn't like it */
+      left: "-8px",
+      top: "-8px",
+      width: "calc(100% + 16px)",
+      height: "calc(100% + 16px)",
+      animation: `${fadeInAnimation} 400ms ease`,
+    },
 
-  [data-gradient]::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    img: {
+      zIndex: 100,
+    },
 
-    background: linear-gradient(
-      to right,
-      transparent 60%,
-      ${(p) => p.theme.colors.accentText}
-    );
-
-    animation: ${rotateAnimation} 1.2s linear infinite;
-  }
-
-  [data-gradient][data-error="true"]::before {
-    animation: none;
-    background: ${(p) => p.theme.colors.danger};
-    box-shadow: 0 0 10px ${(p) => p.theme.colors.danger};
-  }
-
-  [data-blocker] {
-    padding: ${spacing.xs};
-    background: ${(p) => p.theme.colors.modalBg};
-    position: relative;
-    z-index: 1;
-    border-radius: ${radius.xl};
-  }
-`;
-
-const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  animation: ${retryFadeIn} 0.3s ease;
-  position: absolute;
-  background: ${(p) => p.theme.colors.danger};
-  color: ${(p) => p.theme.colors.modalBg};
-  box-shadow: ${shadow.sm};
-  bottom: 5px;
-  right: 5px;
-  transform: translate(50%, 50%);
-  z-index: 100;
-  padding: ${spacing.xs};
-  border-radius: 50%;
-  transition: all 200ms ease;
-
-  &:hover {
-    background: ${(p) => p.theme.colors.danger};
-    color: ${(p) => p.theme.colors.modalBg};
-    transform: translate(50%, 50%) scale(1.2) rotate(35deg);
-  }
-`;
+    rect: {
+      animation: `${dashRotateAnimation} 1.2s linear infinite`,
+      stroke: theme.colors.accentText,
+    },
+  };
+});

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZT1Wq3P4YbgKBSUmCtgbs5ijPF5d91BzaMPh7Aub8d8t",
     "width": 192,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ZAFIC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1369,
   "rpc": [
     "https://zafirium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1369.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.zakumi.io"
   ],
   "shortName": "zafic",

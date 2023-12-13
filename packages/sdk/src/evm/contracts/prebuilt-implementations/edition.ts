@@ -15,9 +15,9 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-mintable";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
@@ -41,7 +41,8 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "edition");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc1155 instead
  */
 export class Edition extends StandardErc1155<TokenERC1155> {
   static contractRoles = NFT_BASE_CONTRACT_ROLES;
@@ -57,7 +58,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     (typeof Edition.contractRoles)[number]
   >;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<TokenERC1155>;
+  public platformFees: ContractPlatformFee;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
@@ -98,7 +99,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
-  public owner: ContractOwner<TokenERC1155>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,
@@ -190,8 +191,11 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    return this.erc1155.getOwned(walletAddress);
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    return this.erc1155.getOwned(walletAddress, queryParams);
   }
 
   /**

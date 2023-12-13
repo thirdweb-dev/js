@@ -14,10 +14,10 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../../core/classes/drop-erc1155-claim-conditions";
-import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { DropErc1155History } from "../../core/classes/internal/erc1155/drop-erc1155-history";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
@@ -42,14 +42,15 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "edition-drop");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc1155 instead
  */
 export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<PrebuiltEditionDrop>;
+  public platformFees: ContractPlatformFee;
   public encoder: ContractEncoder<PrebuiltEditionDrop>;
   public estimator: GasCostEstimator<PrebuiltEditionDrop>;
   public events: ContractEvents<PrebuiltEditionDrop>;
@@ -117,7 +118,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
 
   public history: DropErc1155History;
   public interceptor: ContractInterceptor<PrebuiltEditionDrop>;
-  public owner: ContractOwner<PrebuiltEditionDrop>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,
@@ -216,8 +217,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    return this.erc1155.getOwned(walletAddress);
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    return this.erc1155.getOwned(walletAddress, queryParams);
   }
 
   /**

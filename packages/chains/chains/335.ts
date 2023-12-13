@@ -6,11 +6,16 @@ export default {
     {
       "name": "ethernal",
       "url": "https://explorer-test.dfkchain.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQB48m15TzhUFrmu56QCRQjkrkgUaKfgCmKE8o3RzmuPJ",
     "width": 500,
@@ -24,9 +29,10 @@ export default {
     "symbol": "JEWEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 335,
   "rpc": [
     "https://dfk-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://335.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain-testnet/rpc"
   ],
   "shortName": "DFKTEST",

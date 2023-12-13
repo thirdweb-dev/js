@@ -4,27 +4,11 @@ import { ApiChain, Chain } from "../src/types";
 // default to production api
 const BASE_URI = (process.env.BASE_URI as string) || "https://api.thirdweb.com";
 
-async function getAllPaginatedChains(
-  chains: any[] = [],
-  pathname = "/v1/chains",
-) {
-  const url = new URL(BASE_URI);
-  url.pathname = pathname;
-  const res = await fetch(decodeURIComponent(url.toString()));
-  const json = await res.json();
-
-  if (json.error) {
-    console.error("Failed to fully load chains from DB", json.error);
-    return chains;
-  }
-  if (json.next) {
-    return getAllPaginatedChains([...chains, ...json.data], json.next);
-  }
-  return [...chains, ...json.data];
-}
-
 async function sync() {
-  const allChainsInDB = (await getAllPaginatedChains()) as ApiChain[];
+  const res = await fetch(BASE_URI + "/v1/chains");
+  const json = await res.json();
+  const allChainsInDB = json.data as ApiChain[];
+
   const chainsDir = "./chains";
   // clean out the chains directory
   await fs.rmdir(chainsDir, { recursive: true });
@@ -33,31 +17,21 @@ async function sync() {
 
   const results = await Promise.all(
     allChainsInDB.map(async (chain) => {
-      const pkgChain: Chain = {
-        ...chain,
-        chainId: Number(chain.chainId),
-        features: chain.features?.map((feature) => ({ name: feature })),
-      };
       // remove all null values
-      Object.keys(pkgChain).forEach((key) => {
-        // @ts-ignore
-        if (pkgChain[key] === null || pkgChain[key] === undefined) {
-          // @ts-ignore
-          delete pkgChain[key];
+      Object.keys(chain).forEach((key) => {
+        if (chain[key] === null || chain[key] === undefined) {
+          delete chain[key];
         }
       });
 
       // sort top level keys alphabetically
-      // @ts-ignore
-      const sortedChain: Chain = {};
-      Object.keys(pkgChain)
+      const sortedChain = {} as Chain;
+      Object.keys(chain)
         .sort()
         .forEach((key) => {
-          // @ts-ignore
-          sortedChain[key] = pkgChain[key];
+          sortedChain[key] = chain[key];
         });
 
-      // @ts-ignore
       await fs.writeFile(
         `${chainsDir}/${sortedChain.chainId}.ts`,
         `import type { Chain } from "../src/types";
@@ -78,16 +52,7 @@ export default ${JSON.stringify(
         exportName = `_${exportName}`;
       }
 
-      // imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
-
-      // exports.push(
-      //   `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-      // );
-
       const key = `c${sortedChain.chainId}`;
-
-      // exportNames.push(key);
-      // exportNameToChain[key] = chain;
 
       return {
         imp: `import c${sortedChain.chainId} from "../chains/${sortedChain.chainId}";`,
@@ -101,20 +66,21 @@ export default ${JSON.stringify(
 
   const { imports, exports, exportNames, exportNameToChain } = results.reduce(
     (acc, result) => {
-      // @ts-ignore
+      // if it's a null result skip it (can happen when we skip chains above because their chainID is out of bounds)
+      if (result === null) {
+        return acc;
+      }
       acc.imports.push(result.imp);
-      // @ts-ignore
       acc.exports.push(result.exp);
-      // @ts-ignore
       acc.exportNames.push(result.key);
       acc.exportNameToChain[result.key] = result.chain;
       return acc;
     },
     {
-      imports: [],
-      exports: [],
-      exportNames: [],
-      exportNameToChain: {},
+      imports: [] as string[],
+      exports: [] as string[],
+      exportNames: [] as string[],
+      exportNameToChain: {} as Record<string, Chain>,
     },
   );
 
@@ -127,8 +93,13 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
+export * from "./async";
 export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
-// @ts-expect-error - TODO: fix this later
+
+\/**
+ * @deprecated use \`fetchChains()\` instead
+ *\/
+\/\/ @ts-expect-error - TODO: fix this later
 export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {
@@ -185,6 +156,9 @@ function isValidChainSlug(slug: string): slug is ChainSlug {
   return slug in chainIdsBySlug;
 }
 
+/**
+ * @deprecated use \`getChainByChainIdAsync()\` instead
+ */
 export function getChainByChainId<TChainId extends ChainId>(
   chainId: TChainId | (number & {}),
 ) {
@@ -195,6 +169,9 @@ export function getChainByChainId<TChainId extends ChainId>(
   throw new Error(\`Chain with chainId "\${chainId}" not found\`);
 }
 
+/**
+ * @deprecated use \`getChainBySlugAsync()\` instead
+ */
 export function getChainBySlug<TSlug extends ChainSlug>(
   slug: TSlug | (string & {}),
 ) {

@@ -2,8 +2,7 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { ModalDescription } from "../../../components/modalElements";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import styled from "@emotion/styled";
+import { iconSize, spacing } from "../../../design-system";
 import { fontSize } from "../../../design-system";
 import {
   EyeClosedIcon,
@@ -12,28 +11,33 @@ import {
 } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { useEffect, useRef, useState } from "react";
-import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Spinner } from "../../../components/Spinner";
 import {
   Container,
+  Line,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
 import {
+  shortenAddress,
   useAddress,
   useCreateWalletInstance,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledP } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const ExportLocalWallet: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -122,6 +126,7 @@ export const ExportLocalWallet: React.FC<{
   if (!savedAddress) {
     return (
       <Container
+        animate="fadein"
         flex="row"
         center="both"
         style={{
@@ -136,7 +141,7 @@ export const ExportLocalWallet: React.FC<{
   const exportDisabled = isWrongPassword;
 
   return (
-    <Container fullHeight>
+    <Container fullHeight animate="fadein">
       <form
         style={{
           height: "100%",
@@ -148,25 +153,27 @@ export const ExportLocalWallet: React.FC<{
           exportFromLocalStorage();
         }}
       >
+        <Container p="lg">
+          <ModalHeader
+            onBack={props.onBack}
+            title={locale.exportScreen.title}
+          />
+        </Container>
+        <Line />
         <Container expand p="lg">
-          <ModalHeader onBack={props.onBack} title="Backup Wallet" />
-          <Spacer y="xl" />
-
-          <ModalDescription sm>
-            This will download a JSON file containing the wallet information
-            onto your device encrypted with the password
+          <ModalDescription>
+            {locale.exportScreen.description1}
           </ModalDescription>
 
           <Spacer y="sm" />
 
-          <ModalDescription sm>
-            You can use this JSON file to import the account in MetaMask using
-            the same password
+          <ModalDescription>
+            {locale.exportScreen.description2}
           </ModalDescription>
 
           <Spacer y="xl" />
 
-          <Label>Wallet Address</Label>
+          <Label>{locale.exportScreen.walletAddress}</Label>
           <Spacer y="sm" />
 
           <SavedWalletAddress>
@@ -201,7 +208,7 @@ export const ExportLocalWallet: React.FC<{
                   onClick: () => setShowPassword(!showPassword),
                   icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
                 }}
-                label="Password"
+                label={locale.passwordLabel}
                 type={showPassword ? "text" : "password"}
                 value={password}
                 error={isWrongPassword ? "Wrong Password" : ""}
@@ -229,7 +236,7 @@ export const ExportLocalWallet: React.FC<{
             type="submit"
           >
             <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-            Download
+            {locale.exportScreen.download}
           </Button>
         </ScreenBottomContainer>
       </form>
@@ -253,8 +260,11 @@ function downloadJsonWalletFile(data: string) {
   URL.revokeObjectURL(a.href);
 }
 
-const SavedWalletAddress = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  color: ${(props) => props.theme.colors.secondaryText};
-  margin: 0;
-`;
+const SavedWalletAddress = /* @__PURE__ */ StyledP(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.md,
+    color: theme.colors.secondaryText,
+    margin: 0,
+  };
+});

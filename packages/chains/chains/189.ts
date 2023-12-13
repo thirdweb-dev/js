@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bmc.bytom.io/",
   "name": "BMC Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 189,
   "rpc": [
     "https://bmc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://189.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bmcchain.com"
   ],
   "shortName": "BMCT",

@@ -4,12 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { PhantomWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
     "connecting",
   );
-  const { walletConfig, close } = props;
+  const locale = useTWLocale().wallets.phantomWallet;
+  const { walletConfig, connected } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
   const connect = useConnect();
 
@@ -23,12 +25,12 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
       setErrorConnecting(false);
       await wait(1000);
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [walletConfig, close, connect]);
+  }, [walletConfig, connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -50,11 +52,18 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
         setScreen("get-started");
       }
     })();
-  }, [walletConfig, close, connect, goBack, connectToExtension]);
+  }, [walletConfig, connected, connect, goBack, connectToExtension]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
+        }}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
@@ -73,6 +82,9 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

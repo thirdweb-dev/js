@@ -1,12 +1,12 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { BaseContract } from "ethers";
 import { hasMatchingAbi } from "./hasMatchingAbi";
 
 /**
  * @internal
- * @param contractWrapper
- * @param abi
+ * @param contractWrapper - The contract wrapper to check
+ * @param abi - The abi to check
  * @returns
  */
 export function matchesPrebuiltAbi<T extends BaseContract>(

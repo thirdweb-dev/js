@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9h3nFiCzaBLnBNw8Wot4U7vvEVK45EQfi8nxH4nvrmz",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BTN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 210,
   "rpc": [
     "https://bitnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://210.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitnet.money",
     "https://rpc.btnscan.com"
   ],

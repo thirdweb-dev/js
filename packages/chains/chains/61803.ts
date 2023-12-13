@@ -17,7 +17,6 @@ export default {
   "faucets": [
     "http://faucet.etica-stats.org/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYSyhUqm6ArWyALBe3G64823ZpEUmFdkzKZ93hUUhNKgU",
     "width": 360,
@@ -31,9 +30,10 @@ export default {
     "symbol": "EGAZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 61803,
   "rpc": [
     "https://etica.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://61803.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eticamainnet.eticascan.org",
     "https://eticamainnet.eticaprotocol.org"
   ],

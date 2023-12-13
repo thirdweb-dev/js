@@ -4,14 +4,14 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  WagmiConnector,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { type Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { QRModalOptions } from "./qrModalOptions";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 
 const chainsToRequest = new Set([1, 137, 10, 42161, 56]);
 
@@ -82,6 +82,7 @@ export class WalletConnectConnector extends WagmiConnector<
   #initProviderPromise?: Promise<void>;
   #storage: AsyncStorage;
   filteredChains: Chain[];
+  showWalletConnectModal: boolean;
 
   constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
     super({
@@ -97,6 +98,8 @@ export class WalletConnectConnector extends WagmiConnector<
             return chainsToRequest.has(c.chainId);
           })
         : this.chains;
+
+    this.showWalletConnectModal = this.options.qrcode !== false;
   }
 
   async connect({ chainId: chainIdP, pairingTopic }: ConnectConfig = {}) {
@@ -151,7 +154,7 @@ export class WalletConnectConnector extends WagmiConnector<
 
       // If session exists and chains are authorized, enable provider for required chain
       const accounts = await provider.enable();
-      if (accounts.length === 0) {
+      if (!accounts[0]) {
         throw new Error("No accounts found on provider.");
       }
       const account = utils.getAddress(accounts[0]);
@@ -206,7 +209,7 @@ export class WalletConnectConnector extends WagmiConnector<
 
   async getAccount() {
     const { accounts } = await this.getProvider();
-    if (accounts.length === 0) {
+    if (!accounts[0]) {
       throw new Error("No accounts found on provider.");
     }
     return utils.getAddress(accounts[0]);
@@ -282,8 +285,9 @@ export class WalletConnectConnector extends WagmiConnector<
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-        const blockExplorerUrls = chain.explorers?.length
-          ? { blockExplorerUrls: [chain.explorers[0].url] }
+        const firstExplorer = chain.explorers && chain.explorers[0];
+        const blockExplorerUrls = firstExplorer
+          ? { blockExplorerUrls: [firstExplorer.url] }
           : {};
         await provider.request({
           method: ADD_ETH_CHAIN_METHOD,
@@ -322,12 +326,12 @@ export class WalletConnectConnector extends WagmiConnector<
 
   async #createProvider() {
     if (!this.#initProviderPromise && typeof window !== "undefined") {
-      this.#initProviderPromise = this.#initProvider();
+      this.#initProviderPromise = this.initProvider();
     }
     return this.#initProviderPromise;
   }
 
-  async #initProvider() {
+  async initProvider() {
     const {
       default: EthereumProvider,
       OPTIONAL_EVENTS,
@@ -340,7 +344,7 @@ export class WalletConnectConnector extends WagmiConnector<
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
-        showQrModal: this.options.qrcode !== false,
+        showQrModal: this.showWalletConnectModal,
         projectId: this.options.projectId,
         optionalMethods: OPTIONAL_METHODS,
         optionalEvents: OPTIONAL_EVENTS,
@@ -354,7 +358,10 @@ export class WalletConnectConnector extends WagmiConnector<
           icons: [this.options.dappMetadata.logoUrl || ""],
         },
         rpcMap: Object.fromEntries(
-          this.filteredChains.map((chain) => [chain.chainId, chain.rpc[0]]),
+          this.filteredChains.map((chain) => [
+            chain.chainId,
+            chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
+          ]),
         ),
 
         qrModalOptions: this.options.qrModalOptions,
@@ -463,7 +470,9 @@ export class WalletConnectConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: utils.getAddress(accounts[0]) });
+      if (accounts[0]) {
+        this.emit("change", { account: utils.getAddress(accounts[0]) });
+      }
     }
   };
 

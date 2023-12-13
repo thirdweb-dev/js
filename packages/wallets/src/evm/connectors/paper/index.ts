@@ -10,7 +10,7 @@ import {
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
-import { normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 import {
@@ -62,6 +62,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
               clientId: this.options.clientId,
               chain: "Ethereum",
               styles: this.options.styles,
+              onAuthSuccess: this.options.onAuthSuccess,
             }),
           );
         } catch (err) {
@@ -191,7 +192,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     }
 
     const signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: this.options.chain.rpc[0],
+      rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     if (!signer) {
@@ -218,7 +219,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
 
     // update signer
     this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0],
+      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     this.emit("change", { chain: { id: chainId, unsupported: false } });

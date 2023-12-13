@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTjV3TTR5aLb7fi7tjx8gcDvYtqBpusqhCSaznVxJ7NJg",
     "width": 150,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CURVE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 827431,
   "rpc": [
     "https://curve.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://827431.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.curvescan.io"
   ],
   "shortName": "CURVEm",

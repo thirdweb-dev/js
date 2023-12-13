@@ -7,7 +7,7 @@ import {
 import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
-import { MerkleTree } from "merkletreejs";
+import { MerkleTree } from "@thirdweb-dev/merkletree";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -15,8 +15,6 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 chai.use(deepEqualInAnyOrder);
 
 const { expect, assert } = chai;
-
-global.fetch = require("cross-fetch");
 
 describe("Snapshots", async () => {
   let adminWallet: SignerWithAddress,
@@ -141,8 +139,9 @@ describe("Snapshots", async () => {
           expect(actualProof?.proof).to.include.ordered.members(expectedProof);
 
           const verified = tree.verify(
-            actualProof?.proof,
+            actualProof?.proof as any,
             ShardedMerkleTree.hashEntry(
+              // @ts-expect-error - TODO: fix this
               { ...actualProof },
               0,
               18,

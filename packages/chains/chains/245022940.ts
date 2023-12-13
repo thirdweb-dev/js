@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
     "width": 512,
@@ -29,12 +28,14 @@ export default {
     "symbol": "NEON",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 245022940,
   "rpc": [
     "https://neon-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://245022940.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.neonevm.org"
   ],
   "shortName": "neonevm-testnet",
   "slug": "neon-evm-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

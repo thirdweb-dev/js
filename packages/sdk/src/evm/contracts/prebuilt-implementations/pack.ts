@@ -37,8 +37,8 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
@@ -71,6 +71,7 @@ import { PACK_CONTRACT_ROLES } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers
 export class Pack extends StandardErc1155<PackContract> {
   static contractRoles = PACK_CONTRACT_ROLES;
 
@@ -107,7 +108,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public owner: ContractOwner<PackContract>;
+  public owner: ContractOwner;
 
   private _vrf?: PackVRF;
 
@@ -342,8 +343,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Create Pack
-   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
-   * @remarks See {@link Pack.createTo}
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet. See {@link Pack.createTo}
    *
    * @param metadataWithRewards - the metadata and rewards to include in the pack
    * @example
@@ -396,8 +396,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Add Pack Contents
-   * @remarks Add contents to an existing pack.
-   * @remarks See {@link Pack.addPackContents}
+   * @remarks Add contents to an existing pack. See {@link Pack.addPackContents}
    *
    * @param packId - token Id of the pack to add contents to
    * @param packContents - the rewards to include in the pack
@@ -436,10 +435,10 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   addPackContents = /* @__PURE__ */ buildTransactionFunction(
     async (packId: BigNumberish, packContents: PackRewards) => {
-      const signerAddress = await this.contractWrapper.getSignerAddress();
-      const parsedContents = await PackRewardsOutputSchema.parseAsync(
-        packContents,
-      );
+      const [signerAddress, parsedContents] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        PackRewardsOutputSchema.parseAsync(packContents),
+      ]);
       const { contents, numOfRewardUnits } = await this.toPackContentArgs(
         parsedContents,
       );
@@ -521,14 +520,11 @@ export class Pack extends StandardErc1155<PackContract> {
       to: AddressOrEns,
       metadataWithRewards: PackMetadataInput,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(
-        metadataWithRewards.packMetadata,
-        this.storage,
-      );
-
-      const parsedMetadata = await PackMetadataInputSchema.parseAsync(
-        metadataWithRewards,
-      );
+      const [uri, parsedMetadata, toAddress] = await Promise.all([
+        uploadOrExtractURI(metadataWithRewards.packMetadata, this.storage),
+        PackMetadataInputSchema.parseAsync(metadataWithRewards),
+        resolveAddress(to),
+      ]);
       const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
       const rewardsData: PackRewardsOutput = {
         erc20Rewards,
@@ -548,7 +544,7 @@ export class Pack extends StandardErc1155<PackContract> {
           uri,
           parsedMetadata.openStartTime,
           parsedMetadata.rewardsPerPack,
-          await resolveAddress(to),
+          toAddress,
         ],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<PackCreatedEvent>(

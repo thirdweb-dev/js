@@ -4,7 +4,6 @@ export default {
   "chainId": 160,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://amax.network",
   "name": "Armonia Eva Chain Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "AMAX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 160,
   "rpc": [
     "https://armonia-eva-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://160.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evascan.io/api/eth-rpc/"
   ],
   "shortName": "eva",

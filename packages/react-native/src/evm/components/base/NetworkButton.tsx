@@ -14,8 +14,8 @@ import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
 import Box from "./Box";
 import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
 import { TWModal } from "./modal/TWModal";
-import { useAppTheme } from "../../styles/hooks";
 import { Chain } from "@thirdweb-dev/chains";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 type NetworkButtonProps = {
   chain?: Chain;
@@ -26,6 +26,9 @@ type NetworkButtonProps = {
   onChainSwitched?: () => void;
 } & React.ComponentProps<typeof Box>;
 
+/**
+ * @internal
+ */
 export const NetworkButton = ({
   onPress,
   chain,
@@ -35,7 +38,8 @@ export const NetworkButton = ({
   padding,
   ...props
 }: NetworkButtonProps) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [switchError, setSwitchError] = useState<string | undefined>();
   const [isSwitching, setIsSwitching] = useState(false);
@@ -72,6 +76,7 @@ export const NetworkButton = ({
     <>
       <BaseButton
         p={padding || "sm"}
+        paddingVertical="xs"
         borderRadius="md"
         borderWidth={0.5}
         flexDirection="row"
@@ -82,14 +87,11 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
-          <Box
-            ml="md"
-            alignItems="flex-start"
-            justifyContent="center"
-            height={36}
-          >
-            <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
+          <Box ml="sm" alignItems="flex-start" justifyContent="center">
+            <Text variant="bodyLarge">
+              {chain?.name || l.common.unknown_network}
+            </Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">
                 <Text
@@ -98,12 +100,12 @@ export const NetworkButton = ({
                   mr="xxs"
                   fontSize={10}
                 >
-                  Confirm in your wallet
+                  {l.connect_wallet_details.confirm_in_wallet}
                 </Text>
                 <ActivityIndicator size={10} color={theme.colors.linkPrimary} />
               </Box>
             ) : switchError ? (
-              <Text variant="error">Error switching network</Text>
+              <Text variant="error">{l.common.error_switching_network}</Text>
             ) : null}
           </Box>
         </Box>
@@ -133,6 +135,7 @@ export const SwitchChainModal = ({
   isVisible,
   onClose,
 }: SwitchChainModalProps) => {
+  const l = useLocale();
   const supportedChains = useSupportedChains();
 
   const onCloseInternal = () => {
@@ -151,18 +154,20 @@ export const SwitchChainModal = ({
         >
           <Box flexDirection="row" justifyContent="space-between" mb="sm">
             <Text variant="bodyLarge" textAlign="left">
-              Select Network
+              {l.connect_wallet_details.select_network}
             </Text>
             <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
           </Box>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
             {supportedChains?.length > 0 ? (
               supportedChains.map((chain) => {
                 return (
                   <NetworkButton
                     mt="xxs"
+                    padding="none"
                     key={chain.chainId}
-                    backgroundColor="backgroundHighlight"
+                    backgroundColor="transparent"
+                    borderColor="transparent"
                     chain={chain}
                     enableSwitchModal={false}
                     switchChainOnPress={true}
@@ -171,7 +176,9 @@ export const SwitchChainModal = ({
                 );
               })
             ) : (
-              <Text variant="error">No supported chains detected</Text>
+              <Text variant="error">
+                {l.connect_wallet_details.no_supported_chains_detected}
+              </Text>
             )}
           </ScrollView>
         </Box>

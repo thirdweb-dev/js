@@ -1,6 +1,7 @@
 export type Palette = {
   buttonBackgroundColor: string;
   buttonTextColor: string;
+  buttonBorderColor: string;
 
   accentButtonColor: string;
   accentButtonTextColor: string;
@@ -25,6 +26,7 @@ export type Palette = {
   black: string;
   white: string;
   red: string;
+  transparent: string;
 
   warning: string;
 
@@ -37,10 +39,12 @@ export const paletteBase = {
   red: "red",
   warning: "#F46565",
   error: "#D85252",
+  transparent: "transparent",
 };
 
 export const paletteLight: Palette = {
   buttonBackgroundColor: "black",
+  buttonBorderColor: "black",
   buttonTextColor: "white",
 
   accentButtonColor: "#3385FF",
@@ -67,6 +71,7 @@ export const paletteLight: Palette = {
 
 export const paletteDark: Palette = {
   buttonBackgroundColor: "white",
+  buttonBorderColor: "white",
   buttonTextColor: "black",
 
   accentButtonColor: "#3385FF",

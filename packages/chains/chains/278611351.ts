@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.razorscan.io/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUdwAZJfyKGZnfPGDsCnNvGu123mdd57kTGj1Y3EWVuWK",
     "width": 900,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SFUEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 278611351,
   "rpc": [
     "https://razor-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://278611351.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/turbulent-unique-scheat"
   ],
   "shortName": "razor",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.harmony.one/",
   "name": "Harmony Mainnet Shard 1",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "ONE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1666600001,
   "rpc": [
     "https://harmony-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1666600001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.t.hmny.io"
   ],
   "shortName": "hmy-s1",
+  "slip44": 1023,
   "slug": "harmony-shard-1",
   "testnet": false
 } as const satisfies Chain;

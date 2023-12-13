@@ -6,11 +6,16 @@ export default {
     {
       "name": "Jellie Blockchain Explorer",
       "url": "https://jellie.twala.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTXJVhVKvVC7DQEnGKXvydvwpvVaUEBJrMHvsCr4nr1sK",
+        "width": 1326,
+        "height": 1265,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTXJVhVKvVC7DQEnGKXvydvwpvVaUEBJrMHvsCr4nr1sK",
     "width": 1326,
@@ -24,13 +29,15 @@ export default {
     "symbol": "TWL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 202624,
   "rpc": [
     "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://202624.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jellie-rpc.twala.io/",
     "wss://jellie-rpc-wss.twala.io/"
   ],
   "shortName": "twl-jellie",
   "slug": "jellie",
-  "testnet": true
+  "testnet": true,
+  "title": "Twala Testnet Jellie"
 } as const satisfies Chain;

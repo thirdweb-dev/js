@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.archiechain.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeiady63oqduls2pm4aaykzjhahblagokhnpsc5qeq5dmkxqelh7i2i",
     "width": 512,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ARC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1244,
   "rpc": [
     "https://arc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1244.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test-1.archiechain.io"
   ],
   "shortName": "TARC",

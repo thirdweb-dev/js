@@ -12,10 +12,11 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
-type CoinbaseWalletOptions = {
+export type CoinbaseWalletConfigOptions = {
   /**
    * Whether to use the Coinbase's default QR Code modal or show the custom UI in ConnectWallet Modal
-   * @default "custom"
+   *
+   * The default is `"custom"`
    */
   qrmodal?: "coinbase" | "custom";
 
@@ -25,8 +26,46 @@ type CoinbaseWalletOptions = {
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Coinbase Wallet](https://www.coinbase.com/wallet) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ *
+ * @example
+ *
+ * ### Usage with ConnectWallet
+ *
+ * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ *
+ * ```tsx
+ * <ThirdwebProvider supportedWallets={[coinbaseWallet()]}>
+ *  <App />
+ * </ThirdwebProvider>
+ * ```
+ *
+ * ### Usage with useConnect
+ *
+ * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ *
+ * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ *
+ * ```tsx
+ * const coinbaseWalletConfig = coinbaseWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   async function handleConnect() {
+ *     const wallet = await connect(coinbaseWalletConfig, options);
+ *     console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>;
+ * }
+ * ```
+ */
 export const coinbaseWallet = (
-  options?: CoinbaseWalletOptions,
+  options?: CoinbaseWalletConfigOptions,
 ): WalletConfig<CoinbaseWallet> => {
   const qrmodal = options?.qrmodal || "custom";
 
@@ -59,11 +98,13 @@ export const coinbaseWallet = (
 };
 
 export const CoinbaseNativeModalConnectUI = ({
-  close,
+  connected,
   walletConfig,
-  open,
+  show,
+  hide,
   supportedWallets,
   theme,
+  goBack,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -78,30 +119,34 @@ export const CoinbaseNativeModalConnectUI = ({
     prompted.current = true;
 
     (async () => {
-      close();
+      hide();
       const wallet = createWalletInstance(walletConfig);
       wallet.theme = theme;
       setConnectionStatus("connecting");
       try {
         await wallet.connect();
         setConnectedWallet(wallet);
+        connected();
       } catch (e) {
         setConnectionStatus("disconnected");
         if (!singleWallet) {
-          open();
+          goBack();
+          show();
         }
         console.error(e);
       }
     })();
   }, [
     walletConfig,
-    close,
-    open,
     singleWallet,
     createWalletInstance,
     theme,
     setConnectionStatus,
     setConnectedWallet,
+    hide,
+    connected,
+    goBack,
+    show,
   ]);
 
   return null;

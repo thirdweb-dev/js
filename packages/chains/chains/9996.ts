@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmX2b4CzNyrNgy4ERBEteSS9MsuYNVYeq2sSMMiogGjbFP",
     "width": 732,
@@ -21,14 +20,17 @@ export default {
   "name": "Mind Smart Chain Mainnet",
   "nativeCurrency": {
     "name": "MIND Coin",
-    "symbol": "tMIND",
+    "symbol": "MIND",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9996,
   "rpc": [
     "https://mind-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9996.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-msc.mindchain.info/",
     "https://seednode.mindchain.info",
+    "https://archive.mindchain.info/",
+    "wss://archive.mindchain.info/ws",
     "wss://seednode.mindchain.info/ws"
   ],
   "shortName": "MIND",

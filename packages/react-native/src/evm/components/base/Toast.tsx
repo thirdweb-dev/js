@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useRef } from "react";
 import { Theme } from "../../styles/theme";
 import Text from "./Text";
 import { Animated, StyleSheet } from "react-native";
-import { useAppTheme } from "../../styles/hooks";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const TOAST_HEIGHT = 45;
 
@@ -13,13 +13,16 @@ export type ToastProps = {
   translateY?: number;
 };
 
+/**
+ * @internal
+ */
 export function Toast({
   text,
   icon,
   backgroundColor,
   translateY = TOAST_HEIGHT,
 }: ToastProps) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const translateYRef = useRef(new Animated.Value(translateY)).current;
 

@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "http://athfaucet.ava.network//?address=${ADDRESS}"
   ],
-  "features": [],
   "infoURL": "https://athereum.ava.network",
   "name": "Athereum",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "ATH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 43110,
   "rpc": [
     "https://athereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://43110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ava.network:21015/ext/evm/rpc"
   ],
   "shortName": "avaeth",

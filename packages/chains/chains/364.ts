@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.thetatoken.org/",
   "name": "Theta Amber Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "TFUEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 364,
   "rpc": [
     "https://theta-amber-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://364.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-amber.thetatoken.org/rpc"
   ],
   "shortName": "theta-amber",

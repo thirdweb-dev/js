@@ -1,4 +1,4 @@
-import type { WagmiConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-connectors/WagmiConnector";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
@@ -44,7 +44,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   connector?: Connector;
 
-  static id = walletIds.walletConnect;
+  static id = walletIds.walletConnect as string;
 
   static meta = {
     name: "WalletConnect",
@@ -166,6 +166,8 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
       throw new Error("WalletConnect connector not found");
     }
 
+    wcConnector.showWalletConnectModal = false;
+
     const wcProvider = await wcConnector.getProvider();
 
     wcProvider.on("display_uri", (uri) => {
@@ -174,5 +176,20 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
+  }
+
+  async connectWithModal(options?: { chainId?: number }) {
+    await this.getConnector();
+    const wcConnector = this.#walletConnectConnector;
+
+    if (!wcConnector) {
+      throw new Error("WalletConnect connector not found");
+    }
+
+    wcConnector.showWalletConnectModal = true;
+
+    await wcConnector.initProvider();
+
+    await this.connect({ chainId: options?.chainId });
   }
 }

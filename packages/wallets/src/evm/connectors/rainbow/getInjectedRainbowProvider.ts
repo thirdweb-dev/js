@@ -1,6 +1,9 @@
 import { Ethereum } from "../injected/types";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
+/**
+ * @internal
+ */
 export function getInjectedRainbowProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;

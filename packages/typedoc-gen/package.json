@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "typedoc-gen",
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "watch": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typedoc": "^0.25.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "tsup": "^6.7.0"
+  }
+}

@@ -5,7 +5,7 @@ import {
   type Signer,
 } from "ethers";
 import invariant from "tiny-invariant";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 
@@ -13,12 +13,12 @@ import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
  * Deploy a contract at a deterministic address, using Create2 method
  * Address depends on the Create2 factory address.
  *
- * @public
+ * @internal
  *
- * @param type signer
- * @param bytecode
- * @param encodedArgs
- * @param create2FactoryAddress
+ * @param signer - The signer to use
+ * @param bytecode - The bytecode to deploy
+ * @param encodedArgs - The encoded constructor args to use
+ * @param create2FactoryAddress - The create2 factory address to use
  */
 export async function deployContractDeterministicRaw(
   signer: Signer,

@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.thestratos.org",
   "name": "Stratos",
   "nativeCurrency": {
@@ -23,9 +22,10 @@ export default {
     "symbol": "STOS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2048,
   "rpc": [
     "https://stratos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2048.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://web3-rpc.thestratos.org"
   ],
   "shortName": "stos-mainnet",
