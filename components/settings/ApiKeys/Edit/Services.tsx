@@ -1,12 +1,14 @@
 import {
-  Flex,
   Box,
+  Flex,
   FormControl,
   HStack,
+  IconButton,
+  Input,
+  Stack,
   Switch,
   Textarea,
   Tooltip,
-  Input,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
@@ -15,7 +17,9 @@ import {
   UseFormReturn,
   useFieldArray,
 } from "react-hook-form";
+import { LuTrash2 } from "react-icons/lu";
 import {
+  Button,
   Card,
   Checkbox,
   FormErrorMessage,
@@ -36,6 +40,13 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
   const { fields, update } = useFieldArray({
     control: form.control,
     name: "services",
+  });
+  const embeddedWalletIndex = fields.findIndex(
+    (srv) => srv.name === "embeddedWallets",
+  );
+  const customAuthEndpointHeaderField = useFieldArray({
+    control: form.control,
+    name: `services.${embeddedWalletIndex}.customAuthEndpoint.customHeaders`,
   });
 
   const handleAction = (
@@ -218,9 +229,6 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
                         onChange={() =>
                           update(idx, {
                             ...srv,
-                            recoveryShareManagement: !srv.customAuthentication
-                              ? "USER_MANAGED"
-                              : "AWS_MANAGED",
                             customAuthentication: !srv.customAuthentication
                               ? {
                                   jwksUri: "",
@@ -302,6 +310,164 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
                             }
                           </FormErrorMessage>
                         )}
+                      </FormControl>
+                    </>
+                  )}
+                  <FormControl
+                    isInvalid={
+                      !!form.getFieldState(
+                        `services.${idx}.customAuthentication`,
+                        form.formState,
+                      ).error
+                    }
+                  >
+                    <HStack
+                      justifyContent="space-between"
+                      alignItems="flex-start"
+                    >
+                      <Box>
+                        <FormLabel mt={3}>
+                          Custom Authentication Endpoint
+                        </FormLabel>
+                        <Text>
+                          Optionally allow users to authenticate with any
+                          arbitrary payload that you provide
+                        </Text>
+                      </Box>
+
+                      <Switch
+                        colorScheme="primary"
+                        isChecked={!!srv.customAuthEndpoint}
+                        onChange={() =>
+                          update(idx, {
+                            ...srv,
+                            customAuthEndpoint: !srv.customAuthEndpoint
+                              ? {
+                                  authEndpoint: "",
+                                  customHeaders: [],
+                                }
+                              : undefined,
+                          })
+                        }
+                      />
+                    </HStack>
+                  </FormControl>
+                  {!!srv.customAuthEndpoint && (
+                    <>
+                      <FormControl
+                        isInvalid={
+                          !!form.getFieldState(
+                            `services.${idx}.customAuthEndpoint.authEndpoint`,
+                            form.formState,
+                          ).error
+                        }
+                      >
+                        <FormLabel size="label.sm">
+                          Authentication Endpoint
+                        </FormLabel>
+                        <Input
+                          placeholder="https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/auth/test-custom-auth-endpoint"
+                          type="text"
+                          {...form.register(
+                            `services.${idx}.customAuthEndpoint.authEndpoint`,
+                          )}
+                        />
+                        {!form.getFieldState(
+                          `services.${idx}.customAuthEndpoint.authEndpoint`,
+                          form.formState,
+                        ).error && (
+                          <FormHelperText>
+                            Enter the URL of your server where we will send the
+                            user payload for verification
+                          </FormHelperText>
+                        )}
+
+                        <FormErrorMessage>
+                          {
+                            form.getFieldState(
+                              `services.${idx}.customAuthEndpoint.authEndpoint`,
+                              form.formState,
+                            ).error?.message
+                          }
+                        </FormErrorMessage>
+                      </FormControl>
+                      <FormControl
+                        isInvalid={
+                          !!form.getFieldState(
+                            `services.${idx}.customAuthEndpoint.customHeaders`,
+                            form.formState,
+                          ).error
+                        }
+                      >
+                        <FormLabel size="label.sm">Custom Headers</FormLabel>
+                        <Stack gap={3} alignItems={"end"}>
+                          {customAuthEndpointHeaderField.fields.map(
+                            (_, customHeaderIdx) => {
+                              return (
+                                <Flex key={customHeaderIdx} gap={2} w="full">
+                                  <Input
+                                    placeholder="Key"
+                                    type="text"
+                                    {...form.register(
+                                      `services.${idx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
+                                    )}
+                                  />
+                                  <Input
+                                    placeholder="Value"
+                                    type="text"
+                                    {...form.register(
+                                      `services.${idx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
+                                    )}
+                                  />
+                                  <IconButton
+                                    aria-label="Remove header"
+                                    icon={<LuTrash2 />}
+                                    onClick={() => {
+                                      customAuthEndpointHeaderField.remove(
+                                        customHeaderIdx,
+                                      );
+                                    }}
+                                  />
+                                </Flex>
+                              );
+                            },
+                          )}
+                          <Button
+                            onClick={() => {
+                              customAuthEndpointHeaderField.append({
+                                key: "",
+                                value: "",
+                              });
+                            }}
+                            w={
+                              customAuthEndpointHeaderField.fields.length === 0
+                                ? "full"
+                                : "fit-content"
+                            }
+                          >
+                            Add header
+                          </Button>
+                        </Stack>
+
+                        {!form.getFieldState(
+                          `services.${idx}.customAuthEndpoint.customHeaders`,
+                          form.formState,
+                        ).error && (
+                          <FormHelperText>
+                            Set custom headers to be sent along the request with
+                            the payload to the authentication endpoint above.
+                            You can set values to verify the incoming request
+                            here.
+                          </FormHelperText>
+                        )}
+                        <FormErrorMessage>
+                          {
+                            form.getFieldState(
+                              `services.${idx}.customAuthEndpoint.customHeaders`,
+                              form.formState,
+                            ).error?.message
+                          }
+                        </FormErrorMessage>
                       </FormControl>
                     </>
                   )}

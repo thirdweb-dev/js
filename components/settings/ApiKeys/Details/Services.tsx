@@ -3,6 +3,7 @@ import {
   Flex,
   HStack,
   SimpleGrid,
+  Stack,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -61,9 +62,14 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
       customAuthentication.jwksUri.length
     ) {
       return (
-        <Flex flexDir="column">
+        <Stack w="full">
           <Text isTruncated size="body.sm">
-            <Text display="inline-block" fontWeight="medium" w={12}>
+            <Text
+              display="inline-block"
+              fontWeight="medium"
+              w={"fit-content"}
+              pr={1}
+            >
               JWKS:
             </Text>
             {customAuthentication.jwksUri}
@@ -74,11 +80,44 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
             </Text>
             {customAuthentication.aud}
           </Text>
-        </Flex>
+        </Stack>
       );
     } else {
       return "Not configured";
     }
+  };
+
+  const renderCustomAuthenticationEndpoint = ({
+    customAuthEndpoint,
+  }: ApiKeyService) => {
+    if (!customAuthEndpoint || customAuthEndpoint.authEndpoint.length === 0) {
+      return "Not configured";
+    }
+    return (
+      <Stack w="full">
+        <Text isTruncated size="body.sm">
+          <Text
+            display="inline-block"
+            fontWeight="medium"
+            w="fit-content"
+            pr={1}
+          >
+            Authentication Endpoint:
+          </Text>
+          {customAuthEndpoint.authEndpoint}
+        </Text>
+        <Stack isTruncated fontSize={"body.sm"}>
+          <Text display="inline-block" fontWeight="medium" w="fit-content">
+            Custom Headers:
+          </Text>
+          {customAuthEndpoint.customHeaders.map((header) => (
+            <Text key={header.key}>
+              {header.key}: {header.value}
+            </Text>
+          ))}
+        </Stack>
+      </Stack>
+    );
   };
 
   const renderServicesContent = (service: ApiKeyService) => {
@@ -153,6 +192,11 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                     <DetailsRow
                       title="Custom JWT Auth"
                       content={renderCustomAuthContent(srv)}
+                    />
+
+                    <DetailsRow
+                      title="Custom Authentication Endpoint"
+                      content={renderCustomAuthenticationEndpoint(srv)}
                     />
                   </Flex>
                 )}

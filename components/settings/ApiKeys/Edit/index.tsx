@@ -1,14 +1,14 @@
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, HStack, useToast } from "@chakra-ui/react";
-import { SERVICES } from "@thirdweb-dev/service-utils";
-import { useForm } from "react-hook-form";
-import { ApiKeyValidationSchema, apiKeyValidationSchema } from "../validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fromArrayToList, toArrFromList } from "utils/string";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ApiKeyHeader } from "../Header";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useForm } from "react-hook-form";
 import { Button } from "tw-components";
+import { fromArrayToList, toArrFromList } from "utils/string";
+import { ApiKeyHeader } from "../Header";
+import { ApiKeyValidationSchema, apiKeyValidationSchema } from "../validations";
 import { EditGeneral } from "./General";
 import { EditServices } from "./Services";
 
@@ -43,11 +43,8 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
           enabled: !!existingService,
           actions: existingService?.actions || [],
           recoveryShareManagement: existingService?.recoveryShareManagement,
-          customAuthentication: existingService?.customAuthentication
-            ? {
-                ...existingService.customAuthentication,
-              }
-            : undefined,
+          customAuthentication: existingService?.customAuthentication,
+          customAuthEndpoint: existingService?.customAuthEndpoint,
           applicationName: existingService?.applicationName,
           applicationImageUrl: existingService?.applicationImageUrl,
         };

@@ -1,11 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useApiAuthToken } from "./useApi";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
-import { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
-import { THIRDWEB_PAYMENTS_API_HOST } from "constants/urls";
-import { paymentsKeys } from "../cache-keys";
-import { useAddress } from "@thirdweb-dev/react";
-import invariant from "tiny-invariant";
 import {
   Arbitrum,
   ArbitrumGoerli,
@@ -27,8 +20,33 @@ import {
   Zora,
   ZoraTestnet,
 } from "@thirdweb-dev/chains";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { useAddress } from "@thirdweb-dev/react";
+import { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
+import { detectFeatures } from "components/contract-components/utils";
+import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { PROD_OR_DEV_URL } from "constants/rpc";
+import { THIRDWEB_PAYMENTS_API_HOST } from "constants/urls";
+import { BaseContract } from "ethers";
+import {
+  GetSellerByThirdwebAccountIdDocument,
+  GetSellerByThirdwebAccountIdQuery,
+  GetSellerByThirdwebAccountIdQueryVariables,
+  useGetSellerByThirdwebAccountIdLazyQuery,
+} from "graphql/mutations/__generated__/GetSellerByThirdwebAccountId.generated";
+import {
+  InsertWebhookMutationVariables,
+  useInsertWebhookMutation,
+} from "graphql/mutations/__generated__/InsertWebhook.generated";
+import { useUpdateSellerByThirdwebAccountIdMutation } from "graphql/mutations/__generated__/UpdateSellerByThirdwebAccountId.generated";
+import {
+  UpdateWebhookMutationVariables,
+  useUpdateWebhookMutation,
+} from "graphql/mutations/__generated__/UpdateWebhook.generated";
+import { ApiSecretKeysByOwnerIdQuery } from "graphql/queries/__generated__/ApiSecretKeysByOwnerId.generated";
+import {
+  CheckoutByContractAddressQueryVariables,
+  useCheckoutByContractAddressLazyQuery,
+} from "graphql/queries/__generated__/CheckoutByContractAddress.generated";
 import {
   ContractsByOwnerIdQueryVariables,
   useContractsByOwnerIdLazyQuery,
@@ -38,35 +56,16 @@ import {
   useDetailedAnalyticsLazyQuery,
 } from "graphql/queries/__generated__/DetailedAnalytics.generated";
 import {
-  CheckoutByContractAddressQueryVariables,
-  useCheckoutByContractAddressLazyQuery,
-} from "graphql/queries/__generated__/CheckoutByContractAddress.generated";
-import { BaseContract } from "ethers";
-import { detectFeatures } from "components/contract-components/utils";
-import {
-  GetSellerByThirdwebAccountIdDocument,
-  GetSellerByThirdwebAccountIdQuery,
-  GetSellerByThirdwebAccountIdQueryVariables,
-  useGetSellerByThirdwebAccountIdLazyQuery,
-} from "graphql/mutations/__generated__/GetSellerByThirdwebAccountId.generated";
-import { useUpdateSellerByThirdwebAccountIdMutation } from "graphql/mutations/__generated__/UpdateSellerByThirdwebAccountId.generated";
-import {
   WebhooksBySellerIdDocument,
   WebhooksBySellerIdQueryVariables,
   useWebhooksBySellerIdLazyQuery,
 } from "graphql/queries/__generated__/WebhooksBySellerId.generated";
-import {
-  InsertWebhookMutationVariables,
-  useInsertWebhookMutation,
-} from "graphql/mutations/__generated__/InsertWebhook.generated";
-import {
-  UpdateWebhookMutationVariables,
-  useUpdateWebhookMutation,
-} from "graphql/mutations/__generated__/UpdateWebhook.generated";
-import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
+import { getEVMThirdwebSDK } from "lib/sdk";
+import invariant from "tiny-invariant";
 import { OtherAddressZero } from "utils/zeroAddress";
-import { ApiSecretKeysByOwnerIdQuery } from "graphql/queries/__generated__/ApiSecretKeysByOwnerId.generated";
-import { Webhook } from "./useEngine";
+import { paymentsKeys } from "../cache-keys";
+import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
+import { useApiAuthToken } from "./useApi";
 
 export const paymentsExtensions: FeatureName[] = [
   "ERC721SharedMetadata",

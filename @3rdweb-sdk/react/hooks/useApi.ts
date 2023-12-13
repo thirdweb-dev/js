@@ -4,9 +4,9 @@ import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 
+import type { Chain } from "@thirdweb-dev/chains";
 import invariant from "tiny-invariant";
 import { useLoggedInUser } from "./useLoggedInUser";
-import type { Chain } from "@thirdweb-dev/chains";
 
 export type AuthorizedWallet = {
   id: string;
@@ -60,6 +60,10 @@ export type ApiKeyCustomAuthentication = {
   jwksUri: string;
   aud: string;
 };
+export type ApiKeyCustomAuthEndpoint = {
+  authEndpoint: string;
+  customHeaders: { key: string; value: string }[];
+};
 
 export type ApiKeyService = {
   id: string;
@@ -69,6 +73,7 @@ export type ApiKeyService = {
   // If updating here, need to update validation logic in `validation.ts` as well for recoveryShareManagement
   recoveryShareManagement?: ApiKeyRecoverShareManagement;
   customAuthentication?: ApiKeyCustomAuthentication;
+  customAuthEndpoint?: ApiKeyCustomAuthEndpoint;
   applicationName?: string;
   applicationImageUrl?: string;
 };

@@ -1,10 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  apiKeyCreateValidationSchema,
-  ApiKeyCreateValidationSchema,
-} from "../validations";
 import { ApiKey, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { SERVICES } from "@thirdweb-dev/service-utils";
 import {
   Flex,
   HStack,
@@ -18,6 +12,8 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
@@ -25,9 +21,13 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { Button, ButtonProps, Checkbox, Text } from "tw-components";
 import { toArrFromList } from "utils/string";
+import Message from "../message";
+import {
+  ApiKeyCreateValidationSchema,
+  apiKeyCreateValidationSchema,
+} from "../validations";
 import { CreateGeneral } from "./General";
 import { CreateKeys } from "./Keys";
-import Message from "../message";
 
 interface CreateAPIKeyButtonProps {
   buttonProps?: ButtonProps;
