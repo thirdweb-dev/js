@@ -107,7 +107,6 @@ export function useAddress(): string | undefined {
  * ```
  *
  * @example
- * You can get the chain ID of the connected wallet by using the hook as follows:
  * ```javascript
  * import { useChainId } from "@thirdweb-dev/react"
  *
@@ -117,8 +116,12 @@ export function useAddress(): string | undefined {
  *   return <div>{chainId}</div>
  * }
  * ```
- * @see {@link https://portal.thirdweb.com/react/react.usechainid?utm_source=sdk | Documentation}
- * @public
+ *
+ * @returns
+ * A `number` representing the current chain id, or `undefined` if the user is not connected to a wallet.
+ *
+ * For Example, if the user is connected to the Ethereum Mainnet, the return value will be `1`.
+ *
  * @networkConnection
  */
 export function useChainId(): number | undefined {
@@ -131,24 +134,43 @@ export function useChainId(): number | undefined {
 }
 
 /**
- * Hook for accessing the active Chain the current wallet is connected to
+ * Hook for getting the `Chain` object of the network that the user is connected - but only if
+ * it's a supported network (added in the `ThirdwebProvider`'s [supportedChains](/react/react.thirdwebprovider#supportedchains-optional) or one of [default chains](/react/react.thirdwebprovider#default-chains) ).
  *
- * ```javascript
- * import { useChain } from "@thirdweb-dev/react-core"
+ * Returns `undefined` if the network is not supported or the user is not connected to a wallet. You can use the [useConnectionStatus](/react/react.useconnectionstatus) hook to check if the user is connected to a wallet or not to differentiate between the two cases.
+ *
+ * If you only want to get the chain id of the network the user is connected to regardless of whether it's supported or not, use [useChainId](/react/react.usechainid) instead.
+ *
+ * ```jsx
+ * import { useChain } from "@thirdweb-dev/react";
+ *
+ * const chain = useChain();
  * ```
  *
  * @example
- * You can get the chain of the connected wallet by using the hook as follows:
- * ```javascript
- * import { useChain } from "@thirdweb-dev/react-core"
  *
- * const App = () => {
- *   const chain = useChain()
+ * ```jsx
+ * import { useChain, useConnectionStatus } from "@thirdweb-dev/react";
  *
- *   return <div>{chain.chainId}</div>
+ * function App() {
+ *   const chain = useChain();
+ *   const status = useConnectionStatus();
+ *
+ *   if (status === "unknown") return <div> Loading... </div>;
+ *   if (status === "disconnected") return <div> disconnected </div>;
+ *   if (status === "connecting") return <div> connecting... </div>;
+ *
+ *   if (chain) {
+ *     return <p> Connected to {chain.name} </p>;
+ *   }
+ *
+ *   return <p> Connected to an unsupported network </p>;
  * }
  * ```
- * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
+ *
+ * @returns
+ * An object of type `Chain` from [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package containing various information about the network, or `undefined` if the network is not supported or user is not connected to a wallet.
+ *
  * @networkConnection
  */
 export function useChain(): Chain | undefined {

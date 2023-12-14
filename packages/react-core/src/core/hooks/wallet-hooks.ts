@@ -183,8 +183,24 @@ export function useCreateWalletInstance() {
 }
 
 /**
+ * Hook for switching to a different network.
  *
- * @returns a method to connect the wallet to network/chain with given chainId
+ * @example
+ * ```jsx
+ * import { useSwitchChain } from "@thirdweb-dev/react";
+ * import { Goerli } from "@thirdweb-dev/chains";
+ *
+ * function App() {
+ *   const switchChain = useSwitchChain();
+ *   return (
+ *     <button onClick={() => switchChain(Goerli.chainId)}>
+ *       Switch to Goerli
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns a method to connect the wallet to network/chain with given `chainId`
  * @networkConnection
  */
 export function useSwitchChain() {
