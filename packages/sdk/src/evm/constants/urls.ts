@@ -284,8 +284,8 @@ export function getProviderFromRpcUrl(
           if (existingProvider) {
             return existingProvider;
           }
-
-          // Otherwise, create a new provider on the specific network
+          
+          // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
           let _skipFetchSetup = false;
           if (
             typeof globalThis !== "undefined" &&
@@ -295,6 +295,7 @@ export function getProviderFromRpcUrl(
             _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
           }
 
+          // Otherwise, create a new provider on the specific network
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
               new StaticJsonRpcBatchProvider(
