@@ -41,8 +41,9 @@ const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 export function WalletConnectUI({
   connected,
   walletConfig,
-  goBack,
   projectId,
+  goBack,
+  supportedWallets,
 }: ConnectUIProps<WalletConnect> & { projectId: string }) {
   const l = useLocale();
   const theme = useGlobalTheme();
@@ -163,7 +164,7 @@ export function WalletConnectUI({
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >
         <ModalHeaderTextClose
-          onBackPress={goBack}
+          onBackPress={supportedWallets.length === 1 ? undefined : goBack}
           headerText="WalletConnect"
           onClose={onClosePress}
           paddingHorizontal="md"
