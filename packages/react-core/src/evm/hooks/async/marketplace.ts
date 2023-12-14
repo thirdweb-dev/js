@@ -199,7 +199,7 @@ export function useListing(
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useListing](/react/react.uselisting) instead.
+ * contracts, use `useListing` instead.
  *
  * @example
  *
@@ -289,7 +289,7 @@ export function useDirectListing(
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useListing](/react/react.uselisting) instead.
+ * contracts, use `useListing` instead.
  *
  * @example
  * ```jsx
@@ -393,7 +393,7 @@ export function useEnglishAuction(
  * Note: this hook is only available for `Marketplace` contracts.
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
- * use [useDirectListings](/react/react.usedirectlistings) or [useEnglishAuctions](/react/react.useenglishauctions) instead.
+ * use `useDirectListings` or `useEnglishAuctions` instead.
  *
  * @example
  *
@@ -565,7 +565,7 @@ export function useListings(
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useListings](/react/react.uselistings) instead.
+ * contracts, use `useListings` instead.
  *
  * @example
  *
@@ -993,7 +993,7 @@ export function useValidEnglishAuctions(
  * Note: this hook is only available for `Marketplace` contracts.
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
- * use [useDirectListingsCount](/react/react.usedirectlistingscount) or [useEnglishAuctionsCount](/react/react.useenglishauctionscount) instead.
+ * use `useDirectListingsCount` or `useEnglishAuctionsCount` instead.
  *
  * @example
  *
@@ -1036,7 +1036,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useListingsCount](/react/react.uselistingscount) instead.
+ * contracts, use `useListingsCount` instead.
  *
  * @example
  *
@@ -2076,7 +2076,7 @@ export function useCreateAuctionListing<
  * **Note: This hook is only for `Marketplace` contracts.**
  *
  * For [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3)
- * contracts, use [useCancelDirectListing](/react/react.usecanceldirectlisting) or [useCancelEnglishAuction](/react/react.usecancelenglishauction) instead.
+ * contracts, use `useCancelDirectListing` or `useCancelEnglishAuction` instead.
  *
  * @example
  * ```jsx
@@ -2181,7 +2181,7 @@ export function useCancelListing(
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useCancelListing](/react/react.usecancellisting) instead.
+ * contracts, use `useCancelListing` instead.
  *
  *
  * ```jsx
@@ -2265,7 +2265,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
  * For `Marketplace`
- * contracts, use [useCancelListing](/react/react.usecancellisting) instead.
+ * contracts, use `useCancelListing` instead.
  *
  * ```jsx
  * import { useCancelEnglishAuction } from "@thirdweb-dev/react";
