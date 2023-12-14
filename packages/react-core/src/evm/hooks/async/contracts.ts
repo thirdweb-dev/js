@@ -57,6 +57,23 @@ async function fetchContractType(
 }
 
 /**
+ * Hook for determining the type of contract for a contract address.
+ *
+ * This is useful if you want to determine if a contract is a [prebuilt contract](https://portal.thirdweb.com/pre-built-contracts).
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useContractType } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { data, isLoading, error } = useContractType(contractAddress);
+ * }
+ * ```
+ *
  * @metadata
  */
 export function useContractType(
@@ -111,6 +128,23 @@ function fetchCompilerMetadata(
 }
 
 /**
+ * Hook for retrieving information such as the ABI, license, and metadata of a smart contract using it's contract address.
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useCompilerMetadata } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { data, isLoading, error } = useCompilerMetadata(contractAddress);
+ * }
+ *
+ * export default App;
+ * ```
+ *
  * @metadata
  */
 export function useCompilerMetadata(

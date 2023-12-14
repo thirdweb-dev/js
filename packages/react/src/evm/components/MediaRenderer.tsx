@@ -502,6 +502,11 @@ export interface MediaType {
 }
 
 /**
+ * Hook for resolving the media type and URL of a given URI (including IPFS URIs).
+ *
+ * The `<MediaRenderer />` component renders the relevant.
+ * HTML element for a given URL, including IPFS URIs. e.g. `<img>` for images, `<video>` for videos, etc.
+ *
  * @param uri - the uri to resolve (can be a url or a ipfs://\<cid\>)
  * @returns the fully resolved url + mime type of the media
  *
@@ -525,6 +530,12 @@ export interface MediaType {
  *   return null;
  * }
  * ```
+ *
+ * @returns
+ * The hook returns an object containing two properties:
+ *
+ * - `url`: The fully resolved URL, or `undefined` if the URI is invalid.
+ * - `mimeType`: The mime type of the media, or `undefined` if the URI is invalid.
  *
  * @tags metadata
  */

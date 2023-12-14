@@ -320,15 +320,46 @@ export function useUpdatePlatformFees(
 // metadata
 
 /**
- * Get the metadata of this contract
+ * Hook for getting the metadata associated with a smart contract.
+ *
+ * Available to use on contracts that implement the [Contract Metadata](/solidity/extensions/contractmetadata) interface.
  *
  * @example
+ *
+ *
  * ```jsx
- * const { data: metadata, isLoading, error } = useMetadata(contract);
+ * import { useContract, useMetadata } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useMetadata(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns a {@link CustomContractMetadata} object containing the metadata
+ * @param contract - an instance of a `SmartContract`
+ * @returns a `CustomContractMetadata` object containing the metadata
+ *
+ * The hook's `data` property, once loaded, is an object containing the contract's metadata.
+ *
+ * ```ts
+ * CustomContractMetadata | undefined;
+ * ```
+ *
+ * ```ts
+ * interface CustomContractMetadata {
+ *   // The name of the contract.
+ *   name: string;
+ *   // A description of the contract.
+ *   description?: string;
+ *   // The image associated with the contract.
+ *   image?: any;
+ *   // An external link associated with the contract.
+ *   external_link?: string;
+ * }
+ * ```
+ *
  * @metadata
  */
 export function useMetadata(
@@ -351,36 +382,60 @@ export function useMetadata(
 }
 
 /**
- * Set the metadata of this contract
+ * Hook for updating the metadata of a smart contract.
+ *
+ * Available to use on smart contracts that implement the [ContractMetadata](/solidity/extensions/contractmetadata) interface.
+ *
+ * The wallet initiating this transaction must have the required permissions to update the metadata, (`admin` permissions required by default).
+ *
+ * Provide your contract instance from the [`useContract`](/react/react.usecontract) hook as the first argument, and
+ * an object fitting the [contract-level metadata standards](https://docs.opensea.io/docs/contract-level-metadata) of
+ * the new metadata as the second argument, including:
+ *
+ * - `name`: A `string` for the name of the smart contract (required).
+ * - `description`: A `string` to describe the smart contract (optional).
+ * - `image`: A `string` or `File` object containing the URL or file data of an image to associate with the contract (optional).
+ * - `external_link`: A `string` containing a URL to view the smart contract on your website (optional).
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdateMetadata,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updateMetadata,
+ *     mutateAsync: updateMetadata,
  *     isLoading,
  *     error,
  *   } = useUpdateMetadata(contract);
  *
- *   if (error) {
- *     console.error("failed to update metadata", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updateMetadata({
- *        name: "My Contract",
- *        description: "This is my contract"
- *       })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updateMetadata({
+ *           name: "My App",
+ *           description: "My awesome Ethereum App",
+ *           image: "/path/to/image.jpg", // URL, URI, or File object
+ *           external_link: "https://myapp.com",
+ *         })
+ *       }
  *     >
- *       Update Contract Metadata
- *     </button>
+ *       Update Metadata
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
- * @param contract - an instance of a {@link SmartContract}
+ *
+ * @param contract - an instance of a `SmartContract`
  * @returns a mutation object that can be used to update the metadata
  * @metadata
  */
