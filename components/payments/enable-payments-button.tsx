@@ -1,5 +1,4 @@
 import {
-  hasPaymentsDetectedExtensions,
   usePaymentsEnabledContracts,
   usePaymentsRegisterContract,
 } from "@3rdweb-sdk/react/hooks/usePayments";
@@ -47,7 +46,7 @@ export const EnablePaymentsButton: React.FC<EnablePaymentsButtonProps> = ({
         </Button>
       ) : (
         <Button
-          colorScheme="primary"
+          variant="inverted"
           size="sm"
           onClick={() => {
             trackEvent({

@@ -19,6 +19,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Alert,
+  AlertDescription,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -32,14 +34,21 @@ import {
   LinkButton,
   Text,
   MenuItem,
+  TrackedLink,
 } from "tw-components";
 import {
   ChainIdToSupportedCurrencies,
   CreateUpdateCheckoutInput,
   usePaymentsCreateUpdateCheckout,
 } from "@3rdweb-sdk/react/hooks/usePayments";
-import { useMemo, useState } from "react";
-import { Abi, NATIVE_TOKEN_ADDRESS, useContract } from "@thirdweb-dev/react";
+import { ReactNode, useMemo, useState } from "react";
+import {
+  Abi,
+  NATIVE_TOKEN_ADDRESS,
+  useClaimConditions,
+  useContract,
+  useNFTs,
+} from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BiPencil } from "react-icons/bi";
 import { Checkout } from "graphql/generated_types";
@@ -51,6 +60,8 @@ import { CurrencySelector } from "components/shared/CurrencySelector";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
 import { PaymentsMintMethodInput } from "./mint-method-input";
 import { FiChevronDown } from "react-icons/fi";
+import { BigNumber } from "ethers";
+import { useChainSlug } from "hooks/chains/chainSlug";
 
 const formInputs = [
   {
@@ -314,6 +325,21 @@ const convertInputsToMintMethod = ({
   };
 };
 
+const tokenIdToNumber = (tokenIdStr: string | undefined) => {
+  let tokenId;
+
+  if (!tokenIdStr) {
+    return undefined;
+  }
+
+  try {
+    tokenId = BigNumber.from(tokenIdStr);
+  } catch (err) {
+    // ignore
+  }
+  return tokenId;
+};
+
 interface CreateUpdateCheckoutButtonProps {
   contractId: string;
   contractAddress: string;
@@ -332,25 +358,32 @@ export const CreateUpdateCheckoutButton: React.FC<
   checkoutId,
 }) => {
   const { contract } = useContract(contractAddress);
+  const chainSlug = useChainSlug(contract?.chainId ?? "");
+  const { data: nfts, isLoading: isNftsLoading } = useNFTs(contract, {
+    count: 1,
+  });
 
   const hasDetectedExtensions = paymentContractType !== "CUSTOM_CONTRACT";
 
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
+  const isErc721 = detectFeatures(contract, ["ERC721"]);
 
-  const keysQuery = useApiKeys();
+  const { data: apiKeysData } = useApiKeys();
 
   const apiKeys = useMemo(() => {
-    return (keysQuery?.data || []).filter((key) => {
-      return (key.services || []).some((srv) => srv.name === "embeddedWallets");
+    return (apiKeysData || []).filter((key) => {
+      return (key.services || []).some((srv) => srv.name === "embeddedWallet");
     });
-  }, [keysQuery]);
+  }, [apiKeysData]);
 
   const [step, setStep] = useState<
     "info" | "no-detected-extensions" | "branding" | "delivery" | "advanced"
   >("info");
+  const [contractError, setContractError] = useState<ReactNode | undefined>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createOrUpdateCheckout, isLoading } =
     usePaymentsCreateUpdateCheckout(contractAddress);
+
   const trackEvent = useTrack();
 
   const currentStep = useMemo(() => {
@@ -428,6 +461,14 @@ export const CreateUpdateCheckoutButton: React.FC<
       : {}),
   });
 
+  const { data: claimConditions, isLoading: isClaimConditionsLoading } =
+    useClaimConditions(
+      contract,
+      isErc1155 && form.watch("tokenId")
+        ? tokenIdToNumber(form.watch("tokenId"))
+        : undefined,
+    );
+
   const { onSuccess: onCreateSuccess, onError: onCreateError } =
     useTxNotifications(
       "Checkout created successfully.",
@@ -443,7 +484,61 @@ export const CreateUpdateCheckoutButton: React.FC<
   const onSuccess = checkoutId ? onUpdateSuccess : onCreateSuccess;
   const onError = checkoutId ? onUpdateError : onCreateError;
 
-  // FIXME: Use zod validations
+  const canCreate = useMemo(() => {
+    let errorMessage;
+
+    if (isErc721 || isErc1155) {
+      if (!isNftsLoading && nfts?.length === 0) {
+        errorMessage = (
+          <Text>
+            You don&apos;t have any NFTs yet,{" "}
+            <TrackedLink
+              textDecor="underline"
+              href={`/${chainSlug}/${contractAddress}/nfts`}
+              category="payments"
+              label="no-nfts-alert"
+            >
+              create one here
+            </TrackedLink>
+            .
+          </Text>
+        );
+      } else if (!isClaimConditionsLoading && claimConditions?.length === 0) {
+        errorMessage = (
+          <Text>
+            You don&apos;t have claim conditions,{" "}
+            <TrackedLink
+              textDecor="underline"
+              href={`/${chainSlug}/${contractAddress}/nfts`}
+              category="payments"
+              label="no-claim-conditions-alert"
+            >
+              set them here
+            </TrackedLink>
+            .
+          </Text>
+        );
+      }
+    }
+
+    if (errorMessage) {
+      setContractError(errorMessage);
+      return false;
+    }
+
+    setContractError(undefined);
+    return true;
+  }, [
+    chainSlug,
+    contractAddress,
+    isErc721,
+    isErc1155,
+    isNftsLoading,
+    nfts,
+    isClaimConditionsLoading,
+    claimConditions,
+  ]);
+
   const isValid = useMemo(() => {
     if (step === "info") {
       if (
@@ -623,6 +718,16 @@ export const CreateUpdateCheckoutButton: React.FC<
           <ModalCloseButton />
           <ModalBody py={4}>
             <Flex flexDir="column" gap={4}>
+              {contractError && (
+                <Alert status="warning" variant="left-accent" borderRadius="sm">
+                  <Flex direction="column" gap={2}>
+                    <Text as={AlertDescription} size="body.md">
+                      {contractError}
+                    </Text>
+                  </Flex>
+                </Alert>
+              )}
+
               {formInputs.map((input) => {
                 if (input.step !== step) {
                   return null;
@@ -881,7 +986,7 @@ export const CreateUpdateCheckoutButton: React.FC<
               type="button"
               colorScheme="primary"
               onClick={handleNext}
-              isDisabled={!isValid}
+              isDisabled={!canCreate || !isValid}
               isLoading={form.formState.isSubmitting || isLoading}
             >
               {step === "advanced"

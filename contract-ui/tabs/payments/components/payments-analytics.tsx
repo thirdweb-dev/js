@@ -8,8 +8,7 @@ interface PaymentsAnalyticsProps {
 export const PaymentsAnalytics: React.FC<PaymentsAnalyticsProps> = ({
   contractId,
 }) => {
-  const { data: detailedAnalytics } = usePaymentsDetailedAnalytics(contractId);
+  usePaymentsDetailedAnalytics(contractId);
 
-  console.log({ detailedAnalytics });
   return <Flex flexDir="column" gap={12}></Flex>;
 };

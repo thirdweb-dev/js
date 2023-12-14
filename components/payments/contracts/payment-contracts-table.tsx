@@ -96,7 +96,7 @@ export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
         if (isMainnet && !sellerData?.has_production_access) {
           return (
             <LinkButton
-              colorScheme="blackAlpha"
+              variant="outline"
               size="sm"
               w="full"
               href="/dashboard/payments/settings"
