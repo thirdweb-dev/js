@@ -72,7 +72,6 @@ import invariant from "tiny-invariant";
  * import { useContract, useNFT } from "@thirdweb-dev/react";
  *
  * // The token ID of the NFT you want to fetch
- * // highlight-next-line
  * const tokenId = 0;
  *
  * function App() {
@@ -83,7 +82,6 @@ import invariant from "tiny-invariant";
  *     error,
  *   } = useNFT(
  *     contract,
- *     // highlight-next-line
  *     tokenId,
  *   );
  * }
@@ -564,14 +562,12 @@ export function useSharedMetadata(
  *       contractAddress={contractAddress}
  *       action={() =>
  *         mintNft({
- *           // highlight-start
  *           // Any valid IPFS or HTTP URL that points to a JSON object
  *           metadata: {
  *             name: "My NFT",
  *             description: "This is my NFT",
  *             image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
  *           },
- *           // highlight-end
  *           to: "{{wallet_address}}",
  *         })
  *       }

@@ -420,7 +420,6 @@ export function useEnglishAuction(
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useListings(
  *     contract,
- *     // highlight-start
  *     {
  *       count: 100, // number of listings to fetch
  *       offeror: "{{offeror_address}}", // only show listings with offers from this address
@@ -429,7 +428,6 @@ export function useEnglishAuction(
  *       tokenContract: "{{token_contract_address}}", // only show listings from this collection
  *       tokenId: "{{token_id}}", // only show listings for this token
  *     },
- *     // highlight-end
  *   );
  * }
  * ```
@@ -726,7 +724,6 @@ export function useDirectListings(
  *     error,
  *   } = useValidDirectListings(
  *     contract,
- *     // highlight-start
  *     {
  *       count: 100, // Number of listings to fetch
  *       offeror: "{{offeror_address}}", // Has offers from this address
@@ -735,7 +732,6 @@ export function useDirectListings(
  *       tokenContract: "{{token_contract_address}}", // Only show NFTs from this collection
  *       tokenId: "{{token_id}}", // Only show NFTs with this token ID
  *     },
- *     // highlight-end
  *   );
  * }
  * ```
