@@ -57,7 +57,7 @@ async function fetchContractType(
 }
 
 /**
- * @tags metadata
+ * @metadata
  */
 export function useContractType(
   contractAddress: RequiredParam<ContractAddress>,
@@ -111,7 +111,7 @@ function fetchCompilerMetadata(
 }
 
 /**
- * @tags metadata
+ * @metadata
  */
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
@@ -173,7 +173,7 @@ export type UseContractResult<
  *
  * @param contractAddress - the address of the deployed contract
  * @returns a response object that includes the contract once it is resolved
- * @tags contract
+ * @contract
  */
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
@@ -505,7 +505,7 @@ export function useContractMetadataUpdate(
  * ```
  *
  * @returns a response object that includes the contract events. The hook's data property, once loaded, contains an array of event objects
- * @tags contract
+ * @contract
  *
  */
 export function useContractEvents(
@@ -635,7 +635,7 @@ export function useContractEvents(
  * ```
  *
  * @returns a response object that includes the data returned by the function call
- * @tags contract
+ * @contract
  */
 export function useContractRead<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
@@ -748,7 +748,7 @@ export function useContractRead<
  * @param contract - the contract instance of the contract to call a function on
  * @param functionName - the name of the function to call in the smart contract.
  * @returns a response object that includes the write function to call
- * @tags contract
+ * @contract
  */
 export function useContractWrite<
   TContractAddress extends GeneratedContractAddress | ContractAddress,

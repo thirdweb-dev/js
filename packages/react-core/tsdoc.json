@@ -7,12 +7,57 @@
       "syntaxKind": "block"
     },
     {
-      "tagName": "@tags",
+      "tagName": "@marketplace",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@contract",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@claimConditions",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@nftDrop",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@platformFees",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@nft",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@metadata",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@permissionControl",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@networkConnection",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@delayedReveal",
       "syntaxKind": "block"
     }
   ],
   "supportForTags": {
     "@twfeature": true,
-    "@tags": true
+    "@marketplace": true,
+    "@contract": true,
+    "@claimConditions": true,
+    "@nftDrop": true,
+    "@platformFees": true,
+    "@nft": true,
+    "@metadata": true,
+    "@permissionControl": true,
+    "@networkConnection": true,
+    "@delayedReveal": true
   }
 }

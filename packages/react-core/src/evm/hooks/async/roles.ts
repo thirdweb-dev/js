@@ -56,7 +56,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * @param contract - an instance of a {@link SmartContract}
  * @returns a list of addresses for all supported roles on the contract.
  * @twfeature PermissionsEnumerable
- * @tags permissions
+ * @permissionControl
  */
 export function useAllRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -88,7 +88,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * @param role - the role to get the members of, see {@link Role}
  * @returns a list of addresses that are members of the role
  * @twfeature Permissions
- * @tags permissions
+ * @permissionControl
  */
 export function useRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -121,7 +121,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * @param walletAddress - the address to check
  * @returns true if the address is a member of the role, or false if not
  * @twfeature PermissionsEnumerable
- * @tags permissions
+ * @permissionControl
  */
 export function useIsAddressRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -242,7 +242,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to grant a member of a role on the contract
  * @twfeature Permissions | PermissionsEnumerable
- * @tags permissions
+ * @permissionControl
  */
 export function useGrantRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
@@ -302,7 +302,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to revoke a role from a member on the contract
  * @twfeature Permissions | PermissionsEnumerable
- * @tags permissions
+ * @permissionControl
  */
 export function useRevokeRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,

@@ -139,7 +139,7 @@ export type SetClaimConditionsParams = {
  * @returns a response object with the currently active claim condition
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @tags claim-conditions
+ * @claimConditions
  */
 export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
@@ -222,7 +222,7 @@ export function useActiveClaimCondition(
  *
  * @returns a response object with the snapshot for the provided address
  *
- * @tags claim-conditions
+ * @claimConditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  */
 export function useClaimerProofs(
@@ -358,7 +358,7 @@ export function useClaimerProofs(
  * @returns a response object with the list of claim conditions
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @tags claim-conditions
+ * @claimConditions
  */
 export function useClaimConditions(
   contract: RequiredParam<DropContract>,
@@ -460,7 +460,7 @@ export function useClaimConditions(
  *
  * If the user is eligible to claim tokens, the hook will return an empty array.
  *
- * @tags claim-conditions
+ * @claimConditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  */
 export function useClaimIneligibilityReasons(
@@ -564,7 +564,7 @@ export function useClaimIneligibilityReasons(
  * @returns the active claim condition for the wallet address or `null` if there is no active claim condition
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @tags claim-conditions
+ * @claimConditions
  */
 export function useActiveClaimConditionForWallet(
   contract: RequiredParam<DropContract>,
@@ -841,7 +841,7 @@ export function useActiveClaimConditionForWallet(
  *
  * If you want to provide your own merkle tree for your snapshot, provide the merkle root hash here. This is only recommended for advanced use cases.
  *
- * @tags claim-conditions
+ * @claimConditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  */
 export function useSetClaimConditions(
@@ -921,7 +921,7 @@ export function useSetClaimConditions(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to reset claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @tags nft-drop
+ * @nftDrop
  */
 export function useResetClaimConditions(
   contract: RequiredParam<DropContract>,

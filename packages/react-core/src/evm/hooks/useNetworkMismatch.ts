@@ -27,7 +27,7 @@ import { useChainId } from "./wallet";
  * From here, you can prompt users to switch their network using the `useNetwork` hook.
  *
  * @public
- * @tags network-connection
+ * @networkConnection
  */
 export function useNetworkMismatch() {
   const walletChainId = useChainId();
