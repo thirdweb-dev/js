@@ -1324,6 +1324,30 @@ export function useActiveListings(
  * If the listing cannot be found, is not an auction listing, or is not active, the `error` property will be set.
  *
  * @returns a response object that includes the `Offer` that is winning the auction
+ * The hook's `data` property, once loaded, is an object of type `Offer`, or `undefined` if no winning bid exists.
+ *
+ * ```ts
+ * {
+ *    // The id of the listing.
+ *   listingId: BigNumberish;
+ *
+ *    // The address of the buyer who made the offer.
+ *   buyerAddress: string;
+ *
+ *    // The quantity of tokens to be bought.
+ *   quantityDesired: BigNumberish;
+ *
+ *    // The amount of coins offered per token.
+ *   pricePerToken: BigNumber;
+ *
+ *    // The `CurrencyValue` of the listing. Useful for displaying the price information.
+ *   currencyValue: CurrencyValue;
+ *
+ *    // The currency contract address of the offer token.
+ *   currencyContractAddress: string;
+ * } | undefined;
+ * ```
+ *
  * @marketplace
  */
 export function useWinningBid(
