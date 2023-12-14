@@ -356,7 +356,10 @@ export const Configure: React.FC<ConfigureProps> = ({
                       "customAuthEndpoint.authEndpoint",
                       form.formState,
                     ).error && (
-                      <FormHelperText>Enter the URI of the JWKS</FormHelperText>
+                      <FormHelperText>
+                        Enter the URL of your server where we will send the user
+                        payload for verification
+                      </FormHelperText>
                     )}
                     <FormErrorMessage>
                       {

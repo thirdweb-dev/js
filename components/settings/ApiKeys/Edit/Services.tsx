@@ -41,14 +41,6 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
     control: form.control,
     name: "services",
   });
-  const embeddedWalletIndex = fields.findIndex(
-    (srv) => srv.name === "embeddedWallets",
-  );
-  const customAuthEndpointHeaderField = useFieldArray({
-    control: form.control,
-    name: `services.${embeddedWalletIndex}.customAuthEndpoint.customHeaders`,
-  });
-
   const handleAction = (
     srvIdx: number,
     srv: FieldArrayWithId<ApiKeyValidationSchema, "services", "id">,
@@ -391,84 +383,7 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
                           }
                         </FormErrorMessage>
                       </FormControl>
-                      <FormControl
-                        isInvalid={
-                          !!form.getFieldState(
-                            `services.${idx}.customAuthEndpoint.customHeaders`,
-                            form.formState,
-                          ).error
-                        }
-                      >
-                        <FormLabel size="label.sm">Custom Headers</FormLabel>
-                        <Stack gap={3} alignItems={"end"}>
-                          {customAuthEndpointHeaderField.fields.map(
-                            (_, customHeaderIdx) => {
-                              return (
-                                <Flex key={customHeaderIdx} gap={2} w="full">
-                                  <Input
-                                    placeholder="Key"
-                                    type="text"
-                                    {...form.register(
-                                      `services.${idx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
-                                    )}
-                                  />
-                                  <Input
-                                    placeholder="Value"
-                                    type="text"
-                                    {...form.register(
-                                      `services.${idx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
-                                    )}
-                                  />
-                                  <IconButton
-                                    aria-label="Remove header"
-                                    icon={<LuTrash2 />}
-                                    onClick={() => {
-                                      customAuthEndpointHeaderField.remove(
-                                        customHeaderIdx,
-                                      );
-                                    }}
-                                  />
-                                </Flex>
-                              );
-                            },
-                          )}
-                          <Button
-                            onClick={() => {
-                              customAuthEndpointHeaderField.append({
-                                key: "",
-                                value: "",
-                              });
-                            }}
-                            w={
-                              customAuthEndpointHeaderField.fields.length === 0
-                                ? "full"
-                                : "fit-content"
-                            }
-                          >
-                            Add header
-                          </Button>
-                        </Stack>
-
-                        {!form.getFieldState(
-                          `services.${idx}.customAuthEndpoint.customHeaders`,
-                          form.formState,
-                        ).error && (
-                          <FormHelperText>
-                            Set custom headers to be sent along the request with
-                            the payload to the authentication endpoint above.
-                            You can set values to verify the incoming request
-                            here.
-                          </FormHelperText>
-                        )}
-                        <FormErrorMessage>
-                          {
-                            form.getFieldState(
-                              `services.${idx}.customAuthEndpoint.customHeaders`,
-                              form.formState,
-                            ).error?.message
-                          }
-                        </FormErrorMessage>
-                      </FormControl>
+                      <CustomAuthHeaders form={form} serviceIdx={idx} />
                     </>
                   )}
                 </Flex>
@@ -577,5 +492,96 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
         })}
       </Flex>
     </Flex>
+  );
+};
+
+// to prevent the useFieldArray from inserting an empty array into the form values until needed
+// TODO: consolidate this with the component in embedded-wallet/Configure/index.tsx when we refactor the embedded wallet settings to somehow share types properly
+const CustomAuthHeaders = ({
+  form,
+  serviceIdx,
+}: {
+  form: UseFormReturn<ApiKeyValidationSchema, any>;
+  serviceIdx: number;
+}) => {
+  const customAuthEndpointHeaderField = useFieldArray({
+    control: form.control,
+    name: `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
+  });
+
+  return (
+    <FormControl
+      isInvalid={
+        !!form.getFieldState(
+          `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
+          form.formState,
+        ).error
+      }
+    >
+      <FormLabel size="label.sm">Custom Headers</FormLabel>
+      <Stack gap={3} alignItems={"end"}>
+        {customAuthEndpointHeaderField.fields.map((_, customHeaderIdx) => {
+          return (
+            <Flex key={customHeaderIdx} gap={2} w="full">
+              <Input
+                placeholder="Key"
+                type="text"
+                {...form.register(
+                  `services.${serviceIdx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
+                )}
+              />
+              <Input
+                placeholder="Value"
+                type="text"
+                {...form.register(
+                  `services.${serviceIdx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
+                )}
+              />
+              <IconButton
+                aria-label="Remove header"
+                icon={<LuTrash2 />}
+                onClick={() => {
+                  customAuthEndpointHeaderField.remove(customHeaderIdx);
+                }}
+              />
+            </Flex>
+          );
+        })}
+        <Button
+          onClick={() => {
+            customAuthEndpointHeaderField.append({
+              key: "",
+              value: "",
+            });
+          }}
+          w={
+            customAuthEndpointHeaderField.fields.length === 0
+              ? "full"
+              : "fit-content"
+          }
+        >
+          Add header
+        </Button>
+      </Stack>
+
+      {!form.getFieldState(
+        `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
+        form.formState,
+      ).error && (
+        <FormHelperText>
+          Set custom headers to be sent along the request with the payload to
+          the authentication endpoint above. You can set values to verify the
+          incoming request here.
+        </FormHelperText>
+      )}
+      <FormErrorMessage>
+        {
+          form.getFieldState(
+            `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
+            form.formState,
+          ).error?.message
+        }
+      </FormErrorMessage>
+    </FormControl>
   );
 };
