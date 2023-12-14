@@ -539,7 +539,7 @@ export const CreateUpdateCheckoutButton: React.FC<
     claimConditions,
   ]);
 
-  const isValid = useMemo(() => {
+  const isValid = (() => {
     if (step === "info") {
       if (
         apiKeys.length === 0 ||
@@ -561,7 +561,7 @@ export const CreateUpdateCheckoutButton: React.FC<
       }
     }
     return true;
-  }, [apiKeys, form, isErc1155, step]);
+  })();
 
   const handleNext = async () => {
     await form.trigger();
