@@ -372,7 +372,7 @@ export const CreateUpdateCheckoutButton: React.FC<
 
   const apiKeys = useMemo(() => {
     return (apiKeysData || []).filter((key) => {
-      return (key.services || []).some((srv) => srv.name === "embeddedWallet");
+      return (key.services || []).some((srv) => srv.name === "embeddedWallets");
     });
   }, [apiKeysData]);
 
