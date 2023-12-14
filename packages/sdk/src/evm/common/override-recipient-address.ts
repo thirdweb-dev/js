@@ -7,16 +7,16 @@ import { constants } from "ethers";
  * https://github.com/thirdweb-dev/contracts/pull/530
  *
  * @param signerAddress - The address of the contract deployer
- * @param fee_recipient - The address that will receive the platform fees and/or sale fees
- * @returns `signerAddress` if the `fee_recipient` is AddressZero, otherwise returns `fee_recipient`
+ * @param recipient - The address that will receive the platform fees and/or sale fees
+ * @returns `signerAddress` if the `recipient` is AddressZero, otherwise returns `recipient`
  * @internal
  */
-export function overrideFeeRecipient(
+export function overrideRecipientAddress(
   signerAddress: string,
-  fee_recipient: string,
+  recipient: string,
 ): string {
-  if (fee_recipient === constants.AddressZero) {
+  if (recipient === constants.AddressZero) {
     return signerAddress;
   }
-  return fee_recipient;
+  return recipient;
 }

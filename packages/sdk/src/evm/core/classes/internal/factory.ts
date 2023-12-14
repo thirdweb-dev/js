@@ -42,7 +42,7 @@ import type { DeployEvents } from "../../../types/deploy/deploy-events";
 import { NetworkInput } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "../transactions";
-import { overrideFeeRecipient } from "../../../common/override-fee-recipient";
+import { overrideRecipientAddress } from "../../../common/override-recipient-address";
 
 /**
  * @internal
@@ -246,14 +246,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.symbol,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc721metadata.primary_sale_recipient,
           ),
           erc721metadata.fee_recipient,
           erc721metadata.seller_fee_basis_points,
           erc721metadata.platform_fee_basis_points,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc721metadata.platform_fee_recipient,
           ),
@@ -267,14 +267,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.symbol,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             signatureDropmetadata.primary_sale_recipient,
           ),
           signatureDropmetadata.fee_recipient,
           signatureDropmetadata.seller_fee_basis_points,
           signatureDropmetadata.platform_fee_basis_points,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             signatureDropmetadata.platform_fee_recipient,
           ),
@@ -301,14 +301,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.symbol,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc1155metadata.primary_sale_recipient,
           ),
           erc1155metadata.fee_recipient,
           erc1155metadata.seller_fee_basis_points,
           erc1155metadata.platform_fee_basis_points,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc1155metadata.platform_fee_recipient,
           ),
@@ -324,11 +324,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.symbol,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc20metadata.primary_sale_recipient,
           ),
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             erc20metadata.platform_fee_recipient,
           ),
@@ -366,7 +366,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signerAddress,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             marketplaceMetadata.platform_fee_recipient,
           ),
@@ -379,7 +379,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signerAddress,
           contractURI,
           trustedForwarders,
-          overrideFeeRecipient(
+          overrideRecipientAddress(
             signerAddress,
             marketplaceV3Metadata.platform_fee_recipient,
           ),

@@ -23,7 +23,7 @@ import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../contracts";
-import { overrideFeeRecipient } from "./override-fee-recipient";
+import { overrideRecipientAddress } from "./override-recipient-address";
 
 /**
  *
@@ -75,14 +75,14 @@ export async function getDeployArguments<
         erc721metadata.symbol,
         contractURI,
         trustedForwarders,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc721metadata.primary_sale_recipient,
         ),
         erc721metadata.fee_recipient,
         erc721metadata.seller_fee_basis_points,
         erc721metadata.platform_fee_basis_points,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc721metadata.platform_fee_recipient,
         ),
@@ -96,14 +96,14 @@ export async function getDeployArguments<
         signatureDropmetadata.symbol,
         contractURI,
         trustedForwarders,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           signatureDropmetadata.primary_sale_recipient,
         ),
         signatureDropmetadata.fee_recipient,
         signatureDropmetadata.seller_fee_basis_points,
         signatureDropmetadata.platform_fee_basis_points,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           signatureDropmetadata.platform_fee_recipient,
         ),
@@ -130,14 +130,14 @@ export async function getDeployArguments<
         erc1155metadata.symbol,
         contractURI,
         trustedForwarders,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc1155metadata.primary_sale_recipient,
         ),
         erc1155metadata.fee_recipient,
         erc1155metadata.seller_fee_basis_points,
         erc1155metadata.platform_fee_basis_points,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc1155metadata.platform_fee_recipient,
         ),
@@ -153,11 +153,11 @@ export async function getDeployArguments<
         erc20metadata.symbol,
         contractURI,
         trustedForwarders,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc20metadata.primary_sale_recipient,
         ),
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           erc20metadata.platform_fee_recipient,
         ),
@@ -196,7 +196,7 @@ export async function getDeployArguments<
         signerAddress,
         contractURI,
         trustedForwarders,
-        overrideFeeRecipient(
+        overrideRecipientAddress(
           signerAddress,
           marketplaceMetadata.platform_fee_recipient,
         ),
