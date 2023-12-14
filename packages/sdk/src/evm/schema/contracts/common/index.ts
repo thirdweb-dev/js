@@ -66,7 +66,7 @@ export const CommonPrimarySaleSchema = /* @__PURE__ */ (() =>
     /**
      * primary sale recipient address
      */
-    primary_sale_recipient: AddressOrEnsSchema,
+    primary_sale_recipient: AddressOrEnsSchema.default(constants.AddressZero),
   }))();
 
 /**
