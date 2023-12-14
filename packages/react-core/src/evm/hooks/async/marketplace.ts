@@ -198,7 +198,7 @@ export function useListing(
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useListing](/react/react.uselisting) instead.
  *
  * @example
@@ -288,7 +288,7 @@ export function useDirectListing(
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useListing](/react/react.uselisting) instead.
  *
  * @example
@@ -388,9 +388,9 @@ export function useEnglishAuction(
 }
 
 /**
- * Hook for getting all listings (including expired ones) from a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * Hook for getting all listings (including expired ones) from a `Marketplace` contract.
  *
- * Note: this hook is only available for [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contracts.
+ * Note: this hook is only available for `Marketplace` contracts.
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
  * use [useDirectListings](/react/react.usedirectlistings) or [useEnglishAuctions](/react/react.useenglishauctions) instead.
@@ -564,7 +564,7 @@ export function useListings(
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useListings](/react/react.uselistings) instead.
  *
  * @example
@@ -988,9 +988,9 @@ export function useValidEnglishAuctions(
 }
 
 /**
- * Hook for getting the total number of listings on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * Hook for getting the total number of listings on a `Marketplace` contract.
  *
- * Note: this hook is only available for [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contracts.
+ * Note: this hook is only available for `Marketplace` contracts.
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
  * use [useDirectListingsCount](/react/react.usedirectlistingscount) or [useEnglishAuctionsCount](/react/react.useenglishauctionscount) instead.
@@ -1035,7 +1035,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useListingsCount](/react/react.uselistingscount) instead.
  *
  * @example
@@ -1132,7 +1132,7 @@ export function useEnglishAuctionsCount(
 }
 
 /**
- * Hook for fetching all active listings from a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * Hook for fetching all active listings from a `Marketplace` contract.
  *
  * **Note: This hook is only for Marketplace contracts. For Marketplace V3 contracts, use `useValidDirectListings` or `useValidEnglishAuctions` instead.**
  *
@@ -1299,7 +1299,7 @@ export function useActiveListings(
 }
 
 /**
- * Hook for getting the winning bid of an auction listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * Hook for getting the winning bid of an auction listing on a `Marketplace` contract.
  *
  * @example
  *
@@ -1436,7 +1436,7 @@ export function useEnglishAuctionWinningBid(
 }
 
 /**
- * Hook for getting the winner of an auction (or english auction) on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
+ * Hook for getting the winner of an auction (or english auction) on a `Marketplace` or [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
  * @example
  * ```javascript
@@ -1504,7 +1504,7 @@ export function useAuctionWinner(
 }
 
 /**
- * Hook for determining the current bid buffer on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
+ * Hook for determining the current bid buffer on a `Marketplace` or [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
  * The bid buffer is what percentage higher the next bid must be than the current highest bid, or the starting price if there are no bids.
  *
@@ -1580,7 +1580,7 @@ export function useBidBuffer(
 
 /**
  * Hook for getting the minimum value a bid must be to be valid
- * in an auction listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or
+ * in an auction listing on a `Marketplace` or
  * [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
  * Takes into account the current highest bid, or the reserve price if there is no bid,
@@ -1729,7 +1729,7 @@ export function useOffers(
 /** **********************/
 
 /**
- * Hook for creating a new direct listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * Hook for creating a new direct listing on a `Marketplace`
  * or [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) smart contract.
  *
  * Direct listings require the user to approve the marketplace to transfer the NFTs on their behalf as part of the listing creation process.
@@ -1884,13 +1884,13 @@ export function useCreateDirectListing<
 }
 
 /**
- * Hook for creating an auction listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) or
+ * Hook for creating an auction listing on a `Marketplace` or
  * [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) smart contract.
  *
  * Auction listings hold the NFTs in escrow; requiring the seller to transfer the NFTs to the marketplace contract
  * as part of the listing creation process.
  *
- * Provide your [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * Provide your `Marketplace`
  * or
  * [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3)
  * contract as the argument to the hook.
@@ -2069,11 +2069,11 @@ export function useCreateAuctionListing<
 
 /**
  * Hook for canceling an existing auction or listing on a
- * [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * `Marketplace` contract.
  *
  * **Note**: Auction listings cannot be canceled if a bid has been placed.
  *
- * **Note: This hook is only for [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contracts.**
+ * **Note: This hook is only for `Marketplace` contracts.**
  *
  * For [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3)
  * contracts, use [useCancelDirectListing](/react/react.usecanceldirectlisting) or [useCancelEnglishAuction](/react/react.usecancelenglishauction) instead.
@@ -2180,7 +2180,7 @@ export function useCancelListing(
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useCancelListing](/react/react.usecancellisting) instead.
  *
  *
@@ -2264,7 +2264,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  *
  * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
  *
- * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * For `Marketplace`
  * contracts, use [useCancelListing](/react/react.usecancellisting) instead.
  *
  * ```jsx
@@ -2346,7 +2346,7 @@ export function useCancelEnglishAuction(
 }
 
 /**
- * Hook for placing a bid on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) auction listing.
+ * Hook for placing a bid on a `Marketplace` auction listing.
  *
  * Bids have several important properties:
  *
@@ -2438,7 +2438,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Hook for placing an offer on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) direct listing.
+ * Hook for placing an offer on a `Marketplace` direct listing.
  *
  * @example
  *
@@ -2600,7 +2600,7 @@ export function useAcceptDirectListingOffer(
 }
 
 /**
- * Hook for executing a sale of an auction listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contract.
+ * Hook for executing a sale of an auction listing on a `Marketplace` contract.
  *
  * Triggers a new sale, transferring the NFT(s) to the buyer and the funds to the seller.
  *
@@ -2681,12 +2681,12 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Hook for buying a listing on a [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) smart contract.
+ * Hook for buying a listing on a `Marketplace` smart contract.
  *
  * If the listing is in a currency that is not native to the chain (e.g. not Ether on Ethereum), the hook will prompt the user
  * to approve the marketplace contract to spend the currency on their behalf before performing the buy.
  *
- * **This hook is only for [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace) contracts.**
+ * **This hook is only for `Marketplace` contracts.**
  *
  * ```jsx
  * import { useBuyNow } from "@thirdweb-dev/react";

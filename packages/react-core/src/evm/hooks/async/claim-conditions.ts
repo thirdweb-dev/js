@@ -89,8 +89,6 @@ export type SetClaimConditionsParams = {
  *
  * Pass `undefined`, or leave this field out if you are using ERC721 or ERC20 drop contracts.
  *
- * ### Example
- *
  * ```tsx
  * import { useActiveClaimCondition, useContract } from "@thirdweb-dev/react";
  *
@@ -110,7 +108,7 @@ export type SetClaimConditionsParams = {
  *
  * @param options - additional options to pass to the claim condition fetch
  *
- * ### withAllowlist
+ * #### withAllowlist
  *
  * By default, the hook will not include the allowlist or "snapshot" in the returned data. To include the allowlist in the returned data, pass `withAllowlist: true` in options object.
  *
@@ -329,7 +327,7 @@ export function useClaimerProofs(
  *
  * @param options - additional options to pass to the claim condition fetch
  *
- * ### withAllowlist
+ * #### withAllowlist
  *
  * By default, the hook will not include the allowlist in the returned data. To include the allowlist in the returned data, set the `withAllowlist` option to true.
  *
@@ -429,8 +427,6 @@ export function useClaimConditions(
  *
  * @param tokenId -
  * When using ERC1155 contracts, provide a third argument to specify the token ID.
- *
- * ### Example
  *
  * ```tsx
  * * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
