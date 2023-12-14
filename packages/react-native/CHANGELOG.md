@@ -1,5 +1,28 @@
 # @thirdweb-dev/react-native
 
+## 0.5.1
+
+### Patch Changes
+
+- [#2074](https://github.com/thirdweb-dev/js/pull/2074) [`07fbb799`](https://github.com/thirdweb-dev/js/commit/07fbb799be87c1c5229ae3183fa8bc67ae15c756) Thanks [@iketw](https://github.com/iketw)! - Adds the ability to login with any arbitrary login payload
+
+  ```typescript
+  await embeddedWallet.authenticate({
+    strategy: "auth_endpoint",
+    payload: "SOME_STRING",
+    encryptionKey: "",
+  });
+  ```
+
+- [#2082](https://github.com/thirdweb-dev/js/pull/2082) [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f) Thanks [@iketw](https://github.com/iketw)! - Better comments
+
+- [#2086](https://github.com/thirdweb-dev/js/pull/2086) [`328ef5dc`](https://github.com/thirdweb-dev/js/commit/328ef5dc9c628a89a022a559852dfa2a788f70cb) Thanks [@iketw](https://github.com/iketw)! - Hide WC modal back button when only WC is defined as a supportedWallet
+
+- Updated dependencies [[`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e), [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f)]:
+  - @thirdweb-dev/sdk@4.0.22
+  - @thirdweb-dev/react-core@4.1.16
+  - @thirdweb-dev/wallets@2.3.1
+
 ## 0.5.0
 
 ### Minor Changes
