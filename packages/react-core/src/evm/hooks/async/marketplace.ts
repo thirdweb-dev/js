@@ -785,6 +785,34 @@ export function useCreateDirectListing<
   );
 }
 
+export function useCreateDirectListingBatch<
+  TMarketplaceV3 extends MarketplaceV3,
+>(contract: RequiredParam<TMarketplaceV3>) {
+  const contractAddress = contract?.getAddress();
+  const activeChainId = useSDKChainId();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (data: DirectListingInputParams[]) => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(walletAddress, "No wallet connected, cannot create listing");
+      invariant(
+        contract.directListings.createListingsBatch,
+        "contract does not support directListings.createListingsBatch",
+      );
+      return await contract.directListings.createListingsBatch(data);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
 /**
  * Create a new english auction
  *
@@ -1127,7 +1155,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Nake an offer on a direct or auction listing
+ * Make an offer on a direct or auction listing
  *
  * @example
  * ```jsx
