@@ -887,35 +887,50 @@ export function useSetClaimConditions(
 }
 
 /**
- * Reset claim conditions
+ * Hook for resetting the claim conditions on a drop contract.
+ *
+ * Available to use on contracts that implement
+ * [ERC721ClaimableWithConditions](/solidity/extensions/erc721claimconditions),
+ * [ERC1155ClaimableWithConditions](/solidity/extensions/erc1155claimconditions),
+ * or [ERC20ClaimableWithConditions](/solidity/extensions/erc20claimconditions).
  *
  * @example
+ *
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useContract,
+ *   useResetClaimConditions,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   // Contract must be a drop contract that implements claim conditions
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: resetClaimConditions,
+ *     mutateAsync: resetClaimConditions,
  *     isLoading,
  *     error,
  *   } = useResetClaimConditions(contract);
  *
- *   if (error) {
- *     console.error("failed to reset claim conditions", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={resetClaimConditions}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => resetClaimConditions()}
  *     >
  *       Reset Claim Conditions
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - an instance of a `DropContract`
+ * @param tokenId - For ERC1155 NFTs, provide the token ID of the NFT as the second argument to the hook.
+ *
  * @returns a mutation object that can be used to reset claim conditions
+ *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @nftDrop
  */

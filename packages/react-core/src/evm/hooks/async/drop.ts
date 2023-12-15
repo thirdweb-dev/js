@@ -40,16 +40,55 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Get all unclaimed NFTs
+ * Hook for fetching information about all NFTs that haven't been claimed yet from an NFT Drop contract.
+ *
+ * Available to use on contracts that implement the [ERC721LazyMintable](/solidity/extensions/erc721lazymintable) interface.
  *
  * @example
- * ```javascript
- * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useUnclaimedNFTs(contract);
+ * }
  * ```
  *
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @param queryParams - query params to pass to the query for the sake of pagination
- * @returns a response object that includes an array of NFTs that are unclaimed
+ *
+ * @param queryParams -
+ * query params to pass to the query for the sake of pagination
+ * By default, the hook returns the first 100 unclaimed NFTs from the contract.
+ *
+ * Paginate the results by providing a `queryParams` object as the second argument.
+ *
+ * ```jsx
+ * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useUnclaimedNFTs(
+ *     contract,
+ *     // highlight-start
+ *     {
+ *       count: 10, // Limit the number of results
+ *       start: 0, // Start from the nth result (useful for pagination)
+ *     },
+ *     // highlight-end
+ *   );
+ * }
+ * ```
+ *
+ * @returns
+ * The hook's `data` property, once loaded, contains an array of `NFT` objects.
+ *
  * @twfeature ERC721LazyMintable
  * @nftDrop
  */
@@ -74,17 +113,55 @@ export function useUnclaimedNFTs(
 }
 
 /**
- * Get all claimed NFTs
+ * Hook for fetching all claimed NFTs from a given NFT Drop contract.
  *
- * @remarks Equivalent to using {@link useNFTs}.
+ * Available to use on contracts that implement [`ERC721Claimable`](/solidity/extensions/erc721claimable),
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721).
  *
  * @example
- * ```javascript
- * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   // Contract must implement ERC721Claimable, e.g. nft-drop
+ *   const { contract } = useContract(contractAddress, "nft-drop");
+ *   const { data: nfts, isLoading, error } = useClaimedNFTs(contract);
+ * }
  * ```
  *
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @param queryParams - query params to pass to the query for the sake of pagination
+ *
+ * @param queryParams -
+ * By default, the hook will return the first `100` claimed NFTs
+ *
+ * You can use the `queryParams` argument to paginate the NFTs that are returned.
+ *
+ * ```jsx
+ * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "nft-drop");
+ *   const { data, isLoading, error } = useClaimedNFTs(
+ *     contract,
+ *     // highlight-start
+ *     {
+ *       // For example, to only return the first 50 claimed NFTs in the collection
+ *       // in order of token ID
+ *       count: 50,
+ *       start: 0,
+ *     },
+ *     // highlight-end
+ *   );
+ * }
+ * ```
+ *
  * @returns a response object that includes an array of NFTs that are claimed
  * @twfeature ERC721LazyMintable
  * @nftDrop
@@ -110,10 +187,35 @@ export function useClaimedNFTs(
 }
 
 /**
+ * Hook for fetching the number of unclaimed NFTs from an NFT/Edition Drop contract.
+ *
+ * Unclaimed NFTs are tokens that were lazy-minted but have not yet been claimed by a user.
+ *
+ * Available to use on contracts that implement the [LazyMint](/solidity/extensions/lazymint) extension;
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721) contract.
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useUnclaimedNFTSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "nftDrop");
+ *   const { data, isLoading, error } = useUnclaimedNFTSupply(contract);
+ * }
+ * ```
  *
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @returns a response object that includes the number of NFTs that are unclaimed
+ *
+ * @returns
+ * The hook's `data` property, once loaded, contains a `BigNumber` representing the number of unclaimed NFTs.
+ *
+ *
  * @twfeature ERC721LazyMintable
+ *
  * @nftDrop
  */
 export function useUnclaimedNFTSupply(
@@ -136,10 +238,29 @@ export function useUnclaimedNFTSupply(
 }
 
 /**
- * Get the total number of claimed NFTs
+ * Hook for retrieving the total supply of NFTs claimed from an NFT Drop contract.
+ *
+ * Available to use on contracts that implement [`ERC721Claimable`](/solidity/interfaces/erc721claimable).
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useClaimedNFTSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data: claimedTokens, isLoading } = useClaimedNFTSupply(contract);
+ * }
+ * ```
  *
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @returns a response object that includes the number of NFTs that are claimed
+ *
+ * @returns
+ * The hook's data property, once loaded, is a BigNumber representing the total supply of NFTs claimed from the NFT drop contract so far.
+ *
  * @twfeature ERC721LazyMintable
  * @nftDrop
  */
@@ -224,35 +345,100 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Claim an NFT to a specific wallet
+ * Hook for claiming an NFT from a smart contract.
+ *
+ * Available to use on smart contracts that implement a
+ * [Claimable](/solidity/extensions/erc721claimable) interface, and
+ * follow either the [ERC721](/solidity/extensions/erc721)
+ * or [ERC1155](/solidity/extensions/erc1155) standard.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: claimNFT,
- *     isLoading,
- *     error,
- *   } = useClaimNFT(contract);
+ * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to claim nft", error);
- *   }
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync, isLoading, error } = useClaimNFT(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => claimNFT({ to: "{{wallet_address}}", quantity: 1 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         claimNft({
+ *           to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+ *           quantity: 1,
+ *         })
+ *       }
  *     >
- *       Claim NFT!
- *     </button>
+ *       Claim NFT
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a {@link DropContract}
- * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
+ *
+ * @returns a mutation object that can be used to claim a NFT to the wallet specified in the params
+ *
+ * #### to
+ *
+ * The wallet address to mint the NFT(s) to.
+ *
+ * Use the [`useAddress`](/react/react.useaddress) hook to get the currently connected wallet address.
+ *
+ * #### quantity
+ *
+ * The number of NFTs you wish to claim.
+ *
+ * - With ERC721 contracts, this represents the number of unique tokens you wish to claim.
+ * - With ERC1155 contracts, this represents the quantity of the specific `tokenId` you wish to claim.
+ *
+ * #### tokenId
+ *
+ * For ERC1155 contracts, you must specify a specific `tokenId` to claim.
+ *
+ * #### options (optional)
+ *
+ * Customizable `ClaimOptions` object that can be used to override the default behaviour of the hook.
+ *
+ * There are three options available:
+ *
+ * - `checkERC20Allowance` - Whether to check the ERC20 allowance of the sender, defaults to true.
+ * - `currencyAddress` - The currency to pay for each token claimed, defaults to `NATIVE_TOKEN_ADDRESS` for native currency.
+ * - `pricePerToken` - The price to pay for each token claimed. Not relevant when using claim conditions.
+ *
+ * ```jsx
+ * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutate: claimNft, isLoading, error } = useClaimNFT(contract);
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         claimNft({
+ *           to: "{{wallet_address}}",
+ *           quantity: 1,
+ *           options: {
+ *             checkERC20Allowance: true,
+ *             currencyAddress: "{{erc20_address}}",
+ *             pricePerToken: 0,
+ *           },
+ *         })
+ *       }
+ *     >
+ *       Claim NFT
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
  * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @nftDrop
  */
@@ -312,36 +498,92 @@ export function useClaimNFT<TContract extends DropContract>(
 }
 
 /**
- * Lazy mint NFTs
+ * Hook for lazy minting a batch of NFTs on a drop contract.
+ *
+ * Available to use on smart contracts that implement the
+ * [LazyMintable](/solidity/extensions/erc721lazymintable) interface, and
+ * follow either the [ERC721](/solidity/extensions/erc721)
+ * or [ERC1155](/solidity/extensions/erc1155) standard.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: lazyMint,
- *     isLoading,
- *     error,
- *   } = useLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to lazy mint NFT", error);
- *   }
+ * Provide your drop contract (ERC721 or ERC1155) as the argument to the hook, and an array
+ * of metadata objects to lazy-mint.
+ *
+ * ```jsx
+ * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => lazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         lazyMint({
+ *           // Metadata of the NFTs to upload
+ *           metadatas: [
+ *             {
+ *               name: "My NFT",
+ *               description: "An example NFT",
+ *               image: "{{image_url}}",
+ *             },
+ *           ],
+ *         })
+ *       }
  *     >
- *       Lazy mint NFT!
- *     </button>
+ *       Lazy Mint NFTs
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
  * @param contract - an instance of a {@link NFTContract} with the drop extension
+ *
  * @param onProgress - an optional callback that will be called with the progress of the upload
+ *
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ *
+ * ### metadatas
+ *
+ * An array of objects containing the metadata of the NFTs to lazy mint.
+ *
+ * Your metadata objects must follow the [Metadata standards](https://docs.opensea.io/docs/metadata-standards#metadata-structure).
+ *
+ * ```jsx
+ * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         lazyMint({
+ *           // Metadata of the NFTs to upload
+ *           metadatas: [
+ *             {
+ *               name: "My NFT",
+ *               description: "An example NFT",
+ *               image: "{{image_url}}",
+ *             },
+ *           ],
+ *         })
+ *       }
+ *     >
+ *       Lazy Mint NFTs
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
  * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  * @nftDrop
  */
