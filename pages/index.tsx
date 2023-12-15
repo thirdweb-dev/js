@@ -84,23 +84,26 @@ const HomePage: ThirdwebNextPage = () => {
             products={filterProducts("payments")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
-          <LandingCardWithMetrics
-            title={
-              <Center flexDir="column">
-                <Heading size="display.sm" color="white">
-                  Trusted by the best
-                </Heading>
 
-                <Text size="body.lg" mt={6}>
-                  Powering web3 apps across verticals — from onchain games to
-                  creator platforms.
-                </Text>
-              </Center>
-            }
-            desktopColumns={3}
-            TRACKING_CATEGORY={TRACKING_CATEGORY}
-            metrics={metrics}
-          />
+          <Box px={4}>
+            <LandingCardWithMetrics
+              title={
+                <Center flexDir="column" textAlign="center">
+                  <Heading size="display.sm" color="white">
+                    Trusted by the best
+                  </Heading>
+
+                  <Text size="body.lg" mt={6}>
+                    Powering web3 apps across verticals — from onchain games to
+                    creator platforms.
+                  </Text>
+                </Center>
+              }
+              desktopColumns={3}
+              TRACKING_CATEGORY={TRACKING_CATEGORY}
+              metrics={metrics}
+            />
+          </Box>
 
           <WithoutThirdwebSection />
           <ValuesSection />

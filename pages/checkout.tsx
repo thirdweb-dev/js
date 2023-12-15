@@ -1,32 +1,59 @@
-import { Container, Flex } from "@chakra-ui/react";
+import { Box, Center, Container, Flex } from "@chakra-ui/react";
+import { LandingCardWithImage } from "components/landing-pages/card-with-image";
+import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
 import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingGuidesShowcase } from "components/landing-pages/guide-showcase";
 import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
-import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
 import { LandingLayout } from "components/landing-pages/layout";
 import { LandingSectionHeading } from "components/landing-pages/section-heading";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { Card } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import checkoutLottie from "../public/assets/product-pages/checkout/checkout.json";
 
 const TRACKING_CATEGORY = "checkout-landing";
 
 const CASE_STUDIES = [
   {
-    title: "Balmain x Space Runners",
-    description:
-      "Pushed the boundaries of fashion and the Metaverse with a collection of limited-edition sneakers linked to a unique Balmain x Space Runners Unicorn NFT.",
+    title: "NFT Checkout: Docs Overview",
     image: require("public/assets/product-pages/checkout/case-study-1.png"),
-    link: "https://blog.withpaper.com/how-space-runners-and-balmain-are-shaping-the-future-of-fashion-with-nfts/",
+    link: "https://portal.thirdweb.com/checkouts",
   },
   {
-    title: "Ostrich",
-    description:
-      "Used NFTs to crowdfund their new fintech startup, raising more money with a fiat checkout solution.",
+    title: "NFT Checkout: Getting Started",
+    image: require("public/assets/product-pages/checkout/case-study-3.png"),
+    link: "https://portal.thirdweb.com/checkouts/getting-started",
+  },
+  {
+    title: "NFT Checkout: Embedded Elements",
     image: require("public/assets/product-pages/checkout/case-study-2.png"),
-    link: "https://blog.withpaper.com/how-ostrich-crowdfunded-their-startup-with-the-help-of-paper/",
+    link: "https://portal.thirdweb.com/checkouts/elements",
+  },
+];
+
+export const metrics = [
+  {
+    title: "Courtyard",
+    description:
+      "Bringing the collectibles market onchain — with a tokenization platform, marketplace app, and seamless fiat payments.",
+    image: require("public/assets/landingpage/case-study-courtyard.png"),
+    mobileImage: require("public/assets/landingpage/case-study-courtyard.png"),
+    items: [],
+    href: "https://blog.thirdweb.com/case-studies/courtyard-brings-collectors-onchain-with-fiat-payments/",
+    hoverBackground: "#0053FF",
+  },
+  {
+    title: "Balmain",
+    description:
+      "Shaping the future of luxury fashion with limited-edition phygital apparel — enabling customers to purchase with credit card or crypto.",
+    image: require("public/assets/landingpage/case-study-balmain.png"),
+    mobileImage: require("public/assets/landingpage/case-study-balmain.png"),
+    flexImage: { base: 1, md: 0.93 },
+    items: [],
+    href: "https://blog.thirdweb.com/case-studies/balmain-and-space-runners-shape-the-future-of-fashion/",
+    hoverBackground: "#082E2E",
   },
 ];
 
@@ -35,16 +62,16 @@ const CheckoutLanding: ThirdwebNextPage = () => {
     <LandingLayout
       bgColor="#0F0F0F"
       seo={{
-        title: "Buy NFTs with Credit Card Checkout",
+        title: "Buy NFTs with Credit Card | Fiat Checkout",
         description:
-          "Let users buy digital assets with a credit card, via a one-click checkout flow. Onboard anyone, even if they've never create a wallet.",
+          "Let users buy digital assets with a credit card via one-click NFT checkouts. Onboard anyone, even if they've never created a wallet. Get started.",
         openGraph: {
           images: [
             {
               url: `${getAbsoluteUrl()}/assets/og-image/checkout.png`,
               width: 1200,
               height: 630,
-              alt: "Buy NFTs with Credit Card Checkout",
+              alt: "Buy NFTs with Credit Card | Fiat Checkout",
             },
           ],
         },
@@ -54,101 +81,162 @@ const CheckoutLanding: ThirdwebNextPage = () => {
         maxW="container.page"
         as={Flex}
         flexDir="column"
-        gap={{ base: "80px", md: "120px" }}
+        gap={{ base: "80px", md: "224px" }}
       >
         <LandingHeroWithSideImage
           miniTitle="Checkout"
-          title="NFT checkout"
-          titleWithGradient="with a credit card"
-          subtitle="Enable users to buy digital assets with a credit card. Onboard everyone, even if they've never created a wallet or bought crypto before."
+          title="Powerful NFT checkouts,"
+          titleWithGradient="for everyone"
+          subtitle="Sell NFTs to users with a credit card — with worldwide support for major payment methods, seamless buyer & seller flows, and 100% chargeback protection."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://withpaper.com/sign-up"
+          ctaLink="https://portal.thirdweb.com/checkouts"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
-          image={require("public/assets/product-pages/hero/desktop-hero-checkout.png")}
-          mobileImage={require("public/assets/product-pages/hero/mobile-hero-checkout.png")}
           miniImage={require("public/assets/product-icons/payments.png")}
+          lottie={checkoutLottie}
         />
-
-        <LandingGridSection>
-          <LandingIconSectionItem
-            icon={require("public/assets/product-pages-icons/payments/icon-global.svg")}
-            title="Available worldwide"
-            description="Available in 190+ countries, all 50 U.S. states, with 10+ currencies and languages supported."
-          />
-          <LandingIconSectionItem
-            icon={require("public/assets/product-pages-icons/payments/icon-smart-wallet.svg")}
-            title="Accept all payment methods"
-            description="Credit & debit cards, Apple Pay, Google Pay, iDEAL, and cross-chain crypto — or bring your own payment processor."
-          />
-          <LandingIconSectionItem
-            icon={require("public/assets/product-pages-icons/payments/icon-secure.svg")}
-            title="Enterprise-grade security"
-            description="Fully compliant & enterprise-ready — with built-in fraud & AML detection and 90%+ authorization rates."
-          />
-        </LandingGridSection>
-        <LandingGridSection desktopColumns={2}>
-          <Card p={8}>
-            <LandingIconSectionItem
-              icon={require("public/assets/product-pages-icons/payments/icon-share.svg")}
-              title=" Checkout Links"
-              description="Public, reusable URLs that allows buyers to complete a purchase with Paper's prebuilt checkout experience."
-            />
-          </Card>
-          <Card p={8}>
-            <LandingIconSectionItem
-              icon={require("public/assets/product-pages-icons/payments/icon-custom.svg")}
-              title="Checkout Elements"
-              description="Portions of the checkout experience broken down into components for complete customizability. You can embed Checkout Elements onto any page and create a fully white-labelled experience for your customers."
-            />
-          </Card>
-        </LandingGridSection>
 
         <LandingGridSection
           title={
-            <LandingSectionHeading
-              title="What You Can Build"
-              blackToWhiteTitle=""
-            />
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              w="full"
+              marginBottom="38px"
+            >
+              <LandingSectionHeading
+                title="The most powerful NFT checkout"
+                blackToWhiteTitle=""
+              />
+            </Box>
           }
+          desktopColumns={4}
         >
-          <Card p={8}>
-            <LandingIconSectionItem
-              icon={require("public/assets/product-pages-icons/payments/icon-credit-card.svg")}
-              title="Digital Collectibles"
-              description="Onboard mainstream users onto Web3 by building an NFT drop which you can purchase using your credit card."
-            />
-          </Card>
-          <Card p={8}>
-            <LandingIconSectionItem
-              icon={require("public/assets/product-pages-icons/payments/icon-marketplace.svg")}
-              title="Marketplaces"
-              description="Build a marketplace where users can buy and sell digital assets using traditional payment methods."
-            />
-          </Card>
-          <Card p={8}>
-            <LandingIconSectionItem
-              icon={require("public/assets/product-pages-icons/payments/icon-fundraise.svg")}
-              title="Fundraising"
-              description="Make it easy for your users to donate to charitable causes, or fund your business idea with digital collectibles."
-            />
-          </Card>
+          <LandingCardWithImage
+            title="Accept all payment methods"
+            description="Credit & debit cards, Apple Pay, Google Pay, and cross-chain crypto — or bring your own payments processor."
+            image={require("public/assets/landingpage/desktop/payment-methods.png")}
+            mobileImage={require("public/assets/landingpage/mobile/payment-methods.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/checkouts"
+            direction="horizontal"
+          />
+
+          <LandingCardWithImage
+            title="Available worldwide"
+            description="Accept payments from 190+ countries and all 50 U.S. states, with 10+ currencies and languages supported."
+            image={require("public/assets/landingpage/desktop/worldwide.png")}
+            mobileImage={require("public/assets/landingpage/mobile/worldwide.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/checkouts"
+          />
+
+          <LandingCardWithImage
+            title="World-class DX"
+            description="Integrate in 10 minutes and a few lines of code, or use our hooks to create custom checkout flows."
+            image={require("public/assets/landingpage/desktop/world-class-DX.png")}
+            mobileImage={require("public/assets/landingpage/mobile/world-class-DX.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/checkouts/getting-started"
+            colSpan={1}
+          />
+          <LandingCardWithImage
+            title="No wallet? No problem"
+            description="Create wallets for buyers with an email, Google account, or social login and transfer instantly — or deposit to their existing wallet."
+            image={require("public/assets/landingpage/desktop/wallet-no-problem.png")}
+            mobileImage={require("public/assets/landingpage/mobile/wallet-no-problem.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/embedded-wallet"
+          />
+          <LandingCardWithImage
+            title="Built-in analytics"
+            description="Seller analytics including buyer activity, gross revenue, NFTs minted, & number of purchases."
+            image={require("public/assets/landingpage/desktop/built-in-analytics.png")}
+            mobileImage={require("public/assets/landingpage/mobile/built-in-analytics.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="/dashboard/payments/contracts"
+            colSpan={1}
+          />
+          <LandingCardWithImage
+            title="Full chargeback protection"
+            description="Compliant & enterprise-ready — with built-in fraud & AML detection, 100% chargeback protection, and enterprise SLAs."
+            image={require("public/assets/landingpage/desktop/chargeback-protection.png")}
+            mobileImage={require("public/assets/landingpage/mobile/chargeback-protection.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="/dashboard/payments/contracts"
+          />
+          <LandingCardWithImage
+            title="Everything you need to manage payments"
+            description="A dashboard with one-click checkout link creation, QR code generation, and fine-grained analytics for any smart contract."
+            image={require("public/assets/landingpage/desktop/manage-payments.png")}
+            mobileImage={require("public/assets/landingpage/mobile/manage-payments.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="/dashboard/payments/contracts"
+          />
+          <LandingCardWithImage
+            title="Built for scale"
+            description="Engineered to process millions of dollars — with ~3,000 transactions per minute, 90%+ authorization rates, & high limits."
+            image={require("public/assets/landingpage/desktop/built-for-scale.png")}
+            mobileImage={require("public/assets/landingpage/mobile/built-for-scale.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="/dashboard/payments/contracts"
+            colSpan={1}
+          />
+          <LandingCardWithImage
+            title="Seamless, transparent buyer flows"
+            description="Designed for the best customer experience — with instant wallet creation, NFT delivery status, and flexible payment options."
+            image={require("public/assets/landingpage/desktop/seamless-buyer-flows.png")}
+            mobileImage={require("public/assets/landingpage/mobile/seamless-buyer-flows.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/checkouts"
+          />
+          <LandingCardWithImage
+            title="Any EVM chain"
+            description="Seamless buyer flows on any EVM network, with lightning-fast bridging and swapping."
+            image={require("public/assets/landingpage/desktop/evm-chain.png")}
+            mobileImage={require("public/assets/landingpage/mobile/evm-chain.png")}
+            TRACKING_CATEGORY={TRACKING_CATEGORY}
+            href="https://portal.thirdweb.com/checkouts"
+            colSpan={1}
+          />
         </LandingGridSection>
 
+        <LandingCardWithMetrics
+          title={
+            <Center flexDir="column" textAlign="center">
+              <Heading size="display.sm" color="white">
+                Trusted by industry-leading companies
+              </Heading>
+
+              <Text size="body.lg" mt={6}>
+                From Fortune 500 companies to the world&apos;s leading brands,
+                our products power web3 apps at scale.
+              </Text>
+            </Center>
+          }
+          desktopColumns={2}
+          TRACKING_CATEGORY={TRACKING_CATEGORY}
+          metrics={metrics}
+          gridMaxWidth={752}
+        />
+
         <LandingGuidesShowcase
-          title="The best web3 apps use thirdweb"
-          description=""
+          title="Get started with NFT Checkout"
           category={TRACKING_CATEGORY}
+          description="Read the full docs and start building with the most powerful web3 payments stack."
           guides={CASE_STUDIES}
-          caseStudies
+          customSolution="See the full NFT Checkout docs"
+          customSolutionHref="https://portal.thirdweb.com/checkouts"
+          py={0}
         />
 
         <LandingEndCTA
-          title="Integrate checkouts"
-          titleWithGradient="in a few lines of code."
+          title="Add checkouts to your app"
+          titleWithGradient="in 10 minutes."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://withpaper.com/sign-up"
-          gradient="linear(to-r, #00A876, #75FFD6)"
+          ctaLink="/dashboard/payments/contracts"
+          gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
         />
       </Container>
     </LandingLayout>
