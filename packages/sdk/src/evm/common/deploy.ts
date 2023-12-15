@@ -33,6 +33,8 @@ import { overrideRecipientAddress } from "./override-recipient-address";
  * @returns
  * @internal
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: Update function interface: Remove unused param
 export async function getDeployArguments<
   TContractType extends PrebuiltContractType,
 >(
