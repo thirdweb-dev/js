@@ -15,11 +15,13 @@ export const getDefaultModalStyles = (): ModalStyles => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    pointerEvents: "auto",
   },
   overlay: {
     ...fullScreen,
     position: "absolute",
     backgroundColor: "rgba(0, 0, 0, 0.33)",
+    pointerEvents: "auto",
   },
   body: {
     background: "transparent",
@@ -31,6 +33,7 @@ export const getDefaultModalStyles = (): ModalStyles => ({
     height: "700px",
     maxHeight: "80%",
     animation: "pew-modal-slideIn 0.2s forwards",
+    pointerEvents: "auto",
   },
   spinner: {
     position: "absolute",
