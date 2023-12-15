@@ -16,9 +16,6 @@ import {
   IconButton,
   Box,
   Progress,
-  Menu,
-  MenuButton,
-  MenuList,
   Alert,
   AlertDescription,
 } from "@chakra-ui/react";
@@ -33,7 +30,6 @@ import {
   Heading,
   LinkButton,
   Text,
-  MenuItem,
   TrackedLink,
 } from "tw-components";
 import {
@@ -55,11 +51,9 @@ import { Checkout } from "graphql/generated_types";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { PaymentsSettingsFileUploader } from "components/payments/settings/payment-settings-file-uploader";
-import { ButtonShapeRecord, PaymentsPreviewButton } from "./preview-button";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
 import { PaymentsMintMethodInput } from "./mint-method-input";
-import { FiChevronDown } from "react-icons/fi";
 import { BigNumber } from "ethers";
 import { useChainSlug } from "hooks/chains/chainSlug";
 
@@ -76,15 +70,6 @@ const formInputs = [
         required: true,
         helper:
           "A clear title for this checkout that is shown on the checkout UX, credit card statement, and post-purchase email.",
-        sideField: false,
-      },
-      {
-        name: "description",
-        label: "Description",
-        type: "textarea",
-        placeholder: "Checkout Description",
-        required: false,
-        helper: "",
         sideField: false,
       },
       {
@@ -133,9 +118,18 @@ const formInputs = [
     ],
   },
   {
-    step: "branding",
-    label: "Branding",
+    step: "metadata",
+    label: "Metadata",
     fields: [
+      {
+        name: "description",
+        label: "Description",
+        type: "textarea",
+        placeholder: "Checkout Description",
+        required: false,
+        helper: "",
+        sideField: false,
+      },
       {
         name: "imageUrl",
         label: "NFT Image Preview",
@@ -146,43 +140,13 @@ const formInputs = [
         helper: "",
       },
       {
-        name: "brandDarkMode",
-        label: "Dark mode",
-        type: "switch",
-        placeholder: "",
+        name: "twitterHandleOverride",
+        label: "Seller X (Twitter) Username",
+        type: "text",
+        placeholder: "@username",
         required: false,
-        helper: "",
-        sideField: true,
-      },
-      {
-        name: "brandColorScheme",
-        label: "Color",
-        type: "select",
-        options: [
-          { value: "gray" },
-          { value: "red" },
-          { value: "orange" },
-          { value: "yellow" },
-          { value: "green" },
-          { value: "teal" },
-          { value: "blue" },
-          { value: "cyan" },
-          { value: "purple" },
-          { value: "pink" },
-        ],
-        placeholder: "",
-        required: false,
-        helper: "",
-        sideField: false,
-      },
-      {
-        name: "brandButtonShape",
-        label: "Button shape",
-        type: "select",
-        options: [{ value: "rounded" }, { value: "pill" }, { value: "square" }],
-        placeholder: "",
-        required: false,
-        helper: "",
+        helper:
+          "Override your organization's Twitter username for this checkout.",
         sideField: false,
       },
     ],
@@ -282,16 +246,6 @@ const formInputs = [
           "A buyer will be navigated to this page if they are unable to make a purchase.",
         sideField: false,
       },
-      {
-        name: "twitterHandleOverride",
-        label: "Seller X (Twitter) Username",
-        type: "text",
-        placeholder: "@username",
-        required: false,
-        helper:
-          "Override your organization's Twitter username for this checkout.",
-        sideField: false,
-      },
     ],
   },
 ] as const;
@@ -377,7 +331,7 @@ export const CreateUpdateCheckoutButton: React.FC<
   }, [apiKeysData]);
 
   const [step, setStep] = useState<
-    "info" | "no-detected-extensions" | "branding" | "delivery" | "advanced"
+    "info" | "no-detected-extensions" | "metadata" | "delivery" | "advanced"
   >("info");
   const [contractError, setContractError] = useState<ReactNode | undefined>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -415,7 +369,7 @@ export const CreateUpdateCheckoutButton: React.FC<
     cancelCallbackUrl: checkout?.cancel_callback_url || "",
     brandButtonShape: (checkout?.brand_button_shape as any) || "rounded",
     brandColorScheme: (checkout?.brand_color_scheme as any) || "blue",
-    brandDarkMode: checkout?.brand_dark_mode || false,
+    brandDarkMode: checkout?.brand_dark_mode || true,
     contractArgs: checkout?.contract_args || undefined,
     hideNativeMint: checkout?.hide_native_mint || false,
     listingId: checkout?.listing_id || "",
@@ -580,10 +534,6 @@ export const CreateUpdateCheckoutButton: React.FC<
         ) {
           data.twitterHandleOverride = data.twitterHandleOverride.substring(1);
         }
-        if (data.brandButtonShape) {
-          data.brandButtonShape =
-            ButtonShapeRecord[data.brandButtonShape] || "lg";
-        }
 
         // We need to filter in case an input from a different method has been rendered
         const filteredFunctionArgs = Object.keys(data.mintFunctionArgs)
@@ -641,9 +591,9 @@ export const CreateUpdateCheckoutButton: React.FC<
         return "no-detected-extensions";
       }
       if (prev === "info" || prev === "no-detected-extensions") {
-        return "branding";
+        return "metadata";
       }
-      if (prev === "branding") {
+      if (prev === "metadata") {
         return "delivery";
       }
       if (prev === "delivery") {
@@ -665,14 +615,14 @@ export const CreateUpdateCheckoutButton: React.FC<
 
   const handleBack = () => {
     setStep((prev) => {
-      if (prev === "branding" && !hasDetectedExtensions) {
+      if (prev === "metadata" && !hasDetectedExtensions) {
         return "no-detected-extensions";
       }
-      if (prev === "no-detected-extensions" || prev === "branding") {
+      if (prev === "no-detected-extensions" || prev === "metadata") {
         return "info";
       }
       if (prev === "delivery") {
-        return "branding";
+        return "metadata";
       }
       if (prev === "advanced") {
         return "delivery";
@@ -771,50 +721,6 @@ export const CreateUpdateCheckoutButton: React.FC<
                                 })}
                                 placeholder={field.placeholder}
                               />
-                            ) : field.type === "select" ? (
-                              <>
-                                <Menu>
-                                  {({ isOpen: menuIsOpen }) => (
-                                    <>
-                                      <MenuButton
-                                        as={Button}
-                                        isActive={menuIsOpen}
-                                        variant="outline"
-                                        w="full"
-                                        rightIcon={<FiChevronDown />}
-                                      >
-                                        <Text
-                                          textAlign="left"
-                                          textTransform="capitalize"
-                                        >
-                                          {form.watch(field.name) ||
-                                            field.placeholder}
-                                        </Text>
-                                      </MenuButton>
-                                      <MenuList>
-                                        {field.options.map((option) => (
-                                          <MenuItem
-                                            key={option.value}
-                                            value={option.value}
-                                            textTransform="capitalize"
-                                            onClick={() => {
-                                              form.setValue(
-                                                field.name,
-                                                option.value as any,
-                                                {
-                                                  shouldDirty: true,
-                                                },
-                                              );
-                                            }}
-                                          >
-                                            {option.value}
-                                          </MenuItem>
-                                        ))}
-                                      </MenuList>
-                                    </>
-                                  )}
-                                </Menu>
-                              </>
                             ) : field.type === "switch" ? (
                               <Switch
                                 onChange={(e) => {
@@ -964,15 +870,6 @@ export const CreateUpdateCheckoutButton: React.FC<
                         </FormControl>
                       );
                     })}
-                    {input.step === "branding" && (
-                      <PaymentsPreviewButton
-                        isDarkMode={!!form.watch("brandDarkMode")}
-                        buttonShape={
-                          form.watch("brandButtonShape") || "rounded"
-                        }
-                        colorScheme={form.watch("brandColorScheme") || "red"}
-                      />
-                    )}
                   </Flex>
                 );
               })}
