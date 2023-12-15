@@ -291,37 +291,63 @@ export function useMintToken(
 }
 
 /**
- * Claim tokens to a specific wallet
+ * Hook for claiming a ERC20 tokens from a smart contract.
+ *
+ * Available to use on smart contracts that implement both the ERC20 interface
+ * and the `claim` function,
+ * such as the [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: claimTokens,
- *     isLoading,
- *     error,
- *   } = useClaimToken(contract);
  *
- *   if (error) {
- *     console.error("failed to claim tokens", error);
- *   }
+ * ```jsx
+ * import { useClaimToken, useContract, Web3Button } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: claimToken, isLoading, error } = useClaimToken(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => claimTokens({ to: "{{wallet_address}}", amount: 100 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         claimToken({
+ *           to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+ *           amount: 100, // Amount of token to claim
+ *         })
+ *       }
  *     >
- *       Claim Tokens!
- *     </button>
+ *       Claim Token
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
+ * @param contract - an instance of a `TokenContract`
+ *
  * @returns a mutation object that can be used to tokens to the wallet specified in the params
+ *
+ * #### to (required)
+ *
+ * Likely, you will want to claim the token to the currently connected wallet address.
+ *
+ * You can use the `useAddress` hook to get this value.
+ *
+ * #### amount (required)
+ *
+ * The amount of tokens to be claimed.
+ *
+ * #### checkERC20Allowance (optional)
+ *
+ * Boolean value to check whether the current wallet has enough allowance to pay for claiming the tokens before
+ * attempting to claim the tokens.
+ *
+ * Defaults to `true`.
+ *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
- * @see {@link https://portal.thirdweb.com/react/react.useclaimtoken?utm_source=sdk | Documentation}
+ *
  * @token
  */
 export function useClaimToken(contract: RequiredParam<TokenContract>) {
