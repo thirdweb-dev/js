@@ -2,7 +2,7 @@ import {
   requiredParamInvariant,
   RequiredParam,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../useSDK";
+import { useSDK, useSDKChainId } from "../useSDK";
 import {
   ClaimTokenParams,
   getErc20,
@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import {
   cacheKeys,
+  invalidateBalances,
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
@@ -319,6 +320,51 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
           contractAddress,
           activeChainId,
         ),
+    },
+  );
+}
+
+/**
+ * A hook to transfer native token (of the active chain) to another wallet
+ * 
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: transferNativeToken,
+ *     isLoading,
+ *     error,
+ *   } = useTransferNativeToken();
+ *
+ *   if (error) {
+ *     console.error("failed to transfer tokens", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => transferNativeToken({ to: "{{wallet_address}}", amount: "0.1" })}
+ *     >
+ *       Transfer
+ *     </button>
+ *   );
+ * };
+ * ```
+ * 
+ * @returns a mutation object that can be used to transfer native tokens
+ */
+export function useTransferNativeToken() {
+  const sdk = useSDK();
+  const activeChainId = useSDKChainId();
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: TokenParams) => {
+      const { to, amount } = data;
+      invariant(sdk, "SDK is not initialized");
+      return sdk.wallet.transfer(to, amount);
+    },
+    {
+      onSettled: () => invalidateBalances(queryClient, activeChainId),
     },
   );
 }
