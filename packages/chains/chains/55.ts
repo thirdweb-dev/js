@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://zyx.network/",
   "name": "Zyx Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ZYX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 55,
   "rpc": [
     "https://zyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://55.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.zyx.network/",
     "https://rpc-2.zyx.network/",
     "https://rpc-3.zyx.network/",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Boba BNB Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,19 @@ export default {
     "symbol": "BOBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 56288,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "rpc": [
     "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://56288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bnb.boba.network",
     "https://boba-bnb.gateway.tenderly.co/",
     "https://gateway.tenderly.co/public/boba-bnb",

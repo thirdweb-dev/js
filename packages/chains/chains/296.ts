@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "HashScan",
-      "url": "https://hashscan.io/testnet/dashboard",
-      "standard": "none"
+      "url": "https://hashscan.io/testnet",
+      "standard": "EIP3091"
     },
     {
       "name": "Arkhia Explorer",
@@ -53,12 +53,14 @@ export default {
     "symbol": "HBAR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 296,
   "rpc": [
     "https://hedera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://296.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.hashio.io/api"
   ],
   "shortName": "hedera-testnet",
+  "slip44": 3030,
   "slug": "hedera-testnet",
   "testnet": true
 } as const satisfies Chain;

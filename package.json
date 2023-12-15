@@ -7,13 +7,14 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test --filter=./packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
+    "typedoc": "turbo run typedoc",
     "build:release": "turbo run build --force --filter=./packages/*",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "fix:repo": "manypkg fix",

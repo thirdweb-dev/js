@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,8 +8,11 @@ import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
-import { Theme, fontSize } from "../../../design-system";
+import { fontSize } from "../../../design-system";
 import { RecoveryShareManagement } from "./types";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
   recoveryShareManagement: RecoveryShareManagement;
@@ -23,6 +25,7 @@ type SentEmailInfo = {
 };
 
 export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
+  const locale = useTWLocale().wallets.paperWallet.emailLoginScreen;
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
@@ -119,7 +122,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Sign in" onBack={props.goBack} />
+        <ModalHeader title={locale.title} onBack={props.goBack} />
       </Container>
 
       <Container expand flex="column" center="y">
@@ -128,17 +131,13 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             e.preventDefault();
           }}
         >
-          <div
-            style={{
-              textAlign: "center",
-            }}
-          >
+          <Container flex="column" center="x" px="lg">
             {!isWideModal && <Spacer y="lg" />}
-            <Text>Enter the verification code sent to</Text>
+            <Text>{locale.enterCodeSendTo}</Text>
             <Spacer y="sm" />
             <Text color="primaryText">{email}</Text>
             <Spacer y="xl" />
-          </div>
+          </Container>
 
           <OTPInput
             isInvalid={verifyStatus === "invalid"}
@@ -165,17 +164,17 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               }}
             >
               <Spacer y="xxl" />
-              <Text color="primaryText">New device detected</Text>
+              <Text color="primaryText">{locale.newDeviceDetected}</Text>
               <Spacer y="sm" />
               <Text
+                balance
                 size="sm"
                 multiline
                 style={{
                   maxWidth: "350px",
                 }}
               >
-                Enter the recovery code emailed to you <br /> when you first
-                signed up
+                {locale.enterRecoveryCode}
               </Text>
 
               <Spacer y="lg" />
@@ -191,7 +190,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 }}
                 value={recoveryCode}
                 onChange={(e) => setRecoveryCode(e.target.value)}
-                placeholder="Enter your recovery code"
+                placeholder={locale.enterRecoveryCode}
               />
             </Container>
           )}
@@ -200,8 +199,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             <Container animate="fadein">
               <Spacer y="md" />
               <Text size="sm" color="danger" center>
-                Invalid verification code{" "}
-                {recoveryCodeRequired ? "or recovery code" : ""}
+                {recoveryCodeRequired
+                  ? locale.invalidCodeOrRecoveryCode
+                  : locale.invalidCode}
               </Text>
             </Container>
           )}
@@ -225,7 +225,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                     width: "100%",
                   }}
                 >
-                  Verify
+                  {locale.verify}
                 </Button>
               </Container>
             )}
@@ -239,7 +239,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             {sendEmailStatus === "error" && (
               <>
                 <Text size="sm" center color="danger">
-                  Failed to send verification code
+                  {locale.failedToSendCode}
                 </Text>
               </>
             )}
@@ -253,14 +253,14 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                   textAlign: "center",
                 }}
               >
-                <Text size="sm">Sending verification code</Text>
+                <Text size="sm">{locale.sendingCode}</Text>
                 <Spinner size="xs" color="secondaryText" />
               </Container>
             )}
 
             {typeof sendEmailStatus !== "string" && (
               <LinkButton onClick={sendEmail} type="button">
-                Resend verification code
+                {locale.resendCode}
               </LinkButton>
             )}
           </Container>
@@ -270,14 +270,17 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   );
 };
 
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.colors.accentText};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  text-align: center;
-  width: 100%;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;
+const LinkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    color: theme.colors.accentText,
+    fontSize: fontSize.sm,
+    cursor: "pointer",
+    textAlign: "center",
+    width: "100%",
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+  };
+});

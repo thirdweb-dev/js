@@ -4,7 +4,6 @@ export default {
   "chainId": 8654,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbCBBH4dFHGr8u1yQspCieQG9hLcPFNYdRx1wnVsX8hUw",
     "width": 512,
@@ -18,9 +17,10 @@ export default {
     "symbol": "TOKI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8654,
   "rpc": [
     "https://toki-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8654.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.buildwithtoki.com/v0/rpc"
   ],
   "shortName": "toki",

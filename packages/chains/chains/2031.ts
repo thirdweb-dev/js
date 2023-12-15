@@ -25,9 +25,8 @@ export default {
     "symbol": "CFG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2031,
   "rpc": [
-    "https://centrifuge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.parachain.centrifuge.io"
   ],
   "shortName": "cfg",

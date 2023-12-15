@@ -6,7 +6,13 @@ export default {
     {
       "name": "Palettescan",
       "url": "https://palettescan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -24,9 +30,10 @@ export default {
     "symbol": "PLT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1718,
   "rpc": [
     "https://palette-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1718.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palette-rpc.com:22000"
   ],
   "shortName": "PCM",

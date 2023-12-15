@@ -13,12 +13,14 @@ export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
   /**
    * Set a custom title for the button
-   * @default "Connect Wallet"
+   *
+   * The default is `"Connect Wallet"`
    */
   buttonTitle?: string;
   /**
    * Set a custom title for the Connect Wallet modal
-   * @default "Choose your wallet"
+   *
+   * The default is `"Choose your wallet"`
    */
   modalTitle?: string;
   /**
@@ -102,9 +104,12 @@ export const ConnectWalletButton = ({
         onPress={onConnectWalletPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="buttonTextColor">
+        <Text variant="bodyLargeBold" color="buttonTextColor">
           {showButtonSpinner ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
+            <ActivityIndicator
+              size="small"
+              color={appTheme.colors.buttonTextColor}
+            />
           ) : buttonTitle ? (
             buttonTitle
           ) : (

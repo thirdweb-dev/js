@@ -1,0 +1,67 @@
+{
+  "name": "@thirdweb-dev/merkletree",
+  "version": "0.2.0",
+  "main": "dist/thirdweb-dev-merkletree.cjs.js",
+  "module": "dist/thirdweb-dev-merkletree.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-merkletree.esm.js",
+      "default": "./dist/thirdweb-dev-merkletree.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@thirdweb-dev/crypto": "workspace:*",
+    "buffer": "^6.0.3",
+    "buffer-reverse": "^1.0.1",
+    "treeify": "^1.1.0"
+  },
+  "devDependencies": {
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/benchmark": "^2.1.4",
+    "@types/treeify": "^1.0.2",
+    "benchmark": "^2.1.4",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6",
+    "circomlibjs": "^0.1.7",
+    "crypto": "0.0.3",
+    "ethereum-cryptography": "^1.0.3",
+    "ethereumjs-util": "^7.0.9",
+    "keccak256": "^1.0.6",
+    "sha1": "^1.1.1",
+    "tape": "^4.9.2"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push",
+    "test": "bun test && node test/MerkleTree.js",
+    "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
+    "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
+    "benchmark:sha256": "bun benchmark/sha256.ts",
+    "benchmark": "bun run benchmark:aes-encrypt && bun run benchmark:aes-decrypt && bun run benchmark:sha256"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

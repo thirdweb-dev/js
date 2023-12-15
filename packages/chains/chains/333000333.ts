@@ -6,7 +6,13 @@ export default {
     {
       "name": "explorer",
       "url": "https://subnets.avax.network/meld",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+        "width": 4000,
+        "height": 4000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -24,12 +30,14 @@ export default {
     "symbol": "gMELD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 333000333,
   "rpc": [
     "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333000333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/meld/mainnet/rpc"
   ],
   "shortName": "meld",
   "slug": "meld",
-  "testnet": false
+  "testnet": false,
+  "title": "Meld Mainnet"
 } as const satisfies Chain;

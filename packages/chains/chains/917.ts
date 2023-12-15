@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.thefirechain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRnnw2gtbU9TWJMLJ6tks7SN6HQV5rRugeoyN6csTYHt1",
     "width": 512,
@@ -20,9 +19,10 @@ export default {
     "symbol": "FIRE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 917,
   "rpc": [
     "https://rinia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://917.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinia.rpc1.thefirechain.com"
   ],
   "shortName": "tfire",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Bobaopera",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BOBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 301,
   "rpc": [
     "https://bobaopera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://301.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobaopera.boba.network",
     "wss://wss.bobaopera.boba.network",
     "https://replica.bobaopera.boba.network",

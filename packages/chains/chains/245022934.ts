@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
     "width": 512,
@@ -23,14 +22,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://neonevm.org",
-  "name": "Neon EVM MainNet",
+  "name": "Neon EVM Mainnet",
   "nativeCurrency": {
     "name": "Neon",
     "symbol": "NEON",
     "decimals": 18
   },
-  "redFlags": [],
-  "rpc": [],
+  "networkId": 245022934,
+  "rpc": [
+    "https://neon-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://245022934.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://neon-proxy-mainnet.solana.p2p.org"
+  ],
   "shortName": "neonevm-mainnet",
   "slug": "neon-evm",
   "testnet": false

@@ -10,18 +10,32 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
+export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
 export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
-export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
-export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
+export {
+  NetworkSelector,
+  type NetworkSelectorProps,
+  type NetworkSelectorChainProps,
+} from "../wallet/ConnectWallet/NetworkSelector";
+
+export type { DropDownPosition } from "../wallet/ConnectWallet/Details";
 
 // UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export * from "./components/Web3Button";
-export { ThirdwebProvider } from "./providers/thirdweb-provider";
+export {
+  Web3Button,
+  type Web3ButtonProps,
+  type ActionFn,
+} from "./components/Web3Button";
+export {
+  ThirdwebProvider,
+  type DefaultChains,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider";
 
-export type { MediaRendererProps } from "./components/types";
+export type { MediaRendererProps, SharedMediaProps } from "./components/types";
 
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
@@ -33,6 +47,11 @@ export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useFrameWallet } from "./hooks/wallets/useFrame";
 export { useBloctoWallet } from "./hooks/wallets/useBloctoWallet";
+export {
+  useEmbeddedWallet,
+  useEmbeddedWalletUserEmail,
+} from "./hooks/wallets/useEmbeddedWallet";
+export { useEmbeddedWalletSendVerificationEmail } from "./hooks/useEmbeddedWalletSendVerificationEmail";
 
 export {
   usePaperWalletUserEmail,
@@ -44,8 +63,19 @@ export {
   useWalletConnectV1,
 } from "./hooks/wallets/useWalletConnect";
 
+export {
+  defaultTokens,
+  type SupportedTokens,
+} from "../wallet/ConnectWallet/defaultTokens";
+
+export {
+  oneKeyWallet,
+  type OneKeyWalletConfigOptions,
+} from "../wallet/wallets/oneKey/oneKeyWallet";
+
 // react-core
 export * from "@thirdweb-dev/react-core";
+
 // wallets
 export {
   LocalWallet,
@@ -56,6 +86,7 @@ export {
   PhantomWallet,
   RainbowWallet,
   MetaMaskWallet,
+  OKXWallet,
   TrustWallet,
   CoinbaseWallet,
   BloctoWallet,
@@ -66,4 +97,9 @@ export {
   SignerWallet,
   InjectedWallet,
   setWalletAnalyticsEnabled,
+  CoreWallet,
+  OneKeyWallet,
+  CryptoDefiWallet,
+  RabbyWallet,
+  Coin98Wallet,
 } from "@thirdweb-dev/wallets";

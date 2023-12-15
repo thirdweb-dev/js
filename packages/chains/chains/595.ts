@@ -25,13 +25,15 @@ export default {
     "symbol": "mACA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 595,
   "rpc": [
     "https://acala-mandala-testnet-tc9.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://595.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-tc9.aca-staging.network",
     "wss://eth-rpc-tc9.aca-staging.network"
   ],
   "shortName": "maca",
+  "slip44": 595,
   "slug": "acala-mandala-testnet-tc9",
   "testnet": true
 } as const satisfies Chain;

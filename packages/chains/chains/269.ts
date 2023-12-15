@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://myhpbwallet.com/"
   ],
-  "features": [],
   "infoURL": "https://hpb.io",
   "name": "High Performance Blockchain",
   "nativeCurrency": {
@@ -20,13 +19,15 @@ export default {
     "symbol": "HPB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 269,
   "rpc": [
     "https://high-performance-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://269.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hpbnode.com",
     "wss://ws.hpbnode.com"
   ],
   "shortName": "hpb",
+  "slip44": 269,
   "slug": "high-performance-blockchain",
   "testnet": false
 } as const satisfies Chain;

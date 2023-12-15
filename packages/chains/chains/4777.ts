@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-explorer.blackfort.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "TBXN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4777,
   "rpc": [
     "https://blackfort-exchange-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.blackfort.network/rpc"
   ],
   "shortName": "TBXN",

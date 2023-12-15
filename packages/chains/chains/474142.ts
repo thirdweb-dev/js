@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.openchain.live",
   "name": "OpenChain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "OPC",
     "decimals": 10
   },
-  "redFlags": [],
+  "networkId": 474142,
   "rpc": [
     "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://474142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
   ],
   "shortName": "oc",

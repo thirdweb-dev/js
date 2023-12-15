@@ -1,5 +1,4 @@
 import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
@@ -18,12 +17,11 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { VoteType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -36,6 +34,7 @@ import {
   ProposalVote,
   VoteSettings,
 } from "../../types/vote";
+import { VoteType } from "../../enums/vote/Vote";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -51,6 +50,7 @@ import {
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;
@@ -301,6 +301,9 @@ export class Vote implements UpdateableNetwork {
   public async balanceOfToken(
     tokenAddress: AddressOrEns,
   ): Promise<CurrencyValue> {
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       await resolveAddress(tokenAddress),
       ERC20Abi,

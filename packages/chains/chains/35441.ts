@@ -6,11 +6,16 @@ export default {
     {
       "name": "Q explorer",
       "url": "https://explorer.q.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+        "width": 585,
+        "height": 603,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
     "width": 585,
@@ -24,9 +29,10 @@ export default {
     "symbol": "Q",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 35441,
   "rpc": [
     "https://q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35441.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.q.org"
   ],
   "shortName": "q",

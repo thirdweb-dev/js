@@ -4,7 +4,6 @@ export default {
   "chainId": 64,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ellaism.org",
   "name": "Ellaism",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "ELLA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 64,
   "rpc": [
     "https://ellaism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://64.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.ellaism.org"
   ],
   "shortName": "ellaism",
+  "slip44": 163,
   "slug": "ellaism",
   "testnet": false
 } as const satisfies Chain;

@@ -4,7 +4,6 @@ export default {
   "chainId": 3269,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://arabianchain.org",
   "name": "Dubxcoin network",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "DUBX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3269,
   "rpc": [
     "https://dubxcoin-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3269.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcmain.arabianchain.org"
   ],
   "shortName": "dubx",

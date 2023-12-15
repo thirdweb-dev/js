@@ -20,11 +20,6 @@ import {
 import { AbstractWallet } from "../../evm/wallets/abstract";
 import { formatJsonRpcResult } from "@walletconnect/jsonrpc-utils";
 
-type WalletConnectV2WalletConfig = Omit<
-  WalletConnectReceiverConfig,
-  "enableConnectApp"
->;
-
 export class WalletConnectV2Handler extends WalletConnectHandler {
   #core: ICore;
   #wcWallet: IWeb3Wallet | undefined;
@@ -33,19 +28,28 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   #activeProposal: Web3WalletTypes.SessionProposal | undefined;
   #activeRequestEvent: Web3WalletTypes.SessionRequest | undefined;
 
-  constructor(options: WalletConnectV2WalletConfig) {
-    super();
+  constructor(options: WalletConnectReceiverConfig, wallet: AbstractWallet) {
+    super(wallet);
 
-    this.#wcMetadata = options?.walletConnectWalletMetadata || {
-      name: "Thirdweb Smart Wallet",
-      description: "Thirdweb Smart Wallet",
-      url: "https://thirdweb.com",
-      icons: ["https://thirdweb.com/favicon.ico"],
+    const defaultWCReceiverConfig = {
+      walletConnectWalletMetadata: {
+        name: "Thirdweb Smart Wallet",
+        description: "Thirdweb Smart Wallet",
+        url: "https://thirdweb.com",
+        icons: ["https://thirdweb.com/favicon.ico"],
+      },
+      walletConnectV2ProjectId: TW_WC_PROJECT_ID,
+      walletConnectV2RelayUrl: WC_RELAY_URL,
+      ...(options?.walletConnectReceiver === true
+        ? {}
+        : options?.walletConnectReceiver),
     };
 
+    this.#wcMetadata = defaultWCReceiverConfig.walletConnectWalletMetadata;
+
     this.#core = new Core({
-      projectId: options?.walletConnectV2ProjectId || TW_WC_PROJECT_ID,
-      relayUrl: options?.walletConnectV2RelayUrl || WC_RELAY_URL,
+      projectId: defaultWCReceiverConfig.walletConnectV2ProjectId,
+      relayUrl: defaultWCReceiverConfig.walletConnectV2RelayUrl,
     });
   }
 
@@ -71,7 +75,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     await this.#wcWallet.core.pairing.pair({ uri: wcUri });
   }
 
-  async approveSession(wallet: AbstractWallet) {
+  async approveSession() {
     if (!this.#wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
@@ -82,7 +86,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       throw new Error("Please, pass a valid proposal.");
     }
 
-    const account = await wallet.getAddress();
+    const account = await this.wallet.getAddress();
 
     const { id, params } = this.#activeProposal;
     const { requiredNamespaces, relays } = params;
@@ -133,7 +137,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     });
   }
 
-  async approveEIP155Request(wallet: AbstractWallet) {
+  async approveEIP155Request() {
     if (!this.#activeRequestEvent) {
       return;
     }
@@ -145,7 +149,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
-        const signedMessage = await wallet.signMessage(message || ""); // TODO: handle empty message
+        const signedMessage = await this.wallet.signMessage(message || ""); // TODO: handle empty message
 
         response = formatJsonRpcResult(id, signedMessage);
         break;
@@ -162,7 +166,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       //   const signedData = await wallet._signTypedData(domain, types, data);
       //   return formatJsonRpcResult(id, signedData);
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-        const signer = await wallet.getSigner();
+        const signer = await this.wallet.getSigner();
         const sendTransaction = request.params[0];
 
         const tx = await signer.sendTransaction(sendTransaction);
@@ -172,7 +176,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         response = formatJsonRpcResult(id, transactionHash);
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        const signerSign = await wallet.getSigner();
+        const signerSign = await this.wallet.getSigner();
         const signTransaction = request.params[0];
 
         const signature = await signerSign.signTransaction(signTransaction);

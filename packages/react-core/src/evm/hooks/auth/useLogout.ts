@@ -10,9 +10,18 @@ import invariant from "tiny-invariant";
  *
  * @returns - A function to invoke to logout.
  *
- * @see {@link https://portal.thirdweb.com/react/react.uselogout?utm_source=sdk | Documentation}
+ * @example
+ * ```tsx
+ * function App() {
+ *  const { logout, isLoading } = useLogout();
  *
- * @beta
+ *  return (
+ *    <button onClick={() => logout()}>
+ *      {isLoading ? "Logging out..." : "Logout"}
+ *    </button>
+ *  );
+ *}
+ * ```
  */
 export function useLogout() {
   const queryClient = useQueryClient();

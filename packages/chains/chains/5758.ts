@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.satoshichain.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRegpZQBW4o1imYNsW3d27MQjygBSU23Gf6JKje26nvs7",
     "width": 1251,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SATS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5758,
   "rpc": [
     "https://satoshichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5758.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.satoshichain.io"
   ],
   "shortName": "satst",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.nervos.org",
   "name": "Godwoken Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "pCKB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 71402,
   "rpc": [
     "https://godwoken.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://71402.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://v1.mainnet.godwoken.io/rpc"
   ],
   "shortName": "gw-mainnet-v1",

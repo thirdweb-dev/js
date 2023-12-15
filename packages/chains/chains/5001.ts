@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.testnet.mantle.xyz"
   ],
-  "features": [],
   "infoURL": "https://mantle.xyz",
   "name": "Mantle Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "MNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5001,
   "rpc": [
     "https://mantle-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.mantle.xyz"
   ],
   "shortName": "mantle-testnet",

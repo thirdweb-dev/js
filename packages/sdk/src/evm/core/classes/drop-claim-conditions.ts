@@ -10,7 +10,6 @@ import type {
   IERC20Metadata,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -35,7 +34,6 @@ import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
-import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -55,8 +53,9 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
+import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -503,6 +502,9 @@ export class DropClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const ERC20Abi = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
@@ -552,7 +554,7 @@ export class DropClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
+   * @param walletAddress - the wallet address to check
    * @returns the total supply claimed
    */
   public async getSupplyClaimedByWallet(
@@ -890,9 +892,9 @@ export class DropClaimConditions<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - The address to claim to
+   * @param quantity - The quantity to claim
+   * @param options - Options to override the claim transaction
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
@@ -929,7 +931,7 @@ export class DropClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
@@ -944,7 +946,7 @@ export class DropClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (
@@ -953,7 +955,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
     return (
@@ -968,7 +970,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
     return (

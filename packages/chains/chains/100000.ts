@@ -4,7 +4,6 @@ export default {
   "chainId": 100000,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.quarkchain.io",
   "name": "QuarkChain Mainnet Root",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "QKC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 100000,
   "rpc": [
     "https://quarkchain-root.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://100000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://jrpc.mainnet.quarkchain.io:38391"
   ],
   "shortName": "qkc-r",

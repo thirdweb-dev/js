@@ -2,6 +2,9 @@ import { useConnect } from "@thirdweb-dev/react-core";
 import { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
+/**
+ * @deprecated use the `useWalletConnect` hook instead
+ */
 export function useWalletConnectV1() {
   const connect = useConnect();
   return useCallback(

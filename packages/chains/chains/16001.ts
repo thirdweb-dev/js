@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.metadot.network/"
   ],
-  "features": [],
   "infoURL": "https://metadot.network",
   "name": "MetaDot Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "MTTest",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16001,
   "rpc": [
     "https://metadot-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.metadot.network"
   ],
   "shortName": "mtttest",

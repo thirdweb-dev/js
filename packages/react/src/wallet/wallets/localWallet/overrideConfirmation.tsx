@@ -7,17 +7,19 @@ import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { iconSize } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
   onBack: () => void;
   meta: WalletConfig["meta"];
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet.warningScreen;
   const isCompact = useContext(ModalConfigCtx).modalSize === "compact";
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title="Warning" />
+        <ModalHeader onBack={props.onBack} title={locale.title} />
       </Container>
 
       <Container p={isCompact ? "lg" : "xxl"} expand center="y" flex="column">
@@ -27,9 +29,8 @@ export const OverrideConfirmation: React.FC<{
 
         <Spacer y="xl" />
 
-        <Text multiline center>
-          Your current wallet will be deleted if you create a new wallet. Backup
-          wallet to your device before creating a new wallet
+        <Text multiline center balance>
+          {locale.warning}
         </Text>
 
         <Spacer y="lg" />
@@ -41,7 +42,7 @@ export const OverrideConfirmation: React.FC<{
           }}
         >
           <Button variant="accent" fullWidth onClick={props.onBackup}>
-            Backup wallet
+            {locale.backupWallet}
           </Button>
         </Container>
       </Container>

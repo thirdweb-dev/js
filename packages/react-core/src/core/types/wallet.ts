@@ -43,13 +43,15 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
 
   /**
    * If true, this wallet will be tagged as "recommended" in ConnectWallet Modal and will be shown at the top of the list
-   * @default false
+   *
+   * By default is set to `false`
    */
   recommended?: boolean;
 
   /**
    * If the wallet can sign transactions without user interaction, set this to true.
-   * @default false
+   *
+   * By default is set to `false`
    */
   isHeadless?: boolean;
 };
@@ -154,7 +156,7 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * Called when the wallet is connected but it's
    * part of another wallet's connection flow.
-   * @param walleInstance the instance of the connected wallet
+   * @param walleInstance - the instance of the connected wallet
    */
   onLocallyConnected?: (walleInstance: WalletInstance) => void;
 };

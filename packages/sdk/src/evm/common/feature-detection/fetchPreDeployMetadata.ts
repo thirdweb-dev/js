@@ -9,8 +9,8 @@ import { fetchRawPredeployMetadata } from "./fetchRawPredeployMetadata";
 /**
  * Fetch the metadata coming from CLI, this is before deploying or releasing the contract.
  * @internal
- * @param publishMetadataUri
- * @param storage
+ * @param publishMetadataUri - The publish metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function fetchPreDeployMetadata(
   publishMetadataUri: string,

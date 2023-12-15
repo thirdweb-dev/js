@@ -1,5 +1,4 @@
 import type { ERC20Base, PackVRFDirect } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import {
   ITokenBundle,
@@ -8,7 +7,7 @@ import {
   PackOpenedEventObject,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, utils, type BigNumberish } from "ethers";
+import { BigNumber, utils, type BigNumberish, ContractInterface } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -23,7 +22,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractEvents } from "./contract-events";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Transaction } from "./transactions";
 
@@ -72,12 +71,14 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * const receipt = await contract.pack.open(tokenId, amount);
    * ```
    *
-   * @remarks Open a pack using Chainlink VRFs random number generation
-   * @remarks This will return a transaction result with the requestId of the open request, NOT the contents of the pack
-   * @remarks To get the contents of the pack, you must call claimRewards once the VRF request has been fulfilled
-   * @remarks You can use the canClaimRewards method to check if the VRF request has been fulfilled
-   * @param tokenId
-   * @param amount
+   * @remarks
+   * Open a pack using Chainlink VRFs random number generation
+   * This will return a transaction result with the requestId of the open request, NOT the contents of the pack
+   * To get the contents of the pack, you must call claimRewards once the VRF request has been fulfilled
+   * You can use the canClaimRewards method to check if the VRF request has been fulfilled
+   *
+   * @param tokenId - the id of the pack to open
+   * @param amount - Optional: the amount of packs to open, defaults to 1
    * @returns
    * @twfeature PackVRF
    */
@@ -209,7 +210,9 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * const unsubscribe = await contract.pack.addPackOpenEventListener((packId, openerAddress, rewards) => {
    *  console.log(`Pack ${packId} was opened by ${openerAddress} and contained:`, rewards);
    * });
-   * @param callback the listener to call when a pack is opened
+   * ```
+   *
+   * @param callback - the listener to call when a pack is opened
    * @returns a unsubscribe function to cleanup the listener
    * @twfeature PackVRF
    */
@@ -239,7 +242,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * ```javascript
    * const canClaim = await contract.pack.canClaimRewards("{{wallet_address}}");
    * ```
-   * @param claimerAddress Optional: the address to check if they can claim rewards, defaults to the connected address
+   * @param claimerAddress - Optional: the address to check if they can claim rewards, defaults to the connected address
    * @returns whether the connected address can claim rewards after opening a pack
    * @twfeature PackVRF
    */
@@ -263,9 +266,9 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * const { id } = await contract.pack.openAndClaim(packId, amount);
    * ```
    *
-   * @param packId The id of the pack to open
-   * @param amount Optional: the amount of packs to open, defaults to 1
-   * @param gasLimit Optional: the gas limit to use for the VRF callback transaction, defaults to 500000
+   * @param packId - The id of the pack to open
+   * @param amount - Optional: the amount of packs to open, defaults to 1
+   * @param gasLimit - Optional: the gas limit to use for the VRF callback transaction, defaults to 500000
    * @returns
    * @twfeature PackVRF
    */
@@ -309,7 +312,12 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async getLinkBalance(): Promise<CurrencyValue> {
-    return this.getLinkContract().balanceOf(this.contractWrapper.address);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
+    return this.getLinkContract(ERC20Abi).balanceOf(
+      this.contractWrapper.address,
+    );
   }
 
   /**
@@ -321,14 +329,20 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * await contract.pack.transferLink(amount);
    * ```
    *
-   * @param amount the amount of LINK to transfer to the contract
+   * @param amount - the amount of LINK to transfer to the contract
    * @twfeature PackVRF
    */
   public async transferLink(amount: Amount) {
-    await this.getLinkContract().transfer(this.contractWrapper.address, amount);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
+    await this.getLinkContract(ERC20Abi).transfer(
+      this.contractWrapper.address,
+      amount,
+    );
   }
 
-  private getLinkContract(): Erc20 {
+  private getLinkContract(ERC20Abi: ContractInterface): Erc20 {
     const linkAddress = LINK_TOKEN_ADDRESS[this.chainId];
     if (!linkAddress) {
       throw new Error(

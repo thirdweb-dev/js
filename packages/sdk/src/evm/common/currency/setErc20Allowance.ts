@@ -1,9 +1,11 @@
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { BigNumber } from "ethers";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { isNativeToken } from "./isNativeToken";
 
+/**
+ * @internal
+ */
 export async function setErc20Allowance(
   contractToApprove: ContractWrapper<any>,
   value: BigNumber,
@@ -13,6 +15,9 @@ export async function setErc20Allowance(
   if (isNativeToken(currencyAddress)) {
     overrides["value"] = value;
   } else {
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const signer = contractToApprove.getSigner();
     const provider = contractToApprove.getProvider();
     const erc20 = new ContractWrapper<IERC20>(

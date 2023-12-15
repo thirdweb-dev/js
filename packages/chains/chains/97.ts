@@ -23,20 +23,22 @@ export default {
   "name": "BNB Smart Chain Testnet",
   "nativeCurrency": {
     "name": "BNB Chain Native Token",
-    "symbol": "BNB",
+    "symbol": "tBNB",
     "decimals": 18
   },
+  "networkId": 97,
   "redFlags": [],
   "rpc": [
     "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://bsc-testnet.publicnode.com",
-    "https://bsc-testnet.publicnode.com",
-    "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
-    "https://data-seed-prebsc-1-s3.bnbchain.org:8545",
-    "https://data-seed-prebsc-2-s2.bnbchain.org:8545",
-    "https://data-seed-prebsc-1-s2.bnbchain.org:8545",
+    "https://97.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://data-seed-prebsc-1-s1.bnbchain.org:8545",
     "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
-    "https://data-seed-prebsc-1-s1.bnbchain.org:8545"
+    "https://data-seed-prebsc-1-s2.bnbchain.org:8545",
+    "https://data-seed-prebsc-2-s2.bnbchain.org:8545",
+    "https://data-seed-prebsc-1-s3.bnbchain.org:8545",
+    "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
+    "https://bsc-testnet.publicnode.com",
+    "wss://bsc-testnet.publicnode.com"
   ],
   "shortName": "bnbt",
   "slug": "binance-testnet",

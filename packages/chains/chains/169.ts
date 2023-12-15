@@ -31,9 +31,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 169,
   "rpc": [
     "https://manta-pacific.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://169.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pacific-rpc.manta.network/http"
   ],
   "shortName": "manta",

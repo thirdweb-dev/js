@@ -2,7 +2,6 @@ import type {
   IERC20,
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
@@ -14,7 +13,7 @@ import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -42,6 +41,7 @@ import { ADMIN_ROLE } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Split implements UpdateableNetwork {
   static contractRoles = ADMIN_ROLE;
 
@@ -247,6 +247,9 @@ export class Split implements UpdateableNetwork {
       resolveAddress(tokenAddress),
       resolveAddress(walletAddress),
     ]);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       resolvedToken,
       ERC20Abi,

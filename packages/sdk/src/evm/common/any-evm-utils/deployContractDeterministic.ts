@@ -1,19 +1,19 @@
 import { BigNumber, type PopulatedTransaction, type Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { isContractDeployed } from "./isContractDeployed";
 
 /**
  * Deploy a contract at a deterministic address, using Create2 method
  * Address depends on the Create2 factory address.
  *
- * @public
+ * @internal
  *
- * @param signer
- * @param bytecode
- * @param encodedArgs
- * @param create2FactoryAddress
+ * @param signer - The signer to use
+ * @param bytecode - The bytecode to deploy
+ * @param encodedArgs - The encoded constructor args to use
+ * @param create2FactoryAddress - The create2 factory address to use
  */
 export async function deployContractDeterministic(
   signer: Signer,

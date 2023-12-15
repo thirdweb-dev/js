@@ -22,6 +22,8 @@ export {
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
+export { usePersonalWalletAddress } from "./hooks/usePersonalWalletAddress";
+export { useWalletConnectHandler } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -31,6 +33,7 @@ export {
   useChainId,
   useActiveChain,
   useChain,
+  useBalanceForAddress,
 } from "./hooks/wallet";
 
 // Utilities and Others
@@ -192,6 +195,7 @@ export {
   useTransferToken,
   useTransferBatchToken,
   useBurnToken,
+  useTransferNativeToken,
 } from "./hooks/async/token";
 
 // account factory
@@ -216,32 +220,30 @@ export {
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export {
-  useLogin,
-  useLogout,
-  useUser,
-  useAuth,
-  useSwitchAccount,
-} from "./hooks/auth";
-export type { UserWithData } from "./hooks/auth";
+export { useAuth } from "./hooks/auth/useAuth";
+export { useLogin } from "./hooks/auth/useLogin";
+export { useLogout } from "./hooks/auth/useLogout";
+export { useUser } from "./hooks/auth/useUser";
+export { useSwitchAccount } from "./hooks/auth/useSwitchAccount";
+
+export type { UserWithData } from "./hooks/auth/useUser";
 
 // contract hooks
-export {
-  useEditionDrop,
-  useEdition,
-  useNFTDrop,
-  useMarketplace,
-  useNFTCollection,
-  usePack,
-  useToken,
-  useTokenDrop,
-  useVote,
-  useSplit,
-  useMultiwrap,
-  useSignatureDrop,
-} from "./hooks/contracts";
+export { useEditionDrop } from "./hooks/contracts/useEditionDrop";
+export { useEdition } from "./hooks/contracts/useEdition";
+export { useNFTDrop } from "./hooks/contracts/useNFTDrop";
+export { useMarketplace } from "./hooks/contracts/useMarketplace";
+export { useNFTCollection } from "./hooks/contracts/useNFTCollection";
+export { usePack } from "./hooks/contracts/usePack";
+export { useToken } from "./hooks/contracts/useToken";
+export { useTokenDrop } from "./hooks/contracts/useTokenDrop";
+export { useVote } from "./hooks/contracts/useVote";
+export { useSplit } from "./hooks/contracts/useSplit";
+export { useMultiwrap } from "./hooks/contracts/useMultiwrap";
+export { useSignatureDrop } from "./hooks/contracts/useSignatureDrop";
 
-export { useStorageUpload, useStorage } from "./hooks/storage";
+export { useStorage } from "./hooks/storage/useStorage";
+export { useStorageUpload } from "./hooks/storage/useStorageUpload";
 export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
@@ -257,6 +259,13 @@ export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // utils
 export { invalidateContractAndBalances } from "./utils/cache-keys";
+export {
+  isEnsName,
+  isPossibleEVMAddress,
+  shortenAddress,
+  shortenIfAddress,
+  shortenString,
+} from "./utils/addresses";
 
 // types
 export type {

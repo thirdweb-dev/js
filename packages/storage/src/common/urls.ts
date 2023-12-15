@@ -1,6 +1,7 @@
 import CIDTool from "cid-tool";
 import { GatewayUrls } from "../types";
 import { getProcessEnv } from "./process";
+import { sha256HexSync } from "@thirdweb-dev/crypto";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
@@ -10,7 +11,7 @@ const TW_GATEWAY_URLS = [
 
 /**
  * @internal
- * @param url
+ * @param url - the url to check
  * @returns
  */
 export function isTwGatewayUrl(url: string): boolean {
@@ -135,13 +136,8 @@ export function prepareGatewayUrls(
           if (typeof window !== "undefined") {
             throw new Error("Cannot use secretKey in browser context");
           }
-          // this is on purpose because we're using the crypto module only in node
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const crypto = require("crypto");
-          const hashedSecretKey = crypto
-            .createHash("sha256")
-            .update(secretKey)
-            .digest("hex");
+
+          const hashedSecretKey = sha256HexSync(secretKey);
           const derivedClientId = hashedSecretKey.slice(0, 32);
           return url.replace("{clientId}", derivedClientId);
         } else if (url.includes("{clientId}")) {

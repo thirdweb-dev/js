@@ -4,7 +4,6 @@ export default {
   "chainId": 200625,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://akroma.io",
   "name": "Akroma",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "AKA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 200625,
   "rpc": [
     "https://akroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://200625.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://remote.akroma.io"
   ],
   "shortName": "aka",
+  "slip44": 200625,
   "slug": "akroma",
   "testnet": false
 } as const satisfies Chain;

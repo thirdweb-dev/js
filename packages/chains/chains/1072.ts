@@ -13,7 +13,6 @@ export default {
     "https://evm-toolkit.evm.testnet.shimmer.network",
     "https://evm-faucet.testnet.shimmer.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
     "width": 720,
@@ -21,18 +20,17 @@ export default {
     "format": "png"
   },
   "infoURL": "https://shimmer.network",
-  "name": "ShimmerEVM Testnet",
+  "name": "ShimmerEVM Testnet Deprecated 1072",
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
-    "decimals": 18
+    "decimals": 6
   },
-  "redFlags": [],
-  "rpc": [
-    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.evm.testnet.shimmer.network"
-  ],
-  "shortName": "shimmerevm-testnet",
-  "slug": "shimmerevm-testnet",
-  "testnet": true
+  "networkId": 1072,
+  "rpc": [],
+  "shortName": "shimmerevm-testnet-deprecated-1072",
+  "slug": "shimmerevm-testnet-deprecated-1072",
+  "status": "deprecated",
+  "testnet": true,
+  "title": "ShimmerEVM Testnet Deprecated 1072"
 } as const satisfies Chain;

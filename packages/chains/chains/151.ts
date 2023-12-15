@@ -4,7 +4,6 @@ export default {
   "chainId": 151,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://redbelly.network",
   "name": "Redbelly Network Mainnet",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "RBNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 151,
   "rpc": [],
   "shortName": "rbn",
   "slug": "redbelly-network",

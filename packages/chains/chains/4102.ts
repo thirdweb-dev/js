@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRAGPFhvQiXgoJkui7WHajpKctGFrJNhHqzYdwcWt5V3Z",
     "width": 1024,
@@ -24,12 +23,14 @@ export default {
     "symbol": "AIOZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4102,
   "rpc": [
     "https://aioz-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-ds.testnet.aioz.network"
   ],
   "shortName": "aioz-testnet",
+  "slip44": 60,
   "slug": "aioz-network-testnet",
   "testnet": true
 } as const satisfies Chain;

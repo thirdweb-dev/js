@@ -3,6 +3,7 @@ import { Input } from "./formElements";
 import { Container } from "./basic";
 import { media, fontSize, spacing } from "../design-system";
 import styled from "@emotion/styled";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export function OTPInput(props: {
   digits: number;
@@ -11,9 +12,9 @@ export function OTPInput(props: {
   setValue: (value: string) => void;
   onEnter?: () => void;
 }) {
-  const otp = props.value.split("").map(Number);
+  const otp = props.value.split("");
 
-  const setOTP = (newOTP: number[]) => {
+  const setOTP = (newOTP: string[]) => {
     props.setValue(newOTP.join(""));
   };
 
@@ -37,18 +38,13 @@ export function OTPInput(props: {
             ref={(e) => (boxEls.current[i] = e)}
             key={i}
             value={otp[i] ?? ""}
-            type="number"
-            pattern="[0-9]*"
+            type="text"
+            pattern="[a-zA-Z0-9]*"
             variant="outline"
-            inputMode="numeric"
+            inputMode="text"
             onPaste={(e) => {
               const pastedData = e.clipboardData.getData("text/plain");
-              const newOTP = pastedData
-                .slice(0, props.digits)
-                .split("")
-                .filter((n) => /\d/.test(n))
-                .map(Number);
-
+              const newOTP = pastedData.slice(0, props.digits).split("");
               setOTP(newOTP);
               e.preventDefault();
             }}
@@ -110,7 +106,7 @@ export function OTPInput(props: {
               const newOTP = [...otp];
               const index = i > inputToFocusIndex - 1 ? inputToFocusIndex : i;
 
-              newOTP[index] = Number(value);
+              newOTP[index] = value;
               setOTP(newOTP);
             }}
           />
@@ -120,20 +116,23 @@ export function OTPInput(props: {
   );
 }
 
-const OTPInputBox = /* @__PURE__ */ styled(Input)`
-  appearance: none;
-  -webkit-appearance: none;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: ${fontSize.md};
-  padding: ${spacing.xs};
-  ${media.mobile} {
-    width: 35px;
-    height: 35px;
-  }
-  &[data-verify-status="invalid"] {
-    color: ${(p) => p.theme.colors.danger};
-    border-color: ${(p) => p.theme.colors.danger};
-  }
-`;
+const OTPInputBox = /* @__PURE__ */ styled(Input)(() => {
+  const theme = useCustomTheme();
+  return {
+    appearance: "none",
+    WebkitAppearance: "none",
+    width: "40px",
+    height: "40px",
+    textAlign: "center",
+    fontSize: fontSize.md,
+    padding: spacing.xs,
+    [media.mobile]: {
+      width: "35px",
+      height: "35px",
+    },
+    "&[data-verify-status='invalid']": {
+      color: theme.colors.danger,
+      borderColor: theme.colors.danger,
+    },
+  };
+});

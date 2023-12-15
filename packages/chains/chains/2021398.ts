@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmW9pBps8WHRRWmyXhjLZrjZJUe8F48hUu7z98bu2RVsjN",
     "width": 400,
@@ -24,9 +23,10 @@ export default {
     "symbol": "USD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2021398,
   "rpc": [
     "https://debank-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2021398.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.testnet.debank.com"
   ],
   "shortName": "dbk",

@@ -1,5 +1,50 @@
 # @thirdweb-dev/storage
 
+## 2.0.7
+
+### Patch Changes
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+## 2.0.6
+
+### Patch Changes
+
+- [#2021](https://github.com/thirdweb-dev/js/pull/2021) [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Catch issue when converting invalid IPFS CID to v1
+
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/crypto@0.2.0
+
+## 2.0.4
+
+### Patch Changes
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1949](https://github.com/thirdweb-dev/js/pull/1949) [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd) Thanks [@iketw](https://github.com/iketw)! - Enforces the tsdoc/syntax rule
+
+## 2.0.3
+
+### Patch Changes
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+## 2.0.2
+
+### Patch Changes
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+## 2.0.1
+
+### Patch Changes
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
 ## 2.0.0
 
 ### Major Changes

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://caduceus.foundation/",
   "name": "CMP-Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "CMP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 256256,
   "rpc": [
     "https://cmp.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://256256.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.block.caduceus.foundation",
     "wss://mainnet.block.caduceus.foundation"
   ],

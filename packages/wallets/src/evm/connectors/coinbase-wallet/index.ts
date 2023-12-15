@@ -1,12 +1,11 @@
-import { WagmiConnector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
   AddChainError,
   SwitchChainError,
-  normalizeChainId,
   ProviderRpcError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import type {
   CoinbaseWalletProvider,
   CoinbaseWalletSDK,
@@ -16,16 +15,19 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 type Options = CoinbaseWalletSDKOptions & {
   /**
    * Fallback Ethereum JSON RPC URL
-   * @default ""
+   *
+   * By default it is set to `""`
    */
   jsonRpcUrl?: string;
   /**
    * Fallback Ethereum Chain ID
-   * @default 1
+   *
+   * By default it is set to `1`
    */
   chainId?: number;
 };

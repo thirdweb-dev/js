@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.metatime.com/eleanor"
   ],
-  "features": [],
   "infoURL": "https://eleanor.metatime.com",
   "name": "Eleanor",
   "nativeCurrency": {
@@ -20,13 +19,15 @@ export default {
     "symbol": "MTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1967,
   "rpc": [
     "https://eleanor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1967.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metatime.com/eleanor",
     "wss://ws.metatime.com/eleanor"
   ],
   "shortName": "mtc",
   "slug": "eleanor",
-  "testnet": true
+  "testnet": true,
+  "title": "Metatime Testnet Eleanor"
 } as const satisfies Chain;

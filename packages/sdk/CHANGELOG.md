@@ -1,5 +1,196 @@
 # @thirdweb-dev/sdk
 
+## 4.0.22
+
+### Patch Changes
+
+- [#2085](https://github.com/thirdweb-dev/js/pull/2085) [`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e) Thanks [@hsynlms](https://github.com/hsynlms)! - Fix error when fetching data on `vite-node` environment by setting a global variable `TW_SKIP_FETCH_SETUP` to `true`. Fixes https://github.com/thirdweb-dev/js/issues/2002
+
+  Setting this flag sets `skipFetchSetup` to `true` in [ethers ConnectionInfo](https://docs.ethers.org/v5/api/utils/web/#ConnectionInfo)
+
+  ```ts
+  // set this global variable
+  globalThis.TW_SKIP_FETCH_SETUP = true;
+
+  // use the thirdweb sdk...
+  ```
+
+## 4.0.21
+
+### Patch Changes
+
+- [#2067](https://github.com/thirdweb-dev/js/pull/2067) [`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix deployments
+
+## 4.0.20
+
+### Patch Changes
+
+- [#2062](https://github.com/thirdweb-dev/js/pull/2062) [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose baseFee in getDynamicFeeData()
+
+- [#2053](https://github.com/thirdweb-dev/js/pull/2053) [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix error message
+
+- [#2059](https://github.com/thirdweb-dev/js/pull/2059) [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf) Thanks [@jnsdls](https://github.com/jnsdls)! - contract.roles.setAll now allows passing a actingAddress explictly to "prepare()" to correctly prepare the txn when there are multiple roles being removed
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3)]:
+  - @thirdweb-dev/chains@0.1.61
+
+## 4.0.19
+
+### Patch Changes
+
+- [#2050](https://github.com/thirdweb-dev/js/pull/2050) [`cfe81b44`](https://github.com/thirdweb-dev/js/commit/cfe81b443205d84e58128b8d7d5f2dc940b12875) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update implementations
+
+- [#2049](https://github.com/thirdweb-dev/js/pull/2049) [`72c0bb10`](https://github.com/thirdweb-dev/js/commit/72c0bb10d6d765d1679b2b22ac63d85db101b5c4) Thanks [@jnsdls](https://github.com/jnsdls)! - contract roles: ensure that the connected wallet address always ends up being removed _last_ in the multi-call to remove/revoke roles
+
+- [#2048](https://github.com/thirdweb-dev/js/pull/2048) [`ca618ea0`](https://github.com/thirdweb-dev/js/commit/ca618ea0c9ac5dc4f65cbfbfd39360e4150c72c7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - metadata role
+
+- [#2051](https://github.com/thirdweb-dev/js/pull/2051) [`aefc4cda`](https://github.com/thirdweb-dev/js/commit/aefc4cda4c4fad81411d3a9485931e28100b5718) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add migration role
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+- [#2044](https://github.com/thirdweb-dev/js/pull/2044) [`d20e7898`](https://github.com/thirdweb-dev/js/commit/d20e7898562a3914841522f2e09f88ca37dfdd4b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update contract publisher
+
+- Updated dependencies [[`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56)]:
+  - @thirdweb-dev/storage@2.0.7
+
+## 4.0.18
+
+### Patch Changes
+
+- [#2012](https://github.com/thirdweb-dev/js/pull/2012) [`b0ecfd2d`](https://github.com/thirdweb-dev/js/commit/b0ecfd2d8d5cda33dc8f5ea2d20119cb901a0bcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Propagate isPartialAbi
+
+- [#2003](https://github.com/thirdweb-dev/js/pull/2003) [`d28097f5`](https://github.com/thirdweb-dev/js/commit/d28097f508739cdbd6625e09c2ed0fe25a922c0f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix undefined error for unknown chains
+
+- [#2005](https://github.com/thirdweb-dev/js/pull/2005) [`8bf3be88`](https://github.com/thirdweb-dev/js/commit/8bf3be88be051178a7142618c4371d2f2ef26271) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable deployments for older AccountFactories
+
+- [#2009](https://github.com/thirdweb-dev/js/pull/2009) [`b02fb91a`](https://github.com/thirdweb-dev/js/commit/b02fb91a548a3f66f7677ced24be9397e0f9a7ba) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add missing roles from new contracts
+
+- [#2011](https://github.com/thirdweb-dev/js/pull/2011) [`2861dff1`](https://github.com/thirdweb-dev/js/commit/2861dff1f013b5150314fdaccaeadddbcf0d21c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Don't fetch metadata from CDN for local nodes
+
+- [#2010](https://github.com/thirdweb-dev/js/pull/2010) [`61b6a002`](https://github.com/thirdweb-dev/js/commit/61b6a00214716454222e67fe5fdb47edba391070) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix code comment
+
+- Updated dependencies [[`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a), [`f93bd325`](https://github.com/thirdweb-dev/js/commit/f93bd325e119381ddc3380a5ea43fe63fbcf42c0), [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352), [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa)]:
+  - @thirdweb-dev/chains@0.1.60
+  - @thirdweb-dev/storage@2.0.6
+
+## 4.0.17
+
+### Patch Changes
+
+- Updated dependencies [[`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281)]:
+  - @thirdweb-dev/chains@0.1.59
+
+## 4.0.16
+
+### Patch Changes
+
+- [#1974](https://github.com/thirdweb-dev/js/pull/1974) [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for new relayer and polygon relayer
+
+## 4.0.15
+
+### Patch Changes
+
+- [#1935](https://github.com/thirdweb-dev/js/pull/1935) [`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve diamond pattern facets ABIs
+
+## 4.0.14
+
+### Patch Changes
+
+- [#1861](https://github.com/thirdweb-dev/js/pull/1861) [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4) Thanks [@jnsdls](https://github.com/jnsdls)! - remove `crypto-js` dependency
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/crypto@0.2.0
+  - @thirdweb-dev/merkletree@0.2.0
+  - @thirdweb-dev/storage@2.0.5
+
+## 4.0.13
+
+### Patch Changes
+
+- [#1947](https://github.com/thirdweb-dev/js/pull/1947) [`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for EIP-2612 permit to engine relayer
+
+- [#1936](https://github.com/thirdweb-dev/js/pull/1936) [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improvements for auto resolving contracts:
+
+  - ~10x performance improvements using shared caching layer at the edge
+  - auto resolves any verified contract on etherscan on supported chains
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Fixes all tsdoc comments warnings
+
+- [#1949](https://github.com/thirdweb-dev/js/pull/1949) [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd) Thanks [@iketw](https://github.com/iketw)! - Enforces the tsdoc/syntax rule
+
+- Updated dependencies [[`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd)]:
+  - @thirdweb-dev/storage@2.0.4
+
+## 4.0.12
+
+### Patch Changes
+
+- [#1937](https://github.com/thirdweb-dev/js/pull/1937) [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Standardize large number formatting
+
+- Updated dependencies [[`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3)]:
+  - @thirdweb-dev/storage@2.0.3
+
+## 4.0.11
+
+### Patch Changes
+
+- [#1809](https://github.com/thirdweb-dev/js/pull/1809) [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix publish: clean extra metadata containing old publish flow data
+
+- [#1896](https://github.com/thirdweb-dev/js/pull/1896) [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for relayer endpoint
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e)]:
+  - @thirdweb-dev/chains@0.1.58
+
+## 4.0.10
+
+### Patch Changes
+
+- [#1871](https://github.com/thirdweb-dev/js/pull/1871) [`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Reduce bundle size by lazy loading some large modules
+
+## 4.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618)]:
+  - @thirdweb-dev/chains@0.1.57
+
+## 4.0.8
+
+### Patch Changes
+
+- [#1798](https://github.com/thirdweb-dev/js/pull/1798) [`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve performance for contract-roles methods
+
+- [#1827](https://github.com/thirdweb-dev/js/pull/1827) [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove barrel files
+
+- [#1814](https://github.com/thirdweb-dev/js/pull/1814) [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Perf inmprovement for erc-20 methods
+
+- [#1850](https://github.com/thirdweb-dev/js/pull/1850) [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix double trailing slash when downloading merkle data
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1805](https://github.com/thirdweb-dev/js/pull/1805) [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Spicy Chain deployments
+
+- Updated dependencies [[`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4)]:
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/storage@2.0.2
+
+## 4.0.7
+
+### Patch Changes
+
+- [#1795](https://github.com/thirdweb-dev/js/pull/1795) [`42ba15f2`](https://github.com/thirdweb-dev/js/commit/42ba15f2c0e77e23e62650119dfaaa5c0dbe4481) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve performance for prebuilt implementations"
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+- [#1824](https://github.com/thirdweb-dev/js/pull/1824) [`d8d48a95`](https://github.com/thirdweb-dev/js/commit/d8d48a9516fc8fdd173fbb91a858fe7ec0725ddd) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Performance improve for erc-1155-signature-mintable
+
+- [#1800](https://github.com/thirdweb-dev/js/pull/1800) [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getCompositeABI for dynamic contracts
+
+- [#1813](https://github.com/thirdweb-dev/js/pull/1813) [`6d1eabe9`](https://github.com/thirdweb-dev/js/commit/6d1eabe9f9818ee2a79ce5bf6aa74417dbfd0558) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Various small improvements
+
+- Updated dependencies [[`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522)]:
+  - @thirdweb-dev/storage@2.0.1
+
 ## 4.0.6
 
 ### Patch Changes

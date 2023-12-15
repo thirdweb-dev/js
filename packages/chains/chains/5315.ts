@@ -4,7 +4,6 @@ export default {
   "chainId": 5315,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://uzmigames.com.br/",
   "name": "Uzmi Network Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "UZMI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5315,
   "rpc": [
     "https://uzmi-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5315.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.uzmigames.com.br/"
   ],
   "shortName": "UZMI",

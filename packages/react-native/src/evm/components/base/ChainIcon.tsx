@@ -9,6 +9,9 @@ export type ChainIconProps = {
   size: number;
 };
 
+/**
+ * @internal
+ */
 export const ChainIcon = ({ chainIconUrl, size }: ChainIconProps) => {
   const src = chainIconUrl || defaultChainIcon;
 

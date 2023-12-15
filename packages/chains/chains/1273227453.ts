@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://dashboard.humanprotocol.org/faucet"
   ],
-  "features": [],
   "infoURL": "https://www.humanprotocol.org",
   "name": "HUMAN Protocol",
   "nativeCurrency": {
@@ -20,12 +19,14 @@ export default {
     "symbol": "sFUEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1273227453,
   "rpc": [
     "https://human-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1273227453.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/wan-red-ain"
   ],
   "shortName": "human-mainnet",
   "slug": "human-protocol",
-  "testnet": false
+  "testnet": false,
+  "title": "HUMAN Protocol"
 } as const satisfies Chain;

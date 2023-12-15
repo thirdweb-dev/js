@@ -4,19 +4,14 @@ export default {
   "chainId": 44787,
   "explorers": [
     {
-      "name": "Celoscan",
-      "url": "https://alfajores.celoscan.io/",
-      "standard": "EIP3091"
-    },
-    {
       "name": "Alfajoresscan",
       "url": "https://alfajores.celoscan.io",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://cauldron.pretoriaresearchlab.io/alfajores-faucet",
-    "https://celo.org/developers/faucet"
+    "https://celo.org/developers/faucet",
+    "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"
   ],
   "features": [],
   "infoURL": "https://docs.celo.org/",
@@ -26,11 +21,13 @@ export default {
     "symbol": "CELO",
     "decimals": 18
   },
+  "networkId": 44787,
   "redFlags": [],
   "rpc": [
     "https://celo-alfajores-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://alfajores-forno.celo-testnet.org/ws",
-    "https://alfajores-forno.celo-testnet.org"
+    "https://44787.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://alfajores-forno.celo-testnet.org",
+    "wss://alfajores-forno.celo-testnet.org/ws"
   ],
   "shortName": "ALFA",
   "slug": "celo-alfajores-testnet",

@@ -1,5 +1,4 @@
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
@@ -14,19 +13,19 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
+import { Status } from "../../enums/marketplace/Status";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace";
-import { OfferV3 } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace/MarketPlaceFilter";
+import { OfferV3 } from "../../types/marketplacev3/OfferV3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
 
@@ -426,6 +425,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       : offer.currencyContractAddress;
 
     const provider = this.contractWrapper.getProvider();
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new ContractWrapper<IERC20>(
       provider,
       currency,

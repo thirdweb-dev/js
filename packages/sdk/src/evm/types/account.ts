@@ -5,8 +5,8 @@ import type {
 import { BigNumber, BytesLike } from "ethers";
 import { z } from "zod";
 import { AmountSchema } from "../../core/schema/shared";
-import { EndDateSchema, StartDateSchema } from "../schema";
-import { AddressOrEnsSchema } from "../schema";
+import { AddressOrEnsSchema } from "../schema/shared/AddressOrEnsSchema";
+import { EndDateSchema, StartDateSchema } from "../schema/shared/RawDateSchema";
 
 export type SignerPermissions = {
   startDate: Date;

@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
-import { ImageSvgUri } from "../base";
+import { WalletIcon } from "../base";
 import { useLocale } from "../../providers/ui-context-provider";
 
 export type ConnectWalletDetailsProps = {
@@ -36,6 +36,12 @@ export type ConnectWalletDetailsProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to a Smart Wallet
+   *
+   * The default is `false`
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -45,6 +51,7 @@ export const WalletDetailsButton = ({
   hideTestnetFaucet,
   supportedTokens,
   displayBalanceToken,
+  hideSwitchToPersonalWallet,
 }: ConnectWalletDetailsProps) => {
   const l = useLocale();
   const activeWallet = useWallet();
@@ -76,6 +83,7 @@ export const WalletDetailsButton = ({
         hideTestnetFaucet={hideTestnetFaucet}
         supportedTokens={supportedTokens}
         displayBalanceToken={displayBalanceToken}
+        hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
       />
       {detailsButton ? (
         detailsButton({ onPress })
@@ -92,13 +100,7 @@ export const WalletDetailsButton = ({
             alignContent="center"
             justifyContent="flex-start"
           >
-            <Box borderRadius="lg" overflow="hidden">
-              <ImageSvgUri
-                width={32}
-                height={32}
-                imageUrl={avatarUrl || walletIconUrl}
-              />
-            </Box>
+            <WalletIcon iconUri={avatarUrl || walletIconUrl} size={32} />
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">

@@ -4,26 +4,35 @@ export default {
   "chainId": 2710,
   "explorers": [
     {
-      "name": "Morphism Testnet Explorer",
-      "url": "https://explorer-testnet.morphism.xyz",
+      "name": "Morph Testnet Explorer",
+      "url": "https://explorer-testnet.morphl2.io",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "features": [],
-  "infoURL": "https://morphism.xyz",
-  "name": "Morphism Testnet",
+  "infoURL": "https://morphl2.io",
+  "name": "Morph Testnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2710,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://bridge-testnet.morphl2.io"
+      }
+    ]
+  },
   "rpc": [
-    "https://morphism-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.morphism.xyz"
+    "https://morph-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.morphl2.io"
   ],
   "shortName": "tmorph",
-  "slug": "morphism-testnet",
+  "slug": "morph-testnet",
   "testnet": true
 } as const satisfies Chain;

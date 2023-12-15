@@ -16,10 +16,23 @@ export interface UserWithData<
  * Hook to get the currently logged in user.
  *
  * @returns - The currently logged in user or null if not logged in, as well as a loading state.
+ * ```tsx
+ * {
+ *    user: {
+ *      address: string;
+ *      session?: Json;
+ *    } | undefined;
+ *    isLoggedIn: boolean;
+ *    isLoading: boolean;
+ *}
+ * ```
  *
- * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
- *
- * @beta
+ * @example
+ * ```tsx
+ * function App() {
+ *  const { user, isLoggedIn, isLoading } = useUser();
+ * }
+ * ```
  */
 export function useUser<
   TData extends Json = Json,

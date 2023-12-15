@@ -6,11 +6,16 @@ export default {
     {
       "name": "kalarscan",
       "url": "https://explorer.kalarchain.tech",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreidbzzv3lrwlzquhlpl4jcmr54sifhi5ufoek6olb5kjh3h3kvktdq",
+        "width": 411,
+        "height": 159,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreihfoy2kgf2rebaoicso7z5h7ju46z6gtr64mskkths3qbfkrtnkjm",
     "width": 190,
@@ -24,9 +29,10 @@ export default {
     "symbol": "KLC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1379,
   "rpc": [
     "https://kalar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1379.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-api.kalarchain.tech"
   ],
   "shortName": "KLC",

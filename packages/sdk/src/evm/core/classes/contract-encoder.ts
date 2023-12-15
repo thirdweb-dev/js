@@ -1,4 +1,4 @@
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, utils } from "ethers";
 
 /**
@@ -36,6 +36,16 @@ export class ContractEncoder<TContract extends BaseContract> {
     encodedArgs: string,
   ): utils.Result {
     return this.contractWrapper.readContract.interface.decodeFunctionData(
+      fn as string,
+      encodedArgs,
+    );
+  }
+
+  public decodeResult(
+    fn: keyof TContract["functions"],
+    encodedArgs: string,
+  ): utils.Result {
+    return this.contractWrapper.readContract.interface.decodeFunctionResult(
       fn as string,
       encodedArgs,
     );

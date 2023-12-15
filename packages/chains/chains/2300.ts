@@ -6,11 +6,16 @@ export default {
     {
       "name": "bombscan",
       "url": "https://bombscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
     "width": 1024,
@@ -24,9 +29,10 @@ export default {
     "symbol": "BOMB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2300,
   "rpc": [
     "https://bomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2300.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bombchain.com"
   ],
   "shortName": "bomb",

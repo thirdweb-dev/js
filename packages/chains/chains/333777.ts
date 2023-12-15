@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://apps-test.adigium.com/faucet"
   ],
-  "features": [],
   "infoURL": "https://oonechain.com",
   "name": "Oone Chain Devnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tOONE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 333777,
   "rpc": [
     "https://oone-chain-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.oonechain.com"
   ],
   "shortName": "oonedev",

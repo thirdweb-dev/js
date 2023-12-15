@@ -4,7 +4,6 @@ export default {
   "chainId": 33,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.goodata.org",
   "name": "GoodData Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "GooD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 33,
   "rpc": [
     "https://gooddata.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://33.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.goodata.io"
   ],
   "shortName": "GooD",

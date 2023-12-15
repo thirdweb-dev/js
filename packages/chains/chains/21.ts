@@ -12,17 +12,17 @@ export default {
   "faucets": [
     "https://esc-faucet.elastos.io/"
   ],
-  "features": [],
   "infoURL": "https://www.elastos.org/",
   "name": "Elastos Smart Chain Testnet",
   "nativeCurrency": {
     "name": "Elastos",
-    "symbol": "ELA",
+    "symbol": "tELA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 21,
   "rpc": [
     "https://elastos-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://21.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-testnet.elastos.io/eth"
   ],
   "shortName": "esct",

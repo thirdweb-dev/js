@@ -18,17 +18,19 @@ import {
 import { useCallback, useEffect, useContext, useState } from "react";
 import {
   reservedScreens,
-  compactmodalMaxHeight,
+  compactModalMaxHeight as compactModalMaxHeight,
   onModalUnmount,
 } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
-import styled from "@emotion/styled";
 import { Container, noScrollBar } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { Theme } from "../../../design-system";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
 import { SignatureScreen } from "../SignatureScreen";
+import { StyledDiv } from "../../../design-system/elements";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -69,7 +71,9 @@ export const ConnectModalContent = (props: {
       ? false
       : !!authConfig?.authUrl && !user?.address;
 
-    setHideModal(false);
+    onModalUnmount(() => {
+      setHideModal(false);
+    });
 
     // show sign in screen if required
     if (requiresSignIn) {
@@ -173,7 +177,7 @@ export const ConnectModalContent = (props: {
           scrollY
           relative
           style={{
-            maxHeight: compactmodalMaxHeight,
+            maxHeight: compactModalMaxHeight,
           }}
         >
           {screen === reservedScreens.signIn && (
@@ -240,7 +244,9 @@ export const ConnectModal = () => {
 
   useEffect(() => {
     if (!isWalletModalOpen) {
-      setHideModal(false);
+      onModalUnmount(() => {
+        setHideModal(false);
+      });
     }
   }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
 
@@ -266,6 +272,10 @@ export const ConnectModal = () => {
         size={modalSize}
         open={isWalletModalOpen}
         setOpen={(value) => {
+          if (hideModal) {
+            return;
+          }
+
           setIsWalletModalOpen(value);
           if (!value) {
             const requiresSignIn = auth?.loginOptional
@@ -293,13 +303,14 @@ export const ConnectModal = () => {
   );
 };
 
-const LeftContainer = /* @__PURE__ */ styled.div<{
-  theme?: Theme;
-}>`
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  ${noScrollBar}
-  position: relative;
-  border-right: 1px solid ${(p) => p.theme.colors.separatorLine};
-`;
+const LeftContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto",
+    ...noScrollBar,
+    position: "relative",
+    borderRight: `1px solid ${theme.colors.separatorLine}`,
+  };
+});

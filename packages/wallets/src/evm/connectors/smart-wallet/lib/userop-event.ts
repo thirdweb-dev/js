@@ -30,7 +30,7 @@ export class UserOperationEventListener {
     // listener takes time... first query directly:
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setTimeout(async () => {
-      const res = await this.entryPoint.queryFilter(filter, "latest");
+      const res = await this.entryPoint.queryFilter(filter, -10); // look at last 10 blocks
       if (res.length > 0) {
         void this.listenerCallback(res[0]);
       } else {

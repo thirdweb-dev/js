@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.condor.systems"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPRDuEJSTqp2cDUvWCp71Wns6XV8nvdeAVKWH6srpk4xM",
     "width": 752,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CONDOR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 188881,
   "rpc": [
     "https://condor-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://188881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.condor.systems/rpc"
   ],
   "shortName": "condor",

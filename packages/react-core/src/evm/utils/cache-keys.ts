@@ -58,10 +58,20 @@ export function invalidateContractAndBalances(
         ),
       ),
     ),
-    queryClient.invalidateQueries(
-      enforceCachePrefix(createCacheKeyWithNetwork(["balance"], chainId)),
-    ),
+    invalidateBalances(queryClient, chainId),
   ]);
+}
+
+/**
+ * @internal
+ */
+export function invalidateBalances(
+  queryClient: QueryClient,
+  chainId: RequiredParam<SUPPORTED_CHAIN_ID>,
+) {
+  return queryClient.invalidateQueries(
+    enforceCachePrefix(createCacheKeyWithNetwork(["balance"], chainId)),
+  );
 }
 
 /**
@@ -182,10 +192,12 @@ export const cacheKeys = {
           ),
         totalCirculatingSupply: (
           contractAddress: RequiredParam<ContractAddress>,
+          tokenId?: BigNumberish,
         ) =>
           createContractCacheKey(contractAddress, [
             "query",
             "totalCirculatingSupply",
+            tokenId ?? "0",
           ]),
         totalCount: (contractAddress: RequiredParam<ContractAddress>) =>
           createContractCacheKey(contractAddress, ["query", "totalCount"]),

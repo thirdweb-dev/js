@@ -1,7 +1,7 @@
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { FileOrBufferOrString } from "@thirdweb-dev/storage";
 import type { BigNumberish, Bytes } from "ethers";
-import { CommonContractSchemaInput } from "../../schema";
+import { CommonContractSchemaInput } from "../../schema/contracts/common";
 
 /**
  * Options for deploying an NFT contract
@@ -35,7 +35,7 @@ export interface NFTContractDeployMetadata {
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient: AddressOrEns;
+  primary_sale_recipient?: AddressOrEns;
   /**
    * The address that will receive the proceeds from secondary sales (royalties)
    */
@@ -91,7 +91,7 @@ export interface OpenEditionContractDeployMetadata {
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient: AddressOrEns;
+  primary_sale_recipient?: AddressOrEns;
   /**
    * The address that will receive the proceeds from secondary sales (royalties)
    */
@@ -138,7 +138,7 @@ export interface TokenContractDeployMetadata {
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient: AddressOrEns;
+  primary_sale_recipient?: AddressOrEns;
   /**
    * The address that will receive the proceeds from platform fees
    */

@@ -6,11 +6,16 @@ export default {
     {
       "name": "Deamchain Block Explorer",
       "url": "https://scan.deamchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "DEAM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 136,
   "rpc": [
     "https://deamchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://136.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.deamchain.com"
   ],
   "shortName": "deam",

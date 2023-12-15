@@ -2,9 +2,11 @@ import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { ClientConfig } from "@account-abstraction/sdk";
-import { BaseAccountAPI } from "./base-api";
+import { BaseAccountAPI, BatchData } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
+import { randomNonce } from "./utils";
+import { deepHexlify } from "@account-abstraction/utils";
 
 export class ERC4337EthersSigner extends Signer {
   config: ClientConfig;
@@ -35,19 +37,21 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batched: boolean = false,
+    batchData?: BatchData,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
+    const multidimensionalNonce = randomNonce();
     const userOperation = await this.smartAccountAPI.createSignedUserOp(
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
         value: tx.value,
         gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
       },
-      batched,
+      batchData,
     );
 
     const transactionResponse =
@@ -147,9 +151,27 @@ Code: ${errorCode}`;
   }
 
   async signTransaction(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    batchData?: BatchData,
   ): Promise<string> {
-    throw new Error("not implemented");
+    const tx = await ethers.utils.resolveProperties(transaction);
+    await this.verifyAllNecessaryFields(tx);
+
+    const multidimensionalNonce = randomNonce();
+    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+      {
+        target: tx.to || "",
+        data: tx.data?.toString() || "0x",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
+      },
+      batchData,
+    );
+
+    const userOpString = JSON.stringify(
+      deepHexlify(await utils.resolveProperties(userOperation)),
+    );
+    return userOpString;
   }
 }

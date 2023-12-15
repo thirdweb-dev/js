@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdGCthKA11K9kCZJdbTP5WPAyq1wiRZ3REn6KG58MrWaE",
     "width": 159,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MXC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5167003,
   "rpc": [
     "https://mxc-wannsee-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5167003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wannsee-rpc.mxc.com"
   ],
   "shortName": "MXC",

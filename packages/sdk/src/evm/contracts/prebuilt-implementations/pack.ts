@@ -37,8 +37,8 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
@@ -71,6 +71,7 @@ import { PACK_CONTRACT_ROLES } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers
 export class Pack extends StandardErc1155<PackContract> {
   static contractRoles = PACK_CONTRACT_ROLES;
 
@@ -107,7 +108,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public owner: ContractOwner<PackContract>;
+  public owner: ContractOwner;
 
   private _vrf?: PackVRF;
 

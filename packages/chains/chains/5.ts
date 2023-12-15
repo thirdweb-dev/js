@@ -2,6 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 5,
+  "ens": {
+    "registry": "0x112234455c3a32fd11230c42e7bccd4a84e02010"
+  },
   "explorers": [
     {
       "name": "etherscan-goerli",
@@ -11,11 +14,16 @@ export default {
     {
       "name": "blockscout-goerli",
       "url": "https://eth-goerli.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
-    "https://faucet.paradigm.xyz/",
     "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
     "https://goerli-faucet.slock.it?address=${ADDRESS}",
     "https://faucet.goerli.mudit.blog"
@@ -34,12 +42,13 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 5,
   "redFlags": [],
   "rpc": [
     "https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
-    "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://rpc.goerli.mudit.blog/",
     "https://ethereum-goerli.publicnode.com",
     "wss://ethereum-goerli.publicnode.com",
@@ -48,5 +57,6 @@ export default {
   ],
   "shortName": "gor",
   "slug": "goerli",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Testnet Goerli"
 } as const satisfies Chain;

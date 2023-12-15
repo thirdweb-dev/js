@@ -5,10 +5,10 @@ import {
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
-import * as Application from "expo-application";
 import { Platform } from "react-native";
+import { appBundleId, packageVersion } from "../../evm/utils/version";
+import { BUNDLE_ID_HEADER } from "../../evm/constants/headers";
 
-const APP_BUNDLE_ID = Application.applicationId;
 const METADATA_NAME = "Storage React Native SDK";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
@@ -39,9 +39,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       keyvalues: { ...options?.metadata },
     };
 
-    // this is on purpose because we can't import package.json as a module as it is outside rootDir
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { version, name: packageName } = require("../../../package.json");
+    const { version, name: packageName } = packageVersion;
     const platform = `react-native-${Platform.OS}`;
 
     if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
@@ -143,7 +141,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
+        xhr.setRequestHeader(BUNDLE_ID_HEADER, appBundleId || ""); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
@@ -168,7 +166,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             {
               method: "POST",
               headers: {
-                "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
+                [BUNDLE_ID_HEADER]: appBundleId || "", // only empty on web
                 ...(this.clientId ? { "x-client-id": this.clientId } : {}),
                 "Content-Type": "application/json",
                 "x-sdk-version": version,
@@ -241,7 +239,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           // but then we skip because we don't need to upload it multiple times
           continue;
         }
-        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to differnt files but with the same names)
+        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to different files but with the same names)
         throw new Error(
           `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one different file.`,
         );

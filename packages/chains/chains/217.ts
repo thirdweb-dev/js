@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeicxuxdzrzpwsil4owqmn7wpwka2rqsohpfqmukg57pifzyxr5om2q",
     "width": 100,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MCD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 217,
   "rpc": [
     "https://siriusnet-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://217.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.siriusnet.io"
   ],
   "shortName": "SIN2",

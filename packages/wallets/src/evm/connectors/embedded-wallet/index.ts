@@ -1,19 +1,23 @@
 import { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
-import { normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
 import {
-  AuthLoginReturnType,
+  AuthProvider,
   EmbeddedWalletSdk,
   InitializedUser,
-  UserStatus,
+  SendEmailOtpReturnType,
+  UserWalletStatus,
 } from "./implementations";
 import {
+  AuthParams,
+  AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  EmbeddedWalletOauthStrategy,
 } from "./types";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
@@ -37,75 +41,44 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.#embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
         chain: "Ethereum",
-        styles: this.options.styles,
+        onAuthSuccess: this.options.onAuthSuccess,
       });
     }
     return this.#embeddedWalletSdk;
   }
 
-  async connect(options?: EmbeddedWalletConnectionArgs) {
-    const thirdwebSDK = await this.getEmbeddedWalletSDK();
-    if (!thirdwebSDK) {
-      throw new Error("EmbeddedWallet SDK not initialized");
-    }
-    const user = await thirdwebSDK.getUser();
-    switch (user.status) {
-      case UserStatus.LOGGED_OUT: {
-        let authResult: AuthLoginReturnType;
-
-        switch (options?.loginType) {
-          case "headless_google_oauth": {
-            authResult = await thirdwebSDK.auth.loginWithGoogle({
-              closeOpenedWindow: options.closeOpenedWindow,
-              openedWindow: options.openedWindow,
-            });
-            break;
-          }
-          case "headless_email_otp_verification": {
-            authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
-              email: options.email,
-              otp: options.otp,
-            });
-            break;
-          }
-          case "ui_email_otp": {
-            authResult = await thirdwebSDK.auth.loginWithEmailOtp({
-              email: options.email,
-            });
-            break;
-          }
-          default: {
-            authResult = await thirdwebSDK.auth.loginWithModal();
-            break;
-          }
-        }
-        this.user = authResult.user;
-        break;
+  async connect(args?: EmbeddedWalletConnectionArgs): Promise<string> {
+    // backwards compatibility - options should really be required here
+    if (!args) {
+      // default to iframe flow
+      const result = await this.authenticate({ strategy: "iframe" });
+      if (!result.user) {
+        throw new Error("Error connecting User");
       }
-      case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-        if (options?.loginType === "headless_google_oauth") {
-          if (options.closeOpenedWindow && options.openedWindow) {
-            options.closeOpenedWindow(options.openedWindow);
-          }
-        }
-        this.user = user;
-        break;
+      this.user = result.user;
+    } else {
+      if (!args.authResult) {
+        throw new Error(
+          "Missing authData - call authenticate() first with your authentication strategy",
+        );
       }
-    }
-    if (!this.user) {
-      throw new Error("Error connecting User");
+      if (!args.authResult.user) {
+        throw new Error(
+          "Missing authData.user - call authenticate() first with your authentication strategy",
+        );
+      }
+      this.user = args.authResult.user;
     }
 
-    if (options?.chainId) {
-      this.switchChain(options.chainId);
+    if (args?.chainId) {
+      this.switchChain(args.chainId);
     }
 
-    this.setupListeners();
     return this.getAddress();
   }
 
   async disconnect(): Promise<void> {
-    const paper = await this.#embeddedWalletSdk;
+    const paper = this.#embeddedWalletSdk;
     await paper?.auth.logout();
     this.#signer = undefined;
     this.#embeddedWalletSdk = undefined;
@@ -113,8 +86,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async getAddress(): Promise<string> {
-    const signer = await this.getSigner();
-    return signer.getAddress();
+    if (!this.user) {
+      throw new Error("Embedded Wallet is not connected");
+    }
+    return await this.getSigner().then((signer) => signer.getAddress());
   }
 
   async isConnected(): Promise<boolean> {
@@ -139,18 +114,8 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       return this.#signer;
     }
 
-    if (!this.user) {
-      const embeddedWalletSdk = await this.getEmbeddedWalletSDK();
-      const user = await embeddedWalletSdk.getUser();
-      switch (user.status) {
-        case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-          this.user = user;
-          break;
-        }
-      }
-    }
-
-    const signer = await this.user?.wallet.getEthersJsSigner({
+    const user = await this.getUser();
+    const signer = await user.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
@@ -173,24 +138,21 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Chain not configured");
     }
 
-    // update chain in wallet
-    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
-
-    // update signer
-    this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
-    });
-
-    this.emit("change", { chain: { id: chainId, unsupported: false } });
+    try {
+      // update chain in wallet
+      await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
+      // update signer
+      this.#signer = await this.user?.wallet.getEthersJsSigner({
+        rpcEndpoint: chain.rpc[0] || "",
+      });
+      this.emit("change", { chain: { id: chainId, unsupported: false } });
+    } catch (e) {
+      console.warn("Failed to switch chain", e);
+    }
   }
 
   async setupListeners() {
-    const provider = await this.getProvider();
-    if (provider.on) {
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
-    }
+    return Promise.resolve();
   }
 
   updateChains(chains: Chain[]) {
@@ -218,12 +180,105 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
-  async getEmail() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Paper Wallet is not connected");
+  private async getUser(): Promise<InitializedUser> {
+    if (
+      !this.user ||
+      !this.user.wallet ||
+      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost, need to rehydrate
+    ) {
+      const embeddedWalletSdk = this.getEmbeddedWalletSDK();
+      const user = await embeddedWalletSdk.getUser();
+      switch (user.status) {
+        case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+          this.user = user;
+          break;
+        }
+        default: {
+          // if logged out or unitialized, we can't get a signer, so throw an error
+          throw new Error(
+            "Embedded Wallet is not authenticated, please authenticate first",
+          );
+        }
+      }
     }
-    return this.user.authDetails.email;
+    return this.user;
+  }
+
+  async getEmail() {
+    const user = await this.getUser();
+    return user.authDetails.email;
+  }
+
+  async getRecoveryInformation() {
+    const user = await this.getUser();
+    return user.authDetails;
+  }
+
+  async sendVerificationEmail({
+    email,
+  }: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    return ewSDK.auth.sendEmailLoginOtp({ email });
+  }
+
+  async authenticate(params: AuthParams): Promise<AuthResult> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    const strategy = params.strategy;
+    switch (strategy) {
+      case "email_verification": {
+        return await ewSDK.auth.verifyEmailLoginOtp({
+          email: params.email,
+          otp: params.verificationCode,
+          recoveryCode: params.recoveryCode,
+        });
+      }
+      case "apple":
+      case "facebook":
+      case "google": {
+        const oauthProvider = oauthStrategyToAuthProvider[strategy];
+        return ewSDK.auth.loginWithOauth({
+          oauthProvider,
+          closeOpenedWindow: params.closeOpenedWindow,
+          openedWindow: params.openedWindow,
+        });
+      }
+      case "jwt": {
+        return ewSDK.auth.loginWithCustomJwt({
+          jwt: params.jwt,
+          encryptionKey: params.encryptionKey,
+        });
+      }
+      case "auth_endpoint": {
+        return ewSDK.auth.loginWithCustomAuthEndpoint({
+          payload: params.payload,
+          encryptionKey: params.encryptionKey,
+        });
+      }
+      case "iframe_email_verification": {
+        return ewSDK.auth.loginWithEmailOtp({
+          email: params.email,
+        });
+      }
+      case "iframe": {
+        return ewSDK.auth.loginWithModal();
+      }
+      default:
+        assertUnreachable(strategy);
+    }
   }
 }
+
+function assertUnreachable(x: never): never {
+  throw new Error("Invalid param: " + x);
+}
+
+const oauthStrategyToAuthProvider: Record<
+  EmbeddedWalletOauthStrategy,
+  AuthProvider
+> = {
+  google: AuthProvider.GOOGLE,
+  facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
+};

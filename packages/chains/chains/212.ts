@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.maplabs.io"
   ],
-  "features": [],
   "infoURL": "https://maplabs.io",
   "name": "MAP Makalu",
   "nativeCurrency": {
@@ -20,12 +19,14 @@ export default {
     "symbol": "MAP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 212,
   "rpc": [
     "https://map-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://212.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.maplabs.io"
   ],
   "shortName": "makalu",
   "slug": "map-makalu",
-  "testnet": true
+  "testnet": true,
+  "title": "MAP Testnet Makalu"
 } as const satisfies Chain;

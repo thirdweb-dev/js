@@ -6,11 +6,16 @@ export default {
     {
       "name": "kaibascan",
       "url": "https://kaibascan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
+        "width": 932,
+        "height": 932,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
     "width": 932,
@@ -24,9 +29,10 @@ export default {
     "symbol": "tKAIBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 104,
   "rpc": [
     "https://kaiba-lightning-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://104.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://klc.live/"
   ],
   "shortName": "tklc",

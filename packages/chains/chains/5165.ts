@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Fastex Chain (Bahamut)",
+  "chain": "Bahamut",
   "chainId": 5165,
   "explorers": [
     {
@@ -24,20 +24,26 @@ export default {
     "height": 200,
     "format": "png"
   },
-  "infoURL": "https://fastexchain.com",
-  "name": "Fastex Chain (Bahamut)",
+  "infoURL": "https://bahamut.io",
+  "name": "Bahamut",
   "nativeCurrency": {
     "name": "FTN",
     "symbol": "FTN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5165,
   "rpc": [
-    "https://fastex-chain-bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.sahara.bahamutchain.com",
-    "https://rpc2.sahara.bahamutchain.com"
+    "https://bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.bahamut.io",
+    "https://rpc2.bahamut.io",
+    "wss://ws1.sahara.bahamutchain.com",
+    "wss://ws2.sahara.bahamutchain.com",
+    "https://bahamut.publicnode.com",
+    "wss://bahamut.publicnode.com"
   ],
   "shortName": "ftn",
-  "slug": "fastex-chain-bahamut",
-  "testnet": false
+  "slug": "bahamut",
+  "testnet": false,
+  "title": "Bahamut mainnet"
 } as const satisfies Chain;

@@ -14,6 +14,9 @@ const roleMap = {
   unwrap: "UNWRAP_ROLE",
   factory: "FACTORY_ROLE",
   signer: "SIGNER_ROLE",
+  metadata: "METADATA_ROLE",
+  revoke: "REVOKE_ROLE",
+  migration: "MIGRATION_ROLE",
 } as const;
 
 /**

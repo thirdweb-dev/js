@@ -15,7 +15,7 @@ export type Semver = {
 
 /**
  * @internal
- * @param version
+ * @param version - The version to convert to a Semver
  */
 export function toSemver(version: string): Semver {
   if (version.length > MAX_LENGTH) {
@@ -41,8 +41,8 @@ export function toSemver(version: string): Semver {
 
 /**
  * @internal
- * @param current
- * @param next
+ * @param current - The current version
+ * @param next - The next version
  */
 export function isIncrementalVersion(current: string, next: string) {
   const currentSemver = toSemver(current);
@@ -58,6 +58,9 @@ export function isIncrementalVersion(current: string, next: string) {
   return eqMajor && eqMinor && nextSemver.patch > currentSemver.patch;
 }
 
+/**
+ * @internal
+ */
 export function isDowngradeVersion(current: string, next: string) {
   const currentSemver = toSemver(current);
   const nextSemver = toSemver(next);

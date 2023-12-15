@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRhqq4Gp8G9w27ND3LeFW49o5PxcxrbJsqHbpBFtzEMfC",
     "width": 225,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OLT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 311752642,
   "rpc": [
     "https://oneledger.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://311752642.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.oneledger.network"
   ],
   "shortName": "oneledger",

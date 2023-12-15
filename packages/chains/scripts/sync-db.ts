@@ -4,27 +4,11 @@ import { ApiChain, Chain } from "../src/types";
 // default to production api
 const BASE_URI = (process.env.BASE_URI as string) || "https://api.thirdweb.com";
 
-async function getAllPaginatedChains(
-  chains: any[] = [],
-  pathname = "/v1/chains?limit=100",
-) {
-  const url = new URL(BASE_URI);
-  url.pathname = pathname;
-  const res = await fetch(decodeURIComponent(url.toString()));
-  const json = await res.json();
-
-  if (json.error) {
-    console.error("Failed to fully load chains from DB", json.error);
-    return chains;
-  }
-  if (json.next) {
-    return getAllPaginatedChains([...chains, ...json.data], json.next);
-  }
-  return [...chains, ...json.data];
-}
-
 async function sync() {
-  const allChainsInDB = (await getAllPaginatedChains()) as ApiChain[];
+  const res = await fetch(BASE_URI + "/v1/chains");
+  const json = await res.json();
+  const allChainsInDB = json.data as ApiChain[];
+
   const chainsDir = "./chains";
   // clean out the chains directory
   await fs.rmdir(chainsDir, { recursive: true });
@@ -33,35 +17,19 @@ async function sync() {
 
   const results = await Promise.all(
     allChainsInDB.map(async (chain) => {
-      let chainId = chain.chainId;
-      // try to convert to number for legacy reasons
-      try {
-        chainId = Number(chainId);
-      } catch {
-        // if we fail here then we cannot use this chain in the chains package for now, so we skip it
-        return null;
-      }
-
-      const pkgChain: Chain = {
-        ...chain,
-        // assing back the chainId
-        chainId,
-        // map the features to the legacy format
-        features: chain.features?.map((feature) => ({ name: feature })),
-      };
       // remove all null values
-      Object.keys(pkgChain).forEach((key) => {
-        if (pkgChain[key] === null || pkgChain[key] === undefined) {
-          delete pkgChain[key];
+      Object.keys(chain).forEach((key) => {
+        if (chain[key] === null || chain[key] === undefined) {
+          delete chain[key];
         }
       });
 
       // sort top level keys alphabetically
       const sortedChain = {} as Chain;
-      Object.keys(pkgChain)
+      Object.keys(chain)
         .sort()
         .forEach((key) => {
-          sortedChain[key] = pkgChain[key];
+          sortedChain[key] = chain[key];
         });
 
       await fs.writeFile(
@@ -125,8 +93,13 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
+export * from "./async";
 export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
-// @ts-expect-error - TODO: fix this later
+
+\/**
+ * @deprecated use \`fetchChains()\` instead
+ *\/
+\/\/ @ts-expect-error - TODO: fix this later
 export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {
@@ -183,6 +156,9 @@ function isValidChainSlug(slug: string): slug is ChainSlug {
   return slug in chainIdsBySlug;
 }
 
+/**
+ * @deprecated use \`getChainByChainIdAsync()\` instead
+ */
 export function getChainByChainId<TChainId extends ChainId>(
   chainId: TChainId | (number & {}),
 ) {
@@ -193,6 +169,9 @@ export function getChainByChainId<TChainId extends ChainId>(
   throw new Error(\`Chain with chainId "\${chainId}" not found\`);
 }
 
+/**
+ * @deprecated use \`getChainBySlugAsync()\` instead
+ */
 export function getChainBySlug<TSlug extends ChainSlug>(
   slug: TSlug | (string & {}),
 ) {

@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://docs.celo.org/",
   "name": "Celo Mainnet",
   "nativeCurrency": {
@@ -23,9 +22,10 @@ export default {
     "symbol": "CELO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 42220,
   "rpc": [
     "https://celo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://42220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://forno.celo.org",
     "wss://forno.celo.org/ws"
   ],
