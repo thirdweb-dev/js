@@ -6,19 +6,56 @@ import {
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
 import { useSDK } from "./useSDK";
 import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
+import { BigNumber } from "ethers";
 
 /**
- * A hook to get the native or (optional) ERC20 token balance of the connected wallet.
+ * Hook for getting a wallet's current balance of native or (optional) ERC20 token balance
  *
- * @param tokenAddress - the address of the token contract, if empty will use the chain's native token
- * @returns the balance of the connected wallet (native or ERC20)
+ * @example
+ *
+ * ### get the balance of the native token
+ *
+ * ```jsx
+ * import { useBalance } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { data, isLoading } = useBalance();
+ * }
+ * ```
+ *
+ * ### get the balance of any other token
+ *
+ * ```jsx
+ * import { useBalance } from "@thirdweb-dev/react";
+ *
+ * // ERC20 token smart contract address
+ * const tokenAddress = "{{token_address}}";
+ *
+ * function App() {
+ *   const { data, isLoading } = useBalance(tokenAddress);
+ * }
+ * ```
+ *
+ * @param tokenAddress - the address of the token contract, if not provided, it defaults to the native token
+ * @returns
+ * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.
  */
-export function useBalance(tokenAddress?: ContractAddress) {
+export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
+  | {
+      symbol: string;
+      value: BigNumber;
+      name: string;
+      decimals: number;
+      displayValue: string;
+    }
+  | undefined,
+  unknown
+> {
   const walletAddress = useAddress();
 
   const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
@@ -42,12 +79,29 @@ export function useBalance(tokenAddress?: ContractAddress) {
 }
 
 /**
- * Get the native token balance of a wallet address on the `activeChain` network set in the `ThirdwebProvider`
+ * This hook is similar to the `useBalance` hook, but it for fetching the native token balance of any given wallet address.
+ *
+ * This hook only fetches the native token balance of the given wallet address. If you want to get the ERC20 balance from a given wallet, use `useTokenBalance`
+ *
+ * @example
+ * ```ts
+ * const { data, isLoading } = useBalanceForAddress(walletAddress)
+ * ```
  *
  * @param walletAddress - the address of the wallet that you want to get the native balance
- * @returns the balance of the given wallet address
+ * @returns
+ * The hook's `data` property contains the native token's balance in the `value` property as a `BigNumber` object.
  */
-export function useBalanceForAddress(walletAddress: string) {
+export function useBalanceForAddress(walletAddress: string): UseQueryResult<
+  {
+    symbol: string;
+    value: BigNumber;
+    name: string;
+    decimals: number;
+    displayValue: string;
+  },
+  unknown
+> {
   invariant(walletAddress, "wallet address is not provided");
   const { activeChain } = useWalletContext();
   const chainId = activeChain.chainId;

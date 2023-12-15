@@ -20,8 +20,9 @@ import {
   useMutation,
   UseMutationResult,
   useQueryClient,
+  UseQueryResult,
 } from "@tanstack/react-query";
-import type { providers } from "ethers";
+import type { BigNumber, providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -29,19 +30,40 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Get the total supply for this token
+ * Hook for fetching the total supply of an ERC20 token.
+ *
+ * This takes into account the increase and decrease in supply when tokens are minted and burned.
  *
  * @example
- * ```javascript
- * const { data: totalSupply, isLoading, error } = useTokenSupply(contract);
+ * ```jsx
+ * import { useTokenSupply } from "@thirdweb-dev/react";
+ *
+ * // Your token contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { data, isLoading, error } = useTokenSupply(contractAddress);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that includes the total minted supply
+ * @param contract - an instance of a `TokenContract`
+ *
+ * @returns Hook's `data` object includes the total supply of the token in the `value` property as a `BigNumber` object.
+ *
  * @twfeature ERC20
- * @see {@link https://portal.thirdweb.com/react/react.usetokensupply?utm_source=sdk | Documentation}
  */
-export function useTokenSupply(contract: RequiredParam<TokenContract>) {
+export function useTokenSupply(
+  contract: RequiredParam<TokenContract>,
+): UseQueryResult<
+  {
+    symbol: string;
+    value: BigNumber;
+    name: string;
+    decimals: number;
+    displayValue: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.token.totalSupply(contractAddress),
@@ -60,22 +82,48 @@ export function useTokenSupply(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Get token balance for a specific wallet
+ * Hook for fetching the balance a wallet has for a specific ERC20 token.
+ *
+ * _Note: This hook is for **custom** ERC20 tokens. For native tokens such as Ether, use `useBalance` or `useBalanceForAddress`
+ *
+ * Available to use on contracts that implement the ERC20 interface.
  *
  * @example
- * ```javascript
- * const { data: balance, isLoading, error } = useTokenBalance(contract, "{{wallet_address}}");
+ *
+ * ```jsx
+ * import { useTokenBalance, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * // Your wallet address
+ * const walletAddress = "{{wallet_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "token");
+ *   const { data, isLoading, error } = useTokenBalance(contract, walletAddress);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that includes the balance of the address
+ * @param contract - an instance of a `TokenContract`
+ *
+ * @returns Hook's `data` object includes the token balance for given wallet address
+ *
  * @twfeature ERC20
- * @see {@link https://portal.thirdweb.com/react/react.usetokenbalance?utm_source=sdk | Documentation}
  */
 export function useTokenBalance(
   contract: RequiredParam<TokenContract>,
   walletAddress: RequiredParam<WalletAddress>,
-) {
+): UseQueryResult<
+  {
+    symbol: string;
+    value: BigNumber;
+    name: string;
+    decimals: number;
+    displayValue: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   const erc20 = getErc20(contract);
   return useQueryWithNetwork(
@@ -96,17 +144,31 @@ export function useTokenBalance(
 }
 
 /**
- * Get token decimals
+ * Hook for fetching the [decimals](https://docs.openzeppelin.com/contracts/3.x/erc20#a-note-on-decimals)
+ * of an ERC20 token.
+ *
+ * Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei.
+ * Therefore, `18` is the default value returned by this function, unless your ERC20 contract explicitly overrides it.
  *
  * @example
- * ```javascript
- * const { data: decimals, isLoading, error } = useTokenDecimals(contract);
+ *
+ * ```jsx
+ * import { useTokenDecimals, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "token");
+ *   const { data, isLoading, error } = useTokenDecimals(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that includes the decimals of the ERC20 token
+ * @param contract - an instance of a `TokenContract`
+ *
+ * @returns The hook's `data` property, once loaded, contains the `number` that represents the number of decimals of the ERC20 token.
+ *
  * @twfeature ERC20
- * @see {@link https://portal.thirdweb.com/react/react.usetokendecimals?utm_source=sdk | Documentation}
  */
 export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
@@ -132,37 +194,58 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
 /** **********************/
 
 /**
- * Mint tokens
+ * Hook for minting new tokens in an ERC20 smart contract.
+ *
+ * Available to use on contracts that implement the [ERC20Mintable](https://portal.thirdweb.com/solidity/extensions/erc20mintable)
+ * interface, such as the [Token](https://thirdweb.com/thirdweb.eth/TokenERC20) contract.
+ *
+ * The wallet address that initiates this transaction must have minting permissions on the contract.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: mintTokens,
- *     isLoading,
- *     error,
- *   } = useMintToken(contract);
  *
- *   if (error) {
- *     console.error("failed to mint tokens", error);
- *   }
+ * ```jsx
+ * import { useContract, useMintToken, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ * const walletAddress = "{{wallet_address}}";
+ * const tokenAmount = "{{token_amount}}";
+ *
+ * function App() {
+ *   // Contract must be an ERC-20 contract that implements the ERC20Mintable interface
+ *   const { contract } = useContract(contractAddress, "token");
+ *   const { mutateAsync: mintToken, isLoading, error } = useMintToken(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => mintTokens({ to: "{{wallet_address}}", amount: 1000 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         mintToken({
+ *           amount: tokenAmount, // Quantity to mint
+ *           to: walletAddress, // Address to mint to
+ *         })
+ *       }
  *     >
- *       Mint!
- *     </button>
+ *       Mint Token
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
+ * @param contract - an instance of a `TokenContract`
+ *
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
+ *
+ * ### amount
+ *
+ * The quantity of tokens to mint. Can be a `string` or `number`.
+ *
+ * ### to
+ *
+ * The wallet address to mint the new tokens to.
+ *
+ * To use the connected wallet address, use the `useAddress` hook.
+ *
  * @twfeature ERC20Mintable
- * @see {@link https://portal.thirdweb.com/react/react.useminttoken?utm_source=sdk | Documentation}
  */
 export function useMintToken(
   contract: RequiredParam<TokenContract>,
@@ -265,37 +348,60 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Transfer tokens to a specific wallet
+ * Hook for transferring tokens on an ERC20 contract.
+ *
+ * Available to use on contracts that implement the ERC20
+ * interface, such as the [Token](https://thirdweb.com/thirdweb.eth/TokenERC20) contract.
+ *
+ * The wallet address that initiates this transaction must have a balance of tokens
+ * greater than or equal to the amount being transferred.
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import { useContract, useTransferToken, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ * const toAddress = "{{to_address}}";
+ * const amount = "{{amount}}";
+ *
+ * function App() {
+ *   // Contract must be an ERC-20 contract
+ *   const { contract } = useContract(contractAddress);
  *   const {
  *     mutate: transferTokens,
  *     isLoading,
  *     error,
  *   } = useTransferToken(contract);
  *
- *   if (error) {
- *     console.error("failed to transfer tokens", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => transferTokens({ to: "{{wallet_address}}", amount: 1000 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         transferTokens({
+ *           to: toAddress, // Address to transfer to
+ *           amount: amount, // Amount to transfer
+ *         })
+ *       }
  *     >
  *       Transfer
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
+ * @param contract - an instance of a `TokenContract`
+ *
  * @returns a mutation object that can be used to transfer tokens
+ * ### to
+ *
+ * The wallet address to transfer tokens to.
+ *
+ * ### amount
+ *
+ * The quantity of tokens to transfer. Can be a `string` or `number`.
+ *
  * @twfeature ERC20
- * @see {@link https://portal.thirdweb.com/react/react.usetransfertoken?utm_source=sdk | Documentation}
  */
 export function useTransferToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
@@ -324,37 +430,64 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Airdrop tokens to a list of wallets
+ * Hook for transferring ERC20 tokens to multiple recipients in a single transaction (i.e. airdrop).
+ *
+ * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) interface.
+ *
+ * The wallet that initiates this transaction must have sufficient balance to cover the total amount of tokens being transferred
+ * and must have transfer permissions on the contract, i.e. tokens are not soulbound.
  *
  * @example
+ *
+ * Provide your token contract instance from the `useContract` hook to the hook.
+ *
+ * Then, provide an array of objects with the `to` and `amount` properties to the function.
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useTransferBatchToken,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "token");
  *   const {
- *     mutate: transferBatchTokens,
+ *     mutateAsync: transferBatchToken,
  *     isLoading,
  *     error,
- *   } = useTransferToken(contract);
- *
- *   if (error) {
- *     console.error("failed to transfer batch tokens", error);
- *   }
+ *   } = useTransferBatchToken(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => transferBatchTokens([{ to: "{{wallet_address}}", amount: 1000 }, { to: "{{wallet_address}}", amount: 2000 }])}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         transferBatchToken([
+ *           {
+ *             to: "{{wallet_address}}", // Transfer 10 tokens to a wallet
+ *             amount: 10,
+ *           },
+ *           {
+ *             to: "{{wallet_address}}", // Transfer 20 tokens to another wallet
+ *             amount: 20,
+ *           },
+ *         ])
+ *       }
  *     >
- *       Airdrop
- *     </button>
+ *       Transfer Batch Tokens
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
+ * @param contract - an instance of a `TokenContract`
+ *
  * @returns a mutation object that can be used to transfer batch tokens
+ *
  * @twfeature ERC20
- * @see {@link https://portal.thirdweb.com/react/react.usetransferbatchtoken?utm_source=sdk | Documentation}
  */
 export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
@@ -390,35 +523,47 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Burn tokens
+ * Hook for burning ERC20 tokens on a smart contract.
+ *
+ * Available to use on smart contracts that implement the ERC20 standard.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: burnTokens,
- *     isLoading,
- *     error,
- *   } = useBurnToken(contract);
  *
- *   if (error) {
- *     console.error("failed to burn tokens", error);
- *   }
+ * ```jsx
+ * import { useBurnToken, useContract, Web3Button } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: burnToken, isLoading, error } = useBurnToken(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => burnTokens({ amount: 1000 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         burnToken({
+ *           amount: "10", // Amount of tokens to burn
+ *         })
+ *       }
  *     >
- *       Burn!
- *     </button>
+ *       Burn Token
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link TokenContract}
+ * @param contract - an instance of a `TokenContract`
+ *
  * @returns a mutation object that can be used to burn tokens from the connected wallet
+ *
+ * ### amount (required)
+ *
+ * The amount of tokens to burn.
+ *
+ * The wallet initiating this transaction must have at least this amount of tokens.
+ *
  * @twfeature ERC20Burnable
  * @see {@link https://portal.thirdweb.com/react/react.useburntoken?utm_source=sdk | Documentation}
  */
