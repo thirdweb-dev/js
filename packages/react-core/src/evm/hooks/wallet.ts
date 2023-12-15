@@ -42,8 +42,11 @@ import { BigNumber } from "ethers";
  * ```
  *
  * @param tokenAddress - the address of the token contract, if not provided, it defaults to the native token
+ *
  * @returns
  * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.
+ *
+ * @token
  */
 export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
   | {
@@ -89,8 +92,11 @@ export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
  * ```
  *
  * @param walletAddress - the address of the wallet that you want to get the native balance
+ *
  * @returns
  * The hook's `data` property contains the native token's balance in the `value` property as a `BigNumber` object.
+ *
+ * @token
  */
 export function useBalanceForAddress(walletAddress: string): UseQueryResult<
   {

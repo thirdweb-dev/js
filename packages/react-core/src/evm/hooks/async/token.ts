@@ -51,6 +51,7 @@ import invariant from "tiny-invariant";
  * @returns Hook's `data` object includes the total supply of the token in the `value` property as a `BigNumber` object.
  *
  * @twfeature ERC20
+ * @token
  */
 export function useTokenSupply(
   contract: RequiredParam<TokenContract>,
@@ -110,6 +111,7 @@ export function useTokenSupply(
  * @returns Hook's `data` object includes the token balance for given wallet address
  *
  * @twfeature ERC20
+ * @token
  */
 export function useTokenBalance(
   contract: RequiredParam<TokenContract>,
@@ -169,6 +171,7 @@ export function useTokenBalance(
  * @returns The hook's `data` property, once loaded, contains the `number` that represents the number of decimals of the ERC20 token.
  *
  * @twfeature ERC20
+ * @token
  */
 export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
@@ -246,6 +249,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * To use the connected wallet address, use the `useAddress` hook.
  *
  * @twfeature ERC20Mintable
+ * @token
  */
 export function useMintToken(
   contract: RequiredParam<TokenContract>,
@@ -318,6 +322,7 @@ export function useMintToken(
  * @returns a mutation object that can be used to tokens to the wallet specified in the params
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
  * @see {@link https://portal.thirdweb.com/react/react.useclaimtoken?utm_source=sdk | Documentation}
+ * @token
  */
 export function useClaimToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
@@ -402,6 +407,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  * The quantity of tokens to transfer. Can be a `string` or `number`.
  *
  * @twfeature ERC20
+ * @token
  */
 export function useTransferToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
@@ -488,6 +494,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * @returns a mutation object that can be used to transfer batch tokens
  *
  * @twfeature ERC20
+ * @token
  */
 export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
@@ -565,7 +572,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  * The wallet initiating this transaction must have at least this amount of tokens.
  *
  * @twfeature ERC20Burnable
- * @see {@link https://portal.thirdweb.com/react/react.useburntoken?utm_source=sdk | Documentation}
+ * @token
  */
 export function useBurnToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();

@@ -45,6 +45,10 @@
     {
       "tagName": "@delayedReveal",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@token",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -58,6 +62,7 @@
     "@metadata": true,
     "@permissionControl": true,
     "@networkConnection": true,
-    "@delayedReveal": true
+    "@delayedReveal": true,
+    "@token": true
   }
 }
