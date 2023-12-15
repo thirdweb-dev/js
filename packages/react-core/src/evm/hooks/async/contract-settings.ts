@@ -25,16 +25,27 @@ import invariant from "tiny-invariant";
 // primary sales
 
 /**
- * Get the primary sale recipient
+ * Hook for getting the primary sales recipient of a smart contract.
+ *
+ * Available to use on contracts that implement the "Primary Sale" interface.
  *
  * @example
+ *
  * ```jsx
- * const { data: primarySaleRecipient, isLoading, error } = usePrimarySalesRecipient(contract);
+ * import { useContract, usePrimarySaleRecipient } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = usePrimarySaleRecipient(contract);
+ * }
  * ```
  *
- * Use this to get the primary sales recipient of your {@link SmartContract}
- * @param contract - an instance of a {@link SmartContract}
- * @returns the wallet address of the primary sales recipient
+ * @param contract - an instance of a `SmartContract`
+ *
+ * @returns The hook's `data` property, once loaded, is a string with the wallet address of the primary sales recipient.
+ *
  * @twfeature PrimarySale
  * @platformFees
  */
@@ -57,35 +68,50 @@ export function usePrimarySaleRecipient(
 }
 
 /**
- * Set the primary sale recipient
+ * Hook for updating the primary sale recipient on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [PrimarySale](/solidity/extensions/primarysale) interface.
+ *
+ * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `admin` level).
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdatePrimarySaleRecipient,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updatePrimarySalesRecipient,
+ *     mutateAsync: updatePrimarySaleRecipient,
  *     isLoading,
  *     error,
  *   } = useUpdatePrimarySaleRecipient(contract);
  *
- *   if (error) {
- *     console.error("failed to update recipient", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updatePrimarySalesRecipient({ newRecipient: "{{wallet_address}}" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => updatePrimarySaleRecipient("{{wallet_address}}")}
  *     >
- *       Update Recipient
- *     </button>
+ *       Update Primary Sale Recipient
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a `SmartContract`
  * @returns a mutation object that can be used to update the primary sales recipient
+ *
+ * #### walletAddress
+ *
+ * The wallet address to set as the primary sale recipient.
+ *
  * @twfeature PrimarySale
  * @platformFees
  */
@@ -127,15 +153,40 @@ export function useUpdatePrimarySaleRecipient(
 // royalties
 
 /**
- * Get the royalty recipient and fee
+ * Hook for retrieving royalty settings of a smart contract.
+ *
+ * Available to use on contracts that implement the [Royalty](/solidity/extensions/royalty) interface.
  *
  * @example
+ *
  * ```jsx
- * const { data: settings, isLoading, error } = useRoyaltySettings(contract);
+ * import { useContract, useRoyaltySettings } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address (must implement Royalty interface)
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useRoyaltySettings(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns an object containing recipient address and the royalty basis points
+ * @param contract - an instance of a `SmartContract`
+ *
+ * @returns
+ * The hook's `data` property, once loaded, is an object with two properties:
+ *
+ * ```ts
+ * {
+ *   seller_fee_basis_points: number;
+ *   fee_recipient: string;
+ * }
+ * ```
+ *
+ * - The `seller_fee_basis_points` is the royalty amount (in basis points) that the seller
+ *   will receive for each token sale on secondary markets.
+ * - The `fee_recipient` is the wallet address that will receive the royalty payments.
+ *
  * @twfeature Royalty
  * @platformFees
  */
@@ -158,35 +209,61 @@ export function useRoyaltySettings(
 }
 
 /**
- * Set the royalty recipient and fee
+ * Hook for updating royalty settings on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [Royalty](/solidity/extensions/royalty) interface.
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdateRoyaltySettings,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updateRoyaltySettings,
+ *     mutateAsync: updateRoyaltySettings,
  *     isLoading,
  *     error,
  *   } = useUpdateRoyaltySettings(contract);
  *
- *   if (error) {
- *     console.error("failed to update royalty settings", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updateRoyaltySettings({ updatePayload: { fee_recipient: "{{wallet_address}}", seller_fee_basis_points: 5_00 } })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updateRoyaltySettings({
+ *           seller_fee_basis_points: 0,
+ *           fee_recipient: "{{wallet_address}}",
+ *         })
+ *       }
  *     >
  *       Update Royalty Settings
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a `SmartContract`
+ *
  * @returns a mutation object that can be used to update the royalty settings
+ *
+ * #### seller_fee_basis_points (required)
+ *
+ * The `seller_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
+ *
+ * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
+ *
+ *
+ * #### fee_recipient (required)
+ *
+ * The `fee_recipient` property is the address of the wallet that will receive the fees.
+ *
  * @twfeature Royalty
  * @platformFees
  */
@@ -224,15 +301,41 @@ export function useUpdateRoyaltySettings(
 // platformFees
 
 /**
- * Get the platform fee recipient and basis points
+ * Hook for getting the platform fee settings of a contract.
+ *
+ * Available to use on contracts that implement the `PlatformFee` interface.
  *
  * @example
+ *
  * ```jsx
- * const { data: platformFees, isLoading, error } = usePlatformFees(contract);
+ * import { useContract, usePlatformFees } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address (must implement PlatformFee)
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = usePlatformFees(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns an object containing the platform fee basis points and the fee recipient address
+ * @param contract - an instance of a `SmartContract`
+ *
+ * @returns
+ * The hook's `data` property, once loaded, is an object containing two fields:
+ *
+ * - `platform_fee_basis_points`: the platform fee basis points set on the contract
+ * - `platform_fee_recipient`: the wallet address of the platform fee recipient
+ *
+ * _Note_: The basis points are in percentage format, meaning that a value of `500` is equivalent to a `5%` fee.
+ *
+ * ```ts
+ * {
+ *   platform_fee_basis_points: number;
+ *   platform_fee_recipient: string;
+ * }
+ * ```
+ *
  * @twfeature PlatformFee
  * @platformFees
  */
@@ -255,34 +358,59 @@ export function usePlatformFees(
 }
 
 /**
- * Set the platform fee recipient and basis points
+ * Hook for updating platform fees on a smart contract.
  *
- * @example
+ * Available to use on smart contracts that implement the [PlatformFee](/solidity/extensions/platformfee) interface.
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdatePlatformFees,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updatePlatformFees,
+ *     mutateAsync: updatePlatformFees,
  *     isLoading,
  *     error,
  *   } = useUpdatePlatformFees(contract);
  *
- *   if (error) {
- *     console.error("failed to update platform fees", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updatePlatformFees({ updatePayload: { fee_recipient: "{{wallet_address}}", platform_fee_basis_points: 5_00 } })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updatePlatformFees({
+ *           platform_fee_basis_points: 0,
+ *           fee_recipient: "{{wallet_address}}",
+ *         })
+ *       }
  *     >
- *       Update Platform fees
- *     </button>
+ *       Update Platform Fees
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
- * @param contract - an instance of a {@link SmartContract}
+ *
+ * @param contract - an instance of a `SmartContract`
+ *
  * @returns a mutation object that can be used to update the platform fees settings
+ * #### platform_fee_basis_points (required)
+ *
+ * The `platform_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
+ *
+ * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
+ *
+ * #### fee_recipient (required)
+ *
+ * The `fee_recipient` property is the address of the wallet that will receive the fees.
+ *
+ * Use the [`useAddress`](/react/react.useaddress) hook to get the current wallet address.
+ *
  * @twfeature PlatformFee
  * @platformFees
  */
