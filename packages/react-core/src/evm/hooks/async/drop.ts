@@ -76,12 +76,10 @@ import invariant from "tiny-invariant";
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useUnclaimedNFTs(
  *     contract,
- *     // highlight-start
  *     {
  *       count: 10, // Limit the number of results
  *       start: 0, // Start from the nth result (useful for pagination)
  *     },
- *     // highlight-end
  *   );
  * }
  * ```
@@ -150,14 +148,12 @@ export function useUnclaimedNFTs(
  *   const { contract } = useContract(contractAddress, "nft-drop");
  *   const { data, isLoading, error } = useClaimedNFTs(
  *     contract,
- *     // highlight-start
  *     {
  *       // For example, to only return the first 50 claimed NFTs in the collection
  *       // in order of token ID
  *       count: 50,
  *       start: 0,
  *     },
- *     // highlight-end
  *   );
  * }
  * ```
