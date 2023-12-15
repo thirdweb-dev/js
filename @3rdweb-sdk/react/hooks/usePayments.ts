@@ -37,10 +37,6 @@ import {
 } from "graphql/mutations/__generated__/UpdateWebhook.generated";
 import { ApiSecretKeysByOwnerIdQuery } from "graphql/queries/__generated__/ApiSecretKeysByOwnerId.generated";
 import {
-  CheckoutByContractAddressQueryVariables,
-  useCheckoutByContractAddressLazyQuery,
-} from "graphql/queries/__generated__/CheckoutByContractAddress.generated";
-import {
   ContractsByOwnerIdQueryVariables,
   useContractsByOwnerIdLazyQuery,
 } from "graphql/queries/__generated__/ContractsByOwnerId.generated";
@@ -63,10 +59,12 @@ import {
   SellerDocument,
   SellerQueryVariables,
   useSellerLazyQuery,
-  useSellerQuery,
 } from "graphql/queries/__generated__/Seller.generated";
-import { SellerFragment } from "graphql/fragments/__generated__/Seller.generated";
 import { useUpdateSellerMutation } from "graphql/mutations/__generated__/UpdateSeller.generated";
+import {
+  CheckoutsByContractAddressQueryVariables,
+  useCheckoutsByContractAddressLazyQuery,
+} from "graphql/queries/__generated__/CheckoutsByContractAddress.generated";
 
 export const paymentsExtensions: FeatureName[] = [
   "ERC721SharedMetadata",
@@ -725,7 +723,7 @@ export function usePaymentsCheckoutsByContract(contractAddress: string) {
   const address = useAddress();
   const { paymentsSellerId } = useApiAuthToken();
   const [getCheckoutsByContractAddress] =
-    useCheckoutByContractAddressLazyQuery();
+    useCheckoutsByContractAddressLazyQuery();
 
   return useQuery(
     paymentsKeys.checkouts(contractAddress, address as string),
@@ -733,8 +731,8 @@ export function usePaymentsCheckoutsByContract(contractAddress: string) {
       const { data, error } = await getCheckoutsByContractAddress({
         variables: {
           ownerId: paymentsSellerId,
-          contractAddress,
-        } as CheckoutByContractAddressQueryVariables,
+          contractAddressQuery: contractAddress,
+        } as CheckoutsByContractAddressQueryVariables,
       });
 
       if (error) {
