@@ -1,17 +1,17 @@
 import { StepsCard } from "components/dashboard/StepsCard";
 import { PaymentsSettingsKyc } from "./payment-settings-kyc";
 import { PaymentsSettingsKyb } from "./payment-settings-kyb";
-import { usePaymentsSellerByAccountId } from "@3rdweb-sdk/react/hooks/usePayments";
+import { usePaymentsSellerById } from "@3rdweb-sdk/react/hooks/usePayments";
 import { Flex } from "@chakra-ui/react";
 
 interface PaymentsSettingsChecklistProps {
-  accountId: string;
+  paymentsSellerId: string;
 }
 
 export const PaymentsSettingsChecklist: React.FC<
   PaymentsSettingsChecklistProps
-> = ({ accountId }) => {
-  const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
+> = ({ paymentsSellerId }) => {
+  const { data: sellerData } = usePaymentsSellerById(paymentsSellerId);
 
   const kycIsInTheFuture = sellerData?.date_personal_documents_verified
     ? new Date(sellerData.date_personal_documents_verified) > new Date()

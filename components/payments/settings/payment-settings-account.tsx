@@ -11,22 +11,22 @@ import {
 } from "tw-components";
 import {
   SellerValueInput,
-  usePaymentsSellerByAccountId,
-  usePaymentsUpdateSellerByAccountId,
+  usePaymentsSellerById,
+  usePaymentsUpdateSellerById,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useTrack } from "hooks/analytics/useTrack";
 import { PaymentsSettingsFileUploader } from "./payment-settings-file-uploader";
 
 interface PaymentsSettingsAccountProps {
-  accountId: string;
+  paymentsSellerId: string;
 }
 
 export const PaymentsSettingsAccount: React.FC<
   PaymentsSettingsAccountProps
-> = ({ accountId }) => {
-  const { mutate: updateSellerByAccountId, isLoading } =
-    usePaymentsUpdateSellerByAccountId(accountId);
-  const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
+> = ({ paymentsSellerId }) => {
+  const { mutate: updateSellerById, isLoading } =
+    usePaymentsUpdateSellerById(paymentsSellerId);
+  const { data: sellerData } = usePaymentsSellerById(paymentsSellerId);
   const trackEvent = useTrack();
 
   const values: SellerValueInput = {
@@ -78,9 +78,9 @@ export const PaymentsSettingsAccount: React.FC<
             action: "update-settings",
             label: "attempt",
           });
-          updateSellerByAccountId(
+          updateSellerById(
             {
-              thirdwebAccountId: accountId,
+              id: paymentsSellerId,
               sellerValue: {
                 ...data,
               },

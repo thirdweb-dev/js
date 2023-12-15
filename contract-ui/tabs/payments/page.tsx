@@ -9,7 +9,7 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { NoWalletConnectedPayments } from "./components/no-wallet-connected-payments";
 import { NoPaymentsEnabled } from "./components/no-payments-enabled";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useAccount, useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 
 interface ContractPaymentsPageProps {
   contractAddress?: string;
@@ -18,7 +18,7 @@ interface ContractPaymentsPageProps {
 export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
   contractAddress,
 }) => {
-  const { data: account } = useAccount();
+  const { paymentsSellerId } = useApiAuthToken();
   const chainId = useDashboardEVMChainId();
   const { user } = useLoggedInUser();
 
@@ -82,11 +82,11 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
             </Text>
           </Center>
         </Card>
-      ) : account?.id ? (
+      ) : paymentsSellerId ? (
         <NoPaymentsEnabled
           contractAddress={contractAddress}
           chainId={chainId}
-          accountId={account.id}
+          paymentsSellerId={paymentsSellerId}
         />
       ) : (
         <NoWalletConnectedPayments />

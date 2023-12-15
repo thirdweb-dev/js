@@ -1,7 +1,3 @@
-import {
-  usePaymentsWebhooksByAccountId,
-  usePaymentsWebhooksSecretKeyByAccountId,
-} from "@3rdweb-sdk/react/hooks/usePayments";
 import { Flex, Divider, Skeleton } from "@chakra-ui/react";
 import { Card, Heading, CodeBlock, Text } from "tw-components";
 import { PaymentsWebhooksTable } from "./payments-webhooks-table";
@@ -9,23 +5,27 @@ import { DetailsRow } from "components/settings/ApiKeys/DetailsRow";
 import { useMemo } from "react";
 import { PaymentsWebhooksCreateButton } from "./payments-webhooks-create-webhook-button";
 import { PaymentsWebhooksTestButton } from "./payments-webhooks-test";
+import {
+  usePaymentsWebhooksById,
+  usePaymentsWebhooksSecretKeyById,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 
 const WEBHOOK_LIMIT = 3;
 
 interface PaymentsWebhooksProps {
-  accountId: string;
+  paymentsSellerId: string;
 }
 
 export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
-  accountId,
+  paymentsSellerId,
 }) => {
   const { data: webhookApiKey, isFetched: isSecretKeyFetched } =
-    usePaymentsWebhooksSecretKeyByAccountId(accountId);
+    usePaymentsWebhooksSecretKeyById(paymentsSellerId);
   const {
     data: webhooks,
     isLoading,
     isFetched,
-  } = usePaymentsWebhooksByAccountId(accountId);
+  } = usePaymentsWebhooksById(paymentsSellerId);
 
   const { productionWebhooks, testnetWebhooks } = useMemo(
     () => ({
@@ -66,13 +66,13 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             <Heading size="title.md">Mainnets</Heading>
             <Flex alignItems="center" gap={2}>
               <PaymentsWebhooksCreateButton
-                accountId={accountId}
+                paymentsSellerId={paymentsSellerId}
                 existingWebhooks={productionWebhooks}
                 isMainnets={true}
                 isDisabled={productionWebhooks.length >= WEBHOOK_LIMIT}
               />
               <PaymentsWebhooksTestButton
-                accountId={accountId}
+                paymentsSellerId={paymentsSellerId}
                 webhooks={productionWebhooks}
                 isMainnets={true}
                 isDisabled={productionWebhooks.length === 0}
@@ -80,7 +80,7 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             </Flex>
           </Flex>
           <PaymentsWebhooksTable
-            accountId={accountId}
+            paymentsSellerId={paymentsSellerId}
             webhooks={productionWebhooks}
             isLoading={isLoading}
             isFetched={isFetched}
@@ -93,13 +93,13 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             <Heading size="title.md">Testnets</Heading>
             <Flex alignItems="center" gap={2}>
               <PaymentsWebhooksCreateButton
-                accountId={accountId}
+                paymentsSellerId={paymentsSellerId}
                 existingWebhooks={testnetWebhooks}
                 isMainnets={false}
                 isDisabled={testnetWebhooks.length >= WEBHOOK_LIMIT}
               />
               <PaymentsWebhooksTestButton
-                accountId={accountId}
+                paymentsSellerId={paymentsSellerId}
                 webhooks={testnetWebhooks}
                 isMainnets={false}
                 isDisabled={testnetWebhooks.length === 0}
@@ -107,7 +107,7 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
             </Flex>
           </Flex>
           <PaymentsWebhooksTable
-            accountId={accountId}
+            paymentsSellerId={paymentsSellerId}
             webhooks={testnetWebhooks}
             isLoading={isLoading}
             isFetched={isFetched}

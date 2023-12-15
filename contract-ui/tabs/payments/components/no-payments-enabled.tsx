@@ -1,5 +1,5 @@
 import {
-  usePaymentsSellerByAccountId,
+  usePaymentsSellerById,
   validPaymentsChainIds,
   validPaymentsChainIdsMainnets,
 } from "@3rdweb-sdk/react/hooks/usePayments";
@@ -9,16 +9,16 @@ import { Card, Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface NoPaymentsEnabledProps {
   contractAddress: string;
-  accountId: string;
+  paymentsSellerId: string;
   chainId?: number;
 }
 
 export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
   contractAddress,
-  accountId,
+  paymentsSellerId,
   chainId,
 }) => {
-  const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
+  const { data: sellerData } = usePaymentsSellerById(paymentsSellerId);
   const isMainnet = validPaymentsChainIdsMainnets.includes(chainId ?? 0);
   const isSupportedChain = validPaymentsChainIds.includes(chainId ?? 0);
 

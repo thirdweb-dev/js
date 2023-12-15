@@ -1,7 +1,0 @@
-mutation UpdateSellerByThirdwebAccountId($thirdwebAccountId: String!, $sellerValue: seller_set_input!) {
-  update_seller(where: { thirdweb_account_id: { _eq: $thirdwebAccountId } }, _set: $sellerValue) {
-    returning {
-      ...Seller
-    }
-  }
-}

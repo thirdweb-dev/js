@@ -14,13 +14,13 @@ import { fetchChain } from "utils/fetchChain";
 import { LinkButton, Text } from "tw-components";
 import { EnablePaymentsButton } from "../enable-payments-button";
 import {
-  usePaymentsSellerByAccountId,
+  usePaymentsSellerById,
   validPaymentsChainIdsMainnets,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 
 interface PaymentContractsTableProps {
   paymentContracts: ContractWithMetadata[];
-  accountId: string;
+  paymentsSellerId: string;
   isLoading: boolean;
   isFetched: boolean;
 }
@@ -33,12 +33,12 @@ const columnHelper = createColumnHelper<ContractWithMetadata>();
 
 export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
   paymentContracts,
-  accountId,
+  paymentsSellerId,
   isLoading,
   isFetched,
 }) => {
   const queryClient = useQueryClient();
-  const { data: sellerData } = usePaymentsSellerByAccountId(accountId);
+  const { data: sellerData } = usePaymentsSellerById(paymentsSellerId);
 
   const columns = [
     columnHelper.accessor((row) => row, {

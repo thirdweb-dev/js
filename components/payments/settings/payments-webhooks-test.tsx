@@ -39,7 +39,7 @@ import { MdBlock } from "@react-icons/all-files/md/MdBlock";
 import { MdCheck } from "@react-icons/all-files/md/MdCheck";
 
 export interface PaymentsWebhooksTestButtonProps {
-  accountId: string;
+  paymentsSellerId: string;
   isMainnets: boolean;
   webhooks: PaymentsWebhooksType[];
   isDisabled: boolean;
@@ -73,8 +73,9 @@ export const StatusTag = ({ status }: { status: number }) => {
 
 export const PaymentsWebhooksTestButton: React.FC<
   PaymentsWebhooksTestButtonProps
-> = ({ accountId, isMainnets, webhooks, isDisabled }) => {
-  const { mutate: testWebhook, isLoading } = usePaymentsTestWebhook(accountId);
+> = ({ paymentsSellerId, isMainnets, webhooks, isDisabled }) => {
+  const { mutate: testWebhook, isLoading } =
+    usePaymentsTestWebhook(paymentsSellerId);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const trackEvent = useTrack();
   const [data, setData] = useState<{
@@ -126,7 +127,7 @@ export const PaymentsWebhooksTestButton: React.FC<
               category: "payments",
               action: "test-webhook",
               label: "attempt",
-              accountId,
+              paymentsSellerId,
             });
             testWebhook(input, {
               onSuccess: (result) => {
@@ -135,7 +136,7 @@ export const PaymentsWebhooksTestButton: React.FC<
                   category: "payments",
                   action: "test-webhook",
                   label: "success",
-                  accountId,
+                  paymentsSellerId,
                 });
               },
               onError: (error) => {
@@ -143,7 +144,7 @@ export const PaymentsWebhooksTestButton: React.FC<
                   category: "payments",
                   action: "test-webhook",
                   label: "error",
-                  accountId,
+                  paymentsSellerId,
                   error,
                 });
               },

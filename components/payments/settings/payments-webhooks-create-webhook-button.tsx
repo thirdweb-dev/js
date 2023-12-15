@@ -26,7 +26,7 @@ import {
 import { useMemo } from "react";
 
 export interface PaymentsWebhooksCreateButtonProps {
-  accountId: string;
+  paymentsSellerId: string;
   existingWebhooks: PaymentsWebhooksType[];
   isMainnets: boolean;
   isDisabled: boolean;
@@ -38,9 +38,9 @@ const isValidUrl = (value: string) => {
 
 export const PaymentsWebhooksCreateButton: React.FC<
   PaymentsWebhooksCreateButtonProps
-> = ({ accountId, existingWebhooks, isMainnets, isDisabled }) => {
+> = ({ paymentsSellerId, existingWebhooks, isMainnets, isDisabled }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createWebhook } = usePaymentsCreateWebhook(accountId);
+  const { mutate: createWebhook } = usePaymentsCreateWebhook(paymentsSellerId);
   const trackEvent = useTrack();
 
   const form = useForm<CreateWebhookInput>({
@@ -100,7 +100,7 @@ export const PaymentsWebhooksCreateButton: React.FC<
               category: "payments",
               action: "create-webhook",
               label: "attempt",
-              accountId,
+              paymentsSellerId,
             });
             createWebhook(data, {
               onSuccess: () => {
@@ -111,7 +111,7 @@ export const PaymentsWebhooksCreateButton: React.FC<
                   category: "payments",
                   action: "create-webhook",
                   label: "success",
-                  accountId,
+                  paymentsSellerId,
                 });
               },
               onError: (error) => {
@@ -120,7 +120,7 @@ export const PaymentsWebhooksCreateButton: React.FC<
                   category: "payments",
                   action: "create-webhook",
                   label: "error",
-                  accountId,
+                  paymentsSellerId,
                   error,
                 });
               },
