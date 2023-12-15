@@ -25,9 +25,6 @@ import invariant from "tiny-invariant";
  */
 export type ContractWithRoles = Exclude<ValidContractInstance, Vote>;
 
-/**
- * @internal
- */
 export type RolesForContract<TContract extends ContractWithRoles> =
   TContract extends SmartContract
     ? // eslint-disable-next-line @typescript-eslint/ban-types
@@ -46,15 +43,52 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
 /** **********************/
 
 /**
- * Get all members of all roles
+ * Hook for getting all wallet addresses that have a role in a smart contract.
+ *
+ * Available to use on contracts that implement [Permission Controls](/solidity/extensions/permissions).
  *
  * @example
+ *
  * ```jsx
- * const { data: roles, isLoading, error } = useAllRoleMembers(contract);
+ * import { useAllRoleMembers, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address (must implement permission controls)
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useAllRoleMembers(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns a list of addresses for all supported roles on the contract.
+ * @param contract - an instance of a `SmartContract`
+ *
+ * @returns
+ * The hook's data property, once loaded, is an object, where the keys are the role names and the values are arrays of wallet addresses that have that role.
+ *
+ * ```ts
+ * Record<
+ *   | "admin"
+ *   | "transfer"
+ *   | "minter"
+ *   | "pauser"
+ *   | "lister"
+ *   | "asset"
+ *   | "unwrap"
+ *   | "factory"
+ *   | (string & {}),
+ *   string[]
+ * > | undefined;
+ * ```
+ *
+ * For example, if the contract has two roles, `admin` and `transfer`, and the `admin` role has two members, the `data` property will look like this:
+ *
+ * ```ts
+ * {
+ *   admin: ["0x1234", "0x5678"],
+ *   transfer: [],
+ * }
+ * ```
  * @twfeature PermissionsEnumerable
  * @permissionControl
  */
@@ -77,16 +111,30 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Get all members of a specific role
+ * Hook for getting all wallet addresses that have a specific role in a smart contract.
+ *
+ * Available to use on contracts that implement the `PermissionsEnumerable` interface.
  *
  * @example
+ *
  * ```jsx
- * const { data: members, isLoading, error } = useRoleMembers(SmartContract, "admin");
+ * import { useContract, useRoleMembers } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address (must implement permission controls)
+ * const contractAddress = "{{contract_address}}";
+ *
+ * const roleName = "admin";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useRoleMembers(contract, roleName);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @param role - the role to get the members of, see {@link Role}
- * @returns a list of addresses that are members of the role
+ * @param contract - an instance of a `SmartContract`
+ * @param role - The name of the role to get the members of. Can be any custom role, or a built-in role, such as `admin`, `transfer`, `minter`, `pauser`, `lister`, `asset`, `unwrap`, or `factory`.
+ * @returns The hook's `data` property, once loaded, is an array of wallet addresses that have the specified role
+ *
  * @twfeature Permissions
  * @permissionControl
  */
@@ -109,17 +157,42 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Check if an address is a member of a specific role
+ * Hook to check if an address is a member of a role on a smart contract.
+ *
+ * Available to use on contracts that implement "Permission Controls" interface
+ *
+ * Provide the following arguments to the hook:
+ *
+ * 1. `contract` - The contract instance to check the role on.
+ * 2. `roleName` - The name of the role to check.
+ * 3. `address` - The wallet address to see if it is a member of the role.
  *
  * @example
+ *
  * ```jsx
- * const { data: isMember, isLoading, error } = useIsAddressRole(contract, "admin", "{{wallet_address}}");
+ * import { useIsAddressRole, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address (must implement permission controls)
+ * const contractAddress = "{{contract_address}}";
+ *
+ * // Address of the wallet to check
+ * const walletAddress = "{{wallet_address}}";
+ *
+ * // Name of the role to check
+ * const roleName = "admin";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const isMember = useIsAddressRole(contract, roleName, walletAddress);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @param role - the role to check the member against, see {@link Role}
- * @param walletAddress - the address to check
- * @returns true if the address is a member of the role, or false if not
+ * @param contract - an instance of a `SmartContract`
+ *
+ * @param role - The name of the role to check. Can be any custom role, or a built-in role, such as `"admin"`, `"transfer"`, `"minter"`, `"pauser"`, `"lister"`, `"asset"`, `"unwrap"`, or `"factory"`.
+ * @param walletAddress - The wallet address to check if it is a member of the role. Use the `useAddress` hook to get the current wallet address.
+ * @returns `true` if the address is a member of the role, or `false` if not
+ *
  * @twfeature PermissionsEnumerable
  * @permissionControl
  */
@@ -212,35 +285,69 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Grant a role to a specific address
+ * Hook for granting a role on a smart contract.
+ *
+ * Available to use on smart contracts that implement the "Permissions" interface.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: grantRole,
- *     isLoading,
- *     error,
- *   } = useGrantRole(contract);
+ * import { useGrantRole, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to grant role", error);
- *   }
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ * const roleToGrant = "{{role}}";
+ * const walletAddressToGrant = "{{wallet_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: grantRole, isLoading, error } = useGrantRole(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => grantRole({ role: "admin", address: {{wallet_address}} })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         grantRole({
+ *           role: roleToGrant, // name of your role.
+ *           address: walletAddressToGrant, // address to grant the role to.
+ *         })
+ *       }
  *     >
  *       Grant Role
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a `SmartContract`
+ *
  * @returns a mutation object that can be used to grant a member of a role on the contract
+ *
+ * #### role (required)
+ *
+ * The name of the role to grant the address.
+ *
+ * Accepts any `string` value to include custom-defined roles.
+ *
+ * Also accepts the default roles available on the [prebuilt contracts](https://portal.thirdweb.com/pre-built-contracts):
+ *
+ * ```ts
+ * string |
+ *   "admin" |
+ *   "minter" |
+ *   "transfer" |
+ *   "lister" |
+ *   "asset" |
+ *   "unwrap" |
+ *   "pauser" |
+ *   "factory";
+ * ```
+ *
+ * #### address (required)
+ *
+ * The address to grant the role to.
+ *
+ * To use the address of the connected wallet, use the [`useAddress`](/react/react.useaddress) hook.
+ *
  * @twfeature Permissions | PermissionsEnumerable
  * @permissionControl
  */
@@ -272,35 +379,55 @@ export function useGrantRole<TContract extends ContractWithRoles>(
 }
 
 /**
- * Revoke a role from a specific address
+ * Hook for revoking a wallet address from a role on a smart contract.
  *
- * @example
+ * Available to use on contracts that implement "Permission Controls" interface
+ *
+ * The wallet address that initiates this transaction must have the relevant permissions on the contract to remove the role from the wallet address (typically `admin` level required).
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: revokeRole,
- *     isLoading,
- *     error,
- *   } = useRevokeRole(contract);
+ * import { useContract, useRevokeRole, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to revoke role", error);
- *   }
+ * // Your smart contract address (must implement permission controls)
+ * const contractAddress = "{{contract_address}}";
+ * const walletAddress = "{{wallet_address}}";
+ *
+ * function App() {
+ *   // Contract must be a contract that implements the Permission Controls interface
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: revokeRole, isLoading, error } = useRevokeRole(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => revokeRole({ role: "admin", address: {{wallet_address}} })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         revokeRole({
+ *           role: "admin",
+ *           address: walletAddress,
+ *         })
+ *       }
  *     >
  *       Revoke Role
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a `SmartContract`
+ *
  * @returns a mutation object that can be used to revoke a role from a member on the contract
+ * #### role (required)
+ *
+ * The role to revoke from the wallet address.
+ *
+ * Can be any custom role, or a built-in role, such as `admin`, `transfer`, `minter`, `pauser`, `lister`, `asset`, `unwrap`, or `factory`.
+ *
+ * #### address
+ *
+ * The wallet address to revoke the role from.
+ *
+ * To use the connected wallet address, use the `useAddress` hook.
+ *
  * @twfeature Permissions | PermissionsEnumerable
  * @permissionControl
  */
