@@ -1,7 +1,7 @@
 import { Box, DarkMode, Flex, LightMode } from "@chakra-ui/react";
 import { Button, FormLabel } from "tw-components";
 
-const ButtonShapeRecord: Record<string, string> = {
+export const ButtonShapeRecord: Record<string, "lg" | "none" | "full"> = {
   rounded: "lg",
   square: "none",
   pill: "full",

@@ -55,7 +55,7 @@ import { Checkout } from "graphql/generated_types";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { PaymentsSettingsFileUploader } from "components/payments/settings/payment-settings-file-uploader";
-import { PaymentsPreviewButton } from "./preview-button";
+import { ButtonShapeRecord, PaymentsPreviewButton } from "./preview-button";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
 import { PaymentsMintMethodInput } from "./mint-method-input";
@@ -579,6 +579,10 @@ export const CreateUpdateCheckoutButton: React.FC<
           data.twitterHandleOverride.startsWith("@")
         ) {
           data.twitterHandleOverride = data.twitterHandleOverride.substring(1);
+        }
+        if (data.brandButtonShape) {
+          data.brandButtonShape =
+            ButtonShapeRecord[data.brandButtonShape] || "lg";
         }
 
         // We need to filter in case an input from a different method has been rendered
