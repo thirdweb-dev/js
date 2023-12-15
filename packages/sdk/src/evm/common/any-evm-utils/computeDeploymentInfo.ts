@@ -22,6 +22,7 @@ import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
 import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
+import { AddressZero } from "../../constants/addresses/AddressZero";
 
 /**
  * @internal
@@ -166,6 +167,27 @@ export async function encodeConstructorParamsForImplementation(
           clientId,
           secretKey,
         );
+      } else if (p.name && p.name.includes("trustedForwarder")) {
+        if (compilerMetadata.name === "Pack") {
+          return AddressZero;
+        }
+
+        const deploymentInfo = await computeDeploymentInfo(
+          "infra",
+          provider,
+          storage,
+          create2Factory,
+          {
+            contractName: "Forwarder",
+          },
+          clientId,
+          secretKey,
+        );
+        if (!caches.deploymentPresets["Forwarder"]) {
+          caches.deploymentPresets["Forwarder"] = deploymentInfo;
+        }
+
+        return deploymentInfo.transaction.predictedAddress;
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
         const chainId = (await provider.getNetwork()).chainId;
         return getRoyaltyEngineV1ByChainId(chainId);
