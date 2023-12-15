@@ -635,7 +635,7 @@ export function useBidBuffer(
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the minimum next bid for the auction listing
- * @twfeature EnglishAucton
+ * @twfeature EnglishAuction
  * @see {@link https://portal.thirdweb.com/react/react.useminimumnextbid?utm_source=sdk | Documentation}
  */
 export function useMinimumNextBid(
