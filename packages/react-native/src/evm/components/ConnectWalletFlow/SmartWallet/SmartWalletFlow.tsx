@@ -124,6 +124,7 @@ export const SmartWalletFlow = ({
         <PersonalWalletConfigUI
           {...props}
           connected={connected}
+          hide={connected}
           goBack={goBack}
           walletConfig={personalWalletConfig}
           onLocallyConnected={onPersonalWalletConnected}

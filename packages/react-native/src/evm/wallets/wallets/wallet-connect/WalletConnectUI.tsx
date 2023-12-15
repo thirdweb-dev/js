@@ -44,7 +44,8 @@ export function WalletConnectUI({
   projectId,
   goBack,
   supportedWallets,
-}: ConnectUIProps<WalletConnect> & { projectId: string }) {
+  isVisible,
+}: ConnectUIProps<WalletConnect> & { projectId: string; isVisible?: boolean }) {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
@@ -156,7 +157,7 @@ export function WalletConnectUI({
 
   return (
     <TWModal
-      isVisible={true}
+      isVisible={isVisible ?? true}
       onBackdropPress={onClosePress}
       backdropOpacity={0.7}
     >
