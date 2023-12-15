@@ -166,8 +166,6 @@ export async function encodeConstructorParamsForImplementation(
           clientId,
           secretKey,
         );
-      } else if (p.name && p.name.includes("trustedForwarder")) {
-        return "";
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
         const chainId = (await provider.getNetwork()).chainId;
         return getRoyaltyEngineV1ByChainId(chainId);
