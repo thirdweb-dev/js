@@ -2588,7 +2588,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  * ```
  *
  * @param contract - an instance of a Marketplace contract
- * @returns - Mutation object that can be used to accept an offer on a direct listing
+ * @returns  Mutation object that can be used to accept an offer on a direct listing
  *
  * @marketplace
  */

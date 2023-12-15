@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 /**
  * Hook to switch the account of the active wallet
  *
- * @returns - A function to invoke to switch account.
+ * @returns  A function to invoke to switch account.
  *
  * @see {@link https://portal.thirdweb.com/react/react.useswitchaccount?utm_source=sdk | Documentation}
  *

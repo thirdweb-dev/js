@@ -15,7 +15,7 @@ export interface UserWithData<
 /**
  * Hook to get the currently logged in user.
  *
- * @returns - The currently logged in user or null if not logged in, as well as a loading state.
+ * @returns  The currently logged in user or null if not logged in, as well as a loading state.
  *
  * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
  *

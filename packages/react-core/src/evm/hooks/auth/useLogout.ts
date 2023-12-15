@@ -8,7 +8,7 @@ import invariant from "tiny-invariant";
  * Hook to logout the connected wallet from the backend.
  * The backend logout URL must be configured on the ThirdwebProvider.
  *
- * @returns - A function to invoke to logout.
+ * @returns  A function to invoke to logout.
  *
  * @see {@link https://portal.thirdweb.com/react/react.uselogout?utm_source=sdk | Documentation}
  *

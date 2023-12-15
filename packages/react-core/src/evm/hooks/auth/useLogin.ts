@@ -10,7 +10,7 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  * Hook to securely login to a backend with the connected wallet. The backend
  * authentication URL must be configured on the ThirdwebProvider.
  *
- * @returns - A function to invoke to login with the connected wallet, and an isLoading state.
+ * @returns  A function to invoke to login with the connected wallet, and an isLoading state.
  *
  * @see {@link https://portal.thirdweb.com/react/react.uselogin?utm_source=sdk | Documentation}
  *
