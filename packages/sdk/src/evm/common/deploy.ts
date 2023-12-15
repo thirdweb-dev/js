@@ -42,24 +42,10 @@ export async function getDeployArguments<
   signer: Signer,
   storage: ThirdwebStorage,
 ): Promise<any[]> {
-  const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
-  let trustedForwarders: string[] = [];
-  if (!chainEnum) {
-    const forwarder = await computeForwarderAddress(
-      signer.provider as providers.Provider,
-      storage,
-    );
-    trustedForwarders = [forwarder];
-  } else {
-    trustedForwarders =
-      contractType === PackInitializer.contractType
-        ? []
-        : getDefaultTrustedForwarders(chainId);
-  }
+  const trustedForwarders: string[] = [];
 
-  // add default forwarders to any custom forwarders passed in
+  // add any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
     trustedForwarders.push(...metadata.trusted_forwarders);
   }

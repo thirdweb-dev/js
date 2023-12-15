@@ -167,41 +167,7 @@ export async function encodeConstructorParamsForImplementation(
           secretKey,
         );
       } else if (p.name && p.name.includes("trustedForwarder")) {
-        if (compilerMetadata.name === "Pack") {
-          // EOAForwarder for Pack
-          const deploymentInfo = await computeDeploymentInfo(
-            "infra",
-            provider,
-            storage,
-            create2Factory,
-            {
-              contractName: "ForwarderEOAOnly",
-            },
-            clientId,
-            secretKey,
-          );
-          if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
-            caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
-          }
-          return deploymentInfo.transaction.predictedAddress;
-        }
-
-        const deploymentInfo = await computeDeploymentInfo(
-          "infra",
-          provider,
-          storage,
-          create2Factory,
-          {
-            contractName: "Forwarder",
-          },
-          clientId,
-          secretKey,
-        );
-        if (!caches.deploymentPresets["Forwarder"]) {
-          caches.deploymentPresets["Forwarder"] = deploymentInfo;
-        }
-
-        return deploymentInfo.transaction.predictedAddress;
+        return "";
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
         const chainId = (await provider.getNetwork()).chainId;
         return getRoyaltyEngineV1ByChainId(chainId);
