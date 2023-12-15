@@ -157,19 +157,11 @@ export function useContractRouteConfig(
       isDefault: true,
       isBeta: true,
     },
-    /*     {
-      title: "Payments",
-      path: "payments",
-      component: LazyContractPaymentsPage,
-      isDefault: true,
-    }, */
     {
       title: "Payments",
       path: "payments",
       component: LazyContractPaymentsPage,
-      isEnabled: account?.email?.includes("@thirdweb.com")
-        ? "enabled"
-        : "disabled",
+      isDefault: true,
     },
     {
       title: "NFTs",
