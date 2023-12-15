@@ -787,7 +787,7 @@ export function useCreateDirectListing<
 
 
 /**
- * Create a new direct listing
+ * Create multiple direct listings in one batch
  *
  * @example
  * ```jsx
@@ -800,7 +800,7 @@ export function useCreateDirectListing<
  *   } = useCreateDirectListingBatch(contract);
  *
  *   if (error) {
- *     console.error("failed to create direct listing", error);
+ *     console.error("failed to create direct listing batch", error);
  *   }
  *   
  *   // Sample data
@@ -832,7 +832,7 @@ export function useCreateDirectListing<
  * ```
  *
  * @param contract - an instance of a Marketplace contract
- * @returns a mutation object that can be used to create a new direct listing
+ * @returns a mutation object that can be used to create a new batch of direct listings
  * @twfeature DirectListings
  */
 export function useCreateDirectListingBatch<
