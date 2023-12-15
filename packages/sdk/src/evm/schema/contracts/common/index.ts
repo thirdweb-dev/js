@@ -44,14 +44,16 @@ export const CommonRoyaltySchema = /* @__PURE__ */ (() =>
      *
      * For example: if this value is 100, then the royalty is 1% of the total sales.
      *
-     *  @internalremarks used by OpenSea "seller_fee_basis_points"
+     * @internal
+     * @remarks used by OpenSea "seller_fee_basis_points"
      */
     seller_fee_basis_points: BasisPointsSchema.default(0),
 
     /**
      * The address of the royalty recipient. All royalties will be sent
      * to this address.
-     * @internalremarks used by OpenSea "fee_recipient"
+     * @internal
+     * @remarks used by OpenSea "fee_recipient"
      */
     fee_recipient: AddressOrEnsSchema.default(constants.AddressZero),
   }))();
@@ -64,7 +66,7 @@ export const CommonPrimarySaleSchema = /* @__PURE__ */ (() =>
     /**
      * primary sale recipient address
      */
-    primary_sale_recipient: AddressOrEnsSchema,
+    primary_sale_recipient: AddressOrEnsSchema.default(constants.AddressZero),
   }))();
 
 /**
