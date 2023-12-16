@@ -37,9 +37,7 @@ const ADDRESS_ARRAY_TEMPLATE_VALUES: TemplateValue[] = [
     helperText:
       "Replaced with the addresses of the trusted (gasless) forwarders for the selected network.",
     replacerFunction: (searchValue, replacers) => {
-      const trustedForwardersForChain = replacers.chainId
-        ? getDefaultTrustedForwarders(replacers.chainId)
-        : [];
+      const trustedForwardersForChain: string[] = [];
       return searchValue.replaceAll(
         "{{trusted_forwarders}}",
         JSON.stringify(trustedForwardersForChain),

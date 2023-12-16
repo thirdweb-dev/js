@@ -50,7 +50,6 @@ import {
 import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
-  zkGetDefaultTrustedForwarders,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
@@ -138,6 +137,19 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
       enabled: !!contractId,
     },
   );
+}
+
+export function useDefaultForwarders() {
+  const sdk = useSDK();
+  const provider = sdk?.getProvider();
+  invariant(provider, "Require provider");
+
+  const chainId = useSDKChainId();
+
+  return useQuery(["default-forwarders", chainId], async () => {
+    const forwarders = await getTrustedForwarders(provider, StorageSingleton);
+    return forwarders;
+  });
 }
 
 // metadata PRE publish, only contains the compiler output
@@ -613,20 +625,6 @@ export function useCustomContractDeployMutation(
         // Handle ZkSync deployments separately
         const isZkSync =
           chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
-        if (
-          !isZkSync &&
-          (data.deployParams?._trustedForwarders?.length === 0 ||
-            data.deployParams?._trustedForwarders === "[]")
-        ) {
-          const trustedForwarders = await getTrustedForwarders(
-            sdk.getProvider(),
-            sdk.storage,
-            compilerMetadata.data?.name,
-          );
-
-          data.deployParams._trustedForwarders =
-            JSON.stringify(trustedForwarders);
-        }
 
         // deploy contract
         if (isZkSync) {
@@ -635,7 +633,6 @@ export function useCustomContractDeployMutation(
             window.ethereum as unknown as providers.ExternalProvider,
           ).getSigner();
 
-          data.deployParams._trustedForwarders = JSON.stringify([]);
           contractAddress = await zkDeployContractFromUri(
             ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
             Object.values(data.deployParams),
