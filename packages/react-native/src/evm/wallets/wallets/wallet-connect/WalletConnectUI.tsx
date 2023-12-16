@@ -45,7 +45,18 @@ export function WalletConnectUI({
   goBack,
   supportedWallets,
   isVisible,
-}: ConnectUIProps<WalletConnect> & { projectId: string; isVisible?: boolean }) {
+}: Omit<
+  ConnectUIProps<WalletConnect>,
+  | "isOpen"
+  | "show"
+  | "theme"
+  | "selectionData"
+  | "setSelectionData"
+  | "modalSize"
+> & {
+  projectId: string;
+  isVisible?: boolean;
+}) {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
