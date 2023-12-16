@@ -19,10 +19,10 @@
       "dependsOn": ["^build"],
       "env": ["THIRDWEB_EWS_SDK_VERSION"]
     },
-    "@thirdweb-dev/checkouts#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
+    "@thirdweb-dev/payments#build": {
+      "outputs": ["dist/**"],
       "dependsOn": ["^build"],
-      "env": ["THIRDWEB_CHECKOUTS_SDK_VERSION"]
+      "env": ["THIRDWEB_PAYMENTS_SDK_VERSION"]
     },
     "@thirdweb-dev/pay#build": {
       "outputs": ["dist/**", "integrations/**"],
