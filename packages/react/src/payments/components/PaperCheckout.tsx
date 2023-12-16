@@ -222,7 +222,7 @@ export const PaperCheckout = <T extends ContractType>({
         fontWeight: "bold",
       }}
     >
-      Buy Now
+      {"Buy Now"}
     </button>
   );
 

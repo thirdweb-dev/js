@@ -54,36 +54,32 @@ export const fetchCustomContractArgsFromProps = (
 
 /** This is basically a map from argument name to the value
  * Example:
- * ```json
- * 	{
+ * json
  *    recipient: "0x...",
  *    quantity: 1,
- *  }
- * ```
  *
  * Corresponds to the following argument stub in solidity:
- *  ```solidity
+ *  solidity
  * function myFunction (address recipient, uint128 quantity)
- * ```
+ *
  *
  * You can also pass your complex params for your contract like so:
  *
- * ```json
- * 	{
- * 	  _user: { address: "0x...", age: 24 },
+ * json
+ * 	  _user:address: "0x...", age: 24,
  *    _quantity: 2,
- *  }
- *```
+ *
+ *
  *
  * The above correspond to the following argument stub in solidity:
- * ```solidity
- * struct User {
+ * solidity
+ * struct User
  *    string name;
  *    uint256 age;
- * }
+ *
  *
  * function myFunction(User calldata _user, uint256 _quantity)
- * ```
+ *
  *
  */
 type ArgumentMapType = {
@@ -113,7 +109,7 @@ type ArgumentMapType = {
  * function claim(address _recipient, uint256 _quantity)
  * ```
  *
- * For more on the types of arguments you can pass, see {@link ArgumentMapType}
+ * For more on the types of arguments you can pass, see ArgumentMapType
  */
 export type ReadMethodCallType = {
   name: string;
@@ -121,7 +117,7 @@ export type ReadMethodCallType = {
 };
 
 /**
- * This is similar to {@link ReadMethodCallType} with two added properties
+ * This is similar to ReadMethodCallType with two added properties
  *
  * ## payment
  *  * We will automatically call the `approve` function for non native coins.

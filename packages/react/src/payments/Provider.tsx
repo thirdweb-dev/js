@@ -9,12 +9,15 @@ interface SDKContext {
   clientId: string;
   appName: string;
 }
-const PaymentsSDKContext = createContext<SDKContext>({
+
+const defaultContextValue: SDKContext = {
   chainName: "Polygon",
   setChainName: () => {},
   clientId: "",
   appName: "",
-});
+};
+
+const PaymentsSDKContext = /* @__PURE__ */ createContext(defaultContextValue);
 
 export interface PaymentsProviderProps {
   chainName?: SupportedChainName;
@@ -22,15 +25,6 @@ export interface PaymentsProviderProps {
   clientId?: string;
 }
 
-/**
- * @deprecated Pass required data to individual components as props instead
- * @typedef PaymentsProviderProps
- * @type {object}
- * @property {string} appName - The name used to display
- * @property {string}  chainName - deprecated. Not used anymore
- * @property {string} clientId - deprecated. Used by VerifyOwnershipWithPaper which has since been deprecated
- * @param {PaymentsProviderProps} props
- */
 export const PaymentsSDKProvider = ({
   appName = "",
   chainName = "Polygon",

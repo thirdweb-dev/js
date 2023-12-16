@@ -1,7 +1,7 @@
 // Unchanged
 import React, { forwardRef, memo } from "react";
 
-const IFrameBase = forwardRef(
+const IFrameBase = /* @__PURE__ */ forwardRef(
   (
     props: React.IframeHTMLAttributes<HTMLIFrameElement>,
     ref: React.ForwardedRef<HTMLIFrameElement>,
@@ -10,4 +10,4 @@ const IFrameBase = forwardRef(
   },
 );
 IFrameBase.displayName = "IFrameBase";
-export const IFrameWrapper = memo(IFrameBase);
+export const IFrameWrapper = /* @__PURE__ */ memo(IFrameBase);

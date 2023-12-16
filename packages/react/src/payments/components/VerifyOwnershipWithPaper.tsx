@@ -6,7 +6,8 @@ import React, { useEffect } from "react";
 import { usePaymentsSDKContext } from "../Provider";
 import { openCenteredPopup } from "../lib/utils/popup";
 import { Button } from "./common/Button";
-const packageJson = require("../package.json");
+
+import packageJson from "../../../package.json";
 
 interface VerifyOwnershipWithPaperProps {
   onSuccess?: (code: string) => void;
@@ -120,7 +121,7 @@ export const VerifyOwnershipWithPaper: React.FC<
               align-items: center;
             `}
           >
-            <span style={{ marginRight: "8px" }}>Login with</span>{" "}
+            <span style={{ marginRight: "8px" }}>{"Login with"}</span>{" "}
             <svg
               width="15"
               height="30"
@@ -143,7 +144,7 @@ export const VerifyOwnershipWithPaper: React.FC<
                 fill="#39D0FF"
               />
             </svg>{" "}
-            <span style={{ marginLeft: "5px" }}> Paper</span>
+            <span style={{ marginLeft: "5px" }}>{"Paper"}</span>
           </div>
         </Button>
       )}
