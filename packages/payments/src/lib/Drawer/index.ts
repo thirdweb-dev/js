@@ -1,6 +1,7 @@
 import type { StyleObject } from "../../constants/style";
 import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles } from "./styles";
+
 const packageJson = require("../package.json");
 
 const MAIN_CLASSNAME = "paper--drawer-main";
