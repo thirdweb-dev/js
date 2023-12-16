@@ -2,7 +2,7 @@ import type { StyleObject } from "../../constants/style";
 import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles } from "./styles";
 
-import packageJson from "../package.json";
+import packageJson from "../../../package.json";
 
 const MAIN_CLASSNAME = "paper--drawer-main";
 const OVERLAY_CLASSNAME = "paper--drawer-overlay";
