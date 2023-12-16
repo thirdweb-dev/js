@@ -9,14 +9,14 @@ interface SDKContext {
   clientId: string;
   appName: string;
 }
-const PaperSDKContext = createContext<SDKContext>({
+const PaymentsSDKContext = createContext<SDKContext>({
   chainName: "Polygon",
   setChainName: () => {},
   clientId: "",
   appName: "",
 });
 
-export interface PaperProviderProps {
+export interface PaymentsProviderProps {
   chainName?: SupportedChainName;
   appName?: string;
   clientId?: string;
@@ -24,19 +24,19 @@ export interface PaperProviderProps {
 
 /**
  * @deprecated Pass required data to individual components as props instead
- * @typedef PaperProviderProps
+ * @typedef PaymentsProviderProps
  * @type {object}
  * @property {string} appName - The name used to display
  * @property {string}  chainName - deprecated. Not used anymore
  * @property {string} clientId - deprecated. Used by VerifyOwnershipWithPaper which has since been deprecated
- * @param {PaperProviderProps} props
+ * @param {PaymentsProviderProps} props
  */
-export const PaperSDKProvider = ({
+export const PaymentsSDKProvider = ({
   appName = "",
   chainName = "Polygon",
   clientId = "",
   children,
-}: React.PropsWithChildren<PaperProviderProps>) => {
+}: React.PropsWithChildren<PaymentsProviderProps>) => {
   const [chainName_, setChainName] = useState<SupportedChainName>(chainName);
   const contextValue = useMemo(
     () => ({
@@ -49,12 +49,12 @@ export const PaperSDKProvider = ({
   );
 
   return (
-    <PaperSDKContext.Provider value={contextValue}>
+    <PaymentsSDKContext.Provider value={contextValue}>
       {children}
-    </PaperSDKContext.Provider>
+    </PaymentsSDKContext.Provider>
   );
 };
 
-export const usePaperSDKContext = (): SDKContext => {
-  return useContext(PaperSDKContext);
+export const usePaymentsSDKContext = (): SDKContext => {
+  return useContext(PaymentsSDKContext);
 };
