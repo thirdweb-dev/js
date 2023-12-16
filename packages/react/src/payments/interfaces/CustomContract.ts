@@ -1,3 +1,4 @@
+// UNCHANGED
 export type SignedPayload = {
   payload: { [key: string]: any };
   signature: string;
@@ -130,11 +131,10 @@ export type ReadMethodCallType = {
  * * As of now, we only support specifying the relative amount of gas to use.
  * * They correspond to the values of the [gas trackers](https://etherscan.io/gastracker) at the time of calling the function
  */
-export type WriteMethodCallType =
-  | ReadMethodCallType & {
-      payment: {
-        currency: "MATIC" | "ETH" | "USDC" | "SOL" | "AVAX" | "USDC.e";
-        value: string;
-      };
-      callOptions?: { gasOptions?: "low" | "medium" | "high" };
-    };
+export type WriteMethodCallType = ReadMethodCallType & {
+  payment: {
+    currency: "MATIC" | "ETH" | "USDC" | "SOL" | "AVAX" | "USDC.e";
+    value: string;
+  };
+  callOptions?: { gasOptions?: "low" | "medium" | "high" };
+};

@@ -1,13 +1,7 @@
-import type {
-  ICustomizationOptions,
-  Locale
-} from "../constants/style";
-import {
-  DEFAULT_BRAND_OPTIONS
-} from "../constants/style";
-import {
-  getPaperOriginUrl,
-} from "../constants/settings";
+// CHANGED: Added clientId to interface
+import type { ICustomizationOptions, Locale } from "../constants/style";
+import { DEFAULT_BRAND_OPTIONS } from "../constants/style";
+import { getPaperOriginUrl } from "../constants/settings";
 import {
   CHECKOUT_WITH_CARD_IFRAME_URL,
   PAPER_APP_URL,
@@ -66,7 +60,7 @@ export function createCheckoutWithCardLink({
     return new URL(destination, domain);
   }
 
-  if(!clientId) {
+  if (!clientId) {
     const error = `Must have clientId field set. Please add clientId`;
     const destination = `/error?errorMessage=${error}`;
     const domain = getPaperOriginUrl();

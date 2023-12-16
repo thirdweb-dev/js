@@ -1,3 +1,4 @@
+// UNCHANGED
 export type TransferSuccessResult = {
   /**
    * A unique ID for this purchase.

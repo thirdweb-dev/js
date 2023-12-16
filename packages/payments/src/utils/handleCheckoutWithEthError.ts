@@ -1,3 +1,4 @@
+// UNCHANGED
 import type { PaperSDKError } from "../interfaces/PaperSDKError";
 import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
 

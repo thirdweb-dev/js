@@ -1,3 +1,4 @@
+// UNCHANGED
 import { css, cx } from "@emotion/css";
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useEffect } from "react";
@@ -194,7 +195,8 @@ const dialogClasses = css`
   max-width: 100%;
   max-height: 100%;
   border-radius: 0.5rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 `;
 

@@ -1,3 +1,4 @@
+// UNCHANGED
 export const enum WalletType {
   Preset = "Preset",
   MetaMask = "metaMask",

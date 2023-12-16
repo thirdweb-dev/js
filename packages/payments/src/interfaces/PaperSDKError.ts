@@ -1,3 +1,5 @@
+// UNCHANGED
+
 export type PaperSDKError = {
   /**
    * An enum representing the error encountered.

@@ -1,3 +1,4 @@
+// UNCHANGED: MERGED FROM sdk-common-utilities/iframeMessages
 export type MessageType<T> =
   | {
       eventType: string;

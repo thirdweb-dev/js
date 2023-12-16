@@ -1,3 +1,4 @@
+// UNCHANGED: MERGED FROM sdk-common-utilities/blockchain
 export const ChainToPublicRpc: Record<Chain, string> = {
   Ethereum: "https://ethereum.rpc.thirdweb.com",
   Goerli: "https://goerli.rpc.thirdweb.com",

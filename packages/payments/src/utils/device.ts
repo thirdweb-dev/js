@@ -1,3 +1,4 @@
+// UNCHANGED
 /**
  * Opens a popup centered on the current window.
  * Note that modern browsers may prevent popups from opening automatically,

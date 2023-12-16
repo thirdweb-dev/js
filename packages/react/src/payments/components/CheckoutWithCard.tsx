@@ -1,3 +1,4 @@
+// CHANGED: Import packageJSON + sdk-version only
 import type {
   ICheckoutWithCardConfigs,
   PaperSDKError,
@@ -6,7 +7,10 @@ import type {
   ICustomizationOptions,
   Locale,
 } from "@thirdweb-dev/payments";
-import { createCheckoutWithCardElement, DEFAULT_BRAND_OPTIONS } from "@thirdweb-dev/payments";
+import {
+  createCheckoutWithCardElement,
+  DEFAULT_BRAND_OPTIONS,
+} from "@thirdweb-dev/payments";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePaperSDKContext } from "../Provider";
 import { iframeContainer } from "../lib/utils/styles";

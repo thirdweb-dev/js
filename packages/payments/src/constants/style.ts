@@ -1,3 +1,4 @@
+// // UNCHANGED: MERGED FROM sdk-common-utilities/style
 export type StyleObject = Partial<CSSStyleDeclaration>;
 
 export interface ICustomizationOptions {

@@ -1,3 +1,4 @@
+// UNCHANGED: MERGE BETWEEN sdk-common-utilities/settings and js-client-sdk/settings
 const isDev = (): boolean => {
   return !!(
     typeof window !== "undefined" &&

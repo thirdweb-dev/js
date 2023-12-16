@@ -1,3 +1,4 @@
+// CHANGED: imports only
 import { PAPER_APP_URL, DEFAULT_BRAND_OPTIONS } from "@thirdweb-dev/payments";
 import React, { useEffect, useState } from "react";
 import type {

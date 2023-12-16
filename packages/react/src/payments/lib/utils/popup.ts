@@ -1,3 +1,4 @@
+// UNCHANGED
 /**
  * Opens a popup centered on the parent page and returns a reference to the window.
  * The caller can close the popup with `popupWindow.close()`.

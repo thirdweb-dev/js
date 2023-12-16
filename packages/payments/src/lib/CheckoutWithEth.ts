@@ -1,16 +1,12 @@
+// CHANGED: Imports only
 import type { ethers } from "ethers";
 import {
   CHECKOUT_WITH_ETH_IFRAME_URL,
   PAPER_APP_URL,
   getPaperOriginUrl,
 } from "../constants/settings";
-import type {
-  ICustomizationOptions,
-  Locale
-} from "../constants/style";
-import {
-  DEFAULT_BRAND_OPTIONS
-} from "../constants/style";
+import type { ICustomizationOptions, Locale } from "../constants/style";
+import { DEFAULT_BRAND_OPTIONS } from "../constants/style";
 import type { PaperSDKError } from "../interfaces/PaperSDKError";
 import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
 import type { PriceSummary } from "../interfaces/PriceSummary";

@@ -1,7 +1,6 @@
-import type {
-  ICustomizationOptions,
-  Locale,
-} from "../constants/style";
+// CHANGED: added clientId to link
+
+import type { ICustomizationOptions, Locale } from "../constants/style";
 
 export class LinksManager {
   private link: URL;
