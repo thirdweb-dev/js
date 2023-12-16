@@ -12,7 +12,7 @@ import {
   DEFAULT_BRAND_OPTIONS,
 } from "@thirdweb-dev/payments";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { usePaperSDKContext } from "../Provider";
+import { usePaymentsSDKContext } from "../Provider";
 import { iframeContainer } from "../lib/utils/styles";
 import { SpinnerWrapper } from "./common/SpinnerWrapper";
 const packageJson = require("../package.json");
@@ -58,7 +58,7 @@ export const CheckoutWithCard = ({
   locale,
   configs,
 }: CheckoutWithCardProps): React.ReactElement => {
-  const { appName: appNameContext } = usePaperSDKContext();
+  const { appName: appNameContext } = usePaymentsSDKContext();
   const [isCardDetailIframeLoading, setIsCardDetailIframeLoading] =
     useState<boolean>(true);
   const onCardDetailLoad = useCallback(() => {

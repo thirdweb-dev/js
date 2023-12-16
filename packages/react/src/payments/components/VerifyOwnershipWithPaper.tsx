@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 import type { PaperSDKError, SupportedChainName } from "@thirdweb-dev/payments";
 import { PAPER_APP_URL, PaperSDKErrorCode } from "@thirdweb-dev/payments";
 import React, { useEffect } from "react";
-import { usePaperSDKContext } from "../Provider";
+import { usePaymentsSDKContext } from "../Provider";
 import { openCenteredPopup } from "../lib/utils/popup";
 import { Button } from "./common/Button";
 const packageJson = require("../package.json");
@@ -42,7 +42,7 @@ export const VerifyOwnershipWithPaper: React.FC<
   clientId,
 }) => {
   const { chainName: chainNameContext, clientId: clientIdContext } =
-    usePaperSDKContext();
+    usePaymentsSDKContext();
   const isChildrenFunction = typeof children === "function";
 
   const chainNameToUse = chainName || chainNameContext;
