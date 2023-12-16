@@ -97,5 +97,7 @@ export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
+  //  Since ZkSync has gas sponsoring through native Account Abstraction,
+  //  it doesn’t need a forwarder
   return [];
 }
