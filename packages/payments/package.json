@@ -40,14 +40,6 @@
   "dependencies": {
     "ethers": "^5.7.2"
   },
-  "peerDependencies": {
-    "ethers": "^5.7.2"
-  },
-  "peerDependenciesMeta": {
-    "ethers": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
