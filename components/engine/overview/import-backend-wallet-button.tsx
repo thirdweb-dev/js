@@ -56,13 +56,6 @@ export const ImportBackendWalletButton: React.FC<
         <ModalContent
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            trackEvent({
-              category: "engine",
-              action: "import-backend-wallet",
-              label: "attempt",
-              type: walletConfig?.type,
-              instance,
-            });
             importBackendWallet(data, {
               onSuccess: () => {
                 onSuccess();

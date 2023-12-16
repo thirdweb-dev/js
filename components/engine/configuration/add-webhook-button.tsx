@@ -53,7 +53,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
         colorScheme="primary"
         w="fit-content"
       >
-        Create webhook
+        Create Webhook
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -61,12 +61,6 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
         <ModalContent
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            trackEvent({
-              category: "engine",
-              action: "create-webhook",
-              label: "attempt",
-              instance,
-            });
             createWebhook(data, {
               onSuccess: () => {
                 onSuccess();
@@ -91,7 +85,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
             });
           })}
         >
-          <ModalHeader>Create New Webhook</ModalHeader>
+          <ModalHeader>Create Webhook</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex flexDir="column" gap={4}>

@@ -14,14 +14,16 @@ import {
   useDisclosure,
   Stack,
   FormControl,
+  Tooltip,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { format } from "date-fns";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Button, FormLabel, Text } from "tw-components";
+import { FiTrash } from "react-icons/fi";
+import { Button, Card, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 export function beautifyString(str: string): string {
@@ -68,7 +70,12 @@ const columns = [
   columnHelper.accessor("url", {
     header: "URL",
     cell: (cell) => {
-      return <Text>{cell.getValue()}</Text>;
+      const url = cell.getValue();
+      return (
+        <Text maxW={300} isTruncated>
+          {url}
+        </Text>
+      );
     },
   }),
   columnHelper.accessor("createdAt", {
@@ -78,7 +85,23 @@ const columns = [
       if (!value) {
         return;
       }
-      return <Text>{format(new Date(value), "PP p")}</Text>;
+
+      const date = new Date(value);
+      return (
+        <Tooltip
+          borderRadius="md"
+          bg="transparent"
+          boxShadow="none"
+          label={
+            <Card bgColor="backgroundHighlight">
+              <Text>{format(date, "PP pp z")}</Text>
+            </Card>
+          }
+          shouldWrapChildren
+        >
+          <Text>{formatDistanceToNowStrict(date, { addSuffix: true })}</Text>
+        </Tooltip>
+      );
     },
   }),
 ];
@@ -107,12 +130,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
     if (!webhookToRevoke) {
       return;
     }
-    trackEvent({
-      category: "engine",
-      action: "revoke-webhook",
-      label: "attempt",
-      instance,
-    });
+
     revokeWebhook(
       {
         id: webhookToRevoke.id,
@@ -193,7 +211,14 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}
-        onDelete={(webhook) => onDelete(webhook)}
+        onMenuClick={[
+          {
+            icon: FiTrash,
+            text: "Delete",
+            onClick: onDelete,
+            isDestructive: true,
+          },
+        ]}
       />
     </>
   );

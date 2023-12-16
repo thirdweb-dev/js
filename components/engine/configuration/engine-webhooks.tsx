@@ -17,14 +17,13 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
         <Heading size="title.md">Webhooks</Heading>
         <Text>
           Notify your app backend when transaction and backend wallet events
-          occur.
+          occur.{" "}
           <Link
             href="https://portal.thirdweb.com/engine/webhooks"
             color="primary.500"
             isExternal
           >
-            {" "}
-            Learn more
+            Learn more about webhooks
           </Link>
           .
         </Text>

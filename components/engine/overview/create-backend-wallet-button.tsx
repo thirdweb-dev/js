@@ -61,12 +61,6 @@ export const CreateBackendWalletButton: React.FC<
             </Button>
             <Button
               onClick={() => {
-                trackEvent({
-                  category: "engine",
-                  action: "create-backend-wallet",
-                  label: "attempt",
-                  instance,
-                });
                 createBackendWallet(undefined, {
                   onSuccess: () => {
                     onSuccess();

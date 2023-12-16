@@ -45,12 +45,6 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
       flexDir="column"
       gap={4}
       onSubmit={form.handleSubmit((data) => {
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "aws-kms",
-          label: "attempt",
-        });
         setAwsKmsConfig(data, {
           onSuccess: () => {
             onSuccess();

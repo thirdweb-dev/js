@@ -30,8 +30,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
             color="primary.500"
             isExternal
           >
-            {" "}
-            Learn more
+            Learn more about backend wallets
           </Link>
           .
         </Text>

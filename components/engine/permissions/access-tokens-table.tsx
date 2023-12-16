@@ -23,6 +23,8 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
+import { BiPencil } from "react-icons/bi";
+import { FiTrash } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { toDateTimeLocal } from "utils/date-utils";
@@ -95,14 +97,25 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}
-        onEdit={(accessToken) => {
-          setSelectedAccessToken(accessToken);
-          editDisclosure.onOpen();
-        }}
-        onDelete={(accessToken) => {
-          setSelectedAccessToken(accessToken);
-          removeDisclosure.onOpen();
-        }}
+        onMenuClick={[
+          {
+            icon: BiPencil,
+            text: "Edit",
+            onClick: (accessToken) => {
+              setSelectedAccessToken(accessToken);
+              editDisclosure.onOpen();
+            },
+          },
+          {
+            icon: FiTrash,
+            text: "Delete",
+            onClick: (accessToken) => {
+              setSelectedAccessToken(accessToken);
+              removeDisclosure.onOpen();
+            },
+            isDestructive: true,
+          },
+        ]}
       />
 
       {selectedAccessToken && editDisclosure.isOpen && (

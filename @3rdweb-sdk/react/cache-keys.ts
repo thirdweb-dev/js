@@ -56,6 +56,8 @@ export const engineKeys = {
     [...engineKeys.all, instance, "permissions"] as const,
   accessTokens: (instance: string) =>
     [...engineKeys.all, instance, "accessTokens"] as const,
+  relayers: (instance: string) =>
+    [...engineKeys.all, instance, "relayers"] as const,
   webhooks: (instance: string) =>
     [...engineKeys.all, instance, "webhooks"] as const,
   webhookEventTypes: (instance: string) =>

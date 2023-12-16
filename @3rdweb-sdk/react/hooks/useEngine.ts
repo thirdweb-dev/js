@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import invariant from "tiny-invariant";
@@ -305,6 +305,154 @@ export function useEngineAccessTokens(instance: string) {
       return (json.result as AccessToken[]) || [];
     },
     { enabled: !!instance && !!token },
+  );
+}
+
+export type EngineRelayer = {
+  id: string;
+  name?: string;
+  chainId: string;
+  backendWalletAddress: string;
+  allowedContracts?: string[];
+  allowedForwarders?: string[];
+};
+
+export function useEngineRelayer(instance: string) {
+  const { token } = useApiAuthToken();
+
+  return useQuery(
+    engineKeys.relayers(instance),
+    async () => {
+      const res = await fetch(`${instance}relayer/get-all`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const json = await res.json();
+
+      return (json.result as EngineRelayer[]) || [];
+    },
+    { enabled: !!instance && !!token },
+  );
+}
+
+export type CreateRelayerInput = {
+  name?: string;
+  chain: string;
+  backendWalletAddress: string;
+  allowedContracts?: string[];
+  allowedForwarders?: string[];
+};
+
+export function useEngineCreateRelayer(instance: string) {
+  const { token } = useApiAuthToken();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: CreateRelayerInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}relayer/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+      },
+    },
+  );
+}
+
+export type RevokeRelayerInput = {
+  id: string;
+};
+
+export function useEngineRevokeRelayer(instance: string) {
+  const { token } = useApiAuthToken();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: RevokeRelayerInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}relayer/revoke`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+      },
+    },
+  );
+}
+
+export type UpdateRelayerInput = {
+  id: string;
+  name?: string;
+  chain: string;
+  backendWalletAddress: string;
+  allowedContracts?: string[];
+  allowedForwarders?: string[];
+};
+
+export function useEngineUpdateRelayer(instance: string) {
+  const { token } = useApiAuthToken();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: UpdateRelayerInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}relayer/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+      },
+    },
   );
 }
 
@@ -790,4 +938,44 @@ export function useEngineRevokeWebhook(instance: string) {
       },
     },
   );
+}
+
+type SendTokensInput = {
+  chainId: number;
+  fromAddress: string;
+  toAddress: string;
+  amount: number;
+  currencyAddress?: string;
+};
+
+export function useEngineSendTokens(instance: string) {
+  const { token } = useApiAuthToken();
+
+  return useMutation(async (input: SendTokensInput) => {
+    invariant(instance, "instance is required");
+
+    const res = await fetch(
+      `${instance}backend-wallet/${input.chainId}/transfer`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "x-backend-wallet-address": input.fromAddress,
+        },
+        body: JSON.stringify({
+          to: input.toAddress,
+          amount: input.amount.toString(),
+          currencyAddress: input.currencyAddress,
+        }),
+      },
+    );
+    const json = await res.json();
+
+    if (json.error) {
+      throw new Error(json.message);
+    }
+
+    return json.result;
+  });
 }

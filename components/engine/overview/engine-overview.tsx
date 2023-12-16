@@ -129,6 +129,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
           transactions={transactionsQuery.data?.transactions ?? []}
           isLoading={transactionsQuery.isLoading}
           isFetched={transactionsQuery.isFetched}
+          instanceUrl={instance}
         />
       </Flex>
     </Flex>

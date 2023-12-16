@@ -15,6 +15,7 @@ import { EnginePermissions } from "./permissions/engine-permissions";
 import { useTrack } from "hooks/analytics/useTrack";
 import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { FiArrowLeft } from "react-icons/fi";
+import { EngineRelayer } from "./relayer/engine-relayer";
 
 interface EngineNavigationProps {
   instance: EngineInstance;
@@ -39,16 +40,22 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
       children: <EngineExplorer instance={instance.url} />,
     },
     {
-      title: "Configuration",
+      title: "Relayer",
       isDisabled: false,
       disabledText: "",
-      children: <EngineConfiguration instance={instance.url} />,
+      children: <EngineRelayer instanceUrl={instance.url} />,
     },
     {
       title: "Permissions",
       isDisabled: false,
       disabledText: "",
       children: <EnginePermissions instance={instance.url} />,
+    },
+    {
+      title: "Configuration",
+      isDisabled: false,
+      disabledText: "",
+      children: <EngineConfiguration instance={instance.url} />,
     },
   ];
 

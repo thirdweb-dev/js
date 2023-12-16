@@ -34,7 +34,6 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
   const form = useForm<EngineAdmin>({
     defaultValues: {
       permissions: "ADMIN",
-      label: undefined,
     },
   });
 
@@ -53,19 +52,13 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
         colorScheme="primary"
         w="fit-content"
       >
-        Add admin
+        Add Admin
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            trackEvent({
-              category: "engine",
-              action: "add-admin",
-              label: "attempt",
-              instance,
-            });
             grantPermissions(data, {
               onSuccess: () => {
                 onSuccess();

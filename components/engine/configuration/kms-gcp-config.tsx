@@ -57,12 +57,6 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
       flexDir="column"
       gap={4}
       onSubmit={form.handleSubmit((data) => {
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "gcp-kms",
-          label: "attempt",
-        });
         setGcpKmsConfig(data, {
           onSuccess: () => {
             onSuccess();

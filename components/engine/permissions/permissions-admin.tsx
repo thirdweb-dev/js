@@ -25,7 +25,7 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
             isExternal
           >
             {" "}
-            Learn more
+            Learn more about admins
           </Link>
           .
         </Text>

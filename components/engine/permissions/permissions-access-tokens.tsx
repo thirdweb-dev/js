@@ -24,8 +24,7 @@ export const PermissionsAccessTokens: React.FC<
             color="primary.500"
             isExternal
           >
-            {" "}
-            Learn more
+            Learn more about access tokens
           </Link>
           .
         </Text>

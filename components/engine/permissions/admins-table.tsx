@@ -23,7 +23,9 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Button, FormLabel, Text } from "tw-components";
+import { BiPencil } from "react-icons/bi";
+import { FiTrash } from "react-icons/fi";
+import { Badge, Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface AdminsTableProps {
@@ -63,7 +65,18 @@ const columns = [
   columnHelper.accessor("permissions", {
     header: "Role",
     cell: (cell) => {
-      return <Text textTransform="capitalize">{cell.getValue()}</Text>;
+      return (
+        <Badge
+          borderRadius="full"
+          size="label.sm"
+          variant="subtle"
+          px={3}
+          py={1.5}
+          colorScheme="black"
+        >
+          {cell.getValue()}
+        </Badge>
+      );
     },
   }),
 ];
@@ -86,14 +99,25 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}
-        onEdit={(admin) => {
-          setSelectedAdmin(admin);
-          editDisclosure.onOpen();
-        }}
-        onDelete={(admin) => {
-          setSelectedAdmin(admin);
-          removeDisclosure.onOpen();
-        }}
+        onMenuClick={[
+          {
+            icon: BiPencil,
+            text: "Edit",
+            onClick: (admin) => {
+              setSelectedAdmin(admin);
+              editDisclosure.onOpen();
+            },
+          },
+          {
+            icon: FiTrash,
+            text: "Remove",
+            onClick: (admin) => {
+              setSelectedAdmin(admin);
+              removeDisclosure.onOpen();
+            },
+            isDestructive: true,
+          },
+        ]}
       />
 
       {selectedAdmin && editDisclosure.isOpen && (

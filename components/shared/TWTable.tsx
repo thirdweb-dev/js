@@ -5,6 +5,9 @@ import {
   Flex,
   Icon,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
   Spinner,
   Table,
   Tbody,
@@ -23,9 +26,17 @@ import {
 } from "@tanstack/react-table";
 import pluralize from "pluralize";
 import { SetStateAction, useMemo, useState } from "react";
-import { BiPencil } from "react-icons/bi";
-import { FiArrowRight, FiTrash } from "react-icons/fi";
-import { Button, TableContainer, Text } from "tw-components";
+import { FaEllipsisVertical } from "react-icons/fa6";
+import { FiArrowRight } from "react-icons/fi";
+import { IconType } from "react-icons/lib";
+import { Button, MenuItem, TableContainer, Text } from "tw-components";
+
+type CtaMenuItem<TRowData> = {
+  icon?: IconType;
+  text: string;
+  onClick: (row: TRowData) => void;
+  isDestructive?: boolean;
+};
 
 type TWTableProps<TRowData> = {
   columns: ColumnDef<TRowData, any>[];
@@ -33,8 +44,7 @@ type TWTableProps<TRowData> = {
   isLoading: boolean;
   isFetched: boolean;
   onRowClick?: (row: TRowData) => void;
-  onEdit?: (row: TRowData) => void;
-  onDelete?: (row: TRowData) => void;
+  onMenuClick?: CtaMenuItem<TRowData>[];
   pagination?: {
     pageSize: number;
   };
@@ -133,9 +143,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                   )}
                 </Th>
               ))}
-              {/* if the row is clickable we want an arrow to show */}
-              {tableProps.onRowClick && <Th border="none" />}
-              {(tableProps.onEdit || tableProps.onDelete) && (
+              {(tableProps.onRowClick || tableProps.onMenuClick) && (
                 <Th border="none" />
               )}
             </Tr>
@@ -179,8 +187,9 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     </Td>
                   );
                 })}
-                {/* if the row is clickable we want an arrow to show */}
-                {tableProps.onRowClick && (
+
+                {/* Show a ... menu or individual CTA buttons. */}
+                {tableProps.onRowClick ? (
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
@@ -188,31 +197,38 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                   >
                     <Icon as={FiArrowRight} />
                   </Td>
-                )}
-                {(tableProps.onEdit || tableProps.onDelete) && (
+                ) : tableProps.onMenuClick ? (
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
                     borderBottomColor="accent.100"
                   >
-                    <ButtonGroup variant="ghost" gap={2}>
-                      {tableProps.onEdit && (
-                        <IconButton
-                          onClick={() => tableProps.onEdit?.(row.original)}
-                          icon={<Icon as={BiPencil} boxSize={4} />}
-                          aria-label="Edit"
-                        />
-                      )}
-                      {tableProps.onDelete && (
-                        <IconButton
-                          onClick={() => tableProps.onDelete?.(row.original)}
-                          icon={<Icon as={FiTrash} boxSize={4} />}
-                          aria-label="Remove"
-                        />
-                      )}
-                    </ButtonGroup>
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        variant="outline"
+                        icon={<Icon as={FaEllipsisVertical} boxSize={4} />}
+                        aria-label="Actions"
+                      />
+                      <MenuList>
+                        {tableProps.onMenuClick.map(
+                          ({ icon, text, onClick, isDestructive }) => {
+                            return (
+                              <MenuItem
+                                key={text}
+                                onClick={() => onClick(row.original)}
+                                icon={icon && <Icon as={icon} boxSize={4} />}
+                                color={isDestructive ? "red.500" : undefined}
+                              >
+                                {text}
+                              </MenuItem>
+                            );
+                          },
+                        )}
+                      </MenuList>
+                    </Menu>
                   </Td>
-                )}
+                ) : null}
               </Tr>
             );
           })}

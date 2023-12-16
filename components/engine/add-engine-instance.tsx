@@ -210,6 +210,11 @@ const ModalSelectHostingOption = ({
   );
 };
 
+interface ImportEngineInput {
+  name: string;
+  url: string;
+}
+
 const ModalImportEngine = ({
   setModalState,
   onSuccess,
@@ -219,14 +224,13 @@ const ModalImportEngine = ({
 }) => {
   const toast = useToast();
 
-  const form = useForm({
+  const form = useForm<ImportEngineInput>({
     defaultValues: {
       name: "My Engine Instance",
-      url: "",
     },
   });
 
-  const onSubmit = async (data: { name: string; url: string }) => {
+  const onSubmit = async (data: ImportEngineInput) => {
     try {
       // Instance URLs should end with a /.
       const url = data.url.endsWith("/") ? data.url : `${data.url}/`;

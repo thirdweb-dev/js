@@ -42,12 +42,6 @@ export const LocalConfig: React.FC<LocalConfigProps> = ({ instance }) => {
           colorScheme="primary"
           px={12}
           onClick={() => {
-            trackEvent({
-              category: "engine",
-              action: "set-wallet-config",
-              type: "local",
-              label: "attempt",
-            });
             setLocalConfig(
               { type: "local" },
               {

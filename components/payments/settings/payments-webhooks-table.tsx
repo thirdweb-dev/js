@@ -23,6 +23,8 @@ import { TWTable } from "components/shared/TWTable";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
+import { FiTrash } from "react-icons/fi";
+import { BiPencil } from "react-icons/bi";
 
 export interface PaymentsWebhooksTableProps {
   paymentsSellerId: string;
@@ -199,8 +201,19 @@ export const PaymentsWebhooksTable: React.FC<PaymentsWebhooksTableProps> = ({
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}
-        onDelete={onDelete}
-        onEdit={onEdit}
+        onMenuClick={[
+          {
+            icon: BiPencil,
+            text: "Edit",
+            onClick: onEdit,
+          },
+          {
+            icon: FiTrash,
+            text: "Delete",
+            onClick: onDelete,
+            isDestructive: true,
+          },
+        ]}
       />
     </>
   );

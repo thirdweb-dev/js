@@ -39,12 +39,6 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
     <>
       <Button
         onClick={() => {
-          trackEvent({
-            category: "engine",
-            action: "create-access-token",
-            label: "attempt",
-            instance,
-          });
           createAccessToken(undefined, {
             onSuccess: (response) => {
               onSuccess();
@@ -75,7 +69,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
         colorScheme="primary"
         w="fit-content"
       >
-        Create access token
+        Create Access Token
       </Button>
 
       <Modal
