@@ -908,7 +908,6 @@ export function useAirdropNFT(contract: Erc1155) {
  * ```jsx
  * import { useBurnNFT, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
  * const contractAddress = "{{contract_address}}";
  * // The tokenId of the NFT you want to burn
  * const tokenIdToBurn = "{{tokenId}}}}";

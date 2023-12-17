@@ -294,7 +294,6 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * ```jsx
  * import { useGrantRole, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
  * const contractAddress = "{{contract_address}}";
  * const roleToGrant = "{{role}}";
  * const walletAddressToGrant = "{{wallet_address}}";

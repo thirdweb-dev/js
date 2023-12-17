@@ -113,8 +113,6 @@ export type SetClaimConditionsParams = {
  * ```tsx
  * import { useActiveClaimCondition, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *
@@ -183,8 +181,6 @@ export function useActiveClaimCondition(
  * @example
  * ```javascript
  * import { useClaimerProofs, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -300,8 +296,6 @@ export function useClaimerProofs(
  * ```tsx
  * import { useClaimConditions, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *
@@ -322,8 +316,6 @@ export function useClaimerProofs(
  *
  * ```tsx
  * import { useClaimConditions, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -392,8 +384,6 @@ export function useClaimConditions(
  * ```javascript
  * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useClaimIneligibilityReasons(contract, {
@@ -415,8 +405,6 @@ export function useClaimConditions(
  *
  * ```tsx
  * * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
  *
  * const tokenId = 1;
  *
@@ -681,8 +669,6 @@ export function useActiveClaimConditionForWallet(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
