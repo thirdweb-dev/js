@@ -46,6 +46,10 @@ export const ThirdwebAuthContext = /* @__PURE__ */ createContext<
   ThirdwebAuthContext | undefined
 >(undefined);
 
+/**
+ *
+ * @internal
+ */
 export function useThirdwebAuthContext() {
   return useContext(ThirdwebAuthContext);
 }

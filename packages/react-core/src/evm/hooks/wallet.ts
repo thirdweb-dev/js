@@ -149,6 +149,8 @@ export function useConnectedWallet() {
  *   return <div>{address}</div>
  * }
  * ```
+ *
+ * @walletConnection
  */
 export function useAddress(): string | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
@@ -252,6 +254,7 @@ export function useChain(): Chain | undefined {
 }
 
 /**
+ * @internal
  * @deprecated
  *
  * This hook is renamed to `useChain`

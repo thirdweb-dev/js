@@ -169,6 +169,27 @@ export function useEmbeddedWallet() {
   };
 }
 
+/**
+ * Hook to get the user's email from connected `EmbeddedWallet`
+ *
+ * @example
+ * ```ts
+ * const emailQuery = useEmbeddedWalletUserEmail();
+ *
+ * if (emailQuery.isFetching) {
+ *  return <div> Loading... </div>;
+ * }
+ *
+ * if (emailQuery.data) {
+ *  return <div> Connected with {emailQuery.data} </div>;
+ * }
+ *
+ * return <div> Not connected </div>;
+ * ```
+ *
+ * @connectWallet
+ * @returns Hook's `data` property contains the `string` email if `EmbeddedWallet` is connected, otherwise `undefined`
+ */
 export function useEmbeddedWalletUserEmail(): UseQueryResult<
   string | undefined
 > {

@@ -31,6 +31,8 @@ import { useContract } from "../async/contracts";
  * - const token = useToken("0x1234...");
  * + const token = useContract("0x1234...", "token").contract;
  * ```
+ *
+ * @token
  */
 export function useToken(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

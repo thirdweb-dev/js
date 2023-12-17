@@ -24,7 +24,22 @@ export type UseWatchTransactionsParams = Partial<
  * });
  * ```
  *
- * @returns an array of {@link Transaction} objects
+ * @param watchTransactionParams - Options for watching transactions
+ *
+ * ### address
+ *
+ * The address to watch transactions for
+ *
+ * ### network
+ *
+ * The network to watch transactions on
+ *
+ * ### sdkOptions
+ *
+ * Options to pass to the thirdweb SDK
+ *
+ * @returns an array of `Transaction` objects
+ * @others
  */
 export function useWatchTransactions(
   watchTransactionParams: UseWatchTransactionsParams,

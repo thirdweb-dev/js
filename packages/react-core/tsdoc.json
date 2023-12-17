@@ -65,6 +65,26 @@
     {
       "tagName": "@storage",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@connectWallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@theme",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@locale",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@others",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@appURI",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -83,6 +103,11 @@
     "@walletConnection": true,
     "@smartWallet": true,
     "@auth": true,
-    "@storage": true
+    "@storage": true,
+    "@connectWallet": true,
+    "@theme": true,
+    "@locale": true,
+    "@others": true,
+    "@appURI": true
   }
 }

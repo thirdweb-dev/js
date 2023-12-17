@@ -53,6 +53,34 @@
     {
       "tagName": "@walletConnection",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@smartWallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@auth",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@storage",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@connectWallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@theme",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@locale",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@others",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -68,6 +96,13 @@
     "@networkConnection": true,
     "@delayedReveal": true,
     "@token": true,
-    "@walletConnection": true
+    "@walletConnection": true,
+    "@smartWallet": true,
+    "@auth": true,
+    "@storage": true,
+    "@connectWallet": true,
+    "@theme": true,
+    "@locale": true,
+    "@others": true
   }
 }

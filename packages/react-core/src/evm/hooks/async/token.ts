@@ -490,6 +490,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * ```
  *
  * @returns a mutation object that can be used to transfer native tokens
+ * @token
  */
 export function useTransferNativeToken() {
   const sdk = useSDK();

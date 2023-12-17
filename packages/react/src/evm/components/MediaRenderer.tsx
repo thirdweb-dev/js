@@ -537,7 +537,7 @@ export interface MediaType {
  * - `url`: The fully resolved URL, or `undefined` if the URI is invalid.
  * - `mimeType`: The mime type of the media, or `undefined` if the URI is invalid.
  *
- * @tags metadata
+ * @metadata
  */
 export function useResolvedMediaType(
   uri?: string,

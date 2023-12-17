@@ -31,6 +31,8 @@ import { useContract } from "../async/contracts";
  * - const token = useTokenDrop("0x1234...");
  * + const token = useContract("0x1234...", "token-drop").contract;
  * ```
+ *
+ * @token
  */
 export function useTokenDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

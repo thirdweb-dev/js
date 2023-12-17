@@ -6,10 +6,18 @@ import invariant from "tiny-invariant";
 /**
  * Hook to switch the account of the active wallet
  *
- * @returns  A function to invoke to switch account.
+ * @example
+ * ```ts
+ * const { switchAccount, isLoading } = useSwitchAccount();
  *
- * @see {@link https://portal.thirdweb.com/react/react.useswitchaccount?utm_source=sdk | Documentation}
+ * const handleSwitchAccount = async (address: string) => {
+ *  await switchAccount(address);
+ * }
+ * ```
  *
+ * @returns A function to invoke to switch account and a boolean to indicate if it is in progress
+ *
+ * @auth
  */
 export function useSwitchAccount() {
   const queryClient = useQueryClient();

@@ -3,6 +3,7 @@ import { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
 /**
+ * @internal
  * @deprecated use the `useWalletConnect` hook instead
  */
 export function useWalletConnectV1() {

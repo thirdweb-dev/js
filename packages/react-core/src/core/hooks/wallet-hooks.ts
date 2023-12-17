@@ -146,7 +146,8 @@ export function useWalletConfig() {
 }
 
 /**
- *
+ * @internal
+ * Get `supportedWallets` passed in the `<ThirdwebProvider/>`
  * @returns `supportedWallets` configured in the `<ThirdwebProvider/>`
  */
 export function useWallets() {
