@@ -508,56 +508,6 @@ export function useTransferNativeToken() {
 }
 
 /**
- * A hook to transfer native token (of the active chain) to another wallet
- *
- * @example
- *
- * Provide your token contract instance from the `useContract` hook to the hook.
- *
- * Then, provide an array of objects with the `to` and `amount` properties to the function.
- *
- * ```jsx
- * const Component = () => {
- *   const {
- *     mutate: transferNativeToken,
- *     isLoading,
- *     error,
- *   } = useTransferNativeToken();
- *
- *   if (error) {
- *     console.error("failed to transfer tokens", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => transferNativeToken({ to: "{{wallet_address}}", amount: "0.1" })}
- *     >
- *       Transfer
- *     </button>
- *   );
- * }
- * ```
- *
- * @returns a mutation object that can be used to transfer native tokens
- */
-export function useTransferNativeToken() {
-  const sdk = useSDK();
-  const activeChainId = useSDKChainId();
-  const queryClient = useQueryClient();
-  return useMutation(
-    (data: TokenParams) => {
-      const { to, amount } = data;
-      invariant(sdk, "SDK is not initialized");
-      return sdk.wallet.transfer(to, amount);
-    },
-    {
-      onSettled: () => invalidateBalances(queryClient, activeChainId),
-    },
-  );
-}
-
-/**
  * Hook for transferring ERC20 tokens to multiple recipients in a single transaction (i.e. airdrop).
  *
  * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) interface.
