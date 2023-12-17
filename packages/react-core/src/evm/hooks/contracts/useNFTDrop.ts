@@ -30,6 +30,7 @@ import { useContract } from "../async/contracts";
  * - const nftDrop = useNFTDrop("0x1234...");
  * + const nftDrop = useContract("0x1234...", "nft-drop").contract;
  * ```
+ * @internal
  */
 export function useNFTDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

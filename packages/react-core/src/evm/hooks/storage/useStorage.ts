@@ -43,7 +43,6 @@ import { useSDK } from "../useSDK";
  * Storage can also be configured using the `storageInterface` prop on `ThirdwebProvider`
  *
  * @storage
- *
  */
 export function useStorage() {
   const sdk = useSDK();

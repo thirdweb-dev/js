@@ -91,7 +91,7 @@ export function useAccountsForAddress(
 }
 
 /**
- * Check if a account has been deployed for the given admin
+ * Check if a account has been deployed for the given admin in the account factory contract
  *
  * @example
  * ```javascript
@@ -101,7 +101,7 @@ export function useAccountsForAddress(
  * @param contract - an instance of a account factory contract
  * @returns a boolean indicating if a account has been deployed for the given admin
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.useisaccountdeployed?utm_source=sdk | Documentation}
+ * @smartWallet
  */
 export function useIsAccountDeployed(
   contract: RequiredParam<SmartContract>,
@@ -128,7 +128,7 @@ export function useIsAccountDeployed(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Create a account
+ * Create a account in the account factory contract
  *
  * @example
  * ```jsx
@@ -158,7 +158,7 @@ export function useIsAccountDeployed(
  * @param contract - an instance of a account factory contract
  * @returns a mutation object that can be used to create a account
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.usecreateaccount?utm_source=sdk | Documentation}
+ * @smartWallet
  */
 export function useCreateAccount(contract: RequiredParam<SmartContract>) {
   const activeChainId = useSDKChainId();

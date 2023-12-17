@@ -31,6 +31,7 @@ import { useContract } from "../async/contracts";
  * - const nftCollection = useNFTCollection("0x1234...");
  * + const nftCollection = useContract("0x1234...", "nft-collection").contract;
  * ```
+ * @internal
  */
 export function useNFTCollection(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

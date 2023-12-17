@@ -257,6 +257,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to overwrite all roles on the contract
  * @twfeature Permissions
+ * @permissionControl
  */
 export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,

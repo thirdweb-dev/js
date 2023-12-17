@@ -30,6 +30,7 @@ import { useContract } from "../async/contracts";
  * - const multiwrap = useMultiwrap("0x1234...");
  * + const multiwrap = useContract("0x1234...", "multiwrap").contract;
  * ```
+ * @internal
  */
 export function useMultiwrap(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

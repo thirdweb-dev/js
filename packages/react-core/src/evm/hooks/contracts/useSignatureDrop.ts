@@ -30,6 +30,7 @@ import { useContract } from "../async/contracts";
  * - const signatureDrop = useSignatureDrop("0x1234...");
  * + const signatureDrop = useContract("0x1234...", "signature-drop").contract;
  * ```
+ * @internal
  */
 export function useSignatureDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(

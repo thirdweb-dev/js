@@ -30,6 +30,7 @@ import { useContract } from "../async/contracts";
  * - const editionDrop = useEditionDrop("0x1234...");
  * + const editionDrop = useContract("0x1234...", "edition-drop").contract;
  * ```
+ * @internal
  */
 export function useEditionDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

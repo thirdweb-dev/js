@@ -31,6 +31,7 @@ import { useContract } from "../async/contracts";
  * - const marketplace = useMarketplace("0x1234...");
  * + const marketplace = useContract("0x1234...", "marketplace").contract;
  * ```
+ * @internal
  */
 export function useMarketplace(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

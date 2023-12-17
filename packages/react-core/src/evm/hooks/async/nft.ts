@@ -464,10 +464,10 @@ export function useNFTBalance(
  * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a `NFTContract`
  * @returns a response object that includes the shared metadata of the contract
  * @twfeature ERC721SharedMetadata
- * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useSharedMetadata(
   contract: RequiredParam<NFTContract>,

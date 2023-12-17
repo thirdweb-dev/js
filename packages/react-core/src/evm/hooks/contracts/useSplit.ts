@@ -31,6 +31,7 @@ import { useContract } from "../async/contracts";
  * - const split = useSplit("0x1234...");
  * + const split = useContract("0x1234...", "split").contract;
  * ```
+ * @internal
  */
 export function useSplit(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

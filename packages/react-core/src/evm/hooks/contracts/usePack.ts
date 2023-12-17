@@ -31,6 +31,8 @@ import { useContract } from "../async/contracts";
  * - const pack = usePack("0x1234...");
  * + const pack = useContract("0x1234...", "pack").contract;
  * ```
+ *
+ * @internal
  */
 export function usePack(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
