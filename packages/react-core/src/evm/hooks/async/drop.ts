@@ -49,9 +49,6 @@ import invariant from "tiny-invariant";
  * ```jsx
  * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useUnclaimedNFTs(contract);
@@ -68,9 +65,6 @@ import invariant from "tiny-invariant";
  *
  * ```jsx
  * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -121,9 +115,6 @@ export function useUnclaimedNFTs(
  * ```jsx
  * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   // Contract must implement ERC721Claimable, e.g. nft-drop
  *   const { contract } = useContract(contractAddress, "nft-drop");
@@ -140,9 +131,6 @@ export function useUnclaimedNFTs(
  *
  * ```jsx
  * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "nft-drop");
@@ -195,9 +183,6 @@ export function useClaimedNFTs(
  * ```jsx
  * import { useUnclaimedNFTSupply, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "nftDrop");
  *   const { data, isLoading, error } = useUnclaimedNFTSupply(contract);
@@ -243,9 +228,6 @@ export function useUnclaimedNFTSupply(
  * ```jsx
  * import { useClaimedNFTSupply, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data: claimedTokens, isLoading } = useClaimedNFTSupply(contract);
@@ -289,9 +271,6 @@ export function useClaimedNFTSupply(
  * @example
  * ```tsx
  * import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   // Contract must implement the Delayed reveal interface.
@@ -352,8 +331,6 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * ```jsx
  * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { mutateAsync, isLoading, error } = useClaimNFT(contract);
@@ -407,8 +384,6 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * ```jsx
  * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
- *
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -507,8 +482,6 @@ export function useClaimNFT<TContract extends DropContract>(
  * ```jsx
  * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
@@ -549,8 +522,6 @@ export function useClaimNFT<TContract extends DropContract>(
  *
  * ```jsx
  * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
- *
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -641,9 +612,6 @@ export function useLazyMint<TContract extends DropContract>(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -754,8 +722,6 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  *   useRevealLazyMint,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   // Contract must be an ERC-721 or ERC-1155 contract that implements the ERC721Revealable or ERC1155Revealable interface

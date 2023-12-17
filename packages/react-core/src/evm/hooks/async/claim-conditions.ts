@@ -66,7 +66,7 @@ export type SetClaimConditionsParams = {
 /**
  * Hook for getting the active claim condition for a given drop contract.
  *
- * Available for contracts that implement the claim conditions interface;
+ * Available for contracts that implement the "ClaimConditions" interface;
  * such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
@@ -74,26 +74,22 @@ export type SetClaimConditionsParams = {
  * import { useActiveClaimCondition, useContract } from "@thirdweb-dev/react";
  *
  * function App() {
- *   // Contract can be any contract that implements claim conditions.
- *   // Including ERC721, ERC1155, and ERC20 drop contracts.
- *
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useActiveClaimCondition(contract);
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
+ * @param contract -
+ * Instance of contract that implement the "ClaimConditions" interface;
+ * such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @param tokenId -
- * When using the hook with ERC1155 contracts such as the Edition Drop, pass the `tokenId` as the second parameter; as each token can have unique claim conditions.
+ * When using the hook with ERC1155 contracts such as the [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), pass the `tokenId` as the second parameter; as each token can have unique claim conditions.
  *
  * Pass `undefined`, or leave this field out if you are using ERC721 or ERC20 drop contracts.
  *
  * ```tsx
  * import { useActiveClaimCondition, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -106,7 +102,7 @@ export type SetClaimConditionsParams = {
  * }
  * ```
  *
- * @param options - additional options to pass to the claim condition fetch
+ * @param options - Additional options to pass to the claim condition fetch
  *
  * #### withAllowlist
  *
@@ -118,7 +114,6 @@ export type SetClaimConditionsParams = {
  * import { useActiveClaimCondition, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -134,7 +129,7 @@ export type SetClaimConditionsParams = {
  * }
  * ```
  *
- * @returns a response object with the currently active claim condition
+ * @returns A query result object with the currently active claim condition
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @claimConditions
@@ -190,7 +185,6 @@ export function useActiveClaimCondition(
  * import { useClaimerProofs, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -284,25 +278,19 @@ export function useClaimerProofs(
 /**
  * Hook for fetching all claim conditions for a given drop contract.
  *
- * This is available for available for contracts that implement the claim conditions interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ * This is available for available for contracts that implement the "ClaimConditions" interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
  * ```javascript
  * import { useClaimConditions, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
- *   // Contract can be any contract that implements claim conditions.
- *   // Including ERC721, ERC1155, and ERC20 drop contracts.
- *
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useClaimConditions(contract);
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
+ * @param contract - Instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the "ClaimConditions" extension.
  *
  * @param tokenId -
  * When using the hook with ERC1155 contracts, pass the `tokenId` parameter; as each token can have unique claim conditions.
@@ -313,7 +301,6 @@ export function useClaimerProofs(
  * import { useClaimConditions, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -337,7 +324,6 @@ export function useClaimerProofs(
  * import { useClaimConditions, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -407,7 +393,6 @@ export function useClaimConditions(
  * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -432,7 +417,6 @@ export function useClaimConditions(
  * * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * const tokenId = 1;
  *
@@ -518,7 +502,9 @@ export function useClaimIneligibilityReasons(
  *
  * Each wallet address can have unique claim conditions at any given time. This hook allows you to get the active claim condition for a specific wallet address at this time.
  *
- * This is available for available for contracts that implement the claim conditions interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ * This is available for available for contracts that implement the "ClaimConditions" interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ *
+ *  ---
  *
  * - Returns the claim condition specific to the wallet address if found in the claimer snapshot.
  * - Returns the default claim condition on the contract if the address is not found in the claimer snapshot.
@@ -532,9 +518,6 @@ export function useClaimIneligibilityReasons(
  *   useAddress,
  * } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   // Contract can be any contract that implements claim conditions.
  *   // Including ERC721, ERC1155, and ERC20 drop contracts.
@@ -547,17 +530,17 @@ export function useClaimIneligibilityReasons(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - Instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  *
  * @param walletAddress -
- * the wallet address to check the active claim condition for. You can use the `useAddress` hook to get the currently connected wallet's address.
+ * The wallet address to check the active claim condition for. You can use the `useAddress` hook to get the currently connected wallet's address.
  *
  * @param tokenId -
  * When using the hook with ERC1155 contracts, pass the `tokenId` as the third parameter; as each token can have unique claim conditions.
  *
  * Pass `undefined`, or leave this field out if you are using ERC721 or ERC20 drop contracts.
  *
- * @returns the active claim condition for the wallet address or `null` if there is no active claim condition
+ * @returns The active claim condition for the wallet address or `null` if there is no active claim condition
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @claimConditions
@@ -700,7 +683,6 @@ export function useActiveClaimConditionForWallet(
  * } from "@thirdweb-dev/react";
  *
  * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -900,8 +882,6 @@ export function useSetClaimConditions(
  *   useResetClaimConditions,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   // Contract must be a drop contract that implements claim conditions

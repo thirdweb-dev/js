@@ -39,9 +39,6 @@ import invariant from "tiny-invariant";
  * ```jsx
  * import { useTokenSupply } from "@thirdweb-dev/react";
  *
- * // Your token contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { data, isLoading, error } = useTokenSupply(contractAddress);
  * }
@@ -94,12 +91,6 @@ export function useTokenSupply(
  *
  * ```jsx
  * import { useTokenBalance, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // Your wallet address
- * const walletAddress = "{{wallet_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "token");
@@ -157,9 +148,6 @@ export function useTokenBalance(
  *
  * ```jsx
  * import { useTokenDecimals, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "token");
@@ -302,9 +290,6 @@ export function useMintToken(
  *
  * ```jsx
  * import { useClaimToken, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -529,9 +514,6 @@ export function useTransferNativeToken() {
  *   Web3Button,
  * } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "token");
  *   const {
@@ -611,9 +593,6 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  *
  * ```jsx
  * import { useBurnToken, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);

@@ -55,9 +55,6 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * ```jsx
  * import { useAllRoleMembers, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address (must implement permission controls)
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useAllRoleMembers(contract);

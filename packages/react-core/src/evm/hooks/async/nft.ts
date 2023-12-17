@@ -136,9 +136,6 @@ export function useNFT<TContract extends NFTContract>(
  * ```jsx
  * import { useNFTs, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useNFTs(contract);
@@ -198,9 +195,6 @@ export function useNFTs<TContract extends NFTContract>(
  * ```jsx
  * import { useTotalCount, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data: totalCount, isLoading, error } = useTotalCount(contract);
@@ -258,9 +252,6 @@ export function useTotalCount<TContract extends NFTContract>(
  * ```jsx
  * import { useTotalCirculatingSupply, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useTotalCirculatingSupply(contract);
@@ -272,9 +263,6 @@ export function useTotalCount<TContract extends NFTContract>(
  * @param tokenId - required for ERC1155, the tokenId to look up. This will return the total quantity of the given token ID in circulation.
  * ```ts
  * import { useTotalCirculatingSupply, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -338,9 +326,6 @@ export function useTotalCirculatingSupply(
  * ```jsx
  * import { useOwnedNFTs, useContract, useAddress } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const address = useAddress();
  *   const { contract } = useContract(contractAddress);
@@ -395,9 +380,6 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  *
  * ```jsx
  * import { useNFTBalance, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -510,9 +492,6 @@ export function useSharedMetadata(
  * ```jsx
  * import { useMintNFT, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { mutateAsync: mintNft, isLoading, error } = useMintNFT(contract);
@@ -549,9 +528,6 @@ export function useSharedMetadata(
  *
  * ```jsx
  * import { useMintNFT, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -858,12 +834,6 @@ export function useTransferNFT<TContract extends NFTContract>(
  *
  * ```jsx
  * import { useAirdropNFT, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // Token ID of the NFT you wish to airdrop
- * const tokenId = "{{token_id}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);

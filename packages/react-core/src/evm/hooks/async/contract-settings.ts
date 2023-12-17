@@ -34,8 +34,6 @@ import invariant from "tiny-invariant";
  * ```jsx
  * import { useContract, usePrimarySaleRecipient } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = usePrimarySaleRecipient(contract);
@@ -82,9 +80,6 @@ export function usePrimarySaleRecipient(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -162,9 +157,6 @@ export function useUpdatePrimarySaleRecipient(
  * ```jsx
  * import { useContract, useRoyaltySettings } from "@thirdweb-dev/react";
  *
- * // Your smart contract address (must implement Royalty interface)
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useRoyaltySettings(contract);
@@ -221,9 +213,6 @@ export function useRoyaltySettings(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -310,9 +299,6 @@ export function useUpdateRoyaltySettings(
  * ```jsx
  * import { useContract, usePlatformFees } from "@thirdweb-dev/react";
  *
- * // Your smart contract address (must implement PlatformFee)
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = usePlatformFees(contract);
@@ -368,9 +354,6 @@ export function usePlatformFees(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
@@ -458,8 +441,6 @@ export function useUpdatePlatformFees(
  * ```jsx
  * import { useContract, useMetadata } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useMetadata(contract);
@@ -533,9 +514,6 @@ export function useMetadata(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);

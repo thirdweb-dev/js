@@ -23,12 +23,6 @@ export function useSDKContext(): TWSDKContext {
  * - If there is a connected wallet, the SDK is instantiated from the connected wallet’s signer. Meaning all transactions are initiated from the connected wallet.
  * - If there is no connected wallet, the SDK is in read-only mode on the activeChain.
  *
- * ```javascript
- * import { useSDK } from "@thirdweb-dev/react";
- *
- * const sdk = useSDK();
- * ```
- *
  * @example
  * ```tsx
  * import { useSDK } from "@thirdweb-dev/react";

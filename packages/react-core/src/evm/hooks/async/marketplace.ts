@@ -57,7 +57,6 @@ import invariant from "tiny-invariant";
  * ```jsx
  * import { useContract, useListing } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
  * const listingId = 0;
  *
  * function App() {
@@ -206,12 +205,6 @@ export function useListing(
  * ```jsx
  * import { useDirectListing, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The listing id you want to check
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -294,12 +287,6 @@ export function useDirectListing(
  * @example
  * ```jsx
  * import { useEnglishAuction, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The auction id you want to check
- * const listingId = "{{auction_id}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -400,8 +387,6 @@ export function useEnglishAuction(
  * ```jsx
  * import { useContract, useListings } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useListings(contract);
@@ -413,8 +398,6 @@ export function useEnglishAuction(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * ```jsx
  * import { useContract, useListings } from "@thirdweb-dev/react";
- *
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -570,9 +553,6 @@ export function useListings(
  * ```jsx
  * import { useDirectListings, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -590,9 +570,6 @@ export function useListings(
  * filter to pass to the query for the sake of pagination & filtering
  * ```tsx
  * import { useDirectListings, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -694,9 +671,6 @@ export function useDirectListings(
  * ```jsx
  * import { useValidDirectListings, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -712,9 +686,6 @@ export function useDirectListings(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * ```jsx
  * import { useValidDirectListings, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -819,9 +790,6 @@ export function useValidDirectListings(
  * ```jsx
  * import { useEnglishAuctions, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -839,9 +807,6 @@ export function useValidDirectListings(
  *
  * ```ts
  * import { useEnglishAuctions, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -997,8 +962,6 @@ export function useValidEnglishAuctions(
  * ```jsx
  * import { useContract, useListingsCount } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data: listingsCount, isLoading, error } = useListingsCount(contract);
@@ -1038,9 +1001,6 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
  *
  * ```jsx
  * import { useDirectListingsCount, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -1089,9 +1049,6 @@ export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
  * ```jsx
  * import { useEnglishAuctionsCount, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -1137,9 +1094,6 @@ export function useEnglishAuctionsCount(
  * ```javascript
  * import { useActiveListings, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useActiveListings(contract);
@@ -1154,9 +1108,6 @@ export function useEnglishAuctionsCount(
  *
  * ```tsx
  * import { useActiveListings, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -1302,11 +1253,6 @@ export function useActiveListings(
  * ```jsx
  * import { useContract, useWinningBid } from "@thirdweb-dev/react";
  *
- * // Your marketplace contract address
- * const contractAddress = "{{contract_address}}";
- * // The listing ID to check
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useWinningBid(contract, listingId);
@@ -1378,12 +1324,6 @@ export function useWinningBid(
  * @example
  * ```jsx
  * import { useEnglishAuctionWinningBid, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The id of the auction listing you want to check
- * const listingId = "{{auction_id}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -1462,10 +1402,6 @@ export function useEnglishAuctionWinningBid(
  * ```javascript
  * import { useAuctionWinner, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useAuctionWinner(
@@ -1531,11 +1467,6 @@ export function useAuctionWinner(
  * @example
  * ```javascript
  * import { useBidBuffer, useContract } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- * // Listing ID to get the bid buffer for
- * const listingId = 1;
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -1611,9 +1542,6 @@ export function useBidBuffer(
  * ```jsx
  * import { useContract, useMinimumNextBid } from "@thirdweb-dev/react";
  *
- * const contractAddress = "{{contract_address}}";
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data, isLoading, error } = useMinimumNextBid(contract, listingId);
@@ -1687,12 +1615,6 @@ export function useMinimumNextBid(
  * ```jsx
  * import { useOffers, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The listing ID you want to fetch offers for
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { data: offers, isLoading, error } = useOffers(contract, listingId);
@@ -1762,9 +1684,6 @@ export function useOffers(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -1925,9 +1844,6 @@ export function useCreateDirectListing<
  *   Web3Button,
  * } from "@thirdweb-dev/react";
  * import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
@@ -2103,9 +2019,6 @@ export function useCreateAuctionListing<
  * import { useCancelListing, useContract, Web3Button } from "@thirdweb-dev/react";
  * import { ListingType } from "@thirdweb-dev/sdk";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const {
@@ -2219,12 +2132,6 @@ export function useCancelListing(
  * } from "@thirdweb-dev/react";
  * import { ListingType } from "@thirdweb-dev/sdk";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The ID of the listing you want to cancel
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -2301,12 +2208,6 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  *   Web3Button,
  * } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
- * // The ID of the listing you want to cancel
- * const listingId = "{{listing_id}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
  *   const {
@@ -2379,9 +2280,6 @@ export function useCancelEnglishAuction(
  *
  * ```jsx
  * import { useMakeBid, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -2464,9 +2362,6 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  *
  * ```jsx
  * import { useMakeOffer, useContract, Web3Button } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -2560,9 +2455,6 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  *   Web3Button,
  * } from "@thirdweb-dev/react";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const {
@@ -2637,9 +2529,6 @@ export function useAcceptDirectListingOffer(
  *   useContract,
  *   Web3Button,
  * } from "@thirdweb-dev/react";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
@@ -2730,9 +2619,6 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * import { useBuyNow, useContract, Web3Button } from "@thirdweb-dev/react";
  * import { ListingType } from "@thirdweb-dev/sdk";
  *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace");
  *   const { mutateAsync: buyNow, isLoading, error } = useBuyNow(contract);
@@ -2817,9 +2703,6 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  *   Web3Button,
  * } from "@thirdweb-dev/react";
  * import { ListingType } from "@thirdweb-dev/sdk";
- *
- * // Your smart contract address
- * const contractAddress = "{{contract_address}}";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress, "marketplace-v3");
