@@ -53,6 +53,10 @@
     {
       "tagName": "@walletConnection",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@smartWallet",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -68,6 +72,7 @@
     "@networkConnection": true,
     "@delayedReveal": true,
     "@token": true,
-    "@walletConnection": true
+    "@walletConnection": true,
+    "@smartWallet": true
   }
 }
