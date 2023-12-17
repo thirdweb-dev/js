@@ -4,6 +4,9 @@ import { ZerionConnectUI } from "./ZerionConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 import { zerionWalletUris } from "./zerionWalletUris";
 
+/**
+ * @wallet
+ */
 export type ZerionkWalletConfigOptions = {
   /**
    * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.

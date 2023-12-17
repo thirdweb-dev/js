@@ -28,8 +28,8 @@ import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
- * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons} hook.
- *
+ * The options to be passed as the second parameter to the `useClaimIneligibilityReasons` hook.
+ * @claimConditions
  */
 export type ClaimIneligibilityParams = {
   // the wallet address to check claim eligibility for
@@ -40,7 +40,7 @@ export type ClaimIneligibilityParams = {
 
 /**
  * The params for the {@link useSetClaimConditions} hook mutation.
- *
+ * @claimConditions
  */
 export type SetClaimConditionsParams = {
   /**

@@ -25,6 +25,9 @@ import invariant from "tiny-invariant";
  */
 export type ContractWithRoles = Exclude<ValidContractInstance, Vote>;
 
+/**
+ * @permissionControl
+ */
 export type RolesForContract<TContract extends ContractWithRoles> =
   TContract extends SmartContract
     ? // eslint-disable-next-line @typescript-eslint/ban-types

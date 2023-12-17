@@ -2,6 +2,9 @@ import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
 export type OAuthProvider = "google";
 
+/**
+ * @internal
+ */
 export type PaperWalletConfigOptions = Omit<
   PaperWalletAdditionalOptions,
   "chain" | "clientId"

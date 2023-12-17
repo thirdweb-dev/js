@@ -184,6 +184,9 @@ export const compilerMetadata = {
 
 // useContract
 
+/**
+ * @contract
+ */
 export type UseContractResult<
   TContract extends ValidContractInstance = SmartContract,
 > = UseQueryResult<TContract | undefined> & {

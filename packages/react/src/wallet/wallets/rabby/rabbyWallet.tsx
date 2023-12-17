@@ -2,6 +2,9 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { RabbyWallet, getInjectedRabbyProvider } from "@thirdweb-dev/wallets";
 import { RabbyConnectUI } from "./RabbyConnectUI";
 
+/**
+ * @wallet
+ */
 export type RabbyWalletConfigOptions = {
   /**
    * When connecting Rabby using the QR Code - Wallet Connect connector is used which requires a project id.

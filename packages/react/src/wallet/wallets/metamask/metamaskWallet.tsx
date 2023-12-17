@@ -7,6 +7,9 @@ import { MetamaskConnectUI } from "./MetamaskConnectUI";
 import { metamaskUris } from "./metamaskUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
+/**
+ * @wallet
+ */
 export type MetamaskWalletConfigOptions = {
   /**
    * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.

@@ -5,6 +5,9 @@ import {
 } from "@thirdweb-dev/wallets";
 import { PhantomConnectUI } from "./PhantomConnectUI";
 
+/**
+ * @wallet
+ */
 export type PhantomWalletConfigOptions = {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal

@@ -4,6 +4,9 @@ import { TrustConnectUI } from "./TrustConnectUI";
 import { trustWalletUris } from "./trustWalletUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
+/**
+ * @wallet
+ */
 export type TrustWalletConfigOptions = {
   /**
    * When connecting Trust using the QR Code - Wallet Connect connector is used which requires a project id.

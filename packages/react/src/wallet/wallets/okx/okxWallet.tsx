@@ -2,6 +2,9 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { OKXWallet, getInjectedOKXProvider } from "@thirdweb-dev/wallets";
 import { OKXConnectUI } from "./OKXConnectUI";
 
+/**
+ * @wallet
+ */
 export type OKXWalletConfigOptions = {
   /**
    * When connecting OKX using the QR Code - Wallet Connect connector is used which requires a project id.

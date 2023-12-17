@@ -13,6 +13,9 @@ import type { SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
+/**
+ * @wallet
+ */
 export type SafeWalletConfigOptions = {
   /**
    * An array of personalWallets to show in ConnectWallet Modal to use with SafeWallet

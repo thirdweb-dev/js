@@ -28,6 +28,9 @@ import { WalletInstance } from "../types/wallet";
 
 export type WalletId = (typeof walletIds)[keyof typeof walletIds];
 
+/**
+ * @wallet
+ */
 export type WalletIdToWalletTypeMap = {
   metamask: MetaMaskWallet;
   coin98: Coin98Wallet;

@@ -2,6 +2,9 @@ import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { FrameWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { FrameConnectUI } from "./FrameConnectUI";
 
+/**
+ * @wallet
+ */
 export type FrameWalletConfigOptions = {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal

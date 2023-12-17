@@ -85,6 +85,10 @@
     {
       "tagName": "@appURI",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@wallet",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -108,6 +112,7 @@
     "@theme": true,
     "@locale": true,
     "@others": true,
-    "@appURI": true
+    "@appURI": true,
+    "@wallet": true
   }
 }

@@ -44,9 +44,7 @@ export type {
   WalletConfig,
   ConnectUIProps,
   SelectUIProps,
-  WalletClass,
   WalletInstance,
-  ExtraCoreWalletOptions,
   WalletOptions,
 } from "../core/types/wallet";
 

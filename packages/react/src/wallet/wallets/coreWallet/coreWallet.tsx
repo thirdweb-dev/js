@@ -5,6 +5,9 @@ import {
 } from "@thirdweb-dev/wallets";
 import { CoreWalletConnectUI } from "./CoreWalletConnectUI";
 
+/**
+ * @wallet
+ */
 export type CoreWalletConfigOptions = {
   /**
    * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.

@@ -1,6 +1,9 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { BloctoWallet } from "@thirdweb-dev/wallets";
 
+/**
+ * @wallet
+ */
 export type BloctoWalletConfigOptions = {
   /**
    * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)

@@ -7,6 +7,9 @@ import { RainbowConnectUI } from "./RainbowConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 import { rainbowWalletUris } from "./rainbowWalletUris";
 
+/**
+ * @wallet
+ */
 export type RainbowWalletConfigOptions = {
   /**
    * When connecting Rainbow using the QR Code - Wallet Connect connector is used which requires a project id.

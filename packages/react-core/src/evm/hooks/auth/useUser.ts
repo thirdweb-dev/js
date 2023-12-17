@@ -5,6 +5,9 @@ import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
+/**
+ * @auth
+ */
 export interface UserWithData<
   TData extends Json = Json,
   TContext extends Json = Json,

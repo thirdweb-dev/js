@@ -2,6 +2,9 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { Coin98Wallet, getInjectedCoin98Provider } from "@thirdweb-dev/wallets";
 import { Coin98ConnectUI } from "./Coin98ConnectUI";
 
+/**
+ * @wallet
+ */
 export type Coin98WalletConfigOptions = {
   /**
    * When connecting Coin98 using the QR Code - Wallet Connect connector is used which requires a project id.

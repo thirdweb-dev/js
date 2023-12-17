@@ -43,6 +43,9 @@ import {
 } from "../../ConnectWallet/icons/socialLogins";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
+/**
+ * @wallet
+ */
 export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
   /**
    * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal

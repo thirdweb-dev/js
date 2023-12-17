@@ -2,6 +2,9 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { OneKeyWallet, getInjectedOneKeyProvider } from "@thirdweb-dev/wallets";
 import { OneKeyConnectUI } from "./OneKeyConnectUI";
 
+/**
+ * @wallet
+ */
 export type OneKeyWalletConfigOptions = {
   /**
    * When connecting OneKey wallet using the QR Code - Wallet Connect connector is used which requires a project id.

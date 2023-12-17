@@ -5,6 +5,9 @@ import {
 import type { Transaction } from "ethers";
 import { useEffect, useState } from "react";
 
+/**
+ * @others
+ */
 export type UseWatchTransactionsParams = Partial<
   Omit<WatchTransactionsParams, "onTransactions">
 > & { limit?: number };

@@ -374,7 +374,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - an instance of a `DropContract`
  *
  * @returns a mutation object that can be used to claim a NFT to the wallet specified in the params
  *
@@ -535,7 +535,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract} with the drop extension
+ * @param contract - an instance of a `NFTContract` with the drop extension
  *
  * @param onProgress - an optional callback that will be called with the progress of the upload
  *
