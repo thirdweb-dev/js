@@ -396,7 +396,7 @@ export function useCreateWalletInstance() {
  * }
  * ```
  *
- * @returns a method to connect the wallet to network/chain with given `chainId`
+ * @returns A function to switch the network in the currently connected wallet to network with given `chainId`
  * @networkConnection
  */
 export function useSwitchChain() {
