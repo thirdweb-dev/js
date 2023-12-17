@@ -42,7 +42,6 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  *   const { login, isLoading } = useLogin();
  *
  *   const loginOptions = {
- *     // highlight-start
  *     domain: "https://your-domain.com", // Your dapp domain
  *     statement: "My statement", // Text that the user will sign
  *     uri: "https://your-domain.com/login", // RFC 3986 URI referring to the resource that is the subject of the signing
@@ -52,7 +51,6 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  *     expirationTime: new Date(2021, 1, 1), // When this message expires
  *     invalidBefore: new Date(2020, 12, 1), // When this message becomes valid
  *     resources: ["balance", "history", "info"], // A list of information or references to information the user wishes to have resolved
- *     // highlight-end
  *   };
  *
  *   return <Web3Button action={() => login(loginOptions)}>Login</Web3Button>;

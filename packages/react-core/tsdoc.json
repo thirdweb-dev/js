@@ -61,6 +61,10 @@
     {
       "tagName": "@auth",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@storage",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -78,6 +82,7 @@
     "@token": true,
     "@walletConnection": true,
     "@smartWallet": true,
-    "@auth": true
+    "@auth": true,
+    "@storage": true
   }
 }
