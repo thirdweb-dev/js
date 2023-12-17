@@ -2,4 +2,4 @@
 "@thirdweb-dev/react-native": patch
 ---
 
-Adds analytics nonce to embedded wallet
+Support expo versions =>47 < 50

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.16",
+  "version": "4.1.18",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {

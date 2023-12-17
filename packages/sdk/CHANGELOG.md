@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 4.0.22
+
+### Patch Changes
+
+- [#2085](https://github.com/thirdweb-dev/js/pull/2085) [`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e) Thanks [@hsynlms](https://github.com/hsynlms)! - Fix error when fetching data on `vite-node` environment by setting a global variable `TW_SKIP_FETCH_SETUP` to `true`. Fixes https://github.com/thirdweb-dev/js/issues/2002
+
+  Setting this flag sets `skipFetchSetup` to `true` in [ethers ConnectionInfo](https://docs.ethers.org/v5/api/utils/web/#ConnectionInfo)
+
+  ```ts
+  // set this global variable
+  globalThis.TW_SKIP_FETCH_SETUP = true;
+
+  // use the thirdweb sdk...
+  ```
+
 ## 4.0.21
 
 ### Patch Changes

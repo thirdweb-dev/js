@@ -1,5 +1,52 @@
 # @thirdweb-dev/react-native
 
+## 0.5.1
+
+### Patch Changes
+
+- [#2074](https://github.com/thirdweb-dev/js/pull/2074) [`07fbb799`](https://github.com/thirdweb-dev/js/commit/07fbb799be87c1c5229ae3183fa8bc67ae15c756) Thanks [@iketw](https://github.com/iketw)! - Adds the ability to login with any arbitrary login payload
+
+  ```typescript
+  await embeddedWallet.authenticate({
+    strategy: "auth_endpoint",
+    payload: "SOME_STRING",
+    encryptionKey: "",
+  });
+  ```
+
+- [#2082](https://github.com/thirdweb-dev/js/pull/2082) [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f) Thanks [@iketw](https://github.com/iketw)! - Better comments
+
+- [#2086](https://github.com/thirdweb-dev/js/pull/2086) [`328ef5dc`](https://github.com/thirdweb-dev/js/commit/328ef5dc9c628a89a022a559852dfa2a788f70cb) Thanks [@iketw](https://github.com/iketw)! - Hide WC modal back button when only WC is defined as a supportedWallet
+
+- Updated dependencies [[`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e), [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f)]:
+  - @thirdweb-dev/sdk@4.0.22
+  - @thirdweb-dev/react-core@4.1.16
+  - @thirdweb-dev/wallets@2.3.1
+
+## 0.5.0
+
+### Minor Changes
+
+- [#2018](https://github.com/thirdweb-dev/js/pull/2018) [`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba) Thanks [@iketw](https://github.com/iketw)! - Enforces passing an encryption key for custom jwt auth
+
+  ```typescript
+  const embedded = useEmbeddedWallet();
+
+  embedded.connect({
+    jwt: "<token>",
+    encryptionKey: "<my-key>",
+    strategy: "jwt",
+  });
+  ```
+
+### Patch Changes
+
+- [#2072](https://github.com/thirdweb-dev/js/pull/2072) [`2346396b`](https://github.com/thirdweb-dev/js/commit/2346396bdffeed169cdfc15839bfb42d87f24303) Thanks [@iketw](https://github.com/iketw)! - Adds analytics nonce to embedded wallet
+
+- Updated dependencies [[`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba), [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe), [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da), [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275)]:
+  - @thirdweb-dev/wallets@2.3.0
+  - @thirdweb-dev/react-core@4.1.15
+
 ## 0.4.14
 
 ### Patch Changes

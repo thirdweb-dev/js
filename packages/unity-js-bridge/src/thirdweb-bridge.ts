@@ -92,6 +92,8 @@ interface TWBridge {
   smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
   smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
   smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
+  smartWalletRevokeSessionKey: (signer: string) => Promise<string | undefined>;
+  smartWalletGetAllActiveSigners: () => Promise<string | undefined>;
   waitForTransactionResult: (txHash: string) => Promise<string>;
   getLatestBlockNumber: () => Promise<string>;
   getBlock: (blockNumber: string) => Promise<string>;
@@ -347,8 +349,7 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-        }  
-        else {
+        } else {
           throw new Error(
             "Invalid auth provider: " + authOptionsParsed.authProvider,
           );
@@ -678,11 +679,11 @@ class ThirdwebBridge implements TWBridge {
         strategy: "encryptedJson",
         password,
       });
-    } catch(e) {
+    } catch (e) {
       console.warn(e);
       return localWallet;
     }
-    
+
     return localWallet;
   }
 
@@ -730,6 +731,25 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
+  public async smartWalletRevokeSessionKey(signer: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.revokeSessionKey(signer);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+
+  public async smartWalletGetAllActiveSigners(){
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const res = await smartWallet.getAllActiveSigners();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
   public async waitForTransactionResult(txHash: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -766,7 +786,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getEmail(){
+  public async getEmail() {
     const embeddedWallet = this.walletMap.get(
       walletIds.embeddedWallet,
     ) as EmbeddedWallet;

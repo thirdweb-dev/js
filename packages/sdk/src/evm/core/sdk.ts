@@ -104,7 +104,6 @@ import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
 } from "../common/any-evm-utils/deployDirectDeterministic";
-import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
 import { DeployEvent, DeployEvents } from "../types/deploy/deploy-events";
 import {
   AirdropContractDeployMetadata,
@@ -1025,9 +1024,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1085,9 +1083,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1456,9 +1453,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1488,9 +1484,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1520,9 +1515,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
