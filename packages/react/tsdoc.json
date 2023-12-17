@@ -81,6 +81,10 @@
     {
       "tagName": "@others",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@wallet",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -103,6 +107,7 @@
     "@connectWallet": true,
     "@theme": true,
     "@locale": true,
-    "@others": true
+    "@others": true,
+    "@wallet": true
   }
 }

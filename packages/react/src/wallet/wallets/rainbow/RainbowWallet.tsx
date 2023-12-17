@@ -59,6 +59,8 @@ export type RainbowWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const rainbowWallet = (
   options?: RainbowWalletConfigOptions,

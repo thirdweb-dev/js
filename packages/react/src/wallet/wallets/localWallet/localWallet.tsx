@@ -45,6 +45,8 @@ const phoneIcon = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODA
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const localWallet = (
   config?: LocalWalletConfigOptions,

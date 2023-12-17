@@ -353,6 +353,8 @@ export function esDefault(): ThirdwebLocale {
  *  <App />
  * </ThirdwebProvider>
  * ```
+ *
+ * @locale
  */
 export function es(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = esDefault();

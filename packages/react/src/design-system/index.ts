@@ -216,6 +216,8 @@ export const shadow = {
  *  }
  * })
  * ```
+ *
+ * @theme
  */
 export function lightTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {
@@ -235,6 +237,8 @@ export function lightTheme(overrides?: ThemeOverrides): Theme {
  *  }
  * })
  * ```
+ *
+ * @theme
  */
 export function darkTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {

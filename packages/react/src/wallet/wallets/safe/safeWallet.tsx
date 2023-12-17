@@ -62,6 +62,8 @@ export type SafeWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const safeWallet = (
   config?: SafeWalletConfigOptions,

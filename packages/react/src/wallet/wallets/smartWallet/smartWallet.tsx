@@ -85,6 +85,8 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
  *   return <div> ... </div>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const smartWallet = (
   wallet: WalletConfig<any>,

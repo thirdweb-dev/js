@@ -54,6 +54,8 @@ export type RabbyWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const rabbyWallet = (
   options?: RabbyWalletConfigOptions,

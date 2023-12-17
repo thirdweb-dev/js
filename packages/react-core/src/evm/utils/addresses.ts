@@ -23,6 +23,8 @@ export function shortenString(str: string, extraShort: boolean = true) {
  * ```ts
  * const address = shortenIfAddress("0x1234567890123456789012345678901234567890", true); // result will be "0x1234...890"
  * ```
+ *
+ * @others
  */
 export function shortenAddress(
   address?: string,

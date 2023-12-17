@@ -49,6 +49,8 @@ export type PhantomWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const phantomWallet = (
   options?: PhantomWalletConfigOptions,

@@ -130,7 +130,8 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
-
+ *
+ * @wallet
  */
 export const embeddedWallet = (
   options?: EmbeddedWalletConfigOptions,

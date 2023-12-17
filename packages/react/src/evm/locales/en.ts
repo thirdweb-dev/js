@@ -345,6 +345,8 @@ export function enDefault() {
  *  <App />
  * </ThirdwebProvider>
  * ```
+ *
+ * @locale
  */
 export function en(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = enDefault();

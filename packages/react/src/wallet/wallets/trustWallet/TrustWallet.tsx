@@ -56,6 +56,8 @@ export type TrustWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const trustWallet = (
   options?: TrustWalletConfigOptions,

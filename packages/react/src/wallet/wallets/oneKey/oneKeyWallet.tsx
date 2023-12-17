@@ -54,6 +54,8 @@ export type OneKeyWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const oneKeyWallet = (
   options?: OneKeyWalletConfigOptions,

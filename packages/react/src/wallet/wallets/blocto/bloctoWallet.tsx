@@ -22,7 +22,7 @@ export type BloctoWalletConfigOptions = {
  *
  * ### Usage with ConnectWallet
  *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
+ * To allow users to connect to this wallet using the `ConnectWallet` component, add it to `ThirdwebProvider`'s `supportedWallets` prop.
  *
  * ```tsx
  * <ThirdwebProvider supportedWallets={[bloctoWallet()]}>
@@ -50,6 +50,8 @@ export type BloctoWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const bloctoWallet = (
   options?: BloctoWalletConfigOptions,

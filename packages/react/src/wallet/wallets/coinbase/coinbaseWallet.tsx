@@ -63,6 +63,8 @@ export type CoinbaseWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const coinbaseWallet = (
   options?: CoinbaseWalletConfigOptions,

@@ -46,6 +46,8 @@ export type FrameWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const frameWallet = (
   config?: FrameWalletConfigOptions,

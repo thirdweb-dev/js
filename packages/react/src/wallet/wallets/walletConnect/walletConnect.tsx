@@ -75,6 +75,8 @@ export type walletConnectConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const walletConnect = (
   config?: walletConnectConfigOptions,

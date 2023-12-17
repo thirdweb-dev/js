@@ -56,6 +56,8 @@ export type ZerionkWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const zerionWallet = (
   options?: ZerionkWalletConfigOptions,

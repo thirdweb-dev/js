@@ -54,6 +54,8 @@ export type Coin98WalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const coin98Wallet = (
   options?: Coin98WalletConfigOptions,

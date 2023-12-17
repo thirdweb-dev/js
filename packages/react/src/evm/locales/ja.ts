@@ -347,6 +347,8 @@ export function jaDefault(): ThirdwebLocale {
  *
  * <ThirdwebProvider locale={japanese}> <App /> </ThirdwebProvider>
  * ```
+ *
+ * @locale
  */
 export function ja(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = jaDefault();

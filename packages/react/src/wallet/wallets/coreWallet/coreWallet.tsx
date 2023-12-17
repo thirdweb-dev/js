@@ -57,6 +57,8 @@ export type CoreWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const coreWallet = (
   options?: CoreWalletConfigOptions,

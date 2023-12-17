@@ -91,6 +91,8 @@ export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export function magicLink(
   config: MagicWalletConfigOptions,

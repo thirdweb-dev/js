@@ -54,6 +54,8 @@ export type OKXWalletConfigOptions = {
  *   return <button onClick={handleConnect}> Connect </button>;
  * }
  * ```
+ *
+ * @wallet
  */
 export const okxWallet = (
   options?: OKXWalletConfigOptions,
