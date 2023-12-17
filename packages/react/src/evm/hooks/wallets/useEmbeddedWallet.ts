@@ -187,7 +187,7 @@ export function useEmbeddedWallet() {
  * return <div> Not connected </div>;
  * ```
  *
- * @connectWallet
+ * @walletConnection
  * @returns Hook's `data` property contains the `string` email if `EmbeddedWallet` is connected, otherwise `undefined`
  */
 export function useEmbeddedWalletUserEmail(): UseQueryResult<

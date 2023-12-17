@@ -32,7 +32,7 @@ import { useContract } from "../async/contracts";
  * + const vote = useContract("0x1234...", "vote").contract;
  * ```
  *
- * @others
+ * @internal
  */
 export function useVote(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

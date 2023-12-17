@@ -68,6 +68,7 @@ import { useCallback } from "react";
  * ```
  * @walletConnection
  * @deprecated use `ConnectWallet` component or `useConnect` hook instead
+ * @internal
  */
 export function useCoinbaseWallet() {
   const connect = useConnect();

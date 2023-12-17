@@ -71,6 +71,7 @@ import { useCallback } from "react";
  *
  * @walletConnection
  * @deprecated Use `ConnectWallet` component or `useConnect` hook instead
+ * @internal
  */
 export function useMetamask() {
   const connect = useConnect();

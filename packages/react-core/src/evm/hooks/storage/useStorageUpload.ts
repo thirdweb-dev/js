@@ -114,7 +114,7 @@ interface StorageUploadOptions<T extends UploadOptions> {
  * }
  * ```
  *
- * @auth
+ * @storage
  */
 export function useStorageUpload<
   T extends UploadOptions = IpfsUploadBatchOptions,
