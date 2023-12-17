@@ -55,7 +55,7 @@ import invariant from "tiny-invariant";
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  *
  * @param queryParams -
  * query params to pass to the query for the sake of pagination
@@ -122,7 +122,7 @@ export function useUnclaimedNFTs(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  *
  * @param queryParams -
  * By default, the hook will return the first `100` claimed NFTs
@@ -189,7 +189,7 @@ export function useClaimedNFTs(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  *
  * @returns
  * The hook's `data` property, once loaded, contains a `BigNumber` representing the number of unclaimed NFTs.
@@ -234,7 +234,7 @@ export function useUnclaimedNFTSupply(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  *
  * @returns
  * The hook's data property, once loaded, is a BigNumber representing the total supply of NFTs claimed from the NFT drop contract so far.
@@ -278,7 +278,7 @@ export function useClaimedNFTSupply(
  * }
  * ```
  *
- * @param contract - an instance of a `RevealableContract`
+ * @param contract - Instance of a `RevealableContract`
  *
  * @returns The hook's `data` property, once loaded, contains an array of batches that need to be revealed.
  *
@@ -350,7 +350,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `DropContract`
+ * @param contract - Instance of a `DropContract`
  *
  * @returns a mutation object that can be used to claim a NFT to the wallet specified in the params
  *
@@ -507,7 +507,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract` with the drop extension
+ * @param contract - Instance of a `NFTContract` with the drop extension
  *
  * @param onProgress - an optional callback that will be called with the progress of the upload
  *
@@ -641,7 +641,7 @@ export function useLazyMint<TContract extends DropContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - Instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns Mutation object to lazy mint a batch of NFTs
  *
@@ -758,7 +758,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `RevealableContract`
+ * @param contract - Instance of a `RevealableContract`
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @delayedReveal
  */

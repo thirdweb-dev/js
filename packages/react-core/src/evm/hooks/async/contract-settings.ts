@@ -40,7 +40,7 @@ import invariant from "tiny-invariant";
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns The hook's `data` property, once loaded, is a string with the wallet address of the primary sales recipient.
  *
@@ -100,7 +100,7 @@ export function usePrimarySaleRecipient(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  * @returns a mutation object that can be used to update the primary sales recipient
  *
  * #### walletAddress
@@ -163,7 +163,7 @@ export function useUpdatePrimarySaleRecipient(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns
  * The hook's `data` property, once loaded, is an object with two properties:
@@ -238,7 +238,7 @@ export function useRoyaltySettings(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns a mutation object that can be used to update the royalty settings
  *
@@ -305,7 +305,7 @@ export function useUpdateRoyaltySettings(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns
  * The hook's `data` property, once loaded, is an object containing two fields:
@@ -379,7 +379,7 @@ export function usePlatformFees(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns a mutation object that can be used to update the platform fees settings
  * #### platform_fee_basis_points (required)
@@ -447,7 +447,7 @@ export function useUpdatePlatformFees(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  * @returns a `CustomContractMetadata` object containing the metadata
  *
  * The hook's `data` property, once loaded, is an object containing the contract's metadata.
@@ -541,7 +541,7 @@ export function useMetadata(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  * @returns a mutation object that can be used to update the metadata
  * @metadata
  */

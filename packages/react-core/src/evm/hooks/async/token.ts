@@ -44,7 +44,7 @@ import invariant from "tiny-invariant";
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns Hook's `data` object includes the total supply of the token in the `value` property as a `BigNumber` object.
  *
@@ -98,7 +98,7 @@ export function useTokenSupply(
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns Hook's `data` object includes the token balance for given wallet address
  *
@@ -155,7 +155,7 @@ export function useTokenBalance(
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns The hook's `data` property, once loaded, contains the `number` that represents the number of decimals of the ERC20 token.
  *
@@ -223,7 +223,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
  *
@@ -311,7 +311,7 @@ export function useMintToken(
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns a mutation object that can be used to tokens to the wallet specified in the params
  *
@@ -407,7 +407,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns a mutation object that can be used to transfer tokens
  * ### to
@@ -544,7 +544,7 @@ export function useTransferNativeToken() {
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns a mutation object that can be used to transfer batch tokens
  *
@@ -613,7 +613,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  * }
  * ```
  *
- * @param contract - an instance of a `TokenContract`
+ * @param contract - Instance of a `TokenContract`
  *
  * @returns a mutation object that can be used to burn tokens from the connected wallet
  *

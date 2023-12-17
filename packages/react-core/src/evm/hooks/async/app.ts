@@ -72,7 +72,7 @@ export function useAppURI<TContract extends ValidContractInstance>(
  *   );
  * };
  * ```
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - Instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the appURI of a contract
  * @twfeature AppURI
  * @appURI

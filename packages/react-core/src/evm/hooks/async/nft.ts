@@ -65,7 +65,7 @@ import invariant from "tiny-invariant";
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  *
  * @param tokenId - The token ID of the NFT you want to fetch.
  * ```jsx
@@ -142,7 +142,7 @@ export function useNFT<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  *
  * @param queryParams -
  * By default, the hook will return the first 100 NFTs associated with the contract.
@@ -201,7 +201,7 @@ export function useNFTs<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  * @returns a `BigNumber` that includes the total count of NFTs
  * @twfeature ERC721Supply | ERC1155Enumerable
  * @nft
@@ -258,7 +258,7 @@ export function useTotalCount<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  *
  * @param tokenId - required for ERC1155, the tokenId to look up. This will return the total quantity of the given token ID in circulation.
  * ```ts
@@ -333,7 +333,7 @@ export function useTotalCirculatingSupply(
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  * @param ownerWalletAddress -
  * the wallet address to get owned tokens for. Likely, you will want to view the connected wallet’s NFTs. use the `useAddress` hook to get this value.
  *
@@ -391,7 +391,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - Instance of a {@link NFTContract}
  * @param ownerWalletAddress - the wallet address to check the balance of. Use the `useAddress` hook to get the current wallet address.
  * @param tokenId - required for ERC1155, the tokenId to look up
  * @returns The hook's `data` property, once loaded, returns a `BigNumber` representing the quantity of the NFT owned by the wallet.
@@ -446,7 +446,7 @@ export function useNFTBalance(
  * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  * @returns a response object that includes the shared metadata of the contract
  * @twfeature ERC721SharedMetadata
  * @nft
@@ -516,7 +516,7 @@ export function useSharedMetadata(
  * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - Instance of a {@link NFTContract}
  * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
  *
  * #### metadata
@@ -648,7 +648,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `Erc1155`
+ * @param contract - Instance of a `Erc1155`
  *
  * @returns a mutation object that can be used to mint a more supply of a token id to the provided wallet
  * #### additionalSupply (required)
@@ -753,7 +753,7 @@ export function useMintNFTSupply(contract: Erc1155) {
  * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - Instance of a {@link NFTContract}
  *
  * @returns a mutation object that can be used to transfer NFTs
  * #### to (required)
@@ -860,7 +860,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a `Erc1155`
+ * @param contract - Instance of a `Erc1155`
  * @returns a mutation object that can be used to transfer batch NFTs
  *
  * #### tokenId
@@ -933,7 +933,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * }
  * ```
  *
- * @param contract - an instance of a `NFTContract`
+ * @param contract - Instance of a `NFTContract`
  * @returns a mutation object that can be used to burn an NFT token from the connected wallet
  *
  * #### tokenId

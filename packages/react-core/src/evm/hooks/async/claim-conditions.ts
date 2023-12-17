@@ -394,7 +394,7 @@ export function useClaimConditions(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the "ClaimConditions" extension.
+ * @param contract - Instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the "ClaimConditions" extension.
  *
  * @param params -
  * The conditions to check eligibility for. The `walletAddress` and `quantity` properties are required.
@@ -711,7 +711,7 @@ export function useActiveClaimConditionForWallet(
  * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - Instance of a {@link DropContract}
  * @returns
  *
  * A Mutation object to set claim conditions
@@ -906,7 +906,7 @@ export function useSetClaimConditions(
  * }
  * ```
  *
- * @param contract - an instance of a `DropContract`
+ * @param contract - Instance of a `DropContract`
  * @param tokenId - For ERC1155 NFTs, provide the token ID of the NFT as the second argument to the hook.
  *
  * @returns a mutation object that can be used to reset claim conditions

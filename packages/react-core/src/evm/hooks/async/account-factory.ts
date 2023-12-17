@@ -30,7 +30,7 @@ import invariant from "tiny-invariant";
  * const { data: accounts, isLoading, error } = useAccounts(contract);
  * ```
  *
- * @param contract - an instance of a account factory contract
+ * @param contract - Instance of a account factory contract
  * @returns a response object that includes an array of all accounts with their associated admin
  * @twfeature AccountFactory
  * @smartWallet
@@ -61,7 +61,7 @@ export function useAccounts(
  * const { data: accountsForAddress, isLoading, error } = useAccountsForAddress(contract, "{{account_address}}");
  * ```
  *
- * @param contract - an instance of a account factory contract
+ * @param contract - Instance of a account factory contract
  * @param address - the address to get associated accounts for
  * @returns a response object that includes an array of all accounts associated with the address
  *
@@ -98,7 +98,7 @@ export function useAccountsForAddress(
  * const { data: isAccountDeployed, isLoading, error } = useIsAccountDeployed(contract);
  * ```
  *
- * @param contract - an instance of a account factory contract
+ * @param contract - Instance of a account factory contract
  * @returns a boolean indicating if a account has been deployed for the given admin
  * @twfeature AccountFactory
  * @smartWallet
@@ -155,7 +155,7 @@ export function useIsAccountDeployed(
  * };
  * ```
  *
- * @param contract - an instance of a account factory contract
+ * @param contract - Instance of a account factory contract
  * @returns a mutation object that can be used to create a account
  * @twfeature AccountFactory
  * @smartWallet

@@ -61,7 +61,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns
  * The hook's data property, once loaded, is an object, where the keys are the role names and the values are arrays of wallet addresses that have that role.
@@ -131,7 +131,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  * @param role - The name of the role to get the members of. Can be any custom role, or a built-in role, such as `admin`, `transfer`, `minter`, `pauser`, `lister`, `asset`, `unwrap`, or `factory`.
  * @returns The hook's `data` property, once loaded, is an array of wallet addresses that have the specified role
  *
@@ -187,7 +187,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @param role - The name of the role to check. Can be any custom role, or a built-in role, such as `"admin"`, `"transfer"`, `"minter"`, `"pauser"`, `"lister"`, `"asset"`, `"unwrap"`, or `"factory"`.
  * @param walletAddress - The wallet address to check if it is a member of the role. Use the `useAddress` hook to get the current wallet address.
@@ -254,7 +254,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - Instance of a {@link SmartContract}
  * @returns a mutation object that can be used to overwrite all roles on the contract
  * @twfeature Permissions
  * @permissionControl
@@ -318,7 +318,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns a mutation object that can be used to grant a member of a role on the contract
  *
@@ -413,7 +413,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  * }
  * ```
  *
- * @param contract - an instance of a `SmartContract`
+ * @param contract - Instance of a `SmartContract`
  *
  * @returns a mutation object that can be used to revoke a role from a member on the contract
  * #### role (required)

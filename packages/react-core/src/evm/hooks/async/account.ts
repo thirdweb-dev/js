@@ -31,7 +31,7 @@ import { useWallet } from "../../../core/hooks/wallet-hooks";
  * const { data: accounts, isLoading, error } = useAccountSigners(contract);
  * ```
  *
- * @param contract - an instance of a smart contract
+ * @param contract - Instance of a smart contract
  * @returns hook's `data` property contains an array of all signers
  * @twfeature Account
  * @smartWallet
@@ -62,7 +62,7 @@ export function useAccountSigners(
  * const { data: accounts, isLoading, error } = useAccountAdmins(contract);
  * ```
  *
- * @param contract - an instance of smart contract
+ * @param contract - Instance of smart contract
  * @returns The hook's `data` property, once loaded, contains an array of all admins of the provided account
  * @twfeature Account
  * @smartWallet
@@ -94,7 +94,7 @@ export function useAccountAdmins(
  * const { data: accounts, isLoading, error } = useAccountAdminsAndSigners(contract);
  * ```
  *
- * @param contract - an instance of a smart contract
+ * @param contract - Instance of a smart contract
  * @returns hook's `data` property containing an array of all admins and signers
  *
  * @twfeature Account

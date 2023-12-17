@@ -47,7 +47,7 @@ import invariant from "tiny-invariant";
 /**
  * Hook for getting a specific listing on a `Marketplace` contract.
  *
- * Note: this hook is only available for `Marketplace` contracts.
+ * __This hook is only available for `Marketplace` contracts__
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
  * use `useDirectListing` or `useEnglishAuction` instead.
@@ -66,9 +66,12 @@ import invariant from "tiny-invariant";
  * ```
  *
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  * @param listingId - the listing id to check
- * @returns a response object that includes the desired listing
+ *
+ * @returns
+ * Query Result object that includes the desired listing.
+ *
  * The hook's `data` property, once loaded, is an object containing the desired listing data.
  *
  * The exact shape of the object depends on the type of listing.
@@ -213,7 +216,7 @@ export function useListing(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a marketplace v3 contract
  * @param listingId - The ID of the listing to get. If the listing is not found (or is not a direct listing), the `error` property will be set in the return value of the hook.
  *
  * @returns
@@ -297,7 +300,7 @@ export function useDirectListing(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a marketplace v3 contract
  * @param auctionId -
  * the auction id to check.  If the listing with this ID cannot be found (or is not an auction), the `error` property will be set.
  *
@@ -376,13 +379,12 @@ export function useEnglishAuction(
 /**
  * Hook for getting all listings (including expired ones) from a `Marketplace` contract.
  *
- * Note: this hook is only available for `Marketplace` contracts.
+ * __This hook is only available for `Marketplace` contracts__
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
  * use `useDirectListings` or `useEnglishAuctions` instead.
  *
  * @example
- *
  * ```jsx
  * import { useContract, useListings } from "@thirdweb-dev/react";
  *
@@ -392,7 +394,7 @@ export function useEnglishAuction(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  *
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * ```jsx
@@ -414,7 +416,7 @@ export function useEnglishAuction(
  * }
  * ```
  *
- * @returns a response object that includes an array of listings
+ * @returns Query result object that includes an array of listings
  *
  * The hook's `data` property, once loaded, is an array of listing objects.
  *
@@ -679,7 +681,7 @@ export function useDirectListings(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a marketplace v3 contract
  *
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * ```jsx
@@ -798,7 +800,7 @@ export function useValidDirectListings(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a marketplace v3 contract
  *
  * @param filter -
  * filter to pass to the query for the sake of pagination & filtering
@@ -919,7 +921,7 @@ export function useEnglishAuctions(
  * const { data: validEnglishAuctions, isLoading, error } = useValidEnglishAuctions(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a marketplace v3 contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of english auctions
  * @twfeature EnglishAuctions
@@ -949,14 +951,12 @@ export function useValidEnglishAuctions(
 /**
  * Hook for getting the total number of listings on a `Marketplace` contract.
  *
- * Note: this hook is only available for `Marketplace` contracts.
+ * __This hook is only available for `Marketplace` contracts__
  *
  * If you are using [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3),
  * use `useDirectListingsCount` or `useEnglishAuctionsCount` instead.
  *
  * @example
- *
- *
  * ```jsx
  * import { useContract, useListingsCount } from "@thirdweb-dev/react";
  *
@@ -966,7 +966,7 @@ export function useValidEnglishAuctions(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  *
  * @returns
  * The hook's `data` property, once loaded, is a `BigNumber` containing the total number of listings on the contract.
@@ -1255,7 +1255,7 @@ export function useActiveListings(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  *
  * @param listingId -
  * The ID of the listing to get the winning bid for.
@@ -1548,7 +1548,7 @@ export function useBidBuffer(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  *
  * @param listingId -
  * The ID of the listing to get the minimum next bid for.
@@ -1621,7 +1621,7 @@ export function useMinimumNextBid(
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a Marketplace contract
  *
  * @param listingId - the id of the listing to fetch offers for
  * If the listing cannot be found, is not a direct listing, or is not active, the `error` property will be set.
@@ -1717,7 +1717,7 @@ export function useOffers(
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a Marketplace contract
  *
  * @returns Mutation object to create a new direct listing
  *
@@ -2053,7 +2053,7 @@ export function useCreateAuctionListing<
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a Marketplace contract
  * @returns
  * Mutation object to cancel a listing.
  *
@@ -2330,7 +2330,7 @@ export function useCancelEnglishAuction(
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a Marketplace contract
  *
  * @returns a mutation object that can be used to make a bid on an auction listing
  *
@@ -2413,7 +2413,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a Marketplace contract
  *
  * @returns a mutation object that can be used to make a bid on an auction listing
  *
@@ -2508,7 +2508,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a `Marketplace` contract
+ * @param contract - Instance of a `Marketplace` contract
  * @returns  Mutation object to accept an offer on a direct listing
  * ```ts
  * const { mutateAsync, isLoading, error } = useAcceptDirectListingOffer(contract);
