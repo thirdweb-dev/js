@@ -195,13 +195,11 @@ export function useListing(
 /**
  * Hook to get a specific direct listing from a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useListing` instead.
+ * For `Marketplace` contracts, use `useListing` instead.
  *
  * @example
- *
  * ```jsx
  * import { useDirectListing, useContract } from "@thirdweb-dev/react";
  *
@@ -217,6 +215,7 @@ export function useListing(
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param listingId - The ID of the listing to get. If the listing is not found (or is not a direct listing), the `error` property will be set in the return value of the hook.
+ *
  * @returns
  * The hook's data property, once loaded, is a `DirectListingV3` object, containing the following properties:
  *
@@ -543,13 +542,11 @@ export function useListings(
 /**
  * Hook to get all the direct listings from a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useListings` instead.
+ * For `Marketplace` contracts, use `useListings` instead.
  *
  * @example
- *
  * ```jsx
  * import { useDirectListings, useContract } from "@thirdweb-dev/react";
  *
@@ -564,10 +561,11 @@ export function useListings(
  * ```
  *
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a `MarketplaceV3` contract
  *
  * @param filter -
  * filter to pass to the query for the sake of pagination & filtering
+ *
  * ```tsx
  * import { useDirectListings, useContract } from "@thirdweb-dev/react";
  *
@@ -992,13 +990,11 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
 /**
  * Hook to get the total number of direct listings on a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useListingsCount` instead.
+ * For `Marketplace` contracts, use `useListingsCount` instead.
  *
  * @example
- *
  * ```jsx
  * import { useDirectListingsCount, useContract } from "@thirdweb-dev/react";
  *
@@ -1012,7 +1008,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a `MarketplaceV3` contract
  *
  * @returns
  * The hook's `data` property, once loaded, is a `BigNumber` containing the number of direct listings on the Marketplace V3 contract.
@@ -1039,13 +1035,11 @@ export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
 /**
  * Hook to get the total number of direct listings on a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useListingsCount` instead.
+ * For `Marketplace` contracts, use `useListingsCount` instead.
  *
  * @example
- *
  * ```jsx
  * import { useEnglishAuctionsCount, useContract } from "@thirdweb-dev/react";
  *
@@ -1059,10 +1053,11 @@ export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
  * }
  * ```
  *
- * @param contract - an instance of a marketplace v3 contract
+ * @param contract - Instance of a `MarketplaceV3` contract
  *
  * @returns
  * The hook's `data` property, once loaded, is a `BigNumber` representing the number of direct listings on the Marketplace V3 contract.
+ *
  * @twfeature EnglishAuctions
  * @marketplace
  */
@@ -1087,7 +1082,7 @@ export function useEnglishAuctionsCount(
 /**
  * Hook for fetching all active listings from a `Marketplace` contract.
  *
- * **Note: This hook is only for Marketplace contracts. For Marketplace V3 contracts, use `useValidDirectListings` or `useValidEnglishAuctions` instead.**
+ * __Note: This hook is only for Marketplace contracts. For Marketplace V3 contracts, use `useValidDirectListings` or `useValidEnglishAuctions` instead__
  *
  *
  * @example
@@ -1100,7 +1095,7 @@ export function useEnglishAuctionsCount(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a `Marketplace` contract
  * @param filter -
  * By default, the hook returns all active listings from the marketplace.
  *
@@ -1126,8 +1121,9 @@ export function useEnglishAuctionsCount(
  * }
  * ```
  *
- * @returns a response object that includes an array of listings.
+ * @returns
  * The hook's `data` property, once loaded, returns an array containing both `AuctionListing` and `DirectListing` objects.
+ *
  * Use the `type` property to determine which type of listing each one is.
  *
  * #### AuctionListing
@@ -1335,12 +1331,12 @@ export function useWinningBid(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a marketplace contract
  *
- * @param auctionId - the auction id to check
+ * @param auctionId - The auction id to check
  * If the listing cannot be found, or is not an English auction, the `error` property will be set.
  *
- * @returns a response object that includes the `Bid` that is winning the auction
+ * @returns
  * If there are no bids, the `data` property will be `undefined`. Use the `isLoading` property to differentiate between
  * the loading state and the no bids state.
  *
@@ -1411,13 +1407,15 @@ export function useEnglishAuctionWinningBid(
  * }
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a `Marketplace` or `MarketplaceV3` contract
  *
- * @param listingId - The listing ID of the item that you want to get the auction winner for.
+ * @param listingId -
+ * The listing ID of the item that you want to get the auction winner for.
+ *
  * The listing must be an auction (or english auction) listing, the hook will populate the error property if it is not.
  *
  * @returns
- * The hook's data property, once loaded, contains a `string` representing the address of the auction winner, or undefined if there is no winner.
+ * The hook's `data` property, once loaded, contains a `string` representing the address of the auction winner, or `undefined` if there is no winner.
  *
  * @twfeature EnglishAuctions
  * @marketplace
@@ -1477,15 +1475,17 @@ export function useAuctionWinner(
  *   } = useBidBuffer(contract, listingId);
  * ```
  *
- * @param contract - an instance of a marketplace contract
+ * @param contract - Instance of a `Marketplace` or `MarketplaceV3` contract
  *
- * @param listingId - The listing ID of the item that you want to get the bid buffer for.
+ * @param listingId -
+ * The listing ID of the item that you want to get the bid buffer for.
  * The listing must be an auction (or english auction) listing, the hook will populate the `error` property if it is not.
  *
  * @returns
- * The hook's data property, once loaded, returns a BigNumber value representing the current bid buffer.
+ * The hook's `data` property, once loaded, returns a `BigNumber` value representing the current bid buffer.
  *
- * The `bidBuffer` value returned is in percentage format. For example, a value of `500` means that the next bid must be 5% higher than the current highest bid.
+ * The `bidBuffer` value returned is in percentage format.
+ * For example, a value of `500` means that the next bid must be 5% higher than the current highest bid.
  *
  * @twfeature EnglishAuctions
  * @marketplace
@@ -1719,16 +1719,23 @@ export function useOffers(
  *
  * @param contract - an instance of a Marketplace contract
  *
- * @returns a mutation object that can be used to create a new direct listing
+ * @returns Mutation object to create a new direct listing
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCreateDirectListing(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as an argument with the following properties:
+ *
  * #### assetContractAddress (required)
  *
  * The address of the NFT smart contract that you want to list.
  *
- *
  * #### tokenId (required)
  *
  * The token ID of the NFT that you want to list.
- *
  *
  * #### pricePerToken (required)
  *
@@ -1736,7 +1743,6 @@ export function useOffers(
  *
  * - For ERC721 NFTs, this is the price to buy the NFT outright.
  * - For ERC1155 NFTs, this is the price to `1` quantity of the NFT.
- *
  *
  * #### currencyContractAddress (optional)
  *
@@ -1748,12 +1754,9 @@ export function useOffers(
  *
  * The default value is `NATIVE_TOKEN_ADDRESS`.
  *
- *
  * #### isReservedListing (optional)
  *
  * When set to true, the seller must explicitly approve which wallet addresses can buy the NFT.
- *
- *
  *
  * #### quantity (optional)
  *
@@ -1762,13 +1765,11 @@ export function useOffers(
  * - For ERC721 NFTs, this is always `1`.
  * - For ERC1155 NFTs, this is the quantity of tokens to include in the listing.
  *
- *
  * #### startTimestamp (optional)
  *
  * A `Date` object for the start time of the listing.
  *
  * The default value is `new Date()`, which is the current time.
- *
  *
  * #### endTimestamp (optional)
  *
@@ -1877,9 +1878,19 @@ export function useCreateDirectListing<
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
+ * @param contract - Instance of a `Marketplace` contract
+ *
  * @returns
- * a mutation object that can be used to create a new auction listing.
+ * a mutation object to create a new auction listing.
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCreateAuctionListing(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object of type `NewAuctionListing` or `EnglishAuctionInputParams` as its argument which contains the following properties:
+ *
  * #### tokenId (required)
  *
  * The token ID of the NFT you are listing for auction.
@@ -2004,12 +2015,11 @@ export function useCreateAuctionListing<
 }
 
 /**
- * Hook for canceling an existing auction or listing on a
- * `Marketplace` contract.
+ * Hook for canceling an existing auction or listing on a `Marketplace` contract.
  *
- * **Note**: Auction listings cannot be canceled if a bid has been placed.
+ * __Auction listings cannot be canceled if a bid has been placed__
  *
- * **Note: This hook is only for `Marketplace` contracts.**
+ * __This hook is only for `Marketplace` contracts.__
  *
  * For [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3)
  * contracts, use `useCancelDirectListing` or `useCancelEnglishAuction` instead.
@@ -2045,7 +2055,17 @@ export function useCreateAuctionListing<
  *
  * @param contract - an instance of a Marketplace contract
  * @returns
- * a mutation object that can be used to cancel a listing. The `error` property is set  if the listing is not active, or was not created by the wallet.
+ * Mutation object to cancel a listing.
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCancelListing(contract);
+ * ```
+ *
+ * The `error` property is set if the listing is not active, or was not created by the wallet.
+ *
+ * ## options
+ *
+ * The mutation function takes an object with the following properties as an argument:
  *
  * #### listingId
  *
@@ -2111,17 +2131,9 @@ export function useCancelListing(
  * Direct listings can be canceled at any time, (unless the listing has already been sold).
  * Only the creator of the listing can cancel it.
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useCancelListing` instead.
- *
- *
- * ```jsx
- * import { useCancelDirectListing } from "@thirdweb-dev/react";
- *
- * const { mutateAsync, isLoading, error } = useCancelDirectListing(contract);
- * ```
+ * For `Marketplace` contracts, use `useCancelListing` instead.
  *
  * @example
  * ```jsx
@@ -2151,8 +2163,21 @@ export function useCancelListing(
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace v3 contract
- * @returns a mutation object that can be used to cancel a direct listing by passing the ID of the listing you want to cancel.
+ * @param contract - Instance of a `MarketplaceV3` contract
+ * @returns Mutation object to cancel a direct listing by passing the ID of the listing you want to cancel.
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCancelDirectListing(contract);
+ * ```
+ *
+ * The mutation function takes the `listingId` as an argument.
+ *
+ * The `error` property is set if the listing is not active, or was not created by the wallet
+ *
+ * ### listingId
+ *
+ * The ID of the listing you want to cancel.
+ *
  * @twfeature DirectListings
  * @marketplace
  */
@@ -2187,18 +2212,11 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
 /**
  * Hook for canceling an english auction on a [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
  *
- * **Note**: English auctions cannot be canceled if a bid has been placed.
+ * __English auctions cannot be canceled if a bid has been placed__
  *
- * **Note: This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.**
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
  *
- * For `Marketplace`
- * contracts, use `useCancelListing` instead.
- *
- * ```jsx
- * import { useCancelEnglishAuction } from "@thirdweb-dev/react";
- *
- * const { mutateAsync, isLoading, error } = useCancelEnglishAuction(contract);
- * ```
+ * For `Marketplace` contracts, use `useCancelListing` instead.
  *
  * @example
  * ```jsx
@@ -2227,11 +2245,22 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace v3 contract
- * @returns
- * a mutation object that can be used to cancel an english auction by passing the `listingId` of the auction you want to cancel.
+ * @param contract - Instance of a `MarketplaceV3` contract
  *
- * the `error` property is set if the listing is not active, cannot be canceled, or was not created by the wallet.
+ * @returns
+ * Mutation object that can be used to cancel an english auction
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCancelEnglishAuction(contract);
+ * ```
+ *
+ * The mutation function takes the `listingId` as an argument.
+ *
+ * The `error` property is set if the listing is not active, cannot be canceled, or was not created by the wallet.
+ *
+ * ### listingId
+ *
+ * The ID of the listing you want to cancel.
  *
  * @twfeature EnglishAuctions
  * @marketplace
@@ -2441,7 +2470,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Hook for accepting an offer from a direct listing on a Marketplace contract.
+ * Hook for accepting an offer from a direct listing on a `Marketplace` contract.
  *
  * Allows the seller (the user who listed the NFT for sale) to accept an offer on their listing, triggering a sale event, meaning the:
  * - NFT(s) are transferred from the seller to the buyer.
@@ -2479,8 +2508,23 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
- * @returns  Mutation object that can be used to accept an offer on a direct listing
+ * @param contract - an instance of a `Marketplace` contract
+ * @returns  Mutation object to accept an offer on a direct listing
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useAcceptDirectListingOffer(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function accepts an object as argument with the following properties:
+ *
+ * ### listingId
+ * The `listingId` of the listing you wish to accept.
+ *
+ * ### addressOfOfferor
+ * The wallet address of the user who made the offer you wish to accept.
+ *
+ * The `useContractEvents` hook can be used to read all `NewOffer` events on your `Marketplace` contract.
  *
  * @marketplace
  */
@@ -2521,8 +2565,6 @@ export function useAcceptDirectListingOffer(
  * to the buyer and the funds to the seller.
  *
  * @example
- *
- *
  * ```jsx
  * import {
  *   useExecuteAuctionSale,
@@ -2554,13 +2596,21 @@ export function useAcceptDirectListingOffer(
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
- * @returns a mutation object that can be used to accept an offer on a direct listing
+ * @param contract - Instance of a `Marketplace` contract
  *
- * #### listingId
+ * @returns Mutation object to accept an offer on a direct listing
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useExecuteAuctionSale(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function accepts an object as argument with the following properties:
+ *
+ * ### listingId
  *
  * The ID of the auction listing to execute the sale on. If the listing cannot be found, is not an auction, or is not ready to be executed, the `error` property will be set.
- *
  *
  * @marketplace
  */
@@ -2595,26 +2645,9 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * If the listing is in a currency that is not native to the chain (e.g. not Ether on Ethereum), the hook will prompt the user
  * to approve the marketplace contract to spend the currency on their behalf before performing the buy.
  *
- * **This hook is only for `Marketplace` contracts.**
- *
- * ```jsx
- * import { useBuyNow } from "@thirdweb-dev/react";
- *
- * const { mutateAsync, isLoading, error } = useBuyNow(contract);
- * ```
- *
+ * __This hook is only for `Marketplace` contracts. Not for `MarketplaceV3`__
  *
  * @example
- * ```jsx
- * import { useBuyNow } from "@thirdweb-dev/react";
- *
- * const { mutateAsync, isLoading, error } = useBuyNow(contract);
- * ```
- *
- * ## Usage
- *
- * Provide your marketplace contract as the argument.
- *
  * ```jsx
  * import { useBuyNow, useContract, Web3Button } from "@thirdweb-dev/react";
  * import { ListingType } from "@thirdweb-dev/sdk";
@@ -2641,8 +2674,34 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a Marketplace contract
- * @returns a mutation object that can be used to buy out an auction listing
+ * @param contract - Instance of a `Marketplace` contract
+ * @returns Mutation object that can be used to buy out an auction listing
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useBuyNow(contract);
+ * ```
+ *
+ * ## Options
+ *
+ * The mutation function accepts an object as argument with the following properties:
+ *
+ * ### id
+ *
+ * The ID of the listing you want to buy.
+ *
+ * ### type
+ *
+ * The type of listing. Either `ListingType.Direct` (0) or `ListingType.Auction` (1).
+ *
+ * ### buyAmount
+ *
+ * The amount of tokens you want to buy from the listing.
+ *
+ * Applicable for ERC1155 listings only, should always be 1 for ERC721 listings.
+ *
+ * ### buyForWallet (optional)
+ *
+ * Optionally, specify a different wallet address to buy the listing for.
+ *
  * @marketplace
  */
 export function useBuyNow(contract: RequiredParam<Marketplace>) {
@@ -2729,8 +2788,30 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - an instance of a MarketplaceV3 contract
- * @returns a mutation object that can be used to buy out a direct listing
+ * @param contract - Instance of a `MarketplaceV3` contract
+ * @returns Mutation object that can be used to buy out a direct listing
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useBuyDirectListing(contract);
+ * ```
+ *
+ * ## Options
+ *
+ * The mutation function accepts an object as argument with the following properties:
+ *
+ * ### listingId
+ *
+ * The ID of the direct listing you want to buy.
+ *
+ * ### quantity
+ *
+ * The amount of tokens you want to buy from the listing.
+ *
+ * Applicable for ERC1155 listings only, should always be `1` for ERC721 listings.
+ *
+ * ### buyer
+ *
+ * Specify a different wallet address to buy the listing for.
+ *
  * @marketplace
  */
 export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {

@@ -176,7 +176,7 @@ export function useActiveClaimCondition(
  *
  * A claimer proof is a set of data about a claimer's claim condition, including the claimer's address, the claimer's proof, and the claimer's max claimable amount, price, and currency address.
  *
- * This is available for available for contracts that implement the claim conditions interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ * This is available for available for contracts that implement the "ClaimConditions" interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
  * ```javascript
@@ -193,7 +193,8 @@ export function useActiveClaimCondition(
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
+ * @param contract -
+ * Instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the "ClaimConditions" extension.
  *
  * @param claimerAddress -
  * This is the address of the user you want to get the proof for.
@@ -331,7 +332,7 @@ export function useClaimerProofs(
  * }
  * ```
  *
- * @returns a response object with the list of claim conditions
+ * @returns Query Result object with the list of claim conditions
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @claimConditions
@@ -378,7 +379,7 @@ export function useClaimConditions(
 /**
  * Hook for fetching the reasons a wallet is not eligible to claim tokens from a drop, if any.
  *
- * This is available for available for contracts that implement the claim conditions interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ * This is available for available for contracts that implement the "ClaimConditions" interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
  * ```javascript
@@ -387,15 +388,15 @@ export function useClaimConditions(
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useClaimIneligibilityReasons(contract, {
- *     walletAddress: "{{wallet_address}}", // Use useAddress hook to get the user's wallet address
+ *     walletAddress: "0x123...", // Use useAddress hook to get the user's wallet address
  *     quantity: 1, // Quantity to check eligibility for
  *   });
  * }
  * ```
  *
- * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the "ClaimConditions" extension.
  *
- * @param eligibilityParams -
+ * @param params -
  * The conditions to check eligibility for. The `walletAddress` and `quantity` properties are required.
  *
  * Use the `useAddress` hook to get the connected wallet address.
@@ -404,16 +405,14 @@ export function useClaimConditions(
  * When using ERC1155 contracts, provide a third argument to specify the token ID.
  *
  * ```tsx
- * * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
- *
- * const tokenId = 1;
+ * import { useClaimIneligibilityReasons, useContract } from "@thirdweb-dev/react";
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useClaimIneligibilityReasons(
  *     contract,
  *     {
- *       walletAddress: "{{wallet_address}}",
+ *       walletAddress: "0x123..",
  *       quantity: 1,
  *     },
  *     tokenId,
@@ -422,9 +421,9 @@ export function useClaimConditions(
  * ```
  *
  * @returns
- * The hook's data property, once loaded, contains an array of ClaimEligibility strings, which may be empty.
+ * The hook's `data` property, once loaded, contains an array of `ClaimEligibility` strings, which may be empty.
  *
- * For example, if the user is not in the allowlist, this hook will return ["This address is not on the allowlist."].
+ * For example, if the user is not in the allowlist, this hook will return `["This address is not on the allowlist."]`.
  *
  * If the user is eligible to claim tokens, the hook will return an empty array.
  *
@@ -507,8 +506,6 @@ export function useClaimIneligibilityReasons(
  * } from "@thirdweb-dev/react";
  *
  * function App() {
- *   // Contract can be any contract that implements claim conditions.
- *   // Including ERC721, ERC1155, and ERC20 drop contracts.
  *   const address = useAddress();
  *   const { contract } = useContract(contractAddress);
  *   const { data, isLoading, error } = useActiveClaimConditionForWallet(
@@ -518,7 +515,7 @@ export function useClaimIneligibilityReasons(
  * }
  * ```
  *
- * @param contract - Instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - Instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the "ClaimConditions" extension.
  *
  * @param walletAddress -
  * The wallet address to check the active claim condition for. You can use the `useAddress` hook to get the currently connected wallet's address.
@@ -658,7 +655,7 @@ export function useActiveClaimConditionForWallet(
 /**
  * Hook for setting claim conditions on a drop contract.
  *
- * This is available for available for contracts that implement the claim conditions interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
+ * This is available for available for contracts that implement the "ClaimConditions" interface; such as [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721), [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155), and [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * When using an ERC1155 contract, you must also provide the token ID of the NFT you want to set claim conditions on as the second parameter to the hook.
  *
@@ -716,9 +713,29 @@ export function useActiveClaimConditionForWallet(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns
- * a mutation object that can be used to set claim conditions
  *
- * The mutation function takes in two arguments:
+ * A Mutation object to set claim conditions
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useSetClaimConditions(contract);
+ *
+ * function setPhases(phases) {
+ *  mutateAsync({
+ *    phases,
+ *  });
+ * }
+ *
+ * function reset() {
+ *  mutateAsync({
+ *    reset: true,
+ *  })
+ * }
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object with two possible properties:
+ *
  * 1. `reset` - A boolean that determines whether to reset the claim conditions. This means you reset any previous claim conditions that existed and allow users to claim again as if the drop had just started.
  * 2. `phases` - An array of claim phases that occur in chronological order. You can only have one phase occur at a time. All properties of a phase are optional, with the default being a free, open, unlimited claim, in the native currency, starting immediately.
  *

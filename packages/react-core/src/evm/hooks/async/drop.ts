@@ -273,7 +273,6 @@ export function useClaimedNFTSupply(
  * import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
  *
  * function App() {
- *   // Contract must implement the Delayed reveal interface.
  *   const { contract } = useContract(contractAddress);
  *   const { data: batches, isLoading, error } = useBatchesToReveal(contract);
  * }
@@ -599,12 +598,6 @@ export function useLazyMint<TContract extends DropContract>(
  * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
  * interfaces.
  *
- * ```ts
- * import { useDelayedRevealLazyMint } from "@thirdweb-dev/react";
- *
- * const { mutateAsync, isLoading, error } = useDelayedRevealLazyMint(contract);
- * ```
- *
  * @example
  * ```tsx
  * import {
@@ -650,7 +643,24 @@ export function useLazyMint<TContract extends DropContract>(
  *
  * @param contract - an instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
- * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @returns Mutation object to lazy mint a batch of NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useDelayedRevealLazyMint(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as argument with below properties:
+ *
+ * ### metadatas
+ * An array of metadata objects, representing the metadata of the NFTs to be lazy-minted. Each metadata object must conform to the [standard metadata properties](https://docs.opensea.io/docs/metadata-standards).
+ *
+ * ### password
+ * The password used to encrypt the metadatas.
+ *
+ * __The password CANNOT be recovered once it is set. If you lose the password, you will not be able to reveal the metadata.__
+ *
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @delayedReveal
  */
@@ -748,8 +758,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link RevealableContract}
- * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
+ * @param contract - an instance of a `RevealableContract`
  * @twfeature ERC721Revealable | ERC1155Revealable
  * @delayedReveal
  */
