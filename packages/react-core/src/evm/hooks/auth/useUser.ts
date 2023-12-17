@@ -13,11 +13,19 @@ export interface UserWithData<
 }
 
 /**
- * Hook to get the currently logged in user.
+ * Hook for retrieving information about the currently signed-in user using [auth](https://portal.thirdweb.com/auth).
  *
- * @returns  The currently logged in user or null if not logged in, as well as a loading state.
+ * Useful to get the user's address and session data, or `undefined` if no user is signed in.
  *
- * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
+ * ```jsx
+ * import { useUser } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { user, isLoggedIn, isLoading } = useUser();
+ * }
+ * ```
+ *
+ * @auth
  *
  */
 export function useUser<

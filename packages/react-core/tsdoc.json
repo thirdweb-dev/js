@@ -57,6 +57,10 @@
     {
       "tagName": "@smartWallet",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@auth",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -73,6 +77,7 @@
     "@delayedReveal": true,
     "@token": true,
     "@walletConnection": true,
-    "@smartWallet": true
+    "@smartWallet": true,
+    "@auth": true
   }
 }

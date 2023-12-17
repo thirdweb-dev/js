@@ -5,13 +5,26 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
 
 /**
- * Hook to logout the connected wallet from the backend.
- * The backend logout URL must be configured on the ThirdwebProvider.
+ * Hook for signing out of a wallet after a user has logged in using `useLogin`
  *
- * @returns  A function to invoke to logout.
+ * @example
+ * ```jsx
+ * import { useLogout } from "@thirdweb-dev/react";
  *
- * @see {@link https://portal.thirdweb.com/react/react.uselogout?utm_source=sdk | Documentation}
+ * function App() {
+ *   const { logout, isLoading } = useLogout();
  *
+ *   return (
+ *     <button onClick={() => logout()}>
+ *       {isLoading ? "Logging out..." : "Logout"}
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns object containing a `logout` function and an `isLoading` state that indicates if the logout request is in progress
+ *
+ * @auth
  */
 export function useLogout() {
   const queryClient = useQueryClient();
