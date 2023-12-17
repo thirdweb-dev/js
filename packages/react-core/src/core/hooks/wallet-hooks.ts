@@ -28,7 +28,7 @@ import { WalletInstance } from "../types/wallet";
 
 export type WalletId = (typeof walletIds)[keyof typeof walletIds];
 
-type WalletIdToWalletTypeMap = {
+export type WalletIdToWalletTypeMap = {
   metamask: MetaMaskWallet;
   coin98: Coin98Wallet;
   coinbase: CoinbaseWallet;
@@ -54,12 +54,40 @@ type WalletIdToWalletTypeMap = {
 };
 
 /**
- * @returns the current active wallet instance
+ * Hook to get the instance of the currently connected wallet.
+ *
+ * @example
+ * ```jsx
+ * import { useWallet } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const walletInstance = useWallet();
+ * }
+ * ```
+ * @returns currently connected `WalletInstance` , or `undefined` if no wallet is connected.
+ * @walletConnection
+ */
+export function useWallet(): WalletInstance | undefined;
+
+/**
+ * Hook to get the instance of the currently connected wallet if it matches the given `walletId`.
+ *
+ * @example
+ * ```jsx
+ * import { useWallet } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const metamaskWalletInstance = useWallet('metamask');
+ * }
+ * ```
+ *
+ * @returns currently connected `WalletInstance` with given `walletId` , or `undefined` if no wallet is connected or if the connected wallet does not match the given `walletId`.
+ * @walletConnection
  */
 export function useWallet<T extends WalletId>(
   walletId: T,
 ): WalletIdToWalletTypeMap[T] | undefined;
-export function useWallet(): WalletInstance | undefined;
+
 export function useWallet<T extends WalletId>(walletId?: T) {
   const context = useWalletContext();
   invariant(
@@ -86,7 +114,27 @@ export function useWallet<T extends WalletId>(walletId?: T) {
 }
 
 /**
- * @returns the current active wallet's configuration object
+ *
+ * Hook to get the `WalletConfig` object of the currently connected wallet.
+ *
+ * This is useful to get metadata about the connected wallet, such as the wallet name, logo, etc
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useWalletConfig } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const walletConfig = useWalletConfig();
+ *
+ *   const walletName = walletConfig?.meta.name;
+ *   const walletLogo = walletConfig?.meta.iconURL;
+ * }
+ * ```
+ *
+ * @returns the current connected wallet's configuration object or `undefined` if no wallet is connected.
+ *
+ * @walletConnection
  */
 export function useWalletConfig() {
   const context = useWalletContext();
@@ -111,8 +159,48 @@ export function useWallets() {
 }
 
 /**
+ * Hook for connecting a wallet to your app.
  *
- * @returns a method to connect to a wallet class
+ * The wallet also needs to be added in `ThirdwebProvider`'s `supportedWallets` prop if you want the wallet to auto-connect on page load.
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useConnect, metamaskWallet } from "@thirdweb-dev/react";
+ *
+ * const metamaskConfig = metamaskWallet();
+ *
+ * function App() {
+ *   const connect = useConnect();
+ *
+ *   return (
+ *     <button
+ *       onClick={async () => {
+ *         const wallet = await connect(metamaskConfig, connectOptions);
+ *         console.log("connected to ", wallet);
+ *       }}
+ *     >
+ *       Connect to MetaMask
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns a method to connect a wallet
+ * #### walletConfig
+ *
+ * The wallet to connect. Must be of type `WalletConfig`.
+ *
+ * [Learn more about the available wallet options](https://portal.thirdweb.com/react/connecting-wallets).
+ *
+ *
+ * #### connectOptions
+ *
+ * The typeof `connectOptions` object depends on the wallet you are connecting. For some wallets, it may be optional
+ *
+ * If you are using typescript, `connect` will automatically infer the type of `connectOptions` based on the `walletConfig` you pass in as the first argument and will show type errors if you pass in invalid options.
+ *
+ * @walletConnection
  */
 export function useConnect() {
   const context = useWalletContext();
@@ -124,8 +212,21 @@ export function useConnect() {
 }
 
 /**
+ * Hook for disconnecting the currently connected wallet.
+ *
+ * @example
+ * ```jsx
+ * import { useDisconnect } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const disconnect = useDisconnect();
+ *
+ *   return <button onClick={disconnect}>Disconnect</button>;
+ * }
+ * ```
  *
  * @returns a method to disconnect from the current active wallet
+ * @walletConnection
  */
 export function useDisconnect() {
   const context = useWalletContext();
@@ -137,15 +238,32 @@ export function useDisconnect() {
 }
 
 /**
+ * Hook for checking whether your app is connected to a wallet or not.
  *
- * @returns the connection status of the wallet
+ * @example
+ * ```jsx
+ * import { useConnectionStatus } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const connectionStatus = useConnectionStatus();
+ *
+ *   if (connectionStatus === "unknown") return <p> Loading... </p>;
+ *   if (connectionStatus === "connecting") return <p> Connecting... </p>;
+ *   if (connectionStatus === "connected") return <p> You are connected </p>;
+ *   if (connectionStatus === "disconnected")
+ *     return <p> You are not connected to a wallet </p>;
+ * }
+ * ```
+ *
+ * @returns the wallet connection status
  *
  * It can be one of the following:
- * 1. `unknown` - when wallet connection status is not yet known
- * 2. `connecting` - when wallet is connecting
- * 3. `connected` - when wallet is connected
- * 4. `disconnected` - when wallet is disconnected
+ * - `unknown`: connection status is not known yet. This is the initial state.
+ * - `connecting`: wallet is being connected. Either because of a user action, or when the wallet is auto-connecting on page load.
+ * - `connected`: the wallet is connected and ready to be used.
+ * - `disconnected`: the wallet is not connected.
  *
+ * @walletConnection
  */
 export function useConnectionStatus() {
   const context = useWalletContext();
@@ -157,8 +275,54 @@ export function useConnectionStatus() {
 }
 
 /**
+ * Hook for setting the `connectionStatus` of the wallet which is returned by the `useConnectionStatus` hook
  *
- * @returns a method to create an instance of given wallet class
+ * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ *
+ * @example
+ *
+ * ```ts
+ * import {
+ *   useCreateWalletInstance,
+ *   useSetConnectionStatus,
+ *   useSetConnectedWallet,
+ *   metamaskWallet
+ * } from "@thirdweb-dev/react";
+ *
+ * const walletConfig = metamaskWallet();
+ *
+ * function Example() {
+ *   const createWalletInstance = useCreateWalletInstance();
+ *   const setConnectionStatus = useSetConnectionStatus();
+ *   const setConnectedWallet = useSetConnectedWallet();
+ *
+ *   // Call this function to connect your wallet
+ *   const handleConnect = async () => {
+ *     // 1. create instance
+ *     const walletInstance = createWalletInstance(walletConfig);
+ *     setConnectionStatus("connecting");
+ *
+ *     try {
+ *       // 2. Call `connect` method of your wallet
+ *       await walletInstance.connect(
+ *         connectOptions, // if your wallet.connect method accepts any options, specify it here
+ *       );
+ *
+ *       // 3. Set connected wallet
+ *       setConnectedWallet(walletInstance);
+ *       props.close();
+ *     } catch (e) {
+ *       setConnectionStatus("disconnected");
+ *       console.error("failed to connect", e);
+ *     }
+ *   };
+ *
+ *   return <div> ... </div>;
+ * }
+ * ```
+ *
+ * @returns a function that sets the `connectionStatus` of the wallet
+ * @walletConnection
  */
 export function useSetConnectionStatus() {
   const context = useWalletContext();
@@ -170,8 +334,36 @@ export function useSetConnectionStatus() {
 }
 
 /**
+ * Hook for creating a wallet instance from given `WalletConfig` object.
  *
- * @returns a method to create an instance of given wallet class
+ * If you just want to connect the wallet and don't need the wallet instance before connecting the wallet, use the `useConnect` hook instead.
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useConnect, metamaskWallet } from "@thirdweb-dev/react";
+ *
+ * const metamaskConfig = metamaskWallet();
+ *
+ * function App() {
+ *   const createWalletInstance = useCreateWalletInstance();
+ *
+ *   return (
+ *     <button
+ *       onClick={() => {
+ *         const metamaskWalletInstance = createWalletInstance(metamaskConfig);
+ *         console.log(metamaskWalletInstance);
+ *       }}
+ *     >
+ *       create wallet instance
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns a function that creates a wallet instance for given `WalletConfig` object.
+ *
+ * @walletConnection
  */
 export function useCreateWalletInstance() {
   const context = useWalletContext();
@@ -213,8 +405,54 @@ export function useSwitchChain() {
 }
 
 /**
+ * Hook for setting a wallet instance as "connected" - once done, the wallet connection hooks like `useWallet`, `useAddress`, `useSigner`, `useConnectionStatus` etc will return the data for that wallet instance
  *
- * @returns a method to set a connected wallet instance
+ * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ *
+ * @example
+ *
+ * ```ts
+ * import {
+ *   useCreateWalletInstance,
+ *   useSetConnectionStatus,
+ *   useSetConnectedWallet,
+ *   metamaskWallet
+ * } from "@thirdweb-dev/react";
+ *
+ * const walletConfig = metamaskWallet();
+ *
+ * function Example() {
+ *   const createWalletInstance = useCreateWalletInstance();
+ *   const setConnectionStatus = useSetConnectionStatus();
+ *   const setConnectedWallet = useSetConnectedWallet();
+ *
+ *   // Call this function to connect your wallet
+ *   const handleConnect = async () => {
+ *     // 1. create instance
+ *     const walletInstance = createWalletInstance(walletConfig);
+ *     setConnectionStatus("connecting");
+ *
+ *     try {
+ *       // 2. Call `connect` method of your wallet
+ *       await walletInstance.connect(
+ *         connectOptions, // if your wallet.connect method accepts any options, specify it here
+ *       );
+ *
+ *       // 3. Set connected wallet
+ *       setConnectedWallet(walletInstance);
+ *       props.close();
+ *     } catch (e) {
+ *       setConnectionStatus("disconnected");
+ *       console.error("failed to connect", e);
+ *     }
+ *   };
+ *
+ *   return <div> ... </div>;
+ * }
+ * ```
+ *
+ * @returns a function to set a wallet instance as "connected".
+ * @walletConnection
  */
 export function useSetConnectedWallet() {
   const context = useWalletContext();

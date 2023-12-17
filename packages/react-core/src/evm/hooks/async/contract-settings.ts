@@ -70,7 +70,7 @@ export function usePrimarySaleRecipient(
 /**
  * Hook for updating the primary sale recipient on a smart contract.
  *
- * Available to use on smart contracts that implement the [PrimarySale](/solidity/extensions/primarysale) interface.
+ * Available to use on smart contracts that implement the `PrimarySale` interface.
  *
  * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `admin` level).
  *
@@ -155,7 +155,7 @@ export function useUpdatePrimarySaleRecipient(
 /**
  * Hook for retrieving royalty settings of a smart contract.
  *
- * Available to use on contracts that implement the [Royalty](/solidity/extensions/royalty) interface.
+ * Available to use on contracts that implement the `Royalty` interface.
  *
  * @example
  *
@@ -211,7 +211,7 @@ export function useRoyaltySettings(
 /**
  * Hook for updating royalty settings on a smart contract.
  *
- * Available to use on smart contracts that implement the [Royalty](/solidity/extensions/royalty) interface.
+ * Available to use on smart contracts that implement the `Royalty` interface.
  *
  * @example
  *
@@ -360,7 +360,7 @@ export function usePlatformFees(
 /**
  * Hook for updating platform fees on a smart contract.
  *
- * Available to use on smart contracts that implement the [PlatformFee](/solidity/extensions/platformfee) interface.
+ * Available to use on smart contracts that implement the `PlatformFee` interface.
  *
  * ```jsx
  * import {
@@ -409,7 +409,7 @@ export function usePlatformFees(
  *
  * The `fee_recipient` property is the address of the wallet that will receive the fees.
  *
- * Use the [`useAddress`](/react/react.useaddress) hook to get the current wallet address.
+ * Use the `useAddress` hook to get the current wallet address.
  *
  * @twfeature PlatformFee
  * @platformFees
@@ -450,7 +450,7 @@ export function useUpdatePlatformFees(
 /**
  * Hook for getting the metadata associated with a smart contract.
  *
- * Available to use on contracts that implement the [Contract Metadata](/solidity/extensions/contractmetadata) interface.
+ * Available to use on contracts that implement the "Contract Metadata" interface.
  *
  * @example
  *
@@ -512,11 +512,11 @@ export function useMetadata(
 /**
  * Hook for updating the metadata of a smart contract.
  *
- * Available to use on smart contracts that implement the [ContractMetadata](/solidity/extensions/contractmetadata) interface.
+ * Available to use on smart contracts that implement the `ContractMetadata` interface.
  *
  * The wallet initiating this transaction must have the required permissions to update the metadata, (`admin` permissions required by default).
  *
- * Provide your contract instance from the [`useContract`](/react/react.usecontract) hook as the first argument, and
+ * Provide your contract instance from the `useContract` hook as the first argument, and
  * an object fitting the [contract-level metadata standards](https://docs.opensea.io/docs/contract-level-metadata) of
  * the new metadata as the second argument, including:
  *

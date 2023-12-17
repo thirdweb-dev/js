@@ -9,6 +9,7 @@ export { __DEV__ } from "../core/constants/runtime";
 
 // wallet hooks
 export {
+  type WalletIdToWalletTypeMap,
   useWallet,
   useConnect,
   useConnectionStatus,

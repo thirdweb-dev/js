@@ -83,7 +83,7 @@ type NetworkMetadata = {
  * ```
  * #### data
  *
- * If wallet is connected to a network that is one of [supportedChains](/react/react.thirdwebprovider#supportedchains-optional) or one of the [defaultChains](/react/react.thirdwebprovider#default-chains), `data` object will contain the following:
+ * If wallet is connected to a network that is one of `supportedChains` provided in `ThirdwebProvider` or one of the default supported chains, `data` object will contain the following:
  *
  * ```ts
  * {
@@ -92,7 +92,7 @@ type NetworkMetadata = {
  * }
  * ```
  *
- * If wallet is connected to a network that is NOT one of [supportedChains](/react/react.thirdwebprovider#supportedchains-optional) or [defaultChains](/react/react.thirdwebprovider#default-chains), `data` object will contain the following:
+ * If wallet is connected to a network that is NOT one of `supportedChains` provided in `ThirdwebProvider` or default supported, `data` object will contain the following:
  *
  * ```ts
  * {
@@ -147,7 +147,7 @@ type NetworkMetadata = {
  *     }>
  * ```
  *
- * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
+ * @deprecated use `useChain`, `useSwitchChain`, `useChainId` instead
  * @networkConnection
  */
 export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {

@@ -37,8 +37,8 @@ import invariant from "tiny-invariant";
 /**
  * Hook for fetching information about an NFT from a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC721`
+ * or `ERC1155` standard.
  *
  * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
  * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
@@ -122,8 +122,8 @@ export function useNFT<TContract extends NFTContract>(
 /**
  * Hook to query all NFTs associated with a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC721`
+ * or `ERC1155` standard.
  *
  * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
  * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
@@ -187,8 +187,8 @@ export function useNFTs<TContract extends NFTContract>(
 /**
  * Hook to get the total count of **unique** NFTs minted on a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC721`
+ * or `ERC1155` standard.
  *
  * When used for ERC1155 contracts, the total count is the number of unique token IDs minted, _not_ the total supply of all tokens in circulation.
  *
@@ -389,7 +389,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 /**
  * Hook to get the quantity a user owns of a specific ERC1155 NFT.
  *
- * Available to use on smart contracts that implement the [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC1155` standard.
  *
  * @example
  *
@@ -500,8 +500,8 @@ export function useSharedMetadata(
 /**
  * Hook for minting a new NFT on a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC721`
+ * or `ERC1155` standard.
  *
  * By default, the process uploads and pins the NFT metadata to IPFS before minting.
  *
@@ -583,7 +583,7 @@ export function useSharedMetadata(
  * The wallet address to mint the NFT to.
  *
  * Likely, you will want to mint the NFT to the currently connected wallet address.
- * Use the [`useAddress`](/react/react.useaddress) hook to get this value.
+ * Use the `useAddress` hook to get this value.
  *
  * @twfeature ERC721Mintable | ERC1155Mintable
  * @nft
@@ -784,7 +784,7 @@ export function useMintNFTSupply(contract: Erc1155) {
  *
  * The wallet address to transfer the token(s) to.
  *
- * To use the connected wallet address, use the [`useAddress`](/react/react.useaddress) hook.
+ * To use the connected wallet address, use the `useAddress` hook.
  *
  *
  * #### tokenId (required)
@@ -849,7 +849,7 @@ export function useTransferNFT<TContract extends NFTContract>(
 /**
  * Hook for airdropping ERC1155 NFT tokens to multiple wallet addresses at once.
  *
- * Available to use on smart contracts that implement the [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC1155` standard.
  *
  * Performs a batch transfer from the connected wallet to the specified addresses.
  * This means you need to have the total number of tokens you wish to airdrop available in the wallet that performs this transaction.
@@ -890,7 +890,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * }
  * ```
  *
- * @param contract - an instance of a {@link Erc1155}
+ * @param contract - an instance of a `Erc1155`
  * @returns a mutation object that can be used to transfer batch NFTs
  *
  * #### tokenId
@@ -930,8 +930,8 @@ export function useAirdropNFT(contract: Erc1155) {
 /**
  * Hook for burning a NFT on a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `ERC721`
+ * or `ERC1155` standard.
  *
  * @example
  *

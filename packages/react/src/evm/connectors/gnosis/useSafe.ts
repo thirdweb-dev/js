@@ -2,6 +2,11 @@ import { useConnect } from "@thirdweb-dev/react-core";
 import type { SafeConnectionArgs } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
+/**
+ * @deprecated use `ConnectWallet` or `useConnect` instead
+ * @walletConnection
+ * @internal
+ */
 export function useSafe() {
   const connect = useConnect();
   return useCallback(
@@ -15,5 +20,11 @@ export function useSafe() {
   );
 }
 
-// backwards compatibility
+// for backwards compatibility
+
+/**
+ * @deprecated use `ConnectWallet` or `useConnect` instead
+ * @walletConnection
+ * @internal
+ */
 export const useGnosis = useSafe;

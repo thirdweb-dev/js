@@ -889,10 +889,7 @@ export function useSetClaimConditions(
 /**
  * Hook for resetting the claim conditions on a drop contract.
  *
- * Available to use on contracts that implement
- * [ERC721ClaimableWithConditions](/solidity/extensions/erc721claimconditions),
- * [ERC1155ClaimableWithConditions](/solidity/extensions/erc1155claimconditions),
- * or [ERC20ClaimableWithConditions](/solidity/extensions/erc20claimconditions).
+ * Available to use on contracts that implement `ERC721ClaimableWithConditions`, `ERC1155ClaimableWithConditions` or `ERC20ClaimableWithConditions`.
  *
  * @example
  *

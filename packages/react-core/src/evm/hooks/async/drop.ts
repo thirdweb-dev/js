@@ -42,7 +42,7 @@ import invariant from "tiny-invariant";
 /**
  * Hook for fetching information about all NFTs that haven't been claimed yet from an NFT Drop contract.
  *
- * Available to use on contracts that implement the [ERC721LazyMintable](/solidity/extensions/erc721lazymintable) interface.
+ * Available to use on contracts that implement the `ERC721LazyMintable` interface.
  *
  * @example
  *
@@ -113,7 +113,7 @@ export function useUnclaimedNFTs(
 /**
  * Hook for fetching all claimed NFTs from a given NFT Drop contract.
  *
- * Available to use on contracts that implement [`ERC721Claimable`](/solidity/extensions/erc721claimable),
+ * Available to use on contracts that implement `ERC721Claimable`,
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721).
  *
  * @example
@@ -187,7 +187,7 @@ export function useClaimedNFTs(
  *
  * Unclaimed NFTs are tokens that were lazy-minted but have not yet been claimed by a user.
  *
- * Available to use on contracts that implement the [LazyMint](/solidity/extensions/lazymint) extension;
+ * Available to use on contracts that implement the `LazyMint` extension;
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721) contract.
  *
  * @example
@@ -236,7 +236,7 @@ export function useUnclaimedNFTSupply(
 /**
  * Hook for retrieving the total supply of NFTs claimed from an NFT Drop contract.
  *
- * Available to use on contracts that implement [`ERC721Claimable`](/solidity/interfaces/erc721claimable).
+ * Available to use on contracts that implement `ERC721Claimable`.
  *
  * @example
  *
@@ -344,9 +344,9 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * Hook for claiming an NFT from a smart contract.
  *
  * Available to use on smart contracts that implement a
- * [Claimable](/solidity/extensions/erc721claimable) interface, and
- * follow either the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * `Claimable` interface, and
+ * follow either the `ERC721`
+ * or `ERC1155` standard.
  *
  * @example
  * ```jsx
@@ -382,7 +382,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * The wallet address to mint the NFT(s) to.
  *
- * Use the [`useAddress`](/react/react.useaddress) hook to get the currently connected wallet address.
+ * Use the `useAddress` hook to get the currently connected wallet address.
  *
  * #### quantity
  *
@@ -496,10 +496,8 @@ export function useClaimNFT<TContract extends DropContract>(
 /**
  * Hook for lazy minting a batch of NFTs on a drop contract.
  *
- * Available to use on smart contracts that implement the
- * [LazyMintable](/solidity/extensions/erc721lazymintable) interface, and
- * follow either the [ERC721](/solidity/extensions/erc721)
- * or [ERC1155](/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the `LazyMintable` interface, and
+ * follow either the `ERC721` or `ERC1155` standard.
  *
  * @example
  *

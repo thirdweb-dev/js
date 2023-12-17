@@ -195,11 +195,11 @@ export function useChainId(): number | undefined {
 
 /**
  * Hook for getting the `Chain` object of the network that the user is connected - but only if
- * it's a supported network (added in the `ThirdwebProvider`'s [supportedChains](/react/react.thirdwebprovider#supportedchains-optional) or one of [default chains](/react/react.thirdwebprovider#default-chains) ).
+ * it's a supported network (added in the `ThirdwebProvider`'s `supportedChains` or one of default chains
  *
- * Returns `undefined` if the network is not supported or the user is not connected to a wallet. You can use the [useConnectionStatus](/react/react.useconnectionstatus) hook to check if the user is connected to a wallet or not to differentiate between the two cases.
+ * Returns `undefined` if the network is not supported or the user is not connected to a wallet. You can use the `useConnectionStatus` hook to check if the user is connected to a wallet or not to differentiate between the two cases.
  *
- * If you only want to get the chain id of the network the user is connected to regardless of whether it's supported or not, use [useChainId](/react/react.usechainid) instead.
+ * If you only want to get the chain id of the network the user is connected to regardless of whether it's supported or not, use `useChainId` instead.
  *
  * ```jsx
  * import { useChain } from "@thirdweb-dev/react";

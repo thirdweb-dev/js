@@ -45,7 +45,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
 /**
  * Hook for getting all wallet addresses that have a role in a smart contract.
  *
- * Available to use on contracts that implement [Permission Controls](/solidity/extensions/permissions).
+ * Available to use on contracts that implement `Permissions`.
  *
  * @example
  *
@@ -346,7 +346,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * The address to grant the role to.
  *
- * To use the address of the connected wallet, use the [`useAddress`](/react/react.useaddress) hook.
+ * To use the address of the connected wallet, use the `useAddress` hook.
  *
  * @twfeature Permissions | PermissionsEnumerable
  * @permissionControl

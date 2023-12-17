@@ -49,6 +49,10 @@
     {
       "tagName": "@token",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletConnection",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -63,6 +67,7 @@
     "@permissionControl": true,
     "@networkConnection": true,
     "@delayedReveal": true,
-    "@token": true
+    "@token": true,
+    "@walletConnection": true
   }
 }
