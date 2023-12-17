@@ -12,8 +12,10 @@ export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`
  */
 export const GET_IFRAME_BASE_URL = () => {
   if (
-    typeof window !== "undefined" &&
-    localStorage.getItem("IS_THIRDWEB_DEV") === "true"
+    !!(
+      typeof window !== "undefined" &&
+      localStorage.getItem("IS_THIRDWEB_DEV") === "true"
+    )
   ) {
     return (
       window.localStorage.getItem("THIRDWEB_DEV_URL") ?? "http://localhost:3000"
