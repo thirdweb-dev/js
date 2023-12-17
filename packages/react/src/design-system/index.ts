@@ -45,6 +45,9 @@ const lightColors: ThemeColors = {
   textOnAccent: mauve.mauve1,
 };
 
+/**
+ * @theme
+ */
 export type Theme = {
   type: "light" | "dark";
   colors: {
@@ -152,6 +155,9 @@ export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
 export type ThemeObjectOrType = "light" | "dark" | Theme;
 
+/**
+ * @theme
+ */
 export type ThemeOverrides = {
   [key in Exclude<keyof Theme, "type">]?: Partial<Theme[key]>;
 };

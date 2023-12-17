@@ -6,6 +6,9 @@ import { WalletConnectScan } from "./WalletConnectScan";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
 
+/**
+ * @wallet
+ */
 export type walletConnectConfigOptions = {
   /**
    * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/

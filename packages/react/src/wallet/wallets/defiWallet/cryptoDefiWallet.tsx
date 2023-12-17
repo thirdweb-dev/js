@@ -5,6 +5,9 @@ import {
 } from "@thirdweb-dev/wallets";
 import { CryptoDefiWalletConnectUI } from "./CryptoDefiWalletConnectUI";
 
+/**
+ * @wallet
+ */
 export type CryptoDefiWalletConfigOptions = {
   /**
    * When connecting Defi wallet using the QR Code - Wallet Connect connector is used which requires a project id.
