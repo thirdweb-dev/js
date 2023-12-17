@@ -433,11 +433,9 @@ export function useUpdatePlatformFees(
 /**
  * Hook for getting the metadata associated with a smart contract.
  *
- * Available to use on contracts that implement the "Contract Metadata" interface.
+ * Available to use on contracts that implement the [Contract Metadata](https://portal.thirdweb.com/solidity/extensions/contractmetadata) interface.
  *
  * @example
- *
- *
  * ```jsx
  * import { useContract, useMetadata } from "@thirdweb-dev/react";
  *
@@ -448,7 +446,8 @@ export function useUpdatePlatformFees(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @returns a `CustomContractMetadata` object containing the metadata
+ * @returns
+ * A `CustomContractMetadata` object containing the metadata
  *
  * The hook's `data` property, once loaded, is an object containing the contract's metadata.
  *
@@ -542,7 +541,7 @@ export function useMetadata(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @returns a mutation object that can be used to update the metadata
+ * @returns Mutation object that to update the metadata
  * @metadata
  */
 export function useUpdateMetadata(

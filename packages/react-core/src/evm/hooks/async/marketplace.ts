@@ -666,8 +666,6 @@ export function useDirectListings(
  * For `Marketplace` contracts, use `useActiveListings` instead.
  *
  * @example
- *
- *
  * ```jsx
  * import { useValidDirectListings, useContract } from "@thirdweb-dev/react";
  *
@@ -914,16 +912,133 @@ export function useEnglishAuctions(
 }
 
 /**
- * Get all valid english auctions
+ * Hook to get all valid English auctions from a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract.
+ *
+ * A listing is considered valid if the:
+ *
+ * - Auction has not expired (i.e. current time is before the end time of the auction)
+ * - Auction has not been canceled
+ * - Auction has not been bought out (all quantity has been sold)
+ *
+ * __This hook is only for [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contracts.__
+ *
+ * For [Marketplace](https://thirdweb.com/thirdweb.eth/Marketplace)
+ * contracts, use [useActiveListings](/react/react.useactivelistings) instead.
  *
  * @example
- * ```javascript
- * const { data: validEnglishAuctions, isLoading, error } = useValidEnglishAuctions(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useValidEnglishAuctions, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace-v3");
+ *   const {
+ *     data: englishAuctions,
+ *     isLoading,
+ *     error,
+ *   } = useValidEnglishAuctions(contract);
+ * }
  * ```
  *
  * @param contract - Instance of a marketplace v3 contract
- * @param filter - filter to pass to the query for the sake of pagination & filtering
- * @returns a response object that includes an array of english auctions
+ *
+ * @param filter -
+ * The `filter` object allows you to filter the auctions returned by the hook.
+ *
+ * ```jsx
+ * import { useEnglishAuctions, useContract } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "marketplace-v3");
+ *   const {
+ *     data: englishAuctions,
+ *     isLoading,
+ *     error,
+ *   } = useEnglishAuctions(
+ *     contract,
+ *     // highlight-start
+ *     {
+ *       count: 100, // Number of auctions to fetch
+ *       offeror: "{{offeror_address}}", // Has offers from this address
+ *       seller: "{{seller_address}}", // Being sold by this address
+ *       start: 0, // Start from this index (pagination)
+ *       tokenContract: "{{token_contract_address}}", // Only show NFTs from this collection
+ *       tokenId: "{{token_id}}", // Only show NFTs with this ID
+ *     },
+ *     // highlight-end
+ *   );
+ * }
+ * ```
+ *
+ * @returns a Query Result object that includes an array of english auctions
+ * The hook's `data` property, once loaded, is an
+ * array of `EnglishAuction` objects, each containing the following properties:
+ *
+ * ```ts
+ * Array<{
+ *   // The id of the auction
+ *   id: string;
+ *
+ *   // The address of the creator of auction.
+ *   creatorAddress: string;
+ *
+ *   // The address of the asset being auctioned.
+ *   assetContractAddress: string;
+ *
+ *   // The ID of the token to auction.
+ *   tokenId: string;
+ *
+ *   // The quantity of tokens to include in the auction.
+ *   // For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
+ *   quantity: string;
+ *
+ *   // The address of the currency to accept for the auction.
+ *   currencyContractAddress: string;
+ *
+ *   // The minimum price that a bid must be in order to be accepted.
+ *   minimumBidAmount: string;
+ *
+ *   // The `CurrencyValue` of the minimum bid amount.
+ *   // Useful for displaying the price information.
+ *   minimumBidCurrencyValue: CurrencyValue;
+ *
+ *   // The buyout price of the auction.
+ *   buyoutBidAmount: string;
+ *
+ *   // The `CurrencyValue` of the buyout price.
+ *   // Useful for displaying the price information.
+ *   buyoutCurrencyValue: CurrencyValue;
+ *
+ *   // This is a buffer e.g. x seconds.
+ *   // If a new winning bid is made less than x seconds before expirationTimestamp, the
+ *   // expirationTimestamp is increased by x seconds.
+ *   timeBufferInSeconds: number;
+ *
+ *   // This is a buffer in basis points e.g. x%.
+ *   // To be considered as a new winning bid, a bid must be at least x% greater than
+ *   // the current winning bid.
+ *   bidBufferBps: number;
+ *
+ *   // The start time of the auction.
+ *   startTimeInSeconds: number;
+ *
+ *   // The end time of the auction.
+ *   endTimeInSeconds: number;
+ *
+ *   // The asset being auctioned.
+ *   asset: NFTMetadata;
+ *
+ *   // Whether the listing is CREATED, COMPLETED, or CANCELLED.
+ *   status: Status;
+ * }>;
+ * ```
+ *
  * @twfeature EnglishAuctions
  * @marketplace
  */
@@ -1261,7 +1376,8 @@ export function useActiveListings(
  * The ID of the listing to get the winning bid for.
  * If the listing cannot be found, is not an auction listing, or is not active, the `error` property will be set.
  *
- * @returns a response object that includes the `Offer` that is winning the auction
+ * @returns
+ * Query result object that includes the `Offer` that is winning the auction
  * The hook's `data` property, once loaded, is an object of type `Offer`, or `undefined` if no winning bid exists.
  *
  * ```ts
@@ -1538,7 +1654,6 @@ export function useBidBuffer(
  * and increments it by the bid buffer to calculate the minimum next bid.
  *
  * @example
- *
  * ```jsx
  * import { useContract, useMinimumNextBid } from "@thirdweb-dev/react";
  *
@@ -1555,8 +1670,7 @@ export function useBidBuffer(
  *
  * If the listing cannot be found, is not an auction listing, or is not active, the `error` property will be set.
  *
- *
- * @returns a response object that includes the minimum next bid for the auction listing
+ * @returns Query result object that includes the minimum next bid for the auction listing
  * @twfeature EnglishAucton
  * @marketplace
  */
@@ -1611,7 +1725,6 @@ export function useMinimumNextBid(
  * direct listing on a `Marketplace` contract.
  *
  * @example
- *
  * ```jsx
  * import { useOffers, useContract } from "@thirdweb-dev/react";
  *
@@ -2306,7 +2419,6 @@ export function useCancelEnglishAuction(
  * - Must be higher than the reserve price (if there is no bid yet).
  *
  * @example
- *
  * ```jsx
  * import { useMakeBid, useContract, Web3Button } from "@thirdweb-dev/react";
  *
@@ -2330,19 +2442,27 @@ export function useCancelEnglishAuction(
  * }
  * ```
  *
- * @param contract - Instance of a Marketplace contract
+ * @param contract - Instance of a `Marketplace` contract
  *
- * @returns a mutation object that can be used to make a bid on an auction listing
+ * @returns
+ * Mutation object that can be used to make a bid on an auction listing
  *
- * #### listingId (required)
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useMakeBid(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as an argument with the following properties:
+ *
+ * #### listingId
  *
  * The ID of the listing to bid on. Must be an auction type listing.
  * (Use `useMakeOffer` for direct listings).
  *
  * If the listing cannot be found, is not an auction, or is not active, the `error` property will be set.
  *
- *
- * #### bid (required)
+ * #### bid
  *
  * The amount to bid on the listing. Uses the `currencyContractAddress` of the listing.
  *
@@ -2413,9 +2533,17 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * }
  * ```
  *
- * @param contract - Instance of a Marketplace contract
+ * @param contract - Instance of a `Marketplace` contract
  *
- * @returns a mutation object that can be used to make a bid on an auction listing
+ * @returns Mutation object that can be used to make a bid on an auction listing
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useMakeOffer(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as an argument with the following properties:
  *
  * #### listingId (required)
  *

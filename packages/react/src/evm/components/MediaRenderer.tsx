@@ -507,11 +507,9 @@ export interface MediaType {
  * The `<MediaRenderer />` component renders the relevant.
  * HTML element for a given URL, including IPFS URIs. e.g. `<img>` for images, `<video>` for videos, etc.
  *
- * @param uri - the uri to resolve (can be a url or a ipfs://\<cid\>)
- * @returns the fully resolved url + mime type of the media
  *
  * @example
- * Usage with fully formed url:
+ * ### Usage with fully formed url
  * ```jsx
  * const Component = () => {
  *   const resolved = useResolvedMediaType("https://example.com/video.mp4");
@@ -521,7 +519,7 @@ export interface MediaType {
  * }
  * ```
  *
- * Usage with ipfs cid:
+ * ### Usage with IPFS cid
  * ```jsx
  * const Component = () => {
  *   const resolved = useResolvedMediaType("ipfs://QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvsd");
@@ -531,9 +529,12 @@ export interface MediaType {
  * }
  * ```
  *
+ * @param uri - the uri to resolve (can be a url or a ipfs://\<cid\>)
+ * @param mimeType - the mime type of the media
+ * @param gatewayUrl - the url of the IPFS gateway to use (defaults to https://ipfs.io/ipfs/)
+ *
  * @returns
  * The hook returns an object containing two properties:
- *
  * - `url`: The fully resolved URL, or `undefined` if the URI is invalid.
  * - `mimeType`: The mime type of the media, or `undefined` if the URI is invalid.
  *

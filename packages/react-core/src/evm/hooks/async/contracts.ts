@@ -62,7 +62,6 @@ async function fetchContractType(
  * This is useful if you want to determine if a contract is a [prebuilt contract](https://portal.thirdweb.com/pre-built-contracts).
  *
  * @example
- *
  * ```jsx
  * import { useContractType } from "@thirdweb-dev/react";
  *
@@ -71,6 +70,8 @@ async function fetchContractType(
  * }
  * ```
  *
+ * @param contractAddress - The address of the contract
+ * @returns Query result containing the type of the contract in the `data` property
  * @metadata
  */
 export function useContractType(
@@ -128,7 +129,6 @@ function fetchCompilerMetadata(
  * Hook for retrieving information such as the ABI, license, and metadata of a smart contract using it's contract address.
  *
  * @example
- *
  * ```jsx
  * import { useCompilerMetadata } from "@thirdweb-dev/react";
  *
@@ -138,6 +138,9 @@ function fetchCompilerMetadata(
  *
  * export default App;
  * ```
+ *
+ * @param contractAddress - The address of the deployed contract
+ * @returns Query result containing the compiler metadata of the deployed contract in the `data` property
  *
  * @metadata
  */
@@ -368,15 +371,15 @@ export function useContract(
 }
 
 /**
- * Get the metadata of this contract
+ * Get the metadata of given contract
  *
  * @example
  * ```javascript
  * const { data: contractMetadata, isLoading } = useContractMetadata(contract);
  * ```
  *
- * @param contract - the `ValidContractInstance` instance of the contract to get the metadata for
- * @returns a response object that includes the contract metadata of the deployed contract
+ * @param contract - The `ValidContractInstance` instance of the contract to get the metadata for
+ * @returns A Query result object that includes the contract metadata of the deployed contract
  * @twfeature ContractMetadata
  * @metadata
  */
@@ -400,7 +403,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
 }
 
 /**
- * Update the metadata of this contract
+ * Update the metadata of the given contract
  *
  * @example
  * ```jsx
@@ -427,8 +430,8 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  * };
  * ```
  *
- * @param contract - the `ValidContractInstance` instance of the contract to get the metadata for
- * @returns a response object that includes the contract metadata of the deployed contract
+ * @param contract - The `ValidContractInstance` instance of the contract to get the metadata for
+ * @returns Mutation object to update the contract metadata
  * @twfeature ContractMetadata
  * @metadata
  */
