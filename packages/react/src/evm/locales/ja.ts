@@ -327,25 +327,30 @@ export function jaDefault(): ThirdwebLocale {
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
  * @example
- *
- * ### Use default Japanese Locale
+ * ### Use default Locale
  * ```tsx
- * const japanese = ja(); // default English locale object
- *
- * <ThirdwebProvider locale={japanese}>
- *  <App />
- * </ThirdwebProvider>
+ * const japanese = ja();
  * ```
  *
- * ### Override Japanese Locale
- * ```tsx
+ * ### Override Locale
+ * ```ts
  * const japanese = ja({
  *  connectWallet: {
  *    signIn: "サインイン"
  *  }
  * })
+ * ```
  *
- * <ThirdwebProvider locale={japanese}> <App /> </ThirdwebProvider>
+ * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={japanese}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
  * ```
  *
  * @locale

@@ -215,12 +215,18 @@ export const shadow = {
  * Create a custom light theme object by using the default dark theme as a base and applying overrides.
  *
  * @example
+ * ### Get the default light theme
+ * ```ts
+ * const defaultLightTheme = lightTheme()
+ * ```
+ *
+ * ### Create a custom light theme
  * ```ts
  * const customTheme = lightTheme({
- *  colors: {
- *   modalBg: "red",
- *  }
- * })
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
  * ```
  *
  * @param overrides - The overrides to apply to the default light theme.
@@ -237,12 +243,18 @@ export function lightTheme(overrides?: ThemeOverrides): Theme {
  * Create a custom dark theme object by using the default dark theme as a base and applying overrides.
  *
  * @example
+ * ### Get the default dark theme
+ * ```ts
+ * const defaultDarkTheme = darkTheme()
+ * ```
+ *
+ * ### Create a custom dark theme
  * ```ts
  * const customTheme = darkTheme({
- *  colors: {
- *   modalBg: "red",
- *  }
- * })
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
  * ```
  *
  * @param overrides - The overrides to apply to the default dark theme.
