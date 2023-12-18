@@ -6,7 +6,7 @@ import { AddressZero } from "./AddressZero";
 /**
  *
  * @param chainId - chain id
- * @returns the array of trusted forwarders for the given chain id
+ * @returns The array of trusted forwarders for the given chain id
  * @internal
  */
 export function getDefaultTrustedForwarders(

@@ -83,7 +83,7 @@ export async function fetchChains(options?: {
 /**
  *
  * @param chainId - the chainId of the chain to resolve
- * @returns a Promise that resolves to the Chain object
+ * @returns A Promise that resolves to the Chain object
  * @throws if the chainId is not found
  */
 export async function getChainByChainIdAsync(chainId: number): Promise<Chain> {
@@ -98,7 +98,7 @@ export async function getChainByChainIdAsync(chainId: number): Promise<Chain> {
 /**
  *
  * @param slug - the slug of the chain to resolve
- * @returns a Promise that resolves to the Chain object
+ * @returns A Promise that resolves to the Chain object
  * @throws if the slug is not found
  */
 export async function getChainBySlugAsync(slug: string): Promise<Chain> {

@@ -294,7 +294,7 @@ export class Marketplace implements UpdateableNetwork {
 
   /**
    * Get the total number of Listings
-   * @returns the total number listings on the marketplace
+   * @returns The total number listings on the marketplace
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {

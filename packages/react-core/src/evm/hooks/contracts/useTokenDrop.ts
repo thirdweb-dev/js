@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
- * @param contractAddress - the address of the Token Drop contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Token Drop contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript
@@ -31,6 +31,9 @@ import { useContract } from "../async/contracts";
  * - const token = useTokenDrop("0x1234...");
  * + const token = useContract("0x1234...", "token-drop").contract;
  * ```
+ *
+ * @token
+ * @internal
  */
 export function useTokenDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

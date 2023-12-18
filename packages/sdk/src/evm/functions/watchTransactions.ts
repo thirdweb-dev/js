@@ -24,7 +24,7 @@ export type WatchTransactionsParams = SharedBlockParams & {
  * unsubscribe();
  * ```
  *
- * @returns an unsubscribe function that will stop listening for new transactions when called
+ * @returns An unsubscribe function that will stop listening for new transactions when called
  * @public
  */
 export function watchTransactions({

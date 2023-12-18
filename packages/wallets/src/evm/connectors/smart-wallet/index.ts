@@ -174,7 +174,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   /**
    * Send a single transaction without waiting for confirmations
    * @param transaction - the transaction to send
-   * @returns the awaitable transaction
+   * @returns The awaitable transaction
    */
   async send(transaction: Transaction): Promise<providers.TransactionResponse> {
     const signer = await this.getSigner();
@@ -188,7 +188,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   /**
    * Execute a single transaction (waiting for confirmations)
    * @param transaction - the transaction to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const tx = await this.send(transaction);
@@ -219,7 +219,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   /**
    * Execute multiple transactions in a single batch
    * @param transactions - the transactions to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async executeBatch(
     transactions: Transaction<any>[],
@@ -345,7 +345,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async deploy(): Promise<TransactionResult> {
     if (!this.accountApi) {
@@ -441,7 +441,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Get the underlying account contract of the smart wallet.
-   * @returns the account contract of the smart wallet.
+   * @returns The account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
     const isDeployed = await this.isDeployed();
@@ -472,7 +472,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Get the underlying account factory contract of the smart wallet.
-   * @returns the account factory contract.
+   * @returns The account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
     const sdk = ThirdwebSDK.fromSigner(

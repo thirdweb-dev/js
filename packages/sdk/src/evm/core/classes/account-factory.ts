@@ -51,7 +51,7 @@ export class AccountFactory implements DetectableFeature {
    * ```
    * @param admin - The admin of the account.
    * @param extraData - (Optional) Extra data to be passed to the account on creation.
-   * @returns the deterministic address of the account that will be created for the given admin.
+   * @returns The deterministic address of the account that will be created for the given admin.
    *
    * @twfeature AccountFactory
    */
@@ -74,7 +74,7 @@ export class AccountFactory implements DetectableFeature {
    * const allAccounts = await contract.accountFactory.getAssociatedAccounts(admin);
    * ```
    * @param signer - The account address.
-   * @returns all accounts on which the given signer has authority.
+   * @returns All accounts on which the given signer has authority.
    *
    * @twfeature AccountFactory
    */
@@ -90,7 +90,7 @@ export class AccountFactory implements DetectableFeature {
    * const allAccounts = await contract.accountFactory.getAllAccounts();
    * ```
    *
-   * @returns all accounts created via the account factory.
+   * @returns All accounts created via the account factory.
    *
    * @twfeature AccountFactory
    */
