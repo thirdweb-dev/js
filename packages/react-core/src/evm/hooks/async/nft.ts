@@ -444,7 +444,7 @@ export function useNFTBalance(
  * ```
  *
  * @param contract - Instance of a `NFTContract`
- * @returns a response object that includes the shared metadata of the contract
+ * @returns Query result object that includes the shared metadata of the contract
  * @twfeature ERC721SharedMetadata
  * @nft
  */

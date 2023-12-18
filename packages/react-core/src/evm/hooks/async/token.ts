@@ -225,7 +225,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns a mutation object that can be used to mint new tokens to the connected wallet
+ * @returns A mutation object that can be used to mint new tokens to the connected wallet
  *
  * ### amount
  *
@@ -313,7 +313,7 @@ export function useMintToken(
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns a mutation object that can be used to tokens to the wallet specified in the params
+ * @returns A mutation object that can be used to tokens to the wallet specified in the params
  *
  * #### to (required)
  *
@@ -409,7 +409,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns a mutation object that can be used to transfer tokens
+ * @returns A mutation object that can be used to transfer tokens
  * ### to
  *
  * The wallet address to transfer tokens to.
@@ -474,7 +474,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * };
  * ```
  *
- * @returns a mutation object that can be used to transfer native tokens
+ * @returns A mutation object that can be used to transfer native tokens
  * @token
  */
 export function useTransferNativeToken() {
@@ -546,7 +546,7 @@ export function useTransferNativeToken() {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns a mutation object that can be used to transfer batch tokens
+ * @returns A mutation object that can be used to transfer batch tokens
  *
  * @twfeature ERC20
  * @token
@@ -615,7 +615,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns a mutation object that can be used to burn tokens from the connected wallet
+ * @returns A mutation object that can be used to burn tokens from the connected wallet
  *
  * ### amount (required)
  *

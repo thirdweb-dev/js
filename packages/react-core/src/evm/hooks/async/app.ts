@@ -26,7 +26,7 @@ import invariant from "tiny-invariant";
  * ```
  *
  * @param contract - the `SmartContract` instance of the contract to get the appURI of
- * @returns a response object that includes the appURI of the contract
+ * @returns Query result object that includes the appURI of the contract
  * @twfeature AppURI
  * @appURI
  */
@@ -73,7 +73,7 @@ export function useAppURI<TContract extends ValidContractInstance>(
  * };
  * ```
  * @param contract - Instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the appURI of a contract
+ * @returns A mutation object that can be used to update the appURI of a contract
  * @twfeature AppURI
  * @appURI
  */

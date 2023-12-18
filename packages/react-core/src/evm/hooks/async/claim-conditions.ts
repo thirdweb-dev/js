@@ -209,7 +209,7 @@ export function useActiveClaimCondition(
  * @param claimConditionId -
  * This is the ID of the claim condition you want to get the proof for.
  *
- * @returns a response object with the snapshot for the provided address
+ * @returns Query result object with the snapshot for the provided address
  *
  * @claimConditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
@@ -874,11 +874,12 @@ export function useSetClaimConditions(
 /**
  * Hook for resetting the claim conditions on a drop contract.
  *
- * Available to use on contracts that implement `ERC721ClaimableWithConditions`, `ERC1155ClaimableWithConditions` or `ERC20ClaimableWithConditions`.
+ * Available to use on contracts that implement
+ * [`ERC721ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc721claimconditions),
+ * [`ERC1155ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc1155claimconditions) or
+ * [`ERC20ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc20claimconditions).
  *
  * @example
- *
- *
  * ```jsx
  * import {
  *   useContract,
@@ -908,9 +909,6 @@ export function useSetClaimConditions(
  *
  * @param contract - Instance of a `DropContract`
  * @param tokenId - For ERC1155 NFTs, provide the token ID of the NFT as the second argument to the hook.
- *
- * @returns a mutation object that can be used to reset claim conditions
- *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @nftDrop
  */

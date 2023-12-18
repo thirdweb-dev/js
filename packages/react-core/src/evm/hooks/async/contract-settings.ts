@@ -101,7 +101,7 @@ export function usePrimarySaleRecipient(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @returns a mutation object that can be used to update the primary sales recipient
+ * @returns A mutation object that can be used to update the primary sales recipient
  *
  * #### walletAddress
  *
@@ -240,7 +240,7 @@ export function useRoyaltySettings(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns a mutation object that can be used to update the royalty settings
+ * @returns A mutation object that can be used to update the royalty settings
  *
  * #### seller_fee_basis_points (required)
  *
@@ -292,7 +292,7 @@ export function useUpdateRoyaltySettings(
 /**
  * Hook for getting the platform fee settings of a contract.
  *
- * Available to use on contracts that implement the `PlatformFee` interface.
+ * Available to use on contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
  *
  * @example
  *
@@ -327,7 +327,13 @@ export function useUpdateRoyaltySettings(
  */
 export function usePlatformFees(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseQueryResult<
+  {
+    platform_fee_basis_points: number;
+    platform_fee_recipient: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.platformFees.get(contractAddress),
@@ -381,7 +387,7 @@ export function usePlatformFees(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns a mutation object that can be used to update the platform fees settings
+ * @returns A mutation object that can be used to update the platform fees settings
  * #### platform_fee_basis_points (required)
  *
  * The `platform_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.

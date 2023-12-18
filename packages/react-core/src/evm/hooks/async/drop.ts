@@ -42,7 +42,7 @@ import invariant from "tiny-invariant";
 /**
  * Hook for fetching information about all NFTs that haven't been claimed yet from an NFT Drop contract.
  *
- * Available to use on contracts that implement the `ERC721LazyMintable` interface.
+ * Available to use on contracts that extends the ERC721 spec
  *
  * @example
  *
@@ -107,7 +107,7 @@ export function useUnclaimedNFTs(
 /**
  * Hook for fetching all claimed NFTs from a given NFT Drop contract.
  *
- * Available to use on contracts that implement `ERC721Claimable`,
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable),
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721).
  *
  * @example
@@ -116,7 +116,6 @@ export function useUnclaimedNFTs(
  * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
  *
  * function App() {
- *   // Contract must implement ERC721Claimable, e.g. nft-drop
  *   const { contract } = useContract(contractAddress, "nft-drop");
  *   const { data: nfts, isLoading, error } = useClaimedNFTs(contract);
  * }
@@ -146,7 +145,7 @@ export function useUnclaimedNFTs(
  * }
  * ```
  *
- * @returns a response object that includes an array of NFTs that are claimed
+ * @returns Query Result object that includes an array of NFTs that are claimed in the `data` property
  * @twfeature ERC721LazyMintable
  * @nftDrop
  */
@@ -175,7 +174,7 @@ export function useClaimedNFTs(
  *
  * Unclaimed NFTs are tokens that were lazy-minted but have not yet been claimed by a user.
  *
- * Available to use on contracts that implement the `LazyMint` extension;
+ * Available to use on contracts that implement the [`LazyMint`](https://portal.thirdweb.com/solidity/extensions/lazymint) extension;
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721) contract.
  *
  * @example
@@ -221,7 +220,7 @@ export function useUnclaimedNFTSupply(
 /**
  * Hook for retrieving the total supply of NFTs claimed from an NFT Drop contract.
  *
- * Available to use on contracts that implement `ERC721Claimable`.
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable).
  *
  * @example
  *
@@ -230,14 +229,14 @@ export function useUnclaimedNFTSupply(
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
- *   const { data: claimedTokens, isLoading } = useClaimedNFTSupply(contract);
+ *   const { data, isLoading } = useClaimedNFTSupply(contract);
  * }
  * ```
  *
  * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  *
  * @returns
- * The hook's data property, once loaded, is a BigNumber representing the total supply of NFTs claimed from the NFT drop contract so far.
+ * The hook's `data` property, once loaded, is a `BigNumber` representing the total supply of NFTs claimed from the NFT drop contract so far.
  *
  * @twfeature ERC721LazyMintable
  * @nftDrop
@@ -321,10 +320,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
 /**
  * Hook for claiming an NFT from a smart contract.
  *
- * Available to use on smart contracts that implement a
- * `Claimable` interface, and
- * follow either the `ERC721`
- * or `ERC1155` standard.
+ * Available to use on smart contracts that implement a  `Claimable` interface, and follow either the `ERC721`or `ERC1155` standard.
  *
  * @example
  * ```jsx
@@ -332,7 +328,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * function App() {
  *   const { contract } = useContract(contractAddress);
- *   const { mutateAsync, isLoading, error } = useClaimNFT(contract);
+ *   const { mutateAsync: claimNft, isLoading, error } = useClaimNFT(contract);
  *
  *   return (
  *     <Web3Button
@@ -352,7 +348,15 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * @param contract - Instance of a `DropContract`
  *
- * @returns a mutation object that can be used to claim a NFT to the wallet specified in the params
+ * @returns A mutation object that can be used to claim a NFT to the wallet specified in the params
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useClaimNFT(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as argument with below properties:
  *
  * #### to
  *
@@ -470,7 +474,7 @@ export function useClaimNFT<TContract extends DropContract>(
 /**
  * Hook for lazy minting a batch of NFTs on a drop contract.
  *
- * Available to use on smart contracts that implement the `LazyMintable` interface, and
+ * Available to use on smart contracts that implement the "Drop" extension, and
  * follow either the `ERC721` or `ERC1155` standard.
  *
  * @example
@@ -509,9 +513,17 @@ export function useClaimNFT<TContract extends DropContract>(
  *
  * @param contract - Instance of a `NFTContract` with the drop extension
  *
- * @param onProgress - an optional callback that will be called with the progress of the upload
+ * @param onProgress - Optional callback that will be called with the progress of the upload
  *
- * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @returns A mutation object that can be used to lazy mint a batch of NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useLazyMint(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function takes an object as argument with below properties:
  *
  * ### metadatas
  *

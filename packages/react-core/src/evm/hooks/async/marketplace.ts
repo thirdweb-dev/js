@@ -1994,7 +1994,7 @@ export function useCreateDirectListing<
  * @param contract - Instance of a `Marketplace` contract
  *
  * @returns
- * a mutation object to create a new auction listing.
+ * A mutation object to create a new auction listing.
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useCreateAuctionListing(contract);

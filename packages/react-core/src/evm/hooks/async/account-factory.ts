@@ -31,7 +31,7 @@ import invariant from "tiny-invariant";
  * ```
  *
  * @param contract - Instance of a account factory contract
- * @returns a response object that includes an array of all accounts with their associated admin
+ * @returns Query result object that includes an array of all accounts with their associated admin
  * @twfeature AccountFactory
  * @smartWallet
  */
@@ -63,7 +63,7 @@ export function useAccounts(
  *
  * @param contract - Instance of a account factory contract
  * @param address - the address to get associated accounts for
- * @returns a response object that includes an array of all accounts associated with the address
+ * @returns Query result object that includes an array of all accounts associated with the address
  *
  * @twfeature AccountFactory
  * @smartWallet
@@ -156,7 +156,7 @@ export function useIsAccountDeployed(
  * ```
  *
  * @param contract - Instance of a account factory contract
- * @returns a mutation object that can be used to create a account
+ * @returns A mutation object that can be used to create a account
  * @twfeature AccountFactory
  * @smartWallet
  */

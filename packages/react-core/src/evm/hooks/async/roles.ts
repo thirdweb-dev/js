@@ -48,7 +48,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
 /**
  * Hook for getting all wallet addresses that have a role in a smart contract.
  *
- * Available to use on contracts that implement `Permissions`.
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions).
  *
  * @example
  *
@@ -64,7 +64,18 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * @param contract - Instance of a `SmartContract`
  *
  * @returns
- * The hook's data property, once loaded, is an object, where the keys are the role names and the values are arrays of wallet addresses that have that role.
+ * The hook's `data` property, once loaded, is an object, where the keys are the role names and the values are arrays of wallet addresses that have that role.
+ *
+ * For example, if the contract has two roles, `admin` and `transfer`, and the `admin` role has two members, the `data` property will look like this:
+ *
+ * ```ts
+ * {
+ *   admin: ["0x1234", "0x5678"],
+ *   transfer: [],
+ * }
+ * ```
+ *
+ * #### Type
  *
  * ```ts
  * Record<
@@ -81,14 +92,6 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  * > | undefined;
  * ```
  *
- * For example, if the contract has two roles, `admin` and `transfer`, and the `admin` role has two members, the `data` property will look like this:
- *
- * ```ts
- * {
- *   admin: ["0x1234", "0x5678"],
- *   transfer: [],
- * }
- * ```
  * @twfeature PermissionsEnumerable
  * @permissionControl
  */
@@ -113,10 +116,9 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook for getting all wallet addresses that have a specific role in a smart contract.
  *
- * Available to use on contracts that implement the `PermissionsEnumerable` interface.
+ * Available to use on contracts that implement the [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface.
  *
  * @example
- *
  * ```jsx
  * import { useContract, useRoleMembers } from "@thirdweb-dev/react";
  *
@@ -132,7 +134,19 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @param role - The name of the role to get the members of. Can be any custom role, or a built-in role, such as `admin`, `transfer`, `minter`, `pauser`, `lister`, `asset`, `unwrap`, or `factory`.
+ * @param role -
+ *  The name of the role to get the members of
+ *
+ * Can be any custom role, or a built-in role, such as:
+ * - `"admin"`
+ * - `"transfer"`
+ * - `"minter"`
+ * - `"pauser"`
+ * - `"lister"`
+ * - `"asset"`
+ * - `"unwrap"`
+ * - `"factory"`
+ *
  * @returns The hook's `data` property, once loaded, is an array of wallet addresses that have the specified role
  *
  * @twfeature Permissions
@@ -159,7 +173,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook to check if an address is a member of a role on a smart contract.
  *
- * Available to use on contracts that implement "Permission Controls" interface
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface
  *
  * Provide the following arguments to the hook:
  *
@@ -172,15 +186,6 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * ```jsx
  * import { useIsAddressRole, useContract } from "@thirdweb-dev/react";
  *
- * // Your smart contract address (must implement permission controls)
- * const contractAddress = "{{contract_address}}";
- *
- * // Address of the wallet to check
- * const walletAddress = "{{wallet_address}}";
- *
- * // Name of the role to check
- * const roleName = "admin";
- *
  * function App() {
  *   const { contract } = useContract(contractAddress);
  *   const isMember = useIsAddressRole(contract, roleName, walletAddress);
@@ -189,8 +194,20 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @param role - The name of the role to check. Can be any custom role, or a built-in role, such as `"admin"`, `"transfer"`, `"minter"`, `"pauser"`, `"lister"`, `"asset"`, `"unwrap"`, or `"factory"`.
- * @param walletAddress - The wallet address to check if it is a member of the role. Use the `useAddress` hook to get the current wallet address.
+ * @param role - The name of the role to check. Can be any custom role, or a built-in role, such as:
+ * - `"admin"`
+ * - `"transfer"`
+ * - `"minter"`
+ * - `"pauser"`
+ * - `"lister"`
+ * - `"asset"`
+ * - `"unwrap"`
+ * - `"factory"`
+ *
+ * @param walletAddress -
+ * The wallet address to check if it is a member of the role.
+ * Use the `useAddress` hook to get the current wallet address.
+ *
  * @returns `true` if the address is a member of the role, or `false` if not
  *
  * @twfeature PermissionsEnumerable
@@ -254,8 +271,8 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  * };
  * ```
  *
- * @param contract - Instance of a {@link SmartContract}
- * @returns a mutation object that can be used to overwrite all roles on the contract
+ * @param contract - Instance of a `SmartContract`
+ * @returns A mutation object that can be used to overwrite all roles on the contract
  * @twfeature Permissions
  * @permissionControl
  */
@@ -288,7 +305,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook for granting a role on a smart contract.
  *
- * Available to use on smart contracts that implement the "Permissions" interface.
+ * Available to use on smart contracts that implement the [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface.
  *
  * @example
  * ```jsx
@@ -320,9 +337,17 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns a mutation object that can be used to grant a member of a role on the contract
+ * @returns A mutation object that can be used to grant a member of a role on the contract
  *
- * #### role (required)
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useGrantRole(contract);
+ * ```
+ *
+ * ## options
+ *
+ * The mutation function accepts an object with the following properties:
+ *
+ * #### role
  *
  * The name of the role to grant the address.
  *
@@ -331,18 +356,18 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * Also accepts the default roles available on the [prebuilt contracts](https://portal.thirdweb.com/pre-built-contracts):
  *
  * ```ts
- * string |
- *   "admin" |
- *   "minter" |
- *   "transfer" |
- *   "lister" |
- *   "asset" |
- *   "unwrap" |
- *   "pauser" |
- *   "factory";
+ *  string |
+ *  "admin" |
+ *  "minter" |
+ *  "transfer" |
+ *  "lister" |
+ *  "asset" |
+ *  "unwrap" |
+ *  "pauser" |
+ *  "factory";
  * ```
  *
- * #### address (required)
+ * #### address
  *
  * The address to grant the role to.
  *
@@ -381,9 +406,9 @@ export function useGrantRole<TContract extends ContractWithRoles>(
 /**
  * Hook for revoking a wallet address from a role on a smart contract.
  *
- * Available to use on contracts that implement "Permission Controls" interface
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface
  *
- * The wallet address that initiates this transaction must have the relevant permissions on the contract to remove the role from the wallet address (typically `admin` level required).
+ * The wallet address that initiates this transaction must have the relevant permissions on the contract to remove the role from the wallet address (typically `"admin"` level required).
  *
  * ```jsx
  * import { useContract, useRevokeRole, Web3Button } from "@thirdweb-dev/react";
@@ -415,12 +440,20 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns a mutation object that can be used to revoke a role from a member on the contract
+ * @returns A mutation object that can be used to revoke a role from a member on the contract
  * #### role (required)
  *
  * The role to revoke from the wallet address.
  *
- * Can be any custom role, or a built-in role, such as `admin`, `transfer`, `minter`, `pauser`, `lister`, `asset`, `unwrap`, or `factory`.
+ * Can be any custom role, or a built-in role, such as:
+ * - `"admin"`
+ * - `"transfer"`
+ * - `"minter"`
+ * - `"pauser"`
+ * - `"lister"`
+ * - `"asset"`
+ * - `"unwrap"`
+ * - `"factory"`
  *
  * #### address
  *

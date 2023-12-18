@@ -208,7 +208,7 @@ export type UseContractResult<
  *
  *
  * @param contractAddress - the address of the deployed contract
- * @returns a response object that includes the contract once it is resolved
+ * @returns Query result object that includes the contract once it is resolved
  * @contract
  */
 export function useContract(
@@ -243,7 +243,7 @@ export function useContract(
  *
  * @param contractAddress - the address of the deployed contract
  * @param _contractType - the type of the contract
- * @returns a response object that includes the contract once it is resolved
+ * @returns Query result object that includes the contract once it is resolved
  * @public
  */
 export function useContract<TContractType extends ContractType>(
@@ -269,7 +269,7 @@ export function useContract<TContractType extends ContractType>(
  *
  * @param contractAddress - the address of the deployed contract
  * @param _abi - the ABI of the contract to use
- * @returns a response object that includes the contract once it is resolved
+ * @returns Query result object that includes the contract once it is resolved
  */
 
 export function useContract(
@@ -665,7 +665,7 @@ export function useContractEvents(
  *   });
  * ```
  *
- * @returns a response object that includes the data returned by the function call
+ * @returns Query result object that includes the data returned by the function call
  * @contract
  */
 export function useContractRead<
@@ -768,7 +768,7 @@ export function useContractRead<
  *
  * @param contract - the contract instance of the contract to call a function on
  * @param functionName - the name of the function to call in the smart contract.
- * @returns a mutation object that includes the write function to call
+ * @returns A mutation object that includes the write function to call
  * @contract
  */
 export function useContractWrite<
