@@ -92,7 +92,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Offer object array
+   * @returns The Offer object array
    * @twfeature Offers
    */
   public async getAll(
@@ -129,7 +129,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Offer object array
+   * @returns The Offer object array
    * @twfeature Offers
    */
   public async getAllValid(
@@ -167,7 +167,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```
    *
    * @param offerId - the listing id
-   * @returns the Direct listing object
+   * @returns The Direct listing object
    * @twfeature Offers
    */
   public async getOffer(offerId: BigNumberish): Promise<OfferV3> {
@@ -208,7 +208,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * const id = tx.id; // the id of the newly created offer
    * ```
    * @param offer - the offer data
-   * @returns the transaction receipt and the id of the newly created offer
+   * @returns The transaction receipt and the id of the newly created offer
    * @twfeature Offers
    */
   makeOffer = /* @__PURE__ */ buildTransactionFunction(
@@ -276,7 +276,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * await contract.offers.cancelOffer(offerId);
    * ```
    * @param offerId - the offer id
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    * @twfeature Offers
    */
   cancelOffer = /* @__PURE__ */ buildTransactionFunction(
@@ -301,7 +301,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```
    *
    * @param offerId - The offer id
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    * @twfeature Offers
    */
   acceptOffer = /* @__PURE__ */ buildTransactionFunction(
@@ -353,7 +353,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @internal
    * @param offer - The offer to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   private async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
     let status: Status = Status.UNSET;
@@ -407,7 +407,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @internal
    * @param offer - The offer to check.
-   * @returns - True if the offer is valid, false otherwise.
+   * @returns  True if the offer is valid, false otherwise.
    */
   private async isStillValidOffer(
     offer: OfferV3,

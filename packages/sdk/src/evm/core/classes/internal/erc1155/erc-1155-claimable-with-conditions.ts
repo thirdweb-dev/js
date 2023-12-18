@@ -66,7 +66,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    */
   to = /* @__PURE__ */ buildTransactionFunction(
     async (

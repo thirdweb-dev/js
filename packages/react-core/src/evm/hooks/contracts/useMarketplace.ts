@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of a `Marketplace` contract. This contract is used to support marketplace for purchase and sale of on-chain assets.
- * @param contractAddress - the address of the Marketplace contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Marketplace contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript
@@ -31,6 +31,7 @@ import { useContract } from "../async/contracts";
  * - const marketplace = useMarketplace("0x1234...");
  * + const marketplace = useContract("0x1234...", "marketplace").contract;
  * ```
+ * @internal
  */
 export function useMarketplace(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

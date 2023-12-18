@@ -2,6 +2,11 @@ import { useConnect } from "@thirdweb-dev/react-core";
 import { useCallback } from "react";
 import { BloctoWalletConfigOptions } from "../../../wallet/wallets/blocto/bloctoWallet";
 
+/**
+ * @internal
+ * @deprecated use the `ConnectWallet` component or `useConnect` hook instead
+ * @walletConnection
+ */
 export function useBloctoWallet() {
   const connect = useConnect();
   return useCallback(

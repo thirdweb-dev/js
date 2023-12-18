@@ -2,20 +2,19 @@ import type { AbstractClientWallet, Chain } from "@thirdweb-dev/wallets";
 import { WalletOptions as WalletOptions_ } from "@thirdweb-dev/wallets";
 
 // these are extra options provided by the react-core package
-export type ExtraCoreWalletOptions = {
+
+export type WalletOptions = WalletOptions_<{
   chain: Chain;
-};
+}>;
 
-export type WalletOptions = WalletOptions_<ExtraCoreWalletOptions>;
-
+/**
+ * @wallet
+ */
 export type WalletInstance = AbstractClientWallet;
 
-export type WalletClass<I extends WalletInstance = WalletInstance> = {
-  id: string;
-  new (options: WalletOptions): I;
-  meta: (typeof AbstractClientWallet)["meta"];
-};
-
+/**
+ * @wallet
+ */
 export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   category?: "socialLogin" | "walletLogin";
   id: string;
@@ -56,6 +55,9 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   isHeadless?: boolean;
 };
 
+/**
+ * @wallet
+ */
 export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * temporarily hide the ConnectModal
@@ -156,11 +158,14 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * Called when the wallet is connected but it's
    * part of another wallet's connection flow.
-   * @param walleInstance - the instance of the connected wallet
+   * @param walleInstance - The instance of the connected wallet
    */
   onLocallyConnected?: (walleInstance: WalletInstance) => void;
 };
 
+/**
+ * @wallet
+ */
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * Call this function to "select" your wallet and render the screen for connecting the wallet

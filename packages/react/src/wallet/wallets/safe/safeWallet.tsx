@@ -13,6 +13,9 @@ import type { SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
+/**
+ * @wallet
+ */
 export type SafeWalletConfigOptions = {
   /**
    * An array of personalWallets to show in ConnectWallet Modal to use with SafeWallet
@@ -28,40 +31,29 @@ export type SafeWalletConfigOptions = {
 /**
  * A wallet configurator for [Safe](https://safe.global/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[safeWallet()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * safeWallet({
+ *  personalWallets: [
+ *    metamaskWallet(),
+ *    coinbaseWallet(),
+ *    walletConnect()
+ *  ],
+ * })
  * ```
  *
- * ### Usage with useConnect
+ * @param config -
+ * Optional configuration options for the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * ### personalWallets (optional)
+ * An array of personal wallets to show in `ConnectWallet` Modal for personal wallet selection
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
  *
- * ```tsx
- * const safeWalletConfig = safeWallet();
- *
- * function App() {
- *   const connect = useConnect();
- *
- *   async function handleConnect() {
- *     const wallet = await connect(safeWalletConfig, options);
- *     console.log('connected to', wallet);
- *   }
- *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * @wallet
  */
 export const safeWallet = (
   config?: SafeWalletConfigOptions,

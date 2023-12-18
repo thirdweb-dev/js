@@ -333,7 +333,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
    * ```
-   * @returns the claimed supply
+   * @returns The claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalClaimedSupply();
@@ -349,7 +349,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalUnclaimedSupply();
@@ -448,7 +448,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -465,7 +465,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @remarks See {@link NFTDrop.claimTo}
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (

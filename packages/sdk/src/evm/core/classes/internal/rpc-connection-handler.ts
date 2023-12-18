@@ -55,7 +55,7 @@ export class RPCConnectionHandler extends EventEmitter {
 
   /**
    * Explicitly get the active signer.
-   * @returns the active signer, if there is one
+   * @returns The active signer, if there is one
    */
   public getSigner(): Signer | undefined {
     return this.signer;
@@ -63,7 +63,7 @@ export class RPCConnectionHandler extends EventEmitter {
 
   /**
    * Explicitly get the active provider.
-   * @returns the active provider
+   * @returns The active provider
    */
   public getProvider(): providers.Provider {
     return this.provider;
@@ -71,7 +71,7 @@ export class RPCConnectionHandler extends EventEmitter {
 
   /**
    *
-   * @returns the current signer if there is one, otherwise the active provider
+   * @returns The current signer if there is one, otherwise the active provider
    */
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();

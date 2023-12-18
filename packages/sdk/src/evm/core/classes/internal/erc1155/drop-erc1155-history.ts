@@ -18,7 +18,7 @@ export class DropErc1155History {
    *
    * @remarks Get a list of all the addresses that have claimed a token
    * @param tokenId - the tokenId of the NFT to get the addresses of*
-   * @returns - A unique list of addresses that claimed the token
+   * @returns  A unique list of addresses that claimed the token
    * @example
    * ```javascript
    * const tokenId = "0";

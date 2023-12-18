@@ -78,7 +78,7 @@ export class StandardErc1155<
   /**
    * Returns the total supply of a specific token
    * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
+   * @returns The total supply
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
     return this.erc1155.totalSupply(tokenId);
