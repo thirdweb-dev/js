@@ -25,12 +25,14 @@ export type MetamaskWalletConfigOptions = {
   recommended?: boolean;
 
   /**
-   * Specify how the connection to metamask app should be established if the user is on a mobile device.
-   * There are two options: "walletconnect" and "browser".
+   * Specify how the connection to metamask app should be established if the user is on a mobile device
+   *
+   * There are two options: "walletconnect" and "browser"
+   *
    * 1. "walletconnect" - User will be redirected to MetaMask app and upon successful connection, user can return back to the web page.
    * 2. "browser" - User will be redirected to MetaMask app and the web page will be opened in MetaMask browser.
    *
-   * @defaultValue "walletconnect"
+   * Default is `"walletconnect"`
    */
   connectionMethod?: "walletConnect" | "metamaskBrowser";
 };
@@ -38,40 +40,35 @@ export type MetamaskWalletConfigOptions = {
 /**
  * A wallet configurator for [MetaMask Wallet](https://metamask.io/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[metamaskWallet()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * metamaskWallet({
+ *   projectId: 'YOUR_PROJECT_ID',
+ *   connectionMethod: 'walletConnect', // or 'metamaskBrowser',
+ *   recommended: true,
+ * })
  * ```
  *
- * ### Usage with useConnect
+ * @param options -
+ * Optional configuration options for the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * ### projectId (optional)
+ * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
  *
- * ```tsx
- * const metamaskWalletConfig = metamaskWallet();
+ * ### connectionMethod (optional)
+ * Specify how the connection to metamask app should be established if the user is on a mobile device.
  *
- * function App() {
- *   const connect = useConnect();
+ * There are two options: `"walletconnect"` and `"browser"`
+ * 1. `"walletconnect"` - User will be redirected to MetaMask app and upon successful connection, user can return back to the web page.
+ * 2. `"browser"` - User will be redirected to MetaMask app and the web page will be opened in MetaMask browser.
  *
- *   async function handleConnect() {
- *     const wallet = await connect(metamaskWalletConfig, options);
- *     console.log('connected to', wallet);
- *   }
- *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * Default is `"walletconnect"`
  *
  * @wallet
  */

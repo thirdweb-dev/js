@@ -10,7 +10,7 @@ import { PhantomConnectUI } from "./PhantomConnectUI";
  */
 export type PhantomWalletConfigOptions = {
   /**
-   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+   * If `true`, the wallet will be tagged as "recommended" in ConnectWallet Modal. Default is `false`
    */
   recommended?: boolean;
 };
@@ -18,40 +18,20 @@ export type PhantomWalletConfigOptions = {
 /**
  * A wallet configurator for [Phantom Wallet](https://phantom.app/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[phantomWallet()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * phantomWallet({
+ *  recommended: true,
+ * })
  * ```
  *
- * ### Usage with useConnect
+ * @param options -
+ * Optional configuration options for the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
- *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
- *
- * ```tsx
- * const phantomWalletConfig = phantomWallet();
- *
- * function App() {
- *   const connect = useConnect();
- *
- *   async function handleConnect() {
- *     const wallet = await connect(phantomWalletConfig, options);
- *     console.log('connected to', wallet);
- *   }
- *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * ### recommended (optional)
+ * If `true`, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI. Default is `false`
  *
  * @wallet
  */
