@@ -204,7 +204,7 @@ export function useCreateSessionKey(): UseMutationResult<
 }
 
 /**
- * Revoke a session key (or signer) on the smart wallet
+ * Revoke a session key (or signer) on the smart wallet account
  *
  * @example
  * ```jsx
@@ -229,6 +229,15 @@ export function useCreateSessionKey(): UseMutationResult<
  * ```
  *
  * @twfeature Account
+ * @returns
+ * Mutation object to revoke a session key (or signer) on the smart wallet
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useRevokeSessionKey();
+ * ```
+ *
+ * The mutation function takes an address of type `string` to remove as an admin.
+ *
  * @smartWallet
  */
 export function useRevokeSessionKey(): UseMutationResult<

@@ -62,7 +62,7 @@ export function useAccounts(
  * ```
  *
  * @param contract - Instance of a account factory contract
- * @param address - the address to get associated accounts for
+ * @param address - The address to get associated accounts for
  * @returns Query result object that includes an array of all accounts associated with the address
  *
  * @twfeature AccountFactory

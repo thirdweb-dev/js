@@ -158,7 +158,7 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * Called when the wallet is connected but it's
    * part of another wallet's connection flow.
-   * @param walleInstance - the instance of the connected wallet
+   * @param walleInstance - The instance of the connected wallet
    */
   onLocallyConnected?: (walleInstance: WalletInstance) => void;
 };

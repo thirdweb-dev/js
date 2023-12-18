@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
- * @param contractAddress - the address of the NFT Drop contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the NFT Drop contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

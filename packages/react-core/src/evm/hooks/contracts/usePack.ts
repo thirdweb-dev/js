@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
- * @param contractAddress - the address of the Pack contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Pack contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of a `Split` contract. This contract supports fund distribution to multiple parties.
- * @param contractAddress - the address of the Split contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Split contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

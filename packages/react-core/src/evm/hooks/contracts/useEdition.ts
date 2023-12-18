@@ -5,7 +5,7 @@ import { useContract } from "../async/contracts";
 /**
  *
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
- * @param contractAddress - the address of the Edition contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Edition contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

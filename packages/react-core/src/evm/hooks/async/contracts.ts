@@ -207,7 +207,7 @@ export type UseContractResult<
  * To cache the ABI of the smart contract, use [thirdweb generate](https://portal.thirdweb.com/cli/generate). This is recommended to improve performance and provide type-safety when interacting with your smart contract.
  *
  *
- * @param contractAddress - the address of the deployed contract
+ * @param contractAddress - The address of the deployed contract
  * @returns Query result object that includes the contract once it is resolved
  * @contract
  */
@@ -241,8 +241,8 @@ export function useContract(
  * const { contract, isLoading, error } = useContract(contractAddress, "pack");
  * ```
  *
- * @param contractAddress - the address of the deployed contract
- * @param _contractType - the type of the contract
+ * @param contractAddress - The address of the deployed contract
+ * @param _contractType - The type of the contract
  * @returns Query result object that includes the contract once it is resolved
  * @public
  */
@@ -267,8 +267,8 @@ export function useContract<TContractType extends ContractType>(
  * const { contract, isLoading, error } = useContract(contractAddress, contractAbi);
  * ```
  *
- * @param contractAddress - the address of the deployed contract
- * @param _abi - the ABI of the contract to use
+ * @param contractAddress - The address of the deployed contract
+ * @param _abi - The ABI of the contract to use
  * @returns Query result object that includes the contract once it is resolved
  */
 
@@ -493,7 +493,7 @@ export function useContractMetadataUpdate(
  * }
  * ```
  *
- * @param contract - the contract instance of the contract to listen to events for
+ * @param contract - The contract instance of the contract to listen to events for
  *
  * @param eventName -
  * The name of the event to query for.
@@ -647,9 +647,9 @@ export function useContractEvents(
  * @remarks
  * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
  *
- * @param contract - the contract instance of the contract to call a function on
+ * @param contract - The contract instance of the contract to call a function on
  *
- * @param functionName - the name of the function to call in the smart contract. This can be any function, view, variable, etc. that does not require a transaction to occur.
+ * @param functionName - The name of the function to call in the smart contract. This can be any function, view, variable, etc. that does not require a transaction to occur.
  *
  * @param args - The arguments to pass to the function (if any)
  *
@@ -766,8 +766,8 @@ export function useContractRead<
  * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
  *
  *
- * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call in the smart contract.
+ * @param contract - The contract instance of the contract to call a function on
+ * @param functionName - The name of the function to call in the smart contract.
  * @returns A mutation object that includes the write function to call
  * @contract
  */

@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of an `EditionDrop` contract. This contract is used to interface with ERC1155 compliant NFTs that can be lazily minted.
- * @param contractAddress - the address of the Edition Drop contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Edition Drop contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

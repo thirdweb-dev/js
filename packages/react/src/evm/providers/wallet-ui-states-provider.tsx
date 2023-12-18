@@ -115,7 +115,7 @@ export const useIsWalletModalOpen = () => {
  * )
  * ```
  *
- * @returns function to open or close the modal
+ * @returns Function to open or close the modal
  * @connectWallet
  */
 export const useSetIsWalletModalOpen = () => {

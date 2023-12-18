@@ -107,7 +107,7 @@ export type NetworkSelectorProps = {
 
   /**
    * Callback to be called when a chain is successfully switched
-   * @param chain - the new chain that is switched to
+   * @param chain - The new chain that is switched to
    */
   onSwitch?: (chain: Chain) => void;
   /**

@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of an `NFTCollection` contract. This contract is meant to interface with ERC721 compliant NFTs.
- * @param contractAddress - the address of the NFT Collection contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the NFT Collection contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

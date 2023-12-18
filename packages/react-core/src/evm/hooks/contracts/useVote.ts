@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.
- * @param contractAddress - the address of the Vote contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Vote contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript

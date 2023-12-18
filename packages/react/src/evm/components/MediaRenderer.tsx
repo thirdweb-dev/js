@@ -528,9 +528,9 @@ export interface MediaType {
  * }
  * ```
  *
- * @param uri - the uri to resolve (can be a url or a `ipfs://\<cid\>`)
- * @param mimeType - the mime type of the media
- * @param gatewayUrl - the url of the IPFS gateway to use (defaults to `https://ipfs.io/ipfs/`)
+ * @param uri - The uri to resolve (can be a url or a `ipfs://\<cid\>`)
+ * @param mimeType - The mime type of the media
+ * @param gatewayUrl - The url of the IPFS gateway to use (defaults to `https://ipfs.io/ipfs/`)
  *
  * @returns
  * The hook returns an object containing two properties:

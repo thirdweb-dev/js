@@ -67,7 +67,7 @@ import invariant from "tiny-invariant";
  *
  *
  * @param contract - Instance of a marketplace contract
- * @param listingId - the listing id to check
+ * @param listingId - The listing id to check
  *
  * @returns
  * Query Result object that includes the desired listing.
@@ -1736,7 +1736,7 @@ export function useMinimumNextBid(
  *
  * @param contract - Instance of a Marketplace contract
  *
- * @param listingId - the id of the listing to fetch offers for
+ * @param listingId - The id of the listing to fetch offers for
  * If the listing cannot be found, is not a direct listing, or is not active, the `error` property will be set.
  *
  * @returns
