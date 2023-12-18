@@ -33,15 +33,12 @@ import { BigNumber } from "ethers";
  * ```jsx
  * import { useBalance } from "@thirdweb-dev/react";
  *
- * // ERC20 token smart contract address
- * const tokenAddress = "{{token_address}}";
- *
  * function App() {
  *   const { data, isLoading } = useBalance(tokenAddress);
  * }
  * ```
  *
- * @param tokenAddress - the address of the token contract, if not provided, it defaults to the native token
+ * @param tokenAddress - The address of the token contract, if not provided, it defaults to the native token
  *
  * @returns
  * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.
@@ -91,7 +88,7 @@ export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
  * const { data, isLoading } = useBalanceForAddress(walletAddress)
  * ```
  *
- * @param walletAddress - the address of the wallet that you want to get the native balance
+ * @param walletAddress - The address of the wallet that you want to get the native balance
  *
  * @returns
  * The hook's `data` property contains the native token's balance in the `value` property as a `BigNumber` object.

@@ -272,7 +272,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @returns A mutation object that can be used to overwrite all roles on the contract
+ * @returns A mutation object to overwrite all roles on the contract
  * @twfeature Permissions
  * @permissionControl
  */
@@ -337,18 +337,16 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns A mutation object that can be used to grant a member of a role on the contract
+ * @returns A mutation object to grant a member of a role on the contract
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useGrantRole(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function accepts an object with the following properties:
  *
  * #### role
- *
  * The name of the role to grant the address.
  *
  * Accepts any `string` value to include custom-defined roles.
@@ -368,7 +366,6 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * ```
  *
  * #### address
- *
  * The address to grant the role to.
  *
  * To use the address of the connected wallet, use the `useAddress` hook.
@@ -440,7 +437,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns A mutation object that can be used to revoke a role from a member on the contract
+ * @returns A mutation object to revoke a role from a member on the contract
  * #### role (required)
  *
  * The role to revoke from the wallet address.

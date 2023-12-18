@@ -32,7 +32,7 @@ import { useContract } from "../async/contracts";
  * + const token = useContract("0x1234...", "token").contract;
  * ```
  *
- * @token
+ * @internal
  */
 export function useToken(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

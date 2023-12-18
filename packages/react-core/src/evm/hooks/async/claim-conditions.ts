@@ -732,7 +732,7 @@ export function useActiveClaimConditionForWallet(
  * }
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object with two possible properties:
  *
@@ -741,7 +741,7 @@ export function useActiveClaimConditionForWallet(
  *
  * ---
  *
- * ### reset (optional)
+ * #### reset (optional)
  *
  * A boolean value that determines whether to reset the claim conditions or to keep the existing state.
  *
@@ -753,11 +753,11 @@ export function useActiveClaimConditionForWallet(
  *
  * ---
  *
- * ### phases (required)
+ * #### phases (required)
  *
  * Provide an array of phases that occur in chronological order. All properties of a phase are optional and are described below:
  *
- * #### metadata
+ * ##### metadata
  *
  * An object representing the metadata of the phase. This is only for display purposes in the dashboard and isn’t used elsewhere.
  *
@@ -767,21 +767,21 @@ export function useActiveClaimConditionForWallet(
  * }
  * ```
  *
- * #### currencyAddress
+ * ##### currencyAddress
  *
  * The address of the currency you want users to pay in.
  *
  * This can be any ERC20 token value. If you want users to pay in the native currency (e.g. Ether on Ethereum), you can import the `NATIVE_TOKEN_ADDRESS` constant from `@thirdweb-dev/sdk`. The default value is `NATIVE_TOKEN_ADDRESS`.
  *
- * #### price
+ * ##### price
  *
  * The price per token in the currency specified above. The default value is `0`.
  *
- * #### maxClaimablePerWallet
+ * ##### maxClaimablePerWallet
  *
  * The maximum number of tokens a wallet can claim. The default value is `"unlimited"`
  *
- * #### maxClaimableSupply
+ * ##### maxClaimableSupply
  *
  * The total number of tokens that can be claimed in this phase.
  *
@@ -789,19 +789,19 @@ export function useActiveClaimConditionForWallet(
  *
  * This is useful for "early bird" use cases, where you allow users to claim a limited number of tokens at a discounted price during the first X amount of time.
  *
- * #### startTime
+ * ##### startTime
  *
  * When the phase starts (i.e. when users can start claiming tokens).
  *
  * The default value is `"immediately"`.
  *
- * #### waitInSeconds
+ * ##### waitInSeconds
  *
  * The amount of time between claims a wallet must wait before they can claim again.
  *
  * The default value is `0`, meaning users can claim again immediately after claiming.
  *
- * #### snapshot
+ * ##### snapshot
  *
  * A list of wallets that you want to override the default claim conditions for.
  *
@@ -818,7 +818,7 @@ export function useActiveClaimConditionForWallet(
  *
  * [Learn more about improving claim conditions](https://blog.thirdweb.com/announcing-improved-claim-conditions/)
  *
- * #### merkleRootHash
+ * ##### merkleRootHash
  *
  * If you want to provide your own merkle tree for your snapshot, provide the merkle root hash here. This is only recommended for advanced use cases.
  *

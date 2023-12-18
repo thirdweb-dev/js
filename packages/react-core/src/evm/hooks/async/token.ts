@@ -83,12 +83,11 @@ export function useTokenSupply(
 /**
  * Hook for fetching the balance a wallet has for a specific ERC20 token.
  *
- * _Note: This hook is for **custom** ERC20 tokens. For native tokens such as Ether, use `useBalance` or `useBalanceForAddress`
+ * __This hook is for _custom_ ERC20 tokens. For native tokens such as Ether, use `useBalance` or `useBalanceForAddress`__
  *
  * Available to use on contracts that implement the ERC20 interface.
  *
  * @example
- *
  * ```jsx
  * import { useTokenBalance, useContract } from "@thirdweb-dev/react";
  *
@@ -139,9 +138,9 @@ export function useTokenBalance(
 
 /**
  * Hook for fetching the [decimals](https://docs.openzeppelin.com/contracts/3.x/erc20#a-note-on-decimals)
- * of an ERC20 token.
+ * of an [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) token.
  *
- * Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei.
+ * Tokens usually opt for a value of `18`, imitating the relationship between Ether and Wei.
  * Therefore, `18` is the default value returned by this function, unless your ERC20 contract explicitly overrides it.
  *
  * @example
@@ -225,14 +224,19 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns A mutation object that can be used to mint new tokens to the connected wallet
+ * @returns A mutation object to mint new tokens to the connected wallet
  *
- * ### amount
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useMintToken(contract);
+ * ```
  *
+ * ### options
+ * The mutation function takes an object as an argument with the following properties:
+ *
+ * #### amount
  * The quantity of tokens to mint. Can be a `string` or `number`.
  *
- * ### to
- *
+ * #### to
  * The wallet address to mint the new tokens to.
  *
  * To use the connected wallet address, use the `useAddress` hook.
@@ -313,7 +317,7 @@ export function useMintToken(
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns A mutation object that can be used to tokens to the wallet specified in the params
+ * @returns A mutation object to tokens to the wallet specified in the params
  *
  * #### to (required)
  *
@@ -367,14 +371,13 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
 /**
  * Hook for transferring tokens on an ERC20 contract.
  *
- * Available to use on contracts that implement the ERC20
+ * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20)
  * interface, such as the [Token](https://thirdweb.com/thirdweb.eth/TokenERC20) contract.
  *
  * The wallet address that initiates this transaction must have a balance of tokens
  * greater than or equal to the amount being transferred.
  *
  * @example
- *
  * ```jsx
  * import { useContract, useTransferToken, Web3Button } from "@thirdweb-dev/react";
  *
@@ -383,7 +386,6 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  * const amount = "{{amount}}";
  *
  * function App() {
- *   // Contract must be an ERC-20 contract
  *   const { contract } = useContract(contractAddress);
  *   const {
  *     mutate: transferTokens,
@@ -409,13 +411,19 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns A mutation object that can be used to transfer tokens
- * ### to
+ * @returns A mutation object to transfer tokens
  *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useTransferToken(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object as an argument with the following properties:
+ *
+ * #### to
  * The wallet address to transfer tokens to.
  *
- * ### amount
- *
+ * #### amount
  * The quantity of tokens to transfer. Can be a `string` or `number`.
  *
  * @twfeature ERC20
@@ -474,7 +482,18 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * };
  * ```
  *
- * @returns A mutation object that can be used to transfer native tokens
+ * @returns A Mutation object to transfer native tokens
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useTransferNativeToken();
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object containing `to` and `amount` properties.
+ *
+ * - `to` - The wallet address to transfer tokens to. Must be a `string`.
+ * - `amount` - The amount of tokens to transfer. Must be a `number`.
+ *
  * @token
  */
 export function useTransferNativeToken() {
@@ -546,7 +565,18 @@ export function useTransferNativeToken() {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns A mutation object that can be used to transfer batch tokens
+ * @returns A Mutation object to transfer batch tokens
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useTransferBatchToken(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an array of objects containing `to` and `amount` properties.
+ *
+ * - `to` - The wallet address to transfer tokens to. Must be a `string`.
+ * - `amount` - The amount of tokens to transfer. Must be a `number`.
  *
  * @twfeature ERC20
  * @token
@@ -587,7 +617,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
 /**
  * Hook for burning ERC20 tokens on a smart contract.
  *
- * Available to use on smart contracts that implement the ERC20 standard.
+ * Available to use on smart contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) standard.
  *
  * @example
  *
@@ -615,10 +645,16 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  *
  * @param contract - Instance of a `TokenContract`
  *
- * @returns A mutation object that can be used to burn tokens from the connected wallet
+ * @returns
+ * A mutation object to burn tokens from the connected wallet
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useBurnToken(contract);
+ * ```
  *
- * ### amount (required)
+ * ### options
+ * The mutation function takes an object as an argument with the following properties:
  *
+ * #### amount (required)
  * The amount of tokens to burn.
  *
  * The wallet initiating this transaction must have at least this amount of tokens.

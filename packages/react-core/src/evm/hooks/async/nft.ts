@@ -519,11 +519,10 @@ export function useSharedMetadata(
  * const { mutateAsync, isLoading, error } = useMintNFT(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object with the following properties:
  *
- * ### metadata
+ * #### metadata
  * The metadata of the NFT to mint.
  *
  * By default, the `metadata` object is uploaded and pinned to IPFS before minting.
@@ -557,8 +556,7 @@ export function useSharedMetadata(
  * }
  * ```
  *
- * ### to (required)
- *
+ * #### to (required)
  * The wallet address to mint the NFT to.
  *
  * Likely, you will want to mint the NFT to the currently connected wallet address.
@@ -659,12 +657,11 @@ export function useMintNFT<TContract extends NFTContract>(
  * const { mutateAsync, isLoading, error } = useMintNFTSupply(contract);
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object with the following properties:
  *
  * #### additionalSupply
- *
  * The quantity of additional supply to mint.
  *
  * For example, if you have 10 quantity so far, and you want to mint 5 more, set `additionalSupply` to `5`.
@@ -673,14 +670,12 @@ export function useMintNFT<TContract extends NFTContract>(
  *
  *
  * #### to
- *
  * The wallet address to mint the new supply to.
  *
  * To use the connected wallet address, use the `useAddress` hook.
  *
  *
  * #### tokenId
- *
  * The token ID of the NFT to mint additional supply to.
  *
  * Can be a `string` or `number`.
@@ -773,25 +768,21 @@ export function useMintNFTSupply(contract: Erc1155) {
  * const { mutateAsync, isLoading, error } = useTransferNFT(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object with the following properties:
  *
- * ### to
- *
+ * #### to
  * The wallet address to transfer the token(s) to.
  *
  * To use the connected wallet address, use the `useAddress` hook.
  *
  *
- * ### tokenId
- *
+ * #### tokenId
  * The token ID of the NFT to transfer.
  *
  * Can be a `string` or `number`.
  *
- * ### amount (ERC1155 only)
- *
+ * #### amount (ERC1155 only)
  * If you are using an ERC1155 contract, specify the amount of tokens to transfer.
  *
  * @twfeature ERC721 | ERC1155
@@ -886,16 +877,13 @@ export function useTransferNFT<TContract extends NFTContract>(
  * const { mutateAsync, isLoading, error } = useAirdropNFT(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object with the following properties:
  *
- * ### tokenId
- *
+ * #### tokenId
  * The token ID of the NFT to airdrop.
  *
- * ### addresses
- *
+ * #### addresses
  * An array of objects containing an `address` and `quantity` of NFTs to airdrop to each address.
  *
  * @twfeature ERC1155
@@ -967,16 +955,13 @@ export function useAirdropNFT(contract: Erc1155) {
  * const { mutateAsync, isLoading, error } = useBurnNFT(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object with the following properties:
  *
- * ### tokenId
- *
+ * #### tokenId
  * The token ID of the NFT you want to burn.
  *
- * ### amount (optional)
- *
+ * #### amount (optional)
  * When using ERC1155 NFTs, you can specify the quantity you want to burn.
  *
  * Defaults value is `1`

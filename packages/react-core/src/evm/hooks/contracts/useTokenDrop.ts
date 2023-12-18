@@ -33,6 +33,7 @@ import { useContract } from "../async/contracts";
  * ```
  *
  * @token
+ * @internal
  */
 export function useTokenDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

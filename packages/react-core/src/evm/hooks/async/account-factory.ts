@@ -156,7 +156,7 @@ export function useIsAccountDeployed(
  * ```
  *
  * @param contract - Instance of a account factory contract
- * @returns A mutation object that can be used to create a account
+ * @returns A mutation object to create a account
  * @twfeature AccountFactory
  * @smartWallet
  */

@@ -1838,27 +1838,22 @@ export function useOffers(
  * const { mutateAsync, isLoading, error } = useCreateDirectListing(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object as an argument with the following properties:
  *
  * #### assetContractAddress (required)
- *
  * The address of the NFT smart contract that you want to list.
  *
  * #### tokenId (required)
- *
  * The token ID of the NFT that you want to list.
  *
  * #### pricePerToken (required)
- *
  * The price to **buy** each token in the listing.
  *
  * - For ERC721 NFTs, this is the price to buy the NFT outright.
  * - For ERC1155 NFTs, this is the price to `1` quantity of the NFT.
  *
  * #### currencyContractAddress (optional)
- *
  * The address of the currency you want users to pay with and make bids in.
  *
  * You likely want to use the token native to the chain you are on, e.g. Ether on Ethereum.
@@ -1868,25 +1863,22 @@ export function useOffers(
  * The default value is `NATIVE_TOKEN_ADDRESS`.
  *
  * #### isReservedListing (optional)
- *
  * When set to true, the seller must explicitly approve which wallet addresses can buy the NFT.
  *
  * #### quantity (optional)
- *
  * How many tokens to include in the listing.
  *
  * - For ERC721 NFTs, this is always `1`.
  * - For ERC1155 NFTs, this is the quantity of tokens to include in the listing.
  *
  * #### startTimestamp (optional)
- *
  * A `Date` object for the start time of the listing.
  *
  * The default value is `new Date()`, which is the current time.
  *
  * #### endTimestamp (optional)
- *
  * A `Date` object for the end time of the listing (when the listing will expire).
+ *
  * @twfeature DirectListings
  * @marketplace
  */
@@ -2000,27 +1992,23 @@ export function useCreateDirectListing<
  * const { mutateAsync, isLoading, error } = useCreateAuctionListing(contract);
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object of type `NewAuctionListing` or `EnglishAuctionInputParams` as its argument which contains the following properties:
  *
  * #### tokenId (required)
- *
  * The token ID of the NFT you are listing for auction.
  *
  * #### assetContractAddress (required)
- *
  * The smart contract address of the NFT you are listing for auction.
  *
  * #### buyoutBidAmount (required)
- *
  * The price to **buy** each token in the listing.
  *
  * - For ERC721 NFTs, this is the price to buy the NFT outright.
  * - For ERC1155 NFTs, this is the price to `1` quantity of the NFT.
  *
  * #### currencyContractAddress (optional)
- *
  * The address of the currency you want users to pay with and make bids in.
  *
  * You likely want to use the token native to the chain you are on, e.g. Ether on Ethereum.
@@ -2031,7 +2019,6 @@ export function useCreateDirectListing<
  *
  *
  * #### quantity (optional)
- *
  * How many tokens to include in the listing.
  *
  * - For ERC721 NFTs, this is always `1`.
@@ -2039,9 +2026,7 @@ export function useCreateDirectListing<
  *
  * The default value is `1`.
  *
- *
  * #### minimumBidAmount (required)
- *
  * The minimum price that a bid must be in order to be placed on the listing, per token.
  *
  * Bids that are lower than the reserve price will be rejected by the contract.
@@ -2050,28 +2035,22 @@ export function useCreateDirectListing<
  *
  *
  * #### startTimestamp (optional)
- *
  * A `Date` object for the start time of the listing.
  *
  * The default value is `new Date()`, which is the current time.
  *
  *
  * #### endTimestamp (optional)
- *
  * A `Date` object for the end time of the listing (when the listing will expire).
  *
- *
  * #### bidBufferBps (optional)
- *
  * Bid buffer in basis points (1/100th of a percent).
  *
  * The bid buffer is what percentage higher the next bid must be than the current highest bid.
  *
  * For example, if you set a bid buffer of `100`, then the next bid must be at least `1%` higher than the current highest bid.
  *
- *
  * #### timeBufferInSeconds (optional)
- *
  * Time buffer in seconds.
  *
  * The time buffer is how much time is added to the listing when a new bid is placed.
@@ -2176,16 +2155,14 @@ export function useCreateAuctionListing<
  *
  * The `error` property is set if the listing is not active, or was not created by the wallet.
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object with the following properties as an argument:
  *
  * #### listingId
- *
  * The ID of the listing you want to cancel.
  *
  * #### listingType
- *
  * The type of listing you are canceling. Either `ListingType.Direct` (0) or `ListingType.Auction` (1).
  *
  * @marketplace
@@ -2361,7 +2338,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * @param contract - Instance of a `MarketplaceV3` contract
  *
  * @returns
- * Mutation object that can be used to cancel an english auction
+ * Mutation object to cancel an english auction
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useCancelEnglishAuction(contract);
@@ -2445,25 +2422,22 @@ export function useCancelEnglishAuction(
  * @param contract - Instance of a `Marketplace` contract
  *
  * @returns
- * Mutation object that can be used to make a bid on an auction listing
+ * Mutation object to make a bid on an auction listing
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useMakeBid(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object as an argument with the following properties:
  *
  * #### listingId
- *
  * The ID of the listing to bid on. Must be an auction type listing.
  * (Use `useMakeOffer` for direct listings).
  *
  * If the listing cannot be found, is not an auction, or is not active, the `error` property will be set.
  *
  * #### bid
- *
  * The amount to bid on the listing. Uses the `currencyContractAddress` of the listing.
  *
  * For example, if the listing uses the `NATIVE_TOKEN_ADDRESS` on Ethereum, the bid amount is the amount of ETH to bid. Can be
@@ -2535,31 +2509,27 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - Instance of a `Marketplace` contract
  *
- * @returns Mutation object that can be used to make a bid on an auction listing
+ * @returns Mutation object to make a bid on an auction listing
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useMakeOffer(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object as an argument with the following properties:
  *
  * #### listingId (required)
- *
  * The ID of the listing to make an offer on.
  *
  * If the listing cannot be found, is not a direct listing, or is not active, the `error` property will be set.
  *
  * #### pricePerToken (required)
- *
  * The price to offer per token.
  *
  * - For ERC1155, this is the price to offer per quantity of the NFT (see [`quantity`](#quantity) below).
  * - For ERC721, this is the price to offer to buy the NFT.
  *
  * #### quantity (optional)
- *
  * Used for ERC1155 NFTs, where multiple quantity of the same NFT can be bought at once.
  *
  * This field works with the `pricePerToken` field to calculate the total price of the offer.
@@ -2642,14 +2612,14 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  * const { mutateAsync, isLoading, error } = useAcceptDirectListingOffer(contract);
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function accepts an object as argument with the following properties:
  *
- * ### listingId
+ * #### listingId
  * The `listingId` of the listing you wish to accept.
  *
- * ### addressOfOfferor
+ * #### addressOfOfferor
  * The wallet address of the user who made the offer you wish to accept.
  *
  * The `useContractEvents` hook can be used to read all `NewOffer` events on your `Marketplace` contract.
@@ -2732,12 +2702,10 @@ export function useAcceptDirectListingOffer(
  * const { mutateAsync, isLoading, error } = useExecuteAuctionSale(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function accepts an object as argument with the following properties:
  *
- * ### listingId
- *
+ * #### listingId
  * The ID of the auction listing to execute the sale on. If the listing cannot be found, is not an auction, or is not ready to be executed, the `error` property will be set.
  *
  * @marketplace
@@ -2803,7 +2771,7 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * ```
  *
  * @param contract - Instance of a `Marketplace` contract
- * @returns Mutation object that can be used to buy out an auction listing
+ * @returns Mutation object to buy out an auction listing
  * ```ts
  * const { mutateAsync, isLoading, error } = useBuyNow(contract);
  * ```
@@ -2917,7 +2885,7 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  * ```
  *
  * @param contract - Instance of a `MarketplaceV3` contract
- * @returns Mutation object that can be used to buy out a direct listing
+ * @returns Mutation object to buy out a direct listing
  * ```ts
  * const { mutateAsync, isLoading, error } = useBuyDirectListing(contract);
  * ```

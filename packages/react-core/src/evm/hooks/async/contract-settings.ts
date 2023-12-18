@@ -27,10 +27,9 @@ import invariant from "tiny-invariant";
 /**
  * Hook for getting the primary sales recipient of a smart contract.
  *
- * Available to use on contracts that implement the "Primary Sale" interface.
+ * Available to use on contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
  *
  * @example
- *
  * ```jsx
  * import { useContract, usePrimarySaleRecipient } from "@thirdweb-dev/react";
  *
@@ -42,7 +41,7 @@ import invariant from "tiny-invariant";
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns The hook's `data` property, once loaded, is a string with the wallet address of the primary sales recipient.
+ * @returns The hook's `data` property, once loaded, is a `string` with the wallet address of the primary sales recipient.
  *
  * @twfeature PrimarySale
  * @platformFees
@@ -68,12 +67,11 @@ export function usePrimarySaleRecipient(
 /**
  * Hook for updating the primary sale recipient on a smart contract.
  *
- * Available to use on smart contracts that implement the `PrimarySale` interface.
+ * Available to use on smart contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
  *
- * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `admin` level).
+ * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `"admin"` level).
  *
  * @example
- *
  * ```jsx
  * import {
  *   useUpdatePrimarySaleRecipient,
@@ -101,7 +99,15 @@ export function usePrimarySaleRecipient(
  * ```
  *
  * @param contract - Instance of a `SmartContract`
- * @returns A mutation object that can be used to update the primary sales recipient
+ * @returns A mutation object to update the primary sales recipient
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdatePrimarySaleRecipient(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes a `walletAddress` as argument:
  *
  * #### walletAddress
  *
@@ -150,10 +156,9 @@ export function useUpdatePrimarySaleRecipient(
 /**
  * Hook for retrieving royalty settings of a smart contract.
  *
- * Available to use on contracts that implement the `Royalty` interface.
+ * Available to use on contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
  *
  * @example
- *
  * ```jsx
  * import { useContract, useRoyaltySettings } from "@thirdweb-dev/react";
  *
@@ -184,7 +189,13 @@ export function useUpdatePrimarySaleRecipient(
  */
 export function useRoyaltySettings(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseQueryResult<
+  {
+    seller_fee_basis_points: number;
+    fee_recipient: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.royalties.getDefaultRoyaltyInfo(contractAddress),
@@ -203,10 +214,9 @@ export function useRoyaltySettings(
 /**
  * Hook for updating royalty settings on a smart contract.
  *
- * Available to use on smart contracts that implement the `Royalty` interface.
+ * Available to use on smart contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
  *
  * @example
- *
  * ```jsx
  * import {
  *   useUpdateRoyaltySettings,
@@ -240,16 +250,24 @@ export function useRoyaltySettings(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns A mutation object that can be used to update the royalty settings
+ * @returns
+ * A mutation object to update the royalty settings
  *
- * #### seller_fee_basis_points (required)
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdateRoyaltySettings(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object with below properties:
+ *
+ * #### seller_fee_basis_points
  *
  * The `seller_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
  *
  * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
  *
- *
- * #### fee_recipient (required)
+ * #### fee_recipient
  *
  * The `fee_recipient` property is the address of the wallet that will receive the fees.
  *
@@ -352,7 +370,7 @@ export function usePlatformFees(
 /**
  * Hook for updating platform fees on a smart contract.
  *
- * Available to use on smart contracts that implement the `PlatformFee` interface.
+ * Available to use on smart contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
  *
  * ```jsx
  * import {
@@ -387,14 +405,23 @@ export function usePlatformFees(
  *
  * @param contract - Instance of a `SmartContract`
  *
- * @returns A mutation object that can be used to update the platform fees settings
- * #### platform_fee_basis_points (required)
+ * @returns A mutation object to update the platform fees settings
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdatePlatformFees(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object with below properties:
+ *
+ * #### platform_fee_basis_points
  *
  * The `platform_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
  *
  * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
  *
- * #### fee_recipient (required)
+ * #### fee_recipient
  *
  * The `fee_recipient` property is the address of the wallet that will receive the fees.
  *

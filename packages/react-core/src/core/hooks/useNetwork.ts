@@ -45,7 +45,7 @@ type NetworkMetadata = {
  *    - `loading` indicates if the switch network request is in progress.
  *    - `error` holds the `Error` object if there was an error when attempting to switch network.
  *
- * 2. A function that can be used to switch to a different network.
+ * 2. A function to switch to a different network.
  *
  * @example
  * ```javascript
@@ -129,7 +129,7 @@ type NetworkMetadata = {
  *
  * #### switchNetwork
  *
- * `switchNetwork` is a function that can be used to switch to a different network. It takes a `chainId` as an argument and returns a promise that resolves to an object containing `data` and `error` properties.
+ * `switchNetwork` is a function to switch to a different network. It takes a `chainId` as an argument and returns a promise that resolves to an object containing `data` and `error` properties.
  *
  * If switching network was successful, `data` will contain the new network information. and `error` will be `undefined`. If switching network failed, `data` will be `undefined` and `error` will contain an `Error` object.
  *

@@ -348,13 +348,13 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * @param contract - Instance of a `DropContract`
  *
- * @returns A mutation object that can be used to claim a NFT to the wallet specified in the params
+ * @returns A mutation object to claim a NFT to the wallet specified in the params
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useClaimNFT(contract);
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object as argument with below properties:
  *
@@ -377,7 +377,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * #### options (optional)
  *
- * Customizable `ClaimOptions` object that can be used to override the default behaviour of the hook.
+ * Customizable `ClaimOptions` object to override the default behaviour of the hook.
  *
  * There are three options available:
  *
@@ -515,18 +515,17 @@ export function useClaimNFT<TContract extends DropContract>(
  *
  * @param onProgress - Optional callback that will be called with the progress of the upload
  *
- * @returns A mutation object that can be used to lazy mint a batch of NFTs
+ * @returns A mutation object to lazy mint a batch of NFTs
  *
  * ```ts
  * const { mutateAsync, isLoading, error } = useLazyMint(contract);
  * ```
  *
- * ## options
+ * ### options
  *
  * The mutation function takes an object as argument with below properties:
  *
- * ### metadatas
- *
+ * #### metadatas
  * An array of objects containing the metadata of the NFTs to lazy mint.
  *
  * Your metadata objects must follow the [Metadata standards](https://docs.opensea.io/docs/metadata-standards#metadata-structure).
@@ -661,14 +660,13 @@ export function useLazyMint<TContract extends DropContract>(
  * const { mutateAsync, isLoading, error } = useDelayedRevealLazyMint(contract);
  * ```
  *
- * ## options
- *
+ * ### options
  * The mutation function takes an object as argument with below properties:
  *
- * ### metadatas
+ * #### metadatas
  * An array of metadata objects, representing the metadata of the NFTs to be lazy-minted. Each metadata object must conform to the [standard metadata properties](https://docs.opensea.io/docs/metadata-standards).
  *
- * ### password
+ * #### password
  * The password used to encrypt the metadatas.
  *
  * __The password CANNOT be recovered once it is set. If you lose the password, you will not be able to reveal the metadata.__
