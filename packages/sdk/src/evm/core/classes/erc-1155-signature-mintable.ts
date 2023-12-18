@@ -420,7 +420,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @internal
    *
    * @param mintRequest - The payload to map.
-   * @returns - The mapped payload.
+   * @returns  The mapped payload.
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,

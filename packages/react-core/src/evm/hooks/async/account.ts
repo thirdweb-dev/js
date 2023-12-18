@@ -31,7 +31,7 @@ import { useWallet } from "../../../core/hooks/wallet-hooks";
  * const { data: accounts, isLoading, error } = useAccountSigners(contract);
  * ```
  *
- * @param contract - Instance of a smart contract
+ * @param contract - Instance of a `SmartContract`
  * @returns hook's `data` property contains an array of all signers
  * @twfeature Account
  * @smartWallet
@@ -62,7 +62,7 @@ export function useAccountSigners(
  * const { data: accounts, isLoading, error } = useAccountAdmins(contract);
  * ```
  *
- * @param contract - Instance of smart contract
+ * @param contract - Instance of `SmartContract`
  * @returns The hook's `data` property, once loaded, contains an array of all admins of the provided account
  * @twfeature Account
  * @smartWallet
@@ -94,7 +94,7 @@ export function useAccountAdmins(
  * const { data: accounts, isLoading, error } = useAccountAdminsAndSigners(contract);
  * ```
  *
- * @param contract - Instance of a smart contract
+ * @param contract - Instance of `SmartContract`
  * @returns hook's `data` property containing an array of all admins and signers
  *
  * @twfeature Account
@@ -129,7 +129,7 @@ export type CreateSessionKeyInput = {
 };
 
 /**
- * Create and add a session key for the smart wallet
+ * Create and add a session key for the smart wallet account
  *
  * @example
  * ```jsx
@@ -165,26 +165,28 @@ export type CreateSessionKeyInput = {
  *
  * @twfeature Account
  *
- * @returns - mutation object to create and add a session key for the smart wallet
+ * @returns  Mutation object to create and add a session key for the smart wallet
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useCreateSessionKey();
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object with the following properties as argument:
  *
  * #### address
- *
  * The address to add as an admin on the account as a `string`.
  *
  * #### approvedCallTargets
- *
  * An array of addresses that the session key can call as a `string[]`.
  *
  * #### nativeTokenLimitPerTransaction
- *
  * The maximum amount of native token (in ETH) that the session key can spend per transaction as a `number`.
  *
  * #### startDate
- *
  * The date when the session key becomes active as a `Date`.
  *
  * #### startDate
- *
  * The date when the session key expires as a `Date`.
  *
  * @smartWallet
@@ -265,7 +267,7 @@ export function useRevokeSessionKey(): UseMutationResult<
  * };
  * ```
  *
- * @returns - mutation object to add given address as an admin
+ * @returns  mutation object to add given address as an admin
  *
  * @twfeature Account
  * @smartWallet
@@ -306,7 +308,7 @@ export function useAddAdmin(): UseMutationResult<
  * ```
  *
  * @twfeature Account
- * @returns - mutation object to remove given address as an admin
+ * @returns  mutation object to remove given address as an admin
  * @smartWallet
  */
 export function useRemoveAdmin(): UseMutationResult<

@@ -426,7 +426,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -445,7 +445,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @remarks See {@link NFTDrop.claimTo}
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (

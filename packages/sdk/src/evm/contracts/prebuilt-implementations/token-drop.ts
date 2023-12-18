@@ -225,7 +225,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - The transaction receipt
+   * @returns  The transaction receipt
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (

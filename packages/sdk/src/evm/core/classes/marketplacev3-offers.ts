@@ -353,7 +353,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @internal
    * @param offer - The offer to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   private async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
     let status: Status = Status.UNSET;
@@ -407,7 +407,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @internal
    * @param offer - The offer to check.
-   * @returns - True if the offer is valid, false otherwise.
+   * @returns  True if the offer is valid, false otherwise.
    */
   private async isStillValidOffer(
     offer: OfferV3,

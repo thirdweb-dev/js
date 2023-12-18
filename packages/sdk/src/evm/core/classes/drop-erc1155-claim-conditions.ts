@@ -861,7 +861,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Returns proofs and the overrides required for the transaction.
    *
-   * @returns - `overrides` and `proofs` as an object.
+   * @returns  `overrides` and `proofs` as an object.
    */
   public async prepareClaim(
     tokenId: BigNumberish,

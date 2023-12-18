@@ -619,7 +619,7 @@ export class MarketplaceAuction {
    *
    * @internal
    * @param listing - The listing to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   public async mapListing(
     listing: IMarketplace.ListingStruct,

@@ -809,7 +809,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *
    * @internal
    * @param listing - The listing to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   private async mapListing(
     listing: IDirectListings.ListingStruct,
@@ -869,7 +869,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *
    * @internal
    * @param listing - The listing to check.
-   * @returns - True if the listing is valid, false otherwise.
+   * @returns  True if the listing is valid, false otherwise.
    */
   private async isStillValidListing(
     listing: DirectListingV3,

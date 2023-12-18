@@ -978,7 +978,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -1016,7 +1016,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(

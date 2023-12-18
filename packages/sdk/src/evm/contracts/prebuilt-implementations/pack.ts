@@ -262,7 +262,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * @remarks Get the rewards contained inside a pack.
    *
    * @param packId - The id of the pack to get the contents of.
-   * @returns - The contents of the pack.
+   * @returns  The contents of the pack.
    *
    * @example
    * ```javascript

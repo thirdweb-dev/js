@@ -331,7 +331,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -361,7 +361,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (
