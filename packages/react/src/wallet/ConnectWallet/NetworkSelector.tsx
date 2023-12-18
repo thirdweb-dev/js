@@ -149,6 +149,8 @@ const fuseConfig = {
  *  )
  * }
  * ```
+ *
+ * @internal
  */
 export function NetworkSelector(props: NetworkSelectorProps) {
   const [searchTerm, setSearchTerm] = useState("");
