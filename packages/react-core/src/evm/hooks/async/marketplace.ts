@@ -976,7 +976,7 @@ export function useEnglishAuctions(
  * }
  * ```
  *
- * @returns a Query Result object that includes an array of english auctions
+ * @returns A Query Result object that includes an array of english auctions
  * The hook's `data` property, once loaded, is an
  * array of `EnglishAuction` objects, each containing the following properties:
  *

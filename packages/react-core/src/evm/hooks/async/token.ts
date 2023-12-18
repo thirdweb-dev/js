@@ -286,8 +286,8 @@ export function useMintToken(
 /**
  * Hook for claiming a ERC20 tokens from a smart contract.
  *
- * Available to use on smart contracts that implement both the ERC20 interface
- * and the `claim` function,
+ * Available to use on smart contracts that implement both the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) interface
+ * and the [`claim`](https://portal.thirdweb.com/solidity/extensions/erc721claimable) function,
  * such as the [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
@@ -319,25 +319,28 @@ export function useMintToken(
  *
  * @returns A mutation object to tokens to the wallet specified in the params
  *
- * #### to (required)
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useClaimToken(contract);
+ * ```
  *
+ * ### options
+ * The mutation function takes an object as an argument with the following properties:
+ *
+ * #### to (required)
  * Likely, you will want to claim the token to the currently connected wallet address.
  *
  * You can use the `useAddress` hook to get this value.
  *
  * #### amount (required)
- *
  * The amount of tokens to be claimed.
  *
  * #### checkERC20Allowance (optional)
- *
  * Boolean value to check whether the current wallet has enough allowance to pay for claiming the tokens before
  * attempting to claim the tokens.
  *
  * Defaults to `true`.
  *
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
- *
  * @token
  */
 export function useClaimToken(contract: RequiredParam<TokenContract>) {

@@ -38,7 +38,7 @@ export type UseWatchTransactionsParams = Partial<
  *
  * Options to pass to the thirdweb SDK
  *
- * @returns an array of `Transaction` objects
+ * @returns An array of `Transaction` objects
  */
 export function useWatchTransactions(
   watchTransactionParams: UseWatchTransactionsParams,

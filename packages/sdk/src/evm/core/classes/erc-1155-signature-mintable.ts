@@ -326,7 +326,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc1155SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatch(
@@ -345,7 +345,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc1155SignatureMintable.generateFromTokenId}
    *
    * @param payloadsToSign - the payloads to sign with tokenIds specified
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatchFromTokenIds(

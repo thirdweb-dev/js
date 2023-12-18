@@ -10,7 +10,7 @@ import { extractFeatures } from "./extractFeatures";
 /**
  * Return all the detected features in the abi
  * @param abi - parsed array of abi entries
- * @returns array of all detected extensions with full information on each feature
+ * @returns Array of all detected extensions with full information on each feature
  * @internal
  * @deprecated use getAllDetectedExtensions instead
  */
@@ -47,7 +47,7 @@ export function constructAbiFromBytecode(bytecode: string): AbiInput {
 /**
  * Return all the detected extensions in the abi
  * @param abi - parsed array of abi entries
- * @returns array of all detected extensions with full information on each feature
+ * @returns Array of all detected extensions with full information on each feature
  * @public
  */
 export function getAllDetectedExtensions(

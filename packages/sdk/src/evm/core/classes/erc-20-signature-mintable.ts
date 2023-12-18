@@ -196,7 +196,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc20SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC20SignatureMintable
    */
   public async generateBatch(

@@ -99,7 +99,7 @@ export function useAccountsForAddress(
  * ```
  *
  * @param contract - Instance of a account factory contract
- * @returns a boolean indicating if a account has been deployed for the given admin
+ * @returns A boolean indicating if a account has been deployed for the given admin
  * @twfeature AccountFactory
  * @smartWallet
  */

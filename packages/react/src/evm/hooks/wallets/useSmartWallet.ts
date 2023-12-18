@@ -133,11 +133,9 @@ import type { BytesLike } from "ethers";
  * @param options - Smart Wallet configuration options
  *
  * #### factoryAddress (required)
- *
  * The address of the Smart Wallet Factory contract. Must be of type `string`.
  *
- * ### gasless (required)
- *
+ * #### gasless (required)
  * Whether to turn on or off gasless transactions.
  *
  * - If set to `true`, all gas fees will be paid by a paymaster.
@@ -145,8 +143,7 @@ import type { BytesLike } from "ethers";
  *
  * Must be a `boolean`.
  *
- * ### factoryInfo (optional)
- *
+ * #### factoryInfo (optional)
  * Customize how the Smart Wallet Factory contract is interacted with. If not provided, the default functions will be used.
  *
  * Must be a `object`. The object can contain the following properties:
@@ -154,7 +151,6 @@ import type { BytesLike } from "ethers";
  * - `createAccount` - a function that returns the transaction object to create a new Smart Wallet.
  * - `getAccountAddress` - a function that returns the address of the Smart Wallet contract given the owner address.
  * - `abi` - optional ABI. If not provided, the ABI will be auto-resolved.
- *
  *
  * ```javascript
  *  {
@@ -171,8 +167,7 @@ import type { BytesLike } from "ethers";
  * }
  * ```
  *
- * ### accountInfo (optional)
- *
+ * #### accountInfo (optional)
  * Customize how the Smart Wallet Account contract is interacted with. If not provided, the default functions will be used.
  *
  * Must be a `object`. The object can contain the following properties:
@@ -180,8 +175,6 @@ import type { BytesLike } from "ethers";
  * - `execute` - a function that returns the transaction object to execute an arbitrary transaction.
  * - `getNonce` - a function that returns the current nonce of the account.
  * - `abi` - optional ABI. If not provided, the ABI will be auto-resolved.
- *
- * Example:
  *
  * ```javascript
  * {
@@ -197,20 +190,17 @@ import type { BytesLike } from "ethers";
  * }
  * ```
  *
- * ### bundlerUrl (optional)
- *
+ * #### bundlerUrl (optional)
  * Your own bundler URL to send user operations to. Uses thirdweb's bundler by default.
  *
  * Must be a `string`.
  *
- * ### paymasterUrl (optional)
- *
+ * #### paymasterUrl (optional)
  * Your own paymaster URL to send user operations to for gasless transactions. Uses thirdweb's paymaster by default.
  *
  * Must be a `string`.
  *
- * ### entryPointAddress
- *
+ * #### entryPointAddress
  * The entrypoint contract address. Uses v0.6 by default.
  *
  * Must be a `string`.

@@ -67,7 +67,7 @@ export type WalletIdToWalletTypeMap = {
  *   const walletInstance = useWallet();
  * }
  * ```
- * @returns currently connected `WalletInstance` , or `undefined` if no wallet is connected.
+ * @returns Currently connected `WalletInstance` , or `undefined` if no wallet is connected.
  * @walletConnection
  */
 export function useWallet(): WalletInstance | undefined;
@@ -84,7 +84,7 @@ export function useWallet(): WalletInstance | undefined;
  * }
  * ```
  *
- * @returns currently connected `WalletInstance` with given `walletId` , or `undefined` if no wallet is connected or if the connected wallet does not match the given `walletId`.
+ * @returns Currently connected `WalletInstance` with given `walletId` , or `undefined` if no wallet is connected or if the connected wallet does not match the given `walletId`.
  * @walletConnection
  */
 export function useWallet<T extends WalletId>(
@@ -165,10 +165,9 @@ export function useWallets() {
 /**
  * Hook for connecting a wallet to your app.
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s `supportedWallets` prop if you want the wallet to auto-connect on page load.
+ * The wallet also needs to be added in `ThirdwebProvider`'s `supportedWallets` prop to enable auto-connection on page load.
  *
  * @example
- *
  * ```jsx
  * import { useConnect, metamaskWallet } from "@thirdweb-dev/react";
  *
@@ -190,16 +189,24 @@ export function useWallets() {
  * }
  * ```
  *
- * @returns a method to connect a wallet
- * #### walletConfig
+ * @returns A function to connect a wallet
  *
+ * ```ts
+ * const connect = useConnect();
+ *
+ * function handleConnect() {
+ *  const wallet = await connect(walletConfig, connectOptions);
+ * }
+ * ```
+ *
+ * The function accepts two arguments: `walletConfig` and `connectOptions`
+ *
+ * #### walletConfig
  * The wallet to connect. Must be of type `WalletConfig`.
  *
  * [Learn more about the available wallet options](https://portal.thirdweb.com/react/connecting-wallets).
  *
- *
  * #### connectOptions
- *
  * The typeof `connectOptions` object depends on the wallet you are connecting. For some wallets, it may be optional
  *
  * If you are using typescript, `connect` will automatically infer the type of `connectOptions` based on the `walletConfig` you pass in as the first argument and will show type errors if you pass in invalid options.
@@ -229,7 +236,7 @@ export function useConnect() {
  * }
  * ```
  *
- * @returns a method to disconnect from the current active wallet
+ * @returns A function to disconnect from current connected wallet
  * @walletConnection
  */
 export function useDisconnect() {
@@ -259,7 +266,7 @@ export function useDisconnect() {
  * }
  * ```
  *
- * @returns the wallet connection status
+ * @returns The wallet connection status
  *
  * It can be one of the following:
  * - `unknown`: connection status is not known yet. This is the initial state.
@@ -325,7 +332,7 @@ export function useConnectionStatus() {
  * }
  * ```
  *
- * @returns a function that sets the `connectionStatus` of the wallet
+ * @returns A function that sets the `connectionStatus` of the wallet
  * @walletConnection
  */
 export function useSetConnectionStatus() {
@@ -365,7 +372,7 @@ export function useSetConnectionStatus() {
  * }
  * ```
  *
- * @returns a function that creates a wallet instance for given `WalletConfig` object.
+ * @returns A function that creates a wallet instance for given `WalletConfig` object.
  *
  * @walletConnection
  */
@@ -455,7 +462,7 @@ export function useSwitchChain() {
  * }
  * ```
  *
- * @returns a function to set a wallet instance as "connected".
+ * @returns A function to set a wallet instance as "connected".
  * @walletConnection
  */
 export function useSetConnectedWallet() {

@@ -369,7 +369,7 @@ export class Erc721<
    * const owners = await contract.erc721.getAllOwners();
    * console.log(owners);
    * ```
-   * @returns an array of token ids and owners
+   * @returns An array of token ids and owners
    * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAllOwners() {

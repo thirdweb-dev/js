@@ -48,7 +48,11 @@ type WalletConnectParams<I extends WalletInstance> = Parameters<
   I["connect"]
 >[0];
 
-type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
+export type ConnectionStatus =
+  | "unknown"
+  | "connected"
+  | "disconnected"
+  | "connecting";
 
 type ConnectFnArgs<I extends WalletInstance> =
   // if second argument is optional

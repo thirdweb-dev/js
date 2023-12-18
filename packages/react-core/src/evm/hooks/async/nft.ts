@@ -200,7 +200,7 @@ export function useNFTs<TContract extends NFTContract>(
  * ```
  *
  * @param contract - Instance of a `NFTContract`
- * @returns a `BigNumber` that includes the total count of NFTs
+ * @returns A `BigNumber` that includes the total count of NFTs
  * @twfeature ERC721Supply | ERC1155Enumerable
  * @nft
  */

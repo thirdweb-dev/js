@@ -138,7 +138,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -170,7 +170,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -215,7 +215,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @public
    */
@@ -1545,7 +1545,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
    * @param version - the version of the contract to deploy
-   * @returns a promise of the address of the newly deployed contract
+   * @returns A promise of the address of the newly deployed contract
    */
   deployBuiltInContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async <TContractType extends PrebuiltContractType>(

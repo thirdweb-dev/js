@@ -318,7 +318,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc721WithQuantitySignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC721SignatureMint
    */
   public async generateBatch(

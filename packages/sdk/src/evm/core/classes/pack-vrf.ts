@@ -213,7 +213,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * ```
    *
    * @param callback - the listener to call when a pack is opened
-   * @returns a unsubscribe function to cleanup the listener
+   * @returns A unsubscribe function to cleanup the listener
    * @twfeature PackVRF
    */
   public async addPackOpenEventListener(
