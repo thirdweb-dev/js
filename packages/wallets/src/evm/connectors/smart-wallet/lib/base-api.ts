@@ -361,7 +361,6 @@ export abstract class BaseAccountAPI {
     partialOp.verificationGasLimit = BigNumber.from(
       estimates.verificationGasLimit,
     );
-
     partialOp.preVerificationGas = BigNumber.from(estimates.preVerificationGas);
 
     /**
