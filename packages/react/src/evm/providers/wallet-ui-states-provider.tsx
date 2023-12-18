@@ -77,10 +77,47 @@ export const WalletUIStatesProvider = (
   );
 };
 
+/**
+ * Check if the `ConnectWallet` Modal is open or not
+ *
+ * @example
+ * ```tsx
+ * const isOpen = useIsWalletModalOpen();
+ * ```
+ *
+ * @returns `true` if the `ConnectWallet` modal is open, `false` otherwise
+ * @connectWallet
+ */
 export const useIsWalletModalOpen = () => {
   return useContext(WalletModalOpen);
 };
 
+/**
+ * Open or close the `ConnectWallet` Modal
+ *
+ * @example
+ * ```tsx
+ * const setIsWalletModalOpen = useSetIsWalletModalOpen();
+ *
+ * function openModal() {
+ *  setIsWalletModalOpen(true);
+ * }
+ *
+ * function closeModal() {
+ *  setIsWalletModalOpen(false);
+ * }
+ *
+ * return (
+ *   <div>
+ *    <button onClick={openModal}>Open Modal</button>
+ *    <button onClick={closeModal}>Close Modal</button>
+ *   </div>
+ * )
+ * ```
+ *
+ * @returns Function to open or close the modal
+ * @connectWallet
+ */
 export const useSetIsWalletModalOpen = () => {
   const context = useContext(SetWalletModalOpen);
   if (context === undefined) {

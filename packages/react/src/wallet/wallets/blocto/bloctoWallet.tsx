@@ -1,6 +1,9 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { BloctoWallet } from "@thirdweb-dev/wallets";
 
+/**
+ * @wallet
+ */
 export type BloctoWalletConfigOptions = {
   /**
    * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
@@ -8,7 +11,7 @@ export type BloctoWalletConfigOptions = {
   appId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in `ConnectWallet` Modal
+   * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal
    */
   recommended?: boolean;
 };
@@ -16,40 +19,26 @@ export type BloctoWalletConfigOptions = {
 /**
  * A wallet configurator for [Blocto Wallet](https://blocto.io/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[bloctoWallet()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * bloctoWallet({
+ *  appId: "my-app-id",
+ *  recommended: true,
+ * })
  * ```
  *
- * ### Usage with useConnect
+ * @param options -
+ * Optional object containing the following properties to configure the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * #### appId (optional)
+ * To get advanced features and support from Blocto, you need to create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * #### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
  *
- * ```tsx
- * const bloctoWalletConfig = bloctoWallet();
- *
- * function App() {
- *   const connect = useConnect();
- *
- *   async function handleConnect() {
- *     const wallet = await connect(bloctoWalletConfig, options);
- *     console.log('connected to', wallet);
- *   }
- *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * @wallet
  */
 export const bloctoWallet = (
   options?: BloctoWalletConfigOptions,

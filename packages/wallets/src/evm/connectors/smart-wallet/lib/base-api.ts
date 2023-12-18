@@ -414,7 +414,7 @@ export abstract class BaseAccountAPI {
    * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
    * @param timeout - stop waiting after this timeout
    * @param interval - time to wait between polls.
-   * @returns the transactionHash this userOp was mined, or null if not found.
+   * @returns The transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,

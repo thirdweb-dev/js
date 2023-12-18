@@ -49,7 +49,7 @@ export class ContractRoyalty<
 
   /**
    * Get the royalty recipient and fee
-   * @returns - The royalty recipient and BPS
+   * @returns  The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
@@ -73,7 +73,7 @@ export class ContractRoyalty<
 
   /**
    * Get the royalty recipient and fee of a particular token
-   * @returns - The royalty recipient and BPS
+   * @returns  The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();

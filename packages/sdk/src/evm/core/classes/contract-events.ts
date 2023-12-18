@@ -61,7 +61,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @public
    * @param eventName - the event name as defined in the contract
    * @param listener - the callback function that will be called on every new event
-   * @returns a function to un-subscribe from the event
+   * @returns A function to un-subscribe from the event
    */
   public addEventListener<TEvent extends Record<string, any>>(
     // eslint-disable-next-line @typescript-eslint/ban-types

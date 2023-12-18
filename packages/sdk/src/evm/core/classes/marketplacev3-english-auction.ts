@@ -102,7 +102,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Auction object array
+   * @returns The Auction object array
    * @twfeature EnglishAuctions
    */
   public async getAll(
@@ -139,7 +139,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Auction object array
+   * @returns The Auction object array
    * @twfeature EnglishAuctions
    */
   public async getAllValid(
@@ -177,7 +177,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - the auction Id
-   * @returns the Auction object
+   * @returns The Auction object
    * @twfeature EnglishAuctions
    */
   public async getAuction(auctionId: BigNumberish): Promise<EnglishAuction> {
@@ -253,7 +253,7 @@ export class MarketplaceV3EnglishAuctions<
    * const auctionWinner = await contract.englishAuctions.getWinner(auctionId);
    * ```
    * @param auctionId - the auction Id
-   * @returns the address of the auction winner
+   * @returns The address of the auction winner
    * @twfeature EnglishAuctions
    */
   public async getWinner(auctionId: BigNumberish): Promise<Address> {
@@ -322,7 +322,7 @@ export class MarketplaceV3EnglishAuctions<
    * const id = tx.id; // the id of the newly created auction
    * ```
    * @param auction - the auction data
-   * @returns the transaction hash and the auction id
+   * @returns The transaction hash and the auction id
    * @twfeature EnglishAuctions
    */
   createAuction = /* @__PURE__ */ buildTransactionFunction(
@@ -445,7 +445,7 @@ export class MarketplaceV3EnglishAuctions<
    * await contract.englishAuctions.buyoutAuction(auctionId);
    * ```
    * @param auctionId - the auction id
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   buyoutAuction = /* @__PURE__ */ buildTransactionFunction(
@@ -480,7 +480,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    * @param auctionId - the auction id
    * @param bidAmount - the amount you are willing to bid
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   makeBid = /* @__PURE__ */ buildTransactionFunction(
@@ -555,7 +555,7 @@ export class MarketplaceV3EnglishAuctions<
    * await contract.englishAuctions.cancelAuction(auctionId);
    * ```
    * @param auctionId - the auction id
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   cancelAuction = /* @__PURE__ */ buildTransactionFunction(
@@ -587,7 +587,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param auctionId - the auction id to close
    * @param closeFor - optionally pass the winning bid offeror address to close the auction on their behalf
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   closeAuctionForBidder = /* @__PURE__ */ buildTransactionFunction(
@@ -628,7 +628,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - the auction id to close
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   closeAuctionForSeller = /* @__PURE__ */ buildTransactionFunction(
@@ -666,7 +666,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - the auction to close
-   * @returns the transaction result
+   * @returns The transaction result
    * @twfeature EnglishAuctions
    */
   executeSale = /* @__PURE__ */ buildTransactionFunction(
@@ -711,7 +711,7 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - id of the auction
-   * @returns the buffer in basis points
+   * @returns The buffer in basis points
    * @twfeature EnglishAuctions
    */
   public async getBidBufferBps(auctionId: BigNumberish): Promise<number> {
@@ -728,7 +728,7 @@ export class MarketplaceV3EnglishAuctions<
    * const minimumNextBid = await contract.englishAuctions.getMinimumNextBid(auctionId);
    * ```
    *
-   * @returns the minimum bid a user can place to outbid the previous highest bid
+   * @returns The minimum bid a user can place to outbid the previous highest bid
    * @param auctionId - id of the auction
    * @twfeature EnglishAuctions
    */
@@ -785,7 +785,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @internal
    * @param auction - The auction to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   private async mapAuction(
     auction: IEnglishAuctions.AuctionStruct,
@@ -849,7 +849,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @internal
    * @param bid - The bid to map, as returned from the contract.
-   * @returns - A `Bid` object
+   * @returns  A `Bid` object
    */
   private async mapBid(
     auctionId: string,

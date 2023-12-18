@@ -13,7 +13,7 @@ import { embeddedWallet } from "../wallets/embedded/embedded-wallet";
 
 /**
  * Hook to authenticate and connect to an embedded wallet
- * @returns a function to connect to an embedded wallet
+ * @returns A function to connect to an embedded wallet
  */
 export function useEmbeddedWallet() {
   const create = useCreateWalletInstance();

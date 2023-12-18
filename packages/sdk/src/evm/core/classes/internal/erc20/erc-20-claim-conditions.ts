@@ -90,7 +90,7 @@ export class Erc20ClaimableWithConditions implements DetectableFeature {
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData - Optional, data to pass to the claim function
-   * @returns - The transaction receipt
+   * @returns  The transaction receipt
    */
   to = /* @__PURE__ */ buildTransactionFunction(
     async (
