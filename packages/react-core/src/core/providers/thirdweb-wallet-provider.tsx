@@ -599,7 +599,6 @@ export function useWalletContext() {
 
 /**
  * Get WalletConnect handler instance
- * @others
  */
 export function useWalletConnectHandler() {
   const ctx = useWalletContext();

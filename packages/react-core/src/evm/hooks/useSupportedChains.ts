@@ -7,7 +7,6 @@ import { ThirdwebConfigContext } from "../contexts/thirdweb-config";
  *
  * If `activeChain` is set in the `ThirdwebProvider` then it is also added to the `supportedChains` array
  *
- * @others
  */
 export function useSupportedChains() {
   const context = useContext(ThirdwebConfigContext);

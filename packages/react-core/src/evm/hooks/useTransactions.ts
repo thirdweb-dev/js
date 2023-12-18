@@ -5,9 +5,6 @@ import {
 import type { Transaction } from "ethers";
 import { useEffect, useState } from "react";
 
-/**
- * @others
- */
 export type UseWatchTransactionsParams = Partial<
   Omit<WatchTransactionsParams, "onTransactions">
 > & { limit?: number };
@@ -42,7 +39,6 @@ export type UseWatchTransactionsParams = Partial<
  * Options to pass to the thirdweb SDK
  *
  * @returns an array of `Transaction` objects
- * @others
  */
 export function useWatchTransactions(
   watchTransactionParams: UseWatchTransactionsParams,

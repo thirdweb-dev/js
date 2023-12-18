@@ -79,10 +79,6 @@
       "syntaxKind": "block"
     },
     {
-      "tagName": "@others",
-      "syntaxKind": "block"
-    },
-    {
       "tagName": "@appURI",
       "syntaxKind": "block"
     },
@@ -111,7 +107,6 @@
     "@connectWallet": true,
     "@theme": true,
     "@locale": true,
-    "@others": true,
     "@appURI": true,
     "@wallet": true
   }

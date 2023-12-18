@@ -223,6 +223,7 @@ export const shadow = {
  * })
  * ```
  *
+ * @param overrides - The overrides to apply to the default light theme.
  * @theme
  */
 export function lightTheme(overrides?: ThemeOverrides): Theme {
@@ -244,6 +245,7 @@ export function lightTheme(overrides?: ThemeOverrides): Theme {
  * })
  * ```
  *
+ * @param overrides - The overrides to apply to the default dark theme.
  * @theme
  */
 export function darkTheme(overrides?: ThemeOverrides): Theme {
