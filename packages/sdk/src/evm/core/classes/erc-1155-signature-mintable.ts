@@ -265,7 +265,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generate(
@@ -310,7 +310,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generateFromTokenId(

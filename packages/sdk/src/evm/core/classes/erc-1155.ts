@@ -173,7 +173,7 @@ export class Erc1155<
    * const nft = await contract.erc1155.totalSupply(tokenId);
    * ```
    * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
+   * @returns The total supply
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
@@ -454,7 +454,7 @@ export class Erc1155<
    * const count = await contract.erc1155.totalCount();
    * console.log(count);
    * ```
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -466,7 +466,7 @@ export class Erc1155<
    * Get the total supply of a specific NFT
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */

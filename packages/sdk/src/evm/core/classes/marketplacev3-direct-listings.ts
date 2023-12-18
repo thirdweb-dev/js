@@ -110,7 +110,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Direct listing object array
+   * @returns The Direct listing object array
    * @twfeature DirectListings
    */
   public async getAll(
@@ -149,7 +149,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    *
    * @param filter - optional filter parameters
-   * @returns the Direct listing object array
+   * @returns The Direct listing object array
    * @twfeature DirectListings
    */
   public async getAllValid(
@@ -187,7 +187,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    *
    * @param listingId - the listing id
-   * @returns the Direct listing object
+   * @returns The Direct listing object
    *
    * @example
    * ```javascript

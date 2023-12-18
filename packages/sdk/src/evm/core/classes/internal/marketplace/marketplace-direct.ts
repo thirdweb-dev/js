@@ -75,7 +75,7 @@ export class MarketplaceDirect {
    * Get a direct listing by id
    *
    * @param listingId - the listing id
-   * @returns the Direct listing object
+   * @returns The Direct listing object
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
     const listing = await this.contractWrapper.read("listings", [listingId]);

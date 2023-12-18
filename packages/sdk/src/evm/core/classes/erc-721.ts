@@ -183,7 +183,7 @@ export class Erc721<
    * Get the current owner of an NFT
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
@@ -385,7 +385,7 @@ export class Erc721<
    * console.log(count);
    * ```
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async totalCount() {
@@ -885,7 +885,7 @@ export class Erc721<
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
@@ -917,7 +917,7 @@ export class Erc721<
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {

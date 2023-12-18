@@ -181,7 +181,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC20SignatureMintable
    */
   public async generate(

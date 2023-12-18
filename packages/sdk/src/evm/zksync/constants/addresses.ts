@@ -89,7 +89,7 @@ export function getImplementation(
 /**
  *
  * @param chainId - chain id
- * @returns the array of trusted forwarders for the given chain id
+ * @returns The array of trusted forwarders for the given chain id
  * @internal
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */

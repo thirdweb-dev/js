@@ -135,7 +135,7 @@ function getDefaultGasFee(
 
 /**
  *
- * @returns the gas price
+ * @returns The gas price
  * @internal
  */
 export async function getPolygonGasPriorityFee(

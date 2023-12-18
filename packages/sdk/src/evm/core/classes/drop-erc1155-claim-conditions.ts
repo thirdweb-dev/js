@@ -81,7 +81,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get the currently active claim condition
    *
-   * @returns the claim condition metadata
+   * @returns The claim condition metadata
    */
   public async getActive(
     tokenId: BigNumberish,
@@ -146,7 +146,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get all the claim conditions
    *
-   * @returns the claim conditions metadata
+   * @returns The claim conditions metadata
    */
   public async getAll(
     tokenId: BigNumberish,
@@ -539,7 +539,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get the total supply claimed by a specific wallet
    * @param walletAddress - the wallet address to check
-   * @returns the total supply claimed
+   * @returns The total supply claimed
    */
   public async getSupplyClaimedByWallet(
     tokenId: BigNumberish,

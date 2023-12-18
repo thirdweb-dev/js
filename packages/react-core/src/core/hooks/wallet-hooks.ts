@@ -135,7 +135,7 @@ export function useWallet<T extends WalletId>(walletId?: T) {
  * }
  * ```
  *
- * @returns the current connected wallet's configuration object or `undefined` if no wallet is connected.
+ * @returns The current connected wallet's configuration object or `undefined` if no wallet is connected.
  *
  * @walletConnection
  */

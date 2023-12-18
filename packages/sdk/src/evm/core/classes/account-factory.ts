@@ -51,7 +51,7 @@ export class AccountFactory implements DetectableFeature {
    * ```
    * @param admin - The admin of the account.
    * @param extraData - (Optional) Extra data to be passed to the account on creation.
-   * @returns the deterministic address of the account that will be created for the given admin.
+   * @returns The deterministic address of the account that will be created for the given admin.
    *
    * @twfeature AccountFactory
    */

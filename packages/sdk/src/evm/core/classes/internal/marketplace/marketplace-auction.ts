@@ -67,7 +67,7 @@ export class MarketplaceAuction {
    * Get an Auction listing by id
    *
    * @param listingId - the listing Id
-   * @returns the Auction listing object
+   * @returns The Auction listing object
    */
   public async getListing(listingId: BigNumberish): Promise<AuctionListing> {
     const listing = await this.contractWrapper.read("listings", [listingId]);

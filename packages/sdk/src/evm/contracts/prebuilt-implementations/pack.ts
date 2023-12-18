@@ -239,7 +239,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Get the number of packs created
-   * @returns the total number of packs minted in this contract
+   * @returns The total number of packs minted in this contract
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {

@@ -226,7 +226,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
 
   /**
    * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {

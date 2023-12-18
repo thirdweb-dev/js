@@ -127,7 +127,7 @@ export class Token extends StandardErc20<TokenERC20> {
   /**
    * Get your wallet voting power for the current checkpoints
    *
-   * @returns the amount of voting power in tokens
+   * @returns The amount of voting power in tokens
    */
   public async getVoteBalance(): Promise<CurrencyValue> {
     return await this.getVoteBalanceOf(
@@ -144,7 +144,7 @@ export class Token extends StandardErc20<TokenERC20> {
   /**
    * Get your voting delegatee address
    *
-   * @returns the address of your vote delegatee
+   * @returns The address of your vote delegatee
    */
   public async getDelegation(): Promise<Address> {
     return await this.getDelegationOf(
@@ -155,7 +155,7 @@ export class Token extends StandardErc20<TokenERC20> {
   /**
    * Get a specific address voting delegatee address
    *
-   * @returns the address of your vote delegatee
+   * @returns The address of your vote delegatee
    */
   public async getDelegationOf(account: AddressOrEns): Promise<Address> {
     return await this.contractWrapper.read("delegates", [

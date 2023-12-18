@@ -27,7 +27,7 @@ export class ContractPrimarySale implements DetectableFeature {
 
   /**
    * Get the primary sale recipient
-   * @returns the wallet address.
+   * @returns The wallet address.
    * @example
    * ```javascript
    * const salesRecipient = await contract.sales.getRecipient();

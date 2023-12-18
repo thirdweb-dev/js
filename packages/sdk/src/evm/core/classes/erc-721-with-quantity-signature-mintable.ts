@@ -303,7 +303,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc721.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC721SignatureMint
    */
   public async generate(
