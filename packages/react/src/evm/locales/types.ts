@@ -1,3 +1,6 @@
+/**
+ * @locale
+ */
 export type ExtensionAndQRScreensLocale = {
   connectionScreen: {
     failed: string;
@@ -10,6 +13,9 @@ export type ExtensionAndQRScreensLocale = {
   scanScreen: { instruction: string };
 };
 
+/**
+ * @locale
+ */
 export type ThirdwebLocale = {
   connectWallet: {
     agreement: {

@@ -46,7 +46,7 @@ export class ContractAppURI<TContract extends BaseContract>
 
   /**
    * Get App URI
-   * @returns the appURI (typically an IPFS hash)
+   * @returns The appURI (typically an IPFS hash)
    * @example
    * ```javascript
    * const appURI = await contract.app.get();

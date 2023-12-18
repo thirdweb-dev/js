@@ -24,7 +24,7 @@ export type GetBlockNumberParams = SharedBlockParams;
  *  network: "ethereum"
  * });
  * ```
- * @returns the latest block number
+ * @returns The latest block number
  * @public
  */
 export async function getBlockNumber(params: GetBlockNumberParams) {
@@ -53,7 +53,7 @@ export type GetBlockParams = SharedBlockParams & {
  * });
  * ```
  *
- * @returns the block for the given block number / block tag
+ * @returns The block for the given block number / block tag
  * @public
  */
 export async function getBlock(params: GetBlockParams) {
@@ -104,7 +104,7 @@ export type GetBlockWithTransactionsParams = SharedBlockParams & {
  * });
  * ```
  *
- * @returns the block for the given block number / block tag
+ * @returns The block for the given block number / block tag
  * @public
  */
 export async function getBlockWithTransactions(

@@ -89,7 +89,7 @@ export function getImplementation(
 /**
  *
  * @param chainId - chain id
- * @returns the array of trusted forwarders for the given chain id
+ * @returns The array of trusted forwarders for the given chain id
  * @internal
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -97,5 +97,7 @@ export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
+  //  Since ZkSync has gas sponsoring through native Account Abstraction,
+  //  it doesn’t need a forwarder
   return [];
 }

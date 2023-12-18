@@ -200,7 +200,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
 
   /**
    * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {

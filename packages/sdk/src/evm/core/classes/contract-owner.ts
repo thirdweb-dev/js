@@ -26,7 +26,7 @@ export class ContractOwner implements DetectableFeature {
    * await contract.owner.get();
    * console.log("Owner address: ", ownerAddress);
    * ```
-   * @returns the owner address
+   * @returns The owner address
    * @twfeature Ownable
    */
   public async get(): Promise<string> {

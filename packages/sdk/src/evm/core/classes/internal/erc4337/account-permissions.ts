@@ -289,7 +289,7 @@ export class AccountPermissions implements DetectableFeature {
    * const allAdmins = await contract.account.getAllAdmins();
    * ```
    *
-   * @returns all admins of the account.
+   * @returns All admins of the account.
    *
    * @twfeature AccountPermissions
    */
@@ -305,7 +305,7 @@ export class AccountPermissions implements DetectableFeature {
    * const allSigners = await contract.account.getAllSigners();
    * ```
    *
-   * @returns all (non-admin) signers with permissions to use the account.
+   * @returns All (non-admin) signers with permissions to use the account.
    *
    * @twfeature AccountPermissions
    */
@@ -332,7 +332,7 @@ export class AccountPermissions implements DetectableFeature {
    * const allAdminsAndSigners = await contract.account.getAllAdminsAndSigners();
    * ```
    *
-   * @returns all admins and non-admin signers with permissions to use the account.
+   * @returns All admins and non-admin signers with permissions to use the account.
    *
    * @twfeature AccountPermissions
    */

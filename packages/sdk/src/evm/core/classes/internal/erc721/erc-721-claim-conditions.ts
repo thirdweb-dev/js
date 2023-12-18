@@ -97,7 +97,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - (optional) Options to configure the claim
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   to = /* @__PURE__ */ buildTransactionFunction(
     async (

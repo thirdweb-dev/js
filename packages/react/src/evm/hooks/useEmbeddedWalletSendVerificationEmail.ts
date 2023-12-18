@@ -2,6 +2,10 @@ import { useWalletContext } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
+/**
+ *
+ * @walletConnection
+ */
 export const useEmbeddedWalletSendVerificationEmail = () => {
   const context = useWalletContext();
 

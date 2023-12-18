@@ -42,7 +42,7 @@ export class Erc721SharedMetadata implements DetectableFeature {
    * const tx = await contract.erc721.sharedMetadata.get();
    * ```
    *
-   * @returns - The shared metadata for the Open Edition NFTs.
+   * @returns  The shared metadata for the Open Edition NFTs.
    */
   public async get(): Promise<BasicNFTInput | undefined> {
     const metadata = await this.contractWrapper.read("sharedMetadata", []);
@@ -80,7 +80,7 @@ export class Erc721SharedMetadata implements DetectableFeature {
    *
    * @param metadata - The metadata you want to set for the shared metadata.
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    */
   set = /* @__PURE__ */ buildTransactionFunction(
     async (

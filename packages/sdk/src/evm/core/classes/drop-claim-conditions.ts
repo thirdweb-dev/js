@@ -94,7 +94,7 @@ export class DropClaimConditions<
   /**
    * Get the currently active claim condition
    *
-   * @returns the claim condition metadata
+   * @returns The claim condition metadata
    */
   public async getActive(
     options?: ClaimConditionFetchOptions,
@@ -153,7 +153,7 @@ export class DropClaimConditions<
   /**
    * Get all the claim conditions
    *
-   * @returns the claim conditions metadata
+   * @returns The claim conditions metadata
    */
   public async getAll(
     options?: ClaimConditionFetchOptions,
@@ -555,7 +555,7 @@ export class DropClaimConditions<
   /**
    * Get the total supply claimed by a specific wallet
    * @param walletAddress - the wallet address to check
-   * @returns the total supply claimed
+   * @returns The total supply claimed
    */
   public async getSupplyClaimedByWallet(
     walletAddress: AddressOrEns,
@@ -820,7 +820,7 @@ export class DropClaimConditions<
   /**
    * Returns proofs and the overrides required for the transaction.
    *
-   * @returns - `overrides` and `proofs` as an object.
+   * @returns  `overrides` and `proofs` as an object.
    * @internal
    */
   public async prepareClaim(
