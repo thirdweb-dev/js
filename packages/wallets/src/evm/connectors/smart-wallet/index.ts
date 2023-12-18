@@ -16,7 +16,6 @@ import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
-  getDynamicFeeData,
   getGasPrice,
   SignerPermissionsInput,
   SignerWithPermissions,

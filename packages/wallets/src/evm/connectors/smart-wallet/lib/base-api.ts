@@ -5,7 +5,6 @@ import {
   providers,
   utils,
   BytesLike,
-  constants,
 } from "ethers";
 import {
   EntryPoint,
@@ -21,7 +20,6 @@ import {
 } from "@account-abstraction/sdk";
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
-import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
 import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
