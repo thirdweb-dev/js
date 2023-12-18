@@ -10,7 +10,7 @@ import { PhantomConnectUI } from "./PhantomConnectUI";
  */
 export type PhantomWalletConfigOptions = {
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };

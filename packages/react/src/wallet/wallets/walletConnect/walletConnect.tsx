@@ -27,7 +27,7 @@ export type walletConnectConfigOptions = {
   qrModalOptions?: WC2_QRModalOptions;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 
