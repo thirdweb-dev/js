@@ -123,9 +123,12 @@ export class HttpRpcClient {
     ]);
   }
 
-  async estimateUserOpGas(
-    userOp1: Partial<UserOperationStruct>,
-  ): Promise<string> {
+  async estimateUserOpGas(userOp1: Partial<UserOperationStruct>): Promise<{
+    preVerificationGas: string;
+    verificationGas: string;
+    verificationGasLimit: string;
+    callGasLimit: string;
+  }> {
     await this.initializing;
     const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [

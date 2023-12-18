@@ -16,6 +16,7 @@ import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
+  getDynamicFeeData,
   getGasPrice,
   SignerPermissionsInput,
   SignerWithPermissions,
@@ -525,7 +526,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     tx: TransactionDetailsForUserOp,
     batchData?: BatchData,
   ) {
-    if (!this.accountApi) {
+    if (!this.accountApi || !this.aaProvider) {
       throw new Error("Personal wallet not connected");
     }
     let deployGasLimit = BigNumber.from(0);
@@ -536,12 +537,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!isDeployed) {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }
-    const [{ callGasLimit: transactionGasLimit }, gasPrice] = await Promise.all(
-      [
-        this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batchData),
-        getGasPrice(provider),
-      ],
-    );
+    const [userOp, gasPrice] = await Promise.all([
+      this.accountApi.createUnsignedUserOpv2(
+        this.aaProvider.httpRpcClient,
+        tx,
+        batchData,
+      ),
+      getGasPrice(provider),
+    ]);
+    const resolved = await utils.resolveProperties(userOp);
+    const transactionGasLimit = BigNumber.from(resolved.callGasLimit);
     const transactionCost = transactionGasLimit.mul(gasPrice);
     const deployCost = deployGasLimit.mul(gasPrice);
     const totalCost = deployCost.add(transactionCost);

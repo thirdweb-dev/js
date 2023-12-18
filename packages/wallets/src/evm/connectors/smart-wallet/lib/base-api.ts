@@ -5,6 +5,7 @@ import {
   providers,
   utils,
   BytesLike,
+  constants,
 } from "ethers";
 import {
   EntryPoint,
@@ -27,6 +28,7 @@ import {
   Celo,
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+import { HttpRpcClient } from "./http-rpc-client";
 
 export type BatchData = {
   targets: (string | undefined)[];
@@ -276,25 +278,19 @@ export abstract class BaseAccountAPI {
     });
   }
 
-  /**
-   * create a UserOperation, filling all details (except signature)
-   * - if account is not yet created, add initCode to deploy it.
-   * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
-   * @param info - transaction details for the userOp
-   */
-  async createUnsignedUserOp(
+  async createUnsignedUserOpv2(
+    httpRpcClient: HttpRpcClient,
     info: TransactionDetailsForUserOp,
     batchData?: BatchData,
   ): Promise<UserOperationStruct> {
-    const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info, batchData);
+    // construct the userOp without gasLimit or preVerifictaionGas
     const initCode = await this.getInitCode();
-
-    const initGas = await this.estimateCreationGas(initCode);
-    const verificationGasLimit = BigNumber.from(
-      await this.getVerificationGasLimit(),
-    ).add(initGas);
-
+    const value = parseNumber(info.value) ?? BigNumber.from(0);
+    const callData = batchData
+      ? info.data
+      : await this.prepareExecute(info.target, value, info.data).then((tx) =>
+          tx.encode(),
+        );
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await getDynamicFeeData(
@@ -318,69 +314,78 @@ export abstract class BaseAccountAPI {
         }
       }
     }
-
-    const partialUserOp: any = {
-      sender: this.getAccountAddress(),
-      nonce: info.nonce ?? this.getNonce(),
+    if (!maxFeePerGas || !maxPriorityFeePerGas) {
+      throw new Error(
+        "maxFeePerGas or maxPriorityFeePerGas could not be calculated, please pass them explicitely",
+      );
+    }
+    const [sender, nonce] = await Promise.all([
+      this.getAccountAddress(),
+      info.nonce ? Promise.resolve(info.nonce) : this.getNonce(),
+    ]);
+    const partialOp: UserOperationStruct = {
+      sender,
+      nonce,
       initCode,
       callData,
-      callGasLimit,
-      verificationGasLimit,
       maxFeePerGas,
       maxPriorityFeePerGas,
+      callGasLimit: BigNumber.from(0),
+      verificationGasLimit: BigNumber.from(0),
+      preVerificationGas: BigNumber.from(0),
       paymasterAndData: "0x",
+      signature:
+        "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c",
     };
 
-    let paymasterAndData: string | undefined;
-    let userOp = partialUserOp;
+    // paymaster data for estimation
     if (this.paymasterAPI) {
-      // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
-      try {
-        // userOp.preVerificationGas contains a promise that will resolve to an error.
-        await ethers.utils.resolveProperties(userOp);
-        // eslint-disable-next-line no-empty
-      } catch (_) {}
-      const pmOp: Partial<UserOperationStruct> = {
-        sender: userOp.sender,
-        nonce: userOp.nonce,
-        initCode: userOp.initCode,
-        callData: userOp.callData,
-        callGasLimit: userOp.callGasLimit,
-        verificationGasLimit: userOp.verificationGasLimit,
-        maxFeePerGas: userOp.maxFeePerGas,
-        maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
-        // A dummy value here is required in order to calculate a correct preVerificationGas value.
-        paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
-        signature: ethers.utils.hexlify(Buffer.alloc(SIG_SIZE, 1)),
-      };
-      userOp = await ethers.utils.resolveProperties(pmOp);
-      const preVerificationGas = calcPreVerificationGas(userOp);
-      userOp.preVerificationGas = preVerificationGas;
-      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
-      if (paymasterAndData === "0x") {
-        paymasterAndData = undefined;
+      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
+        partialOp,
+      );
+      if (paymasterAndData && paymasterAndData !== "0x") {
+        partialOp.paymasterAndData = paymasterAndData;
       }
     }
 
-    if (paymasterAndData) {
-      userOp.paymasterAndData = paymasterAndData;
-      return {
-        ...userOp,
-        signature: "",
-      };
-    } else {
-      const modifiedOp = {
-        ...userOp,
-        paymasterAndData: "0x",
-      };
-      modifiedOp.preVerificationGas = await this.getPreVerificationGas(
-        modifiedOp,
-      );
-      return {
-        ...modifiedOp,
-        signature: "",
-      };
+    // query bundler for gas limits
+    let estimates;
+    try {
+      estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+    } catch (error: any) {
+      console.error("estimation err", error);
+      throw error;
     }
+
+    partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+    partialOp.verificationGasLimit = BigNumber.from(
+      estimates.verificationGasLimit,
+    );
+
+    partialOp.preVerificationGas = BigNumber.from(estimates.preVerificationGas);
+
+    /**
+     * ex. response
+     * preVerificationGas: '0xbf98',
+     * verificationGas: '0x18dd5',
+     * verificationGasLimit: '0x18dd5',
+     * callGasLimit: '0x35b76'
+     */
+
+    // This is subotpimal, but PM needs to resign the userOp with the new gas limits - can be fixed with the new paymaster api
+    if (this.paymasterAPI) {
+      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
+        partialOp,
+      );
+      if (paymasterAndData && paymasterAndData !== "0x") {
+        partialOp.paymasterAndData = paymasterAndData;
+      }
+    }
+
+    return {
+      ...partialOp,
+      signature: "",
+    };
   }
 
   /**
@@ -394,19 +399,6 @@ export abstract class BaseAccountAPI {
       ...userOp,
       signature,
     };
-  }
-
-  /**
-   * helper method: create and sign a user operation.
-   * @param info - transaction details for the userOp
-   */
-  async createSignedUserOp(
-    info: TransactionDetailsForUserOp,
-    batchData?: BatchData,
-  ): Promise<UserOperationStruct> {
-    return await this.signUserOp(
-      await this.createUnsignedUserOp(info, batchData),
-    );
   }
 
   /**

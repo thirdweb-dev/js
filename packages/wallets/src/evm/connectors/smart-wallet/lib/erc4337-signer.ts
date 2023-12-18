@@ -43,7 +43,8 @@ export class ERC4337EthersSigner extends Signer {
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOpv2(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
@@ -53,6 +54,7 @@ export class ERC4337EthersSigner extends Signer {
       },
       batchData,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
@@ -158,7 +160,8 @@ Code: ${errorCode}`;
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOpv2(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
@@ -168,6 +171,7 @@ Code: ${errorCode}`;
       },
       batchData,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
     const userOpString = JSON.stringify(
       deepHexlify(await utils.resolveProperties(userOperation)),
