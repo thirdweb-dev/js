@@ -6,6 +6,7 @@ import { isBrowser } from "./utils";
 type FeeData = {
   maxFeePerGas: null | BigNumber;
   maxPriorityFeePerGas: null | BigNumber;
+  baseFee: null | BigNumber;
 };
 
 export async function getDefaultGasOverrides(provider: providers.Provider) {
@@ -63,16 +64,17 @@ export async function getDynamicFeeData(
     maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
     if (!maxPriorityFeePerGas) {
       // chain does not support eip-1559, return null for both
-      return { maxFeePerGas: null, maxPriorityFeePerGas: null };
+      return { maxFeePerGas: null, maxPriorityFeePerGas: null, baseFee: null };
     }
   }
 
-  // eip-1559 formula, with an extra 10% tip to account for gas volatility
-  maxFeePerGas = baseBlockFee
-    .mul(2)
-    .add(getPreferredPriorityFee(maxPriorityFeePerGas));
+  // add 10% tip to maxPriorityFeePerGas for faster processing
+  maxPriorityFeePerGas = getPreferredPriorityFee(maxPriorityFeePerGas);
+  // eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
+  // good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
+  maxFeePerGas = baseBlockFee.mul(2).add(maxPriorityFeePerGas);
 
-  return { maxFeePerGas, maxPriorityFeePerGas };
+  return { maxFeePerGas, maxPriorityFeePerGas, baseFee: baseBlockFee };
 }
 
 function getPreferredPriorityFee(
@@ -80,8 +82,8 @@ function getPreferredPriorityFee(
   percentMultiplier: number = 10,
 ): BigNumber {
   const extraTip = defaultPriorityFeePerGas.div(100).mul(percentMultiplier); // + 10%
-  const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-  return txGasPrice;
+  const totalPriorityFee = defaultPriorityFeePerGas.add(extraTip);
+  return totalPriorityFee;
 }
 
 export async function getGasPrice(
@@ -133,7 +135,7 @@ function getDefaultGasFee(
 
 /**
  *
- * @returns the gas price
+ * @returns The gas price
  * @internal
  */
 export async function getPolygonGasPriorityFee(

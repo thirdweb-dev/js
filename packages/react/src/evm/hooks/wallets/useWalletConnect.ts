@@ -2,6 +2,10 @@ import { useConnect } from "@thirdweb-dev/react-core";
 import { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
+/**
+ * @internal
+ * @deprecated use the `useWalletConnect` hook instead
+ */
 export function useWalletConnectV1() {
   const connect = useConnect();
   return useCallback(
@@ -15,6 +19,11 @@ export function useWalletConnectV1() {
   );
 }
 
+/**
+ * @internal
+ * @walletConnection
+ * @deprecated use the `ConnectWallet` component or `useConnect` hook instead
+ */
 export function useWalletConnect() {
   const connect = useConnect();
   return useCallback(
@@ -26,7 +35,10 @@ export function useWalletConnect() {
       const { walletConnect } = await import(
         "../../../wallet/wallets/walletConnect/walletConnect"
       );
-      return connect(walletConnect(options), options);
+      return connect(
+        walletConnect({ ...options, qrModal: "walletConnect" }),
+        options,
+      );
     },
     [connect],
   );

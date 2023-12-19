@@ -18,7 +18,7 @@ import { parseSnapshotInputs } from "./parseSnapshotInputs";
  * @param provider - the provider to use
  * @param storage - the storage to upload to
  * @param snapshotFormatVersion - the snapshot format version
- * @returns the generated snapshot and URI
+ * @returns The generated snapshot and URI
  * @internal
  */
 export async function createSnapshot(

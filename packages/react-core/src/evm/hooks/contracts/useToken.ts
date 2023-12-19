@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
- * @param contractAddress - the address of the Token contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Token contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript
@@ -31,6 +31,8 @@ import { useContract } from "../async/contracts";
  * - const token = useToken("0x1234...");
  * + const token = useContract("0x1234...", "token").contract;
  * ```
+ *
+ * @internal
  */
 export function useToken(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

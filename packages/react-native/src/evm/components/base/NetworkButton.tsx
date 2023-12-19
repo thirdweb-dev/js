@@ -26,6 +26,9 @@ type NetworkButtonProps = {
   onChainSwitched?: () => void;
 } & React.ComponentProps<typeof Box>;
 
+/**
+ * @internal
+ */
 export const NetworkButton = ({
   onPress,
   chain,

@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/react-native-compat",
   "description": "Shims for Thirdweb in React Native Projects",
-  "version": "0.4.10",
+  "version": "0.5.2",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native-compat",
   "license": "Apache-2.0",

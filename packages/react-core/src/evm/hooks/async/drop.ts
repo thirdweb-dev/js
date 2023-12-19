@@ -40,19 +40,49 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Get all unclaimed NFTs
+ * Hook for fetching information about all NFTs that haven't been claimed yet from an NFT Drop contract.
+ *
+ * Available to use on contracts that extends the ERC721 spec
  *
  * @example
- * ```javascript
- * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useUnclaimedNFTs(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @param queryParams - query params to pass to the query for the sake of pagination
- * @returns a response object that includes an array of NFTs that are unclaimed
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ *
+ * @param queryParams -
+ * query params to pass to the query for the sake of pagination
+ * By default, the hook returns the first 100 unclaimed NFTs from the contract.
+ *
+ * Paginate the results by providing a `queryParams` object as the second argument.
+ *
+ * ```jsx
+ * import { useUnclaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useUnclaimedNFTs(
+ *     contract,
+ *     {
+ *       count: 10, // Limit the number of results
+ *       start: 0, // Start from the nth result (useful for pagination)
+ *     },
+ *   );
+ * }
+ * ```
+ *
+ * @returns
+ * The hook's `data` property, once loaded, contains an array of `NFT` objects.
+ *
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useunclaimednfts?utm_source=sdk | Documentation}
- * @beta
+ * @nftDrop
  */
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -75,21 +105,49 @@ export function useUnclaimedNFTs(
 }
 
 /**
- * Get all claimed NFTs
+ * Hook for fetching all claimed NFTs from a given NFT Drop contract.
  *
- * @remarks Equivalent to using {@link useNFTs}.
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable),
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721).
  *
  * @example
- * ```javascript
- * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "nft-drop");
+ *   const { data: nfts, isLoading, error } = useClaimedNFTs(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @param queryParams - query params to pass to the query for the sake of pagination
- * @returns a response object that includes an array of NFTs that are claimed
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ *
+ * @param queryParams -
+ * By default, the hook will return the first `100` claimed NFTs
+ *
+ * You can use the `queryParams` argument to paginate the NFTs that are returned.
+ *
+ * ```jsx
+ * import { useClaimedNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "nft-drop");
+ *   const { data, isLoading, error } = useClaimedNFTs(
+ *     contract,
+ *     {
+ *       // For example, to only return the first 50 claimed NFTs in the collection
+ *       // in order of token ID
+ *       count: 50,
+ *       start: 0,
+ *     },
+ *   );
+ * }
+ * ```
+ *
+ * @returns Query Result object that includes an array of NFTs that are claimed in the `data` property
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useclaimednfts?utm_source=sdk | Documentation}
- * @beta
+ * @nftDrop
  */
 export function useClaimedNFTs(
   contract: RequiredParam<NFTDrop>,
@@ -112,11 +170,33 @@ export function useClaimedNFTs(
 }
 
 /**
+ * Hook for fetching the number of unclaimed NFTs from an NFT/Edition Drop contract.
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @returns a response object that includes the number of NFTs that are unclaimed
+ * Unclaimed NFTs are tokens that were lazy-minted but have not yet been claimed by a user.
+ *
+ * Available to use on contracts that implement the [`LazyMint`](https://portal.thirdweb.com/solidity/extensions/lazymint) extension;
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721) contract.
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useUnclaimedNFTSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress, "nftDrop");
+ *   const { data, isLoading, error } = useUnclaimedNFTSupply(contract);
+ * }
+ * ```
+ *
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ *
+ * @returns
+ * The hook's `data` property, once loaded, contains a `BigNumber` representing the number of unclaimed NFTs.
+ *
+ *
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useunclaimednftsupply?utm_source=sdk | Documentation}
+ *
+ * @nftDrop
  */
 export function useUnclaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -138,12 +218,28 @@ export function useUnclaimedNFTSupply(
 }
 
 /**
- * Get the total number of claimed NFTs
+ * Hook for retrieving the total supply of NFTs claimed from an NFT Drop contract.
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
- * @returns a response object that includes the number of NFTs that are claimed
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable).
+ *
+ * @example
+ *
+ * ```jsx
+ * import { useClaimedNFTSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading } = useClaimedNFTSupply(contract);
+ * }
+ * ```
+ *
+ * @param contract - Instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
+ *
+ * @returns
+ * The hook's `data` property, once loaded, is a `BigNumber` representing the total supply of NFTs claimed from the NFT drop contract so far.
+ *
  * @twfeature ERC721LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.useclaimednftsupply?utm_source=sdk | Documentation}
+ * @nftDrop
  */
 export function useClaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -164,12 +260,39 @@ export function useClaimedNFTSupply(
 }
 
 /**
- * Get all unrevealed batches
+ * Hook for fetching batches of lazy-minted NFTs that were set to be revealed at a later date, but have not yet been revealed.
  *
- * @param contract - an instance of a {@link RevealableContract}
- * @returns a response object that gets the batches to still be revealed
+ * Available to use on contracts that implement the [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable) interfaces,
+ * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721)
+ * and [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155) smart contracts.
+ *
+ * @example
+ * ```tsx
+ * import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data: batches, isLoading, error } = useBatchesToReveal(contract);
+ * }
+ * ```
+ *
+ * @param contract - Instance of a `RevealableContract`
+ *
+ * @returns The hook's `data` property, once loaded, contains an array of batches that need to be revealed.
+ *
+ * Each batch is an object with the following properties:
+ *
+ * ```ts
+ * {
+ *   batchId: BigNumber;
+ *   batchUri: string;
+ *   placeholderMetadata: NFTMetadata;
+ * }
+ * ```
+ *
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usebatchestoreveal?utm_source=sdk | Documentation}
+ * @delayedReveal
  */
 export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -195,38 +318,103 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Claim an NFT to a specific wallet
+ * Hook for claiming an NFT from a smart contract.
+ *
+ * Available to use on smart contracts that implement a  `Claimable` interface, and follow either the `ERC721`or `ERC1155` standard.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: claimNFT,
- *     isLoading,
- *     error,
- *   } = useClaimNFT(contract);
+ * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to claim nft", error);
- *   }
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: claimNft, isLoading, error } = useClaimNFT(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => claimNFT({ to: "{{wallet_address}}", quantity: 1 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         claimNft({
+ *           to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+ *           quantity: 1,
+ *         })
+ *       }
  *     >
- *       Claim NFT!
- *     </button>
+ *       Claim NFT
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
- * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
+ * @param contract - Instance of a `DropContract`
+ *
+ * @returns A mutation object to claim a NFT to the wallet specified in the params
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useClaimNFT(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object as argument with below properties:
+ *
+ * #### to
+ *
+ * The wallet address to mint the NFT(s) to.
+ *
+ * Use the `useAddress` hook to get the currently connected wallet address.
+ *
+ * #### quantity
+ *
+ * The number of NFTs you wish to claim.
+ *
+ * - With ERC721 contracts, this represents the number of unique tokens you wish to claim.
+ * - With ERC1155 contracts, this represents the quantity of the specific `tokenId` you wish to claim.
+ *
+ * #### tokenId
+ *
+ * For ERC1155 contracts, you must specify a specific `tokenId` to claim.
+ *
+ * #### options (optional)
+ *
+ * Customizable `ClaimOptions` object to override the default behaviour of the hook.
+ *
+ * There are three options available:
+ *
+ * - `checkERC20Allowance` - Whether to check the ERC20 allowance of the sender, defaults to true.
+ * - `currencyAddress` - The currency to pay for each token claimed, defaults to `NATIVE_TOKEN_ADDRESS` for native currency.
+ * - `pricePerToken` - The price to pay for each token claimed. Not relevant when using claim conditions.
+ *
+ * ```jsx
+ * import { useContract, useClaimNFT, Web3Button } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutate: claimNft, isLoading, error } = useClaimNFT(contract);
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         claimNft({
+ *           to: "{{wallet_address}}",
+ *           quantity: 1,
+ *           options: {
+ *             checkERC20Allowance: true,
+ *             currencyAddress: "{{erc20_address}}",
+ *             pricePerToken: 0,
+ *           },
+ *         })
+ *       }
+ *     >
+ *       Claim NFT
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
  * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- * @see {@link https://portal.thirdweb.com/react/react.useclaimnft?utm_source=sdk | Documentation}
- * @beta
+ * @nftDrop
  */
 export function useClaimNFT<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
@@ -284,39 +472,95 @@ export function useClaimNFT<TContract extends DropContract>(
 }
 
 /**
- * Lazy mint NFTs
+ * Hook for lazy minting a batch of NFTs on a drop contract.
+ *
+ * Available to use on smart contracts that implement the "Drop" extension, and
+ * follow either the `ERC721` or `ERC1155` standard.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: lazyMint,
- *     isLoading,
- *     error,
- *   } = useLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to lazy mint NFT", error);
- *   }
+ * Provide your drop contract (ERC721 or ERC1155) as the argument to the hook, and an array
+ * of metadata objects to lazy-mint.
+ *
+ * ```jsx
+ * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => lazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         lazyMint({
+ *           // Metadata of the NFTs to upload
+ *           metadatas: [
+ *             {
+ *               name: "My NFT",
+ *               description: "An example NFT",
+ *               image: "{{image_url}}",
+ *             },
+ *           ],
+ *         })
+ *       }
  *     >
- *       Lazy mint NFT!
- *     </button>
+ *       Lazy Mint NFTs
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract} with the drop extension
- * @param onProgress - an optional callback that will be called with the progress of the upload
- * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @param contract - Instance of a `NFTContract` with the drop extension
+ *
+ * @param onProgress - Optional callback that will be called with the progress of the upload
+ *
+ * @returns A mutation object to lazy mint a batch of NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useLazyMint(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object as argument with below properties:
+ *
+ * #### metadatas
+ * An array of objects containing the metadata of the NFTs to lazy mint.
+ *
+ * Your metadata objects must follow the [Metadata standards](https://docs.opensea.io/docs/metadata-standards#metadata-structure).
+ *
+ * ```jsx
+ * import { useContract, useLazyMint, Web3Button } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         lazyMint({
+ *           // Metadata of the NFTs to upload
+ *           metadatas: [
+ *             {
+ *               name: "My NFT",
+ *               description: "An example NFT",
+ *               image: "{{image_url}}",
+ *             },
+ *           ],
+ *         })
+ *       }
+ *     >
+ *       Lazy Mint NFTs
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
  * @twfeature ERC721LazyMintable | ERC1155LazyMintable
- * @see {@link https://portal.thirdweb.com/react/react.uselazymint?utm_source=sdk | Documentation}
- * @beta
+ * @nftDrop
  */
 export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
@@ -357,39 +601,78 @@ export function useLazyMint<TContract extends DropContract>(
 }
 
 /**
- * Lazy mint NFTs with delayed reveal
+ * Hook to lazy-mint a batch of NFTs with [delayed reveal](https://portal.thirdweb.com/glossary/delayed-reveal);
+ * allowing the owner to set placeholder metadata and reveal the metadata of the NFTs at a later time.
+ *
+ * Available to use on contracts that implement the
+ * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * interfaces.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * ```tsx
+ * import {
+ *   useDelayedRevealLazyMint,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: delayedRevealLazyMint,
+ *     mutateAsync: mintNft,
  *     isLoading,
  *     error,
  *   } = useDelayedRevealLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to lazy mint NFT", error);
- *   }
+ *   const nftData = {
+ *     placeholder: {
+ *       name: "My NFT",
+ *       description: "This is my NFT",
+ *       image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
+ *     },
+ *     metadatas: [
+ *       {
+ *         name: "My NFT",
+ *         description: "This is my NFT",
+ *         image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
+ *       },
+ *     ],
+ *     password: "{{password}}", // Password to be used for encryption
+ *   };
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => delayedRevealLazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => mintNft(nftData)}
  *     >
- *       Delayed Reveal Lazy mint NFT!
- *     </button>
+ *       Mint NFTs
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - Instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
- * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @returns Mutation object to lazy mint a batch of NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useDelayedRevealLazyMint(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object as argument with below properties:
+ *
+ * #### metadatas
+ * An array of metadata objects, representing the metadata of the NFTs to be lazy-minted. Each metadata object must conform to the [standard metadata properties](https://docs.opensea.io/docs/metadata-standards).
+ *
+ * #### password
+ * The password used to encrypt the metadatas.
+ *
+ * __The password CANNOT be recovered once it is set. If you lose the password, you will not be able to reveal the metadata.__
+ *
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usedelayedreveallazymint?utm_source=sdk | Documentation}
- * @beta
+ * @delayedReveal
  */
 export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -439,38 +722,55 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 }
 
 /**
- * Reveal a batch of delayed reveal NFTs
+ * Hook for revealing a batch of delayed reveal NFTs using [delayed reveal](https://portal.thirdweb.com/glossary/delayed-reveal).
+ *
+ * Available to use on contracts that implement the
+ * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * interfaces.
+ *
+ * ```jsx
+ * import { useRevealLazyMint } from "@thirdweb-dev/react";
+ *
+ * const { mutateAsync, isLoading, error } = useRevealLazyMint(contract);
+ * ```
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * ```tsx
+ * import {
+ *   useContract,
+ *   useRevealLazyMint,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   // Contract must be an ERC-721 or ERC-1155 contract that implements the ERC721Revealable or ERC1155Revealable interface
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: revealLazyMint,
+ *     mutateAsync: revealLazyMint,
  *     isLoading,
  *     error,
  *   } = useRevealLazyMint(contract);
  *
- *   if (error) {
- *     console.error("failed to reveal batch", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => revealLazyMint({ batchId: "0", password: "my-password" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         revealLazyMint({
+ *           batchId: "{{batch_id}}", // ID of the batch to reveal (use useBatchesToReveal to get the batch IDs)
+ *           password: "{{password}}", // Password to reveal the batch
+ *         })
+ *       }
  *     >
- *       Reveal batch!
- *     </button>
+ *       Reveal Lazy Mint
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link RevealableContract}
- * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
+ * @param contract - Instance of a `RevealableContract`
  * @twfeature ERC721Revealable | ERC1155Revealable
- * @see {@link https://portal.thirdweb.com/react/react.usereveallazymint?utm_source=sdk | Documentation}
- * @beta
+ * @delayedReveal
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,

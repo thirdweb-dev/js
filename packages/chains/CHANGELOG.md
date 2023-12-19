@@ -1,5 +1,27 @@
 # @thirdweb-dev/chains
 
+## 0.1.62
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+## 0.1.61
+
+### Patch Changes
+
+- [#2066](https://github.com/thirdweb-dev/js/pull/2066) [`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updatechains
+
+## 0.1.60
+
+### Patch Changes
+
+- [#2019](https://github.com/thirdweb-dev/js/pull/2019) [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a) Thanks [@jnsdls](https://github.com/jnsdls)! - add & update chains
+
+- [#2024](https://github.com/thirdweb-dev/js/pull/2024) [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Base Sepolia to defaultChains
+
+- [#2023](https://github.com/thirdweb-dev/js/pull/2023) [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Eth Sepolia to defaultChains
+
 ## 0.1.59
 
 ### Patch Changes

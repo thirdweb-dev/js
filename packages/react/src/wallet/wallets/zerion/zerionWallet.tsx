@@ -4,7 +4,10 @@ import { ZerionConnectUI } from "./ZerionConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 import { zerionWalletUris } from "./zerionWalletUris";
 
-type ZerionkWalletOptions = {
+/**
+ * @wallet
+ */
+export type ZerionkWalletConfigOptions = {
   /**
    * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -14,13 +17,38 @@ type ZerionkWalletOptions = {
   projectId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Zerion Wallet](https://zerion.io/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * zerionWallet({
+ *  projectId: "your_project_id",
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional configuration options for the wallet
+ *
+ * ### projectId (optional)
+ * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+ *
+ * @wallet
+ */
 export const zerionWallet = (
-  options?: ZerionkWalletOptions,
+  options?: ZerionkWalletConfigOptions,
 ): WalletConfig<ZerionWallet> => {
   return {
     id: ZerionWallet.id,

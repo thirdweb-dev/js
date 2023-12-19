@@ -1,4 +1,4 @@
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, utils } from "ethers";
 
 /**
@@ -14,7 +14,7 @@ export class ContractEncoder<TContract extends BaseContract> {
 
   /**
    * Encodes the given contract function with argument
-   * @returns the encoded data
+   * @returns The encoded data
    */
   public encode(
     fn: keyof TContract["functions"],

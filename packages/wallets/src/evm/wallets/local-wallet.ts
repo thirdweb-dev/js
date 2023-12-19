@@ -106,7 +106,7 @@ export class LocalWallet extends AbstractClientWallet<
 
   /**
    * creates a new random wallet
-   * @returns the address of the newly created wallet
+   * @returns The address of the newly created wallet
    */
   async generate() {
     if (this.ethersWallet) {
@@ -510,6 +510,9 @@ function getEncryptor(encryption: EncryptOptions | undefined) {
     : noop;
 }
 
+/**
+ * @internal
+ */
 export function isValidPrivateKey(value: string) {
   return !!value.match(/^(0x)?[0-9a-f]{64}$/i);
 }

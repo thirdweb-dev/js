@@ -70,7 +70,7 @@ export abstract class AbstractWallet
   public abstract getSigner(): Promise<Signer>;
 
   /**
-   * @returns the account address from connected wallet
+   * @returns The account address from connected wallet
    */
   public async getAddress(): Promise<string> {
     const signer = await this.getSigner();
@@ -78,7 +78,7 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns the native token balance of the connected wallet
+   * @returns The native token balance of the connected wallet
    */
   public async getBalance(currencyAddress: string = NATIVE_TOKEN_ADDRESS) {
     const signer = await this.getSigner();
@@ -101,7 +101,7 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns the chain id from connected wallet
+   * @returns The chain id from connected wallet
    */
   public async getChainId(): Promise<number> {
     const signer = await this.getSigner();
@@ -141,7 +141,7 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns the signature of the message
+   * @returns The signature of the message
    */
   public async signMessage(message: Bytes | string): Promise<string> {
     const signer = await this.getSigner();

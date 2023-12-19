@@ -1,18 +1,53 @@
 import {
-  WalletConfig,
-  ConnectUIProps,
-  WalletOptions,
+  type WalletConfig,
+  type ConnectUIProps,
+  type WalletOptions,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { SmartWalletConfig, SmartWalletConfigOptions } from "./types";
+import { SmartWalletConfigOptions } from "./types";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
+/**
+ * A wallet configurator for [Smart Wallet](https://portal.thirdweb.com/wallet/smart-wallet) which allows integrating the wallet with React
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * smartWallet(
+ *  metamaskWallet(),
+ *  {
+ *    factoryAddress: '0x...',
+ *    gasless: true,
+ *  }
+ * )
+ * ```
+ *
+ * @param wallet -
+ * Provide a `WalletConfig` object to use as the personal wallet for the Smart Wallet.
+ *
+ * You can get this object by calling a wallet configurator function such as `metamaskWallet()`
+ *
+ * @param config -
+ * Configuration options for the Smart Wallet
+ *
+ * ### factoryAddress
+ * The address of the Smart Wallet Factory contract. Must be of type `string`
+ *
+ * ### gasless
+ * Whether to turn on or off gasless transactions. Must be a `boolean`.
+ *
+ * - If set to `true`, all gas fees will be paid by a paymaster.
+ * - If set to `false`, all gas fees will be paid by the Smart Wallet itself (needs to be funded).
+ *
+ * @wallet
+ */
 export const smartWallet = (
   wallet: WalletConfig<any>,
   config: SmartWalletConfigOptions,
-): SmartWalletConfig => {
+): WalletConfig<SmartWallet> => {
   const WalletSelectUI = wallet.selectUI;
 
   return {

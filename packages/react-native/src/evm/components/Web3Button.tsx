@@ -20,9 +20,9 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 import { useGlobalTheme, useUIContext } from "../providers/ui-context-provider";
 
-type ActionFn = (contract: SmartContract) => Promise<any>;
+export type ActionFn = (contract: SmartContract) => Promise<any>;
 
-interface Web3ButtonProps<TActionFn extends ActionFn> {
+export interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
 

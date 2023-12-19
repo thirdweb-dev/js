@@ -1,22 +1,22 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
-import { WagmiConnector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   AddChainError,
   ChainNotConfiguredError,
   ConnectorNotFoundError,
-  normalizeChainId,
   ProviderRpcError,
   ResourceUnavailableError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
 import { getValidPublicRPCUrl } from "../../utils/url";
 import { Ethereum } from "./types";
 import { type Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
@@ -24,13 +24,19 @@ export type InjectedConnectorOptions = {
   /**
    * [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Ethereum Provider to target
    *
-   * @defaultValue `() => typeof window !== 'undefined' ? window.ethereum : undefined`
+   * By default it is set to the following:
+   *
+   * ```ts
+   * () => typeof window !== 'undefined' ? window.ethereum : undefined
+   * ```
    */
   getProvider?: () => Ethereum | undefined;
   /**
    * MetaMask and other injected providers do not support programmatic disconnect.
+   *
    * This flag simulates the disconnect behavior by keeping track of connection status in storage. See [GitHub issue](https://github.com/MetaMask/metamask-extension/issues/10353) for more info.
-   * @defaultValue true
+   *
+   * By default, it is set to `true`.
    */
   shimDisconnect?: boolean;
 };

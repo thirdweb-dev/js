@@ -7,7 +7,10 @@ import { RainbowConnectUI } from "./RainbowConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
 import { rainbowWalletUris } from "./rainbowWalletUris";
 
-type RainbowWalletOptions = {
+/**
+ * @wallet
+ */
+export type RainbowWalletConfigOptions = {
   /**
    * When connecting Rainbow using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -17,13 +20,38 @@ type RainbowWalletOptions = {
   projectId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Rainbow Wallet](https://rainbow.me/en/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * rainbowWallet({
+ *  projectId: 'YOUR_PROJECT_ID',
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional configuration options for the wallet
+ *
+ * ### projectId (optional)
+ * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ *
+ * @wallet
+ */
 export const rainbowWallet = (
-  options?: RainbowWalletOptions,
+  options?: RainbowWalletConfigOptions,
 ): WalletConfig<RainbowWallet> => {
   return {
     id: RainbowWallet.id,

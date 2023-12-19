@@ -35,20 +35,61 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Get a single NFT
+ * Hook for fetching information about an NFT from a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ *
+ * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
+ * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
  *
  * @example
- * ```javascript
- * const tokenId = 0; // the tokenId to look up
- * const { data: nft, isLoading, error } = useNFT(contract, tokenId);
+ *
+ * Provide your NFT collection contract object and the token ID of the NFT you want to fetch as
+ * arguments.
+ *
+ * ```jsx
+ * import { useContract, useNFT } from "@thirdweb-dev/react";
+ *
+ * // The token ID of the NFT you want to fetch
+ * const tokenId = 0;
+ *
+ * function App() {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const { data: nft, isLoading, error } = useNFT(contract, tokenId);
+ *
+ *   if (isLoading) return <div>Fetching NFT…</div>;
+ *   if (error) return <div>Error fetching NFT</div>;
+ *   if (!nft) return <div>NFT not found</div>;
+ *   return <div>NFT: {nft.metadata.name}</div>;
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @param tokenId - the tokenId to look up
- * @returns a response object that includes the metadata for the given tokenId
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ *
+ * @param tokenId - The token ID of the NFT you want to fetch.
+ * ```jsx
+ * import { useContract, useNFT } from "@thirdweb-dev/react";
+ *
+ * // The token ID of the NFT you want to fetch
+ * const tokenId = 0;
+ *
+ * function App() {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     data: nft,
+ *     isLoading,
+ *     error,
+ *   } = useNFT(
+ *     contract,
+ *     tokenId,
+ *   );
+ * }
+ * ```
+ *
+ * @returns Query result object that includes the metadata for the given tokenId in `data` property
  * @twfeature ERC721 | ERC1155
- * @see {@link https://portal.thirdweb.com/react/react.usenft?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -79,19 +120,38 @@ export function useNFT<TContract extends NFTContract>(
 }
 
 /**
- * Get all NFTs
+ * Hook to query all NFTs associated with a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ *
+ * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
+ * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
+ *
+ * By default, only returns the first `100` NFTs in the collection. You can use the `queryParams` argument to
+ * filter the NFTs that are returned or to paginate through the collection.
  *
  * @example
- * ```javascript
- * const { data: nfts, isLoading, error } = useNFTs(contract, { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useNFTs, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useNFTs(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @param queryParams - query params to pass to the query for pagination
- * @returns a response object that includes an array of NFTs
+ * @param contract - Instance of a `NFTContract`
+ *
+ * @param queryParams -
+ * By default, the hook will return the first 100 NFTs associated with the contract.
+ *
+ * You can use the `queryParams` argument to paginate the NFTs that are returned.
+ *
+ * @returns Query result object that includes an array of `NFT` objects
  * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Enumerable
- * @beta
- * @see {@link https://portal.thirdweb.com/react/react.usenfts?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -122,19 +182,27 @@ export function useNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Get total supply count
+ * Hook to get the total count of **unique** NFTs minted on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ *
+ * When used for ERC1155 contracts, the total count is the number of unique token IDs minted, _not_ the total supply of all tokens in circulation.
  *
  * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { data: count, isLoading, error } = useTotalCount(contract);
+ * ```jsx
+ * import { useTotalCount, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data: totalCount, isLoading, error } = useTotalCount(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @returns a response object that includes the total count of NFTs
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ * @returns A `BigNumber` that includes the total count of NFTs
  * @twfeature ERC721Supply | ERC1155Enumerable
- * @see {@link https://portal.thirdweb.com/react/react.usetotalcount?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useTotalCount<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -170,20 +238,43 @@ export function useTotalCount<TContract extends NFTContract>(
 }
 
 /**
- * Get total minted supply count
+ * Hook for fetching the total number of NFTs in circulation for a given smart contract.
+ *
+ * This takes into account the increase in supply due to minting and the decrease in supply due to burning.
+ *
+ * Available to use on contracts that implement either the [ERC721](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
  *
  * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { data: totalCirculatingSupply, isLoading, error } = useTotalCirculatingSupply(contract);
+ *
+ * ```jsx
+ * import { useTotalCirculatingSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useTotalCirculatingSupply(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @param tokenId - required for ERC1155, the tokenId to look up
- * @returns a response object that includes the total minted supply
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ *
+ * @param tokenId - Required for ERC1155, the tokenId to look up. This will return the total quantity of the given token ID in circulation.
+ * ```ts
+ * import { useTotalCirculatingSupply, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useTotalCirculatingSupply(
+ *     contract,
+ *     "{{token_id}}",
+ *   );
+ * }
+ * ```
+ *
+ * @returns A `BigNumber` representing the total circulating supply.
+ *
  * @twfeature ERC721Supply | ERC1155Enumerable
- * @see {@link https://portal.thirdweb.com/react/react.usetotalcirculatingsupply?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
@@ -224,20 +315,32 @@ export function useTotalCirculatingSupply(
 }
 
 /**
- * Get all NFTs owned by a specific wallet
+ * Hook for accessing a list of NFTs owned by a single wallet address.
+ *
+ * Available to use on smart contracts that implement either ERC721Enumerable, ERC1155Enumerable, or ERC721Supply extensions.
  *
  * @example
- * ```javascript
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, "{{wallet_address}}", { start: 0, count: 100 });
+ *
+ * ```jsx
+ * import { useOwnedNFTs, useContract, useAddress } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const address = useAddress();
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useOwnedNFTs(contract, address);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet address to get owned tokens for
- * @param queryParams - query params to pass to the query for pagination
- * @returns a response object that includes the list of owned tokens
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ * @param ownerWalletAddress -
+ * The wallet address to get owned tokens for. Likely, you will want to view the connected wallet’s NFTs. use the `useAddress` hook to get this value.
+ *
+ * @param queryParams - Query params to pass to the query for pagination
+ *
+ * @returns Query result object that includes the list of owned `NFT` objects
+ *
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
- * @see {@link https://portal.thirdweb.com/react/react.useownednfts?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -267,23 +370,30 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Get NFT balance of a specific wallet
+ * Hook to get the quantity a user owns of a specific [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155) NFT.
+ *
+ * Available to use on smart contracts that implement the [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
  *
  * @example
- * ```javascript
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}");
- * // for ERC1155 contracts, you can also pass a tokenId
- * const tokenId = 0;
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}", tokenId);
+ * ```jsx
+ * import { useNFTBalance, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { isLoading, data, error } = useNFTBalance(
+ *     contract,
+ *     "{{wallet_address}}",
+ *     "{{token_id}}",
+ *   );
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet address to check the balance of
- * @param tokenId - required for ERC1155, the tokenId to look up
- * @returns a response object that includes the total balance of the owner
+ * @param contract - Instance of a `NFTContract`
+ * @param ownerWalletAddress - The wallet address to check the balance of. Use the `useAddress` hook to get the current wallet address.
+ * @param tokenId - Required for ERC1155, the tokenId to look up
+ * @returns The hook's `data` property, once loaded, returns a `BigNumber` representing the quantity of the NFT owned by the wallet.
  * @twfeature ERC721 | ERC1155
- * @see {@link https://portal.thirdweb.com/react/react.usenftbalance?utm_source=sdk | Documentation}
- * @beta
+ * @nft
  */
 export function useNFTBalance(
   contract: RequiredParam<NFTContract>,
@@ -333,11 +443,10 @@ export function useNFTBalance(
  * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @returns a response object that includes the shared metadata of the contract
+ * @param contract - Instance of a `NFTContract`
+ * @returns Query result object that includes the shared metadata of the contract
  * @twfeature ERC721SharedMetadata
- * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
- * @beta
+ * @nft
  */
 export function useSharedMetadata(
   contract: RequiredParam<NFTContract>,
@@ -368,38 +477,93 @@ export function useSharedMetadata(
 /** **********************/
 
 /**
- * Mint an NFT to a specific wallet
+ * Hook for minting a new NFT on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ *
+ * By default, the process uploads and pins the NFT metadata to IPFS before minting.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: mintNft,
- *     isLoading,
- *     error,
- *   } = useMintNFT(contract);
+ * import { useMintNFT, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to mint NFT", error);
- *   }
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: mintNft, isLoading, error } = useMintNFT(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => mintNft({ name: "My awesome NFT!", to: "{{wallet_address}}" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         mintNft({
+ *           metadata: {
+ *             name: "My NFT",
+ *             description: "This is my NFT",
+ *             image: "ipfs://example.com/my-nft.png", // Accepts any URL or File type
+ *           },
+ *           to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+ *         })
+ *       }
  *     >
- *       Mint!
- *     </button>
+ *       Mint NFT
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ * @returns Mutation object that to mint a new NFT token to the connected wallet
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useMintNFT(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object with the following properties:
+ *
+ * #### metadata
+ * The metadata of the NFT to mint.
+ *
+ * By default, the `metadata` object is uploaded and pinned to IPFS before minting.
+ *
+ * You can override this behavior by providing a `string` to the metadata property. The string must be a URL that points to a valid JSON object containing [standard metadata properties](https://docs.opensea.io/docs/metadata-standards)
+ *
+ * ```jsx
+ * import { useMintNFT, useContract, Web3Button } from "@thirdweb-dev/react";
+ *
+ * // Your smart contract address
+ * const contractAddress = "{{contract_address}}";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: mintNft, isLoading, error } = useMintNFT(contract);
+ *
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         mintNft({
+ *           // Any valid IPFS or HTTP URL that points to a JSON object
+ *           metadata: "https://<url>/<to>/<your>/<metadata>.json",
+ *           to: "{{wallet_address}}",
+ *         })
+ *       }
+ *     >
+ *       Mint NFT
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
+ * #### to (required)
+ * The wallet address to mint the NFT to.
+ *
+ * Likely, you will want to mint the NFT to the currently connected wallet address.
+ * Use the `useAddress` hook to get this value.
+ *
  * @twfeature ERC721Mintable | ERC1155Mintable
- * @see {@link https://portal.thirdweb.com/react/react.usemintnft?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useMintNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -441,38 +605,83 @@ export function useMintNFT<TContract extends NFTContract>(
 }
 
 /**
- * Increase the supply of an existing NFT
+ * Hook for minting additional supply to an _existing_ ERC-1155 token.
+ *
+ * Available to use on contracts that implement the
+ * [ERC1155Mintable](https://portal.thirdweb.com/solidity/extensions/erc1155mintable)
+ * interface, such as the [Edition](https://thirdweb.com/thirdweb.eth/TokenERC1155) or [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155).
+ *
+ * The wallet address that initiates this transaction must have minting permissions on the contract.
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import { useContract, useMintNFTSupply, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ * const walletAddress = "{{wallet_address}}";
+ * const tokenId = "{{token_id}}";
+ * const additionalSupply = "{{additional_supply}}";
+ *
+ * function App() {
+ *   // Contract must be an ERC-1155 contract that implements the ERC1155Mintable interface
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: mintNftSupply,
+ *     mutateAsync: mintNftSupply,
  *     isLoading,
  *     error,
  *   } = useMintNFTSupply(contract);
  *
- *   if (error) {
- *     console.error("failed to mint additional supply", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => mintNftSupply({ tokenId: 0, additionalSupply: 100, to: "{{wallet_address}}"})}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         mintNftSupply({
+ *           additionalSupply: additionalSupply, // Quantity to mint
+ *           to: walletAddress, // Address to mint to
+ *           tokenId: tokenId, // Token ID to add supply to
+ *         })
+ *       }
  *     >
- *       Mint Additional Supply!
- *     </button>
+ *       Mint NFT Supply
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link Erc1155}
- * @returns a mutation object that can be used to mint a more supply of a token id to the provided wallet
- * @beta
+ * @param contract - Instance of a `Erc1155`
+ *
+ * @returns Mutation object to mint a more supply of a token id to the provided wallet
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useMintNFTSupply(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object with the following properties:
+ *
+ * #### additionalSupply
+ * The quantity of additional supply to mint.
+ *
+ * For example, if you have 10 quantity so far, and you want to mint 5 more, set `additionalSupply` to `5`.
+ *
+ * Can be a `string` or `number`.
+ *
+ *
+ * #### to
+ * The wallet address to mint the new supply to.
+ *
+ * To use the connected wallet address, use the `useAddress` hook.
+ *
+ *
+ * #### tokenId
+ * The token ID of the NFT to mint additional supply to.
+ *
+ * Can be a `string` or `number`.
+ *
  * @twfeature ERC1155Mintable
- * @see {@link https://portal.thirdweb.com/react/react.usemintnftsupply?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useMintNFTSupply(contract: Erc1155) {
   const activeChainId = useSDKChainId();
@@ -505,41 +714,79 @@ export function useMintNFTSupply(contract: Erc1155) {
 }
 
 /**
- * Transfer an NFT
+ * Hook for transferring ERC721 or ERC1155 NFTs to another wallet address.
+ *
+ * Available to use on contracts that implement either the
+ * [ERC721](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * and [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155)
+ * interfaces, such as the [Edition](https://thirdweb.com/thirdweb.eth/TokenERC1155)
+ * or [NFT Collection](https://thirdweb.com/thirdweb.eth/TokenERC721).
+ *
+ * The wallet address that initiates this transaction must have transfer permissions on the contract (i.e. the tokens are not soulbound).
+ * It also must have the required amount of token(s) available to transfer.
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import { useContract, useTransferNFT, Web3Button } from "@thirdweb-dev/react";
+ *
+ * // Your NFT collection contract address
+ * const contractAddress = "{{contract_address}}";
+ * const walletAddress = "{{wallet_address}}";
+ * const tokenId = "{{token_id}}";
+ *
+ * function App() {
+ *   // Contract must be an ERC-721 or ERC-1155 contract
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: transferNFT,
+ *     mutateAsync: transferNFT,
  *     isLoading,
  *     error,
  *   } = useTransferNFT(contract);
  *
- *   if (error) {
- *     console.error("failed to transfer NFT", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => transferNFT({
- *         to: "{{wallet_address}}",
- *         tokenId: 2
- *       })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         transferNFT({
+ *           to: walletAddress, // Address to transfer the token to
+ *           tokenId: tokenId, // Token ID to transfer
+ *         })
+ *       }
  *     >
  *       Transfer
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @returns a mutation object that can be used to transfer NFTs
- * @beta
+ * @param contract - Instance of a `NFTContract`
+ *
+ * @returns Mutation object to transfer NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useTransferNFT(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object with the following properties:
+ *
+ * #### to
+ * The wallet address to transfer the token(s) to.
+ *
+ * To use the connected wallet address, use the `useAddress` hook.
+ *
+ *
+ * #### tokenId
+ * The token ID of the NFT to transfer.
+ *
+ * Can be a `string` or `number`.
+ *
+ * #### amount (ERC1155 only)
+ * If you are using an ERC1155 contract, specify the amount of tokens to transfer.
+ *
  * @twfeature ERC721 | ERC1155
- * @see {@link https://portal.thirdweb.com/react/react.usetransfernft?utm_source=sdk | Documentation}
+ * @nft
  */
 export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -587,44 +834,60 @@ export function useTransferNFT<TContract extends NFTContract>(
 }
 
 /**
- * Airdrop NFTs to a list of wallets
+ * Hook for airdropping [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) NFT tokens to multiple wallet addresses at once.
+ *
+ * Available to use on smart contracts that implement the `ERC1155` standard.
+ *
+ * Performs a batch transfer from the connected wallet to the specified addresses.
+ * This means you need to have the total number of tokens you wish to airdrop available in the wallet that performs this transaction.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: airdropNFT,
- *     isLoading,
- *     error,
- *   } = useAirdropNFT(contract);
+ * import { useAirdropNFT, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- *   if (error) {
- *     console.error("failed to transfer batch NFTs", error);
- *   }
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: airdropNft, isLoading, error } = useAirdropNFT(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => airdropNFT({
- *          tokenId: 2,
- *          addresses: [
- *            { address: "{{wallet_address}}", quantity: 2 },
- *            { address: "{{wallet_address}}", quantity: 4 } }
- *          ]
- *       )}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         airdropNft({
+ *           addresses: [
+ *             {
+ *               address: "0x123",
+ *               quantity: 1,
+ *             },
+ *           ],
+ *           tokenId: tokenId,
+ *         })
+ *       }
  *     >
  *       Airdrop NFT
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link Erc1155}
- * @returns a mutation object that can be used to transfer batch NFTs
+ * @param contract - Instance of a `Erc1155`
+ * @returns Mutation object that to transfer batch NFTs
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useAirdropNFT(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object with the following properties:
+ *
+ * #### tokenId
+ * The token ID of the NFT to airdrop.
+ *
+ * #### addresses
+ * An array of objects containing an `address` and `quantity` of NFTs to airdrop to each address.
+ *
  * @twfeature ERC1155
- * @see {@link https://portal.thirdweb.com/react/react.useairdropnft?utm_source=sdk | Documentation}
- * @beta
+ * @nft
  */
 export function useAirdropNFT(contract: Erc1155) {
   const activeChainId = useSDKChainId();
@@ -650,38 +913,61 @@ export function useAirdropNFT(contract: Erc1155) {
 }
 
 /**
- * Burn an NFT
+ * Hook for burning a NFT on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
+ * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
  *
  * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
- *   const {
- *     mutate: burnNFT,
- *     isLoading,
- *     error,
- *   } = useBurnNFT(contract);
  *
- *   if (error) {
- *     console.error("failed to burn NFT", error);
- *   }
+ * ```jsx
+ * import { useBurnNFT, useContract, Web3Button } from "@thirdweb-dev/react";
+ *
+ * const contractAddress = "{{contract_address}}";
+ * // The tokenId of the NFT you want to burn
+ * const tokenIdToBurn = "{{tokenId}}}}";
+ * const amount = 1;
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync: burnNft, isLoading, error } = useBurnNFT(contract);
  *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => burnNFT({ tokenId: 0, amount: 1 })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         burnNft({
+ *           tokenId: tokenIdToBurn,
+ *           amount: amount,
+ *         })
+ *       }
  *     >
- *       Burn!
- *     </button>
+ *       Burn NFT
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
- * @returns a mutation object that can be used to burn an NFT token from the connected wallet
+ * @param contract - Instance of a `NFTContract`
+ * @returns Mutation object that to burn an NFT token from the connected wallet
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useBurnNFT(contract);
+ * ```
+ *
+ * ### options
+ * The mutation function takes an object with the following properties:
+ *
+ * #### tokenId
+ * The token ID of the NFT you want to burn.
+ *
+ * #### amount (optional)
+ * When using ERC1155 NFTs, you can specify the quantity you want to burn.
+ *
+ * Defaults value is `1`
+ *
  * @twfeature ERC721Burnable | ERC1155Burnable
- * @see {@link https://portal.thirdweb.com/react/react.useburnnft?utm_source=sdk | Documentation}
- * @beta
+ * @nft
  */
 export function useBurnNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,

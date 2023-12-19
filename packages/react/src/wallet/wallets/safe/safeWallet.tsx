@@ -9,17 +9,54 @@ import {
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
-import type { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
+import type { SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
+/**
+ * @wallet
+ */
+export type SafeWalletConfigOptions = {
+  /**
+   * An array of personalWallets to show in ConnectWallet Modal to use with SafeWallet
+   */
+  personalWallets?: WalletConfig<any>[];
+
+  /**
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
+};
+
+/**
+ * A wallet configurator for [Safe](https://safe.global/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * safeWallet({
+ *  personalWallets: [
+ *    metamaskWallet(),
+ *    coinbaseWallet(),
+ *    walletConnect()
+ *  ],
+ * })
+ * ```
+ *
+ * @param config -
+ * Optional configuration options for the wallet
+ *
+ * ### personalWallets (optional)
+ * An array of personal wallets to show in `ConnectWallet` Modal for personal wallet selection
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ *
+ * @wallet
+ */
 export const safeWallet = (
-  config?: SafeWalletConfigOptions & {
-    /**
-     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
-     */
-    recommended?: boolean;
-  },
+  config?: SafeWalletConfigOptions,
 ): SafeWalletConfig => {
   const personalWallets = config?.personalWallets || defaultWallets;
   return {

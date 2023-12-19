@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.5",
+  "version": "2.0.8",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -25,7 +25,7 @@
     "test": "pnpm test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "files": [
     "dist/"
@@ -54,8 +54,8 @@
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "typedoc-gen": "workspace:*"
   },
   "dependencies": {
     "cid-tool": "^3.0.0",

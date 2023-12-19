@@ -7,9 +7,10 @@ import {
   ROUTE_USER_MANAGED_OTP,
   ROUTE_VALIDATE_USER_MANAGED_OTP,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
+  EWS_VERSION_HEADER,
+  THIRDWEB_SESSION_NONCE_HEADER,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
-import * as Application from "expo-application";
 import {
   RecoveryShareManagement,
   UserWalletStatus,
@@ -19,18 +20,27 @@ import {
   VerifiedTokenResponse,
 } from "../../../types";
 import { createErrorMessage } from "../errors";
+import {
+  appBundleId,
+  reactNativePackageVersion,
+} from "../../../../../../utils/version";
+import { BUNDLE_ID_HEADER } from "../../../../../../constants/headers";
+import { ANALYTICS } from "../analytics";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
-const BUNDLE_ID_HEADER = "x-bundle-id";
-const APP_BUNDLE_ID = Application.applicationId || "";
+const HEADERS = {
+  "Content-Type": "application/json",
+  [BUNDLE_ID_HEADER]: appBundleId,
+  [EWS_VERSION_HEADER]: reactNativePackageVersion,
+  [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+};
 
 export const verifyClientId = async (clientId: string) => {
   const resp = await fetch(ROUTE_VERIFY_THIRDWEB_CLIENT_ID, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({ clientId, parentDomain: "" }),
   });
@@ -58,15 +68,19 @@ export const authFetchEmbeddedWalletUser = async (
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
+        [EWS_VERSION_HEADER]: reactNativePackageVersion,
+        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
+        [EWS_VERSION_HEADER]: reactNativePackageVersion,
+        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
       };
   return fetch(url, params);
 };
@@ -118,8 +132,7 @@ export async function generateAuthTokenFromCognitoEmailOtp(
   const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       access_token: session.getAccessToken().getJwtToken(),
@@ -143,8 +156,7 @@ export async function sendUserManagedEmailOtp(email: string, clientId: string) {
   const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email,
@@ -169,8 +181,7 @@ export async function validateUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email: options.email,
@@ -195,8 +206,7 @@ export async function isValidUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_IS_VALID_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email: options.email,

@@ -1,6 +1,9 @@
 import { BigNumber, utils } from "ethers";
 import invariant from "tiny-invariant";
 
+/**
+ * @internal
+ */
 export function convertParamValues(
   constructorParamTypes: string[],
   constructorParamValues: any[],

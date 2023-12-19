@@ -5,7 +5,10 @@ import {
 } from "@thirdweb-dev/wallets";
 import { CryptoDefiWalletConnectUI } from "./CryptoDefiWalletConnectUI";
 
-type CryptoDefiWalletOptions = {
+/**
+ * @wallet
+ */
+export type CryptoDefiWalletConfigOptions = {
   /**
    * When connecting Defi wallet using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -15,13 +18,38 @@ type CryptoDefiWalletOptions = {
   projectId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Crypto.com Defi Wallet](https://crypto.com/defi-wallet) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * cryptoDefiWallet({
+ *  projectId: "my-project-id",
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional object containing the following properties to configure the wallet
+ *
+ * ### projectId (optional)
+ * When connecting Defi wallet using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ *
+ * @wallet
+ */
 export const cryptoDefiWallet = (
-  options?: CryptoDefiWalletOptions,
+  options?: CryptoDefiWalletConfigOptions,
 ): WalletConfig<CryptoDefiWallet> => {
   return {
     id: CryptoDefiWallet.id,

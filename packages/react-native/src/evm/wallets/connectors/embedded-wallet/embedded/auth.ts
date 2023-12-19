@@ -26,12 +26,26 @@ import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { Auth } from "aws-amplify";
 import {
   DOMAIN_URL_2023,
+  EWS_VERSION_HEADER,
+  ROUTE_AUTH_ENDPOINT_CALLBACK,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
+  THIRDWEB_SESSION_NONCE_HEADER,
 } from "./helpers/constants";
-import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
+import {
+  AuthEndpointOptions,
+  AuthOptions,
+  OauthOption,
+  VerifiedTokenResponse,
+} from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { createErrorMessage } from "./helpers/errors";
+import {
+  appBundleId,
+  reactNativePackageVersion,
+} from "../../../../utils/version";
+import { BUNDLE_ID_HEADER } from "../../../../constants/headers";
+import { ANALYTICS } from "./helpers/analytics";
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -179,7 +193,13 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     DOMAIN_URL_2023,
   )}&platform=${encodeURIComponent("mobile")}`;
 
-  const resp = await fetch(headlessLoginLinkWithParams);
+  const resp = await fetch(headlessLoginLinkWithParams, {
+    headers: {
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+    },
+  });
 
   if (!resp.ok) {
     const error = await resp.json();
@@ -256,7 +276,12 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+    },
     body: JSON.stringify({
       jwt: jwt,
       developerClientId: clientId,
@@ -288,7 +313,62 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
-      createErrorMessage("Malformed response from post authentication", e),
+      createErrorMessage("Malformed response from post jwt authentication", e),
+    );
+  }
+}
+
+export async function authEndpoint(
+  authOptions: AuthEndpointOptions,
+  clientId: string,
+) {
+  const { payload, encryptionKey } = authOptions;
+
+  const resp = await fetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [EWS_VERSION_HEADER]: reactNativePackageVersion,
+      [BUNDLE_ID_HEADER]: appBundleId,
+      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+    },
+    body: JSON.stringify({
+      payload: payload,
+      developerClientId: clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Custom auth endpoint authentication error: ${error.message}`,
+    );
+  }
+
+  try {
+    const { verifiedToken, verifiedTokenJwtString } = await resp.json();
+
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: verifiedToken.jwtToken,
+      authProvider: verifiedToken.authProvider,
+      authDetails: {
+        ...verifiedToken.authDetails,
+        email: verifiedToken.authDetails.email,
+      },
+      developerClientId: verifiedToken.developerClientId,
+      cookieString: verifiedTokenJwtString,
+      shouldStoreCookieString: true,
+      isNewUser: verifiedToken.isNewUser,
+    };
+
+    await postPaperAuthUserManaged(toStoreToken, clientId, encryptionKey);
+
+    return { verifiedToken, email: verifiedToken.authDetails.email };
+  } catch (e) {
+    throw new Error(
+      createErrorMessage(
+        "Malformed response from post auth_endpoint authentication",
+        e,
+      ),
     );
   }
 }

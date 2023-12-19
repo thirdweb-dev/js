@@ -31,6 +31,7 @@ import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
+  values: BigNumberish[];
 };
 
 export interface BaseApiParams {
@@ -201,6 +202,7 @@ export abstract class BaseAccountAPI {
               from: this.getAccountAddress(),
               to: batchData.targets[i],
               data: batchData.data[i],
+              value: batchData.values[i],
             }),
           ),
         );
@@ -210,6 +212,7 @@ export abstract class BaseAccountAPI {
           from: this.getAccountAddress(),
           to: detailsForUserOp.target,
           data: detailsForUserOp.data,
+          value: detailsForUserOp.value,
         });
       }
 
@@ -226,6 +229,7 @@ export abstract class BaseAccountAPI {
           from: this.entryPointAddress,
           to: this.getAccountAddress(),
           data: callData,
+          value: detailsForUserOp.value,
         }));
     }
 
@@ -301,6 +305,7 @@ export abstract class BaseAccountAPI {
       }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
@@ -384,7 +389,7 @@ export abstract class BaseAccountAPI {
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
-    const signature = this.signUserOpHash(userOpHash);
+    const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
       signature,
@@ -409,12 +414,12 @@ export abstract class BaseAccountAPI {
    * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
    * @param timeout - stop waiting after this timeout
    * @param interval - time to wait between polls.
-   * @returns the transactionHash this userOp was mined, or null if not found.
+   * @returns The transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,
     timeout = 30000,
-    interval = 5000,
+    interval = 2000,
   ): Promise<string | null> {
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {

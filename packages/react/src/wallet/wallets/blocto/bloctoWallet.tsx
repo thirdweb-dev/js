@@ -1,23 +1,47 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { BloctoWallet } from "@thirdweb-dev/wallets";
 
-export type BloctoAdditionalOptions = {
+/**
+ * @wallet
+ */
+export type BloctoWalletConfigOptions = {
   /**
-   * Your app’s unique identifier that can be obtained at https://developers.blocto.app,
-   * To get advanced features and support with Blocto.
-   *
-   * https://docs.blocto.app/blocto-sdk/register-app-id
+   * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
    */
   appId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Blocto Wallet](https://blocto.io/) which allows integrating the wallet with React.
+ *
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * bloctoWallet({
+ *  appId: "my-app-id",
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional object containing the following properties to configure the wallet
+ *
+ * #### appId (optional)
+ * To get advanced features and support from Blocto, you need to create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
+ *
+ * #### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ *
+ * @wallet
+ */
 export const bloctoWallet = (
-  options?: BloctoAdditionalOptions,
+  options?: BloctoWalletConfigOptions,
 ): WalletConfig<BloctoWallet> => ({
   id: BloctoWallet.id,
   recommended: options?.recommended,

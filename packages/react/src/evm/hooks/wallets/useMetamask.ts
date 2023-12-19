@@ -1,14 +1,18 @@
 import { useConnect } from "@thirdweb-dev/react-core";
 import { useCallback } from "react";
 
+/**
+ * @deprecated Use `ConnectWallet` component or `useConnect` hook instead
+ * @internal
+ */
 export function useMetamask() {
   const connect = useConnect();
   return useCallback(
-    async (connectOptions?: { chainId?: number }) => {
+    async (options?: { chainId?: number }) => {
       const { metamaskWallet } = await import(
         "../../../wallet/wallets/metamask/metamaskWallet"
       );
-      return connect(metamaskWallet(), connectOptions);
+      return connect(metamaskWallet(), options);
     },
     [connect],
   );
