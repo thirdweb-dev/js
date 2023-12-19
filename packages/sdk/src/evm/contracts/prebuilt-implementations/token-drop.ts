@@ -138,7 +138,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   /**
    * Get your wallet voting power for the current checkpoints
    *
-   * @returns the amount of voting power in tokens
+   * @returns The amount of voting power in tokens
    */
   public async getVoteBalance(): Promise<CurrencyValue> {
     return await this.getVoteBalanceOf(
@@ -157,7 +157,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   /**
    * Get your voting delegatee address
    *
-   * @returns the address of your vote delegatee
+   * @returns The address of your vote delegatee
    */
   public async getDelegation(): Promise<Address> {
     return await this.getDelegationOf(
@@ -168,7 +168,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   /**
    * Get a specific address voting delegatee address
    *
-   * @returns the address of your vote delegatee
+   * @returns The address of your vote delegatee
    */
   public async getDelegationOf(account: AddressOrEns): Promise<Address> {
     return await this.contractWrapper.read("delegates", [
@@ -225,7 +225,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - The transaction receipt
+   * @returns  The transaction receipt
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (

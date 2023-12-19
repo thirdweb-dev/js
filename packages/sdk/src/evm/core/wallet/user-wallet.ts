@@ -213,7 +213,7 @@ export class UserWallet {
   /**
    * Sign any message with the connected wallet private key
    * @param message - the message to sign
-   * @returns the signed message
+   * @returns The signed message
    *
    * @example
    * ```javascript
@@ -234,7 +234,7 @@ export class UserWallet {
    * @param domain - the domain as EIP712 standard
    * @param types - the structure and data types as defined by the EIP712 standard
    * @param message - the data to sign
-   * @returns the payload and its associated signature
+   * @returns The payload and its associated signature
    *
    * @example
    * ```javascript
@@ -269,7 +269,7 @@ export class UserWallet {
    * Recover the signing address from a signed message
    * @param message - the original message that was signed
    * @param signature - the signature to recover the address from
-   * @returns the address that signed the message
+   * @returns The address that signed the message
    *
    * @example
    * ```javascript

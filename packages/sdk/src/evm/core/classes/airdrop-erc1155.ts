@@ -71,7 +71,7 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
    * @param tokenOwner - Address of the owner of the tokens being airdropped
    * @param contents - Array of recipients and tokenIds to airdrop
    *
-   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @returns An array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC1155
    */
   drop = /* @__PURE__ */ buildTransactionFunction(

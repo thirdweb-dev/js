@@ -57,7 +57,7 @@ export class Erc721ClaimableZora implements DetectableFeature {
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Not applicable
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    */
   to = /* @__PURE__ */ buildTransactionFunction(
     async (

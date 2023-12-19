@@ -6,7 +6,7 @@ import { extractFeatures } from "./extractFeatures";
 /**
  * Return all the detected features names in the abi
  * @param abi - parsed array of abi entries
- * @returns array of all detected features names
+ * @returns Array of all detected features names
  * @internal
  * @deprecated use getAllExtensionNames instead
  */
@@ -19,7 +19,7 @@ export function getAllDetectedFeatureNames(abi: AbiInput): string[] {
 /**
  * Return all the detected extension names in the abi
  * @param abi - parsed array of abi entries
- * @returns array of all detected features names
+ * @returns Array of all detected features names
  * @public
  */
 export function getAllDetectedExtensionNames(abi: AbiInput): string[] {

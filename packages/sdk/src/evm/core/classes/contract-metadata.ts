@@ -82,7 +82,7 @@ export class ContractMetadata<
    * console.log(metadata);
    * ```
    * @public
-   * @returns the metadata of the given contract
+   * @returns The metadata of the given contract
    * @twfeature ContractMetadata
    */
   public async get() {

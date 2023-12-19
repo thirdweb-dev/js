@@ -126,7 +126,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    *
    * @remarks This will return the contents of the pack
    * @remarks Make sure to check if the VRF request has been fulfilled using canClaimRewards() before calling this method
-   * @returns the random rewards from opening a pack
+   * @returns The random rewards from opening a pack
    * @twfeature PackVRF
    */
   claimRewards = /* @__PURE__ */ buildTransactionFunction(
@@ -213,7 +213,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * ```
    *
    * @param callback - the listener to call when a pack is opened
-   * @returns a unsubscribe function to cleanup the listener
+   * @returns A unsubscribe function to cleanup the listener
    * @twfeature PackVRF
    */
   public async addPackOpenEventListener(
@@ -308,7 +308,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * const balance = await contract.pack.getLinkBalance();
    * ```
    *
-   * @returns the balance of LINK in the contract
+   * @returns The balance of LINK in the contract
    * @twfeature PackVRF
    */
   public async getLinkBalance(): Promise<CurrencyValue> {

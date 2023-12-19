@@ -67,7 +67,7 @@ export class MarketplaceAuction {
    * Get an Auction listing by id
    *
    * @param listingId - the listing Id
-   * @returns the Auction listing object
+   * @returns The Auction listing object
    */
   public async getListing(listingId: BigNumberish): Promise<AuctionListing> {
     const listing = await this.contractWrapper.read("listings", [listingId]);
@@ -619,7 +619,7 @@ export class MarketplaceAuction {
    *
    * @internal
    * @param listing - The listing to map, as returned from the contract.
-   * @returns - The mapped interface.
+   * @returns  The mapped interface.
    */
   public async mapListing(
     listing: IMarketplace.ListingStruct,

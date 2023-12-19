@@ -1,5 +1,24 @@
 # @thirdweb-dev/wallets
 
+## 2.3.2
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- [#2093](https://github.com/thirdweb-dev/js/pull/2093) [`81c46e22`](https://github.com/thirdweb-dev/js/commit/81c46e22984cdb5b33b2e6eb99a0ebf0e4fbdb33) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore: update base url derivation for `embeddedWallets`
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c), [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002), [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186)]:
+  - @thirdweb-dev/chains@0.1.62
+  - @thirdweb-dev/sdk@4.0.23
+
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e)]:
+  - @thirdweb-dev/sdk@4.0.22
+
 ## 2.3.0
 
 ### Minor Changes

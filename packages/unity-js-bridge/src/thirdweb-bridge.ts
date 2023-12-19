@@ -349,8 +349,7 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-        }  
-        else {
+        } else {
           throw new Error(
             "Invalid auth provider: " + authOptionsParsed.authProvider,
           );
@@ -680,11 +679,11 @@ class ThirdwebBridge implements TWBridge {
         strategy: "encryptedJson",
         password,
       });
-    } catch(e) {
+    } catch (e) {
       console.warn(e);
       return localWallet;
     }
-    
+
     return localWallet;
   }
 
@@ -787,7 +786,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
-  public async getEmail(){
+  public async getEmail() {
     const embeddedWallet = this.walletMap.get(
       walletIds.embeddedWallet,
     ) as EmbeddedWallet;

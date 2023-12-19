@@ -106,7 +106,7 @@ export class LocalWallet extends AbstractClientWallet<
 
   /**
    * creates a new random wallet
-   * @returns the address of the newly created wallet
+   * @returns The address of the newly created wallet
    */
   async generate() {
     if (this.ethersWallet) {
