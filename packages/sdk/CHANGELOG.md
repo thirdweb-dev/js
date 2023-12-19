@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 4.0.23
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- [#2020](https://github.com/thirdweb-dev/js/pull/2020) [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix deploy issue "invalid recipient"
+
+- [#2090](https://github.com/thirdweb-dev/js/pull/2090) [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186) Thanks [@kumaryash90](https://github.com/kumaryash90)! - empty default trusted forwarders param
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c)]:
+  - @thirdweb-dev/storage@2.0.8
+  - @thirdweb-dev/chains@0.1.62
+
 ## 4.0.22
 
 ### Patch Changes
