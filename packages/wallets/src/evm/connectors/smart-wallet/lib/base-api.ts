@@ -47,6 +47,9 @@ export interface UserOpResult {
   success: boolean;
 }
 
+const DUMMY_SIGNATURE =
+  "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+
 /**
  * Base class for all Smart Wallet ERC-4337 Clients to implement.
  * Subclass should inherit 5 methods to support a specific wallet contract:
@@ -276,7 +279,7 @@ export abstract class BaseAccountAPI {
     });
   }
 
-  async createUnsignedUserOpv2(
+  async createUnsignedUserOp(
     httpRpcClient: HttpRpcClient,
     info: TransactionDetailsForUserOp,
     batchData?: BatchData,
@@ -332,8 +335,7 @@ export abstract class BaseAccountAPI {
       verificationGasLimit: BigNumber.from(0),
       preVerificationGas: BigNumber.from(0),
       paymasterAndData: "0x",
-      signature:
-        "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c",
+      signature: DUMMY_SIGNATURE,
     };
 
     // paymaster data for estimation
@@ -351,7 +353,7 @@ export abstract class BaseAccountAPI {
     try {
       estimates = await httpRpcClient.estimateUserOpGas(partialOp);
     } catch (error: any) {
-      console.error("estimation err", error);
+      console.error("UserOp simulation error", error.message);
       throw error;
     }
 
@@ -360,14 +362,6 @@ export abstract class BaseAccountAPI {
       estimates.verificationGasLimit,
     );
     partialOp.preVerificationGas = BigNumber.from(estimates.preVerificationGas);
-
-    /**
-     * ex. response
-     * preVerificationGas: '0xbf98',
-     * verificationGas: '0x18dd5',
-     * verificationGasLimit: '0x18dd5',
-     * callGasLimit: '0x35b76'
-     */
 
     // This is subotpimal, but PM needs to resign the userOp with the new gas limits - can be fixed with the new paymaster api
     if (this.paymasterAPI) {

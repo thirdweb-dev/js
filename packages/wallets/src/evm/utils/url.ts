@@ -3,7 +3,10 @@ import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
 export function isTwUrl(url: string): boolean {
   const host = new URL(url).hostname;
   return (
-    host.endsWith(".thirdweb.com") || host === "localhost" || host === "0.0.0.0"
+    host.endsWith(".thirdweb.com") ||
+    host.endsWith(".thirdweb-dev.com") ||
+    host === "localhost" ||
+    host === "0.0.0.0"
   );
 }
 

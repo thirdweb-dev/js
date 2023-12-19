@@ -43,7 +43,7 @@ export class ERC4337EthersSigner extends Signer {
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const unsigned = await this.smartAccountAPI.createUnsignedUserOpv2(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
       this.httpRpcClient,
       {
         target: tx.to || "",
@@ -160,7 +160,7 @@ Code: ${errorCode}`;
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const unsigned = await this.smartAccountAPI.createUnsignedUserOpv2(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
       this.httpRpcClient,
       {
         target: tx.to || "",

@@ -537,7 +537,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }
     const [userOp, gasPrice] = await Promise.all([
-      this.accountApi.createUnsignedUserOpv2(
+      this.accountApi.createUnsignedUserOp(
         this.aaProvider.httpRpcClient,
         tx,
         batchData,
