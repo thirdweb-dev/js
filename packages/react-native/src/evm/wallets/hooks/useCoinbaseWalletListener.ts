@@ -13,20 +13,16 @@ export function useCoinbaseWalletListener(enable: boolean, callbackURL?: URL) {
       return;
     }
 
-    const sub = Linking.addEventListener("url", async ({ url }) => {
-      console.log(
-        "CoinbaseWalletListener: Setting up listener for",
-        callbackURL?.toString(),
-        url,
-      );
-      // const incomingUrl = new URL(url);
-      if (callbackURL && url.includes("wsegue?")) {
-        try {
-          // @ts-expect-error - Passing a URL object to handleResponse crashes the function
-          handleResponse(url);
-        } catch (error) {
-          console.error("CoinbaseWallet not initialized", error);
-        }
+    const sub = Linking.addEventListener("url", ({ url }) => {
+      const incomingUrl = new URL(url);
+      if (
+        callbackURL &&
+        incomingUrl.host === callbackURL.host &&
+        incomingUrl.protocol === callbackURL.protocol &&
+        incomingUrl.hostname === callbackURL.hostname
+      ) {
+        // @ts-expect-error - Passing a URL object to handleResponse crashes the function
+        handleResponse(url);
       }
     });
     return () => sub?.remove();
