@@ -1,4 +1,5 @@
 import {
+  AuthEndpointOptions,
   AuthOptions,
   AuthParams,
   AuthResult,
@@ -11,6 +12,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import {
+  authEndpoint,
   customJwt,
   sendVerificationEmail,
   socialLogin,
@@ -101,7 +103,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       case "jwt": {
         return this.customJwt({
           jwt: params.jwt,
-          password: params.encryptionKey || "",
+          password: params.encryptionKey,
+        });
+      }
+      case "auth_endpoint": {
+        return this.authEndpoint({
+          payload: params.payload,
+          encryptionKey: params.encryptionKey,
         });
       }
       default:
@@ -225,6 +233,33 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       };
     } catch (error) {
       console.error(`Error while verifying auth: ${error}`);
+      this.disconnect();
+      throw error;
+    }
+  }
+
+  private async authEndpoint(
+    authOptions: AuthEndpointOptions,
+  ): Promise<AuthResult> {
+    try {
+      const { verifiedToken, email } = await authEndpoint(
+        authOptions,
+        this.options.clientId,
+      );
+      this.email = email;
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            verifiedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: verifiedToken.isNewUser,
+        needsRecoveryCode:
+          verifiedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
+    } catch (error) {
+      console.error(`Error while verifying auth_endpoint auth: ${error}`);
       this.disconnect();
       throw error;
     }

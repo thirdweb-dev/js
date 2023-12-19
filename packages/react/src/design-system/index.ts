@@ -45,6 +45,9 @@ const lightColors: ThemeColors = {
   textOnAccent: mauve.mauve1,
 };
 
+/**
+ * @theme
+ */
 export type Theme = {
   type: "light" | "dark";
   colors: {
@@ -152,6 +155,9 @@ export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
 export type ThemeObjectOrType = "light" | "dark" | Theme;
 
+/**
+ * @theme
+ */
 export type ThemeOverrides = {
   [key in Exclude<keyof Theme, "type">]?: Partial<Theme[key]>;
 };
@@ -209,13 +215,22 @@ export const shadow = {
  * Create a custom light theme object by using the default dark theme as a base and applying overrides.
  *
  * @example
+ * ### Get the default light theme
+ * ```ts
+ * const defaultLightTheme = lightTheme()
+ * ```
+ *
+ * ### Create a custom light theme
  * ```ts
  * const customTheme = lightTheme({
- *  colors: {
- *   modalBg: "red",
- *  }
- * })
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
  * ```
+ *
+ * @param overrides - The overrides to apply to the default light theme.
+ * @theme
  */
 export function lightTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {
@@ -228,13 +243,22 @@ export function lightTheme(overrides?: ThemeOverrides): Theme {
  * Create a custom dark theme object by using the default dark theme as a base and applying overrides.
  *
  * @example
+ * ### Get the default dark theme
+ * ```ts
+ * const defaultDarkTheme = darkTheme()
+ * ```
+ *
+ * ### Create a custom dark theme
  * ```ts
  * const customTheme = darkTheme({
- *  colors: {
- *   modalBg: "red",
- *  }
- * })
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
  * ```
+ *
+ * @param overrides - The overrides to apply to the default dark theme.
+ * @theme
  */
 export function darkTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {

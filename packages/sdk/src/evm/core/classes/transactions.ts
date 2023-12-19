@@ -48,7 +48,7 @@ import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import { getCompositeABI } from "../../common/plugin/getCompositePluginABI";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -875,7 +875,7 @@ export class DeployTransaction extends TransactionContext {
   }
 }
 
-export async function defaultGaslessSendFunction(
+async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -903,6 +903,9 @@ export async function defaultGaslessSendFunction(
   );
 }
 
+/**
+ * @internal
+ */
 export async function engineSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
@@ -955,7 +958,7 @@ export async function engineSendFunction(
   }
 }
 
-export async function biconomySendFunction(
+async function biconomySendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -984,7 +987,7 @@ export async function biconomySendFunction(
   );
 }
 
-export async function defenderSendFunction(
+async function defenderSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,

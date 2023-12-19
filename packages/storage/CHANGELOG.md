@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 2.0.8
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
 ## 2.0.7
 
 ### Patch Changes

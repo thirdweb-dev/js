@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.62
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+## 0.1.61
+
+### Patch Changes
+
+- [#2066](https://github.com/thirdweb-dev/js/pull/2066) [`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updatechains
+
 ## 0.1.60
 
 ### Patch Changes

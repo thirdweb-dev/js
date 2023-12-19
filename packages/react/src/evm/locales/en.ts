@@ -325,26 +325,33 @@ export function enDefault() {
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
  * @example
- *
- * ### Use default English Locale
+ * ### Use default Locale
  * ```tsx
- * const english = en(); // default English locale object
- *
- * <ThirdwebProvider locale={english}> <App /> </ThirdwebProvider>
+ * const english = en();
  * ```
  *
- * ### Override English Locale
- * ```tsx
+ * ### Override Locale
+ * ```ts
  * const english = en({
  *  connectWallet: {
  *    signIn: "Sign in!"
  *  }
  * })
- *
- * <ThirdwebProvider locale={english}>
- *  <App />
- * </ThirdwebProvider>
  * ```
+ *
+ * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={english}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
  */
 export function en(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = enDefault();

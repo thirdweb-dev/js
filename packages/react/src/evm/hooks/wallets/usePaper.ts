@@ -14,6 +14,7 @@ import { useCallback, useEffect } from "react";
 type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain">;
 
 /**
+ * @internal
  * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the `useEmbeddedWallet` hook instead
  */
 export function usePaperWallet() {
@@ -33,6 +34,7 @@ export function usePaperWallet() {
 }
 
 /**
+ * @internal
  * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the `useEmbeddedWallet` hook instead
  */
 export function usePaperWalletUserEmail(): UseQueryResult<

@@ -7,7 +7,7 @@ import { verify } from "../../common/verification";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { NetworkInput } from "../types";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { RPCConnectionHandler } from "./internal/rpc-connection-handler";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 

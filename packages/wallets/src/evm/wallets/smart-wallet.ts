@@ -26,6 +26,7 @@ export {
   getAllSmartWallets,
   getSmartWalletAddress,
   isSmartWalletDeployed,
+  getUserOpReceipt,
 } from "../connectors/smart-wallet/utils";
 
 export type { PaymasterAPI } from "@account-abstraction/sdk";
@@ -79,7 +80,7 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns the signature of the message
+   * @returns The signature of the message
    */
   public async signMessage(message: Bytes | string): Promise<string> {
     // Deploy smart wallet if needed
@@ -130,7 +131,7 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns the signature of the message (for legacy EIP-1271 signature verification)
+   * @returns The signature of the message (for legacy EIP-1271 signature verification)
    */
   private async signMessageLegacy(
     signer: Signer,
@@ -152,7 +153,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send a single transaction without waiting for confirmations
    * @param transaction - the transaction to send
-   * @returns the transaction result
+   * @returns The transaction result
    */
   async send(transaction: Transaction): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
@@ -162,7 +163,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Execute a single transaction and wait for confirmations
    * @param transaction - the transaction to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -172,7 +173,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
    * @param transactions - the transactions to send
-   * @returns the transaction result
+   * @returns The transaction result
    */
   async sendBatch(
     transactions: Transaction[],
@@ -184,7 +185,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Execute multiple transactions in a single batch and wait for confirmations
    * @param transactions - the transactions to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async executeBatch(
     transactions: Transaction<any>[],
@@ -196,7 +197,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send a single raw transaction without waiting for confirmations
    * @param transaction - the transaction to send
-   * @returns the transaction result
+   * @returns The transaction result
    */
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
@@ -208,7 +209,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Execute a single raw transaction and wait for confirmations
    * @param transaction - the transaction to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
@@ -264,7 +265,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
    * @param transactions - the transactions to send
-   * @returns the transaction result
+   * @returns The transaction result
    */
   async sendBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
@@ -276,7 +277,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Execute multiple raw transactions in a single batch and wait for confirmations
    * @param transactions - the transactions to execute
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
@@ -288,7 +289,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async deploy(): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -298,7 +299,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Manually deploy the smart wallet contract. If already deployed this will do nothing.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
   async deployIfNeeded(): Promise<void> {
     const connector = await this.getConnector();
@@ -364,7 +365,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Get the underlying account contract of the smart wallet.
-   * @returns the account contract of the smart wallet.
+   * @returns The account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
     const connector = await this.getConnector();
@@ -373,7 +374,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Get the underlying account factory contract of the smart wallet.
-   * @returns the account factory contract.
+   * @returns The account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
     const connector = await this.getConnector();

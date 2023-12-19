@@ -47,7 +47,7 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
@@ -81,7 +81,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get the currently active claim condition
    *
-   * @returns the claim condition metadata
+   * @returns The claim condition metadata
    */
   public async getActive(
     tokenId: BigNumberish,
@@ -146,7 +146,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get all the claim conditions
    *
-   * @returns the claim conditions metadata
+   * @returns The claim conditions metadata
    */
   public async getAll(
     tokenId: BigNumberish,
@@ -539,7 +539,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Get the total supply claimed by a specific wallet
    * @param walletAddress - the wallet address to check
-   * @returns the total supply claimed
+   * @returns The total supply claimed
    */
   public async getSupplyClaimedByWallet(
     tokenId: BigNumberish,
@@ -861,7 +861,7 @@ export class DropErc1155ClaimConditions<
   /**
    * Returns proofs and the overrides required for the transaction.
    *
-   * @returns - `overrides` and `proofs` as an object.
+   * @returns  `overrides` and `proofs` as an object.
    */
   public async prepareClaim(
     tokenId: BigNumberish,
@@ -972,7 +972,7 @@ export class DropErc1155ClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
     return detectContractFeature<DropSinglePhase1155>(
@@ -981,7 +981,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop1155> {
     return detectContractFeature<Drop1155>(
@@ -990,7 +990,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155_V1> {
     return detectContractFeature<DropSinglePhase1155_V1>(
@@ -999,7 +999,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC1155_V2> {
     return detectContractFeature<DropERC1155_V2>(
