@@ -93,5 +93,5 @@ export async function getCompositeABI(
     }
   } catch (err) {}
 
-  return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+  return pluginABIs.length > 0 ? joinABIs([...pluginABIs], abi) : abi;
 }
