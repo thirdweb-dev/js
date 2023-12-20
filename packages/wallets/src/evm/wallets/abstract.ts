@@ -39,7 +39,7 @@ export interface WalletEvents {
 }
 
 const EIP1271_ABI = [
-  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)",
+  "function isValidSignature(bytes32 _hash, bytes _signature) public view returns (bytes4)",
 ];
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 
