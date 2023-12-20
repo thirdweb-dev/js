@@ -2,7 +2,10 @@ import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
 import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
 import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
-import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
+import {
+  resolveContractUriFromAddress,
+  resolveImplementation,
+} from "./feature-detection/resolveContractUriFromAddress";
 import { fetchSourceFilesFromMetadata } from "./fetchSourceFilesFromMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
@@ -134,6 +137,8 @@ export async function verify(
 ): Promise<string | string[]> {
   try {
     const provider = getChainProvider(chainId, {});
+    contractAddress = (await resolveImplementation(contractAddress, provider))
+      .address;
     const compilerMetadata = await fetchContractMetadataFromAddress(
       contractAddress,
       provider,
