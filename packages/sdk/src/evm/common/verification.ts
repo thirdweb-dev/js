@@ -15,6 +15,7 @@ import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
 import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
+import { getCreate2FactoryAddress } from "./any-evm-utils/getCreate2FactoryAddress";
 
 const RequestStatus = {
   OK: "1",
@@ -349,11 +350,9 @@ async function fetchConstructorParams(
     offset: "1",
   };
   const parameters = new URLSearchParams({ ...requestBody });
-  const result = await fetch(explorerAPIUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: parameters.toString(),
-  });
+  const result = await fetch(
+    `${explorerAPIUrl}?module=contract&action=getcontractcreation&contractaddresses=${contractAddress}&apikey=${explorerAPIKey}`,
+  );
   const data = await result.json();
   if (
     data &&
@@ -361,12 +360,15 @@ async function fetchConstructorParams(
     data.result[0] !== undefined
   ) {
     const contract = new utils.Interface(abi);
-    const txDeployBytecode = data.result[0].input;
+    const txHash = data.result[0].txHash;
     let constructorArgs = "";
 
     if (contract.deploy.inputs.length === 0) {
       return "";
     }
+
+    const tx = await provider.getTransaction(txHash);
+    const txDeployBytecode = tx.data;
 
     // first: attempt to get it from Publish
     try {
@@ -382,7 +384,15 @@ async function fetchConstructorParams(
           ? bytecode
           : `0x${bytecode}`;
 
-        constructorArgs = txDeployBytecode.substring(bytecodeHex.length);
+        let create2FactoryAddress;
+        try {
+          create2FactoryAddress = await getCreate2FactoryAddress(provider);
+        } catch (error) {}
+
+        constructorArgs =
+          tx.to === create2FactoryAddress
+            ? txDeployBytecode.substring(bytecodeHex.length + 64)
+            : txDeployBytecode.substring(bytecodeHex.length);
       }
     } catch (e) {
       // contracts not published through thirdweb
