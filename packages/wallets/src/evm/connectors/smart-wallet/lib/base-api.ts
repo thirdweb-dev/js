@@ -371,20 +371,40 @@ export abstract class BaseAccountAPI {
       if (paymasterAndData && paymasterAndData !== "0x") {
         partialOp.paymasterAndData = paymasterAndData;
       }
-      if (paymasterResult.callGasLimit) {
+      // paymaster can have the gas limits in the response
+      if (
+        paymasterResult.callGasLimit &&
+        paymasterResult.verificationGasLimit &&
+        paymasterResult.preVerificationGas
+      ) {
         partialOp.callGasLimit = BigNumber.from(paymasterResult.callGasLimit);
-      }
-      if (paymasterResult.verificationGasLimit) {
         partialOp.verificationGasLimit = BigNumber.from(
           paymasterResult.verificationGasLimit,
         );
-      }
-      if (paymasterResult.preVerificationGas) {
         partialOp.preVerificationGas = BigNumber.from(
           paymasterResult.preVerificationGas,
         );
+      } else {
+        // otherwise fallback to bundler for gas limits
+        const estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+        partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+        partialOp.verificationGasLimit = BigNumber.from(
+          estimates.verificationGasLimit,
+        );
+        partialOp.preVerificationGas = BigNumber.from(
+          estimates.preVerificationGas,
+        );
+        // need paymaster to re-sign after estimates
+        const paymasterResult2 = await this.paymasterAPI.getPaymasterAndData(
+          partialOp,
+        );
+        if (
+          paymasterResult2.paymasterAndData &&
+          paymasterResult2.paymasterAndData !== "0x"
+        ) {
+          partialOp.paymasterAndData = paymasterResult2.paymasterAndData;
+        }
       }
-      // TODO fallbacks
     } else {
       // query bundler for gas limits
       let estimates;
