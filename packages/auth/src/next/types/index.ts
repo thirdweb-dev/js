@@ -1,7 +1,7 @@
 import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import { GetServerSidePropsContext, NextApiRequest } from "next";
-import { NextRequest } from "next/server";
+import type { GetServerSidePropsContext } from "next";
+import type { NextRequest } from "next/server";
 import { z } from "zod";
 
 export const PayloadBodySchema = z.object({
@@ -19,8 +19,7 @@ export const LoginPayloadBodySchema = z.object({
 
 type RequestType =
   | GetServerSidePropsContext["req"]
-  | NextRequest
-  | NextApiRequest;
+  | NextRequest;
 
 export type ThirdwebAuthRoute =
   | "payload"
@@ -66,11 +65,11 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req: NextApiRequest) => void | TSession)
-      | ((address: string, req: NextApiRequest) => Promise<void | TSession>);
+      | ((address: string, req: NextRequest) => void | TSession)
+      | ((address: string, req: NextRequest) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req: NextApiRequest) => void)
-      | ((token: string, req: NextApiRequest) => Promise<void>);
+      | ((token: string, req: NextRequest) => void)
+      | ((token: string, req: NextRequest) => Promise<void>);
     onUser?:
       | (<TRequestType extends RequestType = RequestType>(
           user: User<TSession>,
@@ -81,8 +80,8 @@ export type ThirdwebAuthConfig<
           req: TRequestType,
         ) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req: NextApiRequest) => void)
-      | ((user: User, req: NextApiRequest) => Promise<void>);
+      | ((user: User, req: NextRequest) => void)
+      | ((user: User, req: NextRequest) => Promise<void>);
   };
 };
 
@@ -91,4 +90,8 @@ export type ThirdwebAuthContext<
   TSession extends Json = Json,
 > = Omit<Omit<ThirdwebAuthConfig<TData, TSession>, "wallet">, "domain"> & {
   auth: ThirdwebAuth;
+};
+
+export type NextContext = {
+  params?: Record<string, string | string[]>
 };

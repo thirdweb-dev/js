@@ -111,7 +111,7 @@
     "express": "^4.18.1",
     "fastify": "^4.24.2",
     "mocha": "^10.2.0",
-    "next": "^12.3.4",
+    "next": "^13.4",
     "next-auth": "^4.22.3",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
@@ -121,7 +121,7 @@
     "ethers": "^5",
     "express": "^4",
     "fastify": "^4.24.2",
-    "next": "^12 || ^13 || ^14",
+    "next": "^13.4 || ^14",
     "next-auth": "^4"
   },
   "peerDependenciesMeta": {

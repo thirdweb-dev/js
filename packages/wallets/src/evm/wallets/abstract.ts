@@ -49,8 +49,21 @@ export async function checkContractWalletSignature(
   address: string,
   chainId: number,
 ): Promise<boolean> {
-  //TODO:  A provider should be passed in instead of creating a new one here.
-  const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
+  // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
+  let _skipFetchSetup = false;
+  if (
+    typeof globalThis !== "undefined" &&
+    "TW_SKIP_FETCH_SETUP" in globalThis &&
+    typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
+  ) {
+    _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
+  }
+
+  //TODO: A provider should be passed in instead of creating a new one here.
+  const provider = new providers.JsonRpcProvider({
+    url: chainIdToThirdwebRpc(chainId),
+    skipFetchSetup: _skipFetchSetup,
+  });
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
   try {

@@ -1,35 +1,41 @@
-import { serialize } from "cookie";
-import { getCookie } from "../helpers/user";
-import { ActiveBodySchema, ThirdwebAuthContext } from "../types";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
+import {
+  ActiveBodySchema,
+  ThirdwebAuthContext,
+} from "../types";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
+import { getCookie } from "../helpers/user";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextRequest,
   ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Invalid method. Only POST supported.",
-    });
+    return Response.json(
+      { error: "Invalid method. Only POST supported." },
+      { status: 405 },
+    );
   }
 
-  const parsedPayload = ActiveBodySchema.safeParse(req.body);
+  const reqBody = await req.json();
+  const parsedPayload = ActiveBodySchema.safeParse(reqBody);
+
   if (!parsedPayload.success) {
-    return res.status(400).json({ error: "Please provide an address" });
+    return Response.json(
+      { error: "Please provide an address." },
+      { status: 400 },
+    );
   }
 
   let cookieExpiration: Date;
-  const cookie = getCookie(
-    req,
-    `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`,
-  );
 
+  const cookie = getCookie(`${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`);
   if (cookie) {
     // If the new account is already logged in, get the expiration time from the cookie
     const {
@@ -48,16 +54,17 @@ export default async function handler(
     );
   }
 
-  res.setHeader("Set-Cookie", [
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, parsedPayload.data.address, {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: cookieExpiration,
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
-  ]);
+  const response = NextResponse.json('', { status: 200 });
+  response.cookies.set({
+    name: THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+    value: parsedPayload.data.address,
+    domain: ctx.cookieOptions?.domain,
+    path: ctx.cookieOptions?.path || "/",
+    sameSite: ctx.cookieOptions?.sameSite || "none",
+    expires: cookieExpiration,
+    httpOnly: true,
+    secure: ctx.cookieOptions?.secure || true,
+  });
 
-  return res.status(200).end();
+  return response;
 }

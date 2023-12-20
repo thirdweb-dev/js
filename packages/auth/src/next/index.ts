@@ -1,3 +1,6 @@
+import type { NextRequest } from "next/server";
+import type { GetServerSidePropsContext } from "next";
+
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
 import payloadHandler from "./routes/payload";
@@ -9,40 +12,35 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
   ThirdwebAuthRoute,
+  NextContext,
 } from "./types";
-import { NextRequest } from "next/server";
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next/types";
 
 export * from "./types";
 
 async function ThirdwebAuthRouter(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  ctx: ThirdwebAuthContext,
+  req: NextRequest,
+  ctx: NextContext,
+  authCtx: ThirdwebAuthContext,
 ) {
   // Catch-all route must be named with [...thirdweb]
-  const { thirdweb } = req.query;
-  const action = thirdweb?.[0] as ThirdwebAuthRoute;
+  const action = ctx.params?.thirdweb?.[0] as ThirdwebAuthRoute;
 
   switch (action) {
     case "payload":
-      return await payloadHandler(req, res, ctx);
+      return await payloadHandler(req, authCtx);
     case "login":
-      return await loginHandler(req, res, ctx);
+      return await loginHandler(req, authCtx);
     case "user":
-      return await userHandler(req, res, ctx);
+      return await userHandler(req, authCtx);
     case "logout":
-      return await logoutHandler(req, res, ctx);
+      return await logoutHandler(req, authCtx);
     case "switch-account":
-      return await switchAccountHandler(req, res, ctx);
+      return await switchAccountHandler(req, authCtx);
     default:
-      return res.status(400).json({
-        message: "Invalid route for authentication.",
-      });
+      return Response.json(
+        { message: "Invalid route for authentication." },
+        { status: 400},
+      );
   }
 }
 
@@ -50,28 +48,28 @@ export function ThirdwebAuth<
   TData extends Json = Json,
   TSession extends Json = Json,
 >(cfg: ThirdwebAuthConfig<TData, TSession>) {
-  const ctx = {
+  const authCtx = {
     ...cfg,
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
   };
 
   function ThirdwebAuthHandler(
-    ...args: [] | [NextApiRequest, NextApiResponse]
+    ...args: [] | [NextRequest, NextContext]
   ) {
     if (args.length === 0) {
-      return async (req: NextApiRequest, res: NextApiResponse) =>
-        await ThirdwebAuthRouter(req, res, ctx as ThirdwebAuthContext);
+      return async (req: NextRequest, ctx: NextContext) =>
+        await ThirdwebAuthRouter(req, ctx, authCtx as ThirdwebAuthContext);
     }
 
-    return ThirdwebAuthRouter(args[0], args[1], ctx as ThirdwebAuthContext);
+    return ThirdwebAuthRouter(args[0], args[1], authCtx as ThirdwebAuthContext);
   }
 
   return {
     ThirdwebAuthHandler,
     getUser: (
-      req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
+      req: GetServerSidePropsContext["req"] | NextRequest,
     ) => {
-      return getUser<TData, TSession>(req, ctx);
+      return getUser<TData, TSession>(req, authCtx);
     },
   };
 }

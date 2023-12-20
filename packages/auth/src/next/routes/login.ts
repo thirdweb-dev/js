@@ -1,26 +1,36 @@
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
 import { GenerateOptionsWithOptionalDomain } from "../../core";
-import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
-import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import {
+  LoginPayloadBodySchema,
+  ThirdwebAuthContext,
+} from "../types";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextRequest,
   ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return Response.json(
+      { error: "Invalid method. Only POST supported." },
+      { status: 405 },
+    );
   }
 
-  const parsedPayload = LoginPayloadBodySchema.safeParse(req.body);
+  const reqBody = await req.json();
+  const parsedPayload = LoginPayloadBodySchema.safeParse(reqBody);
 
   // Get signed login payload from the frontend
   if (!parsedPayload.success) {
-    return res.status(400).json({ error: "Invalid login payload" });
+    return Response.json(
+      { error: "Invalid login payload." },
+      { status: 400 },
+    );
   }
 
   const payload = parsedPayload.data.payload;
@@ -60,11 +70,20 @@ export default async function handler(
     token = await ctx.auth.generate(payload, generateOptions);
   } catch (err: any) {
     if (err.message) {
-      return res.status(400).json({ error: err.message });
+      return Response.json(
+        { error: err.message },
+        { status: 400 },
+      );
     } else if (typeof err === "string") {
-      return res.status(400).json({ error: err });
+      return Response.json(
+        { error: err },
+        { status: 400 },
+      );
     } else {
-      return res.status(400).json({ error: "Invalid login payload" });
+      return Response.json(
+        { error: "Invalid login payload" },
+        { status: 400 },
+      );
     }
   }
 
@@ -78,29 +97,29 @@ export default async function handler(
 
   // Securely set httpOnly cookie on request to prevent XSS on frontend
   // And set path to / to enable thirdweb_auth_token usage on all endpoints
-  res.setHeader("Set-Cookie", [
-    serialize(
-      `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
-      token,
-      {
-        domain: ctx.cookieOptions?.domain,
-        path: ctx.cookieOptions?.path || "/",
-        sameSite: ctx.cookieOptions?.sameSite || "none",
-        expires: new Date(exp * 1000),
-        httpOnly: true,
-        secure: ctx.cookieOptions?.secure || true,
-      },
-    ),
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
-      domain: ctx.cookieOptions?.domain,
-      path: ctx.cookieOptions?.path || "/",
-      sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: new Date(exp * 1000),
-      httpOnly: true,
-      secure: ctx.cookieOptions?.secure || true,
-    }),
-  ]);
+  const response = NextResponse.json({ token }, { status: 200 });
+  response.cookies.set({
+    name: `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
+    value: token,
+    domain: ctx.cookieOptions?.domain,
+    path: ctx.cookieOptions?.path || "/",
+    sameSite: ctx.cookieOptions?.sameSite || "none",
+    expires: new Date(exp * 1000),
+    httpOnly: true,
+    secure: ctx.cookieOptions?.secure || true,
+  });
+
+  response.cookies.set({
+    name: THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+    value: payload.payload.address,
+    domain: ctx.cookieOptions?.domain,
+    path: ctx.cookieOptions?.path || "/",
+    sameSite: ctx.cookieOptions?.sameSite || "none",
+    expires: new Date(exp * 1000),
+    httpOnly: true,
+    secure: ctx.cookieOptions?.secure || true,
+  });
 
   // Send token in body and as cookie for frontend and backend use cases
-  return res.status(200).json({ token });
+  return response;
 }
