@@ -319,17 +319,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   address: deployedContractAddress,
                 });
 
-                // try verifying the contract, might as well
-                try {
-                  // we don't await this, just kick it off and be done with it
-                  verifyContract({
-                    contractAddress: deployedContractAddress,
-                    chainId: selectedChain,
-                  });
-                } catch (e) {
-                  // ignore
-                }
-
                 trackEvent({
                   category: "custom-contract",
                   action: "deploy",
