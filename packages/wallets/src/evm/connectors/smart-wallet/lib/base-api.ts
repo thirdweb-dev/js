@@ -1,11 +1,4 @@
-import {
-  ethers,
-  BigNumber,
-  BigNumberish,
-  providers,
-  utils,
-  BytesLike,
-} from "ethers";
+import { ethers, BigNumber, BigNumberish, providers } from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
@@ -13,11 +6,6 @@ import {
 } from "@account-abstraction/contracts";
 
 import { NotPromise, packUserOp } from "@account-abstraction/utils";
-import {
-  GasOverheads,
-  PaymasterAPI,
-  calcPreVerificationGas,
-} from "@account-abstraction/sdk";
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import {
@@ -27,28 +15,52 @@ import {
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 import { HttpRpcClient } from "./http-rpc-client";
-
-export type BatchData = {
-  targets: (string | undefined)[];
-  data: BytesLike[];
-  values: BigNumberish[];
-};
-
-export interface BaseApiParams {
-  provider: providers.Provider;
-  entryPointAddress: string;
-  accountAddress?: string;
-  overheads?: Partial<GasOverheads>;
-  paymasterAPI?: PaymasterAPI;
-}
-
-export interface UserOpResult {
-  transactionHash: string;
-  success: boolean;
-}
+import type { BaseApiParams, BatchData, PaymasterAPI } from "../types";
+import { arrayify, hexlify } from "ethers/lib/utils";
 
 const DUMMY_SIGNATURE =
   "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+
+const DefaultGasOverheads: GasOverheads = {
+  fixed: 21000,
+  perUserOp: 18300,
+  perUserOpWord: 4,
+  zeroByte: 4,
+  nonZeroByte: 16,
+  bundleSize: 1,
+  sigSize: 65,
+};
+
+interface GasOverheads {
+  /**
+   * fixed overhead for entire handleOp bundle.
+   */
+  fixed: number;
+  /**
+   * per userOp overhead, added on top of the above fixed per-bundle.
+   */
+  perUserOp: number;
+  /**
+   * overhead for userOp word (32 bytes) block
+   */
+  perUserOpWord: number;
+  /**
+   * zero byte cost, for calldata gas cost calculations
+   */
+  zeroByte: number;
+  /**
+   * non-zero byte cost, for calldata gas cost calculations
+   */
+  nonZeroByte: number;
+  /**
+   * expected bundle size, to split per-bundle overhead between all ops.
+   */
+  bundleSize: number;
+  /**
+   * expected length of the userOp signature.
+   */
+  sigSize: number;
+}
 
 /**
  * Base class for all Smart Wallet ERC-4337 Clients to implement.
@@ -70,7 +82,6 @@ export abstract class BaseAccountAPI {
   private readonly entryPointView: EntryPoint;
 
   provider: providers.Provider;
-  overheads?: Partial<GasOverheads>;
   entryPointAddress: string;
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
@@ -81,7 +92,6 @@ export abstract class BaseAccountAPI {
    */
   protected constructor(params: BaseApiParams) {
     this.provider = params.provider;
-    this.overheads = params.overheads;
     this.entryPointAddress = params.entryPointAddress;
     this.accountAddress = params.accountAddress;
     this.paymasterAPI = params.paymasterAPI;
@@ -164,27 +174,21 @@ export abstract class BaseAccountAPI {
   }
 
   /**
-   * should cover cost of putting calldata on-chain, and some overhead.
-   * actual overhead depends on the expected bundle size
-   */
-  async getPreVerificationGas(
-    userOp: Partial<UserOperationStruct>,
-  ): Promise<number> {
-    const p = await utils.resolveProperties(userOp);
-    return calcPreVerificationGas(p, this.overheads);
-  }
-
-  /**
    * ABI-encode a user operation. used for calldata cost estimation
    */
   packUserOp(userOp: NotPromise<UserOperationStruct>): string {
     return packUserOp(userOp, false);
   }
 
-  async encodeUserOpCallDataAndGasLimit(
+  private async fallbackGasLimits(
     detailsForUserOp: TransactionDetailsForUserOp,
     batchData?: BatchData,
-  ): Promise<{ callData: string; callGasLimit: BigNumber }> {
+  ): Promise<{
+    callData: string;
+    callGasLimit: BigNumber;
+    verificationGasLimit: BigNumber;
+    preVerificationGas: BigNumber;
+  }> {
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
     const callData = batchData
       ? detailsForUserOp.data
@@ -236,9 +240,29 @@ export abstract class BaseAccountAPI {
         }));
     }
 
+    const initCode = await this.getInitCode();
+
+    const initGas = await this.estimateCreationGas(initCode);
+    const verificationGasLimit = BigNumber.from(
+      await this.getVerificationGasLimit(),
+    ).add(initGas);
+
+    const partialOp: Partial<UserOperationStruct> = {
+      sender: await this.getAccountAddress(),
+      nonce: 0,
+      initCode,
+      callData,
+      callGasLimit,
+      verificationGasLimit,
+      paymasterAndData: "0x",
+    };
+    const preVerificationGas = this.calcPreVerificationGas(partialOp);
+
     return {
       callData,
       callGasLimit,
+      verificationGasLimit,
+      preVerificationGas,
     };
   }
 
@@ -331,46 +355,54 @@ export abstract class BaseAccountAPI {
       callData,
       maxFeePerGas,
       maxPriorityFeePerGas,
-      callGasLimit: BigNumber.from(0),
-      verificationGasLimit: BigNumber.from(0),
-      preVerificationGas: BigNumber.from(0),
+      callGasLimit: BigNumber.from(10000000),
+      verificationGasLimit: BigNumber.from(10000000),
+      preVerificationGas: BigNumber.from(10000000),
       paymasterAndData: "0x",
       signature: DUMMY_SIGNATURE,
     };
 
     // paymaster data for estimation
     if (this.paymasterAPI) {
-      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
+      const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
         partialOp,
       );
+      const paymasterAndData = paymasterResult.paymasterAndData;
       if (paymasterAndData && paymasterAndData !== "0x") {
         partialOp.paymasterAndData = paymasterAndData;
       }
-    }
-
-    // query bundler for gas limits
-    let estimates;
-    try {
-      estimates = await httpRpcClient.estimateUserOpGas(partialOp);
-    } catch (error: any) {
-      console.error("UserOp simulation error", error.message);
-      throw error;
-    }
-
-    partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
-    partialOp.verificationGasLimit = BigNumber.from(
-      estimates.verificationGasLimit,
-    );
-    partialOp.preVerificationGas = BigNumber.from(estimates.preVerificationGas);
-
-    // This is subotpimal, but PM needs to resign the userOp with the new gas limits - can be fixed with the new paymaster api
-    if (this.paymasterAPI) {
-      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
-        partialOp,
-      );
-      if (paymasterAndData && paymasterAndData !== "0x") {
-        partialOp.paymasterAndData = paymasterAndData;
+      if (paymasterResult.callGasLimit) {
+        partialOp.callGasLimit = BigNumber.from(paymasterResult.callGasLimit);
       }
+      if (paymasterResult.verificationGasLimit) {
+        partialOp.verificationGasLimit = BigNumber.from(
+          paymasterResult.verificationGasLimit,
+        );
+      }
+      if (paymasterResult.preVerificationGas) {
+        partialOp.preVerificationGas = BigNumber.from(
+          paymasterResult.preVerificationGas,
+        );
+      }
+      // TODO fallbacks
+    } else {
+      // query bundler for gas limits
+      let estimates;
+      try {
+        estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+        console.log("--- UserOp simulation", estimates);
+      } catch (error: any) {
+        console.error("UserOp simulation error", error.message);
+        throw error;
+      }
+
+      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+      partialOp.verificationGasLimit = BigNumber.from(
+        estimates.verificationGasLimit,
+      );
+      partialOp.preVerificationGas = BigNumber.from(
+        estimates.preVerificationGas,
+      );
     }
 
     return {
@@ -415,6 +447,32 @@ export abstract class BaseAccountAPI {
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
     return null;
+  }
+
+  calcPreVerificationGas(
+    userOp: Partial<UserOperationStruct>,
+    overheads?: Partial<GasOverheads>,
+  ) {
+    const ov = { ...DefaultGasOverheads, ...(overheads ?? {}) };
+    const p: NotPromise<UserOperationStruct> = {
+      // dummy values, in case the UserOp is incomplete.
+      preVerificationGas: 21000, // dummy value, just for calldata cost
+      signature: hexlify(Buffer.alloc(ov.sigSize, 1)), // dummy signature
+      ...userOp,
+    } as any;
+
+    const packed = arrayify(packUserOp(p, false));
+    const lengthInWord = (packed.length + 31) / 32;
+    const callDataCost = packed
+      .map((x) => (x === 0 ? ov.zeroByte : ov.nonZeroByte))
+      .reduce((sum, x) => sum + x);
+    const ret = Math.round(
+      callDataCost +
+        ov.fixed / ov.bundleSize +
+        ov.perUserOp +
+        ov.perUserOpWord * lengthInWord,
+    );
+    return BigNumber.from(ret);
   }
 }
 

@@ -5,6 +5,7 @@ import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
 import {
   AccountContractInfo,
+  BatchData,
   FactoryContractInfo,
   ProviderConfig,
   SmartWalletConfig,
@@ -27,7 +28,6 @@ import {
 import { AccountAPI } from "./lib/account";
 import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";
-import { BatchData } from "./lib/base-api";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;

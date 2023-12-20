@@ -29,7 +29,7 @@ export {
   getUserOpReceipt,
 } from "../connectors/smart-wallet/utils";
 
-export type { PaymasterAPI } from "@account-abstraction/sdk";
+export type { UserOperationStruct } from "@account-abstraction/contracts";
 
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,

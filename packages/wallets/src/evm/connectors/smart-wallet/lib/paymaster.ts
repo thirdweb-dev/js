@@ -1,9 +1,9 @@
-import { PaymasterAPI } from "@account-abstraction/sdk";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { toJSON } from "./utils";
-
 import { isTwUrl } from "../../../utils/url";
+import { PaymasterAPI, PaymasterResult } from "../types";
 
+const DEBUG = false;
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
   "0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101";
@@ -28,7 +28,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
 
   async getPaymasterAndData(
     userOp: Partial<UserOperationStruct>,
-  ): Promise<string> {
+  ): Promise<PaymasterResult> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
@@ -85,7 +85,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         jsonrpc: "2.0",
         id: 1,
         method: "pm_sponsorUserOperation",
-        params: [await toJSON(userOp), { entryPoint: this.entryPoint }],
+        params: [await toJSON(userOp), this.entryPoint],
       }),
     });
     const res = await response.json();
@@ -101,9 +101,12 @@ Code: ${code}`,
       );
     }
 
+    if (DEBUG) {
+      console.debug("Paymaster returned result: ", res);
+    }
+
     if (res.result) {
-      const result = (res.result as any).paymasterAndData || res.result;
-      return result.toString();
+      return res.result as PaymasterResult;
     } else {
       throw new Error(`Paymaster returned no result from ${this.paymasterUrl}`);
     }

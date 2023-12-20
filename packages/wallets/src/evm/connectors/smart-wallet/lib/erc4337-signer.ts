@@ -1,15 +1,15 @@
 import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { ClientConfig } from "@account-abstraction/sdk";
-import { BaseAccountAPI, BatchData } from "./base-api";
+import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { randomNonce } from "./utils";
 import { deepHexlify } from "@account-abstraction/utils";
+import { BatchData, ProviderConfig } from "../types";
 
 export class ERC4337EthersSigner extends Signer {
-  config: ClientConfig;
+  config: ProviderConfig;
   originalSigner: Signer;
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
@@ -17,7 +17,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
-    config: ClientConfig,
+    config: ProviderConfig,
     originalSigner: Signer,
     erc4337provider: ERC4337EthersProvider,
     httpRpcClient: HttpRpcClient,

@@ -1,4 +1,3 @@
-import type { PaymasterAPI } from "@account-abstraction/sdk";
 import type {
   ChainOrRpcUrl,
   SmartContract,
@@ -7,13 +6,15 @@ import type {
 import type {
   BigNumber,
   BigNumberish,
+  BytesLike,
   ContractInterface,
   Signer,
+  providers,
 } from "ethers";
 import type { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 import { EVMWallet } from "../../interfaces";
 import { WalletOptions } from "../../wallets/base";
-import { BaseApiParams } from "./lib/base-api";
+import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
@@ -86,3 +87,43 @@ export type FactoryContractInfo = {
   ) => Promise<Transaction>;
   getAccountAddress: (factory: SmartContract, owner: string) => Promise<string>;
 };
+
+export type PaymasterResult = {
+  paymasterAndData: string;
+  preVerificationGas?: BigNumber;
+  verificationGasLimit?: BigNumber;
+  callGasLimit?: BigNumber;
+};
+
+/**
+ * an API to external a UserOperation with paymaster info
+ */
+export abstract class PaymasterAPI {
+  /**
+   * @param userOp - a partially-filled UserOperation (without signature and paymasterAndData
+   *  note that the "preVerificationGas" is incomplete: it can't account for the
+   *  paymasterAndData value, which will only be returned by this method..
+   * @returns the value to put into the PaymasterAndData, undefined to leave it empty
+   */
+  abstract getPaymasterAndData(
+    userOp: Partial<UserOperationStruct>,
+  ): Promise<PaymasterResult>;
+}
+
+export type BatchData = {
+  targets: (string | undefined)[];
+  data: BytesLike[];
+  values: BigNumberish[];
+};
+
+export interface BaseApiParams {
+  provider: providers.Provider;
+  entryPointAddress: string;
+  accountAddress?: string;
+  paymasterAPI?: PaymasterAPI;
+}
+
+export interface UserOpResult {
+  transactionHash: string;
+  success: boolean;
+}
