@@ -340,16 +340,7 @@ async function fetchConstructorParams(
   if (constructorParamTypes.length === 0) {
     return "";
   }
-  const requestBody = {
-    apiKey: explorerAPIKey,
-    module: "account",
-    action: "txlist",
-    address: contractAddress,
-    page: "1",
-    sort: "asc",
-    offset: "1",
-  };
-  const parameters = new URLSearchParams({ ...requestBody });
+
   const result = await fetch(
     `${explorerAPIUrl}?module=contract&action=getcontractcreation&contractaddresses=${contractAddress}&apikey=${explorerAPIKey}`,
   );
@@ -389,10 +380,11 @@ async function fetchConstructorParams(
           create2FactoryAddress = await getCreate2FactoryAddress(provider);
         } catch (error) {}
 
-        constructorArgs =
-          tx.to === create2FactoryAddress
-            ? txDeployBytecode.substring(bytecodeHex.length + 64)
-            : txDeployBytecode.substring(bytecodeHex.length);
+        // if deterministic deploy through create2factory, remove salt length too
+        const create2SaltLength = tx.to === create2FactoryAddress ? 64 : 0;
+        constructorArgs = txDeployBytecode.substring(
+          bytecodeHex.length + create2SaltLength,
+        );
       }
     } catch (e) {
       // contracts not published through thirdweb
