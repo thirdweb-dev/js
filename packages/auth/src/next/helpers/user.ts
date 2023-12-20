@@ -49,8 +49,8 @@ export async function getUser<
   TData extends Json = Json,
   TSession extends Json = Json,
 >(
-  req: GetServerSidePropsContext["req"] | NextRequest,
   ctx: ThirdwebAuthContext<TData, TSession>,
+  req?: GetServerSidePropsContext["req"] | NextRequest,
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken();
   if (!token) {
@@ -70,14 +70,12 @@ export async function getUser<
     return null;
   }
 
-  if (!ctx.callbacks?.onUser) {
-    return authenticatedUser;
+  if (req && ctx.callbacks?.onUser) {
+    const data = await ctx.callbacks.onUser(authenticatedUser, req);
+    if (data) {
+      return { ...authenticatedUser, data };
+    }
   }
 
-  const data = await ctx.callbacks.onUser(authenticatedUser, req);
-  if (!data) {
-    return authenticatedUser;
-  }
-
-  return { ...authenticatedUser, data: data };
+  return authenticatedUser;
 }

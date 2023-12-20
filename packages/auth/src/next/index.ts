@@ -67,9 +67,9 @@ export function ThirdwebAuth<
   return {
     ThirdwebAuthHandler,
     getUser: (
-      req: GetServerSidePropsContext["req"] | NextRequest,
+      req?: GetServerSidePropsContext["req"] | NextRequest,
     ) => {
-      return getUser<TData, TSession>(req, authCtx);
+      return getUser<TData, TSession>(authCtx, req);
     },
   };
 }
