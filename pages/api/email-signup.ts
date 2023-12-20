@@ -21,11 +21,11 @@ const handler = async (req: NextRequest) => {
   invariant(process.env.BEEHIIV_API_KEY, "missing BEEHIIV_API_KEY");
 
   const response = await fetch(
-    "https://api.beehiiv.com/v2/publications/9f54090a-6d14-406b-adfd-dbb30574f664/subscriptions",
+    "https://api.beehiiv.com/v2/publications/pub_9f54090a-6d14-406b-adfd-dbb30574f664/subscriptions",
     {
       headers: {
         "Content-Type": "application/json",
-        "X-ApiKey": process.env.BEEHIIV_API_KEY,
+        Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
       },
       method: "POST",
       body: JSON.stringify({
