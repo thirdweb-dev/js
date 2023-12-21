@@ -10,6 +10,7 @@ typedoc({
     "src/evm/wallets/gcp-kms.ts",
     "src/evm/wallets/private-key.ts",
     "src/evm/wallets/aws-secrets-manager.ts",
+    "src/evm/wallets/local-wallet-node.ts",
   ],
   exclude: [],
   output: "both", // TODO: change this to 'json' when old portal is fully migrated to new portal
