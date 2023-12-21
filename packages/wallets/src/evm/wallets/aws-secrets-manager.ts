@@ -31,6 +31,8 @@ export type AwsSecretsManagerWalletOptions = {
  *
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
+ *
+ * @wallet
  */
 export class AwsSecretsManagerWallet extends AbstractWallet {
   #signer?: Promise<Signer>;

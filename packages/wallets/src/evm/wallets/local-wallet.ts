@@ -29,6 +29,9 @@ export type LocalWalletConnectionArgs = {};
 
 const STORAGE_KEY_WALLET_DATA = "localWalletData";
 
+/**
+ * @wallet
+ */
 export class LocalWallet extends AbstractClientWallet<
   LocalWalletOptions,
   LocalWalletConnectionArgs

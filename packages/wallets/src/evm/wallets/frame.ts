@@ -2,6 +2,9 @@ import { walletIds } from "../constants/walletIds";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
+/**
+ * @wallet
+ */
 export class FrameWallet extends AbstractClientWallet {
   connector?: Connector;
 

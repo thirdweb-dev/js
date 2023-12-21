@@ -4,7 +4,13 @@
 import { typedoc } from "typedoc-gen";
 
 typedoc({
-  entryPoints: ["src/index.ts"],
+  entryPoints: [
+    "src/index.ts",
+    "src/evm/wallets/aws-kms.ts",
+    "src/evm/wallets/gcp-kms.ts",
+    "src/evm/wallets/private-key.ts",
+    "src/evm/wallets/aws-secrets-manager.ts",
+  ],
   exclude: [],
   output: "both", // TODO: change this to 'json' when old portal is fully migrated to new portal
 });

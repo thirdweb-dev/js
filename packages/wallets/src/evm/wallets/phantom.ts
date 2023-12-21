@@ -7,6 +7,9 @@ import { getInjectedPhantomProvider } from "../connectors/phantom/getInjectedPha
 
 type PhantomWalletOptions = WalletOptions;
 
+/**
+ * @wallet
+ */
 export class PhantomWallet extends AbstractClientWallet {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

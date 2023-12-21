@@ -16,6 +16,8 @@ export type BloctoOptions = {
 
 /**
  * Wallet Class to connect to [Blocto Wallet](https://blocto.io/)
+ *
+ * @wallet
  */
 export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
   /**

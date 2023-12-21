@@ -37,6 +37,9 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
+/**
+ * @wallet
+ */
 export class CoreWallet extends AbstractClientWallet<CoreWalletAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

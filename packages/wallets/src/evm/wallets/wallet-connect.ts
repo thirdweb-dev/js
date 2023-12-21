@@ -38,6 +38,9 @@ export type WalletConnectOptions = {
   qrModalOptions?: WC2_QRModalOptions;
 };
 
+/**
+ * @wallet
+ */
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;

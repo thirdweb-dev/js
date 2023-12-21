@@ -31,6 +31,9 @@ export {
 
 export type { PaymasterAPI } from "@account-abstraction/sdk";
 
+/**
+ * @wallet
+ */
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
   SmartWalletConnectionArgs

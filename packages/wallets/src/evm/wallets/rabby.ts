@@ -37,6 +37,9 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
+/**
+ * @wallet
+ */
 export class RabbyWallet extends AbstractClientWallet<RabbyAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

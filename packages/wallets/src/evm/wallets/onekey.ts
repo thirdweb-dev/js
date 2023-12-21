@@ -36,7 +36,9 @@ type ConnectWithQrCodeArgs = {
   onQrCodeUri: (uri: string) => void;
   onConnected: (accountAddress: string) => void;
 };
-
+/**
+ * @wallet
+ */
 export class OneKeyWallet extends AbstractClientWallet<OneKeyAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

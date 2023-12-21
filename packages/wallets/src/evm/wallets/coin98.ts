@@ -37,6 +37,9 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
+/**
+ * @wallet
+ */
 export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

@@ -16,6 +16,9 @@ export type MagicLinkOptions = WalletOptions<MagicAuthOptions>;
 export type MagicLinkConnectOptions = MagicAuthConnectOptions;
 export type MagicOAuthProvider = _OAuthProvider;
 
+/**
+ * @wallet
+ */
 export class MagicLink extends AbstractClientWallet<
   MagicLinkOptions,
   MagicAuthConnectOptions

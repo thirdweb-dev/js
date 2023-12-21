@@ -35,7 +35,13 @@ export * from "./wallets/injected";
 export * from "./wallets/local-wallet";
 export * from "./wallets/signer";
 export * from "./wallets/magic";
-export * from "./wallets/metamask";
+
+export {
+  MetaMaskWallet,
+  type MetamaskAdditionalOptions,
+  type MetamaskWalletOptions,
+} from "./wallets/metamask";
+
 export * from "./wallets/phantom";
 export * from "./wallets/private-key";
 export * from "./wallets/rainbow-wallet";

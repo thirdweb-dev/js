@@ -20,6 +20,7 @@ import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  *
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
+ * @wallet
  */
 export class AwsKmsWallet extends AbstractWallet {
   #signer?: Promise<Signer>;

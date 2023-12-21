@@ -56,6 +56,8 @@ export type WalletMeta = {
  * A client side wallet delegates the wallet-specific connection logic to a Connector.
  *
  * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ *
+ * @abstractWallet
  */
 export abstract class AbstractClientWallet<
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -68,9 +70,16 @@ export abstract class AbstractClientWallet<
   protected chains;
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
-  static meta: WalletMeta;
   #connectParams: ConnectParams<TConnectParams> | undefined;
 
+  /**
+   * @internal
+   */
+  static meta: WalletMeta;
+
+  /**
+   * @internal
+   */
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -129,6 +138,7 @@ export abstract class AbstractClientWallet<
   }
 
   /**
+   * @internal
    * Get the options used for connecting to the wallet
    * @returns
    */
@@ -137,7 +147,7 @@ export abstract class AbstractClientWallet<
   }
 
   /**
-   *
+   * @internal
    * Get the options used for creating the wallet instance
    */
   getOptions() {

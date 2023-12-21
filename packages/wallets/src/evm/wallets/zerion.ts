@@ -34,6 +34,9 @@ type ZerionAdditionalOptions = {
   qrModalOptions?: QRModalOptions;
 };
 
+/**
+ * @wallet
+ */
 export class ZerionWallet extends AbstractClientWallet<ZerionAdditionalOptions> {
   connector?: Connector;
   zerionConnector?: ZerionConnector;
