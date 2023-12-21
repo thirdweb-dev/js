@@ -38,20 +38,84 @@ type ConnectWithQrCodeArgs = {
 };
 
 /**
+ * Wallet interface to connect [Coin98 wallet](https://coin98.com/) extension or mobile app.
+ *
+ * @example
+ * ```ts
+ * import { Coin98Wallet } from "@thirdweb-dev/wallets";
+ *
+ * const wallet = new Coin98Wallet();
+ *
+ * wallet.connect();
+ * ```
+ *
  * @wallet
  */
 export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> {
+  /**
+   * @internal
+   */
   connector?: Connector;
+  /**
+   * @internal
+   */
   walletConnectConnector?: WalletConnectConnectorType;
+  /**
+   * @internal
+   */
   Coin98Connector?: Coin98ConnectorType;
+  /**
+   * @internal
+   */
   isInjected: boolean;
-
+  /**
+   * @internal
+   */
   static id = walletIds.coin98 as string;
-
+  /**
+   * @internal
+   */
   public get walletName() {
     return "Coin98 wallet" as const;
   }
 
+  /**
+   * Create instance of `Coin98Wallet`
+   *
+   * @param options - The `options` object contains the following properties:
+   * ### clientId (recommended)
+   *
+   * Provide `clientId` to use the thirdweb RPCs for given `chains`
+   *
+   * You can create a client ID for your application from [thirdweb dashboard](https://thirdweb.com/create-api-key).
+   *
+   * ### projectId (recommended)
+   *
+   * This is only relevant if you want to use [WalletConnect](https://walletconnect.com/) for connecting to Zerion wallet mobile app when MetaMask is not injected.
+   *
+   * This `projectId` can be obtained at [cloud.walletconnect.com](https://cloud.walletconnect.com/). It is highly recommended to use your own project id and only use the default one for testing purposes.
+   *
+   * ### chains (optional)
+   * Provide an array of chains you want to support.
+   *
+   * Must be an array of `Chain` objects, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
+   *
+   * Defaults to our [default chains](/react/react.thirdwebprovider#default-chains).
+   *
+   * ### dappMetadata (optional)
+   * Information about your app that the wallet will display when your app tries to connect to it.
+   *
+   * Must be an object containing `name`, `url`, and optionally `description` and `logoUrl` properties.
+   *
+   * ### qrcode
+   * Whether to display the Wallet Connect QR code Modal or not.
+   *
+   * Must be a `boolean`. Defaults to `true`.
+   *
+   * ### qrModalOptions
+   * WalletConnect's [options](https://docs.walletconnect.com/advanced/walletconnectmodal/options) to customize the QR Code Modal.
+   *
+   */
   constructor(options: Coin98Options) {
     super(Coin98Wallet.id, options);
     this.isInjected = !!getInjectedCoin98Provider();
@@ -106,10 +170,13 @@ export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> 
   }
 
   /**
-   * connect to wallet with QR code
+   * Connect to the wallet using a QR code.
+   * You can use this method to display a QR code. The user can scan this QR code using the Coin98 Wallet mobile app to connect to your dapp.
    *
    * @example
    * ```typescript
+   * const wallet = new WalletConnect();
+   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {
@@ -120,6 +187,18 @@ export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> 
    *  },
    * })
    * ```
+   *
+   * @param options -
+   * The options object contains the following properties/method:
+   *
+   * ### chainId (optional)
+   * If provided, wallet will prompt the user to switch to the network with the given `chainId` after connecting.
+   *
+   * ### onQrCodeUri
+   * A callback to get the QR code URI to display to the user.
+   *
+   * ### onConnected
+   * A callback that is called when the user has connected their wallet using the QR code.
    */
   async connectWithQrCode(options: ConnectWithQrCodeArgs) {
     await this.getConnector();
