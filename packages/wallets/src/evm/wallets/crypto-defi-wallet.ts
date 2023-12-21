@@ -178,8 +178,6 @@ export class CryptoDefiWallet extends AbstractClientWallet<CryptoDefiWalletAddit
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {

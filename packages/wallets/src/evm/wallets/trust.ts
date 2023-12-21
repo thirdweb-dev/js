@@ -196,8 +196,6 @@ export class TrustWallet extends AbstractClientWallet<TrustAdditionalOptions> {
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {

@@ -177,8 +177,6 @@ export class CoreWallet extends AbstractClientWallet<CoreWalletAdditionalOptions
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {

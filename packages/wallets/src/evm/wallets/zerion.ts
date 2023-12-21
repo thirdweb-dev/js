@@ -197,8 +197,6 @@ export class ZerionWallet extends AbstractClientWallet<ZerionAdditionalOptions> 
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {

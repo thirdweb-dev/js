@@ -175,8 +175,6 @@ export class Coin98Wallet extends AbstractClientWallet<Coin98AdditionalOptions> 
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {

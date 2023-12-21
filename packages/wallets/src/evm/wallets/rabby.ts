@@ -175,8 +175,6 @@ export class RabbyWallet extends AbstractClientWallet<RabbyAdditionalOptions> {
    *
    * @example
    * ```typescript
-   * const wallet = new WalletConnect();
-   *
    * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {
