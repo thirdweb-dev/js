@@ -15,8 +15,9 @@ export type BloctoOptions = {
 };
 
 /**
- * Wallet Class to connect to [Blocto Wallet](https://blocto.io/)
+ * Wallet Interface to connect to [Blocto Wallet](https://blocto.io/)
  *
+ * @example
  * ```javascript
  * import { BloctoWallet } from "@thirdweb-dev/wallets";
  *
@@ -65,10 +66,8 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
    *
    * You can create a client ID for your application from [thirdweb dashboard](https://thirdweb.com/create-api-key).
    *
-   *
    * ### appId (recommended)
    * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
-   *
    *
    * ### chains (optional)
    * Provide an array of chains you want to support.
@@ -76,7 +75,6 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
    * Must be an array of `Chain` objects, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
    *
    * Defaults to our [default chains](/react/react.thirdwebprovider#default-chains).
-   *
    *
    * ### dappMetadata (optional)
    * Information about your app that the wallet will display when your app tries to connect to it.
