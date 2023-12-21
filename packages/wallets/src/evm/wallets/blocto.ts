@@ -17,6 +17,14 @@ export type BloctoOptions = {
 /**
  * Wallet Class to connect to [Blocto Wallet](https://blocto.io/)
  *
+ * ```javascript
+ * import { BloctoWallet } from "@thirdweb-dev/wallets";
+ *
+ * const wallet = new BloctoWallet();
+ *
+ * wallet.connect();
+ * ```
+ *
  * @wallet
  */
 export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
@@ -50,7 +58,46 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
 
   /**
    * Create a `BloctoWallet` instance
-   * @param options - options to `BloctoWallet` instance
+   * @param options - The `options` object includes the following properties
+   *
+   * ### clientId (recommended)
+   * Provide `clientId` to use the thirdweb RPCs for given `chains`
+   *
+   * You can create a client ID for your application from [thirdweb dashboard](https://thirdweb.com/create-api-key).
+   *
+   *
+   * ### appId (recommended)
+   * To get advanced features and support from Blocto, you can create an appId from [blocto dashboard](https://docs.blocto.app/blocto-sdk/register-app-id)
+   *
+   *
+   * ### chains (optional)
+   * Provide an array of chains you want to support.
+   *
+   * Must be an array of `Chain` objects, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
+   *
+   * Defaults to our [default chains](/react/react.thirdwebprovider#default-chains).
+   *
+   *
+   * ### dappMetadata (optional)
+   * Information about your app that the wallet will display when your app tries to connect to it.
+   *
+   * Must be an object containing `name`, `url`, and optionally `description` and `logoUrl` properties.
+   *
+   * ```javascript
+   * import { BloctoWallet } from "@thirdweb-dev/wallets";
+   *
+   * const walletWithOptions = new BloctoWallet({
+   *   dappMetadata: {
+   *     name: "thirdweb powered dApp",
+   *     url: "https://thirdweb.com",
+   *     description: "thirdweb powered dApp",
+   *     logoUrl: "https://thirdweb.com/favicon.ico",
+   *   },
+   * });
+   * ```
+   *
+   * ### chain (optional)
+   * The Network to connect the wallet to. Must be a `Chain` object, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
    */
   constructor(options?: WalletOptions<BloctoOptions>) {
     if (options?.chain && options.clientId) {
@@ -60,6 +107,9 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
     super(BloctoWallet.id, options);
   }
 
+  /**
+   * @internal
+   */
   protected async initConnector(): Promise<Connector> {
     const { BloctoConnector } = await import("../connectors/blocto");
     const bloctoConnector = new BloctoConnector({
