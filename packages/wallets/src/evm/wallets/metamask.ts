@@ -22,9 +22,7 @@ export type MetamaskAdditionalOptions = {
   projectId?: string;
 
   /**
-   * options to customize the Wallet Connect QR Code Modal ( only relevant when qrcode is true )
-   *
-   * https://docs.walletconnect.com/2.0/web3modal/options
+   * WalletConnect's [options](https://docs.walletconnect.com/advanced/walletconnectmodal/options) to customize the QR Code Modal.
    */
   qrModalOptions?: QRModalOptions;
 };
@@ -144,6 +142,9 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
    * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
    *
    * Must be a `boolean`. Defaults to `true`.
+   *
+   * ### qrModalOptions
+   * options to customize the Wallet Connect QR Code Modal ( only relevant when qrcode is true )
    */
   constructor(options: MetamaskWalletOptions) {
     super(MetaMaskWallet.id, options);
@@ -203,7 +204,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
   /**
    * Connect to the MetaMask wallet using a QR code if the user does not have the Metamask extension installed.
    *
-   * You can use this method to display a QR code for the user to scan with the MetaMask mobile app.
+   * You can use this method to display a QR code. User can scan the QR code from the MetaMask mobile app to connect to your dapp.
    *
    * @example
    * ```typescript

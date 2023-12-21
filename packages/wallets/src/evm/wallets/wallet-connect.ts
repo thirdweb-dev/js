@@ -31,9 +31,7 @@ export type WalletConnectOptions = {
   qrcode?: boolean;
 
   /**
-   * options to customize the QR Code Modal
-   *
-   * https://docs.walletconnect.com/2.0/web3modal/options
+   * WalletConnect's [options](https://docs.walletconnect.com/advanced/walletconnectmodal/options) to customize the QR Code Modal.
    */
   qrModalOptions?: WC2_QRModalOptions;
 };
@@ -229,7 +227,8 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   }
 
   /**
-   * Connect to the wallet using a QR code. You can use this method to display a QR code for the user to scan with the wallet mobile app.
+   * Connect to the wallet using a QR code.
+   * You can use this method to display a QR code. User can scan this QR code from the Wallet mobile app to connect to your dapp.
    *
    * @example
    * ```typescript
@@ -278,6 +277,9 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
 
+  /**
+   * @internal
+   */
   async connectWithModal(options?: { chainId?: number }) {
     await this.getConnector();
     const wcConnector = this.#walletConnectConnector;
