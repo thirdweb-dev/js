@@ -120,6 +120,14 @@ export class SafeWallet extends AbstractClientWallet<
   }
 
   /**
+   * Get the personal wallet that is connected to the Safe wallet.
+   * @returns
+   */
+  getPersonalWallet() {
+    return this.connector?.personalWallet;
+  }
+
+  /**
    * Auto connect the wallet if it was previously connected.
    */
   autoConnect(params: ConnectParams<SafeConnectionArgs>) {
