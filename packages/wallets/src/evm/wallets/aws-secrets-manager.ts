@@ -10,26 +10,26 @@ export type AwsSecretsManagerWalletOptions = {
 };
 
 /**
- * Create a wallet instance using a private key stored in AWS Secrets Manager.
+ * Connect to a wallet with a private key stored in [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
  *
- *  @example
- * ```javascript
- * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
- * import { AwsSecretsManagerWallet } from "@thirdweb-dev/sdk/evm/wallets"
+ * @example
+ *
+ * To instantiate a wallet with AWS Secrets Manager, you need to gather the necessary secret ID and secret name from AWS.
+ *
+ * ```typescript
+ * import { AwsSecretsManagerWallet } from "@thirdweb-dev/wallets/evm/wallets/aws-secrets-manager";
  *
  * const wallet = new AwsSecretsManagerWallet({
- *   secretName: "my-secret",
- *   secretKeyName: "private-key",
+ *   secretId: "{{secret-id}}", // ID of the secret value
+ *   secretKeyName: "{{secret-key-name}}", // Name of the secret value
  *   awsConfig: {
- *     region: "us-east-1",
+ *     region: "us-east-1", // Region where your secret is stored
  *     credentials: {
- *       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
- *       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+ *       accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Add environment variables to store your AWS credentials
+ *       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Add environment variables to store your AWS credentials
  *     },
- *   }
+ *   },
  * });
- *
- * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  *
  * @wallet
@@ -43,6 +43,9 @@ export class AwsSecretsManagerWallet extends AbstractWallet {
     this.#options = options;
   }
 
+  /**
+   * Get [ethers signer](https://docs.ethers.io/v5/api/signer/) of the connected wallet
+   */
   async getSigner(): Promise<Signer> {
     if (!this.#signer) {
       // construct our promise that will resolve to a signer (eventually)
