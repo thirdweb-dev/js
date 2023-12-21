@@ -36,14 +36,13 @@ export type { PaymasterAPI } from "@account-abstraction/sdk";
  *
  * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
  *
- * **This page is a full reference**, explaining how to use Smart Wallet with the Wallet SDK to connect a smart wallet to your app.
+ * This page is a full reference, explaining how to use Smart Wallet with the Wallet SDK to connect a smart wallet to your app.
+ * _For a complete overview of Smart Wallets, visit the [Smart Wallet SDK documentation](https://portal.thirdweb.com/wallets/smart-wallet)_
  *
- * **For a complete overview of Smart Wallets, visit the [Smart Wallet SDK documentation](https://docs.thirdweb.com/smart-wallet).**
- *
- * References
+ * #### References
  * - [How to use smart wallets with the thirdweb SDKs.](https://portal.thirdweb.com/wallets/smart-wallet)
  * - [Learn more about what a smart wallet is and how it works.](https://portal.thirdweb.com/wallets/smart-wallet/how-it-works)
- * - [Using the thirdweb account abstraction infrastructure.]((https://portal.thirdweb.com/wallets/smart-wallet/infrastructure)
+ * - [Using the thirdweb account abstraction infrastructure.](https://portal.thirdweb.com/wallets/smart-wallet/infrastructure)
  *
  * @example
  *
@@ -300,6 +299,13 @@ export class SmartWallet extends AbstractClientWallet<
     return this.connector;
   }
 
+  /**
+   * Get the personal wallet that is connected to the Smart Wallet.
+   * @example
+   * ```ts
+   * const personalWallet = wallet.getPersonalWallet();
+   * ```
+   */
   getPersonalWallet() {
     return this.connector?.personalWallet;
   }
@@ -388,8 +394,19 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute a single transaction and wait for confirmations
-   * @param transaction - The transaction to execute
-   * @returns The transaction receipt
+   *
+   * @example
+   * ```javascript
+   * const transaction = prepareTransaction();
+   * await wallet.execute(transaction);
+   * ```
+   *
+   * @param transaction -
+   * The transaction to execute. Must be of type `Transaction` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
+   *
+   * Creating these transactions can be done easily using the [Transaction Builder](https://portal.thirdweb.com/typescript/v4/interact#prepare) from the thirdweb SDK.
+   *
+   * @returns `TransactionResult` containing the transaction receipt.
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -398,8 +415,12 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
-   * @param transactions - The transactions to send
-   * @returns The transaction result
+   * @param transactions -
+   * An array of transactions to send. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/@thirdweb-dev/sdk) package.
+   *
+   * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
+   *
+   * @returns `TransactionResult` containing the transaction receipt.
    */
   async sendBatch(
     transactions: Transaction[],
@@ -409,9 +430,24 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * Execute multiple transactions in a single batch and wait for confirmations
-   * @param transactions - The transactions to execute
-   * @returns The transaction receipt
+   * Execute multiple transactions in a single batch and wait for confirmations, only requiring one signature from the personal wallet.
+   *
+   * ```javascript
+   * // Then you can execute multiple transactions at once
+   * const transactions = [
+   *   prepareTransaction1(),
+   *   prepareTransaction2(),
+   *   prepareTransaction3(),
+   * ];
+   * await wallet.executeBatch(transactions);
+   * ```
+   *
+   * @param transactions -
+   * An array of transactions to execute. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/@thirdweb-dev/sdk) package.
+   *
+   * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
+   *
+   * @returns `TransactionResult` containing the transaction receipt.
    */
   async executeBatch(
     transactions: Transaction<any>[],
@@ -514,7 +550,14 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   *
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   *
+   * @example
+   * ```ts
+   * const tx = await wallet.deploy();
+   * ```
+   *
    * @returns The transaction receipt
    */
   async deploy(): Promise<TransactionResult> {
@@ -525,6 +568,12 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Manually deploy the smart wallet contract. If already deployed this will do nothing.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   *
+   * @example
+   * ```ts
+   * await wallet.deployIfNeeded();
+   * ```
+   *
    * @returns The transaction receipt
    */
   async deployIfNeeded(): Promise<void> {
@@ -534,7 +583,12 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Check if the smart wallet contract is deployed
-   * @returns true if the smart wallet contract is deployed
+   * @example
+   * ```ts
+   * const isDeployed = await wallet.isDeployed();
+   * ```
+   *
+   * @returns `true` if the smart wallet contract is deployed
    */
   async isDeployed(): Promise<boolean> {
     const connector = await this.getConnector();
@@ -542,9 +596,35 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * Create and add a session key to the smart wallet.
-   * @param keyAddress - The address of the session key to add.
-   * @param permissions - The permissions to grant to the session key.
+   * Create and add a session key to the Smart Wallet with specific permissions.
+   * @example
+   * ```javascript
+   * // Then you can add session keys with permissions
+   * await wallet.createSessionKey(
+   *   "0x...", // the session key address
+   *   {
+   *       approvedCallTargets: ["0x..."], // the addresses of contracts that the session key can call
+   *       nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
+   *       startDate: new Date(), // the date when the session key becomes active
+   *       expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // the date when the session key expires
+   *   }
+   * );
+   * ```
+   *
+   * @param keyAddress - The address of the session key to add to the Smart Wallet.
+   *
+   * @param permissions -
+   * The specific permissions to give to the session key.
+   * Must be of type `SignerPermissionsInput` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
+   *
+   * ```typescript
+   * {
+   *   startDate: Date;
+   *   expirationDate: Date;
+   *   nativeTokenLimitPerTransaction: number;
+   *   approvedCallTargets: string[];
+   * }
+   * ```
    */
   async createSessionKey(
     keyAddress: string,
@@ -555,8 +635,15 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * Remove a session key from the smart wallet.
-   * @param keyAddress - The address of the session key to remove.
+   * Revoke a session key from the Smart Wallet.
+   * @example
+   * ```javascript
+   * await wallet.revokeSessionKey(
+   *   "0x...", // the session key address
+   * );
+   * ```
+   *
+   * @param keyAddress - The address of the session key to revoke.
    */
   async revokeSessionKey(keyAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
