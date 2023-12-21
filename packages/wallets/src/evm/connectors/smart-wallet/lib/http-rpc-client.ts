@@ -4,7 +4,7 @@ import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
 import pkg from "../../../../../package.json";
 
-const DEBUG = true;
+export const DEBUG = true;
 function isBrowser() {
   return typeof window !== "undefined";
 }

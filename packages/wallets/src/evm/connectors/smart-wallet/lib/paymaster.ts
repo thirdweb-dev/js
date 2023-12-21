@@ -2,8 +2,8 @@ import { UserOperationStruct } from "@account-abstraction/contracts";
 import { toJSON } from "./utils";
 import { isTwUrl } from "../../../utils/url";
 import { PaymasterAPI, PaymasterResult } from "../types";
+import { DEBUG } from "./http-rpc-client";
 
-const DEBUG = false;
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
   "0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101";
@@ -106,9 +106,21 @@ Code: ${code}`,
     }
 
     if (res.result) {
-      return res.result as PaymasterResult;
+      // some paymasters return a string, some return an object with more data
+      if (typeof res.result === "string") {
+        return {
+          paymasterAndData: res.result,
+        };
+      } else {
+        return res.result as PaymasterResult;
+      }
     } else {
-      throw new Error(`Paymaster returned no result from ${this.paymasterUrl}`);
+      const error =
+        res.error?.message ||
+        res.error ||
+        response.statusText ||
+        "unknown error";
+      throw new Error(`Paymaster error from ${this.paymasterUrl}: ${error}`);
     }
   }
 }

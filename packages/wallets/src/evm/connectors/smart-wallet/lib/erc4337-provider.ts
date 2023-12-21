@@ -46,18 +46,8 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
       throw new Error("Should not get here. Investigate.");
     }
     if (method === "estimateGas") {
-      // hijack this to estimate gas from the entrypoint instead
-      const userOp = await this.smartAccountAPI.createUnsignedUserOp(
-        this.httpRpcClient,
-        {
-          target: params.transaction.to,
-          data: params.transaction.data,
-          value: params.transaction.value,
-          gasLimit: params.transaction.gasLimit,
-          nonce: params.transaction.nonce,
-        },
-      );
-      return userOp.callGasLimit;
+      // gas estimation does nothing at this layer, sendTransaction will do the gas estimation for the userOp
+      return BigNumber.from(500000);
     }
     return await this.originalProvider.perform(method, params);
   }

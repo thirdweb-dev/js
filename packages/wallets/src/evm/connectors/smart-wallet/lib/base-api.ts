@@ -386,7 +386,13 @@ export abstract class BaseAccountAPI {
         );
       } else {
         // otherwise fallback to bundler for gas limits
-        const estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+        let estimates;
+        try {
+          estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+          console.log("--- UserOp simulation", estimates);
+        } catch (error: any) {
+          throw this.unwrapBundlerError(error);
+        }
         partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
         partialOp.verificationGasLimit = BigNumber.from(
           estimates.verificationGasLimit,
@@ -412,8 +418,7 @@ export abstract class BaseAccountAPI {
         estimates = await httpRpcClient.estimateUserOpGas(partialOp);
         console.log("--- UserOp simulation", estimates);
       } catch (error: any) {
-        console.error("UserOp simulation error", error.message);
-        throw error;
+        throw this.unwrapBundlerError(error);
       }
 
       partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
@@ -493,6 +498,12 @@ export abstract class BaseAccountAPI {
         ov.perUserOpWord * lengthInWord,
     );
     return BigNumber.from(ret);
+  }
+
+  private unwrapBundlerError(error: any) {
+    const message =
+      error?.error?.message || error.error || error.message || error;
+    return new Error(message);
   }
 }
 
