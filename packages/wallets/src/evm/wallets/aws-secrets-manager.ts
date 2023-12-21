@@ -13,7 +13,6 @@ export type AwsSecretsManagerWalletOptions = {
  * Connect to a wallet with a private key stored in [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
  *
  * @example
- *
  * To instantiate a wallet with AWS Secrets Manager, you need to gather the necessary secret ID and secret name from AWS.
  *
  * ```typescript
@@ -38,6 +37,19 @@ export class AwsSecretsManagerWallet extends AbstractWallet {
   #signer?: Promise<Signer>;
   #options: AwsSecretsManagerWalletOptions;
 
+  /**
+   * Create an instance of `AwsSecretsManagerWallet`
+   * @param options - The `options` object includes the following properties:
+   *
+   * ### `secretId`
+   * The ID of the secret value.
+   *
+   * ### `secretKeyName`
+   * The name of the secret value.
+   *
+   * ### `awsConfig`
+   * The object of type `SecretsManagerClientConfig` from `@aws-sdk/client-secrets-manager` package.
+   */
   constructor(options: AwsSecretsManagerWalletOptions) {
     super();
     this.#options = options;

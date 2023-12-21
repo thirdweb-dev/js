@@ -25,6 +25,12 @@ import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 export class AwsKmsWallet extends AbstractWallet {
   #signer?: Promise<Signer>;
   #options: AwsKmsSignerCredentials;
+
+  /**
+   * Create instance of `AwsKmsWallet`
+   * @param options -
+   * The `options` object of type `AwsKmsSignerCredentials` from `ethers-aws-kms-signer` package
+   */
   constructor(options: AwsKmsSignerCredentials) {
     super();
     this.#options = options;
