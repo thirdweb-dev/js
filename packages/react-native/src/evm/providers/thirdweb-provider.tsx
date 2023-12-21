@@ -18,7 +18,7 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import type { Locale } from "../i18n/types";
 
-interface ThirdwebProviderProps<TChains extends Chain[]>
+export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
     "supportedWallets" | "secretKey" | "signer" | "theme"

@@ -38,7 +38,11 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
-export { Web3Button, type ActionFn } from "./components/Web3Button";
+export {
+  Web3Button,
+  type Web3ButtonProps,
+  type ActionFn,
+} from "./components/Web3Button";
 
 // utilities
 export * from "./utils/uri";
@@ -61,11 +65,19 @@ export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWa
 export * from "./assets";
 
 // providers
-// export * from "./providers/full";
-export * from "./providers/thirdweb-provider";
+export {
+  ThirdwebProvider,
+  type DefaultChains,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core";
 
 // ThirdwebSDK RN
 export { ThirdwebSDK } from "./sdk/ThirdwebSDK";
+
+export {
+  type SupportedTokens,
+  defaultTokens,
+} from "./components/SendFunds/defaultTokens";
