@@ -697,4 +697,21 @@ export class SmartWallet extends AbstractClientWallet<
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
     return this.connect(params);
   }
+
+  /**
+   * Connect the SmartWallet with given personalWallet
+   * @param connectOptions -
+   * The `connectOptions` object includes the following properties:
+   *
+   * #### personalWallet
+   * The instance of a personal wallet that can sign transactions on the Smart Wallet.
+   * Must be of type `EVMWallet` instance such as `CoinbaseWallet` or `MetamaskWallet`.
+   *
+   * @returns A Promise that resolves to the address of the Smart Wallet.
+   */
+  connect(
+    connectOptions?: ConnectParams<SmartWalletConnectionArgs> | undefined,
+  ): Promise<string> {
+    return super.connect(connectOptions);
+  }
 }

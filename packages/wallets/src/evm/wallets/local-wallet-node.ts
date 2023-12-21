@@ -21,6 +21,9 @@ import { LocalWallet, LocalWalletOptions } from "./local-wallet";
  * // generate a random wallet
  * await wallet.generate();
  *
+ * // connect wallet
+ * await wallet.connect();
+ *
  * // at any point, you can save the wallet to persistent storage
  * await wallet.save(config);
  * // and load it back up

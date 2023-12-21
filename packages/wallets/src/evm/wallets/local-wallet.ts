@@ -48,6 +48,7 @@ const STORAGE_KEY_WALLET_DATA = "localWalletData";
  *
  * // generate a random wallet
  * await wallet.generate();
+ *
  * // connect the wallet to the application
  * await wallet.connect();
  *
