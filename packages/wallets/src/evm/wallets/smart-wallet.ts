@@ -416,7 +416,7 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
    * @param transactions -
-   * An array of transactions to send. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/@thirdweb-dev/sdk) package.
+   * An array of transactions to send. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
    *
    * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
    *
@@ -443,7 +443,7 @@ export class SmartWallet extends AbstractClientWallet<
    * ```
    *
    * @param transactions -
-   * An array of transactions to execute. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/@thirdweb-dev/sdk) package.
+   * An array of transactions to execute. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
    *
    * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
    *
