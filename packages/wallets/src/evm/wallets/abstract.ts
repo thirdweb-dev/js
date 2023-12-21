@@ -92,7 +92,7 @@ export abstract class AbstractWallet
   /**
    * Returns the balance of the connected wallet for the specified token address. If no token address is specified, it returns the balance of the native token
    *
-   * @param tokenAddress - the contract address of the token
+   * @param tokenAddress - The contract address of the token
    */
   public async getBalance(tokenAddress: string = NATIVE_TOKEN_ADDRESS) {
     const signer = await this.getSigner();

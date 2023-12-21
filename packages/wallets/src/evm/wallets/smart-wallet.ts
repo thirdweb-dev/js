@@ -32,25 +32,247 @@ export {
 export type { PaymasterAPI } from "@account-abstraction/sdk";
 
 /**
+ * Let your users connect to a [Smart Wallet](/glossary/smart-wallet).
+ *
+ * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
+ *
+ * **This page is a full reference**, explaining how to use Smart Wallet with the Wallet SDK to connect a smart wallet to your app.
+ *
+ * **For a complete overview of Smart Wallets, visit the [Smart Wallet SDK documentation](https://docs.thirdweb.com/smart-wallet).**
+ *
+ * References
+ * - [How to use smart wallets with the thirdweb SDKs.](https://portal.thirdweb.com/wallets/smart-wallet)
+ * - [Learn more about what a smart wallet is and how it works.](https://portal.thirdweb.com/wallets/smart-wallet/how-it-works)
+ * - [Using the thirdweb account abstraction infrastructure.]((https://portal.thirdweb.com/wallets/smart-wallet/infrastructure)
+ *
+ * @example
+ *
+ * To connect to a smart wallet, a personal wallet (acting as the key to the smart wallet) must first be connected.
+ *
+ * ```ts
+ * import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
+ * import { Goerli } from "@thirdweb-dev/chains";
+ *
+ * // First, connect the personal wallet, which can be any wallet (metamask, walletconnect, etc.)
+ * // Here we're just generating a new local wallet which can be saved later
+ * const personalWallet = new LocalWallet();
+ * await personalWallet.generate();
+ *
+ * // Setup the Smart Wallet configuration
+ * const config: SmartWalletConfig = {
+ *   chain: Goerli, // the chain where your smart wallet will be or is deployed
+ *   factoryAddress: "{{factory_address}}", // your own deployed account factory address
+ *   clientId: "YOUR_CLIENT_ID", // Use client id if using on the client side, get it from dashboard settings
+ *   secretKey: "YOUR_SECRET_KEY", // Use secret key if using on the server, get it from dashboard settings
+ *   gasless: true, // enable or disable gasless transactions
+ * };
+ *
+ * // Then, connect the Smart wallet
+ * const wallet = new SmartWallet(config);
+ * await wallet.connect({
+ *   personalWallet,
+ * });
+ *
+ * // You can then use this wallet to perform transactions via the SDK
+ * const sdk = await ThirdwebSDK.fromWallet(wallet, Goerli);
+ * ```
+ *
  * @wallet
  */
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
   SmartWalletConnectionArgs
 > {
+  /**
+   * @internal
+   */
   connector?: SmartWalletConnectorType;
 
+  /**
+   * @internal
+   */
   static meta = {
     name: "Smart Wallet",
     iconURL:
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
   };
 
+  /**
+   * @internal
+   */
   static id = walletIds.smartWallet as string;
+
+  /**
+   * @internal
+   */
   public get walletName() {
     return "Smart Wallet";
   }
 
+  /**
+   *
+   * @param options - The `options` object includes the following properties:
+   * ### Required Properties
+   *
+   * #### chain
+   * The chain that the Smart Wallet contract is deployed to.
+   *
+   * Either a `Chain` object, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package, a chain name, or an RPC URL.
+   *
+   *
+   * #### factoryAddress
+   * The address of the Smart Wallet Factory contract.
+   *
+   * Must be a `string`.
+   *
+   *
+   * #### gasless
+   * Whether to turn on or off gasless transactions.
+   *
+   * - If set to `true`, all gas fees will be paid by a paymaster.
+   * - If set to `false`, all gas fees will be paid by the Smart Wallet itself (needs to be funded).
+   *
+   * Must be a `boolean`.
+   *
+   *
+   * ### Optional properties
+   *
+   * #### clientId or secretKey (recommended)
+   * Your API key can be obtained from the [thirdweb dashboard](https://thirdweb.com/create-api-key).
+   *
+   * If you're using your own bundler and paymaster, you can set this to an empty string.
+   *
+   * You can use either the `clientId` or the `secretKey` depending on whether your application is client or server side.
+   *
+   * Must be a `string`.
+   *
+   * #### factoryInfo
+   * Customize how the Smart Wallet Factory contract is interacted with. If not provided, the default functions will be used.
+   *
+   * Must be a `object`. The object can contain the following properties:
+   *
+   * - `createAccount` - a function that returns the transaction object to create a new Smart Wallet.
+   * - `getAccountAddress` - a function that returns the address of the Smart Wallet contract given the owner address.
+   * - `abi` - optional ABI. If not provided, the ABI will be auto-resolved.
+   *
+   * ```javascript
+   *  const config: SmartWalletConfig = {
+   *       chain,
+   *       gasless,
+   *       factoryAddress,
+   *       clientId,
+   *       factoryInfo: {
+   *         createAccount: async (factory, owner) => {
+   *           return factory.prepare("customCreateAccount", [
+   *             owner,
+   *             getExtraData(),
+   *           ]);
+   *         },
+   *         getAccountAddress: async (factory, owner) => {
+   *           return factory.call("getAccountAddress", [owner]);
+   *         },
+   *         abi: [...]
+   *       },
+   *     };
+   * ```
+   *
+   *
+   * #### accountInfo
+   * Customize how the Smart Wallet Account contract is interacted with. If not provided, the default functions will be used.
+   *
+   * Must be a `object`. The object can contain the following properties:
+   *
+   * - `execute` - a function that returns the transaction object to execute an arbitrary transaction.
+   * - `getNonce` - a function that returns the current nonce of the account.
+   * - `abi` - optional ABI. If not provided, the ABI will be auto-resolved.
+   *
+   * ```javascript
+   *  const config: SmartWalletConfig = {
+   *       chain,
+   *       gasless,
+   *       factoryAddress,
+   *       clientId,
+   *       accountInfo: {
+   *         execute: async (account, target, value, data) => {
+   *           return account.prepare("customExecute", [
+   *             target, value, data
+   *           ]);
+   *         },
+   *         getNonce: async (account) => {
+   *           return account.call("getNonce");
+   *         },
+   *         abi: [...]
+   *       },
+   *     };
+   * ```
+   *
+   * #### bundlerUrl
+   * Your own bundler URL to send user operations to. Uses thirdweb's bundler by default.
+   *
+   * Must be a `string`.
+   *
+   * #### paymasterUrl
+   * Your own paymaster URL to send user operations to for gasless transactions. Uses thirdweb's paymaster by default.
+   *
+   * Must be a `string`.
+   *
+   * #### paymasterAPI
+   * Fully customize how the paymaster data is computed.
+   *
+   * Must be a `PaymasterAPI` class.
+   *
+   * ```javascript
+   * class MyPaymaster extends PaymasterAPI {
+   *   async getPaymasterAndData(
+   *     userOp: Partial<UserOperationStruct>,
+   *   ): Promise<string> {
+   *     // your implementation, must return the signed paymaster data
+   *   }
+   * }
+   *
+   * const config: SmartWalletConfig = {
+   *   chain,
+   *   gasless,
+   *   factoryAddress,
+   *   clientId,
+   *   // highlight-start
+   *   paymasterAPI: new MyPaymaster(),
+   *   // highlight-end
+   * };
+   * ```
+   *
+   *
+   * #### entryPointAddress
+   * The entrypoint contract address. Uses v0.6 by default.
+   *
+   * Must be a `string`.
+   *
+   * #### chains
+   * Provide an array of chains you want to support.
+   *
+   * Must be an array of `Chain` objects, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
+   *
+   * Defaults to thirdweb's [default chains](/react/react.thirdwebprovider#default-chains).
+   *
+   * #### dappMetadata
+   * Information about your app that the wallet will display when your app tries to connect to it.
+   *
+   * Must be an object containing `name`, `url` and optionally `description` and `logoUrl` properties.
+   *
+   * ```javascript
+   * import { SmartWallet } from "@thirdweb-dev/wallets";
+   *
+   * const wallet = new SmartWallet({
+   *   dappMetadata: {
+   *     name: "thirdweb powered dApp",
+   *     url: "https://thirdweb.com",
+   *     description: "thirdweb powered dApp", // optional
+   *     logoUrl: "https://thirdweb.com/favicon.ico", // optional
+   *   },
+   * });
+   * ```
+   *
+   */
   constructor(options: WalletOptions<SmartWalletConfig>) {
     if (options.clientId && typeof options.chain === "object") {
       try {
@@ -83,7 +305,7 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns The signature of the message
+   * Sign a message and return the signature
    */
   public async signMessage(message: Bytes | string): Promise<string> {
     // Deploy smart wallet if needed
@@ -134,7 +356,8 @@ export class SmartWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns The signature of the message (for legacy EIP-1271 signature verification)
+   * This is only for for legacy EIP-1271 signature verification
+   * Sign a message and return the signature
    */
   private async signMessageLegacy(
     signer: Signer,
@@ -145,8 +368,8 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Check whether the connected signer can execute a given transaction using the smart wallet.
-   * @param transaction - the transaction to execute using the smart wallet.
-   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   * @param transaction - The transaction to execute using the smart wallet.
+   * @returns `Promise<true>` if connected signer can execute the transaction using the smart wallet.
    */
   async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
     const connector = await this.getConnector();
@@ -155,7 +378,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a single transaction without waiting for confirmations
-   * @param transaction - the transaction to send
+   * @param transaction - The transaction to send
    * @returns The transaction result
    */
   async send(transaction: Transaction): Promise<providers.TransactionResponse> {
@@ -165,7 +388,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute a single transaction and wait for confirmations
-   * @param transaction - the transaction to execute
+   * @param transaction - The transaction to execute
    * @returns The transaction receipt
    */
   async execute(transaction: Transaction): Promise<TransactionResult> {
@@ -175,7 +398,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
-   * @param transactions - the transactions to send
+   * @param transactions - The transactions to send
    * @returns The transaction result
    */
   async sendBatch(
@@ -187,7 +410,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute multiple transactions in a single batch and wait for confirmations
-   * @param transactions - the transactions to execute
+   * @param transactions - The transactions to execute
    * @returns The transaction receipt
    */
   async executeBatch(
@@ -199,7 +422,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a single raw transaction without waiting for confirmations
-   * @param transaction - the transaction to send
+   * @param transaction - The transaction to send
    * @returns The transaction result
    */
   async sendRaw(
@@ -211,7 +434,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute a single raw transaction and wait for confirmations
-   * @param transaction - the transaction to execute
+   * @param transaction - The transaction to execute
    * @returns The transaction receipt
    */
   async executeRaw(
@@ -223,7 +446,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a single transaction
-   * @param transaction - the transaction to estimate
+   * @param transaction - The transaction to estimate
    * @returns
    */
   async estimate(transaction: Transaction<any>) {
@@ -233,7 +456,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a batch of transactions
-   * @param transactions - the transactions to estimate
+   * @param transactions - The transactions to estimate
    * @returns
    */
   async estimateBatch(transactions: Transaction<any>[]) {
@@ -243,7 +466,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a single raw transaction
-   * @param transactions - the transactions to estimate
+   * @param transactions - The transactions to estimate
    * @returns
    */
   async estimateRaw(
@@ -255,7 +478,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Estimate the gas cost of a batch of raw transactions
-   * @param transactions - the transactions to estimate
+   * @param transactions - The transactions to estimate
    * @returns
    */
   async estimateBatchRaw(
@@ -267,7 +490,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
-   * @param transactions - the transactions to send
+   * @param transactions - The transactions to send
    * @returns The transaction result
    */
   async sendBatchRaw(
@@ -279,7 +502,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Execute multiple raw transactions in a single batch and wait for confirmations
-   * @param transactions - the transactions to execute
+   * @param transactions - The transactions to execute
    * @returns The transaction receipt
    */
   async executeBatchRaw(
@@ -320,8 +543,8 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Create and add a session key to the smart wallet.
-   * @param keyAddress - the address of the session key to add.
-   * @param permissions - the permissions to grant to the session key.
+   * @param keyAddress - The address of the session key to add.
+   * @param permissions - The permissions to grant to the session key.
    */
   async createSessionKey(
     keyAddress: string,
@@ -333,7 +556,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Remove a session key from the smart wallet.
-   * @param keyAddress - the address of the session key to remove.
+   * @param keyAddress - The address of the session key to remove.
    */
   async revokeSessionKey(keyAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -342,7 +565,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Add another admin to the smart wallet.
-   * @param adminAddress - the address of the admin to add.
+   * @param adminAddress - The address of the admin to add.
    */
   async addAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
@@ -351,7 +574,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Remove an admin from the smart wallet.
-   * @param adminAddress - the address of the admin to remove.
+   * @param adminAddress - The address of the admin to remove.
    */
   async removeAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
