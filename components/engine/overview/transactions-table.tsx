@@ -4,15 +4,26 @@ import {
   Flex,
   FormControl,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  DrawerHeader,
   Stack,
   Tooltip,
+  UseDisclosureReturn,
   useDisclosure,
+  Divider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  Stepper,
+  Step,
+  StepIndicator,
+  StepStatus,
+  StepIcon,
+  StepNumber,
+  StepSeparator,
+  Collapse,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -20,15 +31,17 @@ import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRef } from "react";
-import { FiInfo, FiTrash } from "react-icons/fi";
+import { useRef, useState } from "react";
+import { FiArrowLeft, FiArrowRight, FiInfo, FiTrash } from "react-icons/fi";
 import {
   Card,
   Button,
+  Drawer,
   FormLabel,
   LinkButton,
   Text,
   Badge,
+  Heading,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -75,17 +88,14 @@ const statusDetails: Record<
   mined: {
     name: "Mined",
     colorScheme: "green",
-    showTooltipIcon: true,
   },
   retried: {
     name: "Retried",
     colorScheme: "green",
-    showTooltipIcon: true,
   },
   errored: {
     name: "Failed",
     colorScheme: "red",
-    showTooltipIcon: true,
   },
   cancelled: {
     name: "Cancelled",
@@ -102,8 +112,23 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   instanceUrl,
 }) => {
   const { chainIdToChainRecord } = useAllChainsData();
+  const transactionDisclosure = useDisclosure();
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
 
   const columns = [
+    columnHelper.accessor("queueId", {
+      header: "Queue ID",
+      cell: (cell) => {
+        return (
+          <AddressCopyButton
+            address={cell.getValue() ?? ""}
+            title="queue ID"
+            size="xs"
+          />
+        );
+      },
+    }),
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
@@ -117,22 +142,12 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return (
             <Flex align="center" gap={2}>
               <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-              <Text>{chain.name}</Text>
+              <Text maxW={150} isTruncated>
+                {chain.name}
+              </Text>
             </Flex>
           );
         }
-      },
-    }),
-    columnHelper.accessor("queueId", {
-      header: "Queue ID",
-      cell: (cell) => {
-        return (
-          <AddressCopyButton
-            address={cell.getValue() ?? ""}
-            title="queue ID"
-            size="xs"
-          />
-        );
       },
     }),
     columnHelper.accessor("status", {
@@ -151,8 +166,12 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           "sent",
         ].includes(status);
 
-        const shouldShowTooltip =
-          status === "errored" || (status === "mined" && minedAt);
+        const tooltip =
+          status === "errored"
+            ? errorMessage
+            : (status === "mined" || status === "retried") && minedAt
+            ? `Completed ${format(new Date(minedAt), "PP pp")}`
+            : undefined;
 
         return (
           <Flex align="center" gap={1}>
@@ -162,18 +181,11 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               boxShadow="none"
               maxW={{ md: "450px" }}
               label={
-                shouldShowTooltip ? (
+                tooltip ? (
                   <Card bgColor="backgroundHighlight">
-                    <Text>
-                      {status === "errored"
-                        ? errorMessage
-                        : (status === "mined" || status === "retried") &&
-                          minedAt
-                        ? `Completed ${format(new Date(minedAt), "PP pp")}`
-                        : undefined}
-                    </Text>
+                    <Text>{tooltip}</Text>
                   </Card>
-                ) : null
+                ) : undefined
               }
             >
               <Badge
@@ -201,39 +213,19 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       },
     }),
     columnHelper.accessor("fromAddress", {
-      header: "Backend Wallet",
+      header: "From",
       cell: (cell) => {
         return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
       },
     }),
-    columnHelper.accessor("functionName", {
-      header: "Function",
-      cell: (cell) => {
-        const { functionName, extension } = cell.row.original;
-        const functionDisplay =
-          extension === "none" ? functionName : `${extension} ${functionName}`;
-
-        return (
-          <Tooltip
-            borderRadius="md"
-            bg="transparent"
-            boxShadow="none"
-            label={
-              <Card bgColor="backgroundHighlight">
-                <Text>{functionDisplay}</Text>
-              </Card>
-            }
-            shouldWrapChildren
-          >
-            <Text fontFamily="mono" isTruncated maxW={150}>
-              {functionDisplay}
-            </Text>
-          </Tooltip>
-        );
-      },
-    }),
+    // columnHelper.accessor("toAddress", {
+    //   header: "To",
+    //   cell: (cell) => {
+    //     return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
+    //   },
+    // }),
     columnHelper.accessor("transactionHash", {
-      header: "Transaction Hash",
+      header: "Tx Hash",
       cell: (cell) => {
         const { chainId, transactionHash } = cell.row.original;
         if (!chainId || !transactionHash) {
@@ -253,17 +245,9 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           }
 
           return (
-            <LinkButton
-              key={explorer.name}
-              variant="ghost"
-              isExternal
-              size="xs"
-              href={`${explorer.url}/tx/${transactionHash}`}
-            >
-              <Text fontFamily="mono" maxW="100px" isTruncated>
-                {transactionHash}
-              </Text>
-            </LinkButton>
+            <Text fontFamily="mono" maxW="100px" isTruncated>
+              {transactionHash}
+            </Text>
           );
         }
       },
@@ -296,14 +280,41 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     }),
   ];
 
+  const idx = selectedTransaction
+    ? transactions.indexOf(selectedTransaction)
+    : 0;
+
   return (
-    <TWTable
-      title="transactions"
-      data={transactions}
-      columns={columns}
-      isLoading={isLoading}
-      isFetched={isFetched}
-    />
+    <>
+      <TWTable
+        title="transactions"
+        data={transactions}
+        columns={columns}
+        isLoading={isLoading}
+        isFetched={isFetched}
+        onRowClick={(row) => {
+          setSelectedTransaction(row);
+          transactionDisclosure.onOpen();
+        }}
+      />
+
+      {transactionDisclosure.isOpen && selectedTransaction && (
+        <TransactionDetailsDrawer
+          transaction={selectedTransaction}
+          disclosure={transactionDisclosure}
+          onClickPrevious={
+            idx > 0
+              ? () => setSelectedTransaction(transactions[idx - 1])
+              : undefined
+          }
+          onClickNext={
+            idx < transactions.length - 1
+              ? () => setSelectedTransaction(transactions[idx + 1])
+              : undefined
+          }
+        />
+      )}
+    </>
   );
 };
 
@@ -348,12 +359,7 @@ const CancelTransactionButton = ({
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        initialFocusRef={closeButtonRef}
-      >
+      <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={closeButtonRef}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Cancel Transaction</ModalHeader>
@@ -434,5 +440,288 @@ const CancelTransactionButton = ({
         />
       </Tooltip>
     </>
+  );
+};
+
+const TransactionDetailsDrawer = ({
+  transaction,
+  disclosure,
+  onClickPrevious,
+  onClickNext,
+}: {
+  transaction: Transaction;
+  disclosure: UseDisclosureReturn;
+  onClickPrevious?: () => void;
+  onClickNext?: () => void;
+}) => {
+  const { chainIdToChainRecord } = useAllChainsData();
+  const errorMessageDisclosure = useDisclosure();
+  const advancedTxDetailsDisclosure = useDisclosure();
+
+  if (!transaction.chainId || !transaction.status) {
+    return null;
+  }
+
+  const chain = chainIdToChainRecord[parseInt(transaction.chainId)];
+  const explorer = chain.explorers?.[0];
+
+  const status = statusDetails[transaction.status as EngineStatus];
+  const functionCalled =
+    transaction.extension && transaction.extension !== "none"
+      ? `${transaction.extension} ${transaction.functionName}`
+      : transaction.functionName ?? null;
+
+  const prettyPrintTimestamp = (t: string, showDate = false) => {
+    const date = new Date(t);
+    return showDate
+      ? date.toLocaleString(undefined, { timeZoneName: "short" })
+      : date.toLocaleTimeString(undefined, { timeZoneName: "short" });
+  };
+
+  // Build the timeline which should be one of:
+  // - Queued                   - queued
+  // - Queued, Sent             - submitted to mempool
+  // - Queued, Sent, Mined      - mined successfully
+  // - Queued, Sent, Canceled   - canceled
+  // - Queued, Errored          - errored before mempool
+  // - Queued, Sent, Errored    - errored after sending to mempool
+  const timeline = [
+    {
+      title: "Queued",
+      description: transaction.queuedAt
+        ? prettyPrintTimestamp(transaction.queuedAt, true)
+        : undefined,
+    },
+  ];
+  if (transaction.sentAt) {
+    timeline.push({
+      title: "Sent",
+      description: prettyPrintTimestamp(transaction.sentAt),
+    });
+  }
+  if (transaction.minedAt) {
+    timeline.push({
+      title: "Mined",
+      description: prettyPrintTimestamp(transaction.minedAt),
+    });
+  } else if (transaction.cancelledAt) {
+    timeline.push({
+      title: "Canceled",
+      description: prettyPrintTimestamp(transaction.cancelledAt),
+    });
+  } else if (transaction.errorMessage) {
+    timeline.push({
+      title: "Errored",
+      description: undefined,
+    });
+  }
+
+  return (
+    <Drawer
+      isOpen={disclosure.isOpen}
+      onClose={disclosure.onClose}
+      size="sm"
+      closeOnOverlayClick
+      header={{
+        children: (
+          <DrawerHeader as={Flex} gap={3}>
+            <Heading size="title.sm">Transaction Details</Heading>
+            <Badge
+              borderRadius="full"
+              size="label.sm"
+              variant="subtle"
+              px={3}
+              py={1.5}
+              colorScheme={status.colorScheme}
+              w="fit-content"
+            >
+              {status.name}
+            </Badge>
+          </DrawerHeader>
+        ),
+      }}
+      footer={{
+        children: (
+          <Flex gap={3}>
+            <Button
+              isDisabled={!onClickPrevious}
+              onClick={onClickPrevious}
+              variant="outline"
+              leftIcon={<FiArrowLeft />}
+            >
+              Previous
+            </Button>
+            <Button
+              isDisabled={!onClickNext}
+              onClick={onClickNext}
+              variant="outline"
+              rightIcon={<FiArrowRight />}
+            >
+              Next
+            </Button>
+          </Flex>
+        ),
+      }}
+    >
+      <Stack spacing={4}>
+        <FormControl>
+          <FormLabel>Queue ID</FormLabel>
+          <Text>{transaction.queueId}</Text>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>Chain</FormLabel>
+          <Flex align="center" gap={2}>
+            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+            <Text>{chain?.name}</Text>
+          </Flex>
+        </FormControl>
+
+        {functionCalled && (
+          <FormControl>
+            <FormLabel>Function</FormLabel>
+            <Text>{functionCalled}</Text>
+          </FormControl>
+        )}
+
+        <FormControl>
+          <FormLabel>From Address</FormLabel>
+          <LinkButton
+            variant="ghost"
+            isExternal
+            size="xs"
+            href={
+              explorer
+                ? `${explorer.url}/address/${transaction.fromAddress}`
+                : "#"
+            }
+          >
+            <Text fontFamily="mono">{transaction.fromAddress}</Text>
+          </LinkButton>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>To Address</FormLabel>
+          <LinkButton
+            variant="ghost"
+            isExternal
+            size="xs"
+            href={
+              explorer
+                ? `${explorer.url}/address/${transaction.toAddress}`
+                : "#"
+            }
+          >
+            <Text fontFamily="mono">{transaction.toAddress}</Text>
+          </LinkButton>
+        </FormControl>
+
+        {transaction.errorMessage && (
+          <FormControl>
+            <FormLabel>Error</FormLabel>
+            <Text noOfLines={errorMessageDisclosure.isOpen ? undefined : 3}>
+              {transaction.errorMessage}
+            </Text>
+            <Button
+              onClick={errorMessageDisclosure.onToggle}
+              variant="link"
+              size="xs"
+              colorScheme="gray"
+            >
+              {errorMessageDisclosure.isOpen ? "Show less" : "Show more"}
+            </Button>
+          </FormControl>
+        )}
+
+        <Divider />
+
+        <Stepper
+          index={timeline.length + 1}
+          orientation="vertical"
+          height="120px"
+          gap="0"
+          size="xs"
+        >
+          {timeline.map((step, index) => (
+            <Step key={index} as={Flex} w="full">
+              <StepIndicator>
+                <StepStatus
+                  complete={<StepIcon />}
+                  incomplete={<StepNumber />}
+                  active={<StepNumber />}
+                />
+              </StepIndicator>
+
+              <Flex justify="space-between" w="full">
+                <FormLabel m={0}>{step.title}</FormLabel>
+                <Text fontSize="small" mt={-1}>
+                  {step.description}
+                </Text>
+              </Flex>
+
+              <StepSeparator />
+            </Step>
+          ))}
+        </Stepper>
+
+        <Divider />
+
+        {/* On-chain details */}
+
+        {transaction.transactionHash && (
+          <>
+            <FormControl>
+              <FormLabel>Transaction Hash</FormLabel>
+              <LinkButton
+                variant="ghost"
+                isExternal
+                size="xs"
+                href={
+                  explorer
+                    ? `${explorer.url}/tx/${transaction.transactionHash}`
+                    : "#"
+                }
+                maxW="100%"
+              >
+                <Text fontFamily="mono" isTruncated>
+                  {transaction.transactionHash}
+                </Text>
+              </LinkButton>
+            </FormControl>
+
+            <Collapse in={advancedTxDetailsDisclosure.isOpen}>
+              <Stack spacing={4}>
+                <FormControl>
+                  <FormLabel>Nonce</FormLabel>
+                  <Text>{transaction.nonce ?? "N/A"}</Text>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Gas Units</FormLabel>
+                  <Text>{transaction.gasLimit ?? "N/A"}</Text>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Gas Price</FormLabel>
+                  <Text>{transaction.gasPrice ?? "N/A"}</Text>
+                </FormControl>
+              </Stack>
+            </Collapse>
+
+            <Button
+              onClick={advancedTxDetailsDisclosure.onToggle}
+              variant="link"
+              size="xs"
+              colorScheme="gray"
+              w="fit-content"
+            >
+              {advancedTxDetailsDisclosure.isOpen
+                ? "Hide transaction details"
+                : "Show transaction details"}
+            </Button>
+          </>
+        )}
+      </Stack>
+    </Drawer>
   );
 };
