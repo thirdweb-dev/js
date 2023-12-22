@@ -78,9 +78,9 @@ const CardWithMetric = ({
           </Text>
         </Flex>
 
-        <SimpleGrid columns={4} placeItems="center" mt={8}>
-          {items.length > 0 &&
-            items.map((item, index) => (
+        {items.length > 0 && (
+          <SimpleGrid columns={4} placeItems="center" mt={8}>
+            {items.map((item, index) => (
               <GridItem colSpan={item.colSpan ? item.colSpan : 1} key={index}>
                 <Flex flex={1} flexDir="column">
                   <Heading size="title.xs" color="white">
@@ -92,7 +92,8 @@ const CardWithMetric = ({
                 </Flex>
               </GridItem>
             ))}
-        </SimpleGrid>
+          </SimpleGrid>
+        )}
       </Flex>
     </TrackedLink>
   );
