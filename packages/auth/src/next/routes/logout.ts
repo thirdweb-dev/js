@@ -24,7 +24,7 @@ export default async function handler(
   }
 
   if (ctx.callbacks?.onLogout) {
-    const user = await getUser(req, ctx);
+    const user = await getUser(ctx, req);
     if (user) {
       await ctx.callbacks.onLogout(user, req);
     }
