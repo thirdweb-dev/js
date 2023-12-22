@@ -290,6 +290,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       target: transaction.getTarget(),
       data: transaction.encode(),
       value: await transaction.getValue(),
+      gasLimit: await transaction.getOverrides().gasLimit,
+      maxFeePerGas: await transaction.getOverrides().maxFeePerGas,
+      maxPriorityFeePerGas: await transaction.getOverrides()
+        .maxPriorityFeePerGas,
+      nonce: await transaction.getOverrides().nonce,
     });
   }
 
@@ -304,6 +309,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       target: tx.to || AddressZero,
       data: tx.data?.toString() || "",
       value: tx.value || BigNumber.from(0),
+      gasLimit: tx.gasLimit,
+      maxFeePerGas: tx.maxFeePerGas,
+      maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+      nonce: tx.nonce,
     });
   }
 
@@ -317,6 +326,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
       batchData,
     );
@@ -334,6 +347,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
       batchData,
     );

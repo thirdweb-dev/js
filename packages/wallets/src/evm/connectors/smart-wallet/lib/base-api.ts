@@ -326,7 +326,6 @@ export abstract class BaseAccountAPI {
       }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 

@@ -51,6 +51,8 @@ export class ERC4337EthersSigner extends Signer {
         value: tx.value,
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
       },
       batchData,
     );
