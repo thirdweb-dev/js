@@ -5,6 +5,9 @@ import {
   GcpKmsSignerCredentials,
 } from "../connectors/gcp-kms/signer";
 
+/**
+ * @wallet
+ */
 export class GcpKmsWallet extends AbstractWallet {
   #options: GcpKmsSignerCredentials;
 

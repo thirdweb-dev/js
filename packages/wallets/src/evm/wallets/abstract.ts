@@ -60,17 +60,29 @@ export async function checkContractWalletSignature(
     return false;
   }
 }
-
+/**
+ * The base class for any wallet in the Wallet SDK, including backend wallets. It contains the functionality common to all wallets.
+ *
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ *
+ * @abstractWallet
+ */
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
   implements GenericAuthWallet, EVMWallet
 {
+  /**
+   * @internal
+   */
   public type: Ecosystem = "evm";
 
+  /**
+   * Returns an [ethers Signer](https://docs.ethers.org/v5/api/signer/) object of the connected wallet
+   */
   public abstract getSigner(): Promise<Signer>;
 
   /**
-   * @returns The account address from connected wallet
+   * Returns the account address of the connected wallet
    */
   public async getAddress(): Promise<string> {
     const signer = await this.getSigner();
@@ -78,9 +90,11 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns The native token balance of the connected wallet
+   * Returns the balance of the connected wallet for the specified token address. If no token address is specified, it returns the balance of the native token
+   *
+   * @param tokenAddress - The contract address of the token
    */
-  public async getBalance(currencyAddress: string = NATIVE_TOKEN_ADDRESS) {
+  public async getBalance(tokenAddress: string = NATIVE_TOKEN_ADDRESS) {
     const signer = await this.getSigner();
     const address = await this.getAddress();
 
@@ -89,25 +103,32 @@ export abstract class AbstractWallet
     }
 
     let balance: BigNumber;
-    if (isNativeToken(currencyAddress)) {
+    if (isNativeToken(tokenAddress)) {
       balance = await signer.provider.getBalance(address);
     } else {
-      const erc20 = createErc20(signer, currencyAddress);
+      const erc20 = createErc20(signer, tokenAddress);
       balance = await erc20.balanceOf(address);
     }
 
     // Note: assumes that the native currency decimals is 18, which isn't always correct
-    return await fetchCurrencyValue(signer.provider, currencyAddress, balance);
+    return await fetchCurrencyValue(signer.provider, tokenAddress, balance);
   }
 
   /**
-   * @returns The chain id from connected wallet
+   * Returns the chain id of the network that the wallet is connected to
    */
   public async getChainId(): Promise<number> {
     const signer = await this.getSigner();
     return signer.getChainId();
   }
 
+  /**
+   * Transfers some amount of tokens to the specified address
+   * @param to - The address to transfer the amount to
+   * @param amount - The amount to transfer
+   * @param currencyAddress - The contract address of the token to transfer. If not specified, it defaults to the native token
+   * @returns The transaction result
+   */
   public async transfer(
     to: string,
     amount: Price,
@@ -141,7 +162,9 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns The signature of the message
+   * Sign a message with the connected wallet and return the signature
+   * @param message - The message to sign
+   * @returns - The signature
    */
   public async signMessage(message: Bytes | string): Promise<string> {
     const signer = await this.getSigner();
@@ -149,8 +172,11 @@ export abstract class AbstractWallet
   }
 
   /**
-   * verify the signature of a message
-   * @returns `true` if the signature is valid, `false` otherwise
+   * Verify the signature of a message. It returns `true` if the signature is valid, `false` otherwise
+   * @param message - The message to verify
+   * @param signature - The signature to verify
+   * @param address - The address to verify the signature against
+   * @param chainId - The chain id of the network to verify the signature against, If not specified, it defaults to 1 ( Ethereum mainnet )
    */
   public async verifySignature(
     message: string,

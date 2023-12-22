@@ -8,6 +8,10 @@ import { ERC6551_REGISTRY } from "../connectors/smart-wallet/lib/constants";
 /**
  * A smart wallet controlled by the holder of a particular NFT.
  */
+
+/**
+ * @wallet
+ */
 export class TokenBoundSmartWallet extends SmartWallet {
   tbaConnector?: TokenBoundSmartWalletConnectorType;
   tbaOptions: TokenBoundSmartWalletConfig;

@@ -1577,6 +1577,9 @@ importers:
       '@babel/plugin-transform-private-methods':
         specifier: 7.22.5
         version: 7.22.5(@babel/core@7.22.9)
+      '@microsoft/api-extractor':
+        specifier: ^7.36.3
+        version: 7.36.3(@types/node@18.17.1)
       '@noble/ed25519':
         specifier: ^1.7.1
         version: 1.7.3
@@ -9158,7 +9161,7 @@ packages:
       '@rushstack/ts-command-line': 4.15.1
       colors: 1.2.5
       lodash: 4.17.21
-      resolve: 1.22.1
+      resolve: 1.22.8
       semver: 7.5.4
       source-map: 0.6.1
       typescript: 5.0.4
