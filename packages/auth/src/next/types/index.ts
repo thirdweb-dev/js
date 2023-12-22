@@ -16,8 +16,6 @@ export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
 
-type RequestType = NextRequest;
-
 export type ThirdwebAuthRoute =
   | "payload"
   | "login"
@@ -68,11 +66,11 @@ export type ThirdwebAuthConfig<
       | ((token: string, req: NextRequest) => void)
       | ((token: string, req: NextRequest) => Promise<void>);
     onUser?:
-      | (<TRequestType extends RequestType = RequestType>(
+      | (<TRequestType extends NextRequest = NextRequest>(
           user: User<TSession>,
           req: TRequestType,
         ) => void | TData)
-      | (<TRequestType extends RequestType = RequestType>(
+      | (<TRequestType extends NextRequest = NextRequest>(
           user: User<TSession>,
           req: TRequestType,
         ) => Promise<void | TData>);
