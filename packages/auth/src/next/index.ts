@@ -1,5 +1,4 @@
 import type { NextRequest } from "next/server";
-import type { GetServerSidePropsContext } from "next";
 
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
@@ -66,9 +65,7 @@ export function ThirdwebAuth<
 
   return {
     ThirdwebAuthHandler,
-    getUser: (
-      req?: GetServerSidePropsContext["req"] | NextRequest,
-    ) => {
+    getUser: (req?: NextRequest) => {
       return getUser<TData, TSession>(authCtx, req);
     },
   };

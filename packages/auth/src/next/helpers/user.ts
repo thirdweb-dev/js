@@ -1,4 +1,3 @@
-import type { GetServerSidePropsContext } from "next";
 import type { NextRequest } from "next/server";
 import { cookies, headers } from "next/headers";
 
@@ -50,7 +49,7 @@ export async function getUser<
   TSession extends Json = Json,
 >(
   ctx: ThirdwebAuthContext<TData, TSession>,
-  req?: GetServerSidePropsContext["req"] | NextRequest,
+  req?: NextRequest,
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken();
   if (!token) {

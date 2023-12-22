@@ -1,6 +1,5 @@
 import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import type { GetServerSidePropsContext } from "next";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -17,9 +16,7 @@ export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
 
-type RequestType =
-  | GetServerSidePropsContext["req"]
-  | NextRequest;
+type RequestType = NextRequest;
 
 export type ThirdwebAuthRoute =
   | "payload"
