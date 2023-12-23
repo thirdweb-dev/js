@@ -130,7 +130,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "nft-checkout",
     description: "Credit card checkout for NFTs",
     link: "/checkout",
-    dashboardLink: "https://withpaper.com/product/checkouts",
+    dashboardLink: "/dashboard/payments/contracts",
     icon: require("public/assets/product-icons/payments.png"),
     section: "payments",
     inLandingPage: true,
