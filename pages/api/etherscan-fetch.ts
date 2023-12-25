@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "invalid chainId" });
   }
 
-  const endpoint = `${apiMap[chainId]}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKeyMap[chainId]}"`;
+  const endpoint = `${apiMap[chainId]}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKeyMap[chainId]}`;
 
   try {
     const result = await fetch(endpoint, {
@@ -46,8 +46,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     const data = await result.json();
-    const etherscanResult = data.result[0] as EtherscanResult;
-    if (etherscanResult.ABI === "Contract source code not verified") {
+    const etherscanResult = Array.isArray(data.result)
+      ? data.result[0]
+      : data.result;
+    // Blockroute and etherscan return different output schema
+    const etherscanResultMessage = etherscanResult.ABI || etherscanResult;
+    if (etherscanResultMessage === "Contract source code not verified") {
       return res
         .status(404)
         .json({ error: "Contract source code not verified on etherscan" });
