@@ -45,6 +45,8 @@ export const ConnectWalletDetailsModal = ({
   supportedTokens,
   displayBalanceToken,
   hideSwitchToPersonalWallet,
+  hideReceiveButton,
+  hideSendButton,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
@@ -54,6 +56,8 @@ export const ConnectWalletDetailsModal = ({
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
   hideSwitchToPersonalWallet?: boolean;
+  hideReceiveButton?: boolean;
+  hideSendButton?: boolean;
 }) => {
   const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -143,7 +147,7 @@ export const ConnectWalletDetailsModal = ({
     if (activeWallet?.walletId === walletIds.localWallet) {
       return (
         <>
-          <View style={styles.currentNetwork}>
+          <View style={styles.additionalActions}>
             <Text variant="bodySmallSecondary">
               {l.connect_wallet_details.additional_actions}
             </Text>
@@ -267,14 +271,19 @@ export const ConnectWalletDetailsModal = ({
                 </Text>
               </Box>
             ) : null}
-            <Box
-              flexDirection="row"
-              justifyContent="space-evenly"
-              marginVertical="md"
-            >
-              <SendButton supportedTokens={supportedTokens} />
-              <ReceiveButton />
-            </Box>
+            {hideReceiveButton && hideSendButton ? null : (
+              <Box
+                flexDirection="row"
+                justifyContent="space-evenly"
+                gap="xs"
+                marginTop="md"
+              >
+                {hideSendButton ? null : (
+                  <SendButton supportedTokens={supportedTokens} />
+                )}
+                {hideReceiveButton ? null : <ReceiveButton />}
+              </Box>
+            )}
             <View style={styles.currentNetwork}>
               <Text variant="bodySmallSecondary">
                 {l.connect_wallet_details.current_network}
@@ -353,6 +362,15 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   currentNetwork: {
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    marginBottom: 8,
+    marginTop: 28,
+  },
+  additionalActions: {
     display: "flex",
     flexDirection: "column",
     alignContent: "flex-start",
