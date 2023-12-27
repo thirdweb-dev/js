@@ -64,7 +64,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Header: "Name",
         accessor: (row) => row.metadata.name,
         Cell: (cell: CellProps<NFT, string>) => (
-          <Text size="label.md">{cell.value}</Text>
+          <Text noOfLines={1} size="label.md">
+            {cell.value}
+          </Text>
         ),
       },
       {
