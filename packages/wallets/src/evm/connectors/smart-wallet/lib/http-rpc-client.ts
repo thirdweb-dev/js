@@ -1,8 +1,8 @@
 import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
 import pkg from "../../../../../package.json";
+import { hexlifyUserOp } from "./utils";
 
 export const DEBUG = true;
 function isBrowser() {
@@ -111,7 +111,7 @@ export class HttpRpcClient {
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
+    const hexifiedUserOp = await hexlifyUserOp(userOp1);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -130,7 +130,7 @@ export class HttpRpcClient {
     callGasLimit: string;
   }> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
+    const hexifiedUserOp = await hexlifyUserOp(userOp1);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,

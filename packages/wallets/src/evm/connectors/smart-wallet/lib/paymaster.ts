@@ -1,5 +1,5 @@
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import { toJSON } from "./utils";
+import { hexlifyUserOp } from "./utils";
 import { isTwUrl } from "../../../utils/url";
 import { PaymasterAPI, PaymasterResult } from "../types";
 import { DEBUG } from "./http-rpc-client";
@@ -85,7 +85,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         jsonrpc: "2.0",
         id: 1,
         method: "pm_sponsorUserOperation",
-        params: [await toJSON(userOp), this.entryPoint],
+        params: [await hexlifyUserOp(userOp), this.entryPoint],
       }),
     });
     const res = await response.json();

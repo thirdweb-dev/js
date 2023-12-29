@@ -1462,12 +1462,6 @@ importers:
       '@account-abstraction/contracts':
         specifier: ^0.5.0
         version: 0.5.0
-      '@account-abstraction/sdk':
-        specifier: ^0.5.0
-        version: 0.5.0
-      '@account-abstraction/utils':
-        specifier: ^0.5.0
-        version: 0.5.0
       '@blocto/sdk':
         specifier: ^0.5.4
         version: 0.5.4
@@ -1940,40 +1934,6 @@ packages:
 
   /@account-abstraction/contracts@0.5.0:
     resolution: {integrity: sha512-CKyS9Zh5rcYUM+4B6TlaB9+THHzJ+6TY3tWF5QofqvFpqGNvIhF8ddy6wyCmqZw6TB74/yYv7cYD/RarVudfDg==}
-    dev: false
-
-  /@account-abstraction/sdk@0.5.0:
-    resolution: {integrity: sha512-KuEG9UVl2kEhamevFmPJfqY5AQH4fRLnFhfWAdoqwxIZIuSyA8wfyzM9WKnDPSCaiApLvSzckjRwbs4dVoOp2Q==}
-    dependencies:
-      '@account-abstraction/contracts': 0.5.0
-      '@account-abstraction/utils': 0.5.0
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/networks': 5.7.1
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/providers': 5.7.2
-      '@types/debug': 4.1.7
-      debug: 4.3.4(supports-color@8.1.1)
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-    dev: false
-
-  /@account-abstraction/utils@0.5.0:
-    resolution: {integrity: sha512-dgXguTn5WgFMmr3wQMdLGEoIMDcIJgzAv74YlHeb2D3Nyy1pByPArSb3eLOOcgxCJSJeqTscpO9P57uhNkkC4A==}
-    dependencies:
-      '@account-abstraction/contracts': 0.5.0
-      '@ethersproject/abi': 5.7.0
-      '@ethersproject/providers': 5.7.2
-      '@openzeppelin/contracts': 4.9.3
-      debug: 4.3.4(supports-color@8.1.1)
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
     dev: false
 
   /@adraffy/ens-normalize@1.9.4:

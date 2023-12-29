@@ -14,7 +14,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, ethers, providers, utils } from "ethers";
+import { BigNumber, constants, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
   getGasPrice,
@@ -26,7 +26,6 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
@@ -306,7 +305,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     }
     const tx = await ethers.utils.resolveProperties(transaction);
     return this.estimateTx({
-      target: tx.to || AddressZero,
+      target: tx.to || constants.AddressZero,
       data: tx.data?.toString() || "",
       value: tx.value || BigNumber.from(0),
       gasLimit: tx.gasLimit,
@@ -604,7 +603,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ethers.utils.resolveProperties(transaction),
       ),
     );
-    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
+    const targets = resolvedTxs.map((tx) => tx.to || constants.AddressZero);
     const data = resolvedTxs.map((tx) => tx.data || "0x");
     const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
     return {

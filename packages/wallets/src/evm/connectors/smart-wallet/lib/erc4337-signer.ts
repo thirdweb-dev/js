@@ -4,8 +4,7 @@ import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
-import { randomNonce } from "./utils";
-import { deepHexlify } from "@account-abstraction/utils";
+import { hexlifyUserOp, randomNonce } from "./utils";
 import { BatchData, ProviderConfig } from "../types";
 
 export class ERC4337EthersSigner extends Signer {
@@ -175,9 +174,7 @@ Code: ${errorCode}`;
     );
     const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
-    const userOpString = JSON.stringify(
-      deepHexlify(await utils.resolveProperties(userOperation)),
-    );
+    const userOpString = JSON.stringify(await hexlifyUserOp(userOperation));
     return userOpString;
   }
 }
