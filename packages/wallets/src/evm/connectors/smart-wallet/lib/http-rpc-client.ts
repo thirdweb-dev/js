@@ -4,7 +4,7 @@ import { isTwUrl } from "../../../utils/url";
 import pkg from "../../../../../package.json";
 import { hexlifyUserOp } from "./utils";
 
-export const DEBUG = true;
+export const DEBUG = false;
 function isBrowser() {
   return typeof window !== "undefined";
 }
