@@ -252,7 +252,6 @@ export abstract class BaseAccountAPI {
         let estimates;
         try {
           estimates = await httpRpcClient.estimateUserOpGas(partialOp);
-          console.log("--- UserOp simulation", estimates);
         } catch (error: any) {
           throw this.unwrapBundlerError(error);
         }
@@ -279,7 +278,6 @@ export abstract class BaseAccountAPI {
       let estimates;
       try {
         estimates = await httpRpcClient.estimateUserOpGas(partialOp);
-        console.log("--- UserOp simulation", estimates);
       } catch (error: any) {
         throw this.unwrapBundlerError(error);
       }
