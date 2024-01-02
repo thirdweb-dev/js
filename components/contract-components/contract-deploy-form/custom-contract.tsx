@@ -33,7 +33,6 @@ import { LineaTestnet } from "@thirdweb-dev/chains";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { verifyContract } from "contract-ui/tabs/sources/page";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";

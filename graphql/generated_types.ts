@@ -4490,8 +4490,8 @@ export type Developer_Auth_Setting_Bool_Exp = {
 
 /** unique or primary key constraints on table "developer_auth_setting" */
 export enum Developer_Auth_Setting_Constraint {
-  /** unique or primary key constraint on columns "auth_provider", "developer_client_id" */
-  DeveloperAuthSettingAuthProviderDeveloperClientIdKey = 'developer_auth_setting_auth_provider_developer_client_id_key',
+  /** unique or primary key constraint on columns "auth_provider", "developer_client_id", "deleted_at" */
+  DeveloperAuthSettingDeveloperClientIdAuthProviderDelete = 'developer_auth_setting_developer_client_id_auth_provider_delete',
   /** unique or primary key constraint on columns "id" */
   DeveloperAuthSettingPkey = 'developer_auth_setting_pkey'
 }

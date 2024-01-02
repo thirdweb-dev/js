@@ -30216,8 +30216,8 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "developer_auth_setting_auth_provider_developer_client_id_key",
-            "description": "unique or primary key constraint on columns \"auth_provider\", \"developer_client_id\"",
+            "name": "developer_auth_setting_developer_client_id_auth_provider_delete",
+            "description": "unique or primary key constraint on columns \"auth_provider\", \"developer_client_id\", \"deleted_at\"",
             "isDeprecated": false,
             "deprecationReason": null
           },

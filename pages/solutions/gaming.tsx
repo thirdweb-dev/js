@@ -2,7 +2,6 @@ import { Center, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
 import { LandingGridSection } from "components/landing-pages/grid-section";
-import { LandingGuidesShowcase } from "components/landing-pages/guide-showcase";
 import { LandingHero } from "components/landing-pages/hero";
 import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
 import { LandingLayout } from "components/landing-pages/layout";

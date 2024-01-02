@@ -32,7 +32,7 @@ export async function transformMoralisResponseToNFT(
         try {
           return {
             contractAddress: moralisNft.token_address,
-            tokenId: parseInt(moralisNft.token_id, 16),
+            tokenId: moralisNft.token_id,
             metadata: shouldDownloadURI(moralisNft.token_uri)
               ? await StorageSingleton.downloadJSON(
                   handleArbitraryTokenURI(moralisNft.token_uri),

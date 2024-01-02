@@ -37,7 +37,7 @@ export async function transformAlchemyResponseToNFT(
         try {
           return {
             contractAddress: alchemyNFT.contract.address,
-            tokenId: parseInt(alchemyNFT.id.tokenId, 16),
+            tokenId: alchemyNFT.id.tokenId,
             metadata: shouldDownloadURI(rawUri)
               ? await StorageSingleton.downloadJSON(
                   handleArbitraryTokenURI(rawUri),

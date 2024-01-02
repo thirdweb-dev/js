@@ -140,7 +140,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
       return {
         ...nft,
         contractAddress: form.watch("contractAddress"),
-        tokenId: parseInt(nft.metadata.id),
+        tokenId: nft.metadata.id,
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);

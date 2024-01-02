@@ -3,20 +3,28 @@ import {
   Arbitrum,
   ArbitrumGoerli,
   ArbitrumNova,
+  ArbitrumSepolia,
   Avalanche,
   AvalancheFuji,
   Base,
   BaseGoerli,
+  BaseSepoliaTestnet,
   Binance,
   BinanceTestnet,
+  Celo,
   Cronos,
   Ethereum,
   Fantom,
+  FrameTestnet,
   Gnosis,
+  GnosisChiadoTestnet,
   Godwoken,
   GodwokenTestnetV1,
   Goerli,
+  Linea,
+  MantaPacific,
   MantaPacificTestnet,
+  Moonbeam,
   Mumbai,
   Optimism,
   OptimismGoerli,
@@ -25,20 +33,23 @@ import {
   Polygon,
   PolygonZkevm,
   PolygonZkevmTestnet,
+  Scroll,
   ScrollAlphaTestnet,
   ScrollSepoliaTestnet,
   Sepolia,
   ZksyncEra,
   ZksyncEraTestnet,
   Zora,
+  ZoraSepoliaTestnet,
   ZoraTestnet,
 } from "@thirdweb-dev/chains";
 
 export type WalletNFT = NFT & {
   contractAddress: string;
-  tokenId: number;
+  tokenId: string;
 };
 
+// List: https://docs.alchemy.com/reference/nft-api-faq
 export const alchemySupportedChainIdsMap: Record<number, string> = {
   [Ethereum.chainId]: "eth-mainnet",
   [Goerli.chainId]: "eth-goerli",
@@ -51,6 +62,7 @@ export const alchemySupportedChainIdsMap: Record<number, string> = {
   [ArbitrumGoerli.chainId]: "arb-goerli",
 };
 
+// List: https://docs.moralis.io/supported-chains
 export const moralisSupportedChainIdsMap: Record<number, string> = {
   [Ethereum.chainId]: "",
   [Goerli.chainId]: "",
@@ -64,8 +76,13 @@ export const moralisSupportedChainIdsMap: Record<number, string> = {
   [Cronos.chainId]: "",
   [Palm.chainId]: "",
   [Arbitrum.chainId]: "",
+  [Gnosis.chainId]: "",
+  [GnosisChiadoTestnet.chainId]: "",
+  [Base.chainId]: "",
+  [BaseGoerli.chainId]: "",
 };
 
+// List: https://docs.simplehash.com/reference/supported-chains-testnets
 export const simpleHashSupportedChainIdsMap: Record<number, string> = {
   [Ethereum.chainId]: "ethereum",
   [Goerli.chainId]: "ethereum-goerli",
@@ -97,6 +114,15 @@ export const simpleHashSupportedChainIdsMap: Record<number, string> = {
   [ScrollSepoliaTestnet.chainId]: "scroll-sepolia",
   [ZksyncEraTestnet.chainId]: "zksync-era-testnet",
   [ZoraTestnet.chainId]: "zora-testnet",
+  [Celo.chainId]: "celo",
+  [Linea.chainId]: "linea",
+  [MantaPacific.chainId]: "manta",
+  [Moonbeam.chainId]: "moonbeam",
+  [Scroll.chainId]: "scroll",
+  [ArbitrumSepolia.chainId]: "arbitrum-sepolia",
+  [BaseSepoliaTestnet.chainId]: "base-sepolia",
+  [FrameTestnet.chainId]: "frame-testnet",
+  [ZoraSepoliaTestnet.chainId]: "zora-sepolia",
 };
 
 export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;
