@@ -33,6 +33,7 @@ export type Account = {
   unconfirmedEmail?: string;
   stripePaymentActionUrl?: string;
   onboardSkipped?: boolean;
+  paymentAttemptCount?: number;
   notificationPreferences?: {
     billing: "email" | "none";
     updates: "email" | "none";

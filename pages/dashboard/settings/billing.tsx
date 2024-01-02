@@ -20,7 +20,8 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const meQuery = useAccount();
   const router = useRouter();
   const { data: account } = meQuery;
-  const validPayment = account?.status === "validPayment";
+  const validPayment =
+    account?.status === "validPayment" && !account.paymentAttemptCount;
   const paymentVerification = account?.status === "paymentVerification";
 
   const [stepsCompleted, setStepsCompleted] = useState<

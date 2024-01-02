@@ -64,7 +64,7 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
       size="sm"
       fontWeight="normal"
     >
-      {account.status === "validPayment"
+      {account.status === "validPayment" && !account.paymentAttemptCount
         ? "Manage billing"
         : paymentVerification
         ? "Verify payment method →"
