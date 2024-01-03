@@ -7,11 +7,14 @@ const isDev = (): boolean => {
 };
 
 const isOldPaperDomain = (): boolean =>
-  typeof window !== "undefined" && window.location.origin.includes("paper.xyz");
+  typeof window !== "undefined" &&
+  (window.location.hostname === "paper.xyz" ||
+    window.location.hostname.endsWith(".paper.xyz"));
 
 const isThirdwebDomain = (): boolean =>
   typeof window !== "undefined" &&
-  window.location.origin.includes("thirdweb.com");
+  (window.location.hostname === "thirdweb.com" ||
+    window.location.hostname.endsWith(".thirdweb.com"));
 
 export const getPaperOriginUrl = (): string => {
   if (isDev()) {
