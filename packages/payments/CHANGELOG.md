@@ -1,5 +1,11 @@
 # @thirdweb-dev/payments
 
+## 1.0.1
+
+### Patch Changes
+
+- [#2115](https://github.com/thirdweb-dev/js/pull/2115) [`d00ca7fd`](https://github.com/thirdweb-dev/js/commit/d00ca7fd2a0fa3e694bb37d1f486d3d4cf1ad79e) Thanks [@IDubuque](https://github.com/IDubuque)! - Update exports with new payments interface
+
 ## 1.0.0
 
 ### Major Changes

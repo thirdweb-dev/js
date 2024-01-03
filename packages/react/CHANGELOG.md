@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 4.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`d00ca7fd`](https://github.com/thirdweb-dev/js/commit/d00ca7fd2a0fa3e694bb37d1f486d3d4cf1ad79e)]:
+  - @thirdweb-dev/payments@1.0.1
+  - @thirdweb-dev/react-core@4.2.1
+
 ## 4.2.0
 
 ### Minor Changes
