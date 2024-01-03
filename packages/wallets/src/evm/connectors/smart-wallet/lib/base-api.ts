@@ -28,6 +28,11 @@ import {
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 
+export type UserOpConfig = {
+  gasless?: boolean;
+  batchData?: BatchData;
+}
+
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
@@ -40,6 +45,7 @@ export interface BaseApiParams {
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
   paymasterAPI?: PaymasterAPI;
+  gasless?: boolean;
 }
 
 export interface UserOpResult {
@@ -71,6 +77,7 @@ export abstract class BaseAccountAPI {
   entryPointAddress: string;
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
+  gasless?: boolean;
 
   /**
    * base constructor.
@@ -82,6 +89,7 @@ export abstract class BaseAccountAPI {
     this.entryPointAddress = params.entryPointAddress;
     this.accountAddress = params.accountAddress;
     this.paymasterAPI = params.paymasterAPI;
+    this.gasless = params.gasless;
 
     // factory "connect" define the contract address. the contract "connect" defines the "from" address.
     this.entryPointView = EntryPoint__factory.connect(
@@ -284,10 +292,11 @@ export abstract class BaseAccountAPI {
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<UserOperationStruct> {
+
     const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info, batchData);
+      await this.encodeUserOpCallDataAndGasLimit(info, config?.batchData);
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
@@ -333,7 +342,9 @@ export abstract class BaseAccountAPI {
 
     let paymasterAndData: string | undefined;
     let userOp = partialUserOp;
-    if (this.paymasterAPI) {
+
+    const gasless = config?.gasless ? config.gasless : this.gasless;
+    if (gasless && this.paymasterAPI) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       try {
         // userOp.preVerificationGas contains a promise that will resolve to an error.
@@ -402,10 +413,10 @@ export abstract class BaseAccountAPI {
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<UserOperationStruct> {
     return await this.signUserOp(
-      await this.createUnsignedUserOp(info, batchData),
+      await this.createUnsignedUserOp(info, config),
     );
   }
 

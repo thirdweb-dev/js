@@ -55,6 +55,7 @@ export interface ProviderConfig extends ContractInfo {
   factoryAddress: string;
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
+  gasless?: boolean;
 }
 
 export type ContractInfoInput = {

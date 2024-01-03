@@ -2,7 +2,7 @@ import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { ClientConfig } from "@account-abstraction/sdk";
-import { BaseAccountAPI, BatchData } from "./base-api";
+import { BaseAccountAPI, BatchData, UserOpConfig } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { randomNonce } from "./utils";
@@ -37,7 +37,7 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
@@ -51,7 +51,7 @@ export class ERC4337EthersSigner extends Signer {
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
       },
-      batchData,
+      config,
     );
 
     const transactionResponse =
@@ -152,7 +152,7 @@ Code: ${errorCode}`;
 
   async signTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<string> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
@@ -166,7 +166,7 @@ Code: ${errorCode}`;
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
       },
-      batchData,
+      config,
     );
 
     const userOpString = JSON.stringify(
