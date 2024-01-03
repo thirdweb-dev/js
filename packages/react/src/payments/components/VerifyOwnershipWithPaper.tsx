@@ -1,7 +1,10 @@
 // CHANGED: packageJson import + sdk-version + clientId
 import { css } from "@emotion/css";
-import type { PaperSDKError, SupportedChainName } from "@thirdweb-dev/payments";
-import { PAPER_APP_URL, PaperSDKErrorCode } from "@thirdweb-dev/payments";
+import type {
+  PaymentsSDKError,
+  SupportedChainName,
+} from "@thirdweb-dev/payments";
+import { PAPER_APP_URL, PaymentsSDKErrorCode } from "@thirdweb-dev/payments";
 import React, { useEffect } from "react";
 import { usePaymentsSDKContext } from "../Provider";
 import { openCenteredPopup } from "../lib/utils/popup";
@@ -11,7 +14,7 @@ import packageJson from "../../../package.json";
 
 interface VerifyOwnershipWithPaperProps {
   onSuccess?: (code: string) => void;
-  onError?: (error: PaperSDKError) => void;
+  onError?: (error: PaymentsSDKError) => void;
   onWindowClose?: () => void;
   children?: ({
     onClick,
@@ -67,8 +70,8 @@ export const VerifyOwnershipWithPaper: React.FC<
         case VERIFY_OWNERSHIP_WITH_PAPER_EVENT_TYPE.USER_LOGIN_FAILED:
           if (onError) {
             onError({
-              code: PaperSDKErrorCode.UserLoginFailed,
-              error: new Error(PaperSDKErrorCode.UserLoginFailed),
+              code: PaymentsSDKErrorCode.UserLoginFailed,
+              error: new Error(PaymentsSDKErrorCode.UserLoginFailed),
             });
           }
           break;

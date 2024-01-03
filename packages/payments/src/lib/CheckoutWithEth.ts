@@ -7,8 +7,8 @@ import {
 } from "../constants/settings";
 import type { ICustomizationOptions, Locale } from "../constants/style";
 import { DEFAULT_BRAND_OPTIONS } from "../constants/style";
-import type { PaperSDKError } from "../interfaces/PaperSDKError";
-import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
+import type { PaymentsSDKError } from "../interfaces/PaymentsSdkError";
+import { PayWithCryptoErrorCode } from "../interfaces/PaymentsSdkError";
 import type { PriceSummary } from "../interfaces/PriceSummary";
 import { LinksManager } from "../utils/LinksManager";
 import { handlePayWithCryptoError } from "../utils/handleCheckoutWithEthError";
@@ -40,7 +40,7 @@ export async function checkAndSendEth({
   onPaymentSuccess?:
     | CheckoutWithEthMessageHandlerArgs["onPaymentSuccess"]
     | CheckoutWithEthMessageHandlerArgs["onSuccess"];
-  onError?: (error: PaperSDKError) => Promise<void> | void;
+  onError?: (error: PaymentsSDKError) => Promise<void> | void;
 }) {
   try {
     const chainId = await payingWalletSigner.getChainId();
@@ -107,7 +107,7 @@ export interface CheckoutWithEthMessageHandlerArgs {
     transactionId: string;
   }) => Promise<void> | void;
   onPriceUpdate?: (props: PriceSummary) => void;
-  onError?: (error: PaperSDKError) => void;
+  onError?: (error: PaymentsSDKError) => void;
   suppressErrorToast?: boolean;
   setUpUserPayingWalletSigner?: (args: {
     chainId: number;

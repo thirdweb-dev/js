@@ -1,6 +1,6 @@
-// UNCHANGED
-import type { PaperSDKError } from "../interfaces/PaperSDKError";
-import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
+// Changed: Updated PaperSDKError
+import type { PaymentsSDKError } from "../interfaces/PaymentsSdkError";
+import { PayWithCryptoErrorCode } from "../interfaces/PaymentsSdkError";
 
 export interface IErrorObject {
   isErrorObject: boolean;
@@ -10,7 +10,7 @@ export interface IErrorObject {
 
 export const handlePayWithCryptoError = async (
   error: Error | IErrorObject,
-  onError?: (code: PaperSDKError) => Promise<void> | void,
+  onError?: (code: PaymentsSDKError) => Promise<void> | void,
   postToParent?: (errorObject: Omit<IErrorObject, "isErrorObject">) => void,
 ) => {
   if ("isErrorObject" in error) {

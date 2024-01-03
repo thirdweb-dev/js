@@ -1,9 +1,13 @@
 // UNCHANGED
 export {
-  PaperSDKErrorCode,
+  PaymentsSDKErrorCode,
   PayWithCryptoErrorCode,
 } from "@thirdweb-dev/payments";
-export type { PaperSDKError, PaperUser, Locale } from "@thirdweb-dev/payments";
+export type {
+  PaymentsSDKError,
+  PaperUser,
+  Locale,
+} from "@thirdweb-dev/payments";
 // re-export types and enums
 export * from "./Provider";
 export * from "./components/CheckoutWithCard";

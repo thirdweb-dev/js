@@ -12,9 +12,9 @@ import type {
   ReviewResult,
 } from "../interfaces/CheckoutWithCard";
 import type {
-  PaperSDKError,
-  PaperSDKErrorCode,
-} from "../interfaces/PaperSDKError";
+  PaymentsSDKError,
+  PaymentsSDKErrorCode,
+} from "../interfaces/PaymentsSdkError";
 import type { PriceSummary } from "../interfaces/PriceSummary";
 import { LinksManager } from "../utils/LinksManager";
 import { openCenteredPopup } from "../utils/device";
@@ -85,7 +85,7 @@ export interface CheckoutWithCardMessageHandlerArgs {
     id: string;
   }) => void;
   onReview?: (result: ReviewResult) => void;
-  onError?: (error: PaperSDKError) => void;
+  onError?: (error: PaymentsSDKError) => void;
   onOpenKycModal?: (props: KycModal) => void;
   onCloseKycModal?: () => void;
   onBeforeModalOpen?: (props: { url: string }) => void;
@@ -113,7 +113,7 @@ export function createCheckoutWithCardMessageHandler({
       case "checkoutWithCardError":
         if (onError) {
           onError({
-            code: data.code as PaperSDKErrorCode,
+            code: data.code as PaymentsSDKErrorCode,
             error: data.error,
           });
         }

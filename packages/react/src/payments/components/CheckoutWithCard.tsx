@@ -1,7 +1,7 @@
 // CHANGED: Import packageJSON + sdk-version only
 import type {
   ICheckoutWithCardConfigs,
-  PaperSDKError,
+  PaymentsSDKError,
   PriceSummary,
   ReviewResult,
   ICustomizationOptions,
@@ -25,7 +25,7 @@ interface CheckoutWithCardProps {
   appName?: string;
   options?: ICustomizationOptions;
   onReview?: (result: ReviewResult) => void;
-  onError?: (error: PaperSDKError) => void;
+  onError?: (error: PaymentsSDKError) => void;
   onBeforeModalOpen?: (props: { url: string }) => void;
   onPriceUpdate?: (priceSummary: PriceSummary) => void;
   configs?: ICheckoutWithCardConfigs;

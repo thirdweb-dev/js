@@ -1,15 +1,15 @@
-// UNCHANGED
+// CHANGED: Updated name to Payments
 
-export type PaperSDKError = {
+export type PaymentsSDKError = {
   /**
    * An enum representing the error encountered.
    * The value is a human-readable, English message describing the error.
    */
-  code: PaperSDKErrorCode | PayWithCryptoErrorCode;
+  code: PaymentsSDKErrorCode | PayWithCryptoErrorCode;
   error: Error;
 };
 
-export enum PaperSDKErrorCode {
+export enum PaymentsSDKErrorCode {
   UserAbandonedCheckout = "User abandoned the checkout",
   UserLoginFailed = "User login failed",
   InvalidProps = "The props you passed in to this component are not valid.",
