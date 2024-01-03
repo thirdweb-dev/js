@@ -52,11 +52,11 @@ export function ThirdwebAuth<
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
   };
 
-  function ThirdwebAuthHandler(
+  async function ThirdwebAuthHandler(
     ...args: [] | [NextRequest, NextContext]
   ) {
     if (args.length === 0) {
-      return async (req: NextRequest, ctx: NextContext) =>
+      return async (req: NextRequest, ctx: NextContext): Promise<void | Response> =>
         await ThirdwebAuthRouter(req, ctx, authCtx as ThirdwebAuthContext);
     }
 
@@ -65,8 +65,8 @@ export function ThirdwebAuth<
 
   return {
     ThirdwebAuthHandler,
-    getUser: (req?: NextRequest) => {
-      return getUser<TData, TSession>(authCtx, req);
+    getUser: async (req?: NextRequest) => {
+      return await getUser<TData, TSession>(authCtx, req);
     },
   };
 }
