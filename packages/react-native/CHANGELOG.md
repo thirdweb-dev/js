@@ -1,5 +1,12 @@
 # @thirdweb-dev/react-native
 
+## 0.5.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.2.1
+
 ## 0.5.3
 
 ### Patch Changes
