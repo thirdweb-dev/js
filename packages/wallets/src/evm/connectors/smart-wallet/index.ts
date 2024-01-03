@@ -191,8 +191,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @param transaction - The transaction to execute
    * @returns The transaction receipt
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
-    const tx = await this.send(transaction);
+  async execute(
+    transaction: Transaction,
+    config?: { gasless?: boolean },
+  ): Promise<TransactionResult> {
+    const tx = await this.send(transaction, config);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -228,8 +231,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    */
   async executeBatch(
     transactions: Transaction<any>[],
+    config?: { gasless?: boolean },
   ): Promise<TransactionResult> {
-    const tx = await this.sendBatch(transactions);
+    const tx = await this.sendBatch(transactions, config);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -251,8 +255,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    config?: { gasless?: boolean },
   ) {
-    const tx = await this.sendRaw(transaction);
+    const tx = await this.sendRaw(transaction, config);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -283,8 +288,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    config?: { gasless?: boolean },
   ) {
-    const tx = await this.sendBatchRaw(transactions);
+    const tx = await this.sendBatchRaw(transactions, config);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -391,10 +397,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return await this.accountApi.isAcountDeployed();
   }
 
-  async deployIfNeeded(): Promise<void> {
+  async deployIfNeeded(config?: { gasless?: boolean }): Promise<void> {
     const isDeployed = await this.isDeployed();
     if (!isDeployed) {
-      await this.deploy();
+      await this.deploy(config);
     }
   }
 

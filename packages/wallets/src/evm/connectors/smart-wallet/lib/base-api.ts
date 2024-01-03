@@ -343,7 +343,7 @@ export abstract class BaseAccountAPI {
     let paymasterAndData: string | undefined;
     let userOp = partialUserOp;
 
-    const gasless = config?.gasless ? config.gasless : this.gasless;
+    const gasless = config?.gasless !== undefined ? config.gasless : this.gasless;
     if (gasless && this.paymasterAPI) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       try {
