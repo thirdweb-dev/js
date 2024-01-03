@@ -1290,8 +1290,8 @@ importers:
         specifier: ^5.1.6
         version: 5.1.6
       zksync-web3:
-        specifier: ^0.14.3
-        version: 0.14.3(ethers@5.7.2)
+        specifier: ^0.17.1
+        version: 0.17.1(ethers@5.7.2)
 
   packages/service-utils:
     dependencies:
@@ -31881,10 +31881,11 @@ packages:
       zen-observable: 0.7.1
     dev: false
 
-  /zksync-web3@0.14.3(ethers@5.7.2):
-    resolution: {integrity: sha512-hT72th4AnqyLW1d5Jlv8N2B/qhEnl2NePK2A3org7tAa24niem/UAaHMkEvmWI3SF9waYUPtqAtjpf+yvQ9zvQ==}
+  /zksync-web3@0.17.1(ethers@5.7.2):
+    resolution: {integrity: sha512-jMV4gfAQyehkIbNs81i4uvccHLe+XBu/tNPFb0Rm38pXccWY5VXzVE6XWS0dBiHlMfjdfUGn/sxwzJbWZDGYGQ==}
+    deprecated: This package has been deprecated in favor of zksync-ethers@5.0.0
     peerDependencies:
-      ethers: ^5.7.0
+      ethers: ~5.7.0
     dependencies:
       ethers: 5.7.2
     dev: true
