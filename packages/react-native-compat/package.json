@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "^18.17.1",
+    "@types/node": "^20.10.6",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
