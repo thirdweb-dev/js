@@ -11,7 +11,9 @@ export * from "./contracts";
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
 
 // export integration things
-export * from "./integrations/thirdweb-checkout";
+export type {
+  PaperCreateCheckoutLinkShardParams
+} from "./integrations/thirdweb-checkout";
 
 // explicitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";

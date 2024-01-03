@@ -183,7 +183,7 @@ export class Erc721<
    * Get the current owner of an NFT
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
@@ -369,7 +369,7 @@ export class Erc721<
    * const owners = await contract.erc721.getAllOwners();
    * console.log(owners);
    * ```
-   * @returns an array of token ids and owners
+   * @returns An array of token ids and owners
    * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAllOwners() {
@@ -385,7 +385,7 @@ export class Erc721<
    * console.log(count);
    * ```
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async totalCount() {
@@ -784,7 +784,7 @@ export class Erc721<
    *
    * @param quantity - Quantity of the tokens you want to claim
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -816,7 +816,7 @@ export class Erc721<
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - optional claim options
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
@@ -885,7 +885,7 @@ export class Erc721<
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
@@ -917,7 +917,7 @@ export class Erc721<
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {

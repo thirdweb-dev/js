@@ -15,7 +15,6 @@ import { z } from "zod";
 import { getDeployArguments } from "../../../common/deploy";
 import { buildTransactionFunction } from "../../../common/transactions";
 import { getApprovedImplementation } from "../../../constants/addresses/getApprovedImplementation";
-import { getDefaultTrustedForwarders } from "../../../constants/addresses/getDefaultTrustedForwarders";
 import {
   DeploySchemaForPrebuiltContractType,
   EditionDropInitializer,
@@ -226,10 +225,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
     contractURI: string,
   ): Promise<any[]> {
-    let trustedForwarders =
-      contractType === PackInitializer.contractType
-        ? []
-        : await this.getDefaultTrustedForwarders();
+    let trustedForwarders: string[] = [];
     // override default forwarders if custom ones are passed in
     if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
       trustedForwarders = metadata.trusted_forwarders;
@@ -401,11 +397,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       default:
         return [];
     }
-  }
-
-  private async getDefaultTrustedForwarders(): Promise<string[]> {
-    const chainId = await this.getChainID();
-    return getDefaultTrustedForwarders(chainId);
   }
 
   private async getImplementation(

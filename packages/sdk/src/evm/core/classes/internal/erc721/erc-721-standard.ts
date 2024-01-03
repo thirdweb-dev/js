@@ -147,7 +147,7 @@ export class StandardErc721<
    * Get the current owner of a given NFT within this Contract
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return this.erc721.ownerOf(tokenId);

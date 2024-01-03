@@ -63,7 +63,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * @param tokenOwner - Address of the owner of the tokens being airdropped
    * @param contents - Array of airdrop contents
    *
-   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @returns An array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC20
    */
   drop = /* @__PURE__ */ buildTransactionFunction(

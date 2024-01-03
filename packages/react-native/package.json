@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.5.1",
+  "version": "0.5.4",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "3.350.0",
     "@aws-sdk/credential-providers": "3.350.0",
-    "@coinbase/wallet-mobile-sdk": "1.0.7",
+    "@coinbase/wallet-mobile-sdk": "1.0.10",
     "@magic-sdk/provider": "17.2.0",
     "@magic-sdk/react-native-bare": "^18.5.0",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",

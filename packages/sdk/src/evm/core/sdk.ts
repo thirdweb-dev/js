@@ -104,7 +104,6 @@ import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
 } from "../common/any-evm-utils/deployDirectDeterministic";
-import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
 import { DeployEvent, DeployEvents } from "../types/deploy/deploy-events";
 import {
   AirdropContractDeployMetadata,
@@ -139,7 +138,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -171,7 +170,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -216,7 +215,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @public
    */
@@ -506,7 +505,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -526,7 +525,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
    * @param contractType - the {@link ContractType} of the contract to load
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -545,7 +544,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
    * @param abi - the ABI ({@link ContractInterface}) of the contract to load
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -654,7 +653,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    * @param contractAddress - the address of the contract to attempt to resolve the contract type for
-   * @returns the {@link ContractType} for the given contract address
+   * @returns The {@link ContractType} for the given contract address
    *
    */
   public async resolveContractType(
@@ -811,7 +810,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Custom contract from a json ABI
    * @param address - the address of the deployed contract
    * @param abi - the JSON abi
-   * @returns the contract
+   * @returns The contract
    * @beta
    * @example
    * ```javascript
@@ -955,7 +954,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployNFTCollection = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -984,7 +983,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployNFTDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1013,7 +1012,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployLoyaltyCard = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1025,9 +1024,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1073,7 +1071,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1085,9 +1083,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1131,7 +1128,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deploySignatureDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1159,7 +1156,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    * @beta
    */
   deployMultiwrap = /* @__PURE__ */ buildDeployTransactionFunction(
@@ -1189,7 +1186,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployEdition = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1218,7 +1215,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployEditionDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1247,7 +1244,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployToken = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1276,7 +1273,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployTokenDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1305,7 +1302,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployMarketplace = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1334,7 +1331,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployMarketplaceV3 = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1363,7 +1360,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployPack = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1402,7 +1399,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deploySplit = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1432,7 +1429,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployVote = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1456,9 +1453,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1488,9 +1484,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1520,9 +1515,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1551,7 +1545,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
    * @param version - the version of the contract to deploy
-   * @returns a promise of the address of the newly deployed contract
+   * @returns A promise of the address of the newly deployed contract
    */
   deployBuiltInContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async <TContractType extends PrebuiltContractType>(

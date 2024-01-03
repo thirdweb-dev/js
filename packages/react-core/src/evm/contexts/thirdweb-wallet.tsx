@@ -117,6 +117,10 @@ export const ThirdwebConnectedWalletProvider: React.FC<
   );
 };
 
+/**
+ *
+ * @internal
+ */
 export function useThirdwebConnectedWalletContext() {
   const context = useContext(ThirdwebConnectedWalletContext);
   invariant(

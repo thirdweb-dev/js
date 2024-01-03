@@ -313,7 +313,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalClaimedSupply();
@@ -329,7 +329,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalUnclaimedSupply();
@@ -426,7 +426,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -445,7 +445,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @remarks See {@link NFTDrop.claimTo}
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -500,7 +500,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * Get the current owner of a given NFT within this Contract
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return this.erc721.ownerOf(tokenId);
