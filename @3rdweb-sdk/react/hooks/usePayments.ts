@@ -231,9 +231,8 @@ export type RegisterContractInput = {
 const apiDate = "2022-08-12";
 
 function usePaymentsApi() {
-  const { token } = useApiAuthToken();
-
   const fetchFromApi = async <T>(
+    token: string,
     method: string,
     endpoint: string,
     body?: T,
@@ -305,12 +304,14 @@ function usePaymentsApi() {
 }
 
 export function usePaymentsRegisterContract() {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const queryClient = useQueryClient();
   const address = useAddress();
 
   return useMutationWithInvalidate(
     async (input: RegisterContractInput) => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       const sdk = getEVMThirdwebSDK(
         parseInt(input.chain),
@@ -344,6 +345,7 @@ export function usePaymentsRegisterContract() {
       };
 
       return fetchFromPaymentsAPI<RegisterContractInput>(
+        token,
         "POST",
         `${apiDate}/register-contract`,
         body,
@@ -409,15 +411,18 @@ export type CreateUpdateCheckoutInput = {
 };
 
 export function usePaymentsCreateUpdateCheckout(contractAddress: string) {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const queryClient = useQueryClient();
   const address = useAddress();
 
   return useMutationWithInvalidate(
     async (input: CreateUpdateCheckoutInput) => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
 
       return fetchFromPaymentsAPI<CreateUpdateCheckoutInput>(
+        token,
         "POST",
         `${apiDate}/shareable-checkout-link${
           input?.checkoutId ? `/${input.checkoutId} ` : ""
@@ -440,16 +445,19 @@ export type RemoveCheckoutInput = {
 };
 
 export function usePaymentsRemoveCheckout(contractAddress: string) {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const queryClient = useQueryClient();
   const address = useAddress();
 
   return useMutationWithInvalidate(
     async (input: RemoveCheckoutInput) => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(input.checkoutId, "No checkoutId found");
 
       return fetchFromPaymentsAPI<RemoveCheckoutInput>(
+        token,
         "DELETE",
         `${apiDate}/shareable-checkout-link/${input.checkoutId}`,
       );
@@ -469,17 +477,20 @@ export type UploadKybFileInput = {
 };
 
 export function usePaymentsUploadKybFiles() {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const queryClient = useQueryClient();
   const address = useAddress();
 
   return useMutationWithInvalidate(
     async (input: { files: File[] }) => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(input.files.length > 0, "No files found");
 
       for (const file of input.files) {
         const url = await fetchFromPaymentsAPI(
+          token,
           "POST",
           "storage/generate-signed-url",
           { fileName: file.name, fileType: file.type },
@@ -537,16 +548,19 @@ interface UploadImageResponse {
 }
 
 export function usePaymentsUploadToCloudflare() {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const queryClient = useQueryClient();
   const address = useAddress();
 
   return useMutationWithInvalidate(
     async (dataBase64: string) => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(dataBase64, "No file found");
       const file = await getBlobFromBase64Image(dataBase64);
       const res = await fetchFromPaymentsAPI(
+        token,
         "GET",
         "storage/get-image-upload-link",
         undefined,
@@ -635,54 +649,63 @@ export function usePaymentsUpdateSellerById(id: string) {
 }
 
 export function usePaymentsKybStatus() {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const address = useAddress();
 
   return useQuery(
     paymentsKeys.kybStatus(address as string),
     async () => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       return fetchFromPaymentsAPI(
+        token,
         "GET",
         "seller-verification/seller-document-count",
         undefined,
         { isSellerDocumentCount: true },
       );
     },
-    { enabled: !!address },
+    { enabled: !!address && !!token },
   );
 }
 
 export function usePaymentsGetVerificationSession(sellerId: string) {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const address = useAddress();
 
   return useQuery(
     paymentsKeys.verificationSession(address as string),
     async () => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(sellerId, "No sellerId found");
       return fetchFromPaymentsAPI(
+        token,
         "POST",
         "seller-verification/create-verification-session",
         { sellerId },
         { isCreateVerificationSession: true },
       );
     },
-    { enabled: !!address && !!sellerId },
+    { enabled: !!address && !!sellerId && !!token },
   );
 }
 
 export function usePaymentsKycStatus(sessionId: string) {
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
   const address = useAddress();
 
   return useQuery(
     paymentsKeys.kycStatus(address as string),
     async () => {
+      invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(sessionId, "No sessionId found");
       return fetchFromPaymentsAPI(
+        token,
         "POST",
         "seller-verification/status",
         {
@@ -691,7 +714,7 @@ export function usePaymentsKycStatus(sessionId: string) {
         { isSellerVerificationStatus: true },
       );
     },
-    { enabled: !!address },
+    { enabled: !!address && !!token },
   );
 }
 
@@ -986,7 +1009,6 @@ export type UpdateWebhookInput = {
 };
 
 export function usePaymentsUpdateWebhook(paymentsSellerId: string) {
-  invariant(paymentsSellerId, "paymentsSellerId is required");
   const queryClient = useQueryClient();
 
   const [updateWebhookBySellerId] = useUpdateWebhookMutation({
@@ -1025,15 +1047,17 @@ export type PaymentsWebhookSecretType = {
 };
 
 export function usePaymentsWebhooksSecretKeyById(paymentsSellerId: string) {
-  invariant(paymentsSellerId, "paymentsSellerId is required");
-
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
+
   return useQuery(
     paymentsKeys.webhookSecret(paymentsSellerId),
     async () => {
+      invariant(token, "No token found");
       invariant(paymentsSellerId, "No sellerId found");
 
       return fetchFromPaymentsAPI(
+        token,
         "POST",
         "api-key/get-decrypted-key",
         {
@@ -1044,7 +1068,7 @@ export function usePaymentsWebhooksSecretKeyById(paymentsSellerId: string) {
         },
       );
     },
-    { enabled: !!paymentsSellerId },
+    { enabled: !!paymentsSellerId && !!token },
   );
 }
 
@@ -1090,10 +1114,13 @@ export type PaymentsWebhooksTestInput = {
 export function usePaymentsTestWebhook(paymentsSellerId: string) {
   invariant(paymentsSellerId, "paymentsSellerId is required");
 
+  const { token } = useApiAuthToken();
   const fetchFromPaymentsAPI = usePaymentsApi();
 
   return useMutation(async (input: PaymentsWebhooksTestInput) => {
+    invariant(token, "No token found");
     return fetchFromPaymentsAPI(
+      token,
       "POST",
       "checkout/test-webhook-url",
       {
