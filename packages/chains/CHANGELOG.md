@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.62
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
 ## 0.1.61
 
 ### Patch Changes

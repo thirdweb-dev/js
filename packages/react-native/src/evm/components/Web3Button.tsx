@@ -22,7 +22,7 @@ import { useGlobalTheme, useUIContext } from "../providers/ui-context-provider";
 
 export type ActionFn = (contract: SmartContract) => Promise<any>;
 
-interface Web3ButtonProps<TActionFn extends ActionFn> {
+export interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
 

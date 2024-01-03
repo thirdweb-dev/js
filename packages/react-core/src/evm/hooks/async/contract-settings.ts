@@ -25,18 +25,26 @@ import invariant from "tiny-invariant";
 // primary sales
 
 /**
- * Get the primary sale recipient
+ * Hook for getting the primary sales recipient of a smart contract.
+ *
+ * Available to use on contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
  *
  * @example
  * ```jsx
- * const { data: primarySaleRecipient, isLoading, error } = usePrimarySalesRecipient(contract);
+ * import { useContract, usePrimarySaleRecipient } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = usePrimarySaleRecipient(contract);
+ * }
  * ```
  *
- * Use this to get the primary sales recipient of your {@link SmartContract}
- * @param contract - an instance of a {@link SmartContract}
- * @returns the wallet address of the primary sales recipient
+ * @param contract - Instance of a `SmartContract`
+ *
+ * @returns The hook's `data` property, once loaded, is a `string` with the wallet address of the primary sales recipient.
+ *
  * @twfeature PrimarySale
- * @see {@link https://portal.thirdweb.com/react/react.useprimarysalerecipient?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function usePrimarySaleRecipient(
   contract: RequiredParam<ValidContractInstance>,
@@ -57,37 +65,56 @@ export function usePrimarySaleRecipient(
 }
 
 /**
- * Set the primary sale recipient
+ * Hook for updating the primary sale recipient on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
+ *
+ * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `"admin"` level).
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdatePrimarySaleRecipient,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updatePrimarySalesRecipient,
+ *     mutateAsync: updatePrimarySaleRecipient,
  *     isLoading,
  *     error,
  *   } = useUpdatePrimarySaleRecipient(contract);
  *
- *   if (error) {
- *     console.error("failed to update recipient", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updatePrimarySalesRecipient({ newRecipient: "{{wallet_address}}" })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() => updatePrimarySaleRecipient("{{wallet_address}}")}
  *     >
- *       Update Recipient
- *     </button>
+ *       Update Primary Sale Recipient
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the primary sales recipient
+ * @param contract - Instance of a `SmartContract`
+ * @returns A mutation object to update the primary sales recipient
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdatePrimarySaleRecipient(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes a `walletAddress` as argument:
+ *
+ * #### walletAddress
+ *
+ * The wallet address to set as the primary sale recipient.
+ *
  * @twfeature PrimarySale
- * @see {@link https://portal.thirdweb.com/react/react.useupdateprimarysalerecipient?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function useUpdatePrimarySaleRecipient(
   contract: RequiredParam<ValidContractInstance>,
@@ -127,21 +154,48 @@ export function useUpdatePrimarySaleRecipient(
 // royalties
 
 /**
- * Get the royalty recipient and fee
+ * Hook for retrieving royalty settings of a smart contract.
+ *
+ * Available to use on contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
  *
  * @example
  * ```jsx
- * const { data: settings, isLoading, error } = useRoyaltySettings(contract);
+ * import { useContract, useRoyaltySettings } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useRoyaltySettings(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns an object containing recipient address and the royalty basis points
+ * @param contract - Instance of a `SmartContract`
+ *
+ * @returns
+ * The hook's `data` property, once loaded, is an object with two properties:
+ *
+ * ```ts
+ * {
+ *   seller_fee_basis_points: number;
+ *   fee_recipient: string;
+ * }
+ * ```
+ *
+ * - The `seller_fee_basis_points` is the royalty amount (in basis points) that the seller
+ *   will receive for each token sale on secondary markets.
+ * - The `fee_recipient` is the wallet address that will receive the royalty payments.
+ *
  * @twfeature Royalty
- * @see {@link https://portal.thirdweb.com/react/react.useroyaltysettings?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function useRoyaltySettings(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseQueryResult<
+  {
+    seller_fee_basis_points: number;
+    fee_recipient: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.royalties.getDefaultRoyaltyInfo(contractAddress),
@@ -158,37 +212,67 @@ export function useRoyaltySettings(
 }
 
 /**
- * Set the royalty recipient and fee
+ * Hook for updating royalty settings on a smart contract.
+ *
+ * Available to use on smart contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
  *
  * @example
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdateRoyaltySettings,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updateRoyaltySettings,
+ *     mutateAsync: updateRoyaltySettings,
  *     isLoading,
  *     error,
  *   } = useUpdateRoyaltySettings(contract);
  *
- *   if (error) {
- *     console.error("failed to update royalty settings", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updateRoyaltySettings({ updatePayload: { fee_recipient: "{{wallet_address}}", seller_fee_basis_points: 5_00 } })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updateRoyaltySettings({
+ *           seller_fee_basis_points: 0,
+ *           fee_recipient: "{{wallet_address}}",
+ *         })
+ *       }
  *     >
  *       Update Royalty Settings
- *     </button>
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the royalty settings
+ * @param contract - Instance of a `SmartContract`
+ *
+ * @returns
+ * A mutation object to update the royalty settings
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdateRoyaltySettings(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object with below properties:
+ *
+ * #### seller_fee_basis_points
+ *
+ * The `seller_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
+ *
+ * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
+ *
+ * #### fee_recipient
+ *
+ * The `fee_recipient` property is the address of the wallet that will receive the fees.
+ *
  * @twfeature Royalty
- * @see {@link https://portal.thirdweb.com/react/react.useupdateroyaltysettings?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function useUpdateRoyaltySettings(
   contract: RequiredParam<ValidContractInstance>,
@@ -224,21 +308,50 @@ export function useUpdateRoyaltySettings(
 // platformFees
 
 /**
- * Get the platform fee recipient and basis points
+ * Hook for getting the platform fee settings of a contract.
+ *
+ * Available to use on contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
  *
  * @example
+ *
  * ```jsx
- * const { data: platformFees, isLoading, error } = usePlatformFees(contract);
+ * import { useContract, usePlatformFees } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = usePlatformFees(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns an object containing the platform fee basis points and the fee recipient address
+ * @param contract - Instance of a `SmartContract`
+ *
+ * @returns
+ * The hook's `data` property, once loaded, is an object containing two fields:
+ *
+ * - `platform_fee_basis_points`: the platform fee basis points set on the contract
+ * - `platform_fee_recipient`: the wallet address of the platform fee recipient
+ *
+ * _Note_: The basis points are in percentage format, meaning that a value of `500` is equivalent to a `5%` fee.
+ *
+ * ```ts
+ * {
+ *   platform_fee_basis_points: number;
+ *   platform_fee_recipient: string;
+ * }
+ * ```
+ *
  * @twfeature PlatformFee
- * @see {@link https://portal.thirdweb.com/react/react.useplatformfees?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function usePlatformFees(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseQueryResult<
+  {
+    platform_fee_basis_points: number;
+    platform_fee_recipient: string;
+  },
+  unknown
+> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.platformFees.get(contractAddress),
@@ -255,36 +368,67 @@ export function usePlatformFees(
 }
 
 /**
- * Set the platform fee recipient and basis points
+ * Hook for updating platform fees on a smart contract.
  *
- * @example
+ * Available to use on smart contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdatePlatformFees,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updatePlatformFees,
+ *     mutateAsync: updatePlatformFees,
  *     isLoading,
  *     error,
  *   } = useUpdatePlatformFees(contract);
  *
- *   if (error) {
- *     console.error("failed to update platform fees", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updatePlatformFees({ updatePayload: { fee_recipient: "{{wallet_address}}", platform_fee_basis_points: 5_00 } })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updatePlatformFees({
+ *           platform_fee_basis_points: 0,
+ *           fee_recipient: "{{wallet_address}}",
+ *         })
+ *       }
  *     >
- *       Update Platform fees
- *     </button>
+ *       Update Platform Fees
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
- * @param contract - an instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the platform fees settings
+ *
+ * @param contract - Instance of a `SmartContract`
+ *
+ * @returns A mutation object to update the platform fees settings
+ *
+ * ```ts
+ * const { mutateAsync, isLoading, error } = useUpdatePlatformFees(contract);
+ * ```
+ *
+ * ### options
+ *
+ * The mutation function takes an object with below properties:
+ *
+ * #### platform_fee_basis_points
+ *
+ * The `platform_fee_basis_points` property is a `number` between `0` - `10000` that defines the fee rate.
+ *
+ * This number is in percentage points. i.e. `100` is a 1% fee and `10000` is a 100% fee.
+ *
+ * #### fee_recipient
+ *
+ * The `fee_recipient` property is the address of the wallet that will receive the fees.
+ *
+ * Use the `useAddress` hook to get the current wallet address.
+ *
  * @twfeature PlatformFee
- * @see {@link https://portal.thirdweb.com/react/react.useupdateplatformfees?utm_source=sdk | Documentation}
+ * @platformFees
  */
 export function useUpdatePlatformFees(
   contract: RequiredParam<ValidContractInstance>,
@@ -320,16 +464,44 @@ export function useUpdatePlatformFees(
 // metadata
 
 /**
- * Get the metadata of this contract
+ * Hook for getting the metadata associated with a smart contract.
+ *
+ * Available to use on contracts that implement the [Contract Metadata](https://portal.thirdweb.com/solidity/extensions/contractmetadata) interface.
  *
  * @example
  * ```jsx
- * const { data: metadata, isLoading, error } = useMetadata(contract);
+ * import { useContract, useMetadata } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useMetadata(contract);
+ * }
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
- * @returns a {@link CustomContractMetadata} object containing the metadata
- * @see {@link https://portal.thirdweb.com/react/react.usemetadata?utm_source=sdk | Documentation}
+ * @param contract - Instance of a `SmartContract`
+ * @returns
+ * A `CustomContractMetadata` object containing the metadata
+ *
+ * The hook's `data` property, once loaded, is an object containing the contract's metadata.
+ *
+ * ```ts
+ * CustomContractMetadata | undefined;
+ * ```
+ *
+ * ```ts
+ * interface CustomContractMetadata {
+ *   // The name of the contract.
+ *   name: string;
+ *   // A description of the contract.
+ *   description?: string;
+ *   // The image associated with the contract.
+ *   image?: any;
+ *   // An external link associated with the contract.
+ *   external_link?: string;
+ * }
+ * ```
+ *
+ * @metadata
  */
 export function useMetadata(
   contract: RequiredParam<ValidContractInstance>,
@@ -351,38 +523,59 @@ export function useMetadata(
 }
 
 /**
- * Set the metadata of this contract
+ * Hook for updating the metadata of a smart contract.
+ *
+ * Available to use on smart contracts that implement the `ContractMetadata` interface.
+ *
+ * The wallet initiating this transaction must have the required permissions to update the metadata, (`admin` permissions required by default).
+ *
+ * Provide your contract instance from the `useContract` hook as the first argument, and
+ * an object fitting the [contract-level metadata standards](https://docs.opensea.io/docs/contract-level-metadata) of
+ * the new metadata as the second argument, including:
+ *
+ * - `name`: A `string` for the name of the smart contract (required).
+ * - `description`: A `string` to describe the smart contract (optional).
+ * - `image`: A `string` or `File` object containing the URL or file data of an image to associate with the contract (optional).
+ * - `external_link`: A `string` containing a URL to view the smart contract on your website (optional).
  *
  * @example
+ *
  * ```jsx
- * const Component = () => {
- *   const { contract } = useContract("{{contract_address}}");
+ * import {
+ *   useUpdateMetadata,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
  *   const {
- *     mutate: updateMetadata,
+ *     mutateAsync: updateMetadata,
  *     isLoading,
  *     error,
  *   } = useUpdateMetadata(contract);
  *
- *   if (error) {
- *     console.error("failed to update metadata", error);
- *   }
- *
  *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => updateMetadata({
- *        name: "My Contract",
- *        description: "This is my contract"
- *       })}
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       action={() =>
+ *         updateMetadata({
+ *           name: "My App",
+ *           description: "My awesome Ethereum App",
+ *           image: "/path/to/image.jpg", // URL, URI, or File object
+ *           external_link: "https://myapp.com",
+ *         })
+ *       }
  *     >
- *       Update Contract Metadata
- *     </button>
+ *       Update Metadata
+ *     </Web3Button>
  *   );
- * };
+ * }
  * ```
- * @param contract - an instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the metadata
- * @see {@link https://portal.thirdweb.com/react/react.useupdatemetadata?utm_source=sdk | Documentation}
+ *
+ * @param contract - Instance of a `SmartContract`
+ * @returns Mutation object that to update the metadata
+ * @metadata
  */
 export function useUpdateMetadata(
   contract: RequiredParam<ValidContractInstance>,

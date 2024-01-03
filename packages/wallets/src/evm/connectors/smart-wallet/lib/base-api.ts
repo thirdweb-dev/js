@@ -103,9 +103,9 @@ export abstract class BaseAccountAPI {
 
   /**
    * encode the call from entryPoint through our account to the target contract.
-   * @param target - the target contract address
-   * @param value - the value to send to the target contract
-   * @param data - the calldata to send to the target contract
+   * @param target - The target contract address
+   * @param value - The value to send to the target contract
+   * @param data - The calldata to send to the target contract
    */
   abstract prepareExecute(
     target: string,
@@ -115,7 +115,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * sign a userOp's hash (userOpHash).
-   * @param userOpHash - the hash to sign
+   * @param userOpHash - The hash to sign
    */
   abstract signUserOpHash(userOpHash: string): Promise<string>;
 
@@ -385,7 +385,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * Sign the filled userOp.
-   * @param userOp - the UserOperation to sign (with signature field ignored)
+   * @param userOp - The UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
@@ -414,7 +414,7 @@ export abstract class BaseAccountAPI {
    * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
    * @param timeout - stop waiting after this timeout
    * @param interval - time to wait between polls.
-   * @returns the transactionHash this userOp was mined, or null if not found.
+   * @returns The transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,

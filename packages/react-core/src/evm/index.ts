@@ -9,6 +9,7 @@ export { __DEV__ } from "../core/constants/runtime";
 
 // wallet hooks
 export {
+  type WalletIdToWalletTypeMap,
   useWallet,
   useConnect,
   useConnectionStatus,
@@ -24,6 +25,7 @@ export { useNetwork } from "../core/hooks/useNetwork";
 export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 export { usePersonalWalletAddress } from "./hooks/usePersonalWalletAddress";
 export { useWalletConnectHandler } from "../core/providers/thirdweb-wallet-provider";
+export type { ConnectionStatus } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -43,9 +45,7 @@ export type {
   WalletConfig,
   ConnectUIProps,
   SelectUIProps,
-  WalletClass,
   WalletInstance,
-  ExtraCoreWalletOptions,
   WalletOptions,
 } from "../core/types/wallet";
 

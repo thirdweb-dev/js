@@ -68,7 +68,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    * Get the number of NFTs minted
    * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async totalCount(): Promise<BigNumber> {
@@ -79,7 +79,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    * Get the supply of token for a given tokenId.
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async totalCirculatingSupply(

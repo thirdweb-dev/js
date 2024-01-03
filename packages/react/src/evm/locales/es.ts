@@ -333,26 +333,33 @@ export function esDefault(): ThirdwebLocale {
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
  * @example
- *
- * ### Use default Spanish Locale
+ * ### Use default Locale
  * ```tsx
- * const spanish = es(); // default English locale object
- *
- * <ThirdwebProvider locale={english}> <App /> </ThirdwebProvider>
+ * const spanish = es();
  * ```
  *
- * ### Override Spanish Locale
- * ```tsx
+ * ### Override Locale
+ * ```ts
  * const spanish = es({
  *  connectWallet: {
  *    signIn: "Iniciar sesión"
  *  }
  * })
- *
- * <ThirdwebProvider locale={spanish}>
- *  <App />
- * </ThirdwebProvider>
  * ```
+ *
+ * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={spanish}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
  */
 export function es(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = esDefault();

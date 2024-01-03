@@ -27,7 +27,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    *   1, // proof max quantity per transaction
    * ]);
    * ```
-   * @returns the estimated price in native currency (ETH, MATIC, etc) of calling this function
+   * @returns The estimated price in native currency (ETH, MATIC, etc) of calling this function
    * @public
    */
   public async gasCostOf(
@@ -57,7 +57,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    *   1, // proof max quantity per transaction
    * ]);
    * ```
-   * @returns the estimated gas limit of the transaction
+   * @returns The estimated gas limit of the transaction
    * @public
    */
   public async gasLimitOf(
@@ -75,7 +75,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * ```javascript
    * const gasCostInGwei = await contract.estimator.currentGasPriceInGwei();
    * ```
-   * @returns the current gas price in gwei
+   * @returns The current gas price in gwei
    * @public
    */
   public async currentGasPriceInGwei(): Promise<string> {
