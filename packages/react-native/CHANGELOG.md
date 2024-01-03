@@ -1,5 +1,24 @@
 # @thirdweb-dev/react-native
 
+## 0.5.3
+
+### Patch Changes
+
+- [#2101](https://github.com/thirdweb-dev/js/pull/2101) [`7fdb1715`](https://github.com/thirdweb-dev/js/commit/7fdb1715e4263e9b9c90370a1e70c7fa1fa0e95e) Thanks [@iketw](https://github.com/iketw)! - Export types for better reference docs
+
+- [#2108](https://github.com/thirdweb-dev/js/pull/2108) [`b90fa2cc`](https://github.com/thirdweb-dev/js/commit/b90fa2cc298bf1a6deb0f4c0f927ab77f2716448) Thanks [@iketw](https://github.com/iketw)! - Adds `hideSendButton` and `hideReceiveButton` to the ConnectWallet component.
+
+  Both props default to `false`.
+
+  ```js
+  <ConnectWallet hideReceiveButton={true} hideSendButton={true} />
+  ```
+
+- Updated dependencies [[`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11), [`e46dd025`](https://github.com/thirdweb-dev/js/commit/e46dd0254f157c3c4d50fe3e4f44e2e24eaf34a8)]:
+  - @thirdweb-dev/sdk@4.0.24
+  - @thirdweb-dev/wallets@2.3.3
+  - @thirdweb-dev/react-core@4.2.0
+
 ## 0.5.2
 
 ### Patch Changes
