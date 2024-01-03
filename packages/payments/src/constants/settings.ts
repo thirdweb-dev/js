@@ -9,6 +9,10 @@ const isDev = (): boolean => {
 const isOldPaperDomain = (): boolean =>
   typeof window !== "undefined" && window.location.origin.includes("paper.xyz");
 
+const isThirdwebDomain = (): boolean =>
+  typeof window !== "undefined" &&
+  window.location.origin.includes("thirdweb.com");
+
 export const getPaperOriginUrl = (): string => {
   if (isDev()) {
     return (
@@ -17,6 +21,10 @@ export const getPaperOriginUrl = (): string => {
   }
 
   if (isOldPaperDomain()) {
+    return window.location.origin;
+  }
+
+  if (isThirdwebDomain()) {
     return window.location.origin;
   }
 
