@@ -516,6 +516,14 @@ const TransactionDetailsDrawer = ({
     });
   }
 
+  let txFeeDisplay = "N/A";
+  if (transaction.gasLimit && transaction.gasPrice) {
+    const txFee =
+      (parseFloat(transaction.gasLimit) * parseFloat(transaction.gasPrice)) /
+      10 ** chain.nativeCurrency.decimals;
+    txFeeDisplay = `${txFee} ${chain.nativeCurrency.symbol}`;
+  }
+
   return (
     <Drawer
       isOpen={disclosure.isOpen}
@@ -689,22 +697,57 @@ const TransactionDetailsDrawer = ({
               </LinkButton>
             </FormControl>
 
+            <FormControl>
+              <FormLabel>Transaction Fee</FormLabel>
+              <Text>{txFeeDisplay}</Text>
+            </FormControl>
+
             <Collapse in={advancedTxDetailsDisclosure.isOpen}>
               <Stack spacing={4}>
-                <FormControl>
-                  <FormLabel>Nonce</FormLabel>
-                  <Text>{transaction.nonce ?? "N/A"}</Text>
-                </FormControl>
+                {transaction.nonce && (
+                  <FormControl>
+                    <Flex>
+                      <FormLabel>Nonce</FormLabel>
+                      <Tooltip
+                        label="The nonce value this transaction was submitted to mempool."
+                        shouldWrapChildren
+                      >
+                        <FiInfo />
+                      </Tooltip>
+                    </Flex>
+                    <Text>{transaction.nonce ?? "N/A"}</Text>
+                  </FormControl>
+                )}
 
-                <FormControl>
-                  <FormLabel>Gas Units</FormLabel>
-                  <Text>{transaction.gasLimit ?? "N/A"}</Text>
-                </FormControl>
+                {transaction.gasLimit && (
+                  <FormControl>
+                    <Flex>
+                      <FormLabel>Gas Units</FormLabel>
+                      <Tooltip
+                        label="The gas units spent for this transaction."
+                        shouldWrapChildren
+                      >
+                        <FiInfo />
+                      </Tooltip>
+                    </Flex>
+                    <Text>{Number(transaction.gasLimit).toLocaleString()}</Text>
+                  </FormControl>
+                )}
 
-                <FormControl>
-                  <FormLabel>Gas Price</FormLabel>
-                  <Text>{transaction.gasPrice ?? "N/A"}</Text>
-                </FormControl>
+                {transaction.gasPrice && (
+                  <FormControl>
+                    <Flex>
+                      <FormLabel>Gas Price</FormLabel>
+                      <Tooltip
+                        label="The price in wei spent for each gas unit."
+                        shouldWrapChildren
+                      >
+                        <FiInfo />
+                      </Tooltip>
+                    </Flex>
+                    <Text>{Number(transaction.gasPrice).toLocaleString()}</Text>
+                  </FormControl>
+                )}
               </Stack>
             </Collapse>
 

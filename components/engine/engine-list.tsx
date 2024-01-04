@@ -34,6 +34,7 @@ import { AddEngineInstanceButton } from "./add-engine-instance";
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useAddress } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { EngineOverviewDescription } from "./overview/engine-description";
 
 interface EngineInstancesListProps {
   instances: EngineInstance[];
@@ -62,7 +63,8 @@ export const EngineInstancesList = ({
         </Heading>
         <Text>
           Engine is a backend HTTP server that calls smart contracts with your
-          backend wallets.{" "}
+          backend wallets. Reliably send blockchain transactions, manage smart
+          wallets, enable gasless transactions, and more.{" "}
           <TrackedLink
             href="https://portal.thirdweb.com/engine"
             isExternal
@@ -70,7 +72,7 @@ export const EngineInstancesList = ({
             label="clicked-learn-more"
             color="blue.500"
           >
-            Learn more about Engine
+            Learn more to get started for free
           </TrackedLink>
           .
         </Text>
@@ -84,6 +86,8 @@ export const EngineInstancesList = ({
               <Text>
                 View Engine instances you&apos;ve set up and imported here.
               </Text>
+
+              <EngineOverviewDescription />
             </Stack>
           </Card>
         ) : (
