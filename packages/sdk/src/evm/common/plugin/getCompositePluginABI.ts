@@ -2,7 +2,7 @@ import {
   getAllExtensionsAbi,
   getAllPluginsAbi,
 } from "../../constants/thirdweb-features";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Abi, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { isExtensionEnabled } from "../feature-detection/isFeatureEnabled";
@@ -93,5 +93,5 @@ export async function getCompositeABI(
     }
   } catch (err) {}
 
-  return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+  return pluginABIs.length > 0 ? joinABIs([...pluginABIs], abi) : abi;
 }

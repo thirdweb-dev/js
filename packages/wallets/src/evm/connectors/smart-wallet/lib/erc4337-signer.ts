@@ -6,6 +6,7 @@ import { BaseAccountAPI, BatchData } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { randomNonce } from "./utils";
+import { deepHexlify } from "@account-abstraction/utils";
 
 export class ERC4337EthersSigner extends Signer {
   config: ClientConfig;
@@ -150,9 +151,27 @@ Code: ${errorCode}`;
   }
 
   async signTransaction(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    batchData?: BatchData,
   ): Promise<string> {
-    throw new Error("not implemented");
+    const tx = await ethers.utils.resolveProperties(transaction);
+    await this.verifyAllNecessaryFields(tx);
+
+    const multidimensionalNonce = randomNonce();
+    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+      {
+        target: tx.to || "",
+        data: tx.data?.toString() || "0x",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
+      },
+      batchData,
+    );
+
+    const userOpString = JSON.stringify(
+      deepHexlify(await utils.resolveProperties(userOperation)),
+    );
+    return userOpString;
   }
 }

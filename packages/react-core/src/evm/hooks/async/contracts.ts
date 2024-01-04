@@ -56,6 +56,24 @@ async function fetchContractType(
   }
 }
 
+/**
+ * Hook for determining the type of contract for a contract address.
+ *
+ * This is useful if you want to determine if a contract is a [prebuilt contract](https://portal.thirdweb.com/pre-built-contracts).
+ *
+ * @example
+ * ```jsx
+ * import { useContractType } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { data, isLoading, error } = useContractType(contractAddress);
+ * }
+ * ```
+ *
+ * @param contractAddress - The address of the contract
+ * @returns Query result containing the type of the contract in the `data` property
+ * @metadata
+ */
 export function useContractType(
   contractAddress: RequiredParam<ContractAddress>,
 ) {
@@ -107,6 +125,25 @@ function fetchCompilerMetadata(
   }
 }
 
+/**
+ * Hook for retrieving information such as the ABI, license, and metadata of a smart contract using it's contract address.
+ *
+ * @example
+ * ```jsx
+ * import { useCompilerMetadata } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { data, isLoading, error } = useCompilerMetadata(contractAddress);
+ * }
+ *
+ * export default App;
+ * ```
+ *
+ * @param contractAddress - The address of the deployed contract
+ * @returns Query result containing the compiler metadata of the deployed contract in the `data` property
+ *
+ * @metadata
+ */
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
 ): UseQueryResult<PublishedMetadata | null> {
@@ -144,51 +181,69 @@ export const compilerMetadata = {
 
 // useContract
 
+/**
+ * @contract
+ */
 export type UseContractResult<
   TContract extends ValidContractInstance = SmartContract,
 > = UseQueryResult<TContract | undefined> & {
   contract: TContract | undefined;
 };
 
-export function useContract<
-  TContractAddress extends ContractAddress | GeneratedContractAddress,
->(
-  contractAddress: RequiredParam<TContractAddress>,
-): UseContractResult<
-  TContractAddress extends GeneratedContractAddress
-    ? SmartContract<BaseContractForAddress<TContractAddress>>
-    : SmartContract
->;
-
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * Hook for connecting to a smart contract.
+ *
+ * Provide your smart contract address as the first parameter. Once connected, the `contract` will be an instance of your smart contract.
+ *
+ * The ABI of the smart contract is resolved automatically for contracts deployed or imported using the [thirdweb dashboard](https://thirdweb.com/dashboard).
  *
  * @example
  * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}");
+ * const { contract, isLoading, error } = useContract(contractAddress);
  * ```
  *
- * @param contractAddress - the address of the deployed contract
- * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
- * @public
+ * @remarks
+ *
+ * To cache the ABI of the smart contract, use [thirdweb generate](https://portal.thirdweb.com/cli/generate). This is recommended to improve performance and provide type-safety when interacting with your smart contract.
+ *
+ *
+ * @param contractAddress - The address of the deployed contract
+ * @returns Query result object that includes the contract once it is resolved
+ * @contract
  */
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
 ): UseContractResult<SmartContract>;
 
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * If your contract is a prebuilt contract, it is strongly recommended you provide the contract's name as the second argument to gain access to improved top-level functions and type inference.
+ *
+ * Available contract types are:
+ * - `"nft-drop"`
+ * - `"signature-drop"`
+ * - `"edition-drop"`
+ * - `"nft-collection"`
+ * - `"edition"`
+ * - `"multiwrap"`
+ * - `"pack"`
+ * - `"token-drop"`
+ * - `"token"`
+ * - `"marketplace"`
+ * - `"marketplace-v3"`
+ * - `"split"`
+ * - `"vote"`
+ *
+ * When a contract type is provided, the contract object will be typed as the contract's class.
+ * For example, if you provide the contract type `"pack"`, the contract object will be returned typed as an instance of the `Pack` class, unlocking all of the top-level functions specific to the pack.
  *
  * @example
  * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}", "nft-drop");
+ * const { contract, isLoading, error } = useContract(contractAddress, "pack");
  * ```
  *
- * @param contractAddress - the address of the deployed contract
- * @param _contractType - the type of the contract
- * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
+ * @param contractAddress - The address of the deployed contract
+ * @param _contractType - The type of the contract
+ * @returns Query result object that includes the contract once it is resolved
  * @public
  */
 export function useContract<TContractType extends ContractType>(
@@ -201,24 +256,37 @@ export function useContract<TContractType extends ContractType>(
 >;
 
 /**
- * Use this resolve a contract address to a smart contract instance.
+ * Optionally, (if you don’t want to use the dashboard import feature),
+ * you can provide your smart contract’s ABI to the second parameter of the useContract hook.
+ * This is useful when developing on a local node, where it may be faster to use the ABI than to import the contract using the dashboard.
+ *
+ * The ABI is only necessary if you have not deployed your contract with, or imported your contract to the [thirdweb dashboard](https://thirdweb.com/dashboard).
  *
  * @example
  * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}", ABI);
+ * const { contract, isLoading, error } = useContract(contractAddress, contractAbi);
  * ```
  *
- * @param contractAddress - the address of the deployed contract
- * @param _abi - the ABI of the contract to use
- * @returns a response object that includes the contract once it is resolved
- * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
- * @public
+ * @param contractAddress - The address of the deployed contract
+ * @param _abi - The ABI of the contract to use
+ * @returns Query result object that includes the contract once it is resolved
  */
 
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
   _abi: ContractInterface,
 ): UseContractResult<SmartContract>;
+
+// TODO: add JSDoc for this signature
+export function useContract<
+  TContractAddress extends ContractAddress | GeneratedContractAddress,
+>(
+  contractAddress: RequiredParam<TContractAddress>,
+): UseContractResult<
+  TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : SmartContract
+>;
 
 export function useContract(
   contractAddress: RequiredParam<ContractAddress>,
@@ -303,16 +371,17 @@ export function useContract(
 }
 
 /**
- * Get the metadata of this contract
+ * Get the metadata of given contract
  *
  * @example
  * ```javascript
  * const { data: contractMetadata, isLoading } = useContractMetadata(contract);
  * ```
  *
- * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
- * @returns a response object that includes the contract metadata of the deployed contract
+ * @param contract - The `ValidContractInstance` instance of the contract to get the metadata for
+ * @returns A Query result object that includes the contract metadata of the deployed contract
  * @twfeature ContractMetadata
+ * @metadata
  */
 export function useContractMetadata<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
@@ -334,7 +403,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
 }
 
 /**
- * Update the metadata of this contract
+ * Update the metadata of the given contract
  *
  * @example
  * ```jsx
@@ -361,9 +430,10 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  * };
  * ```
  *
- * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
- * @returns a response object that includes the contract metadata of the deployed contract
+ * @param contract - The `ValidContractInstance` instance of the contract to get the metadata for
+ * @returns Mutation object to update the contract metadata
  * @twfeature ContractMetadata
+ * @metadata
  */
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
@@ -409,18 +479,66 @@ export function useContractMetadataUpdate(
  */
 
 /**
- * Get or subscribe to contract events
+ * Hook for reading events emitted by a smart contract, including new events as they are emitted (optional).
+ *
+ * By default, it reads all events emitted by the smart contract.
  *
  * @example
- * ```javascript
- * const { data: contractEvents, isLoading } = useContractEvents(contract);
+ * ```tsx
+ * import { useContractEvents, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractEvents(contract);
+ * }
  * ```
  *
- * @param contract - the {@link ValidContractInstance} instance of the contract to listen to events for
- * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
- * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
- * @returns a response object that includes the contract events
- * @see {@link https://portal.thirdweb.com/react/react.usecontractevents?utm_source=sdk | Documentation}
+ * @param contract - The contract instance of the contract to listen to events for
+ *
+ * @param eventName -
+ * The name of the event to query for.
+ *
+ * For example, if your smart contract emits an event called `MyEvent`, you would pass `"MyEvent"` to this parameter.
+ *
+ * Omit this parameter or provide undefined to query for all events emitted by the smart contract.
+ *
+ * @param options -
+ * An object containing options to filter the events being queried.
+ *
+ * Available options include
+ * - `queryFilter` to refine which events you want to read,
+ * - a boolean `subscribe` flag to subscribe to new events as they are emitted.
+ *
+ * ### Example
+ * ```tsx
+ * import {
+ *   useContractEvents,
+ *   useContract,
+ *   Web3Button,
+ * } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractEvents(
+ *     contract,
+ *     "MyEvent",
+ *     {
+ *       queryFilter: {
+ *         filters: {
+ *           tokenId: 123, // e.g. Only events where tokenId = 123
+ *         },
+ *         fromBlock: 0, // Events starting from this block
+ *         toBlock: 100, // Events up to this block
+ *         order: "asc", // Order of events ("asc" or "desc")
+ *       },
+ *       subscribe: true, // Subscribe to new events
+ *     },
+ *   );
+ * ```
+ *
+ * @returns The hook's `data` property, once loaded, contains an array of `ContractEvent` objects
+ * @contract
+ *
  */
 export function useContractEvents(
   contract: RequiredParam<ValidContractInstance>,
@@ -505,19 +623,50 @@ export function useContractEvents(
 }
 
 /**
- * Get data from a contract read-function call
+ * Generic hook for reading any data from a smart contract via it’s function/view/variable name.
  *
- * @example
  * ```javascript
  * const { contract } = useContract("{{contract_address}}");
- * const { data, isLoading, error } = useContractRead(contract, "functionName", ...args);
- *```
+ * const { data, isLoading, error } = useContractRead(contract, "functionName", args);
+ * ```
  *
- * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
- * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
- * @returns a response object that includes the data returned by the function call
- * @see {@link https://portal.thirdweb.com/react/react.usecontractread?utm_source=sdk | Documentation}
+ * @example
+ * Provide your smart contract instance from `useContract`, a function name and the arguments to pass to the function (if any).
+ *
+ * For example, to read the value of a view on your smart contract called `getName` you would do the following:
+ *
+ * ```tsx
+ * import { useContractRead, useContract } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useContractRead(contract, "getName");
+ * }
+ * ```
+ *
+ * @remarks
+ * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
+ *
+ * @param contract - The contract instance of the contract to call a function on
+ *
+ * @param functionName - The name of the function to call in the smart contract. This can be any function, view, variable, etc. that does not require a transaction to occur.
+ *
+ * @param args - The arguments to pass to the function (if any)
+ *
+ * @param overrides -
+ * `CallOverrides` object to send with your request.
+ *
+ * To include the sender's address (msg.sender) when calling view functions within your smart contract, include the property `{from: 0X123}` passing the relevant address.
+ *
+ * ```ts
+ * const { data, isLoading, error } = useContractRead(contract, "getName", ["arg1", "arg2"], {
+ *     blockTag: 123,
+ *     from: "0x123",
+ *   });
+ * ```
+ *
+ * @returns Query result object that includes the data returned by the function call
+ * @contract
  */
 export function useContractRead<
   TContractAddress extends GeneratedContractAddress | ContractAddress,
@@ -579,21 +728,48 @@ export function useContractRead<
 }
 
 /**
- * Mke a write call to your contract
+ * Generic hook for calling any smart contract function that requires a transaction to take place.
+ *
+ * Provide your smart contract instance returned from the `useContract` hook, along with the name of the function you wish to call on your smart contract as arguments to the hook.
+ *
+ * Then call the `mutate` or `mutateAsync` function returned by the hook, providing an array of arguments to send to your smart contract function.
+ *
+ * If you provide too many or too few arguments, the `error` property will be populated with an error message.
+ *
+ * If your function has no arguments, provide an empty array by calling the function with `{ args: [] }`
  *
  * @example
  * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { mutate: myFunction, isLoading, error } = useContractWrite(contract, "myFunction");
+ * import { useContractWrite, useContract, Web3Button } from "@thirdweb-dev/react";
  *
- * // the function can be called as follows:
- * // myFunction(["param 1", "param 2", ...])
- *```
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const { mutateAsync, isLoading, error } = useContractWrite(
+ *     contract,
+ *     "setName",
+ *   );
  *
- * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
- * @returns a response object that includes the write function to call
- * @see {@link https://portal.thirdweb.com/react/react.usecontractwrite?utm_source=sdk | Documentation}
+ *   return (
+ *     <Web3Button
+ *       contractAddress={contractAddress}
+ *       // Calls the "setName" function on your smart contract with "My Name" as the first argument
+ *       action={() => mutateAsync({ args: ["My Name"] })}
+ *     >
+ *       Send Transaction
+ *     </Web3Button>
+ *   );
+ * }
+ * ```
+ *
+ * @remarks
+ *
+ * If you have cached the ABI of your smart contract using [thirdweb generate](https://portal.thirdweb.com/cli/generate), the functionName and args parameters are strongly typed according to your smart contract’s ABI.
+ *
+ *
+ * @param contract - The contract instance of the contract to call a function on
+ * @param functionName - The name of the function to call in the smart contract.
+ * @returns A mutation object that includes the write function to call
+ * @contract
  */
 export function useContractWrite<
   TContractAddress extends GeneratedContractAddress | ContractAddress,

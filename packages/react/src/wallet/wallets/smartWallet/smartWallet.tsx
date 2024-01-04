@@ -12,79 +12,37 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
 /**
  * A wallet configurator for [Smart Wallet](https://portal.thirdweb.com/wallet/smart-wallet) which allows integrating the wallet with React
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * import {
- *   smartWallet,
- *   metamaskWallet,
- *   coinbaseWallet,
- *   walletConnect,
- * } from "@thirdweb-dev/react";
- *
- * const config = {
- *   factoryAddress: "0x...",
- *   gasless: true,
- * }
- *
- * <ThirdwebProvider
- *   supportedWallets={[
- *     smartWallet(metamaskWallet(), config),
- *     smartWallet(coinbaseWallet(), config),
- *     smartWallet(walletConnect(), config),
- *   ]}
- *   clientId="your-client-id"
- * >
- *   <YourApp />
- * </ThirdwebProvider>;
+ * ```ts
+ * smartWallet(
+ *  metamaskWallet(),
+ *  {
+ *    factoryAddress: '0x...',
+ *    gasless: true,
+ *  }
+ * )
  * ```
  *
- * ### Usage with useConnect
+ * @param wallet -
+ * Provide a `WalletConfig` object to use as the personal wallet for the Smart Wallet.
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * You can get this object by calling a wallet configurator function such as `metamaskWallet()`
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * @param config -
+ * Configuration options for the Smart Wallet
  *
- * You need to connect to a personal wallet first, You can use the useConnect hook to connect to a personal wallet first and then connect to the Smart Wallet. Make sure personal wallet is on the same network as the Smart Wallet.
+ * ### factoryAddress
+ * The address of the Smart Wallet Factory contract. Must be of type `string`
  *
- * ```tsx
- * import { useConnect, smartWallet, metamaskWallet } from "@thirdweb-dev/react";
- * import { Goerli } from "@thirdweb-dev/chains";
+ * ### gasless
+ * Whether to turn on or off gasless transactions. Must be a `boolean`.
  *
- * const personalWalletConfig = metamaskWallet(); // or use any other wallet
+ * - If set to `true`, all gas fees will be paid by a paymaster.
+ * - If set to `false`, all gas fees will be paid by the Smart Wallet itself (needs to be funded).
  *
- * const smartWalletConfig = smartWallet(personalWalletConfig, {
- *   factoryAddress: "0x...",
- *   gasless: true,
- * });
- *
- * function App() {
- *   const connect = useConnect();
- *
- *   const handleConnect = async () => {
- *     // 1. connect the personal wallet first on the network that the smart wallet is deployed to
- *     const personalWallet = await connect(personalWalletConfig, {
- *       chainId: Goerli.chainId,
- *     });
- *
- *     // 2. connect to smart wallet
- *     const smartWallet = await connect(smartWalletConfig, {
- *       chainId: Goerli.chainId,
- *       personalWallet: personalWallet,
- *     });
- *
- *     console.log("connected to", smartWallet);
- *   };
- *
- *   return <div> ... </div>;
- * }
- * ```
+ * @wallet
  */
 export const smartWallet = (
   wallet: WalletConfig<any>,

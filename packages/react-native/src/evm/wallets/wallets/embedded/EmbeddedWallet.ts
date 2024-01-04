@@ -13,6 +13,8 @@ import {
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 import { WalletMeta } from "@thirdweb-dev/wallets/dist/declarations/src/evm/wallets/base";
 import { AUTH_OPTIONS_ICONS } from "../../types/embedded-wallet";
+import { getRandomString } from "../../connectors/embedded-wallet/embedded/helpers/getRandomValues";
+import { ANALYTICS } from "../../connectors/embedded-wallet/embedded/helpers/analytics";
 
 export type EmbeddedWalletOptions = WalletOptions<
   EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
@@ -103,6 +105,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   onDisconnect = () => {
     this.removeListeners();
+    ANALYTICS.nonce = getRandomString(16);
   };
 
   onChange = async (payload: any) => {

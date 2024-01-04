@@ -1,6 +1,6 @@
 import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ChainId } from "../constants/chains/ChainId";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
 import invariant from "tiny-invariant";
@@ -44,7 +44,7 @@ type RegisterContractSuccessResponse = {
  * @param contractAddress - the contract address
  * @param chainId - the chain id
  * @internal
- * @returns the paper xyz contract id
+ * @returns The paper xyz contract id
  * @throws if the contract is not registered on paper xyz
  */
 export async function fetchRegisteredCheckoutId(

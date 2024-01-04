@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Cronos Explorer",
-      "url": "https://cronoscan.com",
+      "url": "https://explorer.cronos.org",
       "standard": "none"
     }
   ],

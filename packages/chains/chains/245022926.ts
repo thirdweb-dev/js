@@ -15,11 +15,6 @@ export default {
       }
     },
     {
-      "name": "native",
-      "url": "https://devnet.explorer.neon-labs.org",
-      "standard": "EIP3091"
-    },
-    {
       "name": "neonscan",
       "url": "https://devnet.neonscan.org",
       "standard": "EIP3091"
@@ -35,7 +30,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://neon-labs.org",
-  "name": "Neon EVM DevNet",
+  "name": "Neon EVM Devnet",
   "nativeCurrency": {
     "name": "Neon",
     "symbol": "NEON",

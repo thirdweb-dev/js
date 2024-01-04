@@ -1,5 +1,59 @@
 # @thirdweb-dev/sdk
 
+## 4.0.24
+
+### Patch Changes
+
+- [#2105](https://github.com/thirdweb-dev/js/pull/2105) [`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix verification
+
+## 4.0.23
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- [#2020](https://github.com/thirdweb-dev/js/pull/2020) [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix deploy issue "invalid recipient"
+
+- [#2090](https://github.com/thirdweb-dev/js/pull/2090) [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186) Thanks [@kumaryash90](https://github.com/kumaryash90)! - empty default trusted forwarders param
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c)]:
+  - @thirdweb-dev/storage@2.0.8
+  - @thirdweb-dev/chains@0.1.62
+
+## 4.0.22
+
+### Patch Changes
+
+- [#2085](https://github.com/thirdweb-dev/js/pull/2085) [`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e) Thanks [@hsynlms](https://github.com/hsynlms)! - Fix error when fetching data on `vite-node` environment by setting a global variable `TW_SKIP_FETCH_SETUP` to `true`. Fixes https://github.com/thirdweb-dev/js/issues/2002
+
+  Setting this flag sets `skipFetchSetup` to `true` in [ethers ConnectionInfo](https://docs.ethers.org/v5/api/utils/web/#ConnectionInfo)
+
+  ```ts
+  // set this global variable
+  globalThis.TW_SKIP_FETCH_SETUP = true;
+
+  // use the thirdweb sdk...
+  ```
+
+## 4.0.21
+
+### Patch Changes
+
+- [#2067](https://github.com/thirdweb-dev/js/pull/2067) [`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix deployments
+
+## 4.0.20
+
+### Patch Changes
+
+- [#2062](https://github.com/thirdweb-dev/js/pull/2062) [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose baseFee in getDynamicFeeData()
+
+- [#2053](https://github.com/thirdweb-dev/js/pull/2053) [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix error message
+
+- [#2059](https://github.com/thirdweb-dev/js/pull/2059) [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf) Thanks [@jnsdls](https://github.com/jnsdls)! - contract.roles.setAll now allows passing a actingAddress explictly to "prepare()" to correctly prepare the txn when there are multiple roles being removed
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3)]:
+  - @thirdweb-dev/chains@0.1.61
+
 ## 4.0.19
 
 ### Patch Changes

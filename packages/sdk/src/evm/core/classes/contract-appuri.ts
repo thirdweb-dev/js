@@ -10,7 +10,7 @@ import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -46,7 +46,7 @@ export class ContractAppURI<TContract extends BaseContract>
 
   /**
    * Get App URI
-   * @returns the appURI (typically an IPFS hash)
+   * @returns The appURI (typically an IPFS hash)
    * @example
    * ```javascript
    * const appURI = await contract.app.get();

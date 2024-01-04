@@ -79,6 +79,9 @@ export function getChainProvider(
   return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
+/**
+ * @internal
+ */
 export function getChainIdFromNetwork(
   network: ChainOrRpcUrl,
   options: SDKOptionsOutput,
@@ -109,6 +112,9 @@ export function getChainIdFromNetwork(
   );
 }
 
+/**
+ * @internal
+ */
 export async function getChainIdOrName(
   network: NetworkInput,
 ): Promise<number | string> {
@@ -134,6 +140,7 @@ export async function getChainIdOrName(
 
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
+ * @internal
  */
 export function isChainConfig(
   network: NetworkInput,
@@ -277,6 +284,16 @@ export function getProviderFromRpcUrl(
           if (existingProvider) {
             return existingProvider;
           }
+          
+          // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
+          let _skipFetchSetup = false;
+          if (
+            typeof globalThis !== "undefined" &&
+            "TW_SKIP_FETCH_SETUP" in globalThis &&
+            typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
+          ) {
+            _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
+          }
 
           // Otherwise, create a new provider on the specific network
           const newProvider = chainId
@@ -285,6 +302,7 @@ export function getProviderFromRpcUrl(
                 {
                   url: rpcUrl,
                   headers,
+                  skipFetchSetup: _skipFetchSetup,
                 },
                 chainId,
               )
@@ -292,6 +310,7 @@ export function getProviderFromRpcUrl(
               new providers.JsonRpcBatchProvider({
                 url: rpcUrl,
                 headers,
+                skipFetchSetup: _skipFetchSetup,
               });
 
           // Save the provider in our cache

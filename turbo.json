@@ -19,6 +19,11 @@
       "dependsOn": ["^build"],
       "env": ["THIRDWEB_EWS_SDK_VERSION"]
     },
+    "@thirdweb-dev/payments#build": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"],
+      "env": ["THIRDWEB_PAYMENTS_SDK_VERSION"]
+    },
     "@thirdweb-dev/pay#build": {
       "outputs": ["dist/**", "integrations/**"],
       "dependsOn": ["^build"]

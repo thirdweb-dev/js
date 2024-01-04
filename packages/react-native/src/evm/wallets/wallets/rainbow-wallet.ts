@@ -22,6 +22,22 @@ export class RainbowWallet extends WalletConnectBase {
   }
 }
 
+/**
+ * Wallet config for Rainbow Wallet.
+ *
+ * @param config - The config for RainbowWallet
+ * @returns The wallet config to be used by the ThirdwebProvider
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider, rainbowWallet } from "@thirdweb-dev/react-native";
+ *
+ * <ThirdwebProvider
+ *    supportedWallets={[rainbowWallet()]}>
+ *   <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
 export const rainbowWallet = (config?: WalletConnectConfig) => {
   return {
     id: RainbowWallet.id,

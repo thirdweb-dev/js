@@ -29,7 +29,7 @@ export type WatchBlockNumberParams = SharedBlockParams & {
  * unsubscribe();
  * ```
  *
- * @returns an unsubscribe function that will stop listening for new blocks when called
+ * @returns An unsubscribe function that will stop listening for new blocks when called
  * @public
  */
 export function watchBlockNumber(params: WatchBlockNumberParams) {
@@ -62,7 +62,7 @@ export type WatchBlockParams = SharedBlockParams & {
  * unsubscribe();
  * ```
  *
- * @returns an unsubscribe function that will stop listening for new blocks when called
+ * @returns An unsubscribe function that will stop listening for new blocks when called
  * @public
  */
 export function watchBlock({
@@ -109,7 +109,7 @@ export type WatchBlockWithTransactionsParams = SharedBlockParams & {
  * unsubscribe();
  * ```
  *
- * @returns an unsubscribe function that will stop listening for new blocks when called
+ * @returns An unsubscribe function that will stop listening for new blocks when called
  * @public
  */
 export function watchBlockWithTransactions({

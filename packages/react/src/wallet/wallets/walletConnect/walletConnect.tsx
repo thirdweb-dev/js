@@ -6,6 +6,9 @@ import { WalletConnectScan } from "./WalletConnectScan";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
 
+/**
+ * @wallet
+ */
 export type walletConnectConfigOptions = {
   /**
    * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/
@@ -24,53 +27,72 @@ export type walletConnectConfigOptions = {
   qrModalOptions?: WC2_QRModalOptions;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Specify wheher a custom QR Modal or the Official WalletConnect Modal should be used on desktop. The custom screen has an option to open the official WalletConnect Modal too.
+   *
+   * Note that the official WalletConnect Modal is always used on mobile devices.
+   *
+   * The default is `"custom"` ( for desktop )
+   */
+  qrModal?: "custom" | "walletConnect";
 };
 
 /**
  * A wallet configurator for [WalletConnect](https://walletconnect.com/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[walletConnect()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * walletConnect({
+ *   projectId: "your_project_id",
+ *   qrModal: "custom", // or "walletConnect"
+ *   qrModalOptions: {
+ *     themeMode: "dark",
+ *   },
+ *   recommended: true,
+ * });
  * ```
  *
- * ### Usage with useConnect
+ * @param config -
+ * Optional configuration options for the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * ### projectId (optional)
+ * When connecting Trust using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * ### qrModal (optional)
+ * Specify wheher a custom QR Modal or the Official WalletConnect Modal should be used on desktop. The custom screen has an option to open the official WalletConnect Modal too.
  *
- * ```tsx
- * const walletConnectConfig = walletConnect();
+ * Note that the official WalletConnect Modal is always used on mobile devices.
  *
- * function App() {
- *   const connect = useConnect();
+ * The default is `"custom"` ( for desktop )
  *
- *   async function handleConnect() {
- *     const wallet = await connect(walletConnectConfig);
- *     console.log('connected to', wallet);
- *   }
+ * ### qrModalOptions (optional)
+ * The [WalletConnect Modal options](https://docs.walletconnect.com/advanced/walletconnectmodal/options) to customize the official WalletConnect Modal.
  *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ *
+ * @wallet
  */
 export const walletConnect = (
   config?: walletConnectConfigOptions,
 ): WalletConfig<WalletConnect> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
+
+  // on mobile - always use the official WalletConnect Modal
+  // on desktop - use the official WalletConnect Modal if qrModal is set to "walletconnect"
+  const showOfficialModal = isMobile()
+    ? true
+    : config?.qrModal === "walletConnect"
+    ? true
+    : false;
+
   return {
     recommended: config?.recommended,
     id: WalletConnect.id,
@@ -82,13 +104,14 @@ export const walletConnect = (
     create(options: WalletOptions) {
       return new WalletConnect({
         ...options,
-        qrcode: isMobile() ? true : false,
+
+        qrcode: showOfficialModal,
         projectId,
         qrModalOptions: config?.qrModalOptions,
       });
     },
     connectUI(props) {
-      if (isMobile()) {
+      if (showOfficialModal) {
         return <HeadlessConnectUI {...props} />;
       }
 
@@ -99,6 +122,8 @@ export const walletConnect = (
           walletConfig={props.walletConfig}
           hideBackButton={props.supportedWallets.length > 1}
           modalSize={props.modalSize}
+          hide={props.hide}
+          show={props.show}
         />
       );
     },
