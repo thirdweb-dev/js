@@ -255,7 +255,7 @@ export const defaultTokens: SupportedTokens = {
       icon: wrappedEthIcon,
     },
     {
-      address: "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
+      address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
       name: "Tether USD",
       symbol: "USDT",
       icon: tetherUsdIcon,

@@ -24,14 +24,28 @@ import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
 export type ConnectWalletProps = {
   /**
-   * render a custom button to display the connected wallet details instead of the default button
+   * Renders a custom button to display the connected wallet details instead of the default button
    */
   detailsButton?: ConnectWalletDetailsProps["detailsButton"];
 
   /**
-   * render custom rows in the Connect Wallet Details modal
+   * Renders custom rows in the Connect Wallet Details modal
    */
   extraRows?: ConnectWalletDetailsProps["extraRows"];
+
+  /**
+   * Option to hide the Send button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Option to hide the Receive button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideReceiveButton?: boolean;
 
   /**
    * Hide option to request testnet funds for testnets in dropdown
@@ -84,6 +98,8 @@ export const ConnectWallet = ({
   buttonTitle,
   modalTitle,
   modalTitleIconUrl,
+  hideReceiveButton,
+  hideSendButton,
   extraRows,
   hideTestnetFaucet,
   displayBalanceToken,
@@ -169,6 +185,8 @@ export const ConnectWallet = ({
               detailsButton={detailsButton}
               extraRows={extraRows}
               hideTestnetFaucet={hideTestnetFaucet}
+              hideReceiveButton={hideReceiveButton}
+              hideSendButton={hideSendButton}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
               hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}

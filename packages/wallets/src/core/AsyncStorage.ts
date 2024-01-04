@@ -8,6 +8,9 @@ export type CreateAsyncStorage = (name: string) => AsyncStorage;
 
 const PREFIX = "__TW__";
 
+/**
+ * @internal
+ */
 export class AsyncLocalStorage implements AsyncStorage {
   name: string;
 

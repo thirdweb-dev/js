@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "4.1.16",
+  "version": "4.2.1",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -110,6 +110,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@emotion/css": "11.10.5",
+    "@headlessui/react": "1.7.6",
     "@google/model-viewer": "^2.1.1",
     "@radix-ui/colors": "^0.1.9",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -122,8 +124,10 @@
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
+    "@thirdweb-dev/payments": "workspace:*",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.2",
     "detect-browser": "^5.3.0",
