@@ -172,7 +172,7 @@ export function useActiveClaimCondition(
 }
 
 /**
- * Hook to get the claimer proofs for an address for [ERC20](https://portal.thirdweb.com/solidity/base-contracts/erc20drop), [ERC721](https://portal.thirdweb.com/solidity/base-contracts/erc721drop), and [ERC1155](https://portal.thirdweb.com/solidity/base-contracts/erc1155drop) drop contracts.
+ * Hook to get the claimer proofs for an address for [ERC20](https://portal.thirdweb.com/contracts/build/base-contracts/erc-20/drop), [ERC721](https://portal.thirdweb.com/contracts/build/base-contracts/erc-721/drop), and [ERC1155](https://portal.thirdweb.com/contracts/build/base-contracts/erc-1155/drop) drop contracts.
  *
  * A claimer proof is a set of data about a claimer's claim condition, including the claimer's address, the claimer's proof, and the claimer's max claimable amount, price, and currency address.
  *
@@ -875,9 +875,9 @@ export function useSetClaimConditions(
  * Hook for resetting the claim conditions on a drop contract.
  *
  * Available to use on contracts that implement
- * [`ERC721ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc721claimconditions),
- * [`ERC1155ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc1155claimconditions) or
- * [`ERC20ClaimableWithConditions`](https://portal.thirdweb.com/solidity/extensions/erc20claimconditions).
+ * [`ERC721ClaimableWithConditions`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721ClaimConditions),
+ * [`ERC1155ClaimableWithConditions`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155ClaimConditions) or
+ * [`ERC20ClaimableWithConditions`](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20ClaimConditions).
  *
  * @example
  * ```jsx

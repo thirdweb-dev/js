@@ -48,7 +48,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
 /**
  * Hook for getting all wallet addresses that have a role in a smart contract.
  *
- * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions).
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/contracts/build/extensions/general/Permissions).
  *
  * @example
  *
@@ -116,7 +116,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook for getting all wallet addresses that have a specific role in a smart contract.
  *
- * Available to use on contracts that implement the [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface.
+ * Available to use on contracts that implement the [`Permissions`](https://portal.thirdweb.com/contracts/build/extensions/general/Permissions) interface.
  *
  * @example
  * ```jsx
@@ -173,7 +173,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook to check if an address is a member of a role on a smart contract.
  *
- * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/contracts/build/extensions/general/Permissions) interface
  *
  * Provide the following arguments to the hook:
  *
@@ -305,7 +305,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
 /**
  * Hook for granting a role on a smart contract.
  *
- * Available to use on smart contracts that implement the [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface.
+ * Available to use on smart contracts that implement the [`Permissions`](https://portal.thirdweb.com/contracts/build/extensions/general/Permissions) interface.
  *
  * @example
  * ```jsx
@@ -403,7 +403,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
 /**
  * Hook for revoking a wallet address from a role on a smart contract.
  *
- * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/solidity/extensions/permissions) interface
+ * Available to use on contracts that implement [`Permissions`](https://portal.thirdweb.com/contracts/build/extensions/general/Permissions) interface
  *
  * The wallet address that initiates this transaction must have the relevant permissions on the contract to remove the role from the wallet address (typically `"admin"` level required).
  *

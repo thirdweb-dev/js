@@ -16,7 +16,7 @@ export interface UserWithData<
 }
 
 /**
- * Hook for retrieving information about the currently signed-in user using [auth](https://portal.thirdweb.com/auth).
+ * Hook for retrieving information about the currently signed-in user using [auth](https://portal.thirdweb.com/wallets/auth).
  *
  * Useful to get the user's address and session data, or `undefined` if no user is signed in.
  *

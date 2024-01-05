@@ -4,7 +4,7 @@ import { BloctoWalletConfigOptions } from "../../../wallet/wallets/blocto/blocto
 
 /**
  * @internal
- * @deprecated use the `ConnectWallet` component or `useConnect` hook instead
+ * @deprecated use the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook instead
  * @walletConnection
  */
 export function useBloctoWallet() {

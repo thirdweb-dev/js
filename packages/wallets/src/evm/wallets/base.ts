@@ -55,7 +55,7 @@ export type WalletMeta = {
  * The base class for all client-side wallets (web, mobile) in the Wallet SDK. It extends AbstractWallet and adds client side specific logic.
  * A client side wallet delegates the wallet-specific connection logic to a Connector.
  *
- * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
  *
  * @abstractWallet
  */

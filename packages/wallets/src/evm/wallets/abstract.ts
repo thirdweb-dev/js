@@ -63,7 +63,7 @@ export async function checkContractWalletSignature(
 /**
  * The base class for any wallet in the Wallet SDK, including backend wallets. It contains the functionality common to all wallets.
  *
- * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
  *
  * @abstractWallet
  */

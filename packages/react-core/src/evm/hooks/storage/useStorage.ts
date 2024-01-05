@@ -3,7 +3,7 @@ import { useSDK } from "../useSDK";
 /**
  * Get the instance of the `ThirdwebStorage` class being used by the `ThirdwebProvider`
  *
- * Allows you to use the TypeScript SDK functionality of [Storage](https://portal.thirdweb.com/storage) in your React app.
+ * Allows you to use the TypeScript SDK functionality of [Storage](https://portal.thirdweb.com/infrastructure/storage/overview) in your React app.
  *
  * @example
  *
