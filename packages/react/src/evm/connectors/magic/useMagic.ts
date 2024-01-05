@@ -4,7 +4,7 @@ import { MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets/evm/wallets/ma
 import { MagicLinkConnectOptions } from "@thirdweb-dev/wallets";
 
 /**
- * @deprecated use `ConnectWallet` or `useConnect` instead
+ * @deprecated use [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) or `useConnect` instead
  * @walletConnection
  * @internal
  */

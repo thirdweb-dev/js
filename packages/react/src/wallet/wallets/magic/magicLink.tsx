@@ -56,7 +56,7 @@ export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
 /**
  * A wallet configurator for [Magic Link](https://magic.link/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -148,7 +148,7 @@ export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
  * ```
  *
  * ### recommended (optional)
- * Show this wallet as "recommended" in the `ConnectWallet` Modal UI
+ * Show this wallet as "recommended" in the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */

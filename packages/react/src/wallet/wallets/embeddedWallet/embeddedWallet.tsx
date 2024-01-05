@@ -32,7 +32,7 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
 /**
  * A wallet configurator for [Embedded Wallet](https://portal.thirdweb.com/wallet/embedded-wallet) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ * It returns a `WalletConfig` object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * You can also connect this wallet using the `useEmbeddedWallet` hook
  *
@@ -60,7 +60,7 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
  * ```
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * ### onAuthSuccess (optional)
  * A callback function that will be called when the user successfully authenticates with the wallet. The callback is called with the `authResult` object

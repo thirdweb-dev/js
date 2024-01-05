@@ -32,7 +32,7 @@ const fantomIcon =
 export type SupportedTokens = Record<number, TokenInfo[]>;
 
 /**
- * Default tokens shown in `ConnectWallet`'s SendFunds screen for each network.
+ * Default tokens shown in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet)'s SendFunds screen for each network.
  *
  * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
  *

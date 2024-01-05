@@ -3,7 +3,7 @@ import type { SafeConnectionArgs } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
 /**
- * @deprecated use `ConnectWallet` or `useConnect` instead
+ * @deprecated use [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) or `useConnect` instead
  * @walletConnection
  * @internal
  */
@@ -23,7 +23,7 @@ export function useSafe() {
 // for backwards compatibility
 
 /**
- * @deprecated use `ConnectWallet` or `useConnect` instead
+ * @deprecated use [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) or `useConnect` instead
  * @walletConnection
  * @internal
  */

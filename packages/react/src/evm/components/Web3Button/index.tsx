@@ -110,7 +110,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
   style?: React.CSSProperties;
 
   /**
-   * Web3Button renders a `ConnectWallet` if no wallet is connected. You can pass props for that component by passing a `connectWallet` prop to Web3Button
+   * Web3Button renders a [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) if no wallet is connected. You can pass props for that component by passing a `connectWallet` prop to Web3Button
    *
    * @example
    * ```tsx
@@ -136,7 +136,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
     btnTitle?: string;
 
     /**
-     * title of the `ConnectWallet` Modal.
+     * title of the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal.
      *
      * The default is `"Connect"`.
      */
@@ -193,7 +193,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
  *
  * It ensures the following criteria before attempting to call the contract function:
  *
- * 1. There is a connected wallet (if there is not, it renders a `ConnectWallet` component instead.
+ * 1. There is a connected wallet (if there is not, it renders a [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component instead.
  *
  * 2. The connected wallet is on the correct network as specified in the `ThirdwebProvider`'s `activeChain` prop. if it is not, it renders a "switch network" button instead.
  *

@@ -53,7 +53,7 @@ export type ConnectWalletProps = {
    * Set the theme for the button and modal.
    *
    * By default it is set to "dark" if `theme` is not set on `ThirdWebProvider`
-   * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on `ConnectWallet` component
+   * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
    *
    * theme can be set to either "dark" or "light" or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
    *
@@ -363,7 +363,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * Set the theme for the button and modal.
  *
  * By default it is set to "dark" if `theme` is not set on `ThirdWebProvider`
- * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on `ConnectWallet` component
+ * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
  *
  * theme can be set to either "dark" or "light" or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
  *
