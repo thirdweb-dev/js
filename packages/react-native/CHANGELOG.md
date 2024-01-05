@@ -1,5 +1,18 @@
 # @thirdweb-dev/react-native
 
+## 0.5.5
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- [#2092](https://github.com/thirdweb-dev/js/pull/2092) [`4c3c840d`](https://github.com/thirdweb-dev/js/commit/4c3c840d8815915840d0819932aa0a858c5d3184) Thanks [@iketw](https://github.com/iketw)! - Export WalletConnect modal component
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/react-core@4.2.2
+  - @thirdweb-dev/wallets@2.3.4
+  - @thirdweb-dev/sdk@4.0.25
+
 ## 0.5.4
 
 ### Patch Changes
