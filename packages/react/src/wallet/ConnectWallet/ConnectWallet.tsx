@@ -131,7 +131,7 @@ export type ConnectWalletProps = {
   dropdownPosition?: DropDownPosition;
 
   /**
-   * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/auth) after connecting their wallet.
+   * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/wallets/auth) after connecting their wallet.
    *
    * This requires the `authConfig` prop to be set on the `ThirdWebProvider` component.
    */

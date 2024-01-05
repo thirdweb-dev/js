@@ -314,7 +314,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   get auth() {
     throw new Error(
       `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0.
-      Please visit https://portal.thirdweb.com/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
+      Please visit https://portal.thirdweb.com/wallets/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
 
       If you still want to use the old @thirdweb-dev/auth@2.0.0 package, you can downgrade the SDK to version 3.6.0.`,
     );

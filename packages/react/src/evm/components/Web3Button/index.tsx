@@ -220,7 +220,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
  * @param props -
  * The props for the component.
  *
- * Refer to [Web3ButtonProps](https://portal.thirdweb.com/references/react/Web3ButtonProps) for more details.
+ * Refer to [Web3ButtonProps](https://portal.thirdweb.com/references/react/v4/Web3ButtonProps) for more details.
  *
  */
 export const Web3Button = <TAction extends ActionFn>(

@@ -37,8 +37,8 @@ import invariant from "tiny-invariant";
 /**
  * Hook for fetching information about an NFT from a smart contract.
  *
- * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
  * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
@@ -122,8 +122,8 @@ export function useNFT<TContract extends NFTContract>(
 /**
  * Hook to query all NFTs associated with a smart contract.
  *
- * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * NFT metadata is automatically fetched from where the `tokenUri` is hosted (e.g. IPFS), and makes the `image`
  * property available as a URL through our IPFS gateway (if the image is hosted on IPFS).
@@ -184,8 +184,8 @@ export function useNFTs<TContract extends NFTContract>(
 /**
  * Hook to get the total count of **unique** NFTs minted on a smart contract.
  *
- * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * When used for ERC1155 contracts, the total count is the number of unique token IDs minted, _not_ the total supply of all tokens in circulation.
  *
@@ -242,8 +242,8 @@ export function useTotalCount<TContract extends NFTContract>(
  *
  * This takes into account the increase in supply due to minting and the decrease in supply due to burning.
  *
- * Available to use on contracts that implement either the [ERC721](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on contracts that implement either the [ERC721](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [ERC1155](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * @example
  *
@@ -370,9 +370,9 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Hook to get the quantity a user owns of a specific [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155) NFT.
+ * Hook to get the quantity a user owns of a specific [ERC1155](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) NFT.
  *
- * Available to use on smart contracts that implement the [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * @example
  * ```jsx
@@ -479,8 +479,8 @@ export function useSharedMetadata(
 /**
  * Hook for minting a new NFT on a smart contract.
  *
- * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * By default, the process uploads and pins the NFT metadata to IPFS before minting.
  *
@@ -608,7 +608,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * Hook for minting additional supply to an _existing_ ERC-1155 token.
  *
  * Available to use on contracts that implement the
- * [ERC1155Mintable](https://portal.thirdweb.com/solidity/extensions/erc1155mintable)
+ * [ERC1155Mintable](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155Mintable)
  * interface, such as the [Edition](https://thirdweb.com/thirdweb.eth/TokenERC1155) or [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155).
  *
  * The wallet address that initiates this transaction must have minting permissions on the contract.
@@ -717,8 +717,8 @@ export function useMintNFTSupply(contract: Erc1155) {
  * Hook for transferring ERC721 or ERC1155 NFTs to another wallet address.
  *
  * Available to use on contracts that implement either the
- * [ERC721](https://portal.thirdweb.com/solidity/extensions/erc721)
- * and [ERC1155](https://portal.thirdweb.com/solidity/extensions/erc1155)
+ * [ERC721](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * and [ERC1155](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155)
  * interfaces, such as the [Edition](https://thirdweb.com/thirdweb.eth/TokenERC1155)
  * or [NFT Collection](https://thirdweb.com/thirdweb.eth/TokenERC721).
  *
@@ -834,7 +834,7 @@ export function useTransferNFT<TContract extends NFTContract>(
 }
 
 /**
- * Hook for airdropping [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) NFT tokens to multiple wallet addresses at once.
+ * Hook for airdropping [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) NFT tokens to multiple wallet addresses at once.
  *
  * Available to use on smart contracts that implement the `ERC1155` standard.
  *
@@ -915,8 +915,8 @@ export function useAirdropNFT(contract: Erc1155) {
 /**
  * Hook for burning a NFT on a smart contract.
  *
- * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/solidity/extensions/erc721)
- * or [`ERC1155`](https://portal.thirdweb.com/solidity/extensions/erc1155) standard.
+ * Available to use on smart contracts that implement the [`ERC721`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721)
+ * or [`ERC1155`](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155) standard.
  *
  * @example
  *

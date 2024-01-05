@@ -381,7 +381,7 @@ export type DefaultChains = typeof defaultChains;
  * ```
  *
  * ### authConfig (optional)
- * The configuration object for setting up [Auth](https://portal.thirdweb.com/auth); allowing users to sign in with their wallet.
+ * The configuration object for setting up [Auth](https://portal.thirdweb.com/wallets/auth); allowing users to sign in with their wallet.
  * It takes an object with the following properties:
  * - `authUrl` - The backend URL of the authentication endpoints. For example, if your endpoints are at `/api/auth/login`, `/api/auth/logout`, etc. then this should be set to `/api/auth`
  * - `domain` - The frontend domain used to generate the login payload. This domain should match the domain used on your auth backend.
@@ -412,7 +412,7 @@ export type DefaultChains = typeof defaultChains;
  *
  * Allows you to create an instance of `ThirdwebStorage` with your own customized config, and pass it to the SDK. This requires the `@thirdweb-dev/storage` package to be installed.
  *
- * [Learn more aboout storage](https://portal.thirdweb.com/storage)
+ * [Learn more about storage](https://portal.thirdweb.com/infrastructure/storage/overview)
  *
  * ```jsx
  * import { ThirdwebProvider } from "@thirdweb-dev/react";

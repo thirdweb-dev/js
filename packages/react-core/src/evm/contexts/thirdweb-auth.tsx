@@ -13,7 +13,7 @@ export interface ISecureStorage {
 }
 
 /**
- * The configuration to use by the React and React Native SDKs with an [auth](https://portal.thirdweb.com/auth) server.
+ * The configuration to use by the React and React Native SDKs with an [auth](https://portal.thirdweb.com/wallets/auth) server.
  * @auth
  */
 export interface ThirdwebAuthConfig {
