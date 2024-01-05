@@ -195,7 +195,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
  *
  * 1. There is a connected wallet (if there is not, it renders a [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component instead.
  *
- * 2. The connected wallet is on the correct network as specified in the `ThirdwebProvider`'s `activeChain` prop. if it is not, it renders a "switch network" button instead.
+ * 2. The connected wallet is on the correct network as specified in the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `activeChain` prop. if it is not, it renders a "switch network" button instead.
  *
  * If the action you are performing is async, make sure to return a `Promise` from the action function so that the SDK knows when the action is complete. This can be done by either using async/await or by returning a `Promise`.
  *

@@ -52,8 +52,8 @@ export type ConnectWalletProps = {
   /**
    * Set the theme for the button and modal.
    *
-   * By default it is set to "dark" if `theme` is not set on `ThirdWebProvider`
-   * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
+   * By default it is set to "dark" if `theme` is not set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+   * If a `theme` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
    *
    * theme can be set to either "dark" or "light" or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
    *
@@ -133,13 +133,13 @@ export type ConnectWalletProps = {
   /**
    * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/wallets/auth) after connecting their wallet.
    *
-   * This requires the `authConfig` prop to be set on the `ThirdWebProvider` component.
+   * This requires the `authConfig` prop to be set on the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
    */
   auth?: {
     /**
      * specify whether signing in is optional or not.
      *
-     * By default it is `true` if `authConfig` is set on `ThirdWebProvider`
+     * By default it is `true` if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
      */
     loginOptional?: boolean;
     /**
@@ -179,7 +179,7 @@ export type ConnectWalletProps = {
 
   /**
    * Whether to show "Switch Network" button if the wallet is connected,
-   * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
    *
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
@@ -315,9 +315,9 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
 /**
  * A component that allows the user to connect their wallet.
  *
- * it renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s supportedWallets prop.
+ * it renders a button which when clicked opens a modal to allow users to connect to wallets specified in the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s supportedWallets prop.
  *
- * This component must be descendant of `ThirdwebProvider`
+ * This component must be descendant of [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
  *
  * @example
  * ```tsx
@@ -355,15 +355,15 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * ### auth (optional)
  * The object contains the following properties to customize the authentication
- * - `loginOptional` - specify whether signing in is optional or not. By default it is `true` if `authConfig` is set on `ThirdWebProvider`
+ * - `loginOptional` - specify whether signing in is optional or not. By default it is `true` if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
  * - `onLogin` - Callback to be called after user signs in with their wallet
  * - `onLogout` - Callback to be called after user signs out
  *
  * ### theme (optional)
  * Set the theme for the button and modal.
  *
- * By default it is set to "dark" if `theme` is not set on `ThirdWebProvider`
- * If a `theme` is set on `ThirdWebProvider` then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
+ * By default it is set to "dark" if `theme` is not set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+ * If a `theme` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) then that theme will be used by default which can be overridden by setting `theme` prop on [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component
  *
  * theme can be set to either "dark" or "light" or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
  *
@@ -427,7 +427,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * ### switchToActiveChain (optional)
  * Whether to show "Switch Network" button if the wallet is connected,
- * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+ * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
  *
  * Please, note that if you support multiple networks in your app this prop should
  * be set to `false` to allow users to switch between networks.

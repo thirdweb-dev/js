@@ -20,7 +20,7 @@ import type { BytesLike } from "ethers";
  *
  * `useSmartWallet()` handles connecting both the personal wallet and the Smart Wallet.
  *
- * The `smartWallet()` also need to be added in `ThirdwebProvider`'s `supportedWallets` prop to enable auto-connection on page load
+ * The `smartWallet()` also need to be added in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `supportedWallets` prop to enable auto-connection on page load
  *
  * ### Example
  *
