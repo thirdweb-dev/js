@@ -44,6 +44,8 @@ export {
   type ActionFn,
 } from "./components/Web3Button";
 
+export { WalletConnectUI } from "./wallets/wallets/wallet-connect/WalletConnectUI";
+
 // utilities
 export * from "./utils/uri";
 export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";

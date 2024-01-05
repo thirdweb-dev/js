@@ -25,6 +25,7 @@ export const SmartWalletFlow = ({
   goBack,
   walletConfig,
   personalWalletConfig,
+  hide,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
   const l = useLocale();
@@ -124,6 +125,7 @@ export const SmartWalletFlow = ({
         <PersonalWalletConfigUI
           {...props}
           connected={connected}
+          hide={hide}
           goBack={goBack}
           walletConfig={personalWalletConfig}
           onLocallyConnected={onPersonalWalletConnected}
