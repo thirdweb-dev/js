@@ -22,7 +22,7 @@ export function useWalletConnectV1() {
 /**
  * @internal
  * @walletConnection
- * @deprecated use the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or `useConnect` hook instead
+ * @deprecated use the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook instead
  */
 export function useWalletConnect() {
   const connect = useConnect();
