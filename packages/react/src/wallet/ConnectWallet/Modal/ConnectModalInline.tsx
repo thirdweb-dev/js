@@ -39,6 +39,7 @@ export const ConnectModalInline = (
     | "switchToActiveChain"
     | "supportedTokens"
     | "hideSwitchToPersonalWallet"
+    | "hideDisconnect"
   > & {
     onModalHide?: () => void;
   },
