@@ -76,7 +76,7 @@ const EngineLanding: ThirdwebNextPage = () => {
           title="The open-source server for"
           subtitle="Production-grade HTTP server to interact with any smart contract on any EVM. Engine lets you create and interact with backend developer wallets, enabling high throughput with automatic nonce and gas management."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/engine"
+          ctaLink="/dashboard/engine"
           ctaText="Get started"
           contactUsTitle="Book a demo"
           gradient="linear(to-r, #9786DF, #9786DF)"
@@ -254,7 +254,7 @@ const EngineLanding: ThirdwebNextPage = () => {
           titleWithGradient="thirdweb Engine."
           trackingCategory={TRACKING_CATEGORY}
           ctaText="Get started"
-          ctaLink="https://portal.thirdweb.com/engine"
+          ctaLink="/dashboard/engine"
           contactUsTitle="Book a demo"
           gradient="linear(to-r, #BFA3DA, #84309C, #C735B0)"
         />
