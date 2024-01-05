@@ -298,7 +298,7 @@ export class Erc20<
   );
 
   /**
-   * Set token allowance
+   * Increases or decreases token allowance to match passed amount
    * @remarks Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
    * @example
    * ```javascript
@@ -311,6 +311,32 @@ export class Erc20<
    * @twfeature ERC20
    */
   setAllowance = /* @__PURE__ */ buildTransactionFunction(
+    async (spender: AddressOrEns, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: await Promise.all([
+          resolveAddress(spender),
+          this.normalizeAmount(amount),
+        ]),
+      });
+    },
+  );
+
+  /**
+   * Sets exact token allowance
+   * @remarks Allows the specified `spender` wallet to transfer the given `amount` of tokens to another address
+   * @example
+   * ```javascript
+   * // Address of the wallet to allow transfers from
+   * const spenderAddress = "0x...";
+   * // The number of tokens to give as allowance
+   * const amount = 100
+   * await contract.erc20.approve(spenderAddress, amount);
+   * ```
+   * @twfeature ERC20
+   */
+  approve = /* @__PURE__ */ buildTransactionFunction(
     async (spender: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

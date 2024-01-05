@@ -232,6 +232,12 @@ export class StandardErc20<
     },
   );
 
+  approve = /* @__PURE__ */ buildTransactionFunction(
+    async (spender: AddressOrEns, amount: Amount): Promise<Transaction> => {
+      return this.erc20.approve.prepare(spender, amount);
+    },
+  );
+
   /**
    * Transfer Tokens To Many Wallets
    *
