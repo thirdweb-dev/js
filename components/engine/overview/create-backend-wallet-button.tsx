@@ -1,9 +1,12 @@
 import {
+  CreateBackendWalletInput,
   useEngineCreateBackendWallet,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
+  FormControl,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,11 +14,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Button } from "tw-components";
+import { useForm } from "react-hook-form";
+import { Button, FormLabel, Text } from "tw-components";
 
 interface CreateBackendWalletButtonProps {
   instance: string;
@@ -33,6 +38,32 @@ export const CreateBackendWalletButton: React.FC<
     "Failed to create wallet.",
   );
   const trackEvent = useTrack();
+  const form = useForm<CreateBackendWalletInput>();
+
+  const onSubmit = async (data: CreateBackendWalletInput) => {
+    createBackendWallet(data, {
+      onSuccess: () => {
+        onSuccess();
+        onClose();
+        trackEvent({
+          category: "engine",
+          action: "create-backend-wallet",
+          label: "success",
+          instance,
+        });
+      },
+      onError: (error) => {
+        onError(error);
+        trackEvent({
+          category: "engine",
+          action: "create-backend-wallet",
+          label: "error",
+          instance,
+          error,
+        });
+      },
+    });
+  };
 
   const walletType =
     walletConfig?.type === "aws-kms"
@@ -49,46 +80,35 @@ export const CreateBackendWalletButton: React.FC<
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create {walletType} wallet</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Are you sure you want to create a {walletType} backend wallet?
-          </ModalBody>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <ModalHeader>Create {walletType} wallet</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Stack spacing={4}>
+                <FormControl>
+                  <FormLabel>Wallet Type</FormLabel>
+                  <Text>{walletType}</Text>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Label</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Enter a descriptive label"
+                    {...form.register("label")}
+                  />
+                </FormControl>
+              </Stack>
+            </ModalBody>
 
-          <ModalFooter as={Flex} gap={3}>
-            <Button onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                createBackendWallet(undefined, {
-                  onSuccess: () => {
-                    onSuccess();
-                    onClose();
-                    trackEvent({
-                      category: "engine",
-                      action: "create-backend-wallet",
-                      label: "success",
-                      instance,
-                    });
-                  },
-                  onError: (error) => {
-                    onError(error);
-                    trackEvent({
-                      category: "engine",
-                      action: "create-backend-wallet",
-                      label: "error",
-                      instance,
-                      error,
-                    });
-                  },
-                });
-              }}
-              colorScheme="primary"
-            >
-              Create
-            </Button>
-          </ModalFooter>
+            <ModalFooter as={Flex} gap={3}>
+              <Button onClick={onClose} variant="ghost">
+                Cancel
+              </Button>
+              <Button type="submit" colorScheme="primary">
+                Create
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

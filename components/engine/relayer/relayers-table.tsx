@@ -21,6 +21,7 @@ import {
   Input,
   Select,
   Textarea,
+  useClipboard,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
@@ -37,6 +38,7 @@ import {
   FormLabel,
   LinkButton,
   Text,
+  TrackedCopyButton,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { AddModalInput, parseAddressListRaw } from "./add-relayer-button";
@@ -63,6 +65,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
   const removeDisclosure = useDisclosure();
   const [selectedRelayer, setSelectedRelayer] = useState<EngineRelayer>();
   const { chainIdToChainRecord } = useAllChainsData();
+  const { onCopy, hasCopied, setValue } = useClipboard("");
 
   const columns = [
     columnHelper.accessor("chainId", {
@@ -133,6 +136,20 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             ? `${allowedForwarders.length} address`
             : `${allowedForwarders.length} addresses`;
         return <Text>{value}</Text>;
+      },
+    }),
+    columnHelper.accessor("id", {
+      header: "URL",
+      cell: (cell) => {
+        const id = cell.getValue();
+        const url = `${instanceUrl}relayer/${id}`;
+        return (
+          <TrackedCopyButton
+            value={url}
+            category="engine"
+            aria-label="Copy to clipboard"
+          />
+        );
       },
     }),
   ];

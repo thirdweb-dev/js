@@ -562,12 +562,16 @@ export function useEngineSetWalletConfig(instance: string) {
   );
 }
 
+export type CreateBackendWalletInput = {
+  label?: string;
+};
+
 export function useEngineCreateBackendWallet(instance: string) {
   const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async () => {
+    async (input: CreateBackendWalletInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}backend-wallet/create`, {
@@ -576,7 +580,7 @@ export function useEngineCreateBackendWallet(instance: string) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify(input),
       });
       const json = await res.json();
 
