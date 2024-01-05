@@ -66,14 +66,8 @@ export type ThirdwebAuthConfig<
       | ((token: string, req: NextRequest) => void)
       | ((token: string, req: NextRequest) => Promise<void>);
     onUser?:
-      | (<TRequestType extends NextRequest = NextRequest>(
-          user: User<TSession>,
-          req: TRequestType,
-        ) => void | TData)
-      | (<TRequestType extends NextRequest = NextRequest>(
-          user: User<TSession>,
-          req: TRequestType,
-        ) => Promise<void | TData>);
+      | ((user: User<TSession>, req: NextRequest) => void | TData)
+      | ((user: User<TSession>, req: NextRequest) => Promise<void | TData>);
     onLogout?:
       | ((user: User, req: NextRequest) => void)
       | ((user: User, req: NextRequest) => Promise<void>);
