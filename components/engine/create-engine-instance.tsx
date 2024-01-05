@@ -1,9 +1,7 @@
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
-  FormControl,
   Icon,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,25 +11,22 @@ import {
   ModalOverlay,
   Stack,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useForm } from "react-hook-form";
 import { BsCloudCheck, BsGear } from "react-icons/bs";
 import { FiPlus } from "react-icons/fi";
-import { Text, Heading, Button, Badge, FormLabel } from "tw-components";
+import { Text, Heading, Button, Badge } from "tw-components";
 
-interface AddEngineInstanceButtonProps {
+interface CreateEngineInstanceButtonProps {
   refetch: () => void;
 }
 
-type ModalState = "selectHostingOption" | "importEngine";
+type ModalState = "selectHostingOption";
 
-export const AddEngineInstanceButton = ({
+export const CreateEngineInstanceButton = ({
   refetch,
-}: AddEngineInstanceButtonProps) => {
+}: CreateEngineInstanceButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const trackEvent = useTrack();
 
@@ -42,14 +37,6 @@ export const AddEngineInstanceButton = ({
   const content =
     modalState === "selectHostingOption" ? (
       <ModalSelectHostingOption setModalState={setModalState} />
-    ) : modalState === "importEngine" ? (
-      <ModalImportEngine
-        setModalState={setModalState}
-        onSuccess={() => {
-          onClose();
-          refetch();
-        }}
-      />
     ) : null;
 
   return (
@@ -65,9 +52,8 @@ export const AddEngineInstanceButton = ({
         }}
         colorScheme="blue"
         leftIcon={<Icon as={FiPlus} boxSize={4} />}
-        w="fit-content"
       >
-        Add Engine Instance
+        Create Instance
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
@@ -111,18 +97,9 @@ const ModalSelectHostingOption = ({
     window.open("https://portal.thirdweb.com/engine/getting-started");
   };
 
-  const onClickImport = () => {
-    trackEvent({
-      category: "engine",
-      action: "import",
-      label: "open-modal",
-    });
-    setModalState("importEngine");
-  };
-
   return (
     <>
-      <ModalHeader>Add Engine Instance</ModalHeader>
+      <ModalHeader>Create Engine Instance</ModalHeader>
       <ModalBody>
         <Stack spacing={4}>
           {/* Cloud-hosted */}
@@ -190,113 +167,9 @@ const ModalSelectHostingOption = ({
               </Text>
             </Stack>
           </Button>
-
-          <Text>
-            Or{" "}
-            <Button
-              variant="link"
-              onClick={onClickImport}
-              color="blue.500"
-              size="sm"
-            >
-              import your existing Engine instance
-            </Button>
-            .
-          </Text>
         </Stack>
       </ModalBody>
       <ModalFooter></ModalFooter>
     </>
-  );
-};
-
-interface ImportEngineInput {
-  name: string;
-  url: string;
-}
-
-const ModalImportEngine = ({
-  setModalState,
-  onSuccess,
-}: {
-  setModalState: Dispatch<SetStateAction<ModalState>>;
-  onSuccess: () => void;
-}) => {
-  const toast = useToast();
-
-  const form = useForm<ImportEngineInput>({
-    defaultValues: {
-      name: "My Engine Instance",
-    },
-  });
-
-  const onSubmit = async (data: ImportEngineInput) => {
-    try {
-      // Instance URLs should end with a /.
-      const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
-
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          url,
-        }),
-      });
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
-      }
-
-      onSuccess();
-    } catch (e) {
-      toast({
-        status: "error",
-        description:
-          "Error importing Engine. Please check if the details are correct.",
-      });
-    }
-  };
-
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <ModalHeader>Import Engine Instance</ModalHeader>
-
-      <ModalBody>
-        <Stack spacing={4}>
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              placeholder="Enter a descriptive label"
-              autoFocus
-              {...form.register("name")}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>URL</FormLabel>
-            <Input
-              type="url"
-              placeholder="Enter your Engine URL"
-              {...form.register("url")}
-            />
-          </FormControl>
-        </Stack>
-      </ModalBody>
-
-      <ModalFooter as={Flex} gap={3}>
-        <Button
-          onClick={() => setModalState("selectHostingOption")}
-          variant="ghost"
-        >
-          Back
-        </Button>
-        <Button type="submit" colorScheme="primary">
-          Import
-        </Button>
-      </ModalFooter>
-    </form>
   );
 };

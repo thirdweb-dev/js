@@ -1,6 +1,6 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Stack } from "@chakra-ui/react";
-import { Card, Heading, Text, TrackedLink } from "tw-components";
+import { Divider, Flex, Stack } from "@chakra-ui/react";
+import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 import { EngineOverviewDescription } from "./overview/engine-description";
 
 export const EngineNoConnectedWallet: React.FC = () => {
@@ -27,19 +27,24 @@ export const EngineNoConnectedWallet: React.FC = () => {
         </Text>
       </Stack>
 
-      <Card p={8}>
-        <Stack>
-          <Heading size="label.lg">Get Started</Heading>
-          <Text>
-            Sign in with your admin wallet to manage Engine instances from this
-            dashboard.
-          </Text>
+      <Divider />
 
-          <EngineOverviewDescription />
+      <Stack>
+        <Flex justify="space-between">
+          <Stack>
+            <Heading size="title.sm">Get Started</Heading>
+            <Text>
+              Sign in with your admin wallet to manage Engine instances from
+              this dashboard.
+            </Text>
+          </Stack>
 
-          <CustomConnectWallet />
-        </Stack>
-      </Card>
+          <Flex h="fit-content">
+            <CustomConnectWallet />
+          </Flex>
+        </Flex>
+        <EngineOverviewDescription />
+      </Stack>
     </Stack>
   );
 };
