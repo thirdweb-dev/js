@@ -29,9 +29,7 @@ import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
  * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.
  * To learn more, please see:
  *
- * Our release notes: https://portal.thirdweb.com/embedded-wallet
- *
- * Our documentation: https://portal.thirdweb.com/react-native/react-native.embeddedwallet
+ * Check out [Release Note](https://portal.thirdweb.com/wallets/embedded-wallet/overview) and [Documentation](https://portal.thirdweb.com/react-native/v0/wallets/embedded-wallet) for more details.
  */
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },

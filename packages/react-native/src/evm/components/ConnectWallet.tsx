@@ -56,7 +56,7 @@ export type ConnectWalletProps = {
 
   /**
    * Whether to show "Switch Network" button if the wallet is connected,
-   * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react-native/v0/ThirdwebProvider)
    *
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.

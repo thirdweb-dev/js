@@ -322,7 +322,7 @@ export function jaDefault(): ThirdwebLocale {
 }
 
 /**
- * Calling this function will return the default Japanese locale object to be set on `ThirdwebProvider` to localize the thirdweb components.
+ * Calling this function will return the default Japanese locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
  *
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
@@ -341,7 +341,7 @@ export function jaDefault(): ThirdwebLocale {
  * })
  * ```
  *
- * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
  *
  * ```tsx
  * function Example() {

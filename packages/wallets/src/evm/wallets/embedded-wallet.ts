@@ -21,7 +21,7 @@ export type {
 } from "../connectors/embedded-wallet/types";
 
 /**
- * Wallet interface to connect [Embedded Wallet](https://portal.thirdweb.com/embedded-wallet) which allows developers to implement seamless onboarding and login flows for their users.
+ * Wallet interface to connect [Embedded Wallet](https://portal.thirdweb.com/wallets/embedded-wallet/overview) which allows developers to implement seamless onboarding and login flows for their users.
  *
  * @example
  * ```javascript

@@ -10,9 +10,9 @@ import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
 /**
- * A wallet configurator for [Smart Wallet](https://portal.thirdweb.com/wallet/smart-wallet) which allows integrating the wallet with React
+ * A wallet configurator for [Smart Wallet](https://portal.thirdweb.com/references/wallets/v2/SmartWallet) which allows integrating the wallet with React
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -26,7 +26,7 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
  * ```
  *
  * @param wallet -
- * Provide a `WalletConfig` object to use as the personal wallet for the Smart Wallet.
+ * Provide a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object to use as the personal wallet for the Smart Wallet.
  *
  * You can get this object by calling a wallet configurator function such as `metamaskWallet()`
  *
