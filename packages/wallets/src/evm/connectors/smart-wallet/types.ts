@@ -55,7 +55,7 @@ export interface ProviderConfig extends ContractInfo {
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
+  paymasterAPI: PaymasterAPI;
   gasless?: boolean;
 }
 
@@ -125,8 +125,8 @@ export type BatchData = {
 export interface BaseApiParams {
   provider: providers.Provider;
   entryPointAddress: string;
+  paymasterAPI: PaymasterAPI;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
   gasless?: boolean;
 }
 

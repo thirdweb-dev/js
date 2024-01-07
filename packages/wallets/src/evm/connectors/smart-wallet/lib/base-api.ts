@@ -40,8 +40,8 @@ export abstract class BaseAccountAPI {
 
   provider: providers.Provider;
   entryPointAddress: string;
+  paymasterAPI: PaymasterAPI;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
   gasless?: boolean;
 
   /**
@@ -229,7 +229,7 @@ export abstract class BaseAccountAPI {
 
     // paymaster data + maybe used for estimation as well
     const gasless = config?.gasless !== undefined ? config.gasless : this.gasless;
-    if (gasless && this.paymasterAPI) {
+    if (gasless ) {
       const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
         partialOp,
       );
