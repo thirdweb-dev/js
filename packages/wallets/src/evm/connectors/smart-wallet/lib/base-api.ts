@@ -229,7 +229,11 @@ export abstract class BaseAccountAPI {
 
     // paymaster data + maybe used for estimation as well
     const gasless = config?.gasless !== undefined ? config.gasless : this.gasless;
+<<<<<<< HEAD
     if (gasless) {
+=======
+    if (gasless ) {
+>>>>>>> 2c73aa8b5 (fix: paymaster param)
       const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
         partialOp,
       );
