@@ -155,9 +155,12 @@ export class SmartWallet extends AbstractClientWallet<
    * @param transaction - the transaction to send
    * @returns The transaction result
    */
-  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
+  async send(
+    transaction: Transaction,
+    config?: { gasless?: boolean }
+  ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.send(transaction);
+    return connector.send(transaction, config);
   }
 
   /**
@@ -165,9 +168,12 @@ export class SmartWallet extends AbstractClientWallet<
    * @param transaction - the transaction to execute
    * @returns The transaction receipt
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
+  async execute(
+    transaction: Transaction,
+    config?: { gasless?: boolean }
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.execute(transaction);
+    return connector.execute(transaction, config);
   }
 
   /**
@@ -177,9 +183,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async sendBatch(
     transactions: Transaction[],
+    config?: { gasless?: boolean }
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatch(transactions);
+    return connector.sendBatch(transactions, config);
   }
 
   /**
@@ -189,9 +196,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async executeBatch(
     transactions: Transaction<any>[],
+    config?: { gasless?: boolean },
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatch(transactions);
+    return connector.executeBatch(transactions, config);
   }
 
   /**
@@ -201,9 +209,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    config?: { gasless?: boolean }
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendRaw(transaction);
+    return connector.sendRaw(transaction, config);
   }
 
   /**
@@ -213,9 +222,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    config?: { gasless?: boolean }
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeRaw(transaction);
+    return connector.executeRaw(transaction, config);
   }
 
   /**
@@ -269,9 +279,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async sendBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    config?: { gasless?: boolean },
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatchRaw(transactions);
+    return connector.sendBatchRaw(transactions, config);
   }
 
   /**
@@ -281,9 +292,10 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    config?: { gasless?: boolean },
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatchRaw(transactions);
+    return connector.executeBatchRaw(transactions, config);
   }
 
   /**
@@ -291,9 +303,9 @@ export class SmartWallet extends AbstractClientWallet<
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
    * @returns The transaction receipt
    */
-  async deploy(): Promise<TransactionResult> {
+  async deploy(config?: { gasless?: boolean }): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.deploy();
+    return connector.deploy(config);
   }
 
   /**
@@ -301,9 +313,9 @@ export class SmartWallet extends AbstractClientWallet<
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
    * @returns The transaction receipt
    */
-  async deployIfNeeded(): Promise<void> {
+  async deployIfNeeded(config?: { gasless?: boolean }): Promise<void> {
     const connector = await this.getConnector();
-    return connector.deployIfNeeded();
+    return connector.deployIfNeeded(config);
   }
 
   /**

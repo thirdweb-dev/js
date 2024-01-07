@@ -5,7 +5,7 @@ import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
-import { BatchData, ProviderConfig } from "../types";
+import { ProviderConfig, UserOpConfig } from "../types";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -36,7 +36,7 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
@@ -53,7 +53,7 @@ export class ERC4337EthersSigner extends Signer {
         maxFeePerGas: tx.maxFeePerGas,
         maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
       },
-      batchData,
+      config,
     );
     const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
@@ -155,7 +155,7 @@ Code: ${errorCode}`;
 
   async signTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batchData?: BatchData,
+    config?: UserOpConfig,
   ): Promise<string> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
@@ -170,7 +170,7 @@ Code: ${errorCode}`;
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
       },
-      batchData,
+      config,
     );
     const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 

@@ -55,7 +55,8 @@ export interface ProviderConfig extends ContractInfo {
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
+  paymasterAPI: PaymasterAPI;
+  gasless: boolean;
 }
 
 export type ContractInfoInput = {
@@ -110,6 +111,11 @@ export abstract class PaymasterAPI {
   ): Promise<PaymasterResult>;
 }
 
+export type UserOpConfig = {
+  gasless?: boolean;
+  batchData?: BatchData;
+};
+
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
@@ -119,8 +125,8 @@ export type BatchData = {
 export interface BaseApiParams {
   provider: providers.Provider;
   entryPointAddress: string;
+  paymasterAPI: PaymasterAPI;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
 }
 
 export interface UserOpResult {
