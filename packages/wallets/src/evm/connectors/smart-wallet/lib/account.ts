@@ -30,6 +30,9 @@ export class AccountAPI extends BaseAccountAPI {
     this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain, {
       clientId: params.clientId,
       secretKey: params.secretKey,
+      // @ts-expect-error expected chain type error
+      supportedChains:
+        typeof params.chain === "object" ? [params.chain] : undefined,
     });
   }
 

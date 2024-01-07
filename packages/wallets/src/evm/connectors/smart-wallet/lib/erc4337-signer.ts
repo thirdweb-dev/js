@@ -1,15 +1,14 @@
 import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { ClientConfig } from "@account-abstraction/sdk";
-import { BaseAccountAPI, BatchData, UserOpConfig } from "./base-api";
+import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
-import { randomNonce } from "./utils";
-import { deepHexlify } from "@account-abstraction/utils";
+import { hexlifyUserOp, randomNonce } from "./utils";
+import { ProviderConfig, UserOpConfig } from "../types";
 
 export class ERC4337EthersSigner extends Signer {
-  config: ClientConfig;
+  config: ProviderConfig;
   originalSigner: Signer;
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
@@ -17,7 +16,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
-    config: ClientConfig,
+    config: ProviderConfig,
     originalSigner: Signer,
     erc4337provider: ERC4337EthersProvider,
     httpRpcClient: HttpRpcClient,
@@ -43,16 +42,20 @@ export class ERC4337EthersSigner extends Signer {
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
         value: tx.value,
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
       },
       config,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
@@ -158,7 +161,8 @@ Code: ${errorCode}`;
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
@@ -168,10 +172,9 @@ Code: ${errorCode}`;
       },
       config,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
-    const userOpString = JSON.stringify(
-      deepHexlify(await utils.resolveProperties(userOperation)),
-    );
+    const userOpString = JSON.stringify(await hexlifyUserOp(userOperation));
     return userOpString;
   }
 }

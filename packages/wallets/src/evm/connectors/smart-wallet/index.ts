@@ -5,6 +5,7 @@ import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
 import {
   AccountContractInfo,
+  BatchData,
   FactoryContractInfo,
   ProviderConfig,
   SmartWalletConfig,
@@ -13,7 +14,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, ethers, providers, utils } from "ethers";
+import { BigNumber, constants, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
   getGasPrice,
@@ -25,9 +26,7 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";
-import { BatchData } from "./lib/base-api";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -307,6 +306,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       target: transaction.getTarget(),
       data: transaction.encode(),
       value: await transaction.getValue(),
+      gasLimit: await transaction.getOverrides().gasLimit,
+      maxFeePerGas: await transaction.getOverrides().maxFeePerGas,
+      maxPriorityFeePerGas: await transaction.getOverrides()
+        .maxPriorityFeePerGas,
+      nonce: await transaction.getOverrides().nonce,
     });
   }
 
@@ -318,9 +322,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     }
     const tx = await ethers.utils.resolveProperties(transaction);
     return this.estimateTx({
-      target: tx.to || AddressZero,
+      target: tx.to || constants.AddressZero,
       data: tx.data?.toString() || "",
       value: tx.value || BigNumber.from(0),
+      gasLimit: tx.gasLimit,
+      maxFeePerGas: tx.maxFeePerGas,
+      maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+      nonce: tx.nonce,
     });
   }
 
@@ -334,6 +342,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
       batchData,
     );
@@ -351,6 +363,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
       batchData,
     );
@@ -545,7 +561,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     tx: TransactionDetailsForUserOp,
     batchData?: BatchData,
   ) {
-    if (!this.accountApi) {
+    if (!this.accountApi || !this.aaProvider) {
       throw new Error("Personal wallet not connected");
     }
     let deployGasLimit = BigNumber.from(0);
@@ -556,12 +572,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!isDeployed) {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }
-    const [{ callGasLimit: transactionGasLimit }, gasPrice] = await Promise.all(
-      [
-        this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batchData),
-        getGasPrice(provider),
-      ],
-    );
+    const [userOp, gasPrice] = await Promise.all([
+      this.accountApi.createUnsignedUserOp(
+        this.aaProvider.httpRpcClient,
+        tx,
+        batchData,
+      ),
+      getGasPrice(provider),
+    ]);
+    const resolved = await utils.resolveProperties(userOp);
+    const transactionGasLimit = BigNumber.from(resolved.callGasLimit);
     const transactionCost = transactionGasLimit.mul(gasPrice);
     const deployCost = deployGasLimit.mul(gasPrice);
     const totalCost = deployCost.add(transactionCost);
@@ -603,7 +623,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ethers.utils.resolveProperties(transaction),
       ),
     );
-    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
+    const targets = resolvedTxs.map((tx) => tx.to || constants.AddressZero);
     const data = resolvedTxs.map((tx) => tx.data || "0x");
     const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
     return {
