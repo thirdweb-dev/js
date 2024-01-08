@@ -78,14 +78,14 @@ export const WalletUIStatesProvider = (
 };
 
 /**
- * Check if the `ConnectWallet` Modal is open or not
+ * Check if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal is open or not
  *
  * @example
  * ```tsx
  * const isOpen = useIsWalletModalOpen();
  * ```
  *
- * @returns `true` if the `ConnectWallet` modal is open, `false` otherwise
+ * @returns `true` if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) modal is open, `false` otherwise
  * @connectWallet
  */
 export const useIsWalletModalOpen = () => {
@@ -93,7 +93,7 @@ export const useIsWalletModalOpen = () => {
 };
 
 /**
- * Open or close the `ConnectWallet` Modal
+ * Open or close the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal
  *
  * @example
  * ```tsx

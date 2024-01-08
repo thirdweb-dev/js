@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.11
+
+### Patch Changes
+
+- [#2107](https://github.com/thirdweb-dev/js/pull/2107) [`1a5627f7`](https://github.com/thirdweb-dev/js/commit/1a5627f72d5a38386228517ef99fb800ca0f5a57) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - added checkout as service
+
 ## 0.4.10
 
 ### Patch Changes

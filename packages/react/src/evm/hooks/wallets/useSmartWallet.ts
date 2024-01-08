@@ -16,11 +16,11 @@ import { useCallback } from "react";
 import type { BytesLike } from "ethers";
 
 /**
- * Hook to connect [Smart wallet](https://portal.thirdweb.com/wallet/smart-wallet)
+ * Hook to connect [Smart wallet](https://portal.thirdweb.com/references/wallets/v2/SmartWallet)
  *
  * `useSmartWallet()` handles connecting both the personal wallet and the Smart Wallet.
  *
- * The `smartWallet()` also need to be added in `ThirdwebProvider`'s `supportedWallets` prop to enable auto-connection on page load
+ * The `smartWallet()` also need to be added in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `supportedWallets` prop to enable auto-connection on page load
  *
  * ### Example
  *

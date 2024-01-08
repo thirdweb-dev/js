@@ -204,7 +204,7 @@ export function useWallets() {
  * #### walletConfig
  * The wallet to connect. Must be of type `WalletConfig`.
  *
- * [Learn more about the available wallet options](https://portal.thirdweb.com/react/connecting-wallets).
+ * [Learn more about the available wallet options](https://portal.thirdweb.com/react/v4/connecting-wallets).
  *
  * #### connectOptions
  * The typeof `connectOptions` object depends on the wallet you are connecting. For some wallets, it may be optional
@@ -288,7 +288,7 @@ export function useConnectionStatus() {
 /**
  * Hook for setting the `connectionStatus` of the wallet which is returned by the `useConnectionStatus` hook
  *
- * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
  *
  * @example
  *
@@ -418,7 +418,7 @@ export function useSwitchChain() {
 /**
  * Hook for setting a wallet instance as "connected" - once done, the wallet connection hooks like `useWallet`, `useAddress`, `useSigner`, `useConnectionStatus` etc will return the data for that wallet instance
  *
- * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ * This is only useful if you are manually connecting a wallet instance as mentioned in [Build your Wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
  *
  * @example
  *

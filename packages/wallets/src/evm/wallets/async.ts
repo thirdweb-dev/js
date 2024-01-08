@@ -6,6 +6,9 @@ export interface AsyncWalletOptions {
   cacheSigner: boolean;
 }
 
+/**
+ * @internal
+ */
 export class AsyncWallet extends AbstractWallet {
   #signer?: Signer;
   #options: AsyncWalletOptions;

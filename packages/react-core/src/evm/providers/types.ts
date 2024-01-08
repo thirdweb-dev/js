@@ -47,7 +47,7 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
   sdkOptions?: Omit<SDKOptions, "chains">;
 
   /**
-   * Override the default [Storage](https://portal.thirdweb.com/storage) interface used by the SDK.
+   * Override the default [Storage](https://portal.thirdweb.com/infrastructure/storage/overview) interface used by the SDK.
    *
    * It allows you to create an instance of `ThirdwebStorage` with your own customized config, and pass it to the SDK.
    *
@@ -89,7 +89,7 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
   storageInterface?: IThirdwebStorage;
 
   /**
-   * The configuration object for setting up [Auth](https://portal.thirdweb.com/auth); allowing users to sign in with their wallet.
+   * The configuration object for setting up [Auth](https://portal.thirdweb.com/wallets/auth); allowing users to sign in with their wallet.
    */
   authConfig?: ThirdwebAuthConfig;
 

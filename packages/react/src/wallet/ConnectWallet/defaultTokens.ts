@@ -32,7 +32,7 @@ const fantomIcon =
 export type SupportedTokens = Record<number, TokenInfo[]>;
 
 /**
- * Default tokens shown in `ConnectWallet`'s SendFunds screen for each network.
+ * Default tokens shown in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet)'s SendFunds screen for each network.
  *
  * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
  *
@@ -255,7 +255,7 @@ export const defaultTokens: SupportedTokens = {
       icon: wrappedEthIcon,
     },
     {
-      address: "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
+      address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
       name: "Tether USD",
       symbol: "USDT",
       icon: tetherUsdIcon,

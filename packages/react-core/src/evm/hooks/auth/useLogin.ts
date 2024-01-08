@@ -7,7 +7,7 @@ import invariant from "tiny-invariant";
 import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
 /**
- * Hook to prompt the user to sign in with their wallet using [auth](https://portal.thirdweb.com/auth)
+ * Hook to prompt the user to sign in with their wallet using [auth](https://portal.thirdweb.com/wallets/auth)
  *
  * Requires the `authConfig` prop to be configured on the `ThirdwebProvider`
  *

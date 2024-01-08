@@ -560,8 +560,30 @@ importers:
         specifier: ^5.1.6
         version: 5.1.6
 
+  packages/payments:
+    dependencies:
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+    devDependencies:
+      '@preconstruct/cli':
+        specifier: 2.7.0
+        version: 2.7.0
+      '@thirdweb-dev/tsconfig':
+        specifier: workspace:*
+        version: link:../tw-tsconfig
+      eslint-config-thirdweb:
+        specifier: workspace:*
+        version: link:../eslint-config-thirdweb
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+
   packages/react:
     dependencies:
+      '@emotion/css':
+        specifier: 11.10.5
+        version: 11.10.5(@babel/core@7.22.9)
       '@emotion/react':
         specifier: ^11.11.1
         version: 11.11.1(@types/react@18.2.17)(react@18.2.0)
@@ -571,6 +593,9 @@ importers:
       '@google/model-viewer':
         specifier: ^2.1.1
         version: 2.1.1
+      '@headlessui/react':
+        specifier: 1.7.6
+        version: 1.7.6(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/colors':
         specifier: ^0.1.9
         version: 0.1.9
@@ -604,9 +629,15 @@ importers:
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
+      '@thirdweb-dev/payments':
+        specifier: workspace:*
+        version: link:../payments
       '@thirdweb-dev/react-core':
         specifier: workspace:*
         version: link:../react-core
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@thirdweb-dev/wallets':
         specifier: workspace:*
         version: link:../wallets
@@ -659,9 +690,6 @@ importers:
       '@thirdweb-dev/auth':
         specifier: workspace:*
         version: link:../auth
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
@@ -1571,6 +1599,9 @@ importers:
       '@babel/plugin-transform-private-methods':
         specifier: 7.22.5
         version: 7.22.5(@babel/core@7.22.9)
+      '@microsoft/api-extractor':
+        specifier: ^7.36.3
+        version: 7.36.3(@types/node@18.17.1)
       '@noble/ed25519':
         specifier: ^1.7.1
         version: 1.7.3
@@ -7148,6 +7179,22 @@ packages:
       stylis: 4.2.0
     dev: false
 
+  /@emotion/css@11.10.5(@babel/core@7.22.9):
+    resolution: {integrity: sha512-maJy0wG82hWsiwfJpc3WrYsyVwUbdu+sdIseKUB+/OLjB8zgc3tqkT6eO0Yt0AhIkJwGGnmMY/xmQwEAgQ4JHA==}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+    dependencies:
+      '@babel/core': 7.22.9
+      '@emotion/babel-plugin': 11.11.0
+      '@emotion/cache': 11.11.0
+      '@emotion/serialize': 1.1.2
+      '@emotion/sheet': 1.2.2
+      '@emotion/utils': 1.2.1
+    dev: false
+
   /@emotion/hash@0.9.1:
     resolution: {integrity: sha512-gJB6HLm5rYwSLI6PQa+X1t5CFGrv1J1TWG+sOyMCeKz2ojaj6Fnl/rZEspogG+cvqbt4AE/2eIyD2QfLKTBNlQ==}
     dev: false
@@ -8255,6 +8302,18 @@ packages:
     dependencies:
       '@hapi/hoek': 9.3.0
 
+  /@headlessui/react@1.7.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-yM/IOGCRaS/DaQRchElrTiH0jOfYWbBX5wkZTAbPDu4OMYdQ1ateM/UgApOcv+7DNpeRaMjUz4bZ4xxNgTGNLA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@humanwhocodes/config-array@0.11.10:
     resolution: {integrity: sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ==}
     engines: {node: '>=10.10.0'}
@@ -9119,7 +9178,7 @@ packages:
       '@rushstack/ts-command-line': 4.15.1
       colors: 1.2.5
       lodash: 4.17.21
-      resolve: 1.22.1
+      resolve: 1.22.8
       semver: 7.5.4
       source-map: 0.6.1
       typescript: 5.0.4
@@ -11810,7 +11869,7 @@ packages:
       buffer: 6.0.1
       fast-stable-stringify: 1.0.0
       jayson: 3.7.0
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
       rpc-websockets: 7.5.1
       superstruct: 0.14.2
     transitivePeerDependencies:
@@ -15344,6 +15403,7 @@ packages:
 
   /browserify-des@1.0.2:
     resolution: {integrity: sha512-BioO1xf3hFwz4kc6iBhI3ieDFompMhrMlnDFC4/0/vd5MokpuAc3R+LYbwTA9A5Yc9pq9UYPqffKpW2ObuwX5A==}
+    requiresBuild: true
     dependencies:
       cipher-base: 1.0.4
       des.js: 1.0.1
@@ -17035,6 +17095,7 @@ packages:
 
   /des.js@1.0.1:
     resolution: {integrity: sha512-Q0I4pfFrv2VPd34/vfLrFOoRmlYj3OV50i7fskps1jZWK1kApMWWT9G6RRUeYedLcBDIhnSDaUvJMb3AhUlaEA==}
+    requiresBuild: true
     dependencies:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
@@ -18218,7 +18279,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.5.3
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -24482,17 +24543,6 @@ packages:
     engines: {node: '>= 0.10.5'}
     dependencies:
       minimatch: 3.1.2
-
-  /node-fetch@2.6.11:
-    resolution: {integrity: sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
-    dependencies:
-      whatwg-url: 5.0.0
 
   /node-fetch@2.6.12:
     resolution: {integrity: sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==}
