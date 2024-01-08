@@ -32,6 +32,9 @@ function putInCache(
   metadataCache[getCacheKey(address, chainId)] = metadata;
 }
 
+/**
+ * @internal
+ */
 export function getContractMetadataFromCache(
   address: string,
   chainId: number,
@@ -96,6 +99,9 @@ export async function fetchContractMetadataFromAddress(
   return metadata;
 }
 
+/**
+ * @internal
+ */
 export async function fetchContractMetadataFromBytecode(
   address: Address,
   chainId: number,

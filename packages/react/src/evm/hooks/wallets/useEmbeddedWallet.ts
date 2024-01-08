@@ -20,8 +20,97 @@ import {
 } from "@tanstack/react-query";
 
 /**
- * Hook to authenticate and connect to an embedded wallet
- * @returns a function to connect to an embedded wallet
+ * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
+ *
+ * The `embeddedWallet()` should be added to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `supportedWallets` prop to enable auto-connection on page load
+ *
+ * @example
+ *
+ * ### Social Login
+ *
+ * ```jsx
+ * import { useEmbeddedWallet } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { connect } = useEmbeddedWallet();
+ *
+ *   const handleLogin = async () => {
+ *     await connect({
+ *       strategy: "google",
+ *     });
+ *   };
+ *
+ *   return <button onClick={handleLogin}> Sign in with Google </button>;
+ * }
+ * ```
+ *
+ *
+ * ### Login with Email verification
+ *
+ * ```tsx
+ * import { useEmbeddedWallet } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { connect, sendVerificationEmail } = useEmbeddedWallet();
+ *
+ *   const sendVerificationCode = async (email: string) => {
+ *     // send email verification code
+ *     await sendVerificationEmail({ email });
+ *   };
+ *
+ *   const handleLogin = async (email: string, verificationCode: string) => {
+ *     // verify email and connect
+ *     await connect({
+ *       strategy: "email_verification",
+ *       email,
+ *       verificationCode,
+ *     });
+ *   };
+ *
+ *   return <div> ... </div>;
+ * }
+ * ```
+ *
+ *
+ * ### Available connection strategies
+ *
+ * ```tsx
+ * // email verification
+ * type EmailVerificationAuthParams = {
+ *   strategy: "email_verification";
+ *   email: string;
+ *   verificationCode: string;
+ *   recoveryCode?: string;
+ * };
+ *
+ * export type EmbeddedWalletOauthStrategy = "google" | "apple" | "facebook";
+ *
+ * type OauthAuthParams = {
+ *   strategy: EmbeddedWalletOauthStrategy;
+ *   openedWindow?: Window;
+ *   closeOpenedWindow?: (window: Window) => void;
+ * };
+ *
+ * // bring your own authentication
+ * type JwtAuthParams = {
+ *   strategy: "jwt";
+ *   jwt: string;
+ *   encryptionKey?: string;
+ * };
+ *
+ * // open iframe to send and input the verification code only
+ * type IframeOtpAuthParams = {
+ *   strategy: "iframe_email_verification";
+ *   email: string;
+ * };
+ *
+ * // open iframe to enter email and verification code
+ * type IframeAuthParams = {
+ *   strategy: "iframe";
+ * };
+ * ```
+ *
+ * @walletConnection
  */
 export function useEmbeddedWallet() {
   const create = useCreateWalletInstance();
@@ -80,6 +169,27 @@ export function useEmbeddedWallet() {
   };
 }
 
+/**
+ * Hook to get the user's email from connected `EmbeddedWallet`
+ *
+ * @example
+ * ```ts
+ * const emailQuery = useEmbeddedWalletUserEmail();
+ *
+ * if (emailQuery.isFetching) {
+ *  return <div> Loading... </div>;
+ * }
+ *
+ * if (emailQuery.data) {
+ *  return <div> Connected with {emailQuery.data} </div>;
+ * }
+ *
+ * return <div> Not connected </div>;
+ * ```
+ *
+ * @walletConnection
+ * @returns Hook's `data` property contains the `string` email if `EmbeddedWallet` is connected, otherwise `undefined`
+ */
 export function useEmbeddedWalletUserEmail(): UseQueryResult<
   string | undefined
 > {

@@ -1,5 +1,108 @@
 # @thirdweb-dev/react-native
 
+## 0.5.5
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- [#2092](https://github.com/thirdweb-dev/js/pull/2092) [`4c3c840d`](https://github.com/thirdweb-dev/js/commit/4c3c840d8815915840d0819932aa0a858c5d3184) Thanks [@iketw](https://github.com/iketw)! - Export WalletConnect modal component
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/react-core@4.2.2
+  - @thirdweb-dev/wallets@2.3.4
+  - @thirdweb-dev/sdk@4.0.25
+
+## 0.5.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.2.1
+
+## 0.5.3
+
+### Patch Changes
+
+- [#2101](https://github.com/thirdweb-dev/js/pull/2101) [`7fdb1715`](https://github.com/thirdweb-dev/js/commit/7fdb1715e4263e9b9c90370a1e70c7fa1fa0e95e) Thanks [@iketw](https://github.com/iketw)! - Export types for better reference docs
+
+- [#2108](https://github.com/thirdweb-dev/js/pull/2108) [`b90fa2cc`](https://github.com/thirdweb-dev/js/commit/b90fa2cc298bf1a6deb0f4c0f927ab77f2716448) Thanks [@iketw](https://github.com/iketw)! - Adds `hideSendButton` and `hideReceiveButton` to the ConnectWallet component.
+
+  Both props default to `false`.
+
+  ```js
+  <ConnectWallet hideReceiveButton={true} hideSendButton={true} />
+  ```
+
+- Updated dependencies [[`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11), [`e46dd025`](https://github.com/thirdweb-dev/js/commit/e46dd0254f157c3c4d50fe3e4f44e2e24eaf34a8)]:
+  - @thirdweb-dev/sdk@4.0.24
+  - @thirdweb-dev/wallets@2.3.3
+  - @thirdweb-dev/react-core@4.2.0
+
+## 0.5.2
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- [#2087](https://github.com/thirdweb-dev/js/pull/2087) [`b7d4dee4`](https://github.com/thirdweb-dev/js/commit/b7d4dee4460185f7706c3f97b67b385bb279b6e2) Thanks [@iketw](https://github.com/iketw)! - Support expo versions =>47 < 50
+
+- [#2099](https://github.com/thirdweb-dev/js/pull/2099) [`94a8f796`](https://github.com/thirdweb-dev/js/commit/94a8f7960a71f24f1eb5c7cebfb548578642e281) Thanks [@iketw](https://github.com/iketw)! - Updates CoinbaseWallet SDK to fix scheme redirection bug
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c), [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002), [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186), [`81c46e22`](https://github.com/thirdweb-dev/js/commit/81c46e22984cdb5b33b2e6eb99a0ebf0e4fbdb33), [`23db97cc`](https://github.com/thirdweb-dev/js/commit/23db97cca51211df82d430fbfff4bbfbd7d4dc38)]:
+  - @thirdweb-dev/react-core@4.1.17
+  - @thirdweb-dev/storage@2.0.8
+  - @thirdweb-dev/wallets@2.3.2
+  - @thirdweb-dev/chains@0.1.62
+  - @thirdweb-dev/sdk@4.0.23
+
+## 0.5.1
+
+### Patch Changes
+
+- [#2074](https://github.com/thirdweb-dev/js/pull/2074) [`07fbb799`](https://github.com/thirdweb-dev/js/commit/07fbb799be87c1c5229ae3183fa8bc67ae15c756) Thanks [@iketw](https://github.com/iketw)! - Adds the ability to login with any arbitrary login payload
+
+  ```typescript
+  await embeddedWallet.authenticate({
+    strategy: "auth_endpoint",
+    payload: "SOME_STRING",
+    encryptionKey: "",
+  });
+  ```
+
+- [#2082](https://github.com/thirdweb-dev/js/pull/2082) [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f) Thanks [@iketw](https://github.com/iketw)! - Better comments
+
+- [#2086](https://github.com/thirdweb-dev/js/pull/2086) [`328ef5dc`](https://github.com/thirdweb-dev/js/commit/328ef5dc9c628a89a022a559852dfa2a788f70cb) Thanks [@iketw](https://github.com/iketw)! - Hide WC modal back button when only WC is defined as a supportedWallet
+
+- Updated dependencies [[`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e), [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f)]:
+  - @thirdweb-dev/sdk@4.0.22
+  - @thirdweb-dev/react-core@4.1.16
+  - @thirdweb-dev/wallets@2.3.1
+
+## 0.5.0
+
+### Minor Changes
+
+- [#2018](https://github.com/thirdweb-dev/js/pull/2018) [`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba) Thanks [@iketw](https://github.com/iketw)! - Enforces passing an encryption key for custom jwt auth
+
+  ```typescript
+  const embedded = useEmbeddedWallet();
+
+  embedded.connect({
+    jwt: "<token>",
+    encryptionKey: "<my-key>",
+    strategy: "jwt",
+  });
+  ```
+
+### Patch Changes
+
+- [#2072](https://github.com/thirdweb-dev/js/pull/2072) [`2346396b`](https://github.com/thirdweb-dev/js/commit/2346396bdffeed169cdfc15839bfb42d87f24303) Thanks [@iketw](https://github.com/iketw)! - Adds analytics nonce to embedded wallet
+
+- Updated dependencies [[`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba), [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe), [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da), [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275)]:
+  - @thirdweb-dev/wallets@2.3.0
+  - @thirdweb-dev/react-core@4.1.15
+
 ## 0.4.14
 
 ### Patch Changes

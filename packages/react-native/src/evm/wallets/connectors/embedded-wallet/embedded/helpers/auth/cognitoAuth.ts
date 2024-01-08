@@ -4,7 +4,7 @@ import {
   COGNITO_APP_CLIENT_ID,
   COGNITO_USER_POOL_ID,
 } from "../constants";
-import { getRandomValues } from "../getRandomValues";
+import { getRandomString } from "../getRandomValues";
 
 Amplify.configure({
   Auth: {
@@ -23,13 +23,6 @@ export async function cognitoEmailSignUp(email: string, clientId: string) {
     },
   });
   await Auth.signOut();
-}
-
-function getRandomString(bytes: number) {
-  const randomValues = getRandomValues(new Uint8Array(bytes));
-  return Array.from(randomValues)
-    .map((nr) => nr.toString(16).padStart(2, "0"))
-    .join("");
 }
 
 export async function cognitoEmailSignIn(email: string, clientId: string) {

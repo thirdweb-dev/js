@@ -58,6 +58,9 @@ export function isIncrementalVersion(current: string, next: string) {
   return eqMajor && eqMinor && nextSemver.patch > currentSemver.patch;
 }
 
+/**
+ * @internal
+ */
 export function isDowngradeVersion(current: string, next: string) {
   const currentSemver = toSemver(current);
   const nextSemver = toSemver(next);

@@ -8,25 +8,19 @@ export type ConnectionStatus =
   | "connecting";
 
 // these are extra options provided by the react-core package
-export type ExtraCoreWalletOptions = {
+
+export type WalletOptions = WalletOptions_<{
   chain: Chain;
-};
+}>;
 
-export type WalletOptions = WalletOptions_<ExtraCoreWalletOptions>;
-
+/**
+ * @wallet
+ */
 export type WalletInstance = AbstractClientWallet;
 
-export type NonNullable<T> = T extends null | undefined ? never : T;
-export type WalletConnectParams<I extends WalletInstance> = Parameters<
-  I["connect"]
->[0];
-
-export type WalletClass<I extends WalletInstance = WalletInstance> = {
-  id: string;
-  new (options: WalletOptions): I;
-  meta: (typeof AbstractClientWallet)["meta"];
-};
-
+/**
+ * @wallet
+ */
 export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   category?: "socialLogin" | "walletLogin";
   id: string;
@@ -67,12 +61,9 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   isHeadless?: boolean;
 };
 
-type ConnectArgs<I extends WalletInstance> =
-  // if second argument is optional
-  undefined extends WalletConnectParams<I>
-    ? [connectParams?: NonNullable<WalletConnectParams<I>>]
-    : [connectParams: NonNullable<WalletConnectParams<I>>];
-
+/**
+ * @wallet
+ */
 export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * temporarily hide the ConnectModal
@@ -134,11 +125,9 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   modalSize: "compact" | "wide";
 
   /**
-   * Called when the wallet is connected but it's part of another wallet's connection flow.
-   *
-   * This is only defined in React Native
-   *
-   * @param walletInstance - the instance of the connected wallet
+   * Called when the wallet is connected but it's
+   * part of another wallet's connection flow.
+   * @param walleInstance - The instance of the connected wallet
    */
   onLocallyConnected?: (walletInstance: WalletInstance) => void;
 
@@ -241,6 +230,9 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   connectedWalletAddress?: string;
 };
 
+/**
+ * @wallet
+ */
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * Call this function to "select" your wallet and render the screen for connecting the wallet

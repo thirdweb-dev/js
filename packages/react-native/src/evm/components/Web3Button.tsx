@@ -22,7 +22,7 @@ import { useGlobalTheme, useUIContext } from "../providers/ui-context-provider";
 
 export type ActionFn = (contract: SmartContract) => Promise<any>;
 
-interface Web3ButtonProps<TActionFn extends ActionFn> {
+export interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
 
@@ -43,7 +43,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
 /**
  * A component that allows the user to call an on-chain function on a contract.
  *
- * The button has to be wrapped in a `ThirdwebProvider` in order to function.
+ * The button has to be wrapped in a [`ThirdwebProvider`](https://portal.thirdweb.com/react-native/v0/ThirdwebProvider) in order to function.
  *
  * @example
  * ```javascript

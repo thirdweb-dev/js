@@ -25,6 +25,9 @@ import { emailIcon } from "../../ConnectWallet/icons/dataUris";
  *
  * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
  * Learn more here: https://portal.thirdweb.com/embedded-wallet
+ *
+ * @wallet
+ * @internal
  */
 export const paperWallet = (
   options?: PaperWalletConfigOptions,

@@ -45,6 +45,17 @@ type LastConnectedWalletInfo = {
   };
 };
 
+type NonNullable<T> = T extends null | undefined ? never : T;
+type WalletConnectParams<I extends WalletInstance> = Parameters<
+  I["connect"]
+>[0];
+
+export type ConnectionStatus =
+  | "unknown"
+  | "connected"
+  | "disconnected"
+  | "connecting";
+
 type ConnectFnArgs<I extends WalletInstance> =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
@@ -750,6 +761,9 @@ export function useWalletContext() {
   return ctx;
 }
 
+/**
+ * Get WalletConnect handler instance
+ */
 export function useWalletConnectHandler() {
   const ctx = useWalletContext();
   if (!ctx) {

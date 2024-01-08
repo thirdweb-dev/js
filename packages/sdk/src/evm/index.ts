@@ -11,7 +11,9 @@ export * from "./contracts";
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
 
 // export integration things
-export * from "./integrations/thirdweb-checkout";
+export type {
+  PaperCreateCheckoutLinkShardParams
+} from "./integrations/thirdweb-checkout";
 
 // explicitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
@@ -42,41 +44,11 @@ export * from "./core/classes/contract-sales";
 export * from "./core/classes/delayed-reveal";
 export * from "./core/classes/drop-claim-conditions";
 export * from "./core/classes/drop-erc1155-claim-conditions";
-export * from "./core/classes/drop-erc1155-history";
-export * from "./core/classes/erc-20-batch-mintable";
-export * from "./core/classes/erc-20-burnable";
-export * from "./core/classes/erc-20-claim-conditions";
-export * from "./core/classes/erc-20-droppable";
-export * from "./core/classes/erc-20-mintable";
-export * from "./core/classes/erc-20-signature-mintable";
 export * from "./core/classes/erc-20";
-export * from "./core/classes/erc-20-history";
-export * from "./core/classes/erc-20-standard";
-export * from "./core/classes/erc-721-batch-mintable";
-export * from "./core/classes/erc-721-claim-conditions";
-export * from "./core/classes/erc-721-claimable";
-export * from "./core/classes/erc-721-lazy-mintable";
-export * from "./core/classes/erc-721-mintable";
-export * from "./core/classes/erc-721-supply";
-export * from "./core/classes/erc-721-enumerable";
-export * from "./core/classes/erc-721-tiered-drop";
 export * from "./core/classes/erc-721";
-export * from "./core/classes/erc-721-with-quantity-signature-mintable";
-export * from "./core/classes/erc-721-burnable";
-export * from "./core/classes/erc-721-standard";
-export * from "./core/classes/erc-1155-batch-mintable";
-export * from "./core/classes/erc-1155-burnable";
-export * from "./core/classes/erc-1155-enumerable";
-export * from "./core/classes/erc-1155-lazy-mintable";
-export * from "./core/classes/erc-1155-mintable";
 export * from "./core/classes/erc-1155";
-export * from "./core/classes/erc-1155-signature-mintable";
-export * from "./core/classes/erc-1155-standard";
-export * from "./core/classes/marketplace-direct";
-export * from "./core/classes/marketplace-auction";
-export * from "./core/classes/marketplacev3-direct-listings";
-export * from "./core/classes/marketplacev3-english-auction";
-export * from "./core/classes/marketplacev3-offers";
+export * from "./core/classes/account";
+export * from "./core/classes/account-factory";
 export * from "./core/classes/gas-cost-estimator";
 export * from "./core/classes/delayed-reveal";
 export * from "./core/classes/contract-events";
@@ -86,8 +58,14 @@ export * from "./core/classes/contract-published-metadata";
 export * from "./core/classes/contract-owner";
 export * from "./core/classes/transactions";
 export * from "./core/classes/contract-appuri";
-export * from "./core/classes/account";
-export * from "./core/classes/account-factory";
+export * from "./core/classes/marketplacev3-direct-listings";
+export * from "./core/classes/marketplacev3-english-auction";
+export * from "./core/classes/marketplacev3-offers";
+export * from "./core/classes/extension-manager";
+export * from "./core/classes/airdrop-erc20";
+export * from "./core/classes/airdrop-erc721";
+export * from "./core/classes/airdrop-erc1155";
+export * from "./core/classes/contract-verifier";
 export * from "./core/wallet/user-wallet";
 export * from "./core/sdk";
 //#endregion @r/packages/sdk/src/evm/core

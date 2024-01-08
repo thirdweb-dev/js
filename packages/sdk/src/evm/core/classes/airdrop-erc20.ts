@@ -4,7 +4,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
 import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { Airdrop20Content, Airdrop20Output } from "../../types/airdrop/airdrop";
 
@@ -63,7 +63,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * @param tokenOwner - Address of the owner of the tokens being airdropped
    * @param contents - Array of airdrop contents
    *
-   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @returns An array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC20
    */
   drop = /* @__PURE__ */ buildTransactionFunction(

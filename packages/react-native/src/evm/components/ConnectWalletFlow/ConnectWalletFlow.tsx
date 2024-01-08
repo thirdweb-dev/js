@@ -135,7 +135,7 @@ export const ConnectWalletFlow = () => {
           connected={handleClose}
           isOpen={modalVisible}
           show={onOpenModal}
-          hide={() => {}}
+          hide={handleClose}
           walletConfig={activeWallet}
           supportedWallets={supportedWallets}
           selectionData={selectionData}

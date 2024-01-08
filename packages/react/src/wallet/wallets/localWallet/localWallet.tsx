@@ -11,40 +11,29 @@ const phoneIcon = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODA
 /**
  * A wallet configurator for Local wallet which allows integrating a "Guest Login" experience to app.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to app via `ConnectWallet` component or `useConnect` hook.
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
- *
- * ### Usage with ConnectWallet
- *
- * To allow users to connect to this wallet using the `ConnectWallet` component, you can add it to `ThirdwebProvider`'s supportedWallets prop.
- *
- * ```tsx
- * <ThirdwebProvider supportedWallets={[localeWallet()]}>
- *  <App />
- * </ThirdwebProvider>
+ * ```ts
+ * localWallet({
+ *  persist: true,
+ * })
  * ```
  *
- * ### Usage with useConnect
+ * @param config -
+ * Optional object containing the following properties to configure the wallet
  *
- * you can use the `useConnect` hook to programmatically connect to the wallet without using the `ConnectWallet` component.
+ * ### persist (optional)
  *
- * The wallet also needs to be added in `ThirdwebProvider`'s supportedWallets if you want the wallet to auto-connect on next page load.
+ * If `true`, the encrypted wallet JSON will be stored on localStorage with user's password.
+ * the user will not need to enter their password again when they visit the site. Because of this, the wallet can not be auto connected.
  *
- * ```tsx
- * const localeWalletConfig = localeWallet();
+ * If `false`, wallet will not be stored, and no password will be required to connect.
+ * the wallet will be lost when the user leaves or reloads the page.
  *
- * function App() {
- *   const connect = useConnect();
+ * By default, it is set to `true`.
  *
- *   async function handleConnect() {
- *     const wallet = await connect(localeWalletConfig, options);
- *     console.log('connected to', wallet);
- *   }
- *
- *   return <button onClick={handleConnect}> Connect </button>;
- * }
- * ```
+ * @wallet
  */
 export const localWallet = (
   config?: LocalWalletConfigOptions,

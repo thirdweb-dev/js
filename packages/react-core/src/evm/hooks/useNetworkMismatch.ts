@@ -2,31 +2,25 @@ import { useSDKChainId } from "./useSDK";
 import { useChainId } from "./wallet";
 
 /**
- * Hook for checking whether the connected wallet is on the correct network specified by the `network` passed to the `<ThirdwebProvider />`.
- *
- * ```javascript
- * import { useNetworkMismatch } from "@thirdweb-dev/react"
- * ```
- *
- * @returns `true` if the chainId of the connected wallet is different from the chainId of the network passed into `<ThirdwebProvider />`
- *
- * @see {@link https://portal.thirdweb.com/react/react.usenetworkmismatch?utm_source=sdk | Documentation}
+ * Hook for checking whether the connected wallet is currently on the correct chain,
+ * i.e. the chain specified in the `activeChain` on the `ThirdwebProvider`.
  *
  * @example
- * You can check if a users wallet is connected to the correct chain ID as follows:
- * ```javascript
- * import { useNetworkMismatch } from "@thirdweb-dev/react"
+ *
+ * ```jsx
+ * import { useNetworkMismatch } from "@thirdweb-dev/react";
  *
  * const App = () => {
- *   const isMismatched = useNetworkMismatch()
- *
- *   return <div>{isMismatched}</div>
- * }
+ *   const isMismatched = useNetworkMismatch();
+ * };
  * ```
  *
- * From here, you can prompt users to switch their network using the `useNetwork` hook.
+ * Using this value, you can prompt users to switch their network using the `useSwitchChain` hook.
  *
- * @public
+ * @returns
+ * Returns `true` if the `chainId` of the connected wallet is different from the `chainId` of the `activeChain` on the `ThirdwebProvider` component
+ *
+ * @networkConnection
  */
 export function useNetworkMismatch() {
   const walletChainId = useChainId();

@@ -14,6 +14,8 @@ export function TWModal(props: Partial<ModalProps>) {
       useNativeDriver
       hideModalContentWhileAnimating={true}
       style={{ maxWidth: MAX_WIDTH }}
+      animationIn="slideInUp" // Slide in from bottom
+      animationOut="slideOutDown" // Slide out to bottom
     >
       {props.children}
     </Modal>

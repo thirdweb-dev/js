@@ -31,6 +31,7 @@ import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
+  values: BigNumberish[];
 };
 
 export interface BaseApiParams {
@@ -102,9 +103,9 @@ export abstract class BaseAccountAPI {
 
   /**
    * encode the call from entryPoint through our account to the target contract.
-   * @param target - the target contract address
-   * @param value - the value to send to the target contract
-   * @param data - the calldata to send to the target contract
+   * @param target - The target contract address
+   * @param value - The value to send to the target contract
+   * @param data - The calldata to send to the target contract
    */
   abstract prepareExecute(
     target: string,
@@ -114,7 +115,7 @@ export abstract class BaseAccountAPI {
 
   /**
    * sign a userOp's hash (userOpHash).
-   * @param userOpHash - the hash to sign
+   * @param userOpHash - The hash to sign
    */
   abstract signUserOpHash(userOpHash: string): Promise<string>;
 
@@ -201,6 +202,7 @@ export abstract class BaseAccountAPI {
               from: this.getAccountAddress(),
               to: batchData.targets[i],
               data: batchData.data[i],
+              value: batchData.values[i],
             }),
           ),
         );
@@ -210,6 +212,7 @@ export abstract class BaseAccountAPI {
           from: this.getAccountAddress(),
           to: detailsForUserOp.target,
           data: detailsForUserOp.data,
+          value: detailsForUserOp.value,
         });
       }
 
@@ -226,12 +229,9 @@ export abstract class BaseAccountAPI {
           from: this.entryPointAddress,
           to: this.getAccountAddress(),
           data: callData,
+          value: detailsForUserOp.value,
         }));
     }
-
-    // callGasLimit = callGasLimit.mul(10); // add 100k for entrypoint checks
-
-    console.log("callGasLimit", callGasLimit.toString());
 
     return {
       callData,
@@ -295,11 +295,6 @@ export abstract class BaseAccountAPI {
       await this.getVerificationGasLimit(),
     ).add(initGas);
 
-    console.log("initGas", initGas.toString());
-    console.log("initGas", verificationGasLimit.toString());
-
-    // verificationGasLimit = verificationGasLimit.mul(3);
-
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await getDynamicFeeData(
@@ -314,28 +309,13 @@ export abstract class BaseAccountAPI {
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        console.log(
-          "CELO maxFeePerGas",
-          ethers.utils.formatUnits(maxFeePerGas || 0, "gwei"),
-        );
-        console.log(
-          "CELO maxPriorityFeePerGas",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
-
         if (
           chainId === Celo.chainId ||
           chainId === CeloAlfajoresTestnet.chainId ||
           chainId === CeloBaklavaTestnet.chainId
         ) {
-          maxFeePerGas = maxFeePerGas?.mul(50);
           maxPriorityFeePerGas = maxFeePerGas;
         }
-
-        console.log(
-          "CELO final",
-          ethers.utils.formatUnits(maxPriorityFeePerGas || 0, "gwei"),
-        );
       }
     }
 
@@ -405,11 +385,11 @@ export abstract class BaseAccountAPI {
 
   /**
    * Sign the filled userOp.
-   * @param userOp - the UserOperation to sign (with signature field ignored)
+   * @param userOp - The UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
-    const signature = this.signUserOpHash(userOpHash);
+    const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
       signature,
@@ -434,12 +414,12 @@ export abstract class BaseAccountAPI {
    * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
    * @param timeout - stop waiting after this timeout
    * @param interval - time to wait between polls.
-   * @returns the transactionHash this userOp was mined, or null if not found.
+   * @returns The transactionHash this userOp was mined, or null if not found.
    */
   async getUserOpReceipt(
     userOpHash: string,
     timeout = 30000,
-    interval = 5000,
+    interval = 2000,
   ): Promise<string | null> {
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {

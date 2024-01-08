@@ -40,6 +40,9 @@ export function hasMatchingAbi(
   return intersection.length === interfaceFn.length;
 }
 
+/**
+ * @internal
+ */
 export function matchesAbiFromBytecode(
   contractBytecode: string,
   featureAbis: readonly AbiInput[],

@@ -42,6 +42,20 @@ export type ConnectWalletDetailsProps = {
    * The default is `false`
    */
   hideSwitchToPersonalWallet?: boolean;
+
+  /**
+   * Option to hide the Send button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Option to hide the Receive button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideReceiveButton?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -49,6 +63,8 @@ export const WalletDetailsButton = ({
   detailsButton,
   extraRows,
   hideTestnetFaucet,
+  hideReceiveButton,
+  hideSendButton,
   supportedTokens,
   displayBalanceToken,
   hideSwitchToPersonalWallet,
@@ -84,6 +100,8 @@ export const WalletDetailsButton = ({
         supportedTokens={supportedTokens}
         displayBalanceToken={displayBalanceToken}
         hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
+        hideReceiveButton={hideReceiveButton}
+        hideSendButton={hideSendButton}
       />
       {detailsButton ? (
         detailsButton({ onPress })

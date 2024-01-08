@@ -84,11 +84,10 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
 /**
  * @internal
  */
-export const ThirdwebProviderCore = <TChains extends Chain[]>({
-  createWalletStorage = createAsyncLocalStorage,
-  ...props
-}: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
-  const { activeChain } = props;
+export const ThirdwebProviderCore = <TChains extends Chain[]>(
+  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
+) => {
+  const { activeChain, createWalletStorage = createAsyncLocalStorage } = props;
 
   const supportedChains = (props.supportedChains || defaultChains) as Chain[];
 

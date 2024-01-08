@@ -1,5 +1,46 @@
 # @thirdweb-dev/sdk
 
+## 4.0.25
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+## 4.0.24
+
+### Patch Changes
+
+- [#2105](https://github.com/thirdweb-dev/js/pull/2105) [`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix verification
+
+## 4.0.23
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- [#2020](https://github.com/thirdweb-dev/js/pull/2020) [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix deploy issue "invalid recipient"
+
+- [#2090](https://github.com/thirdweb-dev/js/pull/2090) [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186) Thanks [@kumaryash90](https://github.com/kumaryash90)! - empty default trusted forwarders param
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c)]:
+  - @thirdweb-dev/storage@2.0.8
+  - @thirdweb-dev/chains@0.1.62
+
+## 4.0.22
+
+### Patch Changes
+
+- [#2085](https://github.com/thirdweb-dev/js/pull/2085) [`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e) Thanks [@hsynlms](https://github.com/hsynlms)! - Fix error when fetching data on `vite-node` environment by setting a global variable `TW_SKIP_FETCH_SETUP` to `true`. Fixes https://github.com/thirdweb-dev/js/issues/2002
+
+  Setting this flag sets `skipFetchSetup` to `true` in [ethers ConnectionInfo](https://docs.ethers.org/v5/api/utils/web/#ConnectionInfo)
+
+  ```ts
+  // set this global variable
+  globalThis.TW_SKIP_FETCH_SETUP = true;
+
+  // use the thirdweb sdk...
+  ```
+
 ## 4.0.21
 
 ### Patch Changes

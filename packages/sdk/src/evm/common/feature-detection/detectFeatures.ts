@@ -11,7 +11,7 @@ import { hasMatchingAbi, matchesAbiFromBytecode } from "./hasMatchingAbi";
  * @internal
  * @param abi - The abi to detect features in
  * @param features - The features to detect
- * @returns the nested struct of all features and whether they're detected in the abi
+ * @returns The nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
   abi: AbiInput,
@@ -31,6 +31,9 @@ export function detectFeatures(
   return results;
 }
 
+/**
+ * @internal
+ */
 export function detectFeaturesFromBytecode(
   bytecode: string,
   features: Record<string, Feature> = SUPPORTED_FEATURES,

@@ -1,6 +1,9 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 
+/**
+ * @wallet
+ */
 export type LocalWalletConfigOptions = {
   /**
    * If `true`, the encrypted wallet JSON will be stored on localStorage with user's password.
