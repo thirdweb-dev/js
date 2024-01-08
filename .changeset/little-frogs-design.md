@@ -1,5 +1,7 @@
 ---
-"@thirdweb-dev/wallets": patch
+"@thirdweb-dev/wallets": minor
 ---
 
-Better userOp estimations
+- Add options to override gasless per transaction
+- Better userOp estimations
+- Performance optimisations
