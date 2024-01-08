@@ -14,7 +14,7 @@ import {
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 import { HttpRpcClient } from "./http-rpc-client";
-import type { BaseApiParams, PaymasterAPI, UserOpConfig } from "../types";
+import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
 
 const DUMMY_SIGNATURE =
   "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
@@ -171,12 +171,12 @@ export abstract class BaseAccountAPI {
   async createUnsignedUserOp(
     httpRpcClient: HttpRpcClient,
     info: TransactionDetailsForUserOp,
-    config?: UserOpConfig,
+    options?: UserOpOptions,
   ): Promise<UserOperationStruct> {
     // construct the userOp without gasLimit or preVerifictaionGas
     const initCode = await this.getInitCode();
     const value = parseNumber(info.value) ?? BigNumber.from(0);
-    const callData = config?.batchData
+    const callData = options?.batchData
       ? info.data
       : await this.prepareExecute(info.target, value, info.data).then((tx) =>
           tx.encode(),
@@ -227,7 +227,7 @@ export abstract class BaseAccountAPI {
     };
 
     // paymaster data + maybe used for estimation as well
-    const gasless = config?.gasless !== undefined ? config.gasless : this.gasless;
+    const gasless = options?.gasless !== undefined ? options.gasless : this.gasless;
     if (gasless) {
       const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
         partialOp,

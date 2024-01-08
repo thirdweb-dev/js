@@ -1,4 +1,4 @@
-import type {
+import {
   ChainOrRpcUrl,
   SmartContract,
   Transaction,
@@ -111,8 +111,11 @@ export abstract class PaymasterAPI {
   ): Promise<PaymasterResult>;
 }
 
-export type UserOpConfig = {
+export interface TransactionOptions {
   gasless?: boolean;
+};
+
+export interface UserOpOptions extends TransactionOptions {
   batchData?: BatchData;
 };
 
