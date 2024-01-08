@@ -1,5 +1,8 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react/hooks/useActiveChainId";
-import { usePaymentsEnabledContracts } from "@3rdweb-sdk/react/hooks/usePayments";
+import {
+  PaperChainToChainId,
+  usePaymentsEnabledContracts,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 import { Center, Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import { PaymentsAnalytics } from "./components/payments-analytics";
@@ -38,9 +41,10 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
     }
     return paymentEnabledContracts?.find(
       (contract) =>
-        contract.address.toLowerCase() === contractAddress.toLowerCase(),
+        contract.address.toLowerCase() === contractAddress.toLowerCase() &&
+        PaperChainToChainId[contract.chain] === chainId,
     );
-  }, [paymentEnabledContracts, contractAddress]);
+  }, [contractAddress, paymentEnabledContracts, chainId]);
 
   if (!contractAddress) {
     // TODO build a skeleton for this

@@ -1,4 +1,5 @@
 import {
+  PaperChainToChainId,
   usePaymentsEnabledContracts,
   usePaymentsRegisterContract,
 } from "@3rdweb-sdk/react/hooks/usePayments";
@@ -25,9 +26,11 @@ export const EnablePaymentsButton: React.FC<EnablePaymentsButtonProps> = ({
   const contractIsEnabled = useMemo(() => {
     return paymentEnabledContracts?.some(
       (paymentContract) =>
-        paymentContract.address.toLowerCase() === contractAddress.toLowerCase(),
+        paymentContract.address.toLowerCase() ===
+          contractAddress.toLowerCase() &&
+        PaperChainToChainId[paymentContract.chain] === chainId,
     );
-  }, [paymentEnabledContracts, contractAddress]);
+  }, [paymentEnabledContracts, contractAddress, chainId]);
 
   const router = useRouter();
   const trackEvent = useTrack();
