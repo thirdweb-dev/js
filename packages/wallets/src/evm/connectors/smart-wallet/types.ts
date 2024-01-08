@@ -1,4 +1,4 @@
-import type {
+import {
   ChainOrRpcUrl,
   SmartContract,
   Transaction,
@@ -55,7 +55,8 @@ export interface ProviderConfig extends ContractInfo {
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
+  paymasterAPI: PaymasterAPI;
+  gasless: boolean;
 }
 
 export type ContractInfoInput = {
@@ -110,6 +111,14 @@ export abstract class PaymasterAPI {
   ): Promise<PaymasterResult>;
 }
 
+export interface TransactionOptions {
+  gasless?: boolean;
+};
+
+export interface UserOpOptions extends TransactionOptions {
+  batchData?: BatchData;
+};
+
 export type BatchData = {
   targets: (string | undefined)[];
   data: BytesLike[];
@@ -119,8 +128,8 @@ export type BatchData = {
 export interface BaseApiParams {
   provider: providers.Provider;
   entryPointAddress: string;
+  paymasterAPI: PaymasterAPI;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
 }
 
 export interface UserOpResult {

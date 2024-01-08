@@ -4,6 +4,7 @@ import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
+  TransactionOptions,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 import {
@@ -153,157 +154,191 @@ export class SmartWallet extends AbstractClientWallet<
   /**
    * Send a single transaction without waiting for confirmations
    * @param transaction - the transaction to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
-  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
+  async send(
+    transaction: Transaction,
+    options?: TransactionOptions
+  ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.send(transaction);
+    return connector.send(transaction, options);
   }
 
   /**
    * Execute a single transaction and wait for confirmations
    * @param transaction - the transaction to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
+  async execute(
+    transaction: Transaction,
+    options?: TransactionOptions
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.execute(transaction);
+    return connector.execute(transaction, options);
   }
 
   /**
    * Send a multiple transaction in a batch without waiting for confirmations
    * @param transactions - the transactions to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
   async sendBatch(
     transactions: Transaction[],
+    options?: TransactionOptions
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatch(transactions);
+    return connector.sendBatch(transactions, options);
   }
 
   /**
    * Execute multiple transactions in a single batch and wait for confirmations
    * @param transactions - the transactions to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
   async executeBatch(
     transactions: Transaction<any>[],
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatch(transactions);
+    return connector.executeBatch(transactions, options);
   }
 
   /**
    * Send a single raw transaction without waiting for confirmations
    * @param transaction - the transaction to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendRaw(transaction);
+    return connector.sendRaw(transaction, options);
   }
 
   /**
    * Execute a single raw transaction and wait for confirmations
    * @param transaction - the transaction to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeRaw(transaction);
+    return connector.executeRaw(transaction, options);
   }
 
   /**
    * Estimate the gas cost of a single transaction
    * @param transaction - the transaction to estimate
+   * @param options - optional transaction options
    * @returns
    */
-  async estimate(transaction: Transaction<any>) {
+  async estimate(
+    transaction: Transaction<any>,
+    options?: TransactionOptions,
+  ) {
     const connector = await this.getConnector();
-    return connector.estimate(transaction);
+    return connector.estimate(transaction, options);
   }
 
   /**
    * Estimate the gas cost of a batch of transactions
    * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
-  async estimateBatch(transactions: Transaction<any>[]) {
+  async estimateBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ) {
     const connector = await this.getConnector();
-    return connector.estimateBatch(transactions);
+    return connector.estimateBatch(transactions, options);
   }
 
   /**
    * Estimate the gas cost of a single raw transaction
    * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
   async estimateRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ) {
     const connector = await this.getConnector();
-    return connector.estimateRaw(transactions);
+    return connector.estimateRaw(transactions, options);
   }
 
   /**
    * Estimate the gas cost of a batch of raw transactions
    * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
   async estimateBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ) {
     const connector = await this.getConnector();
-    return connector.estimateBatchRaw(transactions);
+    return connector.estimateBatchRaw(transactions, options);
   }
 
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
    * @param transactions - the transactions to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
   async sendBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatchRaw(transactions);
+    return connector.sendBatchRaw(transactions, options);
   }
 
   /**
    * Execute multiple raw transactions in a single batch and wait for confirmations
    * @param transactions - the transactions to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatchRaw(transactions);
+    return connector.executeBatchRaw(transactions, options);
   }
 
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
-  async deploy(): Promise<TransactionResult> {
+  async deploy(options?: TransactionOptions): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.deploy();
+    return connector.deploy(options);
   }
 
   /**
    * Manually deploy the smart wallet contract. If already deployed this will do nothing.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
-  async deployIfNeeded(): Promise<void> {
+  async deployIfNeeded(options?: TransactionOptions): Promise<void> {
     const connector = await this.getConnector();
-    return connector.deployIfNeeded();
+    return connector.deployIfNeeded(options);
   }
 
   /**
