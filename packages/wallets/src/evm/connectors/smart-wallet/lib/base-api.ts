@@ -13,7 +13,7 @@ import {
   Celo,
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
-import { DEBUG, HttpRpcClient } from "./http-rpc-client";
+import { HttpRpcClient } from "./http-rpc-client";
 import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
 
 const DUMMY_SIGNATURE =
