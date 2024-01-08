@@ -78,16 +78,6 @@ export const SmartWalletFlow = ({
     [connectSmartWallet, personalWalletConnection],
   );
 
-  // useEffect(() => {
-  //   if (walletConfig.personalWallets?.[0] && !PersonalWalletConfigUI) {
-  //     connectPersonalWallet(walletConfig.personalWallets[0]);
-  //   }
-  // }, [
-  //   PersonalWalletConfigUI,
-  //   connectPersonalWallet,
-  //   walletConfig.personalWallets,
-  // ]);
-
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
     reset();
@@ -114,14 +104,6 @@ export const SmartWalletFlow = ({
     setConnectedPersonalWallet(undefined);
     setPersonalWalletChaindId(undefined);
   };
-
-  // const onPersonalWalletConnected = useCallback(
-  //   (walletInstance: WalletInstance) => {
-  //     setConnectedPersonalWallet(walletInstance);
-  //     connectSmartWallet(walletInstance);
-  //   },
-  //   [connectSmartWallet],
-  // );
 
   if (!personalWalletConnection.activeWallet) {
     const _props: ConnectUIProps<WalletInstance> = {

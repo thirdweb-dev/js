@@ -85,8 +85,7 @@ export const smartWallet = (
 export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig },
 ) => {
-  const { walletConfig } = props;
-  const { personalWalletConfig } = props;
+  const { walletConfig, personalWalletConfig } = props;
   const { personalWalletConnection } = useWalletContext();
 
   return (
