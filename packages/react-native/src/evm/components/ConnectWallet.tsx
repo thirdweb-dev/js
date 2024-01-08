@@ -73,13 +73,17 @@ export type ConnectWalletProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   * Display the balance of a token instead of the native token in ConnectWallet details button.
    *
    * @example
    * ```tsx
+   * import { Base } from "@thirdweb-dev/chains";
+   *
    * <ConnectWallet balanceToken={{
-   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
-   * }} />
+   *    1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   *    [Base.chainId]: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb", // show Dai stablecoin token balance when connected to Base mainnet
+   *  }}
+   * />
    * ```
    */
   displayBalanceToken?: Record<number, string>;
