@@ -5,18 +5,18 @@ import {
   Transaction,
 } from "@thirdweb-dev/sdk";
 import { BigNumberish, BigNumber, ethers, utils, BytesLike } from "ethers";
-import { AccountApiParams } from "../types";
+import { ProviderConfig } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { ACCOUNT_CORE_ABI } from "./constants";
 
 export class AccountAPI extends BaseAccountAPI {
   sdk: ThirdwebSDK;
-  params: AccountApiParams;
+  params: ProviderConfig;
   accountContract?: SmartContract;
   factoryContract?: SmartContract;
 
   constructor(
-    params: AccountApiParams,
+    params: ProviderConfig,
     originalProvider: ethers.providers.Provider,
   ) {
     super({

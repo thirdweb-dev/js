@@ -13,7 +13,7 @@ import {
   Celo,
 } from "@thirdweb-dev/chains";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
-import { HttpRpcClient } from "./http-rpc-client";
+import { DEBUG, HttpRpcClient } from "./http-rpc-client";
 import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
 
 const DUMMY_SIGNATURE =
@@ -53,6 +53,7 @@ export abstract class BaseAccountAPI {
     this.entryPointAddress = params.entryPointAddress;
     this.accountAddress = params.accountAddress;
     this.paymasterAPI = params.paymasterAPI;
+    this.gasless = params.gasless;
 
     // factory "connect" define the contract address. the contract "connect" defines the "from" address.
     this.entryPointView = EntryPoint__factory.connect(
@@ -227,7 +228,8 @@ export abstract class BaseAccountAPI {
     };
 
     // paymaster data + maybe used for estimation as well
-    const gasless = options?.gasless !== undefined ? options.gasless : this.gasless;
+    const gasless =
+      options?.gasless !== undefined ? options.gasless : this.gasless;
     if (gasless) {
       const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
         partialOp,

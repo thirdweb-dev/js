@@ -102,7 +102,7 @@ Code: ${code}`,
     }
 
     if (DEBUG) {
-      console.debug("Paymaster returned result: ", res);
+      console.debug("Paymaster result:", res);
     }
 
     if (res.result) {

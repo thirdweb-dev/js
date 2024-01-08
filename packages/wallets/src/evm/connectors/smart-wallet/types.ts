@@ -1,8 +1,4 @@
-import {
-  ChainOrRpcUrl,
-  SmartContract,
-  Transaction,
-} from "@thirdweb-dev/sdk";
+import { ChainOrRpcUrl, SmartContract, Transaction } from "@thirdweb-dev/sdk";
 import type {
   BigNumber,
   BigNumberish,
@@ -34,17 +30,6 @@ export type SmartWalletConnectionArgs = {
   accountAddress?: string;
 };
 export type SmartWalletOptions = WalletOptions;
-
-export interface AccountApiParams
-  extends Omit<BaseApiParams, "provider">,
-    ContractInfo {
-  chain: ChainOrRpcUrl;
-  localSigner: Signer;
-  factoryAddress: string;
-  accountAddress?: string;
-  clientId?: string;
-  secretKey?: string;
-}
 
 export interface ProviderConfig extends ContractInfo {
   chain: ChainOrRpcUrl;
@@ -113,11 +98,11 @@ export abstract class PaymasterAPI {
 
 export interface TransactionOptions {
   gasless?: boolean;
-};
+}
 
 export interface UserOpOptions extends TransactionOptions {
   batchData?: BatchData;
-};
+}
 
 export type BatchData = {
   targets: (string | undefined)[];
@@ -130,6 +115,7 @@ export interface BaseApiParams {
   entryPointAddress: string;
   paymasterAPI: PaymasterAPI;
   accountAddress?: string;
+  gasless: boolean;
 }
 
 export interface UserOpResult {
