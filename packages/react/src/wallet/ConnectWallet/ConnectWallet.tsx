@@ -310,7 +310,7 @@ export type ConnectWalletProps = {
   hideSwitchToPersonalWallet?: boolean;
 
   /**
-   * Hide the "Disconnect Wallet" button in the wallet modal to control connection lifecycle programmatically.
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
    *
    * By default it is `false`
    *
@@ -548,7 +548,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```
  *
  * ### hideDisconnect
- * Hide the "Disconnect Wallet" button in the wallet modal to control connection lifecycle programmatically.
+ * Hide the "Disconnect Wallet" button in the ConnectWallet dropdown
  *
  * By default it is `false`
  *
