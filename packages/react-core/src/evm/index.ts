@@ -44,7 +44,6 @@ export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
   WalletConfig,
   ConnectUIProps,
-  ConnectionStatus,
   SelectUIProps,
   WalletInstance,
   WalletOptions,

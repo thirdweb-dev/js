@@ -1,9 +1,4 @@
-import {
-  ConnectUIProps,
-  useAddress,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useAddress } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "./EmbeddedWallet";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import {
@@ -38,6 +33,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   goBack,
   selectionData,
   onLocallyConnected,
+  setConnectedWallet,
+  setConnectionStatus,
   ...props
 }) => {
   const l = useLocale();
@@ -49,8 +46,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   const [checkingOtp, setCheckingOtp] = useState(false);
   const [requestingNewOtp, setRequestingNewOtp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
   const [password, setPassword] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | undefined>();
   const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
@@ -316,6 +311,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       <EmbeddedSocialConnection
         connected={() => {}}
         goBack={goBack}
+        setConnectedWallet={setConnectedWallet}
+        setConnectionStatus={setConnectionStatus}
         onLocallyConnected={onLocallyConnected}
         selectionData={selectionData}
         {...props}

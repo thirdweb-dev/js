@@ -12,12 +12,7 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import { TWModal } from "../../../components/base/modal/TWModal";
-import {
-  ConnectUIProps,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
 import { WalletConnectButton } from "./WalletConnectButton";
 import { ModalHeaderTextClose } from "../../../components/base";
@@ -40,12 +35,14 @@ const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function WalletConnectUI({
   connected,
-  walletConfig,
   projectId,
   goBack,
   hide,
   supportedWallets,
   isVisible,
+  createWalletInstance,
+  setConnectedWallet,
+  setConnectionStatus,
 }: Omit<
   ConnectUIProps<WalletConnect>,
   | "isOpen"
@@ -65,9 +62,6 @@ export function WalletConnectUI({
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [searchWallets, setSearchWallets] = useState<WCWallet[]>([]);
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
   const [isVisibleInternal, setIsVisibleInternal] = useState<
     boolean | undefined
   >(isVisible);
@@ -151,7 +145,7 @@ export function WalletConnectUI({
   }, [search, wallets]);
 
   const onChooseWalletItem = (walletMeta: WCWallet) => {
-    const wcWallet = createWalletInstance(walletConfig);
+    const wcWallet = createWalletInstance();
     wcWallet.setWCLinks(walletMeta.links);
 
     setConnectionStatus("connecting");

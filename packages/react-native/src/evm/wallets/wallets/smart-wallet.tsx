@@ -1,4 +1,5 @@
 import {
+  ConnectUIProps,
   useAddress,
   useConnect,
   useWalletContext,
@@ -46,7 +47,7 @@ export const smartWallet = (
         walletStorage: createAsyncLocalStorage("smart-wallet"),
       }),
     connectUI(props) {
-      return <SmartWalletFlow {...props} personalWalletConfig={wallet} />;
+      return <SmartConnectUI {...props} personalWalletConfig={wallet} />;
     },
     selectUI: WalletSelectUI
       ? (props) => {
@@ -79,4 +80,22 @@ export const smartWallet = (
       : undefined,
     personalWallets: [wallet],
   };
+};
+
+export const SmartConnectUI = (
+  props: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig },
+) => {
+  const { walletConfig } = props;
+  const { personalWalletConfig } = props;
+  const { personalWalletConnection } = useWalletContext();
+
+  return (
+    <SmartWalletFlow
+      {...props}
+      smartWalletConfig={walletConfig}
+      personalWalletConfig={personalWalletConfig}
+      personalWallet={personalWalletConnection.activeWallet}
+      personalWalletChainId={personalWalletConnection.chainId || 1}
+    />
+  );
 };

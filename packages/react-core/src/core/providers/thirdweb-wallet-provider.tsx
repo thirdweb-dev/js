@@ -1,8 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import type {
-  ConnectionStatus,
   WalletConfig,
-  WalletConnectParams,
   WalletInstance,
   WalletOptions,
 } from "../types/wallet";

@@ -61,6 +61,17 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   isHeadless?: boolean;
 };
 
+export type NonNullable<T> = T extends null | undefined ? never : T;
+export type WalletConnectParams<I extends WalletInstance> = Parameters<
+  I["connect"]
+>[0];
+
+type ConnectArgs<I extends WalletInstance> =
+  // if second argument is optional
+  undefined extends WalletConnectParams<I>
+    ? [connectParams?: NonNullable<WalletConnectParams<I>>]
+    : [connectParams: NonNullable<WalletConnectParams<I>>];
+
 /**
  * @wallet
  */

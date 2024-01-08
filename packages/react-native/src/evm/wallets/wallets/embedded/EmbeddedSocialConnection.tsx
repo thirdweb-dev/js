@@ -2,20 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import {
-  ConnectUIProps,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, Text, WalletButton } from "../../../components/base";
 import { AUTH_OPTIONS_ICONS, SocialLogin } from "../../types/embedded-wallet";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
-> = ({ goBack, selectionData, onLocallyConnected }) => {
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
+> = ({
+  goBack,
+  selectionData,
+  onLocallyConnected,
+  setConnectedWallet,
+  setConnectionStatus,
+}) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const handleSocialLogin = useCallback(() => {
@@ -36,7 +36,7 @@ export const EmbeddedSocialConnection: React.FC<
           if (onLocallyConnected) {
             onLocallyConnected(selectionData.emailWallet);
           } else {
-            await setConnectedWallet(selectionData.emailWallet);
+            setConnectedWallet(selectionData.emailWallet);
             setConnectionStatus("connected");
           }
         } else {
