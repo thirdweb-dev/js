@@ -22,7 +22,9 @@ import {
   FormLabel,
   CodeBlock,
   TrackedLink,
+  ChakraNextLink,
 } from "tw-components";
+import { ChakraNextImage } from "components/Image";
 import { format } from "prettier/standalone";
 import parserBabel from "prettier/plugins/babel";
 import estree from "prettier/plugins/estree";
@@ -1234,6 +1236,33 @@ export const ConnectWalletPlayground: React.FC<{
                 trackCustomize("code");
               }}
             />
+            <Spacer height={2} />
+            <Box
+              as="article"
+              bg="bgWhite"
+              border="1px solid"
+              borderColor="borderColor"
+              borderRadius="lg"
+              overflow="hidden"
+              py="8"
+              px="8"
+            >
+              <Heading fontSize={20}>Try it out on mobile</Heading>
+              <Heading as="label" size="label.sm">
+                (iOS demo app coming soon)
+              </Heading>
+              <Spacer height={2} />
+              <ChakraNextLink
+                href={
+                  "https://play.google.com/store/search?q=thirdweb&c=apps&hl=en_US&gl=US"
+                }
+              >
+                <ChakraNextImage
+                  alt=""
+                  src={require("public/assets/connect-wallet/google-play-button.svg")}
+                />
+              </ChakraNextLink>
+            </Box>
           </Box>
         </GridItem>
       </Grid>
