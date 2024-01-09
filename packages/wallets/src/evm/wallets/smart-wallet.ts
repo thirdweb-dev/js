@@ -4,6 +4,7 @@ import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
+  TransactionOptions,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 import {
@@ -29,7 +30,7 @@ export {
   getUserOpReceipt,
 } from "../connectors/smart-wallet/utils";
 
-export type { PaymasterAPI } from "@account-abstraction/sdk";
+export type { UserOperationStruct } from "@account-abstraction/contracts";
 
 /**
  * Let your users connect to a [Smart Wallet](/glossary/smart-wallet).
@@ -384,12 +385,16 @@ export class SmartWallet extends AbstractClientWallet<
 
   /**
    * Send a single transaction without waiting for confirmations
-   * @param transaction - The transaction to send
+   * @param transaction - the transaction to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
-  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
+  async send(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.send(transaction);
+    return connector.send(transaction, options);
   }
 
   /**
@@ -405,12 +410,15 @@ export class SmartWallet extends AbstractClientWallet<
    * The transaction to execute. Must be of type `Transaction` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
    *
    * Creating these transactions can be done easily using the [Transaction Builder](https://portal.thirdweb.com/typescript/v4/interact#prepare) from the thirdweb SDK.
-   *
+   * @param options - optional transaction options
    * @returns `TransactionResult` containing the transaction receipt.
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
+  async execute(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.execute(transaction);
+    return connector.execute(transaction, options);
   }
 
   /**
@@ -419,14 +427,15 @@ export class SmartWallet extends AbstractClientWallet<
    * An array of transactions to send. Must be of type `Transaction[]` from the [`@thirdweb-dev/sdk`](https://www.npmjs.com/package/\@thirdweb-dev/sdk) package.
    *
    * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
-   *
+   * @param options - optional transaction options
    * @returns `TransactionResult` containing the transaction receipt.
    */
   async sendBatch(
     transactions: Transaction[],
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatch(transactions);
+    return connector.sendBatch(transactions, options);
   }
 
   /**
@@ -447,105 +456,124 @@ export class SmartWallet extends AbstractClientWallet<
    *
    * Creating these transactions can be done easily using the [Transaction Builder](typescript/sdk.smartcontract.prepare) from the thirdweb SDK.
    *
+   * @param options - optional transaction options
    * @returns `TransactionResult` containing the transaction receipt.
    */
   async executeBatch(
     transactions: Transaction<any>[],
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatch(transactions);
+    return connector.executeBatch(transactions, options);
   }
 
   /**
    * Send a single raw transaction without waiting for confirmations
-   * @param transaction - The transaction to send
+   * @param transaction - the transaction to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendRaw(transaction);
+    return connector.sendRaw(transaction, options);
   }
 
   /**
    * Execute a single raw transaction and wait for confirmations
-   * @param transaction - The transaction to execute
+   * @param transaction - the transaction to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeRaw(transaction);
+    return connector.executeRaw(transaction, options);
   }
 
   /**
    * Estimate the gas cost of a single transaction
-   * @param transaction - The transaction to estimate
+   * @param transaction - the transaction to estimate
+   * @param options - optional transaction options
    * @returns
    */
-  async estimate(transaction: Transaction<any>) {
+  async estimate(transaction: Transaction<any>, options?: TransactionOptions) {
     const connector = await this.getConnector();
-    return connector.estimate(transaction);
+    return connector.estimate(transaction, options);
   }
 
   /**
    * Estimate the gas cost of a batch of transactions
-   * @param transactions - The transactions to estimate
+   * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
-  async estimateBatch(transactions: Transaction<any>[]) {
+  async estimateBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ) {
     const connector = await this.getConnector();
-    return connector.estimateBatch(transactions);
+    return connector.estimateBatch(transactions, options);
   }
 
   /**
    * Estimate the gas cost of a single raw transaction
-   * @param transactions - The transactions to estimate
+   * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
   async estimateRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ) {
     const connector = await this.getConnector();
-    return connector.estimateRaw(transactions);
+    return connector.estimateRaw(transactions, options);
   }
 
   /**
    * Estimate the gas cost of a batch of raw transactions
-   * @param transactions - The transactions to estimate
+   * @param transactions - the transactions to estimate
+   * @param options - optional transaction options
    * @returns
    */
   async estimateBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ) {
     const connector = await this.getConnector();
-    return connector.estimateBatchRaw(transactions);
+    return connector.estimateBatchRaw(transactions, options);
   }
 
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
-   * @param transactions - The transactions to send
+   * @param transactions - the transactions to send
+   * @param options - optional transaction options
    * @returns The transaction result
    */
   async sendBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     const connector = await this.getConnector();
-    return connector.sendBatchRaw(transactions);
+    return connector.sendBatchRaw(transactions, options);
   }
 
   /**
    * Execute multiple raw transactions in a single batch and wait for confirmations
-   * @param transactions - The transactions to execute
+   * @param transactions - the transactions to execute
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.executeBatchRaw(transactions);
+    return connector.executeBatchRaw(transactions, options);
   }
 
   /**
@@ -557,12 +585,12 @@ export class SmartWallet extends AbstractClientWallet<
    * ```ts
    * const tx = await wallet.deploy();
    * ```
-   *
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
-  async deploy(): Promise<TransactionResult> {
+  async deploy(options?: TransactionOptions): Promise<TransactionResult> {
     const connector = await this.getConnector();
-    return connector.deploy();
+    return connector.deploy(options);
   }
 
   /**
@@ -573,12 +601,12 @@ export class SmartWallet extends AbstractClientWallet<
    * ```ts
    * await wallet.deployIfNeeded();
    * ```
-   *
+   * @param options - optional transaction options
    * @returns The transaction receipt
    */
-  async deployIfNeeded(): Promise<void> {
+  async deployIfNeeded(options?: TransactionOptions): Promise<void> {
     const connector = await this.getConnector();
-    return connector.deployIfNeeded();
+    return connector.deployIfNeeded(options);
   }
 
   /**
