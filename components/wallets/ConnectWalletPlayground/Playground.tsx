@@ -1256,6 +1256,7 @@ export const ConnectWalletPlayground: React.FC<{
                 href={
                   "https://play.google.com/store/search?q=thirdweb&c=apps&hl=en_US&gl=US"
                 }
+                isExternal
               >
                 <ChakraNextImage
                   alt=""
