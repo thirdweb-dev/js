@@ -1,5 +1,5 @@
 import { flatten } from "flat";
-import posthog from "posthog-js";
+import posthog from "posthog-js-opensource";
 import { useCallback } from "react";
 
 type TExtendedTrackParams = {

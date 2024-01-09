@@ -10,7 +10,8 @@ import type { AppProps } from "next/app";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import posthog from "posthog-js";
+import posthogOpenSource from "posthog-js-opensource";
+import posthogCloud from "posthog-js";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
@@ -70,8 +71,21 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   }, []);
 
   useEffect(() => {
+    // Init PostHog Cloud (Used for surveys)
+    posthogCloud.init(
+      process.env.NEXT_PUBLIC_POSTHOG_CLOUD_API_KEY ||
+        "phc_oXH0qpLTaotkIQP5MdaWhtoOXvh1Iba7yNSQrLgWbLN",
+      {
+        api_host: "https://pg.paper.xyz",
+        autocapture: true,
+        debug: false,
+        capture_pageview: false,
+        disable_session_recording: true,
+      },
+    );
+
     // Init PostHog
-    posthog.init(
+    posthogOpenSource.init(
       process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
         "phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV",
       {
@@ -83,12 +97,12 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
       },
     );
     // register the git commit sha on all subsequent events
-    posthog.register({
+    posthogOpenSource.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
     });
     // defer session recording start by 2 seconds because it synchronously loads JS
     const t = setTimeout(() => {
-      posthog.startSessionRecording();
+      posthogOpenSource.startSessionRecording();
     }, 2_000);
     return () => {
       clearTimeout(t);
@@ -107,11 +121,11 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     if (pageId === prevPageId.current) {
       return;
     }
-    posthog.register({
+    posthogOpenSource.register({
       page_id: pageId,
       previous_page_id: prevPageId.current,
     });
-    posthog.capture("$pageview");
+    posthogOpenSource.capture("$pageview");
     return () => {
       prevPageId.current = pageId;
     };

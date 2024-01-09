@@ -1,5 +1,5 @@
 import { Flex, Link } from "@chakra-ui/react";
-import posthog from "posthog-js";
+import posthog from "posthog-js-opensource";
 import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
