@@ -29,5 +29,5 @@ export default {
   "slip44": 1,
   "slug": "fraxchain-testnet",
   "status": "active",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
