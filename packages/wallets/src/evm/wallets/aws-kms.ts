@@ -1,5 +1,5 @@
 import { AbstractWallet } from "./abstract";
-import type { Signer } from "ethers";
+import { ethers, TypedDataDomain, type Signer, TypedDataField } from "ethers";
 import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
 /**
@@ -44,7 +44,23 @@ export class AwsKmsWallet extends AbstractWallet {
       this.#signer = new Promise(async (resolve, reject) => {
         try {
           const { AwsKmsSigner } = await import("ethers-aws-kms-signer");
-          resolve(new AwsKmsSigner(this.#options));
+          const signer = new AwsKmsSigner(this.#options);
+
+          // Need to add this because ethers-aws-kms-signer doesn't support
+          (signer as any)._signTypedData = async function (
+            domain: TypedDataDomain,
+            types: Record<string, Array<TypedDataField>>,
+            value: Record<string, any>,
+          ) {
+            const hash = ethers.utils._TypedDataEncoder.hash(
+              domain,
+              types,
+              value,
+            );
+            return signer._signDigest(hash);
+          };
+
+          resolve(signer);
         } catch (err) {
           // remove the cached promise so we can try again
           this.#signer = undefined;
