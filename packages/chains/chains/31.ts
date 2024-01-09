@@ -33,6 +33,7 @@ export default {
     "https://mycrypto.testnet.rsk.co"
   ],
   "shortName": "trsk",
+  "slip44": 1,
   "slug": "rootstock-testnet",
   "testnet": true
 } as const satisfies Chain;

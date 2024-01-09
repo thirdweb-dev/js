@@ -41,6 +41,7 @@ export default {
     "wss://ws-rpc.testnet.lukso.network"
   ],
   "shortName": "lukso-testnet",
+  "slip44": 1,
   "slug": "lukso-testnet",
   "testnet": true
 } as const satisfies Chain;

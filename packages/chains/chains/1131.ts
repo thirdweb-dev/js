@@ -20,6 +20,7 @@ export default {
   "networkId": 1131,
   "rpc": [],
   "shortName": "DFI-T",
+  "slip44": 1,
   "slug": "defichain-evm-network-testnet",
   "status": "incubating",
   "testnet": true

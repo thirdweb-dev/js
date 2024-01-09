@@ -38,6 +38,7 @@ export default {
     "https://rpc-test.tresleches.finance/"
   ],
   "shortName": "TRESTEST",
+  "slip44": 1,
   "slug": "tres-testnet",
   "testnet": true
 } as const satisfies Chain;

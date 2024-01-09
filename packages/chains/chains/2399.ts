@@ -38,6 +38,7 @@ export default {
     "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
   ],
   "shortName": "bombt",
+  "slip44": 1,
   "slug": "bomb-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

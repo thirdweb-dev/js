@@ -24,6 +24,7 @@ export default {
     "https://testrpc.genesisl1.org"
   ],
   "shortName": "L1test",
+  "slip44": 1,
   "slug": "genesis-l1-testnet",
   "testnet": true
 } as const satisfies Chain;

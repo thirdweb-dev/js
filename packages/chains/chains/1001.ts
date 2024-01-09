@@ -12,6 +12,7 @@ export default {
   "faucets": [
     "https://baobab.wallet.klaytn.com/access?next=faucet"
   ],
+  "features": [],
   "infoURL": "https://www.klaytn.com/",
   "name": "Klaytn Testnet Baobab",
   "nativeCurrency": {
@@ -20,12 +21,15 @@ export default {
     "decimals": 18
   },
   "networkId": 1001,
+  "redFlags": [],
   "rpc": [
     "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://klaytn-baobab.blockpi.network/v1/rpc/public",
     "https://api.baobab.klaytn.net:8651"
   ],
   "shortName": "Baobab",
+  "slip44": 1,
   "slug": "klaytn-testnet-baobab",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

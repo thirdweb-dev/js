@@ -24,6 +24,7 @@ export default {
     "https://testnet.aurora.dev/"
   ],
   "shortName": "aurora-testnet",
+  "slip44": 1,
   "slug": "aurora-testnet",
   "testnet": true
 } as const satisfies Chain;

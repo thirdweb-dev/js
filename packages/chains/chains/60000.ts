@@ -26,6 +26,7 @@ export default {
     "https://test.thinkiumrpc.net/"
   ],
   "shortName": "TKM-test0",
+  "slip44": 1,
   "slug": "thinkium-testnet-chain-0",
   "testnet": true
 } as const satisfies Chain;

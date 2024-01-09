@@ -29,6 +29,7 @@ export default {
     "https://web3-rpc-mesos.thestratos.org"
   ],
   "shortName": "stos-testnet",
+  "slip44": 1,
   "slug": "stratos-testnet",
   "testnet": true
 } as const satisfies Chain;

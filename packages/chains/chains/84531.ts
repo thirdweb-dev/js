@@ -60,6 +60,7 @@ export default {
     "wss://base-goerli.publicnode.com"
   ],
   "shortName": "basegor",
+  "slip44": 1,
   "slug": "base-goerli",
   "testnet": true
 } as const satisfies Chain;

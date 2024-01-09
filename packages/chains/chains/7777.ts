@@ -28,6 +28,7 @@ export default {
     "https://testnet5.riseofthewarbots.com"
   ],
   "shortName": "RiseOfTheWarbotsTestnet",
+  "slip44": 1,
   "slug": "rise-of-the-warbots-testnet",
   "testnet": true
 } as const satisfies Chain;

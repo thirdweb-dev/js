@@ -26,6 +26,7 @@ export default {
     "https://api.testnet-dev.trust.one"
   ],
   "shortName": "TrustTestnet",
+  "slip44": 1,
   "slug": "trust-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

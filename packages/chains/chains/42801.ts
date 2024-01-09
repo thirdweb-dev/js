@@ -30,6 +30,7 @@ export default {
     "https://rpc.testnet.verse.gesoten.com/"
   ],
   "shortName": "GST",
+  "slip44": 1,
   "slug": "gesoten-verse-testnet",
   "testnet": true
 } as const satisfies Chain;

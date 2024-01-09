@@ -33,6 +33,7 @@ export default {
     "https://json-rpc.evm.testnet.shimmer.network"
   ],
   "shortName": "shimmerevm-testnet",
+  "slip44": 1,
   "slug": "shimmerevm-testnet",
   "testnet": true,
   "title": "ShimmerEVM Testnet"

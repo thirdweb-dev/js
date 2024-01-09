@@ -21,6 +21,7 @@ export default {
     "wss://rpc.v2.testnet.pulsechain.com/"
   ],
   "shortName": "tpls",
+  "slip44": 1,
   "slug": "pulsechain-testnet",
   "status": "deprecated",
   "testnet": true

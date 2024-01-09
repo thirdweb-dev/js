@@ -14,6 +14,7 @@ export default {
   "networkId": 2,
   "rpc": [],
   "shortName": "tclo",
+  "slip44": 1,
   "slug": "callisto-testnet-deprecated",
   "status": "deprecated",
   "testnet": true

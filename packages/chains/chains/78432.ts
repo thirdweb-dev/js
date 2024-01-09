@@ -29,6 +29,7 @@ export default {
     "https://subnets.avax.network/conduit/testnet/rpc"
   ],
   "shortName": "conduit",
+  "slip44": 1,
   "slug": "conduit-subnet",
   "testnet": true
 } as const satisfies Chain;

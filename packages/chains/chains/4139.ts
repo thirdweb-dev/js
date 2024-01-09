@@ -32,6 +32,7 @@ export default {
     "https://evm-rpc.testnet.humans.zone"
   ],
   "shortName": "humans_testnet",
+  "slip44": 1,
   "slug": "humans-ai-testnet",
   "testnet": true
 } as const satisfies Chain;

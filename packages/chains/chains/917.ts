@@ -26,6 +26,7 @@ export default {
     "https://rinia.rpc1.thefirechain.com"
   ],
   "shortName": "tfire",
+  "slip44": 1,
   "slug": "rinia-testnet",
   "status": "incubating",
   "testnet": true

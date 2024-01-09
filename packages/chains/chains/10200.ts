@@ -42,6 +42,7 @@ export default {
     "wss://gnosis-chiado.publicnode.com"
   ],
   "shortName": "chi",
+  "slip44": 1,
   "slug": "gnosis-chiado-testnet",
   "testnet": true
 } as const satisfies Chain;

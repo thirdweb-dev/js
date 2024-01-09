@@ -35,6 +35,7 @@ export default {
     "https://asia-rpc-opal.unique.network"
   ],
   "shortName": "opl",
+  "slip44": 1,
   "slug": "opal-testnet-by-unique",
   "testnet": true
 } as const satisfies Chain;

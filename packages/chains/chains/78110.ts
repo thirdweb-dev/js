@@ -18,6 +18,7 @@ export default {
     "https://ethnode.primusmoney.com/firenze"
   ],
   "shortName": "firenze",
+  "slip44": 1,
   "slug": "firenze-test-network",
   "testnet": true
 } as const satisfies Chain;

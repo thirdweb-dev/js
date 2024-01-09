@@ -18,6 +18,7 @@ export default {
     "https://www.krotho-test.net"
   ],
   "shortName": "Kortho",
+  "slip44": 1,
   "slug": "korthotest",
   "testnet": true
 } as const satisfies Chain;

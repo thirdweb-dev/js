@@ -36,6 +36,7 @@ export default {
     "https://sepolia.base.org"
   ],
   "shortName": "basesep",
+  "slip44": 1,
   "slug": "base-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

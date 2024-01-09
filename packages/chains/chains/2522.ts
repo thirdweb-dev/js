@@ -26,6 +26,7 @@ export default {
     "https://rpc.testnet.frax.com"
   ],
   "shortName": "fraxchain-testnet",
+  "slip44": 1,
   "slug": "fraxchain-testnet",
   "status": "active",
   "testnet": false

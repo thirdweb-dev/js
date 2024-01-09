@@ -24,7 +24,7 @@ export default {
     "https://testnet-rpc.gochain.io"
   ],
   "shortName": "got",
-  "slip44": 6060,
+  "slip44": 1,
   "slug": "gochain-testnet",
   "testnet": true
 } as const satisfies Chain;

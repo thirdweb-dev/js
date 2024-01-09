@@ -30,6 +30,7 @@ export default {
     "https://wannsee-rpc.mxc.com"
   ],
   "shortName": "MXC",
+  "slip44": 1,
   "slug": "mxc-wannsee-zkevm-testnet",
   "testnet": true
 } as const satisfies Chain;

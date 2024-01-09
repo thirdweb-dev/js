@@ -39,6 +39,7 @@ export default {
     "https://test-eth.reapchain.org"
   ],
   "shortName": "reap-testnet",
+  "slip44": 1,
   "slug": "reapchain-testnet",
   "testnet": true
 } as const satisfies Chain;

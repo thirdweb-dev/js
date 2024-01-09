@@ -36,6 +36,7 @@ export default {
     "wss://avalanche-fuji-c-chain.publicnode.com"
   ],
   "shortName": "Fuji",
+  "slip44": 1,
   "slug": "avalanche-fuji",
   "testnet": true
 } as const satisfies Chain;

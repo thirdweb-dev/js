@@ -28,6 +28,7 @@ export default {
     "https://x1testrpc.okx.com"
   ],
   "shortName": "tokb",
+  "slip44": 1,
   "slug": "x1-testnet",
   "status": "active",
   "testnet": true

@@ -38,6 +38,7 @@ export default {
     "wss://boba-bnb-testnet.gateway.tenderly.co"
   ],
   "shortName": "BobaBnbTestnet",
+  "slip44": 1,
   "slug": "boba-bnb-testnet",
   "testnet": true
 } as const satisfies Chain;

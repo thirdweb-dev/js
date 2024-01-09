@@ -30,6 +30,7 @@ export default {
     "https://network.ambrosus-test.io"
   ],
   "shortName": "airdao-test",
+  "slip44": 1,
   "slug": "airdao-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -33,6 +33,7 @@ export default {
     "wss://testnet.emerald.oasis.dev/ws"
   ],
   "shortName": "emerald-testnet",
+  "slip44": 1,
   "slug": "oasis-emerald-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -30,6 +30,7 @@ export default {
     "https://node1.testnet.ozonechain.io"
   ],
   "shortName": "ozo_tst",
+  "slip44": 1,
   "slug": "ozone-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

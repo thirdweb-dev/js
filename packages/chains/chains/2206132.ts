@@ -33,6 +33,7 @@ export default {
     "wss://devnet2openapi.platon.network/ws"
   ],
   "shortName": "platondev2",
+  "slip44": 1,
   "slug": "platon-dev-testnet2",
   "testnet": true
 } as const satisfies Chain;
