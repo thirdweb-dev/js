@@ -1,5 +1,17 @@
 # @thirdweb-dev/wallets
 
+## 2.4.0
+
+### Minor Changes
+
+- [#2098](https://github.com/thirdweb-dev/js/pull/2098) [`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - - Add options to override gasless per transaction
+  - Better userOp estimations
+  - Performance optimisations
+
+### Patch Changes
+
+- [#2125](https://github.com/thirdweb-dev/js/pull/2125) [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb) Thanks [@adam-maj](https://github.com/adam-maj)! - Add signTypedData to AwsKmsWallet
+
 ## 2.3.4
 
 ### Patch Changes

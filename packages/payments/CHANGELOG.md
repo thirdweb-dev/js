@@ -1,5 +1,11 @@
 # @thirdweb-dev/payments
 
+## 1.0.2
+
+### Patch Changes
+
+- [#2133](https://github.com/thirdweb-dev/js/pull/2133) [`b3cf65b9`](https://github.com/thirdweb-dev/js/commit/b3cf65b9dbdab22a452d2c597d21a14300b2d174) Thanks [@IDubuque](https://github.com/IDubuque)! - Minor bug fix importing package.json
+
 ## 1.0.1
 
 ### Patch Changes

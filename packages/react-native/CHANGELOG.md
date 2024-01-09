@@ -1,5 +1,21 @@
 # @thirdweb-dev/react-native
 
+## 0.5.6
+
+### Patch Changes
+
+- [#2131](https://github.com/thirdweb-dev/js/pull/2131) [`f953c72c`](https://github.com/thirdweb-dev/js/commit/f953c72c4e273feefcbd905876b15e7346b45740) Thanks [@iketw](https://github.com/iketw)! - Fix custom balance token display in details button
+
+- [#2137](https://github.com/thirdweb-dev/js/pull/2137) [`7d07490e`](https://github.com/thirdweb-dev/js/commit/7d07490ed3ec80aa33a991f38b3831996d49fb09) Thanks [@iketw](https://github.com/iketw)! - Adds hideDisconnect prop to hide the disconnect button
+
+  ```ts
+  <ConnectWallet hideDisconnect={true} />
+  ```
+
+- Updated dependencies [[`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f), [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb)]:
+  - @thirdweb-dev/wallets@2.4.0
+  - @thirdweb-dev/react-core@4.2.3
+
 ## 0.5.5
 
 ### Patch Changes
