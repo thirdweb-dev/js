@@ -97,6 +97,7 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
   hideSwitchToPersonalWallet?: boolean;
+  hideDisconnect?: boolean;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
@@ -331,22 +332,24 @@ export const ConnectedWalletDetails: React.FC<{
               </IconButton>
             </div>
 
-            <ToolTip
-              tip={locale.disconnectWallet}
-              side="bottom"
-              align={"end"}
-              sideOffset={10}
-            >
-              <DisconnectIconButton
-                type="button"
-                onClick={() => {
-                  disconnect();
-                  props.onDisconnect();
-                }}
+            {!props.hideDisconnect && (
+              <ToolTip
+                tip={locale.disconnectWallet}
+                side="bottom"
+                align={"end"}
+                sideOffset={10}
               >
-                <ExitIcon size={iconSize.md} />
-              </DisconnectIconButton>
-            </ToolTip>
+                <DisconnectIconButton
+                  type="button"
+                  onClick={() => {
+                    disconnect();
+                    props.onDisconnect();
+                  }}
+                >
+                  <ExitIcon size={iconSize.md} />
+                </DisconnectIconButton>
+              </ToolTip>
+            )}
           </Container>
 
           {/* row 2 */}
