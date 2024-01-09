@@ -1,6 +1,5 @@
 // CHANGED: packageJson import + version string
-// eslint-disable-next-line @typescript-eslint/no-var-requires, better-tree-shaking/no-top-level-side-effects
-const packageJson = require("../package.json");
+import packageJson from "../../package.json";
 
 export interface PaperPaymentElementConstructorArgs {
   onLoad?: (event?: Event) => void;
