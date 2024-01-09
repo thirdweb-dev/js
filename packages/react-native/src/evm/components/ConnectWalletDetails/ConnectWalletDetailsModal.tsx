@@ -47,6 +47,7 @@ export const ConnectWalletDetailsModal = ({
   hideSwitchToPersonalWallet,
   hideReceiveButton,
   hideSendButton,
+  hideDisconnect,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
@@ -58,6 +59,7 @@ export const ConnectWalletDetailsModal = ({
   hideSwitchToPersonalWallet?: boolean;
   hideReceiveButton?: boolean;
   hideSendButton?: boolean;
+  hideDisconnect?: boolean;
 }) => {
   const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -230,6 +232,7 @@ export const ConnectWalletDetailsModal = ({
             <WalletDetailsModalHeader
               tokenAddress={tokenAddress}
               address={address}
+              hideDisconnect={hideDisconnect}
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
