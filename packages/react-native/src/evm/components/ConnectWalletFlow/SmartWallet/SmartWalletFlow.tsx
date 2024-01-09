@@ -27,7 +27,6 @@ export const SmartWalletFlow = ({
   hide,
   ...props
 }: ConnectUIProps<SmartWallet> & {
-  smartWalletConfig: WalletConfig<SmartWallet>;
   personalWalletConfig: WalletConfig;
   personalWallet?: WalletInstance;
   personalWalletChainId: number;
@@ -117,6 +116,8 @@ export const SmartWalletFlow = ({
       },
       setConnectedWallet(wallet) {
         personalWalletConnection.setConnectedWallet(wallet);
+        setConnectedPersonalWallet(wallet);
+        connectSmartWallet(wallet);
       },
       setConnectionStatus(status) {
         personalWalletConnection.setConnectionStatus(status);

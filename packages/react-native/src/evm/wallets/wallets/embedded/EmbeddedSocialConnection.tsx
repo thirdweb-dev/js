@@ -9,13 +9,7 @@ import { AUTH_OPTIONS_ICONS, SocialLogin } from "../../types/embedded-wallet";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
-> = ({
-  goBack,
-  selectionData,
-  onLocallyConnected,
-  setConnectedWallet,
-  setConnectionStatus,
-}) => {
+> = ({ goBack, selectionData, setConnectedWallet, setConnectionStatus }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const handleSocialLogin = useCallback(() => {
@@ -33,12 +27,8 @@ export const EmbeddedSocialConnection: React.FC<
         const response = await embeddedWallet.connect({ authResult });
 
         if (response) {
-          if (onLocallyConnected) {
-            onLocallyConnected(selectionData.emailWallet);
-          } else {
-            setConnectedWallet(selectionData.emailWallet);
-            setConnectionStatus("connected");
-          }
+          setConnectedWallet(selectionData.emailWallet);
+          setConnectionStatus("connected");
         } else {
           setErrorMessage(
             response || "Error signing in. Please try again later.",
@@ -53,9 +43,9 @@ export const EmbeddedSocialConnection: React.FC<
       }
     }, 0);
   }, [
-    onLocallyConnected,
     selectionData.emailWallet,
-    selectionData.oauthOptions,
+    selectionData.oauthOptions?.provider,
+    selectionData.oauthOptions?.redirectUrl,
     setConnectedWallet,
     setConnectionStatus,
   ]);

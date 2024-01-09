@@ -1,7 +1,5 @@
 import {
   ConnectUIProps,
-  useAddress,
-  useConnect,
   useWalletContext,
   type WalletConfig,
   type WalletOptions,
@@ -51,29 +49,30 @@ export const smartWallet = (
     },
     selectUI: WalletSelectUI
       ? (props) => {
-          // TEMP BUILD FIX
-          const connect = useConnect();
-          const address = useAddress();
-          const {
-            setConnectedWallet,
-            setConnectionStatus,
-            connectionStatus,
-            createWalletInstance,
-            activeWallet,
-          } = useWalletContext();
+          const { personalWalletConnection } = useWalletContext();
 
           return (
             <WalletSelectUI
-              {...props}
               walletConfig={wallet}
-              // TEMPORARY BUILD FIX
-              connect={(options: any) => connect(wallet, options)}
-              connectedWallet={activeWallet}
-              connectedWalletAddress={address}
-              connectionStatus={connectionStatus}
-              createWalletInstance={() => createWalletInstance(wallet)}
-              setConnectedWallet={setConnectedWallet}
-              setConnectionStatus={setConnectionStatus}
+              connect={(options: any) => {
+                return personalWalletConnection.connectWallet(wallet, options);
+              }}
+              createWalletInstance={() => {
+                return personalWalletConnection.createWalletInstance(wallet);
+              }}
+              setConnectedWallet={(walletInstance) => {
+                personalWalletConnection.setConnectedWallet(walletInstance);
+              }}
+              setConnectionStatus={(status) => {
+                personalWalletConnection.setConnectionStatus(status);
+              }}
+              connectionStatus={personalWalletConnection.connectionStatus}
+              supportedWallets={props.supportedWallets}
+              theme={props.theme}
+              connectedWallet={personalWalletConnection.activeWallet}
+              connectedWalletAddress={personalWalletConnection.address}
+              modalSize={props.modalSize}
+              onSelect={props.onSelect}
             />
           );
         }
@@ -85,14 +84,11 @@ export const smartWallet = (
 export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig },
 ) => {
-  const { walletConfig, personalWalletConfig } = props;
   const { personalWalletConnection } = useWalletContext();
 
   return (
     <SmartWalletFlow
       {...props}
-      smartWalletConfig={walletConfig}
-      personalWalletConfig={personalWalletConfig}
       personalWallet={personalWalletConnection.activeWallet}
       personalWalletChainId={personalWalletConnection.chainId || 1}
     />

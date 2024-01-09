@@ -4,7 +4,6 @@ import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   WalletConfig,
   useAddress,
-  useConnect,
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
@@ -40,7 +39,6 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
   const theme = useColorScheme();
   const appTheme = useGlobalTheme();
-  const connect = useConnect();
   // TEMP BUILD FIX
   const address = useAddress();
   const {
@@ -48,6 +46,7 @@ export const ConnectWalletFlow = () => {
     setConnectedWallet,
     setConnectionStatus,
     connectionStatus,
+    connect,
     createWalletInstance,
   } = useWalletContext();
 
