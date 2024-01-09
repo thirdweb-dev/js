@@ -587,6 +587,12 @@ export const CreateUpdateCheckoutButton: React.FC<
       return;
     }
     setStep((prev) => {
+      trackEvent({
+        category: "payments",
+        action: checkoutId ? "update-checkout" : "create-checkout",
+        label: "next-step",
+        previousStep: prev,
+      });
       if (prev === "info" && !hasDetectedExtensions) {
         return "no-detected-extensions";
       }
