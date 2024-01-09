@@ -17,7 +17,7 @@ const GUIDES = [
   {
     title: "The Quick-Start Guide to Account Abstraction",
     image: require("/public/assets/product-pages/smart-wallet/get-started.png"),
-    link: "https://portal.thirdweb.com/smart-wallet/getting%20started",
+    link: "https://portal.thirdweb.com/smart-wallet/getting-started",
   },
   {
     title: "Choosing Between Simple, Managed, & Dynamic Smart Wallets",
