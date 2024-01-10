@@ -56,6 +56,8 @@ export type ConnectWalletDetailsProps = {
    * The default is `false`
    */
   hideReceiveButton?: boolean;
+
+  hideDisconnect?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -68,6 +70,7 @@ export const WalletDetailsButton = ({
   supportedTokens,
   displayBalanceToken,
   hideSwitchToPersonalWallet,
+  hideDisconnect,
 }: ConnectWalletDetailsProps) => {
   const l = useLocale();
   const activeWallet = useWallet();
@@ -104,6 +107,7 @@ export const WalletDetailsButton = ({
         address={address}
         hideTestnetFaucet={hideTestnetFaucet}
         supportedTokens={supportedTokens}
+        hideDisconnect={hideDisconnect}
         tokenAddress={tokenAddress}
         hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
         hideReceiveButton={hideReceiveButton}

@@ -20,6 +20,7 @@ export type {
   AbstractWallet,
   WalletData,
   WalletEvents,
+  checkContractWalletSignature,
 } from "./wallets/abstract";
 
 export * from "./wallets/paper-wallet";
