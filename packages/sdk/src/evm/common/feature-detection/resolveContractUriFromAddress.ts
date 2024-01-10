@@ -52,6 +52,12 @@ export async function resolveImplementation(
   }
 
   // check other proxy types
+  const beacon = await getBeaconFromStorageSlot(address, provider); // if the contract is BeaconProxy
+  if (beacon && beacon !== constants.AddressZero) {
+    // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
+    // Hence we replace the proxy address with Beacon address, and continue further resolving below
+    address = beacon as string;
+  }
   const impl = await Promise.all([
     getImplementationFromStorageSlot(address, provider),
     getImplementationFromContractCall(address, provider),
@@ -100,6 +106,30 @@ async function getImplementationFromStorageSlot(
       address,
       BigNumber.from(
         "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+      ),
+    );
+    return `0x${proxyStorage.slice(-40)}`;
+  } catch (e) {
+    return undefined;
+  }
+}
+
+async function getBeaconFromStorageSlot(
+  address: string,
+  provider: providers.Provider,
+) {
+  /**
+   * The storage slot of the Beacon as defined in EIP-1967
+   * See https://eips.ethereum.org/EIPS/eip-1967#beacon-contract-address
+   *
+   * bytes32(uint256(keccak256('eip1967.proxy.beacon')) - 1))
+   */
+
+  try {
+    const proxyStorage = await provider.getStorageAt(
+      address,
+      BigNumber.from(
+        "0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50",
       ),
     );
     return `0x${proxyStorage.slice(-40)}`;
