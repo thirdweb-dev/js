@@ -18,8 +18,9 @@ import {
 } from "@tanstack/react-query";
 import {
   Polygon,
-  ZksyncEra,
-  ZksyncEraTestnet,
+  Zksync,
+  ZksyncEraGoerliTestnetDeprecated,
+  ZksyncSepoliaTestnet,
   getChainByChainId,
 } from "@thirdweb-dev/chains";
 import {
@@ -623,7 +624,9 @@ export function useCustomContractDeployMutation(
 
         // Handle ZkSync deployments separately
         const isZkSync =
-          chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
+          chainId === Zksync.chainId ||
+          chainId === ZksyncSepoliaTestnet.chainId ||
+          chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
 
         // deploy contract
         if (isZkSync) {
@@ -737,8 +740,9 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
 
       // Handle separately for ZkSync
       if (
-        chainId === ZksyncEraTestnet.chainId ||
-        chainId === ZksyncEra.chainId
+        chainId === Zksync.chainId ||
+        chainId === ZksyncSepoliaTestnet.chainId ||
+        chainId === ZksyncEraGoerliTestnetDeprecated.chainId
       ) {
         return await getZkTransactionsForDeploy();
       }

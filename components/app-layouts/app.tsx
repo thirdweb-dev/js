@@ -127,10 +127,9 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
 
   useEffect(() => {
     if (!isProd) {
-      console.debug("IS_PAPER_DEV");
-      localStorage.setItem("IS_PAPER_DEV", "true");
+      localStorage.setItem("IS_THIRDWEB_DEV", "true");
       localStorage.setItem(
-        "PAPER_DEV_URL",
+        "THIRDWEB_DEV_URL",
         "https://embedded-wallet.thirdweb-dev.com",
       );
     }
