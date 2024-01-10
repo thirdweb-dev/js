@@ -39,7 +39,6 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
   const theme = useColorScheme();
   const appTheme = useGlobalTheme();
-  // TEMP BUILD FIX
   const address = useAddress();
   const {
     activeWallet: connectedWallet,
@@ -141,13 +140,13 @@ export const ConnectWalletFlow = () => {
           setSelectionData={() => {}} // TODO
           connect={(options) => {
             return connect(activeWallet, options);
-          }} // TEMP BUILD FIX
+          }}
           connectedWallet={connectedWallet}
           connectedWalletAddress={address}
           connectionStatus={connectionStatus}
           createWalletInstance={() => createWalletInstance(activeWallet)}
-          setConnectedWallet={setConnectedWallet} // TEMP BUILD FIX
-          setConnectionStatus={setConnectionStatus} // TEMP BUILD FIX
+          setConnectedWallet={setConnectedWallet}
+          setConnectionStatus={setConnectionStatus}
         />
       );
     }

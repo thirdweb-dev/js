@@ -112,7 +112,6 @@ export function ChooseWallet({
     }
   };
 
-  // TEMP BUILD FIX
   const connect = useConnect();
   const address = useAddress();
   const {

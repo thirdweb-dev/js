@@ -21,7 +21,6 @@ export const ChooseWalletContent = ({
   onChooseWallet,
 }: ChooseWalletContentProps) => {
   const theme = useTheme();
-  // TEMP BUILD FIX
   const connect = useConnect();
   const address = useAddress();
   const {
