@@ -1,5 +1,20 @@
 # @thirdweb-dev/react
 
+## 4.2.3
+
+### Patch Changes
+
+- [#2122](https://github.com/thirdweb-dev/js/pull/2122) [`0ff90b8f`](https://github.com/thirdweb-dev/js/commit/0ff90b8fba1a0f657d5727fa1a7789bd933a0ad6) Thanks [@b-bot](https://github.com/b-bot)! - Add `hideDisconnect` prop on `ConnectWallet` component to hide the "Disconnect Wallet" option from the ConnectWallet dropdown
+
+  ```tsx
+  <ConnectWallet hideDisconnect={true} />
+  ```
+
+- Updated dependencies [[`b3cf65b9`](https://github.com/thirdweb-dev/js/commit/b3cf65b9dbdab22a452d2c597d21a14300b2d174), [`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f), [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb)]:
+  - @thirdweb-dev/payments@1.0.2
+  - @thirdweb-dev/wallets@2.4.0
+  - @thirdweb-dev/react-core@4.2.3
+
 ## 4.2.2
 
 ### Patch Changes
