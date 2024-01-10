@@ -36,7 +36,11 @@ export async function resolveImplementation(
   address: string,
   provider: providers.Provider,
 ): Promise<{ address: string; bytecode: string }> {
-  const bytecode = await fetchBytecode(address, provider);
+  const fetched = await Promise.all([
+    fetchBytecode(address, provider),
+    getBeaconFromStorageSlot(address, provider),
+  ]);
+  const bytecode = fetched[0];
 
   // check minimal proxy first synchronously
   const minimalProxyImplementationAddress =
@@ -52,7 +56,7 @@ export async function resolveImplementation(
   }
 
   // check other proxy types
-  const beacon = await getBeaconFromStorageSlot(address, provider); // if the contract is BeaconProxy
+  const beacon = fetched[1]; // if the contract is BeaconProxy
   if (beacon && beacon !== constants.AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
