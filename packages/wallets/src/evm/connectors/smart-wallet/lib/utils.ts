@@ -1,30 +1,31 @@
-import { ethers, utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 
-export function toJSON(op: Partial<UserOperationStruct>): Promise<any> {
-  return ethers.utils.resolveProperties(op).then((userOp) =>
-    Object.keys(userOp)
-      .map((key) => {
-        let val = (userOp as any)[key];
-        if (typeof val !== "string" || !val.startsWith("0x")) {
-          val = ethers.utils.hexValue(val);
-        }
-        return [key, val];
-      })
-      .reduce(
-        (set, [k, v]) => ({
-          ...set,
-          [k]: v,
-        }),
-        {},
-      ),
-  );
+export async function hexlifyUserOp(
+  op: Partial<UserOperationStruct>,
+): Promise<any> {
+  const userOp = await utils.resolveProperties(op);
+  return Object.keys(userOp)
+    .map((key) => {
+      let val = (userOp as any)[key];
+      if (typeof val !== "string" || !val.startsWith("0x")) {
+        val = utils.hexValue(val);
+      }
+      return [key, val];
+    })
+    .reduce(
+      (set, [k, v]) => ({
+        ...set,
+        [k]: v,
+      }),
+      {},
+    );
 }
 
 export async function printOp(
   op: Partial<UserOperationStruct>,
 ): Promise<string> {
-  return toJSON(op).then((userOp) => JSON.stringify(userOp, null, 2));
+  return hexlifyUserOp(op).then((userOp) => JSON.stringify(userOp, null, 2));
 }
 
 // v0.6 userOpHash calculation
@@ -100,7 +101,5 @@ export const randomNonce = () => {
     hexString = "0" + hexString;
   }
   hexString = "0x" + hexString;
-  return ethers.BigNumber.from(
-    ethers.utils.concat([hexString, "0x0000000000000000"]),
-  );
+  return BigNumber.from(utils.concat([hexString, "0x0000000000000000"]));
 };

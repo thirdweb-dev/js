@@ -306,6 +306,18 @@ export type ConnectWalletProps = {
    * ```
    */
   hideSwitchToPersonalWallet?: boolean;
+
+  /**
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
+   *
+   * By default it is `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideDisconnect={true} />
+   * ```
+   */
+  hideDisconnect?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -533,6 +545,14 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * <ConnectWallet hideSwitchToPersonalWallet={true} />
  * ```
  *
+ * ### hideDisconnect
+ * Hide the "Disconnect Wallet" button in the ConnectWallet dropdown
+ *
+ * By default it is `false`
+ *
+ * ```tsx
+ * <ConnectWallet hideDisconnect={true} />
+ * ```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -726,6 +746,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               }
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
+            hideDisconnect={props.hideDisconnect}
           />
         );
       })()}
