@@ -1,6 +1,6 @@
 import type { BlockTag } from "@ethersproject/abstract-provider";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   Wallet,
@@ -112,10 +112,14 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       // native token transfer
       const from = await signer.getAddress();
+      const gasOverrides = isBrowser()
+        ? {}
+        : await getDefaultGasOverrides(this.connection.getProvider());
       const tx = await signer.sendTransaction({
         from,
         to: resolvedTo,
         value: amountInWei,
+        ...gasOverrides,
       });
       return {
         receipt: await tx.wait(),
@@ -294,20 +298,14 @@ export class UserWallet {
     transactionRequest: providers.TransactionRequest,
   ): Promise<providers.TransactionResponse> {
     const signer = this.requireWallet();
-    const hasGasPrice = !!transactionRequest.gasPrice;
-    const hasFeeData =
-      !!transactionRequest.maxFeePerGas &&
-      !!transactionRequest.maxPriorityFeePerGas;
-    const hasGasData = hasGasPrice || hasFeeData;
-    if (!hasGasData) {
-      // set default gas values
-      const defaultGas = await getDefaultGasOverrides(
-        this.connection.getProvider(),
-      );
-      transactionRequest.maxFeePerGas = defaultGas.maxFeePerGas;
-      transactionRequest.maxPriorityFeePerGas = defaultGas.maxPriorityFeePerGas;
-      transactionRequest.gasPrice = defaultGas.gasPrice;
-    }
+    // set default gas values
+    const gasOverrides = isBrowser()
+      ? {}
+      : await getDefaultGasOverrides(this.connection.getProvider());
+    transactionRequest = {
+      ...gasOverrides,
+      ...transactionRequest,
+    };
     return signer.sendTransaction(transactionRequest);
   }
 

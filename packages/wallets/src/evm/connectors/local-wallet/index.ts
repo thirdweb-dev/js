@@ -6,6 +6,7 @@ import type { Signer } from "ethers";
 import { providers } from "ethers";
 import type { Wallet } from "ethers";
 import { getChainProvider } from "@thirdweb-dev/sdk";
+import { WrappedSigner } from "./wrapped-signer";
 
 export type LocalWalletConnectorOptions = {
   chain: Chain;
@@ -119,8 +120,9 @@ function getSignerFromEthersWallet(
   ethersWallet: Wallet,
   provider?: providers.Provider,
 ) {
+  let signer = ethersWallet;
   if (provider) {
-    return ethersWallet.connect(provider);
+    signer = ethersWallet.connect(provider);
   }
-  return ethersWallet;
+  return new WrappedSigner(signer);
 }
