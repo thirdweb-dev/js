@@ -94,7 +94,9 @@ const ModalSelectHostingOption = ({
       action: "click",
       label: "clicked-self-host-instructions",
     });
-    window.open("https://portal.thirdweb.com/engine/getting-started");
+    window.open(
+      "https://portal.thirdweb.com/infrastructure/engine/overview/getting-started",
+    );
   };
 
   return (

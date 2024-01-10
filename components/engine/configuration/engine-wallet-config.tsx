@@ -26,7 +26,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
         <Text>
           Select the type of backend wallets to use.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/backend-wallets"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
             color="primary.500"
             isExternal
           >

@@ -40,7 +40,7 @@ const Published: ThirdwebNextPage = () => {
             label="learn_to_publish"
             color="blue.500"
             isExternal
-            href="https://portal.thirdweb.com/publish"
+            href="https://portal.thirdweb.com/contracts/publish/overview"
           >
             Learn how to publish contracts --&gt;
           </TrackedLink>

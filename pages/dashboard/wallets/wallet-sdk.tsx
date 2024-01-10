@@ -19,7 +19,7 @@ export const WALLETS_SNIPPETS = [
     description: "Deploy smart contract wallets for your users",
     iconUrl:
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
-    link: "https://portal.thirdweb.com/wallet/smart-wallet",
+    link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
     supportedLanguages: {
       javascript: `import {{chainName}} from "@thirdweb-dev/chains";
 import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
@@ -109,7 +109,7 @@ public async void ConnectWallet()
     description: "Generate wallets for new users on the fly",
     iconUrl:
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-desktop.svg",
-    link: "https://portal.thirdweb.com/wallet/local-wallet",
+    link: "https://portal.thirdweb.com/references/wallets/latest/LocalWallet",
     supportedLanguages: {
       javascript: `import { LocalWallet } from "@thirdweb-dev/wallets";
 
@@ -178,7 +178,7 @@ public async void ConnectWallet()
     description: "Connect with Coinbase Wallet",
     iconUrl:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
-    link: "https://portal.thirdweb.com/wallet/coinbase-wallet",
+    link: "https://portal.thirdweb.com/references/wallets/latest/CoinbaseWallet",
     supportedLanguages: {
       javascript: `import { CoinbaseWallet } from "@thirdweb-dev/wallets";
 
@@ -233,7 +233,7 @@ public async void ConnectWallet()
     description: "Connect with MetaMask",
     iconUrl:
       "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
-    link: "https://portal.thirdweb.com/wallet/metamask",
+    link: "https://portal.thirdweb.com/references/wallets/latest/MetaMaskWallet",
     supportedLanguages: {
       javascript: `import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
@@ -288,7 +288,7 @@ public async void ConnectWallet()
     description: "Connect with email and social logins",
     iconUrl:
       "ipfs://QmTkzaQhAfijzJv8tB2PcyPXHHHBsu698S6D4d1iwK2RFn/embedded-wallet.svg",
-    link: "https://portal.thirdweb.com/wallet/embedded-wallet",
+    link: "https://portal.thirdweb.com/references/wallets/latest/EmbeddedWallet",
     supportedLanguages: {
       javascript: `import { EmbeddedWallet } from "@thirdweb-dev/wallets";
 import { Ethereum } from "@thirdweb-dev/chains";
@@ -348,7 +348,7 @@ public async void ConnectWallet()
     name: "Ethers.js",
     description: "Connect any ethers.js compatible wallet",
     iconUrl: "ipfs://QmTWXcv6XnRqwUwEQxWp21oCrXZJ5QomiSTVBjKPQAv92k/ethers.png",
-    link: "https://portal.thirdweb.com/wallet",
+    link: "https://portal.thirdweb.com/wallet-sdk/v2",
     supportedLanguages: {
       javascript: ``,
     },
@@ -359,7 +359,7 @@ public async void ConnectWallet()
     description: "Connect a wallet directly by private key",
     iconUrl:
       "ipfs://QmNrycnX15y8EwxDPrwSxnwQgTBWRxUgwSirmhAFoGSod7/private-key.png",
-    link: "https://portal.thirdweb.com/wallet",
+    link: "https://portal.thirdweb.com/wallet-sdk/v2",
     supportedLanguages: {
       javascript: ``,
     },
@@ -370,7 +370,7 @@ public async void ConnectWallet()
     description: "Connect with AWS Key Management Service",
     iconUrl:
       "ipfs://QmVuWYpq5CaMfmbB1qMXXgc4dtUUGY31xiG6sxwvNafoZg/aws-kms.png",
-    link: "https://portal.thirdweb.com/wallet/aws-kms",
+    link: "https://portal.thirdweb.com/references/wallets/latest/AwsKmsWallet",
     supportedLanguages: {
       javascript: `import { AwsKmsWallet } from "@thirdweb-dev/wallets/evm/wallets/aws-kms";
 
@@ -389,7 +389,7 @@ const wallet = new AwsKmsWallet({
     description: "Connect with AWS Secrets Manager",
     iconUrl:
       "ipfs://QmVuWYpq5CaMfmbB1qMXXgc4dtUUGY31xiG6sxwvNafoZg/aws-secrets-manager.png",
-    link: "https://portal.thirdweb.com/wallet/aws-secrets-manager",
+    link: "https://portal.thirdweb.com/references/wallets/latest/AwsSecretsManagerWallet",
     supportedLanguages: {
       javascript: `import { AwsSecretsManagerWallet } from "@thirdweb-dev/wallets/evm/wallets/aws-secrets-manager";
 
@@ -412,7 +412,7 @@ const wallet = new AwsSecretsManagerWallet({
     description: "Connect with Rainbow Wallet",
     iconUrl:
       "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
-    link: "https://portal.thirdweb.com/wallet/rainbow",
+    link: "https://portal.thirdweb.com/references/wallets/latest/RainbowWallet",
     supportedLanguages: {
       javascript: `import { RainbowWallet } from "@thirdweb-dev/wallets";
 
@@ -451,7 +451,7 @@ return (
     description: "Connect with Trust Wallet",
     iconUrl:
       "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
-    link: "https://portal.thirdweb.com/wallet/trust-wallet",
+    link: "https://portal.thirdweb.com/references/wallets/latest/TrustWallet",
     supportedLanguages: {
       javascript: `import { TrustWallet } from "@thirdweb-dev/wallets";
 
@@ -490,7 +490,7 @@ return (
     description: "Connect with WalletConnect",
     iconUrl:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
-    link: "https://portal.thirdweb.com/wallet/wallet-connect-v2",
+    link: "https://portal.thirdweb.com/references/wallets/latest/WalletConnect",
     supportedLanguages: {
       javascript: `import { WalletConnect } from "@thirdweb-dev/wallets";
 
@@ -544,7 +544,7 @@ public async void ConnectWallet()
     description: "Connect to multi-sig wallets via Safe",
     iconUrl:
       "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
-    link: "https://portal.thirdweb.com/wallet/safe",
+    link: "https://portal.thirdweb.com/references/wallets/latest/SafeWallet",
     supportedLanguages: {
       javascript: `import { CoinbaseWallet, SafeWallet } from "@thirdweb-dev/wallets";
 import { Ethereum } from "@thirdweb-dev/chains";
@@ -580,7 +580,7 @@ return (
     description: "Connect with email or phone number via Magic",
     iconUrl:
       "ipfs://QmUMBFZGXxBpgDmZzZAHhbcCL5nYvZnVaYLTajsNjLcxMU/1-Icon_Magic_Color.svg",
-    link: "https://portal.thirdweb.com/wallet/magic",
+    link: "https://portal.thirdweb.com/references/wallets/latest/MagicLink",
     supportedLanguages: {
       javascript: `import { MagicLink } from "@thirdweb-dev/wallets";
 
@@ -781,7 +781,7 @@ const DashboardWalletsWalletSDK: ThirdwebNextPage = () => {
           Full control over wallet connection to your app, game or backend using
           a{" "}
           <Link
-            href="https://portal.thirdweb.com/wallet"
+            href="https://portal.thirdweb.com/wallet-sdk/v2"
             color="blue.400"
             isExternal
           >

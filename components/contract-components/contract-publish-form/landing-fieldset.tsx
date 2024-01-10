@@ -81,7 +81,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <Link
             color="blue.500"
             isExternal
-            href="https://portal.thirdweb.com/publish"
+            href="https://portal.thirdweb.com/contracts/publish/overview"
           >
             Learn more
           </Link>

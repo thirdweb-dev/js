@@ -70,7 +70,7 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
           </Flex>
           <LinkButton
             colorScheme="primary"
-            href="https://portal.thirdweb.com/publish"
+            href="https://portal.thirdweb.com/contracts/publish/overview"
             isExternal
             onClick={() => {
               trackEvent({

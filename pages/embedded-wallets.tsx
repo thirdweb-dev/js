@@ -18,7 +18,7 @@ const GUIDES = [
   {
     title: "Docs: Embedded Wallets Overview",
     image: require("/public/assets/product-pages/embedded-wallets/embedded-wallet.png"),
-    link: "https://portal.thirdweb.com/embedded-wallet",
+    link: "https://portal.thirdweb.com/wallets/embedded-wallet/overview",
   },
   {
     title: "Live Demo: Embedded Wallets",
@@ -64,7 +64,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           titleWithGradient="with web2 UX"
           subtitle="Onboard anyone with an email or Google account — with 1-click login flows, flexible auth options, and secure account recovery. Free up to 10k users."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/embedded-wallet"
+          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4490FF, #4490FF)"
           image={require("public/assets/product-pages/hero/desktop-hero-embedded-wallets.png")}
@@ -136,7 +136,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/onboard.png")}
             mobileImage={require("public/assets/landingpage/mobile/onboard.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
             direction="horizontal"
           />
 
@@ -146,7 +146,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/cross-platform.png")}
             mobileImage={require("public/assets/landingpage/mobile/cross-platform.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           />
 
           <LandingCardWithImage
@@ -155,7 +155,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/enterprise-security.png")}
             mobileImage={require("public/assets/landingpage/mobile/enterprise-security.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet/how-it-works"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-it-works"
             colSpan={1}
           />
 
@@ -165,7 +165,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/magic.png")}
             mobileImage={require("public/assets/landingpage/mobile/magic.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet/smart-wallet-and-embedded-wallet"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/enable-gasless"
           />
 
           <LandingCardWithImage
@@ -174,7 +174,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/guest.png")}
             mobileImage={require("public/assets/landingpage/mobile/guest.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallet/local-wallet"
+            href="https://portal.thirdweb.com/references/wallets/latest/LocalWallet"
             colSpan={1}
           />
 
@@ -184,16 +184,16 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/auth.png")}
             mobileImage={require("public/assets/landingpage/mobile/auth.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet/custom-auth"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/configuration"
           />
 
           <LandingCardWithImage
             title="Everything a wallet needs"
-            description="Give users the ability to send, receive, & view assets. Transaction history, ENS support, & more out of the box."
+            description="Give users the ability to send, receive, & view assets. Transaction history, ENS support,& more out of the box."
             image={require("public/assets/landingpage/desktop/wallet.png")}
             mobileImage={require("public/assets/landingpage/mobile/wallet.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet/connect"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/connect-users"
             direction="horizontal"
           />
 
@@ -203,7 +203,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/powerful.png")}
             mobileImage={require("public/assets/landingpage/mobile/powerful.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet/custom"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/build-your-own-ui"
             colSpan={1}
           />
 
@@ -213,7 +213,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/siwe.png")}
             mobileImage={require("public/assets/landingpage/mobile/siwe.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/auth"
+            href="https://portal.thirdweb.com/wallets/auth"
             direction="horizontal"
           />
 
@@ -234,7 +234,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           description="Read the docs, see the live demo, and use the quick-start template to build with Embedded Wallets."
           guides={GUIDES}
           customSolution="See the full Embedded Wallet docs"
-          customSolutionHref="https://portal.thirdweb.com/embedded-wallet"
+          customSolutionHref="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           py={0}
         />
 
@@ -242,7 +242,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           title="Integrate in"
           titleWithGradient="a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/embedded-wallet"
+          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           gradient="linear(to-r, #3385FF, #7BB0FF)"
         />
       </Container>

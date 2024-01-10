@@ -32,7 +32,7 @@ const DashboardWalletsLocal: ThirdwebNextPage = () => {
             <TrackedLink
               category={TRACKING_CATEGORY}
               label="learn-more"
-              href="https://portal.thirdweb.com/wallet/local-wallet"
+              href="https://portal.thirdweb.com/references/wallets/latest/LocalWallet"
               color="blue.500"
               isExternal
             >
@@ -80,7 +80,7 @@ const DashboardWalletsLocal: ThirdwebNextPage = () => {
                   category={TRACKING_CATEGORY}
                   label="docs"
                   trackingProps={{ breakdown: "full-docs" }}
-                  href="https://portal.thirdweb.com/wallet/local-wallet"
+                  href="https://portal.thirdweb.com/references/wallets/latest/LocalWallet"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"

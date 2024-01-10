@@ -29,7 +29,7 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
           <TrackedLink
             category={TRACKING_CATEGORY}
             label="base-contracts"
-            href="https://portal.thirdweb.com/solidity/base-contracts"
+            href="https://portal.thirdweb.com/contracts/build/base-contracts"
             color="blue.500"
           >
             Base contracts
@@ -42,7 +42,7 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
           <TrackedLink
             category={TRACKING_CATEGORY}
             label="extensions"
-            href="https://portal.thirdweb.com/solidity/extensions"
+            href="https://portal.thirdweb.com/contracts/build/extensions"
             color="blue.500"
           >
             Extensions
@@ -64,7 +64,7 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
             _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
             _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
             size="sm"
-            href="https://portal.thirdweb.com/solidity"
+            href="https://portal.thirdweb.com/contracts/build/overview"
             isExternal
             variant="link"
           >

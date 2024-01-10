@@ -61,7 +61,7 @@ const Web3SDK: ThirdwebNextPage = () => {
         title="Powerful SDKs for every stack"
         description="Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/sdk"
+        buttonLink="https://portal.thirdweb.com/contracts/interact/overview"
         image={require("public/assets/product-pages/sdk/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #5BFF40 100.01%)"
       >
@@ -134,13 +134,16 @@ const Web3SDK: ThirdwebNextPage = () => {
               <>
                 Interact with your contracts from your app in the programming
                 language that you’re familiar with our{" "}
-                <Link color="blue.500" href="https://portal.thirdweb.com/react">
+                <Link
+                  color="blue.500"
+                  href="https://portal.thirdweb.com/react/latest"
+                >
                   React
                 </Link>
                 ,{" "}
                 <Link
                   color="blue.500"
-                  href="https://portal.thirdweb.com/react-native"
+                  href="https://portal.thirdweb.com/react-native/latest"
                 >
                   ReactNative
                 </Link>
@@ -154,7 +157,7 @@ const Web3SDK: ThirdwebNextPage = () => {
                 ,{" "}
                 <Link
                   color="blue.500"
-                  href="https://portal.thirdweb.com/typescript"
+                  href="https://portal.thirdweb.com/typescript/latest"
                 >
                   TypeScript
                 </Link>
@@ -180,14 +183,14 @@ const Web3SDK: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description="Unity SDK includes all supported platforms: Native (Windows, Mac, Linux), Mobile (iOS, Android), Console (PS, Xbox), Browser (WebGL). Unreal SDK coming soon."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://portal.thirdweb.com/gamingkit"
+            href="https://portal.thirdweb.com/unity"
           />
           <ProductLearnMoreCard
             title="Mobile SDK"
             category={TRACKING_CATEGORY}
             description="Integrate web3 into mobile apps with our React Native SDK. Comes with hooks and UI components that let you easily build native apps for iOS and Android."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://portal.thirdweb.com/react-native"
+            href="https://portal.thirdweb.com/react-native/latest"
           />
         </SimpleGrid>
       </ProductSection>

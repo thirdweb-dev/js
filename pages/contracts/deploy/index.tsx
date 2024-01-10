@@ -27,7 +27,7 @@ const ContractsDeployPage: ThirdwebNextPage = () => {
             <Link
               color="blue.500"
               isExternal
-              href="https://portal.thirdweb.com/deploy"
+              href="https://portal.thirdweb.com/contracts/deploy/overview"
             >
               Learn more about deploying your contracts.
             </Link>

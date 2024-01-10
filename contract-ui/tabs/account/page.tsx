@@ -40,7 +40,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
         <Box>
           <LinkButton
             isExternal
-            href="https://portal.thirdweb.com/solidity/extensions/base-account"
+            href="https://portal.thirdweb.com/contracts/build/extensions/erc-4337/SmartWallet"
             colorScheme="purple"
           >
             Learn more

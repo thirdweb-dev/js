@@ -376,7 +376,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             <FormHelperText>
               You need a client ID to use embeds.{" "}
               <Link
-                href="https://portal.thirdweb.com/api-keys"
+                href="https://portal.thirdweb.com/account/api-keys"
                 color="primary.500"
                 isExternal
               >

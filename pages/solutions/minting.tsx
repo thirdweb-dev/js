@@ -68,7 +68,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
           titleWithGradient="easily"
           subtitle="Enable your users to mint, deploy and distribute NFTS through your app with only a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/signature-minting"
+          ctaLink="https://portal.thirdweb.com/contracts/design-docs/signature-mint"
           gradient="linear(to-r, #8E0EFF, #16bdf0)"
           image={require("public/assets/product-pages/hero/desktop-hero-minting.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-minting.png")}
@@ -107,7 +107,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
                   A broad set of options for{" "}
                   <TrackedLink
                     category={TRACKING_CATEGORY}
-                    href="https://portal.thirdweb.com/typescript/extensions"
+                    href="https://portal.thirdweb.com/typescript/latest/extensions"
                     color="primary.500"
                   >
                     distributing NFTs
@@ -128,7 +128,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
                   API configurations including as an{" "}
                   <TrackedLink
                     category={TRACKING_CATEGORY}
-                    href="https://portal.thirdweb.com/embedded-wallet"
+                    href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
                     color="primary.500"
                   >
                     distributing NFTs
@@ -159,7 +159,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/signature-minting"
+          ctaLink="https://portal.thirdweb.com/contracts/design-docs/signature-mint"
           gradient="linear(to-r, #8E0EFF, #16bdf0)"
           contactUsTitle="Book Demo"
         />

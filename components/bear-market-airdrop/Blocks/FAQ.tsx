@@ -186,7 +186,7 @@ export const FAQ: React.FC = () => {
                     textDecoration: "underline",
                     fontWeight: "bold",
                   }}
-                  href="https://portal.thirdweb.com/pre-built-contracts/pack"
+                  href="https://portal.thirdweb.com/contracts/explore/pre-built-contracts/pack"
                   rel="noreferrer"
                   target="_blank"
                 >

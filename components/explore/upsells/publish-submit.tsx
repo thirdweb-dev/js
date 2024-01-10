@@ -76,7 +76,7 @@ export const PublishUpsellCard: React.FC = () => {
               label: "learn_more",
             }}
             variant="ghost"
-            href="https://portal.thirdweb.com/publish"
+            href="https://portal.thirdweb.com/contracts/publish/overview"
             isExternal
             noIcon
             borderColor="borderColor"

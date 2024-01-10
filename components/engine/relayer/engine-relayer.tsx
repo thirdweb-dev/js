@@ -21,7 +21,7 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
           Use relayers to submit transactions from your backend wallets on
           behalf of your users.
           <Link
-            href="https://portal.thirdweb.com/guides/engine/relayer"
+            href="https://portal.thirdweb.com/infrastructure/engine/guides/relayer"
             color="primary.500"
             isExternal
           >

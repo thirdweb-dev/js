@@ -26,7 +26,7 @@ const ContractsPublishPage: ThirdwebNextPage = () => {
           <Link
             color="blue.500"
             isExternal
-            href="https://portal.thirdweb.com/publish"
+            href="https://portal.thirdweb.com/contracts/publish/overview"
           >
             Learn more about publishing your contracts.
           </Link>

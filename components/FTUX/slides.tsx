@@ -57,7 +57,7 @@ export const slides: Slide[] = [
           <ListItem>
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/wallet/paper"
+              href="https://portal.thirdweb.com/references/wallets/latest/EmbeddedWallet"
               isExternal
               label="auth"
               color="blue.500"
@@ -70,7 +70,7 @@ export const slides: Slide[] = [
             {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/auth"
+              href="https://portal.thirdweb.com/wallets/auth"
               isExternal
               label="auth"
               color="blue.500"
@@ -96,7 +96,7 @@ export const slides: Slide[] = [
             {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/solidity"
+              href="https://portal.thirdweb.com/contracts/build/overview"
               label="write"
               isExternal
               color="blue.500"
@@ -108,7 +108,7 @@ export const slides: Slide[] = [
           <ListItem>
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/publish"
+              href="https://portal.thirdweb.com/contracts/publish/overview"
               label="publish"
               isExternal
               color="blue.500"
@@ -133,7 +133,7 @@ export const slides: Slide[] = [
             {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/sdk"
+              href="https://portal.thirdweb.com/contracts/interact/overview"
               isExternal
               label="interact"
               color="blue.500"
@@ -146,7 +146,7 @@ export const slides: Slide[] = [
             {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/deploy"
+              href="https://portal.thirdweb.com/contracts/deploy/overview"
               isExternal
               label="deploy"
               color="blue.500"

@@ -195,7 +195,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     Optionally allow users to authenticate with a custom JWT.{" "}
                     <TrackedLink
                       isExternal
-                      href="https://portal.thirdweb.com/embedded-wallet/custom-jwt-auth-server"
+                      href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/custom-jwt-auth-server"
                       label="learn-more"
                       category={TRACKING_CATEGORY}
                       color="primary.500"
@@ -304,7 +304,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     payload that you provide.{" "}
                     <TrackedLink
                       isExternal
-                      href="https://portal.thirdweb.com/embedded-wallet/custom-auth-server"
+                      href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/custom-auth-server"
                       label="learn-more"
                       category={TRACKING_CATEGORY}
                       color="primary.500"

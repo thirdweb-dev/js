@@ -33,7 +33,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
         <Box>
           <LinkButton
             isExternal
-            href="https://portal.thirdweb.com/solidity/extensions/erc20"
+            href="https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20"
             colorScheme="purple"
           >
             Learn more

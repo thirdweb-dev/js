@@ -93,8 +93,8 @@ import { ThirdwebProvider, useContract } from "@thirdweb-dev/react";
 
 function App() {
   return (
-    <ThirdwebProvider 
-      activeChain={{chainName}} 
+    <ThirdwebProvider
+      activeChain={{chainName}}
       clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
     >
       <Component />
@@ -110,7 +110,7 @@ import { ThirdwebProvider, useContract } from "@thirdweb-dev/react-native";
 
 function App() {
   return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       activeChain={{chainName}}
       clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
     >
@@ -432,7 +432,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   the{" "}
                   <TrackedLink
                     isExternal
-                    href="https://portal.thirdweb.com/wallet/smart-wallet"
+                    href="https://portal.thirdweb.com/references/wallets/latest/SmartWallet"
                     category="accounts-page"
                     label="wallet-sdk"
                     color="primary.500"

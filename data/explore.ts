@@ -166,7 +166,7 @@ const SMART_WALLET = {
   description:
     "Smart wallet factories that let you spin up Account Abstraction (ERC-4337) wallets for your users. Not sure which factory is right for you?",
   learnMore:
-    "https://portal.thirdweb.com/smart-wallet/getting%20started#1-smart-wallet-factory-contract",
+    "https://portal.thirdweb.com/wallets/smart-wallet/get-started#1-deploy-a-smart-wallet-factory-contract",
   contracts: [
     "thirdweb.eth/AccountFactory",
     "thirdweb.eth/DynamicAccountFactory",

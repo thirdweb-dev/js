@@ -5,7 +5,7 @@ export const Resources: React.FC = () => {
   const resources = [
     {
       name: "Gaming",
-      link: "https://portal.thirdweb.com/gamingkit",
+      link: "https://portal.thirdweb.com/unity",
       image: "/assets/hackathon/resources/readyplayer3/gamingkit.png",
     },
     {
@@ -15,7 +15,7 @@ export const Resources: React.FC = () => {
     },
     {
       name: "Gaming Quickstart",
-      link: "https://portal.thirdweb.com/gamingkit/quickstart",
+      link: "https://portal.thirdweb.com/unity",
       image: "/assets/hackathon/resources/readyplayer3/quickstart.png",
     },
   ];

@@ -19,17 +19,17 @@ const CASE_STUDIES = [
   {
     title: "NFT Checkout: Docs Overview",
     image: require("public/assets/product-pages/checkout/case-study-1.png"),
-    link: "https://portal.thirdweb.com/checkouts",
+    link: "https://portal.thirdweb.com/payments",
   },
   {
     title: "NFT Checkout: Getting Started",
     image: require("public/assets/product-pages/checkout/case-study-3.png"),
-    link: "https://portal.thirdweb.com/checkouts/getting-started",
+    link: "https://portal.thirdweb.com/payments/nft-checkout/getting-started",
   },
   {
     title: "NFT Checkout: Embedded Elements",
     image: require("public/assets/product-pages/checkout/case-study-2.png"),
-    link: "https://portal.thirdweb.com/checkouts/elements",
+    link: "https://portal.thirdweb.com/payments/nft-checkout/elements",
   },
 ];
 
@@ -89,7 +89,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           titleWithGradient="for everyone"
           subtitle="Sell NFTs to users with a credit card — with worldwide support for major payment methods, seamless buyer & seller flows, and 100% chargeback protection."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/checkouts"
+          ctaLink="https://portal.thirdweb.com/payments"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
           miniImage={require("public/assets/product-icons/payments.png")}
@@ -119,7 +119,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/payment-methods.png")}
             mobileImage={require("public/assets/landingpage/mobile/payment-methods.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/checkouts"
+            href="https://portal.thirdweb.com/payments"
             direction="horizontal"
           />
 
@@ -129,7 +129,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/worldwide.png")}
             mobileImage={require("public/assets/landingpage/mobile/worldwide.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/checkouts"
+            href="https://portal.thirdweb.com/payments"
           />
 
           <LandingCardWithImage
@@ -138,7 +138,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/world-class-DX.png")}
             mobileImage={require("public/assets/landingpage/mobile/world-class-DX.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/checkouts/getting-started"
+            href="https://portal.thirdweb.com/payments/nft-checkout/getting-started"
             colSpan={1}
           />
           <LandingCardWithImage
@@ -147,7 +147,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/wallet-no-problem.png")}
             mobileImage={require("public/assets/landingpage/mobile/wallet-no-problem.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/embedded-wallet"
+            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           />
           <LandingCardWithImage
             title="Built-in analytics"
@@ -189,7 +189,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/seamless-buyer-flows.png")}
             mobileImage={require("public/assets/landingpage/mobile/seamless-buyer-flows.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/checkouts"
+            href="https://portal.thirdweb.com/payments"
           />
           <LandingCardWithImage
             title="Any EVM chain"
@@ -197,7 +197,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/evm-chain.png")}
             mobileImage={require("public/assets/landingpage/mobile/evm-chain.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/checkouts"
+            href="https://portal.thirdweb.com/payments"
             colSpan={1}
           />
         </LandingGridSection>
@@ -227,7 +227,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           description="Read the full docs and start building with the most powerful web3 payments stack."
           guides={CASE_STUDIES}
           customSolution="See the full NFT Checkout docs"
-          customSolutionHref="https://portal.thirdweb.com/checkouts"
+          customSolutionHref="https://portal.thirdweb.com/payments"
           py={0}
         />
 

@@ -58,7 +58,7 @@ const UIComponents: ThirdwebNextPage = () => {
         title="Plug-and-play frontend components"
         description="Integrate plug-and-play UI components into your web3 apps easily."
         buttonText="Start building"
-        buttonLink="https://portal.thirdweb.com/sdk/ui-components"
+        buttonLink="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
         image={require("public/assets/product-pages/ui-components/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 16.94%, #40FFAF 86.73%)"
       >
@@ -121,28 +121,28 @@ const UIComponents: ThirdwebNextPage = () => {
               category={TRACKING_CATEGORY}
               title="Connect Wallet"
               description="Easily allow users to sign in using their crypto wallets with multiple wallet options (e.g. Coinbase, Metamask, WalletConnect, and more)."
-              href="https://portal.thirdweb.com/ui-components/connectwalletbutton"
+              href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
             />
             <ProductLearnMoreCard
               icon={require("public/assets/product-icons/contracts.png")}
               category={TRACKING_CATEGORY}
               title="Web3 Button"
               description="Enables calling any function on any smart contract with one click."
-              href="https://portal.thirdweb.com/ui-components/web3button"
+              href="https://portal.thirdweb.com/react/latest/components/Web3Button"
             />
             <ProductLearnMoreCard
               icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
               category={TRACKING_CATEGORY}
               title="NFT Metadata Renderer"
               description="Enables consistent display of NFTs on UI by resolving metadata of NFTs in a standard format."
-              href="https://portal.thirdweb.com/ui-components/nft-renderer"
+              href="https://portal.thirdweb.com/react/latest/components/ThirdwebNftMedia"
             />
             <ProductLearnMoreCard
               icon={require("public/assets/product-icons/storage.png")}
               category={TRACKING_CATEGORY}
               title="IPFS Metadata Renderer"
               description="Consistent display of media assets of NFTs with metadata stored on IPFS for all file types (image or video)."
-              href="https://portal.thirdweb.com/ui-components/ipfs-media-renderer"
+              href="https://portal.thirdweb.com/react/latest/components/MediaRenderer"
             />
           </SimpleGrid>
         </ProductSection>

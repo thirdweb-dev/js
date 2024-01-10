@@ -56,7 +56,7 @@ const solutions: SolutionCardProps[] = [
           isExternal
           category="solutions"
           label="contractkit"
-          href="https://portal.thirdweb.com/solidity"
+          href="https://portal.thirdweb.com/contracts/build/overview"
         >
           Solidity SDK
         </TrackedLink>{" "}

@@ -20,7 +20,7 @@ export const PermissionsAccessTokens: React.FC<
         <Text>
           Access tokens allow API access to your Engine instance.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/authentication"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/authentication"
             color="primary.500"
             isExternal
           >

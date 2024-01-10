@@ -109,7 +109,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               A web and mobile friendly page for users to claim NFTs from a
               smart contract implementing{" "}
               <Link
-                href="https://portal.thirdweb.com/solidity/extensions/erc721claimable"
+                href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
                 isExternal
                 color="blue.300"
               >
@@ -133,7 +133,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react"
+              href="https://portal.thirdweb.com/react/latest"
               color="blue.300"
             >
               React SDK
@@ -146,7 +146,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react/react.thirdwebnftmedia"
+              href="https://portal.thirdweb.com/react/latest/components/ThirdwebNftMedia"
               color="blue.300"
             >
               NFT Renderer
@@ -158,7 +158,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react/react.connectwallet"
+              href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
               color="blue.300"
             >
               Connect Wallet Button
@@ -170,7 +170,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react/react.usemetadata"
+              href="https://portal.thirdweb.com/references/react/latest/useMetadata"
               color="blue.300"
             >
               contract metadata
@@ -265,7 +265,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react"
+              href="https://portal.thirdweb.com/react/latest"
               color="blue.300"
             >
               React SDK
@@ -278,7 +278,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react/react.thirdwebnftmedia"
+              href="https://portal.thirdweb.com/react/latest/components/ThirdwebNftMedia"
               color="blue.300"
             >
               NFT Media Renderer
@@ -368,7 +368,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react"
+              href="https://portal.thirdweb.com/react/latest"
               color="blue.300"
             >
               React SDK
@@ -382,7 +382,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <Link
               fontWeight="500"
               isExternal
-              href="https://portal.thirdweb.com/react/react.thirdwebnftmedia"
+              href="https://portal.thirdweb.com/react/latest/components/ThirdwebNftMedia"
               color="blue.300"
             >
               NFT Media Renderer

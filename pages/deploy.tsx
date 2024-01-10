@@ -89,7 +89,7 @@ const DeployLanding: ThirdwebNextPage = () => {
           titleWithGradient="on any EVM chain securely"
           subtitle="Deploy smart contracts to any EVM network, using a single command or a few clicks from our dashboard. No more copying ABIs or sharing private keys."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/deploy"
+          ctaLink="https://portal.thirdweb.com/contracts/deploy/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-deploy.png")}
@@ -204,7 +204,7 @@ const DeployLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/deploy"
+          ctaLink="https://portal.thirdweb.com/contracts/deploy/overview"
           gradient="linear(to-r, #F213A4, #F97CCE)"
         />
       </Container>

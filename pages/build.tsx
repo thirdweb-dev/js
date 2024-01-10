@@ -93,7 +93,7 @@ const BuildLanding: ThirdwebNextPage = () => {
           titleWithGradient="fast"
           subtitle="Deploy pre-built audited smart contracts — or write your own with our Solidity SDK. Available on any EVM chain."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/solidity"
+          ctaLink="https://portal.thirdweb.com/contracts/build/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-build.png")}
@@ -243,7 +243,7 @@ const BuildLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/solidity"
+          ctaLink="https://portal.thirdweb.com/contracts/build/overview"
           gradient="linear(to-r,  #F213A4, #F97CCE)"
         />
       </Container>

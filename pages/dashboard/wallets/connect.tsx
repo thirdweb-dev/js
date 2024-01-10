@@ -58,19 +58,19 @@ const DashboardWalletsConnect: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           size="sm"
           platform="React"
-          href="https://portal.thirdweb.com/react/react.connectwallet"
+          href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
           size="sm"
           platform="React Native"
-          href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+          href="https://portal.thirdweb.com/react-native/latest/components/ConnectWallet"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
           size="sm"
           platform="Unity"
-          href="https://portal.thirdweb.com/unity/connectwallet"
+          href="https://portal.thirdweb.com/unity/wallets/prefab"
         />
       </Flex>
       <Spacer height={12} />
@@ -116,7 +116,7 @@ function ViewDocs() {
           size="md"
           noBorder
           platform="React"
-          href="https://portal.thirdweb.com/react/react.connectwallet"
+          href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
         />
 
         <SupportedPlatformLink
@@ -124,21 +124,21 @@ function ViewDocs() {
           noBorder
           size="md"
           platform="Unity"
-          href="https://portal.thirdweb.com/unity/connectwallet"
+          href="https://portal.thirdweb.com/unity/wallets/prefab"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
           noBorder
           size="md"
           platform="React Native"
-          href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+          href="https://portal.thirdweb.com/react-native/latest/components/ConnectWallet"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
           noBorder
           size="md"
           platform="TypeScript"
-          href="https://portal.thirdweb.com/wallet/usage-with-typescript-sdk"
+          href="https://portal.thirdweb.com/wallet-sdk/latest/usage"
         />
       </Grid>
     </Card>
@@ -166,7 +166,7 @@ function RelevantGuides() {
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/connect/usage-with-react-sdk"
+          href="https://portal.thirdweb.com/wallet-sdk/latest/usage"
           label="react-sdk-get-started"
         >
           Get started with React SDK
@@ -180,7 +180,7 @@ function RelevantGuides() {
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/embedded-wallet/smart-wallet-and-embedded-wallet"
+          href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/enable-gasless"
           label="gasless-tx"
         >
           Enable Gasless Transactions
@@ -306,25 +306,25 @@ function BuildCustomBanner() {
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="React"
-              href="https://portal.thirdweb.com/react/react.connectwallet"
+              href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="React Native"
-              href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+              href="https://portal.thirdweb.com/react-native/latest/components/ConnectWallet"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="Unity"
-              href="https://portal.thirdweb.com/unity/connectwallet"
+              href="https://portal.thirdweb.com/unity/wallets/prefab"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="TypeScript"
-              href="https://portal.thirdweb.com/wallet/usage-with-typescript-sdk"
+              href="https://portal.thirdweb.com/wallet-sdk/latest/usage"
             />
           </Flex>
 
@@ -336,7 +336,7 @@ function BuildCustomBanner() {
               isExternal
               category={TRACKING_CATEGORY}
               label="custom-ui-cta"
-              href="https://portal.thirdweb.com/react/connecting-wallets"
+              href="https://portal.thirdweb.com/react/latest/connecting-wallets"
               bg="bgBlack"
               color="bgWhite"
               minW="180px"

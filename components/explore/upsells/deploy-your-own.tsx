@@ -54,7 +54,7 @@ export const DeployUpsellCard: React.FC = () => {
               _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
               _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
               size="sm"
-              href="https://portal.thirdweb.com/solidity"
+              href="https://portal.thirdweb.com/contracts/build/overview"
               isExternal
               variant="link"
             >
@@ -88,7 +88,7 @@ export const DeployUpsellCard: React.FC = () => {
               fontWeight={400}
               _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
               _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
-              href="https://portal.thirdweb.com/deploy"
+              href="https://portal.thirdweb.com/contracts/deploy/overview"
               isExternal
               variant="link"
             >

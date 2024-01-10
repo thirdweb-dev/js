@@ -255,7 +255,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
               image={require("/public/assets/solutions-pages/gaming/gaming-phone.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               linkTitle="Read the React Native docs"
-              href="https://portal.thirdweb.com/react-native"
+              href="https://portal.thirdweb.com/react-native/latest"
               label="mobile"
             />
           </SimpleGrid>

@@ -52,7 +52,7 @@ export const ContractPermissionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/solidity/extensions/permissions"
+              href="https://portal.thirdweb.com/contracts/build/extensions/general/Permissions"
             >
               Permissions
             </LinkButton>

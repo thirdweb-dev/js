@@ -57,7 +57,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           <Link
             target="_blank"
             color="blue.500"
-            href="https://portal.thirdweb.com/api-keys"
+            href="https://portal.thirdweb.com/account/api-keys"
             isExternal
           >
             Learn more

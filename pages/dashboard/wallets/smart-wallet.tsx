@@ -133,7 +133,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             variant={"solid"}
             label="docs-wallets"
-            href="https://portal.thirdweb.com/smart-wallet"
+            href="https://portal.thirdweb.com/wallets/smart-wallet"
             isExternal
           >
             View Documentation
@@ -203,7 +203,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   label="full-docs"
-                  href="https://portal.thirdweb.com/smart-wallet"
+                  href="https://portal.thirdweb.com/wallets/smart-wallet"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"
@@ -215,7 +215,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   label="smart-wallet-react"
-                  href="https://portal.thirdweb.com/smart-wallet/guides/react"
+                  href="https://portal.thirdweb.com/wallets/smart-wallet/guides/react"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"
@@ -227,7 +227,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   label="smart-wallet-typescript"
-                  href="https://portal.thirdweb.com/smart-wallet/guides/typescript"
+                  href="https://portal.thirdweb.com/wallets/smart-wallet/guides/typescript"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"

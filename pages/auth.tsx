@@ -66,7 +66,7 @@ const AuthLanding: ThirdwebNextPage = () => {
           titleWithGradient="Web3 Authentication"
           subtitle="Easy auth for the most popular web3 wallets and web2 login flows — so you can verify your users’ identities & prove wallet ownership to off-chain systems."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/auth"
+          ctaLink="https://portal.thirdweb.com/wallets/auth"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4490FF, #4490FF)"
           image={require("public/assets/product-pages/hero/desktop-hero-auth.png")}
@@ -189,7 +189,7 @@ const AuthLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/auth"
+          ctaLink="https://portal.thirdweb.com/wallets/auth"
           gradient="linear(to-r, #3385FF, #7BB0FF)"
         />
       </Container>

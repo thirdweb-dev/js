@@ -19,7 +19,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
           <Text>
             Contract source code not available. Try deploying with{" "}
             <Link
-              href="https://portal.thirdweb.com/deploy"
+              href="https://portal.thirdweb.com/contracts/deploy/overview"
               isExternal
               color="primary.500"
             >

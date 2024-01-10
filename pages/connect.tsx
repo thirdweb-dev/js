@@ -20,7 +20,7 @@ const GUIDES = [
   {
     title: "The Quick-Start Guide to thirdweb Connect",
     image: require("/public/assets/product-pages/connect/get-started.png"),
-    link: "https://portal.thirdweb.com/react/react.connectwallet",
+    link: "https://portal.thirdweb.com/react/latest/components/ConnectWallet",
   },
   {
     title: "Add a Connect Wallet Button to Your App or Website",
@@ -101,19 +101,19 @@ const ConnectLanding: ThirdwebNextPage = () => {
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="React"
-              href="https://portal.thirdweb.com/react/react.connectwallet"
+              href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="React Native"
-              href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+              href="https://portal.thirdweb.com/react-native/latest/components/ConnectWallet"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="Unity"
-              href="https://portal.thirdweb.com/unity/connectwallet"
+              href="https://portal.thirdweb.com/unity/wallets/prefab"
             />
           </Flex>
 
@@ -200,7 +200,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-reliable-connectors.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-reliable-connectors.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/wallet"
+              href="https://portal.thirdweb.com/wallet-sdk/latest"
             />
             <LandingCardWithImage
               title="Everything a wallet needs"
@@ -208,7 +208,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-everything-wallet-needs.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-everything-wallet-needs.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/wallet"
+              href="https://portal.thirdweb.com/wallet-sdk/latest"
               direction="horizontal"
             />
           </LandingGridSection>
@@ -228,7 +228,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-account-abstraction.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-account-abstraction.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/smart-wallet"
+              href="https://portal.thirdweb.com/wallets/smart-wallet"
               direction="horizontal"
             />
             <LandingCardWithImage

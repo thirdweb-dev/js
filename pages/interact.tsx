@@ -69,7 +69,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           titleWithGradient="into your apps"
           subtitle="The complete toolkit to add any smart contract into your apps — and call functions for any type of onchain interaction."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/sdk"
+          ctaLink="https://portal.thirdweb.com/contracts/interact/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-interact.png")}
@@ -161,7 +161,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/sdk"
+          ctaLink="https://portal.thirdweb.com/contracts/interact/overview"
           gradient="linear(to-r, #F213A4, #F97CCE)"
         />
       </Container>

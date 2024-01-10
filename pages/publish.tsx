@@ -60,7 +60,7 @@ const PublishLanding: ThirdwebNextPage = () => {
           titleWithGradient="with the world"
           subtitle="Get a landing page for your contract and enable anyone to deploy it securely to any EVM chain — in 1 click."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/publish"
+          ctaLink="https://portal.thirdweb.com/contracts/publish/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-publish.png")}
@@ -145,7 +145,7 @@ const PublishLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/publish"
+          ctaLink="https://portal.thirdweb.com/contracts/publish/overview"
           gradient="linear(to-r,  #F213A4, #F97CCE)"
         />
       </Container>

@@ -43,7 +43,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
         <Box>
           <LinkButton
             isExternal
-            href="https://portal.thirdweb.com/solidity/extensions/base-account-factory"
+            href="https://portal.thirdweb.com/contracts/build/extensions/erc-4337/SmartWalletFactory"
             colorScheme="purple"
           >
             Learn more
@@ -71,7 +71,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
             category={"smart-wallet"}
             variant={"solid"}
             label="docs-factory-page"
-            href="https://portal.thirdweb.com/smart-wallet/getting%20started#3-connect-smart-wallets-in-your-application"
+            href="https://portal.thirdweb.com/wallets/smart-wallet/get-started#3-connect-smart-wallets-in-your-application"
             isExternal
           >
             View Documentation

@@ -68,7 +68,7 @@ const SolutionsMarketplace: ThirdwebNextPage = () => {
           titleWithGradient="to any app or game"
           subtitle="Deploy marketplace contract to any EVM chain. Multi-platform supported including desktop, mobile, and game engines."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/pre-built-contracts/marketplace"
+          ctaLink="https://portal.thirdweb.com/contracts/explore/pre-built-contracts/marketplace"
           gradient="linear(to-r, #F213A4, #F97CCE)"
           image={require("public/assets/product-pages/hero/desktop-hero-marketplace.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-marketplace.png")}
@@ -128,7 +128,7 @@ const SolutionsMarketplace: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/pre-built-contracts/marketplace"
+          ctaLink="https://portal.thirdweb.com/contracts/explore/pre-built-contracts/marketplace"
           gradient="linear(to-r, #F213A4, #F97CCE)"
           contactUsTitle="Book Demo"
         />

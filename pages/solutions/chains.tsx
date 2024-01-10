@@ -211,7 +211,7 @@ const SolutionsChains: ThirdwebNextPage = () => {
           title="Grow your ecosystem."
           titleWithGradient=""
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/gamingkit"
+          ctaLink="https://portal.thirdweb.com/unity"
           gradient="linear(to-r, #F213A4, #F97CCE)"
           noCta
         />

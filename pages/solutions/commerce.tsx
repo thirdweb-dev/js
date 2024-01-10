@@ -145,7 +145,7 @@ const Commerce: ThirdwebNextPage = () => {
             to users' wallets. Easily bootstrap projects with a single
             command."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
-            href="https://portal.thirdweb.com/sdk"
+            href="https://portal.thirdweb.com/contracts/interact/overview"
           />
           <ProductLearnMoreCard
             title="Manage"
@@ -154,7 +154,7 @@ const Commerce: ThirdwebNextPage = () => {
             directly from a user interface, e.g. view all the NFTs that have
             been minted to your most loyal customers."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://portal.thirdweb.com/dashboard"
+            href="https://thirdweb.com/dashboard"
           />
         </SimpleGrid>
       </ProductSection>
@@ -186,7 +186,7 @@ const Commerce: ThirdwebNextPage = () => {
                   isExternal
                   color="white"
                   fontWeight="medium"
-                  href={"https://portal.thirdweb.com/solidity"}
+                  href={"https://portal.thirdweb.com/contracts/build/overview"}
                   label="use-case-contractkit"
                 >
                   Solidity SDK

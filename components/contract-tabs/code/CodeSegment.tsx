@@ -151,7 +151,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
           {activeEnvironment === "web3button" && (
             <Text>
               <TrackedLink
-                href="https://portal.thirdweb.com/ui-components/web3button"
+                href="https://portal.thirdweb.com/react/latest/components/Web3Button"
                 isExternal
                 category="code-tab"
                 label="web3button"

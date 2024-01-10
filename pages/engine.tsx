@@ -158,7 +158,7 @@ const EngineLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/account-abstraction-desktop.png")}
             mobileImage={require("public/assets/landingpage/account-abstraction-mobile.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallet"
+            href="https://portal.thirdweb.com/wallet-sdk/latest"
             direction="horizontal"
           />
 

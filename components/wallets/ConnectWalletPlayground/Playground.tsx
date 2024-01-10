@@ -539,7 +539,7 @@ export const ConnectWalletPlayground: React.FC<{
       <TrackedLink
         category={trackingCategory}
         label="build-wallet"
-        href="https://portal.thirdweb.com/wallet/build-a-wallet"
+        href="https://portal.thirdweb.com/wallet-sdk/latest/build"
         alignItems="center"
         color="blue.500"
         gap={1}

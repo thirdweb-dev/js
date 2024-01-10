@@ -187,7 +187,7 @@ function redirects() {
     },
     {
       source: "/wallet-sdk",
-      destination: "https://portal.thirdweb.com/wallet",
+      destination: "https://portal.thirdweb.com/wallet-sdk/latest",
       permanent: false,
     },
     {

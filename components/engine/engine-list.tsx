@@ -68,7 +68,7 @@ export const EngineInstancesList = ({
           backend wallets. Reliably send blockchain transactions, manage smart
           wallets, enable gasless transactions, and more.{" "}
           <TrackedLink
-            href="https://portal.thirdweb.com/engine"
+            href="https://portal.thirdweb.com/infrastructure/engine/overview"
             isExternal
             category="engine"
             label="clicked-learn-more"

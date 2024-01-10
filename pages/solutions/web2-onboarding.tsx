@@ -141,7 +141,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           gradient="linear(to-r, #4830A4, #9786DF)"
           image={require("public/assets/product-pages/hero/desktop-hero-web2-onboarding.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-web2-onboarding.png")}
-          ctaLink="https://portal.thirdweb.com/embedded-wallet"
+          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           contactUsTitle="Book Demo"
         />
 
@@ -212,7 +212,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/embedded-wallet"
+          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4830A4, #9786DF)"
         />

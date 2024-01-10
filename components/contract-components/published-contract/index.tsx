@@ -169,7 +169,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
     url.searchParams.append(
       "text",
       `Check out this ${publishedContractName} contract on @thirdweb
-      
+
 Deploy it in one click`,
     );
     url.searchParams.append("url", currentRoute);
@@ -487,7 +487,7 @@ Deploy it in one click`,
             <Flex gap={2} alignItems="center">
               <LinkButton
                 colorScheme="blue"
-                href="https://portal.thirdweb.com/publish"
+                href="https://portal.thirdweb.com/contracts/publish/overview"
                 w="full"
                 variant="ghost"
                 isExternal

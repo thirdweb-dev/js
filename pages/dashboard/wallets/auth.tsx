@@ -85,7 +85,7 @@ const DashboardWalletsAuth: ThirdwebNextPage = () => {
             <TrackedLink
               category={TRACKING_CATEGORY}
               label="learn-more"
-              href="https://portal.thirdweb.com/auth"
+              href="https://portal.thirdweb.com/wallets/auth"
               color="blue.500"
               isExternal
             >
@@ -125,7 +125,7 @@ const DashboardWalletsAuth: ThirdwebNextPage = () => {
                   category={TRACKING_CATEGORY}
                   label="docs"
                   trackingProps={{ breakdown: "full-docs" }}
-                  href="https://portal.thirdweb.com/auth"
+                  href="https://portal.thirdweb.com/wallets/auth"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"
@@ -155,7 +155,7 @@ const DashboardWalletsAuth: ThirdwebNextPage = () => {
                   category={TRACKING_CATEGORY}
                   label="guides"
                   trackingProps={{ breakdown: "getting-started" }}
-                  href="https://portal.thirdweb.com/auth/getting-started"
+                  href="https://portal.thirdweb.com/wallets/auth/get-started"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"

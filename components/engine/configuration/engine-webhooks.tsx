@@ -19,7 +19,7 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
           Notify your app backend when transaction and backend wallet events
           occur.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/webhooks"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/webhooks"
             color="primary.500"
             isExternal
           >

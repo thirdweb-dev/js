@@ -69,7 +69,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
                 Engine performs blockchain actions using backend wallets you own
                 and manage.{" "}
                 <Link
-                  href="https://portal.thirdweb.com/engine/backend-wallets"
+                  href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
                   color="primary.500"
                   isExternal
                 >
