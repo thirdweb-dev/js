@@ -2,9 +2,7 @@ import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 import {
   ConnectUIProps,
   SelectUIProps,
-  WalletConfig,
   WalletOptions,
-  useConnect,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import type { ConfiguredMagicLinkWallet } from "./types";
@@ -432,27 +430,26 @@ const MagicUI: React.FC<{
 };
 
 function useConnectMagic() {
-  const connect = useConnect();
   const { activeChain } = useWalletContext();
 
   const connector = useCallback(
     async (data: {
       selectionData: SelectionData;
-      walletConfig: WalletConfig<MagicLink>;
+      connect: ConnectUIProps<MagicLink>["connect"];
       singleWallet: boolean;
       type: "auth" | "connect";
       show: () => void;
       connected: () => void;
       hide: () => void;
     }) => {
-      const { selectionData, walletConfig, connected, show, hide } = data;
+      const { selectionData, connected, show, hide, connect } = data;
 
       // oauth
       if (typeof selectionData === "object") {
         try {
           hide();
           (async () => {
-            await connect(walletConfig, {
+            await connect({
               oauthProvider: selectionData.provider,
               chainId: activeChain.chainId,
             });
@@ -474,7 +471,6 @@ function useConnectMagic() {
         hide();
         try {
           await connect(
-            walletConfig,
             data.type === "connect"
               ? {}
               : isEmail
@@ -488,7 +484,7 @@ function useConnectMagic() {
         show();
       }
     },
-    [connect, activeChain.chainId],
+    [activeChain.chainId],
   );
 
   return connector;
@@ -504,6 +500,7 @@ const MagicConnectingUI: React.FC<
   supportedWallets,
   type,
   hide,
+  connect,
 }) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
@@ -519,7 +516,7 @@ const MagicConnectingUI: React.FC<
       selectionData: selectionData as SelectionData,
       singleWallet,
       type,
-      walletConfig,
+      connect,
       show,
       connected,
       hide,
@@ -533,6 +530,7 @@ const MagicConnectingUI: React.FC<
     type,
     walletConfig,
     hide,
+    connect,
   ]);
 
   return (
@@ -585,7 +583,7 @@ const MagicConnectionUIScreen: React.FC<
               show: props.show,
               singleWallet: props.supportedWallets.length === 1,
               type: props.type,
-              walletConfig: props.walletConfig,
+              connect: props.connect,
               hide: props.hide,
             });
           }}

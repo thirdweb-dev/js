@@ -2,20 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import {
-  ConnectUIProps,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, Text, WalletButton } from "../../../components/base";
 import { AUTH_OPTIONS_ICONS, SocialLogin } from "../../types/embedded-wallet";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
-> = ({ goBack, selectionData, onLocallyConnected }) => {
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
+> = ({ goBack, selectionData, setConnectedWallet, setConnectionStatus }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const handleSocialLogin = useCallback(() => {
@@ -33,12 +27,8 @@ export const EmbeddedSocialConnection: React.FC<
         const response = await embeddedWallet.connect({ authResult });
 
         if (response) {
-          if (onLocallyConnected) {
-            onLocallyConnected(selectionData.emailWallet);
-          } else {
-            await setConnectedWallet(selectionData.emailWallet);
-            setConnectionStatus("connected");
-          }
+          setConnectedWallet(selectionData.emailWallet);
+          setConnectionStatus("connected");
         } else {
           setErrorMessage(
             response || "Error signing in. Please try again later.",
@@ -53,9 +43,9 @@ export const EmbeddedSocialConnection: React.FC<
       }
     }, 0);
   }, [
-    onLocallyConnected,
     selectionData.emailWallet,
-    selectionData.oauthOptions,
+    selectionData.oauthOptions?.provider,
+    selectionData.oauthOptions?.redirectUrl,
     setConnectedWallet,
     setConnectionStatus,
   ]);

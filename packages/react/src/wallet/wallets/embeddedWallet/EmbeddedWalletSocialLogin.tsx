@@ -1,10 +1,4 @@
-import {
-  ConnectUIProps,
-  useConnectionStatus,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
@@ -25,16 +19,19 @@ export const EmbeddedWalletSocialLogin = (
   },
 ) => {
   const locale = useTWLocale().wallets.embeddedWallet.socialLoginScreen;
-  const { goBack, modalSize } = props;
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
-  const connectionStatus = useConnectionStatus();
+  const {
+    goBack,
+    modalSize,
+    createWalletInstance,
+    setConnectionStatus,
+    setConnectedWallet,
+    connectionStatus,
+  } = props;
   const themeObj = useCustomTheme();
 
   const socialLogin = async () => {
     try {
-      const embeddedWallet = createWalletInstance(props.walletConfig);
+      const embeddedWallet = createWalletInstance();
       setConnectionStatus("connecting");
       const socialWindow = openOauthSignInWindow(props.strategy, themeObj);
       if (!socialWindow) {

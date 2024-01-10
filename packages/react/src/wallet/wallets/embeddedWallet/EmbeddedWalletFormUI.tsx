@@ -1,10 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  WalletConfig,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
@@ -26,13 +21,17 @@ export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
-  modalSize?: "compact" | "wide";
+  modalSize: "compact" | "wide";
+  createWalletInstance: ConnectUIProps<EmbeddedWallet>["createWalletInstance"];
+  setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }) => {
   const twLocale = useTWLocale();
   const locale = twLocale.wallets.embeddedWallet;
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
+
+  const { createWalletInstance, setConnectionStatus, setConnectedWallet } =
+    props;
+
   const themeObj = useCustomTheme();
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
@@ -52,7 +51,7 @@ export const EmbeddedWalletFormUI = (props: {
   // Need to trigger login on button click to avoid popup from being blocked
   const socialLogin = async (strategy: EmbeddedWalletOauthStrategy) => {
     try {
-      const embeddedWallet = createWalletInstance(props.walletConfig);
+      const embeddedWallet = createWalletInstance();
       setConnectionStatus("connecting");
 
       const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
@@ -150,6 +149,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
+  createWalletInstance: ConnectUIProps<EmbeddedWallet>["createWalletInstance"];
+  setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }> = (props) => {
   const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
@@ -177,6 +179,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
           authOptions={props.authOptions}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
+          createWalletInstance={props.createWalletInstance}
+          setConnectionStatus={props.setConnectionStatus}
+          setConnectedWallet={props.setConnectedWallet}
         />
       </Container>
     </Container>

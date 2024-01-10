@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { FrameWallet } from "@thirdweb-dev/wallets";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -64,7 +64,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   >("connecting");
   const locale = useTWLocale().wallets.frameWallet;
 
-  const connect = useConnect();
+  const { connect } = props;
   const connectPrompted = useRef(false);
   const { walletConfig, connected, goBack } = props;
   const downloadLink = "https://frame.sh";
@@ -83,7 +83,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         try {
           connectPrompted.current = true;
           setScreen("connecting");
-          await connect(walletConfig);
+          await connect();
           connected();
         } catch (e) {
           setScreen("connect-failed");
@@ -95,7 +95,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         openWindow(downloadLink);
       }
     })();
-  }, [walletConfig, connect, goBack, connected]);
+  }, [connect, goBack, connected]);
 
   if (screen === "connecting") {
     return (

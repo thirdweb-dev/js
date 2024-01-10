@@ -1,9 +1,21 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import {
   CryptoDefiWallet,
   getInjectedCryptoDefiWalletProvider,
 } from "@thirdweb-dev/wallets";
-import { CryptoDefiWalletConnectUI } from "./CryptoDefiWalletConnectUI";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+
+const cryptoDefiWalletUris = {
+  ios: "dfw://",
+  android: "dfw://",
+  other: "dfw://",
+};
 
 /**
  * @wallet
@@ -73,11 +85,36 @@ export const cryptoDefiWallet = (
         qrcode: false,
       });
 
+      handelWCSessionRequest(wallet, cryptoDefiWalletUris);
+
       return wallet;
     },
-    connectUI: CryptoDefiWalletConnectUI,
-    isInstalled() {
-      return !!getInjectedCryptoDefiWalletProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isWalletInstalled,
   };
 };
+
+function isWalletInstalled() {
+  return !!getInjectedCryptoDefiWalletProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<CryptoDefiWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) =>
+        props.setConnectedWallet(w as CryptoDefiWallet)
+      }
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={cryptoDefiWalletUris}
+      walletLocale={locale.wallets.cryptoDefiWallet}
+      isInstalled={isWalletInstalled}
+    />
+  );
+}

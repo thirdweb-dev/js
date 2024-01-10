@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
@@ -13,7 +13,7 @@ export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
   );
   const locale = useTWLocale().wallets.rabbyWallet;
   const { walletConfig, connected } = props;
-  const connect = useConnect();
+  const { connect } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
   const hideBackButton = props.supportedWallets.length === 1;
 
@@ -23,13 +23,13 @@ export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
       setErrorConnecting(false);
       setScreen("connecting");
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -104,6 +104,8 @@ export const RabbyConnectUI = (props: ConnectUIProps<RabbyWallet>) => {
         }}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }
