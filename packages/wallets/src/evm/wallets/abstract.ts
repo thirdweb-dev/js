@@ -8,6 +8,7 @@ import {
   Price,
   TransactionResult,
   fetchCurrencyValue,
+  getDefaultGasOverrides,
   isNativeToken,
   normalizePriceValue,
 } from "@thirdweb-dev/sdk";
@@ -148,10 +149,12 @@ export abstract class AbstractWallet
     );
 
     if (isNativeToken(currencyAddress)) {
+      const gas = getDefaultGasOverrides(signer.provider);
       const tx = await signer.sendTransaction({
         from,
         to,
         value,
+        ...gas,
       });
       return { receipt: await tx.wait() };
     } else {
