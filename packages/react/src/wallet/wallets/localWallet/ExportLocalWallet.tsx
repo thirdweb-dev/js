@@ -21,10 +21,9 @@ import {
   ScreenBottomContainer,
 } from "../../../components/basic";
 import {
+  WalletInstance,
   shortenAddress,
-  useAddress,
   useCreateWalletInstance,
-  useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
@@ -36,6 +35,8 @@ export const ExportLocalWallet: React.FC<{
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
+  walletInstance?: WalletInstance;
+  walletAddress?: string;
 }> = (props) => {
   const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
@@ -43,10 +44,11 @@ export const ExportLocalWallet: React.FC<{
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [passwordIsRequired, setPasswordIsRequired] = useState(false);
 
-  const wallet = useWallet();
-  const address = useAddress();
+  const wallet = props.walletInstance;
   const [savedAddress, setSavedAddress] = useState("");
   const createWalletInstance = useCreateWalletInstance();
+
+  const address = props.walletAddress;
 
   // set savedAddress and passwordIsRequired on mount
   const mounted = useRef(false);

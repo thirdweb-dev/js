@@ -7,8 +7,6 @@ import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 import {
   ConnectUIProps,
   useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
@@ -96,10 +94,10 @@ export const CoinbaseNativeModalConnectUI = ({
   supportedWallets,
   theme,
   goBack,
+  setConnectionStatus,
+  setConnectedWallet,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
   const prompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
 

@@ -120,8 +120,11 @@ export const walletConnect = (
           onBack={props.goBack}
           onConnected={props.connected}
           walletConfig={props.walletConfig}
-          hideBackButton={props.supportedWallets.length > 1}
+          hideBackButton={props.supportedWallets.length === 1}
           modalSize={props.modalSize}
+          createWalletInstance={props.createWalletInstance}
+          setConnectedWallet={props.setConnectedWallet}
+          setConnectionStatus={props.setConnectionStatus}
           hide={props.hide}
           show={props.show}
         />

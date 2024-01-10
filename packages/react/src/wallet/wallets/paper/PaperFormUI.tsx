@@ -1,10 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  WalletConfig,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
@@ -23,18 +18,21 @@ export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
+  setConnectionStatus: ConnectUIProps<PaperWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<PaperWallet>["setConnectedWallet"];
+  createWalletInstance: ConnectUIProps<PaperWallet>["createWalletInstance"];
 }) => {
   const cwLocale = useTWLocale().connectWallet;
   const locale = useTWLocale().wallets.paperWallet;
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
+  const { createWalletInstance, setConnectionStatus, setConnectedWallet } =
+    props;
+
   const themeObj = useCustomTheme();
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
-      const paperWallet = createWalletInstance(props.walletConfig);
+      const paperWallet = createWalletInstance();
       setConnectionStatus("connecting");
       const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
@@ -101,6 +99,9 @@ export const PaperFormUIScreen: React.FC<{
   modalSize: "compact" | "wide";
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
+  setConnectionStatus: ConnectUIProps<PaperWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<PaperWallet>["setConnectedWallet"];
+  createWalletInstance: ConnectUIProps<PaperWallet>["createWalletInstance"];
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   const locale = useTWLocale().wallets.paperWallet;
@@ -127,6 +128,9 @@ export const PaperFormUIScreen: React.FC<{
           walletConfig={props.walletConfig}
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
+          setConnectionStatus={props.setConnectionStatus}
+          setConnectedWallet={props.setConnectedWallet}
+          createWalletInstance={props.createWalletInstance}
         />
       </Container>
     </Container>

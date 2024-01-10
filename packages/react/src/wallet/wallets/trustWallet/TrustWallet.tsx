@@ -1,8 +1,18 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { TrustWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
-import { TrustConnectUI } from "./TrustConnectUI";
-import { trustWalletUris } from "./trustWalletUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+const trustWalletUris = {
+  ios: "trust://",
+  android: "https://link.trustwallet.com/",
+  other: "https://link.trustwallet.com/",
+};
 
 /**
  * @wallet
@@ -69,12 +79,33 @@ export const trustWallet = (
 
       return wallet;
     },
-    connectUI: TrustConnectUI,
-    isInstalled() {
-      if (assertWindowEthereum(globalThis.window)) {
-        return !!globalThis.window.ethereum.isTrust;
-      }
-      return false;
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  if (assertWindowEthereum(globalThis.window)) {
+    return !!globalThis.window.ethereum.isTrust;
+  }
+  return false;
+}
+
+function ConnectUI(props: ConnectUIProps<TrustWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as TrustWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={trustWalletUris}
+      walletLocale={locale.wallets.trustWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}
