@@ -31,6 +31,7 @@ export type Account = {
   currentBillingPeriodEndsAt: string;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
+  emailConfirmationWalletAddress?: string;
   stripePaymentActionUrl?: string;
   onboardSkipped?: boolean;
   paymentAttemptCount?: number;
@@ -43,6 +44,7 @@ export type Account = {
 export interface UpdateAccountInput {
   name?: string;
   email?: string;
+  linkWallet?: boolean;
   subscribeToUpdates?: boolean;
   onboardSkipped?: boolean;
 }
@@ -366,6 +368,12 @@ export function useConfirmEmail() {
     },
     {
       onSuccess: () => {
+        // invalidate related cache, since could be relinking account
+        queryClient.invalidateQueries(apiKeys.keys(user?.address as string));
+        queryClient.invalidateQueries(
+          accountKeys.usage(user?.address as string),
+        );
+
         return queryClient.invalidateQueries(
           accountKeys.me(user?.address as string),
         );
@@ -383,8 +391,7 @@ export function useConfirmEmbeddedWallet() {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(
-        // FIXME: Use confirmEmbeddedWalletEmail
-        `${THIRDWEB_API_HOST}/v1/account/confirmPaperEmail`,
+        `${THIRDWEB_API_HOST}/v1/account/confirmEmbeddedWallet`,
         {
           method: "PUT",
           credentials: "include",
@@ -404,6 +411,12 @@ export function useConfirmEmbeddedWallet() {
     },
     {
       onSuccess: () => {
+        // invalidate related cache, since could be relinking account
+        queryClient.invalidateQueries(apiKeys.keys(user?.address as string));
+        queryClient.invalidateQueries(
+          accountKeys.usage(user?.address as string),
+        );
+
         return queryClient.invalidateQueries(
           accountKeys.me(user?.address as string),
         );

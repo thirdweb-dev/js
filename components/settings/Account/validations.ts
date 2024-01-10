@@ -11,11 +11,6 @@ const emailValidation = z.string().refine((str) => RE_EMAIL.test(str), {
 });
 
 export const accountValidationSchema = z.object({
-  name: nameValidation,
-  email: emailValidation,
-});
-
-export const accountValidationOptionalSchema = z.object({
   email: emailValidation,
   name: nameValidation.or(z.literal("")),
 });
@@ -25,10 +20,6 @@ export const emailConfirmationValidationSchema = z.object({
 });
 
 export type AccountValidationSchema = z.infer<typeof accountValidationSchema>;
-
-export type AccountValidationOptionalSchema = z.infer<
-  typeof accountValidationOptionalSchema
->;
 
 export type EmailConfirmationValidationSchema = z.infer<
   typeof emailConfirmationValidationSchema

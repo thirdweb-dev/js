@@ -16,27 +16,37 @@ import { useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { Button, Text } from "tw-components";
 import { OnboardingTitle } from "./Title";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { shortenString } from "utils/usedapp-external";
 
 interface OnboardingConfirmEmailProps {
   email: string;
+  linking?: boolean;
   onSave: () => void;
   onBack: () => void;
 }
 
 export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   email,
+  linking,
   onSave,
   onBack,
 }) => {
   const [token, setToken] = useState("");
+  const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const { onError } = useErrorHandler();
   const trackEvent = useTrack();
+  const { user } = useLoggedInUser();
 
   const { onSuccess: onResendSuccess, onError: onResendError } =
     useTxNotifications(
-      "We've sent you a new email confirmation code.",
-      "Couldn't send email confirmation. Try later!",
+      !linking
+        ? "We've sent you an email confirmation code."
+        : "We've sent you a wallet linking confirmation code.",
+      !linking
+        ? "Couldn't send an email confirmation code. Try later!"
+        : "Couldn't send a wallet linking confirmation code. Try later!",
     );
 
   const form = useForm<EmailConfirmationValidationSchema>({
@@ -55,22 +65,28 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   };
 
   const handleSubmit = form.handleSubmit((values) => {
+    const trackingAction = !linking ? "confirmEmail" : "confirmLinkWallet";
+
     setSaving(true);
 
     trackEvent({
       category: "account",
-      action: "confirmEmail",
+      action: trackingAction,
       label: "attempt",
     });
 
     mutation.mutate(values, {
       onSuccess: () => {
-        onSave();
+        if (!linking) {
+          onSave();
+        } else {
+          setCompleted(true);
+        }
         setSaving(false);
 
         trackEvent({
           category: "account",
-          action: "confirmEmail",
+          action: trackingAction,
           label: "success",
         });
       },
@@ -87,7 +103,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
 
         trackEvent({
           category: "account",
-          action: "confirmEmail",
+          action: trackingAction,
           label: "error",
           error: message,
         });
@@ -142,18 +158,44 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   return (
     <>
       <OnboardingTitle
-        heading="You're almost done! Verify your email."
+        heading={
+          !linking
+            ? "You're almost done! Verify your email."
+            : completed
+            ? "Wallet linked"
+            : "Linking Wallets"
+        }
         description={
-          <>
-            We&apos;ve sent a 6 letter confirmation code to{" "}
-            <strong>{email}</strong>. Copy the code and paste it below.
-          </>
+          !completed ? (
+            <>
+              We&apos;ve sent a 6 letter confirmation code to{" "}
+              <strong>{email}</strong>. Copy the code and paste it below.
+            </>
+          ) : (
+            <>
+              We&apos;ve linked{" "}
+              <strong>{shortenString(user?.address ?? "")}</strong> wallet to{" "}
+              <strong>{email}</strong> thirdweb account.
+            </>
+          )
         }
       />
 
-      <form onSubmit={handleSubmit}>
-        <Flex gap={8} flexDir="column" w="full">
-          <Flex gap={3} flexDir="column" w="full">
+      {completed && (
+        <Button
+          w="full"
+          size="lg"
+          fontSize="md"
+          onClick={onSave}
+          colorScheme="blue"
+        >
+          Continue to Dashboard
+        </Button>
+      )}
+
+      {!completed && (
+        <form onSubmit={handleSubmit}>
+          <Flex gap={8} flexDir="column" w="full">
             <OtpInput
               shouldAutoFocus
               value={token}
@@ -174,6 +216,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
                   rounded="md"
                   textAlign="center"
                   fontSize="larger"
+                  isDisabled={saving}
                   borderColor={
                     form.getFieldState("confirmationToken", form.formState)
                       .error
@@ -184,44 +227,43 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
               )}
             />
 
-            <Button
-              size="lg"
-              fontSize="sm"
-              variant="link"
-              onClick={handleResend}
-              colorScheme="blue"
-              isDisabled={saving}
-            >
-              <Text color="blue.500">Resend code</Text>
-            </Button>
+            <Flex flexDir="column" gap={3}>
+              <Button
+                w="full"
+                size="lg"
+                fontSize="md"
+                colorScheme="blue"
+                type="submit"
+                onClick={handleSubmit}
+                isLoading={saving}
+                isDisabled={saving}
+              >
+                Verify
+              </Button>
+              <Button
+                w="full"
+                size="lg"
+                fontSize="md"
+                variant="outline"
+                onClick={onBack}
+                isDisabled={saving}
+              >
+                {!linking ? "Update email" : "Use another email"}
+              </Button>
+              <Button
+                size="lg"
+                fontSize="sm"
+                variant="link"
+                onClick={handleResend}
+                colorScheme="blue"
+                isDisabled={saving}
+              >
+                <Text color="blue.500">Resend verification code</Text>
+              </Button>
+            </Flex>
           </Flex>
-
-          <Flex flexDir="column" gap={3}>
-            <Button
-              w="full"
-              size="lg"
-              fontSize="md"
-              variant="inverted"
-              type="submit"
-              onClick={handleSubmit}
-              isLoading={saving}
-              isDisabled={saving}
-            >
-              Confirm
-            </Button>
-            <Button
-              w="full"
-              size="lg"
-              fontSize="md"
-              variant="outline"
-              onClick={onBack}
-              isDisabled={saving}
-            >
-              Update email
-            </Button>
-          </Flex>
-        </Flex>
-      </form>
+        </form>
+      )}
     </>
   );
 };

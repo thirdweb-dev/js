@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
 import {
-  AccountValidationOptionalSchema,
   AccountValidationSchema,
-  accountValidationOptionalSchema,
   accountValidationSchema,
 } from "./validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,27 +33,29 @@ interface AccountFormProps {
   previewEnabled?: boolean;
   showBillingButton?: boolean;
   showSubscription?: boolean;
+  hideName?: boolean;
   buttonProps?: ButtonProps;
   buttonText?: string;
   padded?: boolean;
-  optional?: boolean;
   trackingCategory?: string;
   disableUnchanged?: boolean;
   onSave?: (email: string) => void;
+  onDuplicateError?: (email: string) => void;
 }
 
 export const AccountForm: React.FC<AccountFormProps> = ({
   account,
   onSave,
+  onDuplicateError,
   buttonProps,
   buttonText = "Save",
   horizontal = false,
   previewEnabled = false,
+  hideName = false,
   showBillingButton = false,
   showSubscription = false,
   disableUnchanged = false,
   padded = true,
-  optional = false,
 }) => {
   const [isSubscribing, setIsSubscribing] = useState(
     showSubscription && !!account.email?.length,
@@ -63,13 +63,13 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   const trackEvent = useTrack();
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
 
-  const form = useForm<
-    AccountValidationSchema | AccountValidationOptionalSchema
-  >({
-    resolver: zodResolver(
-      optional ? accountValidationOptionalSchema : accountValidationSchema,
-    ),
+  const form = useForm<AccountValidationSchema>({
+    resolver: zodResolver(accountValidationSchema),
     defaultValues: {
+      name: account.name || "",
+      email: account.unconfirmedEmail || account.email || "",
+    },
+    values: {
       name: account.name || "",
       email: account.unconfirmedEmail || account.email || "",
     },
@@ -113,8 +113,17 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           data,
         });
       },
-      onError: (error) => {
-        onError(error);
+      onError: (err) => {
+        const error = err as Error;
+
+        if (
+          onDuplicateError &&
+          error?.message.match(/email address already exists/)
+        ) {
+          onDuplicateError(values.email);
+        } else {
+          onError(error);
+        }
 
         trackEvent({
           category: "account",
@@ -176,39 +185,38 @@ export const AccountForm: React.FC<AccountFormProps> = ({
             )}
           </FormControl>
 
-          <FormControl
-            isRequired={!previewEnabled && !optional}
-            isInvalid={!!form.getFieldState("name", form.formState).error}
-          >
-            <FormLabel>
-              Name {optional && <Text as="span">(optional)</Text>}
-            </FormLabel>
+          {!hideName && (
+            <FormControl
+              isInvalid={!!form.getFieldState("name", form.formState).error}
+            >
+              <FormLabel>Name</FormLabel>
 
-            {previewEnabled ? (
-              <Flex
-                borderRadius="md"
-                borderColor="borderColor"
-                borderWidth={1}
-                h={10}
-                px={3}
-                alignItems="center"
-              >
-                <Heading size="subtitle.sm">{form.getValues("name")}</Heading>
-              </Flex>
-            ) : (
-              <Input
-                placeholder="Company Inc."
-                type="text"
-                {...form.register("name")}
-              />
-            )}
+              {previewEnabled ? (
+                <Flex
+                  borderRadius="md"
+                  borderColor="borderColor"
+                  borderWidth={1}
+                  h={10}
+                  px={3}
+                  alignItems="center"
+                >
+                  <Heading size="subtitle.sm">{form.getValues("name")}</Heading>
+                </Flex>
+              ) : (
+                <Input
+                  placeholder="Company Inc."
+                  type="text"
+                  {...form.register("name")}
+                />
+              )}
 
-            {form.getFieldState("name", form.formState).error && (
-              <FormErrorMessage size="body.sm">
-                {form.getFieldState("name", form.formState).error?.message}
-              </FormErrorMessage>
-            )}
-          </FormControl>
+              {form.getFieldState("name", form.formState).error && (
+                <FormErrorMessage size="body.sm">
+                  {form.getFieldState("name", form.formState).error?.message}
+                </FormErrorMessage>
+              )}
+            </FormControl>
+          )}
 
           {showSubscription && (
             <Checkbox
