@@ -56,7 +56,7 @@ export async function resolveImplementation(
   if (beacon && beacon !== constants.AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
-    address = beacon as string;
+    address = beacon;
   }
   const impl = await Promise.all([
     getImplementationFromStorageSlot(address, provider),
@@ -117,7 +117,7 @@ async function getImplementationFromStorageSlot(
 async function getBeaconFromStorageSlot(
   address: string,
   provider: providers.Provider,
-) {
+): Promise<string | undefined> {
   /**
    * The storage slot of the Beacon as defined in EIP-1967
    * See https://eips.ethereum.org/EIPS/eip-1967#beacon-contract-address
