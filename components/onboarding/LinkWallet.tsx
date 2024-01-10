@@ -4,7 +4,6 @@ import { shortenString } from "utils/usedapp-external";
 import { Flex } from "@chakra-ui/react";
 import { Button, TrackedLink } from "tw-components";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useTrack } from "hooks/analytics/useTrack";
 
 interface OnboardingLinkWalletProps {
@@ -21,11 +20,6 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
   const { user } = useLoggedInUser();
   const trackEvent = useTrack();
   const updateMutation = useUpdateAccount();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Wallet has been linked.",
-    "Failed to link your wallet.",
-  );
 
   const handleSubmit = () => {
     trackEvent({
@@ -47,7 +41,6 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
           if (onSave) {
             onSave();
           }
-          onSuccess();
 
           trackEvent({
             category: "account",
@@ -58,8 +51,6 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         },
         onError: (err) => {
           const error = err as Error;
-
-          onError(error);
 
           trackEvent({
             category: "account",
