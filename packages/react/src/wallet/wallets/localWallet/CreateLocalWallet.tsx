@@ -3,7 +3,7 @@ import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
@@ -13,6 +13,7 @@ import { spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 import { wait } from "../../../utils/wait";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
@@ -20,6 +21,8 @@ export const CreateLocalWallet_Password: React.FC<{
   localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
   persist: boolean;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
 }> = (props) => {
   const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
@@ -33,7 +36,7 @@ export const CreateLocalWallet_Password: React.FC<{
     props.persist,
   );
 
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -58,6 +61,8 @@ export const CreateLocalWallet_Password: React.FC<{
           setShowImportScreen(false);
         }}
         persist={props.persist}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }
@@ -202,9 +207,11 @@ export const CreateLocalWallet_Guest: React.FC<{
   goBack: () => void;
   localWallet: LocalWalletConfig;
   persist: boolean;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet, props.persist);
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
   const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {

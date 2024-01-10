@@ -11,7 +11,16 @@ export {
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
 export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
-export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+export {
+  ConnectModalInline,
+  type ConnectModalInlineProps,
+} from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+
+export {
+  useShowConnectEmbed,
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "../wallet/ConnectWallet/Modal/ConnectEmbed";
 
 export {
   NetworkSelector,

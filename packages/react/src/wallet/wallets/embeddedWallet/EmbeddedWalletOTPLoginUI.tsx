@@ -1,4 +1,4 @@
-import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
@@ -33,13 +33,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
-    useWalletContext();
+    props;
 
   const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
-  const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
+  const [screen, setScreen] = useState<ScreenToShow>("base");
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
@@ -47,7 +47,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     setEmailStatus("sending");
 
     try {
-      const _wallet = createWalletInstance(props.walletConfig);
+      const _wallet = createWalletInstance();
       setWallet(_wallet);
       const status = await _wallet.sendVerificationEmail({ email });
       setEmailStatus(status);
@@ -56,7 +56,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setVerifyStatus("idle");
       setEmailStatus("error");
     }
-  }, [createWalletInstance, email, props.walletConfig]);
+  }, [createWalletInstance, email]);
 
   const verify = async (otp: string) => {
     if (typeof emailStatus !== "object" || otp.length !== 6) {

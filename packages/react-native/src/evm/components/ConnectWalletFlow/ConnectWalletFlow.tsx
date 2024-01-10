@@ -1,7 +1,12 @@
 import Text from "../base/Text";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
+import {
+  WalletConfig,
+  useAddress,
+  useWalletContext,
+  useWallets,
+} from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
@@ -34,7 +39,15 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
   const theme = useColorScheme();
   const appTheme = useGlobalTheme();
-  const connect = useConnect();
+  const address = useAddress();
+  const {
+    activeWallet: connectedWallet,
+    setConnectedWallet,
+    setConnectionStatus,
+    connectionStatus,
+    connect,
+    createWalletInstance,
+  } = useWalletContext();
 
   const onClose = useCallback(
     (reset?: boolean) => {
@@ -125,15 +138,31 @@ export const ConnectWalletFlow = () => {
           supportedWallets={supportedWallets}
           selectionData={selectionData}
           setSelectionData={() => {}} // TODO
+          connect={(options) => {
+            return connect(activeWallet, options);
+          }}
+          connectedWallet={connectedWallet}
+          connectedWalletAddress={address}
+          connectionStatus={connectionStatus}
+          createWalletInstance={() => createWalletInstance(activeWallet)}
+          setConnectedWallet={setConnectedWallet}
+          setConnectionStatus={setConnectionStatus}
         />
       );
     }
   }, [
     activeWallet,
+    address,
+    connect,
+    connectedWallet,
+    connectionStatus,
+    createWalletInstance,
     handleClose,
     modalVisible,
     onBackPress,
     selectionData,
+    setConnectedWallet,
+    setConnectionStatus,
     supportedWallets,
     theme,
   ]);

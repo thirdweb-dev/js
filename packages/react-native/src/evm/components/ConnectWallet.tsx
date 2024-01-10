@@ -94,6 +94,18 @@ export type ConnectWalletProps = {
    * The default is `false`
    */
   hideSwitchToPersonalWallet?: boolean;
+
+  /**
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
+   *
+   * By default it is `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideDisconnect={true} />
+   * ```
+   */
+  hideDisconnect?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -112,6 +124,7 @@ export const ConnectWallet = ({
   privacyPolicyUrl,
   supportedTokens,
   hideSwitchToPersonalWallet,
+  hideDisconnect,
 }: ConnectWalletProps) => {
   const globalTheme = useGlobalTheme();
   const l = useLocale();
@@ -191,6 +204,7 @@ export const ConnectWallet = ({
               hideTestnetFaucet={hideTestnetFaucet}
               hideReceiveButton={hideReceiveButton}
               hideSendButton={hideSendButton}
+              hideDisconnect={hideDisconnect}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
               hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
