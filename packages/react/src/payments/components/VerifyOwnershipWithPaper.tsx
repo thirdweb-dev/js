@@ -84,7 +84,7 @@ export const VerifyOwnershipWithPaper: React.FC<
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, []);
+  }, [onError, onSuccess, onWindowClose]);
 
   const url = new URL("/sdk/v1/login-with-paper", PAPER_APP_URL);
   url.searchParams.append("chainName", chainNameToUse);

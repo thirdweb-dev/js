@@ -97,7 +97,20 @@ export const CheckoutWithCard = ({
       options,
       configs,
     });
-  }, [CheckoutWithCardIframeContainerRef.current]);
+  }, [
+    appNameToUse,
+    clientId,
+    configs,
+    locale,
+    onBeforeModalOpen,
+    onCardDetailLoad,
+    onError,
+    onPaymentSuccess,
+    onPriceUpdate,
+    onReview,
+    options,
+    sdkClientSecret,
+  ]);
 
   return (
     <>

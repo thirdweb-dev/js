@@ -141,7 +141,7 @@ export const PaperCheckout = <T extends ContractType>({
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, []);
+  }, [onCloseCheckout, onPaymentSuccess, onTransferSuccess]);
 
   // Build iframe URL with query params.
   const checkoutUrl = new URL(`/checkout/${checkoutId}`, PAPER_APP_URL);
