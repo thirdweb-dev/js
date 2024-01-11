@@ -63,8 +63,8 @@ export function ThirdwebAuth<
 
   return {
     ThirdwebAuthHandler,
-    getUser: async (req?: NextRequest) => {
-      return await getUser<TData, TSession>(authCtx, req);
+    getUser: async () => {
+      return await getUser<TData, TSession>(authCtx);
     },
   };
 }

@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { cookies, headers } from "next/headers";
 
 import {
@@ -47,8 +46,7 @@ export async function getUser<
   TData extends Json = Json,
   TSession extends Json = Json,
 >(
-  ctx: ThirdwebAuthContext<TData, TSession>,
-  req?: NextRequest,
+  ctx: ThirdwebAuthContext<TData, TSession>
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken();
   if (!token) {
@@ -68,8 +66,8 @@ export async function getUser<
     return null;
   }
 
-  if (req && ctx.callbacks?.onUser) {
-    const data = await ctx.callbacks.onUser(authenticatedUser, req);
+  if (ctx.callbacks?.onUser) {
+    const data = await ctx.callbacks.onUser(authenticatedUser);
     if (data) {
       return { ...authenticatedUser, data };
     }

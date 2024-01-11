@@ -20,7 +20,7 @@ export default async function handler(
     );
   }
 
-  const user = await getUser(ctx, req);
+  const user = await getUser(ctx);
 
   const response = NextResponse.json(user, { status: 200 });
 

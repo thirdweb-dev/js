@@ -1,5 +1,4 @@
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import type { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
@@ -61,17 +60,17 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req: NextRequest) => void | TSession)
-      | ((address: string, req: NextRequest) => Promise<void | TSession>);
+      | ((address: string) => void | TSession)
+      | ((address: string) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req: NextRequest) => void)
-      | ((token: string, req: NextRequest) => Promise<void>);
+      | ((token: string) => void)
+      | ((token: string) => Promise<void>);
     onUser?:
-      | ((user: User<TSession>, req: NextRequest) => void | TData)
-      | ((user: User<TSession>, req: NextRequest) => Promise<void | TData>);
+      | ((user: User<TSession>) => void | TData)
+      | ((user: User<TSession>) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req: NextRequest) => void)
-      | ((user: User, req: NextRequest) => Promise<void>);
+      | ((user: User) => void)
+      | ((user: User) => Promise<void>);
   };
 };
 

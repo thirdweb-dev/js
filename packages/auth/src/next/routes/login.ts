@@ -43,7 +43,7 @@ export default async function handler(
 
   const getSession = async (address: string) => {
     if (ctx.callbacks?.onLogin) {
-      return ctx.callbacks.onLogin(address, req);
+      return ctx.callbacks.onLogin(address);
     }
   };
 
@@ -88,7 +88,7 @@ export default async function handler(
   }
 
   if (ctx.callbacks?.onToken) {
-    await ctx.callbacks.onToken(token, req);
+    await ctx.callbacks.onToken(token);
   }
 
   const {
