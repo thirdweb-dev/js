@@ -43,6 +43,7 @@ export default {
     "https://mantis-rpc.phoenix-systems.io"
   ],
   "shortName": "mantis",
+  "slip44": 1,
   "slug": "mantis-testnet-hexapod",
   "testnet": true
 } as const satisfies Chain;

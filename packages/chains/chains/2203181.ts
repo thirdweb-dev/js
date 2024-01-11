@@ -33,6 +33,7 @@ export default {
     "wss://devnetopenapi2.platon.network/ws"
   ],
   "shortName": "platondev",
+  "slip44": 1,
   "slug": "platon-dev-testnet-deprecated",
   "status": "deprecated",
   "testnet": true

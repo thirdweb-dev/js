@@ -11,6 +11,9 @@ type IconTextProps = {
   onPress: () => void;
 } & React.ComponentProps<typeof BaseButton>;
 
+/**
+ * @internal
+ */
 export const IconTextButton = ({
   icon,
   onPress,

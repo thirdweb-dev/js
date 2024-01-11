@@ -13,6 +13,9 @@ import { PublishedContractSchema } from "../../schema/contracts/custom";
 
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
+/**
+ * @internal
+ */
 export async function fetchPublishedContractFromPolygon(
   publisherAddress: AddressOrEns,
   contractName: string,

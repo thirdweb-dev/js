@@ -42,8 +42,8 @@ import {
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { RPCConnectionHandler } from "./internal/rpc-connection-handler";
 import { Transaction } from "./transactions";
 import { fetchAndCacheDeployMetadata } from "../../common/any-evm-utils/fetchAndCacheDeployMetadata";
 import { fetchPublishedContractFromPolygon } from "../../common/any-evm-utils/fetchPublishedContractFromPolygon";

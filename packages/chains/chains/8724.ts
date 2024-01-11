@@ -20,7 +20,7 @@ export default {
     "https://testnet-web3.wolot.io"
   ],
   "shortName": "tolo",
-  "slip44": 479,
+  "slip44": 1,
   "slug": "tool-global-testnet",
   "testnet": true
 } as const satisfies Chain;

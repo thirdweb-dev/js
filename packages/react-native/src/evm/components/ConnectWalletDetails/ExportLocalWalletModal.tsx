@@ -13,12 +13,12 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import {
   shortenAddress,
   useAddress,
+  usePersonalWalletAddress,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
 import { useLocale } from "../../providers/ui-context-provider";
@@ -176,16 +176,17 @@ export const ExportLocalWalletModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
-          <Box flexDirection="row" justifyContent="flex-end" mt="lg">
+          <Box flexDirection="row" justifyContent="flex-end" mt="xs">
             <BaseButton
-              backgroundColor="white"
+              backgroundColor="accentButtonColor"
+              borderColor="accentButtonColor"
               style={styles.modalButton}
               onPress={onContinuePress}
             >
               {isExporting ? (
                 <ActivityIndicator size="small" color="black" />
               ) : (
-                <Text variant="bodySmall" color="black">
+                <Text variant="bodySmall" color="accentButtonTextColor">
                   {l.connect_wallet_details.backup}
                 </Text>
               )}

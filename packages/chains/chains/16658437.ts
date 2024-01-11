@@ -24,6 +24,7 @@ export default {
     "https://testnet.plian.io/testnet"
   ],
   "shortName": "plian-testnet",
+  "slip44": 1,
   "slug": "plian-testnet-main",
   "testnet": true
 } as const satisfies Chain;

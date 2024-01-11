@@ -80,17 +80,16 @@ export async function fetchKeyMetadataFromApi(
       "content-type": "application/json",
     },
   });
-  let json: ApiResponse;
+
+  let text = "";
   try {
-    json = await response.json();
+    text = await response.text();
+    return JSON.parse(text);
   } catch (e) {
     throw new Error(
-      `Error fetching key metadata from API: ${response.status} - ${
-        response.statusText
-      } - ${await response.text()}`,
+      `Error fetching key metadata from API: ${response.status} - ${text}`,
     );
   }
-  return json;
 }
 
 export async function fetchAccountFromApi(
@@ -110,17 +109,16 @@ export async function fetchAccountFromApi(
       authorization: `Bearer ${jwt}`,
     },
   });
-  let json: ApiAccountResponse;
+
+  let text = "";
   try {
-    json = await response.json();
+    text = await response.text();
+    return JSON.parse(text);
   } catch (e) {
     throw new Error(
-      `Error fetching account from API: ${response.status} - ${
-        response.statusText
-      } - ${await response.text()}`,
+      `Error fetching account from API: ${response.status} - ${text}`,
     );
   }
-  return json;
 }
 
 export async function updateRateLimitedAt(

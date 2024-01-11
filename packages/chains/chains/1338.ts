@@ -24,6 +24,7 @@ export default {
     "https://elysium-test-rpc.vulcanforged.com"
   ],
   "shortName": "ELST",
+  "slip44": 1,
   "slug": "elysium-testnet",
   "testnet": true,
   "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged"

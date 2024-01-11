@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { fontSize, iconSize } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { Text } from "../../../components/text";
 import { Button } from "../../../components/buttons";
@@ -26,7 +26,10 @@ export const ScanScreen: React.FC<{
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title={props.walletName} />
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : props.onBack}
+          title={props.walletName}
+        />
       </Container>
 
       <Spacer y="sm" />
@@ -50,7 +53,14 @@ export const ScanScreen: React.FC<{
 
           <Spacer y="lg" />
 
-          <Text center multiline balance>
+          <Text
+            center
+            multiline
+            balance
+            style={{
+              paddingInline: spacing.lg,
+            }}
+          >
             {props.qrScanInstruction}
           </Text>
         </div>

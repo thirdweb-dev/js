@@ -39,6 +39,7 @@ export default {
     "wss://cacib-saturn-test.francecentral.cloudapp.azure.com:9443"
   ],
   "shortName": "kerleano",
+  "slip44": 1,
   "slug": "kerleano",
   "status": "active",
   "testnet": true,

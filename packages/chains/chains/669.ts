@@ -27,6 +27,7 @@ export default {
     "wss://ws-testnet.juncachain.com"
   ],
   "shortName": "juncat",
+  "slip44": 1,
   "slug": "juncachain-testnet",
   "testnet": true
 } as const satisfies Chain;

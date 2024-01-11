@@ -45,6 +45,7 @@ export default {
     "https://alpha-hk-http-geth.lumoz.org"
   ],
   "shortName": "Lumoz-Testnet",
+  "slip44": 1,
   "slug": "lumoz-testnet-alpha",
   "testnet": true
 } as const satisfies Chain;

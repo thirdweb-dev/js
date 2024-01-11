@@ -20,6 +20,7 @@ export type ModalConfig = {
     onLogin?: (token: string) => void;
     onLogout?: () => void;
   };
+  isEmbed?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -47,6 +48,12 @@ export const WalletUIStatesProvider = (
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
     welcomeScreen?: WelcomeScreen;
+    isEmbed?: boolean;
+    auth?: {
+      loginOptional?: boolean;
+      onLogin?: (token: string) => void;
+      onLogout?: () => void;
+    };
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -62,6 +69,8 @@ export const WalletUIStatesProvider = (
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.titleIconUrl,
+    isEmbed: props.isEmbed,
+    auth: props.auth,
   });
 
   return (
@@ -77,10 +86,47 @@ export const WalletUIStatesProvider = (
   );
 };
 
+/**
+ * Check if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal is open or not
+ *
+ * @example
+ * ```tsx
+ * const isOpen = useIsWalletModalOpen();
+ * ```
+ *
+ * @returns `true` if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) modal is open, `false` otherwise
+ * @connectWallet
+ */
 export const useIsWalletModalOpen = () => {
   return useContext(WalletModalOpen);
 };
 
+/**
+ * Open or close the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal
+ *
+ * @example
+ * ```tsx
+ * const setIsWalletModalOpen = useSetIsWalletModalOpen();
+ *
+ * function openModal() {
+ *  setIsWalletModalOpen(true);
+ * }
+ *
+ * function closeModal() {
+ *  setIsWalletModalOpen(false);
+ * }
+ *
+ * return (
+ *   <div>
+ *    <button onClick={openModal}>Open Modal</button>
+ *    <button onClick={closeModal}>Close Modal</button>
+ *   </div>
+ * )
+ * ```
+ *
+ * @returns Function to open or close the modal
+ * @connectWallet
+ */
 export const useSetIsWalletModalOpen = () => {
   const context = useContext(SetWalletModalOpen);
   if (context === undefined) {

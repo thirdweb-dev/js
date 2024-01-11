@@ -14,6 +14,7 @@ export default {
   "networkId": 2,
   "rpc": [],
   "shortName": "tubq",
+  "slip44": 1,
   "slug": "ubiq-network-testnet",
   "testnet": true
 } as const satisfies Chain;

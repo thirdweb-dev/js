@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://testnet.torusscan.com",
+      "url": "https://testnet.toruscan.com",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
@@ -36,6 +36,7 @@ export default {
     "https://rpc.testnet.toruschain.com"
   ],
   "shortName": "ttqf",
+  "slip44": 1,
   "slug": "torus-testnet",
   "testnet": true
 } as const satisfies Chain;

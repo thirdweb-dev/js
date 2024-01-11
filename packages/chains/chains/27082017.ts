@@ -37,6 +37,7 @@ export default {
     "https://testnet-rpc.exlscan.com"
   ],
   "shortName": "exlvolta",
+  "slip44": 1,
   "slug": "excoincial-chain-volta-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -21,6 +21,7 @@ export default {
     "wss://volta-rpc.energyweb.org/ws"
   ],
   "shortName": "vt",
+  "slip44": 1,
   "slug": "energy-web-volta-testnet",
   "testnet": true
 } as const satisfies Chain;

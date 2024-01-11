@@ -26,6 +26,7 @@ export default {
     "https://rpc.testnet.oonechain.com"
   ],
   "shortName": "oonetest",
+  "slip44": 1,
   "slug": "oone-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

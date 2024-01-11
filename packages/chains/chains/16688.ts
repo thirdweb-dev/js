@@ -44,6 +44,7 @@ export default {
     "https://evmrpc.nyancat.irisnet.org"
   ],
   "shortName": "nyancat",
+  "slip44": 1,
   "slug": "irishub-testnet",
   "testnet": true
 } as const satisfies Chain;

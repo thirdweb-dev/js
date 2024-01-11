@@ -32,6 +32,7 @@ export default {
     "https://testnet.hashkeychain/rpc"
   ],
   "shortName": "hsktest",
+  "slip44": 1,
   "slug": "hashkey-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

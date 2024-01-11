@@ -32,6 +32,7 @@ export default {
     "https://testnet.vexascan.com/evmapi"
   ],
   "shortName": "VEX",
+  "slip44": 1,
   "slug": "vex-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

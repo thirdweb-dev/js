@@ -5,6 +5,9 @@ import {
 } from "../connectors/engine/signer";
 import { AbstractWallet } from "./abstract";
 
+/**
+ * @wallet
+ */
 export class EngineWallet extends AbstractWallet {
   #signer: EngineSigner;
 

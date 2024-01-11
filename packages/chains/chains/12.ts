@@ -18,6 +18,7 @@ export default {
     "https://api.metadium.com/dev"
   ],
   "shortName": "kal",
+  "slip44": 1,
   "slug": "metadium-testnet",
   "testnet": true
 } as const satisfies Chain;

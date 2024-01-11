@@ -26,6 +26,7 @@ export default {
     "https://tapi.dynoprotocol.com"
   ],
   "shortName": "tdyno",
+  "slip44": 1,
   "slug": "dyno-testnet",
   "testnet": true
 } as const satisfies Chain;

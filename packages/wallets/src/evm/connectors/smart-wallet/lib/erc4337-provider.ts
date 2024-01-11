@@ -4,18 +4,18 @@ import {
   EntryPoint,
   UserOperationStruct,
 } from "@account-abstraction/contracts";
-import { ClientConfig } from "@account-abstraction/sdk";
 import { UserOperationEventListener } from "./userop-event";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersSigner } from "./erc4337-signer";
 import { HttpRpcClient } from "./http-rpc-client";
+import { ProviderConfig } from "../types";
 
 export class ERC4337EthersProvider extends providers.BaseProvider {
   readonly signer: ERC4337EthersSigner;
 
   constructor(
     readonly chainId: number,
-    readonly config: ClientConfig,
+    readonly config: ProviderConfig,
     readonly originalSigner: Signer,
     readonly originalProvider: providers.BaseProvider,
     readonly httpRpcClient: HttpRpcClient,
@@ -46,15 +46,8 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
       throw new Error("Should not get here. Investigate.");
     }
     if (method === "estimateGas") {
-      // hijack this to estimate gas from the entrypoint instead
-      const { callGasLimit } =
-        await this.smartAccountAPI.encodeUserOpCallDataAndGasLimit({
-          target: params.transaction.to,
-          data: params.transaction.data,
-          value: params.transaction.value,
-          gasLimit: params.transaction.gasLimit,
-        });
-      return callGasLimit;
+      // gas estimation does nothing at this layer, sendTransaction will do the gas estimation for the userOp
+      return BigNumber.from(500000);
     }
     return await this.originalProvider.perform(method, params);
   }

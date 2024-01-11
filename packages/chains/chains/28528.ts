@@ -27,6 +27,7 @@ export default {
     "https://alpha-1-replica-2.bedrock-goerli.optimism.io"
   ],
   "shortName": "obgor",
+  "slip44": 1,
   "slug": "optimism-bedrock-goerli-alpha-testnet",
   "testnet": true
 } as const satisfies Chain;

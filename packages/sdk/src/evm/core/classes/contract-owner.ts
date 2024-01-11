@@ -4,17 +4,14 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_OWNER } from "../../constants/thirdweb-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
  * Encodes and decodes Contract functions
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractOwner<TContract extends Ownable>
-  implements DetectableFeature
-{
+export class ContractOwner implements DetectableFeature {
   featureName = FEATURE_OWNER.name;
   private contractWrapper;
 
@@ -29,7 +26,7 @@ export class ContractOwner<TContract extends Ownable>
    * await contract.owner.get();
    * console.log("Owner address: ", ownerAddress);
    * ```
-   * @returns the owner address
+   * @returns The owner address
    * @twfeature Ownable
    */
   public async get(): Promise<string> {

@@ -19,6 +19,7 @@ export default {
     "https://smartbch.devops.cash/testnet"
   ],
   "shortName": "smartbchtest",
+  "slip44": 1,
   "slug": "smart-bitcoin-cash-testnet",
   "testnet": true
 } as const satisfies Chain;

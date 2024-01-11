@@ -37,6 +37,7 @@ export default {
     "wss://jellie-rpc-wss.twala.io/"
   ],
   "shortName": "twl-jellie",
+  "slip44": 1,
   "slug": "jellie",
   "testnet": true,
   "title": "Twala Testnet Jellie"

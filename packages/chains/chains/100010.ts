@@ -22,6 +22,7 @@ export default {
   "networkId": 100010,
   "rpc": [],
   "shortName": "vechain-testnet",
+  "slip44": 1,
   "slug": "vechain-testnet",
   "testnet": true
 } as const satisfies Chain;

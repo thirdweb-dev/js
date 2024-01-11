@@ -32,6 +32,7 @@ export default {
     "https://robin.rangersprotocol.com/api/jsonrpc"
   ],
   "shortName": "trpg",
+  "slip44": 1,
   "slug": "rangers-protocol-testnet-robin",
   "testnet": true
 } as const satisfies Chain;

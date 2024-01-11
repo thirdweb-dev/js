@@ -1,8 +1,8 @@
-import { PaymasterAPI } from "@account-abstraction/sdk";
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import { toJSON } from "./utils";
-
+import { hexlifyUserOp } from "./utils";
 import { isTwUrl } from "../../../utils/url";
+import { PaymasterAPI, PaymasterResult } from "../types";
+import { DEBUG } from "./http-rpc-client";
 
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
@@ -28,7 +28,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
 
   async getPaymasterAndData(
     userOp: Partial<UserOperationStruct>,
-  ): Promise<string> {
+  ): Promise<PaymasterResult> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
@@ -85,7 +85,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         jsonrpc: "2.0",
         id: 1,
         method: "pm_sponsorUserOperation",
-        params: [await toJSON(userOp), { entryPoint: this.entryPoint }],
+        params: [await hexlifyUserOp(userOp), this.entryPoint],
       }),
     });
     const res = await response.json();
@@ -101,11 +101,26 @@ Code: ${code}`,
       );
     }
 
+    if (DEBUG) {
+      console.debug("Paymaster result:", res);
+    }
+
     if (res.result) {
-      const result = (res.result as any).paymasterAndData || res.result;
-      return result.toString();
+      // some paymasters return a string, some return an object with more data
+      if (typeof res.result === "string") {
+        return {
+          paymasterAndData: res.result,
+        };
+      } else {
+        return res.result as PaymasterResult;
+      }
     } else {
-      throw new Error(`Paymaster returned no result from ${this.paymasterUrl}`);
+      const error =
+        res.error?.message ||
+        res.error ||
+        response.statusText ||
+        "unknown error";
+      throw new Error(`Paymaster error from ${this.paymasterUrl}: ${error}`);
     }
   }
 }

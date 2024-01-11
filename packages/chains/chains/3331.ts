@@ -26,6 +26,7 @@ export default {
     "https://rpc-testnet.zcore.cash"
   ],
   "shortName": "zcrbeach",
+  "slip44": 1,
   "slug": "zcore-testnet",
   "testnet": true
 } as const satisfies Chain;

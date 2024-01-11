@@ -32,6 +32,7 @@ export default {
     "https://node-testnet.vention.network"
   ],
   "shortName": "vsct",
+  "slip44": 1,
   "slug": "vention-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

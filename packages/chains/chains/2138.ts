@@ -42,7 +42,7 @@ export default {
     "wss://rpc.public-2138.defi-oracle.io"
   ],
   "shortName": "dfio-meta-test",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "defi-oracle-meta-testnet",
   "testnet": true
 } as const satisfies Chain;

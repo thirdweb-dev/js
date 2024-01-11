@@ -32,6 +32,7 @@ export default {
     "https://rpc.testnet.paribuscan.com"
   ],
   "shortName": "prbtestnet",
+  "slip44": 1,
   "slug": "paribu-net-testnet",
   "testnet": true
 } as const satisfies Chain;

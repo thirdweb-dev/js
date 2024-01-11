@@ -1,5 +1,23 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.11
+
+### Patch Changes
+
+- [#2107](https://github.com/thirdweb-dev/js/pull/2107) [`1a5627f7`](https://github.com/thirdweb-dev/js/commit/1a5627f72d5a38386228517ef99fb800ca0f5a57) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - added checkout as service
+
+## 0.4.10
+
+### Patch Changes
+
+- [#1988](https://github.com/thirdweb-dev/js/pull/1988) [`17fe41d4`](https://github.com/thirdweb-dev/js/commit/17fe41d42bf99ccc83669557dc48d6fd22a5a04e) Thanks [@assimovt](https://github.com/assimovt)! - fix api key caching ttl
+
+## 0.4.9
+
+### Patch Changes
+
+- [#1976](https://github.com/thirdweb-dev/js/pull/1976) [`8ff87be6`](https://github.com/thirdweb-dev/js/commit/8ff87be631f1754b15e7ec4556d51e8eec5cbd18) Thanks [@arcoraven](https://github.com/arcoraven)! - Handle if error parsing JSON response in authorization helper
+
 ## 0.4.8
 
 ### Patch Changes

@@ -62,6 +62,7 @@ export async function getUser<
   const token = getToken(req);
 
   if (!token) {
+    console.error("Error: No auth token found");
     return null;
   }
 
@@ -75,6 +76,7 @@ export async function getUser<
       },
     });
   } catch (err) {
+    console.error(`Authenticate Error: ${(err as Error)?.message}`);
     return null;
   }
 

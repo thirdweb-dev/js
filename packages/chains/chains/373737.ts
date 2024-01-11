@@ -36,6 +36,7 @@ export default {
     "https://jsonrpc-test.hap.land"
   ],
   "shortName": "hap-testnet",
+  "slip44": 1,
   "slug": "hapchain-testnet",
   "testnet": true
 } as const satisfies Chain;

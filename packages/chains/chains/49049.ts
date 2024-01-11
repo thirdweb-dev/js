@@ -30,6 +30,7 @@ export default {
     "https://rpc-floripa.wireshape.org"
   ],
   "shortName": "floripa",
+  "slip44": 1,
   "slug": "wireshape-floripa-testnet",
   "testnet": true,
   "title": "Wireshape Floripa Testnet"

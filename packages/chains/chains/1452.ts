@@ -30,6 +30,7 @@ export default {
     "https://rpc.giltestnet.com"
   ],
   "shortName": "gil",
+  "slip44": 1,
   "slug": "gil-testnet",
   "testnet": true
 } as const satisfies Chain;

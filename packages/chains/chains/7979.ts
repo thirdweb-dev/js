@@ -13,16 +13,28 @@ export default {
         "height": 512,
         "format": "png"
       }
+    },
+    {
+      "name": "DOScan",
+      "url": "https://explorer.doschain.com/",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://doschain.io",
+  "infoURL": "https://doschain.com/",
   "name": "DOS Chain",
   "nativeCurrency": {
     "name": "DOS",
@@ -30,6 +42,7 @@ export default {
     "decimals": 18
   },
   "networkId": 7979,
+  "redFlags": [],
   "rpc": [
     "https://dos-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7979.rpc.thirdweb.com/${THIRDWEB_API_KEY}",

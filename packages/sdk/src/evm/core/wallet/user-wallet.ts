@@ -1,6 +1,6 @@
 import type { BlockTag } from "@ethersproject/abstract-provider";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   Wallet,
@@ -26,8 +26,8 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { Amount, CurrencyValue } from "../../types/currency";
-import { ContractWrapper } from "../classes/contract-wrapper";
-import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
+import { ContractWrapper } from "../classes/internal/contract-wrapper";
+import { RPCConnectionHandler } from "../classes/internal/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
 import { getDefaultGasOverrides } from "../../common/gas-price";
 /**
@@ -112,10 +112,14 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       // native token transfer
       const from = await signer.getAddress();
+      const gasOverrides = isBrowser()
+        ? {}
+        : await getDefaultGasOverrides(this.connection.getProvider());
       const tx = await signer.sendTransaction({
         from,
         to: resolvedTo,
         value: amountInWei,
+        ...gasOverrides,
       });
       return {
         receipt: await tx.wait(),
@@ -213,7 +217,7 @@ export class UserWallet {
   /**
    * Sign any message with the connected wallet private key
    * @param message - the message to sign
-   * @returns the signed message
+   * @returns The signed message
    *
    * @example
    * ```javascript
@@ -234,7 +238,7 @@ export class UserWallet {
    * @param domain - the domain as EIP712 standard
    * @param types - the structure and data types as defined by the EIP712 standard
    * @param message - the data to sign
-   * @returns the payload and its associated signature
+   * @returns The payload and its associated signature
    *
    * @example
    * ```javascript
@@ -269,7 +273,7 @@ export class UserWallet {
    * Recover the signing address from a signed message
    * @param message - the original message that was signed
    * @param signature - the signature to recover the address from
-   * @returns the address that signed the message
+   * @returns The address that signed the message
    *
    * @example
    * ```javascript
@@ -294,20 +298,14 @@ export class UserWallet {
     transactionRequest: providers.TransactionRequest,
   ): Promise<providers.TransactionResponse> {
     const signer = this.requireWallet();
-    const hasGasPrice = !!transactionRequest.gasPrice;
-    const hasFeeData =
-      !!transactionRequest.maxFeePerGas &&
-      !!transactionRequest.maxPriorityFeePerGas;
-    const hasGasData = hasGasPrice || hasFeeData;
-    if (!hasGasData) {
-      // set default gas values
-      const defaultGas = await getDefaultGasOverrides(
-        this.connection.getProvider(),
-      );
-      transactionRequest.maxFeePerGas = defaultGas.maxFeePerGas;
-      transactionRequest.maxPriorityFeePerGas = defaultGas.maxPriorityFeePerGas;
-      transactionRequest.gasPrice = defaultGas.gasPrice;
-    }
+    // set default gas values
+    const gasOverrides = isBrowser()
+      ? {}
+      : await getDefaultGasOverrides(this.connection.getProvider());
+    transactionRequest = {
+      ...gasOverrides,
+      ...transactionRequest,
+    };
     return signer.sendTransaction(transactionRequest);
   }
 

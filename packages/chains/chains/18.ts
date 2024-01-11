@@ -26,6 +26,7 @@ export default {
     "https://testnet-rpc.thundercore.com"
   ],
   "shortName": "TST",
+  "slip44": 1,
   "slug": "thundercore-testnet",
   "testnet": true
 } as const satisfies Chain;

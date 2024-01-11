@@ -4,20 +4,22 @@ export default {
   "chainId": 503129905,
   "explorers": [
     {
-      "name": "nebula",
+      "name": "Blockscout",
       "url": "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmfQkfmQuoUUUKwF1yCcrPEzFcWLaqNyiSv5YMcSj6zs74",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://sfuel.dirtroad.dev/staging"
+  ],
+  "icon": {
+    "url": "ipfs://bafybeic5eexvd34wfy4kuebcyu73qpkv3x57s54ebzjyhyjsmeuni5jwcm",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://nebulachain.io/",
-  "name": "Nebula Staging",
+  "name": "SKALE Nebula Hub Testnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -25,12 +27,13 @@ export default {
   },
   "networkId": 503129905,
   "rpc": [
-    "https://nebula-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://skale-nebula-hub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://503129905.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
     "wss://staging-v3.skalenodes.com/v1/ws/staging-faint-slimy-achird"
   ],
-  "shortName": "nebula-staging",
-  "slug": "nebula-staging",
-  "testnet": false
+  "shortName": "nebula-testnet",
+  "slip44": 1,
+  "slug": "skale-nebula-hub-testnet",
+  "testnet": true
 } as const satisfies Chain;

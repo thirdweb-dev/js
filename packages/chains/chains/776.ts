@@ -22,6 +22,7 @@ export default {
   "networkId": 776,
   "rpc": [],
   "shortName": "opc",
+  "slip44": 1,
   "slug": "openchain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -14,6 +14,7 @@ export default {
   "networkId": 534354,
   "rpc": [],
   "shortName": "scr-prealpha",
+  "slip44": 1,
   "slug": "scroll-pre-alpha-testnet",
   "status": "deprecated",
   "testnet": true

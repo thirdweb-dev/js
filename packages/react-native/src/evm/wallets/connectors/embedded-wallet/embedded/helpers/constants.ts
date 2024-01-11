@@ -12,6 +12,9 @@ export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
 
 export const AWS_REGION = "us-west-2";
 
+export const EWS_VERSION_HEADER = "x-embedded-wallet-version";
+export const THIRDWEB_SESSION_NONCE_HEADER = "x-session-nonce";
+
 export const COGNITO_USER_POOL_ID = "us-west-2_UFwLcZIpq";
 export const COGNITO_APP_CLIENT_ID = "2e02ha2ce6du13ldk8pai4h3d0";
 export const COGNITO_IDENTITY_POOL_ID =
@@ -19,7 +22,8 @@ export const COGNITO_IDENTITY_POOL_ID =
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
-const BASE_URL_2023 = "https://embedded-wallet.thirdweb.com/";
+export const DOMAIN_URL_2023 = "https://embedded-wallet.thirdweb.com";
+const BASE_URL_2023 = `${DOMAIN_URL_2023}/`;
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;
 
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;
@@ -30,6 +34,7 @@ export const ROUTE_STORE_USER_SHARES = `${ROUTE_2023_10_20_API_BASE_PATH}/embedd
 export const ROUTE_GET_USER_SHARES = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-shares`;
 export const ROUTE_VERIFY_THIRDWEB_CLIENT_ID = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/verify-thirdweb-client-id`;
 export const ROUTE_AUTH_JWT_CALLBACK = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-custom-jwt`;
+export const ROUTE_AUTH_ENDPOINT_CALLBACK = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-custom-auth-endpoint`;
 
 export const ROUTE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/send-user-managed-email-otp`;
 export const ROUTE_VALIDATE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-thirdweb-email-otp`;

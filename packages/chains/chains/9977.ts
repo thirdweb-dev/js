@@ -33,6 +33,7 @@ export default {
     "wss://testnet-msc.mindchain.info/ws"
   ],
   "shortName": "tMIND",
+  "slip44": 1,
   "slug": "mind-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

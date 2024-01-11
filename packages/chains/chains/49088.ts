@@ -31,6 +31,7 @@ export default {
     "https://public-02.testnet.thebifrost.io/rpc"
   ],
   "shortName": "tbfc",
+  "slip44": 1,
   "slug": "bifrost-testnet",
   "testnet": true,
   "title": "Bifrost Network Testnet"

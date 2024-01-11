@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.senjepowersscan.com"
   ],
   "shortName": "SPCt",
+  "slip44": 1,
   "slug": "senjepowers-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -1,7 +1,6 @@
-import type { Theme } from "../design-system";
-import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
 import { useStorage } from "@thirdweb-dev/react-core";
+import { StyledDiv } from "../design-system/elements";
 
 const defaultChainIcon =
   "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
@@ -52,13 +51,13 @@ export const ChainIcon: React.FC<{
   );
 };
 
-const ActiveDot = styled.div<{ theme?: Theme }>`
-  width: 28%;
-  height: 28%;
-  border-radius: 50%;
-  position: absolute;
-  top: 60%;
-  right: 0px;
-  background-color: #00d395;
-  box-shadow: 0 0 0 2px var(--bg);
-`;
+const ActiveDot = /* @__PURE__ */ StyledDiv({
+  width: "28%",
+  height: "28%",
+  borderRadius: "50%",
+  position: "absolute",
+  top: "60%",
+  right: 0,
+  backgroundColor: "#00d395",
+  boxShadow: `0 0 0 2px var(--bg)`,
+});

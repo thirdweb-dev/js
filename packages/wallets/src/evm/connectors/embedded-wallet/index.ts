@@ -1,7 +1,7 @@
 import { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
-import { normalizeChainId } from "../../../lib/wagmi-core";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
@@ -89,7 +89,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     if (!this.user) {
       throw new Error("Embedded Wallet is not connected");
     }
-    return this.user.walletAddress;
+    return await this.getSigner().then((signer) => signer.getAddress());
   }
 
   async isConnected(): Promise<boolean> {
@@ -115,7 +115,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     const user = await this.getUser();
-    const signer = await user?.wallet.getEthersJsSigner({
+    const signer = await user.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
@@ -180,11 +180,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
-  async getUser(): Promise<InitializedUser | null> {
+  private async getUser(): Promise<InitializedUser> {
     if (
       !this.user ||
       !this.user.wallet ||
-      typeof this.user.wallet.getEthersJsSigner !== "function"
+      !this.user.wallet.getEthersJsSigner // when serializing, functions are lost, need to rehydrate
     ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
@@ -193,27 +193,25 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           this.user = user;
           break;
         }
+        default: {
+          // if logged out or unitialized, we can't get a signer, so throw an error
+          throw new Error(
+            "Embedded Wallet is not authenticated, please authenticate first",
+          );
+        }
       }
     }
     return this.user;
   }
 
   async getEmail() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails.email;
+    const user = await this.getUser();
+    return user.authDetails.email;
   }
 
   async getRecoveryInformation() {
-    // implicit call to set the user
-    await this.getSigner();
-    if (!this.user) {
-      throw new Error("No user found, Embedded Wallet is not connected");
-    }
-    return this.user.authDetails;
+    const user = await this.getUser();
+    return user.authDetails;
   }
 
   async sendVerificationEmail({
@@ -237,7 +235,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
       }
       case "apple":
-      // case "facebook":
+      case "facebook":
       case "google": {
         const oauthProvider = oauthStrategyToAuthProvider[strategy];
         return ewSDK.auth.loginWithOauth({
@@ -252,13 +250,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           encryptionKey: params.encryptionKey,
         });
       }
+      case "auth_endpoint": {
+        return ewSDK.auth.loginWithCustomAuthEndpoint({
+          payload: params.payload,
+          encryptionKey: params.encryptionKey,
+        });
+      }
       case "iframe_email_verification": {
         return ewSDK.auth.loginWithEmailOtp({
           email: params.email,
         });
       }
-      case "iframe":
-      case undefined: {
+      case "iframe": {
         return ewSDK.auth.loginWithModal();
       }
       default:
@@ -276,6 +279,6 @@ const oauthStrategyToAuthProvider: Record<
   AuthProvider
 > = {
   google: AuthProvider.GOOGLE,
-  // facebook: AuthProvider.FACEBOOK,
+  facebook: AuthProvider.FACEBOOK,
   apple: AuthProvider.APPLE,
 };

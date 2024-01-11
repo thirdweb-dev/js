@@ -14,19 +14,18 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
-import type { CallOverrides, ContractInterface } from "ethers";
+import type { ContractInterface } from "ethers";
 import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 import { useGlobalTheme, useUIContext } from "../providers/ui-context-provider";
 
-type ActionFn = (contract: SmartContract) => Promise<any>;
+export type ActionFn = (contract: SmartContract) => Promise<any>;
 
-interface Web3ButtonProps<TActionFn extends ActionFn> {
+export interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
 
-  overrides?: CallOverrides;
   // called with the result
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
@@ -44,7 +43,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
 /**
  * A component that allows the user to call an on-chain function on a contract.
  *
- * The button has to be wrapped in a `ThirdwebProvider` in order to function.
+ * The button has to be wrapped in a [`ThirdwebProvider`](https://portal.thirdweb.com/react-native/v0/ThirdwebProvider) in order to function.
  *
  * @example
  * ```javascript

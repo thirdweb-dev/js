@@ -24,30 +24,44 @@ import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
 export type ConnectWalletProps = {
   /**
-   * render a custom button to display the connected wallet details instead of the default button
+   * Renders a custom button to display the connected wallet details instead of the default button
    */
   detailsButton?: ConnectWalletDetailsProps["detailsButton"];
 
   /**
-   * render custom rows in the Connect Wallet Details modal
+   * Renders custom rows in the Connect Wallet Details modal
    */
   extraRows?: ConnectWalletDetailsProps["extraRows"];
 
   /**
+   * Option to hide the Send button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Option to hide the Receive button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideReceiveButton?: boolean;
+
+  /**
    * Hide option to request testnet funds for testnets in dropdown
    *
-   * @defaultValue false
+   * The default is `false`
    */
   hideTestnetFaucet?: boolean;
 
   /**
    * Whether to show "Switch Network" button if the wallet is connected,
-   * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react-native/v0/ThirdwebProvider)
    *
    * Please, note that if you support multiple networks in your app this prop should
    * be set to `false` to allow users to switch between networks.
    *
-   * @defaultValue false
+   * The default is `false`
    */
   switchToActiveChain?: boolean;
 
@@ -59,13 +73,17 @@ export type ConnectWalletProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   * Display the balance of a token instead of the native token in ConnectWallet details button.
    *
    * @example
    * ```tsx
+   * import { Base } from "@thirdweb-dev/chains";
+   *
    * <ConnectWallet balanceToken={{
-   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
-   * }} />
+   *    1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   *    [Base.chainId]: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb", // show Dai stablecoin token balance when connected to Base mainnet
+   *  }}
+   * />
    * ```
    */
   displayBalanceToken?: Record<number, string>;
@@ -73,9 +91,21 @@ export type ConnectWalletProps = {
   /**
    * Hide the "switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to a Smart Wallet
    *
-   * @defaultValue false
+   * The default is `false`
    */
   hideSwitchToPersonalWallet?: boolean;
+
+  /**
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
+   *
+   * By default it is `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideDisconnect={true} />
+   * ```
+   */
+  hideDisconnect?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -84,6 +114,8 @@ export const ConnectWallet = ({
   buttonTitle,
   modalTitle,
   modalTitleIconUrl,
+  hideReceiveButton,
+  hideSendButton,
   extraRows,
   hideTestnetFaucet,
   displayBalanceToken,
@@ -92,6 +124,7 @@ export const ConnectWallet = ({
   privacyPolicyUrl,
   supportedTokens,
   hideSwitchToPersonalWallet,
+  hideDisconnect,
 }: ConnectWalletProps) => {
   const globalTheme = useGlobalTheme();
   const l = useLocale();
@@ -169,6 +202,9 @@ export const ConnectWallet = ({
               detailsButton={detailsButton}
               extraRows={extraRows}
               hideTestnetFaucet={hideTestnetFaucet}
+              hideReceiveButton={hideReceiveButton}
+              hideSendButton={hideSendButton}
+              hideDisconnect={hideDisconnect}
               supportedTokens={supportedTokensMemo}
               displayBalanceToken={displayBalanceToken}
               hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}

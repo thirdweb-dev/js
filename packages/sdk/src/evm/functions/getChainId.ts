@@ -16,7 +16,7 @@ const CHAIN_ID_CACHE = new WeakMap<providers.Provider, Promise<number>>();
  * This function will cache the promise for the chainId so that it can be reused.
  * You can call this function multiple times with the same params and it will only make one request to the provider.
  *
- * @returns the ChainId
+ * @returns The ChainId
  * @internal
  */
 export async function getChainId(params: GetChainIdParams) {

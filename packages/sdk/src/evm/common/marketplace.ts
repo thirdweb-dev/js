@@ -13,7 +13,7 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import { NewDirectListing } from "../types/marketplace/NewDirectListing";
 import { NewAuctionListing } from "../types/marketplace/NewAuctionListing";
@@ -30,7 +30,7 @@ import { Offer } from "../types/marketplace/Offer";
  * @param assetContract - The address of the asset contract.
  * @param tokenId - The token id of the token.
  * @param owner - The address of the account that owns the token.
- * @returns - True if the transferrerContractAddress is approved on the token, false otherwise.
+ * @returns  True if the transferrerContractAddress is approved on the token, false otherwise.
  */
 export async function isTokenApprovedForTransfer(
   provider: providers.Provider,
@@ -228,7 +228,7 @@ export function validateNewListingParam(
  *
  * @internal
  * @param offer - The offer to map
- * @returns - An `Offer` object
+ * @returns  An `Offer` object
  */
 export async function mapOffer(
   provider: providers.Provider,

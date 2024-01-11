@@ -40,6 +40,7 @@ export default {
     "https://meer.testnet.meerfans.club"
   ],
   "shortName": "meertest",
+  "slip44": 1,
   "slug": "qitmeer-network-testnet",
   "testnet": true
 } as const satisfies Chain;

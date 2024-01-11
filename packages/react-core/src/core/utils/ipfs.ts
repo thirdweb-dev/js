@@ -5,6 +5,9 @@ export interface IPFSResolverOptions {
   gatewayUrl: string;
 }
 
+/**
+ * @internal
+ */
 export async function resolveMimeType(url?: string) {
   if (!url) {
     return undefined;

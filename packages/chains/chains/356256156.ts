@@ -40,6 +40,7 @@ export default {
     "https://testnet.gather.network"
   ],
   "shortName": "tGTH",
+  "slip44": 1,
   "slug": "gather-testnet-network",
   "testnet": true
 } as const satisfies Chain;

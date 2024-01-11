@@ -33,7 +33,7 @@ export default {
     "wss://eth-rpc-tc9.aca-staging.network"
   ],
   "shortName": "maca",
-  "slip44": 595,
+  "slip44": 1,
   "slug": "acala-mandala-testnet-tc9",
   "testnet": true
 } as const satisfies Chain;

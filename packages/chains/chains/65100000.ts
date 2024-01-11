@@ -26,13 +26,10 @@ export default {
     "decimals": 18
   },
   "networkId": 65100000,
-  "rpc": [
-    "https://autonity-piccadilly-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://65100000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.piccadilly.autonity.org/",
-    "wss://rpc1.piccadilly.autonity.org/ws/"
-  ],
+  "rpc": [],
   "shortName": "piccadilly-0",
+  "slip44": 1,
   "slug": "autonity-piccadilly-thames-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

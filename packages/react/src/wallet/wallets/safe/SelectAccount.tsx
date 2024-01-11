@@ -4,42 +4,41 @@ import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
-import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
+import { iconSize, spacing, fontSize } from "../../../design-system";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
-  useChain,
-  useChainId,
-  useConnect,
-  useConnectionStatus,
+  ConnectUIProps,
+  WalletConfig,
   useSupportedChains,
-  useSwitchChain,
-  useWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
+import { SafeSupportedChainsSet, SafeWallet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useContext, useState } from "react";
-import { SafeWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { safeSlugToChainId } from "./safeChainSlug";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledSelect } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  safeWalletConfig: SafeWalletConfig;
   renderBackButton?: boolean;
+  connect: ConnectUIProps<SafeWallet>["connect"];
+  connectionStatus: ConnectUIProps<SafeWallet>["connectionStatus"];
+  meta: WalletConfig["meta"];
 }> = (props) => {
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
-  const activeWallet = useWallet();
-  const connect = useConnect();
-  const activeChain = useChain();
-  const connectedChainId = useChainId();
+  const { personalWalletConnection } = useWalletContext();
+  const { activeWallet, chainId, switchChain } = personalWalletConnection;
+  const { connect, connectionStatus } = props;
 
   const [safeAddress, setSafeAddress] = useState("");
   const [safeChainId, setSafeChainId] = useState(-1);
@@ -48,7 +47,6 @@ export const SelectAccount: React.FC<{
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  const connectionStatus = useConnectionStatus();
   const chains = useSupportedChains();
 
   // put supported chains first
@@ -67,13 +65,13 @@ export const SelectAccount: React.FC<{
   const useOptGroup = mainnets.length > 0 && testnets.length > 0;
 
   const handleSubmit = async () => {
-    if (!selectedSafeChain || !activeWallet || !activeChain) {
+    if (!selectedSafeChain || !activeWallet) {
       return;
     }
     setSafeConnectError(false);
 
     try {
-      await connect(props.safeWalletConfig, {
+      await connect({
         chain: selectedSafeChain,
         personalWallet: activeWallet,
         safeAddress,
@@ -85,12 +83,11 @@ export const SelectAccount: React.FC<{
     }
   };
 
-  const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
+  const mismatch = safeChainId !== -1 && chainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
 
-  const switchChain = useSwitchChain();
   const modalConfig = useContext(ModalConfigCtx);
 
   return (
@@ -108,9 +105,9 @@ export const SelectAccount: React.FC<{
       >
         <Container p="lg">
           <ModalHeader
-            title={props.safeWalletConfig.meta.name}
+            title={props.meta.name}
             onBack={props.renderBackButton ? props.onBack : undefined}
-            imgSrc={props.safeWalletConfig.meta.iconURL}
+            imgSrc={props.meta.iconURL}
           />
         </Container>
 
@@ -373,38 +370,39 @@ export const SelectAccount: React.FC<{
   );
 };
 
-const NetworkSelect = styled.select<{ theme?: Theme }>`
-  width: 100%;
-  padding: ${spacing.sm};
-  box-sizing: border-box;
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  color: ${(p) => p.theme.colors.primaryText};
-  background: none;
-  font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.secondaryButtonBg};
-  appearance: none;
+const NetworkSelect = /* @__PURE__ */ StyledSelect(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "100%",
+    padding: spacing.sm,
+    boxSizing: "border-box",
+    outline: "none",
+    border: "none",
+    borderRadius: "6px",
+    color: theme.colors.primaryText,
+    background: "none",
+    fontSize: fontSize.md,
+    boxShadow: `0 0 0 1.5px ${theme.colors.secondaryButtonBg}`,
+    appearance: "none",
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
+    "&:invalid": {
+      color: theme.colors.secondaryText,
+    },
+    "&[data-error='true']": {
+      boxShadow: `0 0 0 1.5px ${theme.colors.danger}`,
+    },
+    "&[disabled]": {
+      opacity: 1,
+      cursor: "not-allowed",
+    },
+  };
+});
 
-  &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.colors.accentText};
-  }
-
-  &:invalid {
-    color: ${(p) => p.theme.colors.secondaryText};
-  }
-  &[data-error="true"] {
-    box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.danger};
-  }
-
-  &[disabled] {
-    opacity: 1;
-    cursor: not-allowed;
-  }
-`;
-
-const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(p) => p.theme.colors.secondaryText};
-`;
+const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+  };
+});

@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.helachain.com"
   ],
   "shortName": "hela-testnet",
+  "slip44": 1,
   "slug": "hela-official-runtime-testnet",
   "testnet": true
 } as const satisfies Chain;

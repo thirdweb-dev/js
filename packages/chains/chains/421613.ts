@@ -38,14 +38,13 @@ export default {
   "rpc": [
     "https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://arbitrum-goerli.infura.io/v3/${INFURA_API_KEY}",
-    "https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli-rollup.arbitrum.io/rpc",
     "https://arbitrum-goerli.publicnode.com",
     "wss://arbitrum-goerli.publicnode.com"
   ],
   "shortName": "arb-goerli",
+  "slip44": 1,
   "slug": "arbitrum-goerli",
-  "testnet": false,
+  "testnet": true,
   "title": "Arbitrum Goerli Rollup Testnet"
 } as const satisfies Chain;

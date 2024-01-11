@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "HashScan",
-      "url": "https://hashscan.io/previewnet/dashboard",
-      "standard": "none"
+      "url": "https://hashscan.io/previewnet",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

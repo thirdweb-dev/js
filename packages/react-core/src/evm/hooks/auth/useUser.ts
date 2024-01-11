@@ -5,6 +5,9 @@ import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
+/**
+ * @auth
+ */
 export interface UserWithData<
   TData extends Json = Json,
   TContext extends Json = Json,
@@ -13,13 +16,20 @@ export interface UserWithData<
 }
 
 /**
- * Hook to get the currently logged in user.
+ * Hook for retrieving information about the currently signed-in user using [auth](https://portal.thirdweb.com/wallets/auth).
  *
- * @returns - The currently logged in user or null if not logged in, as well as a loading state.
+ * Useful to get the user's address and session data, or `undefined` if no user is signed in.
  *
- * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
+ * ```jsx
+ * import { useUser } from "@thirdweb-dev/react";
  *
- * @beta
+ * function App() {
+ *   const { user, isLoggedIn, isLoading } = useUser();
+ * }
+ * ```
+ *
+ * @auth
+ *
  */
 export function useUser<
   TData extends Json = Json,

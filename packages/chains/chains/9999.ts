@@ -18,6 +18,7 @@ export default {
     "https://geth.dev.bccloud.net"
   ],
   "shortName": "myn",
+  "slip44": 1,
   "slug": "myown-testnet",
   "testnet": true
 } as const satisfies Chain;

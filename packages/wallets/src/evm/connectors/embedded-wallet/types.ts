@@ -26,7 +26,7 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
-export type EmbeddedWalletOauthStrategy = "google" | "apple"; // | "facebook"
+export type EmbeddedWalletOauthStrategy = "google" | "apple" | "facebook";
 
 type OauthAuthParams = {
   strategy: EmbeddedWalletOauthStrategy;
@@ -37,7 +37,13 @@ type OauthAuthParams = {
 type JwtAuthParams = {
   strategy: "jwt";
   jwt: string;
-  encryptionKey?: string;
+  encryptionKey: string;
+};
+
+type AuthEndpointParams = {
+  strategy: "auth_endpoint";
+  payload: string;
+  encryptionKey: string;
 };
 
 // open iFrame to send and input the OTP
@@ -56,6 +62,7 @@ export type AuthParams =
   | EmailVerificationAuthParams
   | OauthAuthParams
   | JwtAuthParams
+  | AuthEndpointParams
   | IframeOtpAuthParams
   | IframeAuthParams;
 
@@ -64,5 +71,4 @@ export type AuthResult = {
   user?: InitializedUser;
   isNewUser?: boolean;
   needsRecoveryCode?: boolean;
-  verifyOTP?: (otp: string, recoveryCode?: string) => Promise<AuthResult>;
 };

@@ -45,6 +45,7 @@ export default {
     "https://ngeth.testnet.n3.nahmii.io"
   ],
   "shortName": "Nahmii3Testnet",
+  "slip44": 1,
   "slug": "nahmii-3-testnet",
   "testnet": true
 } as const satisfies Chain;

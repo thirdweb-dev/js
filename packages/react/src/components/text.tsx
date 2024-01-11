@@ -1,7 +1,8 @@
-import styled from "@emotion/styled";
 import { fontSize, Theme } from "../design-system";
+import { StyledAnchor, StyledSpan } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
-export const Text = styled.span<{
+type TextProps = {
   theme?: Theme;
   color?: keyof Theme["colors"];
   center?: boolean;
@@ -10,21 +11,26 @@ export const Text = styled.span<{
   weight?: 400 | 500 | 600 | 700;
   multiline?: boolean;
   balance?: boolean;
-}>`
-  font-size: ${(p) => fontSize[p.size || "md"]};
-  color: ${(p) => p.theme.colors[p.color || "secondaryText"]};
-  margin: 0;
-  display: ${(p) => (p.inline ? "inline" : "block")};
-  font-weight: ${(p) => p.weight || 500};
-  line-height: ${(p) => (p.multiline ? 1.5 : "normal")};
-  ${(p) => (p.center ? `text-align: center;` : "")};
-  text-wrap: ${(p) => (p.balance ? "balance" : "inherit")};
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+};
 
-export const Link = styled.a<{
+export const Text = /* @__PURE__ */ StyledSpan((p: TextProps) => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize[p.size || "md"],
+    color: theme.colors[p.color || "secondaryText"],
+    margin: 0,
+    display: p.inline ? "inline" : "block",
+    fontWeight: p.weight || 500,
+    lineHeight: p.multiline ? 1.5 : "normal",
+    textAlign: p.center ? "center" : "left",
+    textWrap: p.balance ? "balance" : "inherit",
+    maxWidth: "100%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
+});
+
+type LinkProps = {
   theme?: Theme;
   size?: keyof typeof fontSize;
   weight?: 400 | 500 | 600 | 700;
@@ -32,20 +38,24 @@ export const Link = styled.a<{
   center?: boolean;
   color?: keyof Theme["colors"];
   hoverColor?: keyof Theme["colors"];
-}>`
-  all: unset;
-  cursor: pointer;
-  color: ${(p) => p.theme.colors[p.color || "accentText"]};
-  font-size: ${(p) => fontSize[p.size || "md"]};
-  text-decoration: none;
-  text-align: ${(p) => (p.center ? "center" : "left")};
-  display: ${(p) => (p.inline ? "inline" : "block")};
-  font-weight: ${(p) => p.weight || 500};
-  line-height: normal;
-  transition: color 0.2s ease;
+};
 
-  &:hover {
-    color: ${(p) => p.theme.colors[p.hoverColor || "primaryText"]};
-    text-decoration: none;
-  }
-`;
+export const Link = /* @__PURE__ */ StyledAnchor((p: LinkProps) => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    cursor: "pointer",
+    color: theme.colors[p.color || "accentText"],
+    fontSize: fontSize[p.size || "md"],
+    textDecoration: "none",
+    textAlign: p.center ? "center" : "left",
+    display: p.inline ? "inline" : "block",
+    fontWeight: p.weight || 500,
+    lineHeight: "normal",
+    transition: "color 0.2s ease",
+    "&:hover": {
+      color: theme.colors[p.hoverColor || "primaryText"],
+      textDecoration: "none",
+    },
+  };
+});

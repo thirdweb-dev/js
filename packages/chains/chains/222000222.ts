@@ -37,6 +37,7 @@ export default {
     "https://subnets.avax.network/meld/testnet/rpc"
   ],
   "shortName": "kanazawa",
+  "slip44": 1,
   "slug": "kanazawa",
   "testnet": true,
   "title": "Meld Testnet Kanazawa"

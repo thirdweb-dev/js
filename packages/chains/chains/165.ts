@@ -29,6 +29,7 @@ export default {
     "https://testnet.omni.network"
   ],
   "shortName": "omni_testnet",
+  "slip44": 1,
   "slug": "omni-testnet",
   "testnet": true
 } as const satisfies Chain;

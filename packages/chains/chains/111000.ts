@@ -36,6 +36,7 @@ export default {
     "https://rpc.test.siberium.net"
   ],
   "shortName": "testsbr",
+  "slip44": 1,
   "slug": "siberium-test-network",
   "testnet": true
 } as const satisfies Chain;

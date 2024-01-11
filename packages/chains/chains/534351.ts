@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Scroll Sepolia Etherscan",
-      "url": "https://sepolia.scrollscan.dev",
+      "url": "https://sepolia.scrollscan.com",
       "standard": "EIP3091"
     },
     {
@@ -28,7 +28,7 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://scroll.io/bridge"
+        "url": "https://sepolia.scroll.io/bridge"
       }
     ]
   },
@@ -41,6 +41,7 @@ export default {
     "https://scroll-testnet-public.unifra.io"
   ],
   "shortName": "scr-sepolia",
+  "slip44": 1,
   "slug": "scroll-sepolia-testnet",
   "status": "active",
   "testnet": true

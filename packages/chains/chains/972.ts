@@ -2,12 +2,24 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Ascraeus",
   "chainId": 972,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Oort Ascraeus Explorer",
+      "url": "https://ascraeus-scan.oortech.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+        "width": 1440,
+        "height": 1440,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
-    "width": 1043,
-    "height": 1079,
+    "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+    "width": 1440,
+    "height": 1440,
     "format": "png"
   },
   "infoURL": "https://oortech.com",

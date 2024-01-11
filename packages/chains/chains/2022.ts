@@ -25,6 +25,7 @@ export default {
     "wss://beresheet.jelliedowl.net"
   ],
   "shortName": "edgt",
+  "slip44": 1,
   "slug": "beresheet-bereevm-testnet",
   "testnet": true
 } as const satisfies Chain;

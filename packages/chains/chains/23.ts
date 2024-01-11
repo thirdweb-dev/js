@@ -14,6 +14,7 @@ export default {
   "networkId": 23,
   "rpc": [],
   "shortName": "eladidt",
+  "slip44": 1,
   "slug": "ela-did-sidechain-testnet",
   "testnet": true
 } as const satisfies Chain;

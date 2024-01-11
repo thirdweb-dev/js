@@ -20,6 +20,9 @@ export type SignerWalletAdditionalOptions = {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type SignerWalletConnectionArgs = {};
 
+/**
+ * @internal
+ */
 export class SignerWallet extends AbstractClientWallet<
   SignerWalletAdditionalOptions,
   SignerWalletConnectionArgs

@@ -18,7 +18,7 @@ export default {
     "https://rpc.testnet.tomochain.com"
   ],
   "shortName": "tomot",
-  "slip44": 889,
+  "slip44": 1,
   "slug": "tomochain-testnet",
   "testnet": true
 } as const satisfies Chain;

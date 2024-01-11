@@ -7,6 +7,9 @@ import { Locale, LocaleType } from "./types";
 
 const locales = { en: _en, es: _es, ja: _ja, tr: _tr };
 
+/**
+ * @internal
+ */
 export const setLocale = (locale: Locale): LocaleType => {
   if (typeof locale === 'string') {
     const selectedLocale = locales[locale];

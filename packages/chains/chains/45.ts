@@ -26,6 +26,7 @@ export default {
     "https://pangoro-rpc.darwinia.network"
   ],
   "shortName": "pangoro",
+  "slip44": 1,
   "slug": "darwinia-pangoro-testnet",
   "testnet": true
 } as const satisfies Chain;
