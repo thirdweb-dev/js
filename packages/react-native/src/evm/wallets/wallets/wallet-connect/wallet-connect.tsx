@@ -10,7 +10,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
-import { WalletConnectInnerUI } from "./WalletConnectUI";
+import { WalletConnectInnerUI } from "./WalletConnectInnerUI";
 import { TW_WC_PROJECT_ID } from "../../../constants/walletConnect";
 import { walletIds } from "@thirdweb-dev/wallets";
 
