@@ -7,7 +7,6 @@ import { Locale, LocaleType } from "./types";
 
 const locales = { en: _en, es: _es, ja: _ja, tr: _tr };
 
-=======
 /**
  * @internal
  */
