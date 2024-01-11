@@ -60,7 +60,6 @@ export const ChooseWalletContent = ({
                       onChooseWallet(item, data);
                     }}
                     walletConfig={item}
-                    // TEMPORARY BUILD FIX
                     connect={(options: any) => connect(item, options)}
                     connectedWallet={activeWallet}
                     connectedWalletAddress={address}

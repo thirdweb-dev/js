@@ -191,7 +191,6 @@ export function ChooseWallet({
             onChooseWallet(emailWallet, data);
           }}
           walletConfig={emailWallet}
-          // TEMPORARY BUILD FIX
           connect={(options: any) => connect(emailWallet, options)}
           connectedWallet={activeWallet}
           connectedWalletAddress={address}

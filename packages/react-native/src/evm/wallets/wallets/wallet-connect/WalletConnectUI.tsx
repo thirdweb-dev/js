@@ -33,7 +33,7 @@ type WCWallet = {
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
-export function WalletConnectUI({
+export function WalletConnectInnerUI({
   connected,
   projectId,
   goBack,
