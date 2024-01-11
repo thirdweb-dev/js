@@ -44,7 +44,7 @@ export {
   type ActionFn,
 } from "./components/Web3Button";
 
-export { WalletConnectUI } from "./wallets/wallets/wallet-connect/WalletConnectUI";
+export { WalletConnectUI } from "./wallets/wallets/wallet-connect/wallet-connect";
 
 // utilities
 export * from "./utils/uri";

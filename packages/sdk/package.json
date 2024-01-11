@@ -64,7 +64,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "generate-docs": "pnpm generate-docs:evm && pnpm generate-snippets",
+    "generate-docs": "mkdir -p etc && pnpm generate-docs:evm && pnpm generate-snippets",
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",

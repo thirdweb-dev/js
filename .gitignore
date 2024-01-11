@@ -21,5 +21,3 @@ playwright-report/
 
 # Artifacts
 packages/cli/artifacts/
-
-typedoc
