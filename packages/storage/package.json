@@ -48,14 +48,14 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "chai": "^4.3.6",
-    "eslint": "^8.45.0",
+    "eslint": "^8.56.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.2.16",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
     "typedoc-gen": "workspace:*",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",
