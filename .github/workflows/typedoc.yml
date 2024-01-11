@@ -7,7 +7,7 @@ name: Commit Typedoc JSON files
 on:
   push:
     branches:
-      - Version Packages
+      - changeset-release/main
 
 jobs:
   typedoc:
