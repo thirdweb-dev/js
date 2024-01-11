@@ -34,8 +34,8 @@
     "exports": true
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.9",
-    "@babel/preset-typescript": "^7.22.5",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-typescript": "^7.23.3",
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
@@ -54,14 +54,14 @@
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
-    "typescript": "^5.1.6",
-    "typedoc-gen": "workspace:*"
+    "typedoc-gen": "workspace:*",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@thirdweb-dev/crypto": "workspace:*",
     "cid-tool": "^3.0.0",
     "form-data": "^4.0.0",
-    "uuid": "^9.0.1",
-    "@thirdweb-dev/crypto": "workspace:*"
+    "uuid": "^9.0.1"
   },
   "engines": {
     "node": ">=18"
