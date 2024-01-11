@@ -5041,10 +5041,10 @@
     yaml "^2.3.1"
     zod "^3.22.3"
 
-"@thirdweb-dev/service-utils@^0.4.11-nightly-ed3afd41-20240103010505":
-  version "0.4.11-nightly-ed3afd41-20240103010505"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/service-utils/-/service-utils-0.4.11-nightly-ed3afd41-20240103010505.tgz#91d81d2f9109903310e655dbd70d4d9fac7639ad"
-  integrity sha512-SBtPWb9bRCVpTjq4MC+JkbtXu/nNIK+gpS77u6bTHsIVOToVUvyMNkhM4VbyY2dweUrx1aCv9dCsaPBOlwUR6Q==
+"@thirdweb-dev/service-utils@^0.4.12-nightly-749a12f9-20240111121246":
+  version "0.4.12-nightly-749a12f9-20240111121246"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/service-utils/-/service-utils-0.4.12-nightly-749a12f9-20240111121246.tgz#d28db256383e92d42bd1549f05d33dd7152b5d14"
+  integrity sha512-lS0Gee3McvgAaDqCsEaPqRsR/H+3CbXk97QUgFZX2fW3EMLP7gdEoJdbTmXHNWwrfvB/Cb488zd8BrKVrGi9NQ==
   dependencies:
     aws4fetch "^1.0.17"
     zod "^3.22.3"

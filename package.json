@@ -38,7 +38,7 @@
     "@thirdweb-dev/chains": "^0.1.62-nightly-94a8f796-20231219003732",
     "@thirdweb-dev/react": "^4.3.0-nightly-27c00ef7-20240110224414",
     "@thirdweb-dev/sdk": "^4.0.26-nightly-27c00ef7-20240110224414",
-    "@thirdweb-dev/service-utils": "^0.4.11-nightly-ed3afd41-20240103010505",
+    "@thirdweb-dev/service-utils": "^0.4.12-nightly-749a12f9-20240111121246",
     "@trytrench/sdk": "^0.0.5",
     "@vercel/og": "^0.5.20",
     "airtable": "^0.12.2",
