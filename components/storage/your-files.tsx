@@ -178,7 +178,7 @@ export const YourFilesSection: React.FC = () => {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const selectData = useCallback(
-    (data?: PinnedFilesResponse) => data?.result.pinnedFiles || [],
+    (data?: PinnedFilesResponse) => data?.result?.pinnedFiles || [],
     [],
   );
   const selectTotalCount = useCallback(
