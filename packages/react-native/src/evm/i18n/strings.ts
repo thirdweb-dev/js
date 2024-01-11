@@ -1,11 +1,12 @@
 import { DeepPartial, deepMerge } from "../types/deepPartial";
 import { _en } from "./en";
 import { _es } from "./es";
+import { _tl } from "./tl";
 import { _ja } from "./ja";
 import { _tr } from "./tr";
 import { Locale, LocaleType } from "./types";
 
-const locales = { en: _en, es: _es, ja: _ja, tr: _tr };
+const locales = { en: _en, es: _es, ja: _ja, tl: _tl, tr: _tr };
 
 /**
  * @internal
@@ -21,6 +22,9 @@ export const setLocale = (locale: Locale): LocaleType => {
   return locale;
 };
 
+/**
+ * @internal
+ */
 export const getLocale = (
   localeKey: keyof typeof locales,
   locale?: DeepPartial<LocaleType>,
@@ -32,7 +36,9 @@ export const getLocale = (
   return deepMerge(defaultLocale, locale);
 };
 
+
 export const en = (locale?: DeepPartial<LocaleType>) => getLocale("en", locale);
 export const es = (locale?: DeepPartial<LocaleType>) => getLocale("es", locale);
 export const ja = (locale?: DeepPartial<LocaleType>) => getLocale("ja", locale);
+export const tl = (locale?: DeepPartial<LocaleType>) => getLocale("tl", locale);
 export const tr = (locale?: DeepPartial<LocaleType>) => getLocale("tr", locale);
