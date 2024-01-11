@@ -53,6 +53,7 @@ export function tlDefault(): ThirdwebLocale {
       personalWallet: "Personal na Wallet",
       smartWallet: "Smart Wallet",
       or: "O",
+      goBackButton: "Bumalik",
       download: {
         chrome: "I-download ang Chrome Extension",
         android: "I-download sa Google Play",
