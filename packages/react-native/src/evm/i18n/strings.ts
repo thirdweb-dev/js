@@ -36,7 +36,6 @@ export const getLocale = (
   return deepMerge(defaultLocale, locale);
 };
 
-
 export const en = (locale?: DeepPartial<LocaleType>) => getLocale("en", locale);
 export const es = (locale?: DeepPartial<LocaleType>) => getLocale("es", locale);
 export const ja = (locale?: DeepPartial<LocaleType>) => getLocale("ja", locale);
