@@ -253,7 +253,7 @@ async function main() {
       ...(goExample?.example ? { go: goExample.example } : {}),
     };
 
-    acc[contractName.replace("", "")] = data;
+    acc[contractName] = data;
 
     return acc;
   }, {});
