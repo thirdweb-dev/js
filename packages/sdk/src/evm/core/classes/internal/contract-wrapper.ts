@@ -43,6 +43,7 @@ import {
   PermitRequestMessage,
 } from "../../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { isBrowser } from "../../../common/utils";
 
 /**
  * @internal
@@ -145,6 +146,10 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
+    // If we're running in the browser, let users configure gas price in their wallet UI
+    if (isBrowser()) {
+      return {};
+    }
     return getDefaultGasOverrides(this.getProvider());
   }
 

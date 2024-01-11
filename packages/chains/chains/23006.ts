@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.antofy.io"
   ],
   "shortName": "ABNt",
+  "slip44": 1,
   "slug": "antofy-testnet",
   "testnet": true
 } as const satisfies Chain;

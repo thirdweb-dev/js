@@ -44,6 +44,7 @@ export default {
     "https://testnet-rollup-api.altlayer.io"
   ],
   "shortName": "alt-testnet",
+  "slip44": 1,
   "slug": "altlayer-testnet",
   "testnet": true
 } as const satisfies Chain;

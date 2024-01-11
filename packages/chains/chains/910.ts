@@ -18,6 +18,7 @@ export default {
     "https://layer1test.decentrabone.com"
   ],
   "shortName": "DBONE",
+  "slip44": 1,
   "slug": "decentrabone-layer1-testnet",
   "testnet": true
 } as const satisfies Chain;

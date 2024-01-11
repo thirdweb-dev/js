@@ -30,6 +30,7 @@ export default {
     "https://rpc.testnet.taraxa.io/"
   ],
   "shortName": "taratest",
+  "slip44": 1,
   "slug": "taraxa-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -24,7 +24,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  NFT,
+  NFTMetadata,
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
@@ -87,7 +87,7 @@ import invariant from "tiny-invariant";
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
-): UseQueryResult<NFT[]> {
+): UseQueryResult<NFTMetadata[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
@@ -98,7 +98,9 @@ export function useUnclaimedNFTs(
         contract.getAllUnclaimed,
         "Contract instance does not support getAllUnclaimed",
       );
-      return contract.getAllUnclaimed(queryParams);
+      const data: Promise<NFTMetadata[]> =
+        contract.getAllUnclaimed(queryParams);
+      return data;
     },
     { enabled: !!contract },
   );

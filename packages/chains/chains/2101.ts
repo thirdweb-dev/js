@@ -24,6 +24,7 @@ export default {
     "https://api.ecoball.org/espuma/"
   ],
   "shortName": "esp",
+  "slip44": 1,
   "slug": "ecoball-testnet-espuma",
   "testnet": true
 } as const satisfies Chain;

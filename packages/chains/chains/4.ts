@@ -31,6 +31,7 @@ export default {
     "wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}"
   ],
   "shortName": "rin",
+  "slip44": 1,
   "slug": "rinkeby",
   "testnet": true,
   "title": "Ethereum Testnet Rinkeby"

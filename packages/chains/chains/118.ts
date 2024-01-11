@@ -30,6 +30,7 @@ export default {
     "https://testnet.arcology.network/rpc"
   ],
   "shortName": "arcology",
+  "slip44": 1,
   "slug": "arcology-testnet",
   "testnet": true
 } as const satisfies Chain;

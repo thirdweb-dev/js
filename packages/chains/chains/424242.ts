@@ -32,6 +32,7 @@ export default {
     "https://rpc.testnet.fastexchain.com"
   ],
   "shortName": "fastexTestnet",
+  "slip44": 1,
   "slug": "fastex-chain-testnet",
   "testnet": true,
   "title": "Fastex Chain testnet"

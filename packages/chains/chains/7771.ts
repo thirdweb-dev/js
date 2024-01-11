@@ -32,6 +32,7 @@ export default {
     "https://testnet.bit-rock.io"
   ],
   "shortName": "tbitrock",
+  "slip44": 1,
   "slug": "bitrock-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -3,9 +3,10 @@ import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
+  ConnectUIProps,
   WalletConfig,
+  WalletInstance,
   shortenAddress,
-  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Label } from "../../../components/formElements";
@@ -19,6 +20,7 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -28,6 +30,10 @@ type ReconnectLocalWalletProps = {
   renderBackButton: boolean;
   persist: boolean;
   modalSize: "wide" | "compact";
+  walletInstance?: WalletInstance;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
+  connectedWalletAddress: ConnectUIProps["connectedWalletAddress"];
 };
 
 /**
@@ -40,7 +46,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
   const [isConnecting, setIsConnecting] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
@@ -73,6 +79,8 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           setShowBackupConfirmation(false);
           setShowCreate(true);
         }}
+        walletInstance={props.walletInstance}
+        walletAddress={props.connectedWalletAddress}
       />
     );
   }
@@ -87,6 +95,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         onBack={() => {
           setShowBackupConfirmation(false);
         }}
+        modalSize={props.modalSize}
       />
     );
   }
@@ -101,6 +110,8 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         }}
         onConnect={props.onConnect}
         persist={props.persist}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }

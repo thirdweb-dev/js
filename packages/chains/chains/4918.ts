@@ -24,6 +24,7 @@ export default {
     "https://rpc-evm-testnet.venidium.io"
   ],
   "shortName": "txvm",
+  "slip44": 1,
   "slug": "venidium-testnet",
   "testnet": true
 } as const satisfies Chain;

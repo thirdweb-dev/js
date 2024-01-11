@@ -26,6 +26,7 @@ export default {
     "https://testnet-rpc.neutrinoschain.com"
   ],
   "shortName": "NEUTR",
+  "slip44": 1,
   "slug": "neutrinos-testnet",
   "testnet": true
 } as const satisfies Chain;

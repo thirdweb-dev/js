@@ -44,6 +44,7 @@ export default {
     "https://testnet.blackfort.network/rpc"
   ],
   "shortName": "TBXN",
+  "slip44": 1,
   "slug": "blackfort-exchange-network-testnet",
   "testnet": true
 } as const satisfies Chain;

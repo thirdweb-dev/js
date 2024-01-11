@@ -33,6 +33,7 @@ export default {
     "https://stardust.metis.io/?owner=588"
   ],
   "shortName": "metis-stardust",
+  "slip44": 1,
   "slug": "metis-stardust-testnet",
   "status": "deprecated",
   "testnet": true

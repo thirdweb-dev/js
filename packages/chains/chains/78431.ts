@@ -29,6 +29,7 @@ export default {
     "https://subnets.avax.network/bulletin/testnet/rpc"
   ],
   "shortName": "bulletin",
+  "slip44": 1,
   "slug": "bulletin-subnet",
   "testnet": true
 } as const satisfies Chain;

@@ -36,6 +36,7 @@ export default {
     "https://vinufoundation-rpc.com"
   ],
   "shortName": "VCTEST",
+  "slip44": 1,
   "slug": "vinuchain-testnet",
   "testnet": true
 } as const satisfies Chain;

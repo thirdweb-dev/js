@@ -11,6 +11,9 @@ let contract: SmartContract;
 const factoryAddress = "0x13947435c2fe6BE51ED82F6f59C38617a323dB9B";
 const chain = Mumbai;
 
+const describeIf = (condition: boolean) =>
+  condition ? describe : describe.skip;
+
 beforeAll(async () => {
   personalWallet = new LocalWallet();
   await personalWallet.generate();
@@ -27,7 +30,7 @@ beforeAll(async () => {
   );
 });
 
-describe("SmartWallet core tests", () => {
+describeIf(!!process.env.TW_SECRET_KEY)("SmartWallet core tests", () => {
   it("can connect", async () => {
     expect(smartWalletAddress).toHaveLength(42);
   });

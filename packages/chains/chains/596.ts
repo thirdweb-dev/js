@@ -25,7 +25,7 @@ export default {
     "wss://eth-rpc-karura-testnet.aca-staging.network"
   ],
   "shortName": "tkar",
-  "slip44": 596,
+  "slip44": 1,
   "slug": "karura-network-testnet",
   "testnet": true
 } as const satisfies Chain;

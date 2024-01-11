@@ -30,6 +30,7 @@ export default {
     "https://columbus.camino.network/ext/bc/C/rpc"
   ],
   "shortName": "Columbus",
+  "slip44": 1,
   "slug": "columbus-test-network",
   "testnet": true
 } as const satisfies Chain;

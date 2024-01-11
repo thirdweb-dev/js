@@ -39,6 +39,7 @@ export default {
     "wss://wss-testnet.bitkubchain.io"
   ],
   "shortName": "bkct",
+  "slip44": 1,
   "slug": "bitkub-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

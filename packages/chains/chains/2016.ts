@@ -21,7 +21,7 @@ export default {
   "infoURL": "https://mainnetz.io",
   "name": "MainnetZ Mainnet",
   "nativeCurrency": {
-    "name": "MainnetZ",
+    "name": "mainnetz",
     "symbol": "NetZ",
     "decimals": 18
   },

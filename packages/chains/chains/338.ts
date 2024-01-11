@@ -26,6 +26,7 @@ export default {
     "https://evm-t3.cronos.org"
   ],
   "shortName": "tcro",
+  "slip44": 1,
   "slug": "cronos-testnet",
   "testnet": true
 } as const satisfies Chain;

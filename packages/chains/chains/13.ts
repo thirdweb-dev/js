@@ -19,6 +19,7 @@ export default {
     "wss://staging.diode.io:8443/ws"
   ],
   "shortName": "dstg",
+  "slip44": 1,
   "slug": "diode-testnet-staging",
   "testnet": true
 } as const satisfies Chain;

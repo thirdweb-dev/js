@@ -51,6 +51,8 @@ export default ${JSON.stringify(
       if (exportName.match(/^[0-9]/)) {
         exportName = `_${exportName}`;
       }
+      // replace all non-alphanumeric characters with underscores
+      exportName = exportName.replace(/\W/g, "_");
 
       const key = `c${sortedChain.chainId}`;
 

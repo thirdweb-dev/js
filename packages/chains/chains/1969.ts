@@ -32,6 +32,7 @@ export default {
     "https://testnetrpc.scschain.com"
   ],
   "shortName": "tscs",
+  "slip44": 1,
   "slug": "super-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

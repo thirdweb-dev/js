@@ -36,6 +36,7 @@ export default {
     "https://testnetq1.blx.org"
   ],
   "shortName": "tblxq",
+  "slip44": 1,
   "slug": "blxq-testnet",
   "testnet": true
 } as const satisfies Chain;

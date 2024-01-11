@@ -26,6 +26,7 @@ export default {
     "https://rpc.testnet.mantle.xyz"
   ],
   "shortName": "mantle-testnet",
+  "slip44": 1,
   "slug": "mantle-testnet",
   "testnet": true
 } as const satisfies Chain;

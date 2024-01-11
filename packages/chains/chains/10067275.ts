@@ -28,6 +28,7 @@ export default {
     "https://testnet.plian.io/child_test"
   ],
   "shortName": "plian-testnet-l2",
+  "slip44": 1,
   "slug": "plian-testnet-subchain-1",
   "testnet": true
 } as const satisfies Chain;

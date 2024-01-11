@@ -43,6 +43,7 @@ export default {
     "https://rpc.ankr.com/zetachain_evm_athens_testnet"
   ],
   "shortName": "zetachain-athens",
+  "slip44": 1,
   "slug": "zetachain-athens-3-testnet",
   "status": "active",
   "testnet": true

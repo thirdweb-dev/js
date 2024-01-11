@@ -1,4 +1,4 @@
-import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OTPInput } from "../../../components/OTPInput";
@@ -30,7 +30,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
-    useWalletContext();
+    props;
 
   const [wallet, setWallet] = useState<PaperWallet | null>(null);
   const isWideModal = props.modalSize === "wide";
@@ -56,7 +56,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
     setSendEmailStatus("sending");
 
     try {
-      const _wallet = createWalletInstance(props.walletConfig);
+      const _wallet = createWalletInstance();
       setWallet(_wallet);
       const _paperSDK = await _wallet.getPaperSDK();
 
@@ -71,7 +71,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
       setVerifyStatus("idle");
       setSendEmailStatus("error");
     }
-  }, [createWalletInstance, email, props.walletConfig]);
+  }, [createWalletInstance, email]);
 
   const handleSubmit = (otp: string) => {
     if (recoveryCodeRequired && !recoveryCode) {

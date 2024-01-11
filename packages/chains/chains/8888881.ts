@@ -19,6 +19,7 @@ export default {
   "networkId": 8888881,
   "rpc": [],
   "shortName": "quarix-testnet",
+  "slip44": 1,
   "slug": "quarix-testnet",
   "status": "incubating",
   "testnet": true

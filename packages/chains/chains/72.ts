@@ -20,6 +20,7 @@ export default {
     "https://testnet-http.dxchain.com"
   ],
   "shortName": "dxc",
+  "slip44": 1,
   "slug": "dxchain-testnet",
   "testnet": true
 } as const satisfies Chain;

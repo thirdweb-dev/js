@@ -39,6 +39,7 @@ export default {
     "https://polaris4.ont.io:10339"
   ],
   "shortName": "OntologyTestnet",
+  "slip44": 1,
   "slug": "ontology-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.dogcoin.me"
   ],
   "shortName": "DOGSt",
+  "slip44": 1,
   "slug": "dogcoin-testnet",
   "testnet": true
 } as const satisfies Chain;

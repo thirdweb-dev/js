@@ -25,6 +25,7 @@ export default {
     "wss://1971.network/atlr"
   ],
   "shortName": "atlr",
+  "slip44": 1,
   "slug": "atelier",
   "testnet": true,
   "title": "Atelier Test Network"

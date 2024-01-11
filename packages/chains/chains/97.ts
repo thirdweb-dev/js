@@ -41,6 +41,7 @@ export default {
     "wss://bsc-testnet.publicnode.com"
   ],
   "shortName": "bnbt",
+  "slip44": 1,
   "slug": "binance-testnet",
   "testnet": true
 } as const satisfies Chain;

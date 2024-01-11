@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.securechain.ai"
   ],
   "shortName": "SCAIt",
+  "slip44": 1,
   "slug": "securechain-testnet",
   "testnet": true
 } as const satisfies Chain;

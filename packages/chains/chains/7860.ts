@@ -33,6 +33,7 @@ export default {
     "https://rpc-bntest.maalscan.io/"
   ],
   "shortName": "maal-test",
+  "slip44": 1,
   "slug": "maalchain-testnet",
   "testnet": true
 } as const satisfies Chain;

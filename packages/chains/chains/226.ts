@@ -30,6 +30,7 @@ export default {
     "https://rpc-testnet.lachain.io"
   ],
   "shortName": "TLA",
+  "slip44": 1,
   "slug": "lachain-testnet",
   "testnet": true
 } as const satisfies Chain;

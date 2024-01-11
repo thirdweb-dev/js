@@ -24,6 +24,7 @@ export default {
     "https://rpc-dubai.mp1network.com/"
   ],
   "shortName": "MEU",
+  "slip44": 1,
   "slug": "metaplayerone-dubai-testnet",
   "testnet": true
 } as const satisfies Chain;

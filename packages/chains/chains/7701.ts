@@ -35,6 +35,7 @@ export default {
     "https://testnet-archive.plexnode.wtf"
   ],
   "shortName": "TestnetCanto",
+  "slip44": 1,
   "slug": "canto-tesnet",
   "testnet": true
 } as const satisfies Chain;

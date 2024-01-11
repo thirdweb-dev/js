@@ -40,6 +40,7 @@ export default {
     "https://rpc1.oasis.bahamutchain.com"
   ],
   "shortName": "Oasis",
+  "slip44": 1,
   "slug": "fastex-chain-bahamut-oasis-testnet",
   "testnet": true,
   "title": "Bahamut testnet Oasis"

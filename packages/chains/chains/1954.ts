@@ -39,6 +39,7 @@ export default {
     "https://rpc.dexilla.com"
   ],
   "shortName": "Dexilla",
+  "slip44": 1,
   "slug": "dexilla-testnet",
   "testnet": true
 } as const satisfies Chain;
