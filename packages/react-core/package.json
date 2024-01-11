@@ -57,10 +57,10 @@
   },
   "sideEffects:": false,
   "devDependencies": {
-    "@babel/core": "^7.22.9",
-    "@babel/preset-env": "^7.22.9",
-    "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.5",
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
     "@babel/runtime": "^7.23.8",
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
@@ -84,17 +84,17 @@
     "ethers": "^5.7.2",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
-    "typescript": "^5.1.6",
-    "typedoc-gen": "workspace:*"
+    "typedoc-gen": "workspace:*",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.33.0",
+    "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:^",
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "@thirdweb-dev/auth": "workspace:*",
     "mime": "3.0.0",
     "tiny-invariant": "^1.2.0"
   },

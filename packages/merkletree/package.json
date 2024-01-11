@@ -41,7 +41,6 @@
     "eslint-config-thirdweb": "workspace:*",
     "typescript": "^5.1.6",
     "circomlibjs": "^0.1.7",
-    "crypto": "1.0.1",
     "ethereum-cryptography": "^1.0.3",
     "ethereumjs-util": "^7.0.9",
     "keccak256": "^1.0.6",
