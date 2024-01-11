@@ -155,6 +155,7 @@ export {
   useOffers,
   useBuyNow,
   useBuyDirectListing,
+  useCreateDirectListingBatch,
 } from "./hooks/async/marketplace";
 
 // nft
