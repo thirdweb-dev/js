@@ -1,5 +1,19 @@
 # @thirdweb-dev/wallets
 
+## 2.4.1
+
+### Patch Changes
+
+- [#2162](https://github.com/thirdweb-dev/js/pull/2162) [`90a2f2d4`](https://github.com/thirdweb-dev/js/commit/90a2f2d435df796fa9cee4e78d540ecfa10d9166) Thanks [@iketw](https://github.com/iketw)! - Implements signedData for LocalWallet
+
+- [#2143](https://github.com/thirdweb-dev/js/pull/2143) [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimations for local and embedded wallets
+
+- Updated dependencies [[`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f), [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70), [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3), [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808)]:
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/sdk@4.0.26
+  - @thirdweb-dev/contracts-js@1.3.16
+  - @thirdweb-dev/crypto@0.2.0
+
 ## 2.4.0
 
 ### Minor Changes

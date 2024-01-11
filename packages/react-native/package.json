@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.5.6",
+  "version": "0.6.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",

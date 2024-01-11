@@ -1,5 +1,77 @@
 # @thirdweb-dev/react-native
 
+## 0.6.0
+
+### Minor Changes
+
+- [#2150](https://github.com/thirdweb-dev/js/pull/2150) [`6dac95bd`](https://github.com/thirdweb-dev/js/commit/6dac95bd489d28faf3bbd415f6c327022de915ee) Thanks [@MananTank](https://github.com/MananTank)! - ### API changed for creating wallet configurator
+
+  ( This is only relevant if you are creating your own wallet configurator - If you are using the wallet configurators provided by thirdweb such as `metamaskWallet()`, `coinbaseWallet()` etc - This API change does not affect you )
+
+  We have introduce a few changes to how the wallet configurator should be created:
+
+  Do not use any wallet connection hooks in the wallet configurator. Only use the `props` passed in the `connectUI` and `selectUI`. The wallet configurator's `connectUI` and `selectUI` now gets below mentioned additional props so that you can avoid using the wallet connection hooks
+
+  - `props.connect` - replaces the `useConnect` hook usage
+  - `props.connectionStatus` - replaces the `useConnectionStatus` hook usage
+  - `props.setConnectionStatus` - replaces the `useSetConnectionStatus` hook usage
+  - `props.setConnectedWallet` - replaces the `useSetConnectedWallet` hook usage
+  - `props.createWalletInstance` - replaces the `useCreateWalletInstance` hook usage
+  - `props.connectedWalletAddress` - replaces the `useAddress` hook usage
+
+  #### Example
+
+  ```tsx
+  import { WalletConfig } from "@thirdweb-dev/react-native";
+  import { MyCustomWallet } from "./MyCustomWallet"; // your custom wallet class
+
+  // your custom wallet configurator
+  function myCustomWallet(): WalletConfig<MyCustomWallet> {
+    return {
+      id: "MyCustomWallet",
+      meta: {
+        name: "FooBar",
+        iconURL: "https://link-to-the-wallet-icon.png",
+      },
+      create(walletOptions) {
+        return new MyCustomWallet(walletOptions);
+      },
+      // only use the props passed in the connectUI and selectUI
+      // do not use any wallet connection hooks that read or write to the wallet connection state
+      connectUI(props) {
+        // const connect = useConnect(); -> old
+        const connect = props.connect; // new
+
+        return <div> .... </div>;
+      },
+      selectUI(props) {
+        return <div> .... </div>;
+      },
+    };
+  }
+  ```
+
+  `onLocallyConnected` has been removed from the `connectUI` props - You no longer need to worry about whether a wallet is part of another wallet's connection flow or not - just use the regular `props` passed in the `connectUI` and `selectUI` and it will be handled automatically.
+
+### Patch Changes
+
+- [#2151](https://github.com/thirdweb-dev/js/pull/2151) [`415f2aa8`](https://github.com/thirdweb-dev/js/commit/415f2aa83b40eae56134d486ee83b43ee426efc9) Thanks [@jnsdls](https://github.com/jnsdls)! - improve typechecking for deepMerge function
+
+- [#1964](https://github.com/thirdweb-dev/js/pull/1964) [`5d567008`](https://github.com/thirdweb-dev/js/commit/5d56700866d5ea2589e415542f261a76f2e913c9) Thanks [@warengonzaga](https://github.com/warengonzaga)! - Add Filipino language to React and React Native SDK
+
+- [#1962](https://github.com/thirdweb-dev/js/pull/1962) [`517d9a8f`](https://github.com/thirdweb-dev/js/commit/517d9a8f94266b7d365cb69ce744e33d80618a55) Thanks [@iketw](https://github.com/iketw)! - Adds Turkish support as locale 'tr'
+
+- [#2158](https://github.com/thirdweb-dev/js/pull/2158) [`abbd255e`](https://github.com/thirdweb-dev/js/commit/abbd255efa347a4f213d2bc015885f9bf3aa1034) Thanks [@iketw](https://github.com/iketw)! - Correctly pass sdkOptions down
+
+- [#2160](https://github.com/thirdweb-dev/js/pull/2160) [`a11b1d49`](https://github.com/thirdweb-dev/js/commit/a11b1d49bd96c2d51e2f47f54a89fe988947c19d) Thanks [@iketw](https://github.com/iketw)! - Update WalletConnectUI to use new arch
+
+- Updated dependencies [[`90a2f2d4`](https://github.com/thirdweb-dev/js/commit/90a2f2d435df796fa9cee4e78d540ecfa10d9166), [`e1001689`](https://github.com/thirdweb-dev/js/commit/e1001689794b25618a82d3469c0098b88f593c76), [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f), [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70), [`30f16cac`](https://github.com/thirdweb-dev/js/commit/30f16cac6d3c2b736c51b84f2b978537d8bfb8d1), [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc), [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3), [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808)]:
+  - @thirdweb-dev/wallets@2.4.1
+  - @thirdweb-dev/react-core@4.3.0
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/sdk@4.0.26
+  - @thirdweb-dev/storage@2.0.8
+
 ## 0.5.6
 
 ### Patch Changes
