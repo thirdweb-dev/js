@@ -821,8 +821,8 @@ importers:
         specifier: workspace:*
         version: link:../tw-tsconfig
       '@types/js-cookie':
-        specifier: ^3.0.3
-        version: 3.0.3
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/mime':
         specifier: 3.0.0
         version: 3.0.0
@@ -12696,8 +12696,8 @@ packages:
       pretty-format: 29.6.2
     dev: true
 
-  /@types/js-cookie@3.0.3:
-    resolution: {integrity: sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==}
+  /@types/js-cookie@3.0.6:
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
     dev: true
 
   /@types/js-yaml@4.0.5:
