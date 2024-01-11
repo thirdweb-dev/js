@@ -197,7 +197,7 @@ export const SelectAccount: React.FC<{
               id="safeNetwork"
               value={safeChainId}
               disabled={disableNetworkSelection}
-              placeholder={locale.selectNetworkPlaceholder}
+              aria-placeholder={locale.selectNetworkPlaceholder}
               onChange={(e) => {
                 setSafeConnectError(false);
                 setSwitchError(false);

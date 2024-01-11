@@ -11,15 +11,15 @@
     "@thirdweb-dev/react": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "ethers": "^5.7.2",
-    "next": "^13.4.12",
+    "next": "^13.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@playwright/test": "1.31.2",
-    "eslint": "^8.45.0",
-    "eslint-config-next": "^13.4.12",
-    "typescript": "^5.1.6"
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^13.5.6",
+    "typescript": "^5.3.3"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/next-12"
 }

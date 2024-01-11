@@ -18,11 +18,10 @@
     "@babel/runtime": "^7.23.8",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "axios": "^1.4.0",
     "deepmerge": "^4.3.1",
     "eslint-config-thirdweb": "workspace:*",
     "plop": "^3.1.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "preconstruct": {
     "entrypoints": [

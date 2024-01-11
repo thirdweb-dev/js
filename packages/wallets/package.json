@@ -544,12 +544,12 @@
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-flow-strip-types": "^7.23.3",
     "@babel/plugin-transform-private-methods": "^7.23.3",
-    "@microsoft/api-extractor": "^7.36.3",
+    "@microsoft/api-extractor": "^7.39.1",
     "@noble/ed25519": "^1.7.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/bn.js": "^5.1.1",
+    "@types/bn.js": "^5.1.5",
     "@types/jest": "^29.5.3",
     "abitype": "^0.2.5",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
@@ -567,7 +567,7 @@
     "ts-jest": "^29.1.1",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
