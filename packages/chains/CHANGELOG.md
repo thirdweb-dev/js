@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.63
+
+### Patch Changes
+
+- [#2145](https://github.com/thirdweb-dev/js/pull/2145) [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
 ## 0.1.62
 
 ### Patch Changes
