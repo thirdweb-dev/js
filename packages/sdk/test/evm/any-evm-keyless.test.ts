@@ -234,7 +234,7 @@ describe("Any EVM Keyless Deploy", async () => {
   });
 
   // can only work if secret key is set, skip otherwise
-  it("deploy marketplacev3", async () => {
+  itIf(!!process.env.TW_SECRET_KEY)("deploy marketplacev3", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     const marketplace = await deployMarketplaceV3();
