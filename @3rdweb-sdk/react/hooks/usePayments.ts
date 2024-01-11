@@ -342,7 +342,7 @@ export function usePaymentsRegisterContract() {
       const body: RegisterContractInput = {
         ...input,
         contractDefinition: contract.abi,
-        contractAddress: input.contractAddress.toLowerCase(),
+        contractAddress: input.contractAddress,
         chain: ChainIdToPaperChain[parseInt(input.chain)],
         contractType,
         displayName,
