@@ -32,6 +32,7 @@ export default {
     "https://rpc.toronto.sx.technology"
   ],
   "shortName": "SX-Testnet",
+  "slip44": 1,
   "slug": "sx-network-testnet",
   "testnet": true
 } as const satisfies Chain;

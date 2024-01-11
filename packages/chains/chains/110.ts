@@ -18,6 +18,7 @@ export default {
     "https://protontestnet.greymass.com/"
   ],
   "shortName": "xpr",
+  "slip44": 1,
   "slug": "proton-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -26,6 +26,7 @@ export default {
     "https://betaenv.singularity.gold:18545"
   ],
   "shortName": "tZERO",
+  "slip44": 1,
   "slug": "singularity-zero-testnet",
   "testnet": true
 } as const satisfies Chain;

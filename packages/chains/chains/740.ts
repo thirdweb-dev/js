@@ -24,6 +24,7 @@ export default {
     "https://eth.plexnode.wtf/"
   ],
   "shortName": "tcanto",
+  "slip44": 1,
   "slug": "canto-testnet",
   "status": "deprecated",
   "testnet": true

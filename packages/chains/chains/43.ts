@@ -26,6 +26,7 @@ export default {
     "https://pangolin-rpc.darwinia.network"
   ],
   "shortName": "pangolin",
+  "slip44": 1,
   "slug": "darwinia-pangolin-testnet",
   "testnet": true
 } as const satisfies Chain;

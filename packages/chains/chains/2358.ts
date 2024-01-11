@@ -45,6 +45,7 @@ export default {
     "https://api.sepolia.kroma.network"
   ],
   "shortName": "kroma-sepolia",
+  "slip44": 1,
   "slug": "kroma-sepolia",
   "testnet": true,
   "title": "Kroma Testnet Sepolia"

@@ -27,6 +27,7 @@ export default {
     "wss://replica-wss.bobabase.boba.network"
   ],
   "shortName": "Bobabase",
+  "slip44": 1,
   "slug": "bobabase-testnet",
   "testnet": true
 } as const satisfies Chain;

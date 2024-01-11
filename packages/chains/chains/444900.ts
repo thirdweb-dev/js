@@ -26,6 +26,7 @@ export default {
     "https://weelinknode1c.gw002.oneitfarm.com"
   ],
   "shortName": "wlkt",
+  "slip44": 1,
   "slug": "weelink-testnet",
   "testnet": true
 } as const satisfies Chain;

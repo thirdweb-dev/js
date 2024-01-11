@@ -36,6 +36,7 @@ export default {
     "https://rpc.testnet.toruschain.com"
   ],
   "shortName": "ttqf",
+  "slip44": 1,
   "slug": "torus-testnet",
   "testnet": true
 } as const satisfies Chain;

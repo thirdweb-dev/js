@@ -6,10 +6,22 @@ export default {
     {
       "name": "etndscan",
       "url": "https://scan.etnd.pro",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "infoURL": "https://www.etnd.pro",
   "name": "ETND Chain Mainnets",
   "nativeCurrency": {

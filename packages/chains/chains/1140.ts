@@ -20,6 +20,7 @@ export default {
     "https://galois-hk.maiziqianbao.net/rpc"
   ],
   "shortName": "tMATH",
+  "slip44": 1,
   "slug": "mathchain-testnet",
   "testnet": true
 } as const satisfies Chain;

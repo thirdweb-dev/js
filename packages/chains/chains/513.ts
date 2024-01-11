@@ -32,6 +32,7 @@ export default {
     "https://rpc-testnet.acuteangle.com"
   ],
   "shortName": "aact",
+  "slip44": 1,
   "slug": "double-a-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

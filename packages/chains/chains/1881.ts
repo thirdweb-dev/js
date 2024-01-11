@@ -38,6 +38,7 @@ export default {
     "https://rpc.cartenz.works"
   ],
   "shortName": "gitshockchain",
+  "slip44": 1,
   "slug": "gitshock-cartenz-testnet",
   "testnet": true
 } as const satisfies Chain;

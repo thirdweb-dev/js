@@ -25,6 +25,7 @@ export default {
     "wss://porcini.rootnet.app/archive/ws"
   ],
   "shortName": "trn-porcini",
+  "slip44": 1,
   "slug": "the-root-network-porcini-testnet",
   "testnet": true
 } as const satisfies Chain;

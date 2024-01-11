@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreie45fcr2hllmej2elwqpdxmiaycxmz25tl5ymraduhtefqndhlm4q",
+    "width": 222,
+    "height": 306,
+    "format": "png"
+  },
   "infoURL": "https://nordekscan.com",
   "name": "Nordek Mainnet",
   "nativeCurrency": {

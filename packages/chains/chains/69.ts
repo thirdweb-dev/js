@@ -26,6 +26,7 @@ export default {
     "https://kovan.optimism.io/"
   ],
   "shortName": "okov",
+  "slip44": 1,
   "slug": "optimism-kovan",
   "testnet": true,
   "title": "Optimism Testnet Kovan"

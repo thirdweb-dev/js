@@ -38,6 +38,7 @@ export default {
     "https://testapi.cicscan.com"
   ],
   "shortName": "CICT",
+  "slip44": 1,
   "slug": "cic-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

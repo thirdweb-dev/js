@@ -48,6 +48,7 @@ export default {
     "https://sepolia.era.zksync.dev"
   ],
   "shortName": "zksync-sepolia",
+  "slip44": 1,
   "slug": "zksync-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

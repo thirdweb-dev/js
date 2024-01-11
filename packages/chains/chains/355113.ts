@@ -32,6 +32,7 @@ export default {
     "https://testnet.bitfinity.network"
   ],
   "shortName": "Bitfinity",
+  "slip44": 1,
   "slug": "bitfinity-network-testnet",
   "testnet": true
 } as const satisfies Chain;

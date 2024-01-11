@@ -32,6 +32,7 @@ export default {
     "wss://staging-v3.skalenodes.com/v1/ws/staging-aware-chief-gianfar"
   ],
   "shortName": "titan-testnet",
+  "slip44": 1,
   "slug": "skale-titan-hub-testnet",
   "testnet": true
 } as const satisfies Chain;

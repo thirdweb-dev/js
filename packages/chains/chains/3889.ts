@@ -38,6 +38,7 @@ export default {
     "https://testnetrpc.kalychain.io/rpc"
   ],
   "shortName": "kalytestnet",
+  "slip44": 1,
   "slug": "kalychain-testnet",
   "testnet": true
 } as const satisfies Chain;

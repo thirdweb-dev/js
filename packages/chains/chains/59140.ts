@@ -61,6 +61,7 @@ export default {
     "wss://linea-goerli.infura.io/ws/v3/${INFURA_API_KEY}"
   ],
   "shortName": "linea-testnet",
+  "slip44": 1,
   "slug": "linea-testnet",
   "status": "active",
   "testnet": true,

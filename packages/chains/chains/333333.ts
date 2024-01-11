@@ -40,6 +40,7 @@ export default {
     "wss://wstest.nativ3.network"
   ],
   "shortName": "N3-Test",
+  "slip44": 1,
   "slug": "nativ3-testnet",
   "testnet": true
 } as const satisfies Chain;

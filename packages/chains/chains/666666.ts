@@ -20,7 +20,7 @@ export default {
     "https://vpioneer.infragrid.v.network/ethereum/compatible"
   ],
   "shortName": "vpioneer",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "vision-vpioneer-test-chain",
   "testnet": true
 } as const satisfies Chain;

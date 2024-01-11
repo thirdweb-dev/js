@@ -24,6 +24,7 @@ export default {
     "https://testnet.web3q.io:8545"
   ],
   "shortName": "w3q-t",
+  "slip44": 1,
   "slug": "web3q-testnet",
   "testnet": true
 } as const satisfies Chain;

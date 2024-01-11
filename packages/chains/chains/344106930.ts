@@ -32,6 +32,7 @@ export default {
     "https://staging-v3.skalenodes.com/v1/staging-utter-unripe-menkar"
   ],
   "shortName": "calypso-testnet",
+  "slip44": 1,
   "slug": "skale-calypso-hub-testnet",
   "testnet": true,
   "title": "Calypso NFT Hub Testnet"

@@ -30,6 +30,7 @@ export default {
     "https://subnets.avax.network/mintara/testnet/rpc"
   ],
   "shortName": "mintara-testnet",
+  "slip44": 1,
   "slug": "mintara-testnet",
   "testnet": true,
   "title": "Mintara Testnet"

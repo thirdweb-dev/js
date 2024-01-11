@@ -20,6 +20,7 @@ export default {
   "networkId": 81351,
   "rpc": [],
   "shortName": "flanatest",
+  "slip44": 1,
   "slug": "flana-testnet",
   "status": "incubating",
   "testnet": true

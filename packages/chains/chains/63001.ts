@@ -38,6 +38,7 @@ export default {
     "https://rpc.tst.ecredits.com"
   ],
   "shortName": "ecs-testnet",
+  "slip44": 1,
   "slug": "ecredits-testnet",
   "testnet": true
 } as const satisfies Chain;

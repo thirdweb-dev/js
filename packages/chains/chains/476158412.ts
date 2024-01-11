@@ -32,6 +32,7 @@ export default {
     "https://staging-v3.skalenodes.com/v1/staging-legal-crazy-castor"
   ],
   "shortName": "europa-testnet",
+  "slip44": 1,
   "slug": "skale-europa-hub-testnet",
   "testnet": true,
   "title": "Europa Hub Testnet"

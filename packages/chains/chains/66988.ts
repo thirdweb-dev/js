@@ -30,6 +30,7 @@ export default {
     "https://rpc.test.janusnetwork.io"
   ],
   "shortName": "janusnetwork-testnet",
+  "slip44": 1,
   "slug": "janus-testnet",
   "status": "active",
   "testnet": true

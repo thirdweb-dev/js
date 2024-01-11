@@ -29,6 +29,7 @@ export default {
     "https://subnets.avax.network/shrapnel/testnet/rpc"
   ],
   "shortName": "shraptest",
+  "slip44": 1,
   "slug": "shrapnel-testnet",
   "testnet": true
 } as const satisfies Chain;

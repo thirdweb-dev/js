@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.eliberty.ngo"
   ],
   "shortName": "ELt",
+  "slip44": 1,
   "slug": "eliberty-testnet",
   "testnet": true
 } as const satisfies Chain;

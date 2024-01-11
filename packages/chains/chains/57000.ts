@@ -28,6 +28,7 @@ export default {
     "wss://rpc-tanenbaum.rollux.com/wss"
   ],
   "shortName": "tsys-rollux",
+  "slip44": 1,
   "slug": "rollux-testnet",
   "testnet": true
 } as const satisfies Chain;
