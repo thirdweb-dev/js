@@ -12,8 +12,7 @@ import {
 } from "../types";
 
 export function getCookie(cookie: string): string | undefined {
-  const cookieStore = cookies();
-  return cookieStore.get(cookie)?.value;
+  return cookies().get(cookie)?.value;
 }
 
 export function getActiveCookie(): string | undefined {
@@ -27,10 +26,10 @@ export function getActiveCookie(): string | undefined {
 }
 
 export function getToken(): string | undefined {
-  const headersList = headers()
+  const headerList = headers();
 
-  if (headersList.has("authorization")) {
-    const authorizationHeader = headersList.get("authorization")?.split(" ");
+  if (headerList.has("authorization")) {
+    const authorizationHeader = headerList.get("authorization")?.split(" ");
     if (authorizationHeader?.length === 2) {
       return authorizationHeader[1];
     }

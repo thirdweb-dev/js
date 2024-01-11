@@ -52,9 +52,7 @@ export function ThirdwebAuth<
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
   };
 
-  async function ThirdwebAuthHandler(
-    ...args: [] | [NextRequest, NextContext]
-  ) {
+  async function ThirdwebAuthHandler(...args: [] | [NextRequest, NextContext]) {
     if (args.length === 0) {
       return async (req: NextRequest, ctx: NextContext): Promise<void | Response> =>
         await ThirdwebAuthRouter(req, ctx, authCtx as ThirdwebAuthContext);

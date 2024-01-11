@@ -1,7 +1,8 @@
-import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
+
+import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
