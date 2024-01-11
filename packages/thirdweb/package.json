@@ -1,0 +1,53 @@
+{
+  "name": "thirdweb",
+  "version": "0.0.0",
+  "bin": {
+    "thirdweb": "./node_modules/@thirdweb/cli/index.js"
+  },
+  "main": "dist/thirdweb.cjs.js",
+  "module": "dist/thirdweb.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb.esm.js",
+      "default": "./dist/thirdweb.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@thirdweb-dev/cli": "workspace:*"
+  },
+  "devDependencies": {
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push",
+    "test": "bun test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
