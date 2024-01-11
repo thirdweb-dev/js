@@ -109,6 +109,7 @@ export function tlDefault(): ThirdwebLocale {
           instruction:
             "Mangyaring pirmahan ang kahilingan ng mensahe sa iyong wallet para magpatuloy",
           signInButton: "Mag-sign in",
+          disconnectWallet: "I-disconnect ang Wallet",
         },
         signingScreen: {
           title: "Pagsisign-in",
