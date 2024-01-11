@@ -517,8 +517,8 @@ importers:
         specifier: ^0.1.7
         version: 0.1.7
       crypto:
-        specifier: 0.0.3
-        version: 0.0.3
+        specifier: 1.0.1
+        version: 1.0.1
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
@@ -16539,8 +16539,8 @@ packages:
       type-fest: 1.4.0
     dev: false
 
-  /crypto@0.0.3:
-    resolution: {integrity: sha512-Q6Ka98WcvWXXg+9cnqd3jHpTSIOaH6/q0m/bESMfQo/0uFxy6e/7EqVS4JdaWx9qLdqV56tDufy2b12dj7BHJg==}
+  /crypto@1.0.1:
+    resolution: {integrity: sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==}
     deprecated: This package is no longer supported. It's now a built-in Node module. If you've depended on crypto, you should switch to the one that's built-in.
     dev: true
 
