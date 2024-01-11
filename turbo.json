@@ -9,6 +9,10 @@
       "outputs": ["typedoc/**"],
       "dependsOn": ["^build"]
     },
+    "generate-docs": {
+      "outputs": ["docs/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],
