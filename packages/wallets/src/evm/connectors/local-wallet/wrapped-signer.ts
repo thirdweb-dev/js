@@ -1,9 +1,16 @@
 import { getDefaultGasOverrides } from "@thirdweb-dev/sdk";
-import { Bytes, Signer, providers } from "ethers";
+import {
+  Bytes,
+  Signer,
+  providers,
+  TypedDataDomain,
+  TypedDataField,
+  Wallet,
+} from "ethers";
 import { Deferrable, defineReadOnly } from "ethers/lib/utils";
 
 export class WrappedSigner extends Signer {
-  constructor(private signer: Signer) {
+  constructor(private signer: Wallet) {
     super();
     defineReadOnly(this, "provider", signer.provider);
   }
@@ -17,13 +24,21 @@ export class WrappedSigner extends Signer {
   }
 
   override async signTransaction(
-    transaction: Deferrable<providers.TransactionRequest>,
+    transaction: providers.TransactionRequest,
   ): Promise<string> {
     return await this.signer.signTransaction(transaction);
   }
 
   override connect(provider: providers.Provider): Signer {
     return new WrappedSigner(this.signer.connect(provider));
+  }
+
+  _signTypedData(
+    domain: TypedDataDomain,
+    types: Record<string, Array<TypedDataField>>,
+    value: Record<string, any>,
+  ): Promise<string> {
+    return this.signer._signTypedData(domain, types, value);
   }
 
   override async sendTransaction(
