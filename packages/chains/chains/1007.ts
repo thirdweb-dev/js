@@ -18,6 +18,7 @@ export default {
     "https://rpc1.newchain.newtonproject.org"
   ],
   "shortName": "tnew",
+  "slip44": 1,
   "slug": "newton-testnet",
   "testnet": true
 } as const satisfies Chain;

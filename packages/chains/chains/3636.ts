@@ -32,6 +32,7 @@ export default {
     "https://node.botanixlabs.dev"
   ],
   "shortName": "BTNX",
+  "slip44": 1,
   "slug": "botanix-testnet",
   "testnet": true
 } as const satisfies Chain;

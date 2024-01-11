@@ -4,14 +4,14 @@ export default {
   "chainId": 443,
   "explorers": [
     {
-      "name": "Obscuro Sepolia Rollup Explorer",
-      "url": "https://testnet.obscuroscan.io",
+      "name": "Ten Sepolia Rollup Explorer",
+      "url": "https://tenscan.io",
       "standard": "none"
     }
   ],
   "faucets": [],
-  "infoURL": "https://obscu.ro",
-  "name": "Obscuro Testnet",
+  "infoURL": "https://ten.xyz",
+  "name": "Ten Testnet",
   "nativeCurrency": {
     "name": "Sepolia Ether",
     "symbol": "ETH",
@@ -23,17 +23,18 @@ export default {
     "chain": "eip155-5",
     "bridges": [
       {
-        "url": "https://bridge.obscu.ro"
+        "url": "https://bridge.ten.xyz"
       }
     ]
   },
   "rpc": [
-    "https://obscuro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ten-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.obscu.ro"
+    "https://testnet.ten.xyz"
   ],
-  "shortName": "obs-testnet",
-  "slug": "obscuro-testnet",
+  "shortName": "ten-testnet",
+  "slip44": 1,
+  "slug": "ten-testnet",
   "testnet": true,
-  "title": "Obscuro Sepolia Rollup Testnet"
+  "title": "Ten Sepolia Rollup Testnet"
 } as const satisfies Chain;

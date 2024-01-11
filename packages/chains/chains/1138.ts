@@ -30,6 +30,7 @@ export default {
     "https://testnet-rpc.amstarscan.com"
   ],
   "shortName": "ASARt",
+  "slip44": 1,
   "slug": "amstar-testnet",
   "testnet": true
 } as const satisfies Chain;

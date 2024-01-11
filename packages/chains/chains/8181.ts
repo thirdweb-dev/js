@@ -38,6 +38,7 @@ export default {
     "https://pre-boc1.beonechain.com"
   ],
   "shortName": "tBOC",
+  "slip44": 1,
   "slug": "testnet-beone-chain",
   "testnet": true
 } as const satisfies Chain;

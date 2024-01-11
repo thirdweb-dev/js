@@ -110,7 +110,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
   style?: React.CSSProperties;
 
   /**
-   * Web3Button renders a `ConnectWallet` if no wallet is connected. You can pass props for that component by passing a `connectWallet` prop to Web3Button
+   * Web3Button renders a [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) if no wallet is connected. You can pass props for that component by passing a `connectWallet` prop to Web3Button
    *
    * @example
    * ```tsx
@@ -136,7 +136,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
     btnTitle?: string;
 
     /**
-     * title of the `ConnectWallet` Modal.
+     * title of the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal.
      *
      * The default is `"Connect"`.
      */
@@ -193,9 +193,9 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
  *
  * It ensures the following criteria before attempting to call the contract function:
  *
- * 1. There is a connected wallet (if there is not, it renders a `ConnectWallet` component instead.
+ * 1. There is a connected wallet (if there is not, it renders a [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component instead.
  *
- * 2. The connected wallet is on the correct network as specified in the `ThirdwebProvider`'s `activeChain` prop. if it is not, it renders a "switch network" button instead.
+ * 2. The connected wallet is on the correct network as specified in the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `activeChain` prop. if it is not, it renders a "switch network" button instead.
  *
  * If the action you are performing is async, make sure to return a `Promise` from the action function so that the SDK knows when the action is complete. This can be done by either using async/await or by returning a `Promise`.
  *
@@ -220,7 +220,7 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
  * @param props -
  * The props for the component.
  *
- * Refer to [Web3ButtonProps](https://portal.thirdweb.com/references/react/Web3ButtonProps) for more details.
+ * Refer to [Web3ButtonProps](https://portal.thirdweb.com/references/react/v4/Web3ButtonProps) for more details.
  *
  */
 export const Web3Button = <TAction extends ActionFn>(

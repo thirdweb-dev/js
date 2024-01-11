@@ -27,7 +27,7 @@ import invariant from "tiny-invariant";
 /**
  * Hook for getting the primary sales recipient of a smart contract.
  *
- * Available to use on contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
+ * Available to use on contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/contracts/build/extensions/general/PrimarySale) interface.
  *
  * @example
  * ```jsx
@@ -67,7 +67,7 @@ export function usePrimarySaleRecipient(
 /**
  * Hook for updating the primary sale recipient on a smart contract.
  *
- * Available to use on smart contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/solidity/extensions/primarysale) interface.
+ * Available to use on smart contracts that implement the [`PrimarySale`](https://portal.thirdweb.com/contracts/build/extensions/general/PrimarySale) interface.
  *
  * The wallet that initiates this transaction must have the required permissions to change the primary sale recipient (defaults to `"admin"` level).
  *
@@ -156,7 +156,7 @@ export function useUpdatePrimarySaleRecipient(
 /**
  * Hook for retrieving royalty settings of a smart contract.
  *
- * Available to use on contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
+ * Available to use on contracts that implement the [`Royalty`](https://portal.thirdweb.com/contracts/build/extensions/general/Royalty) interface.
  *
  * @example
  * ```jsx
@@ -214,7 +214,7 @@ export function useRoyaltySettings(
 /**
  * Hook for updating royalty settings on a smart contract.
  *
- * Available to use on smart contracts that implement the [`Royalty`](https://portal.thirdweb.com/solidity/extensions/royalty) interface.
+ * Available to use on smart contracts that implement the [`Royalty`](https://portal.thirdweb.com/contracts/build/extensions/general/Royalty) interface.
  *
  * @example
  * ```jsx
@@ -310,7 +310,7 @@ export function useUpdateRoyaltySettings(
 /**
  * Hook for getting the platform fee settings of a contract.
  *
- * Available to use on contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
+ * Available to use on contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/contracts/build/extensions/general/PlatformFee) interface.
  *
  * @example
  *
@@ -370,7 +370,7 @@ export function usePlatformFees(
 /**
  * Hook for updating platform fees on a smart contract.
  *
- * Available to use on smart contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/solidity/extensions/platformfee) interface.
+ * Available to use on smart contracts that implement the [`PlatformFee`](https://portal.thirdweb.com/contracts/build/extensions/general/PlatformFee) interface.
  *
  * ```jsx
  * import {
@@ -466,7 +466,7 @@ export function useUpdatePlatformFees(
 /**
  * Hook for getting the metadata associated with a smart contract.
  *
- * Available to use on contracts that implement the [Contract Metadata](https://portal.thirdweb.com/solidity/extensions/contractmetadata) interface.
+ * Available to use on contracts that implement the [Contract Metadata](https://portal.thirdweb.com/contracts/build/extensions/general/ContractMetadata) interface.
  *
  * @example
  * ```jsx

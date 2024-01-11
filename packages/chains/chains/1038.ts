@@ -38,6 +38,7 @@ export default {
     "https://evm-testnet.bronos.org"
   ],
   "shortName": "bronos-testnet",
+  "slip44": 1,
   "slug": "bronos-testnet",
   "testnet": true
 } as const satisfies Chain;

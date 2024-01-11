@@ -14,6 +14,7 @@ export default {
   "networkId": 153,
   "rpc": [],
   "shortName": "rbn-testnet",
+  "slip44": 1,
   "slug": "redbelly-network-testnet",
   "status": "incubating",
   "testnet": true

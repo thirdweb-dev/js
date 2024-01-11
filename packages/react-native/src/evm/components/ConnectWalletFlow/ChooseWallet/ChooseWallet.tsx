@@ -1,6 +1,11 @@
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import {
+  WalletConfig,
+  useAddress,
+  useConnect,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
 import { ReactNode, useMemo, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
@@ -107,6 +112,16 @@ export function ChooseWallet({
     }
   };
 
+  const connect = useConnect();
+  const address = useAddress();
+  const {
+    setConnectedWallet,
+    setConnectionStatus,
+    connectionStatus,
+    createWalletInstance,
+    activeWallet,
+  } = useWalletContext();
+
   return (
     <Box flexDirection="column">
       <ModalHeaderTextClose
@@ -176,6 +191,14 @@ export function ChooseWallet({
             onChooseWallet(emailWallet, data);
           }}
           walletConfig={emailWallet}
+          // TEMPORARY BUILD FIX
+          connect={(options: any) => connect(emailWallet, options)}
+          connectedWallet={activeWallet}
+          connectedWalletAddress={address}
+          connectionStatus={connectionStatus}
+          createWalletInstance={() => createWalletInstance(emailWallet)}
+          setConnectedWallet={setConnectedWallet}
+          setConnectionStatus={setConnectionStatus}
         />
       ) : null}
       {emailWallet &&

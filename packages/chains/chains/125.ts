@@ -26,7 +26,7 @@ export default {
     "https://rpc.testnet.oychain.io"
   ],
   "shortName": "OYchainTestnet",
-  "slip44": 125,
+  "slip44": 1,
   "slug": "oychain-testnet",
   "testnet": true
 } as const satisfies Chain;

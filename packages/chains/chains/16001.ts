@@ -20,6 +20,7 @@ export default {
     "https://testnet.metadot.network"
   ],
   "shortName": "mtttest",
+  "slip44": 1,
   "slug": "metadot-testnet",
   "testnet": true
 } as const satisfies Chain;

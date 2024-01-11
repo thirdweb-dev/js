@@ -32,6 +32,7 @@ export default {
     "https://subnets.avax.network/dexalot/testnet/rpc"
   ],
   "shortName": "dexalot-testnet",
+  "slip44": 1,
   "slug": "dexalot-subnet-testnet",
   "testnet": true
 } as const satisfies Chain;

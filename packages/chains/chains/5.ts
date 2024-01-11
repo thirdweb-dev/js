@@ -56,6 +56,7 @@ export default {
     "wss://goerli.gateway.tenderly.co"
   ],
   "shortName": "gor",
+  "slip44": 1,
   "slug": "goerli",
   "testnet": true,
   "title": "Ethereum Testnet Goerli"

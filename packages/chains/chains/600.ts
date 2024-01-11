@@ -13,6 +13,7 @@ export default {
   "networkId": 600,
   "rpc": [],
   "shortName": "mesh-chain-testnet",
+  "slip44": 1,
   "slug": "meshnyan-testnet",
   "testnet": true
 } as const satisfies Chain;

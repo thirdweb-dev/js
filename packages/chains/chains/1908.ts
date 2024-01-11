@@ -32,6 +32,7 @@ export default {
     "https://testnet.bitcichain.com"
   ],
   "shortName": "tbitci",
+  "slip44": 1,
   "slug": "bitcichain-testnet",
   "testnet": true
 } as const satisfies Chain;

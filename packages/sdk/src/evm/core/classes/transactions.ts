@@ -17,7 +17,7 @@ import type {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
   BaseContract,
   CallOverrides,
@@ -222,18 +222,12 @@ abstract class TransactionContext {
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
+    // If we're running in the browser, let users configure gas price in their wallet UI
+    // TODO - should prob only check if its a json rpc signer (browser extension)
+    if (isBrowser()) {
+      return {};
+    }
     return getDefaultGasOverrides(this.provider);
-  }
-
-  /**
-   * Calculates the priority fee per gas according (adding a 10% buffer)
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
-    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    return txGasPrice;
   }
 }
 

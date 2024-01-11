@@ -26,6 +26,7 @@ export default {
     "https://testnet.gatenode.cc"
   ],
   "shortName": "gttest",
+  "slip44": 1,
   "slug": "gatechain-testnet",
   "testnet": true
 } as const satisfies Chain;

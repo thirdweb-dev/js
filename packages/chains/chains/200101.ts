@@ -31,6 +31,7 @@ export default {
     "wss://rpc-devnet-cardano-evm.c1.milkomeda.com"
   ],
   "shortName": "milkTAda",
+  "slip44": 1,
   "slug": "milkomeda-c1-testnet",
   "testnet": true
 } as const satisfies Chain;

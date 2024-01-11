@@ -40,6 +40,7 @@ export default {
     "https://rpc3-testnet-v1.foxchain.app"
   ],
   "shortName": "fox",
+  "slip44": 1,
   "slug": "fox-testnet-network",
   "testnet": true
 } as const satisfies Chain;

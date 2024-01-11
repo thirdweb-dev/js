@@ -39,6 +39,7 @@ export default {
     "https://l2-testnet-rpc.altscan.org"
   ],
   "shortName": "alterium",
+  "slip44": 1,
   "slug": "alterium-l2-testnet",
   "testnet": true
 } as const satisfies Chain;

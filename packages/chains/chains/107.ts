@@ -32,6 +32,7 @@ export default {
     "https://testnet.rpc.novanetwork.io"
   ],
   "shortName": "ntn",
+  "slip44": 1,
   "slug": "nebula-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -30,6 +30,7 @@ export default {
     "https://rpc-testnet.onuschain.io"
   ],
   "shortName": "onus-testnet",
+  "slip44": 1,
   "slug": "onus-chain-testnet",
   "testnet": true,
   "title": "ONUS Chain Testnet"

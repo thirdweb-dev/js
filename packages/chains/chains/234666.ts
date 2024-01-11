@@ -18,6 +18,7 @@ export default {
     "https://testnet1.haymo.network"
   ],
   "shortName": "hym",
+  "slip44": 1,
   "slug": "haymo-testnet",
   "testnet": true
 } as const satisfies Chain;

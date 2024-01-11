@@ -54,6 +54,7 @@ export function esDefault(): ThirdwebLocale {
       personalWallet: "Cartera personal",
       smartWallet: "Cartera inteligente",
       or: "O",
+      goBackButton: "Atras",
       download: {
         chrome: "Descargar extensión para Chrome",
         android: "Descargar en Google Play",
@@ -111,6 +112,7 @@ export function esDefault(): ThirdwebLocale {
           instruction:
             "Por favor, firma la solicitud de mensaje en tu cartera para continuar",
           signInButton: "Iniciar sesión",
+          disconnectWallet: "Desconectar cartera",
         },
         signingScreen: {
           title: "Iniciando sesión",
@@ -328,7 +330,7 @@ export function esDefault(): ThirdwebLocale {
 }
 
 /**
- * Calling this function will return the default Spanish locale object to be set on `ThirdwebProvider` to localize the thirdweb components.
+ * Calling this function will return the default Spanish locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
  *
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
@@ -347,7 +349,7 @@ export function esDefault(): ThirdwebLocale {
  * })
  * ```
  *
- * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
  *
  * ```tsx
  * function Example() {

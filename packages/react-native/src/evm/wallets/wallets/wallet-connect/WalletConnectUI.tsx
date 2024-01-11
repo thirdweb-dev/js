@@ -12,12 +12,7 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import { TWModal } from "../../../components/base/modal/TWModal";
-import {
-  ConnectUIProps,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
 import { WalletConnectButton } from "./WalletConnectButton";
 import { ModalHeaderTextClose } from "../../../components/base";
@@ -40,11 +35,26 @@ const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function WalletConnectUI({
   connected,
-  walletConfig,
   projectId,
   goBack,
+  hide,
   supportedWallets,
-}: ConnectUIProps<WalletConnect> & { projectId: string }) {
+  isVisible,
+  createWalletInstance,
+  setConnectedWallet,
+  setConnectionStatus,
+}: Omit<
+  ConnectUIProps<WalletConnect>,
+  | "isOpen"
+  | "show"
+  | "theme"
+  | "selectionData"
+  | "setSelectionData"
+  | "modalSize"
+> & {
+  projectId: string;
+  isVisible?: boolean;
+}) {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
@@ -52,9 +62,9 @@ export function WalletConnectUI({
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [searchWallets, setSearchWallets] = useState<WCWallet[]>([]);
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
+  const [isVisibleInternal, setIsVisibleInternal] = useState<
+    boolean | undefined
+  >(isVisible);
 
   const onChangeText = useDebounceCallback({ callback: setSearch });
 
@@ -119,6 +129,10 @@ export function WalletConnectUI({
   }, [projectId]);
 
   useEffect(() => {
+    setIsVisibleInternal(isVisible);
+  }, [isVisible]);
+
+  useEffect(() => {
     if (wallets && search) {
       setSearchWallets(
         wallets.filter((w) => {
@@ -131,7 +145,7 @@ export function WalletConnectUI({
   }, [search, wallets]);
 
   const onChooseWalletItem = (walletMeta: WCWallet) => {
-    const wcWallet = createWalletInstance(walletConfig);
+    const wcWallet = createWalletInstance();
     wcWallet.setWCLinks(walletMeta.links);
 
     setConnectionStatus("connecting");
@@ -145,18 +159,24 @@ export function WalletConnectUI({
         console.error(`Error connecting with WalletConnect: ${e}`);
       })
       .finally(() => {
-        connected();
+        setIsVisibleInternal(false);
+        setTimeout(() => {
+          connected();
+        });
       });
   };
 
   const onClosePress = () => {
     setConnectionStatus("disconnected");
-    connected();
+    setIsVisibleInternal(false);
+    setTimeout(() => {
+      hide();
+    });
   };
 
   return (
     <TWModal
-      isVisible={true}
+      isVisible={isVisibleInternal ?? true}
       onBackdropPress={onClosePress}
       backdropOpacity={0.7}
     >

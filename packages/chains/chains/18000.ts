@@ -24,6 +24,7 @@ export default {
     "https://rpc.fod.games/"
   ],
   "shortName": "ZKST",
+  "slip44": 1,
   "slug": "frontier-of-dreams-testnet",
   "testnet": true
 } as const satisfies Chain;

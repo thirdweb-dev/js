@@ -15,7 +15,7 @@ type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain">;
 
 /**
  * @internal
- * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the `useEmbeddedWallet` hook instead
+ * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the [`useEmbeddedWallet`](https://portal.thirdweb.com/references/react/v4/useEmbeddedWallet) hook instead
  */
 export function usePaperWallet() {
   const connect = useConnect();
@@ -35,7 +35,7 @@ export function usePaperWallet() {
 
 /**
  * @internal
- * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the `useEmbeddedWallet` hook instead
+ * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the [`useEmbeddedWallet`](https://portal.thirdweb.com/references/react/v4/useEmbeddedWallet) hook instead
  */
 export function usePaperWalletUserEmail(): UseQueryResult<
   string | undefined,

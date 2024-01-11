@@ -1,7 +1,6 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
 import { Mumbai, Polygon } from "@thirdweb-dev/chains";
-import { isBrowser } from "./utils";
 
 type FeeData = {
   maxFeePerGas: null | BigNumber;
@@ -10,11 +9,6 @@ type FeeData = {
 };
 
 export async function getDefaultGasOverrides(provider: providers.Provider) {
-  // If we're running in the browser, let users configure gas price in their wallet UI
-  if (isBrowser()) {
-    return {};
-  }
-
   // handle smart wallet provider
   if ((provider as any).originalProvider) {
     provider = (provider as any).originalProvider;

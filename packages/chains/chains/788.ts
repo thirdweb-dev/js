@@ -26,6 +26,7 @@ export default {
     "https://testnet-rpc.aerochain.id/"
   ],
   "shortName": "taero",
+  "slip44": 1,
   "slug": "aerochain-testnet",
   "testnet": true
 } as const satisfies Chain;

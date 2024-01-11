@@ -1,11 +1,21 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import {
   RainbowWallet,
   getInjectedRainbowProvider,
 } from "@thirdweb-dev/wallets";
-import { RainbowConnectUI } from "./RainbowConnectUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
-import { rainbowWalletUris } from "./rainbowWalletUris";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+const rainbowWalletUris = {
+  ios: "rainbow://",
+  android: "https://rnbwapp.com/",
+  other: "https://rnbwapp.com/",
+};
 
 /**
  * @wallet
@@ -28,7 +38,7 @@ export type RainbowWalletConfigOptions = {
 /**
  * A wallet configurator for [Rainbow Wallet](https://rainbow.me/en/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -46,7 +56,7 @@ export type RainbowWalletConfigOptions = {
  * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */
@@ -73,9 +83,30 @@ export const rainbowWallet = (
 
       return wallet;
     },
-    connectUI: RainbowConnectUI,
-    isInstalled() {
-      return !!getInjectedRainbowProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  return !!getInjectedRainbowProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<RainbowWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as RainbowWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={rainbowWalletUris}
+      walletLocale={locale.wallets.rainbowWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}

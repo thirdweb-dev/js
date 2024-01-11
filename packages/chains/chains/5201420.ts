@@ -44,6 +44,7 @@ export default {
     "https://api.electroneum.com"
   ],
   "shortName": "etn-testnet",
+  "slip44": 1,
   "slug": "electroneum-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -16,6 +16,7 @@ import type {
 
 import Provider from "ethereum-provider";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
+import { getDefaultGasOverrides } from "@thirdweb-dev/sdk";
 
 export type SignerProcedureTypes = {
   getAddress: void;
@@ -96,6 +97,20 @@ export class EthersSigner extends Signer {
         },
       });
     return signedTransaction;
+  }
+
+  override async sendTransaction(
+    transaction: Deferrable<providers.TransactionRequest>,
+  ): Promise<providers.TransactionResponse> {
+    if (!this.provider) {
+      throw new Error("Provider not found");
+    }
+    const gas = await getDefaultGasOverrides(this.provider);
+    const txWithGas = {
+      ...gas,
+      ...transaction,
+    };
+    return super.sendTransaction(txWithGas);
   }
 
   async _signTypedData(

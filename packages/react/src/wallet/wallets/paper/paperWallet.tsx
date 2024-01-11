@@ -127,6 +127,9 @@ const PaperSelectionUI: React.FC<
           !!props.providers?.includes("google")
         }
         onSelect={props.onSelect}
+        createWalletInstance={props.createWalletInstance}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     </div>
   );
@@ -184,6 +187,9 @@ const PaperConnectUI = (
         setLoginType(_loginType);
       }}
       onBack={props.goBack}
+      createWalletInstance={props.createWalletInstance}
+      setConnectedWallet={props.setConnectedWallet}
+      setConnectionStatus={props.setConnectionStatus}
     />
   );
 };

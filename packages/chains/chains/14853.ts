@@ -6,6 +6,12 @@ export default {
   "faucets": [
     "https://t.me/HumanodeTestnet5FaucetBot"
   ],
+  "icon": {
+    "url": "ipfs://bafybeihuskzfwqogwvutaxil6sztmvpiavzbrzwjwpn6w2i4j3jysbybra",
+    "width": 1043,
+    "height": 1043,
+    "format": "png"
+  },
   "infoURL": "https://humanode.io",
   "name": "Humanode Testnet 5 Israfel",
   "nativeCurrency": {
@@ -20,6 +26,7 @@ export default {
     "https://explorer-rpc-http.testnet5.stages.humanode.io"
   ],
   "shortName": "hmnd-t5",
+  "slip44": 1,
   "slug": "humanode-testnet-5-israfel",
   "testnet": true
 } as const satisfies Chain;

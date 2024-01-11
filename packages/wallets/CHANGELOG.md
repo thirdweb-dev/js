@@ -1,5 +1,35 @@
 # @thirdweb-dev/wallets
 
+## 2.4.0
+
+### Minor Changes
+
+- [#2098](https://github.com/thirdweb-dev/js/pull/2098) [`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - - Add options to override gasless per transaction
+  - Better userOp estimations
+  - Performance optimisations
+
+### Patch Changes
+
+- [#2125](https://github.com/thirdweb-dev/js/pull/2125) [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb) Thanks [@adam-maj](https://github.com/adam-maj)! - Add signTypedData to AwsKmsWallet
+
+## 2.3.4
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/sdk@4.0.25
+
+## 2.3.3
+
+### Patch Changes
+
+- [#2103](https://github.com/thirdweb-dev/js/pull/2103) [`e46dd025`](https://github.com/thirdweb-dev/js/commit/e46dd0254f157c3c4d50fe3e4f44e2e24eaf34a8) Thanks [@MananTank](https://github.com/MananTank)! - Update JSDoc comments
+
+- Updated dependencies [[`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11)]:
+  - @thirdweb-dev/sdk@4.0.24
+
 ## 2.3.2
 
 ### Patch Changes

@@ -33,6 +33,7 @@ export default {
     "https://rpc-testnet.morphl2.io"
   ],
   "shortName": "tmorph",
+  "slip44": 1,
   "slug": "morph-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -28,6 +28,7 @@ export default {
     "https://subnets.avax.network/kiwi/testnet/rpc"
   ],
   "shortName": "kiwi",
+  "slip44": 1,
   "slug": "kiwi-subnet",
   "testnet": true
 } as const satisfies Chain;

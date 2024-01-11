@@ -34,6 +34,7 @@ export default {
     "https://rpc.testnet.frame.xyz/http"
   ],
   "shortName": "frame-test",
+  "slip44": 1,
   "slug": "frame-testnet",
   "testnet": true
 } as const satisfies Chain;

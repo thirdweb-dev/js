@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.foundryscan.org/"
   ],
   "shortName": "fnc",
+  "slip44": 1,
   "slug": "foundry-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

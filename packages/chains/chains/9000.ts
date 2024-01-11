@@ -39,6 +39,7 @@ export default {
     "https://eth.bd.evmos.dev:8545"
   ],
   "shortName": "evmos-testnet",
+  "slip44": 1,
   "slug": "evmos-testnet",
   "testnet": true
 } as const satisfies Chain;

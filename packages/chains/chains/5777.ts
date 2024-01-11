@@ -24,6 +24,7 @@ export default {
     "https://127.0.0.1:7545"
   ],
   "shortName": "ggui",
+  "slip44": 1,
   "slug": "ganache",
   "testnet": true,
   "title": "Ganache GUI Ethereum Testnet"

@@ -36,6 +36,7 @@ export default {
     "https://blockchain.haradev.com"
   ],
   "shortName": "ntt-haradev",
+  "slip44": 1,
   "slug": "haradev-testnet",
   "testnet": true
 } as const satisfies Chain;

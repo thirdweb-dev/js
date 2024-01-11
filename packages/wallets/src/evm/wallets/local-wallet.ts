@@ -29,27 +29,225 @@ export type LocalWalletConnectionArgs = {};
 
 const STORAGE_KEY_WALLET_DATA = "localWalletData";
 
+/**
+ * Allow users to connect to your app by generating a [Local Wallet](https://portal.thirdweb.com/glossary/local-wallet) directly in your application.
+ *
+ * A local wallet is a low-level wallet that allows you to create wallets within your application or project. It is a non-custodial solution that simplifies the onboarding process and improves the user experience for web3 apps in two ways:
+ *
+ * 1. It enables non-web3 native users to get started easily without having to create a wallet.
+ * 2. It hides transaction confirmations from users.
+ *
+ * After generating wallets for your users, you can offer multiple persistence and backup options.
+ *
+ * @example
+ * ```javascript
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+ * import { LocalWallet } from "@thirdweb-dev/wallets";
+ *
+ * const wallet = new LocalWallet();
+ *
+ * // generate a random wallet
+ * await wallet.generate();
+ *
+ * // connect the wallet to the application
+ * await wallet.connect();
+ *
+ * // at any point, you can save the wallet to persistent storage
+ * await wallet.save(config);
+ * // and load it back up
+ * await wallet.load(config);
+ *
+ * // you can also export the wallet out of the application
+ * const exportedWallet = await wallet.export(config);
+ * // and import it back in
+ * await wallet.import(exportedWallet, config);
+ *
+ * // You can then use this wallet to perform transactions via the SDK
+ * const sdk = await ThirdwebSDK.fromWallet(wallet, "goerli");
+ * ```
+ *
+ * ## Local Wallet Backup
+ *
+ * Local wallets can be persisted on disk, or backed up to the cloud. Currently 3 formats are supported:
+ *
+ * - `encryptedJSON` - a standard format for encrypted wallets, this requires a password to encrypt/decrypt the wallet. Recommended for safe backups.
+ * - `privateKey` - the raw private key. This can be stored encrypted or un-encrypted. If not encrypted, make sure you store it somewhere safe.
+ * - `mnemonic` - the raw seed phrase. This can be stored encrypted or un-encrypted. If not encrypted, make sure you store it somewhere safe.
+ *
+ * We provide encryption capabilities out of the box, but you can customize the type of encryption, and also turn it off completely.
+ *
+ * The type of storage can also be overridden, allowing you to store wallets anywhere you want, including remote locations.
+ *
+ * By default, wallets will be stored on the browser's storage for web (React), and on the secure storage of the device for mobile (React Native).
+ *
+ * On Node.js, you can use `LocalWalletNode` which by default will save to the local file system of the machine.
+ *
+ * ```javascript
+ * import { LocalWalletNode } from "@thirdweb-dev/wallets/evm/wallets/local-wallet-node";
+ *
+ * // wallet data will be saved in 'wallet.json' by default
+ * // you can also pass a different file path by specifying 'storageJsonFile' in the constructor
+ * const wallet = new LocalWalletNode();
+ *
+ * await localWallet.loadOrCreate({
+ *   strategy: "privateKey",
+ *   encryption: false,
+ * });
+ * ```
+ *
+ * Customizing where the wallet data is persisted only requires implementing a simple interface. Here's an example of a Local Wallet with custom storage:
+ *
+ * ```typescript
+ * class MyStorage implements AsyncStorage {
+ *   getItem(key: string): Promise<string | null> { ... }
+ *   setItem(key: string, value: string): Promise<void> { ... }
+ *   removeItem(key: string): Promise<void> { ... }
+ * }
+ *
+ * const wallet = new LocalWallet({
+ *   storage: new MyStorage(),
+ * })
+ * ```
+ *
+ * You can implement this any way you like, file persistance, remote cloud storage, etc.
+ *
+ * ## Encryption examples
+ *
+ * #### Save an encrypted privateKey with default encryption a password as the encryption key:
+ *
+ * ```javascript
+ * localWallet.save({
+ *   strategy: "privateKey",
+ *   encryption: {
+ *     password: "your-encryption-password", // uses default encryption
+ *   },
+ * });
+ * ```
+ *
+ * #### Import a raw private key or mnemonic (seed phrase) with no encryption:
+ *
+ * ```javascript
+ * // privateKey
+ * localWallet.import({
+ *   privateKey: "your-raw-privateKey",
+ *   encryption: false, // no encryption
+ * });
+ *
+ * // mnemonic
+ * localWallet.import({
+ *   mnemonic: "your-raw-mnemonic",
+ *   encryption: false, // no encryption
+ * });
+ * ```
+ *
+ * #### Save an encrypted mnemonic with a custom encryption:
+ *
+ * ```javascript
+ * // privateKey
+ * localWallet.save({
+ *   strategy: "mnemonic",
+ *   encryption: {
+ *     encrypt: (message: string, password: string) => {
+ *       return yourCustomEncryption(message, password);
+ *     },
+ *     password: "your-encryption-password",
+ *   },
+ * });
+ * ```
+ *
+ * @wallet
+ */
 export class LocalWallet extends AbstractClientWallet<
   LocalWalletOptions,
   LocalWalletConnectionArgs
 > {
+  /**
+   * @internal
+   */
   connector?: Connector;
+  /**
+   * @internal
+   */
   options: WalletOptions<LocalWalletOptions>;
+  /**
+   * @internal
+   */
   ethersWallet?: Wallet;
+  /**
+   * @internal
+   */
   #storage: AsyncStorage;
 
+  /**
+   * @internal
+   */
   static id = walletIds.localWallet as string;
 
+  /**
+   * @internal
+   */
   static meta = {
     name: "Local Wallet",
     iconURL:
       "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg",
   };
 
+  /**
+   * @internal
+   */
   public get walletName() {
     return "Local Wallet" as const;
   }
 
+  /**
+   * Initialize the `LocalWallet` with the given `options`
+   *
+   * @param options - The `options` object contains the following properties:
+   * ### clientId or secretKey (recommended)
+   * Provide `clientId` or `secretKey` to use the thirdweb RPCs for given `chains`
+   *
+   * If you are using the `LocalWallet` in a in frontend - provide a `clientId`, If you are using the `LocalWallet` in backend - you can provide a `secretKey`.
+   *
+   * You can create a `clientId` / `secretKey` from [thirdweb dashboard](https://thirdweb.com/create-api-key).
+   *
+   * ### chain (optional)
+   * Must be a `Chain` object, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
+   * Defaults to `Ethereum`.
+   *
+   * ### chains (optional)
+   * Provide an array of chains you want to support.
+   *
+   * Must be an array of `Chain` objects, from the [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package.
+   *
+   * Defaults to our [default chains](/react/react.thirdwebprovider#default-chains).
+   *
+   * ### storage (optional)
+   * This is the default storage for storing the private key, mnemonic or encrypted JSON. This can be implemented in any way you want, as long as it conforms to the `AsyncStorage` interface:
+   *
+   * If omitted, defaults to browser local storage.
+   *
+   *
+   * ```javascript
+   * import { LocalWallet } from "@thirdweb-dev/wallets";
+   *
+   * const customStorage = {
+   *   getItem: (key) => {
+   *     // Implement your own storage logic here
+   *   },
+   *   removeItem: (key) => {
+   *     // Implement your own storage logic here
+   *   },
+   *   setItem: (key, value) => {
+   *     // Implement your own storage logic here
+   *   },
+   * };
+   *
+   * const walletWithOptions = new LocalWallet({
+   *   storage: customStorage,
+   * });
+   * ```
+   *
+   */
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
 
@@ -93,9 +291,30 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * load saved wallet data from storage or generate a new one and save it.
+   * Load the saved wallet data from storage, if it exists, or generate a new one and save it.
+   *
+   * @example
+   * ```js
+   * wallet.loadOrCreate({
+   *   strategy: "encryptedJson",
+   *   password: password,
+   * });
+   * ```
+   *
+   * @param options - The `options` object must be of type `LocalWalletLoadOrCreateOptions`. It takes a `strategy` property and other properties depending on the strategy.
+   *
+   * ### strategy "encryptedJson"
+   * Load the wallet from encrypted JSON. The `options` object takes the following properties:
+   * * `strategy` - must be "encryptedJson"
+   * * `password` - the password to decrypt the encrypted JSON
+   * * `storage` - optional storage to get the wallet data from. Must be of type `AsyncStorage`
+   *
+   * ### strategy "privateKey"
+   * Load the wallet from a private key. The `options` object takes the following properties:
+   * * `strategy` - must be "privateKey"
+   * * `encryption` - optional encryption object of type `DecryptOptions` to decrypt the private key. This is only required if the saved private key is encrypted.
    */
-  async loadOrCreate(options: LoadOrCreateOptions) {
+  async loadOrCreate(options: LocalWalletLoadOrCreateOptions) {
     if (await this.getSavedData(options.storage)) {
       await this.load(options);
     } else {
@@ -105,8 +324,14 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * creates a new random wallet
-   * @returns The address of the newly created wallet
+   * Creates a new random wallet and returns the wallet address.
+   *
+   * @example
+   * ```ts
+   * const address = await wallet.generate();
+   * ```
+   *
+   * @returns Promise that resolves to the address of the wallet
    */
   async generate() {
     if (this.ethersWallet) {
@@ -118,10 +343,40 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * create local wallet from an "encryptedJson", "privateKey" or "mnemonic"
-   * @returns
+   * Create local wallet by importing a private key, mnemonic or encrypted JSON.
+   * @example
+   * ```javascript
+   * const address = await localWallet.import({
+   *   privateKey: "...",
+   *   encryption: false,
+   * });
+   * ```
+   *
+   * @param options - The `options` object must be of type `LocalWalletImportOptions` which can have either `privateKey`, `mnemonic` or `encryptedJson` as a property.
+   * They all can be encrypted or un-encrypted. If encrypted, the `encryption` property must be provided with `password` property to decrypt the data.
+   *
+   * ### privateKey
+   * The Private Key of the wallet.
+   *
+   * ### mnemonic
+   * The mnemonic (seed phrase) of the wallet.
+   *
+   * ### encryptedJson
+   * The encrypted JSON of the wallet.
+   *
+   * ### encryption
+   * This is only required if the given `privateKey`, `mnemonic` or `encryptedJson` is encrypted.
+   * The `encryption` object of type `DecryptOptions` can be provided to decrypt the data. It is an object with the following properties:
+   *
+   * #### password
+   * The password to decrypt the data.
+   *
+   * #### decrypt
+   * A custom decrypt function that takes the encrypted data and password as arguments and returns the decrypted data.
+   *
+   * @returns Promise that resolves to the address of the wallet
    */
-  async import(options: ImportOptions): Promise<string> {
+  async import(options: LocalWalletImportOptions): Promise<string> {
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -176,10 +431,38 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * initialize the wallet from saved data on storage
-   * @param password - password used for encrypting the wallet
+   * Initialize the wallet from saved data on storage
+   *
+   * ```js
+   * await wallet.load({
+   *   strategy: "encryptedJson",
+   *   password: "your-password",
+   * });
+   * ```
+   *
+   * @param options - The `options` object must be of type `LocalWalletLoadOptions` which contains a `strategy` property and other properties depending on the strategy.
+   *
+   * ### strategy "encryptedJson"
+   * Initialize the wallet from encrypted JSON. The `options` object takes the following properties:
+   * * `strategy` - must be "encryptedJson"
+   * * `password` - the password to decrypt the encrypted JSON
+   * * `storage` - optional storage to get the wallet data from. Must be of type `AsyncStorage`
+   *
+   * ### strategy "privateKey"
+   * Initialize the wallet from a private key. The `options` object takes the following properties:
+   * * `strategy` - must be "privateKey"
+   * * `encryption` - optional encryption object of type `DecryptOptions` to decrypt the private key. This is only required if the private key is encrypted.
+   * * `storage` - optional storage to get the wallet data from. Must be of type `AsyncStorage`
+   *
+   * ### strategy "mnemonic"
+   * Initialize the wallet from a mnemonic (seed phrase). The `options` object takes the following properties:
+   * * `strategy` - must be "mnemonic"
+   * * `encryption` - optional encryption object of type `DecryptOptions` to decrypt the mnemonic. This is only required if the mnemonic is encrypted.
+   * * `storage` - optional storage to get the wallet data from. Must be of type `AsyncStorage`
+   *
+   * @returns Promise that resolves to the address of the wallet
    */
-  async load(options: LoadOptions): Promise<string> {
+  async load(options: LocalWalletLoadOptions): Promise<string> {
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -236,8 +519,37 @@ export class LocalWallet extends AbstractClientWallet<
 
   /**
    * Save the wallet data to storage
+   *
+   * @example
+   * ```javascript
+   * wallet.save({
+   *   strategy: "encryptedJson",
+   *   password: "password",
+   * });
+   * ```
+   *
+   * @param options - The `options` object must be of type `LocalWalletSaveOptions`. It takes a `strategy` property and other properties depending on the strategy.
+   *
+   * ### strategy "encryptedJson"
+   * Save the wallet data as encrypted JSON. The `options` object takes the following properties:
+   * * `strategy` - must be "encryptedJson"
+   * * `password` - the password to encrypt the wallet data
+   * * `storage` - optional storage to save the wallet data to. Must be of type `AsyncStorage`
+   *
+   * ### strategy "privateKey"
+   * Save the wallet data as a private key. The `options` object takes the following properties:
+   * * `strategy` - must be "privateKey"
+   * * `encryption` - optional encryption object of type `EncryptOptions` to encrypt the private key. This is only required if you want to encrypt the private key.
+   * * `storage` - optional storage to save the wallet data to. Must be of type `AsyncStorage`
+   *
+   * ### strategy "mnemonic"
+   * Save the wallet data as a mnemonic (seed phrase). The `options` object takes the following properties:
+   * * `strategy` - must be "mnemonic"
+   * * `encryption` - optional encryption object of type `EncryptOptions` to encrypt the mnemonic. This is only required if you want to encrypt the mnemonic.
+   * * `storage` - optional storage to save the wallet data to. Must be of type `AsyncStorage`
+   *
    */
-  async save(options: SaveOptions): Promise<void> {
+  async save(options: LocalWalletSaveOptions): Promise<void> {
     const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
@@ -300,7 +612,9 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns true if initialized wallet's data is saved in storage
+   * Check if the wallet data is saved in storage.
+   *
+   * @returns `true` if initialized wallet's data is saved in storage
    */
   async isSaved() {
     try {
@@ -316,17 +630,48 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * deletes the saved wallet data from storage
+   * Delete the saved wallet from storage. This action is irreversible, use with caution.
+   *
+   * @example
+   * ```ts
+   * await wallet.deleteSaved();
+   * ```
    */
   async deleteSaved() {
     await this.#storage.removeItem(STORAGE_KEY_WALLET_DATA);
   }
 
   /**
-   * encrypts the wallet with given password and returns the encrypted wallet
-   * @param password - password for encrypting the wallet data
+   * Encrypts the wallet with a password in various formats and return it.
+   *
+   * @example
+   * ```javascript
+   * const data = await wallet.export({
+   *   strategy: "encryptedJson",
+   *   password: "password",
+   * });
+   * ```
+   *
+   * @param options - The `options` object must be of type `LocalWalletExportOptions`. It takes a `strategy` and other properties depending on the strategy.
+   *
+   * ### strategy - "encryptedJson"
+   * Export wallet in encryptedJson format. The `options` object takes the following properties:
+   * * `strategy` - must be "encryptedJson"
+   * * `password` - the password to encrypt the wallet data
+   *
+   * ### strategy - "privateKey"
+   * Encrypt the private key of the wallet. The `options` object takes the following properties:
+   * * `strategy` - must be "privateKey"
+   * * `encryption` - encryption object of type `EncryptOptions` to encrypt the private key. It takes a `password` property to encrypt the private key and an optional `encrypt` function to encrypt the private key. If `encrypt` function is not provided, it uses the default encryption.
+   *
+   * ### strategy - "mnemonic"
+   * Encrypt the mnemonic (seed phrase) of the wallet. The `options` object takes the following properties:
+   * * `strategy` - must be "mnemonic"
+   * * `encryption` - encryption object of type `EncryptOptions` to encrypt the mnemonic. It takes a `password` property to encrypt the mnemonic and an optional `encrypt` function to encrypt the mnemonic. If `encrypt` function is not provided, it uses the default encryption.
+   *
+   * @returns Promise that resolves to a `string` that contains encrypted wallet data
    */
-  async export(options: ExportOptions): Promise<string> {
+  async export(options: LocalWalletExportOptions): Promise<string> {
     const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
@@ -359,6 +704,34 @@ export class LocalWallet extends AbstractClientWallet<
 
   /**
    * Get the saved wallet data from storage
+   * @param storage - storage to get the wallet data from. Must be of type `AsyncStorage`
+   *
+   * @example
+   * ```javascript
+   * const someStorage = {
+   *   getItem: (key) => {
+   *     // Implement your own storage logic here
+   *   },
+   *   removeItem: (key) => {
+   *     // Implement your own storage logic here
+   *   },
+   *   setItem: (key, value) => {
+   *     // Implement your own storage logic here
+   *   },
+   * }
+   *
+   * wallet.getSaved(someStorage);
+   * ```
+   *
+   * @returns `Promise` which resolves to a `WalletData` object containing the wallet data. It returns `null` if no wallet data is found in storage.
+   * ```ts
+   * {
+   *     address: string;
+   *     strategy: "mnemonic" | "privateKey" | "encryptedJson";
+   *     data: string;
+   *     isEncrypted: boolean;
+   * }
+   * ```
    */
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
     const _storage = storage || this.#storage;
@@ -388,41 +761,44 @@ export class LocalWallet extends AbstractClientWallet<
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
   }
 
+  /**
+   * Disconnect the wallet
+   */
   async disconnect() {
     await super.disconnect();
     this.ethersWallet = undefined;
   }
 }
 
-type DecryptOptions =
+export type LocalWalletDecryptOptions =
   | {
       decrypt?: (message: string, password: string) => Promise<string>;
       password: string;
     }
   | false;
 
-type EncryptOptions =
+export type LocalWalletEncryptOptions =
   | {
       encrypt?: (message: string, password: string) => Promise<string>;
       password: string;
     }
   | false;
 
-type ImportOptions =
+export type LocalWalletImportOptions =
   | {
       privateKey: string;
-      encryption: DecryptOptions;
+      encryption: LocalWalletDecryptOptions;
     }
   | {
       mnemonic: string;
-      encryption: DecryptOptions;
+      encryption: LocalWalletDecryptOptions;
     }
   | {
       encryptedJson: string;
       password: string;
     };
 
-type LoadOptions =
+export type LocalWalletLoadOptions =
   | {
       strategy: "encryptedJson";
       password: string;
@@ -431,16 +807,16 @@ type LoadOptions =
   | {
       strategy: "privateKey";
       storage?: AsyncStorage;
-      encryption: DecryptOptions;
+      encryption: LocalWalletDecryptOptions;
     }
   | {
       strategy: "mnemonic";
       storage?: AsyncStorage;
-      encryption: DecryptOptions;
+      encryption: LocalWalletDecryptOptions;
     };
 
 // omit the mnemonic strategy option from LoadOptions
-type LoadOrCreateOptions =
+export type LocalWalletLoadOrCreateOptions =
   | {
       strategy: "encryptedJson";
       password: string;
@@ -449,31 +825,31 @@ type LoadOrCreateOptions =
   | {
       strategy: "privateKey";
       storage?: AsyncStorage;
-      encryption: DecryptOptions;
+      encryption: LocalWalletDecryptOptions;
     };
 
-type SaveOptions =
+export type LocalWalletSaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
       strategy: "privateKey";
-      encryption: EncryptOptions;
+      encryption: LocalWalletEncryptOptions;
       storage?: AsyncStorage;
     }
   | {
       strategy: "mnemonic";
-      encryption: EncryptOptions;
+      encryption: LocalWalletEncryptOptions;
       storage?: AsyncStorage;
     };
 
-type ExportOptions =
+export type LocalWalletExportOptions =
   | { strategy: "encryptedJson"; password: string }
   | {
       strategy: "privateKey";
-      encryption: EncryptOptions;
+      encryption: LocalWalletEncryptOptions;
     }
   | {
       strategy: "mnemonic";
-      encryption: EncryptOptions;
+      encryption: LocalWalletEncryptOptions;
     };
 
 // used in getDecryptor and getEncryptor below
@@ -488,7 +864,7 @@ async function noop(msg: string) {
  * - return a noop function
  * @returns
  */
-function getDecryptor(encryption: DecryptOptions | undefined) {
+function getDecryptor(encryption: LocalWalletDecryptOptions | undefined) {
   return encryption
     ? (msg: string) =>
         // we're using aesDecryptCompat here because we want to support legacy crypto-js ciphertext for the moment
@@ -503,7 +879,7 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  * - return a noop function
  * @returns
  */
-function getEncryptor(encryption: EncryptOptions | undefined) {
+function getEncryptor(encryption: LocalWalletEncryptOptions | undefined) {
   return encryption
     ? (msg: string) =>
         (encryption.encrypt || aesEncrypt)(msg, encryption.password)

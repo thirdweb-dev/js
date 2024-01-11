@@ -43,6 +43,7 @@ export default {
     "wss://arbitrum-goerli.publicnode.com"
   ],
   "shortName": "arb-goerli",
+  "slip44": 1,
   "slug": "arbitrum-goerli",
   "testnet": true,
   "title": "Arbitrum Goerli Rollup Testnet"

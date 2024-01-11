@@ -4,7 +4,8 @@ import {
   ConnectUIProps,
   WalletOptions,
   useDisconnect,
-  useWallet,
+  useWalletContext,
+  WalletInstance,
 } from "@thirdweb-dev/react-core";
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
@@ -31,7 +32,7 @@ export type SafeWalletConfigOptions = {
 /**
  * A wallet configurator for [Safe](https://safe.global/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -48,10 +49,10 @@ export type SafeWalletConfigOptions = {
  * Optional configuration options for the wallet
  *
  * ### personalWallets (optional)
- * An array of personal wallets to show in `ConnectWallet` Modal for personal wallet selection
+ * An array of personal wallets to show in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal for personal wallet selection
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */
@@ -81,15 +82,20 @@ export const safeWallet = (
 export const SafeConnectUI = (
   props: ConnectUIProps<SafeWallet> & { personalWallets: WalletConfig[] },
 ) => {
-  const activeWallet = useWallet();
+  const { personalWalletConnection } = useWalletContext();
+
   const [personalWalletConfig, setPersonalWalletConfig] = useState<
     WalletConfig | undefined
   >();
+
   const disconnect = useDisconnect();
 
+  // screen 2
   if (personalWalletConfig) {
-    const _props: ConnectUIProps = {
+    const _props: ConnectUIProps<WalletInstance> = {
       goBack: () => {
+        personalWalletConnection.disconnectWallet();
+        disconnect();
         setPersonalWalletConfig(undefined);
       },
       connected() {
@@ -104,6 +110,26 @@ export const SafeConnectUI = (
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
       modalSize: props.modalSize,
+      connect(options) {
+        return personalWalletConnection.connectWallet(
+          personalWalletConfig,
+          options,
+        );
+      },
+      setConnectedWallet(wallet) {
+        personalWalletConnection.setConnectedWallet(wallet);
+      },
+      setConnectionStatus(status) {
+        personalWalletConnection.setConnectionStatus(status);
+      },
+      connectionStatus: personalWalletConnection.connectionStatus,
+      createWalletInstance() {
+        return personalWalletConnection.createWalletInstance(
+          personalWalletConfig,
+        );
+      },
+      connectedWallet: personalWalletConnection.activeWallet,
+      connectedWalletAddress: personalWalletConnection.address,
     };
 
     if (personalWalletConfig.connectUI) {
@@ -113,7 +139,8 @@ export const SafeConnectUI = (
     return <HeadlessConnectUI {..._props} />;
   }
 
-  if (!activeWallet) {
+  // screen 1
+  if (!personalWalletConnection.activeWallet) {
     return (
       <SelectpersonalWallet
         personalWallets={props.personalWallets}
@@ -125,15 +152,19 @@ export const SafeConnectUI = (
     );
   }
 
+  // screen 3
   return (
     <SelectAccount
       renderBackButton={props.supportedWallets.length > 1}
       onBack={() => {
+        personalWalletConnection.disconnectWallet();
         disconnect();
         props.goBack();
       }}
       onConnect={props.connected}
-      safeWalletConfig={props.walletConfig}
+      connect={props.connect}
+      connectionStatus={props.connectionStatus}
+      meta={props.walletConfig.meta}
     />
   );
 };

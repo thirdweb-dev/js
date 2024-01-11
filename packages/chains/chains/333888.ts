@@ -26,6 +26,7 @@ export default {
     "https://sparta-rpc.polis.tech"
   ],
   "shortName": "sparta",
+  "slip44": 1,
   "slug": "polis-testnet",
   "testnet": true
 } as const satisfies Chain;

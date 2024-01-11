@@ -48,7 +48,7 @@ export default {
     "wss://rpc-testnet-pulsechain.g4mm4.io"
   ],
   "shortName": "t4pls",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "pulsechain-testnet-v4",
   "status": "active",
   "testnet": true

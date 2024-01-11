@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 4.0.25
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+## 4.0.24
+
+### Patch Changes
+
+- [#2105](https://github.com/thirdweb-dev/js/pull/2105) [`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix verification
+
 ## 4.0.23
 
 ### Patch Changes

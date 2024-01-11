@@ -1,5 +1,60 @@
 # @thirdweb-dev/react-native
 
+## 0.5.6
+
+### Patch Changes
+
+- [#2131](https://github.com/thirdweb-dev/js/pull/2131) [`f953c72c`](https://github.com/thirdweb-dev/js/commit/f953c72c4e273feefcbd905876b15e7346b45740) Thanks [@iketw](https://github.com/iketw)! - Fix custom balance token display in details button
+
+- [#2137](https://github.com/thirdweb-dev/js/pull/2137) [`7d07490e`](https://github.com/thirdweb-dev/js/commit/7d07490ed3ec80aa33a991f38b3831996d49fb09) Thanks [@iketw](https://github.com/iketw)! - Adds hideDisconnect prop to hide the disconnect button
+
+  ```ts
+  <ConnectWallet hideDisconnect={true} />
+  ```
+
+- Updated dependencies [[`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f), [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb)]:
+  - @thirdweb-dev/wallets@2.4.0
+  - @thirdweb-dev/react-core@4.2.3
+
+## 0.5.5
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- [#2092](https://github.com/thirdweb-dev/js/pull/2092) [`4c3c840d`](https://github.com/thirdweb-dev/js/commit/4c3c840d8815915840d0819932aa0a858c5d3184) Thanks [@iketw](https://github.com/iketw)! - Export WalletConnect modal component
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/react-core@4.2.2
+  - @thirdweb-dev/wallets@2.3.4
+  - @thirdweb-dev/sdk@4.0.25
+
+## 0.5.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.2.1
+
+## 0.5.3
+
+### Patch Changes
+
+- [#2101](https://github.com/thirdweb-dev/js/pull/2101) [`7fdb1715`](https://github.com/thirdweb-dev/js/commit/7fdb1715e4263e9b9c90370a1e70c7fa1fa0e95e) Thanks [@iketw](https://github.com/iketw)! - Export types for better reference docs
+
+- [#2108](https://github.com/thirdweb-dev/js/pull/2108) [`b90fa2cc`](https://github.com/thirdweb-dev/js/commit/b90fa2cc298bf1a6deb0f4c0f927ab77f2716448) Thanks [@iketw](https://github.com/iketw)! - Adds `hideSendButton` and `hideReceiveButton` to the ConnectWallet component.
+
+  Both props default to `false`.
+
+  ```js
+  <ConnectWallet hideReceiveButton={true} hideSendButton={true} />
+  ```
+
+- Updated dependencies [[`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11), [`e46dd025`](https://github.com/thirdweb-dev/js/commit/e46dd0254f157c3c4d50fe3e4f44e2e24eaf34a8)]:
+  - @thirdweb-dev/sdk@4.0.24
+  - @thirdweb-dev/wallets@2.3.3
+  - @thirdweb-dev/react-core@4.2.0
+
 ## 0.5.2
 
 ### Patch Changes

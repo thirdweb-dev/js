@@ -32,6 +32,7 @@ export default {
     "https://rpctest.egonscan.com"
   ],
   "shortName": "EGONt",
+  "slip44": 1,
   "slug": "egoncoin-testnet",
   "testnet": true
 } as const satisfies Chain;

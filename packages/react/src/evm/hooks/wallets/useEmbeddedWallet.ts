@@ -22,7 +22,7 @@ import {
 /**
  * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
  *
- * The `embeddedWallet()` should be added to `ThirdwebProvider`'s `supportedWallets` prop to enable auto-connection on page load
+ * The `embeddedWallet()` should be added to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `supportedWallets` prop to enable auto-connection on page load
  *
  * @example
  *

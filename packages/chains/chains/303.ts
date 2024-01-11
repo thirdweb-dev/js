@@ -32,6 +32,7 @@ export default {
     "https://nc-rpc-test1.neurochain.io"
   ],
   "shortName": "ncnt",
+  "slip44": 1,
   "slug": "neurochain-testnet",
   "testnet": true
 } as const satisfies Chain;

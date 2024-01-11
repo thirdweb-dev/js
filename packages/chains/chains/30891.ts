@@ -21,11 +21,11 @@ export default {
   "networkId": 30891,
   "redFlags": [],
   "rpc": [
-    "https://jambon-s-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://jambon-s-testnet-jambon's testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://30891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/e8b04790-d50c-4bb1-89ba-7bd140b674f3"
   ],
   "shortName": "Jambon's Testnet",
-  "slug": "jambon-s-testnet",
+  "slug": "jambon-s-testnet-jambon's testnet",
   "testnet": true
 } as const satisfies Chain;

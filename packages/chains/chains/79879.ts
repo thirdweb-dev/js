@@ -32,6 +32,7 @@ export default {
     "https://rpc-testnet.goldsmartchain.com"
   ],
   "shortName": "STANDt",
+  "slip44": 1,
   "slug": "gold-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

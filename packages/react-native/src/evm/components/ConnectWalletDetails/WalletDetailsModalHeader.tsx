@@ -20,6 +20,7 @@ interface WalletDetailsModalHeaderProps {
   onAddressCopied?: () => void;
   loading?: boolean;
   tokenAddress?: string;
+  hideDisconnect?: boolean;
 }
 
 export const WalletDetailsModalHeader = ({
@@ -27,6 +28,7 @@ export const WalletDetailsModalHeader = ({
   onDisconnectPress,
   onAddressCopied,
   tokenAddress,
+  hideDisconnect,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useGlobalTheme();
   const activeWallet = useWallet();
@@ -96,7 +98,7 @@ export const WalletDetailsModalHeader = ({
         </BaseButton>
         {showLoading ? (
           <ActivityIndicator size="small" color={theme.colors.iconHighlight} />
-        ) : (
+        ) : hideDisconnect ? null : (
           <Icon
             type="disconnect"
             width={18}

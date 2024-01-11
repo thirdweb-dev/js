@@ -32,6 +32,7 @@ export default {
     "https://testnet.condor.systems/rpc"
   ],
   "shortName": "condor",
+  "slip44": 1,
   "slug": "condor-test-network",
   "testnet": true
 } as const satisfies Chain;

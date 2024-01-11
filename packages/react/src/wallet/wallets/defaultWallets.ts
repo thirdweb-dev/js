@@ -8,7 +8,7 @@ import { rainbowWallet } from "./rainbow/RainbowWallet";
 import { phantomWallet } from "./phantom/phantomWallet";
 
 /**
- * The default wallets that are used by the `ThirdwebProvider` if no `supportedWallets` prop is provided.
+ * The default wallets that are used by the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) if no `supportedWallets` prop is provided.
  *
  * The defaults wallets are:
  * - Metamask

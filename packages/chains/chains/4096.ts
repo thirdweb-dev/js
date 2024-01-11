@@ -35,6 +35,7 @@ export default {
     "https://testnet-rpc.bitindi.org"
   ],
   "shortName": "BNIt",
+  "slip44": 1,
   "slug": "bitindi-testnet",
   "testnet": true
 } as const satisfies Chain;

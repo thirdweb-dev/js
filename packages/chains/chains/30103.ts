@@ -30,6 +30,7 @@ export default {
     "https://cerium-rpc.canxium.net"
   ],
   "shortName": "ceri",
+  "slip44": 1,
   "slug": "cerium-testnet",
   "testnet": true
 } as const satisfies Chain;

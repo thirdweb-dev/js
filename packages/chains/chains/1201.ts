@@ -18,6 +18,7 @@ export default {
     "https://seed5.evanesco.org:8547"
   ],
   "shortName": "avis",
+  "slip44": 1,
   "slug": "evanesco-testnet",
   "testnet": true
 } as const satisfies Chain;

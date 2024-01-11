@@ -24,7 +24,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  NFT,
+  NFTMetadata,
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
@@ -87,7 +87,7 @@ import invariant from "tiny-invariant";
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
-): UseQueryResult<NFT[]> {
+): UseQueryResult<NFTMetadata[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
@@ -98,7 +98,9 @@ export function useUnclaimedNFTs(
         contract.getAllUnclaimed,
         "Contract instance does not support getAllUnclaimed",
       );
-      return contract.getAllUnclaimed(queryParams);
+      const data: Promise<NFTMetadata[]> =
+        contract.getAllUnclaimed(queryParams);
+      return data;
     },
     { enabled: !!contract },
   );
@@ -107,7 +109,7 @@ export function useUnclaimedNFTs(
 /**
  * Hook for fetching all claimed NFTs from a given NFT Drop contract.
  *
- * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable),
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable),
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721).
  *
  * @example
@@ -174,7 +176,7 @@ export function useClaimedNFTs(
  *
  * Unclaimed NFTs are tokens that were lazy-minted but have not yet been claimed by a user.
  *
- * Available to use on contracts that implement the [`LazyMint`](https://portal.thirdweb.com/solidity/extensions/lazymint) extension;
+ * Available to use on contracts that implement the [`LazyMint`](https://portal.thirdweb.com/contracts/build/extensions/general/LazyMint) extension;
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721) contract.
  *
  * @example
@@ -220,7 +222,7 @@ export function useUnclaimedNFTSupply(
 /**
  * Hook for retrieving the total supply of NFTs claimed from an NFT Drop contract.
  *
- * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/solidity/extensions/erc721claimable).
+ * Available to use on contracts that implement [`ERC721Claimable`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable).
  *
  * @example
  *
@@ -262,8 +264,8 @@ export function useClaimedNFTSupply(
 /**
  * Hook for fetching batches of lazy-minted NFTs that were set to be revealed at a later date, but have not yet been revealed.
  *
- * Available to use on contracts that implement the [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
- * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable) interfaces,
+ * Available to use on contracts that implement the [ERC721Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155Revealable) interfaces,
  * such as the [NFT Drop](https://thirdweb.com/thirdweb.eth/DropERC721)
  * and [Edition Drop](https://thirdweb.com/thirdweb.eth/DropERC1155) smart contracts.
  *
@@ -605,8 +607,8 @@ export function useLazyMint<TContract extends DropContract>(
  * allowing the owner to set placeholder metadata and reveal the metadata of the NFTs at a later time.
  *
  * Available to use on contracts that implement the
- * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
- * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * [ERC721Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155Revealable)
  * interfaces.
  *
  * @example
@@ -725,8 +727,8 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * Hook for revealing a batch of delayed reveal NFTs using [delayed reveal](https://portal.thirdweb.com/glossary/delayed-reveal).
  *
  * Available to use on contracts that implement the
- * [ERC721Revealable](https://portal.thirdweb.com/solidity/extensions/erc721revealable)
- * or [ERC1155Revealable](https://portal.thirdweb.com/solidity/extensions/erc1155revealable)
+ * [ERC721Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Revealable)
+ * or [ERC1155Revealable](https://portal.thirdweb.com/contracts/build/extensions/erc-1155/ERC1155Revealable)
  * interfaces.
  *
  * ```jsx

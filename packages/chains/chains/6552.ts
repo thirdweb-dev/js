@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.scolcoin.com"
   ],
   "shortName": "SRC-test",
+  "slip44": 1,
   "slug": "scolcoin-weichain-testnet",
   "testnet": true
 } as const satisfies Chain;

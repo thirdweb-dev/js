@@ -31,6 +31,7 @@ export default {
     "wss://testnet.sapphire.oasis.dev/ws"
   ],
   "shortName": "sapphire-testnet",
+  "slip44": 1,
   "slug": "oasis-sapphire-testnet",
   "testnet": true
 } as const satisfies Chain;

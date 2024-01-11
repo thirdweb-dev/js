@@ -26,6 +26,7 @@ export default {
     "https://dev-api.zilliqa.com"
   ],
   "shortName": "zil-testnet",
+  "slip44": 1,
   "slug": "zilliqa-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

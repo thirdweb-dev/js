@@ -25,6 +25,7 @@ export default {
     "wss://wss.api.moonbase.moonbeam.network"
   ],
   "shortName": "mbase",
+  "slip44": 1,
   "slug": "moonbase-alpha",
   "testnet": true
 } as const satisfies Chain;

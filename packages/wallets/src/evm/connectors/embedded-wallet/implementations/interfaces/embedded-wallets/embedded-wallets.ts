@@ -21,7 +21,7 @@ export type EmbeddedWalletConstructorType = ClientIdConstructorType & {
    */
   chain: Chain;
   /**
-   * @param authResult - the authResult returned from the EmbeddedWalletSdk auth method
+   * @param authResult - The authResult returned from the EmbeddedWalletSdk auth method
    * @returns
    */
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;

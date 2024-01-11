@@ -226,7 +226,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
  * This Overrides any of the default values for the SDK. If not provided, it uses sensible defaults.
  *
  * ### storageInterface (optional)
- * Override the default [Storage](https://portal.thirdweb.com/storage) interface used by the SDK.
+ * Override the default [Storage](https://portal.thirdweb.com/infrastructure/storage/overview) interface used by the SDK.
  *
  * It allows you to create an instance of `ThirdwebStorage` with your own customized config, and pass it to the SDK.
  *
@@ -265,7 +265,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
  * ```
  *
  * ### authConfig (optional)
- * The configuration object for setting up [Auth](https://portal.thirdweb.com/auth); allowing users to sign in with their wallet.
+ * The configuration object for setting up [Auth](https://portal.thirdweb.com/wallets/auth); allowing users to sign in with their wallet.
  *
  * ### secretKey (optional)
  * secretKey for thirdweb services. This is only required if server side rendering is being used.

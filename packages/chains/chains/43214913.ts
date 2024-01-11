@@ -23,6 +23,7 @@ export default {
     "http://174.138.9.169:9650/ext/bc/VUKSzFZKckx4PoZF9gX5QAqLPxbLzvu1vcssPG5QuodaJtdHT/rpc"
   ],
   "shortName": "mais",
+  "slip44": 1,
   "slug": "maistestsubnet",
   "testnet": true
 } as const satisfies Chain;
