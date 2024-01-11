@@ -183,7 +183,7 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
       }
       createWalletStorage={createWalletStorage}
       clientId={clientId}
-      {...sdkOptions}
+      sdkOptions={sdkOptions}
       {...restProps}
     >
       <ThemeProvider theme={theme ? theme : "dark"}>
