@@ -40,6 +40,7 @@ export default {
     "https://json-rpc.testnet.swisstronik.com"
   ],
   "shortName": "swtr",
+  "slip44": 1,
   "slug": "swisstronik-testnet",
   "testnet": true
 } as const satisfies Chain;

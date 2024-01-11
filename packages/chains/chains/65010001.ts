@@ -33,6 +33,7 @@ export default {
     "wss://rpc1.bakerloo.autonity.org/ws/"
   ],
   "shortName": "bakerloo-01",
+  "slip44": 1,
   "slug": "autonity-bakerloo-barada-testnet",
   "testnet": true
 } as const satisfies Chain;

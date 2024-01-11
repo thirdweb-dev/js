@@ -1,6 +1,17 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { Coin98Wallet, getInjectedCoin98Provider } from "@thirdweb-dev/wallets";
-import { Coin98ConnectUI } from "./Coin98ConnectUI";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+
+const coin98WalletUris = {
+  ios: "coin98://",
+  android: "coin98://",
+  other: "coin98://",
+};
 
 /**
  * @wallet
@@ -23,7 +34,7 @@ export type Coin98WalletConfigOptions = {
 /**
  * A wallet configurator for [Coin98 Wallet](https://coin98.com/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -41,7 +52,7 @@ export type Coin98WalletConfigOptions = {
  * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */
@@ -72,9 +83,30 @@ export const coin98Wallet = (
 
       return wallet;
     },
-    connectUI: Coin98ConnectUI,
-    isInstalled() {
-      return !!getInjectedCoin98Provider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isCoin98Installed,
   };
 };
+
+function isCoin98Installed() {
+  return !!getInjectedCoin98Provider();
+}
+
+function ConnectUI(props: ConnectUIProps<Coin98Wallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as Coin98Wallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={coin98WalletUris}
+      walletLocale={locale.wallets.coin98Wallet}
+      isInstalled={isCoin98Installed}
+    />
+  );
+}

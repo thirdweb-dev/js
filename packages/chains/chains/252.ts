@@ -12,7 +12,7 @@ export default {
     "format": "PNG"
   },
   "infoURL": "https://mainnet.frax.com",
-  "name": "Fraxchain Mainnet",
+  "name": "Fraxtal Mainnet",
   "nativeCurrency": {
     "name": "Frax Ether",
     "symbol": "frxETH",
@@ -21,8 +21,8 @@ export default {
   "networkId": 252,
   "redFlags": [],
   "rpc": [],
-  "shortName": "fraxchain",
-  "slug": "fraxchain",
+  "shortName": "fraxtal",
+  "slug": "fraxtal",
   "status": "incubating",
   "testnet": false
 } as const satisfies Chain;

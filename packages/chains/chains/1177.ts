@@ -44,6 +44,7 @@ export default {
     "https://s2.tl.web.tr:4041"
   ],
   "shortName": "sht",
+  "slip44": 1,
   "slug": "smart-host-teknoloji-testnet",
   "testnet": true
 } as const satisfies Chain;

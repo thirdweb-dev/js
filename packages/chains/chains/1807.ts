@@ -32,6 +32,7 @@ export default {
     "https://rabbit.analog-rpc.com"
   ],
   "shortName": "rAna",
+  "slip44": 1,
   "slug": "rabbit-analog-testnet-chain",
   "testnet": true
 } as const satisfies Chain;

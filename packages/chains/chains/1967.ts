@@ -27,6 +27,7 @@ export default {
     "wss://ws.metatime.com/eleanor"
   ],
   "shortName": "mtc",
+  "slip44": 1,
   "slug": "eleanor",
   "testnet": true,
   "title": "Metatime Testnet Eleanor"

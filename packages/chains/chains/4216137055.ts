@@ -32,6 +32,7 @@ export default {
     "https://frankenstein-rpc.oneledger.network"
   ],
   "shortName": "frankenstein",
+  "slip44": 1,
   "slug": "oneledger-testnet-frankenstein",
   "testnet": true
 } as const satisfies Chain;

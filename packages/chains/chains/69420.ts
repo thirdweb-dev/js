@@ -26,6 +26,7 @@ export default {
     "https://rpc.condrieu.ethdevops.io:8545"
   ],
   "shortName": "cndr",
+  "slip44": 1,
   "slug": "condrieu",
   "testnet": true,
   "title": "Ethereum Verkle Testnet Condrieu"

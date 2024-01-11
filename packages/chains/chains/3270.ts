@@ -20,6 +20,7 @@ export default {
     "https://rpctestnet.arabianchain.org"
   ],
   "shortName": "testdubx",
+  "slip44": 1,
   "slug": "dubxcoin-testnet",
   "testnet": true
 } as const satisfies Chain;

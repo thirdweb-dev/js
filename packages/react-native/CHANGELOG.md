@@ -1,5 +1,34 @@
 # @thirdweb-dev/react-native
 
+## 0.5.6
+
+### Patch Changes
+
+- [#2131](https://github.com/thirdweb-dev/js/pull/2131) [`f953c72c`](https://github.com/thirdweb-dev/js/commit/f953c72c4e273feefcbd905876b15e7346b45740) Thanks [@iketw](https://github.com/iketw)! - Fix custom balance token display in details button
+
+- [#2137](https://github.com/thirdweb-dev/js/pull/2137) [`7d07490e`](https://github.com/thirdweb-dev/js/commit/7d07490ed3ec80aa33a991f38b3831996d49fb09) Thanks [@iketw](https://github.com/iketw)! - Adds hideDisconnect prop to hide the disconnect button
+
+  ```ts
+  <ConnectWallet hideDisconnect={true} />
+  ```
+
+- Updated dependencies [[`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f), [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb)]:
+  - @thirdweb-dev/wallets@2.4.0
+  - @thirdweb-dev/react-core@4.2.3
+
+## 0.5.5
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- [#2092](https://github.com/thirdweb-dev/js/pull/2092) [`4c3c840d`](https://github.com/thirdweb-dev/js/commit/4c3c840d8815915840d0819932aa0a858c5d3184) Thanks [@iketw](https://github.com/iketw)! - Export WalletConnect modal component
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/react-core@4.2.2
+  - @thirdweb-dev/wallets@2.3.4
+  - @thirdweb-dev/sdk@4.0.25
+
 ## 0.5.4
 
 ### Patch Changes

@@ -8,6 +8,7 @@ import {
   Price,
   TransactionResult,
   fetchCurrencyValue,
+  getDefaultGasOverrides,
   isNativeToken,
   normalizePriceValue,
 } from "@thirdweb-dev/sdk";
@@ -63,7 +64,7 @@ export async function checkContractWalletSignature(
 /**
  * The base class for any wallet in the Wallet SDK, including backend wallets. It contains the functionality common to all wallets.
  *
- * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet/build-a-wallet)
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
  *
  * @abstractWallet
  */
@@ -148,10 +149,12 @@ export abstract class AbstractWallet
     );
 
     if (isNativeToken(currencyAddress)) {
+      const gas = getDefaultGasOverrides(signer.provider);
       const tx = await signer.sendTransaction({
         from,
         to,
         value,
+        ...gas,
       });
       return { receipt: await tx.wait() };
     } else {

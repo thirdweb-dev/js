@@ -31,6 +31,6 @@ export default {
   ],
   "shortName": "taiko-l3",
   "slug": "taiko-eldfell-l3",
-  "status": "active",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

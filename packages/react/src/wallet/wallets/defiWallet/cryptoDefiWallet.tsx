@@ -1,9 +1,21 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import {
   CryptoDefiWallet,
   getInjectedCryptoDefiWalletProvider,
 } from "@thirdweb-dev/wallets";
-import { CryptoDefiWalletConnectUI } from "./CryptoDefiWalletConnectUI";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+
+const cryptoDefiWalletUris = {
+  ios: "dfw://",
+  android: "dfw://",
+  other: "dfw://",
+};
 
 /**
  * @wallet
@@ -26,7 +38,7 @@ export type CryptoDefiWalletConfigOptions = {
 /**
  * A wallet configurator for [Crypto.com Defi Wallet](https://crypto.com/defi-wallet) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -44,7 +56,7 @@ export type CryptoDefiWalletConfigOptions = {
  * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */
@@ -73,11 +85,36 @@ export const cryptoDefiWallet = (
         qrcode: false,
       });
 
+      handelWCSessionRequest(wallet, cryptoDefiWalletUris);
+
       return wallet;
     },
-    connectUI: CryptoDefiWalletConnectUI,
-    isInstalled() {
-      return !!getInjectedCryptoDefiWalletProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isWalletInstalled,
   };
 };
+
+function isWalletInstalled() {
+  return !!getInjectedCryptoDefiWalletProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<CryptoDefiWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) =>
+        props.setConnectedWallet(w as CryptoDefiWallet)
+      }
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={cryptoDefiWalletUris}
+      walletLocale={locale.wallets.cryptoDefiWallet}
+      isInstalled={isWalletInstalled}
+    />
+  );
+}

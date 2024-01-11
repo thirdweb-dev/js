@@ -1,7 +1,4 @@
-import {
-  useCreateWalletInstance,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { WalletConnect } from "@thirdweb-dev/wallets";
 import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
@@ -24,16 +21,28 @@ export const WalletConnectScan: React.FC<{
   modalSize: "wide" | "compact";
   hide: ConnectUIProps["hide"];
   show: ConnectUIProps["show"];
-}> = ({ onBack, onConnected, walletConfig, hide, show }) => {
+  setConnectedWallet: ConnectUIProps<WalletConnect>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<WalletConnect>["setConnectionStatus"];
+  createWalletInstance: ConnectUIProps<WalletConnect>["createWalletInstance"];
+}> = (props) => {
+  const {
+    onBack,
+    onConnected,
+    walletConfig,
+    hide,
+    show,
+    setConnectedWallet,
+    setConnectionStatus,
+    createWalletInstance,
+  } = props;
+
   const locale = useTWLocale().wallets.walletConnect;
-  const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  const { chainToConnect } = useWalletContext();
   const [isWCModalOpen, setIsWCModalOpen] = useState(false);
 
   const handleWCModalConnect = async () => {
-    const walletInstance = createInstance(walletConfig);
+    const walletInstance = createWalletInstance();
 
     setConnectionStatus("connecting");
 
@@ -60,7 +69,10 @@ export const WalletConnectScan: React.FC<{
   return (
     <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
-        <ModalHeader onBack={onBack} title={walletConfig.meta.name} />
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : onBack}
+          title={walletConfig.meta.name}
+        />
       </Container>
 
       <Spacer y="sm" />
@@ -78,7 +90,7 @@ export const WalletConnectScan: React.FC<{
           </Container>
         ) : (
           <WalletConnectQRScanConnect
-            createInstance={createInstance}
+            createInstance={createWalletInstance}
             onConnected={onConnected}
             qrCodeUri={qrCodeUri}
             setConnectedWallet={setConnectedWallet}

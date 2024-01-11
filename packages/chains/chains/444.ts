@@ -43,6 +43,7 @@ export default {
     "https://sepolia.synapseprotocol.com"
   ],
   "shortName": "synapse-sepolia",
+  "slip44": 1,
   "slug": "synapse-chain-testnet",
   "status": "active",
   "testnet": true

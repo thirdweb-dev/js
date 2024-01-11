@@ -2,6 +2,7 @@ import {
   WalletInstance,
   useAddress,
   useChainId,
+  useDisconnect,
   useLogin,
   useWallet,
   useWalletConfig,
@@ -46,6 +47,7 @@ export const SignatureScreen: React.FC<{
   const [status, setStatus] = useState<Status>("idle");
   const { login } = useLogin();
   const [tryId, setTryId] = useState(0);
+  const disconnect = useDisconnect();
 
   const isSafeWallet = wallet?.walletId === walletIds.safe;
 
@@ -132,18 +134,31 @@ export const SignatureScreen: React.FC<{
             <Text center multiline balance>
               {locale.instructionScreen.instruction}
             </Text>
-            <Spacer y="md" />
+            <Spacer y="lg" />
             <Button
               fullWidth
               variant="accent"
               onClick={signIn}
               style={{
-                gap: spacing.xs,
                 alignItems: "center",
                 padding: spacing.md,
               }}
             >
               {locale.instructionScreen.signInButton}
+            </Button>
+            <Spacer y="sm" />
+            <Button
+              fullWidth
+              variant="secondary"
+              onClick={() => {
+                disconnect();
+              }}
+              style={{
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              {locale.instructionScreen.disconnectWallet}
             </Button>
           </>
         ) : (
@@ -217,6 +232,20 @@ export const SignatureScreen: React.FC<{
                   >
                     <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
                     {locale.signingScreen.tryAgain}
+                  </Button>
+                  <Spacer y="sm" />
+                  <Button
+                    fullWidth
+                    variant="secondary"
+                    onClick={() => {
+                      disconnect();
+                    }}
+                    style={{
+                      alignItems: "center",
+                      padding: spacing.md,
+                    }}
+                  >
+                    {locale.instructionScreen.disconnectWallet}
                   </Button>
                 </Container>
               )}

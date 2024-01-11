@@ -30,6 +30,7 @@ export default {
     "https://x1-fastnet.xen.network"
   ],
   "shortName": "x1-fastnet",
+  "slip44": 1,
   "slug": "x1-fastnet",
   "testnet": false
 } as const satisfies Chain;

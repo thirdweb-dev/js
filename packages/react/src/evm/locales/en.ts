@@ -53,6 +53,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -109,6 +110,7 @@ export function enDefault() {
           instruction:
             "Please sign the message request in your wallet to continue",
           signInButton: "Sign in",
+          disconnectWallet: "Disconnect Wallet",
         },
         signingScreen: {
           title: "Signing In",
@@ -320,7 +322,7 @@ export function enDefault() {
 }
 
 /**
- * Calling this function will return the default English locale object to be set on `ThirdwebProvider` to localize the thirdweb components.
+ * Calling this function will return the default English locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
  *
  * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
  *
@@ -339,7 +341,7 @@ export function enDefault() {
  * })
  * ```
  *
- * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
  *
  * ```tsx
  * function Example() {

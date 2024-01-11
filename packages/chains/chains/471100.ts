@@ -18,6 +18,7 @@ export default {
     "https://test-rpc.patex.io/"
   ],
   "shortName": "psep",
+  "slip44": 1,
   "slug": "patex-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

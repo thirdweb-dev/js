@@ -38,6 +38,7 @@ export default {
     "wss://polygon-mumbai.gateway.tenderly.co"
   ],
   "shortName": "maticmum",
+  "slip44": 1,
   "slug": "mumbai",
   "testnet": true,
   "title": "Polygon Testnet Mumbai"

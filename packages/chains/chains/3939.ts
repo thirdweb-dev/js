@@ -36,6 +36,7 @@ export default {
     "https://test.doschain.com"
   ],
   "shortName": "dost",
+  "slip44": 1,
   "slug": "dos-tesnet",
   "testnet": true
 } as const satisfies Chain;

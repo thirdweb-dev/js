@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.alyxchain.com"
   ],
   "shortName": "AlyxTestnet",
+  "slip44": 1,
   "slug": "alyx-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

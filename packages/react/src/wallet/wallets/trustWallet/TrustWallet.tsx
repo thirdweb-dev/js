@@ -1,8 +1,18 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import { TrustWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
-import { TrustConnectUI } from "./TrustConnectUI";
-import { trustWalletUris } from "./trustWalletUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
+
+const trustWalletUris = {
+  ios: "trust://",
+  android: "https://link.trustwallet.com/",
+  other: "https://link.trustwallet.com/",
+};
 
 /**
  * @wallet
@@ -25,7 +35,7 @@ export type TrustWalletConfigOptions = {
 /**
  * A wallet configurator for [Trust Wallet](https://trustwallet.com/) which allows integrating the wallet with React.
  *
- * It returns a `WalletConfig` object which can be used to connect the wallet to via `ConnectWallet` component or `useConnect` hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/connecting-wallets) guide
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
  *
  * @example
  * ```ts
@@ -43,7 +53,7 @@ export type TrustWalletConfigOptions = {
  * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
  *
  * ### recommended (optional)
- * If true, the wallet will be tagged as "recommended" in `ConnectWallet` Modal UI
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
  *
  * @wallet
  */
@@ -69,12 +79,33 @@ export const trustWallet = (
 
       return wallet;
     },
-    connectUI: TrustConnectUI,
-    isInstalled() {
-      if (assertWindowEthereum(globalThis.window)) {
-        return !!globalThis.window.ethereum.isTrust;
-      }
-      return false;
-    },
+    connectUI: ConnectUI,
+    isInstalled: isInstalled,
   };
 };
+
+function isInstalled() {
+  if (assertWindowEthereum(globalThis.window)) {
+    return !!globalThis.window.ethereum.isTrust;
+  }
+  return false;
+}
+
+function ConnectUI(props: ConnectUIProps<TrustWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as TrustWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={trustWalletUris}
+      walletLocale={locale.wallets.trustWallet}
+      isInstalled={isInstalled}
+    />
+  );
+}

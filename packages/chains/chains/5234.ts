@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafybeihuskzfwqogwvutaxil6sztmvpiavzbrzwjwpn6w2i4j3jysbybra",
+    "width": 1043,
+    "height": 1043,
+    "format": "png"
+  },
   "infoURL": "https://humanode.io",
   "name": "Humanode Mainnet",
   "nativeCurrency": {

@@ -29,6 +29,7 @@ export default {
     "https://subnets.avax.network/amplify/testnet/rpc"
   ],
   "shortName": "amplify",
+  "slip44": 1,
   "slug": "amplify-subnet",
   "testnet": true
 } as const satisfies Chain;

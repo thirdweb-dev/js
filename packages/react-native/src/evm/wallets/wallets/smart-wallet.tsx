@@ -1,4 +1,9 @@
-import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
+import {
+  ConnectUIProps,
+  useWalletContext,
+  type WalletConfig,
+  type WalletOptions,
+} from "@thirdweb-dev/react-core";
 import { SmartWallet, createAsyncLocalStorage } from "@thirdweb-dev/wallets";
 import { SmartWalletConfig } from "../types/smart-wallet";
 import { SmartWalletFlow } from "../../components/ConnectWalletFlow/SmartWallet/SmartWalletFlow";
@@ -40,13 +45,52 @@ export const smartWallet = (
         walletStorage: createAsyncLocalStorage("smart-wallet"),
       }),
     connectUI(props) {
-      return <SmartWalletFlow {...props} personalWalletConfig={wallet} />;
+      return <SmartConnectUI {...props} personalWalletConfig={wallet} />;
     },
     selectUI: WalletSelectUI
       ? (props) => {
-          return <WalletSelectUI {...props} walletConfig={wallet} />;
+          const { personalWalletConnection } = useWalletContext();
+
+          return (
+            <WalletSelectUI
+              walletConfig={wallet}
+              connect={(options: any) => {
+                return personalWalletConnection.connectWallet(wallet, options);
+              }}
+              createWalletInstance={() => {
+                return personalWalletConnection.createWalletInstance(wallet);
+              }}
+              setConnectedWallet={(walletInstance) => {
+                personalWalletConnection.setConnectedWallet(walletInstance);
+              }}
+              setConnectionStatus={(status) => {
+                personalWalletConnection.setConnectionStatus(status);
+              }}
+              connectionStatus={personalWalletConnection.connectionStatus}
+              supportedWallets={props.supportedWallets}
+              theme={props.theme}
+              connectedWallet={personalWalletConnection.activeWallet}
+              connectedWalletAddress={personalWalletConnection.address}
+              modalSize={props.modalSize}
+              onSelect={props.onSelect}
+            />
+          );
         }
       : undefined,
     personalWallets: [wallet],
   };
+};
+
+export const SmartConnectUI = (
+  props: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig },
+) => {
+  const { personalWalletConnection } = useWalletContext();
+
+  return (
+    <SmartWalletFlow
+      {...props}
+      personalWallet={personalWalletConnection.activeWallet}
+      personalWalletChainId={personalWalletConnection.chainId || 1}
+    />
+  );
 };

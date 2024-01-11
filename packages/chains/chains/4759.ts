@@ -36,6 +36,7 @@ export default {
     "https://rpc.meversetestnet.io"
   ],
   "shortName": "TESTMEV",
+  "slip44": 1,
   "slug": "meverse-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

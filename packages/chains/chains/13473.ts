@@ -38,6 +38,7 @@ export default {
     "https://rpc.testnet.immutable.com"
   ],
   "shortName": "imx-testnet",
+  "slip44": 1,
   "slug": "immutable-zkevm-testnet",
   "testnet": true
 } as const satisfies Chain;

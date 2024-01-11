@@ -34,6 +34,7 @@ export default {
     "http://testnet.dev.svcs.ferrumnetwork.io:9933"
   ],
   "shortName": "frm",
+  "slip44": 1,
   "slug": "ferrum-testnet",
   "testnet": true
 } as const satisfies Chain;

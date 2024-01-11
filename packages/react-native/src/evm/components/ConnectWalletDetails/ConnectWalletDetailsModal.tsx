@@ -43,10 +43,11 @@ export const ConnectWalletDetailsModal = ({
   address,
   hideTestnetFaucet,
   supportedTokens,
-  displayBalanceToken,
+  tokenAddress,
   hideSwitchToPersonalWallet,
   hideReceiveButton,
   hideSendButton,
+  hideDisconnect,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
@@ -54,10 +55,11 @@ export const ConnectWalletDetailsModal = ({
   address?: string;
   hideTestnetFaucet?: boolean;
   supportedTokens: SupportedTokens;
-  displayBalanceToken?: Record<number, string>;
+  tokenAddress?: string;
   hideSwitchToPersonalWallet?: boolean;
   hideReceiveButton?: boolean;
   hideSendButton?: boolean;
+  hideDisconnect?: boolean;
 }) => {
   const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -68,11 +70,6 @@ export const ConnectWalletDetailsModal = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const setConnectedWallet = useSetConnectedWallet();
-
-  const tokenAddress =
-    chain?.chainId && displayBalanceToken
-      ? displayBalanceToken[chain?.chainId]
-      : undefined;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -235,6 +232,7 @@ export const ConnectWalletDetailsModal = ({
             <WalletDetailsModalHeader
               tokenAddress={tokenAddress}
               address={address}
+              hideDisconnect={hideDisconnect}
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />

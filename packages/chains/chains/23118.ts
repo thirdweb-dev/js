@@ -32,6 +32,7 @@ export default {
     "https://testrpc.opside.network"
   ],
   "shortName": "opside",
+  "slip44": 1,
   "slug": "opside-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -36,6 +36,7 @@ export default {
     "https://rpc.qtestnet.org"
   ],
   "shortName": "q-testnet",
+  "slip44": 1,
   "slug": "q-testnet",
   "testnet": true
 } as const satisfies Chain;

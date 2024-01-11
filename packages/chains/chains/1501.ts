@@ -10,6 +10,13 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "https://cloudflare-ipfs.com/ipfs/bafkreibvwfrow3w6q5qj2mk6n7yx5oahxzgn3pnghdr76zsyxvc3l5hh7y",
+    "width": 3600,
+    "height": 3600,
+    "format": "png"
+  },
   "infoURL": "https://chainx.org",
   "name": "BEVM",
   "nativeCurrency": {
@@ -18,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 1501,
+  "redFlags": [],
   "rpc": [
     "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",

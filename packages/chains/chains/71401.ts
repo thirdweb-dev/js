@@ -27,6 +27,7 @@ export default {
     "https://v1.testnet.godwoken.io/rpc"
   ],
   "shortName": "gw-testnet-v1",
+  "slip44": 1,
   "slug": "godwoken-testnet-v1",
   "testnet": true
 } as const satisfies Chain;

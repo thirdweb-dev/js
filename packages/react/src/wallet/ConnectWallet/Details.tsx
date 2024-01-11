@@ -97,6 +97,7 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
   hideSwitchToPersonalWallet?: boolean;
+  hideDisconnect?: boolean;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
@@ -116,10 +117,11 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWalletConfig = useWalletConfig();
   const ensQuery = useENS();
 
-  const [wrapperWallet, setWrapperWallet] = useState<
-    WalletInstance | undefined
-  >();
   const walletContext = useWalletContext();
+
+  const wrapperWallet = activeWallet
+    ? walletContext.getWrapperWallet(activeWallet)
+    : undefined;
 
   const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
     string | undefined
@@ -167,6 +169,8 @@ export const ConnectedWalletDetails: React.FC<{
               setOverrideWalletIconUrl(googleIconUri);
             } else if (auth === "facebook") {
               setOverrideWalletIconUrl(facebookIconUri);
+            } else {
+              setOverrideWalletIconUrl(undefined);
             }
           });
       } else if (activeWallet.walletId === walletIds.smartWallet) {
@@ -331,22 +335,24 @@ export const ConnectedWalletDetails: React.FC<{
               </IconButton>
             </div>
 
-            <ToolTip
-              tip={locale.disconnectWallet}
-              side="bottom"
-              align={"end"}
-              sideOffset={10}
-            >
-              <DisconnectIconButton
-                type="button"
-                onClick={() => {
-                  disconnect();
-                  props.onDisconnect();
-                }}
+            {!props.hideDisconnect && (
+              <ToolTip
+                tip={locale.disconnectWallet}
+                side="bottom"
+                align={"end"}
+                sideOffset={10}
               >
-                <ExitIcon size={iconSize.md} />
-              </DisconnectIconButton>
-            </ToolTip>
+                <DisconnectIconButton
+                  type="button"
+                  onClick={() => {
+                    disconnect();
+                    props.onDisconnect();
+                  }}
+                >
+                  <ExitIcon size={iconSize.md} />
+                </DisconnectIconButton>
+              </ToolTip>
+            )}
           </Container>
 
           {/* row 2 */}
@@ -437,9 +443,6 @@ export const ConnectedWalletDetails: React.FC<{
             <WalletSwitcher
               wallet={personalWallet}
               name={locale.personalWallet}
-              onSwitch={() => {
-                setWrapperWallet(activeWallet);
-              }}
             />
           )}
 
@@ -452,9 +455,6 @@ export const ConnectedWalletDetails: React.FC<{
                 : wrapperWalletConfig.meta.name
             }
             wallet={wrapperWallet}
-            onSwitch={() => {
-              setWrapperWallet(undefined);
-            }}
           />
         )}
 
@@ -606,6 +606,8 @@ export const ConnectedWalletDetails: React.FC<{
           onExport={() => {
             setShowExportModal(false);
           }}
+          walletAddress={address}
+          walletInstance={activeWallet}
         />
       </Modal>
 
@@ -759,11 +761,9 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)(() => {
 
 function WalletSwitcher({
   wallet,
-  onSwitch,
   name,
 }: {
   wallet: WalletInstance;
-  onSwitch: () => void;
   name: string;
 }) {
   const walletContext = useWalletContext();
@@ -774,7 +774,6 @@ function WalletSwitcher({
       type="button"
       onClick={() => {
         walletContext.setConnectedWallet(wallet);
-        onSwitch();
       }}
       style={{
         fontSize: fontSize.sm,

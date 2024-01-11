@@ -24,6 +24,7 @@ export default {
     "https://test-evm-api.carbon.network/"
   ],
   "shortName": "carbon-testnet",
+  "slip44": 1,
   "slug": "carbon-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

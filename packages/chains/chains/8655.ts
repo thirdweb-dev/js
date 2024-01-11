@@ -24,6 +24,7 @@ export default {
     "https://testnet.buildwithtoki.com/v0/rpc"
   ],
   "shortName": "toki-testnet",
+  "slip44": 1,
   "slug": "toki-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -24,6 +24,7 @@ export default {
     "https://sherpax-testnet.chainx.org/rpc"
   ],
   "shortName": "SherpaxTestnet",
+  "slip44": 1,
   "slug": "sherpax-testnet",
   "testnet": true
 } as const satisfies Chain;

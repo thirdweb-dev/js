@@ -32,6 +32,7 @@ export default {
     "http://35.215.120.180:8545"
   ],
   "shortName": "keth",
+  "slip44": 1,
   "slug": "kinto-testnet",
   "testnet": true,
   "title": "Kinto Testnet"

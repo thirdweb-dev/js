@@ -20,6 +20,7 @@ export default {
   "networkId": 115,
   "rpc": [],
   "shortName": "debank-testnet",
+  "slip44": 1,
   "slug": "debank-testnet-deprecated",
   "status": "deprecated",
   "testnet": true

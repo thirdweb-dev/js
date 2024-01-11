@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.soverun.com"
   ],
   "shortName": "SVRNt",
+  "slip44": 1,
   "slug": "soverun-testnet",
   "testnet": true
 } as const satisfies Chain;

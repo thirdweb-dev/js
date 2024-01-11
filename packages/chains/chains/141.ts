@@ -30,6 +30,7 @@ export default {
     "https://testnet.openpiece.io"
   ],
   "shortName": "OPtest",
+  "slip44": 1,
   "slug": "openpiece-testnet",
   "testnet": true
 } as const satisfies Chain;

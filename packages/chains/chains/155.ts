@@ -38,6 +38,7 @@ export default {
     "https://rpc.testnet.tenet.org"
   ],
   "shortName": "tenet-testnet",
+  "slip44": 1,
   "slug": "tenet-testnet",
   "testnet": true,
   "title": "Tenet Testnet"

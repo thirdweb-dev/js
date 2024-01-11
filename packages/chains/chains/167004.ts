@@ -30,6 +30,7 @@ export default {
     "https://rpc.a2.taiko.xyz"
   ],
   "shortName": "taiko-a2",
+  "slip44": 1,
   "slug": "taiko-alpha-2-testnet",
   "status": "deprecated",
   "testnet": true

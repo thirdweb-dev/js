@@ -30,6 +30,7 @@ export default {
     "https://rpc-testnet.ancient8.gg"
   ],
   "shortName": "a8",
+  "slip44": 1,
   "slug": "ancient8-testnet",
   "testnet": true
 } as const satisfies Chain;

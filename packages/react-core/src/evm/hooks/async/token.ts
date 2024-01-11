@@ -138,7 +138,7 @@ export function useTokenBalance(
 
 /**
  * Hook for fetching the [decimals](https://docs.openzeppelin.com/contracts/3.x/erc20#a-note-on-decimals)
- * of an [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) token.
+ * of an [ERC20](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20) token.
  *
  * Tokens usually opt for a value of `18`, imitating the relationship between Ether and Wei.
  * Therefore, `18` is the default value returned by this function, unless your ERC20 contract explicitly overrides it.
@@ -187,7 +187,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
 /**
  * Hook for minting new tokens in an ERC20 smart contract.
  *
- * Available to use on contracts that implement the [ERC20Mintable](https://portal.thirdweb.com/solidity/extensions/erc20mintable)
+ * Available to use on contracts that implement the [ERC20Mintable](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20BatchMintable)
  * interface, such as the [Token](https://thirdweb.com/thirdweb.eth/TokenERC20) contract.
  *
  * The wallet address that initiates this transaction must have minting permissions on the contract.
@@ -286,8 +286,8 @@ export function useMintToken(
 /**
  * Hook for claiming a ERC20 tokens from a smart contract.
  *
- * Available to use on smart contracts that implement both the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) interface
- * and the [`claim`](https://portal.thirdweb.com/solidity/extensions/erc721claimable) function,
+ * Available to use on smart contracts that implement both the [ERC20](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20) interface
+ * and the [`claim`](https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable) function,
  * such as the [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20).
  *
  * @example
@@ -374,7 +374,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
 /**
  * Hook for transferring tokens on an ERC20 contract.
  *
- * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20)
+ * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20)
  * interface, such as the [Token](https://thirdweb.com/thirdweb.eth/TokenERC20) contract.
  *
  * The wallet address that initiates this transaction must have a balance of tokens
@@ -518,7 +518,7 @@ export function useTransferNativeToken() {
 /**
  * Hook for transferring ERC20 tokens to multiple recipients in a single transaction (i.e. airdrop).
  *
- * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) interface.
+ * Available to use on contracts that implement the [ERC20](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20) interface.
  *
  * The wallet that initiates this transaction must have sufficient balance to cover the total amount of tokens being transferred
  * and must have transfer permissions on the contract, i.e. tokens are not soulbound.
@@ -620,7 +620,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
 /**
  * Hook for burning ERC20 tokens on a smart contract.
  *
- * Available to use on smart contracts that implement the [ERC20](https://portal.thirdweb.com/solidity/extensions/erc20) standard.
+ * Available to use on smart contracts that implement the [ERC20](https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20) standard.
  *
  * @example
  *

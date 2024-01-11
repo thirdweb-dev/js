@@ -5,7 +5,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { RabbyWallet } from "@thirdweb-dev/wallets";
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const RabbyScan: React.FC<{
@@ -14,12 +14,23 @@ export const RabbyScan: React.FC<{
   onConnected: () => void;
   walletConfig: WalletConfig<RabbyWallet>;
   hideBackButton: boolean;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
+  setConnectedWallet: ConnectUIProps<RabbyWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<RabbyWallet>["setConnectionStatus"];
+}> = (props) => {
+  const {
+    onBack,
+    onConnected,
+    onGetStarted,
+    walletConfig,
+    hideBackButton,
+    setConnectedWallet,
+    setConnectionStatus,
+  } = props;
+
   const locale = useTWLocale().wallets.rabbyWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
   useEffect(() => {

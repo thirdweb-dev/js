@@ -30,6 +30,7 @@ export default {
     "https://testnet-rpc.rikscan.com"
   ],
   "shortName": "tRIK",
+  "slip44": 1,
   "slug": "rikeza-network-testnet",
   "testnet": true,
   "title": "Rikeza Network Testnet"

@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ConnectUIProps,
   WalletConfig,
   WalletInstance,
   useConnect,
-  useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -25,8 +24,13 @@ export const SmartWalletFlow = ({
   goBack,
   walletConfig,
   personalWalletConfig,
+  hide,
   ...props
-}: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
+}: ConnectUIProps<SmartWallet> & {
+  personalWalletConfig: WalletConfig;
+  personalWallet?: WalletInstance;
+  personalWalletChainId: number;
+}) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
@@ -35,15 +39,14 @@ export const SmartWalletFlow = ({
     number | undefined
   >();
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
-  const createWalletInstance = useCreateWalletInstance();
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
+
+  const { personalWalletConnection } = useWalletContext();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;
-
-  const PersonalWalletConfigUI = personalWalletConfig.connectUI;
 
   const connectSmartWallet = useCallback(
     async (personalWallet: WalletInstance) => {
@@ -63,25 +66,16 @@ export const SmartWalletFlow = ({
 
   const connectPersonalWallet = useCallback(
     async (wallet: WalletConfig) => {
-      const walletInstance = createWalletInstance(wallet);
+      const walletInstance =
+        personalWalletConnection.createWalletInstance(wallet);
       await walletInstance.connect();
 
       setConnectedPersonalWallet(walletInstance);
 
       connectSmartWallet(walletInstance);
     },
-    [connectSmartWallet, createWalletInstance],
+    [connectSmartWallet, personalWalletConnection],
   );
-
-  useEffect(() => {
-    if (walletConfig.personalWallets?.[0] && !PersonalWalletConfigUI) {
-      connectPersonalWallet(walletConfig.personalWallets[0]);
-    }
-  }, [
-    PersonalWalletConfigUI,
-    connectPersonalWallet,
-    walletConfig.personalWallets,
-  ]);
 
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
@@ -110,54 +104,82 @@ export const SmartWalletFlow = ({
     setPersonalWalletChaindId(undefined);
   };
 
-  const onPersonalWalletConnected = useCallback(
-    (walletInstance: WalletInstance) => {
-      setConnectedPersonalWallet(walletInstance);
-      connectSmartWallet(walletInstance);
-    },
-    [connectSmartWallet],
-  );
+  if (!personalWalletConnection.activeWallet) {
+    const _props: ConnectUIProps<WalletInstance> = {
+      walletConfig: personalWalletConfig,
+      connected: connected,
+      connect(options) {
+        return personalWalletConnection.connectWallet(
+          personalWalletConfig,
+          options,
+        );
+      },
+      setConnectedWallet(wallet) {
+        personalWalletConnection.setConnectedWallet(wallet);
+        setConnectedPersonalWallet(wallet);
+        connectSmartWallet(wallet);
+      },
+      setConnectionStatus(status) {
+        personalWalletConnection.setConnectionStatus(status);
+      },
+      createWalletInstance: () => {
+        return personalWalletConnection.createWalletInstance(
+          personalWalletConfig,
+        );
+      },
+      goBack: goBack,
+      hide: hide,
+      isOpen: props.isOpen,
+      modalSize: props.modalSize,
+      selectionData: props.selectionData,
+      setSelectionData: props.setSelectionData,
+      show: props.show,
+      supportedWallets: props.supportedWallets,
+      theme: props.theme,
+      connectedWallet: personalWalletConnection.activeWallet,
+      connectedWalletAddress: personalWalletConnection.address,
+      connectionStatus: personalWalletConnection.connectionStatus,
+    };
+
+    if (personalWalletConfig.connectUI) {
+      return <personalWalletConfig.connectUI {..._props} />;
+    }
+
+    if (walletConfig.personalWallets?.[0] && !personalWalletConfig.connectUI) {
+      connectPersonalWallet(walletConfig.personalWallets[0]);
+    }
+  }
 
   return (
     <>
-      {PersonalWalletConfigUI && !connectedPersonalWallet ? (
-        <PersonalWalletConfigUI
-          {...props}
-          connected={connected}
-          goBack={goBack}
-          walletConfig={personalWalletConfig}
-          onLocallyConnected={onPersonalWalletConnected}
+      <Box paddingHorizontal="xl">
+        <ConnectWalletHeader
+          subHeaderText=""
+          onBackPress={onConnectingBackPress}
+          onClose={onConnectingClosePress}
         />
-      ) : (
-        <Box paddingHorizontal="xl">
-          <ConnectWalletHeader
-            subHeaderText=""
-            onBackPress={onConnectingBackPress}
-            onClose={onConnectingClosePress}
+        <WalletLoadingThumbnail imageSize={85}>
+          <ImageSvgUri
+            height={80}
+            width={80}
+            imageUrl={walletConfig.meta.iconURL}
           />
-          <WalletLoadingThumbnail imageSize={85}>
-            <ImageSvgUri
-              height={80}
-              width={80}
-              imageUrl={walletConfig.meta.iconURL}
-            />
-          </WalletLoadingThumbnail>
-          <View style={styles.connectingContainer}>
-            <>
-              <Text variant="header" mt="lg" textAlign="center">
-                {mismatch
-                  ? l.smart_wallet.network_mismatch
-                  : `${l.smart_wallet.connecting} ...`}
+        </WalletLoadingThumbnail>
+        <View style={styles.connectingContainer}>
+          <>
+            <Text variant="header" mt="lg" textAlign="center">
+              {mismatch
+                ? l.smart_wallet.network_mismatch
+                : `${l.smart_wallet.connecting} ...`}
+            </Text>
+            {mismatch ? (
+              <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
+                {l.connect_wallet_details.network_mismatch}
               </Text>
-              {mismatch ? (
-                <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-                  {l.connect_wallet_details.network_mismatch}
-                </Text>
-              ) : null}
-            </>
-          </View>
-        </Box>
-      )}
+            ) : null}
+          </>
+        </View>
+      </Box>
 
       {mismatch === true ? (
         <BaseButton

@@ -24,6 +24,7 @@ export default {
     "https://testeth-rpc-api.script.tv/rpc"
   ],
   "shortName": "SPAY",
+  "slip44": 1,
   "slug": "script-testnet",
   "testnet": true
 } as const satisfies Chain;

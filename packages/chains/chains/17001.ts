@@ -36,6 +36,7 @@ export default {
     "https://rpc.holesky.redstone.xyz"
   ],
   "shortName": "redstone",
+  "slip44": 1,
   "slug": "redstone-holesky-testnet",
   "testnet": true
 } as const satisfies Chain;

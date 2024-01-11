@@ -24,6 +24,7 @@ export default {
     "https://prod-forge.prod.findora.org:8545/"
   ],
   "shortName": "findora-forge",
+  "slip44": 1,
   "slug": "findora-forge",
   "testnet": true
 } as const satisfies Chain;

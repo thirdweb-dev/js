@@ -42,6 +42,7 @@ export default {
     "https://rpc.testnet.step.network"
   ],
   "shortName": "steptest",
+  "slip44": 1,
   "slug": "step-testnet",
   "testnet": true,
   "title": "Step Test Network"
