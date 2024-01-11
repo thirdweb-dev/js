@@ -26,13 +26,10 @@ export default {
     "decimals": 18
   },
   "networkId": 65010000,
-  "rpc": [
-    "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://65010000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.bakerloo.autonity.org/",
-    "wss://rpc1.bakerloo.autonity.org/ws/"
-  ],
+  "rpc": [],
   "shortName": "bakerloo-0",
+  "slip44": 1,
   "slug": "autonity-bakerloo-thames-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

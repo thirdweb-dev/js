@@ -21,7 +21,7 @@ export default {
   "infoURL": "https://mainnetz.io",
   "name": "MainnetZ Mainnet",
   "nativeCurrency": {
-    "name": "MainnetZ",
+    "name": "mainnetz",
     "symbol": "NetZ",
     "decimals": 18
   },
@@ -29,7 +29,8 @@ export default {
   "rpc": [
     "https://z-mainnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2016.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.mainnetz.io"
+    "https://mainnet-rpc.mainnetz.io",
+    "https://eu-rpc.mainnetz.io"
   ],
   "shortName": "NetZm",
   "slug": "z-mainnet",

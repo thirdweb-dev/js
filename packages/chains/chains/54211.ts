@@ -26,6 +26,7 @@ export default {
     "https://rpc.eth.testedge2.haqq.network"
   ],
   "shortName": "ISLMT",
+  "slip44": 1,
   "slug": "haqq-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
@@ -7,13 +8,35 @@ import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
 import { track } from "../utils/analytics";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+/**
+ * General options required for creating a wallet instance
+ */
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
+  /**
+   * chains supported by the wallet
+   */
   chains?: Chain[];
+  /**
+   * Unique identifier for the wallet ( name of the wallet )
+   */
   walletId?: string;
+  /**
+   * Storage to use for saving the wallet data
+   */
   walletStorage?: AsyncStorage;
+  /**
+   * Metadata for the dapp. Some wallets use some of this data to display in their UI
+   */
   dappMetadata?: DAppMetaData;
+  /**
+   * thirdweb apiKey client id. This is required to use thirdweb's infrastructure services like RPCs, IPFS Storage etc.
+   *
+   * You can create an API key for free on [thirdweb Dashboard](https://thirdweb.com/create-api-key)
+   */
   clientId?: string;
+  /**
+   * Specify if analytics should be enabled or disabled for the wallet
+   */
   analytics?: "enabled" | "disabled";
 } & TOpts;
 
@@ -28,6 +51,14 @@ export type WalletMeta = {
   };
 };
 
+/**
+ * The base class for all client-side wallets (web, mobile) in the Wallet SDK. It extends AbstractWallet and adds client side specific logic.
+ * A client side wallet delegates the wallet-specific connection logic to a Connector.
+ *
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
+ *
+ * @abstractWallet
+ */
 export abstract class AbstractClientWallet<
   // eslint-disable-next-line @typescript-eslint/ban-types
   TAdditionalOpts extends Record<string, any> = {},
@@ -39,12 +70,26 @@ export abstract class AbstractClientWallet<
   protected chains;
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
-  static meta: WalletMeta;
   #connectParams: ConnectParams<TConnectParams> | undefined;
+
+  /**
+   * @internal
+   */
+  static meta: WalletMeta;
+
+  /**
+   * @internal
+   */
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
 
+  /**
+   * Creates an returns instance of `AbstractClientWallet`
+   *
+   * @param walletId - A Unique identifier for the wallet ( name of the wallet )
+   * @param options - Options for creating wallet instance
+   */
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
     super();
     this.walletId = walletId;
@@ -57,15 +102,19 @@ export abstract class AbstractClientWallet<
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
+  /**
+   * Returns the Wallet Connector used by the wallet
+   */
   protected abstract getConnector(): Promise<Connector<TConnectParams>>;
 
   /**
-   * tries to auto connect to the wallet
+   * auto-connect the wallet if possible
+   * @returns
    */
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
-    // remove chainId when autoconnecting to prevent switch-network popup on page load
+    // remove chainId when auto-connecting to prevent switch-network popup on page load
     const options = connectOptions
       ? { ...connectOptions, chainId: undefined }
       : undefined;
@@ -73,7 +122,9 @@ export abstract class AbstractClientWallet<
   }
 
   /**
-   * connect to the wallet
+   * Connect wallet
+   * @param connectOptions - Options for connecting to the wallet
+   * @returns
    */
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
@@ -86,10 +137,19 @@ export abstract class AbstractClientWallet<
     return address;
   }
 
+  /**
+   * @internal
+   * Get the options used for connecting to the wallet
+   * @returns
+   */
   getConnectParams() {
     return this.#connectParams;
   }
 
+  /**
+   * @internal
+   * Get the options used for creating the wallet instance
+   */
   getOptions() {
     return this.options;
   }
@@ -169,6 +229,9 @@ export abstract class AbstractClientWallet<
     connector.on("error", (error) => this.emit("error", error));
   }
 
+  /**
+   * Get [ethers Signer](https://docs.ethers.org/v5/api/signer/) object of the connected wallet
+   */
   async getSigner() {
     const connector = await this.getConnector();
     if (!connector) {
@@ -177,6 +240,9 @@ export abstract class AbstractClientWallet<
     return await connector.getSigner();
   }
 
+  /**
+   * Disconnect the wallet
+   */
   public async disconnect() {
     const connector = await this.getConnector();
     if (connector) {
@@ -186,6 +252,10 @@ export abstract class AbstractClientWallet<
     }
   }
 
+  /**
+   * Switch to different Network/Blockchain in the connected wallet
+   * @param chainId - The chainId of the network to switch to
+   */
   async switchChain(chainId: number): Promise<void> {
     const connector = await this.getConnector();
     if (!connector) {
@@ -197,6 +267,9 @@ export abstract class AbstractClientWallet<
     return await connector.switchChain(chainId);
   }
 
+  /**
+   * Update the chains supported by the wallet. This is useful if wallet was initialized with some chains and this needs to be updated without re-initializing the wallet
+   */
   async updateChains(chains: Chain[]) {
     this.chains = chains.map((c) => {
       return updateChainRPCs(c, this.options?.clientId);
@@ -206,7 +279,9 @@ export abstract class AbstractClientWallet<
   }
 
   /**
-   * If the wallet uses a personal wallet under the hood, return it
+   * If the wallet uses another "personal wallet" under the hood, return it
+   *
+   * This is only useful for wallets like Safe or Smart Wallet uses a "personal wallet" under the hood to sign transactions. This method returns that wallet
    */
   getPersonalWallet(): EVMWallet | undefined {
     return undefined;

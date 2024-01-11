@@ -24,6 +24,7 @@ export default {
     "http://128.199.94.183:8041"
   ],
   "shortName": "prx",
+  "slip44": 1,
   "slug": "proxy-network-testnet",
   "testnet": true
 } as const satisfies Chain;

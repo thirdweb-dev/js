@@ -38,6 +38,7 @@ export default {
     "https://testnet-rpc.oeblock.com"
   ],
   "shortName": "obe",
+  "slip44": 1,
   "slug": "oeblock-testnet",
   "testnet": true
 } as const satisfies Chain;

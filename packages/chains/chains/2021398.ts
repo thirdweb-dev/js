@@ -30,6 +30,7 @@ export default {
     "http://rpc.testnet.debank.com"
   ],
   "shortName": "dbk",
+  "slip44": 1,
   "slug": "debank-testnet",
   "testnet": true
 } as const satisfies Chain;

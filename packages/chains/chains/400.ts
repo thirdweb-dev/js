@@ -38,6 +38,7 @@ export default {
     "https://testnet-rpc.hyperonchain.com"
   ],
   "shortName": "hpn",
+  "slip44": 1,
   "slug": "hyperonchain-testnet",
   "testnet": true
 } as const satisfies Chain;

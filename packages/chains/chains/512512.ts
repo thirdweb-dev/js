@@ -27,6 +27,7 @@ export default {
     "wss://galaxy.block.caduceus.foundation"
   ],
   "shortName": "cmp",
+  "slip44": 1,
   "slug": "cmp-testnet",
   "testnet": true
 } as const satisfies Chain;

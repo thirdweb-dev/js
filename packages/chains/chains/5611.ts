@@ -41,6 +41,7 @@ export default {
     "wss://opbnb-testnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5"
   ],
   "shortName": "obnbt",
+  "slip44": 1,
   "slug": "opbnb-testnet",
   "testnet": true
 } as const satisfies Chain;

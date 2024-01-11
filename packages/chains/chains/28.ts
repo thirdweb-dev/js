@@ -33,6 +33,7 @@ export default {
     "https://rinkeby.boba.network/"
   ],
   "shortName": "BobaRinkeby",
+  "slip44": 1,
   "slug": "boba-network-rinkeby-testnet",
   "testnet": true
 } as const satisfies Chain;

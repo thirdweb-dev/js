@@ -18,6 +18,7 @@ export default {
     "https://test2.goodata.io"
   ],
   "shortName": "GooDT",
+  "slip44": 1,
   "slug": "gooddata-testnet",
   "testnet": true
 } as const satisfies Chain;

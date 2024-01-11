@@ -34,6 +34,7 @@ export default {
     "https://babel-api.testnet.iotex.io"
   ],
   "shortName": "iotex-testnet",
+  "slip44": 1,
   "slug": "iotex-network-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

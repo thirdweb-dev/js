@@ -43,6 +43,7 @@ export default {
     "https://goerli.gateway.metisdevops.link"
   ],
   "shortName": "metis-goerli",
+  "slip44": 1,
   "slug": "metis-goerli-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

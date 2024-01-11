@@ -23,7 +23,6 @@ export default {
     "https://46.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.darwinia.network",
     "https://darwinia-rpc.darwiniacommunitydao.xyz",
-    "https://darwinia2.api.onfinality.io/public-ws",
     "https://darwinia-rpc.dwellir.com"
   ],
   "shortName": "darwinia",

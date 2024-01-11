@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.6",
+  "version": "4.1.22",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -58,7 +58,7 @@
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
     "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'",
@@ -87,7 +87,7 @@
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.6.6",
+    "@swc-node/register": "^1.6.8",
     "@swc/core": "^1.3.71",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/chai": "^4.3.5",

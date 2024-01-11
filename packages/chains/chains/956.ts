@@ -14,6 +14,7 @@ export default {
   "networkId": 956,
   "rpc": [],
   "shortName": "munode",
+  "slip44": 1,
   "slug": "munode-testnet",
   "testnet": true
 } as const satisfies Chain;

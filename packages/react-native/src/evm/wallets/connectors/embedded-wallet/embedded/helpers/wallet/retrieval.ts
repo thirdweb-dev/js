@@ -47,7 +47,7 @@ export async function getExistingUserEtherJsWallet(clientId: string) {
 /**
  *
  * @param deviceShare - retrieves the current share associated with the user's device.
- * @returns the requested shares
+ * @returns The requested shares
  * @throws if attempting to get deviceShare when it's not present
  */
 export async function getShares<

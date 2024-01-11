@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,8 +13,10 @@ export const CoinbaseConnectUI = ({
   connected,
   goBack,
   supportedWallets,
+  setConnectedWallet,
+  setConnectionStatus,
+  connect,
 }: ConnectUIProps<CoinbaseWallet>) => {
-  const connect = useConnect();
   const { meta } = walletConfig;
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
@@ -30,13 +32,13 @@ export const CoinbaseConnectUI = ({
       connectPrompted.current = true;
       await wait(1000);
       setScreen("connecting");
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -62,7 +64,7 @@ export const CoinbaseConnectUI = ({
       else {
         if (isMobile()) {
           // coinbase will redirect to download page for coinbase wallet apps
-          connect(walletConfig);
+          connect();
         } else {
           setScreen("scanning");
         }
@@ -117,6 +119,8 @@ export const CoinbaseConnectUI = ({
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
         hideBackButton={hideBackButton}
+        setConnectedWallet={setConnectedWallet}
+        setConnectionStatus={setConnectionStatus}
       />
     );
   }

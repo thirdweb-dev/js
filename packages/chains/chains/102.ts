@@ -26,6 +26,7 @@ export default {
     "https://testnet-rpc-2.web3games.org/evm"
   ],
   "shortName": "tw3g",
+  "slip44": 1,
   "slug": "web3games-testnet",
   "testnet": true
 } as const satisfies Chain;

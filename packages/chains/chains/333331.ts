@@ -44,6 +44,7 @@ export default {
     "https://test.rpc.avescoin.io"
   ],
   "shortName": "avst",
+  "slip44": 1,
   "slug": "aves-testnet",
   "testnet": true
 } as const satisfies Chain;

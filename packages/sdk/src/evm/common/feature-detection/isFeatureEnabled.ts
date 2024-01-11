@@ -10,6 +10,7 @@ import { detectFeatures } from "./detectFeatures";
  * @deprecated use isExtensionEnabled instead
  * @param abi - The abi to check
  * @param featureName - The feature name to check
+ * @internal
  */
 export function isFeatureEnabled(
   abi: AbiInput,

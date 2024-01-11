@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.cloudtx.finance"
   ],
   "shortName": "CLD",
+  "slip44": 1,
   "slug": "cloudtx-testnet",
   "testnet": true
 } as const satisfies Chain;

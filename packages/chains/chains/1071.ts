@@ -29,6 +29,7 @@ export default {
   "networkId": 1071,
   "rpc": [],
   "shortName": "shimmerevm-testnet-deprecated",
+  "slip44": 1,
   "slug": "shimmerevm-testnet-deprecated",
   "status": "deprecated",
   "testnet": true,

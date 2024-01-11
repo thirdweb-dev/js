@@ -26,8 +26,7 @@ export default {
   "faucets": [
     "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
     "https://goerli-faucet.slock.it?address=${ADDRESS}",
-    "https://faucet.goerli.mudit.blog",
-    "https://faucet.paradigm.xyz/"
+    "https://faucet.goerli.mudit.blog"
   ],
   "features": [],
   "icon": {
@@ -50,7 +49,6 @@ export default {
     "https://5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
-    "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://rpc.goerli.mudit.blog/",
     "https://ethereum-goerli.publicnode.com",
     "wss://ethereum-goerli.publicnode.com",
@@ -58,7 +56,8 @@ export default {
     "wss://goerli.gateway.tenderly.co"
   ],
   "shortName": "gor",
+  "slip44": 1,
   "slug": "goerli",
-  "testnet": false,
+  "testnet": true,
   "title": "Ethereum Testnet Goerli"
 } as const satisfies Chain;

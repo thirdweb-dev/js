@@ -45,7 +45,7 @@ export default {
     "wss://testnet.fusionnetwork.io"
   ],
   "shortName": "tfsn",
-  "slip44": 288,
+  "slip44": 1,
   "slug": "fusion-testnet",
   "testnet": true
 } as const satisfies Chain;

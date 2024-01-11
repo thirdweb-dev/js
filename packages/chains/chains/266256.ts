@@ -18,7 +18,7 @@ export default {
     "https://gzn-test.linksme.info"
   ],
   "shortName": "gz-testnet",
-  "slip44": 266256,
+  "slip44": 1,
   "slug": "gear-zero-network-testnet",
   "testnet": true
 } as const satisfies Chain;

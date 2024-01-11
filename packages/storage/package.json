@@ -1,17 +1,11 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.4",
+  "version": "2.0.8",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-storage.esm.js": "./dist/thirdweb-dev-storage.browser.esm.js"
-  },
   "exports": {
     ".": {
-      "module": {
-        "browser": "./dist/thirdweb-dev-storage.browser.esm.js",
-        "default": "./dist/thirdweb-dev-storage.esm.js"
-      },
+      "module": "./dist/thirdweb-dev-storage.esm.js",
       "default": "./dist/thirdweb-dev-storage.cjs.js"
     },
     "./package.json": "./package.json"
@@ -22,7 +16,7 @@
   "sideEffects": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "clean": "rm -rf dist/",
@@ -31,17 +25,13 @@
     "test": "pnpm test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "files": [
     "dist/"
   ],
   "preconstruct": {
-    "exports": {
-      "envConditions": [
-        "browser"
-      ]
-    }
+    "exports": true
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
@@ -50,7 +40,7 @@
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.6.6",
+    "@swc-node/register": "^1.6.8",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.0",
@@ -64,13 +54,14 @@
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "typedoc-gen": "workspace:*"
   },
   "dependencies": {
     "cid-tool": "^3.0.0",
     "form-data": "^4.0.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "@thirdweb-dev/crypto": "workspace:*"
   },
   "engines": {
     "node": ">=18"

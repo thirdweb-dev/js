@@ -1,11 +1,5 @@
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import {
-  WalletConfig,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
@@ -15,29 +9,34 @@ import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { socialIcons } from "./socialIcons";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
-  modalSize?: "compact" | "wide";
+  modalSize: "compact" | "wide";
+  createWalletInstance: ConnectUIProps<EmbeddedWallet>["createWalletInstance"];
+  setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }) => {
   const twLocale = useTWLocale();
   const locale = twLocale.wallets.embeddedWallet;
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
-  const themeObj = useTheme() as Theme;
+
+  const { createWalletInstance, setConnectionStatus, setConnectedWallet } =
+    props;
+
+  const themeObj = useCustomTheme();
 
   const loginMethodsLabel: Record<EmbeddedWalletOauthStrategy, string> = {
     google: locale.signInWithGoogle,
-    // facebook: locale.signInWithFacebook,
+    facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
   };
 
@@ -52,7 +51,7 @@ export const EmbeddedWalletFormUI = (props: {
   // Need to trigger login on button click to avoid popup from being blocked
   const socialLogin = async (strategy: EmbeddedWalletOauthStrategy) => {
     try {
-      const embeddedWallet = createWalletInstance(props.walletConfig);
+      const embeddedWallet = createWalletInstance();
       setConnectionStatus("connecting");
 
       const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
@@ -76,13 +75,20 @@ export const EmbeddedWalletFormUI = (props: {
     }
   };
 
-  const showOnlyIcons = socialLogins.length > 2;
+  const showOnlyIcons = socialLogins.length > 1;
 
   return (
     <Container flex="column" gap="lg">
       {/* Social Login */}
       {hasSocialLogins && (
-        <Container flex={showOnlyIcons ? "row" : "column"} center="x" gap="sm">
+        <Container
+          flex={showOnlyIcons ? "row" : "column"}
+          center="x"
+          gap="sm"
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
           {socialLogins.map((loginMethod) => {
             const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
             return (
@@ -143,6 +149,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
+  createWalletInstance: ConnectUIProps<EmbeddedWallet>["createWalletInstance"];
+  setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }> = (props) => {
   const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
@@ -170,25 +179,28 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
           authOptions={props.authOptions}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
+          createWalletInstance={props.createWalletInstance}
+          setConnectionStatus={props.setConnectionStatus}
+          setConnectedWallet={props.setConnectedWallet}
         />
       </Container>
     </Container>
   );
 };
 
-const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  &[data-variant="full"] {
-    display: flex;
-    justify-content: flex-start;
-    gap: ${spacing.md};
-    font-size: ${fontSize.md};
-    transition: background-color 0.2s ease;
-    &:active {
-      box-shadow: none;
-    }
-  }
-
-  &[data-variant="icon"] {
-    padding: ${spacing.sm};
-  }
-`;
+const SocialButton = /* @__PURE__ */ styled(Button)({
+  "&[data-variant='full']": {
+    display: "flex",
+    justifyContent: "center",
+    gap: spacing.md,
+    fontSize: fontSize.md,
+    transition: "background-color 0.2s ease",
+    "&:active": {
+      boxShadow: "none",
+    },
+  },
+  "&[data-variant='icon']": {
+    padding: spacing.sm,
+    flexGrow: 1,
+  },
+});

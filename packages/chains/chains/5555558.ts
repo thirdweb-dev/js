@@ -48,6 +48,7 @@ export default {
     "https://ws-jsonrpc-test.imversed.network"
   ],
   "shortName": "imversed-testnet",
+  "slip44": 1,
   "slug": "imversed-testnet",
   "testnet": true
 } as const satisfies Chain;

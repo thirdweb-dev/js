@@ -8,7 +8,7 @@ import { isContractDeployed } from "./isContractDeployed";
  * Deploy a contract at a deterministic address, using Create2 method
  * Address depends on the Create2 factory address.
  *
- * @public
+ * @internal
  *
  * @param signer - The signer to use
  * @param bytecode - The bytecode to deploy

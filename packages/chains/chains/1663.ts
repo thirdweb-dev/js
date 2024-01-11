@@ -47,7 +47,7 @@ export default {
     "https://rpc.ankr.com/horizen_gobi_testnet"
   ],
   "shortName": "Gobi",
-  "slip44": 121,
+  "slip44": 1,
   "slug": "horizen-gobi-testnet",
   "testnet": true
 } as const satisfies Chain;

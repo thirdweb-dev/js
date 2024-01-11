@@ -1,4 +1,4 @@
-import { WalletConfig, useWallets } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWallet, useWallets } from "@thirdweb-dev/react-core";
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { reservedScreens } from "../constants";
 
@@ -17,6 +17,7 @@ export function useScreen() {
 
   const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const prevInitialScreen = useRef(initialScreen);
+  const wallet = useWallet();
 
   // when the initial screen changes, reset the screen to the initial screen ( if the modal is closed )
   useEffect(() => {
@@ -25,6 +26,13 @@ export function useScreen() {
       setScreen(initialScreen);
     }
   }, [initialScreen]);
+
+  // if on signature screen and suddenly the wallet is disconnected, go back to the main screen
+  useEffect(() => {
+    if (!wallet && screen === reservedScreens.signIn) {
+      setScreen(reservedScreens.main);
+    }
+  }, [wallet, screen]);
 
   return {
     screen,

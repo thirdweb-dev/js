@@ -11,6 +11,9 @@ let provider: providers.Provider | undefined;
 
 const ENS_CACHE = new Map<string, Promise<CachedEns>>();
 
+/**
+ * @internal
+ */
 export async function resolveEns(
   ens: string,
   depth = 0,

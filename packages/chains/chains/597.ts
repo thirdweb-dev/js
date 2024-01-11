@@ -25,7 +25,7 @@ export default {
     "wss://eth-rpc-acala-testnet.aca-staging.network"
   ],
   "shortName": "taca",
-  "slip44": 597,
+  "slip44": 1,
   "slug": "acala-network-testnet",
   "testnet": true
 } as const satisfies Chain;

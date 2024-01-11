@@ -16,13 +16,29 @@ export function useSDKContext(): TWSDKContext {
 }
 
 /**
+ * Hook to get the instance of the `ThirdwebSDK` class being used by the `ThirdwebProvider` component.
  *
- * @returns {@link ThirdwebSDK}
- * Access the instance of the thirdweb SDK created by the ThirdwebProvider
- * to call methods using the connected wallet on the desiredChainId.
+ * This gives access to all of the functionality of the TypeScript SDK in your React app.
+ *
+ * - If there is a connected wallet, the SDK is instantiated from the connected wallet’s signer. Meaning all transactions are initiated from the connected wallet.
+ * - If there is no connected wallet, the SDK is in read-only mode on the activeChain.
+ *
  * @example
- * ```javascript
- * const sdk = useSDK();
+ * ```tsx
+ * import { useSDK } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const sdk = useSDK();
+ *
+ *   // Now you use all of the TypeScript SDK functionality
+ *   // For example, deploy a new contract from the connected wallet.
+ *   async function deployContract() {
+ *     sdk?.deployer.deployNFTDrop({
+ *       name: "My NFT Drop",
+ *       primary_sale_recipient: "{{wallet_address}}",
+ *     });
+ *   }
+ * }
  * ```
  */
 export function useSDK(): ThirdwebSDK | undefined {

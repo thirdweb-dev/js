@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.mainnetz.io"
   ],
   "shortName": "NetZt",
+  "slip44": 1,
   "slug": "z-testnet",
   "testnet": true
 } as const satisfies Chain;

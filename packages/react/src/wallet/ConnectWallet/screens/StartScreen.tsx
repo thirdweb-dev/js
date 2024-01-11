@@ -5,11 +5,11 @@ import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { TOS } from "../Modal/TOS";
 import { GlobeIcon } from "../icons/GlobalIcon";
-import styled from "@emotion/styled";
-import { Theme } from "../../../design-system";
 import { keyframes } from "@emotion/react";
 import { Img } from "../../../components/Img";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledDiv } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export function StartScreen() {
   const {
@@ -111,8 +111,11 @@ const floatingAnimation = keyframes`
   }
 `;
 
-const GlobalContainer = styled.div<{ theme?: Theme }>`
-  color: ${(p) => p.theme.colors.accentText};
-  filter: drop-shadow(0px 6px 10px ${(p) => p.theme.colors.accentText});
-  animation: ${floatingAnimation} 2s ease infinite alternate;
-`;
+const GlobalContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.accentText,
+    filter: `drop-shadow(0px 6px 10px ${theme.colors.accentText})`,
+    animation: `${floatingAnimation} 2s ease infinite alternate`,
+  };
+});

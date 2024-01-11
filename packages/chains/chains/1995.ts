@@ -33,6 +33,7 @@ export default {
     "https://io-dataseed1.testnet.edexa.io-market.com/rpc"
   ],
   "shortName": "edx",
+  "slip44": 1,
   "slug": "edexa-testnet",
   "testnet": true
 } as const satisfies Chain;

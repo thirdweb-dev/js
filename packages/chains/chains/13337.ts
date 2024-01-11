@@ -39,6 +39,7 @@ export default {
     "wss://subnets.avax.network/beam/testnet/ws"
   ],
   "shortName": "beam-testnet",
+  "slip44": 1,
   "slug": "beam-testnet",
   "testnet": true
 } as const satisfies Chain;

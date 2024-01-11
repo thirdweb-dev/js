@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "HashScan",
-      "url": "https://hashscan.io/testnet/dashboard",
-      "standard": "none"
+      "url": "https://hashscan.io/testnet",
+      "standard": "EIP3091"
     },
     {
       "name": "Arkhia Explorer",
@@ -60,7 +60,7 @@ export default {
     "https://testnet.hashio.io/api"
   ],
   "shortName": "hedera-testnet",
-  "slip44": 3030,
+  "slip44": 1,
   "slug": "hedera-testnet",
   "testnet": true
 } as const satisfies Chain;

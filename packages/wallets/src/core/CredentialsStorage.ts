@@ -1,5 +1,10 @@
 import { AsyncStorage } from "./AsyncStorage";
 
+// TODO: remove this file - this is not being used
+
+/**
+ * @internal
+ */
 export class CredentialsStorage implements AsyncStorage {
   async getItem(): Promise<string | null> {
     const credential = await navigator.credentials.get({

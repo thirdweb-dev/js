@@ -30,6 +30,7 @@ export default {
     "https://testnet.ethrpc.pandoproject.org/rpc"
   ],
   "shortName": "pando-testnet",
+  "slip44": 1,
   "slug": "pandoproject-testnet",
   "testnet": true
 } as const satisfies Chain;

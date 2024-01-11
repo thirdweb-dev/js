@@ -14,6 +14,7 @@ export default {
   "networkId": 1023,
   "rpc": [],
   "shortName": "tclv",
+  "slip44": 1,
   "slug": "clover-testnet",
   "testnet": true
 } as const satisfies Chain;

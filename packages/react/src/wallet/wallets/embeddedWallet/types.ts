@@ -5,7 +5,10 @@ import type {
 
 export type AuthOption = EmbeddedWalletOauthStrategy | "email";
 
-export type EmbeddedWalletConfig = Omit<
+/**
+ * @wallet
+ */
+export type EmbeddedWalletConfigOptions = Omit<
   EmbeddedWalletAdditionalOptions,
   "chain" | "clientId"
 > & {
@@ -16,7 +19,14 @@ export type EmbeddedWalletConfig = Omit<
 
   /**
    * Choose which auth providers to show in the wallet connection UI
-   * @defaultValue `auth: { options: ["email", "google", "apple"] }`
+   *
+   * By default, all auth methods are enabled, which is equivalent to setting the following:
+   *
+   * ```ts
+   * {
+   *  options: ["email", "google", "apple", "facebook"]
+   * }
+   * ```
    */
   auth?: {
     options: AuthOption[];

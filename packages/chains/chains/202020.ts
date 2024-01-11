@@ -44,6 +44,7 @@ export default {
     "https://testnet-val.decimalchain.com/web3/"
   ],
   "shortName": "tDSC",
+  "slip44": 1,
   "slug": "decimal-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

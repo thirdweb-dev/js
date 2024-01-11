@@ -36,6 +36,7 @@ export default {
     "https://klc.live/"
   ],
   "shortName": "tklc",
+  "slip44": 1,
   "slug": "kaiba-lightning-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -30,6 +30,7 @@ export default {
     "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
   ],
   "shortName": "tpalm",
+  "slip44": 1,
   "slug": "palm-testnet",
   "testnet": true
 } as const satisfies Chain;

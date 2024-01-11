@@ -35,6 +35,8 @@ export default {
     "https://testnet.neonevm.org"
   ],
   "shortName": "neonevm-testnet",
+  "slip44": 1,
   "slug": "neon-evm-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

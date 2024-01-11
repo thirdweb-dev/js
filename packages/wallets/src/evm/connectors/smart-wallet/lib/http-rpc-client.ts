@@ -1,10 +1,10 @@
 import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
 import pkg from "../../../../../package.json";
+import { hexlifyUserOp } from "./utils";
 
-const DEBUG = false;
+export const DEBUG = false; // TODO set as public flag
 function isBrowser() {
   return typeof window !== "undefined";
 }
@@ -106,12 +106,12 @@ export class HttpRpcClient {
 
   /**
    * send a UserOperation to the bundler
-   * @param userOp1 - the UserOperation to send
+   * @param userOp1 - The UserOperation to send
    * @returns userOpHash the id of this operation, for getUserOperationTransaction
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
+    const hexifiedUserOp = await hexlifyUserOp(userOp1);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -123,11 +123,14 @@ export class HttpRpcClient {
     ]);
   }
 
-  async estimateUserOpGas(
-    userOp1: Partial<UserOperationStruct>,
-  ): Promise<string> {
+  async estimateUserOpGas(userOp1: Partial<UserOperationStruct>): Promise<{
+    preVerificationGas: string;
+    verificationGas: string;
+    verificationGasLimit: string;
+    callGasLimit: string;
+  }> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
+    const hexifiedUserOp = await hexlifyUserOp(userOp1);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,

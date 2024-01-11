@@ -22,6 +22,7 @@ export default {
   "networkId": 9170,
   "rpc": [],
   "shortName": "_old_tfire",
+  "slip44": 1,
   "slug": "rinia-testnet-old",
   "status": "deprecated",
   "testnet": true

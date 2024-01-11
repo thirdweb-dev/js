@@ -127,15 +127,16 @@ async function getRecoveryCode(
     storedToken.authDetails.recoveryShareManagement ===
     RecoveryShareManagement.CLOUD_MANAGED
   ) {
-    if (storedToken.authProvider === AuthProvider.CUSTOM_JWT) {
-      // derive sub here
-      const code = extractSubFromJwt(storedToken.jwtToken);
-      if (!code) {
+    if (
+      storedToken.authProvider === AuthProvider.CUSTOM_JWT ||
+      storedToken.authProvider === AuthProvider.CUSTOM_AUTH_ENDPOINT
+    ) {
+      if (!recoveryCode) {
         throw new Error(
           `GetRecoveryCode error: ${ErrorMessages.missingRecoveryCode}`,
         );
       }
-      return code;
+      return recoveryCode;
     } else {
       try {
         const code = await getCognitoRecoveryPassword(clientId);
@@ -154,27 +155,5 @@ async function getRecoveryCode(
     throw new Error(ErrorMessages.missingRecoveryCode);
   } else {
     throw new Error("Invalid recovery share management option");
-  }
-}
-
-function extractSubFromJwt(jwtToken: string): string | undefined {
-  const parts = jwtToken.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT format.");
-  }
-
-  const encodedPayload = parts[1];
-  if (!encodedPayload) {
-    throw new Error("Invalid JWT format.");
-  }
-  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
-
-  try {
-    const payloadObject = JSON.parse(decodedPayload);
-    if (payloadObject && payloadObject.sub) {
-      return payloadObject.sub;
-    }
-  } catch (error) {
-    throw new Error("Error parsing JWT payload as JSON.");
   }
 }

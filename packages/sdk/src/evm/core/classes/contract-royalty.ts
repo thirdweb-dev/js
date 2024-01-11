@@ -13,7 +13,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -49,7 +49,7 @@ export class ContractRoyalty<
 
   /**
    * Get the royalty recipient and fee
-   * @returns - The royalty recipient and BPS
+   * @returns  The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
@@ -73,7 +73,7 @@ export class ContractRoyalty<
 
   /**
    * Get the royalty recipient and fee of a particular token
-   * @returns - The royalty recipient and BPS
+   * @returns  The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();

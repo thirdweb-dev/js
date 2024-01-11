@@ -27,6 +27,7 @@ export default {
     "wss://hatlas.rpc.hazlor.com:8546"
   ],
   "shortName": "tscas",
+  "slip44": 1,
   "slug": "hazlor-testnet",
   "testnet": true
 } as const satisfies Chain;

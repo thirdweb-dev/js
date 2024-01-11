@@ -1,4 +1,5 @@
 import {
+  AuthEndpointOptions,
   AuthOptions,
   AuthParams,
   AuthResult,
@@ -11,6 +12,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import {
+  authEndpoint,
   customJwt,
   sendVerificationEmail,
   socialLogin,
@@ -19,8 +21,11 @@ import {
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
 import {
+  clearConnectedAuthStrategy,
   clearConnectedEmail,
+  getConnectedAuthStrategy,
   getConnectedEmail,
+  saveConnectedAuthStrategy,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
 import {
@@ -39,11 +44,15 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   email?: string;
 
+  connectedAuthStrategy?: AuthParams["strategy"];
+
   constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
 
     this.email = getConnectedEmail();
+
+    this.connectedAuthStrategy = getConnectedAuthStrategy();
   }
 
   async connect(options?: EmbeddedWalletConnectionArgs) {
@@ -59,14 +68,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       await this.switchChain(options.chainId);
     }
 
-    if (this.email) {
-      saveConnectedEmail(this.email);
-    }
     return this.getAddress();
   }
 
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const strategy = params.strategy;
+    this.connectedAuthStrategy = strategy;
     switch (strategy) {
       case "email_verification": {
         return await this.validateEmailOTP({
@@ -96,7 +103,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       case "jwt": {
         return this.customJwt({
           jwt: params.jwt,
-          password: params.encryptionKey || "",
+          password: params.encryptionKey,
+        });
+      }
+      case "auth_endpoint": {
+        return this.authEndpoint({
+          payload: params.payload,
+          encryptionKey: params.encryptionKey,
         });
       }
       default:
@@ -172,7 +185,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         this.options.clientId,
       );
       this.email = email;
-      saveConnectedEmail(email);
 
       return {
         user: {
@@ -226,8 +238,36 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
   }
 
+  private async authEndpoint(
+    authOptions: AuthEndpointOptions,
+  ): Promise<AuthResult> {
+    try {
+      const { verifiedToken, email } = await authEndpoint(
+        authOptions,
+        this.options.clientId,
+      );
+      this.email = email;
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            verifiedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: verifiedToken.isNewUser,
+        needsRecoveryCode:
+          verifiedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
+    } catch (error) {
+      console.error(`Error while verifying auth_endpoint auth: ${error}`);
+      this.disconnect();
+      throw error;
+    }
+  }
+
   async disconnect(): Promise<void> {
     clearConnectedEmail();
+    clearConnectedAuthStrategy();
     await logoutUser(this.options.clientId);
     await this.onDisconnect();
     this.signer = undefined;
@@ -272,6 +312,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.signer = this.signer.connect(
         new providers.JsonRpcProvider(this.options.chain.rpc[0]),
       );
+    }
+
+    if (this.email) {
+      saveConnectedEmail(this.email);
+    }
+    if (this.connectedAuthStrategy) {
+      saveConnectedAuthStrategy(this.connectedAuthStrategy);
     }
 
     return signer;
@@ -346,6 +393,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   getEmail() {
     return this.email;
+  }
+
+  getConnectedAuthStrategy() {
+    return this.connectedAuthStrategy;
   }
 }
 

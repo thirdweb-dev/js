@@ -18,6 +18,7 @@ export default {
     "https://rpc.tau1.artis.network"
   ],
   "shortName": "atstau",
+  "slip44": 1,
   "slug": "artis-testnet-tau1",
   "testnet": true
 } as const satisfies Chain;

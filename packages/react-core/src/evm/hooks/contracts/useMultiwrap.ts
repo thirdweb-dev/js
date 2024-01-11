@@ -4,7 +4,7 @@ import { useContract } from "../async/contracts";
 
 /**
  * Hook for getting an instance of an `Multiwrap` contract. This contract is an ERC721 in which you can wrap ERC721, ERC1155 and ERC20 tokens.
- * @param contractAddress - the address of the Multiwrap contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Multiwrap contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript
@@ -30,6 +30,7 @@ import { useContract } from "../async/contracts";
  * - const multiwrap = useMultiwrap("0x1234...");
  * + const multiwrap = useContract("0x1234...", "multiwrap").contract;
  * ```
+ * @internal
  */
 export function useMultiwrap(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

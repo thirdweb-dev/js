@@ -49,6 +49,7 @@ export default {
     "https://rpc.astranaut.dev"
   ],
   "shortName": "astra-testnet",
+  "slip44": 1,
   "slug": "astra-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -38,8 +38,7 @@ export default {
   "rpc": [
     "https://lightlink-phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://replicator-01.phoenix.lightlink.io/rpc/v1",
-    "https://replicator-02.phoenix.lightlink.io/rpc/v1"
+    "https://replicator.phoenix.lightlink.io/rpc/v1"
   ],
   "shortName": "lightlink_phoenix",
   "slug": "lightlink-phoenix",

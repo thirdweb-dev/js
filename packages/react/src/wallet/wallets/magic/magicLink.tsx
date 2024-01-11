@@ -2,9 +2,8 @@ import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 import {
   ConnectUIProps,
   SelectUIProps,
-  WalletConfig,
   WalletOptions,
-  useConnect,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect, useCallback } from "react";
@@ -12,7 +11,7 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { Img } from "../../../components/Img";
-import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
 import styled from "@emotion/styled";
@@ -40,14 +39,119 @@ import {
   twitchIconUri,
   twitterIconUri,
 } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
+/**
+ * @wallet
+ */
+export type MagicWalletConfigOptions = MagicLinkAdditionalOptions & {
+  /**
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
+};
+
+/**
+ * A wallet configurator for [Magic Link](https://magic.link/) which allows integrating the wallet with React.
+ *
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * magicLink({
+ *   apiKey: "pk_test_123",
+ *   emailLogin: true,
+ *   smsLogin: true,
+ *   oauthOptions: {
+ *     providers: ["google", "facebook"],
+ *     redirectURI: "https://example.com/foo/bar",
+ *   },
+ *   type: "auth", // or 'connect'
+ * });
+ * ```
+ *
+ * @param config -
+ * Object containing the following properties to configure the wallet
+ *
+ * ### apiKey
+ * Your Magic Link apiKey
+ *
+ * You can get an API key by signing up for an account on [Magic Link's website](https://magic.link/).
+ *
+ * Must be a `string`
+ *
+ * ### magicSdkConfiguration (optional)
+ * Configuration for [Magic Auth](https://magic.link/docs/auth/overview) SDK
+ *
+ * This is only relevant if you are using `type: 'auth'` in your config
+ *
+ * ```ts
+ * {
+ *   locale?: string;
+ *   endpoint?: string;
+ *   testMode?: boolean;
+ * }
+ * ```
+ *
+ * * `locale` - Customize the language of Magic's modal, email and confirmation screen. See [Localization](https://magic.link/docs/auth/more/customization/localization) for more.
+ *
+ * * `endpoint` - A URL pointing to the Magic iframe application
+ *
+ * * `testMode` - Enable [testMode](https://magic.link/docs/auth/introduction/test-mode) to assert the desired behavior through the email address you provide to `loginWithMagicLink` without having to go through the auth flow.
+ *
+ * ### smsLogin (optional)
+ * Specify whether you want to allow users to login with their phone number or not. It is `true` by default
+ *
+ * This is only relevant if you are using `type: 'auth'`
+ *
+ * Must be a `boolean`
+ *
+ * ### emailLogin (optional)
+ * Specify whether you want to allow users to login with their email or not. It is `true` by default
+ *
+ * This is only relevant if you are using `type: 'auth'`
+ *
+ * Must be a `boolean`
+ *
+ * ### oauthOptions (optional)
+ * Specify which oauth providers you support in `providers` array.
+ *
+ * Specify which URI to redirect to after the oauth flow is complete in `redirectURI` option. If no `redirectURI` is specified, the user will be redirected to the current page.
+ *
+ * You must pass full URL and not just a relative path. For example, `"https://example.com/foo"` is valid but `"/foo"` is not.
+ * You can use `new URL("/foo", window.location.origin).href` to get the full URL from a relative path based on the current origin.
+ *
+ * This is only relevant if you are using `type: 'auth'`
+ *
+ * You also need to enable the oauth providers for your apiKey from [Magic dashboard](https://dashboard.magic.link/).
+ *
+ * ```ts
+ * type OauthOptions = {
+ *   redirectURI?: string;
+ *   providers: OauthProvider[];
+ * };
+ *
+ * type OauthProvider =
+ *   | "google"
+ *   | "facebook"
+ *   | "apple"
+ *   | "github"
+ *   | "bitbucket"
+ *   | "gitlab"
+ *   | "linkedin"
+ *   | "twitter"
+ *   | "discord"
+ *   | "twitch"
+ *   | "microsoft";
+ * ```
+ *
+ * ### recommended (optional)
+ * Show this wallet as "recommended" in the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
+ *
+ * @wallet
+ */
 export function magicLink(
-  config: MagicLinkAdditionalOptions & {
-    /**
-     * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
-     */
-    recommended?: boolean;
-  },
+  config: MagicWalletConfigOptions,
 ): ConfiguredMagicLinkWallet {
   const emailLoginEnabled = config.emailLogin !== false;
   const smsLoginEnabled = config.smsLogin !== false;
@@ -217,8 +321,15 @@ const MagicUI: React.FC<{
     >
       {props.oauthProviders && (
         <>
-          {props.oauthProviders.length >= 3 ? (
-            <Container gap="md" flex="row" center="x">
+          {props.oauthProviders.length > 1 ? (
+            <Container
+              gap="md"
+              flex="row"
+              style={{
+                justifyContent: "space-between",
+              }}
+              center="x"
+            >
               {props.oauthProviders.map((provider) => {
                 return (
                   <SocialIconButton
@@ -319,70 +430,61 @@ const MagicUI: React.FC<{
 };
 
 function useConnectMagic() {
-  const connect = useConnect();
+  const { activeChain } = useWalletContext();
 
   const connector = useCallback(
     async (data: {
       selectionData: SelectionData;
-      walletConfig: WalletConfig<MagicLink>;
+      connect: ConnectUIProps<MagicLink>["connect"];
       singleWallet: boolean;
       type: "auth" | "connect";
       show: () => void;
       connected: () => void;
       hide: () => void;
     }) => {
-      const {
-        selectionData,
-        walletConfig,
-        singleWallet,
-        connected,
-        show,
-        hide,
-      } = data;
+      const { selectionData, connected, show, hide, connect } = data;
 
+      // oauth
       if (typeof selectionData === "object") {
         try {
           hide();
           (async () => {
-            await connect(walletConfig, {
+            await connect({
               oauthProvider: selectionData.provider,
+              chainId: activeChain.chainId,
             });
           })();
           connected();
-        } catch {
-          if (!singleWallet) {
-            show();
-          }
+        } catch (e) {
+          console.error(e);
         }
 
-        return;
+        show();
       }
 
-      const isEmail = selectionData
-        ? (selectionData as string).includes("@")
-        : false;
+      // email or phone
+      else {
+        const isEmail = selectionData
+          ? (selectionData as string).includes("@")
+          : false;
 
-      (async () => {
         hide();
         try {
           await connect(
-            walletConfig,
             data.type === "connect"
               ? {}
               : isEmail
-              ? { email: selectionData }
-              : { phoneNumber: selectionData },
+              ? { email: selectionData, chainId: activeChain.chainId }
+              : { phoneNumber: selectionData, chainId: activeChain.chainId },
           );
           connected();
         } catch (e) {
-          if (!singleWallet) {
-            show();
-          }
           console.error(e);
         }
-      })();
+        show();
+      }
     },
-    [connect],
+    [activeChain.chainId],
   );
 
   return connector;
@@ -398,6 +500,7 @@ const MagicConnectingUI: React.FC<
   supportedWallets,
   type,
   hide,
+  connect,
 }) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
@@ -413,7 +516,7 @@ const MagicConnectingUI: React.FC<
       selectionData: selectionData as SelectionData,
       singleWallet,
       type,
-      walletConfig,
+      connect,
       show,
       connected,
       hide,
@@ -427,6 +530,7 @@ const MagicConnectingUI: React.FC<
     type,
     walletConfig,
     hide,
+    connect,
   ]);
 
   return (
@@ -479,7 +583,7 @@ const MagicConnectionUIScreen: React.FC<
               show: props.show,
               singleWallet: props.supportedWallets.length === 1,
               type: props.type,
-              walletConfig: props.walletConfig,
+              connect: props.connect,
               hide: props.hide,
             });
           }}
@@ -507,21 +611,33 @@ function upperCaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: flex-start;
-  gap: ${spacing.md};
-  font-size: ${fontSize.md};
-  transition: background-color 0.2s ease;
-  &:hover {
-    background-color: ${(p) => p.theme.colors.secondaryButtonBg};
-  }
-  &:active {
-    box-shadow: none;
-  }
-`;
+const SocialButtonLarge = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    justifyContent: "center",
+    gap: spacing.md,
+    fontSize: fontSize.md,
+    transition: "background-color 0.2s ease",
+    "&:hover": {
+      backgroundColor: theme.colors.secondaryButtonBg,
+    },
+    "&:active": {
+      boxShadow: "none",
+    },
+  };
+});
 
-const SocialIconButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  padding: ${spacing.xs};
-`;
+const SocialIconButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `1px solid ${theme.colors.borderColor}`,
+    padding: spacing.sm,
+    transition: "border-color 0.2s ease",
+    "&:hover": {
+      borderColor: theme.colors.accentText,
+      background: "transparent",
+    },
+    flexGrow: 1,
+  };
+});

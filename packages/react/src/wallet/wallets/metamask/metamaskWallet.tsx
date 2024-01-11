@@ -4,8 +4,13 @@ import {
   getInjectedMetamaskProvider,
 } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
+import { metamaskUris } from "./metamaskUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
-type MetamaskWalletOptions = {
+/**
+ * @wallet
+ */
+export type MetamaskWalletConfigOptions = {
   /**
    * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -15,14 +20,63 @@ type MetamaskWalletOptions = {
   projectId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Specify how the connection to metamask app should be established if the user is on a mobile device
+   *
+   * There are two options: "walletconnect" and "browser"
+   *
+   * 1. "walletconnect" - User will be redirected to MetaMask app and upon successful connection, user can return back to the web page.
+   * 2. "browser" - User will be redirected to MetaMask app and the web page will be opened in MetaMask browser.
+   *
+   * Default is `"walletconnect"`
+   */
+  connectionMethod?: "walletConnect" | "metamaskBrowser";
 };
 
+/**
+ * A wallet configurator for [MetaMask Wallet](https://metamask.io/) which allows integrating the wallet with React.
+ *
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * metamaskWallet({
+ *   projectId: 'YOUR_PROJECT_ID',
+ *   connectionMethod: 'walletConnect', // or 'metamaskBrowser',
+ *   recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional configuration options for the wallet
+ *
+ * ### projectId (optional)
+ * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
+ *
+ * ### connectionMethod (optional)
+ * Specify how the connection to metamask app should be established if the user is on a mobile device.
+ *
+ * There are two options: `"walletconnect"` and `"browser"`
+ * 1. `"walletconnect"` - User will be redirected to MetaMask app and upon successful connection, user can return back to the web page.
+ * 2. `"browser"` - User will be redirected to MetaMask app and the web page will be opened in MetaMask browser.
+ *
+ * Default is `"walletconnect"`
+ *
+ * @wallet
+ */
 export const metamaskWallet = (
-  options?: MetamaskWalletOptions,
+  options?: MetamaskWalletConfigOptions,
 ): WalletConfig<MetaMaskWallet> => {
+  const connectionMethod = options?.connectionMethod || "walletConnect";
+
   return {
     id: MetaMaskWallet.id,
     recommended: options?.recommended,
@@ -38,9 +92,17 @@ export const metamaskWallet = (
         qrcode: false,
       });
 
+      if (connectionMethod === "walletConnect") {
+        handelWCSessionRequest(wallet, metamaskUris);
+      }
+
       return wallet;
     },
-    connectUI: MetamaskConnectUI,
+    connectUI(props) {
+      return (
+        <MetamaskConnectUI {...props} connectionMethod={connectionMethod} />
+      );
+    },
     isInstalled() {
       return !!getInjectedMetamaskProvider();
     },

@@ -44,6 +44,13 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
+  payments: {
+    name: "checkout",
+    title: "Checkouts",
+    description: "Payments for easy web3 onboarding",
+    // all actions allowed
+    actions: [],
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

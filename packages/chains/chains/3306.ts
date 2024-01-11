@@ -30,6 +30,7 @@ export default {
     "https://dev-rpc.debounce.network"
   ],
   "shortName": "debounce-devnet",
+  "slip44": 1,
   "slug": "debounce-subnet-testnet",
   "testnet": true
 } as const satisfies Chain;
