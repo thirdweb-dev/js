@@ -50,5 +50,8 @@ module.exports = {
         ],
       },
     ],
+
+    // react
+    "react-hooks/exhaustive-deps": "error",
   },
 };

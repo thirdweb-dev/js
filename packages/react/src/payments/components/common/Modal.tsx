@@ -36,7 +36,7 @@ export const Modal: React.FC<{
     return () => {
       document.removeEventListener("keydown", keyDownHandler);
     };
-  }, []);
+  }, [escapeToClose, onClose]);
 
   const additionalDialogClasses = isFullScreen ? "" : dialogContainedClasses;
   const dialogPanelBg = isFullScreen ? "transparent" : bgColor;
