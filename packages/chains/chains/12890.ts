@@ -30,6 +30,7 @@ export default {
     "https://testnet-rpc.quantumscan.org"
   ],
   "shortName": "tqnet",
+  "slip44": 1,
   "slug": "quantum-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -30,6 +30,7 @@ export default {
     "https://rpc-devnet-algorand-rollup.a1.milkomeda.com"
   ],
   "shortName": "milkTAlgo",
+  "slip44": 1,
   "slug": "milkomeda-a1-testnet",
   "testnet": true
 } as const satisfies Chain;

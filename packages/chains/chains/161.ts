@@ -24,6 +24,7 @@ export default {
     "https://testnet.evascan.io/api/eth-rpc/"
   ],
   "shortName": "wall-e",
+  "slip44": 1,
   "slug": "armonia-eva-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -38,6 +38,7 @@ export default {
     "https://testnet.deamchain.com"
   ],
   "shortName": "deamtest",
+  "slip44": 1,
   "slug": "deamchain-testnet",
   "testnet": true
 } as const satisfies Chain;

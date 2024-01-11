@@ -38,6 +38,7 @@ export default {
     "https://api.proteus.nautchain.xyz/solana"
   ],
   "shortName": "NAUTTest",
+  "slip44": 1,
   "slug": "nautilus-proteus-testnet",
   "testnet": true
 } as const satisfies Chain;

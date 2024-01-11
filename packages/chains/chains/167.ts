@@ -30,6 +30,7 @@ export default {
     "https://node.atoshi.io/"
   ],
   "shortName": "atoshi",
+  "slip44": 1,
   "slug": "atoshi-testnet",
   "testnet": true
 } as const satisfies Chain;

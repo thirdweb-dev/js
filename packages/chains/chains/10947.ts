@@ -39,6 +39,7 @@ export default {
     "https://rpctest2.quadrans.io"
   ],
   "shortName": "quadranstestnet",
+  "slip44": 1,
   "slug": "quadrans-blockchain-testnet",
   "testnet": true
 } as const satisfies Chain;

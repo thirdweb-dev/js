@@ -25,5 +25,6 @@ export default {
   ],
   "shortName": "algl",
   "slug": "algol",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

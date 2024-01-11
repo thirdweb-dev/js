@@ -12,7 +12,7 @@ export default {
     "format": "PNG"
   },
   "infoURL": "https://testnet.frax.com",
-  "name": "Fraxchain Testnet",
+  "name": "Fraxtal Testnet",
   "nativeCurrency": {
     "name": "Frax Ether",
     "symbol": "frxETH",
@@ -21,12 +21,13 @@ export default {
   "networkId": 2522,
   "redFlags": [],
   "rpc": [
-    "https://fraxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://fraxtal-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2522.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.frax.com"
   ],
-  "shortName": "fraxchain-testnet",
-  "slug": "fraxchain-testnet",
+  "shortName": "fraxtal-testnet",
+  "slip44": 1,
+  "slug": "fraxtal-testnet",
   "status": "active",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

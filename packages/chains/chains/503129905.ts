@@ -33,6 +33,7 @@ export default {
     "wss://staging-v3.skalenodes.com/v1/ws/staging-faint-slimy-achird"
   ],
   "shortName": "nebula-testnet",
+  "slip44": 1,
   "slug": "skale-nebula-hub-testnet",
   "testnet": true
 } as const satisfies Chain;

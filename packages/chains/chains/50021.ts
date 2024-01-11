@@ -28,6 +28,7 @@ export default {
     "https://testnet.gton.network/"
   ],
   "shortName": "tgton",
+  "slip44": 1,
   "slug": "gton-testnet",
   "testnet": true
 } as const satisfies Chain;

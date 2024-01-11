@@ -41,6 +41,7 @@ export default {
     "https://rpc-testnet3.wyzthchain.org/"
   ],
   "shortName": "wyz",
+  "slip44": 1,
   "slug": "wyzth-testnet",
   "testnet": true
 } as const satisfies Chain;

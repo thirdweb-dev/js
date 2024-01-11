@@ -36,6 +36,7 @@ export default {
     "https://ultron-dev.io"
   ],
   "shortName": "UltronTestnet",
+  "slip44": 1,
   "slug": "ultron-testnet",
   "testnet": true
 } as const satisfies Chain;

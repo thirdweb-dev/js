@@ -26,6 +26,7 @@ export default {
   "networkId": 11437,
   "rpc": [],
   "shortName": "shyftt",
+  "slip44": 1,
   "slug": "shyft-testnet",
   "testnet": true
 } as const satisfies Chain;

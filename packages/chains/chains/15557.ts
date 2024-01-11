@@ -39,6 +39,7 @@ export default {
     "https://api.testnet.evm.eosnetwork.com"
   ],
   "shortName": "eos-testnet",
+  "slip44": 1,
   "slug": "eos-evm-network-testnet",
   "testnet": true
 } as const satisfies Chain;

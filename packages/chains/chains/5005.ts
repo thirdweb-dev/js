@@ -44,6 +44,7 @@ export default {
     "https://node3.testnet.treasurenet.io"
   ],
   "shortName": "tntest",
+  "slip44": 1,
   "slug": "treasurenet-testnet",
   "testnet": true
 } as const satisfies Chain;

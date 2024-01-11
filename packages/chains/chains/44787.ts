@@ -30,6 +30,7 @@ export default {
     "wss://alfajores-forno.celo-testnet.org/ws"
   ],
   "shortName": "ALFA",
+  "slip44": 1,
   "slug": "celo-alfajores-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -18,7 +18,7 @@ export default {
     "https://nodeapi.test.energi.network"
   ],
   "shortName": "tnrg",
-  "slip44": 49797,
+  "slip44": 1,
   "slug": "energi-testnet",
   "testnet": true
 } as const satisfies Chain;

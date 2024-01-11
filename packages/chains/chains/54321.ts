@@ -33,6 +33,7 @@ export default {
     "http://testnet.toronet.org/rpc"
   ],
   "shortName": "ToronetTestnet",
+  "slip44": 1,
   "slug": "toronet-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -42,6 +42,7 @@ export default {
     "https://testnet-sg-server-2.somanetwork.io"
   ],
   "shortName": "sma",
+  "slip44": 1,
   "slug": "soma-network-testnet",
   "testnet": true
 } as const satisfies Chain;

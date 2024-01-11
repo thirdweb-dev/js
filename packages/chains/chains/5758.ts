@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.satoshichain.io"
   ],
   "shortName": "satst",
+  "slip44": 1,
   "slug": "satoshichain-testnet",
   "testnet": true
 } as const satisfies Chain;

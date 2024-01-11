@@ -18,6 +18,7 @@ export default {
     "https://testnet.rpc.uschain.network"
   ],
   "shortName": "usctest",
+  "slip44": 1,
   "slug": "ub-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

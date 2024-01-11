@@ -29,6 +29,7 @@ export default {
   "rpc": [
     "https://iotex-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4689.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ankr.com/iotex",
     "https://babel-api.mainnet.iotex.io"
   ],
   "shortName": "iotex-mainnet",

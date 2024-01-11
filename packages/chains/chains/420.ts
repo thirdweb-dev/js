@@ -42,6 +42,7 @@ export default {
     "wss://optimism-goerli.gateway.tenderly.co"
   ],
   "shortName": "ogor",
+  "slip44": 1,
   "slug": "optimism-goerli",
   "testnet": true
 } as const satisfies Chain;

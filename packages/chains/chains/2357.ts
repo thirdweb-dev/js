@@ -45,6 +45,7 @@ export default {
     "https://api.sepolia-deprecated.kroma.network"
   ],
   "shortName": "deprecated-kroma-sepolia",
+  "slip44": 1,
   "slug": "deprecated-kroma-sepolia",
   "status": "deprecated",
   "testnet": true,

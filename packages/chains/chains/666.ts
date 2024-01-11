@@ -21,6 +21,7 @@ export default {
     "wss://ws-testnet.chain.pixie.xyz"
   ],
   "shortName": "pixie-chain-testnet",
+  "slip44": 1,
   "slug": "pixie-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

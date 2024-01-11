@@ -37,7 +37,8 @@ export default {
     "https://10243.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.arthera.net"
   ],
-  "shortName": "aa",
+  "shortName": "aat",
+  "slip44": 1,
   "slug": "arthera-testnet",
   "testnet": true
 } as const satisfies Chain;

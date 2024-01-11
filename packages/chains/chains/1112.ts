@@ -27,6 +27,7 @@ export default {
     "wss://ws.test.wemix.com"
   ],
   "shortName": "twemix",
+  "slip44": 1,
   "slug": "wemix3-0-testnet",
   "testnet": true
 } as const satisfies Chain;

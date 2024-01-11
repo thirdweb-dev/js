@@ -32,6 +32,7 @@ export default {
     "https://sepolia.optimism.io"
   ],
   "shortName": "opsep",
+  "slip44": 1,
   "slug": "op-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

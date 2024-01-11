@@ -24,6 +24,7 @@ export default {
     "https://testrpc.bittorrentchain.io/"
   ],
   "shortName": "tbtt",
+  "slip44": 1,
   "slug": "bittorrent-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

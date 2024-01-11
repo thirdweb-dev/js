@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Yooldo Verse",
-  "chainId": 345,
+  "chainId": 50006,
   "explorers": [
     {
       "name": "Yooldo Verse Explorer",
-      "url": "https://explorer.yooldo-verse.xyz",
+      "url": "https://explorer.testnet.yooldo-verse.xyz",
       "standard": "EIP3091"
     }
   ],
@@ -17,23 +17,24 @@ export default {
     "format": "png"
   },
   "infoURL": "https://yooldo.gg/",
-  "name": "Yooldo Verse Mainnet",
+  "name": "Yooldo Verse Testnet",
   "nativeCurrency": {
     "name": "OAS",
     "symbol": "OAS",
     "decimals": 18
   },
-  "networkId": 345,
+  "networkId": 50006,
   "parent": {
     "type": "L2",
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://yooldo-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://345.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.yooldo-verse.xyz/"
+    "https://yooldo-verse-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://50006.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.yooldo-verse.xyz/"
   ],
-  "shortName": "YVM",
-  "slug": "yooldo-verse",
-  "testnet": false
+  "shortName": "YVT",
+  "slip44": 1,
+  "slug": "yooldo-verse-testnet",
+  "testnet": true
 } as const satisfies Chain;

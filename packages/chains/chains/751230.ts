@@ -32,6 +32,7 @@ export default {
     "https://brnkc-test.bearnetwork.net"
   ],
   "shortName": "BRNKCTEST",
+  "slip44": 1,
   "slug": "bear-network-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

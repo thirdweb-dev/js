@@ -26,6 +26,7 @@ export default {
     "https://rpc.testnet.blockchain.or.th"
   ],
   "shortName": "tTBSI",
+  "slip44": 1,
   "slug": "tbsi-testnet",
   "testnet": true,
   "title": "Thai Blockchain Service Infrastructure Testnet"

@@ -31,6 +31,6 @@ export default {
   ],
   "shortName": "tko-jolnir",
   "slug": "taiko-jolnir-l2",
-  "status": "incubating",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

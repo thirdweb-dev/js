@@ -32,6 +32,7 @@ export default {
     "https://testnet.adilchain-rpc.io"
   ],
   "shortName": "tadil",
+  "slip44": 1,
   "slug": "adil-testnet",
   "testnet": true
 } as const satisfies Chain;

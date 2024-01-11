@@ -32,6 +32,7 @@ export default {
     "https://rpc-testnet.whitebit.network"
   ],
   "shortName": "twbt",
+  "slip44": 1,
   "slug": "whitebit-network-testnet",
   "testnet": true
 } as const satisfies Chain;
