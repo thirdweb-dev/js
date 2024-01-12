@@ -182,7 +182,7 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  * }
  *```
  */
-export const ConnectEmbed = (props: ConnectEmbedProps) => {
+export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;
   const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
@@ -209,8 +209,8 @@ export const ConnectEmbed = (props: ConnectEmbedProps) => {
     );
   }
 
-  return null;
-};
+  return <div></div>;
+}
 
 const ConnectEmbedContent = (
   props: Omit<ConnectEmbedProps, "onConnect"> & {
