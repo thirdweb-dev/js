@@ -2,7 +2,7 @@
 import copy from "copy-to-clipboard";
 import { useCallback, useEffect, useState } from "react";
 
-export interface UseClipboardOptions {
+interface UseClipboardOptions {
   /**
    * timeout delay (in ms) to switch back to initial state once copied.
    */

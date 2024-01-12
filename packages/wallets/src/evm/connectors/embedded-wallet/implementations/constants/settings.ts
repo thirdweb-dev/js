@@ -6,10 +6,6 @@ export const EMBEDDED_WALLET_PATH = "/sdk/2022-08-12/embedded-wallet";
 /**
  * @internal
  */
-export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`;
-/**
- * @internal
- */
 export const GET_IFRAME_BASE_URL = () => {
   if (
     !!(

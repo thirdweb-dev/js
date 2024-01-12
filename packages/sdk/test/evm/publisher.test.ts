@@ -1,4 +1,5 @@
-import { ChainId, resolveContractUriFromAddress } from "../../src/evm";
+/* eslint-disable turbo/no-undeclared-env-vars */
+import { resolveContractUriFromAddress } from "../../src/evm";
 import {
   extendedMetadataMock,
   defaultProvider,
@@ -6,20 +7,17 @@ import {
   signers,
   sdk,
 } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  DropERC1155__factory,
   DropERC721__factory,
   ERC1155Drop__factory,
   ERC1155SignatureMint__factory,
   ERC721Drop__factory,
   MarketplaceV3__factory,
-  TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
-import { ethers } from "ethers";
+import { constants, utils } from "ethers";
 import { readFileSync } from "fs";
 import invariant from "tiny-invariant";
 import { mockUploadMetadataWithBytecode } from "./utils";
@@ -208,9 +206,8 @@ describe("Publishing", async () => {
 
   it.skip("should fetch metadata", async () => {
     const publisher = sdk.getPublisher();
-    const meta = await publisher.fetchCompilerMetadataFromPredeployURI(
-      simpleContractUri,
-    );
+    const meta =
+      await publisher.fetchCompilerMetadataFromPredeployURI(simpleContractUri);
     expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
   });
 
@@ -334,7 +331,7 @@ describe("Publishing", async () => {
     const all = await c.erc721.getAll();
     expect(all.length).to.eq(1);
     invariant(c.royalties, "no royalties detected");
-    const prevMeta = await c.metadata.get();
+    // const prevMeta = await c.metadata.get();
 
     await c.metadata.set({
       name: "Hello",
@@ -454,7 +451,7 @@ describe("Publishing", async () => {
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
     expect(nftsAfter[0].owner).to.equal(adminWallet.address);
     expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
-    expect(nftsAfter[1].owner).to.equal(AddressZero);
+    expect(nftsAfter[1].owner).to.equal(constants.AddressZero);
   });
 
   it("ERC1155Drop base feature detection", async () => {
@@ -473,7 +470,7 @@ describe("Publishing", async () => {
         publisher: adminWallet.address,
       },
     );
-    ("ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa");
+    // ("ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa");
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
       "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
@@ -588,18 +585,18 @@ describe("Publishing", async () => {
       JSON.stringify(["0x1234", "0x4567"]),
       JSON.stringify([
         213,
-        ethers.utils.hexZeroPad("0x1234", 32),
+        utils.hexZeroPad("0x1234", 32),
         [adminWallet.address, samWallet.address],
       ]),
     ]);
     const c = await sdk.getContract(addr);
     const uri = await c.call("contractUri");
-    expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
+    expect(uri).to.eq(utils.hexZeroPad("0x1234", 32));
 
     const tx = await c.call("updateStruct", [
       {
         aNumber: 123,
-        aString: ethers.utils.hexZeroPad("0x1234", 32),
+        aString: utils.hexZeroPad("0x1234", 32),
         anArray: [adminWallet.address, samWallet.address],
       },
     ]);
@@ -655,7 +652,7 @@ describe("Publishing", async () => {
     );
     const compositeAbi = fullMetadata.compositeAbi;
     expect(
-      compositeAbi != undefined &&
+      compositeAbi !== undefined &&
         compositeAbi.length > MarketplaceV3__factory.abi.length,
     );
   });

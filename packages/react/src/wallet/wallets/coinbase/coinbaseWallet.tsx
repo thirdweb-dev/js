@@ -86,7 +86,7 @@ export const coinbaseWallet = (
   };
 };
 
-export const CoinbaseNativeModalConnectUI = ({
+const CoinbaseNativeModalConnectUI = ({
   connected,
   walletConfig,
   show,

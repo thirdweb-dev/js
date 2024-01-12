@@ -396,8 +396,6 @@ export class Base {
   }
 }
 
-export default Base;
-
 // UTILS
 
 // replaces CryptoJS.enc.Hex

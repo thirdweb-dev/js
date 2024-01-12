@@ -8,25 +8,19 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 import { resolveAddress } from "../../common/ens/resolveAddress";
-import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
 import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
 import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
-import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
 import { fetchContractMetadata } from "../../common/fetchContractMetadata";
-import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import {
-  Abi,
   AbiFunction,
   AbiSchema,
-  ContractParam,
-  ContractSource,
   ExtraPublishMetadata,
   FullPublishMetadata,
   FullPublishMetadataSchemaInput,
@@ -76,16 +70,6 @@ export class ContractPublisher extends RPCConnectionHandler {
   public override updateSignerOrProvider(network: NetworkInput): void {
     super.updateSignerOrProvider(network);
     this.publisher.updateSignerOrProvider(network);
-  }
-
-  /**
-   * @internal
-   * @param metadataUri - URI of the contract metadata
-   */
-  public async extractConstructorParams(
-    metadataUri: string,
-  ): Promise<ContractParam[]> {
-    return extractConstructorParams(metadataUri, this.storage);
   }
 
   /**
@@ -201,50 +185,6 @@ export class ContractPublisher extends RPCConnectionHandler {
         .filter((uri) => uri.length > 0)
         .map((uri) => this.fetchFullPublishMetadata(uri)),
     );
-  }
-
-  /**
-   * @internal
-   * TODO clean this up (see method above, too)
-   */
-  public async resolveContractUriFromAddress(address: AddressOrEns) {
-    const resolvedAddress = await resolveAddress(address);
-    const contractUri = await resolveContractUriFromAddress(
-      resolvedAddress,
-      this.getProvider(),
-    );
-    invariant(contractUri, "Could not resolve contract URI from address");
-    return contractUri;
-  }
-
-  /**
-   * Fetch all sources for a contract from its address
-   * @param address - Address of the contract
-   */
-  public async fetchContractSourcesFromAddress(
-    address: AddressOrEns,
-  ): Promise<ContractSource[]> {
-    const resolvedAddress = await resolveAddress(address);
-    const metadata = await this.fetchCompilerMetadataFromAddress(
-      resolvedAddress,
-    );
-    return await fetchSourceFilesFromMetadata(metadata, this.storage);
-  }
-
-  /**
-   * Fetch ABI from a contract, or undefined if not found
-   * @param address - Address of the contract
-   */
-  public async fetchContractAbiFromAddress(
-    address: AddressOrEns,
-  ): Promise<Abi | undefined> {
-    const resolvedAddress = await resolveAddress(address);
-    const meta = await fetchContractMetadataFromAddress(
-      resolvedAddress,
-      this.getProvider(),
-      this.storage,
-    );
-    return meta.abi;
   }
 
   /**
@@ -406,8 +346,8 @@ export class ContractPublisher extends RPCConnectionHandler {
       extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
-        ? "dynamic"
-        : "none";
+          ? "dynamic"
+          : "none";
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
@@ -455,9 +395,8 @@ export class ContractPublisher extends RPCConnectionHandler {
         predeployMetadata.name,
       );
       if (latestContract && latestContract.metadataUri) {
-        const latestMetadata = await this.fetchPublishedContractInfo(
-          latestContract,
-        );
+        const latestMetadata =
+          await this.fetchPublishedContractInfo(latestContract);
 
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (

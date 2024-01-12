@@ -6,10 +6,9 @@ import {
   TokenInitializer,
 } from "../../src/evm";
 import { expectError, sdk, signers } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber } from "ethers";
+import { BigNumber, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 describe("Token Drop Contract (v2)", async () => {
@@ -35,7 +34,7 @@ describe("Token Drop Contract (v2)", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: adminWallet.address,
         platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
+        platform_fee_recipient: constants.AddressZero,
       },
       "2",
     );
@@ -233,8 +232,8 @@ describe("Token Drop Contract (v2)", async () => {
       i % 3 === 0
         ? w.address.toLowerCase()
         : i % 3 === 1
-        ? w.address.toUpperCase().replace("0X", "0x")
-        : w.address,
+          ? w.address.toUpperCase().replace("0X", "0x")
+          : w.address,
     );
     await dropContract.claimConditions.set([
       {

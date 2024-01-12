@@ -40,7 +40,7 @@ export type DeploymentTransaction = {
   addresses: string[];
 };
 
-export type ConstructorParam = {
+type ConstructorParam = {
   type?: string;
   value: any | any[];
 };

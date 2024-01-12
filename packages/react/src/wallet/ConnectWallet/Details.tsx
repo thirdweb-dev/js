@@ -737,7 +737,7 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
 
 const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const StyledChevronRightIcon = /* @__PURE__ */ styled(
+const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
 )(() => {
   const theme = useCustomTheme();

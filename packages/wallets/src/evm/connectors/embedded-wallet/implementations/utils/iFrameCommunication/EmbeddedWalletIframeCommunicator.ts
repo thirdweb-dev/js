@@ -44,7 +44,7 @@ export class EmbeddedWalletIframeCommunicator<
 }
 
 // This is the URL and ID tag of the iFrame that we communicate with
-export function createEmbeddedWalletIframeLink({
+function createEmbeddedWalletIframeLink({
   clientId,
   path,
   queryParams,
@@ -65,4 +65,4 @@ export function createEmbeddedWalletIframeLink({
   embeddedWalletUrl.searchParams.set("clientId", clientId);
   return embeddedWalletUrl;
 }
-export const EMBEDDED_WALLET_IFRAME_ID = "thirdweb-embedded-wallet-iframe";
+const EMBEDDED_WALLET_IFRAME_ID = "thirdweb-embedded-wallet-iframe";

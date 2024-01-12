@@ -1,7 +1,7 @@
 import { ValidContractInstance } from "../../contracts";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-let STORAGE_CACHE = new ThirdwebStorage();
+const STORAGE_CACHE = new ThirdwebStorage();
 const CONTRACT_CACHE = new Map<string, ValidContractInstance>();
 
 function getContractCacheKey(address: string, chainId: number) {
@@ -36,8 +36,4 @@ export function cacheContract(
 
 export function getCachedStorage(storage?: ThirdwebStorage): ThirdwebStorage {
   return storage || STORAGE_CACHE;
-}
-
-export function cacheStorage(storage: ThirdwebStorage) {
-  STORAGE_CACHE = storage;
 }

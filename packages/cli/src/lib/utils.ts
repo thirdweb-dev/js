@@ -10,7 +10,7 @@ export function generateStateParameter(length: number) {
   return crypto.randomBytes(length).toString("hex");
 }
 
-export function convertDependenciesToStringFormat(dependenciesObject: object) {
+function convertDependenciesToStringFormat(dependenciesObject: object) {
   return Object.entries(dependenciesObject).map(([pkg, versionDetails]) => {
     let version = "";
     if (typeof versionDetails === "string") {
@@ -44,13 +44,13 @@ export const parsePackageJson = (
   return { dependencies, devDependencies, peerDependencies };
 };
 
-export const parseRequirementsTxt = (requirementsTxt: Buffer) => {
+const parseRequirementsTxt = (requirementsTxt: Buffer) => {
   const requirementsTxtContent = requirementsTxt.toString();
   const dependencies = requirementsTxtContent.split("\n");
   return { dependencies };
 };
 
-export const parsePipFile = (PipFile: string) => {
+const parsePipFile = (PipFile: string) => {
   const pipfile = toml.parse(PipFile);
   const dependencies = (pipfile.packages as string[]) || [];
   const devDependencies = (pipfile["dev-packages"] as string[]) || [];
@@ -60,7 +60,7 @@ export const parsePipFile = (PipFile: string) => {
   };
 };
 
-export const parsePyProjectToml = (pyProjectToml: string) => {
+const parsePyProjectToml = (pyProjectToml: string) => {
   const pyProjectFile = toml.parse(pyProjectToml) as any;
   const dependencies = pyProjectFile["tool"]["poetry"]["dependencies"] || [];
   const devDependencies =
@@ -154,7 +154,7 @@ export const getDependenciesForPython = (
   };
 };
 
-export const getLatestVersion = async (packageName: string): Promise<any> => {
+const getLatestVersion = async (packageName: string): Promise<any> => {
   try {
     const url = `https://registry.npmjs.org/${packageName}`;
     const response = await fetch(url);
@@ -274,7 +274,7 @@ export const checkIfBrowniePackageIsInstalled = async (regex: RegExp) => {
   };
 };
 
-export const getDependenciesForBrownie = async () => {
+const getDependenciesForBrownie = async () => {
   let deps = "";
   await runCommand("brownie", ["pm", "list"], true, (data) => {
     deps += data.toString();

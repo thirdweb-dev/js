@@ -115,7 +115,7 @@ export async function setWallerUserDetails({
   );
 }
 
-export async function getWalletUserDetails(
+async function getWalletUserDetails(
   clientId: string,
 ): Promise<{ userId: string; email?: string } | undefined> {
   const result = getItemFromAsyncStorage(

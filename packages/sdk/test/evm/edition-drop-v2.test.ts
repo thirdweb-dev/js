@@ -7,12 +7,12 @@ import {
   TokenInitializer,
 } from "../../src/evm";
 import { expectError, sdk, signers } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
-import { BigNumber } from "ethers";
+import { BigNumber, constants } from "ethers";
 import invariant from "tiny-invariant";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);
@@ -43,7 +43,7 @@ describe("Edition Drop Contract (V2)", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 500,
-        fee_recipient: AddressZero,
+        fee_recipient: constants.AddressZero,
         platform_fee_basis_points: 10,
         platform_fee_recipient: adminWallet.address,
       },

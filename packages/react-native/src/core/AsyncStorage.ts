@@ -6,7 +6,7 @@ import { MMKV } from "react-native-mmkv";
 
 const PREFIX = "__TW__";
 
-export class AsyncLocalStorage implements IAsyncStorage {
+class AsyncLocalStorage implements IAsyncStorage {
   name: string;
   asyncStorage: MMKV;
 
@@ -36,7 +36,7 @@ export class AsyncLocalStorage implements IAsyncStorage {
 /**
  * @internal
  */
-export class LocalStorage implements SyncStorage {
+class LocalStorage implements SyncStorage {
   name: string;
   asyncStorage: MMKV;
 

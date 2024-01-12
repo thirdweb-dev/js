@@ -357,13 +357,13 @@ export async function processProject(
   }
 }
 
-export function getUrl(hashes: string[], command: string) {
+function getUrl(hashes: string[], command: string) {
   let url;
   if (hashes.length === 1) {
     url = new URL(
       THIRDWEB_URL +
-      `/contracts/${command}/` +
-      encodeURIComponent(hashes[0].replace("ipfs://", "")),
+        `/contracts/${command}/` +
+        encodeURIComponent(hashes[0].replace("ipfs://", "")),
     );
   } else {
     url = new URL(THIRDWEB_URL + "/contracts/" + command);

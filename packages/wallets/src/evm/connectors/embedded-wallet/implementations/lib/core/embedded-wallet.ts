@@ -8,23 +8,20 @@ import type {
   WalletAddressObjectType,
 } from "../../interfaces/embedded-wallets/embedded-wallets";
 import { UserWalletStatus } from "../../interfaces/embedded-wallets/embedded-wallets";
-
 import { getDefaultProvider } from "ethers";
 import { LocalStorage } from "../../utils/Storage/LocalStorage";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 import { EthersSigner } from "./signer";
 
-export type WalletManagementTypes = {
+type WalletManagementTypes = {
   createWallet: void;
   setUpNewDevice: void;
   getUserStatus: void;
 };
-export type WalletManagementUiTypes = {
+type WalletManagementUiTypes = {
   createWalletUi: void;
   setUpNewDeviceUi: void;
 };
-
-export type EmbeddedWalletInternalHelperType = { showUi: boolean };
 
 type PostWalletSetup = SetUpWalletRpcReturnType & {
   walletUserId: string;

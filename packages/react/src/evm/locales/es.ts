@@ -21,7 +21,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function esDefault(): ThirdwebLocale {
+function esDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "Iniciar sesión",

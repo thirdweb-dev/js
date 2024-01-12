@@ -26,5 +26,6 @@ export function useSafe() {
  * @deprecated use [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) instead
  * @walletConnection
  * @internal
+ * @alias useSafe
  */
 export const useGnosis = useSafe;

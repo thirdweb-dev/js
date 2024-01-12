@@ -119,7 +119,7 @@ const SmartSelectUI = (
   );
 };
 
-export const SmartConnectUI = (
+const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig },
 ) => {
   const { personalWalletConnection } = useWalletContext();

@@ -2,7 +2,6 @@ import {
   ProjectType,
   LanguageType,
   PackageManagerType,
-  AppType,
   FrameworkType,
   LibraryType,
 } from "../types/ProjectType";
@@ -33,12 +32,6 @@ export interface LibraryDetector {
 
 export interface LanguageDetector {
   languageType: LanguageType;
-
-  matches(path: string): boolean;
-}
-
-export interface AppTypeDetector {
-  appType: AppType;
 
   matches(path: string): boolean;
 }

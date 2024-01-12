@@ -22,12 +22,6 @@ export async function hexlifyUserOp(
     );
 }
 
-export async function printOp(
-  op: Partial<UserOperationStruct>,
-): Promise<string> {
-  return hexlifyUserOp(op).then((userOp) => JSON.stringify(userOp, null, 2));
-}
-
 // v0.6 userOpHash calculation
 export async function getUserOpHashV06(
   userOp: UserOperationStruct,

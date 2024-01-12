@@ -5,7 +5,7 @@ import { z } from "zod";
  */
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
-export const QueryAllParamsSchema = /* @__PURE__ */ (() =>
+const QueryAllParamsSchema = /* @__PURE__ */ (() =>
   z
     .object({
       start: z.number().default(0),

@@ -55,7 +55,7 @@ export const walletConnect = (
   };
 };
 
-export type WalletConnectUIProps = {
+type WalletConnectUIProps = {
   /**
    * temporarily hide the ConnectModal
    * This is useful when you want to open another modal and do not want to show the ConnectModal in the background

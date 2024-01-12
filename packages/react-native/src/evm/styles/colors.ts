@@ -33,7 +33,7 @@ export type Palette = {
   error: string;
 };
 
-export const paletteBase = {
+const paletteBase = {
   black: "black",
   white: "white",
   red: "red",

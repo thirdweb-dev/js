@@ -7,7 +7,7 @@ import { OneKeyWallet, getInjectedOneKeyProvider } from "@thirdweb-dev/wallets";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
 
-export const oneKeyWalletUris = {
+const oneKeyWalletUris = {
   ios: "onekey-wallet://",
   android: "onekey-wallet://",
   other: "onekey-wallet://",

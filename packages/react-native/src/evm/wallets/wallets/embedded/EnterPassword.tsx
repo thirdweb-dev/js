@@ -9,7 +9,7 @@ import {
 import { PasswordInput } from "../../../components/PasswordInput";
 import Checkbox from "../../../components/base/CheckBox";
 
-export type EnterPasswordProps = {
+type EnterPasswordProps = {
   goBack: () => void;
   close: () => void;
   email: string;

@@ -25,8 +25,6 @@ import {
 } from "./utils/gcp-kms-utils";
 import { validateVersion } from "./utils/signature-utils";
 
-export const TypedDataVersion = SignTypedDataVersion;
-
 export interface GcpKmsSignerCredentials {
   projectId: string;
   locationId: string;

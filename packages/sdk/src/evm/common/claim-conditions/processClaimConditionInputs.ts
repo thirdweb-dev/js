@@ -42,7 +42,7 @@ function compare(a: BigNumberish, b: BigNumberish) {
  * @param storage - The storage to use
  * @param snapshotFormatVersion - The snapshot format version to use
  */
-export async function processSnapshotData(
+async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
   provider: providers.Provider,
@@ -144,9 +144,8 @@ export async function processClaimConditionInputs(
     storage,
     snapshotFormatVersion,
   );
-  const parsedInputs = await ClaimConditionInputArray.parseAsync(
-    inputsWithSnapshots,
-  );
+  const parsedInputs =
+    await ClaimConditionInputArray.parseAsync(inputsWithSnapshots);
   // Convert processed inputs to the format the contract expects, and sort by timestamp
   const sortedConditions: AbstractClaimConditionContractStruct[] = (
     await Promise.all(

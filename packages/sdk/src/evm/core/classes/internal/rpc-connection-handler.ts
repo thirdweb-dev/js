@@ -1,4 +1,3 @@
-import { isSigner } from "../../../functions/getSignerAndProvider";
 import { getSignerAndProvider } from "../../../constants/urls";
 import {
   SDKOptions,
@@ -44,13 +43,6 @@ export class RPCConnectionHandler extends EventEmitter {
     this.network = network;
     this.signer = signer;
     this.provider = provider;
-  }
-  /**
-   *
-   * @returns whether or not a signer is set, `true` if there is no signer so the class is in "read only" mode
-   */
-  public isReadOnly(): boolean {
-    return !isSigner(this.signer);
   }
 
   /**

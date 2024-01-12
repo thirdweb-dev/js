@@ -7,10 +7,9 @@ import {
   TokenInitializer,
 } from "../../src/evm";
 import { expectError, sdk, signers, storage } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, utils, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 describe("NFT Drop Contract (v3)", async () => {
@@ -35,9 +34,9 @@ describe("NFT Drop Contract (v3)", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 500,
-        fee_recipient: AddressZero,
+        fee_recipient: constants.AddressZero,
         platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
+        platform_fee_recipient: constants.AddressZero,
       },
       "3",
     );
@@ -293,8 +292,8 @@ describe("NFT Drop Contract (v3)", async () => {
       i % 3 === 0
         ? w.address.toLowerCase()
         : i % 3 === 1
-        ? w.address.toUpperCase().replace("0X", "0x")
-        : w.address,
+          ? w.address.toUpperCase().replace("0X", "0x")
+          : w.address,
     );
 
     await dropContract.claimConditions.set([
@@ -890,7 +889,7 @@ describe("NFT Drop Contract (v3)", async () => {
     let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxClaimableSupply).to.be.deep.equal("1");
     expect(updatedConditions[0].price).to.be.deep.equal(
-      ethers.utils.parseUnits("0.15"),
+      utils.parseUnits("0.15"),
     );
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import {
   AbiSchema,
   ChainId,
@@ -61,6 +62,7 @@ import {
   Forwarder__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+// eslint-disable-next-line no-restricted-imports
 import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 import {
@@ -136,6 +138,7 @@ export const expectError = (e: unknown, message: string) => {
 
 export const mochaHooks = {
   beforeAll: async () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require("dotenv-mono").load();
     signers = await hardhatEthers.getSigners();
     implementations = {};

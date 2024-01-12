@@ -27,7 +27,7 @@ export function DynamicHeight(props: {
   );
 }
 
-export function useHeightObserver() {
+function useHeightObserver() {
   const elementRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>();
 

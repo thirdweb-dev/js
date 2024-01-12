@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 const defaultChainIcon =
   "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
-export type ChainIconProps = {
+type ChainIconProps = {
   chainIconUrl?: string;
   size: number;
 };

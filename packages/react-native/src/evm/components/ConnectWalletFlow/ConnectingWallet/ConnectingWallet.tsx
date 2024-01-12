@@ -7,7 +7,7 @@ import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 
-export type ConnectingWalletProps = {
+type ConnectingWalletProps = {
   subHeaderText?: string;
   footer?: ReactNode;
   content?: ReactNode;

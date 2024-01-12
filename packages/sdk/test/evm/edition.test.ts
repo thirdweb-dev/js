@@ -1,9 +1,8 @@
 import { Edition } from "../../src/evm";
 import { expectError, sdk, signers, storage } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 
 describe("Edition Contract", async () => {
   let bundleContract: Edition;
@@ -27,9 +26,9 @@ describe("Edition Contract", async () => {
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       primary_sale_recipient: adminWallet.address,
       seller_fee_basis_points: 1000,
-      fee_recipient: AddressZero,
+      fee_recipient: constants.AddressZero,
       platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
+      platform_fee_recipient: constants.AddressZero,
     });
     bundleContract = await sdk.getEdition(address);
   });
@@ -37,7 +36,7 @@ describe("Edition Contract", async () => {
   it("gas cost", async () => {
     const cost = await bundleContract.estimator.gasCostOf("mintTo", [
       adminWallet.address,
-      ethers.constants.MaxUint256,
+      constants.MaxUint256,
       "mock://12398172398172389/0",
       1,
     ]);
@@ -47,7 +46,7 @@ describe("Edition Contract", async () => {
   it("gas limit", async () => {
     const limit = await bundleContract.estimator.gasLimitOf("mintTo", [
       adminWallet.address,
-      ethers.constants.MaxUint256,
+      constants.MaxUint256,
       "mock://12398172398172389/0",
       1,
     ]);

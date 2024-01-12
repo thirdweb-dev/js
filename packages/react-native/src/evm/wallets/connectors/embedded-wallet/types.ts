@@ -3,30 +3,12 @@ import {
   AuthProvider,
   RecoveryShareManagement,
   UserWalletStatus,
-  WalletOptions,
 } from "@thirdweb-dev/wallets";
-
-export type OauthOptions = {
-  providers: AuthProvider[];
-  redirectUrl: string;
-};
 
 export type OauthOption = {
   provider: AuthProvider;
   redirectUrl: string;
 };
-
-export interface EmbeddedConnectorOptions {
-  chains?: Chain[];
-  chainId?: number;
-  email?: string;
-  phoneNumber?: string;
-}
-
-export type EmbeddedWalletOptions = Omit<
-  WalletOptions<EmbeddedConnectorOptions>,
-  "clientId"
->;
 
 type EmbeddedAdvanceOptions = {
   recoveryShareManagement?: RecoveryShareManagement;
@@ -98,7 +80,7 @@ export type AuthResult = {
   needsRecoveryCode?: boolean;
 };
 
-export type InitializedUser = {
+type InitializedUser = {
   status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
   recoveryShareManagement: RecoveryShareManagement;
 };

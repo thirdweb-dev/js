@@ -10,7 +10,7 @@ export type AuthOption = "email" | SocialLogin;
 
 export type SocialLogin = "google" | "apple" | "facebook";
 
-export type AuthOptionDictionary = Record<AuthOption, string>;
+type AuthOptionDictionary = Record<AuthOption, string>;
 
 export const AUTH_OPTIONS_ICONS: AuthOptionDictionary = {
   google: GOOGLE_ICON,

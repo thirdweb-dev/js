@@ -4,6 +4,7 @@ import { resolve } from "path";
 import { ERROR_MESSAGES } from "../constants/constants";
 
 // load env variables
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
 
 const apiSecretKey = process.env.TW_SECRET_KEY as string;

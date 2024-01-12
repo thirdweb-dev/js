@@ -18,7 +18,7 @@ import Provider from "ethereum-provider";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 import { getDefaultGasOverrides } from "@thirdweb-dev/sdk";
 
-export type SignerProcedureTypes = {
+type SignerProcedureTypes = {
   getAddress: void;
   signMessage: {
     message: string | Bytes;

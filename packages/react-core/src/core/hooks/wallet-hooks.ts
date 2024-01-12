@@ -26,7 +26,7 @@ import type {
 } from "@thirdweb-dev/wallets";
 import { WalletInstance } from "../types/wallet";
 
-export type WalletId = (typeof walletIds)[keyof typeof walletIds];
+type WalletId = (typeof walletIds)[keyof typeof walletIds];
 
 /**
  * @wallet

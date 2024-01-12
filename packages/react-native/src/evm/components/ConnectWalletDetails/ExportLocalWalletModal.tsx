@@ -23,7 +23,7 @@ import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
 import { useLocale } from "../../providers/ui-context-provider";
 
-export type ExportLocalWalletModalProps = {
+type ExportLocalWalletModalProps = {
   isVisible: boolean;
   onClose: () => void;
 };

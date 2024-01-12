@@ -9,7 +9,7 @@ import { AuthAndWalletRpcReturnType, RecoveryShareManagement } from "../auth";
 // Class constructor types
 // types for class constructors still a little messy right now.
 // Open to PRs from whoever sees this and knows of a cleaner way to handle things
-export type ClientIdConstructorType = {
+type ClientIdConstructorType = {
   /**
    * the clientId found on the dashboard settings {@link https://thirdweb.com/dashboard/settings}
    */

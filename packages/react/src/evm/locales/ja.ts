@@ -20,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function jaDefault(): ThirdwebLocale {
+function jaDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "サインイン",

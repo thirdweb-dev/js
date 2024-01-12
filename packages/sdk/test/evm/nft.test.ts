@@ -1,7 +1,7 @@
 import { NFTMetadataInput } from "../../src/core/schema/nft";
 import { NFTCollection, NFTCollectionInitializer } from "../../src/evm";
 import { sdk, signers, storage } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
+import { constants } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
@@ -25,9 +25,9 @@ describe("NFT Contract", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 1000,
-        fee_recipient: AddressZero,
+        fee_recipient: constants.AddressZero,
         platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
+        platform_fee_recipient: constants.AddressZero,
       },
     );
     nftContract = await sdk.getNFTCollection(address);
@@ -125,7 +125,7 @@ describe("NFT Contract", async () => {
     });
     await nftContract.burn(token.id);
     const nft = await nftContract.get("0");
-    assert.equal(nft.owner, AddressZero);
+    assert.equal(nft.owner, constants.AddressZero);
   });
 
   it("should correctly mint nfts in batch", async () => {
@@ -279,7 +279,9 @@ describe("NFT Contract", async () => {
     // Send one to AddressZero so that we can run the test
     await nftContract.burn(0);
     const records = await nftContract.erc721.getAllOwners();
-    const hasFaultyRecord = records.some((item) => item.owner === AddressZero);
+    const hasFaultyRecord = records.some(
+      (item) => item.owner === constants.AddressZero,
+    );
     assert.strictEqual(hasFaultyRecord, false);
     expect(records).to.be.an("array").length(2);
     expect(records[0].tokenId).to.eq(1);

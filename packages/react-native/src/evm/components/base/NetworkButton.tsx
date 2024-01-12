@@ -126,15 +126,12 @@ export const NetworkButton = ({
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 
-export type SwitchChainModalProps = {
+type SwitchChainModalProps = {
   isVisible: boolean;
   onClose: () => void;
 };
 
-export const SwitchChainModal = ({
-  isVisible,
-  onClose,
-}: SwitchChainModalProps) => {
+const SwitchChainModal = ({ isVisible, onClose }: SwitchChainModalProps) => {
   const l = useLocale();
   const supportedChains = useSupportedChains();
 

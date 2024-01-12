@@ -53,10 +53,6 @@ export class LinksManager {
     }
   }
 
-  addOTP() {
-    this.link.searchParams.set("withOTP", "true");
-  }
-
   addAppName(appName?: string) {
     if (appName) {
       this.link.searchParams.set("appName", appName);
@@ -80,13 +76,6 @@ export class LinksManager {
 
   addPayerWalletAddress(address: string) {
     this.link.searchParams.append("payerWalletAddress", address);
-  }
-
-  addDate(date?: Date) {
-    this.link.searchParams.set(
-      "date",
-      date ? date.toString() : Date.now().toString(),
-    );
   }
 
   getLink(): URL {

@@ -6,7 +6,7 @@ import RightArrowIcon from "./right-arrow";
 import { IconStyleProp } from "./types";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-export type IconProps = {
+type IconProps = {
   type: "back" | "close" | "disconnect" | "down-arrow" | "right-arrow";
   onPress?: () => void;
 } & IconStyleProp;

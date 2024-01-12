@@ -51,15 +51,12 @@ export const ReceiveButton = () => {
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 
-export type ReceiveFundsModalProps = {
+type ReceiveFundsModalProps = {
   isVisible: boolean;
   onClose: () => void;
 };
 
-export const ReceiveFundsModal = ({
-  isVisible,
-  onClose,
-}: ReceiveFundsModalProps) => {
+const ReceiveFundsModal = ({ isVisible, onClose }: ReceiveFundsModalProps) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const address = useAddress();

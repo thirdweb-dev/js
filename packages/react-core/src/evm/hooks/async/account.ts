@@ -123,7 +123,7 @@ export function useAccountAdminsAndSigners(
 /**     WRITE HOOKS     **/
 /** **********************/
 
-export type CreateSessionKeyInput = {
+type CreateSessionKeyInput = {
   keyAddress: string;
   permissions: SignerPermissionsInput;
 };

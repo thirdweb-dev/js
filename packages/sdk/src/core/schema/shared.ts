@@ -1,15 +1,12 @@
 import BN from "bn.js";
 import { BigNumber } from "ethers";
 import { z } from "zod";
+import { isBrowser } from "../../evm/common/utils";
 
 /**
  * @internal
  */
-export const isBrowser = () => typeof window !== "undefined";
-/**
- * @internal
- */
-export const FileOrBufferUnionSchema = /* @__PURE__ */ (() =>
+const FileOrBufferUnionSchema = /* @__PURE__ */ (() =>
   isBrowser()
     ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
     : // @fixme, this is a hack to make browser happy for now
@@ -18,7 +15,7 @@ export const FileOrBufferUnionSchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const FileOrBufferSchema = /* @__PURE__ */ (() =>
+const FileOrBufferSchema = /* @__PURE__ */ (() =>
   z.union([
     FileOrBufferUnionSchema,
     z.object({
@@ -37,29 +34,6 @@ export const MAX_BPS = 10000;
 
 export const BytesLikeSchema = /* @__PURE__ */ (() =>
   z.union([z.array(z.number()), z.string()]))();
-
-export const BigNumberSchema = /* @__PURE__ */ (() =>
-  z
-    .union([
-      z.string(),
-      z.number(),
-      z.bigint(),
-      z.custom<BigNumber>((data) => {
-        return BigNumber.isBigNumber(data);
-      }),
-      z.custom<BN>((data) => {
-        return BN.isBN(data);
-      }),
-    ])
-    .transform((arg) => {
-      const str = BN.isBN(arg)
-        ? new BN(arg).toString()
-        : BigNumber.from(arg).toString();
-      return BigNumber.from(str);
-    }))();
-
-export const BigNumberishSchema = /* @__PURE__ */ (() =>
-  BigNumberSchema.transform((arg) => arg.toString()))();
 
 export const BigNumberTransformSchema = /* @__PURE__ */ (() =>
   z
@@ -106,31 +80,7 @@ export const AmountSchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export type Amount = z.input<typeof AmountSchema>;
-
-/**
- * @internal
- */
 export const QuantitySchema = /* @__PURE__ */ (() =>
   z.union([AmountSchema, z.literal("unlimited")]).default("unlimited"))();
 
 export type Quantity = z.output<typeof QuantitySchema>;
-
-export const RawDateSchema = /* @__PURE__ */ (() =>
-  z.date().transform((i) => {
-    return BigNumber.from(Math.floor(i.getTime() / 1000));
-  }))();
-
-/**
- * Default to now
- */
-export const StartDateSchema = /* @__PURE__ */ (() =>
-  RawDateSchema.default(new Date(0)))();
-
-/**
- * Default to 10 years from now
- */
-export const EndDateSchema = /* @__PURE__ */ (() =>
-  RawDateSchema.default(
-    new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
-  ))();

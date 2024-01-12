@@ -105,6 +105,7 @@ export type { Theme, ThemeOverrides } from "./design-system/index";
 export { en } from "./evm/locales/en";
 export { ja } from "./evm/locales/ja";
 export { es } from "./evm/locales/es";
+export { tl } from "./evm/locales/tl";
 
 export type {
   ThirdwebLocale,

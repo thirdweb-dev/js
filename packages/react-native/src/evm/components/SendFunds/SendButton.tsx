@@ -72,13 +72,13 @@ const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 
 type TXError = Error & { data?: { message?: string } };
 
-export type SendFundsModalProps = {
+type SendFundsModalProps = {
   isVisible: boolean;
   onClose: () => void;
   supportedTokens: SupportedTokens;
 };
 
-export const SendFundsModal = ({
+const SendFundsModal = ({
   isVisible,
   onClose,
   supportedTokens,

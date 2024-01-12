@@ -2,7 +2,7 @@
 import { runCommand } from "./run-command";
 import chalk from "chalk";
 
-export const SUPPORTED_RUBY_VERSION = "2.7.6";
+const SUPPORTED_RUBY_VERSION = "2.7.6";
 
 /**
  * Checks if the current ruby version is supported by the project.

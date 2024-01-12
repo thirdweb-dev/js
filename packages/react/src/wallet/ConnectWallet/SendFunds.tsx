@@ -85,7 +85,7 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
   );
 }
 
-export function SendFundsForm(props: {
+function SendFundsForm(props: {
   onTokenSelect: () => void;
   token?: TokenInfo;
   receiverAddress: string;
@@ -389,7 +389,7 @@ function useToken(tokenAddress: string): {
   };
 }
 
-export function TokenSelector(props: {
+function TokenSelector(props: {
   onTokenSelect: (token?: TokenInfo) => void;
   onBack: () => void;
   supportedTokens: SupportedTokens;

@@ -19,7 +19,7 @@ import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPe
 import IAccountPermissionsV1 from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions_V1.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
-export const fallbackAbi = [
+const fallbackAbi = [
   {
     stateMutability: "payable",
     type: "fallback",

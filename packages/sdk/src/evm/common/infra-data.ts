@@ -1,19 +1,19 @@
-export const CloneFactory = {
+const CloneFactory = {
   name: "TWCloneFactory" as const,
   contractType: "cloneFactory" as const,
 };
 
-export const NativeTokenWrapper = {
+const NativeTokenWrapper = {
   name: "WETH9" as const,
   contractType: "nativeTokenWrapper" as const,
 };
 
-export const Forwarder = {
+const Forwarder = {
   name: "Forwarder" as const,
   contractType: "forwarder" as const,
 };
 
-export const EOAForwarder = {
+const EOAForwarder = {
   name: "ForwarderEOAOnly" as const,
   contractType: "eoaForwarder" as const,
 };

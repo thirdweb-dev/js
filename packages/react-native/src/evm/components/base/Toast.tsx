@@ -4,9 +4,9 @@ import Text from "./Text";
 import { Animated, StyleSheet } from "react-native";
 import { useGlobalTheme } from "../../providers/ui-context-provider";
 
-export const TOAST_HEIGHT = 45;
+const TOAST_HEIGHT = 45;
 
-export type ToastProps = {
+type ToastProps = {
   text: string;
   icon?: ReactElement;
   backgroundColor?: keyof Theme["colors"];

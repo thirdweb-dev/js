@@ -1,6 +1,6 @@
 import type { CustomChain } from "../types/any-evm/chains";
 
-export const ERROR_SUBSTRINGS = [
+const ERROR_SUBSTRINGS = [
   "eip-155",
   "eip155",
   "protected",
@@ -14,7 +14,7 @@ export const ERROR_SUBSTRINGS = [
   "chainid(0)",
 ];
 
-export const ERROR_SUBSTRINGS_COMPOSITE = [
+const ERROR_SUBSTRINGS_COMPOSITE = [
   ["account", "not found"],
   ["wrong", "chainid"],
 ];

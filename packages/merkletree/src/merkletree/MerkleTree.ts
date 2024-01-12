@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 // @ts-expect-error - no types exist for this but it is trivial
 import reverse from "buffer-reverse";
 import { asTree } from "treeify";
-import Base from "./Base";
+import { Base } from "./Base";
 
 // TODO: Clean up and DRY up code
 // Disclaimer: The multiproof code is unaudited and may possibly contain serious issues. It's in a hacky state as is and needs to be rewritten.
@@ -16,7 +16,7 @@ type TLeaf = Buffer;
 type TLayer = any;
 type TFillDefaultHash = (idx?: number, hashFn?: THashFn) => THashFnResult;
 
-export interface Options {
+interface Options {
   /** If set to `true`, an odd node will be duplicated and combined to make a pair to generate the layer hash. */
   duplicateOdd?: boolean;
   /** If set to `true`, the leaves will hashed using the set hashing algorithms. */
@@ -590,13 +590,13 @@ export class MerkleTree extends Base {
         ? // @ts-expect-error - issue from original code
           index - 1
         : this.isBitcoinTree &&
-          index === layer.length - 1 &&
-          i < this.layers.length - 1
-        ? // Proof Generation for Bitcoin Trees
-          index
-        : // Proof Generation for Non-Bitcoin Trees
-          // @ts-expect-error - issue from original code
-          index + 1;
+            index === layer.length - 1 &&
+            i < this.layers.length - 1
+          ? // Proof Generation for Bitcoin Trees
+            index
+          : // Proof Generation for Non-Bitcoin Trees
+            // @ts-expect-error - issue from original code
+            index + 1;
 
       if (pairIndex < layer.length) {
         proof.push({

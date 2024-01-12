@@ -131,7 +131,7 @@ const ThirdwebWalletContext = /* @__PURE__ */ createContext<
   ThirdwebWalletContextData | undefined
 >(undefined);
 
-export type WalletConnectionSetup = {
+type WalletConnectionSetup = {
   signer: Signer | undefined;
   connectionStatus: ConnectionStatus;
   setConnectionStatus: (status: ConnectionStatus) => void;

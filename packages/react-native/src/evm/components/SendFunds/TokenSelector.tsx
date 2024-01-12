@@ -20,7 +20,7 @@ import CloseIcon from "../../assets/close";
 import Text from "../base/Text";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
-export function useToken(tokenAddress: string): {
+function useToken(tokenAddress: string): {
   isLoading: boolean;
   data: TokenInfo | undefined;
 } {

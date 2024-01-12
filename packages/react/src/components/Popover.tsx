@@ -5,7 +5,7 @@ import * as RXPopover from "@radix-ui/react-popover";
 import { Container } from "./basic";
 import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
-export type PopoverProps = {
+type PopoverProps = {
   children: React.ReactNode;
   content: React.ReactNode;
   open?: boolean;

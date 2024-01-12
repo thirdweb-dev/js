@@ -7,7 +7,7 @@ export type WagmiConnectorData<Provider = any> = {
   provider?: Provider;
 };
 
-export interface WagmiConnectorEvents<Provider = any> {
+interface WagmiConnectorEvents<Provider = any> {
   change(data: WagmiConnectorData<Provider>): void;
   connect(data: WagmiConnectorData<Provider>): void;
   message({ type, data }: { type: string; data?: unknown }): void;

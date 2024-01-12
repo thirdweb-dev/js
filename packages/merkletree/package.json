@@ -35,9 +35,7 @@
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/benchmark": "^2.1.4",
     "@types/treeify": "^1.0.2",
-    "benchmark": "^2.1.4",
     "circomlibjs": "^0.1.7",
     "eslint-config-thirdweb": "workspace:*",
     "ethereum-cryptography": "^1.0.3",

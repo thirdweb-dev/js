@@ -5,7 +5,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const AirdropAddressInput = /* @__PURE__ */ (() =>
+const AirdropAddressInput = /* @__PURE__ */ (() =>
   z.object({
     address: AddressOrEnsSchema,
     quantity: AmountSchema.default(1),

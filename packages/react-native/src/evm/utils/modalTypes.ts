@@ -11,16 +11,7 @@ export const CLOSE_MODAL_STATE = (caller: Caller): ModalState => {
   };
 };
 
-export type ModalView =
-  | "Closed"
-  | "ConnectWalletFlow"
-  | "ChooseWallet"
-  | "WalletUI"
-  | "WalletDetails"
-  | "WCSessionRequest"
-  | "WCSessionProposal";
-
-export type Caller =
+type Caller =
   | "init"
   | "ConnectWallet"
   | "ConnectWalletDetails"
@@ -32,25 +23,25 @@ export type Caller =
   | "WCSessionProposalListener"
   | "WCSessionRequestListener";
 
-export type SheetModal = {
+type SheetModal = {
   isOpen: boolean;
   isSheet: true;
   caller: Caller;
 };
 
-export type DialogModal = {
+type DialogModal = {
   isOpen: boolean;
   isSheet: false;
   caller: Caller;
 };
 
-export type ClosedModal = {
+type ClosedModal = {
   view: "Closed";
   data: Record<string, never>;
 } & SheetModal;
 
 // connect wallet flow
-export type ConnectWalletFlowData = {
+type ConnectWalletFlowData = {
   modalTitle?: string;
   modalTitleIconUrl?: string;
   termsOfServiceUrl?: string;
@@ -64,11 +55,11 @@ export type ConnectWalletFlowModal = {
 } & SheetModal;
 
 // wallet details
-export type WalletDetailsData = {
+type WalletDetailsData = {
   address: string;
 };
 
-export type WalletDetailsModal = {
+type WalletDetailsModal = {
   view: "WalletDetails";
   data: WalletDetailsData;
 } & SheetModal;

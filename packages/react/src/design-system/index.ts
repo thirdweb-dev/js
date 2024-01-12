@@ -267,7 +267,7 @@ export function darkTheme(overrides?: ThemeOverrides): Theme {
   return applyThemeOverrides(darkThemeObj, overrides);
 }
 
-export function applyThemeOverrides(
+function applyThemeOverrides(
   baseTheme: Theme,
   themeOverrides: ThemeOverrides,
 ): Theme {

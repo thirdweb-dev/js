@@ -58,10 +58,7 @@ function getClientCredentials(kmsCredentials: GcpKmsSignerCredentials) {
     : {};
 }
 
-export async function sign(
-  digest: Buffer,
-  kmsCredentials: GcpKmsSignerCredentials,
-) {
+async function sign(digest: Buffer, kmsCredentials: GcpKmsSignerCredentials) {
   const kms = new KeyManagementServiceClient(
     getClientCredentials(kmsCredentials),
   );
@@ -125,7 +122,7 @@ export function getEthereumAddress(publicKey: Buffer): string {
   return EthAddr;
 }
 
-export function findEthereumSig(signature: Buffer) {
+function findEthereumSig(signature: Buffer) {
   const decoded = EcdsaSigAsnParse.decode(signature, "der");
   const { r, s } = decoded;
 

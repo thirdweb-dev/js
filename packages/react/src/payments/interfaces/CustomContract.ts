@@ -1,5 +1,5 @@
 // UNCHANGED
-export type SignedPayload = {
+type SignedPayload = {
   payload: { [key: string]: any };
   signature: string;
 };
@@ -29,11 +29,11 @@ export type CustomContractArgWrapper<props, T extends ContractType> =
             };
           }
         : T extends ContractType.THIRDWEB_SIGNATURE
-        ? SignedPayload
-        : undefined;
+          ? SignedPayload
+          : undefined;
     });
 
-export type fetchCustomContractArgsFromPropsResponse = {
+type fetchCustomContractArgsFromPropsResponse = {
   contractType?: ContractType;
   contractArgs?: any;
 };

@@ -6,8 +6,8 @@ import { WCMeta } from "../../types/wc";
 import { useState } from "react";
 import WalletLoadingThumbnail from "./WalletLoadingThumbnail";
 
-export const WALLET_MARGIN = 8;
-export const WALLET_HEIGHT = 80;
+const WALLET_MARGIN = 8;
+const WALLET_HEIGHT = 80;
 
 export const WalletConnectButton = ({
   item,

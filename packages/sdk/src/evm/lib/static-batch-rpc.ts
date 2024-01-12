@@ -8,7 +8,7 @@ const DEFAULT_BATCH_OPTIONS = {
   sizeLimit: DEFAULT_BATCH_SIZE_LIMIT,
 };
 
-export type BatchOptions = Partial<typeof DEFAULT_BATCH_OPTIONS>;
+type BatchOptions = Partial<typeof DEFAULT_BATCH_OPTIONS>;
 
 /**
  * mostly copied from ethers.js directly but make it a StaticJsonRpcProvider

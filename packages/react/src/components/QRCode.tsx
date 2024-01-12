@@ -97,12 +97,12 @@ type Props = {
   imageBackground?: string;
 };
 
-export const PlaceholderKeyframes = keyframes`
+const PlaceholderKeyframes = keyframes`
   0%{ background-position: 100% 0; }
   100%{ background-position: -100% 0; }
 `;
 
-export const QRPlaceholder = /* @__PURE__ */ StyledDiv(() => {
+const QRPlaceholder = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     "--color": theme.colors.skeletonBg,
@@ -173,7 +173,7 @@ export const QRPlaceholder = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-export function QRCodeRenderer({
+function QRCodeRenderer({
   ecl = "M",
   size: sizeProp = 200,
   uri,

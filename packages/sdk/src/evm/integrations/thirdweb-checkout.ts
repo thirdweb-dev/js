@@ -11,7 +11,7 @@ const PAPER_API_VERSION = `2022-08-12` as const;
 /**
  * @internal
  */
-export const PAPER_API_URL =
+const PAPER_API_URL =
   `${PAPER_API_BASE}/${PAPER_API_VERSION}/platform/thirdweb` as const;
 
 const PAPER_CHAIN_ID_MAP = /* @__PURE__ */ {
@@ -25,7 +25,7 @@ const PAPER_CHAIN_ID_MAP = /* @__PURE__ */ {
 /**
  * @internal
  */
-export function parseChainIdToPaperChain(chainId: number) {
+function parseChainIdToPaperChain(chainId: number) {
   invariant(
     chainId in PAPER_CHAIN_ID_MAP,
     `chainId not supported by paper: ${chainId}`,
@@ -47,7 +47,7 @@ type RegisterContractSuccessResponse = {
  * @returns The paper xyz contract id
  * @throws if the contract is not registered on paper xyz
  */
-export async function fetchRegisteredCheckoutId(
+async function fetchRegisteredCheckoutId(
   contractAddress: string,
   chainId: number,
 ): Promise<string> {
@@ -130,7 +130,7 @@ export type PaperCreateCheckoutLinkShardParams = {
 /**
  * @internal
  */
-export type PaperCreateCheckoutLinkIntentParams<
+type PaperCreateCheckoutLinkIntentParams<
   TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 > = PaperCreateCheckoutLinkShardParams &
   (TContract extends PrebuiltEditionDrop
@@ -138,18 +138,18 @@ export type PaperCreateCheckoutLinkIntentParams<
         contractArgs: { tokenId: string };
       }
     : TContract extends SignatureDrop
-    ? {
-        contractArgs: SignedPayload721WithQuantitySignature;
-      }
-    : TContract extends PrebuiltNFTDrop
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
-    : never);
+      ? {
+          contractArgs: SignedPayload721WithQuantitySignature;
+        }
+      : TContract extends PrebuiltNFTDrop
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          {}
+        : never);
 
 /**
  * @internal
  */
-export type PaperCreateCheckoutLinkIntentResult = {
+type PaperCreateCheckoutLinkIntentResult = {
   checkoutLinkIntentUrl: string;
 };
 
@@ -163,7 +163,7 @@ const DEFAULT_PARAMS: Partial<PaperCreateCheckoutLinkShardParams> = {
 /**
  * @internal
  */
-export async function createCheckoutLinkIntent<
+async function createCheckoutLinkIntent<
   TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 >(
   contractId: string,

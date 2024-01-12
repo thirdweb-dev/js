@@ -60,10 +60,6 @@ export const DappContextProvider = (props: React.PropsWithChildren) => {
   );
 };
 
-export const useDappContext = () => {
-  return useContext(DappContext);
-};
-
 export const useSmartWallet = () => {
   const context = useContext(DappContext);
 

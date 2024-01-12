@@ -6,7 +6,7 @@ import { TWSDKContext, ThirdwebSDKContext } from "../contexts/thirdweb-sdk";
 /**
  * @internal
  */
-export function useSDKContext(): TWSDKContext {
+function useSDKContext(): TWSDKContext {
   const ctx = useContext(ThirdwebSDKContext);
   invariant(
     ctx._inProvider,

@@ -19,7 +19,7 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 
-export type ChooseWalletProps = {
+type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   onChooseWallet: (wallet: WalletConfig<any>, data?: any) => void;

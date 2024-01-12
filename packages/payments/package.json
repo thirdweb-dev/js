@@ -44,6 +44,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
+    "eslint-plugin-better-tree-shaking": "0.0.4",
     "typescript": "^5.3.3"
   },
   "scripts": {

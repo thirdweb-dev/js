@@ -124,5 +124,3 @@ export interface Ethereum extends InjectedProviders {
     ];
   }): Promise<null>;
 }
-
-export type { Ethereum as E };

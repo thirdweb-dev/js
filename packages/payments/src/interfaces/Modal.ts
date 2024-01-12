@@ -10,8 +10,3 @@ export interface ModalStyles {
   closeButton?: StyleObject;
   spinner: StyleObject;
 }
-
-export interface ModalInterface {
-  modalContainer?: HTMLElement;
-  modalStyles?: Partial<ModalStyles>;
-}

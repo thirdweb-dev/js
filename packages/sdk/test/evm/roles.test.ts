@@ -1,6 +1,6 @@
 import { Edition, EditionInitializer } from "../../src/evm";
 import { sdk, signers } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
+import { constants } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 
@@ -132,12 +132,12 @@ describe("Roles Contract", async () => {
     await bundleContract.roles.setAll({
       admin: [...oldRoles.admin],
       minter: [...oldRoles.minter],
-      transfer: [AddressZero],
+      transfer: [constants.AddressZero],
     });
     const newRoles = await bundleContract.roles.getAll();
     assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
     assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
-    assert.isTrue(newRoles.transfer.includes(AddressZero));
+    assert.isTrue(newRoles.transfer.includes(constants.AddressZero));
   });
 
   it("Make collection non-transferable with some wallets being able to transfer", async () => {
@@ -154,7 +154,7 @@ describe("Roles Contract", async () => {
       newRoles.transfer.includes(bobWallet.address) &&
         newRoles.transfer.includes(samWallet.address) &&
         newRoles.transfer.length === 2 &&
-        !newRoles.transfer.includes(AddressZero),
+        !newRoles.transfer.includes(constants.AddressZero),
     );
   });
 });

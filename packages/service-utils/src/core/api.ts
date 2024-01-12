@@ -49,7 +49,7 @@ export type AccountMetadata = {
   rateLimits: Partial<Record<ServiceName, number>>;
 };
 
-export type ApiResponse = {
+type ApiResponse = {
   data: ApiKeyMetadata | null;
   error: {
     code: string;
@@ -58,7 +58,7 @@ export type ApiResponse = {
   };
 };
 
-export type ApiAccountResponse = {
+type ApiAccountResponse = {
   data: AccountMetadata | null;
   error: {
     code: string;

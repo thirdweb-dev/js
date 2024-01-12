@@ -18,7 +18,7 @@ import { localWallet } from "../../wallets/wallets/local-wallet";
 import { TextInput } from "../base";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
-export type LocalWalletImportModalProps = {
+type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
   onWalletImported: (wallet: LocalWalletInstance) => void;

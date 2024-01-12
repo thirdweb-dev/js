@@ -29,18 +29,16 @@
     "react-native-url-polyfill": "^2.0.0"
   },
   "peerDependencies": {
-    "ethers": "^5.5.1",
-    "react": "^18.0.0",
     "react-native": ">=0.70.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.8",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/node": "^18.17.1",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
-    "ethers": "^5.7.2",
-    "react": "^18.2.0",
+    "eslint-plugin-i18next": "^6.0.3",
+    "eslint-plugin-tsdoc": "^0.2.16",
+    "metro-react-native-babel-preset": "^0.77.0",
     "react-native": "^0.71.11",
     "typescript": "^5.3.3"
   }

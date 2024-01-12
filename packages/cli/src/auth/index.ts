@@ -82,7 +82,7 @@ export async function logoutUser(
   }
 }
 
-export async function getSession(tokenPath: string, configCredsPath: string) {
+async function getSession(tokenPath: string, configCredsPath: string) {
   if (!fs.existsSync(tokenPath) || !fs.existsSync(configCredsPath)) {
     return null;
   }
@@ -93,9 +93,7 @@ export async function getSession(tokenPath: string, configCredsPath: string) {
   }
 }
 
-export const authenticateUser = async (
-  props: LoginProps = defaultLoginProps,
-) => {
+const authenticateUser = async (props: LoginProps = defaultLoginProps) => {
   const { credsConfigPath, cliWalletPath, tokenPath } = props.configPaths;
   const waitForDashboard = spinner(
     "Waiting for a response from the dashboard",

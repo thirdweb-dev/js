@@ -11,7 +11,7 @@ type RepoInfo = {
   filePath: string;
 };
 
-export async function isUrlOk(url: string): Promise<boolean> {
+async function isUrlOk(url: string): Promise<boolean> {
   const res = await got.head(url).catch((e) => e);
   return res.statusCode === 200;
 }

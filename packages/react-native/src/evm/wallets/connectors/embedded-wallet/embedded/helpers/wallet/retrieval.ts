@@ -21,7 +21,7 @@ function getWalletPrivateKeyFromShares(shares: string[]) {
   return privateKey;
 }
 
-export function getUserEtherJsWalletFromShares(args: {
+function getUserEtherJsWalletFromShares(args: {
   shares: string[];
 }): ethers.Wallet {
   const { shares } = args;
@@ -50,7 +50,7 @@ export async function getExistingUserEtherJsWallet(clientId: string) {
  * @returns The requested shares
  * @throws if attempting to get deviceShare when it's not present
  */
-export async function getShares<
+async function getShares<
   A extends boolean,
   D extends boolean,
   R extends boolean,
@@ -148,14 +148,11 @@ export async function getShares<
   };
 }
 
-export function getWalletShareById(
-  shares: string[],
-  id: number = DEVICE_SHARE_ID,
-) {
+function getWalletShareById(shares: string[], id: number = DEVICE_SHARE_ID) {
   return secrets.newShare(id, shares);
 }
 
-export function getWalletAddressFromShares(shares: string[]) {
+function getWalletAddressFromShares(shares: string[]) {
   const wallet = getUserEtherJsWalletFromShares({
     shares,
   });

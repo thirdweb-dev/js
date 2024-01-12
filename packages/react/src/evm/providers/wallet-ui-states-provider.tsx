@@ -6,7 +6,7 @@ import { useTWLocale } from "./locale-provider";
 
 type BoolSetter = (value: boolean) => void;
 
-export type ModalConfig = {
+type ModalConfig = {
   title: string;
   theme: "light" | "dark" | Theme;
   data: any;

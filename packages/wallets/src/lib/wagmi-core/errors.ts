@@ -1,6 +1,3 @@
-import type { WagmiConnector } from "../wagmi-connectors/WagmiConnector";
-import type { utils } from "ethers";
-
 /**
  * Error subclass implementing JSON RPC 2.0 errors and Ethereum RPC errors per EIP-1474.
  * @see https://eips.ethereum.org/EIPS/eip-1474
@@ -118,16 +115,7 @@ export class SwitchChainError extends ProviderRpcError {
     super("Error switching chain", { cause, code: 4902 });
   }
 }
-/**
- * @internal
- */
-export class SwitchChainNotSupportedError extends Error {
-  name = "SwitchChainNotSupportedError";
 
-  constructor({ connector }: { connector: WagmiConnector }) {
-    super(`"${connector.name}" does not support programmatic chain switching.`);
-  }
-}
 /**
  * @internal
  */
@@ -138,13 +126,3 @@ export class UserRejectedRequestError extends ProviderRpcError {
     super("User rejected request", { cause, code: 4001 });
   }
 }
-
-/**
- * @internal
- */
-// Ethers does not have an error type so we can use this for casting
-// https://github.com/ethers-io/ethers.js/blob/main/packages/logger/src.ts/index.ts#L268
-export type EthersError = Error & {
-  reason: string;
-  code: keyof typeof utils.Logger.errors;
-};

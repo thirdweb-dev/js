@@ -67,7 +67,7 @@ export type LibraryType =
   | "web3py"
   | "playmaker"
   | "none";
-export type AppType = "app" | "contract" | "none";
+
 export type ContractLibrariesType =
   | "brownie"
   | "foundry"

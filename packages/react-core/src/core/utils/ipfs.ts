@@ -1,10 +1,5 @@
 import mime from "mime/lite.js";
 
-// TODO legacy remove this when possible
-export interface IPFSResolverOptions {
-  gatewayUrl: string;
-}
-
 /**
  * @internal
  */

@@ -1,13 +1,11 @@
-export const AUTH_SHARE_ID = 3;
+const AUTH_SHARE_ID = 3;
 export const AUTH_SHARE_INDEX = AUTH_SHARE_ID - 1;
-export const NO_EXISTING_WALLET_FOUND_FOR_USER =
-  "User does not have an existing wallet. Create a wallet first";
 
 export const DEVICE_SHARE_ID = 1;
 export const DEVICE_SHARE_INDEX = DEVICE_SHARE_ID - 1;
 export const DEVICE_SHARE_MISSING_MESSAGE = "Missing device share.";
 
-export const RECOVERY_SHARE_ID = 2;
+const RECOVERY_SHARE_ID = 2;
 export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
 
 export const AWS_REGION = "us-west-2";

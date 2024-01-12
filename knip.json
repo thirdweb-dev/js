@@ -1,0 +1,188 @@
+{
+  "$schema": "https://unpkg.com/knip@3/schema.json",
+  "ignoreWorkspaces": [
+    "packages/contracts-js",
+    "packages/generated-abis",
+    "packages/eslint-config-thirdweb",
+    "packages/tw-tsconfig",
+    "packages/typedoc-gen",
+    "test/**"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": "scripts/*.{js,ts,mjs}",
+      "project": "scripts/**/*.{js,ts,mjs}",
+      "ignoreBinaries": ["only-allow"]
+    },
+    "packages/*": {
+      "entry": "src/index.ts!",
+      "project": "src/**/*",
+      "eslint": true,
+      "ignoreDependencies": []
+    },
+    "packages/auth": {
+      "entry": [
+        "src/index.ts!",
+        "src/express/index.ts!",
+        "src/next/index.ts!",
+        "src/next-auth/index.ts!",
+        "src/fastify/index.ts!",
+        "src/evm/index.ts!"
+      ],
+      "project": "src/**/*",
+      "mocha": {
+        "config": "test/.mocharc.json",
+        "entry": "test/*.ts"
+      },
+      "eslint": {
+        "config": ".eslintrc.js"
+      },
+      "ignoreDependencies": ["@types/mocha"]
+    },
+    "packages/chains": {
+      "entry": ["src/index.ts!", "scripts/*.ts", "test/*.test.ts"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.js"
+      },
+      "ignoreDependencies": []
+    },
+    "packages/cli": {
+      "entry": [
+        "src/cli/index.ts!",
+        "src/helpers/hardhat-config-extractor.ts!"
+      ],
+      "jest": {
+        "config": "jest.config.js",
+        "entry": "test/*.test.ts"
+      },
+      "ignoreDependencies": ["@types/jest"]
+    },
+    "packages/crypto": {
+      "entry": ["src/index.ts!", "test/*.ts", "benchmark/*.ts"],
+      "project": "src/**/*",
+      "eslint": true,
+      "ignoreDependencies": []
+    },
+    "packages/merkletree": {
+      "entry": ["src/index.ts!", "test/*.{ts,js}"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "ignoreDependencies": ["buffer"]
+    },
+    "packages/payments": {
+      "entry": ["src/index.ts!"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "ignoreDependencies": []
+    },
+    "packages/react": {
+      "entry": [
+        "src/index.ts!",
+        "src/evm/index.ts!",
+        "src/evm/connectors/**/index.ts!"
+      ],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "ignoreDependencies": []
+    },
+    "packages/react-core": {
+      "entry": ["src/index.ts!", "src/evm/index.ts!"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "ignoreDependencies": []
+    },
+    "packages/react-native": {
+      "entry": ["src/index.ts!"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "babel": {
+        "config": ".babelrc"
+      },
+      "ignoreDependencies": [],
+      "ignore": ["src/evm/types/react-native-aes-gcm-crypto.ts"]
+    },
+    "packages/react-native-compat": {
+      "entry": ["src/index.ts!"],
+      "project": "src/**/*",
+      "eslint": {
+        "config": ".eslintrc.cjs"
+      },
+      "babel": {
+        "config": "babel.config.js"
+      },
+      "ignoreDependencies": []
+    },
+    "packages/sdk": {
+      "entry": [
+        "src/index.ts!",
+        "src/evm/index.ts!",
+        "src/evm/functions/index.ts!",
+        "src/evm/zksync/index.ts!",
+        "test/evm/*.ts"
+      ],
+      "project": ["src/**/*"],
+      "mocha": {
+        "config": "test/evm/.mocharc.json",
+        "entry": "test/evm/*.ts"
+      },
+      "eslint": true,
+      "ignoreDependencies": ["@types/mocha"],
+      "ignoreBinaries": ["make"]
+    },
+    "packages/service-utils": {
+      "entry": [
+        "src/index.ts!",
+        "src/cf-worker/index.ts!",
+        "src/node/index.ts!"
+      ],
+      "project": "src/**/*",
+      "eslint": true,
+      "jest": {
+        "entry": "src/**/*.test.ts"
+      },
+      "ignoreDependencies": ["@types/jest"]
+    },
+    "packages/storage": {
+      "entry": ["src/index.ts!"],
+      "project": "src/**/*",
+      "eslint": true,
+      "mocha": {
+        "config": ".mocharc.json",
+        "entry": "test/*.ts"
+      },
+      "ignoreDependencies": ["@types/mocha"]
+    },
+    "packages/unity-js-bridge": {
+      "entry": ["src/thirdweb-bridge.ts!"],
+      "project": "src/**/*",
+      "eslint": true,
+      "ignoreDependencies": []
+    },
+    "packages/wallets": {
+      "entry": [
+        "src/index.ts!",
+        "src/evm/index.ts!",
+        "src/evm/connectors/*/index.ts!",
+        "src/evm/connectors/embedded-wallet/implementations/index.ts!",
+        "src/evm/wallets/**!"
+      ],
+      "project": ["src/**/*"],
+      "jest": {
+        "entry": "test/*.test.ts"
+      },
+      "eslint": true,
+      "ignoreDependencies": ["buffer", "@types/jest"]
+    }
+  }
+}

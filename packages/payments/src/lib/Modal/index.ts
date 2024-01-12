@@ -4,7 +4,7 @@ import { getDefaultModalStyles, modalKeyframeAnimations } from "./styles";
 
 import packageJson from "../../../package.json";
 
-export const MODAL_ID = "paper-js-sdk-modal";
+const MODAL_ID = "paper-js-sdk-modal";
 
 export class Modal {
   protected container: HTMLElement;

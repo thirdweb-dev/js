@@ -2,7 +2,7 @@
 import type { PaymentsSDKError } from "../interfaces/PaymentsSdkError";
 import { PayWithCryptoErrorCode } from "../interfaces/PaymentsSdkError";
 
-export interface IErrorObject {
+interface IErrorObject {
   isErrorObject: boolean;
   title: PayWithCryptoErrorCode;
   description: string;

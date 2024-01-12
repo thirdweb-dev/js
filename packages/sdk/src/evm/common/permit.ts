@@ -122,66 +122,6 @@ async function getChainDomainSeperator(
 /**
  * @internal
  */
-export async function signDAIPermit(
-  signer: Signer,
-  currencyAddress: string,
-  owner: string,
-  spender: string,
-  allowed = true,
-  deadline?: BigNumberish,
-  nonce?: BigNumberish,
-) {
-  const [name, chainId, signerNonce] = await Promise.all([
-    getTokenName(signer, currencyAddress),
-    signer.getChainId(),
-    getSignerNonce(signer, currencyAddress),
-  ]);
-  const domain = await getChainDomainSeperator(signer, {
-    name,
-    version: "1",
-    chainId,
-    verifyingContract: currencyAddress,
-  });
-
-  nonce = nonce || signerNonce.toString();
-  deadline = deadline || constants.MaxUint256;
-
-  const message = {
-    owner,
-    spender,
-    nonce,
-    deadline,
-    value: 0,
-    allowed,
-  };
-
-  const types = {
-    Permit: [
-      { name: "holder", type: "address" },
-      { name: "spender", type: "address" },
-      { name: "nonce", type: "uint256" },
-      { name: "expiry", type: "uint256" },
-      { name: "allowed", type: "bool" },
-    ],
-  };
-
-  const { signature } = await signTypedDataInternal(signer, domain, types, {
-    holder: owner,
-    spender,
-    nonce,
-    expiry: deadline,
-    allowed,
-  });
-
-  return {
-    message,
-    signature,
-  };
-}
-
-/**
- * @internal
- */
 export async function signEIP2612Permit(
   signer: Signer,
   currencyAddress: string,

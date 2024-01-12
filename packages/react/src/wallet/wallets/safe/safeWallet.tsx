@@ -79,7 +79,7 @@ export const safeWallet = (
   };
 };
 
-export const SafeConnectUI = (
+const SafeConnectUI = (
   props: ConnectUIProps<SafeWallet> & { personalWallets: WalletConfig[] },
 ) => {
   const { personalWalletConnection } = useWalletContext();

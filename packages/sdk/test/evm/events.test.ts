@@ -6,11 +6,10 @@ import {
   NFTDropInitializer,
 } from "../../src/evm";
 import { sdk, signers } from "./before-setup";
-import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { MockContractPublisher__factory } from "@thirdweb-dev/contracts-js";
 import { expect } from "chai";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 
 describe("Events", async () => {
   let dropContract: NFTDrop;
@@ -31,11 +30,11 @@ describe("Events", async () => {
           description: "Test contract from tests",
           image:
             "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-          primary_sale_recipient: AddressZero,
+          primary_sale_recipient: constants.AddressZero,
           seller_fee_basis_points: 500,
-          fee_recipient: AddressZero,
+          fee_recipient: constants.AddressZero,
           platform_fee_basis_points: 10,
-          platform_fee_recipient: AddressZero,
+          platform_fee_recipient: constants.AddressZero,
         },
       ),
     );
@@ -48,11 +47,11 @@ describe("Events", async () => {
           description: "Test contract from tests",
           image:
             "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-          primary_sale_recipient: AddressZero,
+          primary_sale_recipient: constants.AddressZero,
           seller_fee_basis_points: 500,
-          fee_recipient: AddressZero,
+          fee_recipient: constants.AddressZero,
           platform_fee_basis_points: 10,
-          platform_fee_recipient: AddressZero,
+          platform_fee_recipient: constants.AddressZero,
         },
       ),
     );
@@ -65,11 +64,11 @@ describe("Events", async () => {
           description: "Test NFT contract from tests",
           image:
             "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-          primary_sale_recipient: AddressZero,
+          primary_sale_recipient: constants.AddressZero,
           seller_fee_basis_points: 1000,
-          fee_recipient: AddressZero,
+          fee_recipient: constants.AddressZero,
           platform_fee_basis_points: 10,
-          platform_fee_recipient: AddressZero,
+          platform_fee_recipient: constants.AddressZero,
         },
       ),
     );
@@ -85,7 +84,7 @@ describe("Events", async () => {
       }
       txStatus = event.status;
     });
-    await dropContract.setApprovalForAll(ethers.constants.AddressZero, true);
+    await dropContract.setApprovalForAll(constants.AddressZero, true);
     dropContract.events.removeAllListeners();
   });
 

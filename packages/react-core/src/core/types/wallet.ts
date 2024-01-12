@@ -1,11 +1,7 @@
 import type { AbstractClientWallet, Chain } from "@thirdweb-dev/wallets";
 import { WalletOptions as WalletOptions_ } from "@thirdweb-dev/wallets";
 
-export type ConnectionStatus =
-  | "unknown"
-  | "connected"
-  | "disconnected"
-  | "connecting";
+type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 
 // these are extra options provided by the react-core package
 
@@ -61,8 +57,9 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
   isHeadless?: boolean;
 };
 
-export type NonNullable<T> = T extends null | undefined ? never : T;
-export type WalletConnectParams<I extends WalletInstance> = Parameters<
+type NonNullable<T> = T extends null | undefined ? never : T;
+
+type WalletConnectParams<I extends WalletInstance> = Parameters<
   I["connect"]
 >[0];
 
