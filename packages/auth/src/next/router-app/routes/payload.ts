@@ -1,9 +1,7 @@
 import type { NextRequest } from "next/server";
 
-import {
-  PayloadBodySchema,
-  ThirdwebAuthContext,
-} from "../types";
+import type { ThirdwebAuthContext } from "../types";
+import { PayloadBodySchema } from "../types";
 
 export default async function handler(
   req: NextRequest,
@@ -11,7 +9,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return Response.json(
-      { error: "Invalid method. Only POST supported." },
+      { error: "Invalid method. Only POST supported" },
       { status: 405 },
     );
   }
@@ -21,7 +19,7 @@ export default async function handler(
 
   if (!parsedPayload.success) {
     return Response.json(
-      { error: "Please provide an address." },
+      { error: "Please provide an address" },
       { status: 400 },
     );
   }

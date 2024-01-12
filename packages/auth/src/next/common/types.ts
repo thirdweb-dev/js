@@ -1,7 +1,7 @@
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { z } from "zod";
 
-import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
+import { Json, LoginPayloadOutputSchema, User } from "../../core";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
@@ -30,10 +30,7 @@ export type ThirdwebAuthUser<
   data?: TData;
 };
 
-export type ThirdwebAuthConfig<
-  TData extends Json = Json,
-  TSession extends Json = Json,
-> = {
+export type ThirdwebAuthConfigShared = {
   domain: string;
   wallet: GenericAuthWallet;
   authOptions?: {
@@ -58,29 +55,8 @@ export type ThirdwebAuthConfig<
     sameSite?: "lax" | "strict" | "none";
     secure?: boolean;
   };
-  callbacks?: {
-    onLogin?:
-      | ((address: string) => void | TSession)
-      | ((address: string) => Promise<void | TSession>);
-    onToken?:
-      | ((token: string) => void)
-      | ((token: string) => Promise<void>);
-    onUser?:
-      | ((user: User<TSession>) => void | TData)
-      | ((user: User<TSession>) => Promise<void | TData>);
-    onLogout?:
-      | ((user: User) => void)
-      | ((user: User) => Promise<void>);
-  };
 };
 
-export type ThirdwebAuthContext<
-  TData extends Json = Json,
-  TSession extends Json = Json,
-> = Omit<Omit<ThirdwebAuthConfig<TData, TSession>, "wallet">, "domain"> & {
-  auth: ThirdwebAuth;
-};
-
-export type NextContext = {
+export type ThirdwebNextContext = {
   params?: Record<string, string | string[]>
 };

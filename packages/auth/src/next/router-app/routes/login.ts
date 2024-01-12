@@ -4,12 +4,10 @@ import { NextResponse } from "next/server";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
-import { GenerateOptionsWithOptionalDomain } from "../../core";
-import {
-  LoginPayloadBodySchema,
-  ThirdwebAuthContext,
-} from "../types";
+} from "../../../constants";
+import type { GenerateOptionsWithOptionalDomain } from "../../../core";
+import type { ThirdwebAuthContext } from "../types";
+import { LoginPayloadBodySchema } from "../types";
 
 export default async function handler(
   req: NextRequest,
@@ -17,7 +15,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return Response.json(
-      { error: "Invalid method. Only POST supported." },
+      { error: "Invalid method. Only POST supported" },
       { status: 405 },
     );
   }
@@ -28,7 +26,7 @@ export default async function handler(
   // Get signed login payload from the frontend
   if (!parsedPayload.success) {
     return Response.json(
-      { error: "Invalid login payload." },
+      { error: "Invalid login payload" },
       { status: 400 },
     );
   }

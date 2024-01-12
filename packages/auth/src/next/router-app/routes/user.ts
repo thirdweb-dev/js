@@ -5,9 +5,9 @@ import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_DEFAULT_REFRESH_INTERVAL_IN_SECONDS,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
+} from "../../../constants";
 import { getToken, getUser } from "../helpers/user";
-import { ThirdwebAuthContext } from "../types";
+import type { ThirdwebAuthContext } from "../types";
 
 export default async function handler(
   req: NextRequest,
@@ -15,7 +15,7 @@ export default async function handler(
 ) {
   if (req.method !== "GET") {
     return Response.json(
-      { error: "Invalid method. Only GET supported." },
+      { error: "Invalid method. Only GET supported" },
       { status: 405 },
     );
   }

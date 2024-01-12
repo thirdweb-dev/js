@@ -121,7 +121,7 @@
     "ethers": "^5",
     "express": "^4",
     "fastify": "^4.24.2",
-    "next": "^13.4 || ^14",
+    "next": "^12 || ^13 || ^14",
     "next-auth": "^4"
   },
   "peerDependenciesMeta": {

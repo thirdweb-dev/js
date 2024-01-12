@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getActiveCookie, getUser } from "../helpers/user";
-import { ThirdwebAuthContext } from "../types";
+import type { ThirdwebAuthContext } from "../types";
 
 export default async function handler(
   req: NextRequest,
@@ -10,7 +10,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return Response.json(
-      { error: "Invalid method. Only POST supported." },
+      { error: "Invalid method. Only POST supported" },
       { status: 405 },
     );
   }
@@ -18,7 +18,7 @@ export default async function handler(
   const activeCookie = getActiveCookie();
   if (!activeCookie) {
     return Response.json(
-      { error: "No logged in user to logout." },
+      { error: "No logged in user to logout" },
       { status: 400 },
     );
   }
@@ -32,7 +32,7 @@ export default async function handler(
 
   // Set the access token to 'none' and expire in 5 seconds
   const response = NextResponse.json(
-    { message: "Successfully logged out." },
+    { message: "Successfully logged out" },
     { status: 200 },
   );
 

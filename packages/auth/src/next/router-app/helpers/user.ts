@@ -3,12 +3,10 @@ import { cookies, headers } from "next/headers";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
-import { Json } from "../../core";
-import {
-  ThirdwebAuthContext,
-  ThirdwebAuthUser,
-} from "../types";
+} from "../../../constants";
+import type { Json } from "../../../core";
+import type { ThirdwebAuthUser } from "../../common/types";
+import type { ThirdwebAuthContext } from "../types";
 
 export function getCookie(cookie: string): string | undefined {
   return cookies().get(cookie)?.value;
