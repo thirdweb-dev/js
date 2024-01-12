@@ -73,6 +73,10 @@ const employees = [
     name: "Firekeeper",
   },
   {
+    name: "Ian Mukherjee",
+    twitter: "roomakdoteth",
+  },
+  {
     name: "Isaac Dubuque",
     twitter: "isaac_dubuque",
   },
@@ -122,14 +126,11 @@ const employees = [
   },
   {
     name: "Mago Khamidov",
-    twitter: "KosmosDeveloper",
+    twitter: "thirdwebmago",
   },
   {
     name: "Manan Tank",
     twitter: "MananTank_",
-  },
-  {
-    name: "Matt Cheong",
   },
   {
     name: "Mike Shin",
@@ -307,7 +308,7 @@ const About: ThirdwebNextPage = () => {
                     Steven Bartlett
                   </Heading>
                   <TrackedLink
-                    href="https://twitter.com/SteveBartlettSC"
+                    href="https://twitter.com/StevenBartlett"
                     isExternal
                     category="team"
                     label="Steven Bartlett"
