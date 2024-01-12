@@ -931,6 +931,9 @@ importers:
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
+      react-native-mmkv:
+        specifier: '>=2.11.0'
+        version: 2.11.0(react-native@0.71.11)(react@18.2.0)
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.71.11)(react@18.2.0)
@@ -1047,9 +1050,6 @@ importers:
       react-native:
         specifier: ^0.71.11
         version: 0.71.11(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
-      react-native-mmkv:
-        specifier: 2.5.1
-        version: 2.5.1(react-native@0.71.11)(react@18.2.0)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -27499,6 +27499,16 @@ packages:
     dev: false
     optional: true
 
+  /react-native-mmkv@2.11.0(react-native@0.71.11)(react@18.2.0):
+    resolution: {integrity: sha512-28PdUHjZJmAw3q+8zJDAAdohnZMpDC7WgRUJxACOMkcmJeqS3u5cKS/lSq2bhf1CvaeIiHYHUWiyatUjMRCDQQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '>=0.71.0'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.71.11(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
+    dev: false
+
   /react-native-mmkv@2.4.3(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-0hYNOTbsjJ5j5cpX+qjwReGIxuYE9MWRsyPQ72fTOvzmEjYXCF4Wr2VQoqx8R6W1/Uinekvln7dGvJ4RExmHhQ==}
     peerDependencies:
@@ -27508,16 +27518,6 @@ packages:
       react: 18.2.0
       react-native: 0.71.11(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
     dev: false
-
-  /react-native-mmkv@2.5.1(react-native@0.71.11)(react@18.2.0):
-    resolution: {integrity: sha512-5eQu25z3H6zf6w0NkJoTuFEFrbOu6luZxZ6+rK1W+XwY/rjPSFZFQPVtMaz3im90RbILFXXM/KrFGZrpaJJRoQ==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-    dependencies:
-      react: 18.2.0
-      react-native: 0.71.11(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
-    dev: true
 
   /react-native-modal@13.0.1(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-UB+mjmUtf+miaG/sDhOikRfBOv0gJdBU2ZE1HtFWp6UixW9jCk/bhGdHUgmZljbPpp0RaO/6YiMmQSSK3kkMaw==}
