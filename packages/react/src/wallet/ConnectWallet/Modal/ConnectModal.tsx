@@ -56,12 +56,17 @@ export const ConnectModalContent = (props: {
   const title = modalConfig.title;
   const theme = modalConfig.theme;
   const modalSize = modalConfig.modalSize;
+  const onConnect = modalConfig.onConnect;
   const isWideModal = modalSize === "wide";
 
   const { user } = useUser();
   const authConfig = useThirdwebAuthContext();
 
   const handleConnected = useCallback(() => {
+    if (onConnect) {
+      onConnect();
+    }
+
     const requiresSignIn = modalConfig.auth?.loginOptional
       ? false
       : !!authConfig?.authUrl && !user?.address;
@@ -86,6 +91,7 @@ export const ConnectModalContent = (props: {
     setScreen,
     onShow,
     onClose,
+    onConnect,
   ]);
 
   const handleBack = useCallback(() => {
