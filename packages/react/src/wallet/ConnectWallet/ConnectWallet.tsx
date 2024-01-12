@@ -137,7 +137,7 @@ export type ConnectWalletProps = {
     /**
      * specify whether signing in is optional or not.
      *
-     * By default it is `true` if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+     * By default it is `false` ( sign in required )  if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
      */
     loginOptional?: boolean;
     /**
@@ -318,6 +318,32 @@ export type ConnectWalletProps = {
    * ```
    */
   hideDisconnect?: boolean;
+
+  /**
+   * Callback to be called on successful connection of wallet
+   *
+   * ```tsx
+   * <ConnectWallet
+   *  onConnect={() => {
+   *    console.log("wallet connected")
+   *  }}
+   * />
+   * ```
+   *
+   * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
+   *
+   * ```tsx
+   * <ConnectWallet
+   *  auth={{
+   *   onLogin: () => {
+   *     console.log("wallet connected and signed in")
+   *   }
+   *  }}
+   * />
+   * ```
+   *
+   */
+  onConnect?: () => void;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -365,7 +391,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * ### auth (optional)
  * The object contains the following properties to customize the authentication
- * - `loginOptional` - specify whether signing in is optional or not. By default it is `true` if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+ * - `loginOptional` - specify whether signing in is optional or not. By default it is `false` ( Sign in is required ) if `authConfig` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
  * - `onLogin` - Callback to be called after user signs in with their wallet
  * - `onLogout` - Callback to be called after user signs out
  *
@@ -671,6 +697,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   welcomeScreen: props.welcomeScreen,
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
+                  onConnect: props.onConnect,
                 });
                 setIsWalletModalOpen(true);
               }}
