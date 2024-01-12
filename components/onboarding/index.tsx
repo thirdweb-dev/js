@@ -47,7 +47,7 @@ export const Onboarding: React.FC = () => {
 
   const isEmbeddedWallet = wallet?.walletId === walletIds.embeddedWallet;
 
-  const handleSave = () => {
+  const handleSave = (email?: string) => {
     // if account is not ready yet we cannot do anything here
     if (!account) {
       return;
@@ -80,13 +80,33 @@ export const Onboarding: React.FC = () => {
       action: "onboardingStep",
       label: "next",
       data: {
-        email: account.unconfirmedEmail || updatedEmail,
+        email: email || account.unconfirmedEmail || updatedEmail,
         currentStep: state,
         nextStep,
       },
     });
 
     setState(nextStep);
+  };
+
+  const handleDuplicateEmail = (email: string) => {
+    // if account is not ready yet we cannot do anything here
+    if (!account) {
+      return;
+    }
+
+    trackEvent({
+      category: "account",
+      action: "onboardingStep",
+      label: "next",
+      data: {
+        email,
+        currentStep: state,
+        nextStep: "linking",
+      },
+    });
+
+    setState("linking");
   };
 
   const handleEmbeddedWalletConfirmation = () => {
@@ -191,11 +211,11 @@ export const Onboarding: React.FC = () => {
           account={account}
           onSave={(email) => {
             setUpdatedEmail(email);
-            handleSave();
+            handleSave(email);
           }}
           onDuplicate={(email) => {
             setUpdatedEmail(email);
-            setState("linking");
+            handleDuplicateEmail(email);
           }}
         />
       )}

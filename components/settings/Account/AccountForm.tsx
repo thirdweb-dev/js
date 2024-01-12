@@ -130,6 +130,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           action: "update",
           label: "error",
           error,
+          fromOnboarding: !!onDuplicateError,
         });
       },
     });
