@@ -223,7 +223,6 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  *
  * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
  *
- * @example
  * ```ts
  * import { lightTheme } from "@thirdweb-dev/react";
  * const customTheme = lightTheme({
