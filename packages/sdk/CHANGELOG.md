@@ -1,5 +1,22 @@
 # @thirdweb-dev/sdk
 
+## 4.0.26
+
+### Patch Changes
+
+- [#2143](https://github.com/thirdweb-dev/js/pull/2143) [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimations for local and embedded wallets
+
+- [#1887](https://github.com/thirdweb-dev/js/pull/1887) [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add pagination to ERC721's getAllOwners method
+
+- [#2139](https://github.com/thirdweb-dev/js/pull/2139) [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve beacon from beacon-proxy
+
+- Updated dependencies [[`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f)]:
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/contracts-js@1.3.16
+  - @thirdweb-dev/crypto@0.2.0
+  - @thirdweb-dev/merkletree@0.2.0
+  - @thirdweb-dev/storage@2.0.8
+
 ## 4.0.25
 
 ### Patch Changes
