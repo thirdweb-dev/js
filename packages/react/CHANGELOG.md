@@ -1,5 +1,30 @@
 # @thirdweb-dev/react
 
+## 4.3.1
+
+### Patch Changes
+
+- [#2169](https://github.com/thirdweb-dev/js/pull/2169) [`e249a568`](https://github.com/thirdweb-dev/js/commit/e249a56892f04df1313b5cbd40d21a0bd5ac5f4e) Thanks [@MananTank](https://github.com/MananTank)! - Add `onConnect` prop to `ConnectWallet` and `ConnectEmbed` components.
+
+  ```tsx
+  <ConnectWallet
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.3.1
+
 ## 4.3.0
 
 ### Minor Changes

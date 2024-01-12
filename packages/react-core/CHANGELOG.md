@@ -1,5 +1,7 @@
 # @thirdweb-dev/react-core
 
+## 4.3.1
+
 ## 4.3.0
 
 ### Minor Changes

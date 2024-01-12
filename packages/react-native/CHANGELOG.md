@@ -1,5 +1,14 @@
 # @thirdweb-dev/react-native
 
+## 0.6.1
+
+### Patch Changes
+
+- [#2165](https://github.com/thirdweb-dev/js/pull/2165) [`7a74bd9c`](https://github.com/thirdweb-dev/js/commit/7a74bd9c8a2be42ea2827a3e480f8ac0d60bf1d5) Thanks [@iketw](https://github.com/iketw)! - Upgrade min RN version requirenment to 0.71 and mmkv to 2.11.0
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.3.1
+
 ## 0.6.0
 
 ### Minor Changes
