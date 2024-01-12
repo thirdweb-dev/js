@@ -62,6 +62,7 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: |
           pnpm typedoc
+          pnpm build
           pnpm generate-docs
           pnpm generate-snippets
           git config --local user.email "action@github.com"
