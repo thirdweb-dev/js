@@ -72,6 +72,10 @@
       "outputs": ["dist/**", "cf-worker/**", "node/**"],
       "dependsOn": ["^build"]
     },
+    "thirdweb": {
+      "outputs": ["esm/**", "cjs/**", "types/**"],
+      "dependsOn": ["^build"]
+    },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],

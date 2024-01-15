@@ -1,3 +1,75 @@
-export function hello() {
-  console.log("world");
+import type { MethodType } from "./abi/resolveAbiFunction.js";
+import { createThirdwebClient } from "./client/client.js";
+import { getContract, type GetContractOptions } from "./contract/index.js";
+import {
+  createTx,
+  readContract,
+  type TransactionOptions,
+} from "./transaction/index.js";
+import { memoizePromise } from "./utils/promise.js";
+
+export type CreateClientOptions =
+  | {
+      clientId: string;
+      secretKey?: never;
+    }
+  | {
+      clientId?: never;
+      secretKey: string;
+    };
+
+/**
+ *
+ * @param options - the {@link CreateClientOptions} to create the client with
+ * @returns - the client
+ *
+ * @example
+ * ```ts
+ * import { createClient } from "@thirdweb-dev/thirdweb";
+ *
+ * const client = createClient({
+ *  clientId: "my-client-id",
+ * });
+ * ```
+ */
+export function createClient(options: CreateClientOptions) {
+  const thirdwebClient = createThirdwebClient(options);
+
+  return {
+    // add on the underlying client
+    ...thirdwebClient,
+    getContract: (contractOptions: GetContractOptions) => {
+      const contract = getContract(thirdwebClient, contractOptions);
+
+      return {
+        ...contract,
+        // add on the transaction function
+        transaction: <const method extends MethodType>(
+          transactionOptions: TransactionOptions<typeof contract, method>,
+        ) => {
+          const tx = createTx(contract, transactionOptions);
+          return {
+            ...tx,
+            encode: memoizePromise(async () => {
+              const { encode } = await import(
+                "./transaction/actions/encode.js"
+              );
+              // @ts-expect-error - TODO: fix this
+              return encode(tx);
+            }),
+          };
+        },
+        // add on the read function
+        read: <const method extends MethodType>(
+          readOptions: TransactionOptions<typeof contract, method>,
+        ) => readContract(contract, readOptions),
+      };
+    },
+    createTx: <const method extends MethodType>(
+      transactionOptions: TransactionOptions<typeof thirdwebClient, method>,
+    ) => createTx(thirdwebClient, transactionOptions),
+    readContract: <const method extends MethodType>(
+      readOptions: TransactionOptions<typeof thirdwebClient, method>,
+    ) => readContract(thirdwebClient, readOptions),
+  };
 }

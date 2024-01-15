@@ -1,49 +1,79 @@
 {
   "name": "thirdweb",
   "version": "0.0.0",
-  "bin": {
-    "thirdweb": "./node_modules/@thirdweb/cli/index.js"
-  },
-  "main": "dist/thirdweb.cjs.js",
-  "module": "dist/thirdweb.esm.js",
-  "exports": {
-    ".": {
-      "module": "./dist/thirdweb.esm.js",
-      "default": "./dist/thirdweb.cjs.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/thirdweb",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ],
-    "exports": true
+  "type": "module",
+  "bin": {
+    "thirdweb": "./node_modules/@thirdweb/cli/index.js"
+  },
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./types/index.d.ts",
+  "typings": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./esm/index.js",
+      "default": "./cjs/index.js"
+    },
+    "./react": {
+      "types": "./types/react/index.d.ts",
+      "import": "./esm/react/index.js",
+      "default": "./cjs/react/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "browser": {
+    "crypto": false
   },
   "sideEffects": false,
+  "files": [
+    "cjs/*",
+    "esm/*",
+    "types/*",
+    "!**/*.tsbuildinfo",
+    "!**/*.test.ts",
+    "!**/*.test.ts.snap",
+    "!**/*.test-d.ts",
+    "!**/*.bench.ts",
+    "!tsconfig.build.json"
+  ],
   "dependencies": {
-    "@thirdweb-dev/cli": "workspace:*"
+    "@thirdweb-dev/cli": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
+    "abitype": "^0.10.3",
+    "viem": "^2.0.10"
   },
   "devDependencies": {
-    "@preconstruct/cli": "2.7.0",
-    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/react": "^18.2.17",
+    "bun-types": "latest",
     "eslint-config-thirdweb": "workspace:*",
+    "react": "^18.2.0",
+    "rimraf": "^3.0.2",
     "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
-    "clean": "rm -rf dist/",
-    "build": "tsc && preconstruct build",
+    "build": "bun run clean && bun run build:cjs && bun run build:esm && bun run build:types",
+    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./cjs/package.json",
+    "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./types --emitDeclarationOnly --declaration --declarationMap",
+    "clean": "rimraf esm cjs types",
     "push": "yalc push",
     "test": "bun test"
   },
