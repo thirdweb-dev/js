@@ -10,6 +10,13 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://arbitrum.io",
   "name": "Arbitrum Sepolia",
   "nativeCurrency": {
