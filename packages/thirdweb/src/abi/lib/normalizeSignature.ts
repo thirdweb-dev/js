@@ -14,17 +14,23 @@ export function normalizeSignature(signature: string): string {
     }
 
     // If the character is a "level" token, we want to increment/decrement.
-    if (char === "(") level++;
-    if (char === ")") level--;
+    if (char === "(") {
+      level++;
+    }
+    if (char === ")") {
+      level--;
+    }
 
     // If we aren't active, we don't want to mutate the result.
-    if (!active) continue;
+    if (!active) {
+      continue;
+    }
 
     // If level === 0, we are at the definition level.
     if (level === 0) {
-      if (char === " " && ["event", "function", ""].includes(result))
+      if (char === " " && ["event", "function", ""].includes(result)) {
         result = "";
-      else {
+      } else {
         result += char;
 
         // If we are at the end of the definition, we must be finished.

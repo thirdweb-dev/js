@@ -20,28 +20,3 @@ export function createTx<
     _encoded: null,
   } as Transaction<typeof contract, method>;
 }
-
-// // setup the abi fn resolver
-// const resolveAbiFn = memoizePromise(async () => {
-//   const { resolveAbiFunction } = await import("../abi/resolveAbiFunction.js");
-//   return await resolveAbiFunction(contract, options);
-// });
-// // setup the params resolver
-// const resolveParams = memoizePromise(async () => {
-//   const params =
-//     typeof options.params === "function"
-//       ? await options.params()
-//       : options.params;
-//   return params;
-// });
-// return {
-//   encode: memoizePromise(async () => {
-//     const [{ encodeAbiFunction }, parsedAbiFn, resolvedParams] =
-//       await Promise.all([
-//         import("../abi/encode.js"),
-//         resolveAbiFn(),
-//         resolveParams(),
-//       ]);
-//     return encodeAbiFunction(parsedAbiFn, resolvedParams);
-//   }),
-// };

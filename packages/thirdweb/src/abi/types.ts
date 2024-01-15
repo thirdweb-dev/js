@@ -27,37 +27,3 @@ export type GetMethodOutputs<method extends MethodType> = Readonly<
     ? unknown[]
     : AbiParametersToPrimitiveTypes<ParseMethod<method>["outputs"]>
 >;
-
-// // testing
-// type Parsed1 =
-//   ParseMethod<"function balanceOf(address owner) view returns (uint256)">;
-
-// type Parsed2 = ParseMethod<{
-//   name: "balanceOf";
-//   inputs: [
-//     {
-//       name: "owner";
-//       type: "address";
-//     },
-//   ];
-//   outputs: [
-//     {
-//       name: "balance";
-//       type: "uint256";
-//     },
-//   ];
-//   stateMutability: "view";
-//   type: "function";
-// }>;
-
-// type Unparseable = ParseMethod<"balanceOf">;
-
-// // inputs
-// type Inputs1 = GetMethodInputs<Parsed1>;
-// type Inputs2 = GetMethodInputs<Parsed2>;
-// type Inputs3 = GetMethodInputs<Unparseable>;
-
-// // outputs
-// type Outputs1 = GetMethodOutputs<Parsed1>;
-// type Outputs2 = GetMethodOutputs<Parsed2>;
-// type Outputs3 = GetMethodOutputs<Unparseable>;
