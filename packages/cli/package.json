@@ -55,7 +55,7 @@
     "rimraf": "^3.0.2",
     "solc": "0.8.17",
     "tar": "^6.1.15",
-    "update-notifier": "^6.0.2",
+    "update-notifier": "^7.0.0",
     "validate-npm-package-name": "^4.0.0",
     "xdg-app-paths": "^8.3.0",
     "yaml": "^2.3.1"
