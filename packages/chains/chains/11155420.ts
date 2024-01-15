@@ -18,6 +18,12 @@ export default {
   "faucets": [
     "https://app.optimism.io/faucet"
   ],
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://optimism.io",
   "name": "OP Sepolia Testnet",
   "nativeCurrency": {
