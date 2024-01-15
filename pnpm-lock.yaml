@@ -685,8 +685,8 @@ importers:
         specifier: workspace:*
         version: link:../tw-tsconfig
       '@types/color':
-        specifier: ^3.0.3
-        version: 3.0.3
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/qrcode':
         specifier: ^1.5.2
         version: 1.5.2
@@ -13040,8 +13040,8 @@ packages:
     resolution: {integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==}
     dev: true
 
-  /@types/color@3.0.3:
-    resolution: {integrity: sha512-X//qzJ3d3Zj82J9sC/C18ZY5f43utPbAJ6PhYt/M7uG6etcF6MRpKdN880KBy43B0BMzSfeT96MzrsNjFI3GbA==}
+  /@types/color@3.0.6:
+    resolution: {integrity: sha512-NMiNcZFRUAiUUCCf7zkAelY8eV3aKqfbzyFQlXpPIEeoNDbsEHGpb854V3gzTsGKYj830I5zPuOwU/TP5/cW6A==}
     dependencies:
       '@types/color-convert': 2.0.0
     dev: true
