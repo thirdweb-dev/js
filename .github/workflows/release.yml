@@ -57,3 +57,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate docs
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          pnpm typedoc
+          pnpm build
+          pnpm generate-docs
+          pnpm generate-snippets
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "doc automation: update JSON files [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -38,7 +38,7 @@ export type ConnectEmbedProps = {
   /**
    * theme for the ConnectEmbed
    *
-   * If a theme is set on the `ThirdWebProvider` component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
+   * If a theme is set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
    *
    * theme can be set to either "dark" or "light" or a custom theme object.
    *
@@ -74,13 +74,13 @@ export type ConnectEmbedProps = {
   /**
    * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/auth) after connecting their wallet.
    *
-   * This requires the `authConfig` prop to be set on the `ThirdWebProvider` component.
+   * This requires the `authConfig` prop to be set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
    */
   auth?: {
     /**
      * specify whether signing in is optional or not.
      *
-     * By default it is `true` if `authConfig` is set on `ThirdWebProvider`
+     * By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
      */
     loginOptional?: boolean;
     /**
@@ -92,6 +92,32 @@ export type ConnectEmbedProps = {
      */
     onLogout?: () => void;
   };
+
+  /**
+   * Callback to be called on successful connection of wallet
+   *
+   * ```tsx
+   * <ConnectEmbed
+   *  onConnect={() => {
+   *    console.log("wallet connected")
+   *  }}
+   * />
+   * ```
+   *
+   * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
+   *
+   * ```tsx
+   * <ConnectEmbed
+   *  auth={{
+   *   onLogin: () => {
+   *     console.log("wallet connected and signed in")
+   *   }
+   *  }}
+   * />
+   * ```
+   *
+   */
+  onConnect?: () => void;
 };
 
 /**
@@ -154,11 +180,13 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
 /**
  * A component that allows the user to connect their wallet.
  *
+ * it renders the same UI as the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component's modal - but directly on the page instead of being in a modal.
+ *
  * It only renders UI if either one of the following conditions are met:
  * - wallet is not connected
  * - wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )
  *
- * `ConnectEmbed` uses the `useShowConnectEmbed` hook internally to determine if it should be rendered or not. You can also use this hook to determine if you should render something else instead of `ConnectEmbed`
+ * `ConnectEmbed` uses the [`useShowConnectEmbed`](https://portal.thirdweb.com/react/v4/useShowConnectEmbed) hook internally to determine if it should be rendered or not. You can also use this hook to determine if you should render something else instead of `ConnectEmbed`
  *
  * @example
  * ```tsx
@@ -180,9 +208,76 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  *     </div>
  *   );
  * }
- *```
+ * ```
+ *
+ * @param props -
+ * The props for the component.
+ *
+ * ### className
+ * Class name to be added to the root element of ConnectEmbed
+ *
+ * ### theme
+ * theme for the ConnectEmbed
+ *
+ * If a theme is set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
+ *
+ * theme can be set to either "dark" or "light" or a custom theme object.
+ *
+ * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+ *
+ * ```ts
+ * import { lightTheme } from "@thirdweb-dev/react";
+ * const customTheme = lightTheme({
+ *  colors: {
+ *    modalBg: 'red'
+ *  }
+ * })
+ * ```
+ *
+ * ### style
+ * CSS styles to be applied to the root element of ConnectEmbed
+ *
+ * ### termsOfServiceUrl
+ * If provided, Embed will show a Terms of Service message at the bottom with below link
+ *
+ * ### privacyPolicyUrl
+ * If provided, Embed will show a Privacy Policy message at the bottom with below link
+ *
+ * ### auth
+ * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/auth) after connecting their wallet.
+ *
+ * This requires the `authConfig` prop to be set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
+ *
+ * The `auth` prop accepts an object with the following properties:
+ * - `loginOptional` - specify whether signing in is optional or not. By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+ * - `onLogin` - Callback to be called after user signs in with their wallet
+ * - `onLogout` - Callback to be called after user signs out
+ *
+ * ### onConnect
+ * Callback to be called on successful connection of wallet
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *  onConnect={() => {
+ *    console.log("wallet connected")
+ *  }}
+ * />
+ * ```
+ *
+ * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *  auth={{
+ *   onLogin: () => {
+ *     console.log("wallet connected and signed in")
+ *   }
+ *  }}
+ * />
+ * ```
+ *
  */
-export const ConnectEmbed = (props: ConnectEmbedProps) => {
+export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;
   const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
@@ -205,12 +300,13 @@ export const ConnectEmbed = (props: ConnectEmbedProps) => {
         screen={screen}
         setScreen={setScreen}
         initialScreen={initialScreen}
+        onConnect={props.onConnect}
       />
     );
   }
 
-  return null;
-};
+  return <div></div>;
+}
 
 const ConnectEmbedContent = (
   props: Omit<ConnectEmbedProps, "onConnect"> & {
@@ -218,6 +314,7 @@ const ConnectEmbedContent = (
     screen: string | WalletConfig;
     setScreen: (screen: string | WalletConfig) => void;
     initialScreen: string | WalletConfig;
+    onConnect?: () => void;
   },
 ) => {
   const modalSize = "compact" as const;
@@ -266,6 +363,7 @@ const ConnectEmbedContent = (
     privacyPolicyUrl: props.privacyPolicyUrl,
     isEmbed: true,
     auth: props.auth,
+    onConnect: props.onConnect,
   };
 
   return (
