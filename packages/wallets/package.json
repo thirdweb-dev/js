@@ -487,7 +487,7 @@
     "@metamask/eth-sig-util": "^4.0.0",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@paperxyz/sdk-common-utilities": "^0.1.0",
-    "@safe-global/safe-core-sdk": "^3.3.4",
+    "@safe-global/safe-core-sdk": "^3.3.5",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
     "@safe-global/safe-ethers-lib": "^1.9.4",
     "@thirdweb-dev/chains": "workspace:*",
