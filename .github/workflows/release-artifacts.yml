@@ -9,6 +9,9 @@ on:
     branches:
       - changeset-release/main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   setup:
     runs-on: ubuntu-latest
