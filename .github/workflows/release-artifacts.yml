@@ -1,0 +1,57 @@
+# On the Version Packages branch
+# Generate and Commit artifacts to the Version Packages branch
+# It commits the Typedoc JSON files and code snippets JSON files
+
+name: Commit Release Artifacts
+
+on:
+  push:
+    branches:
+      - changeset-release/main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Install
+        uses: ./.github/composite-actions/install
+
+      - name: Build
+        run: pnpm build
+
+  typedoc:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Typedoc
+        run: pnpm typedoc
+
+  snippets:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: generate-docs
+        run: pnpm generate-docs
+
+      - name: generate-snippets
+        run: pnpm generate-snippets
+
+  commit:
+    needs: [typedoc, snippets]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Commit Release Artifacts [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
