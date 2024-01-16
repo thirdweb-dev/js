@@ -182,7 +182,7 @@ export const YourFilesSection: React.FC = () => {
     [],
   );
   const selectTotalCount = useCallback(
-    (data?: PinnedFilesResponse) => data?.result.count || 0,
+    (data?: PinnedFilesResponse) => data?.result?.count || 0,
     [],
   );
   return (
