@@ -335,8 +335,26 @@ export function useTotalCirculatingSupply(
  * @param ownerWalletAddress -
  * The wallet address to get owned tokens for. Likely, you will want to view the connected wallet’s NFTs. use the `useAddress` hook to get this value.
  *
- * @param queryParams - Query params to pass to the query for pagination
+ * @param queryParams - 
+ * Paginate the results by providing a `queryParams` object as an argument.
  *
+ * ```jsx
+ * import { useOwnedNFTs, useContract, useAddress } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { contract } = useContract(contractAddress);
+ *   const address = useAddress();
+ *   const { data, isLoading, error } = useOwnedNFTs(
+ *     contract,
+ *     address
+ *     {
+ *       count: 10, // Limit the number of results
+ *       start: 0, // Start from the nth result (useful for pagination)
+ *     },
+ *   );
+ * }
+ * ```
+ * 
  * @returns Query result object that includes the list of owned `NFT` objects
  *
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
