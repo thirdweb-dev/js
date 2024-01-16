@@ -5,7 +5,6 @@ import {
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
-import { Platform } from "react-native";
 import { appBundleId, packageVersion } from "../../evm/utils/version";
 import { BUNDLE_ID_HEADER } from "../../evm/constants/headers";
 
@@ -40,7 +39,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     };
 
     const { version, name: packageName } = packageVersion;
-    const platform = `react-native-${Platform.OS}`;
+    const platform = "react-native";
 
     if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
       // then it's an array of files
