@@ -27,17 +27,12 @@ jobs:
       - name: Install
         uses: ./.github/composite-actions/install
 
-      - name: Build
-        run: pnpm build
-
-      - name: Generate Docs
-        run: pnpm generate-docs
-
-      - name: Generate Snippets
-        run: pnpm generate-snippets
-
-      - name: Typedoc
-        run: pnpm typedoc
+      - name: Generate Release Artifacts
+        run: |
+          pnpm build
+          pnpm generate-docs
+          pnpm generate-snippets
+          pnpm typedoc
 
       - name: Commit changes
         run: |
