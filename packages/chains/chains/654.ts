@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 654,
   "rpc": [
-    "https://kalichain-kalichainmainnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kalichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://654.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.kalichain.com"
   ],
   "shortName": "kalichainMainnet",
-  "slug": "kalichain-kalichainmainnet",
+  "slug": "kalichain",
   "testnet": false
 } as const satisfies Chain;
