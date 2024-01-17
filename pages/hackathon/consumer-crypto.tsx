@@ -38,16 +38,16 @@ const Hackathon = () => {
         title="Consumer Crypto Hackathon | Presented by Caldera & thirdweb"
         description="Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Caldera & thirdweb. Learn more & sign up here."
         openGraph={{
-          title: "Consumer Crypto Hackathon | Presented by Caldera & thirdweb",
-          url: "https://thirdweb.com/hackathon/caldera-consumer-crypto",
+          title: "Consumer Crypto Hackathon | Presented by thirdweb",
+          url: "https://thirdweb.com/hackathon/consumer-crypto",
           description:
-            "Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Caldera & thirdweb. Learn more & sign up here.",
+            "Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by thirdweb. Learn more & sign up here.",
           images: [
             {
               url: `${getAbsoluteUrl()}/assets/og-image/hackathon.png`,
               width: 1200,
               height: 630,
-              alt: "Consumer Crypto Hackathon | Presented by Caldera & thirdweb",
+              alt: "Consumer Crypto Hackathon | Presented by thirdweb",
             },
           ],
         }}
@@ -125,7 +125,7 @@ const Hackathon = () => {
             <Timer />
 
             <LinkButton
-              href="https://docs.google.com/forms/d/1CT8LPG1DrcpTKAW38ScVzTcyBNwS6ANOk6xpfjpXLAs/edit"
+              href="https://forms.gle/e7rsvAR2zbfimar78"
               onClick={() =>
                 trackEvent({
                   category: "hackathon",
