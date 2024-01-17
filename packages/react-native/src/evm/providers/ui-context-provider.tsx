@@ -100,7 +100,7 @@ export const useGlobalTheme = (theme?: ThemeProviderProps["theme"]): Theme => {
   const resultTheme = useMemo(() => {
     const resp = getThemeObj(context.theme) || getThemeObj(theme) || appTheme;
     return resp;
-  }, [theme, context, appTheme]);
+  }, [theme, context.theme, appTheme]);
 
   return resultTheme;
 };

@@ -38,6 +38,12 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
+
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "./components/ConnectWalletFlow/ConnectEmbed";
+
 export {
   Web3Button,
   type Web3ButtonProps,

@@ -186,6 +186,11 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
      */
     welcomeScreen?: WelcomeScreen;
   };
+
+  /**
+   * Set a custom label for the "Switch Network" button
+   */
+  switchNetworkBtnTitle?: string;
 }
 
 /**
@@ -255,6 +260,8 @@ export const Web3Button = <TAction extends ActionFn>(
   const theme = props.theme || contextTheme || "dark";
 
   const locale = useTWLocale();
+  const switchNetworkLabel =
+    props.switchNetworkBtnTitle || locale.connectWallet.switchNetwork;
 
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
@@ -337,7 +344,7 @@ export const Web3Button = <TAction extends ActionFn>(
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
-          locale.connectWallet.switchNetwork
+          switchNetworkLabel
         )}
       </Button>
     );
