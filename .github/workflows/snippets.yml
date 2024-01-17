@@ -1,8 +1,7 @@
 # On the Version Packages branch
-# Generate and Commit artifacts to the Version Packages branch
-# It commits the Typedoc JSON files and code snippets JSON files
+# Generate and Commit snippets JSON files
 
-name: Commit Release Artifacts
+name: Commit Snippets JSON files
 
 on:
   push:
@@ -13,7 +12,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  setup:
+  snippets:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -30,27 +29,12 @@ jobs:
       - name: Build
         run: pnpm build
 
-  typedoc:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Typedoc
-        run: pnpm typedoc
-
-  snippets:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       - name: generate-docs
         run: pnpm generate-docs
 
       - name: generate-snippets
         run: pnpm generate-snippets
 
-  commit:
-    needs: [typedoc, snippets]
-    runs-on: ubuntu-latest
-    steps:
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
