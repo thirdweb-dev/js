@@ -1,9 +1,9 @@
 import type { AbiFunction, Address } from "abitype";
 import type { Transaction } from "../index.js";
-import type { IWallet } from "../../wallets/utils/wallet.js";
 import { getDefaultGasOverrides } from "../../gas/fee-data.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest, hexToBigInt } from "viem/utils";
+import type { IWallet } from "../../wallets/interfaces/wallet.js";
 
 export async function estimateGas<
   const abiFn extends AbiFunction,

@@ -1,4 +1,5 @@
 import type {
+  Hash,
   Hex,
   PrivateKeyAccount,
   SignableMessage,
@@ -6,12 +7,9 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { IWallet } from "./utils/wallet.js";
-import { privateKeyToAccount } from "viem/accounts";
-import type { AbiFunction, TypedData } from "abitype";
+import type { AbiFunction, Address, TypedData } from "abitype";
 import type { Transaction } from "../transaction/index.js";
-import { estimateGas } from "../transaction/actions/estimate-gas.js";
-import { execute } from "../transaction/actions/execute.js";
+import type { IWallet } from "./interfaces/wallet.js";
 
 export function privateKeyWallet(client: ThirdwebClient) {
   return new PrivateKeyWallet(client);
@@ -22,7 +20,6 @@ type PrivateKeyWalletConnectOptions = {
 };
 
 class PrivateKeyWallet implements IWallet {
-  // private _client: ThirdwebClient;
   private account: PrivateKeyAccount | null = null;
 
   get address() {
@@ -31,11 +28,12 @@ class PrivateKeyWallet implements IWallet {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_client: ThirdwebClient) {
-    // this._client = client;
+    // this.client = client;
   }
 
   public async connect(options: PrivateKeyWalletConnectOptions) {
     const { pkey } = options;
+    const { privateKeyToAccount } = await import("viem/accounts");
     this.account = privateKeyToAccount(pkey as Hex);
   }
 
@@ -65,18 +63,67 @@ class PrivateKeyWallet implements IWallet {
 
   // tx functions
 
-  public async estimateGas<abiFn extends AbiFunction>(tx: Transaction<abiFn>) {
-    if (!this.account) {
+  public async sendTransaction<abiFn extends AbiFunction>(
+    tx: Transaction<abiFn>,
+  ) {
+    if (!this.account || !this.address) {
       throw new Error("not connected");
     }
-    return estimateGas(tx, this);
+    const rpcRequest = tx.client.rpc({ chainId: tx.inputs.chainId });
+
+    const [getDefaultGasOverrides, encode, transactionCount] =
+      await Promise.all([
+        import("../gas/fee-data.js").then((m) => m.getDefaultGasOverrides),
+        import("../transaction/actions/encode.js").then((m) => m.encode),
+        import("../rpc/methods.js").then((m) => m.transactionCount),
+      ]);
+
+    const [gasOverrides, encodedData, nextNonce, estimatedGas] =
+      await Promise.all([
+        getDefaultGasOverrides(tx.client, tx.inputs.chainId),
+        encode(tx),
+        transactionCount(rpcRequest, this.address),
+        this.estimateGas(tx),
+      ]);
+
+    const signedTx = await this.signTransaction({
+      gas: estimatedGas,
+      to: tx.inputs.address as Address,
+      chainId: tx.inputs.chainId,
+      data: encodedData,
+      nonce: nextNonce,
+      ...gasOverrides,
+    });
+
+    // send the tx
+    // TODO: move into rpc/methods
+    const { result } = await rpcRequest({
+      method: "eth_sendRawTransaction",
+      params: [signedTx],
+    });
+    tx.transactionHash = result as Hash;
+
+    return {
+      transactionHash: result as Hash,
+      wait: async () => {
+        const { waitForTxReceipt } = await import(
+          "../transaction/actions/wait-for-tx-receipt.js"
+        );
+        return waitForTxReceipt(tx);
+      },
+    };
   }
 
-  public async execute<abiFn extends AbiFunction>(tx: Transaction<abiFn>) {
+  public async estimateGas<abiFn extends AbiFunction>(
+    tx: Transaction<abiFn>,
+  ): Promise<bigint> {
     if (!this.account) {
       throw new Error("not connected");
     }
-    return execute(tx, this);
+    const { estimateGas } = await import(
+      "../transaction/actions/estimate-gas.js"
+    );
+    return estimateGas(tx, this);
   }
 
   public async disconnect() {

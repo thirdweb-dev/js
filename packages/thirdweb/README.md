@@ -60,7 +60,7 @@ const tx = contract.transaction({
 });
 
 // Step 6: execute the transaction with the wallet
-const receipt = await wallet.execute(tx);
+const receipt = await wallet.sendTransaction(tx);
 
 console.log("tx hash", receipt.transactionHash);
 
