@@ -1,7 +1,7 @@
 # On the Version Packages branch
-# Generate and Commit snippets JSON files
+# Generate and Commit the Typedoc JSON files and the Snippets JSON files
 
-name: Commit Snippets JSON files
+name: Commit Release Artifacts
 
 on:
   push:
@@ -12,12 +12,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  snippets:
+  release-artifacts:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
 
+      # bun setup is required, because pnpm typdoc will run pnpm build and some packages uses bun for build
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -29,10 +30,13 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: generate-docs
+      - name: Typedoc
+        run: pnpm typedoc
+
+      - name: Generate Docs
         run: pnpm generate-docs
 
-      - name: generate-snippets
+      - name: Generate Snippets
         run: pnpm generate-snippets
 
       - name: Commit changes
