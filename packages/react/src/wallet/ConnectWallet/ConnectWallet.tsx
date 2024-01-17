@@ -201,6 +201,8 @@ export type ConnectWalletProps = {
   modalSize?: "compact" | "wide";
 
   /**
+   * URL of the "terms of service" page
+   *
    * If provided, Modal will show a Terms of Service message at the bottom with below link
    *
    * @example
@@ -211,6 +213,8 @@ export type ConnectWalletProps = {
   termsOfServiceUrl?: string;
 
   /**
+   * URL of the "privacy policy" page
+   *
    * If provided, Modal will show a Privacy Policy message at the bottom with below link
    *
    * @example
