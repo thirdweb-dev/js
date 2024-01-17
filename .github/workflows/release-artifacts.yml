@@ -53,6 +53,7 @@ jobs:
           git status
           git add packages/react/typedoc/documentation.json
           git add packages/react-core/typedoc/documentation.json
+          git add packages/react-native/typedoc/documentation.json
           git add packages/sdk/typedoc/documentation.json
           git add packages/storage/typedoc/documentation.json
           git add packages/wallets/typedoc/documentation.json
