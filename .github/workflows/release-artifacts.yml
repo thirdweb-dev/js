@@ -29,10 +29,10 @@ jobs:
 
       - name: Generate Release Artifacts
         run: |
+          pnpm typedoc
           pnpm build
           pnpm generate-docs
           pnpm generate-snippets
-          pnpm typedoc
 
       - name: Commit changes
         run: |
