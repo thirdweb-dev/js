@@ -11,7 +11,7 @@ export type ConnectingWalletProps = {
   subHeaderText?: string;
   footer?: ReactNode;
   content?: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   onBackPress: () => void;
   wallet: WalletConfig<any>;
 };

@@ -23,7 +23,7 @@ export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   onChooseWallet: (wallet: WalletConfig<any>, data?: any) => void;
-  onClose: () => void;
+  onClose?: () => void;
   wallets: WalletConfig<any>[];
   excludeWalletIds?: string[];
   modalTitleIconUrl?: string;
