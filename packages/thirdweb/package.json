@@ -1,7 +1,10 @@
 {
   "name": "thirdweb",
   "version": "0.0.0",
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/thirdweb",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -9,7 +12,7 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "type": "module",
   "bin": {
-    "thirdweb": "./node_modules/@thirdweb/cli/index.js"
+    "thirdweb": "node_modules/@thirdweb-dev/cli/dist/cli/index.js"
   },
   "main": "./cjs/index.js",
   "module": "./esm/index.js",

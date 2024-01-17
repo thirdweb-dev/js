@@ -113,7 +113,7 @@
       "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
-    "thirdweb#e2e": {
+    "@thirdweb-dev/cli#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],
       "dependsOn": ["build"],
