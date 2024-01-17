@@ -80,7 +80,7 @@ export type ConnectWalletProps = {
   btnTitle?: string;
 
   /**
-   * Set a custom title for the "Switch Network" button
+   * Set a custom label for the "Switch Network" button
    */
   switchNetworkBtnTitle?: string;
 

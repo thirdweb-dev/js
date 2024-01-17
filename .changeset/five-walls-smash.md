@@ -2,4 +2,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-Connect Wallet: Adding new optional prop to set a custom Switch Network button title
+Add prop `switchNetworkBtnTitle` to `ConnectWallet` component to allow changing the "Switch Network" label on the button.
