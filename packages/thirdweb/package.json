@@ -33,6 +33,16 @@
     },
     "./package.json": "./package.json"
   },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./types/react/index.d.ts"
+      ],
+      "wallets/*": [
+        "./types/wallets/*.d.ts"
+      ]
+    }
+  },
   "browser": {
     "crypto": false
   },
