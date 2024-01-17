@@ -4,8 +4,8 @@ import { Text, TrackedLink } from "tw-components";
 
 const sponsors = [
   {
-    name: "Base",
-    logo: require("public/assets/landingpage/base.svg"),
+    name: "Caldera",
+    logo: require("public/assets/landingpage/caldera.png"),
     link: "https://base.org/",
   },
   {
@@ -17,11 +17,6 @@ const sponsors = [
     name: "Haun Ventures",
     logo: require("public/assets/landingpage/haun.svg"),
     link: "https://www.haun.co/",
-  },
-  {
-    name: "Framework Ventures",
-    logo: require("public/assets/landingpage/framework.svg"),
-    link: "https://framework.ventures/",
   },
 ];
 
@@ -37,7 +32,7 @@ export const Sponsors = ({ TRACKING_CATEGORY }: SponsorsProps) => {
       </Text>
       <SimpleGrid
         mt={4}
-        columns={{ base: 2, md: 4 }}
+        columns={{ base: 2, md: 3 }}
         gap={8}
         placeItems="center"
       >

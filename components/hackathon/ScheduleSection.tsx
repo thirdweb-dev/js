@@ -4,16 +4,16 @@ import { Heading, Text } from "tw-components";
 export const ScheduleSection: React.FC = () => {
   const items = [
     {
-      day: 8,
-      title:
-        "Hackathon Kickoff: Intro to Base & thirdweb, Team Formation | 5:00pm - 7:00pm",
-    },
-    {
       day: 9,
-      title: "Hack Day | 9:00am - 9:00pm",
+      title:
+        "Hackathon Kickoff: Intro to thirdweb, Team Formation | 5:00pm - 7:00pm",
     },
     {
       day: 10,
+      title: "Hack Day | 9:00am - 9:00pm",
+    },
+    {
+      day: 11,
       title: "Final Submission | 9:00am",
       secondTitle: "Lunch & Winners Announcement | 12:00pm",
     },
@@ -67,7 +67,7 @@ export const ScheduleSection: React.FC = () => {
               flexShrink={0}
             >
               <Text size="body.md" color="gray.300" textTransform="uppercase">
-                DECEMBER
+                FEBRUARY
               </Text>
               <Heading size="title.lg" color="white">
                 {day}

@@ -28,26 +28,26 @@ const Timer = dynamic(() => import("components/hackathon/Timer"), {
   ssr: false,
 });
 
-const TRACKING_CATEGORY = "base-thirdweb-hacakthon";
+const TRACKING_CATEGORY = "caldera-thirdweb-hacakthon";
 
 const Hackathon = () => {
   const trackEvent = useTrack();
   return (
     <DarkMode>
       <NextSeo
-        title="Consumer Crypto Hackathon | Presented by Base & thirdweb"
-        description="Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Base & thirdweb. Learn more & sign up here."
+        title="Consumer Crypto Hackathon | Presented by Caldera & thirdweb"
+        description="Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Caldera & thirdweb. Learn more & sign up here."
         openGraph={{
-          title: "Consumer Crypto Hackathon | Presented by Base & thirdweb",
-          url: "https://thirdweb.com/hackathon/base-consumer-crypto",
+          title: "Consumer Crypto Hackathon | Presented by Caldera & thirdweb",
+          url: "https://thirdweb.com/hackathon/caldera-consumer-crypto",
           description:
-            "Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Base & thirdweb. Learn more & sign up here.",
+            "Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Caldera & thirdweb. Learn more & sign up here.",
           images: [
             {
               url: `${getAbsoluteUrl()}/assets/og-image/hackathon.png`,
               width: 1200,
               height: 630,
-              alt: "Consumer Crypto Hackathon | Presented by Base & thirdweb",
+              alt: "Consumer Crypto Hackathon | Presented by Caldera & thirdweb",
             },
           ],
         }}
@@ -102,7 +102,7 @@ const Hackathon = () => {
             />
 
             <ChakraNextImage
-              src={require("public/assets/landingpage/base-tw-logo.svg")}
+              src={require("public/assets/landingpage/thirdwebw.svg")}
               alt="Hackathon"
               maxW={{ base: "full", md: "xl" }}
             />
@@ -119,7 +119,7 @@ const Hackathon = () => {
               letterSpacing={5}
               textAlign="center"
             >
-              DECEMBER 8 - 10
+              FEBRUARY 9 - 11
             </Heading>
 
             <Timer />
@@ -181,12 +181,12 @@ const Hackathon = () => {
                     <ListItem>• 1 ETH for 1st Place</ListItem>
                     <ListItem>
                       • Meet & present to top industry leaders, operators, and
-                      investors in crypto — from Coinbase, Haun Ventures,
-                      Founders Inc. and Framework Ventures
+                      investors in crypto — from Caldera, Founders Inc. and Haun
+                      Ventures
                     </ListItem>
                     <ListItem>
-                      • Amplification to 500k+ followers on thirdweb and
-                      Base&apos;s social channels
+                      • Amplification to 70k+ followers on thirdweb&apos;s
+                      social channels
                     </ListItem>
                     <ListItem>
                       • $50 Gas Sponsorship for every hackathon builder
@@ -213,9 +213,6 @@ const Hackathon = () => {
                       • Built using any of the following thirdweb products:
                       Engine, Embedded Wallets, and/or Account Abstraction
                     </ListItem>
-                    <ListItem>
-                      • Must be deployed on Base testnet or mainnet
-                    </ListItem>
                     <ListItem>• Code must be open-source</ListItem>
                     <ListItem>
                       • Project must be submitted through GitHub, with a
@@ -227,7 +224,7 @@ const Hackathon = () => {
                 <Text size="body.xl" color="white">
                   Participants will be able to submit their project to the form
                   in the hackathon landing page before the deadline, on{" "}
-                  <b>December 10th at 9:00am PST</b>.
+                  <b>February 11th at 9:00am PST</b>.
                 </Text>
               </Flex>
             </Flex>
@@ -272,7 +269,7 @@ const Hackathon = () => {
                     </ListItem>
                     <ListItem>
                       <b>2. Ecosystem Impact:</b> How impactful and useful is
-                      this app in the Base ecosystem as a whole?
+                      this app in the web3 ecosystem as a whole?
                     </ListItem>
                     <ListItem>
                       <b>3. Originality, Creativity, and Innovation:</b> How

@@ -19,14 +19,13 @@ const Reason = () => {
         </Text>
 
         <Text textAlign="left" size="body.xl" color="white">
-          We&apos;re partnering with Base to host the{" "}
+          This February, we&apos;re excited to host the{" "}
           <b>Consumer Crypto Hackathon</b> — bringing the hungriest builders to
           San Francisco to{" "}
           <b>discover the next billion-dollar web3 consumer app.</b>&nbsp;Get
           resources & expertise from top operators, find your next co-founder,
           and meet VCs & industry leaders from{" "}
-          <b>Coinbase, Haun Ventures, Founders Inc</b>. and&nbsp;
-          <b>Framework Ventures.</b>
+          <b>Caldera, Founders Inc. and Haun Ventures.</b>
         </Text>
       </Flex>
     </Container>

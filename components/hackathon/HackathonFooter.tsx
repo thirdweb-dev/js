@@ -26,9 +26,9 @@ export const HackathonFooter = ({
       px={6}
     >
       <ChakraNextImage
-        src={require("public/assets/landingpage/base-tw-logo.svg")}
+        src={require("public/assets/landingpage/thirdwebw.svg")}
         alt="hackathon-partner"
-        w={{ base: "300px", md: "600px" }}
+        w={{ base: "300px", md: "400px" }}
         objectFit="contain"
       />
       <ChakraNextImage
@@ -44,7 +44,7 @@ export const HackathonFooter = ({
         letterSpacing={5}
         textAlign="center"
       >
-        DECEMBER 8 - 10
+        FEBRUARY 9 - 11
       </Heading>
 
       <LinkButton

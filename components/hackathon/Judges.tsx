@@ -21,22 +21,10 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
       image: "/assets/landingpage/chris.png",
     },
     {
-      name: "Michael Anderson",
-      twitter: "im_manderson",
-      description: "Partner, Framework Ventures",
-      image: "/assets/landingpage/manderson.jpg",
-    },
-    {
-      name: "Dan Kim",
-      twitter: "DANKIMdigital",
-      description: "VP Business Development, Coinbase",
-      image: "/assets/landingpage/dan-kim.jpg",
-    },
-    {
-      name: "Maika Isogawa",
-      twitter: "maikaisogawa",
-      description: "CEO, Webacy",
-      image: "/assets/landingpage/maika.jpg",
+      name: "Parker Jou",
+      twitter: "theappletucker",
+      description: "Founder, CTO at Caldera",
+      image: "/assets/landingpage/parker.jpg",
     },
   ];
 
@@ -49,43 +37,7 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
         justifyContent="space-evenly"
         px={4}
       >
-        {judges.slice(0, 3).map((judge) => (
-          <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
-            <MaskedAvatar
-              boxSize={40}
-              objectFit="cover"
-              src={judge.image}
-              alt={judge.name}
-              borderRadius="full"
-            />
-            <Heading size="title.sm" mt={4} textAlign="center">
-              {judge.name}
-            </Heading>
-            <Text size="body.md" textAlign="center">
-              {judge.description}
-            </Text>
-            <TrackedLink
-              href={`https://twitter.com/${judge.twitter}`}
-              isExternal
-              category={TRACKING_CATEGORY}
-              label={judge.name}
-              textAlign="center"
-            >
-              <Text size="label.md" color="gray.500">
-                @{judge.twitter}
-              </Text>
-            </TrackedLink>
-          </Flex>
-        ))}
-      </SimpleGrid>
-
-      <SimpleGrid
-        columns={{ base: 1, lg: 2 }}
-        gap={{ base: 8, md: 24 }}
-        justifyContent="space-evenly"
-        px={4}
-      >
-        {judges.slice(3, 5).map((judge) => (
+        {judges.map((judge) => (
           <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
             <MaskedAvatar
               boxSize={40}

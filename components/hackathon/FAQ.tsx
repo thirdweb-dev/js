@@ -5,12 +5,12 @@ import { LandingFAQ } from "components/landing-pages/faq";
 const faqs = [
   {
     title: "When is the hackathon being held?",
-    description: "The event will be held from December 8 to December 10, 2023.",
+    description: "The event will be held between February 9th — 11th, 2024.",
   },
   {
     title: "Where is the hackathon held?",
     description:
-      "This will be an in-person event held at the thirdweb offices in San Francisco. Teams will receive invites with a Location following registration.",
+      "This will be an in-person event held at the thirdweb offices in San Francisco. Teams will receive invites with a location following registration.",
   },
   {
     title: "Who is eligible to participate in the hackathon?",
