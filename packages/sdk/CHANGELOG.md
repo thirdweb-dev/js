@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 4.0.27
+
+### Patch Changes
+
+- [#2183](https://github.com/thirdweb-dev/js/pull/2183) [`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ZkSync Sepolia addresses
+
+- Updated dependencies [[`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/chains@0.1.64
+
 ## 4.0.26
 
 ### Patch Changes

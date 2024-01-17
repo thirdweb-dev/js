@@ -1,5 +1,38 @@
 # @thirdweb-dev/react-native
 
+## 0.6.2
+
+### Patch Changes
+
+- [#2182](https://github.com/thirdweb-dev/js/pull/2182) [`c4f1309d`](https://github.com/thirdweb-dev/js/commit/c4f1309dcdb599b8b5f014436bce8e63a7f5a9c6) Thanks [@iketw](https://github.com/iketw)! - Reports only react-nativec
+
+- [#2185](https://github.com/thirdweb-dev/js/pull/2185) [`324330d3`](https://github.com/thirdweb-dev/js/commit/324330d3549176542b05be5bede84ebd8f2684ca) Thanks [@iketw](https://github.com/iketw)! - Exports standalone ConnectEmbed UI
+
+  Devs can now show the Connect modal UI directly into their apps.
+  This component will render the wallets defined in our ThirdwebProvider.
+
+  ```tsx
+  <ConnectEmbed
+    modalTitleIconUrl="<my-icon-url>"
+    modalTitle="Sign In"
+    theme={"light"}
+    onConnect={() => {
+      console.log("wallet connected");
+    }}
+    container={{
+      paddingVertical: "md",
+      marginHorizontal: "md",
+      borderRadius: "md",
+    }}
+  />
+  ```
+
+- Updated dependencies [[`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264), [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/sdk@4.0.27
+  - @thirdweb-dev/chains@0.1.64
+  - @thirdweb-dev/react-core@4.3.2
+  - @thirdweb-dev/wallets@2.4.2
+
 ## 0.6.1
 
 ### Patch Changes
