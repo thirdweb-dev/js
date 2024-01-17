@@ -35,7 +35,7 @@ export const HeroSection = () => {
         "linear-gradient(43deg, #2E938C 14.8%, #4BB8B1 63.81%, #B8EEE8 104.19%)",
     },
     {
-      src: require("public/assets/landingpage/homepage-infra.png"),
+      src: require("public/assets/landingpage/homepage-engine.png"),
       href: "/engine",
       background: "linear-gradient(218deg, #946CBA -6.46%, #9444D3 93.97%)",
     },
