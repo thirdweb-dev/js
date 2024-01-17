@@ -30,14 +30,14 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Typedoc
-        run: pnpm typedoc
-
       - name: Generate Docs
         run: pnpm generate-docs
 
       - name: Generate Snippets
         run: pnpm generate-snippets
+
+      - name: Typedoc
+        run: pnpm typedoc
 
       - name: Commit changes
         run: |
