@@ -1,14 +1,16 @@
-import type { ThirdwebContract } from "../contract/index.js";
 import { type AbiFunction, parseAbiItem } from "abitype";
 import { resolveAbi } from "./resolveContractAbi.js";
 import type { ParseMethod } from "./types.js";
+import type { ThirdwebClient } from "../client/client.js";
+import type { GetContractOptions } from "../contract/index.js";
 
 export type MethodType = AbiFunction | string;
 
-export async function resolveAbiFunction<
-  const contract extends ThirdwebContract,
-  const method extends MethodType,
->(contract: contract, options: { method: method }) {
+export async function resolveAbiFunction<const method extends MethodType>(
+  // used later to resolve via RPC & storage directly
+  _client: ThirdwebClient,
+  options: GetContractOptions & { method: method },
+) {
   // check if we already have a parsed abiFunction as input
   if (isAbiFunction(options.method)) {
     // in this case just return it
@@ -28,7 +30,7 @@ export async function resolveAbiFunction<
     throw new Error(`could not find function with name ${options.method}`);
   } catch (e) {
     // if this fails we can download the abi of the contract and try parsing the entire abi
-    const abi = await resolveAbi(contract);
+    const abi = await resolveAbi(options);
     // we try to find the abiFunction in the abi
     const abiFunction = abi.find((item) => {
       // if the item is not a function we can ignore it
@@ -48,7 +50,7 @@ export async function resolveAbiFunction<
 
 // helpers
 
-function isAbiFunction(item: unknown): item is AbiFunction {
+export function isAbiFunction(item: unknown): item is AbiFunction {
   return !!(
     item &&
     typeof item === "object" &&

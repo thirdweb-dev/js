@@ -13,6 +13,6 @@ export type ThirdwebContract = ThirdwebClient & {
 export function getContract(
   client: ThirdwebClient,
   options: GetContractOptions,
-) {
-  return { ...client, ...options } as const;
+): ThirdwebContract {
+  return { ...client, ...options };
 }

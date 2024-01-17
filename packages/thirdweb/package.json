@@ -26,6 +26,11 @@
       "import": "./esm/react/index.js",
       "default": "./cjs/react/index.js"
     },
+    "./wallets/*": {
+      "types": "./types/wallets/*.d.ts",
+      "import": "./esm/wallets/*.js",
+      "default": "./cjs/wallets/*.js"
+    },
     "./package.json": "./package.json"
   },
   "browser": {

@@ -1,8 +1,9 @@
-import type { MethodType } from "./abi/resolveAbiFunction.js";
+import type { ParseMethod } from "./abi/types.js";
 import { createThirdwebClient } from "./client/client.js";
 import { getContract, type GetContractOptions } from "./contract/index.js";
-import { createTx, type TransactionOptions } from "./transaction/index.js";
+import { transaction, type TransactionOptions } from "./transaction/index.js";
 import { memoizePromise } from "./utils/promise.js";
+import type { AbiFunction } from "abitype";
 
 export type CreateClientOptions =
   | {
@@ -34,48 +35,57 @@ export function createClient(options: CreateClientOptions) {
   return {
     // add on the underlying client
     ...thirdwebClient,
-    getContract: (contractOptions: GetContractOptions) => {
+
+    // contract
+    contract: (contractOptions: GetContractOptions) => {
       const contract = getContract(thirdwebClient, contractOptions);
 
       return {
         ...contract,
         // add on the transaction function
-        createTx: <const method extends MethodType>(
-          transactionOptions: TransactionOptions<typeof contract, method>,
+        transaction: <
+          const method extends string,
+          const abi extends AbiFunction = method extends `function ${string}`
+            ? ParseMethod<method>
+            : AbiFunction,
+        >(
+          txOptions: TransactionOptions<method, abi>,
         ) => {
-          const tx = createTx(contract, transactionOptions);
+          const tx = transaction(thirdwebClient, {
+            ...txOptions,
+            ...contractOptions,
+          });
           return {
             ...tx,
             encode: memoizePromise(async () => {
               const { encode } = await import(
                 "./transaction/actions/encode.js"
               );
-              // @ts-expect-error - TODO: fix this
               return encode(tx);
             }),
+            read: async () => {
+              const { read } = await import("./transaction/actions/read.js");
+              return read(tx);
+            },
           };
         },
         // add on the read function
-        // read: <const method extends MethodType>(
-        //   readOptions: TransactionOptions<typeof contract, method>,
-        // ) => readContract(contract, readOptions),
+        read: async <
+          const method extends string,
+          const abi extends AbiFunction = method extends `function ${string}`
+            ? ParseMethod<method>
+            : AbiFunction,
+        >(
+          txOptions: TransactionOptions<method, abi>,
+        ) => {
+          const tx = transaction(thirdwebClient, {
+            ...txOptions,
+            ...contractOptions,
+          });
+          const { read } = await import("./transaction/actions/read.js");
+          return read(tx);
+        },
       };
     },
-    createTx: <const method extends MethodType>(
-      transactionOptions: TransactionOptions<typeof thirdwebClient, method>,
-    ) => {
-      const tx = createTx(thirdwebClient, transactionOptions);
-      return {
-        ...tx,
-        encode: memoizePromise(async () => {
-          const { encode } = await import("./transaction/actions/encode.js");
-          // @ts-expect-error - TODO: fix this
-          return encode(tx);
-        }),
-      };
-    },
-    // readContract: <const method extends MethodType>(
-    //   readOptions: TransactionOptions<typeof thirdwebClient, method>,
-    // ) => readContract(thirdwebClient, readOptions),
   };
 }

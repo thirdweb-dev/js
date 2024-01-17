@@ -1,37 +1,57 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { createClient } from "./src";
+import { privateKeyWallet } from "./src/wallets/private-key";
 
-const client = createClient({ clientId: "foo" });
-
-const encode1 = await client
-  .createTx({
-    address: "0x679fcB84162267426D8175DA205714A7B2Ca015f",
-    chainId: 137,
-    method: "function balanceOf(address owner) view returns (uint256)",
-    params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
-  })
-  .encode();
-
-console.log("encode1", encode1);
-
-const contract = client.getContract({
-  address: "0x679fcB84162267426D8175DA205714A7B2Ca015f",
-  chainId: 137,
+// Step 1: create a client
+const client = createClient({
+  // create a secret key at https://thirdweb.com/dashboard
+  secretKey: process.env.SECRET_KEY as string,
 });
 
-const encode2 = await contract
-  .createTx({
-    method: "function balanceOf(address owner) view returns (uint256)",
-    params: async () => ["0x0890C23024089675D072E984f28A93bb391a35Ab"] as const,
-  })
-  .encode();
+// Step 2: define a contract to interact with
+const contract = client.contract({
+  // the contract address
+  address: "0xBCfaB342b73E08858Ce927b1a3e3903Ddd203980",
+  // the chainId of the chain the contract is deployed on
+  chainId: 5,
+});
 
-console.log("encode2", encode2);
+// Step 3: read contract state
+const balance = await contract.read({
+  method: "function balanceOf(address) view returns (uint256)",
+  params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
+});
 
-const encode3 = await contract
-  .createTx({
-    method: "balanceOf",
-    params: async () => ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
-  })
-  .encode();
+console.log("beginning balance", balance);
 
-console.log("encode3", encode3);
+// Step 4: initialize a wallet
+const wallet = privateKeyWallet(client);
+
+await wallet.connect({ pkey: process.env.PKEY as string });
+
+// Step 5: create a transaction
+const tx = contract.transaction({
+  method: "function mintTo(address to, uint256 amount)",
+  params: [
+    "0x0890C23024089675D072E984f28A93bb391a35Ab",
+    BigInt(100) * BigInt(10) ** BigInt(18),
+  ],
+});
+
+// Step 6: execute the transaction with the wallet
+const receipt = await wallet.execute(tx);
+
+console.log("tx hash", receipt.transactionHash);
+
+// Step 7: wait for the receipt to be mined
+const txReceipt = await receipt.wait();
+
+console.log(txReceipt);
+
+// Step 8: read contract state
+const newBalance = await contract.read({
+  method: "function balanceOf(address) view returns (uint256)",
+  params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
+});
+
+console.log("ending balance", newBalance);
