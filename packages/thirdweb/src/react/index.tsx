@@ -1,15 +1,16 @@
-import { createContext } from "react";
+import { WallerProvider } from "./wallet-provider.js";
 
-const ThirdwebContext = createContext({});
-
-export type ThirdwebProviderProps = {
-  foo: string;
+export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
+  return <WallerProvider>{children}</WallerProvider>;
 };
 
-export const ThirdwebProvider: React.FC<
-  React.PropsWithChildren<ThirdwebProviderProps>
-> = ({ children }) => {
-  return (
-    <ThirdwebContext.Provider value={{}}>{children}</ThirdwebContext.Provider>
-  );
-};
+export {
+  useSetActiveWallet,
+  useConnect,
+  useActiveWallet,
+  useConnectedWallets,
+  useActiveWalletAddress,
+  WallerProvider,
+} from "./wallet-provider.js";

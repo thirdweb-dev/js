@@ -15,7 +15,7 @@ export interface IWallet {
   connect: (_opts: any) => Promise<void>;
   disconnect: () => Promise<void>;
   //
-  signMessage: (_message: SignableMessage) => Promise<Hex>;
+  signMessage?: (_message: SignableMessage) => Promise<Hex>;
   signTransaction?: (_tx: TransactionSerializable) => Promise<Hex>;
   signTypedData?: <
     const typedData extends TypedData | Record<string, unknown>,
