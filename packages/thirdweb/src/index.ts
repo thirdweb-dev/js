@@ -87,5 +87,39 @@ export function createClient(options: CreateClientOptions) {
         },
       };
     },
+    transaction: <
+      const method extends string,
+      const abi extends AbiFunction = method extends `function ${string}`
+        ? ParseMethod<method>
+        : AbiFunction,
+    >(
+      txOptions: TransactionOptions<method, abi> & GetContractOptions,
+    ) => {
+      const tx = transaction(thirdwebClient, txOptions);
+      return {
+        ...tx,
+        encode: memoizePromise(async () => {
+          const { encode } = await import("./transaction/actions/encode.js");
+          return encode(tx);
+        }),
+        read: async () => {
+          const { read } = await import("./transaction/actions/read.js");
+          return read(tx);
+        },
+      };
+    },
+    // add on the read function
+    read: async <
+      const method extends string,
+      const abi extends AbiFunction = method extends `function ${string}`
+        ? ParseMethod<method>
+        : AbiFunction,
+    >(
+      txOptions: TransactionOptions<method, abi> & GetContractOptions,
+    ) => {
+      const tx = transaction(thirdwebClient, txOptions);
+      const { read } = await import("./transaction/actions/read.js");
+      return read(tx);
+    },
   };
 }
