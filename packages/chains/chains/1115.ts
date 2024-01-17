@@ -38,6 +38,7 @@ export default {
     "https://rpc.test.btcs.network/"
   ],
   "shortName": "tcore",
+  "slip44": 1,
   "slug": "core-blockchain-testnet",
   "testnet": true
 } as const satisfies Chain;

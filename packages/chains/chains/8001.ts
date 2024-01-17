@@ -49,6 +49,7 @@ export default {
     "https://evm-rpc.testnet.teleport.network"
   ],
   "shortName": "teleport-testnet",
+  "slip44": 1,
   "slug": "teleport-testnet",
   "testnet": true
 } as const satisfies Chain;

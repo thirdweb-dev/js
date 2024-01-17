@@ -22,7 +22,11 @@ import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
 import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
+import { AddressZero } from "../../constants/addresses/AddressZero";
 
+/**
+ * @internal
+ */
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
   provider: providers.Provider,
@@ -165,22 +169,7 @@ export async function encodeConstructorParamsForImplementation(
         );
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (compilerMetadata.name === "Pack") {
-          // EOAForwarder for Pack
-          const deploymentInfo = await computeDeploymentInfo(
-            "infra",
-            provider,
-            storage,
-            create2Factory,
-            {
-              contractName: "ForwarderEOAOnly",
-            },
-            clientId,
-            secretKey,
-          );
-          if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
-            caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
-          }
-          return deploymentInfo.transaction.predictedAddress;
+          return AddressZero;
         }
 
         const deploymentInfo = await computeDeploymentInfo(

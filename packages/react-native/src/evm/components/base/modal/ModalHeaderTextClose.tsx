@@ -12,6 +12,9 @@ interface ModalHeaderTextCloseProps {
   onBackPress?: () => void;
 }
 
+/**
+ * @internal
+ */
 export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,

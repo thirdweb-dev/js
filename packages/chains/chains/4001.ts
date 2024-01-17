@@ -36,6 +36,7 @@ export default {
     "https://rpc-testnet.peperium.io"
   ],
   "shortName": "PERIUM",
+  "slip44": 1,
   "slug": "peperium-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

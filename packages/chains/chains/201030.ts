@@ -33,6 +33,7 @@ export default {
     "wss://devnetopenapi.alaya.network/ws"
   ],
   "shortName": "alayadev",
+  "slip44": 1,
   "slug": "alaya-dev-testnet",
   "testnet": true
 } as const satisfies Chain;

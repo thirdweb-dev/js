@@ -2,21 +2,24 @@ export type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-export function deepMerge<T>(target: T, source: DeepPartial<T>): T {
+export function deepMerge<T>(target: T, source: DeepPartial<T> = {}): T {
   for (const key in source) {
+    if (!source.hasOwnProperty(key)) {
+      continue;
+    }
     if (
-      source[key] instanceof Object &&
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      key in target &&
-      target[key] instanceof Object
+      isObject(target) &&
+      target.hasOwnProperty(key) &&
+      isObject(target[key])
     ) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       deepMerge(target[key], source[key]);
     } else {
-      target[key] = source[key] as any;
+      target[key] = source[key] as (typeof target)[typeof key];
     }
   }
   return target;
+}
+
+function isObject(obj: any): obj is object {
+  return obj !== null && typeof obj === "object";
 }

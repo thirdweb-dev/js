@@ -1,8 +1,8 @@
 /**
  * @internal
- * @param name
- * @param metadata
- * @param type
+ * @param name - The name of the function to extract the comment from
+ * @param metadata - The metadata to extract the comment from
+ * @param type - The type of the function to extract the comment from
  */
 export function extractCommentFromMetadata(
   name: string | undefined,

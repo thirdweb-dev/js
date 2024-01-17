@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from "react";
-import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
 import { isMobile } from "../utils/isMobile";
 import { Theme } from "../../design-system";
 import { WelcomeScreen } from "../../wallet/ConnectWallet/screens/types";
+import { useTWLocale } from "./locale-provider";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -20,6 +20,8 @@ export type ModalConfig = {
     onLogin?: (token: string) => void;
     onLogout?: () => void;
   };
+  isEmbed?: boolean;
+  onConnect?: () => void;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -47,13 +49,21 @@ export const WalletUIStatesProvider = (
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
     welcomeScreen?: WelcomeScreen;
+    isEmbed?: boolean;
+    auth?: {
+      loginOptional?: boolean;
+      onLogin?: (token: string) => void;
+      onLogout?: () => void;
+    };
+    onConnect?: () => void;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const _isMobile = isMobile();
+  const locale = useTWLocale();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: props.title || defaultModalTitle,
+    title: props.title || locale.connectWallet.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
     modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",
@@ -61,6 +71,9 @@ export const WalletUIStatesProvider = (
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.titleIconUrl,
+    isEmbed: props.isEmbed,
+    auth: props.auth,
+    onConnect: props.onConnect,
   });
 
   return (
@@ -76,10 +89,47 @@ export const WalletUIStatesProvider = (
   );
 };
 
+/**
+ * Check if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal is open or not
+ *
+ * @example
+ * ```tsx
+ * const isOpen = useIsWalletModalOpen();
+ * ```
+ *
+ * @returns `true` if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) modal is open, `false` otherwise
+ * @connectWallet
+ */
 export const useIsWalletModalOpen = () => {
   return useContext(WalletModalOpen);
 };
 
+/**
+ * Open or close the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal
+ *
+ * @example
+ * ```tsx
+ * const setIsWalletModalOpen = useSetIsWalletModalOpen();
+ *
+ * function openModal() {
+ *  setIsWalletModalOpen(true);
+ * }
+ *
+ * function closeModal() {
+ *  setIsWalletModalOpen(false);
+ * }
+ *
+ * return (
+ *   <div>
+ *    <button onClick={openModal}>Open Modal</button>
+ *    <button onClick={closeModal}>Close Modal</button>
+ *   </div>
+ * )
+ * ```
+ *
+ * @returns Function to open or close the modal
+ * @connectWallet
+ */
 export const useSetIsWalletModalOpen = () => {
   const context = useContext(SetWalletModalOpen);
   if (context === undefined) {

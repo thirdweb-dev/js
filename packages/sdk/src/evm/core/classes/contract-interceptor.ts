@@ -1,9 +1,9 @@
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, CallOverrides } from "ethers";
 
 /**
  * Allows overriding transaction behavior for this contract
- * @public
+ * @internal
  */
 export class ContractInterceptor<TContract extends BaseContract> {
   private contractWrapper;

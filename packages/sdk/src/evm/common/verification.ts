@@ -2,7 +2,10 @@ import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
 import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
 import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
-import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
+import {
+  resolveContractUriFromAddress,
+  resolveImplementation,
+} from "./feature-detection/resolveContractUriFromAddress";
 import { fetchSourceFilesFromMetadata } from "./fetchSourceFilesFromMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
@@ -15,6 +18,7 @@ import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
 import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
+import { getCreate2FactoryAddress } from "./any-evm-utils/getCreate2FactoryAddress";
 
 const RequestStatus = {
   OK: "1",
@@ -47,11 +51,11 @@ const RequestStatus = {
  *   storage // this could be used from the SDK instance, e.g. sdk.storage
  * );
  * ```
- * @param contractName
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param storage
+ * @param contractName - Name of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param storage - Storage instance
  */
 export async function verifyThirdwebPrebuiltImplementation(
   contractName: string,
@@ -117,11 +121,11 @@ export async function verifyThirdwebPrebuiltImplementation(
  *   storage // this could be used from the SDK instance, e.g. sdk.storage
  * );
  * ```
- * @param contractAddress
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param storage
+ * @param contractAddress - Address of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param storage - Storage instance
  */
 export async function verify(
   contractAddress: string,
@@ -133,6 +137,8 @@ export async function verify(
 ): Promise<string | string[]> {
   try {
     const provider = getChainProvider(chainId, {});
+    contractAddress = (await resolveImplementation(contractAddress, provider))
+      .address;
     const compilerMetadata = await fetchContractMetadataFromAddress(
       contractAddress,
       provider,
@@ -236,9 +242,9 @@ export async function verify(
  * @internal
  *
  * Check status of the contract submitted for verification to the explorer
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param guid
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param guid - GUID of the contract verification
  */
 export async function checkVerificationStatus(
   explorerAPIUrl: string,
@@ -271,12 +277,12 @@ export async function checkVerificationStatus(
  * @internal
  *
  * Check if the contract is already verified on etherscan
- * @param contractAddress
- * @param chainId
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * ClientId get from https://thirdweb.com/create-api-key
- * @param clientId
+ * @param contractAddress - Address of the contract to verify
+ * @param chainId - Chain ID of the network
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ *
+ * @param clientId - Client ID: Get from https://thirdweb.com/create-api-key
  */
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
@@ -320,12 +326,12 @@ export async function isVerifiedOnEtherscan(
  * @internal
  *
  * Fetch the deploy transaction from the given contract address and extract the encoded constructor parameters
- * @param explorerAPIUrl
- * @param explorerAPIKey
- * @param contractAddress
- * @param abi
- * @param provider
- * @param storage
+ * @param explorerAPIUrl - Explorer API URL
+ * @param explorerAPIKey - Explorer API Key
+ * @param contractAddress - Address of the contract to verify
+ * @param abi - ABI of the contract to verify
+ * @param provider - Provider instance
+ * @param storage - Storage instance
  */
 async function fetchConstructorParams(
   explorerAPIUrl: string,
@@ -339,21 +345,10 @@ async function fetchConstructorParams(
   if (constructorParamTypes.length === 0) {
     return "";
   }
-  const requestBody = {
-    apiKey: explorerAPIKey,
-    module: "account",
-    action: "txlist",
-    address: contractAddress,
-    page: "1",
-    sort: "asc",
-    offset: "1",
-  };
-  const parameters = new URLSearchParams({ ...requestBody });
-  const result = await fetch(explorerAPIUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: parameters.toString(),
-  });
+
+  const result = await fetch(
+    `${explorerAPIUrl}?module=contract&action=getcontractcreation&contractaddresses=${contractAddress}&apikey=${explorerAPIKey}`,
+  );
   const data = await result.json();
   if (
     data &&
@@ -361,12 +356,15 @@ async function fetchConstructorParams(
     data.result[0] !== undefined
   ) {
     const contract = new utils.Interface(abi);
-    const txDeployBytecode = data.result[0].input;
+    const txHash = data.result[0].txHash;
     let constructorArgs = "";
 
     if (contract.deploy.inputs.length === 0) {
       return "";
     }
+
+    const tx = await provider.getTransaction(txHash);
+    const txDeployBytecode = tx.data;
 
     // first: attempt to get it from Publish
     try {
@@ -382,7 +380,16 @@ async function fetchConstructorParams(
           ? bytecode
           : `0x${bytecode}`;
 
-        constructorArgs = txDeployBytecode.substring(bytecodeHex.length);
+        let create2FactoryAddress;
+        try {
+          create2FactoryAddress = await getCreate2FactoryAddress(provider);
+        } catch (error) {}
+
+        // if deterministic deploy through create2factory, remove salt length too
+        const create2SaltLength = tx.to === create2FactoryAddress ? 64 : 0;
+        constructorArgs = txDeployBytecode.substring(
+          bytecodeHex.length + create2SaltLength,
+        );
       }
     } catch (e) {
       // contracts not published through thirdweb
@@ -441,9 +448,9 @@ async function fetchConstructorParams(
  * @internal
  *
  * Fetches the Publish metadata on the ContractPublisher registry (on polygon) for the given contract address (on any chain)
- * @param contractAddress
- * @param provider
- * @param storage
+ * @param contractAddress - Address of the contract to verify
+ * @param provider - Provider instance
+ * @param storage - Storage instance
  * @returns
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(

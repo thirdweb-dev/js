@@ -27,6 +27,7 @@ export default {
     "ws://godwoken-testnet-web3-rpc.ckbapp.dev/ws"
   ],
   "shortName": "ckb",
+  "slip44": 1,
   "slug": "polyjuice-testnet",
   "testnet": true
 } as const satisfies Chain;

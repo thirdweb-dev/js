@@ -35,6 +35,7 @@ export default {
     "https://replica.testnet.avax.boba.network"
   ],
   "shortName": "BobaFujiTestnet",
+  "slip44": 1,
   "slug": "bobafuji-testnet",
   "testnet": true
 } as const satisfies Chain;

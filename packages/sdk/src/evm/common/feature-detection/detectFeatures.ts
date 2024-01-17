@@ -9,9 +9,9 @@ import { hasMatchingAbi, matchesAbiFromBytecode } from "./hasMatchingAbi";
 /**
  * Processes ALL supported features and sets whether the passed in abi supports each individual feature
  * @internal
- * @param abi
- * @param features
- * @returns the nested struct of all features and whether they're detected in the abi
+ * @param abi - The abi to detect features in
+ * @param features - The features to detect
+ * @returns The nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
   abi: AbiInput,
@@ -31,6 +31,9 @@ export function detectFeatures(
   return results;
 }
 
+/**
+ * @internal
+ */
 export function detectFeaturesFromBytecode(
   bytecode: string,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
@@ -51,8 +54,8 @@ export function detectFeaturesFromBytecode(
 
 /**
  * @internal
- * @param abi
- * @param feature
+ * @param abi - The abi to check
+ * @param feature - The feature to check
  */
 function matchesAbiInterface(abi: AbiInput, feature: Feature): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)

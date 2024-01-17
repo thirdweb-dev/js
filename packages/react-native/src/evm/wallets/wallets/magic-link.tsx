@@ -21,6 +21,16 @@ import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
+/**
+ *
+ * @param magicLinkOptions - Options available to create a magic link wallet
+ * @returns A WalletConfig<MagicLink> object
+ *
+ * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.
+ * To learn more, please see:
+ *
+ * Check out [Release Note](https://portal.thirdweb.com/wallets/embedded-wallet/overview) and [Documentation](https://portal.thirdweb.com/react-native/v0/wallets/embedded-wallet) for more details.
+ */
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
 ): WalletConfig<MagicLink> => {

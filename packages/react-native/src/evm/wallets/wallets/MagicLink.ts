@@ -6,6 +6,12 @@ import {
 import type { MagicConnector as MagicConnectorType } from "../connectors/magic/magic-connector";
 import { MagicConnector } from "../connectors/magic/magic-connector";
 
+/**
+ * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.
+ * To learn more, please see:
+ *
+ * Checkout the [Release Notes](https://portal.thirdweb.com/wallets/embedded-wallet/overview) and [Documentation](https://portal.thirdweb.com/react-native/v0/wallets/embedded-wallet) for more information.
+ */
 export class MagicLink extends AbstractClientWallet<
   MagicLinkOptions,
   MagicConnectorOptions

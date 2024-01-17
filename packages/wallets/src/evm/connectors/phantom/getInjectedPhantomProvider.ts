@@ -8,6 +8,9 @@ declare global {
   }
 }
 
+/**
+ * @internal
+ */
 export function getInjectedPhantomProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;

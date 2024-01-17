@@ -3,9 +3,7 @@ import type {
   AirdropInput,
   Amount,
   Erc721,
-  Erc721Mintable,
   Erc1155,
-  Erc1155Mintable,
   ListingType,
   NFTMetadataInput,
   Price,
@@ -40,6 +38,9 @@ type AddEthereumChainParameter = {
   iconUrls?: string[];
 };
 
+/**
+ * @internal
+ */
 export type Chain = {
   id: number;
   name: AddEthereumChainParameter["chainName"];
@@ -54,20 +55,18 @@ export type Chain = {
 
 /**
  * A wallet address.
- * @beta
+ * @walletConnection
  */
 export type WalletAddress = AddressOrEns;
 
 /**
  * A contract address.
- * @beta
  */
 export type ContractAddress = AddressOrEns;
 
 /**
  * The parameters to pass to the mint and transfer functions.
- *
- * @beta
+ * @token
  */
 export type TokenParams = {
   to: WalletAddress;
@@ -76,8 +75,7 @@ export type TokenParams = {
 
 /**
  * The parameters to pass to the burn function.
- *
- * @beta
+ * @token
  */
 export type TokenBurnParams = {
   amount: Amount;
@@ -87,11 +85,7 @@ export type TokenBurnParams = {
 
 /**
  * The possible NFT contract types.
- * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * ```
- * @beta
+ * @nft
  */
 export type NFTContract =
   | NFTCollection
@@ -102,23 +96,19 @@ export type NFTContract =
 
 /**
  * The possible Token contract types.
- * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * ```
- * @beta
+ * @token
  */
 export type TokenContract = TokenDrop | Token | SmartContract | null;
 
 /**
  * Possible NFT contract types.
- * @beta
+ * @internal
  */
 export type Erc721OrErc1155 = Erc721 | Erc1155;
 
 /**
  * The params to pass to `useTransferNFT`.
- * @beta
+ * @nft
  */
 export type TransferNFTParams = {
   to: WalletAddress;
@@ -128,7 +118,7 @@ export type TransferNFTParams = {
 
 /**
  * The params to pass to `useTransferBatchNFT`.
- * @beta
+ * @nft
  */
 export type AirdropNFTParams = {
   tokenId: BigNumberish;
@@ -137,7 +127,7 @@ export type AirdropNFTParams = {
 
 /**
  * The params to pass to `useMintNFTSupply`.
- * @beta
+ * @nft
  */
 export type MintNFTSupplyParams = {
   tokenId: BigNumberish;
@@ -146,9 +136,8 @@ export type MintNFTSupplyParams = {
 };
 
 /**
- * The params for the {@link useMintNFT} hook mutation.
- *
- * @beta
+ * The params for the `useMintNFT` hook mutation.
+ * @nft
  */
 export type MintNFTParams = {
   metadata: NFTMetadataOrUri;
@@ -157,20 +146,19 @@ export type MintNFTParams = {
 };
 
 /**
- * The return type of the {@link useMintNFT} hook.
- *
- * @beta
+ * The return type of the `useMintNFT` hook.
+ * @nft
  */
 export type MintNFTReturnType<TContract> = TContract extends Erc721
-  ? Awaited<ReturnType<Erc721Mintable["to"]>>
+  ? Awaited<ReturnType<Erc721["mintTo"]>>
   : TContract extends Erc1155
-  ? Awaited<ReturnType<Erc1155Mintable["to"]>>
+  ? Awaited<ReturnType<Erc1155["mintTo"]>>
   : never;
 
 /**
- * The params for the {@link useBurnNFT} hook mutation.
+ * The params for the `useBurnNFT` hook mutation.
  *
- * @beta
+ * @nft
  */
 export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
@@ -178,7 +166,7 @@ export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
 /**
  * The possible DROP contract types.
- * @beta
+ * @nftDrop
  */
 export type DropContract =
   | NFTDrop
@@ -190,25 +178,36 @@ export type DropContract =
 
 /**
  * The possible revealable contract types.
- * @beta
+ * @delayedReveal
  */
 export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
- *
- * @beta
+ * @delayedReveal
  */
 export type DelayedRevealLazyMintInput = {
+  /**
+   * The placeholder object represents the metadata the NFTs will have until the owner reveals the metadata.
+   */
   placeholder: NFTMetadataInput;
+  /**
+   * An array of metadata objects, representing the metadata of the NFTs to be lazy-minted.
+   *
+   * Each metadata object must conform to the [standard metadata properties](https://docs.opensea.io/docs/metadata-standards).
+   */
   metadatas: NFTMetadataInput[];
+  /**
+   * The password used to encrypt the metadatas.
+   *
+   * __The password CANNOT be recovered once it is set. If you lose the password, you will not be able to reveal the metadata.__
+   */
   password: string;
 };
 
 /**
  * The params for the {@link useRevealLazyMint} hook mutation.
- *
- * @beta
+ * @delayedReveal
  */
 export type RevealLazyMintInput = {
   batchId: BigNumberish;
@@ -216,9 +215,8 @@ export type RevealLazyMintInput = {
 };
 
 /**
- * The params for the {@link useClaimNFT} hook mutation.
- *
- * @beta
+ * The params for the `useClaimNFT` hook mutation.
+ * @nftDrop
  */
 export type ClaimNFTParams = {
   to?: WalletAddress;
@@ -231,9 +229,8 @@ export type ClaimNFTParams = {
 };
 
 /**
- * The return type of the {@link useClaimNFT} hook.
- *
- * @beta
+ * The return type of the `useClaimNFT` hook.
+ * @nftDrop
  */
 export type ClaimNFTReturnType =
   | Awaited<ReturnType<Erc721["claimTo"]>>
@@ -241,41 +238,101 @@ export type ClaimNFTReturnType =
 
 // MARKETPLACE //
 
+/**
+ * @marketplace
+ */
 export type MakeBidParams = { listingId: BigNumberish; bid: Price };
+
+/**
+ * @marketplace
+ */
 export type MakeOfferParams = {
   listingId: BigNumberish;
   pricePerToken: Price;
   quantity?: Amount;
 };
+
+/**
+ * @marketplace
+ */
 export type AcceptDirectOffer = {
+  /**
+   * The `listingId` of the listing you wish to accept. Each listing has a unique `listingId` on the `Marketplace` contract.
+   */
   listingId: BigNumberish;
+  /**
+   * The wallet address of the user who made the offer you wish to accept.
+   *
+   * The `useContractEvents` hook can be used to read all `"NewOffer"` events on your `Marketplace` contract.
+   */
   addressOfOfferor: string;
 };
+
+/**
+ * @marketplace
+ */
 export type ExecuteAuctionSale = {
   listingId: BigNumberish;
 };
 
+/**
+ * @marketplace
+ */
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
     ? {
+        /**
+         * The ID of the listing you want to buy.
+         */
         id: BigNumberish;
+        /**
+         * The type of listing. Either ListingType.Direct (0) or ListingType.Auction (1).
+         */
         type: ListingType.Direct;
+        /**
+         * The amount of tokens you want to buy from the listing.
+         *
+         * Applicable for ERC1155 listings only, should always be `1` for ERC721 listings.
+         */
         buyAmount: BigNumberish;
+        /**
+         * Optionally, specify a different wallet address to buy the listing for.
+         */
         buyForWallet?: WalletAddress;
       }
     : {
+        /**
+         * The ID of the listing you want to buy.
+         */
         id: BigNumberish;
+        /**
+         * The type of listing. Either ListingType.Direct (0) or ListingType.Auction (1).
+         */
         type: ListingType.Auction;
       };
 
 export type BuyFromListingParams = {
+  /**
+   * The ID of the direct listing you want to buy.
+   */
   listingId: string;
+  /**
+   * The amount of tokens you want to buy from the listing.
+   *
+   * Applicable for ERC1155 listings only, should always be `1` for ERC721 listings.
+   */
   quantity: Amount;
+  /**
+   * Specify a different wallet address to buy the listing for.
+   */
   buyer: WalletAddress;
 };
 
 // TOKEN DROP //
 
+/**
+ * @token
+ */
 export type ClaimTokenParams = {
   to: WalletAddress;
   amount: Amount;
@@ -284,6 +341,9 @@ export type ClaimTokenParams = {
 
 // Helpers
 
+/**
+ * @internal
+ */
 export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   return {
     erc1155: getErc1155(contract),
@@ -292,6 +352,9 @@ export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   };
 }
 
+/**
+ * @internal
+ */
 export function getErc1155(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc1155 | undefined {
@@ -308,6 +371,9 @@ export function getErc1155(
   return undefined;
 }
 
+/**
+ * @internal
+ */
 export function getErc721(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc721 | undefined {
@@ -324,6 +390,9 @@ export function getErc721(
   return undefined;
 }
 
+/**
+ * @internal
+ */
 export function getErc20(
   contract: RequiredParam<ValidContractInstance | null>,
 ): Erc20 | undefined {

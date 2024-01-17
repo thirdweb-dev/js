@@ -2,64 +2,57 @@ import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import {
-  ConnectUIProps,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
-import { GOOGLE_ICON } from "../../../assets";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, Text, WalletButton } from "../../../components/base";
+import { AUTH_OPTIONS_ICONS, SocialLogin } from "../../types/embedded-wallet";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
-> = ({ goBack, selectionData, onLocallyConnected }) => {
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
+> = ({ goBack, selectionData, setConnectedWallet, setConnectionStatus }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const handleGoogleLogin = useCallback(() => {
+  const handleSocialLogin = useCallback(() => {
     setErrorMessage("");
 
     setTimeout(async () => {
-      const emailWallet = selectionData.emailWallet as EmbeddedWallet;
+      const embeddedWallet = selectionData.emailWallet as EmbeddedWallet;
 
       try {
-        const authResult = await emailWallet.authenticate({
-          strategy: "google",
+        const authResult = await embeddedWallet.authenticate({
+          strategy: selectionData.oauthOptions?.provider as SocialLogin,
           redirectUrl: selectionData.oauthOptions?.redirectUrl,
         });
 
-        const response = await emailWallet.connect({ authResult });
+        const response = await embeddedWallet.connect({ authResult });
 
         if (response) {
-          if (onLocallyConnected) {
-            onLocallyConnected(selectionData.emailWallet);
-          } else {
-            await setConnectedWallet(selectionData.emailWallet);
-            setConnectionStatus("connected");
-          }
+          setConnectedWallet(selectionData.emailWallet);
+          setConnectionStatus("connected");
         } else {
           setErrorMessage(
-            response || "Error login in. Please try again later.",
+            response || "Error signing in. Please try again later.",
           );
         }
       } catch (error) {
-        console.error("Error logging in with google: ", error);
-        setErrorMessage(`Error login in. ${error}`);
+        console.error(
+          `Error signing in with ${selectionData.oauthOptions?.provider}: `,
+          error,
+        );
+        setErrorMessage(`${error}`);
       }
     }, 0);
   }, [
-    onLocallyConnected,
     selectionData.emailWallet,
-    selectionData.oauthOptions,
+    selectionData.oauthOptions?.provider,
+    selectionData.oauthOptions?.redirectUrl,
     setConnectedWallet,
     setConnectionStatus,
   ]);
 
   useEffect(() => {
-    handleGoogleLogin();
-  }, [handleGoogleLogin]);
+    handleSocialLogin();
+  }, [handleSocialLogin]);
 
   return (
     <Box marginHorizontal="xl" height={200}>
@@ -71,7 +64,11 @@ export const EmbeddedSocialConnection: React.FC<
             borderRadius="lg"
             justifyContent="center"
             name="Sign In"
-            walletIconUrl={GOOGLE_ICON}
+            walletIconUrl={
+              AUTH_OPTIONS_ICONS[
+                selectionData.oauthOptions?.provider as SocialLogin
+              ]
+            }
           />
         }
         subHeaderText={""}

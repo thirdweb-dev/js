@@ -20,6 +20,7 @@ export default {
   "networkId": 81361,
   "rpc": [],
   "shortName": "mizanatest",
+  "slip44": 1,
   "slug": "mizana-testnet",
   "status": "incubating",
   "testnet": true

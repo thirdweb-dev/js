@@ -3,7 +3,7 @@ import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
@@ -12,6 +12,8 @@ import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
@@ -19,7 +21,10 @@ export const CreateLocalWallet_Password: React.FC<{
   localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
   persist: boolean;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +36,7 @@ export const CreateLocalWallet_Password: React.FC<{
     props.persist,
   );
 
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -56,6 +61,8 @@ export const CreateLocalWallet_Password: React.FC<{
           setShowImportScreen(false);
         }}
         persist={props.persist}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }
@@ -90,10 +97,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
       <Line />
       <Container expand p="lg">
-        <ModalDescription>
-          Choose a password for your wallet <br /> You{`'`}ll be able to access
-          and export this wallet with the same password
-        </ModalDescription>
+        <ModalDescription>{locale.createScreen.instruction}</ModalDescription>
 
         <Spacer y="lg" />
 
@@ -124,7 +128,7 @@ export const CreateLocalWallet_Password: React.FC<{
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
               onClick: () => setShowPassword(!showPassword),
             }}
-            label="Password"
+            label={locale.passwordLabel}
             type={showPassword ? "text" : "password"}
             value={password}
             dataTest="new-password"
@@ -143,7 +147,7 @@ export const CreateLocalWallet_Password: React.FC<{
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
               onClick: () => setShowPassword(!showPassword),
             }}
-            label="Confirm Password"
+            label={locale.confirmPasswordLabel}
             type={showPassword ? "text" : "password"}
             value={confirmPassword}
             error={passwordMismatch ? "Passwords don't match" : ""}
@@ -167,7 +171,9 @@ export const CreateLocalWallet_Password: React.FC<{
             }}
             data-test="create-new-wallet-button"
           >
-            {isConnecting ? "Connecting" : "Create new wallet"}
+            {isConnecting
+              ? locale.createScreen.connecting
+              : locale.createScreen.createNewWallet}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
@@ -189,7 +195,7 @@ export const CreateLocalWallet_Password: React.FC<{
             alignItems: "center",
           }}
         >
-          Import wallet
+          {locale.createScreen.importWallet}
         </Button>
       </Container>
     </Container>
@@ -201,9 +207,11 @@ export const CreateLocalWallet_Guest: React.FC<{
   goBack: () => void;
   localWallet: LocalWalletConfig;
   persist: boolean;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet, props.persist);
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
   const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {

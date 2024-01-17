@@ -18,6 +18,7 @@ export default {
     "http://test-rpc.dbmbp.com"
   ],
   "shortName": "dbm",
+  "slip44": 1,
   "slug": "dbchain-testnet",
   "testnet": true
 } as const satisfies Chain;

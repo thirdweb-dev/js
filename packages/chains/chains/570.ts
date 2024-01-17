@@ -24,9 +24,7 @@ export default {
     "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://570.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
-    "https://rollux.public-rpc.com",
-    "wss://rpc.rollux.com/wss",
-    "https://rpc.ankr.com/rollux/${ANKR_API_KEY}"
+    "wss://rpc.rollux.com/wss"
   ],
   "shortName": "sys-rollux",
   "slug": "rollux",

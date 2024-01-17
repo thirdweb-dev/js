@@ -4,8 +4,8 @@ export default {
   "chainId": 44787,
   "explorers": [
     {
-      "name": "Celoscan",
-      "url": "https://alfajores.celoscan.io/",
+      "name": "Alfajoresscan",
+      "url": "https://alfajores.celoscan.io",
       "standard": "EIP3091"
     }
   ],
@@ -30,6 +30,7 @@ export default {
     "wss://alfajores-forno.celo-testnet.org/ws"
   ],
   "shortName": "ALFA",
+  "slip44": 1,
   "slug": "celo-alfajores-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

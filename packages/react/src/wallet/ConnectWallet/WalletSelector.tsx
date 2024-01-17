@@ -7,12 +7,13 @@ import {
   ScreenBottomContainer,
   Line,
 } from "../../components/basic";
-import { Button } from "../../components/buttons";
+import { Button, IconButton } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
-import { iconSize, radius, spacing, Theme } from "../../design-system";
-import styled from "@emotion/styled";
+import { iconSize, radius, spacing } from "../../design-system";
 import {
+  SelectUIProps,
   WalletConfig,
+  WalletInstance,
   useConnectionStatus,
   useDisconnect,
 } from "@thirdweb-dev/react-core";
@@ -26,12 +27,30 @@ import { Link, Text } from "../../components/text";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import { StyledButton, StyledUl } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+
+type WalletSelectUIProps = {
+  connect: (
+    walletConfig: WalletConfig,
+    options?: any,
+  ) => Promise<WalletInstance>;
+  connectionStatus: SelectUIProps<any>["connectionStatus"];
+  createWalletInstance: (walletConfig: WalletConfig) => WalletInstance;
+  setConnectedWallet: SelectUIProps<any>["setConnectedWallet"];
+  setConnectionStatus: SelectUIProps<any>["setConnectionStatus"];
+  connectedWallet?: WalletInstance;
+  connectedWalletAddress?: string;
+};
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   onGetStarted: () => void;
   title: string;
+  selectUIProps: WalletSelectUIProps;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const isCompact = modalConfig.modalSize === "compact";
@@ -39,6 +58,7 @@ export const WalletSelector: React.FC<{
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
   const disconnect = useDisconnect();
   const connectionStatus = useConnectionStatus();
+  const locale = useTWLocale().connectWallet;
 
   const localWalletConfig = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
@@ -73,7 +93,7 @@ export const WalletSelector: React.FC<{
       }}
       data-test="continue-as-guest-button"
     >
-      Continue as Guest
+      {locale.continueAsGuest}
     </Button>
   );
 
@@ -148,7 +168,7 @@ export const WalletSelector: React.FC<{
           />
         ))}
       </Container>
-      Connect a wallet
+      {locale.connectAWallet}
     </Button>
   );
 
@@ -160,7 +180,7 @@ export const WalletSelector: React.FC<{
       }}
     >
       <Text color="secondaryText" size="sm" weight={500}>
-        New to wallets?
+        {locale.newToWallets}
       </Text>
       <Link
         weight={500}
@@ -168,7 +188,7 @@ export const WalletSelector: React.FC<{
         target="_blank"
         href="https://blog.thirdweb.com/web3-wallet/"
       >
-        Get started
+        {locale.getStarted}
       </Link>
     </Container>
   );
@@ -190,6 +210,7 @@ export const WalletSelector: React.FC<{
       <WalletSelection
         walletConfigs={nonLocalWalletConfigs}
         selectWallet={handleSelect}
+        selectUIProps={props.selectUIProps}
       />
     );
 
@@ -208,6 +229,7 @@ export const WalletSelector: React.FC<{
         <WalletSelection
           walletConfigs={nonLocalWalletConfigs}
           selectWallet={handleSelect}
+          selectUIProps={props.selectUIProps}
         />
       );
 
@@ -243,10 +265,11 @@ export const WalletSelector: React.FC<{
             <WalletSelection
               walletConfigs={socialWallets}
               selectWallet={handleSelect}
+              selectUIProps={props.selectUIProps}
             />
             {eoaWallets.length > 0 && (
               <>
-                <TextDivider text="OR" />
+                <TextDivider text={locale.or} />
                 <Spacer y="lg" />
               </>
             )}
@@ -298,6 +321,7 @@ export const WalletSelector: React.FC<{
                   <WalletSelection
                     walletConfigs={eoaWallets}
                     selectWallet={handleSelect}
+                    selectUIProps={props.selectUIProps}
                   />
                 </Container>
 
@@ -327,6 +351,7 @@ export const WalletSelector: React.FC<{
           <WalletSelection
             walletConfigs={eoaWallets}
             selectWallet={handleSelect}
+            selectUIProps={props.selectUIProps}
           />
         );
 
@@ -340,28 +365,62 @@ export const WalletSelector: React.FC<{
   return (
     <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
-      <Container p="lg">
-        {isWalletGroupExpanded ? (
-          <ModalHeader
-            title={twTitle}
-            onBack={() => {
-              setIsWalletGroupExpanded(false);
-            }}
-          />
-        ) : (
-          twTitle
-        )}
-      </Container>
+      {!modalConfig.isEmbed && (
+        <Container p="lg">
+          {isWalletGroupExpanded ? (
+            <ModalHeader
+              title={twTitle}
+              onBack={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+            />
+          ) : (
+            twTitle
+          )}
+        </Container>
+      )}
 
       {/* Body */}
       <Container
         expand
         scrollY
         px="md"
-        style={{
-          paddingTop: "2px",
-        }}
+        style={
+          modalConfig.isEmbed
+            ? {
+                paddingTop: spacing.lg,
+              }
+            : {
+                paddingTop: "2px",
+              }
+        }
       >
+        {modalConfig.isEmbed && isWalletGroupExpanded && (
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              padding: spacing.sm,
+              paddingTop: 0,
+            }}
+          >
+            <IconButton
+              onClick={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+              style={{
+                gap: spacing.xxs,
+                transform: `translateX(-${spacing.xs})`,
+                paddingBlock: spacing.xxs,
+                paddingRight: spacing.xs,
+              }}
+            >
+              <ChevronLeftIcon width={iconSize.sm} height={iconSize.sm} />
+              {locale.goBackButton}
+            </IconButton>
+          </Container>
+        )}
+
         {topSection}
       </Container>
 
@@ -374,6 +433,7 @@ export const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   maxHeight?: string;
+  selectUIProps: WalletSelectUIProps;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
@@ -398,6 +458,19 @@ export const WalletSelection: React.FC<{
                   setModalConfig((config) => ({ ...config, data }));
                 }}
                 walletConfig={walletConfig}
+                connect={(options: any) =>
+                  props.selectUIProps.connect(walletConfig, options)
+                }
+                connectionStatus={props.selectUIProps.connectionStatus}
+                createWalletInstance={() =>
+                  props.selectUIProps.createWalletInstance(walletConfig)
+                }
+                setConnectedWallet={props.selectUIProps.setConnectedWallet}
+                setConnectionStatus={props.selectUIProps.setConnectionStatus}
+                connectedWallet={props.selectUIProps.connectedWallet}
+                connectedWalletAddress={
+                  props.selectUIProps.connectedWalletAddress
+                }
               />
             ) : (
               <WalletEntryButton
@@ -420,6 +493,7 @@ export function WalletEntryButton(props: {
 }) {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
+  const locale = useTWLocale().connectWallet;
   return (
     <WalletButton
       type="button"
@@ -439,60 +513,56 @@ export function WalletEntryButton(props: {
           {walletConfig.meta.name}
         </Text>
 
-        {isRecommended && <Text size="sm">Recommended</Text>}
+        {isRecommended && <Text size="sm">{locale.recommended}</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
-          walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
+          walletConfig.isInstalled() && (
+            <Text size="sm">{locale.installed}</Text>
+          )}
       </Container>
     </WalletButton>
   );
 }
 
-const WalletList = styled.ul<{ theme?: Theme }>`
-  all: unset;
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  flex: 1;
-  ${noScrollBar}
+const WalletList = /* @__PURE__ */ StyledUl({
+  all: "unset",
+  listStyleType: "none",
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+  boxSizing: "border-box",
+  overflowY: "auto",
+  flex: 1,
+  ...noScrollBar,
+  // to show the box-shadow of inputs that overflows
+  padding: "2px",
+  margin: "-2px",
+  marginBottom: 0,
+  paddingBottom: spacing.lg,
+});
 
-  /* to show the box-shadow of inputs that overflows  */
-  padding: 2px;
-  margin: -2px;
-  padding-bottom: 0;
-  margin-bottom: 0;
-  padding-bottom: ${spacing.lg};
-`;
-
-const WalletButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  color: ${(p) => p.theme.colors.secondaryText};
-  position: relative;
-  border-radius: ${radius.md};
-  padding: ${spacing.xs} ${spacing.xs};
-
-  &:hover {
-    background-color: ${(p) => p.theme.colors.walletSelectorButtonHoverBg};
-  }
-
-  transition:
-    background-color 200ms ease,
-    transform 200ms ease;
-
-  &:hover {
-    transform: scale(1.01);
-  }
-`;
+const WalletButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    display: "flex",
+    alignItems: "center",
+    gap: spacing.sm,
+    cursor: "pointer",
+    boxSizing: "border-box",
+    width: "100%",
+    color: theme.colors.secondaryText,
+    position: "relative",
+    borderRadius: radius.md,
+    padding: `${spacing.xs} ${spacing.xs}`,
+    "&:hover": {
+      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      transform: "scale(1.01)",
+    },
+    transition: "background-color 200ms ease, transform 200ms ease",
+  };
+});
 
 function sortWalletConfigs(walletConfigs: WalletConfig[]) {
   return (

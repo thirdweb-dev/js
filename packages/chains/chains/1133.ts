@@ -13,13 +13,13 @@ export default {
     "http://tc04.mydefichain.com/faucet"
   ],
   "icon": {
-    "url": "ipfs://QmTFyaJFmkDQf35rVRzEf78nGThKAyUCW4BoRaKDi4nnV5",
-    "width": 720,
-    "height": 720,
-    "format": "png"
+    "url": "ipfs://QmdR3YL9F95ajwVwfxAGoEzYwm9w7JNsPSfUPjSaQogVjK",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
   },
-  "infoURL": "https://defichain.com",
-  "name": "DeFiMetaChain",
+  "infoURL": "https://meta.defichain.com",
+  "name": "DeFiMetaChain Changi Testnet",
   "nativeCurrency": {
     "name": "DeFiChain Token",
     "symbol": "DFI",
@@ -27,11 +27,12 @@ export default {
   },
   "networkId": 1133,
   "rpc": [
-    "https://defimetachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://defimetachain-changi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1133.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dmc.mydefichain.com/changi",
     "https://testnet-dmc.mydefichain.com:20551"
   ],
   "shortName": "changi",
-  "slug": "defimetachain",
+  "slug": "defimetachain-changi-testnet",
   "testnet": true
 } as const satisfies Chain;

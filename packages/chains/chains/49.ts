@@ -30,6 +30,7 @@ export default {
     "https://rpc.pioneer.etm.network"
   ],
   "shortName": "etmpTest",
+  "slip44": 1,
   "slug": "ennothem-testnet-pioneer",
   "testnet": true
 } as const satisfies Chain;

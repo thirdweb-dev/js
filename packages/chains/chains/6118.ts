@@ -35,6 +35,7 @@ export default {
     "https://node-api.alp.uptn.io/v1/ext/rpc"
   ],
   "shortName": "UPTN-TEST",
+  "slip44": 1,
   "slug": "uptn-testnet",
   "testnet": true
 } as const satisfies Chain;

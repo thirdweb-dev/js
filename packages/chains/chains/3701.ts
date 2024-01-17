@@ -32,6 +32,7 @@ export default {
     "https://dimension-rpc.xpla.dev"
   ],
   "shortName": "xplatest",
+  "slip44": 1,
   "slug": "xpla-testnet-xplatest",
   "status": "deprecated",
   "testnet": true

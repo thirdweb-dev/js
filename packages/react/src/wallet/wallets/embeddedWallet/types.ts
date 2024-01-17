@@ -1,23 +1,38 @@
-import type { EmbeddedWalletAdditionalOptions } from "@thirdweb-dev/wallets";
+import type {
+  EmbeddedWalletAdditionalOptions,
+  EmbeddedWalletOauthStrategy,
+} from "@thirdweb-dev/wallets";
 
-export type AuthOption = "google" | "email";
+export type AuthOption = EmbeddedWalletOauthStrategy | "email";
 
-export type EmbeddedWalletConfig = Omit<
+/**
+ * @wallet
+ */
+export type EmbeddedWalletConfigOptions = Omit<
   EmbeddedWalletAdditionalOptions,
   "chain" | "clientId"
 > & {
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 
   /**
    * Choose which auth providers to show in the wallet connection UI
-   * @default { providers: ["email", "google"] }
+   *
+   * By default, all auth methods are enabled, which is equivalent to setting the following:
+   *
+   * ```ts
+   * {
+   *  options: ["email", "google", "apple", "facebook"]
+   * }
+   * ```
    */
   auth?: {
     options: AuthOption[];
   };
 };
 
-export type EmbeddedWalletLoginType = { email: string } | { google: true };
+export type EmbeddedWalletLoginType =
+  | { email: string }
+  | EmbeddedWalletOauthStrategy;

@@ -1,6 +1,7 @@
 import { WalletConnect } from "./wallet-connect";
 
 /**
+ * @internal
  * @deprecated Use `WalletConnect` instead
  *
  * The WalletConnect v1.0 protocol has been shut down and no longer works.

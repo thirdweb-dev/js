@@ -38,6 +38,7 @@ export default {
     "https://manta-testnet.calderachain.xyz/http"
   ],
   "shortName": "mantaTestnet",
+  "slip44": 1,
   "slug": "manta-pacific-testnet",
   "testnet": true
 } as const satisfies Chain;

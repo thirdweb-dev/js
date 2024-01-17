@@ -32,6 +32,7 @@ export default {
     "https://rpc-test-1.archiechain.io"
   ],
   "shortName": "TARC",
+  "slip44": 1,
   "slug": "arc-testnet",
   "testnet": true
 } as const satisfies Chain;

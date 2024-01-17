@@ -1,8 +1,4 @@
 {
   "main": "dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.cjs.js",
-  "module": "dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.cjs.js": "./dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.browser.cjs.js",
-    "./dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.esm.js": "./dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.browser.esm.js"
-  }
+  "module": "dist/thirdweb-dev-contracts-js-factories-TWMultichainRegistryLogic__factory.esm.js"
 }

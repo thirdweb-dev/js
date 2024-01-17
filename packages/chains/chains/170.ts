@@ -20,6 +20,7 @@ export default {
     "https://http-testnet.hoosmartchain.com"
   ],
   "shortName": "hoosmartchain",
+  "slip44": 1,
   "slug": "hoo-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

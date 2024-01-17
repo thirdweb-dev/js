@@ -7,9 +7,12 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useWallet } from "../../core/hooks/wallet-hooks";
 import { WalletData } from "@thirdweb-dev/wallets";
-import { useLogout } from "../hooks/auth";
+import { useLogout } from "../hooks/auth/useLogout";
 import { useSwitchAccount } from "../hooks/auth/useSwitchAccount";
 
+/**
+ * @internal
+ */
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {

@@ -9,11 +9,13 @@ import {
   ProviderConfig,
   SmartWalletConfig,
   SmartWalletConnectionArgs,
+  TransactionOptions,
+  UserOpOptions,
 } from "./types";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, ethers, providers, utils } from "ethers";
+import { BigNumber, constants, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
   getGasPrice,
@@ -25,9 +27,7 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";
-import { BatchData } from "./lib/base-api";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -52,7 +52,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       this.config.bundlerUrl || `https://${this.chainId}.bundler.thirdweb.com`;
     const paymasterUrl =
       this.config.paymasterUrl ||
-      `https://${this.chainId}.bundler.thirdweb.com`;
+      `https://${this.chainId}.bundler.thirdweb.com/v2`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
@@ -60,16 +60,15 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       localSigner,
       entryPointAddress,
       bundlerUrl,
-      paymasterAPI: this.config.gasless
+      paymasterAPI: this.config.paymasterAPI
         ? this.config.paymasterAPI
-          ? this.config.paymasterAPI
-          : getVerifyingPaymaster(
-              paymasterUrl,
-              entryPointAddress,
-              this.config.clientId,
-              this.config.secretKey,
-            )
-        : undefined,
+        : getVerifyingPaymaster(
+            paymasterUrl,
+            entryPointAddress,
+            this.config.clientId,
+            this.config.secretKey,
+          ),
+      gasless: config.gasless,
       factoryAddress: config.factoryAddress,
       accountAddress: params.accountAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
@@ -79,7 +78,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
-    this.aaProvider = await create4337Provider(
+    this.aaProvider = create4337Provider(
       providerConfig,
       accountApi,
       originalProvider,
@@ -147,7 +146,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Check whether the connected signer can execute a given transaction using the smart wallet.
-   * @param transaction the transaction to execute using the smart wallet.
+   * @param transaction - The transaction to execute using the smart wallet.
    * @returns whether the connected signer can execute the transaction using the smart wallet.
    */
   async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
@@ -172,25 +171,35 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Send a single transaction without waiting for confirmations
-   * @param transactions
-   * @returns the awaitable transaction
+   * @param transaction - the transaction to send
+   * @param config - optional the transaction configuration
+   * @returns The awaitable transaction
    */
-  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
+  async send(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<providers.TransactionResponse> {
     const signer = await this.getSigner();
-    return signer.sendTransaction({
-      to: transaction.getTarget(),
-      data: transaction.encode(),
-      value: await transaction.getValue(),
-    });
+    return signer.sendTransaction(
+      {
+        to: transaction.getTarget(),
+        data: transaction.encode(),
+        value: await transaction.getValue(),
+      },
+      options,
+    );
   }
 
   /**
    * Execute a single transaction (waiting for confirmations)
-   * @param transactions
-   * @returns the transaction receipt
+   * @param transaction - The transaction to execute
+   * @returns The transaction receipt
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
-    const tx = await this.send(transaction);
+  async execute(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<TransactionResult> {
+    const tx = await this.send(transaction, options);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -199,6 +208,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async sendBatch(
     transactions: Transaction<any>[],
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
@@ -211,19 +221,23 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         data: tx.encode(),
         value: 0,
       },
-      batchData,
+      {
+        ...options,
+        batchData,
+      },
     );
   }
 
   /**
    * Execute multiple transactions in a single batch
-   * @param transactions
-   * @returns the transaction receipt
+   * @param transactions - The transactions to execute
+   * @returns The transaction receipt
    */
   async executeBatch(
     transactions: Transaction<any>[],
+    options?: TransactionOptions,
   ): Promise<TransactionResult> {
-    const tx = await this.sendBatch(transactions);
+    const tx = await this.sendBatch(transactions, options);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -234,18 +248,20 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    return signer.sendTransaction(transaction);
+    return signer.sendTransaction(transaction, options);
   }
 
   async executeRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ) {
-    const tx = await this.sendRaw(transaction);
+    const tx = await this.sendRaw(transaction, options);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -254,6 +270,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async sendBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
@@ -266,14 +283,18 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         data: batch.tx.encode(),
         value: 0,
       },
-      batch.batchData, // batched tx flag
+      {
+        ...options,
+        batchData: batch.batchData, // batched tx flag
+      },
     );
   }
 
   async executeBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ) {
-    const tx = await this.sendBatchRaw(transactions);
+    const tx = await this.sendBatchRaw(transactions, options);
     const receipt = await tx.wait();
     return {
       receipt,
@@ -282,32 +303,51 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /// ESTIMATION
 
-  async estimate(transaction: Transaction) {
+  async estimate(transaction: Transaction, options?: TransactionOptions) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    return this.estimateTx({
-      target: transaction.getTarget(),
-      data: transaction.encode(),
-      value: await transaction.getValue(),
-    });
+    return this.estimateTx(
+      {
+        target: transaction.getTarget(),
+        data: transaction.encode(),
+        value: await transaction.getValue(),
+        gasLimit: await transaction.getOverrides().gasLimit,
+        maxFeePerGas: await transaction.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await transaction.getOverrides()
+          .maxPriorityFeePerGas,
+        nonce: await transaction.getOverrides().nonce,
+      },
+      options,
+    );
   }
 
   async estimateRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
   ) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
     const tx = await ethers.utils.resolveProperties(transaction);
-    return this.estimateTx({
-      target: tx.to || AddressZero,
-      data: tx.data?.toString() || "",
-      value: tx.value || BigNumber.from(0),
-    });
+    return this.estimateTx(
+      {
+        target: tx.to || constants.AddressZero,
+        data: tx.data?.toString() || "",
+        value: tx.value || BigNumber.from(0),
+        gasLimit: tx.gasLimit,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+        nonce: tx.nonce,
+      },
+      options,
+    );
   }
 
-  async estimateBatch(transactions: Transaction<any>[]) {
+  async estimateBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
@@ -317,13 +357,21 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
-      batchData,
+      {
+        ...options,
+        batchData,
+      },
     );
   }
 
   async estimateBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
   ) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
@@ -334,8 +382,15 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         target: tx.getTarget(),
         data: tx.encode(),
         value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
       },
-      batchData,
+      {
+        ...options,
+        batchData,
+      },
     );
   }
 
@@ -344,9 +399,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
    * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
-   * @returns the transaction receipt
+   * @returns The transaction receipt
    */
-  async deploy(): Promise<TransactionResult> {
+  async deploy(options?: TransactionOptions): Promise<TransactionResult> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
@@ -357,9 +412,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         data: "0x",
       },
       {
-        targets: [],
-        data: [],
-      }, // batched tx flag to avoid hitting the Router fallback method
+        ...options,
+        batchData: {
+          targets: [],
+          data: [],
+          values: [],
+        }, // batched tx flag to avoid hitting the Router fallback method
+      },
     );
     const receipt = await tx.wait();
     return { receipt };
@@ -376,10 +435,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return await this.accountApi.isAcountDeployed();
   }
 
-  async deployIfNeeded(): Promise<void> {
+  async deployIfNeeded(options?: TransactionOptions): Promise<void> {
     const isDeployed = await this.isDeployed();
     if (!isDeployed) {
-      await this.deploy();
+      await this.deploy(options);
     }
   }
 
@@ -439,7 +498,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Get the underlying account contract of the smart wallet.
-   * @returns the account contract of the smart wallet.
+   * @returns The account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
     const isDeployed = await this.isDeployed();
@@ -470,7 +529,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Get the underlying account factory contract of the smart wallet.
-   * @returns the account factory contract.
+   * @returns The account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
     const sdk = ThirdwebSDK.fromSigner(
@@ -499,16 +558,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ]);
       },
       getAccountAddress: async (factory, owner) => {
-        try {
-          return await factory.call("getAddress", [
-            owner,
-            ethers.utils.toUtf8Bytes(""),
-          ]);
-        } catch (e) {
-          console.log("Falling back to old factory");
-          // TODO remove after a few versions
-          return factory.call("getAddress", [owner]);
-        }
+        return await factory.call("getAddress", [
+          owner,
+          ethers.utils.toUtf8Bytes(""),
+        ]);
       },
     };
   }
@@ -528,9 +581,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   private async estimateTx(
     tx: TransactionDetailsForUserOp,
-    batchData?: BatchData,
+    options?: UserOpOptions,
   ) {
-    if (!this.accountApi) {
+    if (!this.accountApi || !this.aaProvider) {
       throw new Error("Personal wallet not connected");
     }
     let deployGasLimit = BigNumber.from(0);
@@ -541,12 +594,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!isDeployed) {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }
-    const [{ callGasLimit: transactionGasLimit }, gasPrice] = await Promise.all(
-      [
-        this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batchData),
-        getGasPrice(provider),
-      ],
-    );
+    const [userOp, gasPrice] = await Promise.all([
+      this.accountApi.createUnsignedUserOp(
+        this.aaProvider.httpRpcClient,
+        tx,
+        options,
+      ),
+      getGasPrice(provider),
+    ]);
+    const resolved = await utils.resolveProperties(userOp);
+    const transactionGasLimit = BigNumber.from(resolved.callGasLimit);
     const transactionCost = transactionGasLimit.mul(gasPrice);
     const deployCost = deployGasLimit.mul(gasPrice);
     const totalCost = deployCost.add(transactionCost);
@@ -588,7 +645,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ethers.utils.resolveProperties(transaction),
       ),
     );
-    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
+    const targets = resolvedTxs.map((tx) => tx.to || constants.AddressZero);
     const data = resolvedTxs.map((tx) => tx.data || "0x");
     const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
     return {
@@ -596,6 +653,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       batchData: {
         targets,
         data,
+        values,
       },
     };
   }
@@ -612,6 +670,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       batchData: {
         targets,
         data,
+        values,
       },
     };
   }

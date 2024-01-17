@@ -37,6 +37,7 @@ export default {
     "https://palette-opennet.com:22000"
   ],
   "shortName": "PCT",
+  "slip44": 1,
   "slug": "palette-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

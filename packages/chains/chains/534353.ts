@@ -29,6 +29,7 @@ export default {
     "https://alpha-rpc.scroll.io/l2"
   ],
   "shortName": "scr-alpha",
+  "slip44": 1,
   "slug": "scroll-alpha-testnet",
   "status": "deprecated",
   "testnet": true

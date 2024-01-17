@@ -26,6 +26,7 @@ export default {
     "https://rpc-testnet.kcc.network"
   ],
   "shortName": "kcst",
+  "slip44": 1,
   "slug": "kcc-testnet",
   "testnet": true
 } as const satisfies Chain;

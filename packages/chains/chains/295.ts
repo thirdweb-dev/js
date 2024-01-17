@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "HashScan",
-      "url": "https://hashscan.io/mainnet/dashboard",
-      "standard": "none"
+      "url": "https://hashscan.io/mainnet",
+      "standard": "EIP3091"
     },
     {
       "name": "Arkhia Explorer",

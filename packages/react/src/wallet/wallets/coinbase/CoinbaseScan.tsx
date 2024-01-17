@@ -1,11 +1,13 @@
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
+  ConnectUIProps,
   WalletConfig,
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CoinbaseScan: React.FC<{
   onBack: () => void;
@@ -13,11 +15,21 @@ export const CoinbaseScan: React.FC<{
   onConnected: () => void;
   walletConfig: WalletConfig<CoinbaseWallet>;
   hideBackButton: boolean;
-}> = ({ walletConfig, onConnected, onGetStarted, onBack, hideBackButton }) => {
+  setConnectedWallet: ConnectUIProps<CoinbaseWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<CoinbaseWallet>["setConnectionStatus"];
+}> = ({
+  walletConfig,
+  onConnected,
+  onGetStarted,
+  onBack,
+  hideBackButton,
+  setConnectionStatus,
+  setConnectedWallet,
+}) => {
+  const locale = useTWLocale().wallets.coinbaseWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
 
@@ -59,12 +71,14 @@ export const CoinbaseScan: React.FC<{
 
   return (
     <ScanScreen
+      qrScanInstruction={locale.scanScreen.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
       hideBackButton={hideBackButton}
+      getStartedLink={locale.getStartedLink}
     />
   );
 };

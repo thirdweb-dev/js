@@ -1,13 +1,17 @@
+/* eslint-disable i18next/no-literal-string */
+
 import { useState } from "react";
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Container, ModalHeader, Line } from "../../../../components/basic";
 import { Button, IconButton } from "../../../../components/buttons";
-import { spacing, Theme, radius, iconSize } from "../../../../design-system";
+import { spacing, radius, iconSize } from "../../../../design-system";
 import { Text } from "../../../../components/text";
 import styled from "@emotion/styled";
 import { useClipboard } from "../../../../evm/components/hooks/useCopyClipboard";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { StyledDiv } from "../../../../design-system/elements";
+import { useCustomTheme } from "../../../../design-system/CustomThemeProvider";
 
 // TODO (ews) - this is unused right now, no backup codes are generated
 export function BackupAccount(props: {
@@ -212,22 +216,27 @@ function CopyRecoveryCode(props: { code: string }) {
   );
 }
 
-const CopyContainer = styled.div<{ theme?: Theme }>`
-  padding: ${spacing.md};
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  border-radius: ${radius.md};
-`;
+const CopyContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    padding: spacing.md,
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.md,
+  };
+});
 
-const CheckboxButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.colors.accentText};
-  color: ${(p) => p.theme.colors.accentText} !important;
-  padding: 0;
-
-  &[aria-checked="true"] {
-    background: ${(p) => p.theme.colors.accentText};
-    color: ${(p) => p.theme.colors.modalBg} !important;
-  }
-`;
+const CheckboxButton = /* @__PURE__ */ styled(IconButton)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `2px solid ${theme.colors.accentText}`,
+    color: `${theme.colors.accentText} !important`,
+    padding: 0,
+    "&[aria-checked='true']": {
+      background: theme.colors.accentText,
+      color: `${theme.colors.modalBg} !important`,
+    },
+  };
+});
 
 function downloadRecoveryCodes(codes: string, fileName: string) {
   const blob = new Blob([codes], {

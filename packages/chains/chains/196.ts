@@ -1,21 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "okbchain",
+  "chain": "X1",
   "chainId": 196,
   "explorers": [],
   "faucets": [],
   "features": [],
-  "infoURL": "https://www.okex.com/okc",
-  "name": "OKBChain Mainnet",
+  "infoURL": "https://www.okx.com/x1",
+  "name": "X1 Mainnet",
   "nativeCurrency": {
-    "name": "OKBChain Global Utility Token",
+    "name": "X1 Global Utility Token",
     "symbol": "OKB",
     "decimals": 18
   },
   "networkId": 196,
   "rpc": [],
   "shortName": "okb",
-  "slug": "okbchain",
+  "slug": "x1",
   "status": "incubating",
   "testnet": false
 } as const satisfies Chain;

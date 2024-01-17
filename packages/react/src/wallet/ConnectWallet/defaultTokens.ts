@@ -31,6 +31,31 @@ const fantomIcon =
 
 export type SupportedTokens = Record<number, TokenInfo[]>;
 
+/**
+ * Default tokens shown in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet)'s SendFunds screen for each network.
+ *
+ * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
+ *
+ * @example
+ * Below example shows adding a custom token for the Ethereum mainnet at start of the list of default tokens for the Ethereum mainnet. Here the `1` represents the chainId of Ethereum mainnet.
+ *
+ * ```tsx
+ * const ethereumChainId = 1;
+ *
+ * <ConnectWallet supportedTokens={{
+ *  ...defaultTokens,
+ *  [ethereumChainId]: [
+ *    {
+ *      address: 'YOUR_TOKEN_ADDRESS',
+ *      name: 'YOUR_TOKEN_NAME',
+ *      symbol: 'YOUR_TOKEN_SYMBOL',
+ *      icon: 'YOUR_TOKEN_ICON_URL'
+ *    },
+ *    ...defaultTokens[ethereumChainId],
+ *  ]
+ * }} />
+ * ```
+ */
 export const defaultTokens: SupportedTokens = {
   "1": [
     {
@@ -230,7 +255,7 @@ export const defaultTokens: SupportedTokens = {
       icon: wrappedEthIcon,
     },
     {
-      address: "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
+      address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
       name: "Tether USD",
       symbol: "USDT",
       icon: tetherUsdIcon,

@@ -41,6 +41,7 @@ export default {
     "https://sepolia.mode.network"
   ],
   "shortName": "modesep",
+  "slip44": 1,
   "slug": "mode-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -22,7 +22,9 @@ export const loginHandler = (
     schema: {
       body: LoginPayloadBodySchema,
       response: {
-        200: z.any(),
+        200: z.object({
+          token: z.string(),
+        }),
       },
     },
     handler: async (req, res) => {
@@ -104,7 +106,8 @@ export const loginHandler = (
         },
       );
 
-      return res.status(200).send({ success: true });
+      // Send token in body and as cookie for frontend and backend use cases
+      return res.status(200).send({ token });
     },
   });
 };

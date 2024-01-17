@@ -1,11 +1,9 @@
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
-import {
-  useCreateWalletInstance,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { OKXWallet } from "@thirdweb-dev/wallets";
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const OKXScan: React.FC<{
   onBack: () => void;
@@ -13,11 +11,23 @@ export const OKXScan: React.FC<{
   onConnected: () => void;
   walletConfig: WalletConfig<OKXWallet>;
   hideBackButton: boolean;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
-  const createInstance = useCreateWalletInstance();
+  createWalletInstance: () => OKXWallet;
+  setConnectedWallet: ConnectUIProps<OKXWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<OKXWallet>["setConnectionStatus"];
+}> = (props) => {
+  const {
+    onBack,
+    onConnected,
+    onGetStarted,
+    walletConfig,
+    hideBackButton,
+    setConnectedWallet,
+    setConnectionStatus,
+    createWalletInstance,
+  } = props;
+  const locale = useTWLocale().wallets.okxWallet;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
   useEffect(() => {
@@ -26,7 +36,7 @@ export const OKXScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const wallet = createInstance(walletConfig);
+    const wallet = createWalletInstance();
 
     setConnectionStatus("connecting");
     wallet.connectWithQrCode({
@@ -40,7 +50,7 @@ export const OKXScan: React.FC<{
       },
     });
   }, [
-    createInstance,
+    createWalletInstance,
     setConnectedWallet,
     chainToConnect,
     onConnected,
@@ -50,12 +60,14 @@ export const OKXScan: React.FC<{
 
   return (
     <ScanScreen
+      qrScanInstruction={locale.scanScreen.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
       hideBackButton={hideBackButton}
+      getStartedLink={locale.getStartedLink}
     />
   );
 };

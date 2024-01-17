@@ -9,10 +9,11 @@ import {
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { SafeWalletConfig } from "./types";
 import { useEffect, useRef } from "react";
 import { Link, Text } from "../../../components/text";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
@@ -21,12 +22,16 @@ export const SelectpersonalWallet: React.FC<{
   selectWallet: (wallet: WalletConfig) => void;
   renderBackButton?: boolean;
 }> = (props) => {
+  const twLocale = useTWLocale();
+  const locale = twLocale.wallets.safeWallet;
   const guestWallet = props.personalWallets.find(
     (w) => w.id === walletIds.localWallet,
   );
   const personalWallets = props.personalWallets.filter(
     (w) => w.id !== walletIds.localWallet,
   );
+
+  const { personalWalletConnection } = useWalletContext();
 
   // auto select guest wallet if no other wallets
   const { selectWallet } = props;
@@ -63,11 +68,11 @@ export const SelectpersonalWallet: React.FC<{
       <Container px="lg">
         <Spacer y="md" />
         <Text size="lg" color="primaryText" weight={500}>
-          Link personal wallet
+          {locale.connectWalletScreen.title}
         </Text>
         <Spacer y="sm" />
         <Text multiline>
-          Connect your personal wallet to use Safe.{" "}
+          {locale.connectWalletScreen.subtitle}{" "}
           <Link
             inline
             target="_blank"
@@ -76,7 +81,7 @@ export const SelectpersonalWallet: React.FC<{
               whiteSpace: "nowrap",
             }}
           >
-            Learn more
+            {locale.connectWalletScreen.learnMoreLink}
           </Link>{" "}
         </Text>
       </Container>
@@ -89,6 +94,15 @@ export const SelectpersonalWallet: React.FC<{
           maxHeight="300px"
           walletConfigs={personalWallets}
           selectWallet={props.selectWallet}
+          selectUIProps={{
+            connect: personalWalletConnection.connectWallet,
+            connectionStatus: personalWalletConnection.connectionStatus,
+            createWalletInstance: personalWalletConnection.createWalletInstance,
+            setConnectedWallet: personalWalletConnection.setConnectedWallet,
+            setConnectionStatus: personalWalletConnection.setConnectionStatus,
+            connectedWallet: personalWalletConnection.activeWallet,
+            connectedWalletAddress: personalWalletConnection.address,
+          }}
         />
       </Container>
 
@@ -102,7 +116,7 @@ export const SelectpersonalWallet: React.FC<{
             }}
             data-test="continue-as-guest-button"
           >
-            Continue as guest
+            {twLocale.connectWallet.continueAsGuest}
           </Button>
         </ScreenBottomContainer>
       )}

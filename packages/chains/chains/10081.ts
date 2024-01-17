@@ -25,6 +25,7 @@ export default {
     "https://rpc-2.testnet.japanopenchain.org:8545"
   ],
   "shortName": "joct",
+  "slip44": 1,
   "slug": "japan-open-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

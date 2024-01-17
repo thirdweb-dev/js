@@ -30,7 +30,7 @@ export default {
     "https://eth-ds.testnet.aioz.network"
   ],
   "shortName": "aioz-testnet",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "aioz-network-testnet",
   "testnet": true
 } as const satisfies Chain;

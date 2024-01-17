@@ -1,5 +1,57 @@
 # @thirdweb-dev/chains
 
+## 0.1.63
+
+### Patch Changes
+
+- [#2145](https://github.com/thirdweb-dev/js/pull/2145) [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.62
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+## 0.1.61
+
+### Patch Changes
+
+- [#2066](https://github.com/thirdweb-dev/js/pull/2066) [`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updatechains
+
+## 0.1.60
+
+### Patch Changes
+
+- [#2019](https://github.com/thirdweb-dev/js/pull/2019) [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a) Thanks [@jnsdls](https://github.com/jnsdls)! - add & update chains
+
+- [#2024](https://github.com/thirdweb-dev/js/pull/2024) [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Base Sepolia to defaultChains
+
+- [#2023](https://github.com/thirdweb-dev/js/pull/2023) [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Eth Sepolia to defaultChains
+
+## 0.1.59
+
+### Patch Changes
+
+- [#1967](https://github.com/thirdweb-dev/js/pull/1967) [`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Arbitrum Sepolia to defaultChains
+
+- [#1990](https://github.com/thirdweb-dev/js/pull/1990) [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281) Thanks [@jnsdls](https://github.com/jnsdls)! - deprecate `allChains` `getChainById` and `getChainBySlug`
+
+  all of these would (necessarily) pull in every single chain in the package (>600kb)
+
+  instead these can be replaced with their async variants:
+
+  - `allChains` -> `await fetchChains()`
+  - `getChainById(chainId)` -> `await getChainByIdAsync(chainId)`
+  - `getChainBySlug(chainSlug)` -> `await getChainBySlugAsync(chainSlug)`
+
+  these async functions will return the same data as their sync counterparts, but without having to pull in every single chain at build-time.
+
+## 0.1.58
+
+### Patch Changes
+
+- [#1911](https://github.com/thirdweb-dev/js/pull/1911) [`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e) Thanks [@iketw](https://github.com/iketw)! - Syncs Chains
+
 ## 0.1.57
 
 ### Patch Changes

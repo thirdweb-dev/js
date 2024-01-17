@@ -54,17 +54,17 @@ import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { ERC1155Claimable } from "./erc-1155-claimable";
-import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { ERC1155Claimable } from "./internal/erc1155/erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./internal/erc1155/erc-1155-claimable-with-conditions";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 
 import { ContractEncoder } from "./contract-encoder";
-import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155LazyMintable } from "./erc-1155-lazy-mintable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
+import { Erc1155Burnable } from "./internal/erc1155/erc-1155-burnable";
+import { Erc1155Enumerable } from "./internal/erc1155/erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./internal/erc1155/erc-1155-lazy-mintable";
+import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
 
 /**
  * Standard ERC1155 NFT functions
@@ -173,7 +173,7 @@ export class Erc1155<
    * const nft = await contract.erc1155.totalSupply(tokenId);
    * ```
    * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
+   * @returns The total supply
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
@@ -454,7 +454,7 @@ export class Erc1155<
    * const count = await contract.erc1155.totalCount();
    * console.log(count);
    * ```
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -466,7 +466,7 @@ export class Erc1155<
    * Get the total supply of a specific NFT
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -978,7 +978,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -1016,7 +1016,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(

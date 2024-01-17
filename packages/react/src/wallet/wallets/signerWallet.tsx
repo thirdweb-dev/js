@@ -2,6 +2,9 @@ import { SignerWallet, WalletOptions } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 
+/**
+ * @internal
+ */
 export const signerWallet = (signer: Signer): WalletConfig<SignerWallet> => {
   return {
     id: "signerWallet",

@@ -2,18 +2,28 @@ import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
 export type OAuthProvider = "google";
 
-export type PaperConfig = Omit<
+/**
+ * @internal
+ */
+export type PaperWalletConfigOptions = Omit<
   PaperWalletAdditionalOptions,
   "chain" | "clientId"
 > & {
   /**
-   * If true, the wallet will be tagged as "recomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 
   /**
    * Enable or Disable OAuth logins and specify which providers to use for OAuth
-   * @default { providers: ["google"] }
+   *
+   * By default, google is enabled which is equivalent to setting the following:
+   *
+   * ```ts
+   * {
+   *  providers: ["google"]
+   * }
+   * ```
    */
   oauthOptions?:
     | {

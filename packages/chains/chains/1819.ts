@@ -39,7 +39,7 @@ export default {
     "wss://ws-testnet-us.cube.network"
   ],
   "shortName": "cubet",
-  "slip44": 1819,
+  "slip44": 1,
   "slug": "cube-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

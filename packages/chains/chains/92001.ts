@@ -38,6 +38,7 @@ export default {
     "https://evm.lambda.top/"
   ],
   "shortName": "lambda-testnet",
+  "slip44": 1,
   "slug": "lambda-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -1,64 +1,75 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
-import {
-  IWalletConnectReceiver,
-  WCProposal,
-  WCRequest,
-} from "@thirdweb-dev/wallets";
+import { WCProposal, WCRequest } from "@thirdweb-dev/wallets";
 
 /**
  * Registers listeners for wallet connect if the active wallet
- * is a smart wallet and has connect to app enabled
+ * is also a WalletConnectReceiver
  */
 export function useWalletConnectListener() {
   const activeWallet = useWallet();
   const { setModalState } = useModalState();
+  const walletConnectHandler = useWalletConnectHandler();
 
-  const onSmartWalletWCMessage = useCallback(
-    ({ type, data }: { type: string; data?: unknown }) => {
-      switch (type) {
-        case "session_proposal":
-          setModalState({
-            view: "WalletConnectSessionProposalModal",
-            caller: "WCSessionProposalListener",
-            data: data as WCProposal,
-            isOpen: true,
-            isSheet: false,
-          });
-          break;
-        case "session_delete":
-          //   reset();
-          break;
-        case "session_request":
-          setModalState({
-            view: "WalletConnectSessionRequestModal",
-            caller: "WCSessionRequestListener",
-            data: data as WCRequest,
-            isOpen: true,
-            isSheet: false,
-          });
-          break;
-        default:
-        // method not implemented
-      }
+  const onSessionProposal = useCallback(
+    (proposal: WCProposal) => {
+      setModalState({
+        view: "WalletConnectSessionProposalModal",
+        caller: "WCSessionProposalListener",
+        data: proposal,
+        isOpen: true,
+        isSheet: false,
+      });
     },
     [setModalState],
   );
 
+  const onSessionRequest = useCallback(
+    (proposal: WCRequest) => {
+      setModalState({
+        view: "WalletConnectSessionRequestModal",
+        caller: "WCSessionRequestListener",
+        data: proposal,
+        isOpen: true,
+        isSheet: false,
+      });
+    },
+    [setModalState],
+  );
+
+  const onSessionDelete = useCallback(() => {
+    // consider clearing local storage
+  }, []);
+
   useEffect(() => {
-    if (
-      activeWallet &&
-      "isWCReceiverEnabled" in activeWallet &&
-      (activeWallet as unknown as IWalletConnectReceiver).isWCReceiverEnabled()
-    ) {
-      activeWallet.addListener("message", onSmartWalletWCMessage);
+    if (!walletConnectHandler) {
+      return;
     }
 
+    walletConnectHandler.addListener("session_proposal", onSessionProposal);
+    walletConnectHandler.addListener("session_delete", onSessionDelete);
+    walletConnectHandler.addListener("session_request", onSessionRequest);
+    // consider adding switch_chain as well
+
     return () => {
-      if (activeWallet) {
-        activeWallet.removeListener("message", onSmartWalletWCMessage);
+      if (walletConnectHandler) {
+        walletConnectHandler.removeListener(
+          "session_proposal",
+          onSessionProposal,
+        );
+        walletConnectHandler.removeListener("session_delete", onSessionDelete);
+        walletConnectHandler.removeListener(
+          "session_request",
+          onSessionRequest,
+        );
       }
     };
-  }, [activeWallet, onSmartWalletWCMessage]);
+  }, [
+    activeWallet,
+    onSessionDelete,
+    onSessionProposal,
+    onSessionRequest,
+    walletConnectHandler,
+  ]);
 }

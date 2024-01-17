@@ -4,10 +4,10 @@ import { getSaltHash } from "./getSaltHash";
 /**
  * Pre-compute a contract's deployment address for a CREATE2 deployment.
  *
- * @public
- * @param bytecode: Creation bytecode of the contract to deploy
- * @param encodedArgs: Abi-encoded constructor params
- * @param create2FactoryAddress
+ * @internal
+ * @param bytecode - Creation bytecode of the contract to deploy
+ * @param encodedArgs - Abi-encoded constructor params
+ * @param create2FactoryAddress - The create2 factory address to use
  */
 export function computeDeploymentAddress(
   bytecode: string,

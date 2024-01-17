@@ -4,21 +4,25 @@ export default {
   "chainId": 6,
   "explorers": [],
   "faucets": [],
-  "infoURL": "https://explorer.jade.builders/?network=kotti",
-  "name": "Ethereum Classic Testnet Kotti",
+  "icon": {
+    "url": "ipfs://QmawMDPsaj3kBTZErCYQ3tshv5RrMAN3smWNs72m943Fyj",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://ethereumclassic.org/development/testnets",
+  "name": "Kotti Testnet",
   "nativeCurrency": {
     "name": "Kotti Ether",
     "symbol": "KOT",
     "decimals": 18
   },
   "networkId": 6,
-  "rpc": [
-    "https://ethereum-classic-testnet-kotti.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://6.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/kotti"
-  ],
+  "rpc": [],
   "shortName": "kot",
-  "slug": "ethereum-classic-testnet-kotti",
+  "slip44": 1,
+  "slug": "kotti-testnet",
   "status": "deprecated",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Classic Kotti Testnet"
 } as const satisfies Chain;
