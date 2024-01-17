@@ -15,7 +15,6 @@
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
     "typedoc": "turbo run typedoc",
-    "generate-docs": "turbo run generate-docs",
     "generate-snippets": "node ./scripts/generate-snippets/index.mjs",
     "build:release": "turbo run build --force --filter=./packages/*",
     "dev": "turbo run dev --no-cache --parallel --continue",
