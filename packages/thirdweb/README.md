@@ -20,8 +20,8 @@ npm install thirdweb@alpha
 ### Backend (Node, Bun, Deno, etc)
 
 ```ts
-import { createClient } from "./src";
-import { privateKeyWallet } from "./src/wallets/private-key";
+import { createClient } from "thirdweb";
+import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
 // Step 1: create a client
 const client = createClient({
