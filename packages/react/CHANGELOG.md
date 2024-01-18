@@ -1,5 +1,61 @@
 # @thirdweb-dev/react
 
+## 4.3.2
+
+### Patch Changes
+
+- [#1884](https://github.com/thirdweb-dev/js/pull/1884) [`89641e33`](https://github.com/thirdweb-dev/js/commit/89641e33784ff74c32fcbb51db72b67065ba85cb) Thanks [@tommaay](https://github.com/tommaay)! - Add prop `switchNetworkBtnTitle` to `ConnectWallet` and `Web3Button` components to allow changing the "Switch Network" label on the button which is displayed when user needs to switch the network in the connected wallet.
+
+  ```tsx
+  <ConnectWallet switchNetworkBtnTitle="Switch Chain" />
+  ```
+
+  ```tsx
+  <Web3Button
+    switchNetworkBtnTitle="Switch Chain"
+    contractAddress="0x..."
+    action={someAction}
+  />
+  ```
+
+- [#2193](https://github.com/thirdweb-dev/js/pull/2193) [`0efd0f9d`](https://github.com/thirdweb-dev/js/commit/0efd0f9d2626d1cb8d7a49f26b9beaa4c27bca15) Thanks [@MananTank](https://github.com/MananTank)! - add `useSetWalletModalConfig` hook to customize the ConnectWallet Modal to programmatically open the modal without using the `ConnectWallet` component along with `useSetIsWalletModalOpen`
+
+  ```tsx
+  import {
+    useSetWalletModalConfig,
+    useSetIsWalletModalOpen,
+  } from "@thirdweb-dev/react";
+
+  function Example() {
+    const setWalletModalConfig = useSetWalletModalConfig();
+    const setIsWalletModalOpen = useSetIsWalletModalOpen();
+
+    return (
+      <button
+        onClick={() => {
+          // customize the modal
+          setWalletModalConfig({
+            modalSize: "wide",
+            theme: "light",
+          });
+          // open the modal
+          setIsWalletModalOpen(true);
+        }}
+      >
+        open connect modal
+      </button>
+    );
+  }
+  ```
+
+- [#2177](https://github.com/thirdweb-dev/js/pull/2177) [`e11e645c`](https://github.com/thirdweb-dev/js/commit/e11e645c7407a37545e78bbf8976ecc31e40bee7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fuse.js from 6.6.2 to 7.0.0
+
+- Updated dependencies [[`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264), [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/sdk@4.0.27
+  - @thirdweb-dev/chains@0.1.64
+  - @thirdweb-dev/react-core@4.3.2
+  - @thirdweb-dev/wallets@2.4.2
+
 ## 4.3.1
 
 ### Patch Changes

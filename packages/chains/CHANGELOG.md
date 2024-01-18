@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.64
+
+### Patch Changes
+
+- [#2187](https://github.com/thirdweb-dev/js/pull/2187) [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - synced chains package with chains db
+
 ## 0.1.63
 
 ### Patch Changes
