@@ -1426,9 +1426,6 @@ importers:
       abitype:
         specifier: ^0.10.3
         version: 0.10.3(typescript@5.3.3)
-      uint8array-extras:
-        specifier: ^1.1.0
-        version: 1.1.0
       viem:
         specifier: ^2.0.10
         version: 2.0.10(typescript@5.3.3)
@@ -30651,11 +30648,6 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true
-
-  /uint8array-extras@1.1.0:
-    resolution: {integrity: sha512-CVaBSyOmGoFHu+zOVPbetXEXykOd8KHVBHLlqvmaMWpwcq3rewj18xVNbU5uzf48hclnNQhfNaNany2cMHFK/g==}
-    engines: {node: '>=18'}
-    dev: false
 
   /uint8arrays@2.1.10:
     resolution: {integrity: sha512-Q9/hhJa2836nQfEJSZTmr+pg9+cDJS9XEAp7N2Vg5MzL3bK/mkMVfjscRGYruP9jNda6MAdf4QD/y78gSzkp6A==}

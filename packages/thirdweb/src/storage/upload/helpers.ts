@@ -1,9 +1,9 @@
+import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
   BuildFormDataOptions,
   FileOrBufferOrString,
 } from "./types.js";
-import { areUint8ArraysEqual, isUint8Array } from "uint8array-extras";
 
 /**
  * @internal

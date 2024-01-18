@@ -73,7 +73,6 @@
     "@thirdweb-dev/cli": "workspace:*",
     "@thirdweb-dev/crypto": "workspace:*",
     "abitype": "^0.10.3",
-    "uint8array-extras": "^1.1.0",
     "viem": "^2.0.10"
   },
   "devDependencies": {
