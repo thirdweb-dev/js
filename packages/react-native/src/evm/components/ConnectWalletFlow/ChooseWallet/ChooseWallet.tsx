@@ -6,7 +6,7 @@ import {
   useConnect,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
@@ -112,6 +112,22 @@ export function ChooseWallet({
     }
   };
 
+  const getHeaderText = useCallback(() => {
+    if (typeof headerText === "string" && headerText.length === 0) {
+      return null;
+    }
+
+    if (!headerText || typeof headerText === "string") {
+      return (
+        <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
+          {headerText ? headerText : l.connect_wallet_details.connect}
+        </Text>
+      );
+    }
+
+    return headerText;
+  }, [headerText, l.connect_wallet_details.connect]);
+
   const connect = useConnect();
   const address = useAddress();
   const {
@@ -150,9 +166,7 @@ export function ChooseWallet({
                 color={theme.colors.backgroundInverted}
               />
             )}
-            <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
-              {headerText ? headerText : l.connect_wallet_details.connect}
-            </Text>
+            {getHeaderText()}
           </Box>
         }
         subHeaderText={subHeaderText}
