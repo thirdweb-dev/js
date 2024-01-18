@@ -3,36 +3,20 @@ import {
   useEVMContractInfo,
   useSetEVMContractInfo,
 } from "@3rdweb-sdk/react";
-import { useImportContract } from "@3rdweb-sdk/react/hooks/useImportContract";
-import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Alert,
-  AlertDescription,
   AlertIcon,
-  AlertTitle,
   Box,
   Container,
   Flex,
   Spinner,
-  useToast,
 } from "@chakra-ui/react";
-import {
-  DehydratedState,
-  QueryClient,
-  dehydrate,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  invalidateContractAndBalances,
-  useCompilerMetadata,
-  useContract,
-  useContractMetadata,
-} from "@thirdweb-dev/react";
+import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
+import { useContract, useContractMetadata } from "@thirdweb-dev/react";
 import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
-import { ImportContract } from "components/contract-components/import-contract";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
@@ -43,7 +27,6 @@ import {
   useSupportedChainsRecord,
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -51,8 +34,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Button } from "tw-components";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { fetchChain } from "utils/fetchChain";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -168,10 +150,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const activeTab = router.query?.paths?.[1] || "overview";
   const contractQuery = useContract(contractAddress);
   const contractMetadataQuery = useContractMetadata(contractQuery.contract);
-  const compilerMetadataQuery = useCompilerMetadata(contractAddress);
-  const requiresImport = !!useSingleQueryParam("import");
-  const autoAddToDashboard = !!useSingleQueryParam("add");
-  const [manuallyImported, setManuallyImported] = useState(false);
   const routes = useContractRouteConfig(contractAddress);
 
   const activeRoute = useMemo(
@@ -179,95 +157,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
     [activeTab, routes],
   );
 
-  const addToDashboard = useAddContractMutation();
-
-  useEffect(() => {
-    setManuallyImported(false);
-    // when this changes we need to reset the import state
-  }, [chainSlug, contractAddress]);
-
-  const showImportContract: boolean = useMemo(() => {
-    // if we manually imported it don't show the import contract
-    if (manuallyImported) {
-      return false;
-    }
-    if (requiresImport) {
-      return true;
-    }
-    if (contractQuery.isSuccess && !contractQuery.data?.abi) {
-      return true;
-    }
-    if (contractQuery.isError) {
-      return true;
-    }
-    if (contractQuery.errorUpdateCount > 0 && !contractQuery.data?.abi) {
-      return true;
-    }
-    return false;
-  }, [
-    contractQuery.data?.abi,
-    contractQuery.errorUpdateCount,
-    contractQuery.isError,
-    contractQuery.isSuccess,
-    manuallyImported,
-    requiresImport,
-  ]);
-
-  const importContract = useImportContract();
-  const client = useQueryClient();
-  const [refetchLoading, setRefetchLoading] = useState(false);
-  const toast = useToast();
-  const handleImportContract = useCallback(() => {
-    if (!chain) {
-      return;
-    }
-
-    importContract.mutate(
-      { contractAddress, chain },
-      {
-        onSuccess: async () => {
-          setRefetchLoading(true);
-          toast({
-            position: "bottom",
-            variant: "solid",
-            title: `Success`,
-            description: `Import Successful`,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-          await invalidateContractAndBalances(
-            client,
-            contractAddress,
-            chain.chainId,
-          );
-          // reload
-          await compilerMetadataQuery.refetch();
-          await contractQuery.refetch();
-          setRefetchLoading(false);
-        },
-        onError: (error) => {
-          toast({
-            position: "bottom",
-            variant: "solid",
-            title: `Error`,
-            description: `Import Failed: ${(error as any).message}`,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
-        },
-      },
-    );
-  }, [
-    chain,
-    contractAddress,
-    importContract,
-    contractQuery,
-    compilerMetadataQuery,
-    client,
-    toast,
-  ]);
   if (chainNotFound) {
     return (
       <HomepageSection maxW="container.md" mx="auto">
@@ -309,41 +198,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
     );
   }
 
-  if (showImportContract) {
-    return (
-      <ImportContract
-        // key is used to force remounting of the component when chain or contract address changes
-        key={`${chainSlug}/${contractAddress}/import`}
-        contractAddress={contractAddress}
-        chain={chain}
-        autoImport={!!requiresImport}
-        onImport={async () => {
-          // stop showing import contract
-          setManuallyImported(true);
-
-          if (autoAddToDashboard && chain?.chainId) {
-            // add to dashboard
-            try {
-              await addToDashboard.mutateAsync({
-                chainId: chain.chainId,
-                contractAddress,
-              });
-            } catch (e) {
-              // failed to add to dashboard
-            }
-          }
-
-          // remove search query param from url without reloading the page or triggering change in router
-          const url = new URL(window.location.href);
-          window.history.replaceState(null, document.title, url.pathname);
-
-          // refetch contract query
-          contractQuery.refetch();
-        }}
-      />
-    );
-  }
-
   if (!isSupportedChainsReady) {
     return (
       <Flex h="100%" justifyContent="center" alignItems="center">
@@ -351,43 +205,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
       </Flex>
     );
   }
-  const importBanner = (
-    <Alert
-      status="info"
-      borderRadius="md"
-      as={Flex}
-      flexDir="column"
-      alignItems="start"
-      gap={2}
-      marginTop={6}
-    >
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        align={{ base: "inherit", md: "center" }}
-        justify="space-between"
-        w="full"
-        gap={2}
-      >
-        <Flex direction={"column"}>
-          <Flex justifyContent="start">
-            <AlertIcon />
-            <AlertTitle>Contract not imported</AlertTitle>
-          </Flex>
-          <AlertDescription>
-            Some functionality might be unavailable. Import this contract to get
-            access all functions and sources.
-          </AlertDescription>
-        </Flex>
-        <Button
-          onClick={handleImportContract}
-          minW={150}
-          isLoading={importContract.isLoading || refetchLoading}
-        >
-          Import Contract
-        </Button>
-      </Flex>
-    </Alert>
-  );
 
   return (
     <Flex
@@ -411,7 +228,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
               />
               <PrimaryDashboardButton contractAddress={contractAddress} />
             </Flex>
-            {compilerMetadataQuery?.data?.isPartialAbi ? importBanner : null}
           </Flex>
         </Container>
       </Box>
