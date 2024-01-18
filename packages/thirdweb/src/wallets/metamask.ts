@@ -173,33 +173,23 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
       await this.switchChain(tx.inputs.chainId);
     }
 
-    const rpcRequest = tx.client.rpc({ chainId: tx.inputs.chainId });
+    const encode = await import("../transaction/actions/encode.js").then(
+      (m) => m.encode,
+    );
 
-    const [getDefaultGasOverrides, encode, transactionCount] =
-      await Promise.all([
-        import("../gas/fee-data.js").then((m) => m.getDefaultGasOverrides),
-        import("../transaction/actions/encode.js").then((m) => m.encode),
-        import("../rpc/methods.js").then((m) => m.transactionCount),
-      ]);
-
-    const [gasOverrides, encodedData, nextNonce, estimatedGas] =
-      await Promise.all([
-        getDefaultGasOverrides(tx.client, tx.inputs.chainId),
-        encode(tx),
-        transactionCount(rpcRequest, this.address),
-        this.estimateGas(tx),
-      ]);
+    const [encodedData, estimatedGas] = await Promise.all([
+      encode(tx),
+      this.estimateGas(tx),
+    ]);
 
     const result = await provider.request({
       method: "eth_sendTransaction",
       params: [
         {
-          gas: estimatedGas,
+          gas: toHex(estimatedGas),
+          from: this.address,
           to: tx.inputs.address as Address,
-          chainId: tx.inputs.chainId,
           data: encodedData,
-          nonce: nextNonce,
-          ...gasOverrides,
         },
       ],
     });
