@@ -12,7 +12,7 @@ import type {
 
 export interface IWallet {
   address: Address | null;
-  connect: (_opts: any) => Promise<InstanceType<IWallet>>;
+  connect: (_opts: any) => Promise<IWallet>;
   disconnect: () => Promise<void>;
   //
   signMessage?: (_message: SignableMessage) => Promise<Hex>;
@@ -23,13 +23,13 @@ export interface IWallet {
   >(
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
-  
+
   // TX methods
   sendTransaction: <abiFn extends AbiFunction>(
     _tx: Transaction<abiFn>,
   ) => Promise<{
-    transactionHash: Hex,
-    wait: () => Promise<TransactionReceipt>,
+    transactionHash: Hex;
+    wait: () => Promise<TransactionReceipt>;
   }>;
   estimateGas: <abiFn extends AbiFunction>(
     _tx: Transaction<abiFn>,

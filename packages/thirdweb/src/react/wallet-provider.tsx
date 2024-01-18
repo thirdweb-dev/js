@@ -109,14 +109,13 @@ export function useSetActiveWallet() {
   return activateWallet;
 }
 
-type UseConnectOptions = IWallet | (() => Promise<IWallet>);
 export function useConnect() {
   const { connectWallet } = useContext(WalletContext);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async (options: UseConnectOptions) => {
+    async (options: IWallet | (() => Promise<IWallet>)) => {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
