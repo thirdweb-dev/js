@@ -1,4 +1,6 @@
+import type { UploadOptions } from "../storage/upload/types.js";
 import { type RpcClientOptions, getRpcClient } from "../rpc/index.js";
+import type { DownloadOptions } from "../storage/download.js";
 import { computeClientIdFromSecretKey } from "../utils/client-id.js";
 
 export type CreateThirdwebClientOptions =
@@ -21,6 +23,10 @@ export type RawClient = {
 
 export type ThirdwebClient = RawClient & {
   rpc: (options: RpcClientOptions) => ReturnType<typeof getRpcClient>;
+  storage: {
+    download: (options: DownloadOptions) => Promise<Response>;
+    upload: (options: UploadOptions) => Promise<string[]>;
+  };
 };
 
 export function createThirdwebClient(
@@ -45,5 +51,15 @@ export function createThirdwebClient(
   return Object.freeze({
     ...rawClient,
     rpc: (rpcOptions: RpcClientOptions) => getRpcClient(rawClient, rpcOptions),
+    storage: {
+      download: async (downloadOptions: DownloadOptions) => {
+        const { download } = await import("../storage/download.js");
+        return download(rawClient, downloadOptions);
+      },
+      upload: async (uploadOptions: UploadOptions) => {
+        const { upload } = await import("../storage/upload/index.js");
+        return upload(rawClient, uploadOptions);
+      },
+    },
   });
 }

@@ -1,4 +1,4 @@
-import type { RawClient, ThirdwebClient } from "../client/client.js";
+import type { RawClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 
 const RPC_CLIENT_CACHE = /* @__PURE__ */ new Map<string, RPCClient>();
@@ -153,7 +153,7 @@ type FetchRpcOptions = {
 };
 
 async function fetchRpc(
-  client: Omit<ThirdwebClient, "rpc">,
+  client: RawClient,
   { requests, chainId }: FetchRpcOptions,
 ): Promise<FullRPCResponse[]> {
   const headers = new Headers({
