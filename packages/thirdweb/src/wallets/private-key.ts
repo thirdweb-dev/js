@@ -19,7 +19,7 @@ type PrivateKeyWalletConnectOptions = {
   pkey: string;
 };
 
-class PrivateKeyWallet implements IWallet {
+class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
   private account: PrivateKeyAccount | null = null;
 
   get address() {

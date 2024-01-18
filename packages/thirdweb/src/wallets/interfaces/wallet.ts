@@ -10,9 +10,11 @@ import type {
   TypedDataDefinition,
 } from "viem";
 
-export interface IWallet {
+export interface IWallet<connectOpts> {
   address: Address | null;
-  connect: (_opts: any) => Promise<IWallet>;
+  connect:
+    | ((opts: connectOpts) => Promise<IWallet<connectOpts>>)
+    | ((opts?: connectOpts) => Promise<IWallet<connectOpts>>);
   disconnect: () => Promise<void>;
   //
   signMessage?: (_message: SignableMessage) => Promise<Hex>;

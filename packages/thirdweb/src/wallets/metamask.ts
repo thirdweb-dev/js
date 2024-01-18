@@ -13,7 +13,7 @@ type MetamaskWalletConnectOptions = {
   chainId?: number;
 };
 
-class MetamaskWallet implements IWallet {
+class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
   private provider?: Ethereum;
   private connectedChainId?: number;
   private connectdAddress?: Address | null;
@@ -94,7 +94,7 @@ class MetamaskWallet implements IWallet {
     // this.client = client;
   }
 
-  public async connect(options: MetamaskWalletConnectOptions) {
+  public async connect(options?: MetamaskWalletConnectOptions) {
     if (hasInjectedProvider(globalThis.window)) {
       this.provider = globalThis.window.ethereum;
     } else {
@@ -116,7 +116,7 @@ class MetamaskWallet implements IWallet {
     this.connectedChainId = chainId;
 
     // if chainId is provided, switch to that chain
-    if (options.chainId && this.connectedChainId !== options.chainId) {
+    if (options?.chainId && this.connectedChainId !== options.chainId) {
       await this.switchChain(options.chainId);
       this.connectedChainId = options.chainId;
     }
