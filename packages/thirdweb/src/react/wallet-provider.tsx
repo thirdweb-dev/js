@@ -7,7 +7,7 @@ import {
 } from "react";
 import type { IWallet } from "../wallets/interfaces/wallet.js";
 
-export type WalletWithId = IWallet & { _id: string };
+export type WalletWithId = IWallet<any> & { _id: string };
 
 type WalletContext = {
   activeWallet: WalletWithId | null;
@@ -115,14 +115,14 @@ export function useConnect() {
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async (options: IWallet | (() => Promise<IWallet>)) => {
+    async function <T>(options: IWallet<T> | (() => Promise<IWallet<T>>)) {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
         const walletWithId = options as WalletWithId;
         walletWithId._id = fakeUuid();
         connectWallet(walletWithId);
-        return;
+        return walletWithId as IWallet<T>;
       }
 
       setIsConnecting(true);
@@ -132,11 +132,13 @@ export function useConnect() {
         const walletWithId = wallet as WalletWithId;
         walletWithId._id = fakeUuid();
         connectWallet(walletWithId);
+        return walletWithId as IWallet<T>;
       } catch (e) {
         setError(e as Error);
       } finally {
         setIsConnecting(false);
       }
+      return null;
     },
     [connectWallet],
   );

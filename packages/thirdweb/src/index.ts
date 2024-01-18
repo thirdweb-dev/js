@@ -5,6 +5,12 @@ import { transaction, type TransactionOptions } from "./transaction/index.js";
 import { memoizePromise } from "./utils/promise.js";
 import type { AbiFunction } from "abitype";
 
+declare module "abitype" {
+  export interface Register {
+    AddressType: string;
+  }
+}
+
 export type CreateClientOptions =
   | {
       clientId: string;

@@ -1,7 +1,7 @@
+import type { Address } from "abitype";
 import type { Transaction } from "../../transaction/index.js";
 import type {
   AbiFunction,
-  Address,
   Hex,
   SignableMessage,
   TransactionReceipt,

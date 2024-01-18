@@ -1,4 +1,5 @@
 import type {
+  Address,
   Hash,
   Hex,
   PrivateKeyAccount,
@@ -7,7 +8,7 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { AbiFunction, Address, TypedData } from "abitype";
+import type { AbiFunction, TypedData } from "abitype";
 import type { Transaction } from "../transaction/index.js";
 import type { IWallet } from "./interfaces/wallet.js";
 

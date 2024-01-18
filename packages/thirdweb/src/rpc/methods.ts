@@ -1,6 +1,6 @@
+import type { Address } from "abitype";
 import type { RPCClient } from "./index.js";
 import {
-  type Address,
   type BlockNumber,
   type BlockTag,
   type RpcBlock,
