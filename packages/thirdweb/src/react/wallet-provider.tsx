@@ -17,7 +17,7 @@ type WalletContext = {
   disconnectWallet: (wallet: WalletWithId) => void;
 };
 
-const WalletContext = createContext({} as WalletContext);
+const WalletContext = /* @__PURE__ */ createContext({} as WalletContext);
 
 export const WallerProvider: React.FC<React.PropsWithChildren> = ({
   children,

@@ -1439,6 +1439,12 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-better-tree-shaking:
+        specifier: 0.0.4
+        version: 0.0.4(eslint@8.56.0)
+      eslint-plugin-tsdoc:
+        specifier: ^0.2.16
+        version: 0.2.17
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -15341,7 +15347,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.8
       cosmiconfig: 7.1.0
-      resolve: 1.22.1
+      resolve: 1.22.8
     dev: false
 
   /babel-plugin-module-resolver@4.1.0:
@@ -18821,11 +18827,11 @@ packages:
       eslint-import-resolver-node: 0.3.7
       eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.60.1)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.3)(eslint@8.56.0)
       has: 1.0.3
-      is-core-module: 2.11.0
+      is-core-module: 2.13.1
       is-glob: 4.0.3
       minimatch: 3.1.2
       object.values: 1.1.6
-      resolve: 1.22.1
+      resolve: 1.22.8
       semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
@@ -28267,7 +28273,7 @@ packages:
   /resolve@1.19.0:
     resolution: {integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==}
     dependencies:
-      is-core-module: 2.11.0
+      is-core-module: 2.13.1
       path-parse: 1.0.7
     dev: true
 

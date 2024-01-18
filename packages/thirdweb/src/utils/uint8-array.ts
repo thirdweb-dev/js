@@ -1,4 +1,3 @@
-const objectToString = Object.prototype.toString;
 const uint8ArrayStringified = "[object Uint8Array]";
 
 /**
@@ -49,7 +48,7 @@ export function isUint8Array(value: unknown): value is Uint8Array {
     return true;
   }
 
-  return objectToString.call(value) === uint8ArrayStringified;
+  return Object.prototype.toString.call(value) === uint8ArrayStringified;
 }
 
 /**
