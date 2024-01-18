@@ -11,13 +11,13 @@ export default {
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmSX8sHToRzyFupT8BvPQjVsegRWFYz2mdnLkVnqBFKohY",
-    "width": 901,
-    "height": 901,
+    "url": "ipfs://QmXLmYMqZ2ZKyaaEjayNjLai4RUo2YmorUDwkk95xmdTUr",
+    "width": 80,
+    "height": 80,
     "format": "png"
   },
   "infoURL": "https://ancient8.gg/",
-  "name": "Ancient8 Testnet",
+  "name": "Ancient8 Testnet (deprecated)",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -25,12 +25,13 @@ export default {
   },
   "networkId": 2863311531,
   "rpc": [
-    "https://ancient8-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ancient8-testnet-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2863311531.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.ancient8.gg"
   ],
-  "shortName": "a8",
+  "shortName": "a8old",
   "slip44": 1,
-  "slug": "ancient8-testnet",
+  "slug": "ancient8-testnet-deprecated",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

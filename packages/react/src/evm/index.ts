@@ -1,6 +1,8 @@
 export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
+  type ModalConfigOptions,
+  useSetWalletModalConfig,
 } from "./providers/wallet-ui-states-provider";
 
 export { useSafe } from "./connectors/gnosis";

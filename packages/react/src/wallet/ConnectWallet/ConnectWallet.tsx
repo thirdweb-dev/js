@@ -80,6 +80,11 @@ export type ConnectWalletProps = {
   btnTitle?: string;
 
   /**
+   * Set a custom label for the "Switch Network" button
+   */
+  switchNetworkBtnTitle?: string;
+
+  /**
    * Change the title of ConnectWallet Modal
    *
    * The default is `"Connect"`
@@ -196,6 +201,8 @@ export type ConnectWalletProps = {
   modalSize?: "compact" | "wide";
 
   /**
+   * URL of the "terms of service" page
+   *
    * If provided, Modal will show a Terms of Service message at the bottom with below link
    *
    * @example
@@ -206,6 +213,8 @@ export type ConnectWalletProps = {
   termsOfServiceUrl?: string;
 
   /**
+   * URL of the "privacy policy" page
+   *
    * If provided, Modal will show a Privacy Policy message at the bottom with below link
    *
    * @example
@@ -722,6 +731,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             <SwitchNetworkButton
               style={props.style}
               className={props.className}
+              switchNetworkBtnTitle={props.switchNetworkBtnTitle}
             />
           );
         }
@@ -784,11 +794,15 @@ export function ConnectWallet(props: ConnectWalletProps) {
 function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
+  switchNetworkBtnTitle?: string;
 }) {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
   const locale = useTWLocale();
+
+  const switchNetworkBtnTitle =
+    props.switchNetworkBtnTitle ?? locale.connectWallet.switchNetwork;
 
   return (
     <AnimatedButton
@@ -818,7 +832,7 @@ function SwitchNetworkButton(props: {
       {switching ? (
         <Spinner size="sm" color="primaryButtonText" />
       ) : (
-        locale.connectWallet.switchNetwork
+        switchNetworkBtnTitle
       )}
     </AnimatedButton>
   );
