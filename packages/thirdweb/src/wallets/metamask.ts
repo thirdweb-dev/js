@@ -95,6 +95,7 @@ class MetamaskWallet implements IWallet {
       await this.switchChain(options.chainId);
       this.connectedChainId = options.chainId;
     }
+    return this;
   }
 
   async getAccount() {

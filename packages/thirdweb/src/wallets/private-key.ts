@@ -32,9 +32,14 @@ class PrivateKeyWallet implements IWallet {
   }
 
   public async connect(options: PrivateKeyWalletConnectOptions) {
-    const { pkey } = options;
+    let pkey = options.pkey;
     const { privateKeyToAccount } = await import("viem/accounts");
+    // auto prefix
+    if (typeof pkey === "string" && !pkey.startsWith("0x")) {
+      pkey = "0x" + pkey;
+    }
     this.account = privateKeyToAccount(pkey as Hex);
+    return this;
   }
 
   public async signMessage(message: SignableMessage) {

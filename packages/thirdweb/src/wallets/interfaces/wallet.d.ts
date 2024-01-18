@@ -12,7 +12,7 @@ import type {
 
 export interface IWallet {
   address: Address | null;
-  connect: (_opts: any) => Promise<void>;
+  connect: (_opts: any) => Promise<InstanceType<IWallet>>;
   disconnect: () => Promise<void>;
   //
   signMessage?: (_message: SignableMessage) => Promise<Hex>;

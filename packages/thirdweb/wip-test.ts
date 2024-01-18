@@ -25,9 +25,9 @@ const balance = await contract.read({
 console.log("beginning balance", balance);
 
 // Step 4: initialize a wallet
-const wallet = privateKeyWallet(client);
-
-await wallet.connect({ pkey: process.env.PKEY as string });
+const wallet = await privateKeyWallet(client).connect({
+  pkey: process.env.PKEY as string,
+});
 
 // Step 5: create a transaction
 const tx = contract.transaction({
@@ -39,7 +39,7 @@ const tx = contract.transaction({
 });
 
 // Step 6: execute the transaction with the wallet
-const receipt = await wallet.execute(tx);
+const receipt = await wallet.sendTransaction(tx);
 
 console.log("tx hash", receipt.transactionHash);
 
