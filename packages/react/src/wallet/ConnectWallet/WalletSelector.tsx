@@ -366,7 +366,12 @@ export const WalletSelector: React.FC<{
     <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
       {!modalConfig.isEmbed && (
-        <Container p="lg">
+        <Container
+          p="lg"
+          style={{
+            paddingBottom: spacing.md,
+          }}
+        >
           {isWalletGroupExpanded ? (
             <ModalHeader
               title={twTitle}
