@@ -18,6 +18,27 @@ class MetamaskWallet implements IWallet {
   private connectedChainId?: number;
   private connectdAddress?: Address | null;
 
+  private async getAccount() {
+    const provider = this.provider;
+    if (!provider) {
+      throw new Error("not connected");
+    }
+    const accounts = await provider.request({
+      method: "eth_accounts",
+    });
+
+    // return checksum address
+    return getAddress(accounts[0] as string);
+  }
+
+  private async getChainId() {
+    const provider = this.provider;
+    if (!provider) {
+      throw new Error("not connected");
+    }
+    return provider.request({ method: "eth_chainId" }).then(normalizeChainId);
+  }
+
   private setupListeners() {
     const provider = this.provider;
     if (provider && provider.on) {
@@ -64,6 +85,10 @@ class MetamaskWallet implements IWallet {
     return this.connectdAddress || null;
   }
 
+  get chainId() {
+    return this.connectedChainId || null;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_client: ThirdwebClient) {
     // this.client = client;
@@ -96,27 +121,6 @@ class MetamaskWallet implements IWallet {
       this.connectedChainId = options.chainId;
     }
     return this;
-  }
-
-  async getAccount() {
-    const provider = this.provider;
-    if (!provider) {
-      throw new Error("not connected");
-    }
-    const accounts = await provider.request({
-      method: "eth_accounts",
-    });
-
-    // return checksum address
-    return getAddress(accounts[0] as string);
-  }
-
-  async getChainId() {
-    const provider = this.provider;
-    if (!provider) {
-      throw new Error("not connected");
-    }
-    return provider.request({ method: "eth_chainId" }).then(normalizeChainId);
   }
 
   async switchChain(chainId: number): Promise<void> {
