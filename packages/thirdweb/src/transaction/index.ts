@@ -46,12 +46,9 @@ export type Transaction<abiFn extends AbiFunction> = {
 
 export function transaction<
   method extends string,
-  abi extends AbiFunction,
-  parsedAbi extends AbiFunction = abi extends AbiFunction
-    ? abi
-    : method extends `function ${string}`
-      ? ParseMethod<method>
-      : AbiFunction,
+  abi extends AbiFunction = method extends `function ${string}`
+    ? ParseMethod<method>
+    : AbiFunction,
 >(
   client: ThirdwebClient,
   options: TransactionOptions<method, abi> & GetContractOptions,
@@ -70,7 +67,7 @@ export function transaction<
       try {
         const abiItem = parseAbiItem(options.method as string);
         if (abiItem.type === "function") {
-          return abiItem as parsedAbi;
+          return abiItem as abi;
         }
         throw new Error(`could not find function with name ${options.method}`);
       } catch (e) {}
@@ -84,7 +81,7 @@ export function transaction<
         }
         // if the item is a function we can compare the name
         return item.name === options.method;
-      }) as parsedAbi | undefined;
+      }) as abi | undefined;
 
       if (!abiFunction) {
         throw new Error(`could not find function with name ${options.method}`);
@@ -93,5 +90,5 @@ export function transaction<
     }),
     _encoded: null,
     transactionHash: null,
-  } as Transaction<parsedAbi>;
+  } as Transaction<abi>;
 }

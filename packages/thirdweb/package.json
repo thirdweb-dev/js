@@ -34,6 +34,11 @@
       "import": "./esm/wallets/*.js",
       "default": "./cjs/wallets/*.js"
     },
+    "./extensions/*": {
+      "types": "./types/extensions/*.d.ts",
+      "import": "./esm/extensions/*.js",
+      "default": "./cjs/extensions/*.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -43,6 +48,9 @@
       ],
       "wallets/*": [
         "./types/wallets/*.d.ts"
+      ],
+      "extensions/*": [
+        "./types/extensions/*.d.ts"
       ]
     }
   },
