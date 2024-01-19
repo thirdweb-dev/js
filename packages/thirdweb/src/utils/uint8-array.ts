@@ -91,3 +91,42 @@ export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
 
   return true;
 }
+
+let _bytesLookupTable: Array<string>;
+const getBytesLookupTable = () => {
+  if (!_bytesLookupTable) {
+    _bytesLookupTable = Array.from({ length: 256 }, (_, index) =>
+      index.toString(16).padStart(2, "0"),
+    );
+  }
+  return _bytesLookupTable;
+};
+
+/**
+Convert a `Uint8Array` (containing a UTF-8 string) to a string.
+
+Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
+
+@example
+```
+import {uint8ArrayToString} from 'uint8array-extras';
+
+const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
+
+console.log(uint8ArrayToString(byteArray));
+//=> 'Hello'
+```
+*/
+export function uint8ArrayToHex(array: Uint8Array): string {
+  assertUint8Array(array);
+
+  // Concatenating a string is faster than using an array.
+  let hexString = "";
+  const bytesLookupTable = getBytesLookupTable();
+  for (let index = 0; index < array.length; index++) {
+    hexString +=
+      bytesLookupTable[array[index] as keyof typeof bytesLookupTable];
+  }
+
+  return hexString;
+}

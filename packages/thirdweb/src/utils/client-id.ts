@@ -1,4 +1,5 @@
-import { sha256HexSync } from "@thirdweb-dev/crypto";
+import { sha256 } from "@noble/hashes/sha256";
+import { uint8ArrayToHex } from "./uint8-array.js";
 
 /**
  * @param secretKey - the secret key to compute the client id from
@@ -6,5 +7,5 @@ import { sha256HexSync } from "@thirdweb-dev/crypto";
  * @internal
  */
 export function computeClientIdFromSecretKey(secretKey: string) {
-  return sha256HexSync(secretKey).slice(0, 32);
+  return uint8ArrayToHex(sha256(secretKey)).slice(0, 32);
 }

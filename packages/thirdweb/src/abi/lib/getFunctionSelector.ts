@@ -1,10 +1,12 @@
 import type { AbiFunction } from "abitype";
 import { getFunctionSignature } from "./getFunctionSignature.js";
-import { slice, toBytes } from "viem/utils";
+import { slice } from "viem/utils";
 import type { Hash } from "viem";
-import { keccak256SyncHexPrefixed } from "@thirdweb-dev/crypto";
+import { keccak_256 } from "@noble/hashes/sha3";
+import { uint8ArrayToHex } from "../../utils/uint8-array.js";
 
-const hash = (value: string) => keccak256SyncHexPrefixed(toBytes(value));
+const hash = (value: string) =>
+  `0x${uint8ArrayToHex(keccak_256(value))}` as const;
 
 const FN_SELECTOR_CACHE = /*@__PURE__*/ new Map<string, Hash>();
 
