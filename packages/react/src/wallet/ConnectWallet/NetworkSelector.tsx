@@ -561,11 +561,13 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
 
   if (isLoading) {
     return (
-      <NetworkListUl>
-        {new Array(10).fill(0).map((_, i) => (
-          <Skeleton height="48px" key={i} />
-        ))}
-      </NetworkListUl>
+      <Container px="xxs">
+        <NetworkListUl>
+          {new Array(10).fill(0).map((_, i) => (
+            <Skeleton height="48px" key={i} />
+          ))}
+        </NetworkListUl>
+      </Container>
     );
   }
 
