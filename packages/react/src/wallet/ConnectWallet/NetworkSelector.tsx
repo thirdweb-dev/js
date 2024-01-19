@@ -33,6 +33,7 @@ import {
 } from "../../design-system/CustomThemeProvider";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
+import { Skeleton } from "../../components/Skeleton";
 
 export type NetworkSelectorChainProps = {
   /**
@@ -550,22 +551,21 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
 
   useEffect(() => {
     if (isLoading) {
-      setIsLoading(false);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          setIsLoading(false);
+        });
+      }, 150);
     }
   }, [isLoading]);
 
   if (isLoading) {
     return (
-      <Container
-        flex="row"
-        center="both"
-        style={{
-          height: "250px",
-        }}
-      >
-        {/* Don't put a spinner here - it's gonna freeze */}
-        <Text>{locale.loading}</Text>
-      </Container>
+      <NetworkListUl>
+        {new Array(10).fill(0).map((_, i) => (
+          <Skeleton height="48px" key={i} />
+        ))}
+      </NetworkListUl>
     );
   }
 
