@@ -83,6 +83,10 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return connector.authenticate(params);
   }
 
+  async deleteActiveAccount() {
+    return this.connector?.deleteActiveAccount();
+  }
+
   getMeta(): WalletMeta {
     const strategy = this.connector?.getConnectedAuthStrategy();
     const meta = (this.constructor as typeof AbstractClientWallet).meta;
