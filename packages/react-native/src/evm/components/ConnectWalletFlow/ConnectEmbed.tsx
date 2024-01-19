@@ -107,7 +107,16 @@ export type ConnectEmbedProps = {
 };
 
 export const ConnectEmbed = (props: ConnectEmbedProps) => {
-  return <ConnectEmbedUI {...props} isModal={false} />;
+  return (
+    <ConnectEmbedUI
+      container={{
+        borderRadius: "xxl",
+        paddingBottom: "lg",
+      }}
+      {...props}
+      isModal={false}
+    />
+  );
 };
 
 export const ConnectEmbedUI = ({

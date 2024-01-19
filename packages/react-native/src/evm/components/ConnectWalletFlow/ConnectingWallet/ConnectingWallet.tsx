@@ -27,11 +27,13 @@ export function ConnectingWallet({
   const l = useLocale();
   return (
     <Box paddingHorizontal="xl">
-      <ConnectWalletHeader
-        onBackPress={onBackPress}
-        subHeaderText={subHeaderText}
-        onClose={onClose}
-      />
+      <Box marginVertical="lg">
+        <ConnectWalletHeader
+          onBackPress={onBackPress}
+          subHeaderText={subHeaderText}
+          onClose={onClose}
+        />
+      </Box>
       <WalletLoadingThumbnail imageSize={85}>
         <ImageSvgUri height={80} width={80} imageUrl={wallet.meta.iconURL} />
       </WalletLoadingThumbnail>
