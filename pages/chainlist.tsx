@@ -1,5 +1,6 @@
 import { fetchChainsFromApi } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  ButtonGroup,
   Flex,
   GridItem,
   Icon,
@@ -11,8 +12,10 @@ import {
   LinkOverlay,
   SimpleGrid,
   Spinner,
+  useColorMode,
 } from "@chakra-ui/react";
 import type { Chain } from "@thirdweb-dev/chains";
+import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ChainIcon } from "components/icons/ChainIcon";
 
@@ -25,6 +28,7 @@ import { FiSearch } from "react-icons/fi";
 import {
   Card,
   Heading,
+  LinkButton,
   Text,
   TrackedCopyButton,
   TrackedLink,
@@ -82,6 +86,7 @@ export const ChainsLanding: ThirdwebNextPage = (
           description,
         }}
       />
+      <PublishUpsellCard />
       <Flex direction="row" align="center" justify="space-between" gap={4}>
         <Heading size="title.lg" as="h1" flexShrink={0}>
           Chainlist
@@ -122,6 +127,67 @@ export const ChainsLanding: ThirdwebNextPage = (
       </Flex>
 
       <SearchResults chains={filteredChains} />
+    </Flex>
+  );
+};
+
+export const PublishUpsellCard: React.FC = () => {
+  const { colorMode } = useColorMode();
+
+  return (
+    <Flex
+      borderRadius="3xl"
+      border="1px solid rgba(255, 255, 255, 0.1);"
+      p={{ base: 8, md: 10 }}
+      gap={12}
+      bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+      bgColor={colorMode === "dark" ? "transparent" : "backgroundHighlight"}
+    >
+      <Flex flexDir="column" gap={6}>
+        <Heading>Accelerate your chain&apos;s growth</Heading>
+        <Text>
+          Add your EVM chain to this list and make it easy for developers to
+          build on your network.
+        </Text>
+
+        <Flex gap={{ base: 3, sm: 4 }} flexDir={{ base: "column", sm: "row" }}>
+          <LinkButton
+            as={TrackedLink}
+            {...{
+              category: TRACKING_CATEGORY,
+              label: "add_chain",
+            }}
+            bg="accent.900"
+            color="accent.100"
+            borderColor="accent.900"
+            borderWidth="1px"
+            href="https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/how-to-add-your-evm-chain-to-thirdweb%E2%80%99s-chainlist-/3HMqrwyxXUFxQYaudDJffT"
+            noIcon
+            _hover={{
+              bg: "transparent",
+              color: "accent.900",
+            }}
+          >
+            Add your chain
+          </LinkButton>
+
+          <LinkButton
+            as={TrackedLink}
+            {...{
+              category: TRACKING_CATEGORY,
+              label: "get_in_touch",
+            }}
+            variant="ghost"
+            href="/contact-us"
+            isExternal
+            noIcon
+            borderColor="borderColor"
+            borderWidth="1px"
+          >
+            Get In Touch
+          </LinkButton>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
