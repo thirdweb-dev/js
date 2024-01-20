@@ -39,6 +39,11 @@
       "import": "./esm/extensions/*.js",
       "default": "./cjs/extensions/*.js"
     },
+    "./adapters/*": {
+      "types": "./types/adapters/*.d.ts",
+      "import": "./esm/adapters/*.js",
+      "default": "./cjs/adapters/*.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -51,6 +56,9 @@
       ],
       "extensions/*": [
         "./types/extensions/*.d.ts"
+      ],
+      "adapters/*": [
+        "./types/adapters/*.d.ts"
       ]
     }
   },
@@ -83,13 +91,19 @@
     "eslint-plugin-tsdoc": "^0.2.16",
     "react": "^18.2.0",
     "rimraf": "^3.0.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "ethers5": "npm:ethers@^5.0.0",
+    "ethers6": "npm:ethers@^6.0.0"
   },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=18",
+    "ethers": "^5 || ^6"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "ethers": {
       "optional": true
     }
   },
