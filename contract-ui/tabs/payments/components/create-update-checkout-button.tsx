@@ -458,12 +458,13 @@ export const CreateUpdateCheckoutButton: React.FC<
           </Text>
         );
       } else if (!isClaimConditionsLoading && claimConditions?.length === 0) {
+        const pageSlug = isErc721 ? "claim-conditions" : "nfts";
         errorMessage = (
           <Text>
             You don&apos;t have claim conditions,{" "}
             <TrackedLink
               textDecor="underline"
-              href={`/${chainSlug}/${contractAddress}/nfts`}
+              href={`/${chainSlug}/${contractAddress}/${pageSlug}`}
               category="payments"
               label="no-claim-conditions-alert"
             >
