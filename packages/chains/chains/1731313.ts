@@ -14,7 +14,7 @@ export default {
   "rpc": [
     "https://turkey-demo-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1731313.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://blockscout-poa.huabeizhenxuan.com"
+    "https://devchain-poa.huabeizhenxuan.com"
   ],
   "shortName": "TDD",
   "slug": "turkey-demo-dev",

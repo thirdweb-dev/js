@@ -10,8 +10,14 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreieox7v337p3jfhd37dz74mq6mn3uk5i5475rmzpirmyp6ydcfzzqi",
+    "width": 350,
+    "height": 350,
+    "format": "png"
+  },
   "infoURL": "https://kalichain.com",
-  "name": "Kalichain Mainnet",
+  "name": "Kalichain Testnet",
   "nativeCurrency": {
     "name": "kalis",
     "symbol": "KALIS",
@@ -19,11 +25,11 @@ export default {
   },
   "networkId": 653,
   "rpc": [
-    "https://kalichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kalichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://653.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kalichain.com"
   ],
   "shortName": "kalichain",
-  "slug": "kalichain",
-  "testnet": false
+  "slug": "kalichain-testnet",
+  "testnet": true
 } as const satisfies Chain;

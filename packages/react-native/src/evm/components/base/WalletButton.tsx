@@ -43,7 +43,6 @@ export const WalletButton = ({
       paddingHorizontal="md"
       paddingVertical="sm"
       borderRadius="sm"
-      backgroundColor="background"
       onPress={onPress}
       {...props}
     >

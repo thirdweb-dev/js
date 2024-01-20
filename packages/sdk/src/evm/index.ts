@@ -11,9 +11,7 @@ export * from "./contracts";
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
 
 // export integration things
-export type {
-  PaperCreateCheckoutLinkShardParams
-} from "./integrations/thirdweb-checkout";
+export type { PaperCreateCheckoutLinkShardParams } from "./integrations/thirdweb-checkout";
 
 // explicitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
@@ -45,8 +43,11 @@ export * from "./core/classes/delayed-reveal";
 export * from "./core/classes/drop-claim-conditions";
 export * from "./core/classes/drop-erc1155-claim-conditions";
 export * from "./core/classes/erc-20";
+export * from "./core/classes/erc-20-signature-mintable";
 export * from "./core/classes/erc-721";
+export * from "./core/classes/erc-721-with-quantity-signature-mintable";
 export * from "./core/classes/erc-1155";
+export * from "./core/classes/erc-1155-signature-mintable";
 export * from "./core/classes/account";
 export * from "./core/classes/account-factory";
 export * from "./core/classes/gas-cost-estimator";
