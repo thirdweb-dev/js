@@ -7,15 +7,15 @@ import type { RawClient } from "../client/client.js";
 type Ethers5 = typeof ethers5;
 
 function isEthers5(
-  ethers_: typeof ethers5 | typeof ethers6,
-): ethers_ is typeof ethers5 {
-  return "providers" in ethers_;
+  ethers: typeof ethers5 | typeof ethers6,
+): ethers is typeof ethers5 {
+  return "providers" in ethers;
 }
 
 function assertEthers5(
-  ethers_: typeof ethers5 | typeof ethers6,
-): asserts ethers_ is typeof ethers5 {
-  if (!isEthers5(ethers_)) {
+  ethers: typeof ethers5 | typeof ethers6,
+): asserts ethers is typeof ethers5 {
+  if (!isEthers5(ethers)) {
     throw new Error(
       "You seem to be using ethers@6, please use the `ethers6Adapter()",
     );
@@ -23,13 +23,13 @@ function assertEthers5(
 }
 
 export function ethers5Adapter() {
-  const ethers_ = universalethers;
-  assertEthers5(ethers_);
+  const ethers = universalethers;
+  assertEthers5(ethers);
   return {
     toProvider: (client: RawClient, chainId: number) =>
-      toProvider(ethers_, client, chainId),
+      toProvider(ethers, client, chainId),
     toContract: (contract: ThirdwebContract, abi?: ethers5.ContractInterface) =>
-      toContract(ethers_, contract, abi),
+      toContract(ethers, contract, abi),
   };
 }
 
@@ -49,18 +49,27 @@ function toProvider(
   });
 }
 
-async function toContract(
+function toContract<abi extends ethers5.ContractInterface>(
   ethers: Ethers5,
   contract: ThirdwebContract,
-  abi?: ethers5.ContractInterface,
-): Promise<ethers5.Contract> {
+  abi?: abi,
+): abi extends ethers5.ContractInterface
+  ? ethers5.Contract
+  : Promise<ethers5.Contract> {
   // TODO handle signers as well
   // resolve the ABI if it is not explicitly passed
   if (!abi) {
-    const { resolveAbi } = await import("../abi/resolveContractAbi.js");
-    // this is compatible with ethers5
-    abi = (await resolveAbi(contract)) as ethers5.ContractInterface;
+    // @ts-expect-error - typescript can't understand this
+    return import("../abi/resolveContractAbi.js")
+      .then((m) => {
+        return m.resolveAbi(contract) as Promise<ethers5.ContractInterface>;
+      })
+      .then((abi_) => {
+        // call self again this time with the resolved abi
+        return toContract(ethers, contract, abi_);
+      });
   }
   const provider = toProvider(ethers, contract, contract.chainId);
+  // @ts-expect-error - typescript can't understand this
   return new ethers.Contract(contract.address, abi, provider);
 }

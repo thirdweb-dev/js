@@ -23,41 +23,50 @@ function assertEthers6(
 }
 
 export function ethers6Adapter() {
-  const ethers_ = universalethers;
-  assertEthers6(ethers_);
+  const ethers = universalethers;
+  assertEthers6(ethers);
   return {
     toProvider: (client: RawClient, chainId: number) =>
-      toProvider(ethers_, client, chainId),
+      toProvider(ethers, client, chainId),
     toContract: (contract: ThirdwebContract, abi?: ethers6.InterfaceAbi) =>
-      toContract(ethers_, contract, abi),
+      toContract(ethers, contract, abi),
   };
 }
 
-function toProvider(ethers_: Ethers6, client: RawClient, chainId: number) {
+function toProvider(ethers: Ethers6, client: RawClient, chainId: number) {
   const url = `https://${chainId}.rpc.thirdweb.com/${client.clientId}`;
 
-  const fetchRequest = new ethers_.FetchRequest(url);
+  const fetchRequest = new ethers.FetchRequest(url);
   if (client.secretKey) {
     fetchRequest.setHeader("x-secret-key", client.secretKey);
   }
 
-  return new ethers_.JsonRpcProvider(fetchRequest, chainId, {
+  return new ethers.JsonRpcProvider(fetchRequest, chainId, {
     staticNetwork: true,
   });
 }
 
-async function toContract(
-  ethers_: Ethers6,
+function toContract<abi extends ethers6.InterfaceAbi>(
+  ethers: Ethers6,
   contract: ThirdwebContract,
-  abi?: ethers6.InterfaceAbi,
-) {
+  abi?: abi,
+): abi extends ethers6.InterfaceAbi
+  ? ethers6.Contract
+  : Promise<ethers6.Contract> {
   // TODO handle signers as well
   // resolve the ABI if it is not explicitly passed
   if (!abi) {
-    const { resolveAbi } = await import("../abi/resolveContractAbi.js");
-    // this is compatible with Ethers6
-    abi = (await resolveAbi(contract)) as ethers6.InterfaceAbi;
+    // @ts-expect-error - typescript can't understand this
+    return import("../abi/resolveContractAbi.js")
+      .then((m) => {
+        return m.resolveAbi(contract) as Promise<ethers6.InterfaceAbi>;
+      })
+      .then((abi_) => {
+        // call self again this time with the resolved abi
+        return toContract(ethers, contract, abi_);
+      });
   }
-  const provider = toProvider(ethers_, contract, contract.chainId);
-  return new ethers_.Contract(contract.address, abi, provider);
+  const provider = toProvider(ethers, contract, contract.chainId);
+  // @ts-expect-error - typescript can't understand this
+  return new ethers.Contract(contract.address, abi, provider);
 }
