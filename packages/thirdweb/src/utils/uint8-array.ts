@@ -1,3 +1,5 @@
+import { cachedTextDecoder } from "./text-decoder.js";
+
 const uint8ArrayStringified = "[object Uint8Array]";
 
 /**
@@ -129,4 +131,74 @@ export function uint8ArrayToHex(array: Uint8Array): string {
   }
 
   return hexString;
+}
+
+/**
+Convert a `Uint8Array` (containing a UTF-8 string) to a string.
+
+Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
+
+@example
+```
+import {uint8ArrayToString} from 'uint8array-extras';
+
+const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
+
+console.log(uint8ArrayToString(byteArray));
+//=> 'Hello'
+```
+*/
+export function uint8ArrayToString(array: Uint8Array): string {
+  assertUint8Array(array);
+  return cachedTextDecoder().decode(array);
+}
+
+function assertString(value: any): asserts value is string {
+  if (typeof value !== "string") {
+    throw new TypeError(`Expected \`string\`, got \`${typeof value}\``);
+  }
+}
+
+function base64UrlToBase64(base64url: string) {
+  return base64url.replaceAll("-", "+").replaceAll("_", "/");
+}
+
+/**
+Convert a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a `Uint8Array`.
+
+Replacement for [`Buffer.from('SGVsbG8=', 'base64')`](https://nodejs.org/api/buffer.html#static-method-bufferfromstring-encoding).
+
+@example
+```
+import {base64ToUint8Array} from 'uint8array-extras';
+
+console.log(base64ToUint8Array('SGVsbG8='));
+//=> Uint8Array [72, 101, 108, 108, 111]
+```
+*/
+export function base64ToUint8Array(base64String: string): Uint8Array {
+  assertString(base64String);
+  return Uint8Array.from(
+    globalThis.atob(base64UrlToBase64(base64String)),
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    (x) => x.codePointAt(0)!,
+  );
+}
+
+/**
+Decode a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a string.
+
+Replacement for `Buffer.from('SGVsbG8=', 'base64').toString()` and [`atob()`](https://developer.mozilla.org/en-US/docs/Web/API/atob).
+
+@example
+```
+import {base64ToString} from 'uint8array-extras';
+
+console.log(base64ToString('SGVsbG8='));
+//=> 'Hello'
+```
+*/
+export function base64ToString(base64String: string): string {
+  assertString(base64String);
+  return uint8ArrayToString(base64ToUint8Array(base64String));
 }

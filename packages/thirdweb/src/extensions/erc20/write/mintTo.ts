@@ -11,6 +11,13 @@ type MintToParams = { to: string } & (
     }
 );
 
+/**
+ * Mints a specified amount of tokens to the given address.
+ *
+ * @param contract - The ThirdwebContract instance.
+ * @param options - The minting options.
+ * @returns A promise that resolves to the transaction result.
+ */
 export function mintTo(contract: ThirdwebContract, options: MintToParams) {
   return transaction(contract, {
     address: contract.address,

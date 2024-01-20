@@ -11,6 +11,13 @@ type TransferParams = { to: string } & (
     }
 );
 
+/**
+ * Transfers ERC20 tokens from the contract to the specified address.
+ *
+ * @param contract - The ERC20 contract instance.
+ * @param options - The transfer options.
+ * @returns A promise that resolves to the transaction result.
+ */
 export function transfer(contract: ThirdwebContract, options: TransferParams) {
   return transaction(contract, {
     address: contract.address,
