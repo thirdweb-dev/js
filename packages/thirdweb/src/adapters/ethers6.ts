@@ -22,18 +22,18 @@ function assertEthers6(
   }
 }
 
-export function ethers6Adapter() {
+export const ethers6Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
   assertEthers6(ethers);
   return {
-    toProvider: (client: RawClient, chainId: number) =>
-      toProvider(ethers, client, chainId),
-    toContract: (contract: ThirdwebContract, abi?: ethers6.InterfaceAbi) =>
-      toContract(ethers, contract, abi),
+    provider: (client: RawClient, chainId: number) =>
+      provider(ethers, client, chainId),
+    contract: (twContract: ThirdwebContract, abi?: ethers6.InterfaceAbi) =>
+      contract(ethers, twContract, abi),
   };
-}
+})();
 
-function toProvider(ethers: Ethers6, client: RawClient, chainId: number) {
+function provider(ethers: Ethers6, client: RawClient, chainId: number) {
   const url = `https://${chainId}.rpc.thirdweb.com/${client.clientId}`;
 
   const fetchRequest = new ethers.FetchRequest(url);
@@ -46,9 +46,9 @@ function toProvider(ethers: Ethers6, client: RawClient, chainId: number) {
   });
 }
 
-function toContract<abi extends ethers6.InterfaceAbi>(
+function contract<abi extends ethers6.InterfaceAbi>(
   ethers: Ethers6,
-  contract: ThirdwebContract,
+  twContract: ThirdwebContract,
   abi?: abi,
 ): abi extends ethers6.InterfaceAbi
   ? ethers6.Contract
@@ -59,14 +59,18 @@ function toContract<abi extends ethers6.InterfaceAbi>(
     // @ts-expect-error - typescript can't understand this
     return import("../abi/resolveContractAbi.js")
       .then((m) => {
-        return m.resolveAbi(contract) as Promise<ethers6.InterfaceAbi>;
+        return m.resolveAbi(twContract) as Promise<ethers6.InterfaceAbi>;
       })
       .then((abi_) => {
         // call self again this time with the resolved abi
-        return toContract(ethers, contract, abi_);
+        return contract(ethers, twContract, abi_);
       });
   }
-  const provider = toProvider(ethers, contract, contract.chainId);
+
   // @ts-expect-error - typescript can't understand this
-  return new ethers.Contract(contract.address, abi, provider);
+  return new ethers.Contract(
+    twContract.address,
+    abi,
+    provider(ethers, twContract, twContract.chainId),
+  );
 }

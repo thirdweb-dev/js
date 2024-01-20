@@ -22,18 +22,18 @@ function assertEthers5(
   }
 }
 
-export function ethers5Adapter() {
+export const ethers5Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
   assertEthers5(ethers);
   return {
-    toProvider: (client: RawClient, chainId: number) =>
-      toProvider(ethers, client, chainId),
-    toContract: (contract: ThirdwebContract, abi?: ethers5.ContractInterface) =>
-      toContract(ethers, contract, abi),
+    provider: (client: RawClient, chainId: number) =>
+      provider(ethers, client, chainId),
+    contract: (twContract: ThirdwebContract, abi?: ethers5.ContractInterface) =>
+      contract(ethers, twContract, abi),
   };
-}
+})();
 
-function toProvider(
+function provider(
   ethers: Ethers5,
   client: RawClient,
   chainId: number,
@@ -49,9 +49,9 @@ function toProvider(
   });
 }
 
-function toContract<abi extends ethers5.ContractInterface>(
+function contract<abi extends ethers5.ContractInterface>(
   ethers: Ethers5,
-  contract: ThirdwebContract,
+  twContract: ThirdwebContract,
   abi?: abi,
 ): abi extends ethers5.ContractInterface
   ? ethers5.Contract
@@ -62,14 +62,18 @@ function toContract<abi extends ethers5.ContractInterface>(
     // @ts-expect-error - typescript can't understand this
     return import("../abi/resolveContractAbi.js")
       .then((m) => {
-        return m.resolveAbi(contract) as Promise<ethers5.ContractInterface>;
+        return m.resolveAbi(twContract) as Promise<ethers5.ContractInterface>;
       })
       .then((abi_) => {
         // call self again this time with the resolved abi
-        return toContract(ethers, contract, abi_);
+        return contract(ethers, twContract, abi_);
       });
   }
-  const provider = toProvider(ethers, contract, contract.chainId);
+
   // @ts-expect-error - typescript can't understand this
-  return new ethers.Contract(contract.address, abi, provider);
+  return new ethers.Contract(
+    twContract.address,
+    abi,
+    provider(ethers, twContract, twContract.chainId),
+  );
 }
