@@ -40,7 +40,8 @@ import invariant from "tiny-invariant";
  * import { useTokenSupply } from "@thirdweb-dev/react";
  *
  * function App() {
- *   const { data, isLoading, error } = useTokenSupply(contractAddress);
+ *   const { contract } = useContract(contractAddress);
+ *   const { data, isLoading, error } = useTokenSupply(contract);
  * }
  * ```
  *
