@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-type FileOrBuffer = File | Uint8Array | BufferOrStringWithName;
+export type FileOrBuffer = File | Uint8Array | BufferOrStringWithName;
 
 /**
  * @internal
@@ -25,5 +25,5 @@ export type BuildFormDataOptions = {
 };
 
 export type UploadOptions = {
-  files: FileOrBufferOrString[];
+  files: (FileOrBufferOrString | Record<string, unknown>)[];
 } & BuildFormDataOptions;

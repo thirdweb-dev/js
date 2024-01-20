@@ -2,6 +2,7 @@ import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
   BuildFormDataOptions,
+  FileOrBuffer,
   FileOrBufferOrString,
 } from "./types.js";
 
@@ -156,4 +157,119 @@ export function buildFormData(
     // encode the file names on the way out (which is what the upload backend expects)
     fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
   };
+}
+
+export function isFileOrUint8Array(
+  data: any,
+): data is File | Uint8Array | BufferOrStringWithName {
+  return (
+    isFileInstance(data) || isUint8Array(data) || isBufferOrStringWithName(data)
+  );
+}
+
+/**
+ * @internal
+ */
+export function extractObjectFiles(
+  data: unknown,
+  files: FileOrBuffer[] = [],
+): FileOrBuffer[] {
+  // If item is a FileOrBuffer add it to our list of files
+  if (isFileOrUint8Array(data)) {
+    files.push(data);
+    return files;
+  }
+
+  if (typeof data === "object") {
+    if (!data) {
+      return files;
+    }
+
+    if (Array.isArray(data)) {
+      data.forEach((entry) => extractObjectFiles(entry, files));
+    } else {
+      Object.keys(data).map((key) =>
+        extractObjectFiles(data[key as keyof typeof data], files),
+      );
+    }
+  }
+
+  return files;
+}
+
+/**
+ * @internal
+ */
+export function replaceObjectFilesWithUris(
+  data: unknown,
+  uris: string[],
+): unknown {
+  if (isFileOrUint8Array(data)) {
+    if (uris.length) {
+      data = uris.shift() as string;
+      return data;
+    } else {
+      console.warn("Not enough URIs to replace all files in object.");
+    }
+  }
+
+  if (typeof data === "object") {
+    if (!data) {
+      return data;
+    }
+
+    if (Array.isArray(data)) {
+      return data.map((entry) => replaceObjectFilesWithUris(entry, uris));
+    } else {
+      return Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [
+          key,
+          replaceObjectFilesWithUris(value, uris),
+        ]),
+      );
+    }
+  }
+
+  return data;
+}
+
+function replaceGatewayUrlWithScheme(url: string): string {
+  if (url.includes("/ipfs/")) {
+    const hash = url.split("/ipfs/")[1];
+    return `ipfs://${hash}`;
+  }
+  return url;
+}
+
+/**
+ * @internal
+ */
+export function replaceObjectGatewayUrlsWithSchemes<TData>(data: TData): TData {
+  if (typeof data === "string") {
+    return replaceGatewayUrlWithScheme(data) as TData;
+  }
+  if (typeof data === "object") {
+    if (!data) {
+      return data;
+    }
+
+    if (isFileOrUint8Array(data)) {
+      return data;
+    }
+
+    if (Array.isArray(data)) {
+      return data.map((entry) =>
+        replaceObjectGatewayUrlsWithSchemes(entry),
+      ) as TData;
+    }
+
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        replaceObjectGatewayUrlsWithSchemes(value),
+      ]),
+    ) as TData;
+  }
+
+  return data;
 }

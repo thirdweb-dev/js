@@ -7,3 +7,4 @@ export { startTokenId } from "./erc721/read/startTokenId.js";
 export { tokenURI, type TokenUriParams } from "./erc721/read/tokenURI.js";
 
 // WRITE
+export { mintTo, type MintToParams } from "./erc721/write/mintTo.js";

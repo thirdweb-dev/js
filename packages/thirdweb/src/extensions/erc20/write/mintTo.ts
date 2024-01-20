@@ -15,27 +15,27 @@ type MintToParams = { to: string } & (
  * Mints a specified amount of tokens to the given address.
  *
  * @param contract - The ThirdwebContract instance.
- * @param options - The minting options.
+ * @param params - The minting options.
  * @returns A promise that resolves to the transaction result.
  */
-export function mintTo(contract: ThirdwebContract, options: MintToParams) {
+export function mintTo(contract: ThirdwebContract, params: MintToParams) {
   return transaction(contract, {
     address: contract.address,
     chainId: contract.chainId,
     method: "function mintTo(address to, uint256 amount)",
     params: async () => {
       let amount: bigint;
-      if ("amount" in options) {
+      if ("amount" in params) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
         const { decimals } = await import("../read/decimals.js");
         // if this fails we fall back to `18` decimals
         const d = await decimals(contract).catch(() => 18);
         // turn ether into gwei
-        amount = parseUnits(options.amount.toString(), d);
+        amount = parseUnits(params.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = params.amountGwei;
       }
-      return [options.to, amount] as const;
+      return [params.to, amount] as const;
     },
   });
 }
