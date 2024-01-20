@@ -18,6 +18,14 @@ export type MintToParams = {
   nft: NFTInput | string;
 };
 
+/**
+ * Mints a new ERC721 token and assigns it to the specified address.
+ * If the `params.nft` is a string, it uses the provided URI for the token.
+ * If the `params.nft` is a file, it uploads the file to the storage server and uses the generated URI for the token.
+ * @param contract - The ThirdwebContract instance.
+ * @param params - The parameters for minting the token.
+ * @returns The transaction object.
+ */
 export function mintTo(contract: ThirdwebContract, params: MintToParams) {
   return transaction(contract, {
     address: contract.address,
