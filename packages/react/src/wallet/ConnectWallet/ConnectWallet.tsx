@@ -153,9 +153,9 @@ export type ConnectWalletProps = {
   >;
 
   /**
-   * Hide the "Request Testnet funds" link in ConnectWallet Details Modal which is shown when user is connected to a testnet.
+   * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
    *
-   * By default it is `false`
+   * By default it is `true`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
    *
    * @example
    * ```tsx
@@ -433,9 +433,9 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * Customize the Network selector shown
  *
  * ### hideTestnetFaucet (optional)
- * Hide the "Request Testnet funds" link in ConnectWallet Details Modal which is shown when user is connected to a testnet.
+ * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet. By default it is `true`
  *
- * By default it is `false`
+ * If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
  *
  * ```tsx
  * <ConnectWallet hideTestnetFaucet={false} />

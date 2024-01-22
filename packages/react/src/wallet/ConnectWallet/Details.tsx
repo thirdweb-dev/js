@@ -282,6 +282,10 @@ export const ConnectedWalletDetails: React.FC<{
     </MenuButton>
   );
 
+  // by default we hide faucet link
+  const showFaucet =
+    props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
+
   let content = (
     <div>
       <Spacer y="xl" />
@@ -449,7 +453,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Request Testnet funds */}
-          {!props.hideTestnetFaucet &&
+          {showFaucet &&
             ((chain?.faucets && chain.faucets.length > 0) ||
               chain?.chainId === Localhost.chainId) && (
               <MenuLink
