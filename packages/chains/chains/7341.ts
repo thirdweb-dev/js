@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmUkFZC2ZmoYPTKf7AHdjwRPZoV2h1MCuHaGM4iu8SNFpi",
-    "width": 400,
-    "height": 400,
-    "format": "svg"
-  },
   "infoURL": "https://shyft.network",
   "name": "Shyft Mainnet",
   "nativeCurrency": {
