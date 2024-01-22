@@ -119,7 +119,7 @@ const Hackathon = () => {
               letterSpacing={5}
               textAlign="center"
             >
-              FEBRUARY 9 - 11
+              FEBRUARY 16 - 18
             </Heading>
 
             <Timer />
@@ -180,9 +180,9 @@ const Hackathon = () => {
                     </ListItem>
                     <ListItem>• 1 ETH for 1st Place</ListItem>
                     <ListItem>
-                      • Meet & present to top industry leaders, operators, and
-                      investors in crypto — from Caldera, Founders Inc. and Haun
-                      Ventures
+                      • Meet & present to builders, operators, & investors in
+                      crypto — from Caldera, Pantera Capital, Founders Inc, and
+                      Haun Ventures
                     </ListItem>
                     <ListItem>
                       • Amplification to 70k+ followers on thirdweb&apos;s
@@ -224,7 +224,7 @@ const Hackathon = () => {
                 <Text size="body.xl" color="white">
                   Participants will be able to submit their project to the form
                   in the hackathon landing page before the deadline, on{" "}
-                  <b>February 11th at 9:00am PST</b>.
+                  <b>February 18th at 9:00am PST</b>.
                 </Text>
               </Flex>
             </Flex>

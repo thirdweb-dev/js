@@ -23,8 +23,14 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
     {
       name: "Parker Jou",
       twitter: "theappletucker",
-      description: "Founder, CTO at Caldera",
+      description: "Founder & CTO, Caldera",
       image: "/assets/landingpage/parker.jpg",
+    },
+    {
+      name: "Franklin Bi",
+      twitter: "FranklinBi",
+      description: "Partner, Pantera Capital",
+      image: "/assets/landingpage/franklin.jpg",
     },
   ];
 
@@ -32,7 +38,7 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
     <VStack spacing={8} position="relative">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
-        columns={{ base: 1, lg: 3 }}
+        columns={{ base: 1, lg: 4 }}
         gap={{ base: 8, md: 24 }}
         justifyContent="space-evenly"
         px={4}

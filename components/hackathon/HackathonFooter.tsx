@@ -44,7 +44,7 @@ export const HackathonFooter = ({
         letterSpacing={5}
         textAlign="center"
       >
-        FEBRUARY 9 - 11
+        FEBRUARY 16 - 18
       </Heading>
 
       <LinkButton

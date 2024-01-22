@@ -24,8 +24,8 @@ const Reason = () => {
           San Francisco to{" "}
           <b>discover the next billion-dollar web3 consumer app.</b>&nbsp;Get
           resources & expertise from top operators, find your next co-founder,
-          and meet VCs & industry leaders from{" "}
-          <b>Caldera, Founders Inc. and Haun Ventures.</b>
+          and meet builders & investors from{" "}
+          <b>Caldera, Pantera Capital, Founders Inc, and Haun Ventures.</b>
         </Text>
       </Flex>
     </Container>

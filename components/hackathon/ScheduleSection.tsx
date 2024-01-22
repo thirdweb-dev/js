@@ -4,16 +4,16 @@ import { Heading, Text } from "tw-components";
 export const ScheduleSection: React.FC = () => {
   const items = [
     {
-      day: 9,
+      day: 16,
       title:
         "Hackathon Kickoff: Intro to thirdweb, Team Formation | 5:00pm - 7:00pm",
     },
     {
-      day: 10,
+      day: 17,
       title: "Hack Day | 9:00am - 9:00pm",
     },
     {
-      day: 11,
+      day: 18,
       title: "Final Submission | 9:00am",
       secondTitle: "Lunch & Winners Announcement | 12:00pm",
     },

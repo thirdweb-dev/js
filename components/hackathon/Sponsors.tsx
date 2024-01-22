@@ -18,6 +18,11 @@ const sponsors = [
     logo: require("public/assets/landingpage/haun.svg"),
     link: "https://www.haun.co/",
   },
+  {
+    name: "Pantera",
+    logo: require("public/assets/landingpage/pantera.png"),
+    link: "https://panteracapital.com",
+  },
 ];
 
 interface SponsorsProps {
@@ -32,7 +37,7 @@ export const Sponsors = ({ TRACKING_CATEGORY }: SponsorsProps) => {
       </Text>
       <SimpleGrid
         mt={4}
-        columns={{ base: 2, md: 3 }}
+        columns={{ base: 2, md: 4 }}
         gap={8}
         placeItems="center"
       >
