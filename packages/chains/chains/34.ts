@@ -9,9 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.securechain.ai"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
     "width": 150,
