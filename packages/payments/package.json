@@ -1,0 +1,58 @@
+{
+  "name": "@thirdweb-dev/payments",
+  "version": "1.0.2",
+  "main": "dist/thirdweb-dev-payments.cjs.js",
+  "module": "dist/thirdweb-dev-payments.esm.js",
+  "types": "dist/thirdweb-dev-payments.cjs.d.ts",
+  "browser": {
+    "./dist/thirdweb-dev-payments.esm.js": "./dist/thirdweb-dev-payments.browser.esm.js"
+  },
+  "exports": {
+    ".": {
+      "module": {
+        "browser": "./dist/thirdweb-dev-payments.browser.esm.js",
+        "default": "./dist/thirdweb-dev-payments.esm.js"
+      },
+      "default": "./dist/thirdweb-dev-payments.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/payments",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "preconstruct:fix": "preconstruct fix",
+    "push": "yalc push"
+  }
+}

@@ -39,6 +39,7 @@ export default {
     "https://beta.evmapi2.nuls.io"
   ],
   "shortName": "enulst",
+  "slip44": 1,
   "slug": "enuls-testnet",
   "testnet": true
 } as const satisfies Chain;

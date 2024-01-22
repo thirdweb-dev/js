@@ -8,6 +8,10 @@ import { ERC6551_REGISTRY } from "../connectors/smart-wallet/lib/constants";
 /**
  * A smart wallet controlled by the holder of a particular NFT.
  */
+
+/**
+ * @wallet
+ */
 export class TokenBoundSmartWallet extends SmartWallet {
   tbaConnector?: TokenBoundSmartWalletConnectorType;
   tbaOptions: TokenBoundSmartWalletConfig;
@@ -33,10 +37,6 @@ export class TokenBoundSmartWallet extends SmartWallet {
 
   async getConnector(): Promise<TokenBoundSmartWalletConnectorType> {
     if (!this.tbaConnector) {
-      if (this.enableConnectApp) {
-        await this.wcWallet.init();
-        this.setupWalletConnectEventsListeners();
-      }
       const { TokenBoundSmartWalletConnector } = await import(
         "../connectors/token-bound-smart-wallet"
       );

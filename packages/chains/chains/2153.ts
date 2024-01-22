@@ -24,6 +24,7 @@ export default {
     "https://prod-testnet.prod.findora.org:8545/"
   ],
   "shortName": "findora-testnet",
+  "slip44": 1,
   "slug": "findora-testnet",
   "testnet": true
 } as const satisfies Chain;

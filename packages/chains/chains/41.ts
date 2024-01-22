@@ -34,6 +34,7 @@ export default {
     "https://testnet.telos.net/evm"
   ],
   "shortName": "TelosEVMTestnet",
+  "slip44": 1,
   "slug": "telos-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

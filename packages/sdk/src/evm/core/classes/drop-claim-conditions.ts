@@ -53,7 +53,7 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
@@ -94,7 +94,7 @@ export class DropClaimConditions<
   /**
    * Get the currently active claim condition
    *
-   * @returns the claim condition metadata
+   * @returns The claim condition metadata
    */
   public async getActive(
     options?: ClaimConditionFetchOptions,
@@ -153,7 +153,7 @@ export class DropClaimConditions<
   /**
    * Get all the claim conditions
    *
-   * @returns the claim conditions metadata
+   * @returns The claim conditions metadata
    */
   public async getAll(
     options?: ClaimConditionFetchOptions,
@@ -554,8 +554,8 @@ export class DropClaimConditions<
 
   /**
    * Get the total supply claimed by a specific wallet
-   * @param walletAddress the wallet address to check
-   * @returns the total supply claimed
+   * @param walletAddress - the wallet address to check
+   * @returns The total supply claimed
    */
   public async getSupplyClaimedByWallet(
     walletAddress: AddressOrEns,
@@ -820,7 +820,7 @@ export class DropClaimConditions<
   /**
    * Returns proofs and the overrides required for the transaction.
    *
-   * @returns - `overrides` and `proofs` as an object.
+   * @returns  `overrides` and `proofs` as an object.
    * @internal
    */
   public async prepareClaim(
@@ -892,9 +892,9 @@ export class DropClaimConditions<
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
+   * @param destinationAddress - The address to claim to
+   * @param quantity - The quantity to claim
+   * @param options - Options to override the claim transaction
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
@@ -931,7 +931,7 @@ export class DropClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
@@ -946,7 +946,7 @@ export class DropClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (
@@ -955,7 +955,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
     return (
@@ -970,7 +970,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
     return (

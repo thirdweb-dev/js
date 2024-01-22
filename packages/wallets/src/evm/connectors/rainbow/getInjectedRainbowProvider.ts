@@ -1,6 +1,9 @@
 import { Ethereum } from "../injected/types";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
+/**
+ * @internal
+ */
 export function getInjectedRainbowProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;
@@ -12,6 +15,7 @@ export function getInjectedRainbowProvider(): Ethereum | undefined {
     if (!isRainbow) {
       return;
     }
+
     // Brave tries to make itself look like MetaMask
     // Could also try RPC `web3_clientVersion` if following is unreliable
     if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {

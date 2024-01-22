@@ -32,7 +32,8 @@ export default {
     "https://rpc.public.zkevm-test.net"
   ],
   "shortName": "testnet-zkEVM-mango",
+  "slip44": 1,
   "slug": "polygon-zkevm-testnet",
-  "testnet": false,
+  "testnet": true,
   "title": "Polygon zkEVM Testnet"
 } as const satisfies Chain;

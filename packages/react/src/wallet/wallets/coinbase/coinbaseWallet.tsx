@@ -7,26 +7,54 @@ import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 import {
   ConnectUIProps,
   useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
-type CoinbaseWalletOptions = {
+/**
+ * @wallet
+ */
+export type CoinbaseWalletConfigOptions = {
   /**
    * Whether to use the Coinbase's default QR Code modal or show the custom UI in ConnectWallet Modal
-   * @default "custom"
+   *
+   * The default is `"custom"`
    */
   qrmodal?: "coinbase" | "custom";
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Coinbase Wallet](https://www.coinbase.com/wallet) which allows integrating the wallet with React.
+ *
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * coinbaseWallet({
+ *  qrmodal: "custom",
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional object containing the following properties to configure the wallet
+ *
+ * ### qrmodal (optional)
+ * Whether to use the Coinbase's default QR Code modal or show the custom UI in ConnectWallet Modal.
+ *
+ * The default is `"custom"`
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
+ *
+ * @wallet
+ */
 export const coinbaseWallet = (
-  options?: CoinbaseWalletOptions,
+  options?: CoinbaseWalletConfigOptions,
 ): WalletConfig<CoinbaseWallet> => {
   const qrmodal = options?.qrmodal || "custom";
 
@@ -66,10 +94,10 @@ export const CoinbaseNativeModalConnectUI = ({
   supportedWallets,
   theme,
   goBack,
+  setConnectionStatus,
+  setConnectedWallet,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
   const prompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
 

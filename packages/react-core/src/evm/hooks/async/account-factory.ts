@@ -30,11 +30,10 @@ import invariant from "tiny-invariant";
  * const { data: accounts, isLoading, error } = useAccounts(contract);
  * ```
  *
- * @param contract - an instance of a account factory contract
- * @returns a response object that includes an array of all accounts with their associated admin
+ * @param contract - Instance of a account factory contract
+ * @returns Query result object that includes an array of all accounts with their associated admin
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.useaccounts?utm_source=sdk | Documentation}
- * @beta
+ * @smartWallet
  */
 export function useAccounts(
   contract: RequiredParam<SmartContract>,
@@ -62,11 +61,12 @@ export function useAccounts(
  * const { data: accountsForAddress, isLoading, error } = useAccountsForAddress(contract, "{{account_address}}");
  * ```
  *
- * @param contract - an instance of a account factory contract
- * @returns a response object that includes an array of all accounts associated with the address
+ * @param contract - Instance of a account factory contract
+ * @param address - The address to get associated accounts for
+ * @returns Query result object that includes an array of all accounts associated with the address
+ *
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.useaccountsforaddress?utm_source=sdk | Documentation}
- * @beta
+ * @smartWallet
  */
 export function useAccountsForAddress(
   contract: RequiredParam<SmartContract>,
@@ -91,18 +91,17 @@ export function useAccountsForAddress(
 }
 
 /**
- * Check if a account has been deployed for the given admin
+ * Check if a account has been deployed for the given admin in the account factory contract
  *
  * @example
  * ```javascript
  * const { data: isAccountDeployed, isLoading, error } = useIsAccountDeployed(contract);
  * ```
  *
- * @param contract - an instance of a account factory contract
- * @returns a boolean indicating if a account has been deployed for the given admin
+ * @param contract - Instance of a account factory contract
+ * @returns A boolean indicating if a account has been deployed for the given admin
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.useisaccountdeployed?utm_source=sdk | Documentation}
- * @beta
+ * @smartWallet
  */
 export function useIsAccountDeployed(
   contract: RequiredParam<SmartContract>,
@@ -129,7 +128,7 @@ export function useIsAccountDeployed(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Create a account
+ * Create a account in the account factory contract
  *
  * @example
  * ```jsx
@@ -156,11 +155,10 @@ export function useIsAccountDeployed(
  * };
  * ```
  *
- * @param contract - an instance of a account factory contract
- * @returns a mutation object that can be used to create a account
+ * @param contract - Instance of a account factory contract
+ * @returns A mutation object to create a account
  * @twfeature AccountFactory
- * @see {@link https://portal.thirdweb.com/react/react.usecreateaccount?utm_source=sdk | Documentation}
- * @beta
+ * @smartWallet
  */
 export function useCreateAccount(contract: RequiredParam<SmartContract>) {
   const activeChainId = useSDKChainId();

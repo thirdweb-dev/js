@@ -30,6 +30,7 @@ export default {
     "https://rpc-testnet.theconsta.com"
   ],
   "shortName": "tCNT",
+  "slip44": 1,
   "slug": "consta-testnet",
   "testnet": true
 } as const satisfies Chain;

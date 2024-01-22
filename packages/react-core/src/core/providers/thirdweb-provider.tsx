@@ -56,6 +56,9 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
 
   theme?: "light" | "dark";
 
+  /**
+   * @internal
+   */
   createWalletStorage?: CreateAsyncStorage;
 
   /**
@@ -68,18 +71,23 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    *
    * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
    *
-   * @defaultValue 15000
+   * By default, it is set to `15000` milliseconds (15 seconds)
    */
   autoConnectTimeout?: number;
 
+  /**
+   * @internal
+   */
   signerWallet?: WalletConfig<SignerWallet>;
 }
 
-export const ThirdwebProviderCore = <TChains extends Chain[]>({
-  createWalletStorage = createAsyncLocalStorage,
-  ...props
-}: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
-  const { activeChain } = props;
+/**
+ * @internal
+ */
+export const ThirdwebProviderCore = <TChains extends Chain[]>(
+  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
+) => {
+  const { activeChain, createWalletStorage = createAsyncLocalStorage } = props;
 
   const supportedChains = (props.supportedChains || defaultChains) as Chain[];
 

@@ -21,6 +21,7 @@ export default {
     "https://baklava-forno.celo-testnet.org"
   ],
   "shortName": "BKLV",
+  "slip44": 1,
   "slug": "celo-baklava-testnet",
   "testnet": true
 } as const satisfies Chain;

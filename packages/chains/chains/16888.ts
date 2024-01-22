@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.ivarex.com"
   ],
   "shortName": "tivar",
+  "slip44": 1,
   "slug": "ivar-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -24,6 +24,7 @@ export default {
     "https://www.3sps.net"
   ],
   "shortName": "SPS-Test",
+  "slip44": 1,
   "slug": "sps-testnet",
   "testnet": true
 } as const satisfies Chain;

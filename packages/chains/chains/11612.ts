@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.sardisnetwork.com"
   ],
   "shortName": "SRDXt",
+  "slip44": 1,
   "slug": "sardis-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -33,6 +33,7 @@ export default {
     "https://testnetrpc.num.network"
   ],
   "shortName": "Snow",
+  "slip44": 1,
   "slug": "numbers-testnet",
   "testnet": true
 } as const satisfies Chain;

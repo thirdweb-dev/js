@@ -21,6 +21,8 @@ export const LocalWalletConnectUI = (
         localWallet={props.walletConfig}
         goBack={props.goBack}
         onConnect={props.connected}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }
@@ -49,6 +51,10 @@ export const LocalWalletConnectUI = (
         goBack={props.goBack}
         localWallet={props.walletConfig}
         persist={props.persist}
+        walletInstance={props.connectedWallet}
+        connectedWalletAddress={props.connectedWalletAddress}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }
@@ -60,6 +66,8 @@ export const LocalWalletConnectUI = (
       onConnect={props.connected}
       renderBackButton={props.supportedWallets.length > 1}
       persist={props.persist}
+      setConnectedWallet={props.setConnectedWallet}
+      setConnectionStatus={props.setConnectionStatus}
     />
   );
 };

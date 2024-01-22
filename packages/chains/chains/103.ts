@@ -20,7 +20,7 @@ export default {
   "name": "Worldland Mainnet",
   "nativeCurrency": {
     "name": "Worldland",
-    "symbol": "WL",
+    "symbol": "WLC",
     "decimals": 18
   },
   "networkId": 103,

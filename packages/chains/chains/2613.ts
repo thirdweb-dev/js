@@ -32,6 +32,7 @@ export default {
     "https://testnet-api.ezchain.com/ext/bc/C/rpc"
   ],
   "shortName": "Fuji-EZChain",
+  "slip44": 1,
   "slug": "ezchain-c-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

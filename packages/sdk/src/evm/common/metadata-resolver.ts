@@ -3,13 +3,18 @@ import { Address } from "../schema/shared/Address";
 import { resolveContractUriAndBytecode } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
-import { fetchContractMetadata } from "./fetchContractMetadata";
+import {
+  fetchContractMetadata,
+  formatCompilerMetadata,
+} from "./fetchContractMetadata";
 import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
+
+const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -27,15 +32,21 @@ function putInCache(
   metadataCache[getCacheKey(address, chainId)] = metadata;
 }
 
-function getFromCache(address: string, chainId: number) {
+/**
+ * @internal
+ */
+export function getContractMetadataFromCache(
+  address: string,
+  chainId: number,
+): PublishedMetadata | undefined {
   return metadataCache[getCacheKey(address, chainId)];
 }
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadataFromAddress(
   address: Address,
@@ -44,12 +55,61 @@ export async function fetchContractMetadataFromAddress(
   sdkOptions: SDKOptions = {},
 ): Promise<PublishedMetadata> {
   const chainId = (await provider.getNetwork()).chainId; // TODO resolve from sdk network
-  const cached = getFromCache(address, chainId);
+  const cached = getContractMetadataFromCache(address, chainId);
   if (cached) {
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
 
+  // try to resolve from DNS first
+  const isLocalChain = chainId === 31337 || chainId === 1337;
+  if (!isLocalChain) {
+    try {
+      const response = await fetch(
+        `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+      );
+      if (response.ok) {
+        const resolvedData = await response.json();
+        metadata = formatCompilerMetadata(resolvedData);
+      }
+    } catch (e) {
+      // fallback to IPFS
+    }
+  }
+
+  if (!metadata) {
+    metadata = await fetchContractMetadataFromBytecode(
+      address,
+      chainId,
+      provider,
+      storage,
+      sdkOptions,
+    );
+  }
+
+  if (!metadata) {
+    throw new Error(
+      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
+  }
+
+  if (!metadata.isPartialAbi) {
+    putInCache(address, chainId, metadata);
+  }
+  return metadata;
+}
+
+/**
+ * @internal
+ */
+export async function fetchContractMetadataFromBytecode(
+  address: Address,
+  chainId: number,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  sdkOptions: SDKOptions = {},
+) {
+  let metadata: PublishedMetadata | undefined;
   // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([
     resolveContractUriAndBytecode(address, provider).catch(() => undefined),
@@ -97,13 +157,6 @@ export async function fetchContractMetadataFromAddress(
       return metadata;
     }
   }
-
-  if (!metadata) {
-    throw new Error(
-      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
-    );
-  }
-  putInCache(address, chainId, metadata);
   return metadata;
 }
 
@@ -135,9 +188,9 @@ async function getMetadataUriFromMultichainRegistry(
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  * @returns
  */
 export async function fetchAbiFromAddress(

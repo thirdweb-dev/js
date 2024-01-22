@@ -1,6 +1,9 @@
 export const walletIds = {
   blocto: "blocto",
+  coin98: "coin98",
   coinbase: "coinbase",
+  coreWallet: "coreWallet",
+  cryptoDefiWallet: "cryptoDefiWallet",
   frame: "frame",
   localWallet: "localWallet",
   magicLink: "magicLink",
@@ -16,5 +19,7 @@ export const walletIds = {
   walletConnect: "walletConnect",
   phantom: "phantom",
   okx: "okx",
+  oneKey: "oneKey",
+  rabby: "rabby",
   // add new ids sorted alphabetically
 } as const;

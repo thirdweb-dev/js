@@ -5,6 +5,10 @@ import { useAddress } from "./wallet";
 import { useSupportedChains } from "./useSupportedChains";
 import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
 
+/**
+ *
+ * @internal
+ */
 export function useENS() {
   const address = useAddress();
   const supportedChains = useSupportedChains();

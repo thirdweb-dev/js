@@ -18,10 +18,10 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
-import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { MarketplaceAuction } from "../../core/classes/internal/marketplace/marketplace-auction";
+import { MarketplaceDirect } from "../../core/classes/internal/marketplace/marketplace-direct";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
@@ -50,7 +50,8 @@ import { Offer } from "../../types/marketplace/Offer";
  * const contract = await sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.directListings / contract.auctions / contract.offers instead
  */
 export class Marketplace implements UpdateableNetwork {
   static contractRoles = MARKETPLACE_CONTRACT_ROLES;
@@ -62,7 +63,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
-  public platformFees: ContractPlatformFee<MarketplaceContract>;
+  public platformFees: ContractPlatformFee;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof MarketplaceContractSchema
@@ -293,7 +294,7 @@ export class Marketplace implements UpdateableNetwork {
 
   /**
    * Get the total number of Listings
-   * @returns the total number listings on the marketplace
+   * @returns The total number listings on the marketplace
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {

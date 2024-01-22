@@ -37,6 +37,9 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
+/**
+ * @wallet
+ */
 export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;

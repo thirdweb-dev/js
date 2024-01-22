@@ -21,6 +21,7 @@ export default {
     "wss://ws.latam-blockchain.com"
   ],
   "shortName": "resil",
+  "slip44": 1,
   "slug": "latam-blockchain-resil-testnet",
   "testnet": true
 } as const satisfies Chain;

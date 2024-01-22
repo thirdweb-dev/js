@@ -18,6 +18,7 @@ export default {
     "https://testnet.mdgl.io"
   ],
   "shortName": "mdgl",
+  "slip44": 1,
   "slug": "mdgl-testnet",
   "testnet": true
 } as const satisfies Chain;

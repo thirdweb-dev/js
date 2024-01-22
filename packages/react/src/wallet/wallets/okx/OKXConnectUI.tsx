@@ -1,20 +1,19 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
-import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { isMobile } from "../../../evm/utils/isMobile";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { OKXScan } from "./OKXScan";
-import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import type { OKXWallet } from "@thirdweb-dev/wallets";
-import { wait } from "../../../utils/wait";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { isMobile } from "../../../evm/utils/isMobile";
+import { wait } from "../../../utils/wait";
+import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
+import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { OKXScan } from "./OKXScan";
 
 export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
   const locale = useTWLocale().wallets.okxWallet;
-  const { walletConfig, connected } = props;
-  const connect = useConnect();
+  const { walletConfig, connected, connect } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const hideBackButton = props.supportedWallets.length === 1;
@@ -25,13 +24,13 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
       setErrorConnecting(false);
       setScreen("connecting");
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -113,6 +112,9 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
         }}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
+        createWalletInstance={props.createWalletInstance}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
       />
     );
   }

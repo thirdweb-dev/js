@@ -11,7 +11,7 @@ import { getCreate2FactoryDeploymentInfo } from "./getCreate2FactoryDeploymentIn
  * https://github.com/Arachnid/deterministic-deployment-proxy/blob/master/source/deterministic-deployment-proxy.yul
  *
  * @internal
- * @param provider
+ * @param provider - The provider to use
  */
 export async function getCreate2FactoryAddress(
   provider: providers.Provider,

@@ -32,6 +32,7 @@ export default {
     "https://scoville-rpc.chiliz.com"
   ],
   "shortName": "chz",
+  "slip44": 1,
   "slug": "chiliz-scoville-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -1,3 +1,4 @@
+import { ThirdwebLocale } from "./types";
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
 
 // wallets that connect via extension and QR scan
@@ -52,6 +53,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -108,6 +110,7 @@ export function enDefault() {
           instruction:
             "Please sign the message request in your wallet to continue",
           signInButton: "Sign in",
+          disconnectWallet: "Disconnect Wallet",
         },
         signingScreen: {
           title: "Signing In",
@@ -117,6 +120,7 @@ export function enDefault() {
           approveTransactionInSafe: "Approve transaction in Safe",
           tryAgain: "Try Again",
           failedToSignIn: "Failed to Sign in",
+          inProgress: "Awaiting Confirmation",
         },
       },
     },
@@ -166,6 +170,11 @@ export function enDefault() {
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      coreWallet: extensionAndQRScanScreens("Core"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
+      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {
         signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",
@@ -196,14 +205,16 @@ export function enDefault() {
       },
       embeddedWallet: {
         signInWithGoogle: "Sign in with Google",
+        signInWithFacebook: "Sign in with Facebook",
+        signInWithApple: "Sign in with Apple",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
-        googleLoginScreen: {
+        socialLoginScreen: {
           title: "Sign in",
-          instruction: "Select your Google account in the pop-up",
+          instruction: "Sign into your account in the pop-up",
           failed: "Failed to sign in",
           retry: "Retry",
         },
@@ -310,8 +321,40 @@ export function enDefault() {
   };
 }
 
-export type ThirdwebLocale = ReturnType<typeof enDefault>;
-
+/**
+ * Calling this function will return the default English locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ * ### Use default Locale
+ * ```tsx
+ * const english = en();
+ * ```
+ *
+ * ### Override Locale
+ * ```ts
+ * const english = en({
+ *  connectWallet: {
+ *    signIn: "Sign in!"
+ *  }
+ * })
+ * ```
+ *
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={english}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
+ */
 export function en(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = enDefault();
   if (!overrides) {

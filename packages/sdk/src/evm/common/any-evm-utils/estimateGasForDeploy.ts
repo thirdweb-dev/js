@@ -1,5 +1,8 @@
 import { utils } from "ethers";
 
+/**
+ * @internal
+ */
 export function estimateGasForDeploy(initCode: string) {
   let gasLimit =
     utils

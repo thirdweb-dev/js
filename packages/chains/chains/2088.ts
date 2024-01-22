@@ -12,6 +12,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmSwqWxZ5HRdc25HMhEmVKxZkwSKapuuyGHb8kyrtuzxat",
+    "width": 210,
+    "height": 210,
+    "format": "svg"
+  },
   "infoURL": "https://centrifuge.io",
   "name": "Altair",
   "nativeCurrency": {
@@ -21,7 +27,8 @@ export default {
   },
   "networkId": 2088,
   "rpc": [
-    "wss://fullnode.altair.centrifuge.io"
+    "wss://fullnode.altair.centrifuge.io",
+    "wss://altair.api.onfinality.io/public-ws"
   ],
   "shortName": "air",
   "slug": "altair",

@@ -20,6 +20,7 @@ export default {
     "https://node.sirius.lightstreams.io"
   ],
   "shortName": "tpht",
+  "slip44": 1,
   "slug": "lightstreams-testnet",
   "testnet": true
 } as const satisfies Chain;

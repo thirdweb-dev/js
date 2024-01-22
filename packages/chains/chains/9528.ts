@@ -26,6 +26,7 @@ export default {
     "https://qeasyweb3.com"
   ],
   "shortName": "QETTest",
+  "slip44": 1,
   "slug": "qeasyweb3-testnet",
   "testnet": true
 } as const satisfies Chain;

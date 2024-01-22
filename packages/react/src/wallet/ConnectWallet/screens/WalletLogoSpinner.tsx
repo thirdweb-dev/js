@@ -1,8 +1,9 @@
 import { keyframes } from "@emotion/react";
-import styled from "@emotion/styled";
 import { Img } from "../../../components/Img";
-import { radius, Theme } from "../../../design-system";
+import { radius } from "../../../design-system";
 import { fadeInAnimation } from "../../../design-system/animations";
+import { StyledDiv } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
   const loaderRadius = 20;
@@ -84,50 +85,52 @@ const plusAnimation = keyframes`
 }
 `;
 
-const LogoContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  position: relative;
-  border-radius: ${radius.xl};
+const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    justifyContent: "center",
+    position: "relative",
+    borderRadius: radius.xl,
 
-  [data-img-container] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
+    "[data-img-container]": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+    },
 
-  &[data-error="true"] [data-container] {
-    animation: ${shakeErrorAnimation} 0.25s linear;
-  }
+    "&[data-error='true'] [data-container]": {
+      animation: `${shakeErrorAnimation} 0.25s linear`,
+    },
 
-  &[data-error="true"] [data-img-container]::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    animation: none;
-    background: ${(p) => p.theme.colors.danger};
-    animation: ${plusAnimation} 1.5s ease infinite;
-    border-radius: 20px;
-    z-index: -1;
-  }
+    "&[data-error='true'] [data-img-container]::before": {
+      content: '""',
+      position: "absolute",
+      inset: 0,
+      background: theme.colors.danger,
+      animation: `${plusAnimation} 1.5s ease infinite`,
+      borderRadius: "20px",
+      zIndex: -1,
+    },
 
-  svg {
-    position: absolute;
-    /* can't use inset because safari doesn't like it */
-    left: -8px;
-    top: -8px;
-    width: calc(100% + 16px);
-    height: calc(100% + 16px);
-    animation: ${fadeInAnimation} 400ms ease;
-  }
+    svg: {
+      position: "absolute",
+      /* can't use inset because safari doesn't like it */
+      left: "-8px",
+      top: "-8px",
+      width: "calc(100% + 16px)",
+      height: "calc(100% + 16px)",
+      animation: `${fadeInAnimation} 400ms ease`,
+    },
 
-  img {
-    z-index: 100;
-  }
+    img: {
+      zIndex: 100,
+    },
 
-  rect {
-    animation: ${dashRotateAnimation} 1.2s linear infinite;
-    stroke: ${(p) => p.theme.colors.accentText};
-  }
-`;
+    rect: {
+      animation: `${dashRotateAnimation} 1.2s linear infinite`,
+      stroke: theme.colors.accentText,
+    },
+  };
+});

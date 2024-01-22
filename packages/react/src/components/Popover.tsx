@@ -1,14 +1,9 @@
-import {
-  fontSize,
-  radius,
-  shadow,
-  spacing,
-  type Theme,
-} from "../design-system";
+import { fontSize, radius, shadow, spacing } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RXPopover from "@radix-ui/react-popover";
 import { Container } from "./basic";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export type PopoverProps = {
   children: React.ReactNode;
@@ -53,21 +48,25 @@ from {
   }
 `;
 
-const PopoverContent = /* @__PURE__ */ (() => styled(RXPopover.Content)<{
-  theme?: Theme;
-}>`
-  border-radius: ${radius.sm};
-  padding: ${spacing.sm} ${spacing.md};
-  background-color: ${(p) => p.theme.colors.tooltipBg};
-  box-shadow: ${shadow.md};
-  will-change: transform, opacity;
-  animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
-  color: ${(p) => p.theme.colors.tooltipText};
-  font-size: ${fontSize.md};
-`)();
+const PopoverContent = /* @__PURE__ */ (() =>
+  styled(RXPopover.Content)(() => {
+    const theme = useCustomTheme();
+    return {
+      borderRadius: radius.sm,
+      padding: `${spacing.sm} ${spacing.md}`,
+      backgroundColor: theme.colors.tooltipBg,
+      boxShadow: shadow.md,
+      willChange: "transform, opacity",
+      animation: `${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      color: theme.colors.tooltipText,
+      fontSize: fontSize.md,
+    };
+  }))();
 
-const PopoverArrow = /* @__PURE__ */ (() => styled(RXPopover.Arrow)<{
-  theme?: Theme;
-}>`
-  fill: ${(p) => p.theme.colors.tooltipBg};
-`)();
+const PopoverArrow = /* @__PURE__ */ (() =>
+  styled(RXPopover.Arrow)(() => {
+    const theme = useCustomTheme();
+    return {
+      fill: theme.colors.tooltipBg,
+    };
+  }))();

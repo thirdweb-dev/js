@@ -3,7 +3,7 @@ import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
 import type { Chain } from "@thirdweb-dev/chains";
 
-import { WagmiConnector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -11,18 +11,19 @@ import {
   ResourceUnavailableError,
   AddChainError,
   SwitchChainError,
-  normalizeChainId,
   ProviderRpcError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { Ethereum } from "../injected/types";
 import { AsyncStorage } from "../../../core";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 export type FrameConnectorOptions = {
   /**
    * eth-provider and the Frame Companion injected provider do not support programmatic disconnect.
    * This flag simulates the disconnect behavior by keeping track of connection status in storage.
-   * @default true
+   *
+   * By default, it is set to `true`.
    */
   shimDisconnect?: boolean;
 };

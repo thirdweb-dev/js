@@ -24,6 +24,7 @@ export default {
     "https://eth-rpc-api-sapphire.thetatoken.org/rpc"
   ],
   "shortName": "theta-sapphire",
+  "slip44": 1,
   "slug": "theta-sapphire-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -18,7 +18,7 @@
     "@playwright/test": "1.31.2",
     "@vitejs/plugin-react": "^2",
     "serve": "^14.0.1",
-    "vite": "^3.2.7",
+    "vite": "^3.2.8",
     "vite-plugin-node-polyfills": "^0.7.0"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/vite-3"

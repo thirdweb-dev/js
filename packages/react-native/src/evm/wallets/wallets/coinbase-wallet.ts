@@ -66,6 +66,26 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   }
 }
 
+/**
+ * Wallet config for the Coinbase Wallet.
+ *
+ * @param config - The config for the Coinbase Wallet
+ * @returns The wallet config to be used by the ThirdwebProvider
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider, coinbaseWallet } from "@thirdweb-dev/react-native";
+ *
+ * <ThirdwebProvider
+ *    supportedWallets={[
+ *      coinbaseWallet({
+ *         callbackURL: new URL('app-redirect-url://'),
+ *       }),
+ *    ]}>
+ *   <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
 export const coinbaseWallet = (config?: {
   callbackURL?: URL;
   recommended?: boolean;

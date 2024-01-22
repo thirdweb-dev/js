@@ -20,6 +20,7 @@ export default {
   "networkId": 1422,
   "rpc": [],
   "shortName": "testnet-zkEVM-mango-pre-audit-upgraded",
+  "slip44": 1,
   "slug": "polygon-zkevm-testnet-pre-audit-upgraded",
   "status": "deprecated",
   "testnet": true,

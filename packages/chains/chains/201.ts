@@ -24,6 +24,7 @@ export default {
     "https://gateway.moac.io/testnet"
   ],
   "shortName": "moactest",
+  "slip44": 1,
   "slug": "moac-testnet",
   "testnet": true
 } as const satisfies Chain;

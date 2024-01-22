@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/unity-js-bridge",
-  "version": "0.2.97",
+  "version": "0.3.7",
   "main": "dist/thirdweb-unity-bridge.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/unity-js-bridge",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "esbuild": "0.15.17",
     "eslint-config-thirdweb": "workspace:*",
     "node-stdlib-browser": "^1.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "sideEffects": false,
   "scripts": {

@@ -27,6 +27,7 @@ export default {
     "wss://rpc-ws-testnet.bcsdev.io"
   ],
   "shortName": "tbcs",
+  "slip44": 1,
   "slug": "blockchain-station-testnet",
   "testnet": true
 } as const satisfies Chain;

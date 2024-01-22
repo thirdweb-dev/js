@@ -38,11 +38,22 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
-export { Web3Button } from "./components/Web3Button";
+
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "./components/ConnectWalletFlow/ConnectEmbed";
+
+export {
+  Web3Button,
+  type Web3ButtonProps,
+  type ActionFn,
+} from "./components/Web3Button";
+
+export { WalletConnectUI } from "./wallets/wallets/wallet-connect/wallet-connect";
 
 // utilities
 export * from "./utils/uri";
-export * from "./utils/addresses";
 export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
@@ -53,17 +64,28 @@ export * from "./i18n/types";
 
 // ui components
 export * from "./components/base";
+/**
+ * @internal
+ */
 export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 
 // assets / icons
 export * from "./assets";
 
 // providers
-// export * from "./providers/full";
-export * from "./providers/thirdweb-provider";
+export {
+  ThirdwebProvider,
+  type DefaultChains,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core";
 
 // ThirdwebSDK RN
 export { ThirdwebSDK } from "./sdk/ThirdwebSDK";
+
+export {
+  type SupportedTokens,
+  defaultTokens,
+} from "./components/SendFunds/defaultTokens";

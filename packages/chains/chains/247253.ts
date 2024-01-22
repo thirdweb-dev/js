@@ -30,6 +30,7 @@ export default {
     "https://rpc-testnet.saakuru.network"
   ],
   "shortName": "saakuru-testnet",
+  "slip44": 1,
   "slug": "saakuru-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -48,6 +48,7 @@ export default {
     "wss://ethereum-sepolia.publicnode.com"
   ],
   "shortName": "sep",
+  "slip44": 1,
   "slug": "sepolia",
   "testnet": true,
   "title": "Ethereum Testnet Sepolia"

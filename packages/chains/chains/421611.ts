@@ -40,6 +40,7 @@ export default {
     "https://rinkeby.arbitrum.io/rpc"
   ],
   "shortName": "arb-rinkeby",
+  "slip44": 1,
   "slug": "arbitrum-rinkeby",
   "testnet": true,
   "title": "Arbitrum Testnet Rinkeby"

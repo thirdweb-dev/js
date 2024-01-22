@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.7",
+  "version": "0.4.12",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -47,17 +47,17 @@
     "@types/node": "^18.17.1",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
-    "eslint": "^8.45.0",
+    "eslint": "^8.56.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",
     "jest": "^29.6.2",
-    "prettier": "^3.0.0",
+    "prettier": "^3.1.1",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
+    "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",

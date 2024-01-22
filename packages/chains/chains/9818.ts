@@ -39,6 +39,7 @@ export default {
     "https://data-aws2-testnet.imperiumchain.com"
   ],
   "shortName": "tIMP",
+  "slip44": 1,
   "slug": "imperium-testnet",
   "testnet": true
 } as const satisfies Chain;

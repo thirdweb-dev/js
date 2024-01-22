@@ -38,6 +38,7 @@ export default {
     "https://rpc.testnet.qom.one"
   ],
   "shortName": "tqom",
+  "slip44": 1,
   "slug": "ql1-testnet",
   "status": "incubating",
   "testnet": true

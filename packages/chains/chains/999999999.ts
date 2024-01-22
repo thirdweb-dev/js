@@ -30,6 +30,7 @@ export default {
     "https://sepolia.rpc.zora.energy"
   ],
   "shortName": "zsep",
+  "slip44": 1,
   "slug": "zora-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

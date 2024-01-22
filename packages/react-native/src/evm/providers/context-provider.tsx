@@ -25,7 +25,11 @@ export const DappContextProvider = (props: React.PropsWithChildren) => {
   const createdWalletInstance = useWalletContext().createdWalletInstance;
 
   useEffect(() => {
-    if (createdWalletInstance?.walletId === walletIds.magicLink) {
+    if (!createdWalletInstance) {
+      return;
+    }
+
+    if (createdWalletInstance.walletId === walletIds.magicLink) {
       setMagicLink(createdWalletInstance as MagicLink);
     }
   }, [createdWalletInstance, setMagicLink]);

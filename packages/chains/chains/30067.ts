@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc0.piecenetwork.com"
   ],
   "shortName": "Piece",
+  "slip44": 1,
   "slug": "piece-testnet",
   "testnet": true
 } as const satisfies Chain;

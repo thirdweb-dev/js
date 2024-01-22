@@ -1,41 +1,40 @@
 import styled from "@emotion/styled";
-import {
-  WalletConfig,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
+import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { iconSize, spacing } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
-import { TextDivider } from "../../../components/TextDivider";
-import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
-import { useTheme } from "@emotion/react";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { Img } from "../../../components/Img";
+import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
+  setConnectionStatus: ConnectUIProps<PaperWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<PaperWallet>["setConnectedWallet"];
+  createWalletInstance: ConnectUIProps<PaperWallet>["createWalletInstance"];
 }) => {
   const cwLocale = useTWLocale().connectWallet;
   const locale = useTWLocale().wallets.paperWallet;
-  const createWalletInstance = useCreateWalletInstance();
-  const setConnectionStatus = useSetConnectionStatus();
-  const setConnectedWallet = useSetConnectedWallet();
-  const themeObj = useTheme() as Theme;
+  const { createWalletInstance, setConnectionStatus, setConnectedWallet } =
+    props;
+
+  const themeObj = useCustomTheme();
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
-      const paperWallet = createWalletInstance(props.walletConfig);
+      const paperWallet = createWalletInstance();
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow(themeObj);
+      const googleWindow = openOauthSignInWindow("google", themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -66,7 +65,7 @@ export const PaperFormUI = (props: {
               props.onSelect({ google: true });
             }}
           >
-            <GoogleIcon size={iconSize.md} />
+            <Img src={googleIconUri} width={iconSize.md} height={iconSize.md} />
             {locale.signInWithGoogle}
           </SocialButton>
 
@@ -100,6 +99,9 @@ export const PaperFormUIScreen: React.FC<{
   modalSize: "compact" | "wide";
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
+  setConnectionStatus: ConnectUIProps<PaperWallet>["setConnectionStatus"];
+  setConnectedWallet: ConnectUIProps<PaperWallet>["setConnectedWallet"];
+  createWalletInstance: ConnectUIProps<PaperWallet>["createWalletInstance"];
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   const locale = useTWLocale().wallets.paperWallet;
@@ -126,14 +128,17 @@ export const PaperFormUIScreen: React.FC<{
           walletConfig={props.walletConfig}
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
+          setConnectionStatus={props.setConnectionStatus}
+          setConnectedWallet={props.setConnectedWallet}
+          createWalletInstance={props.createWalletInstance}
         />
       </Container>
     </Container>
   );
 };
 
-const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-  display: flex;
-  justify-content: center;
-  gap: ${spacing.sm};
-`;
+const SocialButton = /* @__PURE__ */ styled(Button)({
+  display: "flex",
+  justifyContent: "center",
+  gap: spacing.sm,
+});

@@ -13,7 +13,7 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import { NewDirectListing } from "../types/marketplace/NewDirectListing";
 import { NewAuctionListing } from "../types/marketplace/NewAuctionListing";
@@ -30,7 +30,7 @@ import { Offer } from "../types/marketplace/Offer";
  * @param assetContract - The address of the asset contract.
  * @param tokenId - The token id of the token.
  * @param owner - The address of the account that owns the token.
- * @returns - True if the transferrerContractAddress is approved on the token, false otherwise.
+ * @returns  True if the transferrerContractAddress is approved on the token, false otherwise.
  */
 export async function isTokenApprovedForTransfer(
   provider: providers.Provider,
@@ -94,11 +94,11 @@ export async function isTokenApprovedForTransfer(
 /**
  * Checks if the marketplace is approved to make transfers on the assetContract
  * If not, it tries to set the approval.
- * @param contractWrapper
- * @param marketplaceAddress
- * @param assetContract
- * @param tokenId
- * @param from
+ * @param contractWrapper - The contract wrapper to use
+ * @param marketplaceAddress - The address of the marketplace contract
+ * @param assetContract - The address of the asset contract.
+ * @param tokenId - The token id of the token.
+ * @param from - The address of the account that owns the token.
  */
 export async function handleTokenApproval(
   contractWrapper: ContractWrapper<any>,
@@ -227,8 +227,8 @@ export function validateNewListingParam(
  * Maps a contract offer to the strict interface
  *
  * @internal
- * @param offer
- * @returns - An `Offer` object
+ * @param offer - The offer to map
+ * @returns  An `Offer` object
  */
 export async function mapOffer(
   provider: providers.Provider,

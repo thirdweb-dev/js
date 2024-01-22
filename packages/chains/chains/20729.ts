@@ -20,6 +20,7 @@ export default {
     "https://testnet-rpc.callisto.network/"
   ],
   "shortName": "CLOTestnet",
+  "slip44": 1,
   "slug": "callisto-testnet",
   "testnet": true
 } as const satisfies Chain;

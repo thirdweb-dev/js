@@ -24,6 +24,7 @@ export default {
     "https://eth-rpc-api-amber.thetatoken.org/rpc"
   ],
   "shortName": "theta-amber",
+  "slip44": 1,
   "slug": "theta-amber-testnet",
   "testnet": true
 } as const satisfies Chain;

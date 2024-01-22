@@ -15,17 +15,15 @@ export default {
       }
     }
   ],
-  "faucets": [
-    "https://goerli.portal.zksync.io/faucet"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
     "width": 512,
     "height": 512,
     "format": "svg"
   },
-  "infoURL": "https://era.zksync.io/docs/",
-  "name": "zkSync Era Testnet",
+  "infoURL": "https://zksync.io/",
+  "name": "zkSync Era Goerli Testnet (deprecated)",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -37,16 +35,18 @@ export default {
     "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://goerli.portal.zksync.io/bridge"
+        "url": "https://bridge.zksync.io/"
       }
     ]
   },
   "rpc": [
-    "https://zksync-era-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://zksync-era-goerli-testnet-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.era.zksync.dev"
   ],
   "shortName": "zksync-goerli",
-  "slug": "zksync-era-testnet",
+  "slip44": 1,
+  "slug": "zksync-era-goerli-testnet-deprecated",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

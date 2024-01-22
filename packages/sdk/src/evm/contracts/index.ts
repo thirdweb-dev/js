@@ -60,6 +60,9 @@ type InitalizeParams = [
   options?: SDKOptions,
 ];
 
+/**
+ * @internal
+ */
 export const EditionDropInitializer = {
   name: "DropERC1155" as const,
   contractType: prebuiltContractTypes["edition-drop"],
@@ -106,6 +109,9 @@ export const EditionDropInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const EditionInitializer = {
   name: "TokenERC1155" as const,
   contractType: prebuiltContractTypes["edition"],
@@ -146,6 +152,9 @@ export const EditionInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const MarketplaceInitializer = {
   name: "Marketplace" as const,
   contractType: prebuiltContractTypes.marketplace,
@@ -187,6 +196,9 @@ export const MarketplaceInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const MarketplaceV3Initializer = {
   name: "MarketplaceV3" as const,
   contractType: prebuiltContractTypes["marketplace-v3"],
@@ -256,6 +268,9 @@ export const MarketplaceV3Initializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const MultiwrapInitializer = {
   name: "Multiwrap" as const,
   contractType: prebuiltContractTypes.multiwrap,
@@ -295,6 +310,9 @@ export const MultiwrapInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const NFTCollectionInitializer = {
   name: "TokenERC721" as const,
   contractType: prebuiltContractTypes["nft-collection"],
@@ -336,6 +354,9 @@ export const NFTCollectionInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const NFTDropInitializer = {
   name: "DropERC721" as const,
   contractType: prebuiltContractTypes["nft-drop"],
@@ -382,6 +403,9 @@ export const NFTDropInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const PackInitializer = {
   name: "Pack" as const,
   contractType: prebuiltContractTypes["pack"],
@@ -424,6 +448,9 @@ export const PackInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const SignatureDropInitializer = {
   name: "SignatureDrop" as const,
   contractType: prebuiltContractTypes["signature-drop"],
@@ -474,6 +501,9 @@ export const SignatureDropInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const SplitInitializer = {
   name: "Split" as const,
   contractType: prebuiltContractTypes["split"],
@@ -514,6 +544,9 @@ export const SplitInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const TokenDropInitializer = {
   name: "DropERC20" as const,
   contractType: prebuiltContractTypes["token-drop"],
@@ -558,6 +591,9 @@ export const TokenDropInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const TokenInitializer = {
   name: "TokenERC20" as const,
   contractType: prebuiltContractTypes.token,
@@ -598,6 +634,9 @@ export const TokenInitializer = {
   },
 };
 
+/**
+ * @internal
+ */
 export const VoteInitializer = {
   name: "VoteERC20" as const,
   contractType: prebuiltContractTypes.vote,
@@ -647,7 +686,7 @@ async function getContractInfo(address: Address, provider: providers.Provider) {
 }
 
 /**
- * a map from contractType -> contract metadata
+ * a map from contractType - contract metadata
  * @internal
  */
 export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
@@ -666,6 +705,9 @@ export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes.vote]: VoteInitializer,
 } as const;
 
+/**
+ * @internal
+ */
 export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes["edition-drop"]]:
     "ipfs://QmNm3wRzpKYWo1SRtJfgfxtvudp5p2nXD6EttcsQJHwTmk",
@@ -695,6 +737,9 @@ const SmartContract = {
   roles: ALL_ROLES,
 };
 
+/**
+ * @internal
+ */
 export const CONTRACTS_MAP = /* @__PURE__ */ {
   ...PREBUILT_CONTRACTS_MAP,
   [SmartContract.contractType]: SmartContract,
@@ -710,6 +755,9 @@ export function getContractTypeForRemoteName(name: string): ContractType {
   );
 }
 
+/**
+ * @internal
+ */
 export function getContractName(
   type: PrebuiltContractType,
 ): string | undefined {
@@ -718,28 +766,47 @@ export function getContractName(
   )?.name;
 }
 
+/**
+ * @internal
+ */
 export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+/**
+ * @internal
+ */
 export type PrebuiltContractsInstances = {
   [K in keyof PrebuiltContractsMap]: Awaited<
     ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
   >;
 };
-
+/**
+ * @internal
+ */
 export type ContractsMap = typeof CONTRACTS_MAP;
-
+/**
+ * @internal
+ */
 export type ValidContractInstance =
   | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
   | SmartContractType;
-
+/**
+ * @internal
+ */
 export type SchemaForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = PrebuiltContractsMap[TContractType]["schema"];
-
+/**
+ * @internal
+ */
 export type ContractForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = PrebuiltContractsInstances[TContractType];
-
+/**
+ * @internal
+ */
 export type ContractType = keyof ContractsMap;
+/**
+ * @internal
+ */
 export type DeploySchemaForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = SchemaForPrebuiltContractType<TContractType>["deploy"];

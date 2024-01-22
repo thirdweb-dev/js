@@ -4,8 +4,8 @@ import { FormFieldWithIconButton } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
+  ConnectUIProps,
   useCreateWalletInstance,
-  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { DragNDrop } from "../../../components/DragNDrop";
@@ -20,6 +20,8 @@ export const ImportLocalWallet: React.FC<{
   goBack: () => void;
   localWalletConf: LocalWalletConfig;
   persist: boolean;
+  setConnectedWallet: ConnectUIProps<LocalWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<LocalWallet>["setConnectionStatus"];
 }> = (props) => {
   const locale = useTWLocale().wallets.localWallet;
   const [jsonString, setJsonString] = useState<string | undefined>();
@@ -33,7 +35,7 @@ export const ImportLocalWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = props;
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(

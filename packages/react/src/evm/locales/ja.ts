@@ -1,5 +1,5 @@
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
-import { ThirdwebLocale } from "./en";
+import { ThirdwebLocale } from "./types";
 
 // wallets that connect via extension and QR scan
 function extensionAndQRScanScreens(walletName: string) {
@@ -53,6 +53,7 @@ export function jaDefault(): ThirdwebLocale {
       personalWallet: "パーソナルウォレット",
       smartWallet: "スマートウォレット",
       or: "または",
+      goBackButton: "戻る", // TODO - check translation
       download: {
         chrome: "Chrome拡張をダウンロード",
         android: "Google Playでダウンロード",
@@ -110,6 +111,7 @@ export function jaDefault(): ThirdwebLocale {
           instruction:
             "続行するためにウォレットでメッセージリクエストにサインしてください",
           signInButton: "サインイン",
+          disconnectWallet: "ウォレットの切断",
         },
         signingScreen: {
           title: "サインイン中",
@@ -119,6 +121,7 @@ export function jaDefault(): ThirdwebLocale {
           approveTransactionInSafe: "Safeで取引を承認",
           tryAgain: "再試行",
           failedToSignIn: "サインインに失敗しました",
+          inProgress: "確認待ち",
         },
       },
     },
@@ -166,10 +169,15 @@ export function jaDefault(): ThirdwebLocale {
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
+      coreWallet: extensionAndQRScanScreens("Core"),
+      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "サインイン",
         signInWithGoogle: "Googleでサインイン",
@@ -199,14 +207,16 @@ export function jaDefault(): ThirdwebLocale {
       },
       embeddedWallet: {
         signInWithGoogle: "Googleでサインイン",
+        signInWithFacebook: "Facebookでサインイン",
+        signInWithApple: "Appleでサインイン",
         emailPlaceholder: "メールアドレスを入力してください",
         submitEmail: "続ける",
         emailRequired: "メールアドレスが必要です",
         invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
-        googleLoginScreen: {
+        socialLoginScreen: {
           title: "サインイン",
-          instruction: "ポップアップ内でGoogleアカウントを選択してください",
+          instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct
           failed: "サインインに失敗しました",
           retry: "再試行",
         },
@@ -313,6 +323,40 @@ export function jaDefault(): ThirdwebLocale {
   };
 }
 
+/**
+ * Calling this function will return the default Japanese locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ * ### Use default Locale
+ * ```tsx
+ * const japanese = ja();
+ * ```
+ *
+ * ### Override Locale
+ * ```ts
+ * const japanese = ja({
+ *  connectWallet: {
+ *    signIn: "サインイン"
+ *  }
+ * })
+ * ```
+ *
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={japanese}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
+ */
 export function ja(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = jaDefault();
   if (!overrides) {

@@ -36,6 +36,7 @@ export default {
     "https://testnet.eurus.network"
   ],
   "shortName": "euntest",
+  "slip44": 1,
   "slug": "eurus-testnet",
   "testnet": true
 } as const satisfies Chain;

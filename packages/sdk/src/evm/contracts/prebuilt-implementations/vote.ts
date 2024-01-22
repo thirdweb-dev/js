@@ -17,7 +17,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -50,6 +50,7 @@ import { VoteType } from "../../enums/vote/Vote";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;
@@ -122,7 +123,7 @@ export class Vote implements UpdateableNetwork {
    * Get a proposal by id.
    *
    * @param proposalId - The proposal id to get.
-   * @returns - The proposal.
+   * @returns  The proposal.
    */
   public async get(proposalId: BigNumberish): Promise<Proposal> {
     const all = await this.getAll();
@@ -146,7 +147,7 @@ export class Vote implements UpdateableNetwork {
    * console.log(proposals);
    * ```
    *
-   * @returns - All the proposals in the contract.
+   * @returns  All the proposals in the contract.
    */
   public async getAll(): Promise<Proposal[]> {
     const _proposals =
@@ -224,7 +225,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @param proposalId - The unique identifier of a proposal .
    * @param account - (optional) wallet account address. Defaults to connected signer.
-   * @returns - True if the account has already voted on the proposal.
+   * @returns  True if the account has already voted on the proposal.
    */
   public async hasVoted(
     proposalId: string,
@@ -253,7 +254,7 @@ export class Vote implements UpdateableNetwork {
    * ```
    *
    * @param proposalId - The proposal ID to check.
-   * @returns - True if the proposal can be executed, false otherwise.
+   * @returns  True if the proposal can be executed, false otherwise.
    */
   public async canExecute(proposalId: string): Promise<boolean> {
     await this.ensureExists(proposalId);
@@ -276,7 +277,7 @@ export class Vote implements UpdateableNetwork {
   /**
    * Check the balance of the project wallet in the native token of the chain
    *
-   * @returns - The balance of the project in the native token of the chain
+   * @returns  The balance of the project in the native token of the chain
    */
   public async balance(): Promise<CurrencyValue> {
     const balance = await this.contractWrapper
@@ -295,7 +296,7 @@ export class Vote implements UpdateableNetwork {
    * Check the balance of the project wallet in a particular
    * ERC20 token contract
    *
-   * @returns - The balance of the project in the native token of the chain
+   * @returns  The balance of the project in the native token of the chain
    */
   public async balanceOfToken(
     tokenAddress: AddressOrEns,
@@ -396,7 +397,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @param description - The description of the proposal.
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
-   * @returns - The id of the created proposal and the transaction receipt.
+   * @returns  The id of the created proposal and the transaction receipt.
    */
   propose = /* @__PURE__ */ buildTransactionFunction(
     async (

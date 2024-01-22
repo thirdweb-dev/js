@@ -1,11 +1,8 @@
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
-import {
-  useCreateWalletInstance,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const MetamaskScan: React.FC<{
@@ -14,12 +11,25 @@ export const MetamaskScan: React.FC<{
   onConnected: () => void;
   walletConfig: WalletConfig<MetaMaskWallet>;
   hideBackButton: boolean;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
+  setConnectedWallet: ConnectUIProps<MetaMaskWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<MetaMaskWallet>["setConnectionStatus"];
+  createWalletInstance: () => MetaMaskWallet;
+}> = (props) => {
+  const {
+    onBack,
+    onConnected,
+    onGetStarted,
+    walletConfig,
+    hideBackButton,
+    setConnectedWallet,
+    setConnectionStatus,
+    createWalletInstance,
+  } = props;
   const locale = useTWLocale().wallets.metamaskWallet;
-  const createInstance = useCreateWalletInstance();
+
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
   useEffect(() => {
@@ -28,26 +38,26 @@ export const MetamaskScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const metamask = createInstance(walletConfig);
+    const metamask = createWalletInstance();
 
-    setConnectionStatus("connecting");
     metamask.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
+        setConnectionStatus("connecting");
         setConnectedWallet(metamask);
         onConnected();
       },
     });
   }, [
-    createInstance,
     setConnectedWallet,
     chainToConnect,
     onConnected,
     walletConfig,
     setConnectionStatus,
+    createWalletInstance,
   ]);
 
   return (

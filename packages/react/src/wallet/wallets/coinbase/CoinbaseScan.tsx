@@ -1,5 +1,6 @@
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
+  ConnectUIProps,
   WalletConfig,
   useCreateWalletInstance,
   useWalletContext,
@@ -14,12 +15,21 @@ export const CoinbaseScan: React.FC<{
   onConnected: () => void;
   walletConfig: WalletConfig<CoinbaseWallet>;
   hideBackButton: boolean;
-}> = ({ walletConfig, onConnected, onGetStarted, onBack, hideBackButton }) => {
+  setConnectedWallet: ConnectUIProps<CoinbaseWallet>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<CoinbaseWallet>["setConnectionStatus"];
+}> = ({
+  walletConfig,
+  onConnected,
+  onGetStarted,
+  onBack,
+  hideBackButton,
+  setConnectionStatus,
+  setConnectedWallet,
+}) => {
   const locale = useTWLocale().wallets.coinbaseWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  const { chainToConnect } = useWalletContext();
 
   const scanStarted = useRef(false);
 

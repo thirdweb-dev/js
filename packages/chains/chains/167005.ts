@@ -31,6 +31,6 @@ export default {
   ],
   "shortName": "taiko-l2",
   "slug": "taiko-grimsvotn-l2",
-  "status": "active",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

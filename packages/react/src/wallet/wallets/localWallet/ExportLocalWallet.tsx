@@ -2,8 +2,7 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { ModalDescription } from "../../../components/modalElements";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import styled from "@emotion/styled";
+import { iconSize, spacing } from "../../../design-system";
 import { fontSize } from "../../../design-system";
 import {
   EyeClosedIcon,
@@ -12,7 +11,6 @@ import {
 } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { useEffect, useRef, useState } from "react";
-import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Spinner } from "../../../components/Spinner";
@@ -23,18 +21,22 @@ import {
   ScreenBottomContainer,
 } from "../../../components/basic";
 import {
-  useAddress,
+  WalletInstance,
+  shortenAddress,
   useCreateWalletInstance,
-  useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledP } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const ExportLocalWallet: React.FC<{
   onBack?: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
+  walletInstance?: WalletInstance;
+  walletAddress?: string;
 }> = (props) => {
   const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
@@ -42,10 +44,11 @@ export const ExportLocalWallet: React.FC<{
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [passwordIsRequired, setPasswordIsRequired] = useState(false);
 
-  const wallet = useWallet();
-  const address = useAddress();
+  const wallet = props.walletInstance;
   const [savedAddress, setSavedAddress] = useState("");
   const createWalletInstance = useCreateWalletInstance();
+
+  const address = props.walletAddress;
 
   // set savedAddress and passwordIsRequired on mount
   const mounted = useRef(false);
@@ -259,8 +262,11 @@ function downloadJsonWalletFile(data: string) {
   URL.revokeObjectURL(a.href);
 }
 
-const SavedWalletAddress = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  color: ${(props) => props.theme.colors.secondaryText};
-  margin: 0;
-`;
+const SavedWalletAddress = /* @__PURE__ */ StyledP(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.md,
+    color: theme.colors.secondaryText,
+    margin: 0,
+  };
+});

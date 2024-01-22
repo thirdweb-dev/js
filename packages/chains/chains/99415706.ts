@@ -20,6 +20,7 @@ export default {
     "https://toys.joys.cash/"
   ],
   "shortName": "TOYS",
+  "slip44": 1,
   "slug": "joys-digital-testnet",
   "testnet": true
 } as const satisfies Chain;
