@@ -1,5 +1,5 @@
 import { Theme, iconSize } from "../../design-system";
-import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
+import { ConnectedWalletDetails } from "./Details";
 import {
   useAddress,
   useConnectionStatus,
@@ -118,22 +118,6 @@ export type ConnectWalletProps = {
   detailsBtn?: () => JSX.Element;
 
   /**
-   * When user connects the wallet using ConnectWallet Modal, a "Details Button" is rendered. Clicking on this button opens a dropdown which opens in a certain direction relative to the Details button.
-   *
-   * `dropdownPosition` prop allows you to customize the direction the dropdown should open relative to the Details button.
-   *
-   * ```tsx
-   * <ConnectWallet
-   *  dropdownPosition={{
-   *    side: "bottom", // or use:  "top" | "bottom" | "left" | "right"
-   *    align: "end", // or use:  "start" | "center" | "end";
-   *  }}
-   *  />
-   * ```
-   */
-  dropdownPosition?: DropDownPosition;
-
-  /**
    * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/wallets/auth) after connecting their wallet.
    *
    * This requires the `authConfig` prop to be set on the [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
@@ -169,9 +153,9 @@ export type ConnectWalletProps = {
   >;
 
   /**
-   * Hide the "Request Testnet funds" link in ConnectWallet dropdown which is shown when user is connected to a testnet.
+   * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
    *
-   * By default it is `false`
+   * By default it is `true`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
    *
    * @example
    * ```tsx
@@ -317,7 +301,7 @@ export type ConnectWalletProps = {
   hideSwitchToPersonalWallet?: boolean;
 
   /**
-   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Details Modal.
    *
    * By default it is `false`
    *
@@ -441,19 +425,6 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * />
  * ```
  *
- * ### dropdownPosition (optional)
- * When user connects the wallet using ConnectWallet Modal, a "Details Button" is rendered. Clicking on this button opens a dropdown which opens in a certain direction relative to the Details button.
- *
- * `dropdownPosition` prop allows you to customize the direction the dropdown should open relative to the Details button.
- *
- * ```tsx
- * <ConnectWallet
- *  dropdownPosition={{
- *    side: "bottom", // or use:  "top" | "bottom" | "left" | "right"
- *    align: "end", // or use:  "start" | "center" | "end";
- *  }}
- *  />
- * ```
  *
  * ### style (optional)
  * CSS styles to apply to the button element
@@ -462,9 +433,9 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * Customize the Network selector shown
  *
  * ### hideTestnetFaucet (optional)
- * Hide the "Request Testnet funds" link in ConnectWallet dropdown which is shown when user is connected to a testnet.
+ * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet. By default it is `true`
  *
- * By default it is `false`
+ * If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
  *
  * ```tsx
  * <ConnectWallet hideTestnetFaucet={false} />
@@ -581,7 +552,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```
  *
  * ### hideDisconnect
- * Hide the "Disconnect Wallet" button in the ConnectWallet dropdown
+ * Hide the "Disconnect Wallet" button in the ConnectWallet Details Modal
  *
  * By default it is `false`
  *
@@ -769,7 +740,6 @@ export function ConnectWallet(props: ConnectWalletProps) {
           <ConnectedWalletDetails
             theme={theme}
             networkSelector={props.networkSelector}
-            dropdownPosition={props.dropdownPosition}
             className={props.className}
             style={props.style}
             detailsBtn={props.detailsBtn}

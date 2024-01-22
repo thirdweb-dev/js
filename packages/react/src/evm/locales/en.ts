@@ -44,7 +44,7 @@ export function enDefault() {
       transactionHistory: "Transaction History",
       backupWallet: "Backup Wallet",
       guestWalletWarning:
-        "This is a temporary guest wallet. Backup if you don't want to lose access to it",
+        "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
       connectedToSmartWallet: "Connected To Smart Wallet",
       confirmInWallet: "Confirm in wallet",

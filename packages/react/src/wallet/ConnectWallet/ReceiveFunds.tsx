@@ -12,14 +12,14 @@ import { shortenString } from "@thirdweb-dev/react-core";
 import { StyledButton } from "../../design-system/elements";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
-export function ReceiveFunds(props: { iconUrl: string }) {
+export function ReceiveFunds(props: { iconUrl: string; onBack: () => void }) {
   const address = useAddress();
   const { hasCopied, onCopy } = useClipboard(address || "");
   const locale = useTWLocale().connectWallet.receiveFundsScreen;
 
   return (
     <Container p="lg">
-      <ModalHeader title={locale.title} />
+      <ModalHeader title={locale.title} onBack={props.onBack} />
 
       <Spacer y="xl" />
 

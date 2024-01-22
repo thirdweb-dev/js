@@ -30,8 +30,6 @@ export {
   type NetworkSelectorChainProps,
 } from "../wallet/ConnectWallet/NetworkSelector";
 
-export type { DropDownPosition } from "../wallet/ConnectWallet/Details";
-
 // UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
