@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react": patch
+"@thirdweb-dev/react": minor
 ---
 
 - Change ConnectWallet Details dropdown to a Modal with a few UI improvements.
