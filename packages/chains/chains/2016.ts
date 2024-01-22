@@ -9,9 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.mainnetz.io"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmT5gJ5weBiLT3GoYuF5yRTRLdPLCVZ3tXznfqW7M8fxgG",
     "width": 400,
@@ -21,7 +19,7 @@ export default {
   "infoURL": "https://mainnetz.io",
   "name": "MainnetZ Mainnet",
   "nativeCurrency": {
-    "name": "mainnetz",
+    "name": "MainnetZ",
     "symbol": "NetZ",
     "decimals": 18
   },
@@ -32,7 +30,7 @@ export default {
     "https://mainnet-rpc.mainnetz.io",
     "https://eu-rpc.mainnetz.io"
   ],
-  "shortName": "NetZm",
+  "shortName": "netz",
   "slug": "z-mainnet",
   "testnet": false
 } as const satisfies Chain;
