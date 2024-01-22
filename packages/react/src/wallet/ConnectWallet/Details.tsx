@@ -4,7 +4,6 @@ import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
-import { ToolTip } from "../../components/Tooltip";
 import { Button, IconButton } from "../../components/buttons";
 import {
   fontSize,
@@ -126,13 +125,7 @@ export const ConnectedWalletDetails: React.FC<{
     string | undefined
   >(undefined);
 
-  // modals
-  // const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  // const [showExportModal, setShowExportModal] = useState(false);
-  // const [showSendModal, setShowSendModal] = useState(false);
-  // const [showReceiveModal, setShowReceiveModal] = useState(false);
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
-
   const [isOpen, setIsOpen] = useState(false);
 
   const sdk = useSDK();
@@ -257,13 +250,14 @@ export const ConnectedWalletDetails: React.FC<{
     </WalletInfoButton>
   );
 
-  let networkSwitcherButton = (
+  const networkSwitcherButton = (
     <MenuButton
       type="button"
       disabled={disableSwitchChain}
       onClick={() => {
         setScreen("network-switcher");
       }}
+      data-variant="primary"
     >
       <div
         style={{
@@ -288,79 +282,67 @@ export const ConnectedWalletDetails: React.FC<{
     </MenuButton>
   );
 
-  if (!disableSwitchChain) {
-    networkSwitcherButton = (
-      <ToolTip tip={locale.switchNetwork}>{networkSwitcherButton}</ToolTip>
-    );
-  }
-
   let content = (
     <div>
-      <Spacer y="lg" />
-      <Container px="lg">
-        {/* Balance and Account Address */}
-        <Container flex="row" gap="sm" center="y">
-          <Img
-            width={iconSize.xl}
-            height={iconSize.xl}
-            src={avatarOrWalletIconUrl}
-            alt=""
-            style={{
-              borderRadius: radius.sm,
-            }}
-          />
+      <Spacer y="xl" />
+      <Container px="lg" flex="column" center="x">
+        <Img
+          width={iconSize.xxl}
+          height={iconSize.xxl}
+          src={avatarOrWalletIconUrl}
+          alt=""
+          style={{
+            borderRadius: radius.sm,
+          }}
+        />
 
-          <div
+        <Spacer y="md" />
+
+        {/* Address */}
+        <div
+          style={{
+            display: "flex",
+            gap: spacing.xxs,
+            alignItems: "center",
+            transform: "translateX(10px)",
+          }}
+          data-test="connected-wallet-address"
+          data-address={address}
+        >
+          <Text color="primaryText" weight={500} size="md">
+            {addressOrENS}
+          </Text>
+          <IconButton
             style={{
-              flexGrow: 1,
+              padding: "3px",
             }}
+            data-test="copy-address"
           >
-            {/* row 1 */}
-            <Container gap="xs" flex="row" center="y">
-              <div
-                style={{
-                  display: "flex",
-                  gap: spacing.xs,
-                  alignItems: "center",
-                }}
-                data-test="connected-wallet-address"
-                data-address={address}
-              >
-                <Text color="primaryText" weight={500}>
-                  {addressOrENS}
-                </Text>
-                <IconButton
-                  style={{
-                    padding: "3px",
-                  }}
-                  data-test="copy-address"
-                >
-                  <CopyIcon
-                    text={address || ""}
-                    tip={locale.copyAddress}
-                    side="bottom"
-                  />
-                </IconButton>
-              </div>
-            </Container>
+            <CopyIcon
+              text={address || ""}
+              tip={locale.copyAddress}
+              side="top"
+            />
+          </IconButton>
+        </div>
 
-            <Spacer y="xxs" />
+        <Spacer y="xxs" />
 
-            {/* row 2 */}
-            <Text weight={500} size="sm">
-              {" "}
-              {balanceQuery.data ? (
-                Number(balanceQuery.data.displayValue).toFixed(3)
-              ) : (
-                <Skeleton height="1em" width="100px" />
-              )}{" "}
-              {balanceQuery.data?.symbol}{" "}
-            </Text>
-          </div>
-        </Container>
+        {/* Balance */}
+        <Text weight={500} size="sm">
+          {" "}
+          {balanceQuery.data ? (
+            Number(balanceQuery.data.displayValue).toFixed(3)
+          ) : (
+            <Skeleton height="1em" width="100px" />
+          )}{" "}
+          {balanceQuery.data?.symbol}{" "}
+        </Text>
+      </Container>
 
-        <Spacer y="lg" />
+      <Spacer y="lg" />
 
+      <Container px="lg">
         <ConnectedToSmartWallet />
         <EmbeddedWalletEmail />
 
@@ -379,6 +361,7 @@ export const ConnectedWalletDetails: React.FC<{
               display: "flex",
               gap: spacing.xs,
               alignItems: "center",
+              padding: spacing.sm,
             }}
             onClick={() => {
               setScreen("send");
@@ -401,6 +384,7 @@ export const ConnectedWalletDetails: React.FC<{
               display: "flex",
               gap: spacing.xs,
               alignItems: "center",
+              padding: spacing.sm,
             }}
             onClick={() => {
               setScreen("receive");
@@ -419,7 +403,7 @@ export const ConnectedWalletDetails: React.FC<{
         <Container
           flex="column"
           style={{
-            gap: "2px",
+            gap: "1px",
           }}
         >
           {networkSwitcherButton}
@@ -692,9 +676,13 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     },
     svg: {
       color: theme.colors.secondaryText,
+      transition: "color 200ms ease",
     },
     "&[data-variant='danger']:hover svg": {
       color: theme.colors.danger + "!important",
+    },
+    "&[data-variant='primary']:hover svg": {
+      color: theme.colors.primaryText + "!important",
     },
   };
 });
@@ -768,22 +756,9 @@ function ConnectedToSmartWallet() {
   }, [activeWallet]);
 
   const content = (
-    <Container
-      flex="row"
-      gap="xs"
-      center="y"
-      style={{
-        width: "100%",
-        justifyContent: "space-between",
-      }}
-    >
-      <Container flex="row" gap="xs" center="y">
-        <ActiveDot />
-        {locale.connectedToSmartWallet}
-      </Container>
-      {isSmartWalletDeployed && (
-        <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-      )}
+    <Container flex="row" gap="xxs" center="both">
+      <ActiveDot />
+      {locale.connectedToSmartWallet}
     </Container>
   );
 
@@ -818,11 +793,13 @@ function EmbeddedWalletEmail() {
   if (emailQuery.data) {
     return (
       <Container
+        flex="row"
+        center="x"
         style={{
           paddingBottom: spacing.md,
         }}
       >
-        <Text color="primaryText">{emailQuery.data}</Text>
+        <Text size="sm">{emailQuery.data}</Text>
       </Container>
     );
   }
