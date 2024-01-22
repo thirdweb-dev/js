@@ -31,4 +31,5 @@ fragment Seller on seller {
   has_production_access
   thirdweb_account_id
   is_trusted
+  is_branding_disabled
 }

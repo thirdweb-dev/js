@@ -187,7 +187,7 @@ const supportedCurrenciesMap: SupportedCurrenciesMap = {
   [Polygon.chainId]: ["MATIC", "WETH", "USDC", "USDC.e"],
   [Mumbai.chainId]: ["MATIC", "USDC", "USDC.e", "DERC20", "CDOL"],
   [Avalanche.chainId]: ["AVAX", "USDC", "USDC.e"],
-  [AvalancheFuji.chainId]: ["AVAX"],
+  [AvalancheFuji.chainId]: ["AVAX", "USDC"],
   [Optimism.chainId]: ["ETH", "USDC"],
   [OptimismGoerli.chainId]: ["ETH"],
   [Arbitrum.chainId]: ["ETH", "USDC"],
@@ -211,6 +211,7 @@ const ChainSymbolToChainName: Record<string, string> = {
   MATIC: "Matic",
   AVAX: "Avalanche",
   AGOR: "Arbitrum Goerli Ether",
+  XAI: "XAI",
 };
 
 export const ChainIdToSupportedCurrencies: Record<number, CurrencyMetadata[]> =
@@ -422,16 +423,16 @@ export type CreateUpdateCheckoutInput = {
   brandDarkMode?: boolean;
   brandButtonShape?: "full" | "lg" | "none";
   brandColorScheme?:
-  | "gray"
-  | "red"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "teal"
-  | "blue"
-  | "cyan"
-  | "purple"
-  | "pink";
+    | "gray"
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "teal"
+    | "blue"
+    | "cyan"
+    | "purple"
+    | "pink";
   thirdwebClientId: string;
   checkoutId?: string;
 };
@@ -450,7 +451,8 @@ export function usePaymentsCreateUpdateCheckout(contractAddress: string) {
       return fetchFromPaymentsAPI<CreateUpdateCheckoutInput>(
         token,
         "POST",
-        `${apiDate}/shareable-checkout-link${input?.checkoutId ? `/${input.checkoutId} ` : ""
+        `${apiDate}/shareable-checkout-link${
+          input?.checkoutId ? `/${input.checkoutId} ` : ""
         }`,
         input,
       );
@@ -978,12 +980,12 @@ export function usePaymentsWebhooksById(paymentsSellerId: string) {
 
       return data && data?.webhook.length > 0
         ? (data.webhook.map((webhook) => ({
-          id: webhook.id,
-          sellerId: webhook.seller_id,
-          url: webhook.url,
-          isProduction: webhook.is_production,
-          createdAt: new Date(webhook.created_at),
-        })) as PaymentsWebhooksType[])
+            id: webhook.id,
+            sellerId: webhook.seller_id,
+            url: webhook.url,
+            isProduction: webhook.is_production,
+            createdAt: new Date(webhook.created_at),
+          })) as PaymentsWebhooksType[])
         : ([] as PaymentsWebhooksType[]);
     },
     { enabled: !!paymentsSellerId },
