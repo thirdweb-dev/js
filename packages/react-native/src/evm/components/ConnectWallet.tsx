@@ -50,7 +50,12 @@ export type ConnectWalletProps = {
   /**
    * Hide option to request testnet funds for testnets in dropdown
    *
-   * The default is `false`
+   * By default it is `true`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideTestnetFaucet={false} />
+   * ```
    */
   hideTestnetFaucet?: boolean;
 
