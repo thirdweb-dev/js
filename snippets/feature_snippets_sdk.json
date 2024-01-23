@@ -865,6 +865,61 @@
       "reference": {
         "javascript": "https://docs.thirdweb.com/typescript/sdk.erc1155signaturemintable"
       }
+    },
+    {
+      "name": "mint",
+      "summary": "Mint a dynamically generated NFT\n\n",
+      "remarks": "\n\nMint a dynamic NFT with a previously generated signature.\n\n",
+      "examples": {
+        "javascript": "// see how to craft a payload to sign in the `generate()` documentation\nconst signedPayload = contract.erc1155.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.erc1155.signature.mint(signedPayload);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.signedpayload1155"
+      }
+    },
+    {
+      "name": "mintBatch",
+      "summary": "Mint any number of dynamically generated NFT at once\n\n",
+      "remarks": "\n\nMint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)\n\n",
+      "examples": {
+        "javascript": "// see how to craft a batch of payloads to sign in the `generateBatch()` documentation\nconst signedPayloads = contract.erc1155.signature.generateBatch(payloads);\n\n// now anyone can mint the NFT\nconst tx = contract.erc1155.signature.mintBatch(signedPayloads);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.signedpayload1155"
+      }
+    },
+    {
+      "name": "generate",
+      "summary": "Generate a signature that can be used to mint an NFT dynamically.\n\n",
+      "remarks": "\n\nTakes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.\n\n",
+      "examples": {
+        "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  metadata: nftMetadata, // The NFT to mint\n  to: {{wallet_address}}, // Who will receive the NFT\n  quantity: 2, // the quantity of NFTs to mint\n  price: 0.5, // the price per NFT\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now\n  royaltyRecipient: \"0x...\", // custom royalty recipient for this NFT\n  royaltyBps: 100, // custom royalty fees for this NFT (in bps)\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this NFT\n};\n\nconst signedPayload = await contract.erc1155.signature.generate(payload);\n// now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc1155signaturemintable.generate"
+      }
+    },
+    {
+      "name": "generateFromTokenId",
+      "summary": "Generate a signature that can be used to mint additionally supply to an existing NFT.\n\n",
+      "remarks": "\n\nTakes in a payload with the token ID of an existing NFT, and signs it with your private key. The generated signature can then be used to mint additional supply to the NFT using the exact payload and signature generated.\n\n",
+      "examples": {
+        "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  tokenId: 0, // Instead of metadata, we specify the token ID of the NFT to mint supply to\n  to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)\n  quantity: 2, // the quantity of NFTs to mint\n  price: 0.5, // the price per NFT\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now\n  royaltyRecipient: \"0x...\", // custom royalty recipient for this NFT\n  royaltyBps: 100, // custom royalty fees for this NFT (in bps)\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this NFT\n};\n\nconst signedPayload = await contract.erc1155.signature.generateFromTokenId(payload);\n// now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc1155signaturemintable.generatefromtokenid"
+      }
+    },
+    {
+      "name": "verify",
+      "summary": "Verify that a payload is correctly signed\n\n",
+      "remarks": null,
+      "examples": {
+        "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  metadata: nftMetadata, // The NFT to mint\n  to: {{wallet_address}}, // Who will receive the NFT\n  quantity: 2, // the quantity of NFTs to mint\n  price: 0.5, // the price per NFT\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now\n  royaltyRecipient: \"0x...\", // custom royalty recipient for this NFT\n  royaltyBps: 100, // custom royalty fees for this NFT (in bps)\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this NFT\n};\n\nconst signedPayload = contract.erc1155.signature.generate(payload);\n// Now you can verify that the payload is valid\nconst isValid = await contract.erc1155.signature.verify(signedPayload);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc1155signaturemintable.verify"
+      }
     }
   ],
   "ERC1155Enumerable": [
@@ -1214,6 +1269,28 @@
       },
       "reference": {
         "javascript": "https://docs.thirdweb.com/typescript/sdk.erc20signaturemintable"
+      }
+    },
+    {
+      "name": "mint",
+      "summary": "Mint tokens from a signature\n\n",
+      "remarks": "\n\nMint a certain amount of tokens from a previously generated signature.\n\n",
+      "examples": {
+        "javascript": "// see how to craft a payload to sign in the `generate()` documentation\nconst signedPayload = contract.erc20.signature.generate(payload);\n\n// Use the signed payload to mint the tokens\nconst tx = contract.erc20.signature.mint(signedPayload);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.signedpayload20"
+      }
+    },
+    {
+      "name": "generate",
+      "summary": "Generate a signature that can be used to mint a certain amount of tokens\n\n",
+      "remarks": "\n\nTakes in a quantity of tokens, some conditions for how it can be minted and signs it with your private key. The generated signature can then be used to mint those tokens using the exact payload and signature generated.\n\n",
+      "examples": {
+        "javascript": "const startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  quantity: 4.2, // The quantity of tokens to be minted\n  to: {{wallet_address}}, // Who will receive the tokens\n  price: 0.5, // the price to pay for minting those tokens\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now,\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this token mint\n};\n\nconst signedPayload = await contract.erc20.signature.generate(payload);\n// now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc20signaturemintable.generate"
       }
     }
   ],
@@ -1859,6 +1936,41 @@
       },
       "reference": {
         "javascript": "https://docs.thirdweb.com/typescript/sdk.erc721.getowned"
+      }
+    }
+  ],
+  "ERC721SignatureMint": [
+    {
+      "name": "mint",
+      "summary": "Mint a dynamically generated NFT\n\n",
+      "remarks": "\n\nMint a dynamic NFT with a previously generated signature.\n\n",
+      "examples": {
+        "javascript": "// see how to craft a payload to sign in the `generate()` documentation\nconst signedPayload = contract.erc721.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.erc721.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.signedpayload721withquantitysignature"
+      }
+    },
+    {
+      "name": "generate",
+      "summary": "Generate a signature that can be used to mint a dynamic NFT\n\n",
+      "remarks": "\n\nTakes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.\n\n",
+      "examples": {
+        "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  metadata: nftMetadata, // The NFT to mint\n  to: {{wallet_address}}, // Who will receive the NFT\n  quantity: 2, // the quantity of NFTs to mint\n  price: 0.5, // the price per NFT\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now\n  royaltyRecipient: \"0x...\", // custom royalty recipient for this NFT\n  royaltyBps: 100, // custom royalty fees for this NFT (in bps)\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this NFT\n};\n\nconst signedPayload = await contract.erc721.signature.generate(payload);\n// now anyone can use these to mint the NFT using `contract.erc721.signature.mint(signedPayload)`"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc721withquantitysignaturemintable.generate"
+      }
+    },
+    {
+      "name": "verify",
+      "summary": "Verify that a payload is correctly signed\n\n",
+      "remarks": null,
+      "examples": {
+        "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst startTime = new Date();\nconst endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst payload = {\n  metadata: nftMetadata, // The NFT to mint\n  to: {{wallet_address}}, // Who will receive the NFT\n  quantity: 2, // the quantity of NFTs to mint\n  price: 0.5, // the price per NFT\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTime: startTime, // can mint anytime from now\n  mintEndTime: endTime, // to 24h from now\n  royaltyRecipient: \"0x...\", // custom royalty recipient for this NFT\n  royaltyBps: 100, // custom royalty fees for this NFT (in bps)\n  primarySaleRecipient: \"0x...\", // custom sale recipient for this NFT\n};\n\nconst signedPayload = await contract.erc721.signature.generate(payload);\n// Now you can verify if the signed payload is valid\nconst isValid = await contract.erc721.signature.verify(signedPayload);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.erc721withquantitysignaturemintable.verify"
       }
     }
   ],

@@ -2742,7 +2742,7 @@
       "summary": "Hook for fetching the total supply of an ERC20 token.\n\nThis takes into account the increase and decrease in supply when tokens are minted and burned.\n\n",
       "remarks": null,
       "examples": {
-        "javascript": "import { useTokenSupply } from \"@thirdweb-dev/react\";\n\nfunction App() {\n  const { data, isLoading, error } = useTokenSupply(contractAddress);\n}"
+        "javascript": "import { useTokenSupply } from \"@thirdweb-dev/react\";\n\nfunction App() {\n  const { contract } = useContract(contractAddress);\n  const { data, isLoading, error } = useTokenSupply(contract);\n}"
       },
       "reference": {
         "javascript": "https://docs.thirdweb.com/react/react.usetokensupply"
