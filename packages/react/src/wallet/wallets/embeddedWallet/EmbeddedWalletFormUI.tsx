@@ -71,7 +71,7 @@ export const EmbeddedWalletFormUI = (props: {
       setConnectedWallet(embeddedWallet);
     } catch (e) {
       setConnectionStatus("disconnected");
-      console.error(e);
+      console.error(`Error sign in with ${strategy}`, e);
     }
   };
 

@@ -164,6 +164,7 @@ export type ThirdwebLocale = {
         title: string;
       };
       submitEmail: string;
+      maxAccountsExceeded: string;
     };
     frameWallet: {
       connectionFailedScreen: {
