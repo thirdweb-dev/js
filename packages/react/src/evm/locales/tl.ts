@@ -86,7 +86,8 @@ export function tlDefault(): ThirdwebLocale {
       },
       receiveFundsScreen: {
         title: "Matanggap ang Pondo",
-        instruction: "Kopyahin ang address ng wallet para ipadala ang pondo dito",
+        instruction:
+          "Kopyahin ang address ng wallet para ipadala ang pondo dito",
       },
       sendFundsScreen: {
         title: "Ipadala ang Pondo",
@@ -126,21 +127,24 @@ export function tlDefault(): ThirdwebLocale {
     },
     wallets: {
       walletConnect: {
-        scanInstruction: "I-scan ito gamit ang iyong wallet app para makakonekta",
+        scanInstruction:
+          "I-scan ito gamit ang iyong wallet app para makakonekta",
       },
       smartWallet: {
         connecting: "Kumokonekta sa Smart Wallet",
         failedToConnect: "Hindi nagawa ang pagkonekta sa Smart Wallet",
         wrongNetworkScreen: {
           title: "Maling Network",
-          subtitle: "Hindi konektado ang iyong wallet sa kinakailangang network",
+          subtitle:
+            "Hindi konektado ang iyong wallet sa kinakailangang network",
           failedToSwitch: "Hindi nagawa ang pagpapalit ng network",
         },
       },
       safeWallet: {
         connectWalletScreen: {
           title: "Kumonekta ng personal na wallet",
-          subtitle: "Konektahin ang iyong personal na wallet para magamit ang Safe.",
+          subtitle:
+            "Konektahin ang iyong personal na wallet para magamit ang Safe.",
           learnMoreLink: "Alamin pa",
         },
         accountDetailsScreen: {
@@ -148,7 +152,8 @@ export function tlDefault(): ThirdwebLocale {
           findSafeAddressIn: "Maaari mong mahanap ang iyong safe address sa", // You can find your safe address in + <dashboardLink>
           dashboardLink: "Safe Dashboard", // <dashboardLink>
           network: "Safe Network",
-          selectNetworkPlaceholder: "Network kung saan inilunsad ang iyong safe",
+          selectNetworkPlaceholder:
+            "Network kung saan inilunsad ang iyong safe",
           invalidChainConfig:
             "Hindi magamit ang Safe: Walang mga suportadong chain ng Safe na nakakonfigure sa App",
           failedToConnect:
@@ -212,6 +217,7 @@ export function tlDefault(): ThirdwebLocale {
         signIn: "Mag-sign in",
         emailRequired: "Kinakailangan ang email address",
         invalidEmail: "Hindi wastong email address",
+        maxAccountsExceeded: "Naabot mo na ang maximum na bilang ng accounts",
         socialLoginScreen: {
           title: "Mag-sign in",
           instruction: "Mag-sign in sa iyong account sa pop-up",
@@ -261,7 +267,8 @@ export function tlDefault(): ThirdwebLocale {
         invalidEmail: "Hindi wastong email address",
         invalidPhone: "Hindi wastong numero ng telepono",
         invalidEmailOrPhone: "Hindi wastong email address o numero ng telepono",
-        countryCodeMissing: "Ang numero ng telepono ay dapat magsimula sa country code",
+        countryCodeMissing:
+          "Ang numero ng telepono ay dapat magsimula sa country code",
         emailPlaceholder: "Ilagay ang iyong email address",
         emailRequired: "Kinakailangan ang email address",
       },
@@ -301,7 +308,8 @@ export function tlDefault(): ThirdwebLocale {
           title: "Mag-import ng Wallet",
           description1:
             "Ang application ay maaaring mag-authorize ng anumang mga transaksyon sa ngalan ng wallet nang walang anumang mga approval",
-          description2: "Minumungkahi naming kumonekta lamang sa mga pinagkakatiwalaang application",
+          description2:
+            "Minumungkahi naming kumonekta lamang sa mga pinagkakatiwalaang application",
           import: "Mag-import",
           uploadJSON: "Mangyaring mag-upload ng isang JSON file",
           uploadedSuccessfully: "Matagumpay na na-upload",
