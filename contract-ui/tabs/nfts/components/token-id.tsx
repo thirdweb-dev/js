@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { IoChevronBack } from "react-icons/io5";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useState } from "react";
+import { useChainSlug } from "hooks/chains/chainSlug";
 
 function isValidUrl(possibleUrl?: string | null) {
   if (!possibleUrl) {
@@ -54,7 +55,9 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const router = useRouter();
 
   const chainId = useDashboardEVMChainId();
-  const url = `/${chainId}/${contractAddress}/nfts`;
+
+  const chainSlug = useChainSlug(chainId || 1);
+  const url = `/${chainSlug}/${contractAddress}/nfts`;
   if (!nft) {
     return null;
   }

@@ -24,7 +24,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const contractQuery = useContract(contractAddress);
   const router = useRouter();
 
-  const tokenId = router.query?.paths?.[3];
+  const tokenId = router.query?.paths?.[2];
+
   const { data: nft } = useNFT(contractQuery.contract, tokenId);
   const tabs = useNFTDrawerTabs(
     contractQuery.contract as NFTContract,
