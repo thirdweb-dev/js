@@ -67,13 +67,14 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
                 I have a thirdweb account
               </Button>
               <Button
-                variant="outline"
+                variant="link"
                 onClick={handleLogout}
                 w="full"
-                size="lg"
-                fontSize="md"
+                size="sm"
+                pt={4}
+                pb={2}
               >
-                Logout
+                Log out
               </Button>
             </>
           ) : (
