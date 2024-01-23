@@ -23,7 +23,7 @@ export type ApiKeyMetadata = {
   key: string;
   accountId: string;
   accountStatus: "noCustomer" | "noPayment" | "validPayment" | "invalidPayment";
-  accountPlan: "free" | "enterprise";
+  accountPlan: "free" | "growth" | "pro" | "enterprise";
   creatorWalletAddress: string;
   secretHash: string;
   walletAddresses: string[];
