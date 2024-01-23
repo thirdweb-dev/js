@@ -1,3 +1,5 @@
+import type { ThirdwebClient } from "../../client/client.js";
+
 // Oauth User Types
 export type DiscordUserType = {
   id: string;
@@ -67,6 +69,12 @@ export type MultiStepAuthProviderType =
       provider: "phone";
       phone: string;
     };
+export type InitiateAuthArgsType = MultiStepAuthProviderType & {
+  client: ThirdwebClient;
+  config?: {
+    autoLinkAccount?: boolean;
+  };
+};
 export type InitiateAuthResultType = {
   initiationType: InitiateAuthType;
 } & MultiStepAuthProviderType;
@@ -76,11 +84,15 @@ export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
   code: string;
 };
 export type SingleStepAuthArgsType =
-  | { provider: "google"; oauthPrompt?: "select_account" | "none" | "consent" }
+  | {
+      provider: "google";
+      googleOauthPrompt?: "select_account" | "none" | "consent";
+    }
   | { provider: "discord" };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   storage: AuthTokenStorageType;
+  client: ThirdwebClient;
   config?: {
     autoLinkAccount?: boolean;
   };
