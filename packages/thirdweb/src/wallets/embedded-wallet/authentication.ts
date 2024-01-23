@@ -1,7 +1,13 @@
+import {
+  AuthenticationError,
+  USER_ABORT_AUTHENTICATION_ERROR_MESSAGE,
+  UserAbortError,
+} from "./authentication.error.js";
 import type {
   AuthArgsType,
   AuthResultType,
   AuthTokenStorageType,
+  InitiateAuthArgsType,
   InitiateAuthResultType,
   LinkAuthArgsType,
   MultiStepAuthArgsType,
@@ -18,11 +24,21 @@ import {
 
 const THIRDWEB_AUTH_TOKEN_KEY = "thirdweb-auth-token";
 
-export const createAuthClient = ({
+export const createAuthStorage = ({
   fetchToken,
   storeToken,
 }: AuthTokenStorageType): AuthTokenStorageType => {
   return { fetchToken, storeToken };
+};
+export const createAuthLocalStorage = () => {
+  return createAuthStorage({
+    fetchToken: ({ key }) => {
+      return localStorage.getItem(key) ?? undefined;
+    },
+    storeToken: async ({ key, value }) => {
+      localStorage.setItem(key, value);
+    },
+  });
 };
 
 export const getAuthenticatedUser = async (arg: {
@@ -51,28 +67,42 @@ export const getAuthenticatedUser = async (arg: {
 
 // for 2 step Auth
 export const preAuthenticate = async (
-  arg: MultiStepAuthProviderType,
+  arg: InitiateAuthArgsType,
 ): Promise<InitiateAuthResultType> => {
   switch (arg.provider) {
     case "email": {
       const { email } = arg;
-      const resp = await fetch(ROUTE_INITIATE_AUTH(arg.provider), {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-        }),
-      });
+      const resp = await fetch(
+        ROUTE_INITIATE_AUTH(
+          arg.provider,
+          arg.client.clientId,
+          arg.config?.autoLinkAccount,
+        ),
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email,
+          }),
+        },
+      );
       const result = await resp.json();
       return result as InitiateAuthResultType;
     }
     case "phone": {
       const { phone } = arg;
-      const resp = await fetch(ROUTE_INITIATE_AUTH(arg.provider), {
-        method: "POST",
-        body: JSON.stringify({
-          phone,
-        }),
-      });
+      const resp = await fetch(
+        ROUTE_INITIATE_AUTH(
+          arg.provider,
+          arg.client.clientId,
+          arg.config?.autoLinkAccount,
+        ),
+        {
+          method: "POST",
+          body: JSON.stringify({
+            phone,
+          }),
+        },
+      );
       const result = await resp.json();
       return result as InitiateAuthResultType;
     }
@@ -85,31 +115,66 @@ export const preAuthenticate = async (
 export const authenticate = async (
   arg: AuthArgsType,
 ): Promise<AuthResultType> => {
-  const oauthListener = new Promise<AuthResultType>((res, rej) => {
-    const authSuccessListener = async (event: MessageEvent) => {
-      console.log("event.origin", event.origin);
-      console.log("getBaseUrl()", getBaseUrl());
-      if (event.data.eventType === "oauthSuccessResult") {
-        window.removeEventListener("message", authSuccessListener);
-        const authResult = event.data.authResult as AuthResultType;
-        await arg.storage.storeToken({
-          key: THIRDWEB_AUTH_TOKEN_KEY,
-          value: authResult.authToken,
-        });
-        res(authResult);
-      } else if (event.data.eventType === "oauthFailureResult") {
-        window.removeEventListener("message", authSuccessListener);
-        const error = event.data.error as Error;
-        rej(error);
-      }
-    };
-    window.addEventListener("message", authSuccessListener);
-  });
+  const oauthListener = (popup: Window | null) =>
+    new Promise<AuthResultType>((res, rej) => {
+      const interval = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(interval);
+          rej(new UserAbortError());
+        }
+      }, 1000); // 1 second
+
+      const authSuccessListener = async (event: MessageEvent) => {
+        if (event.origin !== getBaseUrl()) {
+          return;
+        }
+        if (event.data.eventType === "oauthSuccessResult") {
+          window.removeEventListener("message", authSuccessListener);
+          const authResult = event.data.authResult as AuthResultType;
+          await arg.storage.storeToken({
+            key: THIRDWEB_AUTH_TOKEN_KEY,
+            value: authResult.authToken,
+          });
+          popup?.close();
+          res(authResult);
+        } else if (event.data.eventType === "oauthFailureResult") {
+          window.removeEventListener("message", authSuccessListener);
+          popup?.close();
+          const errorString = event.data.errorString as string;
+          if (errorString === USER_ABORT_AUTHENTICATION_ERROR_MESSAGE) {
+            return rej(new UserAbortError());
+          }
+          rej(new AuthenticationError(errorString));
+        }
+      };
+      window.addEventListener("message", authSuccessListener);
+    });
   switch (arg.provider) {
-    case "discord":
+    case "discord": {
+      const popup = openPopUp(
+        ROUTE_INITIATE_AUTH(
+          arg.provider,
+          arg.client.clientId,
+          arg.config?.autoLinkAccount,
+        ),
+        "width=450,height=600",
+      );
+      return oauthListener(popup);
+    }
     case "google": {
-      openPopUp(ROUTE_INITIATE_AUTH(arg.provider));
-      return oauthListener;
+      const baseUrl = new URL(
+        ROUTE_INITIATE_AUTH(
+          arg.provider,
+          arg.client.clientId,
+          arg.config?.autoLinkAccount,
+        ),
+      );
+      if (arg.googleOauthPrompt) {
+        baseUrl.searchParams.set("prompt", arg.googleOauthPrompt);
+      }
+      console.log("baseUrl.href", baseUrl.href);
+      const popup = openPopUp(baseUrl.href);
+      return oauthListener(popup);
     }
     case "email": {
       const { email, code } = arg;
@@ -152,6 +217,11 @@ export const pre2FA = async (
         body: JSON.stringify({
           email,
         }),
+        headers: {
+          Authorization: `Bearer ${await arg.storage.fetchToken({
+            key: THIRDWEB_AUTH_TOKEN_KEY,
+          })}`,
+        },
       });
       const result = await resp.json();
       return result as InitiateAuthResultType;
@@ -163,6 +233,11 @@ export const pre2FA = async (
         body: JSON.stringify({
           phone,
         }),
+        headers: {
+          Authorization: `Bearer ${await arg.storage.fetchToken({
+            key: THIRDWEB_AUTH_TOKEN_KEY,
+          })}`,
+        },
       });
       const result = await resp.json();
       return result as InitiateAuthResultType;
