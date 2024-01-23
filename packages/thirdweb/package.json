@@ -97,7 +97,7 @@
     "@noble/hashes": "^1.3.3",
     "@thirdweb-dev/cli": "workspace:*",
     "abitype": "^0.10.3",
-    "viem": "^2.0.10"
+    "viem": "^2.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.17",
@@ -105,15 +105,15 @@
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-tsdoc": "^0.2.16",
+    "ethers5": "npm:ethers@^5.0.0",
+    "ethers6": "npm:ethers@^6.0.0",
     "react": "^18.2.0",
     "rimraf": "^3.0.2",
-    "typescript": "^5.1.6",
-    "ethers5": "npm:ethers@^5.0.0",
-    "ethers6": "npm:ethers@^6.0.0"
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "ethers": "^5 || ^6"
+    "ethers": "^5 || ^6",
+    "react": ">=18"
   },
   "peerDependenciesMeta": {
     "react": {
