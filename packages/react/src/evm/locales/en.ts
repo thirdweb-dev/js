@@ -212,6 +212,8 @@ export function enDefault() {
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
+        maxAccountsExceeded:
+          "Maximum number of accounts exceeded. Please notify the app developer.",
         socialLoginScreen: {
           title: "Sign in",
           instruction: "Sign into your account in the pop-up",
