@@ -1,5 +1,17 @@
 # @thirdweb-dev/react-core
 
+## 4.4.0
+
+### Patch Changes
+
+- [#2202](https://github.com/thirdweb-dev/js/pull/2202) [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update code sample for useTokenSupply
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+  - @thirdweb-dev/auth@4.1.25
+
 ## 4.3.2
 
 ### Patch Changes

@@ -1,5 +1,26 @@
 # @thirdweb-dev/react
 
+## 4.4.0
+
+### Minor Changes
+
+- [#2197](https://github.com/thirdweb-dev/js/pull/2197) [`212b2e7b`](https://github.com/thirdweb-dev/js/commit/212b2e7bc28c8e88207a9935756f7e6133a5b7d3) Thanks [@MananTank](https://github.com/MananTank)! - - Change ConnectWallet Details dropdown to a Modal with a few UI improvements.
+
+  - Because of this the `dropdownPosition` prop has been removed from `ConnectWallet` component
+  - The "Request Testnet funds" button is now hidden by default in the new Modal UI.
+
+    - You can add it back by setting `hideTestnetFaucet` to `false` in the `ConnectWallet` component.
+
+### Patch Changes
+
+- [#2209](https://github.com/thirdweb-dev/js/pull/2209) [`f29f91d7`](https://github.com/thirdweb-dev/js/commit/f29f91d7e0837b2084d7257288e80ef2cbc70942) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show specific error message for embedded wallet limits reached
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9), [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/react-core@4.4.0
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+
 ## 4.3.2
 
 ### Patch Changes
