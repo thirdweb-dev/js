@@ -1,4 +1,3 @@
-import { transaction } from "../../../transaction/index.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
 import { read } from "../../../transaction/actions/read.js";
 
@@ -8,11 +7,9 @@ import { read } from "../../../transaction/actions/read.js";
  * @returns A promise that resolves to the start token ID.
  */
 export async function startTokenId(contract: ThirdwebContract) {
-  return read(
-    transaction(contract, {
-      address: contract.address,
-      chainId: contract.chainId,
-      method: "function startTokenId() view returns (uint256)",
-    }),
-  );
+  return read(contract, {
+    address: contract.address,
+    chainId: contract.chainId,
+    method: "function startTokenId() view returns (uint256)",
+  });
 }

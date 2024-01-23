@@ -1,7 +1,7 @@
 import { getAddress, toHex, type Hash } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import type { AbiFunction, Address } from "abitype";
-import type { Transaction } from "../transaction/index.js";
+import type { Transaction } from "../transaction/transaction.js";
 import type { IWallet } from "./interfaces/wallet.js";
 import type { Ethereum } from "./interfaces/ethereum.js";
 
@@ -197,12 +197,6 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
 
     return {
       transactionHash: result as Hash,
-      wait: async () => {
-        const { waitForTxReceipt } = await import(
-          "../transaction/actions/wait-for-tx-receipt.js"
-        );
-        return waitForTxReceipt(tx);
-      },
     };
   }
 

@@ -1,4 +1,4 @@
-import { transaction } from "../../../transaction/index.js";
+import { transaction } from "../../../transaction/transaction.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
 import { parseUnits } from "viem";
 

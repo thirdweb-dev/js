@@ -2,14 +2,14 @@ import { type AbiFunction, parseAbiItem } from "abitype";
 import { resolveAbi } from "./resolveContractAbi.js";
 import type { ParseMethod } from "./types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import type { GetContractOptions } from "../contract/index.js";
+import type { ContractOptions } from "../contract/index.js";
 
 export type MethodType = AbiFunction | string;
 
 export async function resolveAbiFunction<const method extends MethodType>(
   // used later to resolve via RPC & storage directly
   _client: ThirdwebClient,
-  options: GetContractOptions & { method: method },
+  options: ContractOptions & { method: method },
 ) {
   // check if we already have a parsed abiFunction as input
   if (isAbiFunction(options.method)) {

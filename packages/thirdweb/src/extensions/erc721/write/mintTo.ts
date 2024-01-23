@@ -40,8 +40,10 @@ export function mintTo(contract: ThirdwebContract, params: MintToParams) {
       } else {
         // otherwise we need to upload the file to the storage server
 
+        // load the upload code if we need it
+        const { upload } = await import("../../../storage/upload.js");
         tokenUri = (
-          await contract.storage.upload({
+          await upload(contract, {
             files: [params.nft],
           })
         )[0] as string;

@@ -7,9 +7,9 @@ const FALLBACK_METADATA = {
 };
 
 type FetchTokenMetadataOptions = {
+  client: ThirdwebClient;
   tokenId: bigint;
   tokenUri: string;
-  client: ThirdwebClient;
 };
 
 export async function fetchTokenMetadata({
@@ -31,10 +31,13 @@ export async function fetchTokenMetadata({
     }
   }
 
+  // in all other cases we will need the `download` fucntion from storage
+  const { download } = await import("../../storage/download.js");
+
   // handle non-dynamic uris (most common case -> skip the other checks)
   try {
     if (!tokenUri.includes("{id}")) {
-      return await (await client.storage.download({ uri: tokenUri })).json();
+      return await (await download(client, { uri: tokenUri })).json();
     }
   } catch (e) {
     console.error("Failed to fetch non-dynamic NFT", { tokenId, tokenUri }, e);
@@ -46,7 +49,7 @@ export async function fetchTokenMetadata({
     try {
       // try first dynamic id format
       return await (
-        await client.storage.download({
+        await download(client, {
           uri: tokenUri.replace(
             "{id}",
 
@@ -57,7 +60,7 @@ export async function fetchTokenMetadata({
     } catch (err) {
       // otherwise attempt the second format
       return await (
-        await client.storage.download({
+        await download(client, {
           uri: tokenUri.replace("{id}", tokenId.toString()),
         })
       ).json();

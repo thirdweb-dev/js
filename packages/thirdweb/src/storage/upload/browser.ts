@@ -1,9 +1,9 @@
-import type { RawClient } from "../../client/client.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";
 import type { UploadOptions } from "./types.js";
 
 export async function uploadBatchBrowser(
-  client: RawClient,
+  client: ThirdwebClient,
   form: FormData,
   fileNames: string[],
   options?: UploadOptions,

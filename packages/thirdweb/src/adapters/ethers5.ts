@@ -2,7 +2,7 @@ import type { ThirdwebContract } from "../contract/index.js";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
-import type { RawClient } from "../client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
 
 type Ethers5 = typeof ethers5;
 
@@ -26,7 +26,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
   assertEthers5(ethers);
   return {
-    provider: (client: RawClient, chainId: number) =>
+    provider: (client: ThirdwebClient, chainId: number) =>
       provider(ethers, client, chainId),
     contract: (twContract: ThirdwebContract, abi?: ethers5.ContractInterface) =>
       contract(ethers, twContract, abi),
@@ -35,7 +35,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
 
 function provider(
   ethers: Ethers5,
-  client: RawClient,
+  client: ThirdwebClient,
   chainId: number,
 ): ethers5.providers.Provider {
   const url = `https://${chainId}.rpc.thirdweb.com/${client.clientId}`;

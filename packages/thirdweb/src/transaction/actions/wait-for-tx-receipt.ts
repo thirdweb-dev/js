@@ -1,11 +1,12 @@
+import { getRpcClient } from "../../rpc/index.js";
 import { getTransactionReceipt } from "../../rpc/methods.js";
-import type { Transaction } from "../index.js";
+import type { Transaction } from "../transaction.js";
 import type { AbiFunction } from "abitype";
 
 const POLL_LIMIT_MS = 1000 * 60 * 5; // 5 minutes
 const POLL_WAIT_MS = 1000 * 5; // 5 seconds
 
-export async function waitForTxReceipt<const abiFn extends AbiFunction>(
+export async function waitForReceipt<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
 ) {
   if (!tx.transactionHash) {
@@ -14,7 +15,7 @@ export async function waitForTxReceipt<const abiFn extends AbiFunction>(
     );
   }
   const start = Date.now();
-  const rpcClient = tx.client.rpc({ chainId: tx.inputs.chainId });
+  const rpcClient = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
   while (Date.now() - start < POLL_LIMIT_MS) {
     // if we don't yet have a tx hash then we can't check for a receipt, so just try again
 

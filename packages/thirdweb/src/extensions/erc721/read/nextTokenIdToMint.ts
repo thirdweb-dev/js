@@ -1,4 +1,3 @@
-import { transaction } from "../../../transaction/index.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
 import { read } from "../../../transaction/actions/read.js";
 
@@ -8,11 +7,9 @@ import { read } from "../../../transaction/actions/read.js";
  * @returns A promise that resolves to the next token ID to be minted.
  */
 export async function nextTokenIdToMint(contract: ThirdwebContract) {
-  return read(
-    transaction(contract, {
-      address: contract.address,
-      chainId: contract.chainId,
-      method: "function nextTokenIdToMint() view returns (uint256)",
-    }),
-  );
+  return read(contract, {
+    address: contract.address,
+    chainId: contract.chainId,
+    method: "function nextTokenIdToMint() view returns (uint256)",
+  });
 }

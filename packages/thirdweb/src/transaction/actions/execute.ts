@@ -1,5 +1,5 @@
 import type { AbiFunction } from "abitype";
-import type { Transaction } from "../index.js";
+import type { Transaction } from "../transaction.js";
 import type { IWallet } from "../../wallets/interfaces/wallet.js";
 
 export async function execute<

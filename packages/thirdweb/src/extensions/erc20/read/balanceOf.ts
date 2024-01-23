@@ -1,4 +1,3 @@
-import { transaction } from "../../../transaction/index.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
 import { read } from "../../../transaction/actions/read.js";
 import { decimals } from "./decimals.js";
@@ -18,14 +17,12 @@ export async function balanceOf(
   params: BalanceOfParams,
 ) {
   const [balanceWei, decimals_, symbol_] = await Promise.all([
-    read(
-      transaction(contract, {
-        address: contract.address,
-        chainId: contract.chainId,
-        method: "function balanceOf(address) view returns (uint256)",
-        params: [params.address],
-      }),
-    ),
+    read(contract, {
+      address: contract.address,
+      chainId: contract.chainId,
+      method: "function balanceOf(address) view returns (uint256)",
+      params: [params.address],
+    }),
     decimals(contract),
     symbol(contract),
   ]);

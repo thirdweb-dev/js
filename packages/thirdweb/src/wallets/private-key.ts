@@ -9,7 +9,7 @@ import type {
 } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import type { AbiFunction, TypedData } from "abitype";
-import type { Transaction } from "../transaction/index.js";
+import type { Transaction } from "../transaction/transaction.js";
 import type { IWallet } from "./interfaces/wallet.js";
 
 export function privateKeyWallet(client: ThirdwebClient) {
@@ -75,7 +75,8 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
     if (!this.account || !this.address) {
       throw new Error("not connected");
     }
-    const rpcRequest = tx.client.rpc({ chainId: tx.inputs.chainId });
+    const { getRpcClient } = await import("../rpc/index.js");
+    const rpcRequest = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
 
     const [getDefaultGasOverrides, encode, transactionCount] =
       await Promise.all([
@@ -111,12 +112,6 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     return {
       transactionHash: result as Hash,
-      wait: async () => {
-        const { waitForTxReceipt } = await import(
-          "../transaction/actions/wait-for-tx-receipt.js"
-        );
-        return waitForTxReceipt(tx);
-      },
     };
   }
 

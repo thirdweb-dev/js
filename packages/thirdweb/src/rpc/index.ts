@@ -1,10 +1,10 @@
-import type { RawClient } from "../client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 
 const RPC_CLIENT_CACHE = /* @__PURE__ */ new Map<string, RPCClient>();
 
 function rpcClientKey(
-  client: RawClient,
+  client: ThirdwebClient,
   { chainId, ...rest }: RpcClientOptions,
 ): string {
   return `${chainId}:${client.clientId}:${!!client.secretKey}:${JSON.stringify(
@@ -41,7 +41,7 @@ const DEFAULT_BATCH_TIMEOUT_MS = 10;
 export type RPCClient = (request: RPCRequest) => Promise<RPCResponse>;
 
 export function getRpcClient(
-  client: RawClient,
+  client: ThirdwebClient,
   options: RpcClientOptions,
 ): RPCClient {
   const cacheKey = rpcClientKey(client, options);
@@ -153,7 +153,7 @@ type FetchRpcOptions = {
 };
 
 async function fetchRpc(
-  client: RawClient,
+  client: ThirdwebClient,
   { requests, chainId }: FetchRpcOptions,
 ): Promise<FullRPCResponse[]> {
   const headers = new Headers({

@@ -1,10 +1,13 @@
-import type { RawClient } from "../client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
 
 export type DownloadOptions = {
   uri: string;
 };
 
-export async function download(client: RawClient, options: DownloadOptions) {
+export async function download(
+  client: ThirdwebClient,
+  options: DownloadOptions,
+) {
   let url: string;
   if (options.uri.startsWith("ipfs://")) {
     url = `https://${client.clientId}.ipfscdn.io/ipfs/${options.uri.slice(7)}`;

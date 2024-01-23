@@ -46,7 +46,8 @@ export async function getDynamicFeeData(
   let maxFeePerGas: null | bigint = null;
   let maxPriorityFeePerGas_: null | bigint = null;
 
-  const rpcClient = client.rpc({ chainId });
+  const { getRpcClient } = await import("../rpc/index.js");
+  const rpcClient = getRpcClient(client, { chainId });
 
   const [block, eth_maxPriorityFeePerGas] = await Promise.all([
     blockByNumber(rpcClient, "latest", false),
@@ -104,7 +105,8 @@ export async function getGasPrice(
   client: ThirdwebClient,
   chainId: number,
 ): Promise<bigint> {
-  const rpcClient = client.rpc({ chainId });
+  const { getRpcClient } = await import("../rpc/index.js");
+  const rpcClient = getRpcClient(client, { chainId });
   const gasPrice_ = await gasPrice(rpcClient);
   const maxGasPrice = 300n; // 300 gwei
   const extraTip = (gasPrice_ / BigInt(100)) * BigInt(10);

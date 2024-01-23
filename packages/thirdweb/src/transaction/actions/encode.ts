@@ -1,6 +1,6 @@
 import { encodeAbiFunction } from "../../abi/encode.js";
 import type { AbiFunction } from "abitype";
-import type { Transaction } from "../index.js";
+import type { Transaction } from "../transaction.js";
 
 export async function encode<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,

@@ -1,16 +1,17 @@
 import type { AbiFunction } from "abitype";
-import type { Transaction } from "../index.js";
+import type { Transaction } from "../transaction.js";
 import { getDefaultGasOverrides } from "../../gas/fee-data.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest, hexToBigInt } from "viem/utils";
 import type { IWallet } from "../../wallets/interfaces/wallet.js";
 import type { Address } from "viem";
+import { getRpcClient } from "../../rpc/index.js";
 
 export async function estimateGas<
   const abiFn extends AbiFunction,
   const wallet extends IWallet<any>,
 >(tx: Transaction<abiFn>, wallet?: wallet) {
-  const rpcRequest = tx.client.rpc({ chainId: tx.inputs.chainId });
+  const rpcRequest = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
 
   const [gasOverrides, encodedData] = await Promise.all([
     getDefaultGasOverrides(tx.client, tx.inputs.chainId),

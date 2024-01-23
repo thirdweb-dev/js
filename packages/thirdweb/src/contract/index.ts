@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
 
-export type GetContractOptions = {
+export type ContractOptions = {
   address: string;
   chainId: number;
 };
@@ -10,9 +10,15 @@ export type ThirdwebContract = ThirdwebClient & {
   chainId: Readonly<number>;
 };
 
-export function getContract(
+/**
+ * Creates a Thirdweb contract by combining the Thirdweb client and contract options.
+ * @param client - The Thirdweb client.
+ * @param options - The contract options.
+ * @returns The Thirdweb contract.
+ */
+export function contract(
   client: ThirdwebClient,
-  options: GetContractOptions,
+  options: ContractOptions,
 ): ThirdwebContract {
-  return { ...client, ...options };
+  return { ...client, ...options } as const;
 }

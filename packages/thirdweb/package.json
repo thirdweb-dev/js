@@ -24,10 +24,20 @@
       "import": "./esm/index.js",
       "default": "./cjs/index.js"
     },
+    "./transaction": {
+      "types": "./types/transaction/index.d.ts",
+      "import": "./esm/transaction/index.js",
+      "default": "./cjs/transaction/index.js"
+    },
     "./react": {
       "types": "./types/react/index.d.ts",
       "import": "./esm/react/index.js",
       "default": "./cjs/react/index.js"
+    },
+    "./storage": {
+      "types": "./types/storage/index.d.ts",
+      "import": "./esm/storage/index.js",
+      "default": "./cjs/storage/index.js"
     },
     "./wallets/*": {
       "types": "./types/wallets/*.d.ts",
@@ -50,6 +60,12 @@
     "*": {
       "react": [
         "./types/react/index.d.ts"
+      ],
+      "transaction": [
+        "./types/transaction/index.d.ts"
+      ],
+      "storage": [
+        "./types/storage/index.d.ts"
       ],
       "wallets/*": [
         "./types/wallets/*.d.ts"

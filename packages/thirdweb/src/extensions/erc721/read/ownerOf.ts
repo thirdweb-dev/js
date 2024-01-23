@@ -1,4 +1,3 @@
-import { transaction } from "../../../transaction/index.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
 import { read } from "../../../transaction/actions/read.js";
 
@@ -14,13 +13,11 @@ export async function ownerOf(
   contract: ThirdwebContract,
   options: OwnerOfParams,
 ) {
-  return read(
-    transaction(contract, {
-      address: contract.address,
-      chainId: contract.chainId,
-      method:
-        "function ownerOf(uint256 tokenId) external view returns (address owner)",
-      params: [BigInt(options.tokenId)],
-    }),
-  );
+  return read(contract, {
+    address: contract.address,
+    chainId: contract.chainId,
+    method:
+      "function ownerOf(uint256 tokenId) external view returns (address owner)",
+    params: [BigInt(options.tokenId)],
+  });
 }

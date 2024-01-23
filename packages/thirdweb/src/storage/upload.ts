@@ -1,5 +1,5 @@
-import { stringify } from "../../utils/json.js";
-import type { RawClient } from "../../client/client.js";
+import { stringify } from "../utils/json.js";
+import type { ThirdwebClient } from "../client/client.js";
 import {
   buildFormData,
   extractObjectFiles,
@@ -7,10 +7,10 @@ import {
   isFileOrUint8Array,
   replaceObjectFilesWithUris,
   replaceObjectGatewayUrlsWithSchemes,
-} from "./helpers.js";
-import type { FileOrBufferOrString, UploadOptions } from "./types.js";
+} from "./upload/helpers.js";
+import type { FileOrBufferOrString, UploadOptions } from "./upload/types.js";
 
-export async function upload(client: RawClient, options: UploadOptions) {
+export async function upload(client: ThirdwebClient, options: UploadOptions) {
   // deal with the differnt file types
 
   // if there are no files, return an empty array immediately
@@ -56,13 +56,11 @@ export async function upload(client: RawClient, options: UploadOptions) {
   const form_ = new FormData();
 
   const { fileNames, form } = buildFormData(form_, uris, options);
-  // default uploadWithoutDirectory to true if there is only one file and the option is not set explicitly
-  options.uploadWithoutDirectory =
-    options.uploadWithoutDirectory ?? fileNames.length === 1;
+
   if (isBrowser()) {
-    const { uploadBatchBrowser } = await import("./browser.js");
+    const { uploadBatchBrowser } = await import("./upload/browser.js");
     return await uploadBatchBrowser(client, form, fileNames, options);
   }
-  const { uploadBatchNode } = await import("./node.js");
+  const { uploadBatchNode } = await import("./upload/node.js");
   return uploadBatchNode(client, form, fileNames, options);
 }
