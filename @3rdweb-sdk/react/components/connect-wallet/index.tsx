@@ -34,6 +34,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({ auth }) => {
       }}
       termsOfServiceUrl="/tos"
       privacyPolicyUrl="/privacy"
+      hideTestnetFaucet={false}
       networkSelector={{
         popularChains,
         recentChains,
