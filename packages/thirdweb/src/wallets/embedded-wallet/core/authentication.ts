@@ -166,9 +166,18 @@ export const pre2FA = async (
   arg: MultiStepAuthProviderType & { storage: AuthTokenStorageType },
 ): Promise<InitiateAuthResultType> => {
   const { ROUTE_INITIATE_2FA_AUTH } = await import("./routes.js");
+  const { AuthenticationError } = await import("./authentication.error.js");
   const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
     "./authentication.constant.js"
   );
+
+  const token = await arg.storage.fetchToken({
+    key: THIRDWEB_AUTH_TOKEN_KEY,
+  });
+  if (!token) {
+    throw new AuthenticationError("No authenticated user found!");
+  }
+
   switch (arg.provider) {
     case "email": {
       const { email } = arg;
@@ -178,9 +187,7 @@ export const pre2FA = async (
           email,
         }),
         headers: {
-          Authorization: `Bearer ${await arg.storage.fetchToken({
-            key: THIRDWEB_AUTH_TOKEN_KEY,
-          })}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const result = await resp.json();
@@ -194,9 +201,7 @@ export const pre2FA = async (
           phone,
         }),
         headers: {
-          Authorization: `Bearer ${await arg.storage.fetchToken({
-            key: THIRDWEB_AUTH_TOKEN_KEY,
-          })}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const result = await resp.json();

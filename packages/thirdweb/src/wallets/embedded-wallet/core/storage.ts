@@ -10,6 +10,18 @@ import type {
 } from "./storage.type.js";
 import type { WalletDetailType } from "./wallet.type.js";
 
+export const getUserAuthToken = async (authUser?: AuthUserType) => {
+  const { StorageError } = await import("./storage.error.js");
+
+  const token = authUser?.authToken;
+  if (!token) {
+    throw new StorageError(
+      "An authenticated user is required to save the key material with thirdweb",
+    );
+  }
+  return token;
+};
+
 /** Sends an encrypted share / key to thirdweb for storage
  * @throws if developer is not on thirdweb managed storage
  */
@@ -33,12 +45,13 @@ export const saveEncryptedInThirdweb = (arg: {
         "Invalid encryption. The encrypted value must not be the same as the original value",
       );
     }
+    const token = await getUserAuthToken(authUser);
 
     const saveResp = await fetch(ROUTE_STORAGE_ENCRYPTED(), {
       method: "POST",
       headers: {
         "x-secret-key": secretKey ?? "",
-        "x-auth-user-token": authUser?.authToken ?? "",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         // TODO: figure out what goes here
@@ -78,11 +91,13 @@ export const saveInThirdweb = (): SaveKeyType => {
       );
     }
 
+    const token = await getUserAuthToken(authUser);
+
     const saveResp = await fetch(ROUTE_STORAGE_BASIC(), {
       method: "POST",
       headers: {
         "x-secret-key": secretKey ?? "",
-        "x-auth-user-token": authUser?.authToken ?? "",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         // walletId: walletDetail.,
@@ -137,11 +152,13 @@ export const loadEncryptedFromThirdweb = (arg: {
       );
     }
 
+    const token = await getUserAuthToken(authUser);
+
     const encryptedKeyMaterialResp = await fetch(ROUTE_STORAGE_ENCRYPTED(), {
       method: "GET",
       headers: {
         "x-secret-key": secretKey ?? "",
-        "x-auth-user-token": authUser?.authToken ?? "",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!encryptedKeyMaterialResp.ok) {
@@ -178,11 +195,13 @@ export const loadFromThirdweb = (): LoadKeyType => {
       );
     }
 
+    const token = await getUserAuthToken(authUser);
+
     const keyMaterialResp = await fetch(ROUTE_STORAGE_BASIC(), {
       method: "GET",
       headers: {
         "x-secret-key": secretKey ?? "",
-        "x-auth-user-token": authUser?.authToken ?? "",
+        Authorization: `Bearer ${token}`,
       },
     });
 
