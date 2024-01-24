@@ -96,15 +96,17 @@ export const saveWallet = async ({
 
   let walletId: string = walletDetail.walletId;
   if (isNew) {
+    const secretKey = walletDetail.client.secretKey;
     const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
       method: "POST",
       headers: {
+        "x-secret-key": secretKey ?? "",
         Authorization: `Bearer ${storage.authUser?.authToken}`,
         "Content-Type": "application/json",
-        body: JSON.stringify({
-          walletId: walletDetail.walletId,
-        }),
       },
+      body: JSON.stringify({
+        walletId: walletDetail.walletId,
+      }),
     });
     if (!walletIdResp.ok) {
       throw new EmbeddedWalletError("Failed to create wallet");
