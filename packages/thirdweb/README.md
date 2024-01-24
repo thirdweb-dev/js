@@ -22,11 +22,6 @@ npm install thirdweb@alpha
 #### With Extensions
 
 ```ts
-import { createClient } from "thirdweb";
-import { privateKeyWallet } from "thirdweb/wallets/private-key";
-import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
-
-// Step 1: create a client
 import { createClient, contract } from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
@@ -39,7 +34,8 @@ const client = createClient({
 });
 
 // Step 2: define a contract to interact with
-const myContract = contract(client, {
+const myContract = contract({
+  client,
   // the contract address
   address: "0xBCfaB342b73E08858Ce927b1a3e3903Ddd203980",
   // the chainId of the chain the contract is deployed on
@@ -47,19 +43,21 @@ const myContract = contract(client, {
 });
 
 // Step 3: read contract state
-const balance = await balanceOf(myContract, {
+const balance = await balanceOf({
+  client: myContract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
 console.log("beginning balance", balance);
 
 // Step 4: initialize a wallet
-const wallet = privateKeyWallet(client);
+const wallet = privateKeyWallet({ client });
 
 await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
 
 // Step 5: create a transaction
-const tx = mintTo(myContract, {
+const tx = mintTo({
+  client: myContract,
   to: "0x0890C23024089675D072E984f28A93bb391a35Ab",
   amount: 100,
 });
@@ -75,7 +73,8 @@ const txReceipt = await waitForReceipt(tx);
 console.log(txReceipt);
 
 // Step 8: read contract state
-const newBalance = await balanceOf(myContract, {
+const newBalance = await balanceOf({
+  client: myContract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
@@ -96,7 +95,8 @@ const client = createClient({
 });
 
 // Step 2: define a contract to interact with
-const myContract = contract(client, {
+const myContract = contract({
+  client,
   // the contract address
   address: "0xBCfaB342b73E08858Ce927b1a3e3903Ddd203980",
   // the chainId of the chain the contract is deployed on
@@ -104,7 +104,8 @@ const myContract = contract(client, {
 });
 
 // Step 3: read contract state
-const balance = await read(myContract, {
+const balance = await read({
+  client: myContract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });
@@ -112,17 +113,15 @@ const balance = await read(myContract, {
 console.log("beginning balance", balance);
 
 // Step 4: initialize a wallet
-const wallet = privateKeyWallet(client);
+const wallet = privateKeyWallet({ client });
 
 await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
 
 // Step 5: create a transaction
-const tx = transaction(myContract, {
+const tx = transaction({
+  client: myContract,
   method: "function mintTo(address to, uint256 amount)",
-  params: [
-    "0x0890C23024089675D072E984f28A93bb391a35Ab",
-    BigInt(100) * BigInt(10) ** BigInt(18),
-  ],
+  params: ["0x0890C23024089675D072E984f28A93bb391a35Ab", 100n * 10n ** 18n],
 });
 
 // Step 6: execute the transaction with the wallet
@@ -136,7 +135,8 @@ const txReceipt = await waitForReceipt(tx);
 console.log(txReceipt);
 
 // Step 8: read contract state
-const newBalance = await read(myContract, {
+const newBalance = await read({
+  client: myContract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });

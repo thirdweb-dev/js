@@ -12,7 +12,7 @@ import type { AbiFunction, TypedData } from "abitype";
 import type { Transaction } from "../transaction/transaction.js";
 import type { IWallet } from "./interfaces/wallet.js";
 
-export function privateKeyWallet(client: ThirdwebClient) {
+export function privateKeyWallet({ client }: { client: ThirdwebClient }) {
   return new PrivateKeyWallet(client);
 }
 
