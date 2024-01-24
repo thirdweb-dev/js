@@ -1,7 +1,4 @@
 import type { AbiFunction, TypedData } from "abitype";
-import type { ThirdwebClient } from "src/client/client.js";
-import { fakeUuid } from "src/utils/uuid.js";
-import type { IWallet } from "src/wallets/interfaces/wallet.js";
 import {
   type Hash,
   type Hex,
@@ -10,7 +7,10 @@ import {
   type TransactionSerializable,
   type TypedDataDefinition,
 } from "viem";
+import type { ThirdwebClient } from "../../../client/client.js";
 import type { Transaction } from "../../../transaction/transaction.js";
+import { fakeUuid } from "../../../utils/uuid.js";
+import type { IWallet } from "../../interfaces/wallet.js";
 
 import { generatePrivateKey, type Address } from "viem/accounts";
 import type { AuthUserType } from "./authentication.type.js";
@@ -78,6 +78,8 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   constructor(arg: { client: ThirdwebClient; storage: StorageType }) {
     this.client = arg.client;
     this.storage = arg.storage;
+    console.log("client", this.client);
+    console.log("storage", this.storage);
   }
 
   async loadOrCreateWallet() {
