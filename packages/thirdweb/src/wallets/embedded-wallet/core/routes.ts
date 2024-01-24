@@ -21,17 +21,19 @@ export const ROUTE_COMPLETE_AUTH = (provider: AuthMethodType) =>
 export const ROUTE_INITIATE_2FA_AUTH = (provider: AuthMethodType) =>
   `${getBaseUrl()}/v2/2fa/${provider}`;
 
-export const ROUTE_STORAGE = (
-  uniqueId: string,
-  type: "basic" | "encrypted",
-  walletId?: string,
-) => {
+export const ROUTE_STORAGE = ({
+  type,
+  uniqueId,
+  walletId,
+}: {
+  uniqueId: string;
+  type: "basic" | "encrypted";
+  walletId: string;
+}) => {
   const url = new URL(`${getBaseUrl()}/v2/storage`);
   url.searchParams.set("uniqueId", uniqueId);
   url.searchParams.set("type", type);
-  if (walletId) {
-    url.searchParams.set("walletId", walletId);
-  }
+  url.searchParams.set("walletId", walletId);
   return url.href;
 };
 export const ROUTE_NEW_STORAGE = () => `${getBaseUrl()}/v2/storage/new`;

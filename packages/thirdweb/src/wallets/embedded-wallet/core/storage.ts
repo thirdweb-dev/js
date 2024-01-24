@@ -49,7 +49,11 @@ export const saveEncryptedInThirdweb = (arg: {
     const token = await getUserAuthToken(authUser);
 
     const saveResp = await fetch(
-      ROUTE_STORAGE(uniqueId, "encrypted", walletDetail.walletId),
+      ROUTE_STORAGE({
+        uniqueId,
+        type: "encrypted",
+        walletId: walletDetail.walletId,
+      }),
       {
         method: "POST",
         headers: {
@@ -98,7 +102,11 @@ export const saveInThirdweb = (): SaveKeyType => {
     const token = await getUserAuthToken(authUser);
 
     const saveResp = await fetch(
-      ROUTE_STORAGE(uniqueId, "basic", walletDetail.walletId),
+      ROUTE_STORAGE({
+        uniqueId,
+        type: "basic",
+        walletId: walletDetail.walletId,
+      }),
       {
         method: "POST",
         headers: {
@@ -163,7 +171,11 @@ export const loadEncryptedFromThirdweb = (arg: {
     const token = await getUserAuthToken(authUser);
 
     const encryptedKeyMaterialResp = await fetch(
-      ROUTE_STORAGE(uniqueId, "encrypted", walletDetail.walletId),
+      ROUTE_STORAGE({
+        uniqueId,
+        type: "encrypted",
+        walletId: walletDetail.walletId,
+      }),
       {
         method: "GET",
         headers: {
@@ -209,7 +221,11 @@ export const loadFromThirdweb = (): LoadKeyType => {
     const token = await getUserAuthToken(authUser);
 
     const keyMaterialResp = await fetch(
-      ROUTE_STORAGE(uniqueId, "basic", walletDetail.walletId),
+      ROUTE_STORAGE({
+        uniqueId,
+        type: "basic",
+        walletId: walletDetail.walletId,
+      }),
       {
         method: "GET",
         headers: {
