@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "src/client/client.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import type { WalletStorageFormatType } from "./storage.type.js";
 
 export type WalletStateType = "loaded" | "pending_load" | "read_only";
