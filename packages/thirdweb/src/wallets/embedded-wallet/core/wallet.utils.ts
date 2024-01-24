@@ -30,25 +30,40 @@ export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
 export const createWallet = async ({
   createWalletOverride,
   client,
-  userId,
+  authUser,
   format,
 }: {
   createWalletOverride?: CreateWalletOverrideType | undefined;
   client: ThirdwebClient;
-  userId?: string | undefined;
+  authUser?: AuthUserType | undefined;
   format: WalletStorageFormatType;
 }): Promise<SensitiveWalletDetailType> => {
-  const { fakeUuid } = await import("../../../utils/uuid.js");
+  const { EmbeddedWalletError } = await import("./wallet.error.js");
+  const { ROUTE_NEW_STORAGE } = await import("./routes.js");
+
+  const secretKey = client.secretKey;
+  const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
+    method: "POST",
+    headers: {
+      "x-secret-key": secretKey ?? "",
+      Authorization: `Bearer ${authUser?.authToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!walletIdResp.ok) {
+    throw new EmbeddedWalletError("Failed to create wallet");
+  }
+  const { uuid: walletId } = await walletIdResp.json();
 
   if (createWalletOverride) {
     const wallet = await createWalletOverride();
     return {
-      walletId: fakeUuid(),
+      walletId,
       address: wallet.address,
       keyMaterial: wallet.privateKey,
       keyGenerationSource: "developer",
       client: client,
-      userId: userId,
+      userId: authUser?.userDetails.userId,
       walletState: "loaded",
       createdAt: Date.now(),
       format: format,
@@ -62,12 +77,12 @@ export const createWallet = async ({
   const privateKey = generatePrivateKey();
   const account = privateKeyToAccount(privateKey);
   return {
-    walletId: fakeUuid(),
+    walletId,
     address: account.address,
     keyMaterial: privateKey,
     keyGenerationSource: "thirdweb",
     client: client,
-    userId: userId,
+    userId: authUser?.userDetails.userId,
     walletState: "loaded",
     createdAt: Date.now(),
     format: format,
@@ -77,11 +92,7 @@ export const createWallet = async ({
 export const saveWallet = async ({
   storage,
   walletDetail,
-  isNew,
 }: SaveWalletArgType): Promise<SensitiveWalletDetailType> => {
-  const { EmbeddedWalletError } = await import("./wallet.error.js");
-  const { ROUTE_NEW_STORAGE } = await import("./routes.js");
-
   const { keyMaterial } = walletDetail;
   const censoredWalletDetail: WalletDetailType = {
     address: walletDetail.address,
@@ -93,26 +104,6 @@ export const saveWallet = async ({
     keyGenerationSource: walletDetail.keyGenerationSource,
     walletId: walletDetail.walletId,
   };
-
-  let walletId: string = walletDetail.walletId;
-  if (isNew) {
-    const secretKey = walletDetail.client.secretKey;
-    const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
-      method: "POST",
-      headers: {
-        "x-secret-key": secretKey ?? "",
-        Authorization: `Bearer ${storage.authUser?.authToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        walletId: walletDetail.walletId,
-      }),
-    });
-    if (!walletIdResp.ok) {
-      throw new EmbeddedWalletError("Failed to create wallet");
-    }
-    ({ uuid: walletId } = await walletIdResp.json());
-  }
 
   switch (storage.format) {
     case "privateKey": {
@@ -151,7 +142,7 @@ export const saveWallet = async ({
       break;
     }
   }
-  return { ...walletDetail, walletId };
+  return { ...walletDetail };
 };
 
 export const loadWallet = async ({

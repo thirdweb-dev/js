@@ -24,5 +24,4 @@ export type CreateWalletOverrideType = () =>
 export type SaveWalletArgType = {
   walletDetail: SensitiveWalletDetailType;
   storage: StorageType;
-  isNew: boolean;
 };
