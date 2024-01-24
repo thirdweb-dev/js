@@ -55,6 +55,7 @@ export const saveEncryptedInThirdweb = (arg: {
         headers: {
           "x-secret-key": secretKey ?? "",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           walletDetail,
@@ -102,6 +103,7 @@ export const saveInThirdweb = (): SaveKeyType => {
         method: "POST",
         headers: {
           "x-secret-key": secretKey ?? "",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
