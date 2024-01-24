@@ -37,7 +37,7 @@ export type EmailAuthDetailsType = {
   type: "email";
 } & EmailUserType;
 
-export type AuthDetailType =
+export type AuthProviderDetailType =
   | DiscordAuthDetailsType
   | GoogleAuthDetailsType
   | EmailAuthDetailsType;
