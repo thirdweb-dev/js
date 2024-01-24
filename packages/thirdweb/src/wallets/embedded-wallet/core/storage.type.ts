@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "src/index.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import type { AuthUserType } from "./authentication.type.js";
 import type { WalletDetailType } from "./wallet.type.js";
 
