@@ -6,8 +6,7 @@ on:
       - ".changeset/**"
       - "packages/**"
     branches:
-      - alpha
-      - "winston/embedded-wallet-v2"
+      - "**"
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
