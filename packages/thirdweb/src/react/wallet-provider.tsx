@@ -1,10 +1,11 @@
 import {
   createContext,
   useCallback,
-  useState,
-  useMemo,
   useContext,
+  useMemo,
+  useState,
 } from "react";
+import { fakeUuid } from "src/utils/uuid.js";
 import type { IWallet } from "../wallets/interfaces/wallet.js";
 
 export type WalletWithId = IWallet<any> & { _id: string };
@@ -144,11 +145,4 @@ export function useConnect() {
   );
 
   return { connect, isConnecting, error } as const;
-}
-
-// helpers //
-
-// TODO replace with more realiable uuid generator
-function fakeUuid() {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
