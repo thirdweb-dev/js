@@ -50,13 +50,13 @@ const myContract = contract({
 })
 ```
 
-## Transactions
+### Transactions
 
 Transactions are the primary way to interact with smart contracts. They are created using the `transaction` function.
 
 There are 3 ways to define a transaction, all of these return the same transaction object.
 
-#### Method Signature
+##### Method Signature
 
 ```ts
 import { transaction } from "thirdweb/transaction";
@@ -71,7 +71,7 @@ const tx = transaction({
 });
 ```
 
-#### Automatic Abi Resolution
+##### Automatic Abi Resolution
 
 ```ts
 import { transaction } from "thirdweb/transaction";
@@ -84,7 +84,7 @@ const tx = transaction({
 });
 ```
 
-#### ABI Snippet
+##### ABI Snippet
 
 ```ts
 import { transaction } from "thirdweb/transaction";
@@ -110,11 +110,11 @@ const tx = transaction({
 });
 ```
 
-### Transaction "Actions"
+#### Actions
 
 Transactions have a variety of actions that can be called on them, in all cases this is done by calling the action on the transaction object itself.
 
-#### `read` - reading contract state
+##### `read` - reading contract state
 
 For reading contract state, there is a shortcut function called `read` that can be used instead of `transaction`:
 
@@ -144,7 +144,7 @@ const tx = transaction({
 const balance = await readTx(tx);
 ```
 
-#### `estimateGas` - estimating gas cost for a tx
+##### `estimateGas` - estimating gas cost for a tx
 
 ```ts
 import { estimateGas } from "thirdweb/transaction";
@@ -152,7 +152,7 @@ import { estimateGas } from "thirdweb/transaction";
 const gasEstimate = await estimateGas(tx);
 ```
 
-#### `sendTransaction` - sending a transaction
+##### `sendTransaction` - sending a transaction
 
 See [Wallets](#wallets) for more information on how to send a transaction.
 
@@ -164,7 +164,7 @@ const wallet = privateKeyWallet({ client });
 const { transactionHash } = await wallet.sendTransaction(tx);
 ```
 
-#### `waitForReceipt` - waiting for a transaction to be mined
+##### `waitForReceipt` - waiting for a transaction to be mined
 
 ```ts
 import { waitForReceipt } from "thirdweb/transaction";
@@ -172,7 +172,7 @@ import { waitForReceipt } from "thirdweb/transaction";
 const receipt = await waitForReceipt(tx);
 ```
 
-## Wallets
+### Wallets
 
 _TODO: add more info._
 
@@ -194,7 +194,7 @@ For usage in backend environments.
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 ```
 
-## Extensions
+### Extensions
 
 _**Alpha Note**: Currently some extensions are available for ERC20 and ERC721 standards, we are constantly adding more._
 
@@ -207,7 +207,7 @@ They are namespaced by ERC standard, meaning you can import them like this:
 import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
 ```
 
-## Usage Examples
+## Examples
 
 ### Backend (Node, Bun, Deno, etc)
 
