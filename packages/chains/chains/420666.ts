@@ -36,6 +36,7 @@ export default {
     "https://testnet.kekchain.com"
   ],
   "shortName": "tKEK",
+  "slip44": 1,
   "slug": "kekchain-kektest",
   "testnet": true
 } as const satisfies Chain;

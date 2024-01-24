@@ -44,6 +44,7 @@ export default {
     "https://testnet-rpc.zkfair.io"
   ],
   "shortName": "ZKFair-Testnet",
+  "slip44": 1,
   "slug": "zkfair-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -24,6 +24,7 @@ export default {
     "https://testnet-rpc.coinex.net/"
   ],
   "shortName": "tcet",
+  "slip44": 1,
   "slug": "coinex-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

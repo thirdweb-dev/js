@@ -54,6 +54,7 @@ export function esDefault(): ThirdwebLocale {
       personalWallet: "Cartera personal",
       smartWallet: "Cartera inteligente",
       or: "O",
+      goBackButton: "Atras",
       download: {
         chrome: "Descargar extensión para Chrome",
         android: "Descargar en Google Play",
@@ -111,6 +112,7 @@ export function esDefault(): ThirdwebLocale {
           instruction:
             "Por favor, firma la solicitud de mensaje en tu cartera para continuar",
           signInButton: "Iniciar sesión",
+          disconnectWallet: "Desconectar cartera",
         },
         signingScreen: {
           title: "Iniciando sesión",
@@ -213,6 +215,7 @@ export function esDefault(): ThirdwebLocale {
         signIn: "Iniciar sesión",
         emailRequired: "Se requiere dirección de correo electrónico",
         invalidEmail: "Dirección de correo electrónico inválida",
+        maxAccountsExceeded: "Número máximo de cuentas alcanzado",
         socialLoginScreen: {
           title: "Iniciar sesión",
           instruction: "Inicie sesión en su cuenta en la ventana abierta",

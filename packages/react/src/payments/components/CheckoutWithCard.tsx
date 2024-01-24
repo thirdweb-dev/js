@@ -44,21 +44,23 @@ interface CheckoutWithCardProps {
   locale?: Locale;
 }
 
-export const CheckoutWithCard = ({
-  clientId,
-  sdkClientSecret,
-  appName,
-  options = {
-    ...DEFAULT_BRAND_OPTIONS,
-  },
-  onPaymentSuccess,
-  onReview,
-  onError,
-  onBeforeModalOpen,
-  onPriceUpdate,
-  locale,
-  configs,
-}: CheckoutWithCardProps): React.ReactElement => {
+export function CheckoutWithCard(props: CheckoutWithCardProps) {
+  const {
+    clientId,
+    sdkClientSecret,
+    appName,
+    options = {
+      ...DEFAULT_BRAND_OPTIONS,
+    },
+    onPaymentSuccess,
+    onReview,
+    onError,
+    onBeforeModalOpen,
+    onPriceUpdate,
+    locale,
+    configs,
+  } = props;
+
   const { appName: appNameContext } = usePaymentsSDKContext();
   const [isCardDetailIframeLoading, setIsCardDetailIframeLoading] =
     useState<boolean>(true);
@@ -97,18 +99,29 @@ export const CheckoutWithCard = ({
       options,
       configs,
     });
-  }, [CheckoutWithCardIframeContainerRef.current]);
+  }, [
+    appNameToUse,
+    clientId,
+    configs,
+    locale,
+    onBeforeModalOpen,
+    onCardDetailLoad,
+    onError,
+    onPaymentSuccess,
+    onPriceUpdate,
+    onReview,
+    options,
+    sdkClientSecret,
+  ]);
 
   return (
-    <>
-      <div
-        className={iframeContainer}
-        ref={CheckoutWithCardIframeContainerRef}
-        // Label the package version.
-        data-thirdweb-sdk-version={`${packageJson.name}@${packageJson.version}`}
-      >
-        {isCardDetailIframeLoading && <SpinnerWrapper />}
-      </div>
-    </>
+    <div
+      className={iframeContainer}
+      ref={CheckoutWithCardIframeContainerRef}
+      // Label the package version.
+      data-thirdweb-sdk-version={`${packageJson.name}@${packageJson.version}`}
+    >
+      {isCardDetailIframeLoading && <SpinnerWrapper />}
+    </div>
   );
-};
+}

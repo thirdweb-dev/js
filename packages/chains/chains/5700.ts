@@ -29,6 +29,7 @@ export default {
     "wss://syscoin-tanenbaum-evm.publicnode.com"
   ],
   "shortName": "tsys",
+  "slip44": 1,
   "slug": "syscoin-tanenbaum-testnet",
   "testnet": true
 } as const satisfies Chain;

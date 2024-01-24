@@ -13,5 +13,4 @@ typedoc({
     "src/evm/wallets/local-wallet-node.ts",
   ],
   exclude: [],
-  output: "both", // TODO: change this to 'json' when old portal is fully migrated to new portal
 });

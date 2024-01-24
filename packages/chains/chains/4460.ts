@@ -35,6 +35,7 @@ export default {
     "https://l2-orderly-l2-4460-sepolia-8tc3sd7dvy.t.conduit.xyz"
   ],
   "shortName": "orderlyl2",
+  "slip44": 1,
   "slug": "orderly-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

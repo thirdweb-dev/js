@@ -26,6 +26,7 @@ export default {
     "https://rpctest.meter.io"
   ],
   "shortName": "MeterTest",
+  "slip44": 1,
   "slug": "meter-testnet",
   "testnet": true
 } as const satisfies Chain;

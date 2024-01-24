@@ -26,6 +26,7 @@ export default {
     "https://rpc.blgchain.com"
   ],
   "shortName": "blgchain",
+  "slip44": 1,
   "slug": "blg-testnet",
   "testnet": true
 } as const satisfies Chain;

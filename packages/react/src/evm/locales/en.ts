@@ -44,7 +44,7 @@ export function enDefault() {
       transactionHistory: "Transaction History",
       backupWallet: "Backup Wallet",
       guestWalletWarning:
-        "This is a temporary guest wallet. Backup if you don't want to lose access to it",
+        "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
       connectedToSmartWallet: "Connected To Smart Wallet",
       confirmInWallet: "Confirm in wallet",
@@ -53,6 +53,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -109,6 +110,7 @@ export function enDefault() {
           instruction:
             "Please sign the message request in your wallet to continue",
           signInButton: "Sign in",
+          disconnectWallet: "Disconnect Wallet",
         },
         signingScreen: {
           title: "Signing In",
@@ -210,6 +212,8 @@ export function enDefault() {
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
+        maxAccountsExceeded:
+          "Maximum number of accounts exceeded. Please notify the app developer.",
         socialLoginScreen: {
           title: "Sign in",
           instruction: "Sign into your account in the pop-up",

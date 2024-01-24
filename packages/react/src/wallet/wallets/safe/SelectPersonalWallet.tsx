@@ -9,7 +9,7 @@ import {
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { SafeWalletConfig } from "./types";
 import { useEffect, useRef } from "react";
 import { Link, Text } from "../../../components/text";
@@ -30,6 +30,8 @@ export const SelectpersonalWallet: React.FC<{
   const personalWallets = props.personalWallets.filter(
     (w) => w.id !== walletIds.localWallet,
   );
+
+  const { personalWalletConnection } = useWalletContext();
 
   // auto select guest wallet if no other wallets
   const { selectWallet } = props;
@@ -92,6 +94,15 @@ export const SelectpersonalWallet: React.FC<{
           maxHeight="300px"
           walletConfigs={personalWallets}
           selectWallet={props.selectWallet}
+          selectUIProps={{
+            connect: personalWalletConnection.connectWallet,
+            connectionStatus: personalWalletConnection.connectionStatus,
+            createWalletInstance: personalWalletConnection.createWalletInstance,
+            setConnectedWallet: personalWalletConnection.setConnectedWallet,
+            setConnectionStatus: personalWalletConnection.setConnectionStatus,
+            connectedWallet: personalWalletConnection.activeWallet,
+            connectedWalletAddress: personalWalletConnection.address,
+          }}
         />
       </Container>
 

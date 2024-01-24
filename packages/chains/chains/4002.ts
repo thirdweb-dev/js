@@ -42,6 +42,7 @@ export default {
     "wss://fantom-testnet.publicnode.com"
   ],
   "shortName": "tftm",
+  "slip44": 1,
   "slug": "fantom-testnet",
   "testnet": true
 } as const satisfies Chain;

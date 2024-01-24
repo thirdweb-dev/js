@@ -38,6 +38,7 @@ export default {
     "https://fncy-testnet-seed.fncy.world"
   ],
   "shortName": "tFNCY",
+  "slip44": 1,
   "slug": "fncy-testnet",
   "testnet": true
 } as const satisfies Chain;

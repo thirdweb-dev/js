@@ -36,6 +36,7 @@ export default {
     "http://testnet.satosh.ie"
   ],
   "shortName": "satoshie_testnet",
+  "slip44": 1,
   "slug": "satoshie-testnet",
   "testnet": true
 } as const satisfies Chain;

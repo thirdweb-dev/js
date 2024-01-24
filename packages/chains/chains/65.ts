@@ -26,6 +26,7 @@ export default {
     "https://exchaintestrpc.okex.org"
   ],
   "shortName": "tokt",
+  "slip44": 1,
   "slug": "okexchain-testnet",
   "testnet": true
 } as const satisfies Chain;

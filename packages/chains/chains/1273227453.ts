@@ -6,7 +6,13 @@ export default {
     {
       "name": "Blockscout",
       "url": "https://wan-red-ain.explorer.mainnet.skalenodes.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmT5KKrpNt6duU8QfwaYw3xf4ifTBPtjahpWsMi3gsFmcS",
+        "width": 440,
+        "height": 600,
+        "format": "png"
+      }
     }
   ],
   "faucets": [

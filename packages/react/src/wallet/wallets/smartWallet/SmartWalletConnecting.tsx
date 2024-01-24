@@ -4,13 +4,11 @@ import { Button } from "../../../components/buttons";
 import { iconSize, spacing, fontSize } from "../../../design-system";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  useChain,
   useConnect,
   useConnectionStatus,
-  useNetworkMismatch,
   useWalletContext,
-  useWallet,
-  useSwitchChain,
+  WalletInstance,
+  useSDKChainId,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -18,22 +16,25 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
-import type { SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 
 export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   smartWallet: WalletConfig<SmartWallet>;
-  personalWallet: WalletConfig;
+  personalWalletConfig: WalletConfig;
+  personalWallet: WalletInstance;
+  personalWalletChainId: number;
+  switchChainPersonalWallet: (chainId: number) => void;
 }> = (props) => {
   const locale = useTWLocale().wallets.smartWallet;
-  const activeWallet = useWallet(); // personal wallet
-
+  const { personalWallet, personalWalletChainId, switchChainPersonalWallet } =
+    props;
   const connect = useConnect();
-  const connectedChain = useChain();
   const targetChain = useWalletContext().activeChain;
+  const sdkChainId = useSDKChainId();
 
-  const mismatch = useNetworkMismatch();
+  const wrongNetwork = sdkChainId !== personalWalletChainId;
 
   const [connectError, setConnectError] = useState(false);
   const [switchError, setSwitchError] = useState(false);
@@ -44,11 +45,10 @@ export const SmartWalletConnecting: React.FC<{
   const { onConnect } = props;
   const connectStarted = useRef(false);
 
-  const switchChain = useSwitchChain();
   const modalSize = useContext(ModalConfigCtx).modalSize;
 
   const handleConnect = useCallback(async () => {
-    if (!activeWallet || !connectedChain || connectStarted.current) {
+    if (!personalWallet || connectStarted.current) {
       return;
     }
     setConnectError(false);
@@ -56,22 +56,22 @@ export const SmartWalletConnecting: React.FC<{
     try {
       connectStarted.current = true;
       await connect(props.smartWallet, {
-        personalWallet: activeWallet,
+        personalWallet: personalWallet,
       });
       onConnect();
     } catch (e) {
       console.error(e);
       setConnectError(true);
     }
-  }, [activeWallet, connectedChain, connect, props.smartWallet, onConnect]);
+  }, [personalWallet, connect, props.smartWallet, onConnect]);
 
   useEffect(() => {
-    if (!mismatch) {
+    if (!wrongNetwork) {
       handleConnect();
     }
-  }, [mismatch, handleConnect, activeWallet, connectedChain]);
+  }, [wrongNetwork, handleConnect, personalWallet]);
 
-  if (!connectError && (connectionStatus === "connecting" || !mismatch)) {
+  if (!connectError && (connectionStatus === "connecting" || !wrongNetwork)) {
     return (
       <Container
         fullHeight
@@ -85,7 +85,7 @@ export const SmartWalletConnecting: React.FC<{
           {locale.connecting}
         </Text>
         <Spacer y="lg" />
-        <Spinner color="accentText" size="xl" />
+        <Spinner color="accentText" size="lg" />
       </Container>
     );
   }
@@ -111,8 +111,8 @@ export const SmartWalletConnecting: React.FC<{
     <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
         <ModalHeader
-          title={props.personalWallet.meta.name}
-          imgSrc={props.personalWallet.meta.iconURL}
+          title={props.personalWalletConfig.meta.name}
+          imgSrc={props.personalWalletConfig.meta.iconURL}
           onBack={props.onBack}
         />
       </Container>
@@ -150,14 +150,11 @@ export const SmartWalletConnecting: React.FC<{
                 gap: spacing.sm,
               }}
               onClick={async () => {
-                if (!activeWallet) {
-                  throw new Error("No active wallet");
-                }
                 setConnectError(false);
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await switchChain(targetChain.chainId);
+                  await switchChainPersonalWallet(targetChain.chainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

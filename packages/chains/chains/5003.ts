@@ -26,6 +26,7 @@ export default {
     "https://rpc.sepolia.mantle.xyz"
   ],
   "shortName": "mnt-sep",
+  "slip44": 1,
   "slug": "mantle-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

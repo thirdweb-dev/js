@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.tipboxcoin.net"
   ],
   "shortName": "TPBXt",
+  "slip44": 1,
   "slug": "tipboxcoin-testnet",
   "testnet": true
 } as const satisfies Chain;

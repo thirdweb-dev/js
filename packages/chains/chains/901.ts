@@ -42,6 +42,7 @@ export default {
     "https://s1-testnet.garizon.net/rpc"
   ],
   "shortName": "gar-test-s1",
+  "slip44": 1,
   "slug": "garizon-testnet-stage1",
   "testnet": true
 } as const satisfies Chain;

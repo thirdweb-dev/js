@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.12
+
+### Patch Changes
+
+- [#2157](https://github.com/thirdweb-dev/js/pull/2157) [`749a12f9`](https://github.com/thirdweb-dev/js/commit/749a12f92f687774330e154d7412aeba79f8fff5) Thanks [@assimovt](https://github.com/assimovt)! - fix checkout service name
+
 ## 0.4.11
 
 ### Patch Changes

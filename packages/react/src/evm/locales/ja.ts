@@ -53,6 +53,7 @@ export function jaDefault(): ThirdwebLocale {
       personalWallet: "パーソナルウォレット",
       smartWallet: "スマートウォレット",
       or: "または",
+      goBackButton: "戻る", // TODO - check translation
       download: {
         chrome: "Chrome拡張をダウンロード",
         android: "Google Playでダウンロード",
@@ -110,6 +111,7 @@ export function jaDefault(): ThirdwebLocale {
           instruction:
             "続行するためにウォレットでメッセージリクエストにサインしてください",
           signInButton: "サインイン",
+          disconnectWallet: "ウォレットの切断",
         },
         signingScreen: {
           title: "サインイン中",
@@ -212,6 +214,7 @@ export function jaDefault(): ThirdwebLocale {
         emailRequired: "メールアドレスが必要です",
         invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
+        maxAccountsExceeded: "アカウントの最大数を超えました",
         socialLoginScreen: {
           title: "サインイン",
           instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct

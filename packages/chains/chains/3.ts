@@ -31,6 +31,7 @@ export default {
     "wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}"
   ],
   "shortName": "rop",
+  "slip44": 1,
   "slug": "ropsten",
   "testnet": true,
   "title": "Ethereum Testnet Ropsten"

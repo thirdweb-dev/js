@@ -148,6 +148,10 @@ const EmbeddedWalletSelectionUI: React.FC<
         onSelect={props.onSelect}
         walletConfig={props.walletConfig}
         authOptions={props.authOptions}
+        createWalletInstance={props.createWalletInstance}
+        setConnectedWallet={props.setConnectedWallet}
+        setConnectionStatus={props.setConnectionStatus}
+        modalSize={props.modalSize}
       />
     </div>
   );
@@ -201,6 +205,9 @@ const EmbeddedWalletConnectUI = (
       walletConfig={props.walletConfig}
       onBack={props.goBack}
       authOptions={props.authOptions}
+      createWalletInstance={props.createWalletInstance}
+      setConnectedWallet={props.setConnectedWallet}
+      setConnectionStatus={props.setConnectionStatus}
     />
   );
 };

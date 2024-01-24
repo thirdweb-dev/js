@@ -24,6 +24,7 @@ export default {
     "https://avastar.cc/ext/bc/C/rpc"
   ],
   "shortName": "SNS",
+  "slip44": 1,
   "slug": "star-social-testnet",
   "testnet": true
 } as const satisfies Chain;

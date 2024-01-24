@@ -40,6 +40,7 @@ export default {
     "https://aia-dataseed1-testnet.aiachain.org"
   ],
   "shortName": "aiatestnet",
+  "slip44": 1,
   "slug": "aia-testnet",
   "testnet": true
 } as const satisfies Chain;

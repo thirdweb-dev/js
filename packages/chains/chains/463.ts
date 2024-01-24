@@ -27,7 +27,11 @@ export default {
   "rpc": [
     "https://areon-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://463.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.areon.network"
+    "https://mainnet-rpc.areon.network",
+    "https://mainnet-rpc2.areon.network",
+    "https://mainnet-rpc3.areon.network",
+    "https://mainnet-rpc4.areon.network",
+    "https://mainnet-rpc5.areon.network"
   ],
   "shortName": "area",
   "slug": "areon-network",

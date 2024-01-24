@@ -1,5 +1,38 @@
 # @thirdweb-dev/sdk
 
+## 4.0.28
+
+### Patch Changes
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9)]:
+  - @thirdweb-dev/chains@0.1.65
+
+## 4.0.27
+
+### Patch Changes
+
+- [#2183](https://github.com/thirdweb-dev/js/pull/2183) [`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ZkSync Sepolia addresses
+
+- Updated dependencies [[`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/chains@0.1.64
+
+## 4.0.26
+
+### Patch Changes
+
+- [#2143](https://github.com/thirdweb-dev/js/pull/2143) [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimations for local and embedded wallets
+
+- [#1887](https://github.com/thirdweb-dev/js/pull/1887) [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add pagination to ERC721's getAllOwners method
+
+- [#2139](https://github.com/thirdweb-dev/js/pull/2139) [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve beacon from beacon-proxy
+
+- Updated dependencies [[`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f)]:
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/contracts-js@1.3.16
+  - @thirdweb-dev/crypto@0.2.0
+  - @thirdweb-dev/merkletree@0.2.0
+  - @thirdweb-dev/storage@2.0.8
+
 ## 4.0.25
 
 ### Patch Changes

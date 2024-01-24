@@ -1,6 +1,8 @@
 export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
+  type ModalConfigOptions,
+  useSetWalletModalConfig,
 } from "./providers/wallet-ui-states-provider";
 
 export { useSafe } from "./connectors/gnosis";
@@ -11,15 +13,22 @@ export {
   type ConnectWalletProps,
 } from "../wallet/ConnectWallet/ConnectWallet";
 export type { WelcomeScreen } from "../wallet/ConnectWallet/screens/types";
-export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+export {
+  ConnectModalInline,
+  type ConnectModalInlineProps,
+} from "../wallet/ConnectWallet/Modal/ConnectModalInline";
+
+export {
+  useShowConnectEmbed,
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "../wallet/ConnectWallet/Modal/ConnectEmbed";
 
 export {
   NetworkSelector,
   type NetworkSelectorProps,
   type NetworkSelectorChainProps,
 } from "../wallet/ConnectWallet/NetworkSelector";
-
-export type { DropDownPosition } from "../wallet/ConnectWallet/Details";
 
 // UI components
 export * from "./components/MediaRenderer";

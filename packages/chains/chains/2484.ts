@@ -38,6 +38,7 @@ export default {
     "https://rpc-nebulas-testnet.uniultra.xyz"
   ],
   "shortName": "u2u_nebulas",
+  "slip44": 1,
   "slug": "unicorn-ultra-nebulas-testnet",
   "testnet": true
 } as const satisfies Chain;

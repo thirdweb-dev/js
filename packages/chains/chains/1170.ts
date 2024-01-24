@@ -36,6 +36,7 @@ export default {
     "https://json-rpc.origin.uptick.network"
   ],
   "shortName": "auoc",
+  "slip44": 1,
   "slug": "origin-testnet",
   "testnet": true
 } as const satisfies Chain;

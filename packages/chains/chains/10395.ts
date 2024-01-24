@@ -20,7 +20,7 @@ export default {
   "name": "Worldland Testnet",
   "nativeCurrency": {
     "name": "Worldland",
-    "symbol": "WL",
+    "symbol": "WLC",
     "decimals": 18
   },
   "networkId": 10395,
@@ -30,6 +30,7 @@ export default {
     "https://gwangju.worldland.foundation"
   ],
   "shortName": "TWLC",
+  "slip44": 1,
   "slug": "worldland-testnet",
   "testnet": true
 } as const satisfies Chain;

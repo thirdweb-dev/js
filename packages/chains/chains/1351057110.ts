@@ -32,6 +32,7 @@ export default {
     "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix"
   ],
   "shortName": "chaos-tenet",
+  "slip44": 1,
   "slug": "chaos-skale-testnet",
   "testnet": true,
   "title": "Chaos Testnet"

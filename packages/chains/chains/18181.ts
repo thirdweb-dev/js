@@ -32,6 +32,7 @@ export default {
     "https://testnet-rpc.oneg8.network"
   ],
   "shortName": "G8Ct",
+  "slip44": 1,
   "slug": "g8chain-testnet",
   "testnet": true
 } as const satisfies Chain;

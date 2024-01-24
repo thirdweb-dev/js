@@ -24,6 +24,7 @@ export default {
     "https://subnets.avax.network/portal-fantasy/testnet/rpc"
   ],
   "shortName": "PFTEST",
+  "slip44": 1,
   "slug": "portal-fantasy-chain-test",
   "testnet": true
 } as const satisfies Chain;

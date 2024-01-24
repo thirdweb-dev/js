@@ -34,6 +34,7 @@ export default {
     "wss://wss.goerli.boba.network/"
   ],
   "shortName": "BobaGoerli",
+  "slip44": 1,
   "slug": "boba-network-goerli-testnet",
   "testnet": true
 } as const satisfies Chain;

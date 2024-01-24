@@ -45,6 +45,7 @@ export default {
     "https://testnet.era.zksync.dev"
   ],
   "shortName": "zksync-goerli",
+  "slip44": 1,
   "slug": "zksync-era-goerli-testnet-deprecated",
   "status": "deprecated",
   "testnet": true

@@ -39,6 +39,7 @@ export default {
     "https://nodetestnet-station-two.tritanium.network/"
   ],
   "shortName": "ttrn",
+  "slip44": 1,
   "slug": "tritanium-testnet",
   "testnet": true
 } as const satisfies Chain;

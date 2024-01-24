@@ -44,7 +44,7 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
-  payments: {
+  checkout: {
     name: "checkout",
     title: "Checkouts",
     description: "Payments for easy web3 onboarding",

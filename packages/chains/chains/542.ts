@@ -24,6 +24,7 @@ export default {
     "https://pawchainx.com/"
   ],
   "shortName": "PAW",
+  "slip44": 1,
   "slug": "pawchain-testnet",
   "testnet": true
 } as const satisfies Chain;

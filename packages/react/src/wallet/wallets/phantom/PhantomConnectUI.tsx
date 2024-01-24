@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
@@ -13,7 +13,7 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const locale = useTWLocale().wallets.phantomWallet;
   const { walletConfig, connected } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const connect = useConnect();
+  const { connect } = props;
 
   const hideBackButton = props.supportedWallets.length === 1;
   const { goBack } = props;
@@ -24,13 +24,13 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
       setScreen("connecting");
       setErrorConnecting(false);
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [walletConfig, connected, connect]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {

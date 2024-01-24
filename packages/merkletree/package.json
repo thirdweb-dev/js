@@ -38,15 +38,14 @@
     "@types/benchmark": "^2.1.4",
     "@types/treeify": "^1.0.2",
     "benchmark": "^2.1.4",
-    "eslint-config-thirdweb": "workspace:*",
-    "typescript": "^5.1.6",
     "circomlibjs": "^0.1.7",
-    "crypto": "0.0.3",
+    "eslint-config-thirdweb": "workspace:*",
     "ethereum-cryptography": "^1.0.3",
     "ethereumjs-util": "^7.0.9",
     "keccak256": "^1.0.6",
     "sha1": "^1.1.1",
-    "tape": "^4.9.2"
+    "tape": "^4.9.2",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

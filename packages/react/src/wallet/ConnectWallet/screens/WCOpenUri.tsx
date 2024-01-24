@@ -1,10 +1,11 @@
-import {
-  useCreateWalletInstance,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 import type { WalletConnect } from "@thirdweb-dev/wallets";
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  ConnectUIProps,
+  WalletConfig,
+  WalletInstance,
+} from "@thirdweb-dev/react-core";
 import { isAndroid, isIOS } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "./ConnectingScreen";
 import { openWindow } from "../../utils/openWindow";
@@ -12,13 +13,14 @@ import { openWindow } from "../../utils/openWindow";
 export const WCOpenURI: React.FC<{
   onBack: () => void;
   onConnected: () => void;
-  walletConfig: WalletConfig<any>;
+  createWalletInstance: () => WalletInstance;
+  setConnectedWallet: ConnectUIProps<WalletInstance>["setConnectedWallet"];
+  setConnectionStatus: ConnectUIProps<WalletInstance>["setConnectionStatus"];
   appUriPrefix: {
     ios: string;
     android: string;
     other: string;
   };
-  // supportLink: string;
   errorConnecting: boolean;
   onRetry: () => void;
   hideBackButton: boolean;
@@ -30,20 +32,24 @@ export const WCOpenURI: React.FC<{
     failed: string;
     inProgress: string;
   };
-}> = ({
-  onBack,
-  onConnected,
-  walletConfig,
-  appUriPrefix,
-  onRetry,
-  errorConnecting,
-  hideBackButton,
-  onGetStarted,
-  locale,
-}) => {
-  const createInstance = useCreateWalletInstance();
-  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
-    useWalletContext();
+  meta: WalletConfig["meta"];
+}> = (props) => {
+  const {
+    createWalletInstance,
+    setConnectionStatus,
+    setConnectedWallet,
+    onBack,
+    onConnected,
+    appUriPrefix,
+    onRetry,
+    errorConnecting,
+    hideBackButton,
+    onGetStarted,
+    locale,
+    meta,
+  } = props;
+
+  const { chainToConnect } = useWalletContext();
 
   const connectStarted = useRef(false);
   useEffect(() => {
@@ -52,7 +58,7 @@ export const WCOpenURI: React.FC<{
     }
     connectStarted.current = true;
 
-    const wallet = createInstance(walletConfig) as WalletConnect;
+    const wallet = createWalletInstance() as WalletConnect;
 
     setConnectionStatus("connecting");
     wallet.connectWithQrCode({
@@ -74,13 +80,12 @@ export const WCOpenURI: React.FC<{
       },
     });
   }, [
-    createInstance,
     setConnectedWallet,
     chainToConnect,
     onConnected,
-    walletConfig,
     setConnectionStatus,
     appUriPrefix,
+    createWalletInstance,
   ]);
 
   return (
@@ -88,8 +93,8 @@ export const WCOpenURI: React.FC<{
       locale={locale}
       hideBackButton={hideBackButton}
       onBack={onBack}
-      walletName={walletConfig.meta.name}
-      walletIconURL={walletConfig.meta.iconURL}
+      walletName={meta.name}
+      walletIconURL={meta.iconURL}
       errorConnecting={errorConnecting}
       onRetry={onRetry}
       onGetStarted={onGetStarted}

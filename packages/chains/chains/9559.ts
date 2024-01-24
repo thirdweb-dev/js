@@ -38,6 +38,7 @@ export default {
     "https://testnet.neonlink.io"
   ],
   "shortName": "testneon",
+  "slip44": 1,
   "slug": "neonlink-testnet",
   "testnet": true
 } as const satisfies Chain;

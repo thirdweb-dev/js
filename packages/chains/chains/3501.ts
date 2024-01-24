@@ -14,7 +14,7 @@ export default {
   "name": "JFIN Chain",
   "nativeCurrency": {
     "name": "JFIN Coin",
-    "symbol": "jfin",
+    "symbol": "JFIN",
     "decimals": 18
   },
   "networkId": 3501,
@@ -23,7 +23,7 @@ export default {
     "https://3501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jfinchain.com"
   ],
-  "shortName": "jfin",
+  "shortName": "JFIN",
   "slug": "jfin-chain",
   "testnet": false
 } as const satisfies Chain;

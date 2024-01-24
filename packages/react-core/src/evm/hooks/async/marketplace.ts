@@ -1671,7 +1671,7 @@ export function useBidBuffer(
  * If the listing cannot be found, is not an auction listing, or is not active, the `error` property will be set.
  *
  * @returns Query result object that includes the minimum next bid for the auction listing
- * @twfeature EnglishAucton
+ * @twfeature EnglishAuction
  * @marketplace
  */
 export function useMinimumNextBid(
@@ -1916,6 +1916,84 @@ export function useCreateDirectListing<
         );
       }
       invariant(false, "Contract is not a valid marketplace contract");
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+
+/**
+ * Create multiple direct listings in one batch
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     mutate: createDirectListingBatch,
+ *     isLoading,
+ *     error,
+ *   } = useCreateDirectListingBatch(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to create direct listing batch", error);
+ *   }
+ *   
+ *   // Sample data
+ *   const directListingData = [
+ *     {
+ *       assetContractAddress: "nft-contract-address",
+ *       tokenId: "token-id-1",
+ *       quantity: "quantity-1",
+ *       currencyContractAddress: "currency-address",
+ *       pricePerToken: 1
+ *     },
+ *     {
+ *       assetContractAddress: "nft-contract-address",
+ *       tokenId: "token-id-2",
+ *       quantity: 1,
+ *       currencyContractAddress: "currency-address",
+ *       pricePerToken: 0
+ *     },
+ *   ];
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => createDirectListingBatch(directListingData)}
+ *     >
+ *       Create batch Direct Listing!
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @returns a mutation object that can be used to create a new batch of direct listings
+ * @twfeature DirectListings
+ */
+export function useCreateDirectListingBatch<
+  TMarketplaceV3 extends MarketplaceV3,
+>(contract: RequiredParam<TMarketplaceV3>) {
+  const contractAddress = contract?.getAddress();
+  const activeChainId = useSDKChainId();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (data: DirectListingInputParams[]) => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(walletAddress, "No wallet connected, cannot create listing");
+      invariant(
+        contract.directListings.createListingsBatch,
+        "contract does not support directListings.createListingsBatch",
+      );
+      return await contract.directListings.createListingsBatch(data);
     },
     {
       onSettled: () =>

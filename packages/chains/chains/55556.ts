@@ -32,6 +32,7 @@ export default {
     "https://rei-testnet-rpc.moonrhythm.io"
   ],
   "shortName": "trei",
+  "slip44": 1,
   "slug": "rei-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

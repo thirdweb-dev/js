@@ -38,13 +38,19 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
+
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "./components/ConnectWalletFlow/ConnectEmbed";
+
 export {
   Web3Button,
   type Web3ButtonProps,
   type ActionFn,
 } from "./components/Web3Button";
 
-export { WalletConnectUI } from "./wallets/wallets/wallet-connect/WalletConnectUI";
+export { WalletConnectUI } from "./wallets/wallets/wallet-connect/wallet-connect";
 
 // utilities
 export * from "./utils/uri";

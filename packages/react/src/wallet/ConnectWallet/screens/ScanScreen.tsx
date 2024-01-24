@@ -26,7 +26,10 @@ export const ScanScreen: React.FC<{
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title={props.walletName} />
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : props.onBack}
+          title={props.walletName}
+        />
       </Container>
 
       <Spacer y="sm" />

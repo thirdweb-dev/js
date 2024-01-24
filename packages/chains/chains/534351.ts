@@ -41,6 +41,7 @@ export default {
     "https://scroll-testnet-public.unifra.io"
   ],
   "shortName": "scr-sepolia",
+  "slip44": 1,
   "slug": "scroll-sepolia-testnet",
   "status": "active",
   "testnet": true

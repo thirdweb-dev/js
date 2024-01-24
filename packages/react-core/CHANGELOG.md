@@ -1,5 +1,127 @@
 # @thirdweb-dev/react-core
 
+## 4.4.0
+
+### Patch Changes
+
+- [#2202](https://github.com/thirdweb-dev/js/pull/2202) [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update code sample for useTokenSupply
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+  - @thirdweb-dev/auth@4.1.25
+
+## 4.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264), [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/sdk@4.0.27
+  - @thirdweb-dev/chains@0.1.64
+  - @thirdweb-dev/wallets@2.4.2
+  - @thirdweb-dev/auth@4.1.24
+
+## 4.3.1
+
+## 4.3.0
+
+### Minor Changes
+
+- [#2055](https://github.com/thirdweb-dev/js/pull/2055) [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc) Thanks [@MananTank](https://github.com/MananTank)! - ### New `ConnectEmbed` component and `useShowConnectEmbed` hook
+
+  - Add `ConnectEmbed` component and `useShowConnectEmbed` hook allow embedding the `ConnectWallet`'s Modal directly into the page.
+  - `useShowConnectEmbed` returns `true` if the `<ConnectEmbed />`should be rendered. It returns`true` if either one of the following conditions are met:
+
+    - Wallet is NOT connected
+    - Wallet IS connected but the user is NOT signed in and `auth` is required ( loginOptional is NOT set to false )
+
+    ```tsx
+    function Example() {
+      const loginOptional = false;
+      const showConnectEmbed = useShowConnectEmbed(loginOptional);
+
+      if (!showConnectEmbed) {
+        return <div> Wallet is connected </div>;
+      }
+
+      return (
+        <ConnectEmbed
+          auth={{
+            loginOptional,
+          }}
+        />
+      );
+    }
+    ```
+
+  ### `ConnectWallet` component changes
+
+  - Fix double connection issue when Connecting a Safe / Smart Wallet. Now the personal wallet will not be set as the active wallet - only the final wallet will be set as the active wallet. This fixes the issue of hooks like `useWallet`, `useAddress`, `useConnectionStatus` etc showing the wrong wallet / address / connection status for a brief moment when connecting a Safe / Smart Wallet.
+  - Add "Disconnect Wallet" button in "Sign in" Screen and don't disconnect wallet when the "Sign in" screen is dismissed by closing the modal. This makes this screen reusable for both `ConnectWallet` and `ConnectEmbed` components and also improves the user experience.
+
+  ### API changed for creating wallet configurator
+
+  _This is only relevant if you are creating your own wallet configurator - If you are using the wallet configurators provided by thirdweb such as `metamaskWallet()`, `coinbaseWallet()` etc - This API change does not affect you_
+
+  To Fix the above mentioned "double connection" issue in the `ConnectWallet` component, We have introduce a few changes to how the wallet configurator should be created.
+
+  Do not use any wallet connection hooks in the wallet configurator. Only use the `props` passed in the `connectUI` and `selectUI`. The wallet configurator's `connectUI` and `selectUI` now gets below mentioned additional props so that you can avoid using the wallet connection hooks
+
+  - `props.connect` - replaces the `useConnect` hook usage
+  - `props.connectionStatus` - replaces the `useConnectionStatus` hook usage
+  - `props.setConnectionStatus` - replaces the `useSetConnectionStatus` hook usage
+  - `props.setConnectedWallet` - replaces the `useSetConnectedWallet` hook usage
+  - `props.createWalletInstance` - replaces the `useCreateWalletInstance` hook usage
+  - `props.connectedWalletAddress` - replaces the `useAddress` hook usage
+
+  #### Example
+
+  ```tsx
+  import { WalletConfig } from "@thirdweb-dev/react";
+  import { MyCustomWallet } from "./MyCustomWallet"; // your custom wallet class
+
+  // your custom wallet configurator
+  function myCustomWallet(): WalletConfig<MyCustomWallet> {
+    return {
+      id: "MyCustomWallet",
+      meta: {
+        name: "FooBar",
+        iconURL: "https://link-to-the-wallet-icon.png",
+      },
+      create(walletOptions) {
+        return new MyCustomWallet(walletOptions);
+      },
+      // only use the props passed in the connectUI and selectUI
+      // do not use any wallet connection hooks that read or write to the wallet connection state
+      connectUI(props) {
+        // const connect = useConnect(); -> old
+        const connect = props.connect; // new
+
+        return <div> .... </div>;
+      },
+      selectUI(props) {
+        return <div> .... </div>;
+      },
+    };
+  }
+  ```
+
+### Patch Changes
+
+- [#2089](https://github.com/thirdweb-dev/js/pull/2089) [`e1001689`](https://github.com/thirdweb-dev/js/commit/e1001689794b25618a82d3469c0098b88f593c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add hook for creating direct listings in batch for Marketplace v3
+
+- [#2140](https://github.com/thirdweb-dev/js/pull/2140) [`30f16cac`](https://github.com/thirdweb-dev/js/commit/30f16cac6d3c2b736c51b84f2b978537d8bfb8d1) Thanks [@MananTank](https://github.com/MananTank)! - Fix return type of `useUnclaimedNFTs` hook.
+
+  This fixes https://github.com/thirdweb-dev/js/issues/2110
+
+- Updated dependencies [[`90a2f2d4`](https://github.com/thirdweb-dev/js/commit/90a2f2d435df796fa9cee4e78d540ecfa10d9166), [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f), [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70), [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3), [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808)]:
+  - @thirdweb-dev/wallets@2.4.1
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/sdk@4.0.26
+  - @thirdweb-dev/auth@4.1.23
+  - @thirdweb-dev/storage@2.0.8
+
 ## 4.2.3
 
 ### Patch Changes

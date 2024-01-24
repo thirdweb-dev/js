@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { BaseButton, Text } from "../base";
-import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
+import { useConnectionStatus } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
 import {
   useGlobalTheme,
@@ -53,7 +53,6 @@ export const ConnectWalletButton = ({
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
-  const supportedWallets = useWallets();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
   const { setModalState } = useModalState();
 
@@ -88,8 +87,6 @@ export const ConnectWalletButton = ({
         modalTitleIconUrl,
         termsOfServiceUrl,
         privacyPolicyUrl,
-        walletConfig:
-          supportedWallets.length === 1 ? supportedWallets[0] : undefined,
       },
       caller: "ConnectWallet",
     });

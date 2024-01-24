@@ -1,5 +1,203 @@
 # @thirdweb-dev/react
 
+## 4.4.0
+
+### Minor Changes
+
+- [#2197](https://github.com/thirdweb-dev/js/pull/2197) [`212b2e7b`](https://github.com/thirdweb-dev/js/commit/212b2e7bc28c8e88207a9935756f7e6133a5b7d3) Thanks [@MananTank](https://github.com/MananTank)! - - Change ConnectWallet Details dropdown to a Modal with a few UI improvements.
+
+  - Because of this the `dropdownPosition` prop has been removed from `ConnectWallet` component
+  - The "Request Testnet funds" button is now hidden by default in the new Modal UI.
+
+    - You can add it back by setting `hideTestnetFaucet` to `false` in the `ConnectWallet` component.
+
+### Patch Changes
+
+- [#2209](https://github.com/thirdweb-dev/js/pull/2209) [`f29f91d7`](https://github.com/thirdweb-dev/js/commit/f29f91d7e0837b2084d7257288e80ef2cbc70942) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show specific error message for embedded wallet limits reached
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9), [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/react-core@4.4.0
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+
+## 4.3.2
+
+### Patch Changes
+
+- [#1884](https://github.com/thirdweb-dev/js/pull/1884) [`89641e33`](https://github.com/thirdweb-dev/js/commit/89641e33784ff74c32fcbb51db72b67065ba85cb) Thanks [@tommaay](https://github.com/tommaay)! - Add prop `switchNetworkBtnTitle` to `ConnectWallet` and `Web3Button` components to allow changing the "Switch Network" label on the button which is displayed when user needs to switch the network in the connected wallet.
+
+  ```tsx
+  <ConnectWallet switchNetworkBtnTitle="Switch Chain" />
+  ```
+
+  ```tsx
+  <Web3Button
+    switchNetworkBtnTitle="Switch Chain"
+    contractAddress="0x..."
+    action={someAction}
+  />
+  ```
+
+- [#2193](https://github.com/thirdweb-dev/js/pull/2193) [`0efd0f9d`](https://github.com/thirdweb-dev/js/commit/0efd0f9d2626d1cb8d7a49f26b9beaa4c27bca15) Thanks [@MananTank](https://github.com/MananTank)! - add `useSetWalletModalConfig` hook to customize the ConnectWallet Modal to programmatically open the modal without using the `ConnectWallet` component along with `useSetIsWalletModalOpen`
+
+  ```tsx
+  import {
+    useSetWalletModalConfig,
+    useSetIsWalletModalOpen,
+  } from "@thirdweb-dev/react";
+
+  function Example() {
+    const setWalletModalConfig = useSetWalletModalConfig();
+    const setIsWalletModalOpen = useSetIsWalletModalOpen();
+
+    return (
+      <button
+        onClick={() => {
+          // customize the modal
+          setWalletModalConfig({
+            modalSize: "wide",
+            theme: "light",
+          });
+          // open the modal
+          setIsWalletModalOpen(true);
+        }}
+      >
+        open connect modal
+      </button>
+    );
+  }
+  ```
+
+- [#2177](https://github.com/thirdweb-dev/js/pull/2177) [`e11e645c`](https://github.com/thirdweb-dev/js/commit/e11e645c7407a37545e78bbf8976ecc31e40bee7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fuse.js from 6.6.2 to 7.0.0
+
+- Updated dependencies [[`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264), [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/sdk@4.0.27
+  - @thirdweb-dev/chains@0.1.64
+  - @thirdweb-dev/react-core@4.3.2
+  - @thirdweb-dev/wallets@2.4.2
+
+## 4.3.1
+
+### Patch Changes
+
+- [#2169](https://github.com/thirdweb-dev/js/pull/2169) [`e249a568`](https://github.com/thirdweb-dev/js/commit/e249a56892f04df1313b5cbd40d21a0bd5ac5f4e) Thanks [@MananTank](https://github.com/MananTank)! - Add `onConnect` prop to `ConnectWallet` and `ConnectEmbed` components.
+
+  ```tsx
+  <ConnectWallet
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.3.1
+
+## 4.3.0
+
+### Minor Changes
+
+- [#2055](https://github.com/thirdweb-dev/js/pull/2055) [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc) Thanks [@MananTank](https://github.com/MananTank)! - ### New `ConnectEmbed` component and `useShowConnectEmbed` hook
+
+  - Add `ConnectEmbed` component and `useShowConnectEmbed` hook allow embedding the `ConnectWallet`'s Modal directly into the page.
+  - `useShowConnectEmbed` returns `true` if the `<ConnectEmbed />`should be rendered. It returns`true` if either one of the following conditions are met:
+
+    - Wallet is NOT connected
+    - Wallet IS connected but the user is NOT signed in and `auth` is required ( loginOptional is NOT set to false )
+
+    ```tsx
+    function Example() {
+      const loginOptional = false;
+      const showConnectEmbed = useShowConnectEmbed(loginOptional);
+
+      if (!showConnectEmbed) {
+        return <div> Wallet is connected </div>;
+      }
+
+      return (
+        <ConnectEmbed
+          auth={{
+            loginOptional,
+          }}
+        />
+      );
+    }
+    ```
+
+  ### `ConnectWallet` component changes
+
+  - Fix double connection issue when Connecting a Safe / Smart Wallet. Now the personal wallet will not be set as the active wallet - only the final wallet will be set as the active wallet. This fixes the issue of hooks like `useWallet`, `useAddress`, `useConnectionStatus` etc showing the wrong wallet / address / connection status for a brief moment when connecting a Safe / Smart Wallet.
+  - Add "Disconnect Wallet" button in "Sign in" Screen and don't disconnect wallet when the "Sign in" screen is dismissed by closing the modal. This makes this screen reusable for both `ConnectWallet` and `ConnectEmbed` components and also improves the user experience.
+
+  ### API changed for creating wallet configurator
+
+  _This is only relevant if you are creating your own wallet configurator - If you are using the wallet configurators provided by thirdweb such as `metamaskWallet()`, `coinbaseWallet()` etc - This API change does not affect you_
+
+  To Fix the above mentioned "double connection" issue in the `ConnectWallet` component, We have introduce a few changes to how the wallet configurator should be created.
+
+  Do not use any wallet connection hooks in the wallet configurator. Only use the `props` passed in the `connectUI` and `selectUI`. The wallet configurator's `connectUI` and `selectUI` now gets below mentioned additional props so that you can avoid using the wallet connection hooks
+
+  - `props.connect` - replaces the `useConnect` hook usage
+  - `props.connectionStatus` - replaces the `useConnectionStatus` hook usage
+  - `props.setConnectionStatus` - replaces the `useSetConnectionStatus` hook usage
+  - `props.setConnectedWallet` - replaces the `useSetConnectedWallet` hook usage
+  - `props.createWalletInstance` - replaces the `useCreateWalletInstance` hook usage
+  - `props.connectedWalletAddress` - replaces the `useAddress` hook usage
+
+  #### Example
+
+  ```tsx
+  import { WalletConfig } from "@thirdweb-dev/react";
+  import { MyCustomWallet } from "./MyCustomWallet"; // your custom wallet class
+
+  // your custom wallet configurator
+  function myCustomWallet(): WalletConfig<MyCustomWallet> {
+    return {
+      id: "MyCustomWallet",
+      meta: {
+        name: "FooBar",
+        iconURL: "https://link-to-the-wallet-icon.png",
+      },
+      create(walletOptions) {
+        return new MyCustomWallet(walletOptions);
+      },
+      // only use the props passed in the connectUI and selectUI
+      // do not use any wallet connection hooks that read or write to the wallet connection state
+      connectUI(props) {
+        // const connect = useConnect(); -> old
+        const connect = props.connect; // new
+
+        return <div> .... </div>;
+      },
+      selectUI(props) {
+        return <div> .... </div>;
+      },
+    };
+  }
+  ```
+
+### Patch Changes
+
+- [#1964](https://github.com/thirdweb-dev/js/pull/1964) [`5d567008`](https://github.com/thirdweb-dev/js/commit/5d56700866d5ea2589e415542f261a76f2e913c9) Thanks [@warengonzaga](https://github.com/warengonzaga)! - Add Filipino language to React and React Native SDK
+
+- [#2138](https://github.com/thirdweb-dev/js/pull/2138) [`6047d67d`](https://github.com/thirdweb-dev/js/commit/6047d67daa5d48e6521b4d71b0c1687742ba7d01) Thanks [@MananTank](https://github.com/MananTank)! - Enforce react-hooks/exhaustive-deps lint rule
+
+- Updated dependencies [[`90a2f2d4`](https://github.com/thirdweb-dev/js/commit/90a2f2d435df796fa9cee4e78d540ecfa10d9166), [`e1001689`](https://github.com/thirdweb-dev/js/commit/e1001689794b25618a82d3469c0098b88f593c76), [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f), [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70), [`30f16cac`](https://github.com/thirdweb-dev/js/commit/30f16cac6d3c2b736c51b84f2b978537d8bfb8d1), [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc), [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3), [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808)]:
+  - @thirdweb-dev/wallets@2.4.1
+  - @thirdweb-dev/react-core@4.3.0
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/sdk@4.0.26
+  - @thirdweb-dev/payments@1.0.2
+
 ## 4.2.3
 
 ### Patch Changes

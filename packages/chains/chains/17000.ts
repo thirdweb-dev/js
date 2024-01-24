@@ -65,6 +65,7 @@ export default {
     "wss://ethereum-holesky.publicnode.com"
   ],
   "shortName": "holesky",
+  "slip44": 1,
   "slug": "holesky",
   "status": "incubating",
   "testnet": true,

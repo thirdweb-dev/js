@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -19,8 +19,7 @@ export const MetamaskConnectUI = (
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const locale = useTWLocale().wallets.metamaskWallet;
-  const { walletConfig, connected } = props;
-  const connect = useConnect();
+  const { walletConfig, connected, connect } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const connectingLocale = {
@@ -39,13 +38,13 @@ export const MetamaskConnectUI = (
       setErrorConnecting(false);
       setScreen("connecting");
       await wait(1000);
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -129,8 +128,13 @@ export const MetamaskConnectUI = (
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={connected}
-        walletConfig={walletConfig}
         appUriPrefix={metamaskUris}
+        createWalletInstance={props.createWalletInstance}
+        setConnectedWallet={(w) => {
+          props.setConnectedWallet(w as MetaMaskWallet);
+        }}
+        setConnectionStatus={props.setConnectionStatus}
+        meta={walletConfig.meta}
       />
     );
   }
@@ -145,6 +149,9 @@ export const MetamaskConnectUI = (
         }}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
+        setConnectedWallet={(w: MetaMaskWallet) => props.setConnectedWallet(w)}
+        setConnectionStatus={props.setConnectionStatus}
+        createWalletInstance={props.createWalletInstance}
       />
     );
   }

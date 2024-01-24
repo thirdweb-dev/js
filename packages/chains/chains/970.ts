@@ -26,7 +26,7 @@ export default {
   "name": "Oort Mainnet",
   "nativeCurrency": {
     "name": "Oort",
-    "symbol": "CCN",
+    "symbol": "OORT",
     "decimals": 18
   },
   "networkId": 970,
