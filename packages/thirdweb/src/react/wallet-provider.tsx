@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { fakeUuid } from "src/utils/uuid.js";
+import { fakeUuid } from "../utils/uuid.js";
 import type { IWallet } from "../wallets/interfaces/wallet.js";
 
 export type WalletWithId = IWallet<any> & { _id: string };
