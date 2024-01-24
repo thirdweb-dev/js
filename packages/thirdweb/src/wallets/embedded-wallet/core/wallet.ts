@@ -56,6 +56,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
       const newSensitiveWalletDetail = await this.createWallet();
       const sensitiveWalletDetail = await this.saveWallet({
         walletDetail: newSensitiveWalletDetail,
+        isNew: true,
       });
       this.wallets[sensitiveWalletDetail.walletId] = sensitiveWalletDetail;
       await this.setActiveWallet({
@@ -102,7 +103,8 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
     const storage = arg.storageOverride ?? this.storage;
     const { saveWallet } = await import("./wallet.utils.js");
     return await saveWallet({
-      walletDetail: arg.walletDetail as SensitiveWalletDetailType,
+      walletDetail: arg.walletDetail,
+      isNew: arg.isNew,
       storage,
     });
   }

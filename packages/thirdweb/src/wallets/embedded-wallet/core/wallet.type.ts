@@ -5,7 +5,7 @@ export type WalletStateType = "loaded" | "pending_load" | "read_only";
 export type KeyGenerationSourceType = "developer" | "thirdweb";
 
 export type WalletDetailType = {
-  walletId?: string | undefined;
+  walletId: string;
   address: Readonly<string>;
   client: ThirdwebClient;
   userId?: string | undefined;
@@ -24,4 +24,5 @@ export type CreateWalletOverrideType = () =>
 export type SaveWalletArgType = {
   walletDetail: SensitiveWalletDetailType;
   storage: StorageType;
+  isNew: boolean;
 };

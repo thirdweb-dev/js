@@ -38,9 +38,12 @@ export const createWallet = async ({
   userId?: string | undefined;
   format: WalletStorageFormatType;
 }): Promise<SensitiveWalletDetailType> => {
+  const { fakeUuid } = await import("../../../utils/uuid.js");
+
   if (createWalletOverride) {
     const wallet = await createWalletOverride();
     return {
+      walletId: fakeUuid(),
       address: wallet.address,
       keyMaterial: wallet.privateKey,
       keyGenerationSource: "developer",
@@ -59,6 +62,7 @@ export const createWallet = async ({
   const privateKey = generatePrivateKey();
   const account = privateKeyToAccount(privateKey);
   return {
+    walletId: fakeUuid(),
     address: account.address,
     keyMaterial: privateKey,
     keyGenerationSource: "thirdweb",
@@ -73,9 +77,8 @@ export const createWallet = async ({
 export const saveWallet = async ({
   storage,
   walletDetail,
-}: SaveWalletArgType): Promise<
-  SensitiveWalletDetailType & { walletId: string }
-> => {
+  isNew,
+}: SaveWalletArgType): Promise<SensitiveWalletDetailType> => {
   const { EmbeddedWalletError } = await import("./wallet.error.js");
   const { ROUTE_NEW_STORAGE } = await import("./routes.js");
 
@@ -91,21 +94,22 @@ export const saveWallet = async ({
     walletId: walletDetail.walletId,
   };
 
-  let walletId = walletDetail.walletId;
-  if (!walletId) {
+  let walletId: string = walletDetail.walletId;
+  if (isNew) {
     const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${storage.authUser?.authToken}`,
+        "Content-Type": "application/json",
+        body: JSON.stringify({
+          walletId: walletDetail.walletId,
+        }),
       },
     });
     if (!walletIdResp.ok) {
       throw new EmbeddedWalletError("Failed to create wallet");
     }
     ({ uuid: walletId } = await walletIdResp.json());
-  }
-  if (!walletId) {
-    throw new EmbeddedWalletError("Bad State: No walletId found");
   }
 
   switch (storage.format) {
@@ -154,7 +158,7 @@ export const loadWallet = async ({
 }: {
   storage: StorageType;
   walletDetail: WalletDetailType;
-}): Promise<SensitiveWalletDetailType & { walletId: string }> => {
+}): Promise<SensitiveWalletDetailType> => {
   const { EmbeddedWalletError } = await import("./wallet.error.js");
   if (storage.format !== walletDetail.format) {
     throw new EmbeddedWalletError(
