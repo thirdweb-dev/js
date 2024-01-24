@@ -184,6 +184,10 @@ For usage in browsers.
 
 ```ts
 import { metamaskWallet } from "thirdweb/wallets/metamask";
+
+const wallet = metamaskWallet({ client });
+
+await wallet.connect();
 ```
 
 #### Private Key
@@ -192,6 +196,12 @@ For usage in backend environments.
 
 ```ts
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
+
+const wallet = privateKeyWallet({ client });
+
+await wallet.connect({
+  pkey: "<your private key>",
+});
 ```
 
 ### Extensions
