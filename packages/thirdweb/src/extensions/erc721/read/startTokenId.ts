@@ -1,4 +1,9 @@
-import type { ThirdwebContract } from "../../../contract/index.js";
+import {
+  extractTXOpts,
+  type ThirdwebClientLike,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
+
 import { read } from "../../../transaction/actions/read.js";
 
 /**
@@ -6,10 +11,12 @@ import { read } from "../../../transaction/actions/read.js";
  * @param contract - The ERC721 contract.
  * @returns A promise that resolves to the start token ID.
  */
-export async function startTokenId(contract: ThirdwebContract) {
-  return read(contract, {
-    address: contract.address,
-    chainId: contract.chainId,
+export async function startTokenId<client extends ThirdwebClientLike>(
+  options: TxOpts<client>,
+) {
+  const [opts] = extractTXOpts(options);
+  return read({
+    ...opts,
     method: "function startTokenId() view returns (uint256)",
   });
 }

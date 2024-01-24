@@ -5,13 +5,12 @@ import {
 } from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
 
-export async function decimals<client extends ThirdwebClientLike>(
+export async function totalSupply<client extends ThirdwebClientLike>(
   options: TxOpts<client>,
 ) {
   const [opts] = extractTXOpts(options);
-  // TODO consider caching this
   return read({
     ...opts,
-    abi: "function decimals() view returns (uint8)",
+    method: "function totalSupply() view returns (uint256)",
   });
 }

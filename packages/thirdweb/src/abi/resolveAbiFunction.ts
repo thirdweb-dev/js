@@ -30,7 +30,10 @@ export async function resolveAbiFunction<const method extends MethodType>(
     throw new Error(`could not find function with name ${options.method}`);
   } catch (e) {
     // if this fails we can download the abi of the contract and try parsing the entire abi
-    const abi = await resolveAbi(options);
+    const abi = await resolveAbi({
+      chainId: options.chainId,
+      contractAddress: options.address,
+    });
     // we try to find the abiFunction in the abi
     const abiFunction = abi.find((item) => {
       // if the item is not a function we can ignore it

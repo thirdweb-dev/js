@@ -6,26 +6,15 @@ import {
   type TransactionOptions,
 } from "../transaction.js";
 import { getRpcClient } from "../../rpc/index.js";
-import type { ParseMethod } from "../../abi/types.js";
+
 import type { ThirdwebClient } from "../../client/client.js";
-import type {
-  ContractOptions,
-  ThirdwebContract,
-} from "../../contract/index.js";
+import type { ThirdwebContract } from "../../contract/index.js";
 
 export async function read<
-  method extends string,
-  abi extends AbiFunction = method extends `function ${string}`
-    ? ParseMethod<method>
-    : AbiFunction,
-  client extends ThirdwebClient | ThirdwebContract = ThirdwebClient,
->(
-  client: client,
-  options: client extends ThirdwebContract
-    ? TransactionOptions<method, abi> & Partial<ContractOptions>
-    : TransactionOptions<method, abi> & ContractOptions,
-) {
-  return readTx(transaction(client, options));
+  client extends ThirdwebClient | ThirdwebContract,
+  method extends AbiFunction | string,
+>(options: TransactionOptions<client, method>) {
+  return readTx(transaction(options));
 }
 
 export async function readTx<const abiFn extends AbiFunction>(
@@ -52,13 +41,12 @@ export async function readTx<const abiFn extends AbiFunction>(
     throw new Error("Unable to resolve ABI");
   }
 
-  const rpcRequest = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
-
-  const { result } = await rpcRequest({
+  const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
+  const result = await rpcRequest({
     method: "eth_call",
     params: [
       {
-        to: tx.inputs.address,
+        to: tx.contractAddress,
         data: encodedData,
       },
       "latest",

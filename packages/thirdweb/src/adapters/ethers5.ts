@@ -62,7 +62,10 @@ function contract<abi extends ethers5.ContractInterface>(
     // @ts-expect-error - typescript can't understand this
     return import("../abi/resolveContractAbi.js")
       .then((m) => {
-        return m.resolveAbi(twContract) as Promise<ethers5.ContractInterface>;
+        return m.resolveAbi({
+          chainId: twContract.chainId,
+          contractAddress: twContract.address,
+        }) as Promise<ethers5.ContractInterface>;
       })
       .then((abi_) => {
         // call self again this time with the resolved abi
