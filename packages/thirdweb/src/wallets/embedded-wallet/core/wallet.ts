@@ -45,7 +45,7 @@ export const createWallet = async (arg: {
 }): Promise<WalletDetailType> => {
   const { privateKeyWallet } = await import("../../private-key.js");
   const privateKey = generatePrivateKey();
-  const factory = privateKeyWallet(arg.client);
+  const factory = privateKeyWallet({ client: arg.client });
   const wallet = await factory.connect({ pkey: privateKey });
   const address = wallet.address;
   if (!address) {
@@ -132,7 +132,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
       throw new Error("not connected");
     }
     const { getRpcClient } = await import("../../../rpc/index.js");
-    const rpcRequest = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
+    const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
 
     const [getDefaultGasOverrides, encode, transactionCount] =
       await Promise.all([
@@ -145,7 +145,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
 
     const [gasOverrides, encodedData, nextNonce, estimatedGas] =
       await Promise.all([
-        getDefaultGasOverrides(tx.client, tx.inputs.chainId),
+        getDefaultGasOverrides(tx.client, tx.chainId),
         encode(tx),
         transactionCount(rpcRequest, this.address),
         this.estimateGas(tx),
@@ -153,8 +153,8 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
 
     const signedTx = await this.signTransaction({
       gas: estimatedGas,
-      to: tx.inputs.address as Address,
-      chainId: tx.inputs.chainId,
+      to: tx.contractAddress as Address,
+      chainId: tx.chainId,
       data: encodedData,
       nonce: nextNonce,
       ...gasOverrides,
