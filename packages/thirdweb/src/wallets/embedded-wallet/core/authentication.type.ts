@@ -108,6 +108,9 @@ export type AuthUserType = {
   userDetails: {
     userId: string;
     linkedAccounts: AuthMethodType[];
+    email?: string;
+    phone?: string;
+    walletAddress?: string;
   };
   accounts: {
     discord?: DiscordAuthDetailsType;
