@@ -1,3 +1,4 @@
+import type { ThirdwebClient } from "src/index.js";
 import type { AuthUserType } from "./authentication.type.js";
 import type {
   EncryptionType,
@@ -233,6 +234,7 @@ export const LoadFromKeyValueStore = (arg: {
 };
 
 export const createManagedStorage = (arg: {
+  client: ThirdwebClient;
   authUser?: AuthUserType;
   format: WalletStorageFormatType;
   encryptValue: EncryptionType;
@@ -244,6 +246,8 @@ export const createManagedStorage = (arg: {
     case "privateKey": {
       return {
         format: "privateKey",
+        client: arg.client,
+        authUser: arg.authUser,
         save: saveEncryptedInThirdweb({
           encryptValue: arg.encryptValue,
         }),
@@ -255,6 +259,8 @@ export const createManagedStorage = (arg: {
     case "sharded": {
       return {
         format: "sharded",
+        client: arg.client,
+        authUser: arg.authUser,
         shareA: {
           save: saveInKeyValueStore({
             saveItem: arg.saveKeyValue,

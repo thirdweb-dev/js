@@ -1,134 +1,186 @@
 import type { AbiFunction, TypedData } from "abitype";
-import {
-  type Hash,
-  type Hex,
-  type PrivateKeyAccount,
-  type SignableMessage,
-  type TransactionSerializable,
-  type TypedDataDefinition,
+import type {
+  Hash,
+  Hex,
+  SignableMessage,
+  TransactionSerializable,
+  TypedDataDefinition,
 } from "viem";
-import type { ThirdwebClient } from "../../../client/client.js";
+import { type Address } from "viem/accounts";
 import type { Transaction } from "../../../transaction/transaction.js";
-import { fakeUuid } from "../../../utils/uuid.js";
 import type { IWallet } from "../../interfaces/wallet.js";
-
-import { generatePrivateKey, type Address } from "viem/accounts";
-import type { AuthUserType } from "./authentication.type.js";
 import type { StorageType } from "./storage.type.js";
-import type { WalletDetailType } from "./wallet.type.js";
+import type {
+  CreateWalletOverrideType,
+  SaveWalletArgType,
+  SensitiveWalletDetailType,
+  WalletDetailType,
+} from "./wallet.type.js";
 
-export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
-  const { ROUTE_FETCH_USER_WALLETS } = await import("./routes.js");
-
-  const resp = await fetch(ROUTE_FETCH_USER_WALLETS(), {
-    headers: {
-      Authorization: arg.user.authToken,
-    },
-  });
-  const result = await resp.json();
-  return result as WalletDetailType;
-};
-
-export const embeddedWallet = async (arg: {
-  storage: StorageType;
-  client: ThirdwebClient;
-}) => {
+export const embeddedWallet = async (arg: { storage: StorageType }) => {
   const wallet = new EmbeddedWallet({
-    client: arg.client,
     storage: arg.storage,
   });
   return wallet.loadOrCreateWallet();
 };
 
-export const createWallet = async (arg: {
-  client: ThirdwebClient;
-}): Promise<WalletDetailType> => {
-  const { privateKeyWallet } = await import("../../private-key.js");
-  const privateKey = generatePrivateKey();
-  const factory = privateKeyWallet({ client: arg.client });
-  const wallet = await factory.connect({ pkey: privateKey });
-  const address = wallet.address;
-  if (!address) {
-    throw new Error("address not found");
-  }
-  return {
-    address: wallet.address,
-    walletId: fakeUuid(),
-    keyGenerationSource: "thirdweb",
-    walletState: "loaded",
-    format: "sharded",
-    client: arg.client,
-    createdAt: new Date().getTime(),
-  };
-};
-
-type EmbeddedWalletConnectOptions = {
-  pkey: string;
-};
+type EmbeddedWalletConnectOptions = Record<string, never>;
 
 class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
-  private client: ThirdwebClient;
   private storage: StorageType;
-  private account: PrivateKeyAccount | null = null;
+  private activeWallet: SensitiveWalletDetailType | null = null;
+  private wallets: Record<string, SensitiveWalletDetailType> = {};
 
   get address() {
-    return this.account?.address || null;
+    return this.activeWallet?.address || null;
   }
 
-  constructor(arg: { client: ThirdwebClient; storage: StorageType }) {
-    this.client = arg.client;
+  constructor(arg: { storage: StorageType }) {
     this.storage = arg.storage;
-    console.log("client", this.client);
-    console.log("storage", this.storage);
   }
 
   async loadOrCreateWallet() {
-    // TODO: implement
+    const { getUserWalletDetail } = await import("./wallet.utils.js");
+
+    if (!this.storage.authUser) {
+      throw new Error(
+        "Secret key for backend usage of embedded wallets is not implemented yet. Please use it with an authenticated user.",
+      );
+    }
+
+    const wallets = await getUserWalletDetail({
+      user: this.storage.authUser,
+    });
+
+    if (wallets.length === 0) {
+      const sensitiveWalletDetail = await this.createWallet();
+      await this.saveWallet({
+        walletDetail: sensitiveWalletDetail,
+      });
+      this.wallets[sensitiveWalletDetail.walletId] = sensitiveWalletDetail;
+      await this.setActiveWallet({
+        wallet: sensitiveWalletDetail,
+      });
+      return this;
+    }
+
+    const wallet = wallets[0];
+    if (!wallet) {
+      throw new Error(`BAD STATE: Wallets array is empty`);
+    }
+    await this.loadWallet({
+      walletDetail: wallet,
+    });
     return this;
   }
 
-  // TODO: DRY this with PrivateKeyWallet
-  public async connect(options: EmbeddedWalletConnectOptions) {
-    let pkey = options.pkey;
-    const { privateKeyToAccount } = await import("viem/accounts");
-    // auto prefix
-    if (typeof pkey === "string" && !pkey.startsWith("0x")) {
-      pkey = "0x" + pkey;
+  async getWalletDetails() {
+    const { getUserWalletDetail } = await import("./wallet.utils.js");
+    if (!this.storage.authUser) {
+      // todo: check secret key path
+      return [];
     }
-    this.account = privateKeyToAccount(pkey as Hex);
+    const wallets = await getUserWalletDetail({
+      user: this.storage.authUser,
+    });
+    return wallets;
+  }
+
+  async createWallet(arg?: { createWalletOverride: CreateWalletOverrideType }) {
+    const { createWallet } = await import("./wallet.utils.js");
+    return await createWallet({
+      createWalletOverride: arg?.createWalletOverride,
+      client: this.storage.client,
+      format: this.storage.format,
+      userId: this.storage.authUser?.userDetails.userId,
+    });
+  }
+
+  async saveWallet(
+    arg: Omit<SaveWalletArgType, "storage"> & { storageOverride?: StorageType },
+  ): Promise<SensitiveWalletDetailType> {
+    const storage = arg.storageOverride ?? this.storage;
+    const { saveWallet } = await import("./wallet.utils.js");
+    return await saveWallet({
+      walletDetail: arg.walletDetail as SensitiveWalletDetailType,
+      storage,
+    });
+  }
+
+  async loadWallet({
+    walletDetail,
+    storageOverride,
+  }: {
+    walletDetail: WalletDetailType;
+    storageOverride?: StorageType;
+  }) {
+    const { loadWallet } = await import("./wallet.utils.js");
+
+    const storage = storageOverride ?? this.storage;
+
+    const sensitiveWalletDetail = await loadWallet({
+      walletDetail,
+      storage,
+    });
+    this.wallets[sensitiveWalletDetail.walletId] = sensitiveWalletDetail;
+
+    await this.setActiveWallet({
+      wallet: sensitiveWalletDetail,
+    });
+  }
+
+  async setActiveWallet(arg: { wallet: SensitiveWalletDetailType }) {
+    this.activeWallet = arg.wallet;
+  }
+
+  // TODO: DRY this with PrivateKeyWallet and figure out what connect takes
+  public async connect(options: EmbeddedWalletConnectOptions) {
+    // hack to satisfy linter
+    void options;
     return this;
   }
 
   public async signMessage(message: SignableMessage) {
-    if (!this.account) {
+    const { privateKeyToAccount } = await import("viem/accounts");
+
+    if (!this.activeWallet) {
       throw new Error("not connected");
     }
-    return this.account.signMessage({ message });
+
+    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
+    return account.signMessage({ message });
   }
 
   public async signTransaction(tx: TransactionSerializable) {
-    if (!this.account) {
+    const { privateKeyToAccount } = await import("viem/accounts");
+
+    if (!this.activeWallet) {
       throw new Error("not connected");
     }
-    return this.account.signTransaction(tx);
+
+    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
+    return account.signTransaction(tx);
   }
 
   public async signTypedData<
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(typedData: TypedDataDefinition<typedData, primaryType>) {
-    if (!this.account) {
+    const { privateKeyToAccount } = await import("viem/accounts");
+
+    if (!this.activeWallet) {
       throw new Error("not connected");
     }
-    return this.account.signTypedData(typedData);
+
+    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
+    return account.signTypedData(typedData);
   }
 
   // tx functions
-
   public async sendTransaction<abiFn extends AbiFunction>(
     tx: Transaction<abiFn>,
   ) {
-    if (!this.account || !this.address) {
+    if (!this.activeWallet || !this.address) {
       throw new Error("not connected");
     }
     const { getRpcClient } = await import("../../../rpc/index.js");
@@ -176,7 +228,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   public async estimateGas<abiFn extends AbiFunction>(
     tx: Transaction<abiFn>,
   ): Promise<bigint> {
-    if (!this.account) {
+    if (!this.activeWallet) {
       throw new Error("not connected");
     }
     const { estimateGas } = await import(
@@ -186,6 +238,6 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   }
 
   public async disconnect() {
-    this.account = null;
+    this.activeWallet = null;
   }
 }

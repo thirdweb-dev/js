@@ -33,6 +33,7 @@ export const getAuthenticatedUser = async (arg: {
     return undefined;
   }
 
+  // TODO: 500 seems to be throwing??
   const userResp = await fetch(ROUTE_FETCH_USER(), {
     headers: {
       Authorization: `Bearer ${token}`,

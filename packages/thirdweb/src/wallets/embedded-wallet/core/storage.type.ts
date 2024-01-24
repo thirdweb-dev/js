@@ -1,3 +1,4 @@
+import type { ThirdwebClient } from "src/index.js";
 import type { AuthUserType } from "./authentication.type.js";
 import type { WalletDetailType } from "./wallet.type.js";
 
@@ -21,13 +22,13 @@ export type SaveKeyType = (args: {
   walletDetail: WalletDetailType;
   uniqueId: string;
   keyMaterial: string;
-  authUser?: AuthUserType;
+  authUser?: AuthUserType | undefined;
 }) => Promise<void> | void;
 
 export type LoadKeyType = (args: {
   uniqueId: string;
   walletDetail: WalletDetailType;
-  authUser?: AuthUserType;
+  authUser?: AuthUserType | undefined;
 }) => Promise<string> | string;
 
 export type SaveLoadKeyType = {
@@ -41,9 +42,13 @@ export type SaveLoadKeyType = {
 export type StorageType =
   | ({
       format: "privateKey";
+      client: ThirdwebClient;
+      authUser?: AuthUserType | undefined;
     } & SaveLoadKeyType)
   | {
       format: "sharded";
+      client: ThirdwebClient;
+      authUser?: AuthUserType | undefined;
       shareA: SaveLoadKeyType;
       shareB: SaveLoadKeyType;
       shareC: SaveLoadKeyType;
