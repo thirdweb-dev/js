@@ -127,10 +127,19 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
     await this.setActiveWallet({
       wallet: sensitiveWalletDetail,
     });
+    return sensitiveWalletDetail;
   }
 
-  async setActiveWallet(arg: { wallet: SensitiveWalletDetailType }) {
-    this.activeWallet = arg.wallet;
+  async setActiveWallet(arg: {
+    wallet: SensitiveWalletDetailType | WalletDetailType;
+  }) {
+    if ("keyMaterial" in arg.wallet) {
+      this.activeWallet = arg.wallet;
+    } else {
+      await this.loadWallet({
+        walletDetail: arg.wallet,
+      });
+    }
   }
 
   // TODO: DRY this with PrivateKeyWallet and figure out what connect takes

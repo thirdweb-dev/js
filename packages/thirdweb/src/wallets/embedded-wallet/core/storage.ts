@@ -48,19 +48,21 @@ export const saveEncryptedInThirdweb = (arg: {
     }
     const token = await getUserAuthToken(authUser);
 
-    const saveResp = await fetch(ROUTE_STORAGE_ENCRYPTED(), {
-      method: "POST",
-      headers: {
-        "x-secret-key": secretKey ?? "",
-        Authorization: `Bearer ${token}`,
+    const saveResp = await fetch(
+      ROUTE_STORAGE_ENCRYPTED(walletDetail.walletId, uniqueId),
+      {
+        method: "POST",
+        headers: {
+          "x-secret-key": secretKey ?? "",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          walletDetail,
+          uniqueId,
+          encrypted,
+        }),
       },
-      body: JSON.stringify({
-        // TODO: figure out what goes here
-        // walletId: walletDetail.,
-        uniqueId,
-        encrypted,
-      }),
-    });
+    );
     if (!saveResp.ok) {
       throw new StorageError(
         "Failed to save encrypted key material to thirdweb.",
@@ -94,18 +96,21 @@ export const saveInThirdweb = (): SaveKeyType => {
 
     const token = await getUserAuthToken(authUser);
 
-    const saveResp = await fetch(ROUTE_STORAGE_BASIC(), {
-      method: "POST",
-      headers: {
-        "x-secret-key": secretKey ?? "",
-        Authorization: `Bearer ${token}`,
+    const saveResp = await fetch(
+      ROUTE_STORAGE_BASIC(walletDetail.walletId, uniqueId),
+      {
+        method: "POST",
+        headers: {
+          "x-secret-key": secretKey ?? "",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          walletDetail,
+          uniqueId,
+          keyMaterial,
+        }),
       },
-      body: JSON.stringify({
-        // walletId: walletDetail.,
-        uniqueId,
-        keyMaterial,
-      }),
-    });
+    );
     if (!saveResp.ok) {
       throw new StorageError(
         "Failed to save encrypted key material to thirdweb.",
@@ -142,7 +147,7 @@ export const saveInKeyValueStore = (arg: {
 export const loadEncryptedFromThirdweb = (arg: {
   decryptValue: EncryptionType;
 }): LoadKeyType => {
-  return async ({ walletDetail, authUser }) => {
+  return async ({ walletDetail, authUser, uniqueId }) => {
     const { ROUTE_STORAGE_ENCRYPTED } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
@@ -155,13 +160,16 @@ export const loadEncryptedFromThirdweb = (arg: {
 
     const token = await getUserAuthToken(authUser);
 
-    const encryptedKeyMaterialResp = await fetch(ROUTE_STORAGE_ENCRYPTED(), {
-      method: "GET",
-      headers: {
-        "x-secret-key": secretKey ?? "",
-        Authorization: `Bearer ${token}`,
+    const encryptedKeyMaterialResp = await fetch(
+      ROUTE_STORAGE_ENCRYPTED(walletDetail.walletId, uniqueId),
+      {
+        method: "GET",
+        headers: {
+          "x-secret-key": secretKey ?? "",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (!encryptedKeyMaterialResp.ok) {
       throw new StorageError(
         "Failed to get encrypted key material from thirdweb.",
@@ -179,7 +187,7 @@ export const loadEncryptedFromThirdweb = (arg: {
  * @throws if dev is not on managed storage
  */
 export const loadFromThirdweb = (): LoadKeyType => {
-  return async ({ walletDetail, authUser }) => {
+  return async ({ walletDetail, authUser, uniqueId }) => {
     const { ROUTE_STORAGE_BASIC } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
@@ -198,13 +206,16 @@ export const loadFromThirdweb = (): LoadKeyType => {
 
     const token = await getUserAuthToken(authUser);
 
-    const keyMaterialResp = await fetch(ROUTE_STORAGE_BASIC(), {
-      method: "GET",
-      headers: {
-        "x-secret-key": secretKey ?? "",
-        Authorization: `Bearer ${token}`,
+    const keyMaterialResp = await fetch(
+      ROUTE_STORAGE_BASIC(walletDetail.walletId, uniqueId),
+      {
+        method: "GET",
+        headers: {
+          "x-secret-key": secretKey ?? "",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     if (!keyMaterialResp.ok) {
       throw new StorageError("Failed to get key material from thirdweb.");

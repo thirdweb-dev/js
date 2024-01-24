@@ -27,6 +27,7 @@ export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
   return result as WalletDetailType[];
 };
 
+// TODO: Move uuid generation to the backend to prevent collision attack
 export const createWallet = async ({
   createWalletOverride,
   client,
