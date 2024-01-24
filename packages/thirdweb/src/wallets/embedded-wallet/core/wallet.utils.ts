@@ -27,7 +27,6 @@ export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
   return result as WalletDetailType[];
 };
 
-// TODO: Move uuid generation to the backend to prevent collision attack
 export const createWallet = async ({
   createWalletOverride,
   client,
@@ -39,15 +38,12 @@ export const createWallet = async ({
   userId?: string | undefined;
   format: WalletStorageFormatType;
 }): Promise<SensitiveWalletDetailType> => {
-  const { fakeUuid } = await import("../../../utils/uuid.js");
-
   if (createWalletOverride) {
     const wallet = await createWalletOverride();
     return {
       address: wallet.address,
       keyMaterial: wallet.privateKey,
       keyGenerationSource: "developer",
-      walletId: fakeUuid(),
       client: client,
       userId: userId,
       walletState: "loaded",
@@ -66,7 +62,6 @@ export const createWallet = async ({
     address: account.address,
     keyMaterial: privateKey,
     keyGenerationSource: "thirdweb",
-    walletId: fakeUuid(),
     client: client,
     userId: userId,
     walletState: "loaded",
@@ -78,7 +73,12 @@ export const createWallet = async ({
 export const saveWallet = async ({
   storage,
   walletDetail,
-}: SaveWalletArgType): Promise<SensitiveWalletDetailType> => {
+}: SaveWalletArgType): Promise<
+  SensitiveWalletDetailType & { walletId: string }
+> => {
+  const { EmbeddedWalletError } = await import("./wallet.error.js");
+  const { ROUTE_NEW_STORAGE } = await import("./routes.js");
+
   const { keyMaterial } = walletDetail;
   const censoredWalletDetail: WalletDetailType = {
     address: walletDetail.address,
@@ -90,6 +90,23 @@ export const saveWallet = async ({
     keyGenerationSource: walletDetail.keyGenerationSource,
     walletId: walletDetail.walletId,
   };
+
+  let walletId = walletDetail.walletId;
+  if (!walletId) {
+    const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${storage.authUser?.authToken}`,
+      },
+    });
+    if (!walletIdResp.ok) {
+      throw new EmbeddedWalletError("Failed to create wallet");
+    }
+    ({ uuid: walletId } = await walletIdResp.json());
+  }
+  if (!walletId) {
+    throw new EmbeddedWalletError("Bad State: No walletId found");
+  }
 
   switch (storage.format) {
     case "privateKey": {
@@ -128,7 +145,7 @@ export const saveWallet = async ({
       break;
     }
   }
-  return walletDetail;
+  return { ...walletDetail, walletId };
 };
 
 export const loadWallet = async ({
@@ -137,11 +154,17 @@ export const loadWallet = async ({
 }: {
   storage: StorageType;
   walletDetail: WalletDetailType;
-}): Promise<SensitiveWalletDetailType> => {
+}): Promise<SensitiveWalletDetailType & { walletId: string }> => {
+  const { EmbeddedWalletError } = await import("./wallet.error.js");
   if (storage.format !== walletDetail.format) {
-    const { EmbeddedWalletError } = await import("./wallet.error.js");
     throw new EmbeddedWalletError(
       `Wallet storage format mismatched. Wallet storage format: ${walletDetail.format}, provided storage format: ${storage.format}`,
+    );
+  }
+  const walletId = walletDetail.walletId;
+  if (!walletId) {
+    throw new EmbeddedWalletError(
+      "Cannot load a wallet without a walletId. Try saving the wallet first.",
     );
   }
   switch (storage.format) {
@@ -153,6 +176,7 @@ export const loadWallet = async ({
       });
       return {
         ...walletDetail,
+        walletId,
         keyMaterial,
       };
     }
@@ -177,6 +201,7 @@ export const loadWallet = async ({
       const keyMaterial = await combineShares([shareA, shareB, shareC]);
       return {
         ...walletDetail,
+        walletId,
         keyMaterial,
       };
     }

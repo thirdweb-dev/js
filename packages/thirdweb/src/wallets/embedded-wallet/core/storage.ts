@@ -30,7 +30,7 @@ export const saveEncryptedInThirdweb = (arg: {
   encryptValue: EncryptionType;
 }): SaveKeyType => {
   return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
-    const { ROUTE_STORAGE_ENCRYPTED } = await import("./routes.js");
+    const { ROUTE_STORAGE } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
     const secretKey = walletDetail.client.secretKey;
@@ -49,7 +49,7 @@ export const saveEncryptedInThirdweb = (arg: {
     const token = await getUserAuthToken(authUser);
 
     const saveResp = await fetch(
-      ROUTE_STORAGE_ENCRYPTED(walletDetail.walletId, uniqueId),
+      ROUTE_STORAGE(uniqueId, "encrypted", walletDetail.walletId),
       {
         method: "POST",
         headers: {
@@ -60,7 +60,7 @@ export const saveEncryptedInThirdweb = (arg: {
         body: JSON.stringify({
           walletDetail,
           uniqueId,
-          encrypted,
+          value: encrypted,
         }),
       },
     );
@@ -79,7 +79,7 @@ export const saveEncryptedInThirdweb = (arg: {
  */
 export const saveInThirdweb = (): SaveKeyType => {
   return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
-    const { ROUTE_STORAGE_BASIC } = await import("./routes.js");
+    const { ROUTE_STORAGE } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
     const secretKey = walletDetail.client.secretKey;
@@ -98,7 +98,7 @@ export const saveInThirdweb = (): SaveKeyType => {
     const token = await getUserAuthToken(authUser);
 
     const saveResp = await fetch(
-      ROUTE_STORAGE_BASIC(walletDetail.walletId, uniqueId),
+      ROUTE_STORAGE(uniqueId, "basic", walletDetail.walletId),
       {
         method: "POST",
         headers: {
@@ -109,7 +109,7 @@ export const saveInThirdweb = (): SaveKeyType => {
         body: JSON.stringify({
           walletDetail,
           uniqueId,
-          keyMaterial,
+          value: keyMaterial,
         }),
       },
     );
@@ -150,7 +150,7 @@ export const loadEncryptedFromThirdweb = (arg: {
   decryptValue: EncryptionType;
 }): LoadKeyType => {
   return async ({ walletDetail, authUser, uniqueId }) => {
-    const { ROUTE_STORAGE_ENCRYPTED } = await import("./routes.js");
+    const { ROUTE_STORAGE } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
     const secretKey = walletDetail.client.secretKey;
@@ -163,7 +163,7 @@ export const loadEncryptedFromThirdweb = (arg: {
     const token = await getUserAuthToken(authUser);
 
     const encryptedKeyMaterialResp = await fetch(
-      ROUTE_STORAGE_ENCRYPTED(walletDetail.walletId, uniqueId),
+      ROUTE_STORAGE(uniqueId, "encrypted", walletDetail.walletId),
       {
         method: "GET",
         headers: {
@@ -190,7 +190,7 @@ export const loadEncryptedFromThirdweb = (arg: {
  */
 export const loadFromThirdweb = (): LoadKeyType => {
   return async ({ walletDetail, authUser, uniqueId }) => {
-    const { ROUTE_STORAGE_BASIC } = await import("./routes.js");
+    const { ROUTE_STORAGE } = await import("./routes.js");
     const { StorageError } = await import("./storage.error.js");
 
     const secretKey = walletDetail.client.secretKey;
@@ -209,7 +209,7 @@ export const loadFromThirdweb = (): LoadKeyType => {
     const token = await getUserAuthToken(authUser);
 
     const keyMaterialResp = await fetch(
-      ROUTE_STORAGE_BASIC(walletDetail.walletId, uniqueId),
+      ROUTE_STORAGE(uniqueId, "basic", walletDetail.walletId),
       {
         method: "GET",
         headers: {

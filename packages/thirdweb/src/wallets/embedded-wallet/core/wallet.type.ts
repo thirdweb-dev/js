@@ -5,7 +5,7 @@ export type WalletStateType = "loaded" | "pending_load" | "read_only";
 export type KeyGenerationSourceType = "developer" | "thirdweb";
 
 export type WalletDetailType = {
-  walletId: string;
+  walletId?: string | undefined;
   address: Readonly<string>;
   client: ThirdwebClient;
   userId?: string | undefined;
