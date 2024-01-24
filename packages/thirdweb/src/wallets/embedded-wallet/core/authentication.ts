@@ -12,8 +12,9 @@ import type {
 export const createAuthStorage = ({
   fetchToken,
   storeToken,
+  removeToken,
 }: AuthTokenStorageType): AuthTokenStorageType => {
-  return { fetchToken, storeToken };
+  return { fetchToken, storeToken, removeToken };
 };
 
 export const getAuthenticatedUser = async (arg: {
@@ -26,14 +27,25 @@ export const getAuthenticatedUser = async (arg: {
 
   const token = await arg.storage.fetchToken({ key: THIRDWEB_AUTH_TOKEN_KEY });
   if (!token) {
+    await arg.storage.removeToken({
+      key: THIRDWEB_AUTH_TOKEN_KEY,
+    });
     return undefined;
   }
 
-  const userResp = await fetch(ROUTE_FETCH_USER, {
+  const userResp = await fetch(ROUTE_FETCH_USER(), {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  if (!userResp.ok) {
+    await arg.storage.removeToken({
+      key: THIRDWEB_AUTH_TOKEN_KEY,
+    });
+    return undefined;
+  }
+
   const user = (await userResp.json()) as AuthUserType;
 
   // store the refreshed token
@@ -216,4 +228,33 @@ export const preLinkAuthentication = async (
 export const linkAuthentication = (arg: LinkAuthArgsType) => {
   // TODO: Implement
   console.log("arg", arg);
+};
+
+export const logout = async (arg: { storage: AuthTokenStorageType }) => {
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
+    "./authentication.constant.js"
+  );
+  const { ROUTE_LOGOUT } = await import("./routes.js");
+
+  const token = await arg.storage.fetchToken({
+    key: THIRDWEB_AUTH_TOKEN_KEY,
+  });
+
+  if (!token) {
+    return await arg.storage.removeToken({
+      key: THIRDWEB_AUTH_TOKEN_KEY,
+    });
+  }
+
+  return await Promise.all([
+    fetch(ROUTE_LOGOUT(), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+    arg.storage.removeToken({
+      key: THIRDWEB_AUTH_TOKEN_KEY,
+    }),
+  ]);
 };

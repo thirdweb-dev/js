@@ -13,6 +13,9 @@ const createAuthLocalStorage = () => {
     storeToken: async ({ key, value }) => {
       localStorage.setItem(key, value);
     },
+    removeToken: async ({ key }) => {
+      localStorage.removeItem(key);
+    },
   });
 };
 
@@ -101,6 +104,12 @@ export const authenticate = async (
       return oauthListener(popup);
     },
   });
+};
+
+export const logout = async (arg?: { storage: AuthTokenStorageType }) => {
+  const { logout: logoutCore } = await import("../core/authentication.js");
+  const storage = arg?.storage ?? createAuthLocalStorage();
+  return logoutCore({ storage });
 };
 
 export {
