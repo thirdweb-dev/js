@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "../../client/client.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 
 // Oauth User Types
 export type DiscordUserType = {
@@ -71,9 +71,6 @@ export type MultiStepAuthProviderType =
     };
 export type InitiateAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
-  config?: {
-    autoLinkAccount?: boolean;
-  };
 };
 export type InitiateAuthResultType = {
   initiationType: InitiateAuthType;
@@ -103,7 +100,7 @@ export type AuthMethodType = "discord" | "google" | "email" | "phone";
 export type AuthStageType = "READY_TO_LOAD" | "NEEDS_2FA";
 export type AuthLevelType = "BASIC" | "2FA";
 
-export type AuthResultType = {
+export type AuthUserType = {
   stage: AuthStageType;
   authLevel: AuthLevelType;
   authMethod: AuthMethodType;

@@ -1,28 +1,13 @@
-import {
-  AuthenticationError,
-  USER_ABORT_AUTHENTICATION_ERROR_MESSAGE,
-  UserAbortError,
-} from "./authentication.error.js";
 import type {
   AuthArgsType,
-  AuthResultType,
   AuthTokenStorageType,
+  AuthUserType,
   InitiateAuthArgsType,
   InitiateAuthResultType,
   LinkAuthArgsType,
   MultiStepAuthArgsType,
   MultiStepAuthProviderType,
 } from "./authentication.type.js";
-import { openPopUp } from "./authentication.utils.js";
-import { getBaseUrl } from "./base-url.js";
-import {
-  ROUTE_COMPLETE_AUTH,
-  ROUTE_FETCH_USER,
-  ROUTE_INITIATE_2FA_AUTH,
-  ROUTE_INITIATE_AUTH,
-} from "./routes.js";
-
-const THIRDWEB_AUTH_TOKEN_KEY = "thirdweb-auth-token";
 
 export const createAuthStorage = ({
   fetchToken,
@@ -30,20 +15,15 @@ export const createAuthStorage = ({
 }: AuthTokenStorageType): AuthTokenStorageType => {
   return { fetchToken, storeToken };
 };
-export const createAuthLocalStorage = () => {
-  return createAuthStorage({
-    fetchToken: ({ key }) => {
-      return localStorage.getItem(key) ?? undefined;
-    },
-    storeToken: async ({ key, value }) => {
-      localStorage.setItem(key, value);
-    },
-  });
-};
 
 export const getAuthenticatedUser = async (arg: {
   storage: AuthTokenStorageType;
 }) => {
+  const { ROUTE_FETCH_USER } = await import("./routes.js");
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
+    "./authentication.constant.js"
+  );
+
   const token = await arg.storage.fetchToken({ key: THIRDWEB_AUTH_TOKEN_KEY });
   if (!token) {
     return undefined;
@@ -54,7 +34,7 @@ export const getAuthenticatedUser = async (arg: {
       Authorization: `Bearer ${token}`,
     },
   });
-  const user = (await userResp.json()) as AuthResultType;
+  const user = (await userResp.json()) as AuthUserType;
 
   // store the refreshed token
   await arg.storage.storeToken({
@@ -69,15 +49,13 @@ export const getAuthenticatedUser = async (arg: {
 export const preAuthenticate = async (
   arg: InitiateAuthArgsType,
 ): Promise<InitiateAuthResultType> => {
+  const { ROUTE_INITIATE_AUTH } = await import("./routes.js");
+
   switch (arg.provider) {
     case "email": {
       const { email } = arg;
       const resp = await fetch(
-        ROUTE_INITIATE_AUTH(
-          arg.provider,
-          arg.client.clientId,
-          arg.config?.autoLinkAccount,
-        ),
+        ROUTE_INITIATE_AUTH(arg.provider, arg.client.clientId),
         {
           method: "POST",
           body: JSON.stringify({
@@ -91,11 +69,7 @@ export const preAuthenticate = async (
     case "phone": {
       const { phone } = arg;
       const resp = await fetch(
-        ROUTE_INITIATE_AUTH(
-          arg.provider,
-          arg.client.clientId,
-          arg.config?.autoLinkAccount,
-        ),
+        ROUTE_INITIATE_AUTH(arg.provider, arg.client.clientId),
         {
           method: "POST",
           body: JSON.stringify({
@@ -113,53 +87,23 @@ export const preAuthenticate = async (
 };
 
 export const authenticate = async (
-  arg: AuthArgsType,
-): Promise<AuthResultType> => {
-  const oauthListener = (popup: Window | null) =>
-    new Promise<AuthResultType>((res, rej) => {
-      const interval = setInterval(() => {
-        if (popup?.closed) {
-          clearInterval(interval);
-          rej(new UserAbortError());
-        }
-      }, 1000); // 1 second
+  arg: AuthArgsType & {
+    handleOauth: (arg: { url: string }) => Promise<AuthUserType>;
+  },
+): Promise<AuthUserType> => {
+  const { ROUTE_INITIATE_AUTH, ROUTE_COMPLETE_AUTH } = await import(
+    "./routes.js"
+  );
 
-      const authSuccessListener = async (event: MessageEvent) => {
-        if (event.origin !== getBaseUrl()) {
-          return;
-        }
-        if (event.data.eventType === "oauthSuccessResult") {
-          window.removeEventListener("message", authSuccessListener);
-          const authResult = event.data.authResult as AuthResultType;
-          await arg.storage.storeToken({
-            key: THIRDWEB_AUTH_TOKEN_KEY,
-            value: authResult.authToken,
-          });
-          popup?.close();
-          res(authResult);
-        } else if (event.data.eventType === "oauthFailureResult") {
-          window.removeEventListener("message", authSuccessListener);
-          popup?.close();
-          const errorString = event.data.errorString as string;
-          if (errorString === USER_ABORT_AUTHENTICATION_ERROR_MESSAGE) {
-            return rej(new UserAbortError());
-          }
-          rej(new AuthenticationError(errorString));
-        }
-      };
-      window.addEventListener("message", authSuccessListener);
-    });
   switch (arg.provider) {
     case "discord": {
-      const popup = openPopUp(
-        ROUTE_INITIATE_AUTH(
+      return arg.handleOauth({
+        url: ROUTE_INITIATE_AUTH(
           arg.provider,
           arg.client.clientId,
           arg.config?.autoLinkAccount,
         ),
-        "width=450,height=600",
-      );
-      return oauthListener(popup);
+      });
     }
     case "google": {
       const baseUrl = new URL(
@@ -172,9 +116,9 @@ export const authenticate = async (
       if (arg.googleOauthPrompt) {
         baseUrl.searchParams.set("prompt", arg.googleOauthPrompt);
       }
-      console.log("baseUrl.href", baseUrl.href);
-      const popup = openPopUp(baseUrl.href);
-      return oauthListener(popup);
+      return arg.handleOauth({
+        url: baseUrl.href,
+      });
     }
     case "email": {
       const { email, code } = arg;
@@ -186,7 +130,7 @@ export const authenticate = async (
         }),
       });
       const result = await resp.json();
-      return result as AuthResultType;
+      return result as AuthUserType;
     }
     case "phone": {
       const { phone, code } = arg;
@@ -198,7 +142,7 @@ export const authenticate = async (
         }),
       });
       const result = await resp.json();
-      return result as AuthResultType;
+      return result as AuthUserType;
     }
     default: {
       throw new Error(`Invalid authentication provider`);
@@ -209,6 +153,10 @@ export const authenticate = async (
 export const pre2FA = async (
   arg: MultiStepAuthProviderType & { storage: AuthTokenStorageType },
 ): Promise<InitiateAuthResultType> => {
+  const { ROUTE_INITIATE_2FA_AUTH } = await import("./routes.js");
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
+    "./authentication.constant.js"
+  );
   switch (arg.provider) {
     case "email": {
       const { email } = arg;
