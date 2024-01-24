@@ -189,17 +189,17 @@ export const loadWallet = async ({
     case "sharded": {
       const [shareA, shareB, shareC] = await Promise.all([
         storage.shareA.load({
-          uniqueId: getWalletUniqueId(walletDetail, "pKey"),
+          uniqueId: getWalletUniqueId(walletDetail, "shareA"),
           walletDetail,
           authUser: storage.authUser,
         }),
         storage.shareB.load({
-          uniqueId: getWalletUniqueId(walletDetail, "pKey"),
+          uniqueId: getWalletUniqueId(walletDetail, "shareB"),
           walletDetail,
           authUser: storage.authUser,
         }),
         storage.shareC.load({
-          uniqueId: getWalletUniqueId(walletDetail, "pKey"),
+          uniqueId: getWalletUniqueId(walletDetail, "shareC"),
           walletDetail,
           authUser: storage.authUser,
         }),
