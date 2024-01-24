@@ -1,4 +1,8 @@
-import type { ThirdwebContract } from "../../../contract/index.js";
+import {
+  extractTXOpts,
+  type ThirdwebClientLike,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
 
 export type TokenUriParams = { tokenId: bigint };
@@ -9,15 +13,14 @@ export type TokenUriParams = { tokenId: bigint };
  * @param options - The token URI parameters.
  * @returns A promise that resolves to the token URI string.
  */
-export async function tokenURI(
-  contract: ThirdwebContract,
-  options: TokenUriParams,
+export async function tokenURI<client extends ThirdwebClientLike>(
+  options: TxOpts<client, TokenUriParams>,
 ) {
-  return read(contract, {
-    address: contract.address,
-    chainId: contract.chainId,
+  const [opts, params] = extractTXOpts(options);
+  return read({
+    ...opts,
     method:
       "function tokenURI(uint256 tokenId) external view returns (string memory)",
-    params: [BigInt(options.tokenId)],
+    params: [BigInt(params.tokenId)],
   });
 }

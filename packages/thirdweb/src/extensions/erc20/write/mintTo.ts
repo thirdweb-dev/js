@@ -1,5 +1,9 @@
-import { transaction } from "../../../transaction/transaction.js";
-import type { ThirdwebContract } from "../../../contract/index.js";
+import {
+  transaction,
+  type ThirdwebClientLike,
+  type TxOpts,
+  extractTXOpts,
+} from "../../../transaction/transaction.js";
 import { parseUnits } from "viem";
 
 type MintToParams = { to: string } & (
@@ -11,17 +15,12 @@ type MintToParams = { to: string } & (
     }
 );
 
-/**
- * Mints a specified amount of tokens to the given address.
- *
- * @param contract - The ThirdwebContract instance.
- * @param params - The minting options.
- * @returns A promise that resolves to the transaction result.
- */
-export function mintTo(contract: ThirdwebContract, params: MintToParams) {
-  return transaction(contract, {
-    address: contract.address,
-    chainId: contract.chainId,
+export function mintTo<client extends ThirdwebClientLike>(
+  options: TxOpts<client, MintToParams>,
+) {
+  const [opts, params] = extractTXOpts(options);
+  return transaction({
+    ...opts,
     method: "function mintTo(address to, uint256 amount)",
     params: async () => {
       let amount: bigint;
@@ -29,7 +28,7 @@ export function mintTo(contract: ThirdwebContract, params: MintToParams) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
         const { decimals } = await import("../read/decimals.js");
         // if this fails we fall back to `18` decimals
-        const d = await decimals(contract).catch(() => 18);
+        const d = await decimals(opts).catch(() => 18);
         // turn ether into gwei
         amount = parseUnits(params.amount.toString(), d);
       } else {

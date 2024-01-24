@@ -1,30 +1,33 @@
-import type { ThirdwebContract } from "../../../contract/index.js";
 import { read } from "../../../transaction/actions/read.js";
 import { decimals } from "./decimals.js";
 import { formatUnits } from "viem";
 import { symbol } from "./symbol.js";
+import {
+  extractTXOpts,
+  type ThirdwebClientLike,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
 
 type BalanceOfParams = { address: string };
 
 /**
- * Retrieves the balance of a specific address for a given ERC20 contract.
- * @param contract - The ERC20 contract instance.
- * @param params - The parameters for retrieving the balance.
- * @returns An object containing the balance information.
+ * Retrieves the balance of an ERC20 token for a specific address.
+ *
+ * @param options - The transaction options and balance query parameters.
+ * @returns An object containing the balance value, display value, and symbol.
  */
-export async function balanceOf(
-  contract: ThirdwebContract,
-  params: BalanceOfParams,
+export async function balanceOf<client extends ThirdwebClientLike>(
+  options: TxOpts<client, BalanceOfParams>,
 ) {
+  const [opts, params] = extractTXOpts(options);
   const [balanceWei, decimals_, symbol_] = await Promise.all([
-    read(contract, {
-      address: contract.address,
-      chainId: contract.chainId,
+    read({
+      ...opts,
       method: "function balanceOf(address) view returns (uint256)",
       params: [params.address],
     }),
-    decimals(contract),
-    symbol(contract),
+    decimals(options),
+    symbol(options),
   ]);
   return {
     value: balanceWei,

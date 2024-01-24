@@ -9,9 +9,7 @@ export async function encode<const abiFn extends AbiFunction>(
     tx._encoded = (async function () {
       const [abiFn, params] = await Promise.all([
         tx.abi(),
-        typeof tx.inputs.params === "function"
-          ? tx.inputs.params()
-          : tx.inputs.params,
+        typeof tx.params === "function" ? tx.params() : tx.params,
       ]);
       // @ts-expect-error - missing typecheck for inputs actually having a length etc
       return encodeAbiFunction<abiFn>(abiFn, params ?? []);

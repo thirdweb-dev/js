@@ -1,5 +1,9 @@
-import { transaction } from "../../../transaction/transaction.js";
-import type { ThirdwebContract } from "../../../contract/index.js";
+import {
+  extractTXOpts,
+  transaction,
+  type ThirdwebClientLike,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
 import { parseUnits } from "viem";
 
 type TransferParams = { to: string } & (
@@ -11,29 +15,24 @@ type TransferParams = { to: string } & (
     }
 );
 
-/**
- * Transfers ERC20 tokens from the contract to the specified address.
- *
- * @param contract - The ERC20 contract instance.
- * @param options - The transfer options.
- * @returns A promise that resolves to the transaction result.
- */
-export function transfer(contract: ThirdwebContract, options: TransferParams) {
-  return transaction(contract, {
-    address: contract.address,
-    chainId: contract.chainId,
+export function transfer<client extends ThirdwebClientLike>(
+  options: TxOpts<client, TransferParams>,
+) {
+  const [opts, params] = extractTXOpts(options);
+  return transaction({
+    ...opts,
     method: "function transfer(address to, uint256 value)",
     params: async () => {
       let amount: bigint;
-      if ("amount" in options) {
+      if ("amount" in params) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
         const { decimals } = await import("../read/decimals.js");
         // if this fails we fall back to `18` decimals
-        const d = await decimals(contract).catch(() => 18);
+        const d = await decimals(options).catch(() => 18);
         // turn ether into gwei
-        amount = parseUnits(options.amount.toString(), d);
+        amount = parseUnits(params.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = params.amountGwei;
       }
       return [options.to, amount] as const;
     },

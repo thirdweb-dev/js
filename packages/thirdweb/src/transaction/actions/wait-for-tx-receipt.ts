@@ -15,7 +15,7 @@ export async function waitForReceipt<const abiFn extends AbiFunction>(
     );
   }
   const start = Date.now();
-  const rpcClient = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
+  const rpcClient = getRpcClient(tx.client, { chainId: tx.chainId });
   while (Date.now() - start < POLL_LIMIT_MS) {
     // if we don't yet have a tx hash then we can't check for a receipt, so just try again
 

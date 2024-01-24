@@ -6,7 +6,15 @@ declare module "abitype" {
 }
 
 // client
-export { createClient, type CreateClientOptions } from "./client/client.js";
+export {
+  createClient,
+  type CreateClientOptions,
+  type ThirdwebClient,
+} from "./client/client.js";
 
 // contract
-export { contract, type ContractOptions } from "./contract/index.js";
+export {
+  contract,
+  type ContractOptions,
+  type ThirdwebContract,
+} from "./contract/index.js";

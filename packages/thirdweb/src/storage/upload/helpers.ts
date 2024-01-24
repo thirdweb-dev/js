@@ -17,7 +17,7 @@ export function isBrowser() {
  * @internal
  */
 export function isFileInstance(data: any): data is File {
-  return global.File && data instanceof File;
+  return globalThis.File && data instanceof File;
 }
 
 /**

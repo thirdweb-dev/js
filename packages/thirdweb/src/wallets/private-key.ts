@@ -12,7 +12,7 @@ import type { AbiFunction, TypedData } from "abitype";
 import type { Transaction } from "../transaction/transaction.js";
 import type { IWallet } from "./interfaces/wallet.js";
 
-export function privateKeyWallet(client: ThirdwebClient) {
+export function privateKeyWallet({ client }: { client: ThirdwebClient }) {
   return new PrivateKeyWallet(client);
 }
 
@@ -76,7 +76,7 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       throw new Error("not connected");
     }
     const { getRpcClient } = await import("../rpc/index.js");
-    const rpcRequest = getRpcClient(tx.client, { chainId: tx.inputs.chainId });
+    const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
 
     const [getDefaultGasOverrides, encode, transactionCount] =
       await Promise.all([
@@ -87,7 +87,7 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     const [gasOverrides, encodedData, nextNonce, estimatedGas] =
       await Promise.all([
-        getDefaultGasOverrides(tx.client, tx.inputs.chainId),
+        getDefaultGasOverrides(tx.client, tx.chainId),
         encode(tx),
         transactionCount(rpcRequest, this.address),
         this.estimateGas(tx),
@@ -95,8 +95,8 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     const signedTx = await this.signTransaction({
       gas: estimatedGas,
-      to: tx.inputs.address as Address,
-      chainId: tx.inputs.chainId,
+      to: tx.contractAddress as Address,
+      chainId: tx.chainId,
       data: encodedData,
       nonce: nextNonce,
       ...gasOverrides,

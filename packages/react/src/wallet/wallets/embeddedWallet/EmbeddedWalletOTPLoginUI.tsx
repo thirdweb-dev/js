@@ -17,7 +17,12 @@ import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
-type VerificationStatus = "verifying" | "invalid" | "valid" | "idle";
+type VerificationStatus =
+  | "verifying"
+  | "invalid"
+  | "valid"
+  | "idle"
+  | "payment_required";
 type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
 type ScreenToShow =
   | "base"
@@ -135,9 +140,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       }
 
       setVerifyStatus("valid");
-    } catch (e) {
-      setVerifyStatus("invalid");
-      console.error(e);
+    } catch (e: any) {
+      if (e?.message?.includes("PAYMENT_METHOD_REQUIRED")) {
+        setVerifyStatus("payment_required");
+      } else {
+        setVerifyStatus("invalid");
+      }
+      console.error("Authentication Error", e);
     }
   };
 
@@ -249,6 +258,15 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                 <Spacer y="md" />
                 <Text size="sm" color="danger" center>
                   {locale.emailLoginScreen.invalidCode}
+                </Text>
+              </FadeIn>
+            )}
+
+            {verifyStatus === "payment_required" && (
+              <FadeIn>
+                <Spacer y="md" />
+                <Text size="sm" color="danger" center>
+                  {locale.maxAccountsExceeded}
                 </Text>
               </FadeIn>
             )}

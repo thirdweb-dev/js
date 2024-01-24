@@ -36,9 +36,10 @@ export type RPCResponse<TResult = any, TError = any> =
   | ErrorResult<TError>;
 
 const DEFAULT_MAX_BATCH_SIZE = 100;
-const DEFAULT_BATCH_TIMEOUT_MS = 10;
+// default to no timeout (next tick)
+const DEFAULT_BATCH_TIMEOUT_MS = 0;
 
-export type RPCClient = (request: RPCRequest) => Promise<RPCResponse>;
+export type RPCClient = (request: RPCRequest) => Promise<RPCResponse["result"]>;
 
 export function getRpcClient(
   client: ThirdwebClient,
@@ -90,10 +91,12 @@ export function getRpcClient(
               inflight.reject(new Error("no response"));
               // if we got a response with an error, reject the inflight request
             } else if (response.error) {
-              inflight.reject(response);
+              inflight.reject(response.error);
               // otherwise, resolve the inflight request
             } else {
-              inflight.resolve(response);
+              // TODO: type this properly based on the method
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              inflight.resolve(response.result!);
             }
             // remove the inflight request from the inflightRequests map
             inflightRequests.delete(inflight.requestKey);
