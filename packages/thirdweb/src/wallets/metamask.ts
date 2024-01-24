@@ -5,7 +5,7 @@ import type { Transaction } from "../transaction/transaction.js";
 import type { IWallet } from "./interfaces/wallet.js";
 import type { Ethereum } from "./interfaces/ethereum.js";
 
-export function metamask({ client }: { client: ThirdwebClient }) {
+export function metamaskWallet({ client }: { client: ThirdwebClient }) {
   return new MetamaskWallet(client);
 }
 
