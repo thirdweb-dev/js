@@ -56,6 +56,7 @@ export type AuthTokenStorageType = {
     key: string;
     value: string;
   }) => void | Promise<void>;
+  removeToken: ({ key }: { key: string }) => void | Promise<void>;
 };
 
 // 2 Step Auth Flow Type
