@@ -20,3 +20,7 @@ export const ROUTE_COMPLETE_AUTH = (provider: AuthMethodType) =>
 
 export const ROUTE_INITIATE_2FA_AUTH = (provider: AuthMethodType) =>
   `${getBaseUrl()}/v2/2fa/${provider}`;
+
+export const ROUTE_STORAGE_ENCRYPTED = () =>
+  `${getBaseUrl()}/v2/storage/encrypted`;
+export const ROUTE_STORAGE_BASIC = () => `${getBaseUrl()}/v2/storage/basic`;
