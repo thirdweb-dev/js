@@ -13,7 +13,7 @@ export const OnboardingTitle: React.FC<OnboardingTitleProps> = ({
 }) => {
   return (
     <VStack alignItems="flex-start" gap={3}>
-      <Heading size="title.md">{heading}</Heading>
+      <Heading size="title.sm">{heading}</Heading>
 
       {description && (
         <Text size="body.md" fontWeight="medium">

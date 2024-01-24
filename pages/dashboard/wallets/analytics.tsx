@@ -35,6 +35,8 @@ import {
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
+import { CONTACT_US_URL } from "utils/pricing";
 
 const RADIAN = Math.PI / 180;
 const TRACKING_CATEGORY = "wallet-analytics";
@@ -42,16 +44,12 @@ const TRACKING_CATEGORY = "wallet-analytics";
 const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const barColors = useMemo(() => {
-    if (colorMode === "light") {
-      return BAR_COLORS_LIGHT;
-    }
-
-    return BAR_COLORS_DARK;
-  }, [colorMode]);
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
+  const statsQuery = useWalletStats(selectedKey?.key);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   useEffect(() => {
     if (selectedKey) {
       return;
@@ -62,7 +60,12 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
       setSelectedKey(undefined);
     }
   }, [keysQuery.data, selectedKey]);
-  const statsQuery = useWalletStats(selectedKey?.key);
+
+  const barColors = useMemo(
+    () => (colorMode === "light" ? BAR_COLORS_LIGHT : BAR_COLORS_DARK),
+    [colorMode],
+  );
+
   const pieChartData = useMemo(() => {
     return statsQuery.data
       ? Object.values(
@@ -83,6 +86,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         )
       : [];
   }, [statsQuery.data]);
+
   const barChartData = useMemo(() => {
     return statsQuery.data
       ? Object.values(
@@ -108,6 +112,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         )
       : [];
   }, [statsQuery.data]);
+
   const walletBarChartData = useMemo(() => {
     return statsQuery.data
       ? Object.values(
@@ -128,6 +133,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         )
       : [];
   }, [statsQuery.data]);
+
   const totalStatsData = useMemo(() => {
     return statsQuery.data
       ? statsQuery.data.timeSeries.reduce(
@@ -210,7 +216,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
       </g>
     );
   };
-  const [activeIndex, setActiveIndex] = useState(0);
+
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
@@ -222,167 +228,176 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   }
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex flexDir="column" gap={2}>
-        <Heading size="title.lg" as="h1">
-          Connect Analytics
-        </Heading>
-        <Text>Visualize how users are connecting to your apps.</Text>
-      </Flex>
-      {keysQuery.data && selectedKey && (
-        <Flex
-          w="full"
-          alignItems={{ base: "flex-start", lg: "center" }}
-          gap={1}
-          flexDir={{ base: "column", lg: "row" }}
-        >
-          <Text minW={32}>Select a Client ID:</Text>
-
-          <ApiKeysMenu
-            apiKeys={keysQuery.data}
-            selectedKey={selectedKey}
-            onSelect={setSelectedKey}
-          />
-        </Flex>
-      )}
+    <GatedFeature
+      title="Wallet Analytics is an advanced feature."
+      description="Dive into user analytics and gather user insights on connect, smart and embedded wallet."
+      trackingLabel="analytics"
+      imgSrc="/assets/dashboard/features/analytics.png"
+      imgWidth={576}
+      imgHeight={624}
+    >
       <Flex flexDir="column" gap={8}>
-        {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
-          <>
-            <Text size="body.md">
-              Showing data for the <b>last 7 days</b>. Need more insights?{" "}
-              <TrackedLink
-                href="https://thirdweb.com/contact-us"
-                category={TRACKING_CATEGORY}
-                label="contact-us"
-                color="blue.500"
-                isExternal
-              >
-                Contact us.
-              </TrackedLink>
-            </Text>
-            <Flex gap={4}>
-              <WalletStatCard
-                label="Connections"
-                value={totalStatsData.totalWallets}
-              />
-              <WalletStatCard
-                label="Unique Wallets"
-                value={totalStatsData.uniqueWallets}
-              />
-            </Flex>
-            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                <Heading as="h3" size="subtitle.sm">
-                  Daily Connections
-                </Heading>
-                <Text>
-                  Total and unique wallets addresses that connected to your app
-                  each day.
-                </Text>
-              </Stack>
-              <ChartContainer w="full" ratio={21 / 9}>
-                <AutoBarChart
-                  data={barChartData}
-                  showXAxis
-                  showYAxis
-                  index={{
-                    id: "time",
-                  }}
-                />
-              </ChartContainer>
-            </Flex>
-            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                <Heading as="h3" size="subtitle.sm">
-                  Wallet Connectors
-                </Heading>
-                <Text>
-                  The different types of wallets used to connect to your app
-                  each day.
-                </Text>
-              </Stack>
-              <ChartContainer w="full" ratio={21 / 9}>
-                <AutoBarChart
-                  data={walletBarChartData}
-                  showXAxis
-                  showYAxis
-                  index={{
-                    id: "time",
-                  }}
-                  stacked
-                />
-              </ChartContainer>
-            </Flex>
-            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                <Heading as="h3" size="subtitle.sm">
-                  Wallet Distribution
-                </Heading>
-                <Text>
-                  Distribution of wallet types used to connect to your app.
-                </Text>
-              </Stack>
-              <ChartContainer w="full" ratio={isMobile ? 1.5 : 21 / 9}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      activeIndex={activeIndex}
-                      activeShape={renderActiveShape}
-                      onMouseEnter={onPieEnter}
-                      data={pieChartData}
-                      outerRadius={"70%"}
-                      dataKey="totalWallets"
-                      valueKey="walletType"
-                      nameKey="walletType"
-                      strokeWidth={2}
-                      stroke={"var(--chakra-colors-backgroundHighlight)"}
-                    >
-                      {pieChartData.map((entry, index) => (
-                        <Cell
-                          key={index}
-                          fill={barColors[index % barColors.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Legend
-                      layout={isMobile ? "horizontal" : "radial"}
-                      verticalAlign={isMobile ? "bottom" : "middle"}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </Flex>
-          </>
-        ) : selectedKey ? (
-          <Stack>
-            <Heading as="h3" size="subtitle.sm">
-              No data found for this Client ID.
-            </Heading>
-            <Text>
-              Make sure you are running the latest version of the SDK with
-              wallet analytics enabled.
-            </Text>
-          </Stack>
-        ) : (
-          <Stack>
-            <Heading as="h3" size="subtitle.sm">
-              No API keys found
-            </Heading>
-            <Text>
-              Create a free API key and set it into your app to get started with
-              wallet analytics.
-            </Text>
-            <LinkButton
-              variant="solid"
-              href={"/dashboard/settings"}
-              maxW={"sm"}
-            >
-              Create API Key
-            </LinkButton>
-          </Stack>
+        <Flex flexDir="column" gap={2}>
+          <Heading size="title.lg" as="h1">
+            Connect Analytics
+          </Heading>
+          <Text>Visualize how users are connecting to your apps.</Text>
+        </Flex>
+        {keysQuery.data && selectedKey && (
+          <Flex
+            w="full"
+            alignItems={{ base: "flex-start", lg: "center" }}
+            gap={1}
+            flexDir={{ base: "column", lg: "row" }}
+          >
+            <Text minW={32}>Select a Client ID:</Text>
+
+            <ApiKeysMenu
+              apiKeys={keysQuery.data}
+              selectedKey={selectedKey}
+              onSelect={setSelectedKey}
+            />
+          </Flex>
         )}
+        <Flex flexDir="column" gap={8}>
+          {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
+            <>
+              <Text size="body.md">
+                Showing data for the <b>last 7 days</b>. Need more insights?{" "}
+                <TrackedLink
+                  href={CONTACT_US_URL}
+                  category={TRACKING_CATEGORY}
+                  label="contact-us"
+                  color="blue.500"
+                  isExternal
+                >
+                  Contact us.
+                </TrackedLink>
+              </Text>
+              <Flex gap={4}>
+                <WalletStatCard
+                  label="Connections"
+                  value={totalStatsData.totalWallets}
+                />
+                <WalletStatCard
+                  label="Unique Wallets"
+                  value={totalStatsData.uniqueWallets}
+                />
+              </Flex>
+              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                  <Heading as="h3" size="subtitle.sm">
+                    Daily Connections
+                  </Heading>
+                  <Text>
+                    Total and unique wallets addresses that connected to your
+                    app each day.
+                  </Text>
+                </Stack>
+                <ChartContainer w="full" ratio={21 / 9}>
+                  <AutoBarChart
+                    data={barChartData}
+                    showXAxis
+                    showYAxis
+                    index={{
+                      id: "time",
+                    }}
+                  />
+                </ChartContainer>
+              </Flex>
+              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                  <Heading as="h3" size="subtitle.sm">
+                    Wallet Connectors
+                  </Heading>
+                  <Text>
+                    The different types of wallets used to connect to your app
+                    each day.
+                  </Text>
+                </Stack>
+                <ChartContainer w="full" ratio={21 / 9}>
+                  <AutoBarChart
+                    data={walletBarChartData}
+                    showXAxis
+                    showYAxis
+                    index={{
+                      id: "time",
+                    }}
+                    stacked
+                  />
+                </ChartContainer>
+              </Flex>
+              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                  <Heading as="h3" size="subtitle.sm">
+                    Wallet Distribution
+                  </Heading>
+                  <Text>
+                    Distribution of wallet types used to connect to your app.
+                  </Text>
+                </Stack>
+                <ChartContainer w="full" ratio={isMobile ? 1.5 : 21 / 9}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        activeIndex={activeIndex}
+                        activeShape={renderActiveShape}
+                        onMouseEnter={onPieEnter}
+                        data={pieChartData}
+                        outerRadius={"70%"}
+                        dataKey="totalWallets"
+                        valueKey="walletType"
+                        nameKey="walletType"
+                        strokeWidth={2}
+                        stroke={"var(--chakra-colors-backgroundHighlight)"}
+                      >
+                        {pieChartData.map((entry, index) => (
+                          <Cell
+                            key={index}
+                            fill={barColors[index % barColors.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Legend
+                        layout={isMobile ? "horizontal" : "radial"}
+                        verticalAlign={isMobile ? "bottom" : "middle"}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </Flex>
+            </>
+          ) : selectedKey ? (
+            <Stack>
+              <Heading as="h3" size="subtitle.sm">
+                No data found for this Client ID.
+              </Heading>
+              <Text>
+                Make sure you are running the latest version of the SDK with
+                wallet analytics enabled.
+              </Text>
+            </Stack>
+          ) : (
+            <Stack>
+              <Heading as="h3" size="subtitle.sm">
+                No API keys found
+              </Heading>
+              <Text>
+                Create a free API key and set it into your app to get started
+                with wallet analytics.
+              </Text>
+              <LinkButton
+                variant="solid"
+                href={"/dashboard/settings"}
+                maxW={"sm"}
+              >
+                Create API Key
+              </LinkButton>
+            </Stack>
+          )}
+        </Flex>
       </Flex>
-    </Flex>
+    </GatedFeature>
   );
 };
 

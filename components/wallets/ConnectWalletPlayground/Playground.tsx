@@ -52,6 +52,7 @@ import { PreviewThirdwebProvider } from "./PreviewThirdwebProvider";
 import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
+import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 
 type OptionalUrl = { url: string; enabled: boolean };
 export const ConnectWalletPlayground: React.FC<{
@@ -861,7 +862,9 @@ export const ConnectWalletPlayground: React.FC<{
             addOn={
               <Flex gap={3} alignItems="center">
                 <Text>{modalTitleIconUrl.enabled ? "Custom" : "Default"}</Text>
-                <Switch
+                <GatedSwitch
+                  togglable
+                  trackingLabel="customConnect"
                   size="lg"
                   isChecked={modalTitleIconUrl.enabled}
                   onChange={() => {
@@ -874,7 +877,7 @@ export const ConnectWalletPlayground: React.FC<{
                       enabled: !modalTitleIconUrl.enabled,
                     });
                   }}
-                ></Switch>
+                />
               </Flex>
             }
           >

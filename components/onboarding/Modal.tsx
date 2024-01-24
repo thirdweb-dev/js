@@ -13,18 +13,20 @@ import { ComponentWithChildren } from "types/component-with-children";
 interface OnboardingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  wide?: boolean;
 }
 
 export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
   children,
   isOpen,
   onClose,
+  wide = false,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Modal
-      size={isMobile ? "full" : "lg"}
+      size={isMobile ? "full" : wide ? "3xl" : "lg"}
       closeOnEsc={false}
       allowPinchZoom
       closeOnOverlayClick={false}
@@ -35,7 +37,7 @@ export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalBody p={6} as={Flex} gap={4} flexDir="column">
+        <ModalBody p={8} as={Flex} gap={4} flexDir="column">
           <AspectRatio ratio={1} w="40px">
             <IconLogo />
           </AspectRatio>

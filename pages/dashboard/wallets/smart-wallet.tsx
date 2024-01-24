@@ -18,7 +18,11 @@ import {
 } from "tw-components";
 import { ContractWithMetadata, useSupportedChains } from "@thirdweb-dev/react";
 import { useQuery } from "@tanstack/react-query";
-import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  AccountStatus,
+  useAccount,
+  useApiKeys,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import React, { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
@@ -91,7 +95,9 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
     return apiKeys.find(
       (k) =>
         k.services?.find(
-          (s) => account.status !== "validPayment" && s.name === "bundler",
+          (s) =>
+            account.status !== AccountStatus.ValidPayment &&
+            s.name === "bundler",
         ),
     );
   }, [apiKeys, account]);

@@ -1,12 +1,7 @@
 import { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Badge, Text, TrackedLink } from "tw-components";
 import { Flex, HStack } from "@chakra-ui/react";
-
-const PLAN_TITLE = {
-  free: "Starter",
-  pro: "Pro",
-  enterprise: "Enterprise",
-};
+import { PLANS } from "utils/pricing";
 
 interface BillingPlanProps {
   account: Account;
@@ -24,19 +19,19 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
   direction = "row",
 }) => {
   return (
-    <Flex direction={direction} gap={2}>
+    <Flex direction={direction} gap={3}>
       <HStack>
         <Text color={titleColor} size={titleSize}>
           Your current plan is
         </Text>
         <Badge
-          borderRadius="full"
+          borderRadius="md"
           size="label.sm"
-          variant="subtle"
+          textTransform="capitalize"
           px={3}
           py={1.5}
         >
-          {(PLAN_TITLE as any)[account.plan]}
+          {(PLANS as any)[account.plan].title}
         </Badge>
       </HStack>
 

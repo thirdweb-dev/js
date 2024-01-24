@@ -6,9 +6,9 @@ import { ThirdwebNextPage } from "utils/types";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { Heading } from "tw-components";
 import { Usage } from "components/settings/Account/Usage";
-import { BillingPeriod } from "components/settings/Account/BillingPeriod";
+import { BillingPeriod } from "components/settings/Account/Billing/Period";
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { BillingPlan } from "components/settings/Account/BillingPlan";
+import { BillingPlan } from "components/settings/Account/Billing/Plan";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const SettingsUsagePage: ThirdwebNextPage = () => {

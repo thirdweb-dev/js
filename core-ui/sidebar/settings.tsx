@@ -21,7 +21,7 @@ const links: Route[] = [
   { path: "/dashboard/settings/devices", title: "Devices", name: "devices" },
   {
     path: "/dashboard/settings/billing",
-    title: "Account & Billing",
+    title: "Billing",
     name: "billing",
   },
   { path: "/dashboard/settings/usage", title: "Usage", name: "usage" },

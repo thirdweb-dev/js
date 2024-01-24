@@ -15,7 +15,7 @@ export function useTrack() {
     const catActLab = label
       ? `${category}.${action}.${label}`
       : `${category}.${action}`;
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "production") {
       console.debug(`[PH.capture]:${catActLab}`, restData);
     }
 

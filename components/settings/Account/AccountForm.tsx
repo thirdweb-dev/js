@@ -24,7 +24,7 @@ import {
 } from "tw-components";
 import { Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ManageBillingButton } from "components/settings/Account/ManageBillingButton";
+import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { ChangeEvent, useState } from "react";
 
 interface AccountFormProps {
@@ -142,7 +142,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         alignItems="flex-start"
         w="full"
         gap={horizontal ? 6 : 8}
-        maxW={horizontal ? "auto" : "lg"}
         borderRadius="xl"
         borderColor="borderColor"
         borderWidth={padded ? 1 : 0}

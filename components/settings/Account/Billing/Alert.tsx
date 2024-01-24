@@ -1,4 +1,8 @@
-import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  AccountStatus,
+  useAccount,
+  useAccountUsage,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
@@ -148,7 +152,7 @@ export const BillingAlert = () => {
   }
 
   if (
-    status === "invalidPayment" ||
+    status === AccountStatus.InvalidPayment ||
     (paymentAttemptCount && paymentAttemptCount !== 0)
   ) {
     return (
@@ -161,13 +165,14 @@ export const BillingAlert = () => {
   }
 
   if (
-    status !== "validPayment" &&
+    status !== AccountStatus.ValidPayment &&
     exceededUsage_50 &&
+    !exceededUsage_100 &&
     !dismissedForThePeriod(DismissedStorageType.Usage_50)
   ) {
     return (
       <BillingTypeAlert
-        title="You are approaching your free monthly limits"
+        title="You are approaching your free monthly credits"
         status="warning"
         onDismiss={() => handleDismiss(DismissedStorageType.Usage_50)}
       />
@@ -175,13 +180,13 @@ export const BillingAlert = () => {
   }
 
   if (
-    status !== "validPayment" &&
+    status !== AccountStatus.ValidPayment &&
     exceededUsage_100 &&
     !dismissedForThePeriod(DismissedStorageType.Usage_100)
   ) {
     return (
       <BillingTypeAlert
-        title="You have used all of your free monthly limits"
+        title="You have used all of your free monthly credits"
         status="error"
         onDismiss={() => handleDismiss(DismissedStorageType.Usage_100)}
       />
@@ -192,9 +197,8 @@ export const BillingAlert = () => {
     return (
       <BillingTypeAlert
         title="You have exceeded your RPC rate limit"
-        description={`You have exceeded your RPC rate limit (${usageQuery.data.rateLimits.rpc} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Pro by`}
-        ctaText="contacting Sales"
-        ctaHref="/contact-us"
+        description={`You have exceeded your RPC rate limit (${usageQuery.data.rateLimits.rpc} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your`}
+        ctaText="Billing Settings"
         status="warning"
         onDismiss={() => handleDismiss(DismissedStorageType.RateRpc)}
       />
@@ -208,9 +212,8 @@ export const BillingAlert = () => {
     return (
       <BillingTypeAlert
         title="You have exceeded your Storage Gateway rate limit"
-        description={`You have exceeded your Storage Gateway rate limit (${usageQuery.data.rateLimits.storage} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Pro by`}
-        ctaText="contacting Sales"
-        ctaHref="/contact-us"
+        description={`You have exceeded your Storage Gateway rate limit (${usageQuery.data.rateLimits.storage} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your`}
+        ctaText="Billing Settings"
         status="warning"
         onDismiss={() => handleDismiss(DismissedStorageType.RateStorage)}
       />

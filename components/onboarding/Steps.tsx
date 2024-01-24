@@ -1,4 +1,8 @@
-import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  AccountStatus,
+  useAccount,
+  useApiKeys,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { HStack, VStack } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -83,7 +87,7 @@ export const OnboardingSteps: React.FC = () => {
       setCurrentStep(Step.Docs);
     } else if (
       !(Step.Payment in savedStep) &&
-      meQuery?.data?.status !== "validPayment"
+      meQuery?.data?.status !== AccountStatus.ValidPayment
     ) {
       setCurrentStep(Step.Payment);
     } else {

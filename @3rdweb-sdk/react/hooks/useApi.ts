@@ -8,6 +8,23 @@ import type { Chain } from "@thirdweb-dev/chains";
 import invariant from "tiny-invariant";
 import { useLoggedInUser } from "./useLoggedInUser";
 
+// FIXME: We keep repeating types, API server should provide them
+
+export enum AccountStatus {
+  NoCustomer = "noCustomer",
+  NoPayment = "noPayment",
+  PaymentVerification = "paymentVerification",
+  ValidPayment = "validPayment",
+  InvalidPayment = "invalidPayment",
+}
+
+export enum AccountPlan {
+  Free = "free",
+  Growth = "growth",
+  Pro = "pro",
+  Enterprise = "enterprise",
+}
+
 export type AuthorizedWallet = {
   id: string;
   accountId: string;
@@ -23,14 +40,16 @@ export type Account = {
   id: string;
   isStaff: boolean;
   creatorWalletAddress: string;
-  status: string;
-  plan: string;
+  status: AccountStatus;
+  plan: AccountPlan;
   name?: string;
   email?: string;
+  advancedEnabled: boolean;
   currentBillingPeriodStartsAt: string;
   currentBillingPeriodEndsAt: string;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
+  trialPeriodEndedAt?: string;
   emailConfirmationWalletAddress?: string;
   stripePaymentActionUrl?: string;
   onboardSkipped?: boolean;
@@ -44,6 +63,7 @@ export type Account = {
 export interface UpdateAccountInput {
   name?: string;
   email?: string;
+  plan?: AccountPlan;
   linkWallet?: boolean;
   subscribeToUpdates?: boolean;
   onboardSkipped?: boolean;
@@ -123,7 +143,6 @@ export interface UpdateKeyInput {
   services?: UpdateKeyServiceInput[];
 }
 
-// FIXME: We keep repeating types, API server should provide them
 export interface UsageBundler {
   chainId: number;
   sumTransactionFee: number;
@@ -137,20 +156,27 @@ export interface UsageEmbeddedWallets {
   countWalletAddresses: number;
 }
 
+export interface UsageCheckout {
+  sumTransactionFeeUsd: number;
+}
+
 export interface UsageBillableByService {
   usage: {
     bundler: UsageBundler[];
     storage: UsageStorage;
     embeddedWallets: UsageEmbeddedWallets;
+    checkout: UsageCheckout;
   };
   billableUsd: {
     bundler: number;
     storage: number;
     embeddedWallets: number;
+    checkout: number;
   };
   limits: {
     storage: number;
     embeddedWallets: number;
+    checkout: number;
   };
   rateLimits: {
     storage: number;
@@ -279,6 +305,44 @@ export function useUpdateAccount() {
       onSuccess: () => {
         return queryClient.invalidateQueries(
           accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export function useUpdateAccountPlan() {
+  const { user } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: { plan: string; feedback?: string }) => {
+      invariant(user?.address, "walletAddress is required");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+      });
+
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        // invalidate usage data as limits are different
+        queryClient.invalidateQueries(accountKeys.me(user?.address as string));
+
+        return queryClient.invalidateQueries(
+          accountKeys.usage(user?.address as string),
         );
       },
     },

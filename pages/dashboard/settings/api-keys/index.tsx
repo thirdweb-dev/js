@@ -1,4 +1,8 @@
-import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  AccountStatus,
+  useAccount,
+  useApiKeys,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
@@ -28,7 +32,9 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     return apiKeys.find(
       (k) =>
         k.services?.find(
-          (s) => account.status !== "validPayment" && s.name === "bundler",
+          (s) =>
+            account.status !== AccountStatus.ValidPayment &&
+            s.name === "bundler",
         ),
     );
   }, [apiKeys, account]);

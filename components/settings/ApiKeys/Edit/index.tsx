@@ -71,6 +71,7 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
       if (embeddedWallets) {
         const { customAuthentication, recoveryShareManagement } =
           embeddedWallets;
+
         if (
           recoveryShareManagement === "USER_MANAGED" &&
           (!customAuthentication?.aud.length ||
@@ -173,7 +174,7 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
 
         <Flex flexDir="column" gap={10}>
           <EditGeneral form={form} />
-          <EditServices form={form} />
+          <EditServices form={form} apiKeyName={apiKey.name} />
 
           <HStack gap={3} alignSelf="flex-end">
             {actions}

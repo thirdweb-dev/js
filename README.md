@@ -12,6 +12,12 @@ We use `yarn`.
 yarn install
 ```
 
+### Generate graphql types
+
+```sh
+yarn apollo-codegen
+```
+
 ### Starting local dev server.
 
 ```sh

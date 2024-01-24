@@ -69,7 +69,7 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
       >
         <Flex flexDir="column" gap={1}>
           <Heading size="label.lg">Reminders</Heading>
-          <Text>Approaching and exceeding usage limits.</Text>
+          <Text>Approaching and exceeding usage credits.</Text>
         </Flex>
         <Switch
           isChecked={preferences?.billing === "email"}
