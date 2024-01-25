@@ -5,7 +5,7 @@ import type { AbiFunction, AbiParametersToPrimitiveTypes } from "abitype";
 
 export function encodeAbiFunction<const abiFn extends AbiFunction>(
   abiFn: abiFn,
-  args: AbiParametersToPrimitiveTypes<abiFn["inputs"]>,
+  args: AbiParametersToPrimitiveTypes<abiFn["inputs"]> | readonly unknown[],
 ) {
   const signature = getFunctionSelector(abiFn);
   const data =

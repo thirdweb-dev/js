@@ -2,11 +2,7 @@ import { startTokenId } from "./startTokenId.js";
 import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { min } from "../../../utils/bigint.js";
 import { getNFT } from "./getNFT.js";
-import {
-  extractTXOpts,
-  type ThirdwebClientLike,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+import { type TxOpts } from "../../../transaction/transaction.js";
 import { totalSupply } from "./totalSupply.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
@@ -29,21 +25,11 @@ export type GetNFTsParams = {
   includeOwners?: boolean;
 };
 
-/**
- * Retrieves a list of NFTs from the contract.
- *
- * @param contract - TThe {@link ThirdwebContract} instance representing the ERC721 contract.
- * @param params - The {@link GetNFTsParams} object containing the token ID and additional options.
- * @returns A promise that resolves to an array of {@link NFT}s.
- */
-export async function getNFTs<client extends ThirdwebClientLike>(
-  options: TxOpts<client, GetNFTsParams>,
-) {
-  const [opts, params] = extractTXOpts(options);
+export async function getNFTs(options: TxOpts<GetNFTsParams>) {
   const [startTokenId_, maxSupply] = await Promise.allSettled([
-    startTokenId(opts),
-    nextTokenIdToMint(opts),
-    totalSupply(opts),
+    startTokenId(options),
+    nextTokenIdToMint(options),
+    totalSupply(options),
   ]).then(([_startTokenId, _next, _total]) => {
     // default to 0 if startTokenId is not available
     const startTokenId__ =
@@ -64,28 +50,19 @@ export async function getNFTs<client extends ThirdwebClientLike>(
     }
     return [startTokenId__, maxSupply_] as const;
   });
-  const start = BigInt(params.start ?? 0) + startTokenId_;
-  const count = BigInt(params.count ?? DEFAULT_QUERY_ALL_COUNT);
+  const start = BigInt(options.start ?? 0) + startTokenId_;
+  const count = BigInt(options.count ?? DEFAULT_QUERY_ALL_COUNT);
 
   const maxId = min(maxSupply + startTokenId_, start + count);
-
-  console.log({
-    start,
-    count,
-    maxId,
-    maxSupply,
-    startTokenId_,
-    params,
-  });
 
   const promises: ReturnType<typeof getNFT>[] = [];
 
   for (let i = start; i < maxId; i++) {
     promises.push(
       getNFT({
-        ...opts,
+        ...options,
         tokenId: i,
-        includeOwner: params.includeOwners ?? false,
+        includeOwner: options.includeOwners ?? false,
       }),
     );
   }

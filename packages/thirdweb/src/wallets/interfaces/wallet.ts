@@ -4,6 +4,7 @@ import type {
   AbiFunction,
   Hex,
   SignableMessage,
+  TransactionReceipt,
   TransactionSerializable,
   TypedData,
   TypedDataDefinition,
@@ -30,6 +31,7 @@ export interface IWallet<connectOpts> {
     _tx: Transaction<abiFn>,
   ) => Promise<{
     transactionHash: Hex;
+    wait: () => Promise<TransactionReceipt>;
   }>;
   estimateGas: <abiFn extends AbiFunction>(
     _tx: Transaction<abiFn>,

@@ -1,10 +1,6 @@
 import { transaction } from "../../../transaction/index.js";
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
-import {
-  extractTXOpts,
-  type ThirdwebClientLike,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+import { type TxOpts } from "../../../transaction/transaction.js";
 
 export type NFTInput = {
   name?: string;
@@ -30,32 +26,28 @@ export type MintToParams = {
  * @param params - The parameters for minting the token.
  * @returns The transaction object.
  */
-export function mintTo<client extends ThirdwebClientLike>(
-  options: TxOpts<client, MintToParams>,
-) {
-  const [opts, params] = extractTXOpts(options);
+export function mintTo(options: TxOpts<MintToParams>) {
   return transaction({
-    ...opts,
-
+    ...options,
     method: "function mintTo(address _to, string memory _tokenURI)",
     params: async () => {
       let tokenUri: string;
 
-      if (typeof params.nft === "string") {
+      if (typeof options.nft === "string") {
         // if the input is already a string then we just use that
-        tokenUri = params.nft;
+        tokenUri = options.nft;
       } else {
         // otherwise we need to upload the file to the storage server
 
         // load the upload code if we need it
         const { upload } = await import("../../../storage/upload.js");
         tokenUri = (
-          await upload(opts.client, {
-            files: [params.nft],
+          await upload(options.contract, {
+            files: [options.nft],
           })
         )[0] as string;
       }
-      return [params.to, tokenUri] as const;
+      return [options.to, tokenUri] as const;
     },
   });
 }

@@ -1,14 +1,17 @@
+import type { Abi } from "abitype";
 import type { ThirdwebClient } from "../client/client.js";
 
-export type ContractOptions = {
+export type ContractOptions<abi extends Abi = []> = {
   client: ThirdwebClient;
   address: string;
   chainId: number;
+  readonly abi?: abi;
 };
 
-export type ThirdwebContract = ThirdwebClient & {
-  address: Readonly<string>;
-  chainId: Readonly<number>;
+export type ThirdwebContract<abi extends Abi = []> = ThirdwebClient & {
+  readonly address: string;
+  readonly chainId: number;
+  readonly abi?: abi;
 };
 
 /**
@@ -17,7 +20,9 @@ export type ThirdwebContract = ThirdwebClient & {
  * @param options - The contract options.
  * @returns The Thirdweb contract.
  */
-export function contract(options: ContractOptions): ThirdwebContract {
+export function contract<const abi extends Abi = []>(
+  options: ContractOptions<abi>,
+): ThirdwebContract<abi> {
   const { client, ...rest } = options;
   return { ...client, ...rest } as const;
 }

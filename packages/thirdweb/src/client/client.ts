@@ -11,8 +11,8 @@ export type CreateClientOptions =
     };
 
 export type ThirdwebClient = {
-  clientId: Readonly<string>;
-  secretKey: Readonly<string | undefined>;
+  readonly clientId: string;
+  readonly secretKey: string | undefined;
 };
 
 /**

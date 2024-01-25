@@ -1,10 +1,7 @@
 import { tokenURI, type TokenUriParams } from "./tokenURI.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT } from "../../../utils/nft/parseNft.js";
-import type {
-  ThirdwebClientLike,
-  TxOpts,
-} from "../../../transaction/transaction.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
 
 /**
  * Parameters for getting an NFT.
@@ -22,9 +19,7 @@ export type GetNFTParams = TokenUriParams & {
  * @param params - The {@link GetNFTParams} object containing the token ID and additional options.
  * @returns A promise that resolves to a {@link NFT}.
  */
-export async function getNFT<client extends ThirdwebClientLike>(
-  options: TxOpts<client, GetNFTParams>,
-) {
+export async function getNFT(options: TxOpts<GetNFTParams>) {
   const [uri, owner] = await Promise.all([
     tokenURI(options),
     options.includeOwner
@@ -33,7 +28,7 @@ export async function getNFT<client extends ThirdwebClientLike>(
   ]);
   return parseNFT(
     await fetchTokenMetadata({
-      client: options.client,
+      client: options.contract,
       tokenId: options.tokenId,
       tokenUri: uri,
     }),

@@ -1,19 +1,26 @@
 import { decodeFunctionResult } from "../../abi/decode.js";
-import type { AbiFunction, AbiParametersToPrimitiveTypes } from "abitype";
+import type {
+  Abi,
+  AbiFunction,
+  AbiParametersToPrimitiveTypes,
+  ExtractAbiFunctionNames,
+} from "abitype";
 import {
   transaction,
   type Transaction,
-  type TransactionOptions,
+  type TransactionInput,
 } from "../transaction.js";
 import { getRpcClient } from "../../rpc/index.js";
-
-import type { ThirdwebClient } from "../../client/client.js";
-import type { ThirdwebContract } from "../../contract/index.js";
+import { encode } from "./encode.js";
+import { resolveAbi } from "./resolve-abi.js";
 
 export async function read<
-  client extends ThirdwebClient | ThirdwebContract,
-  method extends AbiFunction | string,
->(options: TransactionOptions<client, method>) {
+  const abi extends Abi,
+  // if an abi has been passed into the contract, restrict the method to function names of the abi
+  const method extends abi extends { length: 0 }
+    ? AbiFunction | string
+    : ExtractAbiFunctionNames<abi>,
+>(options: TransactionInput<abi, method>) {
   return readTx(transaction(options));
 }
 
@@ -29,24 +36,22 @@ export async function readTx<const abiFn extends AbiFunction>(
       : // otherwise we'll return the array
         AbiParametersToPrimitiveTypes<abiFn["outputs"]>
 > {
-  if (!tx._encoded) {
-    // import the encode function only when it is needed
-    const { encode } = await import("./encode.js");
-
-    tx._encoded = encode(tx);
-  }
-
-  const [encodedData, resolvedAbi] = await Promise.all([tx._encoded, tx.abi()]);
+  const [encodedData, resolvedAbi] = await Promise.all([
+    encode(tx),
+    resolveAbi(tx),
+  ]);
   if (!resolvedAbi) {
     throw new Error("Unable to resolve ABI");
   }
 
-  const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
+  const rpcRequest = getRpcClient(tx.contract, {
+    chainId: tx.contract.chainId,
+  });
   const result = await rpcRequest({
     method: "eth_call",
     params: [
       {
-        to: tx.contractAddress,
+        to: tx.contract.address,
         data: encodedData,
       },
       "latest",

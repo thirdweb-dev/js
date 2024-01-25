@@ -31,7 +31,7 @@ export async function fetchTokenMetadata({
     }
   }
 
-  // in all other cases we will need the `download` fucntion from storage
+  // in all other cases we will need the `download` function from storage
   const { download } = await import("../../storage/download.js");
 
   // handle non-dynamic uris (most common case -> skip the other checks)
@@ -50,11 +50,7 @@ export async function fetchTokenMetadata({
       // try first dynamic id format
       return await (
         await download(client, {
-          uri: tokenUri.replace(
-            "{id}",
-
-            toHex(tokenId, { size: 32 }).slice(2),
-          ),
+          uri: tokenUri.replace("{id}", toHex(tokenId, { size: 32 }).slice(2)),
         })
       ).json();
     } catch (err) {

@@ -32,9 +32,9 @@ const client = createClient({
 });
 ```
 
-#### Contract
+### Contract
 
-A "contract" is a specialized client that carries additional information about a specific smart contract on a specific chain.
+A "contract" is a wrapper around a smart contract that is deployed on a chain. It is what you use to create [transactions](#transactions) and [read contract state](#read---reading-contract-state).
 
 ```ts
 import { createClient, contract } from "thirdweb";
@@ -47,6 +47,8 @@ const myContract = contract({
   address: "0x123...",
   // and the chainId
   chainId: 5,
+  // OPTIONALLY the contract's abi
+  abi: [...],
 })
 ```
 
@@ -54,7 +56,7 @@ const myContract = contract({
 
 Transactions are the primary way to interact with smart contracts. They are created using the `transaction` function.
 
-There are 3 ways to define a transaction, all of these return the same transaction object.
+There are 4 ways to create a transaction, all of these return the same transaction object.
 
 ##### Method Signature
 
@@ -71,7 +73,7 @@ const tx = transaction({
 });
 ```
 
-##### Automatic Abi Resolution
+##### Automatic ABI Resolution
 
 ```ts
 import { transaction } from "thirdweb/transaction";
@@ -80,6 +82,44 @@ const tx = transaction({
   // in this case we only pass the name of the method we want to call
   method: "mintTo",
   // however using this method we lose type safety for our params
+  params: ["0x123...", 100n * 10n ** 18n],
+});
+```
+
+##### Explicit Contract ABI
+
+```ts
+import { contract } from "thirdweb";
+import { transaction } from "thirdweb/transaction";
+
+const myContract = contract({
+  {...}
+  // the abi for the contract is defined here
+  abi: [
+    ...
+    {
+      name: "mintTo",
+      inputs: [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "uint256",
+          name: "amount",
+        },
+      ],
+      type: "function",
+    }
+    ...
+  ],
+});
+
+const tx = transaction({
+  client: myContract,
+  // we get auto-completion for all the available functions on the contract ABI
+  method: "mintTo",
+  // including full type-safety for the params
   params: ["0x123...", 100n * 10n ** 18n],
 });
 ```
@@ -246,7 +286,7 @@ const myContract = contract({
 
 // Step 3: read contract state
 const balance = await balanceOf({
-  client: myContract,
+  contract: myContract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
@@ -259,7 +299,7 @@ await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
 
 // Step 5: create a transaction
 const tx = mintTo({
-  client: myContract,
+  contract: myContract,
   to: "0x0890C23024089675D072E984f28A93bb391a35Ab",
   amount: 100,
 });
@@ -270,13 +310,13 @@ const receipt = await wallet.sendTransaction(tx);
 console.log("tx hash", receipt.transactionHash);
 
 // Step 7: wait for the receipt to be mined
-const txReceipt = await waitForReceipt(tx);
+const txReceipt = await receipt.wait();
 
 console.log(txReceipt);
 
 // Step 8: read contract state
 const newBalance = await balanceOf({
-  client: myContract,
+  contract: myContract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
@@ -307,7 +347,7 @@ const myContract = contract({
 
 // Step 3: read contract state
 const balance = await read({
-  client: myContract,
+  contract: myContract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });
@@ -321,7 +361,7 @@ await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
 
 // Step 5: create a transaction
 const tx = transaction({
-  client: myContract,
+  contract: myContract,
   method: "function mintTo(address to, uint256 amount)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab", 100n * 10n ** 18n],
 });
@@ -332,13 +372,13 @@ const receipt = await wallet.sendTransaction(tx);
 console.log("tx hash", receipt.transactionHash);
 
 // Step 7: wait for the receipt to be mined
-const txReceipt = await waitForReceipt(tx);
+const txReceipt = await receipt.wait();
 
 console.log(txReceipt);
 
 // Step 8: read contract state
 const newBalance = await read({
-  client: myContract,
+  contract: myContract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });

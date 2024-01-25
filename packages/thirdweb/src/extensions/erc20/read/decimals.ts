@@ -1,17 +1,10 @@
-import {
-  extractTXOpts,
-  type ThirdwebClientLike,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+import { type TxOpts } from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
 
-export async function decimals<client extends ThirdwebClientLike>(
-  options: TxOpts<client>,
-) {
-  const [opts] = extractTXOpts(options);
+export async function decimals(options: TxOpts) {
   // TODO consider caching this
   return read({
-    ...opts,
-    abi: "function decimals() view returns (uint8)",
+    ...options,
+    method: "function decimals() view returns (uint8)",
   });
 }

@@ -1,8 +1,4 @@
-import {
-  extractTXOpts,
-  type ThirdwebClientLike,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+import { type TxOpts } from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
 
 export type OwnerOfParams = { tokenId: bigint };
@@ -13,14 +9,11 @@ export type OwnerOfParams = { tokenId: bigint };
  * @param options - The parameters for the ownerOf function.
  * @returns A Promise that resolves to the address of the token owner.
  */
-export async function ownerOf<client extends ThirdwebClientLike>(
-  options: TxOpts<client, OwnerOfParams>,
-) {
-  const [opts, params] = extractTXOpts(options);
+export async function ownerOf(options: TxOpts<OwnerOfParams>) {
   return read({
-    ...opts,
+    ...options,
     method:
       "function ownerOf(uint256 tokenId) external view returns (address owner)",
-    params: [BigInt(params.tokenId)],
+    params: [BigInt(options.tokenId)],
   });
 }

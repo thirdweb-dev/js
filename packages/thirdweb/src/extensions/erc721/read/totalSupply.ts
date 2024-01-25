@@ -1,16 +1,9 @@
-import {
-  extractTXOpts,
-  type ThirdwebClientLike,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+import { type TxOpts } from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
 
-export async function totalSupply<client extends ThirdwebClientLike>(
-  options: TxOpts<client>,
-) {
-  const [opts] = extractTXOpts(options);
+export async function totalSupply(options: TxOpts) {
   return read({
-    ...opts,
+    ...options,
     method: "function totalSupply() view returns (uint256)",
   });
 }

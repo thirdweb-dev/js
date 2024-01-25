@@ -169,8 +169,8 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
       throw new Error("not connected");
     }
     // switch chain if tx is on different chain
-    if (tx.chainId !== this.connectedChainId) {
-      await this.switchChain(tx.chainId);
+    if (tx.contract.chainId !== this.connectedChainId) {
+      await this.switchChain(tx.contract.chainId);
     }
 
     const encode = await import("../transaction/actions/encode.js").then(
@@ -188,15 +188,23 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
         {
           gas: toHex(estimatedGas),
           from: this.address,
-          to: tx.contractAddress as Address,
+          to: tx.contract.address as Address,
           data: encodedData,
         },
       ],
     });
-    tx.transactionHash = result as Hash;
 
     return {
       transactionHash: result as Hash,
+      wait: async () => {
+        const { waitForReceipt } = await import(
+          "../transaction/actions/wait-for-tx-receipt.js"
+        );
+        return waitForReceipt({
+          contract: tx.contract,
+          transactionHash: result,
+        });
+      },
     };
   }
 

@@ -76,7 +76,9 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       throw new Error("not connected");
     }
     const { getRpcClient } = await import("../rpc/index.js");
-    const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
+    const rpcRequest = getRpcClient(tx.contract, {
+      chainId: tx.contract.chainId,
+    });
 
     const [getDefaultGasOverrides, encode, transactionCount] =
       await Promise.all([
@@ -87,7 +89,7 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     const [gasOverrides, encodedData, nextNonce, estimatedGas] =
       await Promise.all([
-        getDefaultGasOverrides(tx.client, tx.chainId),
+        getDefaultGasOverrides(tx.contract, tx.contract.chainId),
         encode(tx),
         transactionCount(rpcRequest, this.address),
         this.estimateGas(tx),
@@ -95,8 +97,8 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     const signedTx = await this.signTransaction({
       gas: estimatedGas,
-      to: tx.contractAddress as Address,
-      chainId: tx.chainId,
+      to: tx.contract.address as Address,
+      chainId: tx.contract.chainId,
       data: encodedData,
       nonce: nextNonce,
       ...gasOverrides,
@@ -108,10 +110,18 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       method: "eth_sendRawTransaction",
       params: [signedTx],
     });
-    tx.transactionHash = result as Hash;
 
     return {
       transactionHash: result as Hash,
+      wait: async () => {
+        const { waitForReceipt } = await import(
+          "../transaction/actions/wait-for-tx-receipt.js"
+        );
+        return waitForReceipt({
+          contract: tx.contract,
+          transactionHash: result,
+        });
+      },
     };
   }
 

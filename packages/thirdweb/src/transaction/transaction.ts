@@ -1,171 +1,47 @@
-import {
-  type AbiFunction,
-  type AbiParametersToPrimitiveTypes,
-  parseAbiItem,
+import type {
+  Abi,
+  AbiFunction,
+  AbiParametersToPrimitiveTypes,
+  ExtractAbiFunctionNames,
 } from "abitype";
-import { memoizePromise } from "../utils/promise.js";
-import { isAbiFunction } from "../abi/resolveAbiFunction.js";
 import type { ThirdwebContract } from "../contract/index.js";
 import type { ParseMethod } from "../abi/types.js";
-import type { ThirdwebClient } from "../client/client.js";
-import type { Hash, Hex } from "viem";
 
-type ParamsOption<abi extends AbiFunction> = abi["inputs"] extends { length: 0 }
-  ? // allow omitting "args" if there are no inputs
+type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
+  length: 0;
+}
+  ? // allow omitting "params" if there are no inputs
     { params?: unknown[] }
   : {
       params:
-        | AbiParametersToPrimitiveTypes<abi["inputs"]>
-        | (() => Promise<AbiParametersToPrimitiveTypes<abi["inputs"]>>);
+        | AbiParametersToPrimitiveTypes<abiFn["inputs"]>
+        | (() => Promise<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>);
     };
 
-export type TransactionOptions<
-  client extends ThirdwebClient | ThirdwebContract,
+export type TransactionInput<
+  abi extends Abi,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   method extends AbiFunction | string,
-> = TxOpts<client> &
-  (
-    | {
-        method: method;
-      }
-    | {
-        abi: method;
-      }
-  ) &
-  ParamsOption<method extends AbiFunction ? method : ParseMethod<method>>;
+> = TxOpts<object, abi> & {
+  method: method;
+} & ParamsOption<ParseMethod<abi, method>>;
 
-export type Transaction<abiFn extends AbiFunction> = {
-  contractAddress: string;
-  chainId: number;
-  client: ThirdwebClient;
-
-  abi: () => Promise<abiFn>;
-
-  transactionHash: Hash | null;
-
-  _encoded: Promise<Hex> | null;
-} & ParamsOption<abiFn>;
+// the only difference here is that
+export type Transaction<abiFn extends AbiFunction> = TransactionInput<
+  Abi,
+  abiFn
+>;
 
 export function transaction<
-  client extends ThirdwebClient | ThirdwebContract,
-  method extends AbiFunction | string,
->(options: TransactionOptions<client, method>) {
-  // declare the parsed abi inline
-  type ParsedAbi = method extends AbiFunction ? method : ParseMethod<method>;
-
-  const [opts] = extractTXOpts<client>(options);
-  return {
-    ...opts,
-    params: options.params,
-    // way to resolve the ABI reliably
-    abi: memoizePromise(async () => {
-      if ("abi" in options) {
-        return options.abi;
-      }
-      if (isAbiFunction(options.method)) {
-        return options.method;
-      }
-      // otherwise try to parse it
-      try {
-        const abiItem = parseAbiItem(options.method as string);
-        if (abiItem.type === "function") {
-          return abiItem as ParsedAbi;
-        }
-        throw new Error(`could not find function with name ${options.method}`);
-      } catch (e) {}
-      // if this fails we can download the abi of the contract and try parsing the entire abi
-      const { resolveAbi } = await import("../abi/resolveContractAbi.js");
-
-      const abi = await resolveAbi(opts);
-      // we try to find the abiFunction in the abi
-      const abiFunction = abi.find((item) => {
-        // if the item is not a function we can ignore it
-        if (item.type !== "function") {
-          return false;
-        }
-        // if the item is a function we can compare the name
-        return item.name === options.method;
-      }) as ParsedAbi | undefined;
-
-      if (!abiFunction) {
-        throw new Error(`could not find function with name ${options.method}`);
-      }
-      return abiFunction;
-    }),
-    transactionHash: null,
-
-    // "private" cached values
-    _encoded: null,
-  } as Transaction<ParsedAbi>;
+  const abi extends Abi,
+  // if an abi has been passed into the contract, restrict the method to function names of the abi
+  const method extends abi extends { length: 0 }
+    ? AbiFunction | string
+    : ExtractAbiFunctionNames<abi>,
+>(options: TransactionInput<abi, method>) {
+  return options as Transaction<ParseMethod<abi, method>>;
 }
 
-export type ThirdwebClientLike = ThirdwebClient | ThirdwebContract;
-
-export type TxOpts<
-  client extends ThirdwebClientLike,
-  T extends object = object,
-> = (client extends ThirdwebContract
-  ? {
-      client: client;
-      contractAddress?: never;
-      chainId?: never;
-    }
-  : client extends ThirdwebClient
-    ? {
-        client: client;
-        contractAddress: string;
-        chainId: number;
-      }
-    : never) &
-  T;
-
-export function isThirdwebContract(
-  client: ThirdwebClientLike,
-): client is ThirdwebContract {
-  return "address" in client && "chainId" in client;
-}
-
-export function extractTXOpts<
-  TClient extends ThirdwebClientLike,
-  T extends object = object,
->(options: TxOpts<TClient, T>) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { client, contractAddress, chainId, ...rest } = options;
-  return [
-    {
-      client: extractClient(options),
-      contractAddress: extractContractAddress(options),
-      chainId: extractChainId(options),
-    },
-    rest as T,
-  ] as const;
-}
-
-function extractClient<client extends ThirdwebClientLike>(
-  options: TxOpts<client>,
-) {
-  return options.client;
-}
-
-function extractContractAddress<client extends ThirdwebClientLike>(
-  options: TxOpts<client>,
-) {
-  if (options.contractAddress) {
-    return options.contractAddress;
-  }
-  if (isThirdwebContract(options.client)) {
-    return options.client.address;
-  }
-  throw new Error("Unable to extract extractContractAddress from tx options");
-}
-
-function extractChainId<client extends ThirdwebClientLike>(
-  options: TxOpts<client>,
-) {
-  if (options.chainId) {
-    return options.chainId;
-  }
-  if (isThirdwebContract(options.client)) {
-    return options.client.chainId;
-  }
-  throw new Error("Unable to extract chainId from tx options");
-}
+export type TxOpts<T extends object = object, abi extends Abi = Abi> = {
+  contract: ThirdwebContract<abi>;
+} & T;

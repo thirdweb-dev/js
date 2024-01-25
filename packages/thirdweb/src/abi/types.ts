@@ -1,12 +1,23 @@
-import type { ParseAbiItem, AbiFunction } from "abitype";
+import type {
+  ParseAbiItem,
+  AbiFunction,
+  Abi,
+  ExtractAbiFunction,
+} from "abitype";
 
-export type ParseMethod<method> =
+export type ParseMethod<abi extends Abi, method extends AbiFunction | string> =
   // if the method IS an AbiFunction, return it
   method extends AbiFunction
     ? method
-    : // if the method IS NOT an AbiFunction, attempt to parse it
-      method extends string
-      ? ParseAbiItem<method> extends AbiFunction
+    : method extends string // we now know we are in "string" territory
+      ? // if the string starts with `function` then we can parse it
+        method extends `function ${string}`
         ? ParseAbiItem<method>
-        : never
-      : never;
+        : // do we have an ABI to check, check the length
+          abi extends { length: 0 }
+          ? // if not, we return AbiFunction
+            AbiFunction
+          : // if we do have a length, extract the abi function
+            ExtractAbiFunction<abi, method>
+      : // this means its neither have an AbiFunction NOR a string -> never
+        never;
