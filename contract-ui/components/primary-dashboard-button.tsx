@@ -43,8 +43,8 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   );
 
   const { onSuccess: onAddSuccess, onError: onAddError } = useTxNotifications(
-    "Successfully added to dashboard",
-    "Failed to add to dashboard",
+    "Successfully imported",
+    "Failed to import",
   );
 
   const onOldRegistry = useMemo(() => {
@@ -159,7 +159,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         );
       }}
     >
-      Add to dashboard
+      Import contract
     </Button>
   );
 };
