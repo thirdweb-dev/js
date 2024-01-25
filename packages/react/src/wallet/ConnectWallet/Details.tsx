@@ -25,7 +25,8 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
-  TextAlignJustifyIcon,
+  TextAlignLeftIcon,
+  ExternalLinkIcon,
   ExitIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
@@ -72,6 +73,13 @@ import {
 import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 import { onModalUnmount } from "./constants";
 
+type ConnectedWalletDetailsLink = {
+  title: string;
+  url: string;
+};
+
+export type ConnectedWalletDetailsLinks = ConnectedWalletDetailsLink[];
+
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
 type WalletDetailsModalScreen =
@@ -91,6 +99,7 @@ export const ConnectedWalletDetails: React.FC<{
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
+  links?: ConnectedWalletDetailsLinks;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
@@ -399,6 +408,46 @@ export const ConnectedWalletDetails: React.FC<{
           </Button>
         </Container>
       </Container>
+
+      {props.links && props.links.length > 0 ? (
+        <>
+          <Spacer y="md" />
+          <Container flex="column" gap="sm">
+            {props.links.map((link) => {
+              return (
+                <MenuLink
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  as="a"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: fontSize.sm,
+                  }}
+                >
+                  <Container flex="row" center="both" color="secondaryText">
+                    <ExternalLinkIcon
+                      width={iconSize.sm}
+                      height={iconSize.sm}
+                    />
+                  </Container>
+                  {link.title}
+                </MenuLink>
+              );
+            })}
+          </Container>
+        </>
+      ) : null}
+
+      <Spacer y="lg" />
+
+      {/* Network Switcher */}
+      <div>
+        <DropdownLabel>{locale.currentNetwork}</DropdownLabel>
+        <Spacer y="xs" />
+        {networkSwitcherButton}
+      </div>
 
       <Spacer y="md" />
 
