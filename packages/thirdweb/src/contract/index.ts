@@ -7,8 +7,8 @@ export type ContractOptions = {
 };
 
 export type ThirdwebContract = ThirdwebClient & {
-  address: Readonly<string>;
-  chainId: Readonly<number>;
+  readonly address: string;
+  readonly chainId: number;
 };
 
 /**
