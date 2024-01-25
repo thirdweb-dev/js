@@ -25,7 +25,7 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
-  TextAlignLeftIcon,
+  TextAlignJustifyIcon,
   ExternalLinkIcon,
   ExitIcon,
 } from "@radix-ui/react-icons";
