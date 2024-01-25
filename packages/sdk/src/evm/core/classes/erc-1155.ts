@@ -273,6 +273,40 @@ export class Erc1155<
   );
 
   /**
+   * Transfer multiple NFTs
+   * 
+   * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
+   * 
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   * // The token IDs of the NFTs you want to send
+   * const tokenIds = [0, 1, 2];
+   * // How many copies of the NFTs to transfer
+   * const amounts = [1, 2, 3];
+   * await contract.erc1155.transferBatch(toAddress, tokenIds, amounts);
+   * ```
+   * 
+   * @twfeature ERC1155BatchTransferable
+   */
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+      data: BytesLike = [0],
+    ) => {
+      const from = await this.contractWrapper.getSignerAddress();
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeBatchTransferFrom",
+        args: [from, await resolveAddress(to), tokenIds, amounts, data],
+      });
+    },
+  );
+
+  /**
    * Transfer an NFT from a specific wallet
    *
    * @remarks Transfer an NFT from a specific wallet to another wallet.
