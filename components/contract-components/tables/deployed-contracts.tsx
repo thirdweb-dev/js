@@ -1,3 +1,4 @@
+import { ImportModal } from "../import-contract/modal";
 import { ShowMoreButton } from "./show-more-button";
 import { useAllContractList } from "@3rdweb-sdk/react";
 import { useRemoveContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
@@ -93,6 +94,10 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
     <>
       {!noHeader && (
         <>
+          <ImportModal
+            isOpen={modalState.isOpen}
+            onClose={modalState.onClose}
+          />
           <Flex
             justify="space-between"
             align="top"
@@ -108,6 +113,13 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
               </Text>
             </Flex>
             <ButtonGroup>
+              <Button
+                leftIcon={<FiFilePlus />}
+                variant="outline"
+                onClick={modalState.onOpen}
+              >
+                Import contract
+              </Button>
               <LinkButton
                 leftIcon={<FiPlus />}
                 colorScheme="primary"

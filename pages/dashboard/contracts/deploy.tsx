@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
+import { ImportModal } from "components/contract-components/import-contract/modal";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { ContractsSidebar } from "core-ui/sidebar/contracts";
@@ -78,6 +79,12 @@ const DeployOptions = () => {
           "Pick from our library of ready-to-deploy contracts and deploy to any EVM chain in just 1-click.",
         href: "/explore",
       },
+      import: {
+        title: "Import",
+        description:
+          "Import an already deployed contract to build apps on top of contract using thirdweb tools.",
+        onClick: modalState.onOpen,
+      },
       build: {
         title: "Build your own",
         description:
@@ -91,11 +98,13 @@ const DeployOptions = () => {
         href: "https://portal.thirdweb.com/cli",
       },
     }),
-    [],
+    [modalState.onOpen],
   );
 
   return (
     <>
+      <ImportModal isOpen={modalState.isOpen} onClose={modalState.onClose} />
+
       <Tabs isFitted>
         <TabList>
           {Object.entries(content).map(([key, value]) => (
@@ -190,7 +199,7 @@ const Contracts: ThirdwebNextPage = () => {
       },
 
       {
-        title: "Build or deploy a contract",
+        title: "Build, deploy or import a contract",
         description:
           "Choose between deploying your own contract or import an existing one.",
         children: <DeployOptions />,
