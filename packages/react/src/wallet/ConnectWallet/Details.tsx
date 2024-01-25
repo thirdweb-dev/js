@@ -27,6 +27,7 @@ import {
   PinBottomIcon,
   ShuffleIcon,
   TextAlignLeftIcon,
+  ExternalLinkIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -80,6 +81,13 @@ export type DropDownPosition = {
   align: "start" | "center" | "end";
 };
 
+type ConnectedWalletDetailsLink = {
+  title: string;
+  url: string;
+};
+
+export type ConnectedWalletDetailsLinks = ConnectedWalletDetailsLink[];
+
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
 export const ConnectedWalletDetails: React.FC<{
@@ -93,6 +101,7 @@ export const ConnectedWalletDetails: React.FC<{
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
+  links?: ConnectedWalletDetailsLinks;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
@@ -423,6 +432,37 @@ export const ConnectedWalletDetails: React.FC<{
           {locale.receive}{" "}
         </Button>
       </Container>
+
+      {props.links && props.links.length > 0 ? (
+        <>
+          <Spacer y="md" />
+          <Container flex="column" gap="sm">
+            {props.links.map((link) => {
+              return (
+                <MenuLink
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  as="a"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: fontSize.sm,
+                  }}
+                >
+                  <Container flex="row" center="both" color="secondaryText">
+                    <ExternalLinkIcon
+                      width={iconSize.sm}
+                      height={iconSize.sm}
+                    />
+                  </Container>
+                  {link.title}
+                </MenuLink>
+              );
+            })}
+          </Container>
+        </>
+      ) : null}
 
       <Spacer y="lg" />
 

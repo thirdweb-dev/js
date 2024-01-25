@@ -1,5 +1,5 @@
 import { Theme, iconSize } from "../../design-system";
-import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
+import { ConnectedWalletDetails, type DropDownPosition, type ConnectedWalletDetailsLinks } from "./Details";
 import {
   useAddress,
   useConnectionStatus,
@@ -36,6 +36,7 @@ import { Modal } from "../../components/Modal";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 
 export type ConnectWalletProps = {
+  links?: ConnectedWalletDetailsLinks;
   /**
    * CSS class to apply to the button element
    *
@@ -772,6 +773,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             dropdownPosition={props.dropdownPosition}
             className={props.className}
             style={props.style}
+            links={props.links}
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
             supportedTokens={supportedTokens}
