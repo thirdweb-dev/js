@@ -43,6 +43,7 @@ export {
   type MetamaskWalletOptions,
 } from "./wallets/metamask";
 
+export * from "./wallets/xdefi";
 export * from "./wallets/phantom";
 export * from "./wallets/private-key";
 export * from "./wallets/rainbow-wallet";
