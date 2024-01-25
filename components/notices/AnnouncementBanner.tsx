@@ -26,7 +26,7 @@ export const AnnouncementBanner = () => {
         px={4}
       >
         <Box display={{ base: "none", md: "block" }} />
-        <TrackedLink href="/checkout" category="announcement" label="checkout">
+        <TrackedLink href="/engine" category="announcement" label="engine">
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
               cursor="pointer"
@@ -42,8 +42,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing Checkout: Sell NFTs to anyone with a credit card or
-                crypto. Get started
+                Introducing Engine: The open-source HTTP server for scalable
+                web3 apps. Spin up an instance
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
