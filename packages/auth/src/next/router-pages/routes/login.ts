@@ -1,11 +1,12 @@
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
-import { GenerateOptionsWithOptionalDomain } from "../../core";
-import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
+} from "../../../constants";
+import type { GenerateOptionsWithOptionalDomain } from "../../../core";
+import type { ThirdwebAuthContext } from "../types";
+import { LoginPayloadBodySchema } from "../types";
 import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,

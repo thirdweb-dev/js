@@ -71,7 +71,6 @@ export type Theme = {
     secondaryButtonHoverBg: string;
 
     modalBg: string;
-    dropdownBg: string;
 
     tooltipBg: string;
     tooltipText: string;
@@ -122,7 +121,6 @@ function createThemeObj(colors: ThemeColors): Theme {
       secondaryButtonHoverBg: colors.base4,
 
       modalBg: colors.base1,
-      dropdownBg: colors.base1,
 
       tooltipBg: colors.primaryText,
       tooltipText: colors.base1,

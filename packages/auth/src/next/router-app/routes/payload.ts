@@ -1,20 +1,27 @@
-import { PayloadBodySchema, ThirdwebAuthContext } from "../types";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextRequest } from "next/server";
+
+import type { ThirdwebAuthContext } from "../types";
+import { PayloadBodySchema } from "../types";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextRequest,
   ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Invalid method. Only POST supported.",
-    });
+    return Response.json(
+      { error: "Invalid method. Only POST supported" },
+      { status: 405 },
+    );
   }
 
-  const parsedPayload = PayloadBodySchema.safeParse(req.body);
+  const reqBody = await req.json();
+  const parsedPayload = PayloadBodySchema.safeParse(reqBody);
+
   if (!parsedPayload.success) {
-    return res.status(400).json({ error: "Please provide an address" });
+    return Response.json(
+      { error: "Please provide an address" },
+      { status: 400 },
+    );
   }
 
   // TODO: Add nonce generation + custom expiration + invalid before
@@ -32,5 +39,6 @@ export default async function handler(
       : undefined,
   });
 
-  return res.status(200).json({ payload });
+  const response = Response.json({ payload }, { status: 200 });
+  return response;
 }
