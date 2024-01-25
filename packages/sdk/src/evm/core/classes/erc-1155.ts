@@ -295,9 +295,10 @@ export class Erc1155<
       to: AddressOrEns,
       tokenIds: BigNumberish[],
       amounts: BigNumberish[],
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const from = fromAddress ? await resolveAddress(fromAddress) : await this.contractWrapper.getSignerAddress();
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "safeBatchTransferFrom",

@@ -169,9 +169,10 @@ export class StandardErc1155<
       to: AddressOrEns,
       tokenIds: BigNumberish[],
       amounts: BigNumberish[],
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      return this.erc1155.transferBatch.prepare(to, tokenIds, amounts, data);
+      return this.erc1155.transferBatch.prepare(to, tokenIds, amounts, fromAddress, data);
     },
   );
 
