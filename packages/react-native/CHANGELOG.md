@@ -1,5 +1,21 @@
 # @thirdweb-dev/react-native
 
+## 0.6.3
+
+### Patch Changes
+
+- [#2198](https://github.com/thirdweb-dev/js/pull/2198) [`94e4dc9a`](https://github.com/thirdweb-dev/js/commit/94e4dc9aab2b4fee0c444e10b2f860ed9f7c0fc9) Thanks [@iketw](https://github.com/iketw)! - UI improvements
+
+- [#2197](https://github.com/thirdweb-dev/js/pull/2197) [`212b2e7b`](https://github.com/thirdweb-dev/js/commit/212b2e7bc28c8e88207a9935756f7e6133a5b7d3) Thanks [@MananTank](https://github.com/MananTank)! - - The "Request Testnet funds" button is now hidden by default in `ConnectWallet` Details Modal
+
+  - You can add it back by setting `hideTestnetFaucet` to `false` in the `ConnectWallet` component.
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9), [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/react-core@4.4.0
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+
 ## 0.6.2
 
 ### Patch Changes

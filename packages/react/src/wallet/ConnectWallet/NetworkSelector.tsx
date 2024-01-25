@@ -24,7 +24,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { useEffect } from "react";
-import { Container, Line } from "../../components/basic";
+import { Container, Line, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import {
@@ -33,6 +33,7 @@ import {
 } from "../../design-system/CustomThemeProvider";
 import { useTWLocale } from "../../evm/providers/locale-provider";
 import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
+import { Skeleton } from "../../components/Skeleton";
 
 export type NetworkSelectorChainProps = {
   /**
@@ -153,10 +154,38 @@ const fuseConfig = {
  * @internal
  */
 export function NetworkSelector(props: NetworkSelectorProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const deferredSearchTerm = useDeferredValue(searchTerm);
   const themeFromContext = useCustomTheme();
   const theme = props.theme || themeFromContext || "dark";
+  const { onClose } = props;
+
+  return (
+    <CustomThemeProvider theme={theme}>
+      <Modal
+        size={"compact"}
+        open={props.open}
+        setOpen={(value) => {
+          if (!value && onClose) {
+            onClose();
+          }
+        }}
+        style={{
+          paddingBottom: props.onCustomClick ? spacing.md : "0px",
+        }}
+      >
+        <NetworkSelectorContent {...props} />
+      </Modal>
+    </CustomThemeProvider>
+  );
+}
+
+export function NetworkSelectorContent(
+  props: NetworkSelectorProps & {
+    onBack?: () => void;
+  },
+) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
   const locale = useTWLocale().connectWallet.networkSelector;
@@ -222,177 +251,166 @@ export function NetworkSelector(props: NetworkSelectorProps) {
   );
 
   return (
-    <CustomThemeProvider theme={theme}>
-      <Modal
-        size={"compact"}
-        open={props.open}
-        setOpen={(value) => {
-          if (!value && onClose) {
-            onClose();
-          }
-        }}
-        style={{
-          paddingBottom: props.onCustomClick ? spacing.md : "0px",
-        }}
-      >
-        <Container>
-          <Container p="lg">
-            <ModalTitle>{locale.title}</ModalTitle>
-          </Container>
+    <Container>
+      <Container p="lg">
+        {props.onBack ? (
+          <ModalHeader title={locale.title} onBack={props.onBack} />
+        ) : (
+          <ModalTitle>{locale.title}</ModalTitle>
+        )}
+      </Container>
 
-          <Tabs.Root className="TabsRoot" defaultValue="all">
+      <Tabs.Root className="TabsRoot" defaultValue="all">
+        <Container px="lg">
+          <Tabs.List
+            className="TabsList"
+            aria-label="Manage your account"
+            style={{
+              display: "flex",
+              gap: spacing.xxs,
+            }}
+          >
+            <TabButton className="TabsTrigger" value="all">
+              {locale.allNetworks}
+            </TabButton>
+            <TabButton className="TabsTrigger" value="mainnet">
+              {locale.mainnets}
+            </TabButton>
+            <TabButton className="TabsTrigger" value="testnet">
+              {locale.testnets}
+            </TabButton>
+          </Tabs.List>
+        </Container>
+
+        <Spacer y="lg" />
+
+        {chains.length > 10 && (
+          <>
             <Container px="lg">
-              <Tabs.List
-                className="TabsList"
-                aria-label="Manage your account"
+              {/* Search */}
+              <div
                 style={{
                   display: "flex",
-                  gap: spacing.xxs,
+                  alignItems: "center",
+                  position: "relative",
                 }}
               >
-                <TabButton className="TabsTrigger" value="all">
-                  {locale.allNetworks}
-                </TabButton>
-                <TabButton className="TabsTrigger" value="mainnet">
-                  {locale.mainnets}
-                </TabButton>
-                <TabButton className="TabsTrigger" value="testnet">
-                  {locale.testnets}
-                </TabButton>
-              </Tabs.List>
-            </Container>
+                <StyledMagnifyingGlassIcon
+                  width={iconSize.md}
+                  height={iconSize.md}
+                />
 
-            <Spacer y="lg" />
-
-            {chains.length > 10 && (
-              <>
-                <Container px="lg">
-                  {/* Search */}
+                <Input
+                  style={{
+                    padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+                  }}
+                  tabIndex={-1}
+                  variant="outline"
+                  placeholder={locale.inputPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                />
+                {/* Searching Spinner */}
+                {deferredSearchTerm !== searchTerm && (
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      position: "relative",
+                      position: "absolute",
+                      right: spacing.md,
                     }}
                   >
-                    <StyledMagnifyingGlassIcon
-                      width={iconSize.md}
-                      height={iconSize.md}
-                    />
-
-                    <Input
-                      style={{
-                        padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
-                      }}
-                      tabIndex={-1}
-                      variant="outline"
-                      placeholder={locale.inputPlaceholder}
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                      }}
-                    />
-                    {/* Searching Spinner */}
-                    {deferredSearchTerm !== searchTerm && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          right: spacing.md,
-                        }}
-                      >
-                        <Spinner size="md" color="accentText" />
-                      </div>
-                    )}
+                    <Spinner size="md" color="accentText" />
                   </div>
-                </Container>
-                <Spacer y="lg" />
-              </>
-            )}
-
-            <Container px="md">
-              <Tabs.Content
-                className="TabsContent"
-                value="all"
-                style={{
-                  outline: "none",
-                }}
-              >
-                <NetworkTab
-                  allChains={allChains}
-                  type="all"
-                  popularChains={popularChains}
-                  recentChains={recentChains}
-                  onSwitch={handleSwitch}
-                  renderChain={props.renderChain}
-                  close={props.onClose}
-                />
-              </Tabs.Content>
-
-              <Tabs.Content
-                className="TabsContent"
-                value="mainnet"
-                style={{
-                  outline: "none",
-                }}
-              >
-                <NetworkTab
-                  allChains={allChains}
-                  type="mainnet"
-                  popularChains={popularChains}
-                  recentChains={recentChains}
-                  onSwitch={handleSwitch}
-                  renderChain={props.renderChain}
-                  close={props.onClose}
-                />
-              </Tabs.Content>
-
-              <Tabs.Content
-                className="TabsContent"
-                value="testnet"
-                style={{
-                  outline: "none",
-                }}
-              >
-                <NetworkTab
-                  allChains={allChains}
-                  type="testnet"
-                  popularChains={popularChains}
-                  recentChains={recentChains}
-                  onSwitch={handleSwitch}
-                  renderChain={props.renderChain}
-                  close={props.onClose}
-                />
-              </Tabs.Content>
+                )}
+              </div>
             </Container>
+            <Spacer y="lg" />
+          </>
+        )}
 
-            {onCustomClick && (
-              <>
-                <Line />
-                <Container p="lg">
-                  <Button
-                    fullWidth
-                    variant="link"
-                    onClick={() => {
-                      onCustomClick();
-                      if (onClose) {
-                        onClose();
-                      }
-                    }}
-                    style={{
-                      display: "flex",
-                      fontSize: fontSize.sm,
-                      boxShadow: "none",
-                    }}
-                  >
-                    {locale.addCustomNetwork}
-                  </Button>
-                </Container>
-              </>
-            )}
-          </Tabs.Root>
+        <Container px="md">
+          <Tabs.Content
+            className="TabsContent"
+            value="all"
+            style={{
+              outline: "none",
+            }}
+          >
+            <NetworkTab
+              allChains={allChains}
+              type="all"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
+
+          <Tabs.Content
+            className="TabsContent"
+            value="mainnet"
+            style={{
+              outline: "none",
+            }}
+          >
+            <NetworkTab
+              allChains={allChains}
+              type="mainnet"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
+
+          <Tabs.Content
+            className="TabsContent"
+            value="testnet"
+            style={{
+              outline: "none",
+            }}
+          >
+            <NetworkTab
+              allChains={allChains}
+              type="testnet"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
         </Container>
-      </Modal>
-    </CustomThemeProvider>
+
+        {onCustomClick && (
+          <>
+            <Line />
+            <Container p="lg">
+              <Button
+                fullWidth
+                variant="link"
+                onClick={() => {
+                  onCustomClick();
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+                style={{
+                  display: "flex",
+                  fontSize: fontSize.sm,
+                  boxShadow: "none",
+                }}
+              >
+                {locale.addCustomNetwork}
+              </Button>
+            </Container>
+          </>
+        )}
+      </Tabs.Root>
+    </Container>
   );
 }
 
@@ -533,21 +551,22 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
 
   useEffect(() => {
     if (isLoading) {
-      setIsLoading(false);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          setIsLoading(false);
+        });
+      }, 150);
     }
   }, [isLoading]);
 
   if (isLoading) {
     return (
-      <Container
-        flex="row"
-        center="both"
-        style={{
-          height: "250px",
-        }}
-      >
-        {/* Don't put a spinner here - it's gonna freeze */}
-        <Text>{locale.loading}</Text>
+      <Container px="xxs">
+        <NetworkListUl>
+          {new Array(10).fill(0).map((_, i) => (
+            <Skeleton height="48px" key={i} />
+          ))}
+        </NetworkListUl>
       </Container>
     );
   }

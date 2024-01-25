@@ -220,6 +220,10 @@ export const ConnectWalletDetailsModal = ({
     hideSwitchToPersonalWallet,
   ]);
 
+  // by default we hide faucet link
+  const showFaucet =
+    hideTestnetFaucet === undefined ? false : !hideTestnetFaucet;
+
   return (
     <ThemeProvider>
       <TWModal isVisible={isVisible} onBackdropPress={onClosePress}>
@@ -288,7 +292,7 @@ export const ConnectWalletDetailsModal = ({
               </Text>
             </View>
             <NetworkButton chain={chain} enableSwitchModal={true} />
-            {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
+            {showFaucet && chain?.testnet && chain?.faucets?.length ? (
               <IconTextButton
                 mt="xs"
                 text={l.connect_wallet_details.request_testnet_funds}

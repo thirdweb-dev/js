@@ -1,12 +1,13 @@
 import { serialize } from "cookie";
 import { getCookie } from "../helpers/user";
-import { ActiveBodySchema, ThirdwebAuthContext } from "../types";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { ThirdwebAuthContext } from "../types";
+import { ActiveBodySchema } from "../types";
+import type { NextApiRequest, NextApiResponse } from "next";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
+} from "../../../constants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +16,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({
-      error: "Invalid method. Only POST supported.",
+      error: "Invalid method. Only POST supported",
     });
   }
 

@@ -3,7 +3,7 @@ import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -18,7 +18,8 @@ export const EmbeddedWalletSocialLogin = (
     strategy: EmbeddedWalletOauthStrategy;
   },
 ) => {
-  const locale = useTWLocale().wallets.embeddedWallet.socialLoginScreen;
+  const ewLocale = useTWLocale().wallets.embeddedWallet;
+  const locale = ewLocale.socialLoginScreen;
   const {
     goBack,
     modalSize,
@@ -28,9 +29,11 @@ export const EmbeddedWalletSocialLogin = (
     connectionStatus,
   } = props;
   const themeObj = useCustomTheme();
+  const [authError, setAuthError] = useState<string | undefined>(undefined);
 
   const socialLogin = async () => {
     try {
+      console.log("socialLogin");
       const embeddedWallet = createWalletInstance();
       setConnectionStatus("connecting");
       const socialWindow = openOauthSignInWindow(props.strategy, themeObj);
@@ -49,7 +52,12 @@ export const EmbeddedWalletSocialLogin = (
       });
       setConnectedWallet(embeddedWallet);
       props.connected();
-    } catch (e) {
+    } catch (e: any) {
+      // TODO this only happens on 'retry' button click, not on initial login
+      // should pass auth error message to this component
+      if (e?.message?.includes("PAYMENT_METHOD_REQUIRED")) {
+        setAuthError(ewLocale.maxAccountsExceeded);
+      }
       setConnectionStatus("disconnected");
       console.error(`Error sign in with ${props.strategy}`, e);
     }
@@ -110,6 +118,7 @@ export const EmbeddedWalletSocialLogin = (
           {connectionStatus === "disconnected" && (
             <Container animate="fadein">
               <Text color="danger">{locale.failed}</Text>
+              {authError && <Text color="danger">{authError}</Text>}
               <Spacer y="lg" />
               <Button variant="primary" onClick={socialLogin}>
                 {locale.retry}
