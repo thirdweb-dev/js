@@ -1,8 +1,10 @@
+import { createLruCache } from "../../common/utils";
 import { ValidContractInstance } from "../../contracts";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 let STORAGE_CACHE = new ThirdwebStorage();
-const CONTRACT_CACHE = new Map<string, ValidContractInstance>();
+const CONTRACT_CACHE =
+  /* @__PURE__ */ createLruCache<ValidContractInstance>(10);
 
 function getContractCacheKey(address: string, chainId: number) {
   return `${address}-${chainId}`;
@@ -31,7 +33,7 @@ export function cacheContract(
   chainId: number,
 ) {
   const cacheKey = getContractCacheKey(address, chainId);
-  CONTRACT_CACHE.set(cacheKey, contract);
+  CONTRACT_CACHE.put(cacheKey, contract);
 }
 
 export function getCachedStorage(storage?: ThirdwebStorage): ThirdwebStorage {
