@@ -170,8 +170,8 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           status === "errored"
             ? errorMessage
             : (status === "mined" || status === "retried") && minedAt
-            ? `Completed ${format(new Date(minedAt), "PP pp")}`
-            : undefined;
+              ? `Completed ${format(new Date(minedAt), "PP pp")}`
+              : undefined;
 
         return (
           <Flex align="center" gap={1}>

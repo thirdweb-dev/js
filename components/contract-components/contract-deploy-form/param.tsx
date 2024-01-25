@@ -36,8 +36,8 @@ export const Param: React.FC<ParamProps> = ({
             {extraMetadataParam?.displayName
               ? extraMetadataParam.displayName
               : paramKey === "*"
-              ? "Unnamed"
-              : camelToTitle(paramKey)}
+                ? "Unnamed"
+                : camelToTitle(paramKey)}
             <Text size="label.sm">({paramKey})</Text>
           </Flex>
         </FormLabel>

@@ -13,31 +13,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, SetStateAction, useState } from "react";
 import { BsCloudCheck, BsGear } from "react-icons/bs";
 import { FiPlus } from "react-icons/fi";
 import { Text, Heading, Button, Badge } from "tw-components";
 
-interface CreateEngineInstanceButtonProps {
-  refetch: () => void;
-}
-
-type ModalState = "selectHostingOption";
-
-export const CreateEngineInstanceButton = ({
-  refetch,
-}: CreateEngineInstanceButtonProps) => {
+export const CreateEngineInstanceButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const trackEvent = useTrack();
-
-  const [modalState, setModalState] = useState<ModalState>(
-    "selectHostingOption",
-  );
-
-  const content =
-    modalState === "selectHostingOption" ? (
-      <ModalSelectHostingOption setModalState={setModalState} />
-    ) : null;
 
   return (
     <>
@@ -60,18 +42,14 @@ export const CreateEngineInstanceButton = ({
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          {content}
+          <ModalSelectHostingOption />
         </ModalContent>
       </Modal>
     </>
   );
 };
 
-const ModalSelectHostingOption = ({
-  setModalState,
-}: {
-  setModalState: Dispatch<SetStateAction<ModalState>>;
-}) => {
+const ModalSelectHostingOption = () => {
   const trackEvent = useTrack();
   const meQuery = useAccount();
 

@@ -134,8 +134,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             ? fullPublishMetadata.data?.constructorParams?.[param.name]
                 ?.defaultValue || ""
             : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
-            ? "0"
-            : "",
+              ? "0"
+              : "",
           param.type,
           {
             connectedWallet,

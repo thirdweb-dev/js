@@ -34,8 +34,8 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
     defaultCurrencies.length > 0
       ? defaultCurrencies
       : chainId
-      ? CURRENCIES[chainId] || []
-      : [];
+        ? CURRENCIES[chainId] || []
+        : [];
 
   const [isAddingCurrency, setIsAddingCurrency] = useState(false);
   const [editCustomCurrency, setEditCustomCurrency] = useState("");
@@ -131,8 +131,8 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           isPaymentsSelector
             ? value
             : value?.toLowerCase() === constants.AddressZero.toLowerCase()
-            ? OtherAddressZero.toLowerCase()
-            : value?.toLowerCase()
+              ? OtherAddressZero.toLowerCase()
+              : value?.toLowerCase()
         }
         onChange={(e) => {
           if (e.target.value === "custom") {

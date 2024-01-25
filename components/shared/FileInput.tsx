@@ -73,10 +73,10 @@ export const FileInput: React.FC<IFileInputProps> = ({
   const helperTextOrFile = helperText
     ? helperText
     : accept &&
-      Object.keys(accept).filter((k) => k.split("/")[0] !== "image").length ===
-        1
-    ? "image"
-    : "file";
+        Object.keys(accept).filter((k) => k.split("/")[0] !== "image")
+          .length === 1
+      ? "image"
+      : "file";
 
   // Don't display non image file types
   const noDisplay = file && !file.type.includes("image");
@@ -85,18 +85,18 @@ export const FileInput: React.FC<IFileInputProps> = ({
     ? file.type.includes("image")
       ? "Image"
       : file.type.includes("audio")
-      ? "Audio"
-      : file.type.includes("video")
-      ? "Video"
-      : file.type.includes("csv")
-      ? "CSV"
-      : file.type.includes("text") || file.type.includes("pdf")
-      ? "Text"
-      : file.type.includes("model") ||
-        file.name.endsWith(".glb") ||
-        file.name.endsWith(".usdz")
-      ? "3D Model"
-      : "Media"
+        ? "Audio"
+        : file.type.includes("video")
+          ? "Video"
+          : file.type.includes("csv")
+            ? "CSV"
+            : file.type.includes("text") || file.type.includes("pdf")
+              ? "Text"
+              : file.type.includes("model") ||
+                  file.name.endsWith(".glb") ||
+                  file.name.endsWith(".usdz")
+                ? "3D Model"
+                : "Media"
     : null;
 
   if (children) {

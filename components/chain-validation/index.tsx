@@ -143,8 +143,8 @@ const ChainValidation: React.FC<{}> = () => {
                           {!existingChain
                             ? "is available"
                             : existingChain?.mainnet
-                            ? "is already on mainnet"
-                            : "is on testnet"}
+                              ? "is already on mainnet"
+                              : "is on testnet"}
                           {existingChain?.infoURL && (
                             <Link
                               ml={1}

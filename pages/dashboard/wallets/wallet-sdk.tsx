@@ -733,8 +733,8 @@ const SupportedWalletsSelector: React.FC<SupportedWalletsSelectorProps> = ({
                     {selectedLanguage === "react-native"
                       ? "React Native"
                       : selectedLanguage === "javascript"
-                      ? "JavaScript"
-                      : selectedLanguage}
+                        ? "JavaScript"
+                        : selectedLanguage}
                   </Box>
                 </Heading>
               </SimpleGrid>

@@ -372,9 +372,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     form.watch("deployType") === "customFactory")
                     ? setFieldsetToShow("factory")
                     : fieldsetToShow === "contractParams" &&
-                      form.watch("deployType") === "standard"
-                    ? setFieldsetToShow("networks")
-                    : setFieldsetToShow("landing")
+                        form.watch("deployType") === "standard"
+                      ? setFieldsetToShow("networks")
+                      : setFieldsetToShow("landing")
                 }
                 aria-label="Back"
                 icon={<Icon as={IoChevronBack} boxSize={6} />}

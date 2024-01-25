@@ -45,8 +45,8 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
                           {walletConfig.type === "aws-kms"
                             ? "backend wallets secured by AWS KMS"
                             : walletConfig.type === "gcp-kms"
-                            ? "backend wallets secured by GCP KMS"
-                            : "local backend wallets"}
+                              ? "backend wallets secured by GCP KMS"
+                              : "local backend wallets"}
                           . You can change this in the Configuration tab.
                         </Text>
                       </Card>

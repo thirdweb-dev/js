@@ -118,8 +118,8 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           allowedContracts.length === 0
             ? "*"
             : allowedContracts.length === 1
-            ? `${allowedContracts.length} address`
-            : `${allowedContracts.length} addresses`;
+              ? `${allowedContracts.length} address`
+              : `${allowedContracts.length} addresses`;
         return <Text>{value}</Text>;
       },
     }),
@@ -131,8 +131,8 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           allowedForwarders.length === 0
             ? "*"
             : allowedForwarders.length === 1
-            ? `${allowedForwarders.length} address`
-            : `${allowedForwarders.length} addresses`;
+              ? `${allowedForwarders.length} address`
+              : `${allowedForwarders.length} addresses`;
         return <Text>{value}</Text>;
       },
     }),

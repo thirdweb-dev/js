@@ -195,8 +195,8 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
               {key === "javascript"
                 ? "JavaScript"
                 : key === "react-native"
-                ? "React Native"
-                : key}
+                  ? "React Native"
+                  : key}
             </CodeOptionButton>
           ) : null,
         )}
@@ -223,8 +223,8 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
             activeLanguage === "react" || activeLanguage === "react-native"
               ? "jsx"
               : activeLanguage === "unity"
-              ? "cpp"
-              : activeLanguage
+                ? "cpp"
+                : activeLanguage
           }
           backgroundColor="transparent"
           mt={4}

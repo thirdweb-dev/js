@@ -83,8 +83,8 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
       {validPayment
         ? "Manage billing"
         : paymentVerification
-        ? "Verify payment method →"
-        : "Add payment method"}
+          ? "Verify payment method →"
+          : "Add payment method →"}
     </Button>
   );
 };

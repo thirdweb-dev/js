@@ -29,13 +29,11 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
       return;
     }
 
-    return apiKeys.find(
-      (k) =>
-        k.services?.find(
-          (s) =>
-            account.status !== AccountStatus.ValidPayment &&
-            s.name === "bundler",
-        ),
+    return apiKeys.find((k) =>
+      k.services?.find(
+        (s) =>
+          account.status !== AccountStatus.ValidPayment && s.name === "bundler",
+      ),
     );
   }, [apiKeys, account]);
 

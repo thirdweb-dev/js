@@ -213,12 +213,12 @@ export const AutoBarChart = <
               index.format
                 ? index.format(payload)
                 : index.type === "date"
-                ? new Date(payload).toLocaleDateString(undefined, {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "2-digit",
-                  })
-                : payload
+                  ? new Date(payload).toLocaleDateString(undefined, {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "2-digit",
+                    })
+                  : payload
             }
             style={{
               fontSize: "12px",

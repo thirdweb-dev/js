@@ -162,8 +162,8 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
           !linking
             ? "You're almost done! Verify your email."
             : completed
-            ? "Wallet linked"
-            : "Linking Wallets"
+              ? "Wallet linked"
+              : "Linking Wallets"
         }
         description={
           !completed ? (

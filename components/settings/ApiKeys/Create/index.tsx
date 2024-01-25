@@ -201,8 +201,8 @@ export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
                     {step === "domainsAlert"
                       ? "Proceed"
                       : step === "create"
-                      ? "Next"
-                      : "Complete"}
+                        ? "Next"
+                        : "Complete"}
                   </Button>
                 </HStack>
               </Flex>

@@ -356,8 +356,8 @@ const ChainPage: ThirdwebNextPage = ({
                 rpcStats.isSuccess
                   ? "good"
                   : rpcStats.isError
-                  ? "bad"
-                  : "neutral"
+                    ? "bad"
+                    : "neutral"
               }
             >
               <Flex gap={2}>

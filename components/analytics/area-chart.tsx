@@ -142,12 +142,12 @@ export const AreaChart = <
               index.format
                 ? index.format(payload)
                 : index.type === "date"
-                ? new Date(payload).toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
-                : payload
+                  ? new Date(payload).toLocaleDateString(undefined, {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : payload
             }
             style={{
               fontSize: "12px",

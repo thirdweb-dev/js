@@ -45,9 +45,8 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
     );
 
     if (networksEnabled) {
-      return options.filter(
-        ({ value: val }) =>
-          form.watch("networksForDeployment.networksEnabled")?.includes(val),
+      return options.filter(({ value: val }) =>
+        form.watch("networksForDeployment.networksEnabled")?.includes(val),
       );
     } else {
       return options;

@@ -176,10 +176,10 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
             prefix
               ? `${prefix} ${code}`
               : autoType
-              ? speedUpEnabled
-                ? code
-                : code.slice(0, currentCodeIndex)
-              : code
+                ? speedUpEnabled
+                  ? code
+                  : code.slice(0, currentCodeIndex)
+                : code
           }
           language={language}
           theme={{

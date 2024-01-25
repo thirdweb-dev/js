@@ -140,12 +140,12 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
                   ? "jsx"
                   : "bash"
                 : activeEnvironment === "react" ||
-                  activeEnvironment === "react-native" ||
-                  activeEnvironment === "web3button"
-                ? "jsx"
-                : activeEnvironment === "unity"
-                ? "cpp"
-                : activeEnvironment
+                    activeEnvironment === "react-native" ||
+                    activeEnvironment === "web3button"
+                  ? "jsx"
+                  : activeEnvironment === "unity"
+                    ? "cpp"
+                    : activeEnvironment
             }
           />
           {activeEnvironment === "web3button" && (

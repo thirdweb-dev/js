@@ -25,8 +25,8 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
     chainIdProp
       ? chainIdProp
       : connectedChainId && connectedChainId in configuredNetworksRecord
-      ? connectedChainId
-      : undefined,
+        ? connectedChainId
+        : undefined,
   );
 
   useEffect(() => {

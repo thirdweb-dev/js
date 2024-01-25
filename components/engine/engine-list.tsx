@@ -98,7 +98,7 @@ export const EngineInstancesList = ({
                 </Text>
               </Stack>
               <Flex direction={{ base: "column", md: "row-reverse" }} gap={3}>
-                <CreateEngineInstanceButton refetch={refetch} />
+                <CreateEngineInstanceButton />
                 <ImportEngineInstanceButton refetch={refetch} />
               </Flex>
             </Flex>
@@ -113,7 +113,7 @@ export const EngineInstancesList = ({
               justify="end"
               gap={3}
             >
-              <CreateEngineInstanceButton refetch={refetch} />
+              <CreateEngineInstanceButton />
               <ImportEngineInstanceButton refetch={refetch} />
             </Flex>
             {instances.map((instance) => {

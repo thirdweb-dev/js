@@ -35,23 +35,23 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
                 validPayment
                   ? FiCheckCircle
                   : paymentVerification
-                  ? FiInfo
-                  : FiAlertCircle
+                    ? FiInfo
+                    : FiAlertCircle
               }
               color={
                 validPayment
                   ? "green.500"
                   : paymentVerification
-                  ? "orange.500"
-                  : "red.500"
+                    ? "orange.500"
+                    : "red.500"
               }
             />
             <Text size="label.sm" as="span">
               {validPayment
                 ? "Valid payment"
                 : paymentVerification
-                ? "Needs verification"
-                : "Invalid payment"}
+                  ? "Needs verification"
+                  : "Invalid payment"}
             </Text>
           </HStack>
         </Badge>

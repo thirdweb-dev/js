@@ -103,8 +103,8 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
               {!selectedOption
                 ? "All Networks"
                 : useCleanChainName
-                ? cleanChainName(selectedOption.name)
-                : selectedOption.name}
+                  ? cleanChainName(selectedOption.name)
+                  : selectedOption.name}
             </Text>
           </MenuButton>
 

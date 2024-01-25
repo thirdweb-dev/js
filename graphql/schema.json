@@ -60003,6 +60003,18 @@
             "deprecationReason": null
           },
           {
+            "name": "is_branding_disabled",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "is_enterprise",
             "description": null,
             "args": [],
@@ -62296,6 +62308,16 @@
             "defaultValue": null
           },
           {
+            "name": "is_branding_disabled",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Boolean_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "is_enterprise",
             "description": null,
             "type": {
@@ -62803,6 +62825,16 @@
           },
           {
             "name": "is_archived",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "is_branding_disabled",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -64044,6 +64076,16 @@
             "defaultValue": null
           },
           {
+            "name": "is_branding_disabled",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "is_enterprise",
             "description": null,
             "type": {
@@ -64377,6 +64419,12 @@
             "deprecationReason": null
           },
           {
+            "name": "is_branding_disabled",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "is_enterprise",
             "description": "column name",
             "isDeprecated": false,
@@ -64663,6 +64711,16 @@
           },
           {
             "name": "is_archived",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "is_branding_disabled",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -65281,6 +65339,16 @@
             "defaultValue": null
           },
           {
+            "name": "is_branding_disabled",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "is_enterprise",
             "description": null,
             "type": {
@@ -65634,6 +65702,12 @@
           },
           {
             "name": "is_archived",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "is_branding_disabled",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
