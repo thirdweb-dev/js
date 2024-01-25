@@ -440,15 +440,6 @@ export const ConnectedWalletDetails: React.FC<{
         </>
       ) : null}
 
-      <Spacer y="lg" />
-
-      {/* Network Switcher */}
-      <div>
-        <DropdownLabel>{locale.currentNetwork}</DropdownLabel>
-        <Spacer y="xs" />
-        {networkSwitcherButton}
-      </div>
-
       <Spacer y="md" />
 
       <Container px="md">
