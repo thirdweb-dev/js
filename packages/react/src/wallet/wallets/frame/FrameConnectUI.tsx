@@ -1,72 +1,72 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { FrameWallet } from "@thirdweb-dev/wallets";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import {
-  BackButton,
   HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
 import { Spacer } from "../../../components/Spacer";
-import { Flex } from "../../../components/basic";
-import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
+import { Container, ModalHeader } from "../../../components/basic";
+import {
+  ButtonLink,
+  GetStartedScreen,
+} from "../../ConnectWallet/screens/GetStartedScreen";
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
 import { openWindow } from "../../utils/openWindow";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 const FrameFailedConnect: React.FC<{
   onBack: () => void;
   walletIconURL: string;
   supportLink: string;
 }> = (props) => {
+  const locale = useTWLocale().wallets.frameWallet.connectionFailedScreen;
+
   return (
-    <>
-      <BackButton onClick={() => props.onBack()} />
-      <Spacer y="lg" />
+    <Container p="lg">
+      <ModalHeader onBack={() => props.onBack()} title="Frame" />
+      <Spacer y="xl" />
       {
         <>
-          <ModalTitle>Failed to connect to Frame.</ModalTitle>
+          <ModalTitle> {locale.title} </ModalTitle>
           <Spacer y="sm" />
-
-          <ModalDescription>
-            Make sure the desktop app is installed and running. You can download
-            Frame from the link below. Make sure to refresh this page once Frame
-            is running.
-          </ModalDescription>
+          <ModalDescription>{locale.description}</ModalDescription>
         </>
       }
-      <Spacer y="xl" />
-      <Flex flexDirection="column" gap="xs">
-        <ButtonLink
-          onClick={() => {
-            openWindow("https://frame.sh");
-          }}
-        >
-          <Img
-            width={iconSize.lg}
-            height={iconSize.lg}
-            src={props.walletIconURL}
-          />
-          <span>Download Frame</span>
-        </ButtonLink>
-      </Flex>
-      <Spacer y="xl" />
+      <Spacer y="lg" />
+      <ButtonLink
+        onClick={() => {
+          openWindow("https://frame.sh");
+        }}
+      >
+        <Img
+          width={iconSize.lg}
+          height={iconSize.lg}
+          src={props.walletIconURL}
+        />
+        <span>{locale.downloadFrame}</span>
+      </ButtonLink>
+      <Spacer y="lg" />
       <HelperLink target="_blank" href={props.supportLink}>
-        Still having troubles connecting?
+        {locale.supportLink}
       </HelperLink>
-    </>
+    </Container>
   );
 };
 
 export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
-  const [screen, setScreen] = useState<"connecting" | "connect-failed">(
-    "connecting",
-  );
-  const connect = useConnect();
+  const [screen, setScreen] = useState<
+    "connecting" | "connect-failed" | "get-started"
+  >("connecting");
+  const locale = useTWLocale().wallets.frameWallet;
+
+  const { connect } = props;
   const connectPrompted = useRef(false);
-  const { walletConfig, close, goBack } = props;
+  const { walletConfig, connected, goBack } = props;
   const downloadLink = "https://frame.sh";
   const supportLink = "https://docs.frame.sh";
   const hideBackButton = props.supportedWallets.length === 1;
@@ -83,8 +83,8 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         try {
           connectPrompted.current = true;
           setScreen("connecting");
-          await connect(walletConfig);
-          close();
+          await connect();
+          connected();
         } catch (e) {
           setScreen("connect-failed");
         }
@@ -95,16 +95,29 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         openWindow(downloadLink);
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connect, goBack, connected]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
+        }}
+        errorConnecting={false}
+        onRetry={() => {
+          // NOOP
+        }}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
         hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink={supportLink}
       />
     );
   }
@@ -115,6 +128,22 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         onBack={goBack}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink={supportLink}
+      />
+    );
+  }
+
+  if (screen === "get-started") {
+    return (
+      <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
+        walletIconURL={walletConfig.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        chromeExtensionLink={walletConfig.meta.urls?.chrome}
+        googlePlayStoreLink={walletConfig.meta.urls?.android}
+        appleStoreLink={walletConfig.meta.urls?.ios}
+        onBack={props.goBack}
       />
     );
   }

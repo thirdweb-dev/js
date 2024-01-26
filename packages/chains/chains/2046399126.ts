@@ -1,31 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Europa SKALE Chain",
   "chain": "europa",
-  "icon": {
-    "url": "ipfs://bafkreiezcwowhm6xjrkt44cmiu6ml36rhrxx3amcg3cfkcntv2vgcvgbre",
-    "width": 600,
-    "height": 600,
-    "format": "png"
-  },
-  "rpc": [
-    "https://europa-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.skalenodes.com/v1/elated-tan-skat",
-    "wss://mainnet.skalenodes.com/v1/elated-tan-skat"
-  ],
-  "faucets": [
-    "https://ruby.exchange/faucet.html",
-    "https://sfuel.mylilius.com/"
-  ],
-  "nativeCurrency": {
-    "name": "sFUEL",
-    "symbol": "sFUEL",
-    "decimals": 18
-  },
-  "infoURL": "https://europahub.network/",
-  "shortName": "europa",
   "chainId": 2046399126,
-  "networkId": 2046399126,
   "explorers": [
     {
       "name": "Blockscout",
@@ -33,6 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "https://ruby.exchange/faucet.html",
+    "https://sfuel.mylilius.com/"
+  ],
+  "icon": {
+    "url": "ipfs://bafkreiezcwowhm6xjrkt44cmiu6ml36rhrxx3amcg3cfkcntv2vgcvgbre",
+    "width": 600,
+    "height": 600,
+    "format": "png"
+  },
+  "infoURL": "https://europahub.network/",
+  "name": "SKALE Europa Hub",
+  "nativeCurrency": {
+    "name": "sFUEL",
+    "symbol": "sFUEL",
+    "decimals": 18
+  },
+  "networkId": 2046399126,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
@@ -42,6 +36,13 @@ export default {
       }
     ]
   },
-  "testnet": false,
-  "slug": "europa-skale-chain"
+  "rpc": [
+    "https://skale-europa-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2046399126.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.skalenodes.com/v1/elated-tan-skat",
+    "wss://mainnet.skalenodes.com/v1/elated-tan-skat"
+  ],
+  "shortName": "europa",
+  "slug": "skale-europa-hub",
+  "testnet": false
 } as const satisfies Chain;

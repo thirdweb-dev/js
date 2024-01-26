@@ -1,4 +1,11 @@
-import { Transaction } from "./transactions";
+import type {
+  DropERC721_V3,
+  IThirdwebContract,
+  SignatureDrop,
+} from "@thirdweb-dev/contracts-js";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, Contract, utils, type BigNumberish } from "ethers";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -12,28 +19,21 @@ import {
 import { buildTransactionFunction } from "../../common/transactions";
 import { FeatureName } from "../../constants/contract-features";
 import type { BatchToReveal } from "../../types/delayed-reveal";
-import type { UploadProgressEvent } from "../../types/events";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
 } from "../../types/eips";
-import { ContractWrapper } from "./contract-wrapper";
-import type {
-  DropERC721_V3,
-  IThirdwebContract,
-  SignatureDrop,
-} from "@thirdweb-dev/contracts-js";
-import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, type BigNumberish, utils, Contract } from "ethers";
+import type { UploadProgressEvent } from "../../types/events";
 import type { TransactionResultWithId } from "../types";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Handles delayed reveal logic
  * @public
  */
 export class DelayedReveal<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
   T extends
     | DropERC721_V3
     | BaseDelayedRevealERC721
@@ -42,12 +42,17 @@ export class DelayedReveal<
 > {
   featureName;
 
-  private contractWrapper: ContractWrapper<T>;
+  private contractWrapper;
   private storage: ThirdwebStorage;
   private nextTokenIdToMintFn: () => Promise<BigNumber>;
 
   constructor(
-    contractWrapper: ContractWrapper<T>,
+    contractWrapper: ContractWrapper<
+      | DropERC721_V3
+      | BaseDelayedRevealERC721
+      | SignatureDrop
+      | BaseDelayedRevealERC1155
+    >,
     storage: ThirdwebStorage,
     featureName: FeatureName,
     nextTokenIdToMintFn: () => Promise<BigNumber>,
@@ -127,17 +132,15 @@ export class DelayedReveal<
       );
 
       const baseUri = getBaseUriFromBatch(uris);
-      const baseUriId =
-        await this.contractWrapper.readContract.getBaseURICount();
+      const baseUriId = await this.contractWrapper.read("getBaseURICount", []);
       const hashedPassword = await this.hashDelayRevealPassword(
         baseUriId,
         password,
       );
-      const encryptedBaseUri =
-        await this.contractWrapper.readContract.encryptDecrypt(
-          utils.toUtf8Bytes(baseUri),
-          hashedPassword,
-        );
+      const encryptedBaseUri = await this.contractWrapper.read(
+        "encryptDecrypt",
+        [utils.toUtf8Bytes(baseUri), hashedPassword],
+      );
 
       let data: string;
       const legacyContract = await this.isLegacyContract();
@@ -236,7 +239,7 @@ export class DelayedReveal<
    * @public
    */
   public async getBatchesToReveal(): Promise<BatchToReveal[]> {
-    const count = await this.contractWrapper.readContract.getBaseURICount();
+    const count = await this.contractWrapper.read("getBaseURICount", []);
     if (count.isZero()) {
       return [];
     }
@@ -251,13 +254,13 @@ export class DelayedReveal<
             this.contractWrapper,
           )
         ) {
-          return this.contractWrapper.readContract.getBatchIdAtIndex(i);
+          return this.contractWrapper.read("getBatchIdAtIndex", [i]);
         }
 
         if (
           hasFunction<DropERC721_V3>("baseURIIndices", this.contractWrapper)
         ) {
-          return this.contractWrapper.readContract.baseURIIndices(i);
+          return this.contractWrapper.read("baseURIIndices", [i]);
         }
 
         throw new Error(
@@ -282,7 +285,7 @@ export class DelayedReveal<
       Array.from([...uriIndices]).map((i) =>
         legacyContract
           ? this.getLegacyEncryptedData(i)
-          : this.contractWrapper.readContract.encryptedData(i),
+          : this.contractWrapper.read("encryptedData", [i]),
       ),
     );
     const encryptedBaseUris = encryptedUriData.map((data) => {
@@ -316,7 +319,7 @@ export class DelayedReveal<
     password: string,
   ) {
     const chainId = await this.contractWrapper.getChainID();
-    const contractAddress = this.contractWrapper.readContract.address;
+    const contractAddress = this.contractWrapper.address;
     return utils.solidityKeccak256(
       ["string", "uint256", "uint256", "address"],
       [password, chainId, batchTokenIndex, contractAddress],
@@ -325,7 +328,7 @@ export class DelayedReveal<
 
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     return fetchTokenMetadataForContract(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       this.contractWrapper.getProvider(),
       tokenId,
       this.storage,
@@ -337,8 +340,9 @@ export class DelayedReveal<
       hasFunction<IThirdwebContract>("contractVersion", this.contractWrapper)
     ) {
       try {
-        const version =
-          await this.contractWrapper.readContract.contractVersion();
+        const version = await (
+          this.contractWrapper as ContractWrapper<IThirdwebContract>
+        ).read("contractVersion", []);
         return version <= 2;
       } catch (e) {
         return false;
@@ -348,8 +352,13 @@ export class DelayedReveal<
   }
 
   private async getLegacyEncryptedData(index: BigNumber) {
+    const DeprecatedAbi = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json"
+      )
+    ).default;
     const legacy = new Contract(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       DeprecatedAbi,
       this.contractWrapper.getProvider(),
     );

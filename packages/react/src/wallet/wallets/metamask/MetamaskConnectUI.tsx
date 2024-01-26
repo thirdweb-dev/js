@@ -1,21 +1,50 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { metamaskUris } from "./metamaskUris";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
-export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
+export const MetamaskConnectUI = (
+  props: ConnectUIProps<MetaMaskWallet> & {
+    connectionMethod: "walletConnect" | "metamaskBrowser";
+  },
+) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const { walletConfig, close } = props;
-  const connect = useConnect();
+  const locale = useTWLocale().wallets.metamaskWallet;
+  const { walletConfig, connected, connect } = props;
+  const [errorConnecting, setErrorConnecting] = useState(false);
+
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connectionScreen.instruction,
+    tryAgain: locale.connectionScreen.retry,
+    inProgress: locale.connectionScreen.inProgress,
+    failed: locale.connectionScreen.failed,
+  };
 
   const hideBackButton = props.supportedWallets.length === 1;
 
-  const { goBack } = props;
+  const connectToExtension = useCallback(async () => {
+    try {
+      connectPrompted.current = true;
+      setErrorConnecting(false);
+      setScreen("connecting");
+      await wait(1000);
+      await connect();
+      connected();
+    } catch (e) {
+      setErrorConnecting(true);
+      console.error(e);
+    }
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -30,39 +59,41 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
     // if loading
     (async () => {
       if (isInstalled) {
-        try {
-          connectPrompted.current = true;
-          setScreen("connecting");
-          await connect(walletConfig);
-          close();
-        } catch (e) {
-          goBack();
-        }
+        connectToExtension();
       }
 
       // if metamask is not injected
       else {
         // on mobile, open metamask app link
         if (isMobile()) {
-          window.open(
-            `https://metamask.app.link/dapp/${window.location.toString()}`,
-          );
+          if (props.connectionMethod === "walletConnect") {
+            setScreen("open-wc-uri");
+          } else {
+            window.open(
+              `https://metamask.app.link/dapp/${window.location.toString()}`,
+            );
+          }
         } else {
           // on desktop, show the metamask scan qr code
           setScreen("scanning");
         }
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connectToExtension, props.connectionMethod, walletConfig]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={connectingLocale}
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        onRetry={connectToExtension}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
   }
@@ -70,14 +101,40 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
+        onBack={props.goBack}
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        locale={connectingLocale}
+        onRetry={() => {
+          // NOOP - TODO make onRetry optional
         }}
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={connected}
+        appUriPrefix={metamaskUris}
+        createWalletInstance={props.createWalletInstance}
+        setConnectedWallet={(w) => {
+          props.setConnectedWallet(w as MetaMaskWallet);
+        }}
+        setConnectionStatus={props.setConnectionStatus}
+        meta={walletConfig.meta}
       />
     );
   }
@@ -85,13 +142,16 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "scanning") {
     return (
       <MetamaskScan
-        onBack={goBack}
-        onConnected={close}
+        onBack={props.goBack}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
+        setConnectedWallet={(w: MetaMaskWallet) => props.setConnectedWallet(w)}
+        setConnectionStatus={props.setConnectionStatus}
+        createWalletInstance={props.createWalletInstance}
       />
     );
   }

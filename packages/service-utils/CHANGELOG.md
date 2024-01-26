@@ -1,5 +1,76 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.12
+
+### Patch Changes
+
+- [#2157](https://github.com/thirdweb-dev/js/pull/2157) [`749a12f9`](https://github.com/thirdweb-dev/js/commit/749a12f92f687774330e154d7412aeba79f8fff5) Thanks [@assimovt](https://github.com/assimovt)! - fix checkout service name
+
+## 0.4.11
+
+### Patch Changes
+
+- [#2107](https://github.com/thirdweb-dev/js/pull/2107) [`1a5627f7`](https://github.com/thirdweb-dev/js/commit/1a5627f72d5a38386228517ef99fb800ca0f5a57) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - added checkout as service
+
+## 0.4.10
+
+### Patch Changes
+
+- [#1988](https://github.com/thirdweb-dev/js/pull/1988) [`17fe41d4`](https://github.com/thirdweb-dev/js/commit/17fe41d42bf99ccc83669557dc48d6fd22a5a04e) Thanks [@assimovt](https://github.com/assimovt)! - fix api key caching ttl
+
+## 0.4.9
+
+### Patch Changes
+
+- [#1976](https://github.com/thirdweb-dev/js/pull/1976) [`8ff87be6`](https://github.com/thirdweb-dev/js/commit/8ff87be631f1754b15e7ec4556d51e8eec5cbd18) Thanks [@arcoraven](https://github.com/arcoraven)! - Handle if error parsing JSON response in authorization helper
+
+## 0.4.8
+
+### Patch Changes
+
+- [#1907](https://github.com/thirdweb-dev/js/pull/1907) [`8d1b8a47`](https://github.com/thirdweb-dev/js/commit/8d1b8a47e6d2262ef7e326ff561a30f401cb9834) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: add "checkout" as a usage type
+
+## 0.4.7
+
+### Patch Changes
+
+- [#1752](https://github.com/thirdweb-dev/js/pull/1752) [`1fbbc2d2`](https://github.com/thirdweb-dev/js/commit/1fbbc2d27d88af6029267e6993dd79e077a60ab2) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore(service-utils): add `redirecrUrls` type to `ApiKeyMetadata`
+
+- [#1751](https://github.com/thirdweb-dev/js/pull/1751) [`95380eae`](https://github.com/thirdweb-dev/js/commit/95380eaed4aad93d47ece4da2b45fdbba2d14205) Thanks [@arcoraven](https://github.com/arcoraven)! - Add walletType to usage payload
+
+## 0.4.6
+
+### Patch Changes
+
+- [#1729](https://github.com/thirdweb-dev/js/pull/1729) [`52b1a0fc`](https://github.com/thirdweb-dev/js/commit/52b1a0fcacb136e8da417d883e5365f2ab558d59) Thanks [@arcoraven](https://github.com/arcoraven)! - Make accountId optional in publishUsageEvents. This will be hydrated internally.
+
+## 0.4.5
+
+### Patch Changes
+
+- [#1641](https://github.com/thirdweb-dev/js/pull/1641) [`d66ff413`](https://github.com/thirdweb-dev/js/commit/d66ff413dee8abeb8b5ad75919a2e553d8dedb1e) Thanks [@arcoraven](https://github.com/arcoraven)! - Adds platform metrics to usage tracker payload
+
+- [#1640](https://github.com/thirdweb-dev/js/pull/1640) [`e2e6bdd4`](https://github.com/thirdweb-dev/js/commit/e2e6bdd4cda061019c8b76519f019cebc43128c5) Thanks [@assimovt](https://github.com/assimovt)! - add embedded wallets to service definitions
+
+- [#1584](https://github.com/thirdweb-dev/js/pull/1584) [`903145a4`](https://github.com/thirdweb-dev/js/commit/903145a4ae4474356f46b62e363871f4f3f613c5) Thanks [@assimovt](https://github.com/assimovt)! - rate limit worker
+
+## 0.4.4
+
+### Patch Changes
+
+- [#1566](https://github.com/thirdweb-dev/js/pull/1566) [`d378106a`](https://github.com/thirdweb-dev/js/commit/d378106a852f941779bb72ac1841bddf34fc15a6) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - docs(service-utils): Add documentation for authorizeNode for node auth function
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- [#1559](https://github.com/thirdweb-dev/js/pull/1559) [`13ef6a50`](https://github.com/thirdweb-dev/js/commit/13ef6a50cf10b442b2b54b780e42210cab2db762) Thanks [@assimovt](https://github.com/assimovt)! - expose account status in api key metadata
+
+## 0.4.3
+
+### Patch Changes
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,42 +1,44 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CIC Chain Testnet",
   "chain": "CICT",
-  "rpc": [
-    "https://cic-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testapi.cicscan.com"
+  "chainId": 1252,
+  "explorers": [
+    {
+      "name": "CICscan",
+      "url": "https://testnet.cicscan.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
+        "width": 1024,
+        "height": 768,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [
     "https://cicfaucet.com"
   ],
-  "nativeCurrency": {
-    "name": "Crazy Internet Coin",
-    "symbol": "CICT",
-    "decimals": 18
-  },
-  "infoURL": "https://www.cicchain.net",
-  "shortName": "CICT",
-  "chainId": 1252,
-  "networkId": 1252,
   "icon": {
     "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
     "width": 1024,
     "height": 768,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "CICscan",
-      "url": "https://testnet.cicscan.com",
-      "icon": {
-        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
-        "width": 1024,
-        "height": 768,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://www.cicchain.net",
+  "name": "CIC Chain Testnet",
+  "nativeCurrency": {
+    "name": "Crazy Internet Coin",
+    "symbol": "CICT",
+    "decimals": 18
+  },
+  "networkId": 1252,
+  "rpc": [
+    "https://cic-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1252.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testapi.cicscan.com"
   ],
-  "testnet": true,
-  "slug": "cic-chain-testnet"
+  "shortName": "CICT",
+  "slip44": 1,
+  "slug": "cic-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

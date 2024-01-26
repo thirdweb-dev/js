@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ancient8 Testnet",
   "chain": "Ancient8",
-  "icon": {
-    "url": "ipfs://QmSX8sHToRzyFupT8BvPQjVsegRWFYz2mdnLkVnqBFKohY",
-    "width": 901,
-    "height": 901,
-    "format": "png"
-  },
-  "rpc": [
-    "https://ancient8-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.ancient8.gg"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://ancient8.gg/",
-  "shortName": "a8",
   "chainId": 2863311531,
-  "networkId": 2863311531,
   "explorers": [
     {
       "name": "a8scan-testnet",
@@ -29,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ancient8-testnet"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXLmYMqZ2ZKyaaEjayNjLai4RUo2YmorUDwkk95xmdTUr",
+    "width": 80,
+    "height": 80,
+    "format": "png"
+  },
+  "infoURL": "https://ancient8.gg/",
+  "name": "Ancient8 Testnet (deprecated)",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 2863311531,
+  "rpc": [
+    "https://ancient8-testnet-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2863311531.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.ancient8.gg"
+  ],
+  "shortName": "a8old",
+  "slip44": 1,
+  "slug": "ancient8-testnet-deprecated",
+  "status": "deprecated",
+  "testnet": true
 } as const satisfies Chain;

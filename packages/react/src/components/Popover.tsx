@@ -1,13 +1,9 @@
-import {
-  fontSize,
-  radius,
-  shadow,
-  spacing,
-  type Theme,
-} from "../design-system";
+import { fontSize, radius, shadow, spacing } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RXPopover from "@radix-ui/react-popover";
+import { Container } from "./basic";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export type PopoverProps = {
   children: React.ReactNode;
@@ -22,7 +18,18 @@ export const Popover = (props: PopoverProps) => {
       <RXPopover.Trigger asChild>{props.children}</RXPopover.Trigger>
       <RXPopover.Portal>
         <PopoverContent sideOffset={7} side="top">
-          <FlexWrapper>{props.content}</FlexWrapper>
+          <Container
+            flex="row"
+            center="y"
+            gap="sm"
+            style={{
+              lineHeight: 1.5,
+              maxWidth: "200px",
+              textAlign: "center",
+            }}
+          >
+            {props.content}
+          </Container>
           <PopoverArrow />
         </PopoverContent>
       </RXPopover.Portal>
@@ -41,29 +48,25 @@ from {
   }
 `;
 
-const PopoverContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ RXPopover.Content,
-)<{ theme?: Theme }>`
-  border-radius: ${radius.sm};
-  padding: ${spacing.sm} ${spacing.md};
-  background-color: ${(p) => p.theme.bg.inverted};
-  box-shadow: ${shadow.md};
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-  animation-name: ${slideUpAndFade};
-  color: ${(p) => p.theme.text.inverted};
-  font-size: ${fontSize.md};
-`;
+const PopoverContent = /* @__PURE__ */ (() =>
+  styled(RXPopover.Content)(() => {
+    const theme = useCustomTheme();
+    return {
+      borderRadius: radius.sm,
+      padding: `${spacing.sm} ${spacing.md}`,
+      backgroundColor: theme.colors.tooltipBg,
+      boxShadow: shadow.md,
+      willChange: "transform, opacity",
+      animation: `${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      color: theme.colors.tooltipText,
+      fontSize: fontSize.md,
+    };
+  }))();
 
-const PopoverArrow = /* @__PURE__ */ styled(/* @__PURE__ */ RXPopover.Arrow)<{
-  theme?: Theme;
-}>`
-  fill: ${(p) => p.theme.bg.inverted};
-`;
-
-const FlexWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-`;
+const PopoverArrow = /* @__PURE__ */ (() =>
+  styled(RXPopover.Arrow)(() => {
+    const theme = useCustomTheme();
+    return {
+      fill: theme.colors.tooltipBg,
+    };
+  }))();

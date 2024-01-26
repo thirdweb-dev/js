@@ -1,34 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cronos Mainnet",
   "chain": "CRO",
-  "rpc": [
-    "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.cronos.org",
-    "https://cronos-evm.publicnode.com"
+  "chainId": 25,
+  "explorers": [
+    {
+      "name": "Cronos Explorer",
+      "url": "https://explorer.cronos.org",
+      "standard": "none"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "infoURL": "https://cronos.org/",
+  "name": "Cronos Mainnet",
   "nativeCurrency": {
     "name": "Cronos",
     "symbol": "CRO",
     "decimals": 18
   },
-  "infoURL": "https://cronos.org/",
-  "shortName": "cro",
-  "chainId": 25,
   "networkId": 25,
-  "explorers": [
-    {
-      "name": "Cronos Explorer",
-      "url": "https://cronoscan.com",
-      "standard": "none"
-    }
+  "rpc": [
+    "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://25.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.cronos.org",
+    "https://cronos-evm.publicnode.com",
+    "wss://cronos-evm.publicnode.com"
   ],
-  "testnet": false,
-  "slug": "cronos"
+  "shortName": "cro",
+  "slug": "cronos",
+  "testnet": false
 } as const satisfies Chain;

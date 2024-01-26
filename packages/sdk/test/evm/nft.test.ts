@@ -5,8 +5,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("NFT Contract", async () => {
   type NewType = NFTCollection;
   let nftContract: NewType;
@@ -272,5 +270,102 @@ describe("NFT Contract", async () => {
       },
     });
     expect(tx.id.toNumber()).to.eq(0);
+  });
+
+  it("allOwners() should not return AddressZero as one of the owners", async () => {
+    const metadata = [{ name: "Test1" }, { name: "Test2" }, { name: "Test3" }];
+    await nftContract.mintBatch(metadata);
+
+    // Send one to AddressZero so that we can run the test
+    await nftContract.burn(0);
+    const records = await nftContract.erc721.getAllOwners();
+    const hasFaultyRecord = records.some((item) => item.owner === AddressZero);
+    assert.strictEqual(hasFaultyRecord, false);
+    expect(records).to.be.an("array").length(2);
+    expect(records[0].tokenId).to.eq(1);
+    expect(records[1].tokenId).to.eq(2);
+  });
+
+  it("should respect pagination for getOwned (erc-721-standard.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nftPage1 = await nftContract.getOwned(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    expect(nftPage1[0].metadata.id).to.eq("0");
+    expect(nftPage1[1].metadata.id).to.eq("1");
+
+    const nftPage2 = await nftContract.getOwned(undefined, {
+      count: 3,
+      start: 2,
+    });
+    expect(nftPage2).to.be.an("array").length(3);
+    expect(nftPage2[0].metadata.id).to.eq("2");
+    expect(nftPage2[1].metadata.id).to.eq("3");
+    expect(nftPage2[2].metadata.id).to.eq("4");
+  });
+
+  it("should respect pagination for getOwned (erc-721.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nftPage1 = await nftContract.erc721.getOwned(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    expect(nftPage1[0].metadata.id).to.eq("0");
+    expect(nftPage1[1].metadata.id).to.eq("1");
+
+    const nftPage2 = await nftContract.erc721.getOwned(undefined, {
+      count: 3,
+      start: 2,
+    });
+    expect(nftPage2).to.be.an("array").length(3);
+    expect(nftPage2[0].metadata.id).to.eq("2");
+    expect(nftPage2[1].metadata.id).to.eq("3");
+    expect(nftPage2[2].metadata.id).to.eq("4");
+  });
+
+  it("should respect pagination for getAllOwners", async () => {
+    const _tokenIds: number[] = Array.from({ length: 31 }, (_, index) => index);
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const [page1, page2] = await Promise.all([
+      nftContract.erc721.getAllOwners({ start: 0, count: 10 }),
+      nftContract.erc721.getAllOwners({ start: 5, count: 8 }),
+    ]);
+    expect(page1).to.be.an("array").length(10);
+    expect(page1[0].tokenId).to.eq(0);
+    expect(page1[9].tokenId).to.eq(9);
+
+    expect(page2).to.be.an("array").length(8);
+    expect(page2[0].tokenId).to.eq(5);
+    expect(page2[7].tokenId).to.eq(12);
+  });
+
+  it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
+  });
+
+  it("getOwned should return all items when queryParams.count is greater than the total supply (erc-721.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.erc721.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
   });
 });

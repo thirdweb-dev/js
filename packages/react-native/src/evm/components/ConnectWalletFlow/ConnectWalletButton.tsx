@@ -1,33 +1,58 @@
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { BaseButton, Text } from "../base";
-import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
+import { useConnectionStatus } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import { ThemeProvider, ThemeProviderProps } from "../../styles/ThemeProvider";
 
 export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
   /**
    * Set a custom title for the button
-   * @default "Connect Wallet"
+   *
+   * The default is `"Connect Wallet"`
    */
   buttonTitle?: string;
   /**
    * Set a custom title for the Connect Wallet modal
-   * @default "Choose your wallet"
+   *
+   * The default is `"Choose your wallet"`
    */
   modalTitle?: string;
+  /**
+   * Replace the thirdweb icon next to modalTitle and set your own iconUrl
+   *
+   * Set to empty string to hide the icon
+   */
+  modalTitleIconUrl?: string;
+  /**
+   * Set a custom terms of service url
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * Set a custom privacy policy url
+   */
+  privacyPolicyUrl?: string;
 };
 
 export const ConnectWalletButton = ({
   modalTitle,
+  modalTitleIconUrl,
+  termsOfServiceUrl,
+  privacyPolicyUrl,
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
+  const l = useLocale();
+  const appTheme = useGlobalTheme();
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
-  const supportedWallets = useWallets();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
   const { setModalState } = useModalState();
 
@@ -59,27 +84,33 @@ export const ConnectWalletButton = ({
       view: "ConnectWalletFlow",
       data: {
         modalTitle,
-        walletConfig:
-          supportedWallets.length === 1 ? supportedWallets[0] : undefined,
+        modalTitleIconUrl,
+        termsOfServiceUrl,
+        privacyPolicyUrl,
       },
       caller: "ConnectWallet",
     });
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme ? theme : appTheme}>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
+        borderColor="buttonBorderColor"
+        borderWidth={1}
         onPress={onConnectWalletPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="buttonTextColor">
+        <Text variant="bodyLargeBold" color="buttonTextColor">
           {showButtonSpinner ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
+            <ActivityIndicator
+              size="small"
+              color={appTheme.colors.buttonTextColor}
+            />
           ) : buttonTitle ? (
             buttonTitle
           ) : (
-            "Connect Wallet"
+            l.connect_wallet.label
           )}
         </Text>
       </BaseButton>

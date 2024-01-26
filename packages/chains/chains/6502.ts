@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Peerpay",
   "chain": "P2P",
-  "rpc": [
-    "https://peerpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://peerpay.su.gy/p2p"
-  ],
+  "chainId": 6502,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://peerpay.su.gy",
+  "name": "Peerpay",
   "nativeCurrency": {
     "name": "Peerpay",
     "symbol": "P2P",
     "decimals": 18
   },
-  "infoURL": "https://peerpay.su.gy",
-  "shortName": "Peerpay",
-  "chainId": 6502,
   "networkId": 6502,
-  "explorers": [],
-  "testnet": false,
-  "slug": "peerpay"
+  "rpc": [
+    "https://peerpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6502.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://peerpay.su.gy/p2p"
+  ],
+  "shortName": "Peerpay",
+  "slug": "peerpay",
+  "testnet": false
 } as const satisfies Chain;

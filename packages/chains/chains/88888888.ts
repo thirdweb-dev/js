@@ -1,23 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "T.E.A.M Blockchain",
   "chain": "TEAM",
-  "icon": {
-    "url": "ipfs://QmcnA15BLE9uvznbugXKjqquizZs1eLPeEEkc92DSmvhmt",
-    "width": 248,
-    "height": 248,
-    "format": "png"
-  },
-  "rpc": [
-    "https://t-e-a-m-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.teamblockchain.team"
+  "chainId": 88888888,
+  "explorers": [
+    {
+      "name": "teamscan",
+      "url": "https://teamblockchain.team",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "TEAM",
-    "symbol": "$TEAM",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -26,17 +18,26 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmcnA15BLE9uvznbugXKjqquizZs1eLPeEEkc92DSmvhmt",
+    "width": 248,
+    "height": 248,
+    "format": "png"
+  },
   "infoURL": "https://teamblockchain.team",
-  "shortName": "team",
-  "chainId": 88888888,
+  "name": "T.E.A.M Blockchain",
+  "nativeCurrency": {
+    "name": "TEAM",
+    "symbol": "$TEAM",
+    "decimals": 18
+  },
   "networkId": 88888888,
-  "explorers": [
-    {
-      "name": "teamscan",
-      "url": "https://teamblockchain.team",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://t-e-a-m-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.teamblockchain.team"
   ],
-  "testnet": false,
-  "slug": "t-e-a-m-blockchain"
+  "shortName": "team",
+  "slug": "t-e-a-m-blockchain",
+  "testnet": false
 } as const satisfies Chain;

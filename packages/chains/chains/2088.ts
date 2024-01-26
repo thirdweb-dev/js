@@ -1,10 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Altair",
   "chain": "AIR",
-  "rpc": [
-    "wss://fullnode.altair.centrifuge.io"
-  ],
+  "chainId": 2088,
+  "explorers": [],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -13,16 +12,25 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmSwqWxZ5HRdc25HMhEmVKxZkwSKapuuyGHb8kyrtuzxat",
+    "width": 210,
+    "height": 210,
+    "format": "svg"
+  },
+  "infoURL": "https://centrifuge.io",
+  "name": "Altair",
   "nativeCurrency": {
     "name": "Altair",
     "symbol": "AIR",
     "decimals": 18
   },
-  "infoURL": "https://centrifuge.io",
-  "shortName": "air",
-  "chainId": 2088,
   "networkId": 2088,
-  "testnet": false,
-  "slug": "altair"
+  "rpc": [
+    "wss://fullnode.altair.centrifuge.io",
+    "wss://altair.api.onfinality.io/public-ws"
+  ],
+  "shortName": "air",
+  "slug": "altair",
+  "testnet": false
 } as const satisfies Chain;

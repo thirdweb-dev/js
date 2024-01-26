@@ -1,23 +1,31 @@
-import {
-  PaperWalletConnectionArgs,
-  PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
-} from "../connectors/paper/types";
-import { Connector } from "../interfaces/connector";
-import { AbstractClientWallet, WalletOptions } from "./base";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
+import {
+  PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
+  PaperWalletConnectionArgs,
+} from "../connectors/paper/types";
 import { walletIds } from "../constants/walletIds";
+import { ConnectParams, Connector } from "../interfaces/connector";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions_>;
 
+/**
+ * Paper Wallet
+ *
+ * @deprecated We have deprecated PaperWallet in favor of our {@link EmbeddedWallet} which adds support for more sign in methods.
+ * @wallet
+ * @internal
+ */
 export class PaperWallet extends AbstractClientWallet<
   PaperWalletAdditionalOptions_,
   PaperWalletConnectionArgs
 > {
   connector?: Connector;
 
-  static id = walletIds.paper;
+  static id = walletIds.paper as string;
 
   static meta = {
     name: "Paper Wallet",
@@ -29,16 +37,65 @@ export class PaperWallet extends AbstractClientWallet<
     return "Paper Wallet" as const;
   }
 
-  paperClientId: PaperWalletAdditionalOptions_["paperClientId"];
+  paperClientId: string;
   chain: PaperWalletAdditionalOptions_["chain"];
+  onAuthSuccess: PaperWalletAdditionalOptions_["onAuthSuccess"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
       ...options,
     });
 
-    this.paperClientId = options.paperClientId;
-    this.chain = options.chain;
+    try {
+      this.chain = {
+        ...options.chain,
+        rpc: getValidChainRPCs(options.chain, options.clientId),
+      };
+    } catch {
+      this.chain = options.chain;
+    }
+
+    if (options.paperClientId && options.paperClientId === "uninitialized") {
+      this.paperClientId = "00000000-0000-0000-0000-000000000000";
+      return;
+    }
+
+    if (
+      options.advancedOptions &&
+      options.advancedOptions?.recoveryShareManagement === "USER_MANAGED"
+    ) {
+      // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
+      if (
+        (options.paperClientId &&
+          !this.isClientIdLegacyPaper(options.paperClientId)) ||
+        (!options.paperClientId &&
+          options.clientId &&
+          !this.isClientIdLegacyPaper(options.clientId))
+      ) {
+        throw new Error(
+          'RecoveryShareManagement option "USER_MANAGED" is not supported with thirdweb client ID',
+        );
+      }
+    }
+    if (!options.clientId && !options.paperClientId) {
+      throw new Error("clientId or paperClientId is required");
+    }
+    if (
+      options.paperClientId &&
+      !this.isClientIdLegacyPaper(options.paperClientId)
+    ) {
+      throw new Error("paperClientId must be a legacy paper client ID");
+    }
+    if (options.clientId && this.isClientIdLegacyPaper(options.clientId)) {
+      throw new Error("clientId must be a thirdweb client ID");
+    }
+
+    // cast is okay because we assert that either clientId or paperClientId is defined above
+    this.paperClientId = (options.paperClientId ?? options.clientId) as string;
+    this.onAuthSuccess = options.onAuthSuccess;
+  }
+  private isClientIdLegacyPaper(clientId: string): boolean {
+    return clientId.indexOf("-") > 0 && clientId.length === 36;
   }
 
   protected async getConnector(): Promise<Connector> {
@@ -48,6 +105,7 @@ export class PaperWallet extends AbstractClientWallet<
         clientId: this.paperClientId,
         chain: this.chain,
         chains: this.chains,
+        onAuthSuccess: this.onAuthSuccess,
         advancedOptions: {
           recoveryShareManagement:
             this.options?.advancedOptions?.recoveryShareManagement,
@@ -58,8 +116,31 @@ export class PaperWallet extends AbstractClientWallet<
     return this.connector;
   }
 
+  getConnectParams(): ConnectParams<PaperWalletConnectionArgs> | undefined {
+    const connectParams = super.getConnectParams();
+
+    if (!connectParams) {
+      return undefined;
+    }
+
+    // do not return non-serializable params to make auto-connect work
+    if (typeof connectParams.googleLogin === "object") {
+      return {
+        ...connectParams,
+        googleLogin: true,
+      };
+    }
+
+    return connectParams;
+  }
+
   async getEmail() {
     const connector = (await this.getConnector()) as PaperWalletConnector;
     return connector.getEmail();
+  }
+
+  async getPaperSDK() {
+    const connector = (await this.getConnector()) as PaperWalletConnector;
+    return connector.getPaperSDK();
   }
 }

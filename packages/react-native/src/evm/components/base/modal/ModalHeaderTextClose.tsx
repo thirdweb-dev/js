@@ -1,22 +1,28 @@
+import { View } from "react-native";
 import { Icon } from "../../../assets/icon";
-import { useAppTheme } from "../../../styles/hooks";
 import Box from "../Box";
 import Text from "../Text";
 import { ReactNode } from "react";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 interface ModalHeaderTextCloseProps {
-  onClose: () => void;
+  onClose?: () => void;
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
+  onBackPress?: () => void;
 }
 
+/**
+ * @internal
+ */
 export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,
   onClose,
+  onBackPress,
   ...props
-}: ModalHeaderTextCloseProps & (typeof Box)["arguments"]) => {
-  const theme = useAppTheme();
+}: ModalHeaderTextCloseProps & React.ComponentProps<typeof Box>) => {
+  const theme = useGlobalTheme();
 
   return (
     <>
@@ -25,26 +31,39 @@ export const ModalHeaderTextClose = ({
         justifyContent={headerText ? "space-between" : "flex-end"}
         {...props}
       >
+        {onBackPress ? (
+          <Icon
+            type="back"
+            width={16}
+            height={16}
+            onPress={onBackPress}
+            color={theme.colors.iconPrimary}
+          />
+        ) : null}
         {typeof headerText === "string" ? (
           <Text variant="header">{headerText}</Text>
         ) : (
           headerText
         )}
-        <Icon
-          type="close"
-          width={14}
-          height={14}
-          color={theme.colors.iconSecondary}
-          onPress={onClose}
-        />
-      </Box>
-      <Box flexDirection="row" justifyContent="space-between" mt="md">
-        {typeof subHeaderText === "string" ? (
-          <Text variant="subHeader">{subHeaderText}</Text>
+        {onClose ? (
+          <Icon
+            type="close"
+            width={16}
+            height={16}
+            color={theme.colors.iconSecondary}
+            onPress={onClose}
+          />
         ) : (
-          subHeaderText
+          <View />
         )}
       </Box>
+      {!subHeaderText ? null : typeof subHeaderText === "string" ? (
+        <Box mt="md">
+          <Text variant="subHeader">{subHeaderText}</Text>
+        </Box>
+      ) : (
+        <Box mt="md">{subHeaderText}</Box>
+      )}
     </>
   );
 };

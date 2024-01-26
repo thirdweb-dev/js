@@ -14,32 +14,48 @@ export const CONTRACT_ADDRESSES: Record<
   }
 > = {
   [280]: {
-    openzeppelinForwarder: "0x12A305cc7168fa3b7B172fE53c57b9a22716F667",
+    openzeppelinForwarder: AddressZero,
     openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
   },
   [324]: {
-    openzeppelinForwarder: "0x4e0C3577335961Ff800FFDA24981EB2F38D94483",
+    openzeppelinForwarder: AddressZero,
     openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
   },
 };
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
-  // ZKSync Era Testnet
+  // ZKSync Era Goerli Testnet (Deprecated)
   [280]: {
     DropERC721: "0xA8E28D98203848401A4f924358e6c337153D0f04",
     DropERC1155: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
     DropERC20: "0x4027561E163a420c4e5Db46E07EBd581CAa8Bb62",
     SignatureDrop: "",
     Marketplace: "0xA77041a7A34A67D7285c8d3550110e441009436e",
-    MarketplaceV3: "0x838Dbc16A6bc7B5B6f86B7f4818f6c4d41F31f91",
+    MarketplaceV3: "0x6026C3b81927f9f3bD943c32F8605C1774Df79f2",
     TokenERC721: "0xe04593be4c928769ACb157aab0214be1c4E7b6F6",
     TokenERC1155: "0x4e0C3577335961Ff800FFDA24981EB2F38D94483",
     TokenERC20: "0x0aecDe90BC11303871E6e4D7d83Ee84433BC115C",
     AirdropERC20: "0xcd3555c6058278E725A5b66d2D89aCc3b211768b",
     AirdropERC721: "0x3D9337181DC55fB1cD06D46b0738A8134295670d",
     AirdropERC1155: "0x8b0DBCf5b7D01eBB0F24525CE8AB72F16CE4F8C8",
+  },
+
+  // ZKSync Era Sepolia Testnet
+  [300]: {
+    DropERC721: "0x0006BC0D8Bf9D91290Df89341F936c612D6978eb",
+    DropERC1155: "0xe0AD48286BF27AE0C5953d4417fB37f3FECABB4a",
+    DropERC20: "0xA77041a7A34A67D7285c8d3550110e441009436e",
+    SignatureDrop: "",
+    Marketplace: "",
+    MarketplaceV3: "0x12A305cc7168fa3b7B172fE53c57b9a22716F667",
+    TokenERC721: "0x9742f5ac11958cFAd151eBF0Fc31302fA409036E",
+    TokenERC1155: "0x4027561E163a420c4e5Db46E07EBd581CAa8Bb62",
+    TokenERC20: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
+    AirdropERC20: "0x4b14569c7B79DBe686Ac3Ba5996131E7EDaB7a93",
+    AirdropERC721: "0xDD3E3BBa3bb4edcbbEa9d52Cd1E49289Ef3DfDE3",
+    AirdropERC1155: "0x8A4E9034BC6ac77E1408AC878e0603A32B5d4b73",
   },
 
   // ZKSync Era Mainnet
@@ -49,7 +65,8 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     DropERC20: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
     SignatureDrop: "",
     Marketplace: "",
-    MarketplaceV3: "0x58e0F289C7dD2025eBd0696d913ECC0fdc1CC8bc",
+    MarketplaceV3: "0x13f25360dd3f9096c3e2cBe60b95c45b11ADB7E4",
+    MarketplaceV3_aux: "0x5a2524Ca4E4f86a34382C5be871F34f50F014d84",
     TokenERC721: "0x26279882D5E93045D4FA986847CAAC048b2Bac3b",
     TokenERC1155: "0xA8E28D98203848401A4f924358e6c337153D0f04",
     TokenERC20: "0x56Abb6a3f25DCcdaDa106191053b1CC54C196DEE",
@@ -61,16 +78,24 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
 
 /**
  * @internal
- * @param chainId
- * @param contractType
+ * @param chainId - chain id
+ * @param contractType - contract type
  */
 export function getImplementation(
   chainId: number,
   contractName: string,
+  version?: string,
 ): string | null {
   if (chainId in IMPLEMENTATIONS) {
     const approvedImpls = IMPLEMENTATIONS[chainId];
     if (contractName in approvedImpls) {
+      if (
+        contractName === "MarketplaceV3" &&
+        version === "1.1.2" &&
+        chainId === 324
+      ) {
+        return approvedImpls["MarketplaceV3_aux"];
+      }
       return approvedImpls[contractName as keyof typeof approvedImpls];
     }
   }
@@ -80,20 +105,15 @@ export function getImplementation(
 /**
  *
  * @param chainId - chain id
- * @returns the array of trusted forwarders for the given chain id
+ * @returns The array of trusted forwarders for the given chain id
  * @internal
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export function zkGetDefaultTrustedForwarders(
   chainId: number,
   contractName?: string,
 ): string[] {
-  const biconomyForwarder = CONTRACT_ADDRESSES[chainId].biconomyForwarder;
-  const openzeppelinForwarder =
-    CONTRACT_ADDRESSES[chainId].openzeppelinForwarder;
-
-  return contractName && contractName === "Pack"
-    ? []
-    : [openzeppelinForwarder, biconomyForwarder].filter(
-        (a) => a !== AddressZero,
-      );
+  //  Since ZkSync has gas sponsoring through native Account Abstraction,
+  //  it doesn’t need a forwarder
+  return [];
 }

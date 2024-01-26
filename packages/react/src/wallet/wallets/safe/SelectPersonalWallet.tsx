@@ -1,20 +1,19 @@
 import { walletIds } from "@thirdweb-dev/wallets";
-import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Steps } from "../../../components/Steps";
-import { Flex } from "../../../components/basic";
-import { Button } from "../../../components/buttons";
+// import { Steps } from "../../../components/Steps";
 import {
-  BackButton,
-  ModalTitle,
-  ModalDescription,
-  HelperLink,
-} from "../../../components/modalElements";
-import { iconSize } from "../../../design-system";
+  Container,
+  Line,
+  ModalHeader,
+  ScreenBottomContainer,
+} from "../../../components/basic";
+import { Button } from "../../../components/buttons";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { SafeWalletConfig } from "./types";
 import { useEffect, useRef } from "react";
+import { Link, Text } from "../../../components/text";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
@@ -23,12 +22,16 @@ export const SelectpersonalWallet: React.FC<{
   selectWallet: (wallet: WalletConfig) => void;
   renderBackButton?: boolean;
 }> = (props) => {
+  const twLocale = useTWLocale();
+  const locale = twLocale.wallets.safeWallet;
   const guestWallet = props.personalWallets.find(
     (w) => w.id === walletIds.localWallet,
   );
   const personalWallets = props.personalWallets.filter(
     (w) => w.id !== walletIds.localWallet,
   );
+
+  const { personalWalletConnection } = useWalletContext();
 
   // auto select guest wallet if no other wallets
   const { selectWallet } = props;
@@ -49,60 +52,74 @@ export const SelectpersonalWallet: React.FC<{
   }
 
   return (
-    <>
-      {props.renderBackButton && (
-        <>
-          <BackButton onClick={props.onBack} />
-          <Spacer y="md" />
-        </>
-      )}
-      <Img
-        src={props.safeWallet.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
-      />
-      <Spacer y="lg" />
-      <ModalTitle>Link Personal Wallet</ModalTitle>
+    <Container flex="column" scrollY animate="fadein">
+      {/* header */}
+
+      <Container p="lg">
+        <ModalHeader
+          title={props.safeWallet.meta.name}
+          onBack={props.renderBackButton ? props.onBack : undefined}
+          imgSrc={props.safeWallet.meta.iconURL}
+        />
+      </Container>
+      <Line />
       <Spacer y="sm" />
 
-      <ModalDescription>
-        Select a personal wallet to connect to your Safe
-      </ModalDescription>
+      <Container px="lg">
+        <Spacer y="md" />
+        <Text size="lg" color="primaryText" weight={500}>
+          {locale.connectWalletScreen.title}
+        </Text>
+        <Spacer y="sm" />
+        <Text multiline>
+          {locale.connectWalletScreen.subtitle}{" "}
+          <Link
+            inline
+            target="_blank"
+            href="https://docs.safe.global/getting-started/readme"
+            style={{
+              whiteSpace: "nowrap",
+            }}
+          >
+            {locale.connectWalletScreen.learnMoreLink}
+          </Link>{" "}
+        </Text>
+      </Container>
 
-      <Spacer y="xl" />
-      <Steps step={1} />
       <Spacer y="lg" />
 
-      <WalletSelection
-        walletConfigs={personalWallets}
-        selectWallet={props.selectWallet}
-      />
+      {/* list */}
+      <Container expand px="md" scrollY>
+        <WalletSelection
+          maxHeight="300px"
+          walletConfigs={personalWallets}
+          selectWallet={props.selectWallet}
+          selectUIProps={{
+            connect: personalWalletConnection.connectWallet,
+            connectionStatus: personalWalletConnection.connectionStatus,
+            createWalletInstance: personalWalletConnection.createWalletInstance,
+            setConnectedWallet: personalWalletConnection.setConnectedWallet,
+            setConnectionStatus: personalWalletConnection.setConnectionStatus,
+            connectedWallet: personalWalletConnection.activeWallet,
+            connectedWalletAddress: personalWalletConnection.address,
+          }}
+        />
+      </Container>
 
-      <Spacer y="xl" />
-
-      {guestWallet ? (
-        <Flex justifyContent="center">
+      {guestWallet && (
+        <ScreenBottomContainer>
           <Button
             variant="link"
+            fullWidth
             onClick={() => {
               props.selectWallet(guestWallet);
             }}
             data-test="continue-as-guest-button"
           >
-            Continue as guest
+            {twLocale.connectWallet.continueAsGuest}
           </Button>
-        </Flex>
-      ) : (
-        <HelperLink
-          target="_blank"
-          href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
-          style={{
-            textAlign: "center",
-          }}
-        >
-          What is a Safe?
-        </HelperLink>
+        </ScreenBottomContainer>
       )}
-    </>
+    </Container>
   );
 };

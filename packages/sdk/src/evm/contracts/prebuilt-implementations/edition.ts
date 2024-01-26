@@ -1,3 +1,6 @@
+import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common/role";
@@ -12,21 +15,18 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-mintable";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -41,7 +41,8 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "edition");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc1155 instead
  */
 export class Edition extends StandardErc1155<TokenERC1155> {
   static contractRoles = NFT_BASE_CONTRACT_ROLES;
@@ -57,7 +58,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     (typeof Edition.contractRoles)[number]
   >;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<TokenERC1155>;
+  public platformFees: ContractPlatformFee;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
@@ -98,7 +99,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
-  public owner: ContractOwner<TokenERC1155>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,
@@ -151,7 +152,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -190,13 +191,16 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    return this.erc1155.getOwned(walletAddress);
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    return this.erc1155.getOwned(walletAddress, queryParams);
   }
 
   /**
    * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
@@ -207,10 +211,10 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 

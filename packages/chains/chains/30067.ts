@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Piece testnet",
   "chain": "PieceNetwork",
-  "icon": {
-    "url": "ipfs://QmWAU39z1kcYshAqkENRH8qUjfR5CJehCxA4GiC33p3HpH",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
-  "rpc": [
-    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc0.piecenetwork.com"
-  ],
-  "faucets": [
-    "https://piecenetwork.com/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "ECE",
-    "symbol": "ECE",
-    "decimals": 18
-  },
-  "infoURL": "https://piecenetwork.com",
-  "shortName": "Piece",
   "chainId": 30067,
-  "networkId": 30067,
   "explorers": [
     {
       "name": "Piece Scan",
@@ -31,6 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "piece-testnet"
+  "faucets": [
+    "https://piecenetwork.com/faucet"
+  ],
+  "icon": {
+    "url": "ipfs://QmWAU39z1kcYshAqkENRH8qUjfR5CJehCxA4GiC33p3HpH",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
+  "infoURL": "https://piecenetwork.com",
+  "name": "Piece testnet",
+  "nativeCurrency": {
+    "name": "ECE",
+    "symbol": "ECE",
+    "decimals": 18
+  },
+  "networkId": 30067,
+  "rpc": [
+    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://30067.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc0.piecenetwork.com"
+  ],
+  "shortName": "Piece",
+  "slip44": 1,
+  "slug": "piece-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -24,14 +24,12 @@ export async function createApp({
   framework,
   language,
   template,
-  chain,
 }: {
   appPath: string;
   packageManager: PackageManager;
   framework?: string;
   language?: string;
   template?: string;
-  chain?: string;
 }): Promise<void> {
   let frameworkPath = "";
 
@@ -47,9 +45,7 @@ export async function createApp({
       process.exit(1);
     }
   } else if (framework) {
-    frameworkPath = `${framework}-${language || "javascript"}-${
-      chain === "solana" ? "solana-" : ""
-    }starter`;
+    frameworkPath = `${framework}-${language || "javascript"}-starter`;
     const found = await hasTemplate(frameworkPath);
 
     if (!found) {
@@ -220,7 +216,7 @@ export async function createApp({
   }
 
   let startOrDev: string | undefined;
-  if (framework && (framework === "next" || framework === "vite")) {
+  if (framework && (framework.includes("next") || framework.includes("vite"))) {
     startOrDev = "dev";
   } else if (template) {
     startOrDev = await getStartOrDev(template);

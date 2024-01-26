@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Elysium Mainnet",
-  "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged",
   "chain": "Elysium",
-  "rpc": [
-    "https://elysium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.elysiumchain.tech/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "LAVA",
-    "symbol": "LAVA",
-    "decimals": 18
-  },
-  "infoURL": "https://elysiumscan.vulcanforged.com",
-  "shortName": "ELSM",
   "chainId": 1339,
-  "networkId": 1339,
   "explorers": [
     {
       "name": "Elysium mainnet explorer",
@@ -24,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://elysiumscan.vulcanforged.com",
+  "name": "Elysium Mainnet",
+  "nativeCurrency": {
+    "name": "LAVA",
+    "symbol": "LAVA",
+    "decimals": 18
+  },
+  "networkId": 1339,
+  "rpc": [
+    "https://elysium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.elysiumchain.tech/"
+  ],
+  "shortName": "ELSM",
+  "slug": "elysium",
   "testnet": false,
-  "slug": "elysium"
+  "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged"
 } as const satisfies Chain;

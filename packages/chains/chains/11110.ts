@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Astra",
   "chain": "Astra",
-  "rpc": [
-    "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.astranaut.io",
-    "https://rpc1.astranaut.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Astra",
-    "symbol": "ASA",
-    "decimals": 18
-  },
-  "infoURL": "https://astranaut.io",
-  "shortName": "astra",
   "chainId": 11110,
-  "networkId": 11110,
-  "icon": {
-    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-    "width": 104,
-    "height": 80,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Astra EVM Explorer (Blockscout)",
@@ -47,6 +26,28 @@ export default {
       }
     }
   ],
-  "testnet": false,
-  "slug": "astra"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+    "width": 104,
+    "height": 80,
+    "format": "png"
+  },
+  "infoURL": "https://astranaut.io",
+  "name": "Astra",
+  "nativeCurrency": {
+    "name": "Astra",
+    "symbol": "ASA",
+    "decimals": 18
+  },
+  "networkId": 11110,
+  "rpc": [
+    "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.astranaut.io",
+    "https://rpc1.astranaut.io"
+  ],
+  "shortName": "astra",
+  "slug": "astra",
+  "testnet": false
 } as const satisfies Chain;

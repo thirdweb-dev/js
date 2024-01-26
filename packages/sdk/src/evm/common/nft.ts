@@ -14,9 +14,6 @@ import type {
   IERC165,
   IERC721Metadata,
 } from "@thirdweb-dev/contracts-js";
-import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json";
-import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json";
 import type {
   ThirdwebStorage,
   UploadProgressEvent,
@@ -97,10 +94,10 @@ export async function fetchTokenMetadata(
 // Used for marketplace to fetch NFT metadata from contract address + tokenId
 /**
  * @internal
- * @param contractAddress
- * @param provider
- * @param tokenId
- * @param storage
+ * @param contractAddress - the contract address
+ * @param provider - the provider to use
+ * @param tokenId - the token id
+ * @param storage - the storage to use
  */
 export async function fetchTokenMetadataForContract(
   contractAddress: string,
@@ -109,14 +106,22 @@ export async function fetchTokenMetadataForContract(
   storage: ThirdwebStorage,
 ): Promise<NFTMetadata> {
   let uri: string | undefined;
+  const ERC165MetadataAbi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+  ).default;
   const erc165 = new Contract(
     contractAddress,
     ERC165MetadataAbi,
     provider,
   ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+  const [isERC721, isERC1155] = await Promise.all([
+    erc165.supportsInterface(InterfaceId_IERC721),
+    erc165.supportsInterface(InterfaceId_IERC1155),
+  ]);
   if (isERC721) {
+    const ERC721MetadataAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json")
+    ).default;
     const erc721 = new Contract(
       contractAddress,
       ERC721MetadataAbi,
@@ -124,6 +129,9 @@ export async function fetchTokenMetadataForContract(
     ) as IERC721Metadata;
     uri = await erc721.tokenURI(tokenId);
   } else if (isERC1155) {
+    const ERC1155MetadataAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json")
+    ).default;
     const erc1155 = new Contract(
       contractAddress,
       ERC1155MetadataAbi,
@@ -146,8 +154,8 @@ export async function fetchTokenMetadataForContract(
 
 /**
  * @internal
- * @param metadata
- * @param storage
+ * @param metadata - the metadata to upload
+ * @param storage - the storage to use
  */
 export async function uploadOrExtractURI(
   metadata: NFTMetadataOrUri,
@@ -162,12 +170,12 @@ export async function uploadOrExtractURI(
 
 /**
  * @internal
- * @param metadatas
- * @param storage
- * @param startNumber
- * @param contractAddress
- * @param signerAddress
- * @param options
+ * @param metadatas - the metadata to upload
+ * @param storage - the storage to use
+ * @param startNumber - the number to start the file names at
+ * @param contractAddress - the contract address
+ * @param signerAddress - the signer address
+ * @param options - options
  */
 export async function uploadOrExtractURIs(
   metadatas: NFTMetadataOrUri[],

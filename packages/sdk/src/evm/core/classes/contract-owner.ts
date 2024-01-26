@@ -4,20 +4,18 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_OWNER } from "../../constants/thirdweb-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
  * Encodes and decodes Contract functions
  * @public
  */
-export class ContractOwner<TContract extends Ownable>
-  implements DetectableFeature
-{
+export class ContractOwner implements DetectableFeature {
   featureName = FEATURE_OWNER.name;
   private contractWrapper;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<Ownable>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -28,11 +26,11 @@ export class ContractOwner<TContract extends Ownable>
    * await contract.owner.get();
    * console.log("Owner address: ", ownerAddress);
    * ```
-   * @returns the owner address
+   * @returns The owner address
    * @twfeature Ownable
    */
   public async get(): Promise<string> {
-    return this.contractWrapper.readContract.owner();
+    return this.contractWrapper.read("owner", []);
   }
 
   /**
@@ -53,7 +51,7 @@ export class ContractOwner<TContract extends Ownable>
       const resolvedAddress = await resolveAddress(address);
 
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<Ownable>,
+        contractWrapper: this.contractWrapper,
         method: "setOwner",
         args: [resolvedAddress],
       });

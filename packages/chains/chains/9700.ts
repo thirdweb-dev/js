@@ -1,25 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oort MainnetDev",
-  "title": "Oort MainnetDev",
   "chain": "MainnetDev",
-  "rpc": [],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Oort",
-    "symbol": "CCN",
-    "decimals": 18
-  },
-  "infoURL": "https://oortech.com",
-  "shortName": "MainnetDev",
   "chainId": 9700,
-  "networkId": 9700,
+  "explorers": [
+    {
+      "name": "Oort MainnetDev Scan",
+      "url": "https://dev-scan.oortech.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+        "width": 1440,
+        "height": 1440,
+        "format": "png"
+      }
+    }
+  ],
+  "faucets": [],
   "icon": {
-    "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
-    "width": 1043,
-    "height": 1079,
+    "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
+    "width": 1440,
+    "height": 1440,
     "format": "png"
   },
+  "infoURL": "https://oortech.com",
+  "name": "Oort MainnetDev",
+  "nativeCurrency": {
+    "name": "Oort",
+    "symbol": "OORT",
+    "decimals": 18
+  },
+  "networkId": 9700,
+  "rpc": [
+    "https://oort-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dev-rpc.oortech.com"
+  ],
+  "shortName": "MainnetDev",
+  "slug": "oort-dev",
   "testnet": false,
-  "slug": "oort-dev"
+  "title": "Oort MainnetDev"
 } as const satisfies Chain;

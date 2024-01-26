@@ -1,18 +1,19 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWallet, useWalletConnectHandler } from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
 import {
   CLOSE_MODAL_STATE,
   WalletConnectSessionProposalModal,
 } from "../../utils/modalTypes";
-import { useModalState } from "../../providers/ui-context-provider";
+import { useLocale, useModalState } from "../../providers/ui-context-provider";
 
 export const SessionProposalModal = () => {
+  const l = useLocale();
   const { modalState, setModalState } = useModalState();
   const { data: proposalData } =
     modalState as WalletConnectSessionProposalModal;
+  const walletConnectHandler = useWalletConnectHandler();
 
   const wallet = useWallet();
 
@@ -27,7 +28,7 @@ export const SessionProposalModal = () => {
       borderRadius="md"
       p="lg"
     >
-      <Text variant="bodyLarge">Connect to App</Text>
+      <Text variant="bodyLarge">{l.connect_wallet_details.connect_to_app}</Text>
       <Text variant="bodyLarge">{proposalData.proposer.metadata.name}</Text>
       <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
         <BaseButton
@@ -40,11 +41,11 @@ export const SessionProposalModal = () => {
           minWidth={100}
           borderColor="border"
           onPress={async () => {
-            (wallet as unknown as IWalletConnectReceiver).rejectSession();
+            walletConnectHandler?.rejectSession();
             onClose();
           }}
         >
-          <Text variant="bodySmall">Reject</Text>
+          <Text variant="bodySmall">{l.common.reject}</Text>
         </BaseButton>
         <BaseButton
           alignContent="center"
@@ -60,14 +61,12 @@ export const SessionProposalModal = () => {
             if (!wallet) {
               throw new Error("Wallet not connected.");
             }
-            await (
-              wallet as unknown as IWalletConnectReceiver
-            ).approveSession();
+            await walletConnectHandler?.approveSession();
             onClose();
           }}
         >
           <Text variant="bodySmall" color="black">
-            Approve
+            {l.common.approve}
           </Text>
         </BaseButton>
       </Box>

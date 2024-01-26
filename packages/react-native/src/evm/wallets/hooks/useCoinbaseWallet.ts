@@ -8,18 +8,17 @@ import { useCoinbaseWalletListener } from "./useCoinbaseWalletListener";
  * const connect = useCoinbaseWallet('org.reactjs.native.example.test15://');
  * connect();
  *
- * @param callbackURL The Universal Link used by Coinbase Wallet to return responses to your application.
+ * @param callbackURL - The Universal Link used by Coinbase Wallet to return responses to your application.
  * @returns connect function to connect to the Coinbase wallet
  */
-export function useCoinbaseWallet(callbackURL: string) {
+export function useCoinbaseWallet(callbackURL: URL) {
   const connect = useConnect();
-  useCoinbaseWalletListener(true);
+  useCoinbaseWalletListener(true, callbackURL);
 
   return useCallback(
-    async (connectOptions?: { chainId?: number; callbackURL: string }) => {
+    async (connectOptions?: { chainId?: number }) => {
       const { coinbaseWallet } = await import("../wallets/coinbase-wallet");
       return connect(
-        // @ts-expect-error - Passing a URL object to callbackURL crashes the function @fixme: @manan
         coinbaseWallet({ callbackURL: callbackURL }),
         connectOptions,
       );

@@ -1,21 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Testnet Kotti",
   "chain": "ETC",
-  "rpc": [
-    "https://ethereum-classic-testnet-kotti.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/kotti"
-  ],
+  "chainId": 6,
+  "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmawMDPsaj3kBTZErCYQ3tshv5RrMAN3smWNs72m943Fyj",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://ethereumclassic.org/development/testnets",
+  "name": "Kotti Testnet",
   "nativeCurrency": {
     "name": "Kotti Ether",
     "symbol": "KOT",
     "decimals": 18
   },
-  "infoURL": "https://explorer.jade.builders/?network=kotti",
-  "shortName": "kot",
-  "chainId": 6,
   "networkId": 6,
+  "rpc": [],
+  "shortName": "kot",
+  "slip44": 1,
+  "slug": "kotti-testnet",
+  "status": "deprecated",
   "testnet": true,
-  "slug": "ethereum-classic-testnet-kotti"
+  "title": "Ethereum Classic Kotti Testnet"
 } as const satisfies Chain;

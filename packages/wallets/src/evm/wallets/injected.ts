@@ -1,10 +1,13 @@
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
+/**
+ * @internal
+ */
 export class InjectedWallet extends AbstractClientWallet {
   connector?: Connector;
 
-  static id = "injected" as const;
+  static id = "injected" as string;
   public get walletName() {
     return "Injected Wallet";
   }

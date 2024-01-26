@@ -1,12 +1,12 @@
+import type { AirdropERC20, IAirdropERC20 } from "@thirdweb-dev/contracts-js";
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
-import { Address } from "../../schema";
-import { Airdrop20Content, Airdrop20Output } from "../../types";
+import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IAirdropERC20, AirdropERC20 } from "@thirdweb-dev/contracts-js";
+import { Airdrop20Content, Airdrop20Output } from "../../types/airdrop/airdrop";
 
 /**
  * @public
@@ -25,7 +25,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -59,11 +59,11 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * //     - array containing failed drops, if any
    *
    * ```
-   * @param tokenAddress
-   * @param tokenOwner
-   * @param contents
+   * @param tokenAddress - Address of the ERC20 token being airdropped
+   * @param tokenOwner - Address of the owner of the tokens being airdropped
+   * @param contents - Array of airdrop contents
    *
-   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @returns An array of recipients for who the airdrop failed (empty means all transfers were successful)
    * @twfeature AirdropERC20
    */
   drop = /* @__PURE__ */ buildTransactionFunction(
@@ -74,7 +74,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
     ): Promise<Transaction<Airdrop20Output>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "airdrop",
+        method: "airdropERC20",
         args: [tokenAddress, tokenOwner, contents],
         parse: (receipt) => {
           const events = this.contractWrapper.parseLogs<AirdropFailedEvent>(

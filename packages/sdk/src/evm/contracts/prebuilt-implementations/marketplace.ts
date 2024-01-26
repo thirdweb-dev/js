@@ -1,6 +1,11 @@
+import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
+import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import invariant from "tiny-invariant";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common/error";
 import { isNativeToken } from "../../common/currency/isNativeToken";
+import { ListingNotFoundError } from "../../common/error";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -13,28 +18,25 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
-import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { MarketplaceAuction } from "../../core/classes/internal/marketplace/marketplace-auction";
+import { MarketplaceDirect } from "../../core/classes/internal/marketplace/marketplace-direct";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { ListingType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
-import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
-import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import invariant from "tiny-invariant";
 import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
+import { ListingType } from "../../enums/marketplace/ListingType";
+import { AuctionListing } from "../../types/marketplace/AuctionListing";
+import { DirectListing } from "../../types/marketplace/DirectListing";
+import { Offer } from "../../types/marketplace/Offer";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -48,7 +50,8 @@ import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.directListings / contract.auctions / contract.offers instead
  */
 export class Marketplace implements UpdateableNetwork {
   static contractRoles = MARKETPLACE_CONTRACT_ROLES;
@@ -60,7 +63,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
-  public platformFees: ContractPlatformFee<MarketplaceContract>;
+  public platformFees: ContractPlatformFee;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof MarketplaceContractSchema
@@ -198,7 +201,7 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -221,7 +224,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getListing(
     listingId: BigNumberish,
   ): Promise<AuctionListing | DirectListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
     if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
@@ -291,21 +294,21 @@ export class Marketplace implements UpdateableNetwork {
 
   /**
    * Get the total number of Listings
-   * @returns the total number listings on the marketplace
+   * @returns The total number listings on the marketplace
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalListings();
+    return await this.contractWrapper.read("totalListings", []);
   }
 
   /**
    * Get whether listing is restricted only to addresses with the Lister role
    */
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
-    const anyoneCanList = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanList = await this.contractWrapper.read("hasRole", [
       getRoleHash("lister"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanList;
   }
 
@@ -313,14 +316,14 @@ export class Marketplace implements UpdateableNetwork {
    * Get the buffer in basis points between offers
    */
   public async getBidBufferBps(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.bidBufferBps();
+    return this.contractWrapper.read("bidBufferBps", []);
   }
 
   /**
    * get the buffer time in seconds between offers
    */
   public async getTimeBufferInSeconds(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.timeBuffer();
+    return this.contractWrapper.read("timeBuffer", []);
   }
 
   /**
@@ -348,8 +351,8 @@ export class Marketplace implements UpdateableNetwork {
     );
     // derive the offers from the events
     return await Promise.all(
-      listingEvents.map(async (e): Promise<Offer> => {
-        return await mapOffer(
+      listingEvents.map((e): Promise<Offer> => {
+        return mapOffer(
           this.contractWrapper.getProvider(),
           BigNumber.from(listingId),
           {
@@ -391,9 +394,7 @@ export class Marketplace implements UpdateableNetwork {
       quantityDesired?: BigNumberish,
       receiver?: AddressOrEns,
     ) => {
-      const listing = await this.contractWrapper.readContract.listings(
-        listingId,
-      );
+      const listing = await this.contractWrapper.read("listings", [listingId]);
       if (listing.listingId.toString() !== listingId.toString()) {
         throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
@@ -445,9 +446,7 @@ export class Marketplace implements UpdateableNetwork {
       pricePerToken: Price,
       quantity?: BigNumberish,
     ) => {
-      const listing = await this.contractWrapper.readContract.listings(
-        listingId,
-      );
+      const listing = await this.contractWrapper.read("listings", [listingId]);
       if (listing.listingId.toString() !== listingId.toString()) {
         throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
@@ -601,7 +600,7 @@ export class Marketplace implements UpdateableNetwork {
     const listings = await Promise.all(
       Array.from(
         Array(
-          (await this.contractWrapper.readContract.totalListings()).toNumber(),
+          (await this.contractWrapper.read("totalListings", [])).toNumber(),
         ).keys(),
       ).map(async (i) => {
         let listing;

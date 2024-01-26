@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Proxy Network Testnet",
   "chain": "Proxy Network",
-  "rpc": [
-    "https://proxy-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://128.199.94.183:8041"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "PRX",
-    "symbol": "PRX",
-    "decimals": 18
-  },
-  "infoURL": "https://theproxy.network",
-  "shortName": "prx",
   "chainId": 1031,
-  "networkId": 1031,
   "explorers": [
     {
       "name": "proxy network testnet",
@@ -23,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "proxy-network-testnet"
+  "faucets": [],
+  "infoURL": "https://theproxy.network",
+  "name": "Proxy Network Testnet",
+  "nativeCurrency": {
+    "name": "PRX",
+    "symbol": "PRX",
+    "decimals": 18
+  },
+  "networkId": 1031,
+  "rpc": [
+    "https://proxy-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://128.199.94.183:8041"
+  ],
+  "shortName": "prx",
+  "slip44": 1,
+  "slug": "proxy-network-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,3 +1,5 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
@@ -16,23 +18,21 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -47,7 +47,8 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "nft-drop");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc721 instead
  */
 export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   static contractRoles = NFT_BASE_CONTRACT_ROLES;
@@ -61,7 +62,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   >;
   public app: ContractAppURI<PrebuiltNFTDrop>;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
+  public platformFees: ContractPlatformFee;
   public events: ContractEvents<PrebuiltNFTDrop>;
   public roles: ContractRoles<
     PrebuiltNFTDrop,
@@ -154,7 +155,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    */
   public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public owner: ContractOwner<PrebuiltNFTDrop>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,
@@ -215,7 +216,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -226,8 +227,10 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
   override async totalSupply() {
-    const claimed = await this.totalClaimedSupply();
-    const unclaimed = await this.totalUnclaimedSupply();
+    const [claimed, unclaimed] = await Promise.all([
+      this.totalClaimedSupply(),
+      this.totalUnclaimedSupply(),
+    ]);
     return claimed.add(unclaimed);
   }
 
@@ -251,7 +254,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
     const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToClaim()).toNumber(),
+      (await this.contractWrapper.read("nextTokenIdToClaim", [])).toNumber(),
       start + count,
     );
     return await Promise.all(
@@ -282,17 +285,13 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     ).toNumber();
     const firstTokenId = BigNumber.from(
       Math.max(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToClaim()
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToClaim", [])).toNumber(),
         start,
       ),
     );
     const maxId = BigNumber.from(
       Math.min(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToMint()
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToMint", [])).toNumber(),
         firstTokenId.toNumber() + count,
       ),
     );
@@ -314,7 +313,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalClaimedSupply();
@@ -330,7 +329,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalUnclaimedSupply();
@@ -340,10 +339,10 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 
@@ -391,9 +390,9 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param checkERC20Allowance
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
@@ -427,7 +426,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -446,7 +445,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @remarks See {@link NFTDrop.claimTo}
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -501,7 +500,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * Get the current owner of a given NFT within this Contract
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return this.erc721.ownerOf(tokenId);

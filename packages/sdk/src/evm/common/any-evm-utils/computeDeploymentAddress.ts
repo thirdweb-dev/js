@@ -4,10 +4,10 @@ import { getSaltHash } from "./getSaltHash";
 /**
  * Pre-compute a contract's deployment address for a CREATE2 deployment.
  *
- * @public
- * @param bytecode: Creation bytecode of the contract to deploy
- * @param encodedArgs: Abi-encoded constructor params
- * @param create2FactoryAddress
+ * @internal
+ * @param bytecode - Creation bytecode of the contract to deploy
+ * @param encodedArgs - Abi-encoded constructor params
+ * @param create2FactoryAddress - The create2 factory address to use
  */
 export function computeDeploymentAddress(
   bytecode: string,
@@ -15,12 +15,15 @@ export function computeDeploymentAddress(
   create2FactoryAddress: string,
   salt?: string,
 ): string {
-  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecode);
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
+  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecodePrefixed);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
   const initBytecode = utils.solidityPack(
     ["bytes", "bytes"],
-    [bytecode, encodedArgs],
+    [bytecodePrefixed, encodedArgs],
   );
 
   // 2. abi-encode pack the deployer address, salt, and bytecode hash

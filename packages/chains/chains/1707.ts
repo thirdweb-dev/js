@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TBSI Mainnet",
-  "title": "Thai Blockchain Service Infrastructure Mainnet",
   "chain": "TBSI",
-  "rpc": [
-    "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.blockchain.or.th"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Jinda",
-    "symbol": "JINDA",
-    "decimals": 18
-  },
-  "infoURL": "https://blockchain.or.th",
-  "shortName": "TBSI",
   "chainId": 1707,
-  "networkId": 1707,
   "explorers": [
     {
       "name": "blockscout",
@@ -24,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://blockchain.or.th",
+  "name": "TBSI Mainnet",
+  "nativeCurrency": {
+    "name": "Jinda",
+    "symbol": "JINDA",
+    "decimals": 18
+  },
+  "networkId": 1707,
+  "rpc": [
+    "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1707.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.blockchain.or.th"
+  ],
+  "shortName": "TBSI",
+  "slug": "tbsi",
   "testnet": false,
-  "slug": "tbsi"
+  "title": "Thai Blockchain Service Infrastructure Mainnet"
 } as const satisfies Chain;

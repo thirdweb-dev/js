@@ -1,19 +1,7 @@
-import { ApiKeyMetadata } from "../api";
+import { validApiKeyMeta } from "../../mocks";
 import { ClientAuthorizationPayload, authorizeClient } from "./client";
 
 describe("authorizeClient", () => {
-  const validApiKeyMeta: ApiKeyMetadata = {
-    id: "1",
-    key: "your-api-key",
-    creatorWalletAddress: "creator-address",
-    secretHash: "secret-hash",
-    walletAddresses: [],
-    domains: ["example.com", "*.example.com"],
-    bundleIds: ["com.example.app"],
-    services: [],
-    accountId: "test-account-id",
-  };
-
   const validAuthOptions: ClientAuthorizationPayload = {
     secretKeyHash: "secret-hash",
     bundleId: null,

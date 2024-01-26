@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hazlor Testnet",
   "chain": "SCAS",
-  "rpc": [
-    "https://hazlor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://hatlas.rpc.hazlor.com:8545",
-    "wss://hatlas.rpc.hazlor.com:8546"
-  ],
-  "faucets": [
-    "https://faucet.hazlor.com"
-  ],
-  "nativeCurrency": {
-    "name": "Hazlor Test Coin",
-    "symbol": "TSCAS",
-    "decimals": 18
-  },
-  "infoURL": "https://hazlor.com",
-  "shortName": "tscas",
   "chainId": 7878,
-  "networkId": 7878,
   "explorers": [
     {
       "name": "Hazlor Testnet Explorer",
@@ -26,6 +9,25 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "hazlor-testnet"
+  "faucets": [
+    "https://faucet.hazlor.com"
+  ],
+  "infoURL": "https://hazlor.com",
+  "name": "Hazlor Testnet",
+  "nativeCurrency": {
+    "name": "Hazlor Test Coin",
+    "symbol": "TSCAS",
+    "decimals": 18
+  },
+  "networkId": 7878,
+  "rpc": [
+    "https://hazlor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7878.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://hatlas.rpc.hazlor.com:8545",
+    "wss://hatlas.rpc.hazlor.com:8546"
+  ],
+  "shortName": "tscas",
+  "slip44": 1,
+  "slug": "hazlor-testnet",
+  "testnet": true
 } as const satisfies Chain;

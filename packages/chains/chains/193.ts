@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crypto Emergency",
   "chain": "CEM",
-  "rpc": [
-    "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://cemchain.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Crypto Emergency",
-    "symbol": "CEM",
-    "decimals": 18
-  },
-  "infoURL": "https://cemblockchain.com/",
-  "shortName": "cem",
   "chainId": 193,
-  "networkId": 193,
   "explorers": [
     {
       "name": "cemscan",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "crypto-emergency"
+  "faucets": [],
+  "infoURL": "https://cemblockchain.com/",
+  "name": "Crypto Emergency",
+  "nativeCurrency": {
+    "name": "Crypto Emergency",
+    "symbol": "CEM",
+    "decimals": 18
+  },
+  "networkId": 193,
+  "rpc": [
+    "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://193.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://cemchain.com"
+  ],
+  "shortName": "cem",
+  "slug": "crypto-emergency",
+  "testnet": false
 } as const satisfies Chain;

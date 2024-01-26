@@ -1,25 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ProofOfPepe Testnet",
   "chain": "POPTestnet",
-  "shortName": "POPTestnet",
   "chainId": 331769,
-  "testnet": true,
-  "icon": {
-    "format": "png",
-    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
-    "height": 400,
-    "width": 400
-  },
-  "rpc": [
-    "https://proofofpepe-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet01.proofofpepe.tech"
-  ],
-  "nativeCurrency": {
-    "name": "POP",
-    "symbol": "POP",
-    "decimals": 18
-  },
   "explorers": [
     {
       "name": "ProofOfPepe Explorer",
@@ -27,5 +9,28 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "slug": "proofofpepe-testnet"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "name": "ProofOfPepe Testnet",
+  "nativeCurrency": {
+    "name": "POP",
+    "symbol": "POP",
+    "decimals": 18
+  },
+  "networkId": 331769,
+  "redFlags": [],
+  "rpc": [
+    "https://proofofpepe-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://331769.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet01.proofofpepe.tech"
+  ],
+  "shortName": "POPTestnet",
+  "slug": "proofofpepe-testnet",
+  "testnet": true
 } as const satisfies Chain;

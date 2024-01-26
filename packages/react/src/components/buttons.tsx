@@ -1,143 +1,134 @@
 import { fontSize, radius, spacing, Theme } from "../design-system";
-import styled from "@emotion/styled";
+import { StyledButton } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
-// for rendering a conventional button
-export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link" | "danger";
+type ButtonProps = {
+  variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
-}>`
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${radius.md};
-  padding: ${spacing.sm} ${spacing.sm};
-  font-size: ${fontSize.md};
-  font-weight: 500;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1;
-  flex-shrink: 0;
+  fullWidth?: boolean;
+  gap?: keyof typeof spacing;
+};
 
-  &:focus {
-    box-shadow: 0 0 0 3px
-      ${(p) => {
-        switch (p.variant) {
-          case "inverted":
-            return p.theme.bg.invertedFocused;
-          case "secondary":
-            return p.theme.bg.highlighted;
-          case "link":
-            return "none";
-          case "danger":
-            return p.theme.text.danger;
-        }
-      }};
-  }
+export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radius.md,
+    padding: `${fontSize.sm} ${fontSize.sm}`,
+    fontSize: fontSize.md,
+    fontWeight: 500,
+    boxSizing: "border-box",
+    WebkitTapHighlightColor: "transparent",
+    lineHeight: "normal",
+    flexShrink: 0,
+    transition: "border 200ms ease",
+    gap: (props.gap && spacing[props.gap]) || 0,
+    width: props.fullWidth ? "100%" : undefined,
+    background: (() => {
+      switch (props.variant) {
+        case "primary":
+          return theme.colors.primaryButtonBg;
+        case "accent":
+          return theme.colors.accentButtonBg;
+        case "secondary":
+          return theme.colors.secondaryButtonBg;
+        default:
+          return "none";
+      }
+    })(),
+    color: (() => {
+      switch (props.variant) {
+        case "primary":
+          return theme.colors.primaryButtonText;
+        case "accent":
+          return theme.colors.accentButtonText;
+        case "secondary":
+          return theme.colors.secondaryButtonText;
+        case "outline":
+          return theme.colors.secondaryButtonText;
+        case "link":
+          return theme.colors.accentText;
+        default:
+          return theme.colors.primaryButtonText;
+      }
+    })(),
+    "&:active": {
+      transform: "translateY(1px)",
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
+    },
+    ...(() => {
+      if (props.variant === "outline") {
+        return {
+          border: `1.5px solid ${theme.colors.borderColor}`,
+          "&:hover": {
+            borderColor: theme.colors.accentText,
+          },
+        };
+      }
 
-  box-shadow: ${(p) => {
-    switch (p.variant) {
-      case "danger":
-        return `0 0 0 2px ${p.theme.text.danger}`;
-      case "link":
-        return "none";
-      default:
-        return "none";
-    }
-  }};
+      if (props.variant === "secondary") {
+        return {
+          "&:hover": {
+            background: theme.colors.secondaryButtonHoverBg,
+          },
+        };
+      }
 
-  background: ${(p) => {
-    switch (p.variant) {
-      case "inverted":
-        return p.theme.bg.inverted;
-      case "secondary":
-        return p.theme.bg.elevated;
-      case "link":
-        return "transparent";
-      case "danger":
-        return "none";
-    }
-  }};
-  color: ${(p) => {
-    switch (p.variant) {
-      case "inverted":
-        return p.theme.text.inverted;
-      case "secondary":
-        return p.theme.text.neutral;
-      case "link":
-        return p.theme.link.primary;
-      case "danger":
-        return p.theme.text.danger;
-    }
-  }};
+      if (props.variant === "link") {
+        return {
+          padding: 0,
+          "&:hover": {
+            color: theme.colors.primaryText,
+          },
+        };
+      }
+    })(),
+  };
+});
 
-  ${(p) => {
-    if (p.variant === "link") {
-      return `
-      padding: 0;
-      &:hover {
-        color: ${p.theme.text.neutral};
-      }`;
-    }
-  }}
+export const IconButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radius.sm,
+    WebkitTapHighlightColor: "transparent",
+    color: theme.colors.secondaryIconColor,
+    padding: "2px",
+    transition: "background 200ms ease, color 200ms ease",
+    "&:hover": {
+      background: theme.colors.secondaryIconHoverBg,
+      color: theme.colors.secondaryIconHoverColor,
+    },
+  };
+});
 
-  cursor: pointer;
-
-  /* pressed effect */
-  &:active {
-    transform: translateY(1px);
-  }
-
-  &[disabled] {
-    cursor: not-allowed;
-  }
-`;
-
-// for rendering a button with an icon
-export const IconButton = styled.button<{
-  variant: "neutral" | "secondary";
-  theme?: Theme;
-}>`
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${radius.sm};
-  -webkit-tap-highlight-color: transparent;
-  color: ${(p) => {
-    switch (p.variant) {
-      case "neutral":
-        return p.theme.text.neutral;
-      case "secondary":
-        return p.theme.text.secondary;
-    }
-  }};
-  padding: 2px;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-  &:hover {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
-  }
-`;
-
-// for rendering a button next to input
-export const InputButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${radius.sm};
-  padding: ${spacing.sm};
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  color: ${(p) => p.theme.text.secondary};
-  &:hover {
-    color: ${(p) => p.theme.text.neutral};
-  }
-  &[disabled] {
-    cursor: not-allowed;
-  }
-`;
+export const InputButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    cursor: "pointer",
+    WebkitTapHighlightColor: "transparent",
+    color: theme.colors.secondaryText,
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
+    },
+  };
+});

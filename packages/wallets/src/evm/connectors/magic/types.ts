@@ -22,17 +22,20 @@ export interface MagicOptions {
 export interface MagicAuthOptions extends MagicOptions {
   /**
    * enable email login for the Magic Auth.
-   * @default true
+   *
+   * By default it is set to `true`
    */
   emailLogin?: boolean;
   /**
    * enable sms login for the Magic Auth.
-   * @default true
+   *
+   * By default it is set to `true`
    */
   smsLogin?: boolean;
   /**
    * Specify whether to use the Magic Auth or Magic Connect.
-   * @default "auth"
+   *
+   * By default it is set to `"auth"`
    */
   type?: "auth" | "connect";
 
@@ -52,7 +55,8 @@ export interface MagicConnectorBaseOptions {
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
   /**
    * Specify whether to use the Magic Auth or Magic Connect.
-   * @default "auth"
+   *
+   * By default it is set to `"auth"`
    */
   type?: "auth" | "connect";
 }

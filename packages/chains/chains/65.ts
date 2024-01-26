@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OKExChain Testnet",
   "chain": "okexchain",
-  "rpc": [
-    "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://exchaintestrpc.okex.org"
-  ],
-  "faucets": [
-    "https://www.okex.com/drawdex"
-  ],
-  "nativeCurrency": {
-    "name": "OKExChain Global Utility Token in testnet",
-    "symbol": "OKT",
-    "decimals": 18
-  },
-  "infoURL": "https://www.okex.com/okexchain",
-  "shortName": "tokt",
   "chainId": 65,
-  "networkId": 65,
   "explorers": [
     {
       "name": "OKLink",
@@ -25,6 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "okexchain-testnet"
+  "faucets": [
+    "https://www.okex.com/drawdex"
+  ],
+  "infoURL": "https://www.okex.com/okexchain",
+  "name": "OKExChain Testnet",
+  "nativeCurrency": {
+    "name": "OKExChain Global Utility Token in testnet",
+    "symbol": "OKT",
+    "decimals": 18
+  },
+  "networkId": 65,
+  "rpc": [
+    "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://exchaintestrpc.okex.org"
+  ],
+  "shortName": "tokt",
+  "slip44": 1,
+  "slug": "okexchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

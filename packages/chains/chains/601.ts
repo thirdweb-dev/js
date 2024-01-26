@@ -1,42 +1,43 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PEER Testnet",
-  "chain": "PEER",
-  "rpc": [
-    "https://peer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://testnet-polka-host-232813573.us-west-1.elb.amazonaws.com"
-  ],
-  "faucets": [
-    "https://testnet.peer.inc"
-  ],
-  "nativeCurrency": {
-    "name": "PEER Token",
-    "symbol": "PEER",
-    "decimals": 18
-  },
-  "infoURL": "https://peer.inc",
-  "shortName": "PEER",
+  "chain": "VINE",
   "chainId": 601,
-  "networkId": 601,
-  "icon": {
-    "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-    "width": 1363,
-    "height": 760,
-    "format": "png"
-  },
   "explorers": [
     {
-      "name": "PEER Explorer",
-      "url": "https://testnet.peer.inc",
+      "name": "Vine Explorer",
+      "url": "https://vne.network/rose",
       "standard": "none",
       "icon": {
-        "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-        "width": 1363,
-        "height": 760,
+        "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
+        "width": 512,
+        "height": 512,
         "format": "png"
       }
     }
   ],
-  "testnet": true,
-  "slug": "peer-testnet"
+  "faucets": [
+    "https://vne.network/rose"
+  ],
+  "icon": {
+    "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://www.peer.inc",
+  "name": "Vine Testnet",
+  "nativeCurrency": {
+    "name": "VINE",
+    "symbol": "VNE",
+    "decimals": 18
+  },
+  "networkId": 601,
+  "rpc": [
+    "https://vine-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://601.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.vne.network"
+  ],
+  "shortName": "VINE",
+  "slug": "vine-testnet",
+  "testnet": true
 } as const satisfies Chain;

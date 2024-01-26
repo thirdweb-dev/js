@@ -1,10 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JIBCHAIN L1",
   "chain": "JBC",
-  "rpc": [
-    "https://jibchain-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-l1.jibchain.net"
+  "chainId": 8899,
+  "explorers": [
+    {
+      "name": "JIBCHAIN Explorer",
+      "url": "https://exp-l1.jibchain.net",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
   "features": [
@@ -15,22 +18,27 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmfGHivFXtqs1CZvrBbLsRXAukWiLqgUF5erWaLNK55pDV",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://jibchain.net",
+  "name": "JIBCHAIN L1",
   "nativeCurrency": {
     "name": "JIBCOIN",
     "symbol": "JBC",
     "decimals": 18
   },
-  "infoURL": "https://jibchain.net",
-  "shortName": "jbc",
-  "chainId": 8899,
   "networkId": 8899,
-  "explorers": [
-    {
-      "name": "JIBCHAIN Explorer",
-      "url": "https://exp-l1.jibchain.net",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://jibchain-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8899.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-l1.jibchain.net",
+    "https://jib-rpc.inan.in.th"
   ],
-  "testnet": false,
-  "slug": "jibchain-l1"
+  "shortName": "jbc",
+  "slug": "jibchain-l1",
+  "testnet": false
 } as const satisfies Chain;

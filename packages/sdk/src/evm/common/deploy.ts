@@ -23,15 +23,18 @@ import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../contracts";
+import { overrideRecipientAddress } from "./override-recipient-address";
 
 /**
  *
- * @param contractType
- * @param metadata
- * @param contractURI
+ * @param contractType - The contract type to get deploy arguments for
+ * @param metadata - The metadata to get deploy arguments for
+ * @param contractURI - The contract URI to get deploy arguments for
  * @returns
  * @internal
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: Update function interface: Remove unused param
 export async function getDeployArguments<
   TContractType extends PrebuiltContractType,
 >(
@@ -41,24 +44,10 @@ export async function getDeployArguments<
   signer: Signer,
   storage: ThirdwebStorage,
 ): Promise<any[]> {
-  const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
-  let trustedForwarders: string[] = [];
-  if (!chainEnum) {
-    const forwarder = await computeForwarderAddress(
-      signer.provider as providers.Provider,
-      storage,
-    );
-    trustedForwarders = [forwarder];
-  } else {
-    trustedForwarders =
-      contractType === PackInitializer.contractType
-        ? []
-        : getDefaultTrustedForwarders(chainId);
-  }
+  const trustedForwarders: string[] = [];
 
-  // add default forwarders to any custom forwarders passed in
+  // add any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
     trustedForwarders.push(...metadata.trusted_forwarders);
   }
@@ -74,11 +63,17 @@ export async function getDeployArguments<
         erc721metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc721metadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc721metadata.primary_sale_recipient,
+        ),
         erc721metadata.fee_recipient,
         erc721metadata.seller_fee_basis_points,
         erc721metadata.platform_fee_basis_points,
-        erc721metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc721metadata.platform_fee_recipient,
+        ),
       ];
     case SignatureDropInitializer.contractType:
       const signatureDropmetadata =
@@ -89,11 +84,17 @@ export async function getDeployArguments<
         signatureDropmetadata.symbol,
         contractURI,
         trustedForwarders,
-        signatureDropmetadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          signatureDropmetadata.primary_sale_recipient,
+        ),
         signatureDropmetadata.fee_recipient,
         signatureDropmetadata.seller_fee_basis_points,
         signatureDropmetadata.platform_fee_basis_points,
-        signatureDropmetadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          signatureDropmetadata.platform_fee_recipient,
+        ),
       ];
     case MultiwrapInitializer.contractType:
       const multiwrapMetadata =
@@ -117,11 +118,17 @@ export async function getDeployArguments<
         erc1155metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc1155metadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc1155metadata.primary_sale_recipient,
+        ),
         erc1155metadata.fee_recipient,
         erc1155metadata.seller_fee_basis_points,
         erc1155metadata.platform_fee_basis_points,
-        erc1155metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc1155metadata.platform_fee_recipient,
+        ),
       ];
     case TokenDropInitializer.contractType:
     case TokenInitializer.contractType:
@@ -134,8 +141,14 @@ export async function getDeployArguments<
         erc20metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc20metadata.primary_sale_recipient,
-        erc20metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc20metadata.primary_sale_recipient,
+        ),
+        overrideRecipientAddress(
+          signerAddress,
+          erc20metadata.platform_fee_recipient,
+        ),
         erc20metadata.platform_fee_basis_points,
       ];
     case VoteInitializer.contractType:
@@ -171,7 +184,10 @@ export async function getDeployArguments<
         signerAddress,
         contractURI,
         trustedForwarders,
-        marketplaceMetadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          marketplaceMetadata.platform_fee_recipient,
+        ),
         marketplaceMetadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:

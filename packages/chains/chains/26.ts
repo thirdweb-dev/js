@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Genesis L1 testnet",
   "chain": "genesis",
-  "rpc": [
-    "https://genesis-l1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testrpc.genesisl1.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "L1 testcoin",
-    "symbol": "L1test",
-    "decimals": 18
-  },
-  "infoURL": "https://www.genesisl1.com",
-  "shortName": "L1test",
   "chainId": 26,
-  "networkId": 26,
   "explorers": [
     {
       "name": "Genesis L1 testnet explorer",
@@ -23,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "genesis-l1-testnet"
+  "faucets": [],
+  "infoURL": "https://www.genesisl1.com",
+  "name": "Genesis L1 testnet",
+  "nativeCurrency": {
+    "name": "L1 testcoin",
+    "symbol": "L1test",
+    "decimals": 18
+  },
+  "networkId": 26,
+  "rpc": [
+    "https://genesis-l1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://26.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testrpc.genesisl1.org"
+  ],
+  "shortName": "L1test",
+  "slip44": 1,
+  "slug": "genesis-l1-testnet",
+  "testnet": true
 } as const satisfies Chain;

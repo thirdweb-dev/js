@@ -1,24 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Energy Web Volta Testnet",
   "chain": "Volta",
-  "rpc": [
-    "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://volta-rpc.energyweb.org",
-    "wss://volta-rpc.energyweb.org/ws"
-  ],
+  "chainId": 73799,
+  "explorers": [],
   "faucets": [
     "https://voltafaucet.energyweb.org"
   ],
+  "infoURL": "https://energyweb.org",
+  "name": "Energy Web Volta Testnet",
   "nativeCurrency": {
     "name": "Volta Token",
     "symbol": "VT",
     "decimals": 18
   },
-  "infoURL": "https://energyweb.org",
-  "shortName": "vt",
-  "chainId": 73799,
   "networkId": 73799,
-  "testnet": true,
-  "slug": "energy-web-volta-testnet"
+  "rpc": [
+    "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://73799.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://volta-rpc.energyweb.org",
+    "wss://volta-rpc.energyweb.org/ws"
+  ],
+  "shortName": "vt",
+  "slip44": 1,
+  "slug": "energy-web-volta-testnet",
+  "testnet": true
 } as const satisfies Chain;

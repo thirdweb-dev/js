@@ -1,31 +1,66 @@
+import { media, spacing, shadow, radius, iconSize } from "../design-system";
 import {
-  Theme,
-  media,
-  spacing,
-  shadow,
-  radius,
-  iconSize,
-  fontSize,
-} from "../design-system";
-import { scrollbar } from "../design-system/styles";
+  wideModalMaxHeight,
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  compactModalMaxHeight,
+  modalCloseFadeOutDuration,
+} from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
+import { noScrollBar } from "./basic";
 import { IconButton } from "./buttons";
 import { keyframes } from "@emotion/react";
-import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { DynamicHeight } from "./DynamicHeight";
+import { useEffect, useRef, useState } from "react";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import { StyledDiv } from "../design-system/elements";
+import { FocusScope } from "@radix-ui/react-focus-scope";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
   open?: boolean;
   setOpen?: (open: boolean) => void;
   children: React.ReactNode;
-  title?: string;
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
+  size: "wide" | "compact";
+  hide?: boolean;
 }> = (props) => {
+  const [open, setOpen] = useState(props.open);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!props.open) {
+      if (contentRef.current) {
+        const animationConfig = {
+          duration: modalCloseFadeOutDuration,
+          fill: "forwards",
+          easing: "ease",
+        } as const;
+
+        contentRef.current.animate([{ opacity: 0 }], {
+          ...animationConfig,
+        }).onfinish = () => {
+          setOpen(false);
+        };
+
+        overlayRef.current?.animate([{ opacity: 0 }], {
+          ...animationConfig,
+          duration: modalCloseFadeOutDuration + 100,
+        });
+      } else {
+        setOpen(props.open);
+      }
+    } else {
+      setOpen(props.open);
+    }
+  }, [props.open]);
+
   return (
-    <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
+    <Dialog.Root open={open} onOpenChange={props.setOpen}>
       {/* Trigger */}
       {props.trigger && (
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
@@ -34,51 +69,70 @@ export const Modal: React.FC<{
       {/* Dialog */}
       <Dialog.Portal>
         {/* Overlay */}
-        <Dialog.Overlay asChild>
-          <Overlay />
-        </Dialog.Overlay>
-        <Dialog.Content asChild>
-          <DialogContent style={props.style}>
-            {props.title && <DialogTitle> {props.title}</DialogTitle>}
+        {!props.hide && (
+          <Dialog.Overlay asChild>
+            <Overlay ref={overlayRef} />
+          </Dialog.Overlay>
+        )}
 
-            {props.children}
+        <FocusScope trapped={!props.hide}>
+          <Dialog.Content asChild>
+            <DialogContent
+              ref={contentRef}
+              style={
+                props.hide
+                  ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
+                  : {
+                      height:
+                        props.size === "compact" ? "auto" : wideModalMaxHeight,
+                      maxWidth:
+                        props.size === "compact"
+                          ? modalMaxWidthCompact
+                          : modalMaxWidthWide,
+                    }
+              }
+            >
+              {props.size === "compact" ? (
+                <DynamicHeight maxHeight={compactModalMaxHeight}>
+                  {props.children}{" "}
+                </DynamicHeight>
+              ) : (
+                props.children
+              )}
 
-            {/* Close Icon */}
-            {!props.hideCloseIcon && (
-              <CrossContainer>
-                <Dialog.Close asChild>
-                  <IconButton
-                    variant="secondary"
-                    type="button"
-                    aria-label="Close"
-                  >
-                    <Cross2Icon
-                      style={{
-                        width: iconSize.md,
-                        height: iconSize.md,
-                        color: "inherit",
-                      }}
-                    />
-                  </IconButton>
-                </Dialog.Close>
-              </CrossContainer>
-            )}
-          </DialogContent>
-        </Dialog.Content>
+              {/* Close Icon */}
+              {!props.hideCloseIcon && (
+                <CrossContainer>
+                  <Dialog.Close asChild>
+                    <IconButton type="button" aria-label="Close">
+                      <Cross2Icon
+                        width={iconSize.md}
+                        height={iconSize.md}
+                        style={{
+                          color: "inherit",
+                        }}
+                      />
+                    </IconButton>
+                  </Dialog.Close>
+                </CrossContainer>
+              )}
+            </DialogContent>
+          </Dialog.Content>
+        </FocusScope>
       </Dialog.Portal>
     </Dialog.Root>
   );
 };
 
-const CrossContainer = styled.div`
-  position: absolute;
-  top: ${spacing.lg};
-  right: ${spacing.lg};
-
-  ${media.mobile} {
-    right: ${spacing.md};
-  }
-`;
+export const CrossContainer = /* @__PURE__ */ StyledDiv({
+  position: "absolute",
+  top: spacing.lg,
+  right: spacing.lg,
+  transform: "translateX(15%)",
+  [media.mobile]: {
+    right: spacing.md,
+  },
+});
 
 const modalAnimationDesktop = keyframes`
   from {
@@ -102,61 +156,45 @@ const modalAnimationMobile = keyframes`
   }
 `;
 
-const DialogContent = styled.div<{ theme?: Theme }>`
-  z-index: 10000;
-  background-color: ${(p) => p.theme.bg.base};
-  border-radius: ${radius.xl};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100vw - 40px);
-  box-sizing: border-box;
-  overflow-y: auto;
-  padding: ${spacing.lg};
-  padding-bottom: ${spacing.xl};
-  animation: ${modalAnimationDesktop} 200ms ease;
-  box-shadow: ${shadow.lg};
-  line-height: 1;
+const DialogContent = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
 
-  &:focus {
-    outline: none;
-  }
-
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
-
-  /* open from bottom on mobile */
-  ${media.mobile} {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: 100vw;
-    transform: none;
-    width: 100vw;
-    animation: ${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1);
-    border-radius: ${radius.xxl};
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    max-width: none !important;
-  }
-
-  & *::selection {
-    background-color: ${(p) => p.theme.bg.inverted};
-    color: ${(p) => p.theme.text.inverted};
-  }
-`;
-
-const DialogTitle = /* @__PURE__ */ styled(/* @__PURE__ */ Dialog.Title)<{
-  theme?: Theme;
-}>`
-  margin: 0;
-  font-weight: 500;
-  color: ${(p) => p.theme.text.neutral};
-  font-size: ${fontSize.lg};
-`;
+  return {
+    zIndex: 10000,
+    background: theme.colors.modalBg,
+    "--bg": theme.colors.modalBg,
+    color: theme.colors.primaryText,
+    borderRadius: radius.xl,
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "calc(100vw - 40px)",
+    boxSizing: "border-box",
+    animation: `${modalAnimationDesktop} 300ms ease`,
+    boxShadow: shadow.lg,
+    lineHeight: "normal",
+    border: `1px solid ${theme.colors.borderColor}`,
+    outline: "none",
+    overflow: "hidden",
+    fontFamily: theme.fontFamily,
+    [media.mobile]: {
+      top: "auto",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      transform: "none",
+      width: "100vw",
+      animation: `${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1)`,
+      borderRadius: radius.xxl,
+      borderBottomRightRadius: 0,
+      borderBottomLeftRadius: 0,
+      maxWidth: "none !important",
+    },
+    "& *::selection": {
+      backgroundColor: theme.colors.selectedTextBg,
+      color: theme.colors.selectedTextColor,
+    },
+    ...noScrollBar,
+  };
+});

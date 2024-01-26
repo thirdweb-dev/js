@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Network",
   "chain": "darwinia",
-  "rpc": [
-    "https://darwinia-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.darwinia.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Darwinia Network Native Token",
-    "symbol": "RING",
-    "decimals": 18
-  },
-  "infoURL": "https://darwinia.network/",
-  "shortName": "darwinia",
   "chainId": 46,
-  "networkId": 46,
   "explorers": [
     {
       "name": "subscan",
@@ -23,6 +9,23 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "darwinia-network"
+  "faucets": [],
+  "infoURL": "https://darwinia.network/",
+  "name": "Darwinia Network",
+  "nativeCurrency": {
+    "name": "Darwinia Network Native Token",
+    "symbol": "RING",
+    "decimals": 18
+  },
+  "networkId": 46,
+  "rpc": [
+    "https://darwinia-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://46.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.darwinia.network",
+    "https://darwinia-rpc.darwiniacommunitydao.xyz",
+    "https://darwinia-rpc.dwellir.com"
+  ],
+  "shortName": "darwinia",
+  "slug": "darwinia-network",
+  "testnet": false
 } as const satisfies Chain;

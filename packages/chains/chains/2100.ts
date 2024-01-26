@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ecoball Mainnet",
   "chain": "ECO",
-  "rpc": [
-    "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.ecoball.org/ecoball/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ecoball Coin",
-    "symbol": "ECO",
-    "decimals": 18
-  },
-  "infoURL": "https://ecoball.org",
-  "shortName": "eco",
   "chainId": 2100,
-  "networkId": 2100,
   "explorers": [
     {
       "name": "Ecoball Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ecoball"
+  "faucets": [],
+  "infoURL": "https://ecoball.org",
+  "name": "Ecoball Mainnet",
+  "nativeCurrency": {
+    "name": "Ecoball Coin",
+    "symbol": "ECO",
+    "decimals": 18
+  },
+  "networkId": 2100,
+  "rpc": [
+    "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.ecoball.org/ecoball/"
+  ],
+  "shortName": "eco",
+  "slug": "ecoball",
+  "testnet": false
 } as const satisfies Chain;

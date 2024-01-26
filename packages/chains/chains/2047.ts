@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Stratos Testnet",
   "chain": "STOS",
-  "rpc": [
-    "https://stratos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://web3-rpc-mesos.thestratos.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "STOS",
-    "symbol": "STOS",
-    "decimals": 18
-  },
-  "infoURL": "https://www.thestratos.org",
-  "shortName": "stos-testnet",
   "chainId": 2047,
-  "networkId": 2047,
   "explorers": [
     {
       "name": "Stratos EVM Explorer (Blockscout)",
@@ -28,6 +14,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "stratos-testnet"
+  "faucets": [],
+  "infoURL": "https://www.thestratos.org",
+  "name": "Stratos Testnet",
+  "nativeCurrency": {
+    "name": "STOS",
+    "symbol": "STOS",
+    "decimals": 18
+  },
+  "networkId": 2047,
+  "rpc": [
+    "https://stratos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2047.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://web3-rpc-mesos.thestratos.org"
+  ],
+  "shortName": "stos-testnet",
+  "slip44": 1,
+  "slug": "stratos-testnet",
+  "testnet": true
 } as const satisfies Chain;

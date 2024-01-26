@@ -1,4 +1,3 @@
-import { WalletConfig } from "@thirdweb-dev/react-core";
 import { WCProposal, WCRequest } from "@thirdweb-dev/wallets";
 
 export const CLOSE_MODAL_STATE = (caller: Caller): ModalState => {
@@ -50,14 +49,16 @@ export type ClosedModal = {
 } & SheetModal;
 
 // connect wallet flow
-export type ConnectWalletFlowData = {
+export type ConnectEmbedData = {
   modalTitle?: string;
-  walletConfig?: WalletConfig;
+  modalTitleIconUrl?: string;
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
 };
 
 export type ConnectWalletFlowModal = {
   view: "ConnectWalletFlow";
-  data: ConnectWalletFlowData;
+  data: ConnectEmbedData;
 } & SheetModal;
 
 // wallet details

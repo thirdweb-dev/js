@@ -1,4 +1,4 @@
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "../core/classes/internal/contract-wrapper";
 import { TransactionResult } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -12,7 +12,7 @@ import type {
   ContractFactory,
 } from "ethers";
 import EventEmitter from "eventemitter3";
-import { DeployEvents } from "./deploy";
+import { DeployEvents } from "./deploy/deploy-events";
 
 export type ParseTransactionReceipt<TResult = TransactionResult> =
   | ((receipt: providers.TransactionReceipt) => TResult)

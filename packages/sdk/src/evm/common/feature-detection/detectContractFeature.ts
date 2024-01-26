@@ -1,5 +1,5 @@
 import { FeatureName } from "../../constants/contract-features";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { AbiSchema } from "../../schema/contracts/custom";
 import { BaseContract } from "ethers";
 import { isExtensionEnabled } from "./isFeatureEnabled";
@@ -7,8 +7,8 @@ import { isExtensionEnabled } from "./isFeatureEnabled";
 /**
  * Type guard for contractWrappers depending on passed feature name
  * @internal
- * @param contractWrapper
- * @param featureName
+ * @param contractWrapper - The contract wrapper to check
+ * @param featureName - The feature name to check
  */
 export function detectContractFeature<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,

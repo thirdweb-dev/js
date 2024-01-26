@@ -1,42 +1,44 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Core Blockchain Testnet",
   "chain": "Core",
+  "chainId": 1115,
+  "explorers": [
+    {
+      "name": "Core Scan Testnet",
+      "url": "https://scan.test.btcs.network",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
+        "width": 200,
+        "height": 217,
+        "format": "png"
+      }
+    }
+  ],
+  "faucets": [
+    "https://scan.test.btcs.network/faucet"
+  ],
   "icon": {
     "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
     "width": 200,
     "height": 217,
     "format": "png"
   },
-  "rpc": [
-    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.test.btcs.network/"
-  ],
-  "faucets": [
-    "https://scan.test.btcs.network/faucet"
-  ],
+  "infoURL": "https://www.coredao.org",
+  "name": "Core Blockchain Testnet",
   "nativeCurrency": {
     "name": "Core Blockchain Testnet Native Token",
     "symbol": "tCORE",
     "decimals": 18
   },
-  "infoURL": "https://www.coredao.org",
-  "shortName": "tcore",
-  "chainId": 1115,
   "networkId": 1115,
-  "explorers": [
-    {
-      "name": "Core Scan Testnet",
-      "url": "https://scan.test.btcs.network",
-      "icon": {
-        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
-        "width": 200,
-        "height": 217,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1115.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.test.btcs.network/"
   ],
-  "testnet": true,
-  "slug": "core-blockchain-testnet"
+  "shortName": "tcore",
+  "slip44": 1,
+  "slug": "core-blockchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

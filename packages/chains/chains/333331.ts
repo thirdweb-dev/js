@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aves Testnet",
   "chain": "AVST",
-  "rpc": [
-    "https://aves-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.rpc.avescoin.io"
+  "chainId": 333331,
+  "explorers": [
+    {
+      "name": "avescan",
+      "url": "https://testnet.avescoin.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "AvesT",
-    "symbol": "AVST",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,27 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://ethereum.org",
-  "shortName": "avst",
-  "chainId": 333331,
-  "networkId": 333331,
   "icon": {
     "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
     "width": 232,
     "height": 232,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "avescan",
-      "url": "https://testnet.avescoin.io",
-      "icon": {
-        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
-        "width": 232,
-        "height": 232,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://ethereum.org",
+  "name": "Aves Testnet",
+  "nativeCurrency": {
+    "name": "AvesT",
+    "symbol": "AVST",
+    "decimals": 18
+  },
+  "networkId": 333331,
+  "rpc": [
+    "https://aves-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test.rpc.avescoin.io"
   ],
-  "testnet": true,
-  "slug": "aves-testnet"
+  "shortName": "avst",
+  "slip44": 1,
+  "slug": "aves-testnet",
+  "testnet": true
 } as const satisfies Chain;

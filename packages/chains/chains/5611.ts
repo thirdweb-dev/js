@@ -1,35 +1,47 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "opBNB",
   "chain": "opBNB",
-  "shortName": "opBNB",
   "chainId": 5611,
-  "testnet": true,
-  "nativeCurrency": {
-    "name": "Testnet bnb",
-    "symbol": "Tbnb",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://opbnb-testnet-rpc.bnbchain.org"
-  ],
   "explorers": [
     {
-      "name": "opBNB Scan",
-      "url": "https://opbnbscan.com/",
-      "standard": ""
+      "name": "bscscan-opbnb-testnet",
+      "url": "https://opbnb-testnet.bscscan.com",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "opbnbscan",
+      "url": "https://opbnbscan.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://opbnb-testnet-bridge.bnbchain.org/"
+    "https://testnet.bnbchain.org/faucet-smart"
   ],
-  "infoURL": "https://docs.bnbchain.org/",
   "icon": {
-    "url": "ipfs://QmfFvfFsQKby3M32uqr8T55ENBnTHL8bkdeeu6rYVL2n4z/opbnblogo.svg",
-    "height": 512,
-    "width": 512,
-    "format": "svg"
+    "url": "ipfs://bafybeib75gwytvblyvjpfminitr3i6mpat3a624udfsqsl5nysf5vuuvie",
+    "width": 96,
+    "height": 96,
+    "format": "png"
   },
-  "slug": "opbnb"
+  "infoURL": "https://opbnb.bnbchain.org/en",
+  "name": "opBNB Testnet",
+  "nativeCurrency": {
+    "name": "BNB Chain Native Token",
+    "symbol": "tBNB",
+    "decimals": 18
+  },
+  "networkId": 5611,
+  "rpc": [
+    "https://opbnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://opbnb-testnet-rpc.bnbchain.org",
+    "https://opbnb-testnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
+    "wss://opbnb-testnet.nodereal.io/ws/v1/64a9df0874fb4a93b9d0a3849de012d3",
+    "https://opbnb-testnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
+    "wss://opbnb-testnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5"
+  ],
+  "shortName": "obnbt",
+  "slip44": 1,
+  "slug": "opbnb-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mythical Chain",
   "chain": "MYTH",
-  "rpc": [
-    "https://mythical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://chain-rpc.mythicalgames.com"
+  "chainId": 201804,
+  "explorers": [
+    {
+      "name": "Mythical Chain Explorer",
+      "url": "https://explorer.mythicalgames.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
+        "width": 350,
+        "height": 350,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Mythos",
-    "symbol": "MYTH",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://mythicalgames.com/",
-  "shortName": "myth",
-  "chainId": 201804,
-  "networkId": 201804,
   "icon": {
     "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
     "width": 350,
     "height": 350,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Mythical Chain Explorer",
-      "url": "https://explorer.mythicalgames.com",
-      "icon": {
-        "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
-        "width": 350,
-        "height": 350,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://mythicalgames.com/",
+  "name": "Mythical Chain",
+  "nativeCurrency": {
+    "name": "Mythos",
+    "symbol": "MYTH",
+    "decimals": 18
+  },
+  "networkId": 201804,
+  "rpc": [
+    "https://mythical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://201804.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://chain-rpc.mythicalgames.com"
   ],
-  "testnet": false,
-  "slug": "mythical-chain"
+  "shortName": "myth",
+  "slug": "mythical-chain",
+  "testnet": false
 } as const satisfies Chain;

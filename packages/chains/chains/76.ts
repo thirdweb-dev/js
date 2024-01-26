@@ -1,22 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mix",
   "chain": "MIX",
-  "rpc": [
-    "https://mix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc2.mix-blockchain.org:8647"
-  ],
+  "chainId": 76,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://mix-blockchain.org",
+  "name": "Mix",
   "nativeCurrency": {
     "name": "Mix Ether",
     "symbol": "MIX",
     "decimals": 18
   },
-  "infoURL": "https://mix-blockchain.org",
-  "shortName": "mix",
-  "chainId": 76,
   "networkId": 76,
+  "rpc": [
+    "https://mix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://76.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc2.mix-blockchain.org:8647"
+  ],
+  "shortName": "mix",
   "slip44": 76,
-  "testnet": false,
-  "slug": "mix"
+  "slug": "mix",
+  "testnet": false
 } as const satisfies Chain;

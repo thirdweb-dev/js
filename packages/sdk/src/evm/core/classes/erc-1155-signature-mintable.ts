@@ -1,3 +1,12 @@
+import type {
+  ITokenERC1155,
+  Multicall,
+  TokenERC1155,
+} from "@thirdweb-dev/contracts-js";
+import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, constants } from "ethers";
+import invariant from "tiny-invariant";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
@@ -19,18 +28,10 @@ import {
 import { BaseSignatureMintERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  ITokenERC1155,
-  Multicall,
-  TokenERC1155,
-} from "@thirdweb-dev/contracts-js";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, constants } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -82,8 +83,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     ): Promise<Transaction<TransactionResultWithId>> => {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
-      const message = await this.mapPayloadToContractStruct(mintRequest);
-      const overrides = await this.contractWrapper.getCallOverrides();
+      const [message, overrides] = await Promise.all([
+        this.mapPayloadToContractStruct(mintRequest),
+        this.contractWrapper.getCallOverrides(),
+      ]);
       // TODO: Transaction Sequence Pattern
       await setErc20Allowance(
         this.contractWrapper,
@@ -135,27 +138,29 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     async (
       signedPayloads: SignedPayload1155[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          const message = await this.mapPayloadToContractStruct(s.payload);
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
+      const contractStructs = await Promise.all(
+        signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
       );
+      const contractPayloads = signedPayloads.map((s, index) => {
+        const message = contractStructs[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintWithSignature",
-          [p.message, p.signature],
-        );
+        return contractEncoder.encode("mintWithSignature", [
+          p.message,
+          p.signature,
+        ]);
       });
 
       if (hasFunction<Multicall>("multicall", this.contractWrapper)) {
@@ -221,8 +226,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
-    const verification: [boolean, string] =
-      await this.contractWrapper.readContract.verify(message, signature);
+    const verification: [boolean, string] = await this.contractWrapper.read(
+      "verify",
+      [message, signature],
+    );
     return verification[0];
   }
 
@@ -258,7 +265,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generate(
@@ -272,7 +279,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   }
 
   /**
-   * Generate a signature that can be used to mint additionaly supply to an existing NFT.
+   * Generate a signature that can be used to mint additionally supply to an existing NFT.
    *
    * @remarks Takes in a payload with the token ID of an existing NFT, and signs it with your private key. The generated signature can then be used to mint additional supply to the NFT using the exact payload and signature generated.
    *
@@ -287,7 +294,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * const startTime = new Date();
    * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
-   *   tokenId: 0, // Instead of metadata, we specificy the token ID of the NFT to mint supply to
+   *   tokenId: 0, // Instead of metadata, we specify the token ID of the NFT to mint supply to
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
    *   quantity: 2, // the quantity of NFTs to mint
    *   price: 0.5, // the price per NFT
@@ -303,7 +310,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generateFromTokenId(
@@ -319,7 +326,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc1155SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatch(
@@ -333,21 +340,21 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically.
+   * Generate a batch of signatures that can be used to mint new NFTs or additionally supply to existing NFTs dynamically.
    *
    * @remarks See {@link Erc1155SignatureMintable.generateFromTokenId}
    *
    * @param payloadsToSign - the payloads to sign with tokenIds specified
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatchFromTokenIds(
     payloadsToSign: PayloadToSign1155WithTokenId[],
   ): Promise<SignedPayload1155[]> {
-    await this.roles?.verify(
-      ["minter"],
-      await this.contractWrapper.getSignerAddress(),
-    );
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
+
+    await this.roles?.verify(["minter"], await signer.getAddress());
 
     const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
       await Promise.all(
@@ -357,42 +364,50 @@ export class Erc1155SignatureMintable implements DetectableFeature {
       );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
 
-    const chainId = await this.contractWrapper.getChainID();
-    const signer = this.contractWrapper.getSigner();
-    invariant(signer, "No signer available");
+    const [uris, chainId, contractInfo] = await Promise.all([
+      uploadOrExtractURIs(metadatas, this.storage),
+      this.contractWrapper.getChainID(),
+      getPrebuiltInfo(
+        this.contractWrapper.address,
+        this.contractWrapper.getProvider(),
+      ),
+    ]);
 
-    const contractInfo = await getPrebuiltInfo(
-      this.contractWrapper.readContract.address,
-      this.contractWrapper.getProvider(),
-    );
-    const isLegacyContract = contractInfo?.type === "TokenERC1155";
-
-    return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = await Signature1155PayloadOutput.parseAsync({
+    const finalPayloads = await Promise.all(
+      parsedRequests.map((m, i) =>
+        Signature1155PayloadOutput.parseAsync({
           ...m,
-          uri,
-        });
-        const signature = await this.contractWrapper.signTypedData(
+          uri: uris[i],
+        }),
+      ),
+    );
+    const contractStructs = await Promise.all(
+      finalPayloads.map((finalPayload) =>
+        this.mapPayloadToContractStruct(finalPayload),
+      ),
+    );
+
+    const isLegacyContract = contractInfo?.type === "TokenERC1155";
+    const signatures = await Promise.all(
+      contractStructs.map((contractStruct) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name: isLegacyContract ? "TokenERC1155" : "SignatureMintERC1155",
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          contractStruct,
+        ),
+      ),
     );
+    return signatures.map((signature, index) => ({
+      payload: finalPayloads[index],
+      signature: signature.toString(),
+    }));
   }
 
   /** ******************************
@@ -405,7 +420,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @internal
    *
    * @param mintRequest - The payload to map.
-   * @returns - The mapped payload.
+   * @returns  The mapped payload.
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,

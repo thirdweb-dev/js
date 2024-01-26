@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ThaiChain",
   "chain": "TCH",
-  "rpc": [
-    "https://thaichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.dome.cloud",
-    "https://rpc.thaichain.org"
+  "chainId": 7,
+  "explorers": [
+    {
+      "name": "Thaichain Explorer",
+      "url": "https://exp.thaichain.org",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
   "features": [
@@ -16,22 +18,21 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "infoURL": "https://thaichain.io",
+  "name": "ThaiChain",
   "nativeCurrency": {
     "name": "ThaiChain Ether",
     "symbol": "TCH",
     "decimals": 18
   },
-  "infoURL": "https://thaichain.io",
-  "shortName": "tch",
-  "chainId": 7,
   "networkId": 7,
-  "explorers": [
-    {
-      "name": "Thaichain Explorer",
-      "url": "https://exp.thaichain.org",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://thaichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.dome.cloud",
+    "https://rpc.thaichain.org"
   ],
-  "testnet": false,
-  "slug": "thaichain"
+  "shortName": "tch",
+  "slug": "thaichain",
+  "testnet": false
 } as const satisfies Chain;

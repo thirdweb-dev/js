@@ -1,21 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Haymo Testnet",
   "chain": "tHYM",
-  "rpc": [
-    "https://haymo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet1.haymo.network"
-  ],
+  "chainId": 234666,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://haymoswap.web.app/",
+  "name": "Haymo Testnet",
   "nativeCurrency": {
     "name": "HAYMO",
     "symbol": "HYM",
     "decimals": 18
   },
-  "infoURL": "https://haymoswap.web.app/",
-  "shortName": "hym",
-  "chainId": 234666,
   "networkId": 234666,
-  "testnet": true,
-  "slug": "haymo-testnet"
+  "rpc": [
+    "https://haymo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://234666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet1.haymo.network"
+  ],
+  "shortName": "hym",
+  "slip44": 1,
+  "slug": "haymo-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Meter Mainnet",
   "chain": "METER",
-  "rpc": [
-    "https://meter.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.meter.io"
-  ],
-  "faucets": [
-    "https://faucet.meter.io"
-  ],
-  "nativeCurrency": {
-    "name": "Meter",
-    "symbol": "MTR",
-    "decimals": 18
-  },
-  "infoURL": "https://www.meter.io",
-  "shortName": "Meter",
   "chainId": 82,
-  "networkId": 82,
   "explorers": [
     {
       "name": "Meter Mainnet Scan",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "meter"
+  "faucets": [
+    "https://faucet.meter.io"
+  ],
+  "infoURL": "https://www.meter.io",
+  "name": "Meter Mainnet",
+  "nativeCurrency": {
+    "name": "Meter",
+    "symbol": "MTR",
+    "decimals": 18
+  },
+  "networkId": 82,
+  "rpc": [
+    "https://meter.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://82.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.meter.io"
+  ],
+  "shortName": "Meter",
+  "slug": "meter",
+  "testnet": false
 } as const satisfies Chain;

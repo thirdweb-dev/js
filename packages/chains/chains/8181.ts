@@ -1,44 +1,44 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BeOne Chain Testnet",
-  "chain": "BOC",
-  "rpc": [
-    "https://beone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pre-boc1.beonechain.com",
-    "https://pre-boc2.beonechain.com",
-    "https://pre-boc3.beonechain.com"
+  "chain": "tBOC",
+  "chainId": 8181,
+  "explorers": [
+    {
+      "name": "Testnet BeOne Chain",
+      "url": "https://testnet.beonescan.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [
     "https://testnet.beonescan.com/faucet"
   ],
-  "nativeCurrency": {
-    "name": "BeOne Chain Testnet",
-    "symbol": "BOC",
-    "decimals": 18
-  },
-  "infoURL": "https://testnet.beonescan.com",
-  "shortName": "tBOC",
-  "chainId": 8181,
-  "networkId": 8181,
   "icon": {
     "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "BeOne Chain Testnet",
-      "url": "https://testnet.beonescan.com",
-      "icon": {
-        "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://testnet.beonescan.com",
+  "name": "Testnet BeOne Chain",
+  "nativeCurrency": {
+    "name": "Testnet BeOne Chain",
+    "symbol": "tBOC",
+    "decimals": 18
+  },
+  "networkId": 8181,
+  "rpc": [
+    "https://testnet-beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://pre-boc1.beonechain.com"
   ],
-  "testnet": true,
-  "slug": "beone-chain-testnet"
+  "shortName": "tBOC",
+  "slip44": 1,
+  "slug": "testnet-beone-chain",
+  "testnet": true
 } as const satisfies Chain;

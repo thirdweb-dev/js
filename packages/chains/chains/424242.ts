@@ -1,12 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fastex Chain testnet",
   "chain": "FTN",
-  "title": "Fastex Chain testnet",
-  "rpc": [
-    "https://fastex-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.fastexchain.com"
+  "chainId": 424242,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://testnet.ftnscan.com",
+      "standard": "none"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -15,23 +18,22 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "infoURL": "https://fastex.com",
+  "name": "Fastex Chain testnet",
   "nativeCurrency": {
     "name": "FTN",
     "symbol": "FTN",
     "decimals": 18
   },
-  "infoURL": "https://fastex.com",
-  "shortName": "fastexTestnet",
-  "chainId": 424242,
   "networkId": 424242,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://testnet.ftnscan.com",
-      "standard": "none"
-    }
+  "rpc": [
+    "https://fastex-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://424242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.fastexchain.com"
   ],
+  "shortName": "fastexTestnet",
+  "slip44": 1,
+  "slug": "fastex-chain-testnet",
   "testnet": true,
-  "slug": "fastex-chain-testnet"
+  "title": "Fastex Chain testnet"
 } as const satisfies Chain;

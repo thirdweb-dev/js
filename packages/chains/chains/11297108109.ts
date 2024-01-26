@@ -1,34 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palm",
   "chain": "Palm",
+  "chainId": 11297108109,
+  "explorers": [
+    {
+      "name": "Chainlens",
+      "url": "https://palm.chainlens.com",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Dora",
+      "url": "https://www.ondora.xyz/network/palm",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}"
-  ],
-  "faucets": [],
+  "infoURL": "https://palm.network",
+  "name": "Palm",
   "nativeCurrency": {
     "name": "PALM",
     "symbol": "PALM",
     "decimals": 18
   },
-  "infoURL": "https://palm.io",
-  "shortName": "palm",
-  "chainId": 11297108109,
   "networkId": 11297108109,
-  "explorers": [
-    {
-      "name": "Palm Explorer",
-      "url": "https://explorer.palm.io",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11297108109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}",
+    "https://palm-mainnet.public.blastapi.io"
   ],
-  "testnet": false,
-  "slug": "palm"
+  "shortName": "palm",
+  "slug": "palm",
+  "testnet": false
 } as const satisfies Chain;

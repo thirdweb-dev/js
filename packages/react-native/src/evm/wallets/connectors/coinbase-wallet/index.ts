@@ -17,18 +17,20 @@ import {
 } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers, utils } from "ethers";
-import { getValidPublicRPCUrl } from "evm/utils/uri";
+import { getValidPublicRPCUrl } from "../../../utils/uri";
 
 export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {
     /**
      * Fallback Ethereum JSON RPC URL
-     * @default ""
+     *
+     * By default it is set to `""`
      */
     jsonRpcUrl?: string;
     /**
      * Fallback Ethereum Chain ID
-     * @default 1
+     *
+     * By default it is set to `1`
      */
     chainId?: number;
   };

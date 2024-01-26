@@ -1,5 +1,142 @@
 # @thirdweb-dev/chains
 
+## 0.1.65
+
+### Patch Changes
+
+- [#2203](https://github.com/thirdweb-dev/js/pull/2203) [`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9) Thanks [@iketw](https://github.com/iketw)! - Syncs Chains
+
+## 0.1.64
+
+### Patch Changes
+
+- [#2187](https://github.com/thirdweb-dev/js/pull/2187) [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - synced chains package with chains db
+
+## 0.1.63
+
+### Patch Changes
+
+- [#2145](https://github.com/thirdweb-dev/js/pull/2145) [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.62
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+## 0.1.61
+
+### Patch Changes
+
+- [#2066](https://github.com/thirdweb-dev/js/pull/2066) [`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updatechains
+
+## 0.1.60
+
+### Patch Changes
+
+- [#2019](https://github.com/thirdweb-dev/js/pull/2019) [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a) Thanks [@jnsdls](https://github.com/jnsdls)! - add & update chains
+
+- [#2024](https://github.com/thirdweb-dev/js/pull/2024) [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Base Sepolia to defaultChains
+
+- [#2023](https://github.com/thirdweb-dev/js/pull/2023) [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Eth Sepolia to defaultChains
+
+## 0.1.59
+
+### Patch Changes
+
+- [#1967](https://github.com/thirdweb-dev/js/pull/1967) [`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Arbitrum Sepolia to defaultChains
+
+- [#1990](https://github.com/thirdweb-dev/js/pull/1990) [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281) Thanks [@jnsdls](https://github.com/jnsdls)! - deprecate `allChains` `getChainById` and `getChainBySlug`
+
+  all of these would (necessarily) pull in every single chain in the package (>600kb)
+
+  instead these can be replaced with their async variants:
+
+  - `allChains` -> `await fetchChains()`
+  - `getChainById(chainId)` -> `await getChainByIdAsync(chainId)`
+  - `getChainBySlug(chainSlug)` -> `await getChainBySlugAsync(chainSlug)`
+
+  these async functions will return the same data as their sync counterparts, but without having to pull in every single chain at build-time.
+
+## 0.1.58
+
+### Patch Changes
+
+- [#1911](https://github.com/thirdweb-dev/js/pull/1911) [`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e) Thanks [@iketw](https://github.com/iketw)! - Syncs Chains
+
+## 0.1.57
+
+### Patch Changes
+
+- [#1865](https://github.com/thirdweb-dev/js/pull/1865) [`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618) Thanks [@jnsdls](https://github.com/jnsdls)! - sync chains
+
+## 0.1.56
+
+### Patch Changes
+
+- [#1843](https://github.com/thirdweb-dev/js/pull/1843) [`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93) Thanks [@jnsdls](https://github.com/jnsdls)! - sync chains
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1805](https://github.com/thirdweb-dev/js/pull/1805) [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Spicy Chain deployments
+
+## 0.1.55
+
+### Patch Changes
+
+- [#1783](https://github.com/thirdweb-dev/js/pull/1783) [`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64) Thanks [@jnsdls](https://github.com/jnsdls)! - sync chains
+
+## 0.1.54
+
+### Patch Changes
+
+- [#1702](https://github.com/thirdweb-dev/js/pull/1702) [`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated chains
+
+## 0.1.53
+
+### Patch Changes
+
+- [#1631](https://github.com/thirdweb-dev/js/pull/1631) [`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131) Thanks [@jnsdls](https://github.com/jnsdls)! - add & update chains
+
+- [#1662](https://github.com/thirdweb-dev/js/pull/1662) [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861) Thanks [@jnsdls](https://github.com/jnsdls)! - added & updated chains
+
+## 0.1.52
+
+### Patch Changes
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(chains): add new chain information
+
+## 0.1.51
+
+### Patch Changes
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1599](https://github.com/thirdweb-dev/js/pull/1599) [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1) Thanks [@MananTank](https://github.com/MananTank)! - Update chains
+
+## 0.1.50
+
+### Patch Changes
+
+- [#1558](https://github.com/thirdweb-dev/js/pull/1558) [`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005) Thanks [@Marfuen](https://github.com/Marfuen)! - Updating chains list
+
+## 0.1.49
+
+### Patch Changes
+
+- [#1540](https://github.com/thirdweb-dev/js/pull/1540) [`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - updated chains
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
+- [#1551](https://github.com/thirdweb-dev/js/pull/1551) [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.48
+
+### Patch Changes
+
+- [#1530](https://github.com/thirdweb-dev/js/pull/1530) [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add Chiliz Spicy testnet
+
 ## 0.1.47
 
 ### Patch Changes

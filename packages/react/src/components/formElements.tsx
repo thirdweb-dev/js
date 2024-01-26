@@ -1,120 +1,100 @@
-import { fontSize, radius, spacing, Theme } from "../design-system";
-import styled from "@emotion/styled";
+import { fontSize, radius, Theme, spacing } from "../design-system";
+import { StyledDiv, StyledInput, StyledLabel } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
-export const Label = styled.label<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.neutral};
-  display: block;
-`;
+type LabelProps = {
+  color?: keyof Theme["colors"];
+};
 
-export const Input = styled.input<{
-  variant: "outline" | "transparent" | "secondary";
+export const Label = /* @__PURE__ */ StyledLabel((props: LabelProps) => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.sm,
+    color: theme.colors[props.color || "primaryText"],
+    display: "block",
+    fontWeight: 500,
+  };
+});
+
+type InputProps = {
+  variant: "outline" | "transparent";
+  sm?: boolean;
   theme?: Theme;
-}>`
-  font-size: ${fontSize.md};
-  display: block;
-  padding: ${spacing.sm};
-  box-sizing: border-box;
-  width: 100%;
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  color: ${(p) => p.theme.text.neutral};
-  -webkit-appearance: none;
-  appearance: none;
-  background: ${(p) => {
-    switch (p.variant) {
-      case "secondary":
-        return p.theme.bg.elevated;
-      default:
-        return "transparent";
-    }
-  }};
+};
 
-  &::placeholder {
-    color: ${(p) => p.theme.text.secondary};
-  }
-
-  box-shadow: 0 0 0 1.5px
-    ${(p) => {
-      switch (p.variant) {
-        case "outline":
-          return p.theme.input.outline;
-        case "transparent":
-          return "transparent";
-        case "secondary":
-          return p.theme.bg.elevated;
-      }
-    }};
-
-  /* when browser auto-fills the input  */
-  &:-webkit-autofill {
-    -webkit-text-fill-color: ${(p) => p.theme.text.neutral};
-    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset !important;
-    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset !important;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-
-  &:-webkit-autofill:focus {
-    -webkit-box-shadow:
-      0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
-      0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
-    box-shadow:
-      0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
-      0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.focusRing};
-  }
-
-  /* show overflow ellipsis for long text - but not if it's a type="password"  */
-  &:not([type="password"]) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &[data-error="true"] {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing} !important;
-  }
-
-  &[disabled] {
-    cursor: not-allowed;
-  }
-`;
+export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.md,
+    display: "block",
+    padding: props.sm ? spacing.sm : fontSize.sm,
+    boxSizing: "border-box",
+    width: "100%",
+    outline: "none",
+    border: "none",
+    borderRadius: "6px",
+    color: theme.colors.primaryText,
+    WebkitAppearance: "none",
+    appearance: "none",
+    background: "transparent",
+    "&::placeholder": {
+      color: theme.colors.secondaryText,
+    },
+    boxShadow: `0 0 0 1.5px ${
+      props.variant === "outline" ? theme.colors.borderColor : "transparent"
+    }`,
+    "&:-webkit-autofill": {
+      WebkitTextFillColor: theme.colors.primaryText,
+      WebkitBoxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset !important`,
+      boxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset !important`,
+      transition: "background-color 5000s ease-in-out 0s",
+    },
+    "&:-webkit-autofill:focus": {
+      WebkitBoxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
+      boxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
+    },
+    "&:focus": {
+      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
+    "&:not([type='password'])": {
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    },
+    "&[data-error='true']": {
+      boxShadow: `0 0 0 2px ${theme.colors.danger} !important`,
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
+    },
+    "&[type='number']::-webkit-outer-spin-button, &[type='number']::-webkit-inner-spin-button":
+      {
+        WebkitAppearance: "none",
+        margin: 0,
+      },
+    "&[type='number']": {
+      appearance: "none",
+      MozAppearance: "textfield",
+    },
+  };
+});
 
 // for rendering a input and a button side by side
-export const InputContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  border-radius: ${radius.sm};
-  box-shadow: 0 0 0px 1.5px ${(p) => p.theme.input.outline};
-
-  /* show focus ring on container instead of input  */
-  &:focus-within {
-    box-shadow: 0 0 0px 2px ${(p) => p.theme.input.focusRing};
-  }
-
-  input:focus {
-    box-shadow: none;
-  }
-
-  /* show error ring on container instead of input  */
-  &[data-error="true"] {
-    box-shadow: 0 0 0px 2px ${(p) => p.theme.input.errorRing};
-  }
-`;
-
-export const ErrorMessage = styled.p<{ theme?: Theme }>`
-  all: unset;
-  font-size: ${fontSize.sm};
-  display: block;
-  color: ${(p) => p.theme.input.errorRing};
-  line-height: 1.5;
-`;
-
-export const FormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${spacing.sm};
-`;
+export const InputContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    borderRadius: radius.sm,
+    boxShadow: `0 0 0px 1.5px ${theme.colors.borderColor}`,
+    "&:focus-within": {
+      boxShadow: `0 0 0px 2px ${theme.colors.accentText}`,
+    },
+    "input:focus": {
+      boxShadow: "none",
+    },
+    // show error ring on container instead of input
+    "&[data-error='true']": {
+      boxShadow: `0 0 0px 2px ${theme.colors.danger}`,
+    },
+  };
+});

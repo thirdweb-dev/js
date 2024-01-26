@@ -1,40 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eurus Testnet",
   "chain": "EUN",
-  "rpc": [
-    "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.eurus.network"
+  "chainId": 1984,
+  "explorers": [
+    {
+      "name": "testnetexplorer",
+      "url": "https://testnetexplorer.eurus.network",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+        "width": 471,
+        "height": 471,
+        "format": "svg"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Eurus",
-    "symbol": "EUN",
-    "decimals": 18
-  },
-  "infoURL": "https://eurus.network",
-  "shortName": "euntest",
-  "chainId": 1984,
-  "networkId": 1984,
   "icon": {
     "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
     "width": 471,
     "height": 471,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "testnetexplorer",
-      "url": "https://testnetexplorer.eurus.network",
-      "icon": {
-        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
-        "width": 471,
-        "height": 471,
-        "format": "svg"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://eurus.network",
+  "name": "Eurus Testnet",
+  "nativeCurrency": {
+    "name": "Eurus",
+    "symbol": "EUN",
+    "decimals": 18
+  },
+  "networkId": 1984,
+  "rpc": [
+    "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1984.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.eurus.network"
   ],
-  "testnet": true,
-  "slug": "eurus-testnet"
+  "shortName": "euntest",
+  "slip44": 1,
+  "slug": "eurus-testnet",
+  "testnet": true
 } as const satisfies Chain;

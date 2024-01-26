@@ -1,23 +1,21 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Flex } from "../../../components/basic";
-import {
-  BackButton,
-  HelperLink,
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { Container, ModalHeader } from "../../../components/basic";
 import { iconSize, radius, spacing } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
-import { Apple, Chrome, GooglePlay } from "../iconURLs";
-import styled from "@emotion/styled";
 import { useState } from "react";
+import { AppleIcon } from "../icons/AppleIcon";
+import { ChromeIcon } from "../icons/ChromeIcon";
+import { PlayStoreIcon } from "../icons/PlayStoreIcon";
+import { Text } from "../../../components/text";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { StyledButton } from "../../../design-system/elements";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 export const GetStartedScreen: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   walletName: string;
   walletIconURL: string;
   chromeExtensionLink?: string;
@@ -25,6 +23,10 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  showBack?: boolean;
+  locale: {
+    scanToDownload: string;
+  };
 }> = ({
   walletName,
   walletIconURL,
@@ -34,227 +36,197 @@ export const GetStartedScreen: React.FC<{
   header,
   footer,
   onBack,
+  locale: localeProp,
 }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
 
+  const locale = useTWLocale().connectWallet.download;
+
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
 
-  return (
-    <>
-      <BackButton
-        style={
-          isScanScreen
-            ? {
-                position: "absolute",
-                top: spacing.lg,
-                left: spacing.lg,
-              }
-            : undefined
+  const handleBack = onBack
+    ? () => {
+        if (showScreen === "base") {
+          onBack();
+        } else {
+          setShowScreen("base");
         }
-        onClick={() => {
-          if (showScreen === "base") {
-            onBack();
-          } else {
-            setShowScreen("base");
-          }
-        }}
-      />
+      }
+    : undefined;
 
-      {showScreen === "android-scan" && googlePlayStoreLink && (
-        <ScanScreen
-          platformIcon={
-            <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
-          }
-          url={googlePlayStoreLink}
-          platform="Google Play"
-          walletName={walletName}
-          walletIconURL={walletIconURL}
-        />
-      )}
-
-      {showScreen === "ios-scan" && appleStoreLink && (
-        <ScanScreen
-          platformIcon={
-            <Img width={iconSize.md} height={iconSize.md} src={Apple} />
-          }
-          url={appleStoreLink}
-          platform="App Store"
-          walletName={walletName}
-          walletIconURL={walletIconURL}
-        />
-      )}
-
-      {showScreen === "base" && (
-        <>
-          <Spacer y="lg" />
-
-          {header || (
-            <>
-              <Img
-                src={walletIconURL}
-                width={iconSize.xl}
-                height={iconSize.xl}
-                alt=""
-              />
-
-              <Spacer y="lg" />
-
-              <ModalTitle>Get started with {walletName}</ModalTitle>
-              <Spacer y="sm" />
-
-              <ModalDescription>
-                Download your preferred option and refresh this page
-              </ModalDescription>
-            </>
-          )}
-          <Spacer y="xl" />
-
-          <Flex flexDirection="column" gap="xs">
-            {/* Chrome Extension  */}
-            {chromeExtensionLink && (
-              <ButtonLink
-                onClick={() => {
-                  openWindow(chromeExtensionLink);
-                }}
-              >
-                <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
-                <span>Download Chrome Extension</span>
-              </ButtonLink>
-            )}
-
-            {/* Google Play store  */}
-            {googlePlayStoreLink && (
-              <ButtonLink
-                as="button"
-                onClick={() => {
-                  if (isMobile()) {
-                    openWindow(googlePlayStoreLink);
-                  } else {
-                    setShowScreen("android-scan");
-                  }
-                }}
-              >
-                <Img
-                  width={iconSize.lg}
-                  height={iconSize.lg}
-                  src={GooglePlay}
-                />
-                <span>Download on Google Play</span>
-              </ButtonLink>
-            )}
-
-            {/* App Store  */}
-            {appleStoreLink && (
-              <ButtonLink
-                as="button"
-                onClick={() => {
-                  if (isMobile()) {
-                    openWindow(appleStoreLink);
-                  } else {
-                    setShowScreen("ios-scan");
-                  }
-                }}
-              >
-                <Img width={iconSize.lg} height={iconSize.lg} src={Apple} />
-                <span>Download on App Store</span>
-              </ButtonLink>
-            )}
-          </Flex>
-        </>
-      )}
-
-      {isScanScreen && (
-        <>
-          <Spacer y="xl" />
-          <HelperLink
-            as="button"
-            onClick={onBack}
-            style={{
-              textAlign: "center",
-              display: "block",
-              width: "100%",
+  return (
+    <Container fullHeight flex="column" animate="fadein">
+      <Container expand flex="column" p="lg">
+        {showScreen === "android-scan" && googlePlayStoreLink && (
+          <InstallScanScreen
+            platformIcon={<PlayStoreIcon size={iconSize.md} />}
+            url={googlePlayStoreLink}
+            platform="Google Play"
+            walletName={walletName}
+            walletIconURL={walletIconURL}
+            onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
             }}
-          >
-            I{`'`}ve finished setting up my {walletName} on mobile
-          </HelperLink>
-        </>
-      )}
+          />
+        )}
 
-      {!isScanScreen && footer}
-    </>
+        {showScreen === "ios-scan" && appleStoreLink && (
+          <InstallScanScreen
+            platformIcon={<AppleIcon size={iconSize.md} />}
+            url={appleStoreLink}
+            platform="App Store"
+            walletName={walletName}
+            walletIconURL={walletIconURL}
+            onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
+            }}
+          />
+        )}
+
+        {showScreen === "base" && (
+          <Container expand flex="column">
+            {header || <ModalHeader onBack={handleBack} title={walletName} />}
+            <Spacer y="xl" />
+
+            <Container
+              expand
+              animate="fadein"
+              flex="column"
+              center="y"
+              style={{
+                minHeight: "250px",
+              }}
+            >
+              <Container flex="column" gap="xs">
+                {/* Chrome Extension  */}
+                {chromeExtensionLink && (
+                  <ButtonLink
+                    onClick={() => {
+                      openWindow(chromeExtensionLink);
+                    }}
+                  >
+                    <ChromeIcon size={iconSize.lg} />
+                    <span>{locale.chrome}</span>
+                  </ButtonLink>
+                )}
+
+                {/* Google Play store  */}
+                {googlePlayStoreLink && (
+                  <ButtonLink
+                    as="button"
+                    onClick={() => {
+                      if (isMobile()) {
+                        openWindow(googlePlayStoreLink);
+                      } else {
+                        setShowScreen("android-scan");
+                      }
+                    }}
+                  >
+                    <PlayStoreIcon size={iconSize.lg} />
+                    <span>{locale.android}</span>
+                  </ButtonLink>
+                )}
+
+                {/* App Store  */}
+                {appleStoreLink && (
+                  <ButtonLink
+                    as="button"
+                    onClick={() => {
+                      if (isMobile()) {
+                        openWindow(appleStoreLink);
+                      } else {
+                        setShowScreen("ios-scan");
+                      }
+                    }}
+                  >
+                    <AppleIcon size={iconSize.lg} />
+                    <span>{locale.iOS}</span>
+                  </ButtonLink>
+                )}
+              </Container>
+            </Container>
+          </Container>
+        )}
+
+        {!isScanScreen && footer}
+      </Container>
+    </Container>
   );
 };
 
-const ScanScreen: React.FC<{
+const InstallScanScreen: React.FC<{
   url: string;
   platform: string;
   walletName: string;
   platformIcon: React.ReactNode;
   walletIconURL: string;
+  onBack?: () => void;
+  locale: {
+    scanToDownload: string;
+  };
 }> = (props) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <QRCode
-        qrCodeUri={props.url}
-        QRIcon={
-          <Img
-            src={props.walletIconURL}
-            width={iconSize.lg}
-            height={iconSize.lg}
-          />
-        }
-      />
+    <Container animate="fadein" expand>
+      <ModalHeader title={props.walletName} onBack={props.onBack} />
       <Spacer y="xl" />
 
-      <div
+      <Container
+        flex="column"
+        expand
+        center="both"
         style={{
-          display: "flex",
-          gap: spacing.sm,
-          alignItems: "center",
+          textAlign: "center",
         }}
       >
-        {props.platformIcon}
-        <ModalTitle>
-          Install {props.walletName} on {props.platform}
-        </ModalTitle>
-      </div>
+        <QRCode
+          qrCodeUri={props.url}
+          QRIcon={
+            <Img
+              src={props.walletIconURL}
+              width={iconSize.xxl}
+              height={iconSize.xxl}
+            />
+          }
+        />
 
-      <Spacer y="lg" />
-      <ModalDescription>
-        Scan QR with your phone to download <br /> {props.walletName} for{" "}
-        {props.platform}
-      </ModalDescription>
-    </div>
+        <Spacer y="xl" />
+
+        <Text multiline center balance>
+          {props.locale.scanToDownload}
+        </Text>
+
+        <Spacer y="xs" />
+      </Container>
+    </Container>
   );
 };
 
-export const ButtonLink = styled.button<{ theme?: Theme }>`
-  all: unset;
-  text-decoration: none;
-  padding: ${spacing.sm} ${spacing.md};
-  border-radius: ${radius.sm};
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  color: ${(p) => p.theme.text.neutral};
-  background: ${(p) => p.theme.bg.elevated};
-  transition: 100ms ease;
-  &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
-    text-decoration: none;
-    color: ${(p) => p.theme.text.neutral};
-  }
-`;
+export const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    textDecoration: "none",
+    padding: `${spacing.sm} ${spacing.md}`,
+    borderRadius: radius.sm,
+    display: "flex",
+    alignItems: "center",
+    gap: spacing.md,
+    cursor: "pointer",
+    boxSizing: "border-box",
+    width: "100%",
+    fontWeight: 500,
+    color: theme.colors.secondaryButtonText,
+    background: theme.colors.secondaryButtonBg,
+    transition: "100ms ease",
+    "&:hover": {
+      background: theme.colors.secondaryButtonHoverBg,
+      textDecoration: "none",
+      color: theme.colors.primaryText,
+    },
+  };
+});

@@ -1,34 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitrock Mainnet",
   "chain": "Bitrock",
+  "chainId": 7171,
+  "explorers": [
+    {
+      "name": "Bitrock Explorer",
+      "url": "https://explorer.bit-rock.io",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmfXZCAh3HWS2bJroUStN9TieL4QA9QArMotie3X4pwBfj",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.bit-rock.io"
-  ],
-  "faucets": [],
+  "infoURL": "https://bit-rock.io",
+  "name": "Bitrock Mainnet",
   "nativeCurrency": {
     "name": "BITROCK",
     "symbol": "BROCK",
     "decimals": 18
   },
-  "infoURL": "https://bit-rock.io",
-  "shortName": "bitrock",
-  "chainId": 7171,
   "networkId": 7171,
-  "explorers": [
-    {
-      "name": "Bitrock Explorer",
-      "url": "https://scan.bit-rock.io",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7171.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://connect.bit-rock.io",
+    "https://brockrpc.io"
   ],
-  "testnet": false,
-  "slug": "bitrock"
+  "shortName": "bitrock",
+  "slug": "bitrock",
+  "testnet": false
 } as const satisfies Chain;

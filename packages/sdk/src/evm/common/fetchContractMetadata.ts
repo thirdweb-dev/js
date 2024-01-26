@@ -9,8 +9,8 @@ const CONTRACT_METADATA_TIMEOUT_SEC = 2;
 
 /**
  * @internal
- * @param compilerMetadataUri
- * @param storage
+ * @param compilerMetadataUri - The compiler metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadata(
   compilerMetadataUri: string,
@@ -25,6 +25,13 @@ export async function fetchContractMetadata(
       `Could not resolve metadata for contract at ${compilerMetadataUri}`,
     );
   }
+  return formatCompilerMetadata(metadata);
+}
+
+/**
+ * @internal
+ */
+export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
@@ -46,5 +53,6 @@ export async function fetchContractMetadata(
     metadata,
     info,
     licenses,
+    isPartialAbi: metadata.isPartialAbi,
   };
 }

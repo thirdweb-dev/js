@@ -13,6 +13,7 @@ import {
   createAsyncLocalStorage,
   CreateAsyncStorage,
   DAppMetaData,
+  SignerWallet,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
@@ -20,7 +21,7 @@ import React, { useMemo } from "react";
  * The possible props for the ThirdwebProvider.
  */
 export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
-  extends ThirdwebSDKProviderProps<TChains> {
+  extends Omit<ThirdwebSDKProviderProps<TChains>, "signer"> {
   /**
    * An array of wallets that the dApp supports
    * If not provided, will default to Metamask (injected), Coinbase wallet and Device wallet
@@ -55,6 +56,9 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
 
   theme?: "light" | "dark";
 
+  /**
+   * @internal
+   */
   createWalletStorage?: CreateAsyncStorage;
 
   /**
@@ -67,16 +71,23 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    *
    * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
    *
-   * @defaultValue 15000
+   * By default, it is set to `15000` milliseconds (15 seconds)
    */
   autoConnectTimeout?: number;
+
+  /**
+   * @internal
+   */
+  signerWallet?: WalletConfig<SignerWallet>;
 }
 
-export const ThirdwebProviderCore = <TChains extends Chain[]>({
-  createWalletStorage = createAsyncLocalStorage,
-  ...props
-}: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
-  const { activeChain } = props;
+/**
+ * @internal
+ */
+export const ThirdwebProviderCore = <TChains extends Chain[]>(
+  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
+) => {
+  const { activeChain, createWalletStorage = createAsyncLocalStorage } = props;
 
   const supportedChains = (props.supportedChains || defaultChains) as Chain[];
 
@@ -153,6 +164,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         autoConnectTimeout={props.autoConnectTimeout}
         clientId={props.clientId}
         activeChainSetExplicitly={!!props.activeChain}
+        signerWallet={props.signerWallet}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

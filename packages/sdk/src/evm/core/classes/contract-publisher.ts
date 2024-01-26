@@ -1,17 +1,28 @@
+import type {
+  IContractPublisher,
+  ContractPublisher as OnChainContractPublisher,
+} from "@thirdweb-dev/contracts-js";
+import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
+import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { constants, utils } from "ethers";
+import invariant from "tiny-invariant";
 import { resolveAddress } from "../../common/ens/resolveAddress";
-import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
-import { extractFunctions } from "../../common/feature-detection/extractFunctions";
 import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
+import { extractFunctions } from "../../common/feature-detection/extractFunctions";
 import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
+import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
 import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchContractMetadata } from "../../common/fetchContractMetadata";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { joinABIs } from "../../common/plugin/joinABIs";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import {
+  Abi,
   AbiFunction,
   AbiSchema,
   ContractParam,
@@ -26,28 +37,17 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
+  PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { RPCConnectionHandler } from "./internal/rpc-connection-handler";
 import { Transaction } from "./transactions";
-import type {
-  ContractPublisher as OnChainContractPublisher,
-  IContractPublisher,
-} from "@thirdweb-dev/contracts-js";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
-import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { constants, utils } from "ethers";
-import invariant from "tiny-invariant";
-import {
-  fetchAndCacheDeployMetadata,
-  fetchPublishedContractFromPolygon,
-  isFeatureEnabled,
-} from "../../common";
-import { joinABIs } from "../../common/plugin/joinABIs";
+import { fetchAndCacheDeployMetadata } from "../../common/any-evm-utils/fetchAndCacheDeployMetadata";
+import { fetchPublishedContractFromPolygon } from "../../common/any-evm-utils/fetchPublishedContractFromPolygon";
+import { isFeatureEnabled } from "../../common/feature-detection/isFeatureEnabled";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -80,7 +80,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param metadataUri
+   * @param metadataUri - URI of the contract metadata
    */
   public async extractConstructorParams(
     metadataUri: string,
@@ -90,7 +90,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param predeployMetadataUri
+   * @param predeployMetadataUri - URI of the predeploy metadata
    */
   public async extractFunctions(
     predeployMetadataUri: string,
@@ -100,7 +100,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param predeployUri
+   * @param predeployUri - URI of the predeploy metadata
    */
   public async fetchCompilerMetadataFromPredeployURI(
     predeployUri: string,
@@ -110,8 +110,8 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param prepublishUri
-   * @param publisherAddress
+   * @param prepublishUri - URI of the prepublish metadata
+   * @param publisherAddress - Address of the publisher
    */
   public async fetchPrePublishMetadata(
     prepublishUri: string,
@@ -137,10 +137,11 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
-   * @param address
+   * @param address - Address of the contract
    */
-  public async fetchCompilerMetadataFromAddress(address: AddressOrEns) {
+  public async fetchCompilerMetadataFromAddress(
+    address: AddressOrEns,
+  ): Promise<PublishedMetadata> {
     const resolvedAddress = await resolveAddress(address);
     return fetchContractMetadataFromAddress(
       resolvedAddress,
@@ -153,7 +154,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   /**
    * @internal
    * Get the full information about a published contract
-   * @param contract
+   * @param contract - Published contract
    */
   public async fetchPublishedContractInfo(
     contract: PublishedContract,
@@ -169,7 +170,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publishedMetadataUri
+   * @param publishedMetadataUri - URI of the published metadata
    */
   public async fetchFullPublishMetadata(
     publishedMetadataUri: string,
@@ -181,15 +182,15 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * // TODO expose a resolvePublishMetadata(contractAddress, chainId) that handles the dual chain case
    * // TODO will be easy to do with the multichain pattern of 3.0
-   * @param compilerMetadataUri
+   * @param compilerMetadataUri - URI of the compiler metadata
    */
   public async resolvePublishMetadataFromCompilerMetadata(
     compilerMetadataUri: string,
   ): Promise<FullPublishMetadata[]> {
-    const publishedMetadataUri =
-      await this.publisher.readContract.getPublishedUriFromCompilerUri(
-        compilerMetadataUri,
-      );
+    const publishedMetadataUri = await this.publisher.read(
+      "getPublishedUriFromCompilerUri",
+      [compilerMetadataUri],
+    );
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetadataUri}`,
@@ -217,8 +218,8 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
-   * @param address
+   * Fetch all sources for a contract from its address
+   * @param address - Address of the contract
    */
   public async fetchContractSourcesFromAddress(
     address: AddressOrEns,
@@ -231,8 +232,24 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
+   * Fetch ABI from a contract, or undefined if not found
+   * @param address - Address of the contract
+   */
+  public async fetchContractAbiFromAddress(
+    address: AddressOrEns,
+  ): Promise<Abi | undefined> {
+    const resolvedAddress = await resolveAddress(address);
+    const meta = await fetchContractMetadataFromAddress(
+      resolvedAddress,
+      this.getProvider(),
+      this.storage,
+    );
+    return meta.abi;
+  }
+
+  /**
    * @internal
-   * @param profileMetadata
+   * @param profileMetadata - Profile metadata
    */
   updatePublisherProfile = /* @__PURE__ */ buildTransactionFunction(
     async (profileMetadata: ProfileMetadataInput) => {
@@ -251,15 +268,15 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publisherAddress
+   * @param publisherAddress - Address of the publisher
    */
   public async getPublisherProfile(
     publisherAddress: AddressOrEns,
   ): Promise<ProfileMetadata> {
     const resolvedPublisherAddress = await resolveAddress(publisherAddress);
-    const profileUri = await this.publisher.readContract.getPublisherProfileUri(
+    const profileUri = await this.publisher.read("getPublisherProfileUri", [
       resolvedPublisherAddress,
-    );
+    ]);
     if (!profileUri || profileUri.length === 0) {
       return {};
     }
@@ -270,15 +287,15 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publisherAddress
+   * @param publisherAddress - Address of the publisher
    */
   public async getAll(
     publisherAddress: AddressOrEns,
   ): Promise<PublishedContract[]> {
     const resolvedPublisherAddress = await resolveAddress(publisherAddress);
-    const data = await this.publisher.readContract.getAllPublishedContracts(
+    const data = await this.publisher.read("getAllPublishedContracts", [
       resolvedPublisherAddress,
-    );
+    ]);
     // since we can fetch from multiple publisher contracts, just keep the latest one in the list
     const map = data.reduce(
       (acc, curr) => {
@@ -297,19 +314,18 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publisherAddress
-   * @param contractId
+   * @param publisherAddress - Address of the publisher
+   * @param contractId - ID of the contract
    */
   public async getAllVersions(
     publisherAddress: AddressOrEns,
     contractId: string,
   ): Promise<PublishedContract[]> {
     const resolvedPublisherAddress = await resolveAddress(publisherAddress);
-    const contractStructs =
-      await this.publisher.readContract.getPublishedContractVersions(
-        resolvedPublisherAddress,
-        contractId,
-      );
+    const contractStructs = await this.publisher.read(
+      "getPublishedContractVersions",
+      [resolvedPublisherAddress, contractId],
+    );
     if (contractStructs.length === 0) {
       throw Error("Not found");
     }
@@ -349,10 +365,10 @@ export class ContractPublisher extends RPCConnectionHandler {
     contractId: string,
   ): Promise<PublishedContract | undefined> {
     const resolvedPublisherAddress = await resolveAddress(publisherAddress);
-    const model = await this.publisher.readContract.getPublishedContract(
+    const model = await this.publisher.read("getPublishedContract", [
       resolvedPublisherAddress,
       contractId,
-    );
+    ]);
     if (model && model.publishMetadataUri) {
       return this.toPublishedContract(model);
     }
@@ -364,6 +380,8 @@ export class ContractPublisher extends RPCConnectionHandler {
       predeployUri: string,
       extraMetadata: ExtraPublishMetadata,
     ): Promise<Transaction<TransactionResult<PublishedContract>>> => {
+      const extraMetadataCleaned =
+        this.cleanupOldPublishFlowData(extraMetadata);
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
       const publisher = await signer.getAddress();
@@ -385,7 +403,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         AbiSchema.parse(compilerMetadata.abi),
         "DynamicContract",
       );
-      extraMetadata.routerType = isPlugin
+      extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
         ? "dynamic"
@@ -393,7 +411,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
-        const defaultExtensions = extraMetadata.defaultExtensions;
+        const defaultExtensions = extraMetadataCleaned.defaultExtensions;
 
         if (defaultExtensions && defaultExtensions.length > 0) {
           try {
@@ -426,7 +444,7 @@ export class ContractPublisher extends RPCConnectionHandler {
               compilerMetadata.abi,
               ...extensionABIs,
             ]);
-            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+            extraMetadataCleaned.compositeAbi = AbiSchema.parse(composite);
           } catch {}
         }
       }
@@ -442,9 +460,11 @@ export class ContractPublisher extends RPCConnectionHandler {
         );
 
         const latestVersion = latestMetadata.publishedMetadata.version;
-        if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
+        if (
+          !isIncrementalVersion(latestVersion, extraMetadataCleaned.version)
+        ) {
           throw Error(
-            `Version ${extraMetadata.version} is not greater than ${latestVersion}`,
+            `Version ${extraMetadataCleaned.version} is not greater than ${latestVersion}`,
           );
         }
       }
@@ -460,7 +480,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       const contractId = predeployMetadata.name;
 
       const fullMetadata = await FullPublishMetadataSchemaInput.parseAsync({
-        ...extraMetadata,
+        ...extraMetadataCleaned,
         metadataUri: predeployMetadata.metadataUri,
         bytecodeUri: predeployMetadata.bytecodeUri,
         name: predeployMetadata.name,
@@ -522,5 +542,24 @@ export class ContractPublisher extends RPCConnectionHandler {
       timestamp: contractModel.publishTimestamp,
       metadataUri: contractModel.publishMetadataUri,
     });
+  }
+
+  private cleanupOldPublishFlowData(
+    extraMetadata: ExtraPublishMetadata,
+  ): ExtraPublishMetadata {
+    if (extraMetadata.compositeAbi) {
+      delete extraMetadata.compositeAbi;
+    }
+
+    return {
+      ...extraMetadata,
+      isDeployableViaFactory: false,
+      isDeployableViaProxy: false,
+      factoryDeploymentData: {
+        ...extraMetadata.factoryDeploymentData,
+        implementationAddresses: {},
+        factoryAddresses: {},
+      },
+    };
   }
 }

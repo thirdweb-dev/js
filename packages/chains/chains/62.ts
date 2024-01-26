@@ -1,18 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Testnet Morden",
   "chain": "ETC",
-  "rpc": [],
+  "chainId": 62,
+  "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmawMDPsaj3kBTZErCYQ3tshv5RrMAN3smWNs72m943Fyj",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://ethereumclassic.org/development/testnets",
+  "name": "Morden Testnet",
   "nativeCurrency": {
-    "name": "Ethereum Classic Testnet Ether",
+    "name": "Morden Ether",
     "symbol": "TETC",
     "decimals": 18
   },
-  "infoURL": "https://ethereumclassic.org",
-  "shortName": "tetc",
-  "chainId": 62,
   "networkId": 2,
+  "rpc": [],
+  "shortName": "tetc",
+  "slip44": 1,
+  "slug": "morden-testnet",
+  "status": "deprecated",
   "testnet": true,
-  "slug": "ethereum-classic-testnet-morden"
+  "title": "Ethereum Classic Morden Testnet"
 } as const satisfies Chain;

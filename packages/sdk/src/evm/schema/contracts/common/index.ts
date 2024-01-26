@@ -10,14 +10,16 @@ import { z } from "zod";
  * @internal
  */
 export const CommonContractSchema = /* @__PURE__ */ (() =>
-  z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    image: FileOrBufferOrStringSchema.optional(),
-    external_link: z.string().optional(),
-    app_uri: z.string().optional(),
-    social_urls: z.record(z.string()).optional(),
-  }))();
+  z
+    .object({
+      name: z.string(),
+      description: z.string().optional(),
+      image: FileOrBufferOrStringSchema.optional(),
+      external_link: z.string().optional(),
+      app_uri: z.string().optional(),
+      social_urls: z.record(z.string()).optional(),
+    })
+    .catchall(z.unknown()))();
 
 export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
 
@@ -42,14 +44,16 @@ export const CommonRoyaltySchema = /* @__PURE__ */ (() =>
      *
      * For example: if this value is 100, then the royalty is 1% of the total sales.
      *
-     *  @internalremarks used by OpenSea "seller_fee_basis_points"
+     * @internal
+     * @remarks used by OpenSea "seller_fee_basis_points"
      */
     seller_fee_basis_points: BasisPointsSchema.default(0),
 
     /**
      * The address of the royalty recipient. All royalties will be sent
      * to this address.
-     * @internalremarks used by OpenSea "fee_recipient"
+     * @internal
+     * @remarks used by OpenSea "fee_recipient"
      */
     fee_recipient: AddressOrEnsSchema.default(constants.AddressZero),
   }))();
@@ -57,12 +61,13 @@ export const CommonRoyaltySchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const CommonPrimarySaleSchema = /* @__PURE__ */ z.object({
-  /**
-   * primary sale recipient address
-   */
-  primary_sale_recipient: AddressOrEnsSchema,
-});
+export const CommonPrimarySaleSchema = /* @__PURE__ */ (() =>
+  z.object({
+    /**
+     * primary sale recipient address
+     */
+    primary_sale_recipient: AddressOrEnsSchema.default(constants.AddressZero),
+  }))();
 
 /**
  * @internal
@@ -94,8 +99,3 @@ export const CommonSymbolSchema = /* @__PURE__ */ (() =>
   z.object({
     symbol: z.string().default(""),
   }))();
-
-export * from "./claim-conditions";
-export * from "./currency";
-export * from "./signature";
-export * from "./snapshots";

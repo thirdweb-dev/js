@@ -5,9 +5,9 @@ import {
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
-import * as Application from "expo-application";
+import { appBundleId, packageVersion } from "../../evm/utils/version";
+import { BUNDLE_ID_HEADER } from "../../evm/constants/headers";
 
-const APP_BUNDLE_ID = Application.applicationId;
 const METADATA_NAME = "Storage React Native SDK";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
@@ -21,7 +21,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
   async uploadBatch(
     data: UploadDataValue[],
-    options?: IpfsUploadBatchOptions | undefined,
+    options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
     if (data.length === 0) {
       throw new Error("[UPLOAD_BATCH_ERROR] No files or objects to upload.");
@@ -37,6 +37,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       name: METADATA_NAME,
       keyvalues: { ...options?.metadata },
     };
+
+    const { version, name: packageName } = packageVersion;
+    const platform = "react-native";
 
     if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
       // then it's an array of files
@@ -137,10 +140,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
+        xhr.setRequestHeader(BUNDLE_ID_HEADER, appBundleId || ""); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
+
+        xhr.setRequestHeader("x-sdk-version", version);
+        xhr.setRequestHeader("x-sdk-name", packageName);
+        xhr.setRequestHeader("x-sdk-platform", platform);
 
         xhr.send(form);
       });
@@ -153,21 +160,34 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         try {
-          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
-            method: "POST",
-            headers: {
-              "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
-              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${TW_UPLOAD_SERVER_URL}/ipfs/batch-pin-json`,
+            {
+              method: "POST",
+              headers: {
+                [BUNDLE_ID_HEADER]: appBundleId || "", // only empty on web
+                ...(this.clientId ? { "x-client-id": this.clientId } : {}),
+                "Content-Type": "application/json",
+                "x-sdk-version": version,
+                "x-sdk-name": packageName,
+                "x-sdk-platform": platform,
+              },
+              body: fetchBody,
             },
-            body: fetchBody,
-          });
+          );
 
           if (res.ok) {
-            const ipfs = await res.json();
-            const cid = ipfs.IpfsHash;
+            const ipfsResults = await res.json();
 
-            return resolve([`ipfs://${cid}`]);
+            const results = ipfsResults.results.map(
+              (ipfs: { IpfsHash: string; PinSize: number }) => {
+                const cid = ipfs.IpfsHash;
+
+                return `ipfs://${cid}`;
+              },
+            );
+
+            return resolve(results);
           }
         } catch (error) {
           reject(error);
@@ -218,7 +238,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           // but then we skip because we don't need to upload it multiple times
           continue;
         }
-        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to differnt files but with the same names)
+        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to different files but with the same names)
         throw new Error(
           `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one different file.`,
         );

@@ -15,11 +15,24 @@ import { useEffect, useRef } from "react";
 import Box from "../../components/base/Box";
 import { TextInput } from "../../components/base/TextInput";
 import Text from "../../components/base/Text";
-import { ActivityIndicator } from "react-native";
 import { useMagicLink } from "../../providers/context-provider";
+import BaseButton from "../../components/base/BaseButton";
+import React from "react";
+import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
+/**
+ *
+ * @param magicLinkOptions - Options available to create a magic link wallet
+ * @returns A WalletConfig<MagicLink> object
+ *
+ * @deprecated We have deprecated magicLink in favor of our embeddedWallet which adds support for more sign in methods.
+ * To learn more, please see:
+ *
+ * Check out [Release Note](https://portal.thirdweb.com/wallets/embedded-wallet/overview) and [Documentation](https://portal.thirdweb.com/react-native/v0/wallets/embedded-wallet) for more details.
+ */
 export const magicLink = (
-  magicLinkOptions: MagicLinkOptions,
+  magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
 ): WalletConfig<MagicLink> => {
   return {
     id: walletIds.magicLink,
@@ -42,37 +55,72 @@ export const magicLink = (
     /**
      * UI for selecting wallet - this UI is rendered in the wallet selection screen
      */
-    selectUI: (props: SelectUIProps<MagicLink>) => {
-      return (
-        <Box flex={1}>
-          <TextInput
-            placeholder="Enter your email or phone number"
-            placeholderTextColor="gray"
-            onEndEditing={(
-              e: (typeof TextInput)["arguments"]["onEndEditing"],
-            ) => {
-              props.onSelect(e.nativeEvent.text);
-            }}
-          />
-          <Text
-            marginVertical="sm"
-            variant="bodySmallSecondary"
-            textAlign="center"
-          >
-            ---- OR ----
-          </Text>
-        </Box>
-      );
-    },
+    selectUI: MagicSelectionUI,
     isInstalled: () => {
       return true;
     },
+    recommended: magicLinkOptions?.recommended,
   };
+};
+
+const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
+  const l = useLocale();
+  const theme = useGlobalTheme();
+  const [email, setEmail] = React.useState("");
+
+  const onContinuePress = () => {
+    if (!email) {
+      return;
+    }
+    props.onSelect(email);
+  };
+
+  return (
+    <Box paddingHorizontal="xl" mt="lg">
+      <TextInput
+        textInputProps={{
+          placeholder: l.embedded_wallet.enter_your_email,
+          placeholderTextColor: theme.colors.textSecondary,
+          onChangeText: (text: string) => {
+            setEmail(text);
+          },
+          style: {
+            fontSize: 14,
+            color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
+            lineHeight: 16,
+            padding: 0,
+          },
+        }}
+        containerProps={{
+          paddingHorizontal: "sm",
+          paddingVertical: "sm",
+        }}
+      />
+      <BaseButton
+        mt="md"
+        paddingVertical="md"
+        borderRadius="lg"
+        borderWidth={1}
+        borderColor="border"
+        backgroundColor="accentButtonColor"
+        onPress={onContinuePress}
+      >
+        <Text
+          variant="bodySmall"
+          color="accentButtonTextColor"
+          fontWeight="700"
+        >
+          {l.common.continue}
+        </Text>
+      </BaseButton>
+    </Box>
+  );
 };
 
 const MagicConnectionUI: React.FC<
   ConnectUIProps<MagicLink> & { magicLinkOptions: MagicLinkOptions }
-> = ({ selectionData, walletConfig, close, magicLinkOptions }) => {
+> = ({ selectionData, walletConfig, connected, goBack, magicLinkOptions }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
@@ -104,7 +152,7 @@ const MagicConnectionUI: React.FC<
             ? { email: selectionData }
             : { phoneNumber: selectionData }),
         };
-        close();
+        connected();
         await ctxMagicLink.connect(connectParams);
         await ctxMagicLink.getMagicSDK().user.getMetadata();
 
@@ -118,7 +166,7 @@ const MagicConnectionUI: React.FC<
   }, [
     selectionData,
     walletConfig,
-    close,
+    connected,
     ctxMagicLink,
     setConnectedWallet,
     setConnectionStatus,
@@ -127,10 +175,12 @@ const MagicConnectionUI: React.FC<
   ]);
 
   return (
-    <Box minHeight={500}>
-      <ActivityIndicator size="small" />
-      <TextInput placeholder="Enter the OTP sent to your email / phone number" />
-    </Box>
+    <ConnectingWallet
+      subHeaderText=""
+      wallet={walletConfig}
+      onClose={connected}
+      onBackPress={goBack}
+    />
   );
 };
 

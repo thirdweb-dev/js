@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WhiteBIT Network Testnet",
   "chain": "WBT",
-  "rpc": [
-    "https://whitebit-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.whitebit.network"
-  ],
-  "faucets": [
-    "https://explorer.whitebit.network/testnet/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "WhiteBIT Coin",
-    "symbol": "WBT",
-    "decimals": 18
-  },
-  "infoURL": "https://whitebit.com/wbt",
-  "shortName": "twbt",
   "chainId": 2625,
-  "networkId": 2625,
-  "icon": {
-    "url": "ipfs://QmQqAAn2F98TH5ouRyvReKxQdaGKjE7WJQPEPW6mFFVXUT",
-    "width": 32,
-    "height": 32,
-    "format": "svg"
-  },
   "explorers": [
     {
       "name": "wb-explorer-testnet",
@@ -31,6 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "whitebit-network-testnet"
+  "faucets": [
+    "https://explorer.whitebit.network/testnet/faucet"
+  ],
+  "icon": {
+    "url": "ipfs://QmQqAAn2F98TH5ouRyvReKxQdaGKjE7WJQPEPW6mFFVXUT",
+    "width": 32,
+    "height": 32,
+    "format": "svg"
+  },
+  "infoURL": "https://whitebit.com/wbt",
+  "name": "WhiteBIT Network Testnet",
+  "nativeCurrency": {
+    "name": "WhiteBIT Coin",
+    "symbol": "WBT",
+    "decimals": 18
+  },
+  "networkId": 2625,
+  "rpc": [
+    "https://whitebit-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2625.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.whitebit.network"
+  ],
+  "shortName": "twbt",
+  "slip44": 1,
+  "slug": "whitebit-network-testnet",
+  "testnet": true
 } as const satisfies Chain;

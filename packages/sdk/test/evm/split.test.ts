@@ -1,10 +1,8 @@
-import { Split, SplitInitializer, TokenInitializer } from "../../src/evm";
-import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { ethers } from "ethers";
-
-global.fetch = require("cross-fetch");
+import { Split, SplitInitializer, TokenInitializer } from "../../src/evm";
+import { sdk, signers } from "./before-setup";
 
 describe("Splits Contract", async () => {
   let splitsContract: Split;

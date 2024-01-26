@@ -4,6 +4,11 @@ import {
   PackageManagerType,
 } from "../core/types/ProjectType";
 
+export type ICredsConfig = {
+  password: string;
+  expiration: number;
+}
+
 export type IProcessContractAppTypeArgs = {
   detectedPackageManager: PackageManagerType;
   thirdwebDepsToUpdate: Set<string>;

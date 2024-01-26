@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TBSI Testnet",
-  "title": "Thai Blockchain Service Infrastructure Testnet",
   "chain": "TBSI",
-  "rpc": [
-    "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.blockchain.or.th"
-  ],
-  "faucets": [
-    "https://faucet.blockchain.or.th"
-  ],
-  "nativeCurrency": {
-    "name": "Jinda",
-    "symbol": "JINDA",
-    "decimals": 18
-  },
-  "infoURL": "https://blockchain.or.th",
-  "shortName": "tTBSI",
   "chainId": 1708,
-  "networkId": 1708,
   "explorers": [
     {
       "name": "blockscout",
@@ -26,6 +9,25 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "https://faucet.blockchain.or.th"
+  ],
+  "infoURL": "https://blockchain.or.th",
+  "name": "TBSI Testnet",
+  "nativeCurrency": {
+    "name": "Jinda",
+    "symbol": "JINDA",
+    "decimals": 18
+  },
+  "networkId": 1708,
+  "rpc": [
+    "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1708.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.blockchain.or.th"
+  ],
+  "shortName": "tTBSI",
+  "slip44": 1,
+  "slug": "tbsi-testnet",
   "testnet": true,
-  "slug": "tbsi-testnet"
+  "title": "Thai Blockchain Service Infrastructure Testnet"
 } as const satisfies Chain;

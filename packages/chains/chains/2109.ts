@@ -1,42 +1,43 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Exosama Network",
   "chain": "EXN",
-  "rpc": [
-    "https://exosama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.exosama.com",
-    "wss://rpc.exosama.com"
+  "chainId": 2109,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.exosama.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Sama Token",
-    "symbol": "SAMA",
-    "decimals": 18
-  },
-  "infoURL": "https://moonsama.com",
-  "shortName": "exn",
-  "chainId": 2109,
-  "networkId": 2109,
-  "slip44": 2109,
   "icon": {
     "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
     "width": 468,
     "height": 468,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://explorer.exosama.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://moonsama.com",
+  "name": "Exosama Network",
+  "nativeCurrency": {
+    "name": "Sama Token",
+    "symbol": "SAMA",
+    "decimals": 18
+  },
+  "networkId": 2109,
+  "rpc": [
+    "https://exosama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.exosama.com",
+    "wss://rpc.exosama.com"
   ],
-  "testnet": false,
-  "slug": "exosama-network"
+  "shortName": "exn",
+  "slip44": 2109,
+  "slug": "exosama-network",
+  "testnet": false
 } as const satisfies Chain;

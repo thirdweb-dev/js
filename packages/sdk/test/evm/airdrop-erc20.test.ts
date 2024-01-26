@@ -24,8 +24,6 @@ import {
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
 
-global.fetch = require("cross-fetch");
-
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 
 /**
@@ -50,7 +48,7 @@ describe("Airdrop ERC20", async () => {
 
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     await mockPublishAirdrop();
     airdropContract = await sdk.getContract(
       await sdk.deployer.deployAirdropERC20({

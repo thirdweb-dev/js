@@ -3,17 +3,22 @@ import { Address } from "../schema/shared/Address";
 import { resolveContractUriAndBytecode } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
-import { fetchContractMetadata } from "./fetchContractMetadata";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
+import {
+  fetchContractMetadata,
+  formatCompilerMetadata,
+} from "./fetchContractMetadata";
 import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
-import { SDKOptions } from "../schema";
+import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
+import { createLruCache } from "./utils";
+
+const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 // Internal static cache
-const metadataCache: Record<string, PublishedMetadata> = {};
+const metadataCache = /* @__PURE__ */ createLruCache<PublishedMetadata>(20);
 let multichainRegistry: Contract | undefined = undefined;
 
 function getCacheKey(address: string, chainId: number) {
@@ -25,18 +30,24 @@ function putInCache(
   chainId: number,
   metadata: PublishedMetadata,
 ) {
-  metadataCache[getCacheKey(address, chainId)] = metadata;
-}
-
-function getFromCache(address: string, chainId: number) {
-  return metadataCache[getCacheKey(address, chainId)];
+  metadataCache.put(getCacheKey(address, chainId), metadata);
 }
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ */
+export function getContractMetadataFromCache(
+  address: string,
+  chainId: number,
+): PublishedMetadata | undefined {
+  return metadataCache.get(getCacheKey(address, chainId));
+}
+
+/**
+ * @internal
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  */
 export async function fetchContractMetadataFromAddress(
   address: Address,
@@ -45,12 +56,65 @@ export async function fetchContractMetadataFromAddress(
   sdkOptions: SDKOptions = {},
 ): Promise<PublishedMetadata> {
   const chainId = (await provider.getNetwork()).chainId; // TODO resolve from sdk network
-  const cached = getFromCache(address, chainId);
+  const cached = getContractMetadataFromCache(address, chainId);
   if (cached) {
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
 
+  // try to resolve from DNS first
+  const isLocalChain = chainId === 31337 || chainId === 1337;
+  if (!isLocalChain) {
+    try {
+      const response = await fetch(
+        `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+      );
+      if (response.ok) {
+        const resolvedData = await response.json();
+        metadata = formatCompilerMetadata(resolvedData);
+      }
+    } catch (e) {
+      // fallback to IPFS
+    }
+  }
+
+  if (!metadata) {
+    metadata = await fetchContractMetadataFromBytecode(
+      address,
+      chainId,
+      provider,
+      storage,
+      sdkOptions,
+    );
+  }
+
+  if (!metadata) {
+    throw new Error(
+      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
+  }
+
+  if (!metadata.isPartialAbi) {
+    putInCache(address, chainId, metadata);
+  } else {
+    console.warn(
+      `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
+  }
+  return metadata;
+}
+
+/**
+ * @internal
+ */
+export async function fetchContractMetadataFromBytecode(
+  address: Address,
+  chainId: number,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  sdkOptions: SDKOptions = {},
+) {
+  let metadata: PublishedMetadata | undefined;
   // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([
     resolveContractUriAndBytecode(address, provider).catch(() => undefined),
@@ -82,9 +146,6 @@ export async function fetchContractMetadataFromAddress(
   if (!metadata && bytecode) {
     const abi = constructAbiFromBytecode(bytecode);
     if (abi && abi.length > 0) {
-      console.warn(
-        `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
-      );
       // return partial ABI
       metadata = {
         name: "Unimported Contract",
@@ -98,13 +159,6 @@ export async function fetchContractMetadataFromAddress(
       return metadata;
     }
   }
-
-  if (!metadata) {
-    throw new Error(
-      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
-    );
-  }
-  putInCache(address, chainId, metadata);
   return metadata;
 }
 
@@ -113,6 +167,11 @@ async function getMetadataUriFromMultichainRegistry(
   chainId: number,
   sdkOptions: SDKOptions,
 ) {
+  const TWRegistryABI = (
+    await import(
+      "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json"
+    )
+  ).default;
   if (!multichainRegistry) {
     const polygonChain = sdkOptions?.supportedChains?.find(
       (c) => c.chainId === 137,
@@ -131,9 +190,9 @@ async function getMetadataUriFromMultichainRegistry(
 
 /**
  * @internal
- * @param address
- * @param provider
- * @param storage
+ * @param address - The address to fetch the metadata for
+ * @param provider - The provider to use
+ * @param storage - The storage to use
  * @returns
  */
 export async function fetchAbiFromAddress(

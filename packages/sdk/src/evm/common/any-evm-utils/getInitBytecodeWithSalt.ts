@@ -7,19 +7,22 @@ import { getSaltHash } from "./getSaltHash";
  * This hex data is intended to be sent to the CREATE2 factory address
  *
  * @internal
- * @param bytecode: Creation bytecode of the contract to deploy
- * @param encodedArgs: Abi-encoded constructor params
+ * @param bytecode - Creation bytecode of the contract to deploy
+ * @param encodedArgs - Abi-encoded constructor params
  */
 export function getInitBytecodeWithSalt(
   bytecode: string,
   encodedArgs: BytesLike,
   salt?: string,
 ): string {
-  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecode);
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
+  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecodePrefixed);
 
   const initBytecodeWithSalt = utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
-    [saltHash, bytecode, encodedArgs],
+    [saltHash, bytecodePrefixed, encodedArgs],
   );
 
   return initBytecodeWithSalt;

@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Numbers Testnet",
   "chain": "NUM",
-  "icon": {
-    "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
-    "width": 1500,
-    "height": 1500,
-    "format": "png"
-  },
-  "rpc": [
-    "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnetrpc.num.network"
-  ],
-  "faucets": [
-    "https://faucet.avax.network/?subnet=num",
-    "https://faucet.num.network"
-  ],
-  "nativeCurrency": {
-    "name": "NUM Token",
-    "symbol": "NUM",
-    "decimals": 18
-  },
-  "infoURL": "https://numbersprotocol.io",
-  "shortName": "Snow",
   "chainId": 10508,
-  "networkId": 10508,
   "explorers": [
     {
       "name": "ethernal",
@@ -32,6 +9,31 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "numbers-testnet"
+  "faucets": [
+    "https://faucet.avax.network/?subnet=num",
+    "https://faucet.num.network"
+  ],
+  "icon": {
+    "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
+    "width": 1500,
+    "height": 1500,
+    "format": "png"
+  },
+  "infoURL": "https://numbersprotocol.io",
+  "name": "Numbers Testnet",
+  "nativeCurrency": {
+    "name": "NUM Token",
+    "symbol": "NUM",
+    "decimals": 18
+  },
+  "networkId": 10508,
+  "rpc": [
+    "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10508.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnetrpc.num.network"
+  ],
+  "shortName": "Snow",
+  "slip44": 1,
+  "slug": "numbers-testnet",
+  "testnet": true
 } as const satisfies Chain;

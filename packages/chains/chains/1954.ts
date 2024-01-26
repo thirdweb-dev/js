@@ -1,10 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dexilla Testnet",
   "chain": "Dexilla",
-  "rpc": [
-    "https://dexilla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.dexilla.com"
+  "chainId": 1954,
+  "explorers": [
+    {
+      "name": "dos-mainnet",
+      "url": "https://exp.dexilla.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
   "icon": {
@@ -13,22 +16,14 @@ export default {
     "height": 512,
     "format": "png"
   },
+  "infoURL": "https://dexilla.com",
+  "name": "Dexilla Testnet",
   "nativeCurrency": {
     "name": "Dexilla Native Token",
     "symbol": "DXZ",
     "decimals": 18
   },
-  "infoURL": "https://dexilla.com",
-  "shortName": "Dexilla",
-  "chainId": 1954,
   "networkId": 1954,
-  "explorers": [
-    {
-      "name": "dos-mainnet",
-      "url": "https://exp.dexilla.com",
-      "standard": "EIP3091"
-    }
-  ],
   "parent": {
     "type": "L2",
     "chain": "eip155-11155111",
@@ -38,6 +33,13 @@ export default {
       }
     ]
   },
-  "testnet": true,
-  "slug": "dexilla-testnet"
+  "rpc": [
+    "https://dexilla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1954.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.dexilla.com"
+  ],
+  "shortName": "Dexilla",
+  "slip44": 1,
+  "slug": "dexilla-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.2.55",
+  "version": "0.6.3",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -12,11 +12,12 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint src/ && tsc --noEmit",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc",
-    "push": "yalc push"
+    "push": "yalc push",
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "keywords": [
     "react-native",
@@ -24,9 +25,12 @@
     "android"
   ],
   "dependencies": {
-    "@coinbase/wallet-mobile-sdk": "1.0.7",
+    "@aws-sdk/client-lambda": "3.350.0",
+    "@aws-sdk/credential-providers": "3.350.0",
+    "@coinbase/wallet-mobile-sdk": "1.0.10",
     "@magic-sdk/provider": "17.2.0",
     "@magic-sdk/react-native-bare": "^18.5.0",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
@@ -35,19 +39,21 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "abitype": "^0.2.5",
+    "aws-amplify": "^5.3.8",
     "expo-application": "^5.3.0",
     "expo-clipboard": "^4.1.2",
     "expo-document-picker": "^11.2.2",
     "expo-file-system": "^15.2.2",
     "expo-secure-store": "^12.1.1",
-    "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
+    "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
+    "secrets.js-34r7h": "^2.0.2",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.9",
-    "@babel/preset-env": "^7.22.9",
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
     "@react-native-async-storage/async-storage": "^1.18.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
@@ -57,37 +63,46 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "babel-jest": "^29.6.2",
-    "eslint": "^8.45.0",
+    "eslint": "^8.56.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",
+    "eslint-plugin-i18next": "^6.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
-    "expo": "^47.0.14",
     "jest": "^29.6.2",
-    "prettier": "^3.0.0",
+    "prettier": "^3.1.1",
     "react": "^18.2.0",
     "react-native": "^0.71.11",
     "react-native-camera": "^4.2.1",
     "react-native-device-info": "10.6.0",
-    "react-native-safe-area-context": "4.5.3",
+    "react-native-safe-area-context": "4.7.4",
     "react-native-webview": "12.1.0",
-    "typescript": "^5.1.6"
+    "rimraf": "^3.0.2",
+    "typedoc-gen": "workspace:*",
+    "typescript": "^5.3.3"
   },
   "optionalDependencies": {
+    "amazon-cognito-identity-js": "^6.3.3",
+    "react-native-aes-gcm-crypto": "^0.2.2",
     "react-native-camera": "^4.2.1",
     "react-native-device-info": "10.6.0",
-    "react-native-safe-area-context": "4.5.3",
+    "react-native-inappbrowser-reborn": "^3.7.0",
+    "react-native-quick-base64": "^2.0.7",
+    "react-native-quick-crypto": "^0.6.1",
+    "react-native-safe-area-context": "4.7.4",
     "react-native-webview": "12.1.0"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1 <6",
-    "expo": "^47.0.0",
+    "expo": ">=47 <50",
     "react": ">=18.0.0",
-    "react-native": ">=0.70.0"
+    "react-native": ">=0.71.0",
+    "react-native-mmkv": ">=2.11.0"
   },
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">=18"
   }
 }

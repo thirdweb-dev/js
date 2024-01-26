@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shyft Mainnet",
   "chain": "SHYFT",
-  "icon": {
-    "url": "ipfs://QmUkFZC2ZmoYPTKf7AHdjwRPZoV2h1MCuHaGM4iu8SNFpi",
-    "width": 400,
-    "height": 400,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://shyft.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.shyft.network/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Shyft",
-    "symbol": "SHYFT",
-    "decimals": 18
-  },
-  "infoURL": "https://shyft.network",
-  "shortName": "shyft",
   "chainId": 7341,
-  "networkId": 7341,
-  "slip44": 2147490989,
   "explorers": [
     {
       "name": "Shyft BX",
@@ -30,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "shyft"
+  "faucets": [],
+  "infoURL": "https://shyft.network",
+  "name": "Shyft Mainnet",
+  "nativeCurrency": {
+    "name": "Shyft",
+    "symbol": "SHYFT",
+    "decimals": 18
+  },
+  "networkId": 7341,
+  "rpc": [
+    "https://shyft.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7341.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.shyft.network/"
+  ],
+  "shortName": "shyft",
+  "slip44": 2147490989,
+  "slug": "shyft",
+  "testnet": false
 } as const satisfies Chain;

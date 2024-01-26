@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Weelink Testnet",
   "chain": "WLK",
-  "rpc": [
-    "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://weelinknode1c.gw002.oneitfarm.com"
-  ],
-  "faucets": [
-    "https://faucet.weelink.gw002.oneitfarm.com"
-  ],
-  "nativeCurrency": {
-    "name": "Weelink Chain Token",
-    "symbol": "tWLK",
-    "decimals": 18
-  },
-  "infoURL": "https://weelink.cloud",
-  "shortName": "wlkt",
   "chainId": 444900,
-  "networkId": 444900,
   "explorers": [
     {
       "name": "weelink-testnet",
@@ -25,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "weelink-testnet"
+  "faucets": [
+    "https://faucet.weelink.gw002.oneitfarm.com"
+  ],
+  "infoURL": "https://weelink.cloud",
+  "name": "Weelink Testnet",
+  "nativeCurrency": {
+    "name": "Weelink Chain Token",
+    "symbol": "tWLK",
+    "decimals": 18
+  },
+  "networkId": 444900,
+  "rpc": [
+    "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://444900.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://weelinknode1c.gw002.oneitfarm.com"
+  ],
+  "shortName": "wlkt",
+  "slip44": 1,
+  "slug": "weelink-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Condrieu",
-  "title": "Ethereum Verkle Testnet Condrieu",
   "chain": "ETH",
-  "rpc": [
-    "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.condrieu.ethdevops.io:8545"
-  ],
-  "faucets": [
-    "https://faucet.condrieu.ethdevops.io"
-  ],
-  "nativeCurrency": {
-    "name": "Condrieu Testnet Ether",
-    "symbol": "CTE",
-    "decimals": 18
-  },
-  "infoURL": "https://condrieu.ethdevops.io",
-  "shortName": "cndr",
   "chainId": 69420,
-  "networkId": 69420,
   "explorers": [
     {
       "name": "Condrieu explorer",
@@ -26,6 +9,25 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [
+    "https://faucet.condrieu.ethdevops.io"
+  ],
+  "infoURL": "https://condrieu.ethdevops.io",
+  "name": "Condrieu",
+  "nativeCurrency": {
+    "name": "Condrieu Testnet Ether",
+    "symbol": "CTE",
+    "decimals": 18
+  },
+  "networkId": 69420,
+  "rpc": [
+    "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://69420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.condrieu.ethdevops.io:8545"
+  ],
+  "shortName": "cndr",
+  "slip44": 1,
+  "slug": "condrieu",
   "testnet": true,
-  "slug": "condrieu"
+  "title": "Ethereum Verkle Testnet Condrieu"
 } as const satisfies Chain;

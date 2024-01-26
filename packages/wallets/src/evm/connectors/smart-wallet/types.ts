@@ -1,19 +1,16 @@
-import type { PaymasterAPI } from "@account-abstraction/sdk";
-import type {
-  ChainOrRpcUrl,
-  SmartContract,
-  Transaction,
-} from "@thirdweb-dev/sdk";
+import { ChainOrRpcUrl, SmartContract, Transaction } from "@thirdweb-dev/sdk";
 import type {
   BigNumber,
   BigNumberish,
+  BytesLike,
   ContractInterface,
   Signer,
+  providers,
 } from "ethers";
+import type { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 import { EVMWallet } from "../../interfaces";
 import { WalletOptions } from "../../wallets/base";
-import { BaseApiParams } from "./lib/base-api";
-import { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
+import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
@@ -25,6 +22,7 @@ export type SmartWalletConfig = {
   paymasterUrl?: string;
   paymasterAPI?: PaymasterAPI;
   entryPointAddress?: string;
+  deployOnSign?: boolean;
 } & ContractInfoInput &
   WalletConnectReceiverConfig;
 
@@ -33,17 +31,6 @@ export type SmartWalletConnectionArgs = {
   accountAddress?: string;
 };
 export type SmartWalletOptions = WalletOptions;
-
-export interface AccountApiParams
-  extends Omit<BaseApiParams, "provider">,
-    ContractInfo {
-  chain: ChainOrRpcUrl;
-  localSigner: Signer;
-  factoryAddress: string;
-  accountAddress?: string;
-  clientId?: string;
-  secretKey?: string;
-}
 
 export interface ProviderConfig extends ContractInfo {
   chain: ChainOrRpcUrl;
@@ -54,7 +41,9 @@ export interface ProviderConfig extends ContractInfo {
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;
-  paymasterAPI?: PaymasterAPI;
+  paymasterAPI: PaymasterAPI;
+  gasless: boolean;
+  deployOnSign?: boolean;
 }
 
 export type ContractInfoInput = {
@@ -86,3 +75,52 @@ export type FactoryContractInfo = {
   ) => Promise<Transaction>;
   getAccountAddress: (factory: SmartContract, owner: string) => Promise<string>;
 };
+
+export type PaymasterResult = {
+  paymasterAndData: string;
+  preVerificationGas?: BigNumber;
+  verificationGasLimit?: BigNumber;
+  callGasLimit?: BigNumber;
+};
+
+/**
+ * an API to external a UserOperation with paymaster info
+ */
+export abstract class PaymasterAPI {
+  /**
+   * @param userOp - a partially-filled UserOperation (without signature and paymasterAndData
+   *  note that the "preVerificationGas" is incomplete: it can't account for the
+   *  paymasterAndData value, which will only be returned by this method..
+   * @returns the value to put into the PaymasterAndData, undefined to leave it empty
+   */
+  abstract getPaymasterAndData(
+    userOp: Partial<UserOperationStruct>,
+  ): Promise<PaymasterResult>;
+}
+
+export interface TransactionOptions {
+  gasless?: boolean;
+}
+
+export interface UserOpOptions extends TransactionOptions {
+  batchData?: BatchData;
+}
+
+export type BatchData = {
+  targets: (string | undefined)[];
+  data: BytesLike[];
+  values: BigNumberish[];
+};
+
+export interface BaseApiParams {
+  provider: providers.Provider;
+  entryPointAddress: string;
+  paymasterAPI: PaymasterAPI;
+  accountAddress?: string;
+  gasless: boolean;
+}
+
+export interface UserOpResult {
+  transactionHash: string;
+  success: boolean;
+}

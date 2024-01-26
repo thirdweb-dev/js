@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kiwi Subnet",
   "chain": "KIWI",
-  "rpc": [
-    "https://kiwi-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/kiwi/testnet/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Shrapgas",
-    "symbol": "SHRAP",
-    "decimals": 18
-  },
-  "infoURL": "",
-  "shortName": "kiwi",
   "chainId": 2037,
-  "networkId": 2037,
   "explorers": [
     {
       "name": "KIWI Explorer",
@@ -28,6 +9,26 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kiwi-subnet"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "name": "Kiwi Subnet",
+  "nativeCurrency": {
+    "name": "Shrapgas",
+    "symbol": "SHRAP",
+    "decimals": 18
+  },
+  "networkId": 2037,
+  "rpc": [
+    "https://kiwi-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2037.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/kiwi/testnet/rpc"
+  ],
+  "shortName": "kiwi",
+  "slip44": 1,
+  "slug": "kiwi-subnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AME Chain Mainnet",
   "chain": "AME",
-  "rpc": [
-    "https://ame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node1.amechain.io/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "AME",
-    "symbol": "AME",
-    "decimals": 18
-  },
-  "infoURL": "https://amechain.io/",
-  "shortName": "ame",
   "chainId": 180,
-  "networkId": 180,
   "explorers": [
     {
       "name": "AME Scan",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ame-chain"
+  "faucets": [],
+  "infoURL": "https://amechain.io/",
+  "name": "AME Chain Mainnet",
+  "nativeCurrency": {
+    "name": "AME",
+    "symbol": "AME",
+    "decimals": 18
+  },
+  "networkId": 180,
+  "rpc": [
+    "https://ame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://180.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node1.amechain.io/"
+  ],
+  "shortName": "ame",
+  "slug": "ame-chain",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,4 +1,14 @@
+import type { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
+import {
+  ITokenBundle,
+  TokensWrappedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { utils, type BigNumberish, type CallOverrides } from "ethers";
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
@@ -10,15 +20,15 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
+import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
-import { SDKOptions } from "../../schema/sdk-options";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
@@ -26,16 +36,6 @@ import {
   TokensToWrap,
   WrappedTokens,
 } from "../../types/multiwrap";
-import type { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
-import {
-  ITokenBundle,
-  TokensWrappedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { type BigNumberish, type CallOverrides, utils } from "ethers";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { MULTIWRAP_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -52,6 +52,7 @@ import { MULTIWRAP_CONTRACT_ROLES } from "../contractRoles";
  *
  * @beta
  */
+// TODO create extension wrappers for this
 export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractRoles = MULTIWRAP_CONTRACT_ROLES;
 
@@ -90,7 +91,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
-  public owner: ContractOwner<MultiwrapContract>;
+  public owner: ContractOwner;
 
   constructor(
     network: NetworkInput,
@@ -149,10 +150,10 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   public async getWrappedContents(
     wrappedTokenId: BigNumberish,
   ): Promise<WrappedTokens> {
-    const wrappedTokens =
-      await this.contractWrapper.readContract.getWrappedContents(
-        wrappedTokenId,
-      );
+    const wrappedTokens = await this.contractWrapper.read(
+      "getWrappedContents",
+      [wrappedTokenId],
+    );
 
     const erc20Tokens: ERC20Wrappable[] = [];
     const erc721Tokens: ERC721Wrappable[] = [];
@@ -238,15 +239,15 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       wrappedTokenMetadata: NFTMetadataOrUri,
       recipientAddress?: AddressOrEns,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
-
-      const recipient = await resolveAddress(
-        recipientAddress
-          ? recipientAddress
-          : await this.contractWrapper.getSignerAddress(),
-      );
-
-      const tokens = await this.toTokenStructList(contents);
+      const [uri, tokens, recipient] = await Promise.all([
+        uploadOrExtractURI(wrappedTokenMetadata, this.storage),
+        this.toTokenStructList(contents),
+        resolveAddress(
+          recipientAddress
+            ? recipientAddress
+            : await this.contractWrapper.getSignerAddress(),
+        ),
+      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

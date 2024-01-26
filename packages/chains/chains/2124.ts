@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metaplayerone Dubai Testnet",
   "chain": "MP1 Dubai-Testnet",
-  "rpc": [
-    "https://metaplayerone-dubai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-dubai.mp1network.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Metaunit",
-    "symbol": "MEU",
-    "decimals": 18
-  },
-  "infoURL": "https://docs.metaplayer.one/",
-  "shortName": "MEU",
   "chainId": 2124,
-  "networkId": 2124,
   "explorers": [
     {
       "name": "MP1Scan",
@@ -23,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "metaplayerone-dubai-testnet"
+  "faucets": [],
+  "infoURL": "https://docs.metaplayer.one/",
+  "name": "Metaplayerone Dubai Testnet",
+  "nativeCurrency": {
+    "name": "Metaunit",
+    "symbol": "MEU",
+    "decimals": 18
+  },
+  "networkId": 2124,
+  "rpc": [
+    "https://metaplayerone-dubai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2124.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-dubai.mp1network.com/"
+  ],
+  "shortName": "MEU",
+  "slip44": 1,
+  "slug": "metaplayerone-dubai-testnet",
+  "testnet": true
 } as const satisfies Chain;

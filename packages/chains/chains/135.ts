@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alyx Chain Testnet",
   "chain": "Alyx Chain Testnet",
-  "rpc": [
-    "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.alyxchain.com"
-  ],
-  "faucets": [
-    "https://faucet.alyxchain.com"
-  ],
-  "nativeCurrency": {
-    "name": "Alyx Testnet Native Token",
-    "symbol": "ALYX",
-    "decimals": 18
-  },
-  "infoURL": "https://www.alyxchain.com",
-  "shortName": "AlyxTestnet",
   "chainId": 135,
-  "networkId": 135,
   "explorers": [
     {
       "name": "alyx testnet scan",
@@ -25,12 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "https://faucet.alyxchain.com"
+  ],
   "icon": {
     "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
     "width": 2481,
     "height": 2481,
     "format": "png"
   },
-  "testnet": true,
-  "slug": "alyx-chain-testnet"
+  "infoURL": "https://www.alyxchain.com",
+  "name": "Alyx Chain Testnet",
+  "nativeCurrency": {
+    "name": "Alyx Testnet Native Token",
+    "symbol": "ALYX",
+    "decimals": 18
+  },
+  "networkId": 135,
+  "rpc": [
+    "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://135.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.alyxchain.com"
+  ],
+  "shortName": "AlyxTestnet",
+  "slip44": 1,
+  "slug": "alyx-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,3 +1,6 @@
+import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
@@ -16,25 +19,22 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { StandardErc721 } from "../../core/classes/internal/erc721/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { UploadProgressEvent } from "../../types/events";
-import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -51,13 +51,14 @@ import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
  * const contract = await sdk.getContract("{{contract_address}}", "signature-drop");
  * ```
  *
- * @public
+ * @internal
+ * @deprecated use contract.erc721 instead
  */
 export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
-  public owner: ContractOwner<SignatureDropContract>;
+  public owner: ContractOwner;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
@@ -66,7 +67,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   >;
   public app: ContractAppURI<SignatureDropContract>;
   public sales: ContractPrimarySale;
-  public platformFees: ContractPlatformFee<SignatureDropContract>;
+  public platformFees: ContractPlatformFee;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,
@@ -238,7 +239,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -249,8 +250,10 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
   override async totalSupply() {
-    const claimed = await this.totalClaimedSupply();
-    const unclaimed = await this.totalUnclaimedSupply();
+    const [claimed, unclaimed] = await Promise.all([
+      this.totalClaimedSupply(),
+      this.totalUnclaimedSupply(),
+    ]);
     return claimed.add(unclaimed);
   }
 
@@ -308,9 +311,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     );
     const maxId = BigNumber.from(
       Math.min(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToMint()
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToMint", [])).toNumber(),
         firstTokenId.toNumber() + count,
       ),
     );
@@ -332,7 +333,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
    * ```
-   * @returns the claimed supply
+   * @returns The claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalClaimedSupply();
@@ -348,7 +349,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
     return this.erc721.totalUnclaimedSupply();
@@ -358,10 +359,10 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 
@@ -409,9 +410,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param checkERC20Allowance
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
@@ -447,7 +448,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -464,7 +465,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @remarks See {@link NFTDrop.claimTo}
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (

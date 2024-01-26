@@ -1,4 +1,7 @@
-export type Ecosystem = "solana" | "evm";
+/**
+ * @internal
+ */
+export type Ecosystem = "evm";
 export interface GenericAuthWallet {
   type: Ecosystem;
   getAddress(): Promise<string>;

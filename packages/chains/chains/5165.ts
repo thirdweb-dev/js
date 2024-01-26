@@ -1,19 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fastex Chain (Bahamut)",
-  "title": "Bahamut mainnet Sahara",
-  "chain": "Fastex Chain (Bahamut)",
-  "icon": {
-    "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
-  "rpc": [
-    "https://fastex-chain-bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.sahara.bahamutchain.com",
-    "https://rpc2.sahara.bahamutchain.com"
+  "chain": "Bahamut",
+  "chainId": 5165,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://ftnscan.com",
+      "standard": "none"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -22,23 +18,32 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://bahamut.io",
+  "name": "Bahamut",
   "nativeCurrency": {
     "name": "FTN",
     "symbol": "FTN",
     "decimals": 18
   },
-  "shortName": "ftn",
-  "infoURL": "https://fastexchain.com",
-  "chainId": 5165,
   "networkId": 5165,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://ftnscan.com",
-      "standard": "none"
-    }
+  "rpc": [
+    "https://bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.bahamut.io",
+    "https://rpc2.bahamut.io",
+    "wss://ws1.sahara.bahamutchain.com",
+    "wss://ws2.sahara.bahamutchain.com",
+    "https://bahamut.publicnode.com",
+    "wss://bahamut.publicnode.com"
   ],
+  "shortName": "ftn",
+  "slug": "bahamut",
   "testnet": false,
-  "slug": "fastex-chain-bahamut"
+  "title": "Bahamut mainnet"
 } as const satisfies Chain;

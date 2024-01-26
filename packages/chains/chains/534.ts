@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Candle",
   "chain": "Candle",
-  "rpc": [
-    "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://candle-rpc.com/",
-    "https://rpc.cndlchain.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "CANDLE",
-    "symbol": "CNDL",
-    "decimals": 18
-  },
-  "infoURL": "https://candlelabs.org/",
-  "shortName": "CNDL",
   "chainId": 534,
-  "networkId": 534,
-  "slip44": 674,
   "explorers": [
     {
       "name": "candleexplorer",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "candle"
+  "faucets": [],
+  "infoURL": "https://candlelabs.org/",
+  "name": "Candle",
+  "nativeCurrency": {
+    "name": "CANDLE",
+    "symbol": "CNDL",
+    "decimals": 18
+  },
+  "networkId": 534,
+  "rpc": [
+    "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://candle-rpc.com/",
+    "https://rpc.cndlchain.com"
+  ],
+  "shortName": "CNDL",
+  "slip44": 674,
+  "slug": "candle",
+  "testnet": false
 } as const satisfies Chain;

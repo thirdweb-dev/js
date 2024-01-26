@@ -1,4 +1,4 @@
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, BigNumber, utils } from "ethers";
 
 /**
@@ -27,7 +27,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    *   1, // proof max quantity per transaction
    * ]);
    * ```
-   * @returns the estimated price in native currency (ETH, MATIC, etc) of calling this function
+   * @returns The estimated price in native currency (ETH, MATIC, etc) of calling this function
    * @public
    */
   public async gasCostOf(
@@ -35,8 +35,10 @@ export class GasCostEstimator<TContract extends BaseContract> {
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
-    const price = await this.contractWrapper.getPreferredGasPrice();
-    const gasUnits = await this.contractWrapper.estimateGas(fn, args);
+    const [price, gasUnits] = await Promise.all([
+      this.contractWrapper.getProvider().getGasPrice(),
+      this.contractWrapper.estimateGas(fn, args),
+    ]);
     return utils.formatEther(gasUnits.mul(price));
   }
 
@@ -55,7 +57,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    *   1, // proof max quantity per transaction
    * ]);
    * ```
-   * @returns the estimated gas limit of the transaction
+   * @returns The estimated gas limit of the transaction
    * @public
    */
   public async gasLimitOf(
@@ -73,7 +75,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * ```javascript
    * const gasCostInGwei = await contract.estimator.currentGasPriceInGwei();
    * ```
-   * @returns the current gas price in gwei
+   * @returns The current gas price in gwei
    * @public
    */
   public async currentGasPriceInGwei(): Promise<string> {

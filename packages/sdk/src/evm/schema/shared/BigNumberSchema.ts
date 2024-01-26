@@ -13,9 +13,8 @@ export const BigNumberSchema = /* @__PURE__ */ (() =>
     ])
     .transform((arg) => BigNumber.from(arg)))();
 
-export const BigNumberishSchema = /* @__PURE__ */ BigNumberSchema.transform(
-  (arg) => arg.toString(),
-);
+export const BigNumberishSchema = /* @__PURE__ */ (() =>
+  BigNumberSchema.transform((arg) => arg.toString()))();
 
 export const BigNumberTransformSchema = /* @__PURE__ */ (() =>
   z

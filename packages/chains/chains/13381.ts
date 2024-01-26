@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Phoenix Mainnet",
   "chain": "Phoenix",
-  "rpc": [
-    "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.phoenixplorer.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Phoenix",
-    "symbol": "PHX",
-    "decimals": 18
-  },
-  "infoURL": "https://cryptophoenix.org/phoenix",
-  "shortName": "Phoenix",
   "chainId": 13381,
-  "networkId": 13381,
-  "icon": {
-    "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
-    "width": 1501,
-    "height": 1501,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "phoenixplorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "phoenix"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
+    "width": 1501,
+    "height": 1501,
+    "format": "png"
+  },
+  "infoURL": "https://cryptophoenix.org/phoenix",
+  "name": "Phoenix Mainnet",
+  "nativeCurrency": {
+    "name": "Phoenix",
+    "symbol": "PHX",
+    "decimals": 18
+  },
+  "networkId": 13381,
+  "rpc": [
+    "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13381.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.phoenixplorer.com/"
+  ],
+  "shortName": "Phoenix",
+  "slug": "phoenix",
+  "testnet": false
 } as const satisfies Chain;

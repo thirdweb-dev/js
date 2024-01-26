@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bifrost Mainnet",
-  "title": "The Bifrost Mainnet network",
   "chain": "BFC",
-  "rpc": [
-    "https://bifrost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://public-01.mainnet.thebifrost.io/rpc",
-    "https://public-02.mainnet.thebifrost.io/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Bifrost",
-    "symbol": "BFC",
-    "decimals": 18
-  },
-  "infoURL": "https://thebifrost.io",
-  "shortName": "bfc",
   "chainId": 3068,
-  "networkId": 3068,
-  "icon": {
-    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "explorer-thebifrost",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYxniqbiFD7nXBNjN8boUhoXYEAW23YquArD2Rnkq8WHS",
+    "width": 480,
+    "height": 480,
+    "format": "png"
+  },
+  "infoURL": "https://thebifrost.io",
+  "name": "Bifrost Mainnet",
+  "nativeCurrency": {
+    "name": "Bifrost",
+    "symbol": "BFC",
+    "decimals": 18
+  },
+  "networkId": 3068,
+  "rpc": [
+    "https://bifrost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3068.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://public-01.mainnet.thebifrost.io/rpc",
+    "https://public-02.mainnet.thebifrost.io/rpc"
+  ],
+  "shortName": "bfc",
+  "slug": "bifrost",
   "testnet": false,
-  "slug": "bifrost"
+  "title": "Bifrost Network Mainnet"
 } as const satisfies Chain;

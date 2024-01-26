@@ -1,37 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CamDL Mainnet",
   "chain": "CADL",
-  "rpc": [
-    "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.camdl.gov.kh/"
-  ],
-  "faucets": [
-    "https://faucet.camdl.gov.kh/"
-  ],
-  "nativeCurrency": {
-    "name": "CADL",
-    "symbol": "CADL",
-    "decimals": 18
-  },
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
-  "infoURL": "https://camdl.gov.kh/",
-  "shortName": "camdl",
   "chainId": 95,
-  "networkId": 95,
-  "redFlags": [
-    "reusedChainId"
-  ],
-  "icon": {
-    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
-    "width": 1453,
-    "height": 1453,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "CamDL Block Explorer",
@@ -39,7 +9,38 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "https://faucet.camdl.gov.kh/"
+  ],
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
+    "width": 1453,
+    "height": 1453,
+    "format": "png"
+  },
+  "infoURL": "https://camdl.gov.kh/",
+  "name": "CamDL Mainnet",
+  "nativeCurrency": {
+    "name": "CADL",
+    "symbol": "CADL",
+    "decimals": 18
+  },
+  "networkId": 95,
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "rpc": [
+    "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://95.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.camdl.gov.kh/"
+  ],
+  "shortName": "camdl",
+  "slug": "camdl",
   "status": "active",
-  "testnet": false,
-  "slug": "camdl"
+  "testnet": false
 } as const satisfies Chain;

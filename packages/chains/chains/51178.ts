@@ -1,18 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opside Testnet Pre-Alpha",
   "chain": "ETH",
-  "rpc": [
-    "https://opside-testnet-pre-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pre-alpha-us-http-geth.opside.network",
-    "https://pre-alpha-hk-http-geth.opside.network"
+  "chainId": 51178,
+  "explorers": [
+    {
+      "name": "LumozTestnetInfo",
+      "url": "https://lumoz.info",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
+        "width": 401,
+        "height": 400,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "IDE Test Token",
-    "symbol": "IDE",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -21,29 +24,28 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://opsi.de/",
-  "shortName": "Opside-Testnet",
-  "chainId": 51178,
-  "networkId": 51178,
   "icon": {
     "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
     "width": 401,
     "height": 400,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "OpsideTestnetInfo",
-      "url": "https://pre-alpha.opside.info",
-      "icon": {
-        "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
-        "width": 401,
-        "height": 400,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://lumoz.org",
+  "name": "Lumoz Testnet Alpha",
+  "nativeCurrency": {
+    "name": "Lumoz Test Token",
+    "symbol": "MOZ",
+    "decimals": 18
+  },
+  "networkId": 51178,
+  "rpc": [
+    "https://lumoz-testnet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://51178.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://alpha-us-http-geth.lumoz.org",
+    "https://alpha-hk-http-geth.lumoz.org"
   ],
-  "testnet": true,
-  "slug": "opside-testnet-pre-alpha"
+  "shortName": "Lumoz-Testnet",
+  "slip44": 1,
+  "slug": "lumoz-testnet-alpha",
+  "testnet": true
 } as const satisfies Chain;

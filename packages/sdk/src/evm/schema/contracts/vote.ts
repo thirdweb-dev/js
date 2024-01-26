@@ -17,21 +17,19 @@ export const VoteSettingsInputSchema = /* @__PURE__ */ (() =>
     proposal_token_threshold: BigNumberishSchema.default(1),
   }))();
 
-export const VoteSettingsOuputSchema =
-  /* @__PURE__ */ VoteSettingsInputSchema.extend({
+export const VoteSettingsOuputSchema = /* @__PURE__ */ (() =>
+  VoteSettingsInputSchema.extend({
     proposal_token_threshold: BigNumberSchema,
-  });
+  }))();
 
-export const VoteContractInput = /* @__PURE__ */ CommonContractSchema.merge(
-  VoteSettingsInputSchema,
-);
+export const VoteContractInput = /* @__PURE__ */ (() =>
+  CommonContractSchema.merge(VoteSettingsInputSchema))();
 
-export const VoteContractOutput =
-  /* @__PURE__ */ CommonContractOutputSchema.merge(VoteSettingsOuputSchema);
+export const VoteContractOutput = /* @__PURE__ */ (() =>
+  CommonContractOutputSchema.merge(VoteSettingsOuputSchema))();
 
-export const VoteContractDeploy = /* @__PURE__ */ VoteContractInput.merge(
-  CommonTrustedForwarderSchema,
-);
+export const VoteContractDeploy = /* @__PURE__ */ (() =>
+  VoteContractInput.merge(CommonTrustedForwarderSchema))();
 
 export const VoteContractSchema = {
   deploy: VoteContractDeploy,

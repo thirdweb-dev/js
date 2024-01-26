@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BitEth",
-  "chain": "BTE",
-  "rpc": [
-    "https://biteth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.biteth.org"
-  ],
+  "chain": "BTC",
+  "chainId": 8086,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://biteth.org",
+  "name": "Bitcoin Chain",
   "nativeCurrency": {
-    "name": "BitEth",
-    "symbol": "BTE",
+    "name": "Bitcoin",
+    "symbol": "BTC",
     "decimals": 18
   },
-  "infoURL": "https://biteth.org",
-  "shortName": "BitEth",
-  "chainId": 8086,
   "networkId": 8086,
-  "explorers": [],
-  "testnet": false,
-  "slug": "biteth"
+  "rpc": [
+    "https://bitcoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8086.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.biteth.org"
+  ],
+  "shortName": "Bitcoin",
+  "slug": "bitcoin-chain",
+  "testnet": false
 } as const satisfies Chain;

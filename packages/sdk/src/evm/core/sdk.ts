@@ -1,6 +1,6 @@
 import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
@@ -9,14 +9,14 @@ import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
-import { SmartContract } from "../contracts/smart-contract";
+import type { SmartContract as SmartContractType } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
-import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
+import { RPCConnectionHandler } from "./classes/internal/rpc-connection-handler";
 import type {
   ContractForPrebuiltContractType,
   ContractType,
@@ -26,7 +26,6 @@ import type {
 import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
@@ -77,25 +76,10 @@ import {
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
-import type {
-  DeployEvents,
-  NFTContractDeployMetadata,
-  MultiwrapContractDeployMetadata,
-  TokenContractDeployMetadata,
-  MarketplaceContractDeployMetadata,
-  MarketplaceV3ContractDeployMetadata,
-  SplitContractDeployMetadata,
-  VoteContractDeployMetadata,
-  DeployOptions,
-  DeployMetadata,
-  DeployEvent,
-  OpenEditionContractDeployMetadata,
-  AirdropContractDeployMetadata,
-} from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
-import { ContractFactory } from "./classes/factory";
-import { ContractRegistry } from "./classes/registry";
+import { ContractFactory } from "./classes/internal/factory";
+import { ContractRegistry } from "./classes/internal/registry";
 import { DeployTransaction, Transaction } from "./classes/transactions";
 import {
   type BytesLike,
@@ -103,7 +87,7 @@ import {
   utils,
   ContractFactory as ethersContractFactory,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import {
@@ -112,15 +96,27 @@ import {
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
-import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
-import { DropErc721ContractSchema } from "../schema";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
-} from "../common";
+} from "../common/any-evm-utils/deployDirectDeterministic";
+import { DeployEvent, DeployEvents } from "../types/deploy/deploy-events";
+import {
+  AirdropContractDeployMetadata,
+  MarketplaceContractDeployMetadata,
+  MarketplaceV3ContractDeployMetadata,
+  MultiwrapContractDeployMetadata,
+  NFTContractDeployMetadata,
+  OpenEditionContractDeployMetadata,
+  SplitContractDeployMetadata,
+  TokenContractDeployMetadata,
+  VoteContractDeployMetadata,
+} from "../types/deploy/deploy-metadata";
+import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -142,7 +138,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -174,7 +170,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @beta
    */
@@ -185,14 +181,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
-    if (network && !signer.provider) {
-      const provider = getChainProvider(network, options);
-      signerWithProvider = signer.connect(provider);
+    if (network) {
+      try {
+        const provider = getChainProvider(network, options);
+        signerWithProvider = signer.connect(provider);
+      } catch {
+        // We have to catch here because browser wallets throw when trying to override provider
+      }
     }
 
     const sdk = new ThirdwebSDK(
       network || signerWithProvider,
-      options,
+      network ? addChainToSupportedChains(network, options) : options,
       storage,
     );
     sdk.updateSignerOrProvider(signerWithProvider);
@@ -215,7 +215,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @param storage - optional storage implementation to use
-   * @returns an instance of the SDK
+   * @returns An instance of the SDK
    *
    * @public
    */
@@ -227,7 +227,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new EthersWallet(privateKey, provider);
-    return new ThirdwebSDK(signer, options, storage);
+    return new ThirdwebSDK(
+      signer,
+      addChainToSupportedChains(network, options),
+      storage,
+    );
   }
 
   /**
@@ -281,14 +285,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
-    if (isChainConfig(network)) {
-      options = {
-        ...options,
-        // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-        supportedChains: [network, ...(options.supportedChains || [])],
-      };
-    }
-
+    options = addChainToSupportedChains(network, options);
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
@@ -317,7 +314,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   get auth() {
     throw new Error(
       `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0.
-      Please visit https://portal.thirdweb.com/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
+      Please visit https://portal.thirdweb.com/wallets/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
 
       If you still want to use the old @thirdweb-dev/auth@2.0.0 package, you can downgrade the SDK to version 3.6.0.`,
     );
@@ -508,7 +505,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -521,14 +518,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: TContractAddress,
   ): Promise<
     TContractAddress extends ContractAddress
-      ? SmartContract<BaseContractForAddress<TContractAddress>>
-      : SmartContract<BaseContract>
+      ? SmartContractType<BaseContractForAddress<TContractAddress>>
+      : SmartContractType<BaseContract>
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
    * @param contractType - the {@link ContractType} of the contract to load
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -541,13 +538,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): Promise<
     TContractType extends PrebuiltContractType
       ? ContractForPrebuiltContractType<TContractType>
-      : SmartContract
+      : SmartContractType
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
    * @param abi - the ABI ({@link ContractInterface}) of the contract to load
-   * @returns the contract
+   * @returns The contract
    * @public
    * @example
    * ```javascript
@@ -557,7 +554,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getContract(
     address: AddressOrEns,
     abi: ContractInterface,
-  ): Promise<SmartContract>;
+  ): Promise<SmartContractType>;
   public async getContract(
     address: AddressOrEns,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
@@ -656,13 +653,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    * @param contractAddress - the address of the contract to attempt to resolve the contract type for
-   * @returns the {@link ContractType} for the given contract address
+   * @returns The {@link ContractType} for the given contract address
    *
    */
   public async resolveContractType(
     contractAddress: AddressOrEns,
   ): Promise<ContractType> {
     try {
+      const IThirdwebContractABI = (
+        await import(
+          "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json"
+        )
+      ).default;
       const contract = new EthersContract(
         await resolveAddress(contractAddress),
         IThirdwebContractABI,
@@ -808,7 +810,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Custom contract from a json ABI
    * @param address - the address of the deployed contract
    * @param abi - the JSON abi
-   * @returns the contract
+   * @returns The contract
    * @beta
    * @example
    * ```javascript
@@ -826,10 +828,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: AddressOrEns,
     abi: ContractInterface,
   ) {
-    const resolvedAddress = await resolveAddress(address);
+    const [resolvedAddress, { SmartContract }] = await Promise.all([
+      resolveAddress(address),
+      import("../contracts/smart-contract"),
+    ]);
 
     if (this.contractCache.has(resolvedAddress)) {
-      return this.contractCache.get(resolvedAddress) as SmartContract;
+      return this.contractCache.get(resolvedAddress) as SmartContractType;
     }
     const [, provider] = getSignerAndProvider(
       this.getSignerOrProvider(),
@@ -837,11 +842,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
 
     const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
-    // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
-      await getCompositePluginABI(
+      await getCompositeABI(
         resolvedAddress,
         AbiSchema.parse(parsedABI),
         provider,
@@ -879,6 +883,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public getPublisher(): ContractPublisher {
     return this._publisher;
   }
+}
+
+function addChainToSupportedChains(
+  network: NetworkInput,
+  options: SDKOptions | undefined,
+) {
+  if (isChainConfig(network)) {
+    options = {
+      ...options,
+      // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
+      supportedChains: [network, ...(options?.supportedChains || [])],
+    };
+  }
+  return options;
 }
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
@@ -936,7 +954,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployNFTCollection = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -965,7 +983,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployNFTDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -994,7 +1012,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployLoyaltyCard = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1006,9 +1024,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1035,6 +1052,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "LoyaltyCard",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1053,7 +1071,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1065,9 +1083,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1088,10 +1105,11 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata.seller_fee_basis_points,
       ];
 
-      return await this.deployReleasedContract.prepare(
+      return await this.deployPublishedContract.prepare(
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1110,7 +1128,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deploySignatureDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1138,7 +1156,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    * @beta
    */
   deployMultiwrap = /* @__PURE__ */ buildDeployTransactionFunction(
@@ -1168,7 +1186,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployEdition = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1197,7 +1215,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployEditionDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1226,7 +1244,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployToken = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1255,7 +1273,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployTokenDrop = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1284,7 +1302,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployMarketplace = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1313,7 +1331,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployMarketplaceV3 = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1342,7 +1360,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployPack = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1381,7 +1399,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deploySplit = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1411,7 +1429,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
-   * @returns the address of the deployed contract
+   * @returns The address of the deployed contract
    */
   deployVote = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1435,9 +1453,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1453,6 +1470,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC20",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1466,9 +1484,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1484,6 +1501,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC721",
         deployArgs,
+        "latest",
         options,
       );
     },
@@ -1497,9 +1515,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      const trustedForwarders = getDefaultTrustedForwarders(chainId);
-      // add default forwarders to any custom forwarders passed in
+      const trustedForwarders: string[] = [];
+      // add any custom forwarders passed in
       if (
         metadata.trusted_forwarders &&
         metadata.trusted_forwarders.length > 0
@@ -1515,19 +1532,20 @@ export class ContractDeployer extends RPCConnectionHandler {
         THIRDWEB_DEPLOYER,
         "AirdropERC1155",
         deployArgs,
+        "latest",
         options,
       );
     },
   );
 
   /**
-   * Deploys a new contract
+   * Deploys a new prebuilt contract
    *
-   * @internal
+   * @public
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
-   * @param version
-   * @returns a promise of the address of the newly deployed contract
+   * @param version - the version of the contract to deploy
+   * @returns A promise of the address of the newly deployed contract
    */
   deployBuiltInContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async <TContractType extends PrebuiltContractType>(
@@ -1609,7 +1627,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param contractType
+   * @param contractType - the type of contract to deploy
    */
   public async getLatestBuiltInContractVersion<
     TContractType extends PrebuiltContractType,
@@ -1623,18 +1641,19 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy any published contract by its name
-   * @param publisherAddress the address of the publisher
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress - the address of the publisher
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
    *
    * @deprecated use deployPublishedContract instead
+   * @internal
    */
   deployReleasedContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
       publisherAddress: AddressOrEns,
       contractName: string,
       constructorParams: any[],
-      version = "latest",
+      version: string = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       const publishedContract = await this.fetchPublishedContractFromPolygon(
@@ -1652,21 +1671,21 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy any published contract by its name
-   * @param publisherAddress the address of the publisher
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param options Optional: the deploy options
+   * @param publisherAddress - the address of the publisher
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param options - Optional: the deploy options
    */
   deployPublishedContract = this.deployReleasedContract;
 
   /**
    * Deploy any published contract by its name
-   * @param contractName the name of the contract to deploy
-   * @param constructorParams the constructor params to pass to the contract
-   * @param publisherAddress the address of the publisher
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   * @param contractName - the name of the contract to deploy
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param publisherAddress - the address of the publisher
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 - Optional: salt for create2 deployment, will determine deployment address
    */
   async deployPublishedContractDeterministic(
     contractName: string,
@@ -1693,11 +1712,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Predict Create2 address of a contract
-   * @param contractName the name of the contract
-   * @param constructorParams the constructor params to pass to the contract
-   * @param publisherAddress the address of the publisher
-   * @param version Optional: the version of the contract to deploy or "latest"
-   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   * @param contractName - the name of the contract
+   * @param constructorParams - the constructor params to pass to the contract
+   * @param publisherAddres -s the address of the publisher
+   * @param version - Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 - Optional: salt for create2 deployment, will determine deployment address
    */
   async predictAddressDeterministic(
     contractName: string,
@@ -1724,11 +1743,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via the given factory
-   * @param factoryAddress
-   * @param implementationAddress
-   * @param implementationAbi
-   * @param initializerFunction
-   * @param initializerArgs
+   * @param factoryAddress - the address of the factory
+   * @param implementationAddress - the address of the implementation
+   * @param implementationAbi - the abi of the implementation
+   * @param initializerFunction - the initializer function to call
+   * @param initializerArgs - the initializer args to pass to the initializer function
    */
   deployViaFactory = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -1770,10 +1789,10 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation directly
-   * @param implementationAddress
-   * @param implementationAbi
-   * @param initializerFunction
-   * @param initializerArgs
+   * @param implementationAddress - the address of the implementation
+   * @param implementationAbi - the abi of the implementation
+   * @param initializerFunction - the initializer function to call
+   * @param initializerArgs - the initializer args to pass to the initializer function
    */
   deployProxy = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1800,11 +1819,12 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via thirdweb's Clone factory
-   * @param publishMetadataUri
-   * @param constructorParamValues
-   * @param deployMetadata
-   * @param signer
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param constructorParamValues - the constructor param values
+   * @param deployMetadata - the deploy metadata
+   * @param signer - the signer to use
+   * @param options - the deploy options
+   * @internal
    */
   deployViaAutoFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1868,6 +1888,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             `Error deploying contract at ${tx.predictedAddress}`,
             (e as any)?.message,
           );
+          throw e;
         }
       }
 
@@ -1900,10 +1921,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Deploy a proxy contract of a given implementation via a custom factory
-   * @param constructorParamValues
-   * @param deployMetadata
-   * @param signer
-   * @param chainId
+   * @param constructorParamValues - the constructor param values
+   * @param deployMetadata - the deploy metadata
+   * @param signer - the signer to use
+   * @param chainId - the chain id to deploy to
+   * @internal
    */
   deployViaCustomFactory = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1992,10 +2014,14 @@ export class ContractDeployer extends RPCConnectionHandler {
         if (!registryAddress) {
           return undefined;
         }
+        const TWRegistryABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json")
+        ).default;
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
           this.storage,
+          TWRegistryABI,
           this.options,
         );
       }));
@@ -2031,6 +2057,9 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
+  /**
+   * @internal
+   */
   public override updateSignerOrProvider(network: NetworkInput) {
     super.updateSignerOrProvider(network);
     this.updateContractSignerOrProvider();
@@ -2057,9 +2086,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publishMetadataUri
-   * @param constructorParamValues
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param constructorParamValues - the constructor param values
+   * @param options - the deploy options
    */
   deployContractFromUri = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2079,7 +2108,11 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
         ) || extendedMetadata?.networksForDeployment?.allNetworks;
 
-      if (extendedMetadata?.networksForDeployment && !isNetworkEnabled) {
+      if (
+        extendedMetadata?.networksForDeployment &&
+        !isNetworkEnabled &&
+        compilerMetadata.name !== "AccountFactory" // ignore network restrictions for simple AccountFactory
+      ) {
         throw new Error(
           `Deployments disabled on this network, with chainId: ${chainId}`,
         );
@@ -2201,10 +2234,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   );
 
   /**
-   * @internal
-   * @param abi
-   * @param bytecode
-   * @param constructorParams
+   * @public
+   * @param abi - the abi of the contract
+   * @param bytecode - the bytecode of the contract
+   * @param constructorParams - the constructor params to pass to the contract
    */
   deployContractWithAbi = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -2230,8 +2263,8 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * @public
-   * @param publishMetadataUri
-   * @param options
+   * @param publishMetadataUri - the uri of the publish metadata
+   * @param options - the deploy options
    */
   public async getTransactionsForDeploy(
     publishMetadataUri: string,
@@ -2350,7 +2383,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Listen to all deploy transactions from this deployer
-   * @param listener the listener to add
+   * @param listener - the listener to add
    */
   public addDeployListener(listener: (event: DeployEvent) => void) {
     this.events.on("contractDeployed", listener);
@@ -2358,7 +2391,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   /**
    * Remove a deploy listener
-   * @param listener the listener to remove
+   * @param listener - the listener to remove
    */
   public removeDeployListener(listener: (event: DeployEvent) => void) {
     this.events.off("contractDeployed", listener);

@@ -6,6 +6,12 @@
   "plugins": [
     "@babel/plugin-transform-flow-strip-types",
     "@babel/plugin-transform-private-methods",
-    "@babel/plugin-proposal-class-properties"
+    "@babel/plugin-transform-class-properties",
+    [
+      "transform-inline-environment-variables",
+      {
+        "include": ["THIRDWEB_EWS_SDK_VERSION"]
+      }
+    ]
   ]
 }

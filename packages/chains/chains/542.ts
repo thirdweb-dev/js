@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PAWCHAIN Testnet",
   "chain": "PAW",
-  "rpc": [
-    "https://pawchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pawchainx.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "PAW",
-    "symbol": "PAW",
-    "decimals": 18
-  },
-  "infoURL": "https://pawchainx.com/",
-  "shortName": "PAW",
   "chainId": 542,
-  "networkId": 542,
   "explorers": [
     {
       "name": "PAWCHAIN Testnet",
@@ -23,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "pawchain-testnet"
+  "faucets": [],
+  "infoURL": "https://pawchainx.com/",
+  "name": "PAWCHAIN Testnet",
+  "nativeCurrency": {
+    "name": "PAW",
+    "symbol": "PAW",
+    "decimals": 18
+  },
+  "networkId": 542,
+  "rpc": [
+    "https://pawchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://542.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://pawchainx.com/"
+  ],
+  "shortName": "PAW",
+  "slip44": 1,
+  "slug": "pawchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

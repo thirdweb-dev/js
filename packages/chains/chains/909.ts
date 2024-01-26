@@ -1,26 +1,26 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Portal Fantasy Chain",
   "chain": "PF",
+  "chainId": 909,
+  "explorers": [],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmeMa6aw3ebUKJdGgbzDgcVtggzp7cQdfSrmzMYmnt5ywc",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [],
-  "faucets": [],
+  "infoURL": "https://portalfantasy.io",
+  "name": "Portal Fantasy Chain",
   "nativeCurrency": {
     "name": "Portal Fantasy Token",
     "symbol": "PFT",
     "decimals": 18
   },
-  "infoURL": "https://portalfantasy.io",
-  "shortName": "PF",
-  "chainId": 909,
   "networkId": 909,
-  "explorers": [],
+  "rpc": [],
+  "shortName": "PF",
+  "slug": "portal-fantasy-chain",
   "status": "incubating",
-  "testnet": false,
-  "slug": "portal-fantasy-chain"
+  "testnet": false
 } as const satisfies Chain;

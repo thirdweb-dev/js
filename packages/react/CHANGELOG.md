@@ -1,5 +1,1176 @@
 # @thirdweb-dev/react
 
+## 4.4.0
+
+### Minor Changes
+
+- [#2197](https://github.com/thirdweb-dev/js/pull/2197) [`212b2e7b`](https://github.com/thirdweb-dev/js/commit/212b2e7bc28c8e88207a9935756f7e6133a5b7d3) Thanks [@MananTank](https://github.com/MananTank)! - - Change ConnectWallet Details dropdown to a Modal with a few UI improvements.
+
+  - Because of this the `dropdownPosition` prop has been removed from `ConnectWallet` component
+  - The "Request Testnet funds" button is now hidden by default in the new Modal UI.
+
+    - You can add it back by setting `hideTestnetFaucet` to `false` in the `ConnectWallet` component.
+
+### Patch Changes
+
+- [#2209](https://github.com/thirdweb-dev/js/pull/2209) [`f29f91d7`](https://github.com/thirdweb-dev/js/commit/f29f91d7e0837b2084d7257288e80ef2cbc70942) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show specific error message for embedded wallet limits reached
+
+- Updated dependencies [[`3f2ee85a`](https://github.com/thirdweb-dev/js/commit/3f2ee85a1ab70e74aefe7f458379a2ccaf4058a9), [`ba978f55`](https://github.com/thirdweb-dev/js/commit/ba978f55b0c6a7458801a7c02f28db3266718e14)]:
+  - @thirdweb-dev/chains@0.1.65
+  - @thirdweb-dev/react-core@4.4.0
+  - @thirdweb-dev/sdk@4.0.28
+  - @thirdweb-dev/wallets@2.4.3
+
+## 4.3.2
+
+### Patch Changes
+
+- [#1884](https://github.com/thirdweb-dev/js/pull/1884) [`89641e33`](https://github.com/thirdweb-dev/js/commit/89641e33784ff74c32fcbb51db72b67065ba85cb) Thanks [@tommaay](https://github.com/tommaay)! - Add prop `switchNetworkBtnTitle` to `ConnectWallet` and `Web3Button` components to allow changing the "Switch Network" label on the button which is displayed when user needs to switch the network in the connected wallet.
+
+  ```tsx
+  <ConnectWallet switchNetworkBtnTitle="Switch Chain" />
+  ```
+
+  ```tsx
+  <Web3Button
+    switchNetworkBtnTitle="Switch Chain"
+    contractAddress="0x..."
+    action={someAction}
+  />
+  ```
+
+- [#2193](https://github.com/thirdweb-dev/js/pull/2193) [`0efd0f9d`](https://github.com/thirdweb-dev/js/commit/0efd0f9d2626d1cb8d7a49f26b9beaa4c27bca15) Thanks [@MananTank](https://github.com/MananTank)! - add `useSetWalletModalConfig` hook to customize the ConnectWallet Modal to programmatically open the modal without using the `ConnectWallet` component along with `useSetIsWalletModalOpen`
+
+  ```tsx
+  import {
+    useSetWalletModalConfig,
+    useSetIsWalletModalOpen,
+  } from "@thirdweb-dev/react";
+
+  function Example() {
+    const setWalletModalConfig = useSetWalletModalConfig();
+    const setIsWalletModalOpen = useSetIsWalletModalOpen();
+
+    return (
+      <button
+        onClick={() => {
+          // customize the modal
+          setWalletModalConfig({
+            modalSize: "wide",
+            theme: "light",
+          });
+          // open the modal
+          setIsWalletModalOpen(true);
+        }}
+      >
+        open connect modal
+      </button>
+    );
+  }
+  ```
+
+- [#2177](https://github.com/thirdweb-dev/js/pull/2177) [`e11e645c`](https://github.com/thirdweb-dev/js/commit/e11e645c7407a37545e78bbf8976ecc31e40bee7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fuse.js from 6.6.2 to 7.0.0
+
+- Updated dependencies [[`9a23de2b`](https://github.com/thirdweb-dev/js/commit/9a23de2be0c47a7a3702d65041ff654159d8e264), [`e21f7bb1`](https://github.com/thirdweb-dev/js/commit/e21f7bb171334fa3003c954060e60c1ce8c1228f)]:
+  - @thirdweb-dev/sdk@4.0.27
+  - @thirdweb-dev/chains@0.1.64
+  - @thirdweb-dev/react-core@4.3.2
+  - @thirdweb-dev/wallets@2.4.2
+
+## 4.3.1
+
+### Patch Changes
+
+- [#2169](https://github.com/thirdweb-dev/js/pull/2169) [`e249a568`](https://github.com/thirdweb-dev/js/commit/e249a56892f04df1313b5cbd40d21a0bd5ac5f4e) Thanks [@MananTank](https://github.com/MananTank)! - Add `onConnect` prop to `ConnectWallet` and `ConnectEmbed` components.
+
+  ```tsx
+  <ConnectWallet
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={() => {
+      console.log("connected");
+    }}
+  />
+  ```
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.3.1
+
+## 4.3.0
+
+### Minor Changes
+
+- [#2055](https://github.com/thirdweb-dev/js/pull/2055) [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc) Thanks [@MananTank](https://github.com/MananTank)! - ### New `ConnectEmbed` component and `useShowConnectEmbed` hook
+
+  - Add `ConnectEmbed` component and `useShowConnectEmbed` hook allow embedding the `ConnectWallet`'s Modal directly into the page.
+  - `useShowConnectEmbed` returns `true` if the `<ConnectEmbed />`should be rendered. It returns`true` if either one of the following conditions are met:
+
+    - Wallet is NOT connected
+    - Wallet IS connected but the user is NOT signed in and `auth` is required ( loginOptional is NOT set to false )
+
+    ```tsx
+    function Example() {
+      const loginOptional = false;
+      const showConnectEmbed = useShowConnectEmbed(loginOptional);
+
+      if (!showConnectEmbed) {
+        return <div> Wallet is connected </div>;
+      }
+
+      return (
+        <ConnectEmbed
+          auth={{
+            loginOptional,
+          }}
+        />
+      );
+    }
+    ```
+
+  ### `ConnectWallet` component changes
+
+  - Fix double connection issue when Connecting a Safe / Smart Wallet. Now the personal wallet will not be set as the active wallet - only the final wallet will be set as the active wallet. This fixes the issue of hooks like `useWallet`, `useAddress`, `useConnectionStatus` etc showing the wrong wallet / address / connection status for a brief moment when connecting a Safe / Smart Wallet.
+  - Add "Disconnect Wallet" button in "Sign in" Screen and don't disconnect wallet when the "Sign in" screen is dismissed by closing the modal. This makes this screen reusable for both `ConnectWallet` and `ConnectEmbed` components and also improves the user experience.
+
+  ### API changed for creating wallet configurator
+
+  _This is only relevant if you are creating your own wallet configurator - If you are using the wallet configurators provided by thirdweb such as `metamaskWallet()`, `coinbaseWallet()` etc - This API change does not affect you_
+
+  To Fix the above mentioned "double connection" issue in the `ConnectWallet` component, We have introduce a few changes to how the wallet configurator should be created.
+
+  Do not use any wallet connection hooks in the wallet configurator. Only use the `props` passed in the `connectUI` and `selectUI`. The wallet configurator's `connectUI` and `selectUI` now gets below mentioned additional props so that you can avoid using the wallet connection hooks
+
+  - `props.connect` - replaces the `useConnect` hook usage
+  - `props.connectionStatus` - replaces the `useConnectionStatus` hook usage
+  - `props.setConnectionStatus` - replaces the `useSetConnectionStatus` hook usage
+  - `props.setConnectedWallet` - replaces the `useSetConnectedWallet` hook usage
+  - `props.createWalletInstance` - replaces the `useCreateWalletInstance` hook usage
+  - `props.connectedWalletAddress` - replaces the `useAddress` hook usage
+
+  #### Example
+
+  ```tsx
+  import { WalletConfig } from "@thirdweb-dev/react";
+  import { MyCustomWallet } from "./MyCustomWallet"; // your custom wallet class
+
+  // your custom wallet configurator
+  function myCustomWallet(): WalletConfig<MyCustomWallet> {
+    return {
+      id: "MyCustomWallet",
+      meta: {
+        name: "FooBar",
+        iconURL: "https://link-to-the-wallet-icon.png",
+      },
+      create(walletOptions) {
+        return new MyCustomWallet(walletOptions);
+      },
+      // only use the props passed in the connectUI and selectUI
+      // do not use any wallet connection hooks that read or write to the wallet connection state
+      connectUI(props) {
+        // const connect = useConnect(); -> old
+        const connect = props.connect; // new
+
+        return <div> .... </div>;
+      },
+      selectUI(props) {
+        return <div> .... </div>;
+      },
+    };
+  }
+  ```
+
+### Patch Changes
+
+- [#1964](https://github.com/thirdweb-dev/js/pull/1964) [`5d567008`](https://github.com/thirdweb-dev/js/commit/5d56700866d5ea2589e415542f261a76f2e913c9) Thanks [@warengonzaga](https://github.com/warengonzaga)! - Add Filipino language to React and React Native SDK
+
+- [#2138](https://github.com/thirdweb-dev/js/pull/2138) [`6047d67d`](https://github.com/thirdweb-dev/js/commit/6047d67daa5d48e6521b4d71b0c1687742ba7d01) Thanks [@MananTank](https://github.com/MananTank)! - Enforce react-hooks/exhaustive-deps lint rule
+
+- Updated dependencies [[`90a2f2d4`](https://github.com/thirdweb-dev/js/commit/90a2f2d435df796fa9cee4e78d540ecfa10d9166), [`e1001689`](https://github.com/thirdweb-dev/js/commit/e1001689794b25618a82d3469c0098b88f593c76), [`d3637a16`](https://github.com/thirdweb-dev/js/commit/d3637a160d088dde6e35dc213ee611b73b831c3f), [`27c00ef7`](https://github.com/thirdweb-dev/js/commit/27c00ef779fd6386b529598a65346bdd1d6ecc70), [`30f16cac`](https://github.com/thirdweb-dev/js/commit/30f16cac6d3c2b736c51b84f2b978537d8bfb8d1), [`0f9b88ab`](https://github.com/thirdweb-dev/js/commit/0f9b88ab68402ad6c1e596595db08effa540dabc), [`eb6544ff`](https://github.com/thirdweb-dev/js/commit/eb6544ffc88385dafd20eabd6cd00ba2b8ba73d3), [`756d5cc9`](https://github.com/thirdweb-dev/js/commit/756d5cc96080964710fafaf2b16ce51124f57808)]:
+  - @thirdweb-dev/wallets@2.4.1
+  - @thirdweb-dev/react-core@4.3.0
+  - @thirdweb-dev/chains@0.1.63
+  - @thirdweb-dev/sdk@4.0.26
+  - @thirdweb-dev/payments@1.0.2
+
+## 4.2.3
+
+### Patch Changes
+
+- [#2122](https://github.com/thirdweb-dev/js/pull/2122) [`0ff90b8f`](https://github.com/thirdweb-dev/js/commit/0ff90b8fba1a0f657d5727fa1a7789bd933a0ad6) Thanks [@b-bot](https://github.com/b-bot)! - Add `hideDisconnect` prop on `ConnectWallet` component to hide the "Disconnect Wallet" option from the ConnectWallet dropdown
+
+  ```tsx
+  <ConnectWallet hideDisconnect={true} />
+  ```
+
+- Updated dependencies [[`b3cf65b9`](https://github.com/thirdweb-dev/js/commit/b3cf65b9dbdab22a452d2c597d21a14300b2d174), [`22571ba0`](https://github.com/thirdweb-dev/js/commit/22571ba0a9bd238f9ee16f548bc17ccad2e7ad1f), [`e66e9066`](https://github.com/thirdweb-dev/js/commit/e66e906650e04a63e084bc869a62681bd956e0bb)]:
+  - @thirdweb-dev/payments@1.0.2
+  - @thirdweb-dev/wallets@2.4.0
+  - @thirdweb-dev/react-core@4.2.3
+
+## 4.2.2
+
+### Patch Changes
+
+- [#2119](https://github.com/thirdweb-dev/js/pull/2119) [`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc) Thanks [@MananTank](https://github.com/MananTank)! - Update Links to Docs website
+
+- Updated dependencies [[`cf606665`](https://github.com/thirdweb-dev/js/commit/cf606665fcfdad7b08259350d39b60313278a8dc)]:
+  - @thirdweb-dev/react-core@4.2.2
+  - @thirdweb-dev/wallets@2.3.4
+  - @thirdweb-dev/sdk@4.0.25
+
+## 4.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`d00ca7fd`](https://github.com/thirdweb-dev/js/commit/d00ca7fd2a0fa3e694bb37d1f486d3d4cf1ad79e)]:
+  - @thirdweb-dev/payments@1.0.1
+  - @thirdweb-dev/react-core@4.2.1
+
+## 4.2.0
+
+### Minor Changes
+
+- [#1913](https://github.com/thirdweb-dev/js/pull/1913) [`ed3afd41`](https://github.com/thirdweb-dev/js/commit/ed3afd418cb6e0d711814a1c52afb302460751ba) Thanks [@IDubuque](https://github.com/IDubuque)! - Migrated `@paperxyz/react-client-sdk` into `@thirdweb-dev/react` to provide checkout components under the thirdweb react sdk. The `@paperxyz/react-client-sdk` package will be continued within the `@thirdweb-dev/react` package, aligning with the new branding and expanded capabilities under thirdweb. It inherits the core functionality and components of Paper's developer-first NFT checkout solution.
+
+  ### Added
+
+  - Integrated the `@paper-xyz/react-client-sdk` components into `@thirdweb-dev/react`. This update brings all the Paper.xyz React components into the thirdweb ecosystem, providing a seamless developer experience for building NFT-powered applications.
+  - New components from Paper.xyz for NFT checkouts, enhancing the existing thirdweb SDK capabilities.
+
+### Patch Changes
+
+- Updated dependencies [[`b808e942`](https://github.com/thirdweb-dev/js/commit/b808e942fdaa81b5de61dcb3f2083081cb99ea11), [`e46dd025`](https://github.com/thirdweb-dev/js/commit/e46dd0254f157c3c4d50fe3e4f44e2e24eaf34a8), [`ed3afd41`](https://github.com/thirdweb-dev/js/commit/ed3afd418cb6e0d711814a1c52afb302460751ba)]:
+  - @thirdweb-dev/sdk@4.0.24
+  - @thirdweb-dev/wallets@2.3.3
+  - @thirdweb-dev/payments@1.0.0
+  - @thirdweb-dev/react-core@4.2.0
+
+## 4.1.17
+
+### Patch Changes
+
+- [#2084](https://github.com/thirdweb-dev/js/pull/2084) [`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc comments Improvements
+
+- Updated dependencies [[`c410a1c1`](https://github.com/thirdweb-dev/js/commit/c410a1c18a704d118555215db9ba7d92c3b24d8c), [`fed1313a`](https://github.com/thirdweb-dev/js/commit/fed1313a199011a9b52d7c5e11ad6e72fc969002), [`f369bffe`](https://github.com/thirdweb-dev/js/commit/f369bffe5a30e2e8a9df2ac62f24f93f96324186), [`81c46e22`](https://github.com/thirdweb-dev/js/commit/81c46e22984cdb5b33b2e6eb99a0ebf0e4fbdb33), [`23db97cc`](https://github.com/thirdweb-dev/js/commit/23db97cca51211df82d430fbfff4bbfbd7d4dc38)]:
+  - @thirdweb-dev/react-core@4.1.17
+  - @thirdweb-dev/wallets@2.3.2
+  - @thirdweb-dev/chains@0.1.62
+  - @thirdweb-dev/sdk@4.0.23
+
+## 4.1.16
+
+### Patch Changes
+
+- Updated dependencies [[`c701c388`](https://github.com/thirdweb-dev/js/commit/c701c388c65a1e531b88991d8fd67d25f153992e), [`699f31c2`](https://github.com/thirdweb-dev/js/commit/699f31c20a76cd284dbed1629c4a19d93aca7b7f)]:
+  - @thirdweb-dev/sdk@4.0.22
+  - @thirdweb-dev/react-core@4.1.16
+  - @thirdweb-dev/wallets@2.3.1
+
+## 4.1.15
+
+### Patch Changes
+
+- Updated dependencies [[`33c9f6b1`](https://github.com/thirdweb-dev/js/commit/33c9f6b1ab3e65187b2c49c083412d39a1334bba), [`de5ebc90`](https://github.com/thirdweb-dev/js/commit/de5ebc9093aaf5fc08bc0d2d414138b520fe17fe), [`e10173bf`](https://github.com/thirdweb-dev/js/commit/e10173bf8aeaaabdb45231109b4da0c52c91b9da), [`09bafa9a`](https://github.com/thirdweb-dev/js/commit/09bafa9aebadb01641214747148c67d0b39c1275)]:
+  - @thirdweb-dev/wallets@2.3.0
+  - @thirdweb-dev/react-core@4.1.15
+
+## 4.1.14
+
+### Patch Changes
+
+- Updated dependencies [[`bcfa9463`](https://github.com/thirdweb-dev/js/commit/bcfa9463bbae6bf1d3b6389b7a141f65ef3e1173)]:
+  - @thirdweb-dev/sdk@4.0.21
+  - @thirdweb-dev/react-core@4.1.14
+  - @thirdweb-dev/wallets@2.2.1
+
+## 4.1.13
+
+### Patch Changes
+
+- [#2029](https://github.com/thirdweb-dev/js/pull/2029) [`b50e4a41`](https://github.com/thirdweb-dev/js/commit/b50e4a41b560eb647fec1224d6b6782be7132034) Thanks [@MananTank](https://github.com/MananTank)! - Connect to MetaMask on mobile device using WalletConnect instead of opening the web app in MetaMask browser by default
+
+  This behavior can be changed by setting `connectionMethod` option to `metamaskWallet`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "walletConnect", // default
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  this is same as not setting `connectionMethod` option:
+
+  ```tsx
+  <ThirdwebProvider supportedWallets={[metamaskWallet()]}>
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  If you want to revert to old behavior of opening the web app in Metamask browser, set `connectionMethod` to `metamaskBrowser`
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        connectionMethod: "metamaskBrowser",
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+- [#2063](https://github.com/thirdweb-dev/js/pull/2063) [`c8ba5cf8`](https://github.com/thirdweb-dev/js/commit/c8ba5cf863b7b2a92e0cb2c50776511782d4e2b6) Thanks [@MananTank](https://github.com/MananTank)! - - Add option to only show the Official WalletConnect Modal for `walletConnect` in ConnectWallet Modal
+
+  ```ts
+  walletConnect({
+    qrModal: "walletConnect", // hide the ConnectWallet Modal and only show the WalletConnect Modal
+  });
+  ```
+
+  If no, `qrModal` is set, it defaults to `"custom"` as shown below:
+
+  ```ts
+  walletConnect({
+    qrModal: "custom", // render QR code in ConnectWallet Modal
+  });
+  ```
+
+  - Stop Focus trapping the ConnectWallet Modal when it is rendered but hidden
+
+- [#2058](https://github.com/thirdweb-dev/js/pull/2058) [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d) Thanks [@MananTank](https://github.com/MananTank)! - Add option to open the official wallet connect modal in ConnectWallet
+
+- Updated dependencies [[`d2001ca4`](https://github.com/thirdweb-dev/js/commit/d2001ca464aa699ac821c97eb37de7409ba865f3), [`85842c15`](https://github.com/thirdweb-dev/js/commit/85842c1596c901e228be1894b6702a8871d9e794), [`e595d4d9`](https://github.com/thirdweb-dev/js/commit/e595d4d92f03e36cbe61e1f00a366e37ede5d814), [`497677f3`](https://github.com/thirdweb-dev/js/commit/497677f3596977fa90ebc0fa76cb5842d46d8dcf), [`94966069`](https://github.com/thirdweb-dev/js/commit/9496606964d65268f8ee6bf9f78b2786e99d33ac), [`15ae5e7f`](https://github.com/thirdweb-dev/js/commit/15ae5e7f95a482a9736923c0e10916a0a6115c3d)]:
+  - @thirdweb-dev/chains@0.1.61
+  - @thirdweb-dev/sdk@4.0.20
+  - @thirdweb-dev/wallets@2.2.0
+  - @thirdweb-dev/react-core@4.1.13
+
+## 4.1.12
+
+### Patch Changes
+
+- [#1842](https://github.com/thirdweb-dev/js/pull/1842) [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56) Thanks [@MananTank](https://github.com/MananTank)! - JSDoc improvements
+
+- [#2045](https://github.com/thirdweb-dev/js/pull/2045) [`a135857c`](https://github.com/thirdweb-dev/js/commit/a135857c7ad73e1a508298858eb0f5fd744ec176) Thanks [@MananTank](https://github.com/MananTank)! - Fix type EmbeddedWalletConfigOptions
+
+- [#1938](https://github.com/thirdweb-dev/js/pull/1938) [`4ae1cd63`](https://github.com/thirdweb-dev/js/commit/4ae1cd63bb7b471cae48a27bf6554c4953c1dc82) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add OneKey wallet
+
+- [#2042](https://github.com/thirdweb-dev/js/pull/2042) [`61c62b3f`](https://github.com/thirdweb-dev/js/commit/61c62b3f07a082ffd7620c949e3bcc6b75c104b5) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and Type exports
+
+- Updated dependencies [[`cfe81b44`](https://github.com/thirdweb-dev/js/commit/cfe81b443205d84e58128b8d7d5f2dc940b12875), [`34546c24`](https://github.com/thirdweb-dev/js/commit/34546c24c74f4e9e1f5e94567ebe1017ad63aea5), [`72c0bb10`](https://github.com/thirdweb-dev/js/commit/72c0bb10d6d765d1679b2b22ac63d85db101b5c4), [`ca618ea0`](https://github.com/thirdweb-dev/js/commit/ca618ea0c9ac5dc4f65cbfbfd39360e4150c72c7), [`aefc4cda`](https://github.com/thirdweb-dev/js/commit/aefc4cda4c4fad81411d3a9485931e28100b5718), [`a36c7e83`](https://github.com/thirdweb-dev/js/commit/a36c7e8331744879a169f84e97b66abf0ab44f56), [`4ae1cd63`](https://github.com/thirdweb-dev/js/commit/4ae1cd63bb7b471cae48a27bf6554c4953c1dc82), [`61c62b3f`](https://github.com/thirdweb-dev/js/commit/61c62b3f07a082ffd7620c949e3bcc6b75c104b5), [`7bb054e4`](https://github.com/thirdweb-dev/js/commit/7bb054e45c75450c8f465809d23eb66371f6ef8e), [`cd87be4a`](https://github.com/thirdweb-dev/js/commit/cd87be4a24a9a3a552fbc4f33da6fcb08b7da88b), [`d20e7898`](https://github.com/thirdweb-dev/js/commit/d20e7898562a3914841522f2e09f88ca37dfdd4b)]:
+  - @thirdweb-dev/sdk@4.0.19
+  - @thirdweb-dev/react-core@4.1.12
+  - @thirdweb-dev/wallets@2.1.11
+
+## 4.1.11
+
+### Patch Changes
+
+- [#1926](https://github.com/thirdweb-dev/js/pull/1926) [`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Rabby browser extension
+
+- [#2031](https://github.com/thirdweb-dev/js/pull/2031) [`fdf19b0a`](https://github.com/thirdweb-dev/js/commit/fdf19b0a26be0404ddf5424f26d96719de849627) Thanks [@MananTank](https://github.com/MananTank)! - Do not swallow errors in useEmbeddedWallet().connect
+
+- [#1997](https://github.com/thirdweb-dev/js/pull/1997) [`50749662`](https://github.com/thirdweb-dev/js/commit/507496627bcd77b49bb027b24996a31c57e04819) Thanks [@MananTank](https://github.com/MananTank)! - - Fixes issue #1708
+
+  - Fixes smart wallet icon shown even after clicking on "Switch to Personal wallet" in ConnectWallet dropdown
+
+- [#1987](https://github.com/thirdweb-dev/js/pull/1987) [`b3394277`](https://github.com/thirdweb-dev/js/commit/b3394277c77e4af130151111e056e27a28ac893a) Thanks [@MananTank](https://github.com/MananTank)! - Improved JSDoc comments and type exports
+
+- [#1928](https://github.com/thirdweb-dev/js/pull/1928) [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Crypto.com Defi wallet
+
+- Updated dependencies [[`e79b2935`](https://github.com/thirdweb-dev/js/commit/e79b293562bbcf4af6fbcb4829b2acb4cb3e2cb4), [`8c2d4e5e`](https://github.com/thirdweb-dev/js/commit/8c2d4e5ea7c38b3efa4d8d94c9822a92d271e59b), [`b0ecfd2d`](https://github.com/thirdweb-dev/js/commit/b0ecfd2d8d5cda33dc8f5ea2d20119cb901a0bcb), [`a27b10c5`](https://github.com/thirdweb-dev/js/commit/a27b10c5c3400500ef0138069acc550b3a07ffc6), [`d28097f5`](https://github.com/thirdweb-dev/js/commit/d28097f508739cdbd6625e09c2ed0fe25a922c0f), [`94559129`](https://github.com/thirdweb-dev/js/commit/9455912932c71f3ef9b67461bf5604f1ea1f71e8), [`b8332500`](https://github.com/thirdweb-dev/js/commit/b833250053320c8608109053f5cffe2dc96ce70a), [`8bf3be88`](https://github.com/thirdweb-dev/js/commit/8bf3be88be051178a7142618c4371d2f2ef26271), [`b02fb91a`](https://github.com/thirdweb-dev/js/commit/b02fb91a548a3f66f7677ced24be9397e0f9a7ba), [`2861dff1`](https://github.com/thirdweb-dev/js/commit/2861dff1f013b5150314fdaccaeadddbcf0d21c9), [`61b6a002`](https://github.com/thirdweb-dev/js/commit/61b6a00214716454222e67fe5fdb47edba391070), [`28fc3736`](https://github.com/thirdweb-dev/js/commit/28fc3736aa30c89690084aa2c62556c183796352), [`50749662`](https://github.com/thirdweb-dev/js/commit/507496627bcd77b49bb027b24996a31c57e04819), [`b3394277`](https://github.com/thirdweb-dev/js/commit/b3394277c77e4af130151111e056e27a28ac893a), [`06805217`](https://github.com/thirdweb-dev/js/commit/06805217c26de203a57c21246acba22def8a78fa), [`2b4f1c8e`](https://github.com/thirdweb-dev/js/commit/2b4f1c8e55de091100fb5279887bcb19ea31d38c), [`4c488aa3`](https://github.com/thirdweb-dev/js/commit/4c488aa31f6fadc13759ff60f30230b929feb314)]:
+  - @thirdweb-dev/react-core@4.1.11
+  - @thirdweb-dev/wallets@2.1.10
+  - @thirdweb-dev/sdk@4.0.18
+  - @thirdweb-dev/chains@0.1.60
+
+## 4.1.10
+
+### Patch Changes
+
+- [#1996](https://github.com/thirdweb-dev/js/pull/1996) [`4bb8f5b1`](https://github.com/thirdweb-dev/js/commit/4bb8f5b15e58de39c5edccc7476da3e4907d7688) Thanks [@MananTank](https://github.com/MananTank)! - Revert commit fb0cb676b996fe386dcc53b5a6dab03f88e76175
+
+- [#1994](https://github.com/thirdweb-dev/js/pull/1994) [`68288436`](https://github.com/thirdweb-dev/js/commit/68288436acd62256be561395743762965888449d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove `overrides` props from Web3ButtonProps
+
+- Updated dependencies [[`4bb8f5b1`](https://github.com/thirdweb-dev/js/commit/4bb8f5b15e58de39c5edccc7476da3e4907d7688), [`47b0ed51`](https://github.com/thirdweb-dev/js/commit/47b0ed5171be5608ae23c19481a1b04948443c6a), [`d4ce855e`](https://github.com/thirdweb-dev/js/commit/d4ce855e5f5e6c4206a3efa250e92e690ae87281), [`b5bbe2bd`](https://github.com/thirdweb-dev/js/commit/b5bbe2bd438179c38451bc2cfa20a54fc79e4f3a)]:
+  - @thirdweb-dev/react-core@4.1.10
+  - @thirdweb-dev/chains@0.1.59
+  - @thirdweb-dev/wallets@2.1.9
+  - @thirdweb-dev/sdk@4.0.17
+
+## 4.1.9
+
+### Patch Changes
+
+- [#1952](https://github.com/thirdweb-dev/js/pull/1952) [`fb0cb676`](https://github.com/thirdweb-dev/js/commit/fb0cb676b996fe386dcc53b5a6dab03f88e76175) Thanks [@MananTank](https://github.com/MananTank)! - - Add `ConnectEmbed`` component to embed the ConnectWallet's Modal UI directly in page
+
+  - Fix `ConnectWallet` component setting personal wallet as "connected" wallet when connecting a Safe / Smart Wallet
+
+- [#1921](https://github.com/thirdweb-dev/js/pull/1921) [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Coin98 wallet
+
+- Updated dependencies [[`fb0cb676`](https://github.com/thirdweb-dev/js/commit/fb0cb676b996fe386dcc53b5a6dab03f88e76175), [`1094a03a`](https://github.com/thirdweb-dev/js/commit/1094a03a04f3e7ade84af0f7a6073794c0904cb1), [`7c45941b`](https://github.com/thirdweb-dev/js/commit/7c45941b57fb5a6f83be507ee64dbf885d93c9d4), [`12d85dec`](https://github.com/thirdweb-dev/js/commit/12d85dec10f47d6520b737a23576e4f832abb47f)]:
+  - @thirdweb-dev/react-core@4.1.9
+  - @thirdweb-dev/wallets@2.1.8
+  - @thirdweb-dev/sdk@4.0.16
+
+## 4.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`6832b19f`](https://github.com/thirdweb-dev/js/commit/6832b19fc5eedc7c17e69940a361840de0a84881), [`7abb36a7`](https://github.com/thirdweb-dev/js/commit/7abb36a7ec39766dd7da03015ccef401ef7a7863), [`1c4cbedb`](https://github.com/thirdweb-dev/js/commit/1c4cbedb6a3c9f9014ffbf83c02b998768958d96), [`e43beec3`](https://github.com/thirdweb-dev/js/commit/e43beec36a569211b6fe708107aa7dc04bff08ec)]:
+  - @thirdweb-dev/wallets@2.1.7
+  - @thirdweb-dev/sdk@4.0.15
+  - @thirdweb-dev/react-core@4.1.8
+
+## 4.1.7
+
+### Patch Changes
+
+- [#1969](https://github.com/thirdweb-dev/js/pull/1969) [`4c5e40ae`](https://github.com/thirdweb-dev/js/commit/4c5e40ae4eccdca9158a52ec0d677dec4c72ed00) Thanks [@MananTank](https://github.com/MananTank)! - Fix text alignment issue in embedded-wallet/paper
+
+- [#1965](https://github.com/thirdweb-dev/js/pull/1965) [`13029e32`](https://github.com/thirdweb-dev/js/commit/13029e328609eecfd3f0a180d6003c03c67caac1) Thanks [@MananTank](https://github.com/MananTank)! - - Fix Minor Safari / iOS UI issues
+
+  - Adjust Magic Link's social icons UI to match EmbeddedWallet's social icons UI
+  - expose hook `useEmbeddedWalletUserEmail` for fetching email from connected embeddedWallet. The hook returns the `react-query` query object. See example below:
+
+  ```tsx
+  const emailQuery = useEmbeddedWalletUserEmail();
+
+  const email = emailQuery.data;
+  const isFetchingEmail = emailQuery.isFetching;
+  ```
+
+- Updated dependencies [[`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4), [`ab2dfd4f`](https://github.com/thirdweb-dev/js/commit/ab2dfd4f5cf4256fa62d76f84ca804992afab1e4)]:
+  - @thirdweb-dev/sdk@4.0.14
+  - @thirdweb-dev/wallets@2.1.6
+  - @thirdweb-dev/react-core@4.1.7
+
+## 4.1.6
+
+### Patch Changes
+
+- [#1954](https://github.com/thirdweb-dev/js/pull/1954) [`7912c263`](https://github.com/thirdweb-dev/js/commit/7912c263237708e9d2e9471873db7679e783b6f8) Thanks [@MananTank](https://github.com/MananTank)! - use Custom Theme context in styled components to prevent theme conflicts
+
+- [#1945](https://github.com/thirdweb-dev/js/pull/1945) [`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091) Thanks [@iketw](https://github.com/iketw)! - Enable Facebook Sign In for embedded wallet
+
+- Updated dependencies [[`69d68f5a`](https://github.com/thirdweb-dev/js/commit/69d68f5a25877bf5ea694719d2cf4ca8388f3091)]:
+  - @thirdweb-dev/wallets@2.1.5
+  - @thirdweb-dev/react-core@4.1.6
+
+## 4.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`9f993dcc`](https://github.com/thirdweb-dev/js/commit/9f993dcc1e60cc087850b8fb9ce09524073ce0b5)]:
+  - @thirdweb-dev/wallets@2.1.4
+  - @thirdweb-dev/react-core@4.1.5
+
+## 4.1.4
+
+### Patch Changes
+
+- [#1944](https://github.com/thirdweb-dev/js/pull/1944) [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1948](https://github.com/thirdweb-dev/js/pull/1948) [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6) Thanks [@iketw](https://github.com/iketw)! - Deprecates PaperWallet in favor of EmbeddedWallet
+
+- Updated dependencies [[`23ab897e`](https://github.com/thirdweb-dev/js/commit/23ab897e329cdd5b316fbe554ea0f64add91f2b4), [`a3f3e160`](https://github.com/thirdweb-dev/js/commit/a3f3e160e07328655a4f0332f41f4edd210a1a8a), [`e79a9520`](https://github.com/thirdweb-dev/js/commit/e79a95206116ea09de0126fdbe30fb4413fdff28), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`42c74368`](https://github.com/thirdweb-dev/js/commit/42c743682739de77c264c11cc1692ed752f929a6), [`6fcdec7c`](https://github.com/thirdweb-dev/js/commit/6fcdec7c12e4a3c0d10f3a67771e19cfad5c8ab5), [`480ed721`](https://github.com/thirdweb-dev/js/commit/480ed721d1c736049fa8b6ee4cbdbdf3cce18abd), [`16e9e8b6`](https://github.com/thirdweb-dev/js/commit/16e9e8b64d7d1a97a5b32fc855479e992b7ed3a8), [`b1190914`](https://github.com/thirdweb-dev/js/commit/b1190914a97a9c4d9019c4ce8ee49ad345aed18c)]:
+  - @thirdweb-dev/sdk@4.0.13
+  - @thirdweb-dev/react-core@4.1.4
+  - @thirdweb-dev/wallets@2.1.3
+
+## 4.1.3
+
+### Patch Changes
+
+- [#1943](https://github.com/thirdweb-dev/js/pull/1943) [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3) Thanks [@iketw](https://github.com/iketw)! - Adds tsdoc warnings to enforce a common comments format
+
+- [#1929](https://github.com/thirdweb-dev/js/pull/1929) [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7) Thanks [@iketw](https://github.com/iketw)! - Move addresses' utils to the core package
+
+- [#1920](https://github.com/thirdweb-dev/js/pull/1920) [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat: add apple auth to embedded wallet
+
+  ```
+  <ThirdwebProvider
+    supportedWallets={[
+      embeddedWallet({
+        auth: {
+          options: ["google", "email", "apple"], // <- new apple option!
+        }
+      })
+    ]}
+  >
+  ```
+
+- Updated dependencies [[`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b), [`a81a5285`](https://github.com/thirdweb-dev/js/commit/a81a5285b7ef4ddf47fd2779ab80ebbef4bd9e0e), [`30ea9c6b`](https://github.com/thirdweb-dev/js/commit/30ea9c6bf74b483a98592a1d8d64589b7f1b22a3), [`06e59cf9`](https://github.com/thirdweb-dev/js/commit/06e59cf91647e4080829d49f8cb91a4d8fdc87f7), [`97fdbc8f`](https://github.com/thirdweb-dev/js/commit/97fdbc8f6443dcd08a7610e4437bd4c9d6b0e8c8), [`3f3a484a`](https://github.com/thirdweb-dev/js/commit/3f3a484a3aa6e9f784e4d44458461bac0d3d4c6b)]:
+  - @thirdweb-dev/wallets@2.1.2
+  - @thirdweb-dev/react-core@4.1.3
+  - @thirdweb-dev/sdk@4.0.12
+
+## 4.1.2
+
+### Patch Changes
+
+- [#1906](https://github.com/thirdweb-dev/js/pull/1906) [`b90d3af5`](https://github.com/thirdweb-dev/js/commit/b90d3af5b8cfb762b38a88d7997879be9b5744bf) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `hideSwitchToPersonalWallet` prop on `ConnectWallet` component to hide the "switch to Personal wallet" option in the ConnectWallet dropdown which is shown when wallet is connected to either Smart Wallet or Safe
+
+  ```tsx
+  <ConnectWallet hideSwitchToPersonalWallet={true} > // default: false
+  ```
+
+- [#1891](https://github.com/thirdweb-dev/js/pull/1891) [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Core wallet (Avalanche)
+
+- [#1847](https://github.com/thirdweb-dev/js/pull/1847) [`c34ac468`](https://github.com/thirdweb-dev/js/commit/c34ac468fbf983a6806cd88828c77eb6d7231e78) Thanks [@MananTank](https://github.com/MananTank)! - Add Localization API to change language used in components `ConnectWallet` and `Web3Button` and/or override the default texts
+
+  ### Japanese
+
+  ```tsx
+  import { ja } from "@thirdweb-dev/react";
+
+  const japanese = ja();
+
+  <ThirdwebProvider locale={japanese}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  ### Spanish
+
+  ```tsx
+  import { es } from "@thirdweb-dev/react";
+
+  const spanish = es();
+
+  <ThirdwebProvider locale={spanish}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  ### English ( default )
+
+  ```tsx
+  import { en } from "@thirdweb-dev/react";
+
+  const english = en();
+
+  <ThirdwebProvider locale={english}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  This API also allows overriding the default texts in the locale object. You can override all the texts or just some parts
+
+  ```tsx
+  import { en } from "@thirdweb-dev/react";
+
+  // override some texts
+  const english = en({
+    connectWallet: {
+      confirmInWallet: "Confirm in your wallet",
+    },
+    wallets: {
+      metamaskWallet: {
+        connectionScreen: {
+          inProgress: "Awaiting Confirmation",
+          instruction: "Accept connection request in your MetaMask wallet",
+        },
+      },
+    },
+  });
+
+  <ThirdwebProvider locale={english}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- Updated dependencies [[`0dcb15b7`](https://github.com/thirdweb-dev/js/commit/0dcb15b7e647acd038b0ec8b1a2b200808aae00e), [`fefeaeef`](https://github.com/thirdweb-dev/js/commit/fefeaeef18f52a75462c43da8b85a77975d32e01), [`20d0f53b`](https://github.com/thirdweb-dev/js/commit/20d0f53b46a2975a0a14ddaa4a377f2f758804db), [`91c2352b`](https://github.com/thirdweb-dev/js/commit/91c2352b03d7cf1c3cbbbc98846f248b0f707ea7)]:
+  - @thirdweb-dev/chains@0.1.58
+  - @thirdweb-dev/sdk@4.0.11
+  - @thirdweb-dev/wallets@2.1.1
+  - @thirdweb-dev/react-core@4.1.2
+
+## 4.1.1
+
+### Patch Changes
+
+- [#1888](https://github.com/thirdweb-dev/js/pull/1888) [`789700cf`](https://github.com/thirdweb-dev/js/commit/789700cf60ac40d4cc2742c8aa735a225089c522) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign in connect button display logic
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.1.1
+
+## 4.1.0
+
+### Minor Changes
+
+- [#1846](https://github.com/thirdweb-dev/js/pull/1846) [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New API to configure authentication options on `embeddedWallet`
+
+  ```ts
+  // default - google sign in is enabled
+  embeddedWallet();
+
+  // this is same as
+  embeddedWallet({
+    auth: {
+      options: ["email", "google"],
+    },
+  });
+
+  // only email
+  embeddedWallet({
+    auth: {
+      options: ["email"],
+    },
+  });
+
+  // only google sign in
+  embeddedWallet({
+    auth: {
+      options: ["google"],
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#1885](https://github.com/thirdweb-dev/js/pull/1885) [`961ef644`](https://github.com/thirdweb-dev/js/commit/961ef644d1b1adaad08c071903cd53aacac50bb4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improved `useSmartWallet()` hook
+
+  Example with metamask:
+
+  ```ts
+  const { connect } = useSmartWallet(metamaskWallet(), {
+    factoryAddress: factoryAddress,
+    gasless: true,
+  });
+
+  const onClick = async () => {
+    // nothing to do here, all handled internally
+    await connect();
+  };
+  ```
+
+  ```ts
+  Example with localWallet:
+
+  const { connect } = useSmartWallet(localWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'load' the local wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              await w.generate();
+              await w.connect();
+          }
+      });
+  }
+  ```
+
+  ```ts
+  Example with embeddedWallet:
+
+  const { connect } = useSmartWallet(embeddedWallet(), {
+      factoryAddress: factoryAddress,
+      gasless: true,
+  });
+
+  const onClick = async () => {
+      // function to 'auth' the embedded wallet before using it
+      await connect({
+          connectPersonalWallet: async (w) => {
+              const authResult = await w.authenticate({ strategy: "google" });
+              await w.connect({ authResult });
+          }
+      });
+  }
+  ```
+
+- [#1886](https://github.com/thirdweb-dev/js/pull/1886) [`6fcd09dd`](https://github.com/thirdweb-dev/js/commit/6fcd09ddbdad2c5e02fad9c3d2c61348ebd987de) Thanks [@edwardysun](https://github.com/edwardysun)! - Fix for user address and active wallet address out of sync
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79), [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a)]:
+  - @thirdweb-dev/sdk@4.0.10
+  - @thirdweb-dev/wallets@2.1.0
+  - @thirdweb-dev/react-core@4.1.0
+
+## 4.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618), [`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4)]:
+  - @thirdweb-dev/chains@0.1.57
+  - @thirdweb-dev/wallets@2.0.10
+  - @thirdweb-dev/react-core@4.0.10
+  - @thirdweb-dev/sdk@4.0.9
+
+## 4.0.9
+
+### Patch Changes
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- Updated dependencies [[`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36), [`4fa09df6`](https://github.com/thirdweb-dev/js/commit/4fa09df6d0ece89e5e6f1c8f9b530a4bd6c266d7), [`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93), [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a), [`4cb6e287`](https://github.com/thirdweb-dev/js/commit/4cb6e287c857e3597ae9f3c92c9c3961ca7a9f4e), [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264), [`5917e626`](https://github.com/thirdweb-dev/js/commit/5917e626b0744af369b67a2e44d9361422a8045d), [`44f258d6`](https://github.com/thirdweb-dev/js/commit/44f258d6bf801b553ca67a5dcebe213a4772e8a1), [`7ff0b4d5`](https://github.com/thirdweb-dev/js/commit/7ff0b4d54715afc86fc72e297a4d8bbe6897e49c), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`042459fe`](https://github.com/thirdweb-dev/js/commit/042459fe3424add527209ac273913b494b5e426c), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4), [`1934ef5f`](https://github.com/thirdweb-dev/js/commit/1934ef5fac339dab2b1fda39f00f5268daa2168a)]:
+  - @thirdweb-dev/sdk@4.0.8
+  - @thirdweb-dev/wallets@2.0.9
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/react-core@4.0.9
+
+## 4.0.8
+
+### Patch Changes
+
+- [#1797](https://github.com/thirdweb-dev/js/pull/1797) [`246b0d4a`](https://github.com/thirdweb-dev/js/commit/246b0d4aace8c785d89bc8f0bd156c96fc53ed10) Thanks [@MananTank](https://github.com/MananTank)! - Fix wrong Icon size of few icons in Firefox in ConnectWallet Modal
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+- [#1815](https://github.com/thirdweb-dev/js/pull/1815) [`5ffbcfc3`](https://github.com/thirdweb-dev/js/commit/5ffbcfc302f74167768b196d93a328f979344036) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Add onAuthSuccess for paperWallet
+
+- [#1826](https://github.com/thirdweb-dev/js/pull/1826) [`2307f11a`](https://github.com/thirdweb-dev/js/commit/2307f11ab311aa4a775edd23e777d10f8015ce86) Thanks [@MananTank](https://github.com/MananTank)! - Add OKX wallet
+
+- Updated dependencies [[`5ffbcfc3`](https://github.com/thirdweb-dev/js/commit/5ffbcfc302f74167768b196d93a328f979344036), [`42ba15f2`](https://github.com/thirdweb-dev/js/commit/42ba15f2c0e77e23e62650119dfaaa5c0dbe4481), [`d27a3dee`](https://github.com/thirdweb-dev/js/commit/d27a3dee8398d5707d2d1343c428abf8e03f67e3), [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522), [`d8d48a95`](https://github.com/thirdweb-dev/js/commit/d8d48a9516fc8fdd173fbb91a858fe7ec0725ddd), [`aa9f48d1`](https://github.com/thirdweb-dev/js/commit/aa9f48d1361194fc81146da530c95a3409bd0799), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`2307f11a`](https://github.com/thirdweb-dev/js/commit/2307f11ab311aa4a775edd23e777d10f8015ce86), [`64138642`](https://github.com/thirdweb-dev/js/commit/64138642e84d8b56b254762eca613d443cca292b), [`6d1eabe9`](https://github.com/thirdweb-dev/js/commit/6d1eabe9f9818ee2a79ce5bf6aa74417dbfd0558)]:
+  - @thirdweb-dev/wallets@2.0.8
+  - @thirdweb-dev/sdk@4.0.7
+  - @thirdweb-dev/react-core@4.0.8
+
+## 4.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64)]:
+  - @thirdweb-dev/chains@0.1.55
+  - @thirdweb-dev/react-core@4.0.7
+  - @thirdweb-dev/sdk@4.0.6
+  - @thirdweb-dev/wallets@2.0.7
+
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553)]:
+  - @thirdweb-dev/sdk@4.0.5
+  - @thirdweb-dev/react-core@4.0.6
+  - @thirdweb-dev/wallets@2.0.6
+
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.4
+  - @thirdweb-dev/wallets@2.0.5
+  - @thirdweb-dev/react-core@4.0.5
+
+## 4.0.4
+
+### Patch Changes
+
+- [#1769](https://github.com/thirdweb-dev/js/pull/1769) [`010955ff`](https://github.com/thirdweb-dev/js/commit/010955ff5cc35a975b54c25992b8e65b40e033a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix OTP input not working well with Japanese keyboard
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/sdk@4.0.3
+  - @thirdweb-dev/wallets@2.0.4
+  - @thirdweb-dev/react-core@4.0.4
+
+## 4.0.3
+
+### Patch Changes
+
+- [#1766](https://github.com/thirdweb-dev/js/pull/1766) [`dd7d0fca`](https://github.com/thirdweb-dev/js/commit/dd7d0fca2d14a529343396a31939d49b1a074d3e) Thanks [@MananTank](https://github.com/MananTank)! - Fix Continue as Guest button missing when Social + Guest login is setup in ConnectWallet Modal
+
+- [#1692](https://github.com/thirdweb-dev/js/pull/1692) [`fb0f12ae`](https://github.com/thirdweb-dev/js/commit/fb0f12ae2835f4eba60ba4a74b453151cab0d393) Thanks [@etnlbck](https://github.com/etnlbck)! - Refactored OTPInput component to be simpler to read
+
+- Updated dependencies [[`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6), [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06), [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223), [`08e9cd20`](https://github.com/thirdweb-dev/js/commit/08e9cd206bcc37cf1e84a878dc78bc4f38e5092c), [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd)]:
+  - @thirdweb-dev/sdk@4.0.2
+  - @thirdweb-dev/react-core@4.0.3
+  - @thirdweb-dev/wallets@2.0.3
+
+## 4.0.2
+
+### Patch Changes
+
+- [#1750](https://github.com/thirdweb-dev/js/pull/1750) [`bb1666b9`](https://github.com/thirdweb-dev/js/commit/bb1666b92b5e151d78ea7dae6831297fb947d954) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI tweaks/fixes
+
+- Updated dependencies [[`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800), [`74941603`](https://github.com/thirdweb-dev/js/commit/74941603a96456da46a47147f67c98235ac55022), [`4b98e487`](https://github.com/thirdweb-dev/js/commit/4b98e487d4b47225d7095e5444dc5e7608db48a3), [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125), [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9), [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606), [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e), [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/sdk@4.0.1
+  - @thirdweb-dev/wallets@2.0.2
+  - @thirdweb-dev/react-core@4.0.2
+
+## 4.0.1
+
+### Patch Changes
+
+- [#1742](https://github.com/thirdweb-dev/js/pull/1742) [`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946) Thanks [@MananTank](https://github.com/MananTank)! - Apply ConnectWallet theme to Google Sign in popup opened from paperWallet, embeddedWallet
+
+- Updated dependencies [[`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946)]:
+  - @thirdweb-dev/wallets@2.0.1
+  - @thirdweb-dev/react-core@4.0.1
+
+## 4.0.0
+
+### Major Changes
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Solana**:
+
+  - We've decided to drop support for Solana across our SDKs.
+  - Starting with this version of our SDKs all previous solana related functionality will be removed.
+  - Previous versions of our SDKs will continue to work with Solana. However, we will not be providing any further updates or bug fixes for Solana.
+  - You can read a detailed explanation of our decision [on our blog](https://blog.thirdweb.com/discontinuing-solana-support/).
+
+### Patch Changes
+
+- [#1645](https://github.com/thirdweb-dev/js/pull/1645) [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71) Thanks [@MananTank](https://github.com/MananTank)! - - Fix the Modal closing and opening again when connecting to wallets like Smart Wallet and Safe ( EOA wrappers )
+  - Prompt for signing directly in the Modal instead of closing the Modal and rendering a "Sign in" Button
+  - Lot of UI improvements
+- Updated dependencies [[`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8), [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71), [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8)]:
+  - @thirdweb-dev/react-core@4.0.0
+  - @thirdweb-dev/wallets@2.0.0
+  - @thirdweb-dev/sdk@4.0.0
+
+## 3.16.5
+
+### Patch Changes
+
+- Updated dependencies [[`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9), [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae), [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48)]:
+  - @thirdweb-dev/sdk@3.10.67
+  - @thirdweb-dev/react-core@3.16.5
+  - @thirdweb-dev/wallets@1.3.5
+
+## 3.16.4
+
+### Patch Changes
+
+- [#1713](https://github.com/thirdweb-dev/js/pull/1713) [`46672a49`](https://github.com/thirdweb-dev/js/commit/46672a490a82924e3c4a003419e3eaad10d6dd8b) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update upsell link
+
+- [#1717](https://github.com/thirdweb-dev/js/pull/1717) [`ffb1bb0a`](https://github.com/thirdweb-dev/js/commit/ffb1bb0a603a69c22eb8b6429326c23a2977e5a6) Thanks [@MananTank](https://github.com/MananTank)! - Add spinner in the Google Sign in popup instead of blank page
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d), [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c), [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/react-core@3.16.4
+  - @thirdweb-dev/sdk@3.10.66
+
+## 3.16.3
+
+### Patch Changes
+
+- [#1707](https://github.com/thirdweb-dev/js/pull/1707) [`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650) Thanks [@MananTank](https://github.com/MananTank)! - Fix Unchecked Index accesses
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/react-core@3.16.3
+
+## 3.16.2
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+  - @thirdweb-dev/react-core@3.16.2
+  - @thirdweb-dev/sdk@3.10.64
+  - @thirdweb-dev/wallets@1.3.2
+
+## 3.16.1
+
+### Patch Changes
+
+- [#1637](https://github.com/thirdweb-dev/js/pull/1637) [`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d) Thanks [@MananTank](https://github.com/MananTank)! - add SignerWallet
+
+- [#1682](https://github.com/thirdweb-dev/js/pull/1682) [`eb9e9f0c`](https://github.com/thirdweb-dev/js/commit/eb9e9f0ce8019570a00660724a9bf669910959b9) Thanks [@MananTank](https://github.com/MananTank)! - - Always show "Connected to Smart Wallet" text in ConnectWallet dropdown but only link to dashboard if it is deployed
+
+  - Show QR code in the Receive funds screen on mobile too
+
+- [#1687](https://github.com/thirdweb-dev/js/pull/1687) [`fd378ec3`](https://github.com/thirdweb-dev/js/commit/fd378ec3e41c17bca6b67ff2969d3591e4e0f047) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI Improvements for OTP screen and other minor UI tweaks
+
+- Updated dependencies [[`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d), [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3), [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19), [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357), [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3), [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b), [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d), [`c085d690`](https://github.com/thirdweb-dev/js/commit/c085d69060c68b3335761bdb2cc0c3e082548702), [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604), [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3)]:
+  - @thirdweb-dev/wallets@1.3.1
+  - @thirdweb-dev/sdk@3.10.63
+  - @thirdweb-dev/react-core@3.16.1
+
+## 3.16.0
+
+### Minor Changes
+
+- [#1618](https://github.com/thirdweb-dev/js/pull/1618) [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54) Thanks [@MananTank](https://github.com/MananTank)! - ## New smartWallet() API (Breaking Change)
+
+  ### Before
+
+  In the previous API, adding a smart wallet created it's own new entry called "Smart wallet" in the ConnectWallet Modal and you had to pass in the personal wallets which was shown to the user when they clicked on the "Smart wallet".
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet({
+        personalWallets: [metamaskWallet(), coinbaseWallet()],
+        factoryAddress: "....",
+        gassless: true,
+      }),
+    ]}
+  />
+  ```
+
+  ### After
+
+  Since most users don't know what a smart wallet is, this was confusing. So with the new API, you can just use smart wallet under the hood for any wallet you want and it will just show up as that wallet and not a "smart wallet" in ConnectWallet Modal to improve the user experience.
+
+  Once the user is connected, the ConnectWallet Details button shows to the user that they are infact connected to a smart wallet.
+
+  ```tsx
+  const config = {
+    factoryAddress: "....",
+    gassless: true,
+  }
+
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet(metamaskWallet(), config),
+      smartWalet(coinbaseWallet(), config),
+    ]}
+  />
+  ```
+
+  ## New Features added to `ConnectWallet` component
+
+  - ENS Name + Avatar support added
+  - New 'Send funds' button added to ConnectWallet which users can use to send various tokens.
+  - New "Receive funds" button added to ConnectWallet which users scan the QR code from their wallet app on phone to send funds to their other wallet on desktop
+  - Added `supportedTokens` prop to customize the list of tokens for each network in for the "Send Funds" screen.
+  - "Transaction history" button added to ConnectWallet which opens the block explorer
+  - New wallet `embededWallet()` to sign in with Google / Email
+  - Ability to show balance of any token instead of just native token in the ConnectWallet details button using the `displayBalanceToken` prop
+
+- [#1622](https://github.com/thirdweb-dev/js/pull/1622) [`4268775f`](https://github.com/thirdweb-dev/js/commit/4268775f9c81d559e19af72887b1f2d1fb893e51) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(react): add `embeddedWallet` wallet type
+
+- [#1598](https://github.com/thirdweb-dev/js/pull/1598) [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(wallets): Add `EmbeddedWallet` and `EmbeddedWalletConnector` to `@thirdweb-dev/wallets` for use in vanilla JS clients
+
+### Patch Changes
+
+- [#1650](https://github.com/thirdweb-dev/js/pull/1650) [`1018eb56`](https://github.com/thirdweb-dev/js/commit/1018eb56a6560d97a2768b1d6d726082cd91a728) Thanks [@MananTank](https://github.com/MananTank)! - - show the first token given to `supportedTokens` as the default selected token in the "Send Funds" screen
+
+  - Show smart wallet icon in "Receive Funds" screen when connected to a smart wallet
+  - only show "Connected to smart wallet" link if the smart wallet is deployed
+
+- [#1653](https://github.com/thirdweb-dev/js/pull/1653) [`bd18e4f5`](https://github.com/thirdweb-dev/js/commit/bd18e4f5ef0378cc141009287d3555b4445081dd) Thanks [@MananTank](https://github.com/MananTank)! - NetworkSelector component UI tweaks
+
+- [#1659](https://github.com/thirdweb-dev/js/pull/1659) [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix(wallets/react): Show recovery modal for `USER_MANAGED` wallets in `paperWallet` implementation
+
+- [#1664](https://github.com/thirdweb-dev/js/pull/1664) [`a9854e69`](https://github.com/thirdweb-dev/js/commit/a9854e69ced6657db758b7b000a5b12580276370) Thanks [@MananTank](https://github.com/MananTank)! - Fix Img component crashing app on invalid URL
+
+- Updated dependencies [[`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`9d553746`](https://github.com/thirdweb-dev/js/commit/9d553746b025ac489f9b8ee357372c9d01c835e1), [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861), [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa), [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439), [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6), [`94bdcc14`](https://github.com/thirdweb-dev/js/commit/94bdcc142a7fe1e9f53273560404fa6b5ac3a7c4), [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628), [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525), [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d), [`def6d400`](https://github.com/thirdweb-dev/js/commit/def6d400ab463bda3118d4c9cb00e5cc25a415c2)]:
+  - @thirdweb-dev/react-core@3.16.0
+  - @thirdweb-dev/chains@0.1.53
+  - @thirdweb-dev/wallets@1.3.0
+  - @thirdweb-dev/sdk@3.10.62
+
+## 3.15.0
+
+### Minor Changes
+
+- [#1550](https://github.com/thirdweb-dev/js/pull/1550) [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e) Thanks [@MananTank](https://github.com/MananTank)! - # New ConnectWallet UI and APIs
+
+  This introduces a new UI for the ConnectWallet modal and some new APIs along with it.
+
+  ### modalSize
+
+  ConnectWallet modal now has two sizes - "wide" and "compact".
+
+  The default is “wide” for desktop. Note that it's always “compact” on mobile device no matter what you pass in.
+
+  ```tsx
+  <ConnectWallet modalSize="wide" />
+  ```
+
+  ```tsx
+  <ConnectWallet modalSize="compact" />
+  ```
+
+  ### New default wallets
+
+  - MetaMask
+  - Coinbase Wallet
+  - WalletConnect
+  - Trust Wallet
+  - Rainbow
+  - Zerion Wallet
+  - Phantom
+
+  ### Theme Customization
+
+  `ConnectWallet`, `Web3Button` and `ThirdwebProvider`'s `theme` prop now also takes an object which you can use to create a custom theme.
+
+  To do this, there are two new functions `darkTheme()` and `lightTheme()` to create this theme object
+
+  ```ts
+  import { darkTheme } from '@thirdweb-dev/react'
+
+  const customDarkTheme = darkTheme({
+    fontFamily: 'Inter, sans-serif',
+    color: {
+      modalBg: 'black',
+      accentText: 'red',
+      // ...etc
+    }
+  })
+
+  <ConnectWallet theme={customDarkTheme} />
+  ```
+
+  ### Show a wallet as “recommended”
+
+  call the wallet configurator function with `{ recommended: true }`
+
+  recommended wallets are shown at the top of the list
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      metamaskWallet({
+        recommended: true,
+      }),
+      coinbaseWalletWallet({
+        recommended: true,
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+  ### Show Terms of Service and/or Privacy policy links
+
+  ```tsx
+  <ConnectWallet
+    termsOfServiceUrl="https://...."
+    privacyPolicyUrl="https://...."
+  />
+  ```
+
+  ### Customize the “Welcome Screen” or Render your own
+
+  The "wide" ConnectWallet modal renders a default welcome screen on the right side which you can customize the texts and image of or completely replace with your own component.
+
+  ```tsx
+  // Customize texts and logo
+
+  <ConnectWallet
+    welcomeScreen={{
+      title: "YOUR TITLE",
+      subtitle: "YOUR SUBTITLE",
+      img: {
+        src: "https://...",
+        width: 300,
+        height: 50,
+      },
+    }}
+  />
+
+  // or render your own component
+
+  <ConnectWallet
+  	welcomeScreen={() => {
+  		return <div> ... </div>
+  	}}
+  />
+  ```
+
+  ### ConnectWallet’s props are exposed to Web3Button as well
+
+  `Web3Button`` renders a `ConnectWallet``component when the user is not connected, now you can customize that`ConnectWallet`by passing props for it via`connectWallet` object
+
+  ```tsx
+  <Web3Button
+    connectWallet={{
+      modalTitle: "Login",
+      modalSize: "compact", // etc..
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#1615](https://github.com/thirdweb-dev/js/pull/1615) [`f5991387`](https://github.com/thirdweb-dev/js/commit/f5991387efad368a268f856f56b8a407340807f4) Thanks [@MananTank](https://github.com/MananTank)! - Code cleanup
+
+- [#1621](https://github.com/thirdweb-dev/js/pull/1621) [`bab39980`](https://github.com/thirdweb-dev/js/commit/bab39980e777be7ec307c2a592bb7966bad1623a) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet minor UI fixes
+
+- Updated dependencies [[`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a), [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/sdk@3.10.61
+  - @thirdweb-dev/wallets@1.2.1
+  - @thirdweb-dev/react-core@3.15.0
+  - @thirdweb-dev/chains@0.1.52
+
+## 3.14.41
+
+### Patch Changes
+
+- [#1587](https://github.com/thirdweb-dev/js/pull/1587) [`4a7f41b3`](https://github.com/thirdweb-dev/js/commit/4a7f41b3ee15914000ea23c3136c24b26290e8dd) Thanks [@iketw](https://github.com/iketw)! - Remove signer from ThirdwebProvider as it is not being used
+
+  The idea of the React/RN ThirdwebProvider is to provider support for wallets. If devs want to pass their own signer they can directly use ThirdwebSDKProvider
+
+- [#1597](https://github.com/thirdweb-dev/js/pull/1597) [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore(wallets,react): add ability to use thirdweb's client ID with paperWallet
+
+- [#1588](https://github.com/thirdweb-dev/js/pull/1588) [`0307671c`](https://github.com/thirdweb-dev/js/commit/0307671c63e0986977ed892d4b404c79a72227a0) Thanks [@MananTank](https://github.com/MananTank)! - Fix SmartWallet and Safe connection issues
+
+- [#1577](https://github.com/thirdweb-dev/js/pull/1577) [`d37c3a75`](https://github.com/thirdweb-dev/js/commit/d37c3a75e7beba4e306db66edc7a1f0185a9b6c0) Thanks [@MananTank](https://github.com/MananTank)! - Fix Rainbow wallet connection in mobile
+
+- [#1596](https://github.com/thirdweb-dev/js/pull/1596) [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353) Thanks [@nheingit](https://github.com/nheingit)! - Add phantom wallet
+
+- Updated dependencies [[`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c), [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93), [`2a873d2f`](https://github.com/thirdweb-dev/js/commit/2a873d2f80271208819bac88b32cea0b48761c8d), [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612), [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1), [`defe5fce`](https://github.com/thirdweb-dev/js/commit/defe5fced3fd738157616a9f1644c5092dcaa5a8), [`2f187d13`](https://github.com/thirdweb-dev/js/commit/2f187d13754f571b7205fc1b743efde767b1b1c8), [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334), [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353)]:
+  - @thirdweb-dev/sdk@3.10.60
+  - @thirdweb-dev/wallets@1.2.0
+  - @thirdweb-dev/chains@0.1.51
+  - @thirdweb-dev/react-core@3.14.41
+
+## 3.14.40
+
+### Patch Changes
+
+- Updated dependencies [[`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/sdk@3.10.59
+  - @thirdweb-dev/wallets@1.1.23
+  - @thirdweb-dev/react-core@3.14.40
+
+## 3.14.39
+
+### Patch Changes
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+  - @thirdweb-dev/react-core@3.14.39
+  - @thirdweb-dev/wallets@1.1.22
+
+## 3.14.38
+
+### Patch Changes
+
+- [#1532](https://github.com/thirdweb-dev/js/pull/1532) [`b29ec675`](https://github.com/thirdweb-dev/js/commit/b29ec675f9c41c49c015af2427d5402367c06c73) Thanks [@MananTank](https://github.com/MananTank)! - Export ConnectModalInline component
+
+- [#1544](https://github.com/thirdweb-dev/js/pull/1544) [`eb463735`](https://github.com/thirdweb-dev/js/commit/eb463735e2f784cd1d212a982835af95cf60766b) Thanks [@iketw](https://github.com/iketw)! - Adds support for Rainbow's new browser extension
+
+- Updated dependencies [[`eb463735`](https://github.com/thirdweb-dev/js/commit/eb463735e2f784cd1d212a982835af95cf60766b), [`adec589e`](https://github.com/thirdweb-dev/js/commit/adec589ead8ceff1b57169e05a3e6733b4652cc7), [`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d), [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3), [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5)]:
+  - @thirdweb-dev/wallets@1.1.21
+  - @thirdweb-dev/sdk@3.10.57
+  - @thirdweb-dev/chains@0.1.49
+  - @thirdweb-dev/react-core@3.14.38
+
+## 3.14.37
+
+### Patch Changes
+
+- Updated dependencies [[`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b), [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c), [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32)]:
+  - @thirdweb-dev/sdk@3.10.56
+  - @thirdweb-dev/chains@0.1.48
+  - @thirdweb-dev/react-core@3.14.37
+  - @thirdweb-dev/wallets@1.1.20
+
 ## 3.14.36
 
 ### Patch Changes

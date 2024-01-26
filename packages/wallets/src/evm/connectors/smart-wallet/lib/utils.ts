@@ -1,30 +1,31 @@
-import { ethers, utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 
-export function toJSON(op: Partial<UserOperationStruct>): Promise<any> {
-  return ethers.utils.resolveProperties(op).then((userOp) =>
-    Object.keys(userOp)
-      .map((key) => {
-        let val = (userOp as any)[key];
-        if (typeof val !== "string" || !val.startsWith("0x")) {
-          val = ethers.utils.hexValue(val);
-        }
-        return [key, val];
-      })
-      .reduce(
-        (set, [k, v]) => ({
-          ...set,
-          [k]: v,
-        }),
-        {},
-      ),
-  );
+export async function hexlifyUserOp(
+  op: Partial<UserOperationStruct>,
+): Promise<any> {
+  const userOp = await utils.resolveProperties(op);
+  return Object.keys(userOp)
+    .map((key) => {
+      let val = (userOp as any)[key];
+      if (typeof val !== "string" || !val.startsWith("0x")) {
+        val = utils.hexValue(val);
+      }
+      return [key, val];
+    })
+    .reduce(
+      (set, [k, v]) => ({
+        ...set,
+        [k]: v,
+      }),
+      {},
+    );
 }
 
 export async function printOp(
   op: Partial<UserOperationStruct>,
 ): Promise<string> {
-  return toJSON(op).then((userOp) => JSON.stringify(userOp, null, 2));
+  return hexlifyUserOp(op).then((userOp) => JSON.stringify(userOp, null, 2));
 }
 
 // v0.6 userOpHash calculation
@@ -76,3 +77,29 @@ export async function getUserOpHashV06(
   );
   return utils.keccak256(enc);
 }
+
+const generateRandomUint192 = (): bigint => {
+  const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand2 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand3 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand4 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand5 = BigInt(Math.floor(Math.random() * 0x100000000));
+  const rand6 = BigInt(Math.floor(Math.random() * 0x100000000));
+  return (
+    (rand1 << BigInt(160)) |
+    (rand2 << BigInt(128)) |
+    (rand3 << BigInt(96)) |
+    (rand4 << BigInt(64)) |
+    (rand5 << BigInt(32)) |
+    rand6
+  );
+};
+
+export const randomNonce = () => {
+  let hexString = generateRandomUint192().toString(16);
+  if (hexString.length % 2 !== 0) {
+    hexString = "0" + hexString;
+  }
+  hexString = "0x" + hexString;
+  return BigNumber.from(utils.concat([hexString, "0x0000000000000000"]));
+};

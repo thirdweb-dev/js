@@ -1,14 +1,9 @@
-import { WalletConfig } from "@thirdweb-dev/react-core";
-import {
-  SmartWallet,
-  SmartWalletConfig as SmartWalletConfig_,
-} from "@thirdweb-dev/wallets";
+import { SmartWalletConfig } from "@thirdweb-dev/wallets";
 
+/**
+ * @wallet
+ */
 export type SmartWalletConfigOptions = Omit<
-  SmartWalletConfig_,
+  SmartWalletConfig,
   "chain" | "clientId" | "secretKey"
-> & {
-  personalWallets?: WalletConfig<any>[];
-};
-
-export type SmartWalletConfig = WalletConfig<SmartWallet>;
+>;

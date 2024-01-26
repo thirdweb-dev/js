@@ -1,42 +1,43 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "FNCY",
   "chain": "FNCY",
-  "rpc": [
-    "https://fncy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://fncy-seed1.fncy.world"
+  "chainId": 73,
+  "explorers": [
+    {
+      "name": "fncy scan",
+      "url": "https://fncyscan.fncy.world",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [
     "https://faucet-testnet.fncy.world"
   ],
-  "nativeCurrency": {
-    "name": "FNCY",
-    "symbol": "FNCY",
-    "decimals": 18
-  },
-  "infoURL": "https://fncyscan.fncy.world",
-  "shortName": "FNCY",
-  "chainId": 73,
-  "networkId": 73,
   "icon": {
     "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "fncy scan",
-      "url": "https://fncyscan.fncy.world",
-      "icon": {
-        "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://fncyscan.fncy.world",
+  "name": "FNCY",
+  "nativeCurrency": {
+    "name": "FNCY",
+    "symbol": "FNCY",
+    "decimals": 18
+  },
+  "networkId": 73,
+  "rpc": [
+    "https://fncy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://73.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://fncy-seed1.fncy.world"
   ],
-  "testnet": true,
-  "slug": "fncy"
+  "shortName": "FNCY",
+  "slug": "fncy",
+  "testnet": true
 } as const satisfies Chain;

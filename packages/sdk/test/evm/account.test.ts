@@ -9,7 +9,6 @@ import {
 } from "../../src/evm";
 import { ContractFactory, utils } from "ethers";
 import EntrypointArtifact from "./mock/EntryPoint.json";
-import AccountFactoryArtifact from "./mock/AccountFactory.json";
 
 // Target ABIs
 import IAccountCoreAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
@@ -17,11 +16,14 @@ import {
   deployContractAndUploadMetadata,
   mockUploadContractMetadata,
 } from "./utils";
-import { IAccountCore, IAccountFactory } from "@thirdweb-dev/contracts-js";
+import {
+  AccountFactory__factory,
+  IAccountCore,
+  IAccountFactory,
+} from "@thirdweb-dev/contracts-js";
+import { AddressZero } from "../../src/evm/constants/addresses/AddressZero";
 
-global.fetch = /* @__PURE__ */ require("cross-fetch");
-
-/* @__PURE__ */ describe("Accounts with account factory", function () {
+describe("Accounts with account factory", function () {
   let accountFactory: AccountFactory<IAccountFactory>;
   let account: Account<IAccountCore>;
 
@@ -59,8 +61,8 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       adminWallet,
     ).deploy();
     const factoryAddress = await deployContractAndUploadMetadata(
-      AccountFactoryArtifact.abi,
-      AccountFactoryArtifact.bytecode.object,
+      AccountFactory__factory.abi,
+      AccountFactory__factory.bytecode,
       adminWallet,
       [entrypoint.address],
     );
@@ -126,8 +128,8 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         accountAddress,
         IAccountCoreAbi,
       );
-      const account = (await sdk.getContract(accountAddress)).account;
-      const allAdmins = await account.getAllAdmins();
+      const acc = (await sdk.getContract(accountAddress)).account;
+      const allAdmins = await acc.getAllAdmins();
       assert.isTrue(
         allAdmins.length === 1,
         "Account should only have one admin.",
@@ -188,65 +190,65 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       account = (await sdk.getContract(accountAddress)).account;
     });
 
-    // it("Should be able to add another admin to the account.", async () => {
-    //   assert.isFalse(
-    //     await account.isAdmin(signer1Wallet.address),
-    //     "New signer1 should not be an admin on the account.",
-    //   );
+    it("Should be able to add another admin to the account.", async () => {
+      assert.isFalse(
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
+      );
 
-    //   await account.grantAdminPermissions(signer1Wallet.address);
+      await account.grantAdminPermissions(signer1Wallet.address);
 
-    //   assert.isTrue(
-    //     await account.isAdmin(signer1Wallet.address),
-    //     "New signer1 should be an admin on the account.",
-    //   );
+      assert.isTrue(
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should be an admin on the account.",
+      );
 
-    //   const isAdmin = (await account.getAllAdmins()).includes(
-    //     utils.getAddress(signer1Wallet.address),
-    //   );
+      const isAdmin = (await account.getAllAdmins()).includes(
+        utils.getAddress(signer1Wallet.address),
+      );
 
-    //   assert.isTrue(isAdmin, "New signer1 should be an admin on the account.");
+      assert.isTrue(isAdmin, "New signer1 should be an admin on the account.");
 
-    //   assert.isTrue(
-    //     (
-    //       await accountFactory.getAssociatedAccounts(signer1Wallet.address)
-    //     ).includes(account.getAddress()),
-    //     "Wallet is an associated account of the signer.",
-    //   );
-    // });
+      assert.isTrue(
+        (
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is an associated account of the signer.",
+      );
+    });
 
-    // it("Should be able to remove an admin from the account.", async () => {
-    //   await account.grantAdminPermissions(signer1Wallet.address);
-    //   assert.isTrue(
-    //     await account.isAdmin(signer1Wallet.address),
-    //     "New signer1 should be an admin on the account.",
-    //   );
+    it("Should be able to remove an admin from the account.", async () => {
+      await account.grantAdminPermissions(signer1Wallet.address);
+      assert.isTrue(
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should be an admin on the account.",
+      );
 
-    //   await account.revokeAdminPermissions(signer1Wallet.address);
+      await account.revokeAdminPermissions(signer1Wallet.address);
 
-    //   assert.isFalse(
-    //     await account.isAdmin(signer1Wallet.address),
-    //     "New signer1 should not be an admin on the account.",
-    //   );
+      assert.isFalse(
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
+      );
 
-    //   assert.isFalse(
-    //     (await account.getAllSigners())
-    //       .map((result) => utils.getAddress(result.signer))
-    //       .includes(signer1Wallet.address),
-    //     "New signer1 should not be an admin on the account.",
-    //   );
+      assert.isFalse(
+        (await account.getAllSigners())
+          .map((result) => utils.getAddress(result.signer))
+          .includes(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
+      );
 
-    //   assert.isFalse(
-    //     (await account.getAllAdmins()).includes(signer1Wallet.address),
-    //     "New signer1 is not an associated signer of the account.",
-    //   );
-    //   assert.isFalse(
-    //     (
-    //       await accountFactory.getAssociatedAccounts(signer1Wallet.address)
-    //     ).includes(account.getAddress()),
-    //     "Wallet is not an associated account of the signer.",
-    //   );
-    // });
+      assert.isFalse(
+        (await account.getAllAdmins()).includes(signer1Wallet.address),
+        "New signer1 is not an associated signer of the account.",
+      );
+      assert.isFalse(
+        (
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is not an associated account of the signer.",
+      );
+    });
 
     it("Should be able to grant restricted access to a new signer.", async () => {
       const signersWithRestrictions = await account.getAllSigners();
@@ -306,6 +308,56 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
           await accountFactory.getAssociatedAccounts(signer1Wallet.address)
         ).includes(account.getAddress()),
         "Wallet is an associated account of the signer.",
+      );
+    });
+
+    it("Should be able to restrict approved targets.", async () => {
+      // Grant access
+      await account.grantPermissions(signer1Wallet.address, {
+        nativeTokenLimitPerTransaction: "1",
+        approvedCallTargets: [adminWallet.address],
+      });
+
+      const s = await account.getAllSigners();
+      const restrictions = s.find(
+        (result) =>
+          utils.getAddress(result.signer) ===
+          utils.getAddress(signer1Wallet.address),
+      )?.permissions as SignerPermissions;
+      assert.strictEqual(
+        restrictions.approvedCallTargets.length,
+        1,
+        "New signer1 should have one approved call targets.",
+      );
+      assert.strictEqual(
+        restrictions.approvedCallTargets[0],
+        adminWallet.address,
+        "New signer1 should have the expected approved call targets.",
+      );
+    });
+
+    it("Should be able to approve any target.", async () => {
+      // Grant access
+      await account.grantPermissions(signer1Wallet.address, {
+        nativeTokenLimitPerTransaction: "1",
+        approvedCallTargets: "*",
+      });
+
+      const s = await account.getAllSigners();
+      const restrictions = s.find(
+        (result) =>
+          utils.getAddress(result.signer) ===
+          utils.getAddress(signer1Wallet.address),
+      )?.permissions as SignerPermissions;
+      assert.strictEqual(
+        restrictions.approvedCallTargets.length,
+        1,
+        "New signer1 should have one approved call targets.",
+      );
+      assert.strictEqual(
+        restrictions.approvedCallTargets[0],
+        AddressZero,
+        "New signer1 should have the expected approved call targets.",
       );
     });
 

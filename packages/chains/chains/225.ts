@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LACHAIN Mainnet",
   "chain": "LA",
-  "icon": {
-    "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
-  "rpc": [
-    "https://lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.lachain.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "LA",
-    "symbol": "LA",
-    "decimals": 18
-  },
-  "infoURL": "https://lachain.io",
-  "shortName": "LA",
   "chainId": 225,
-  "networkId": 225,
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "lachain"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
+    "width": 1280,
+    "height": 1280,
+    "format": "png"
+  },
+  "infoURL": "https://lachain.io",
+  "name": "LACHAIN Mainnet",
+  "nativeCurrency": {
+    "name": "LA",
+    "symbol": "LA",
+    "decimals": 18
+  },
+  "networkId": 225,
+  "rpc": [
+    "https://lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://225.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.lachain.io"
+  ],
+  "shortName": "LA",
+  "slug": "lachain",
+  "testnet": false
 } as const satisfies Chain;

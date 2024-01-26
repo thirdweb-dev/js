@@ -1,73 +1,105 @@
-import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
-import {
-  BackButton,
-  HelperLink,
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
-import { iconSize, media, spacing } from "../../../design-system";
-import { isMobile } from "../../../evm/utils/isMobile";
-import styled from "@emotion/styled";
+import { Container, ModalHeader, Line } from "../../../components/basic";
+import { iconSize, spacing } from "../../../design-system";
+import { Button } from "../../../components/buttons";
+import { Text } from "../../../components/text";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { WalletLogoSpinner } from "./WalletLogoSpinner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
   walletIconURL: string;
   walletName: string;
-  supportLink: string;
+  onGetStarted: () => void;
   hideBackButton: boolean;
+  errorConnecting: boolean;
+  onRetry: () => void;
+  locale: {
+    getStartedLink: string;
+    tryAgain: string;
+    instruction: string;
+    failed: string;
+    inProgress: string;
+  };
 }> = (props) => {
+  const { locale } = props;
+  const modalConfig = useContext(ModalConfigCtx);
   return (
-    <>
-      {!props.hideBackButton && <BackButton onClick={props.onBack} />}
-      <IconContainer>
-        <Img
-          src={props.walletIconURL}
-          width={iconSize.xl}
-          height={iconSize.xl}
+    <Container animate="fadein" fullHeight flex="column">
+      <Container
+        p="lg"
+        style={{
+          paddingBottom: 0,
+        }}
+      >
+        <ModalHeader
+          title={props.walletName}
+          onBack={props.hideBackButton ? undefined : props.onBack}
         />
-      </IconContainer>
-      <Spacer y="lg" />
-      <TitleContainer>
-        <ModalTitle>Connecting your wallet</ModalTitle>
-        <Spinner size="md" color="link" />
-      </TitleContainer>
-      <Spacer y="md" />
-      <Desc centerOnMobile>
-        Connect your wallet through the {props.walletName}{" "}
-        {isMobile() ? "application" : "pop-up"}
-      </Desc>
+      </Container>
+
+      <Container
+        flex="column"
+        center="y"
+        expand
+        px={modalConfig.modalSize === "compact" ? "lg" : "xxl"}
+        relative
+        style={{
+          paddingTop: 0,
+        }}
+      >
+        <Container py="3xl">
+          <WalletLogoSpinner
+            error={props.errorConnecting}
+            iconUrl={props.walletIconURL}
+          />
+        </Container>
+
+        <Container
+          animate="fadein"
+          style={{
+            animationDuration: "200ms",
+          }}
+        >
+          <Text center color="primaryText" size="lg" weight={600}>
+            {props.errorConnecting ? locale.failed : locale.inProgress}
+          </Text>
+
+          <Spacer y="md" />
+
+          {!props.errorConnecting ? (
+            <Text balance center multiline>
+              {locale.instruction}
+            </Text>
+          ) : (
+            <Container flex="row" center="x" animate="fadein">
+              <Button
+                fullWidth
+                variant="accent"
+                onClick={props.onRetry}
+                style={{
+                  gap: spacing.xs,
+                  alignItems: "center",
+                }}
+              >
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+                {locale.tryAgain}
+              </Button>
+            </Container>
+          )}
+        </Container>
+      </Container>
+
       <Spacer y="xl" />
-      <HelperLink target="_blank" href={props.supportLink}>
-        Having troubles connecting to {props.walletName}?
-      </HelperLink>
-    </>
+      <Line />
+
+      <Container flex="row" center="x" p="lg">
+        <Button variant="link" onClick={props.onGetStarted}>
+          {locale.getStartedLink}
+        </Button>
+      </Container>
+    </Container>
   );
 };
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: center;
-    gap: ${spacing.xl};
-  }
-`;
-
-const IconContainer = styled.div`
-  display: flex;
-  margin-top: ${spacing.lg};
-  ${media.mobile} {
-    justify-content: center;
-    margin-top: 0;
-  }
-`;
-
-const Desc = /* @__PURE__ */ styled(ModalDescription)`
-  ${media.mobile} {
-    padding: 0 ${spacing.lg};
-  }
-`;

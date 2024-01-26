@@ -14,9 +14,9 @@ import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { deployCreate2Factory } from "./deployCreate2Factory";
 import { convertParamValues } from "./convertParamValues";
-import { AbiInput } from "../../schema";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
+import { AbiInput } from "../../schema/contracts/custom";
 
 /**
  * Direct deploy a contract at a deterministic address, using Create2 method
@@ -24,11 +24,11 @@ import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromP
  *
  * @public
  *
- * @param bytecode
- * @param abi
- * @param signer
- * @param constructorArgs
- * @param saltForCreate2
+ * @param bytecode - The bytecode to deploy
+ * @param abi - The abi to use
+ * @param signer - The signer to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministic(
   bytecode: string,
@@ -48,17 +48,24 @@ export async function directDeployDeterministic(
   const create2Factory = await deployCreate2Factory(signer);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 
@@ -108,11 +115,11 @@ export async function directDeployDeterministic(
  *
  * @public
  *
- * @param publishMetadataUri
- * @param signer
- * @param storage
- * @param constructorArgs
- * @param saltForCreate2
+ * @param publishMetadataUri - The metadata uri to use
+ * @param signer - The signer to use
+ * @param storage - The storage to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministicWithUri(
   publishMetadataUri: string,
@@ -146,16 +153,16 @@ export async function directDeployDeterministicWithUri(
  *
  * @public
  *
- * @param contractName
- * @param publisherAddress
- * @param contractVersion
- * @param constructorArgs
- * @param signer
- * @param storage
- * @param clientId
- * @param secretKey
- * @param constructorArgs
- * @param saltForCreate2
+ * @param contractName - The name of the contract to deploy
+ * @param publisherAddress - The publisher address to use
+ * @param contractVersion - The contract version to use
+ * @param constructorArgs - The constructor args to use
+ * @param signer - The signer to use
+ * @param storage - The storage to use
+ * @param clientId - The client id to use
+ * @param secretKey - The secret key to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministicPublished(
   contractName: string,
@@ -212,18 +219,24 @@ export async function predictAddressDeterministic(
   const create2Factory = await getCreate2FactoryAddress(provider);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
-
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 

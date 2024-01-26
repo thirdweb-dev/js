@@ -1,4 +1,4 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import type {
   ClaimCondition,
   ClaimVerification,
@@ -15,7 +15,7 @@ import { fetchSnapshotEntryForAddress } from "./fetchSnapshotEntryForAddress";
 /**
  * Returns proofs and the overrides required for the transaction.
  * @internal
- * @returns - `overrides` and `proofs` as an object.
+ * @returns  `overrides` and `proofs` as an object.
  */
 export async function prepareClaim(
   addressToClaim: string,

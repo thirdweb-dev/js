@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crossbell",
   "chain": "Crossbell",
-  "rpc": [
-    "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.crossbell.io"
-  ],
-  "faucets": [
-    "https://faucet.crossbell.io"
-  ],
-  "nativeCurrency": {
-    "name": "Crossbell Token",
-    "symbol": "CSB",
-    "decimals": 18
-  },
-  "infoURL": "https://crossbell.io",
-  "shortName": "csb",
   "chainId": 3737,
-  "networkId": 3737,
-  "icon": {
-    "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
-    "format": "svg",
-    "width": 408,
-    "height": 408
-  },
   "explorers": [
     {
       "name": "Crossbell Explorer",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "crossbell"
+  "faucets": [
+    "https://faucet.crossbell.io"
+  ],
+  "icon": {
+    "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
+    "width": 408,
+    "height": 408,
+    "format": "svg"
+  },
+  "infoURL": "https://crossbell.io",
+  "name": "Crossbell",
+  "nativeCurrency": {
+    "name": "Crossbell Token",
+    "symbol": "CSB",
+    "decimals": 18
+  },
+  "networkId": 3737,
+  "rpc": [
+    "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3737.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.crossbell.io"
+  ],
+  "shortName": "csb",
+  "slug": "crossbell",
+  "testnet": false
 } as const satisfies Chain;

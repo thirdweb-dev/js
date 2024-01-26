@@ -1,10 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Catalyst",
   "chain": "CFG",
-  "rpc": [
-    "wss://fullnode.catalyst.cntrfg.com"
-  ],
+  "chainId": 2032,
+  "explorers": [],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -13,16 +12,18 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "infoURL": "https://centrifuge.io",
+  "name": "Catalyst",
   "nativeCurrency": {
     "name": "Catalyst CFG",
     "symbol": "NCFG",
     "decimals": 18
   },
-  "infoURL": "https://centrifuge.io",
-  "shortName": "ncfg",
-  "chainId": 2032,
   "networkId": 2032,
-  "testnet": false,
-  "slug": "catalyst"
+  "rpc": [
+    "wss://fullnode.catalyst.cntrfg.com"
+  ],
+  "shortName": "ncfg",
+  "slug": "catalyst",
+  "testnet": false
 } as const satisfies Chain;

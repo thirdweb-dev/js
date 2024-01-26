@@ -6,7 +6,6 @@ import {
   IpfsDownloaderOptions,
   SingleDownloadOptions,
 } from "../../types";
-import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
 
 /**
@@ -29,15 +28,18 @@ import pkg from "../../../package.json";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
-  DEFAULT_TIMEOUT_IN_SECONDS = 30;
+  DEFAULT_TIMEOUT_IN_SECONDS = 60;
   DEFAULT_MAX_RETRIES = 3;
 
   private secretKey?: string;
   private clientId?: string;
+  private defaultTimeout: number;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
+    this.defaultTimeout =
+      options.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
   }
 
   async download(
@@ -110,12 +112,28 @@ export class StorageDownloader implements IStorageDownloader {
         };
       }
 
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers = {
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_CLI_AUTH_TOKEN as string
+          }`,
+        };
+        headers["x-authorize-wallet"] = "true";
+      }
+
       headers["x-sdk-version"] = pkg.version;
       headers["x-sdk-name"] = pkg.name;
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-        ? "browser"
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
         : "node";
     }
 
@@ -125,8 +143,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     const controller = new AbortController();
-    const timeoutInSeconds =
-      options?.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
+    const timeoutInSeconds = options?.timeoutInSeconds || this.defaultTimeout;
     const timeout = setTimeout(
       () => controller.abort(),
       timeoutInSeconds * 1000,

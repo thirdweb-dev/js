@@ -4,6 +4,11 @@ import path from "path";
 import { PackageManagerType } from "../core/types/ProjectType";
 import { runCommand } from "../create/helpers/run-command";
 import { IProcessAppTypeArgs, IProcessContractAppTypeArgs } from "./types";
+import crypto from "crypto";
+
+export function generateStateParameter(length: number) {
+  return crypto.randomBytes(length).toString("hex");
+}
 
 export function convertDependenciesToStringFormat(dependenciesObject: object) {
   return Object.entries(dependenciesObject).map(([pkg, versionDetails]) => {
@@ -151,7 +156,6 @@ export const getDependenciesForPython = (
 
 export const getLatestVersion = async (packageName: string): Promise<any> => {
   try {
-    const fetch = (await import("node-fetch")).default;
     const url = `https://registry.npmjs.org/${packageName}`;
     const response = await fetch(url);
     if (!response.ok) {

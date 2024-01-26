@@ -1,36 +1,38 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Botanix Testnet",
-  "chain": "BTC",
-  "icon": {
-    "url": "ipfs://Qmf2iSjcrZwUDKhCVY9ZzfbSV2He2HSssbcG2yMz1mDerm",
-    "width": 32,
-    "height": 32,
-    "format": "png"
-  },
-  "rpc": [
-    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.btxtestchain.com"
+  "chain": "BOTANIX",
+  "chainId": 3636,
+  "explorers": [
+    {
+      "name": "3xpl",
+      "url": "https://3xpl.com/botanix",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
-    "https://faucet.btxtestchain.com"
+    "https://faucet.botanixlabs.dev"
   ],
+  "icon": {
+    "url": "ipfs://QmVE5s2pXiqdMnAcxhAmWkZYhpFB5CysypeLyPKzT4rGYe",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://botanixlabs.xyz",
+  "name": "Botanix Testnet",
   "nativeCurrency": {
     "name": "Botanix",
     "symbol": "BTC",
     "decimals": 18
   },
-  "infoURL": "https://btxtestchain.com",
-  "shortName": "BTCt",
-  "chainId": 3636,
   "networkId": 3636,
-  "explorers": [
-    {
-      "name": "Botanix",
-      "url": "https://testnet.btxtestchain.com",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3636.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node.botanixlabs.dev"
   ],
-  "testnet": true,
-  "slug": "botanix-testnet"
+  "shortName": "BTNX",
+  "slip44": 1,
+  "slug": "botanix-testnet",
+  "testnet": true
 } as const satisfies Chain;

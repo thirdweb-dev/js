@@ -1,39 +1,3 @@
-import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT } from "../../../core/schema/nft";
-import { assertEnabled } from "../../common/feature-detection/assertEnabled";
-import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens/resolveAddress";
-import { isTokenApprovedForTransfer } from "../../common/marketplace";
-import { uploadOrExtractURI } from "../../common/nft";
-import { getRoleHash } from "../../common/role";
-import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { ContractAppURI } from "../../core/classes/contract-appuri";
-import { ContractEncoder } from "../../core/classes/contract-encoder";
-import { ContractEvents } from "../../core/classes/contract-events";
-import { ContractInterceptor } from "../../core/classes/contract-interceptor";
-import { ContractMetadata } from "../../core/classes/contract-metadata";
-import { ContractOwner } from "../../core/classes/contract-owner";
-import { ContractRoles } from "../../core/classes/contract-roles";
-import { ContractRoyalty } from "../../core/classes/contract-royalty";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
-import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { PackVRF } from "../../core/classes/pack-vrf";
-import { Transaction } from "../../core/classes/transactions";
-import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
-import { PackContractSchema } from "../../schema/contracts/packs";
-import { SDKOptions } from "../../schema/sdk-options";
-import {
-  PackMetadataInput,
-  PackMetadataInputSchema,
-  PackRewards,
-  PackRewardsOutput,
-  PackRewardsOutputSchema,
-} from "../../schema/tokens/pack";
 import type {
   IPackVRFDirect,
   Pack as PackContract,
@@ -47,14 +11,50 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  type BigNumberish,
-  type CallOverrides,
   constants,
   utils,
+  type BigNumberish,
+  type CallOverrides,
 } from "ethers";
+import { QueryAllParams } from "../../../core/schema/QueryParams";
+import { NFT } from "../../../core/schema/nft";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { isTokenApprovedForTransfer } from "../../common/marketplace";
+import { uploadOrExtractURI } from "../../common/nft";
+import { getRoleHash } from "../../common/role";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
+import { StandardErc1155 } from "../../core/classes/internal/erc1155/erc-1155-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { PackVRF } from "../../core/classes/pack-vrf";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
+import { PackContractSchema } from "../../schema/contracts/packs";
+import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import {
+  PackMetadataInput,
+  PackMetadataInputSchema,
+  PackRewards,
+  PackRewardsOutput,
+  PackRewardsOutputSchema,
+} from "../../schema/tokens/pack";
 import { PACK_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -71,6 +71,7 @@ import { PACK_CONTRACT_ROLES } from "../contractRoles";
  *
  * @public
  */
+// TODO create extension wrappers
 export class Pack extends StandardErc1155<PackContract> {
   static contractRoles = PACK_CONTRACT_ROLES;
 
@@ -107,7 +108,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public owner: ContractOwner<PackContract>;
+  public owner: ContractOwner;
 
   private _vrf?: PackVRF;
 
@@ -175,7 +176,7 @@ export class Pack extends StandardErc1155<PackContract> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -238,7 +239,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Get the number of packs created
-   * @returns the total number of packs minted in this contract
+   * @returns The total number of packs minted in this contract
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
@@ -249,10 +250,10 @@ export class Pack extends StandardErc1155<PackContract> {
    * Get whether users can transfer packs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 
@@ -261,7 +262,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * @remarks Get the rewards contained inside a pack.
    *
    * @param packId - The id of the pack to get the contents of.
-   * @returns - The contents of the pack.
+   * @returns  The contents of the pack.
    *
    * @example
    * ```javascript
@@ -275,8 +276,10 @@ export class Pack extends StandardErc1155<PackContract> {
   public async getPackContents(
     packId: BigNumberish,
   ): Promise<PackRewardsOutput> {
-    const { contents, perUnitAmounts } =
-      await this.contractWrapper.readContract.getPackContents(packId);
+    const { contents, perUnitAmounts } = await this.contractWrapper.read(
+      "getPackContents",
+      [packId],
+    );
 
     const erc20Rewards: PackRewardsOutput["erc20Rewards"] = [];
     const erc721Rewards: PackRewardsOutput["erc721Rewards"] = [];
@@ -340,8 +343,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Create Pack
-   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
-   * @remarks See {@link Pack.createTo}
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet. See {@link Pack.createTo}
    *
    * @param metadataWithRewards - the metadata and rewards to include in the pack
    * @example
@@ -394,8 +396,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Add Pack Contents
-   * @remarks Add contents to an existing pack.
-   * @remarks See {@link Pack.addPackContents}
+   * @remarks Add contents to an existing pack. See {@link Pack.addPackContents}
    *
    * @param packId - token Id of the pack to add contents to
    * @param packContents - the rewards to include in the pack
@@ -434,10 +435,10 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   addPackContents = /* @__PURE__ */ buildTransactionFunction(
     async (packId: BigNumberish, packContents: PackRewards) => {
-      const signerAddress = await this.contractWrapper.getSignerAddress();
-      const parsedContents = await PackRewardsOutputSchema.parseAsync(
-        packContents,
-      );
+      const [signerAddress, parsedContents] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        PackRewardsOutputSchema.parseAsync(packContents),
+      ]);
       const { contents, numOfRewardUnits } = await this.toPackContentArgs(
         parsedContents,
       );
@@ -519,14 +520,11 @@ export class Pack extends StandardErc1155<PackContract> {
       to: AddressOrEns,
       metadataWithRewards: PackMetadataInput,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(
-        metadataWithRewards.packMetadata,
-        this.storage,
-      );
-
-      const parsedMetadata = await PackMetadataInputSchema.parseAsync(
-        metadataWithRewards,
-      );
+      const [uri, parsedMetadata, toAddress] = await Promise.all([
+        uploadOrExtractURI(metadataWithRewards.packMetadata, this.storage),
+        PackMetadataInputSchema.parseAsync(metadataWithRewards),
+        resolveAddress(to),
+      ]);
       const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
       const rewardsData: PackRewardsOutput = {
         erc20Rewards,
@@ -546,7 +544,7 @@ export class Pack extends StandardErc1155<PackContract> {
           uri,
           parsedMetadata.openStartTime,
           parsedMetadata.rewardsPerPack,
-          await resolveAddress(to),
+          toAddress,
         ],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
@@ -810,7 +808,7 @@ export class Pack extends StandardErc1155<PackContract> {
     ) {
       return new PackVRF(
         this.contractWrapper.getSignerOrProvider(),
-        this.contractWrapper.readContract.address,
+        this.contractWrapper.address,
         this.storage,
         this.contractWrapper.options,
         this.chainId,

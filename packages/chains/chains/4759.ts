@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MEVerse Chain Testnet",
   "chain": "MEVerse",
-  "rpc": [
-    "https://meverse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.meversetestnet.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "MEVerse",
-    "symbol": "MEV",
-    "decimals": 18
-  },
-  "infoURL": "https://www.meverse.sg",
-  "shortName": "TESTMEV",
   "chainId": 4759,
-  "networkId": 4759,
-  "icon": {
-    "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "MEVerse Chain Testnet Explorer",
@@ -35,6 +15,28 @@ export default {
       }
     }
   ],
-  "testnet": true,
-  "slug": "meverse-chain-testnet"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
+  "infoURL": "https://www.meverse.sg",
+  "name": "MEVerse Chain Testnet",
+  "nativeCurrency": {
+    "name": "MEVerse",
+    "symbol": "MEV",
+    "decimals": 18
+  },
+  "networkId": 4759,
+  "rpc": [
+    "https://meverse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4759.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.meversetestnet.io"
+  ],
+  "shortName": "TESTMEV",
+  "slip44": 1,
+  "slug": "meverse-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

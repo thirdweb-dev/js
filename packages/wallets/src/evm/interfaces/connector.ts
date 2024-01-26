@@ -1,7 +1,7 @@
-import { WagmiConnector } from "../../lib/wagmi-core";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
+import { WagmiConnector } from "../../lib/wagmi-connectors/WagmiConnector";
 
 export abstract class Connector<
   // eslint-disable-next-line @typescript-eslint/ban-types

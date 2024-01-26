@@ -37,7 +37,7 @@ await wallet.connect();
 
 - Private key
 - AWS KMs
-- AWS Sercret Manager
+- AWS Secret Manager
 
 #### Documentation
 

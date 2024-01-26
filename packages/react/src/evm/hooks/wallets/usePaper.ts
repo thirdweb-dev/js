@@ -1,26 +1,30 @@
+import {
+  UseQueryResult,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useConnect, useWallet } from "@thirdweb-dev/react-core";
 import {
   PaperWallet,
-  walletIds,
   PaperWalletAdditionalOptions,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
-import {
-  useQuery,
-  UseQueryResult,
-  useQueryClient,
-} from "@tanstack/react-query";
 
-type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain">;
 
+/**
+ * @internal
+ * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the [`useEmbeddedWallet`](https://portal.thirdweb.com/references/react/v4/useEmbeddedWallet) hook instead
+ */
 export function usePaperWallet() {
   const connect = useConnect();
   return useCallback(
     async (options: { chainId?: number; email?: string } & PaperConfig) => {
       const { paperWallet } = await import(
-        "../../../wallet/wallets/paperWallet"
+        "../../../wallet/wallets/paper/paperWallet"
       );
-      return connect(paperWallet({ paperClientId: options.paperClientId }), {
+      return connect(paperWallet(options), {
         chainId: options.chainId,
         email: options.email,
       });
@@ -29,6 +33,10 @@ export function usePaperWallet() {
   );
 }
 
+/**
+ * @internal
+ * @deprecated We have deprecated `PaperWallet` in favor of our `EmbeddedWallet` which adds support for more sign in methods. use the [`useEmbeddedWallet`](https://portal.thirdweb.com/references/react/v4/useEmbeddedWallet) hook instead
+ */
 export function usePaperWalletUserEmail(): UseQueryResult<
   string | undefined,
   string

@@ -1,38 +1,47 @@
-import { type Theme, fontSize, media } from "../design-system";
+import { fontSize, media } from "../design-system";
 import { iconSize } from "../design-system";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import { StyledAnchor, StyledH2, StyledP } from "../design-system/elements";
 import { IconButton } from "./buttons";
-import styled from "@emotion/styled";
-import { Title } from "@radix-ui/react-dialog";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ styled(Title)<{
-  theme?: Theme;
-  centerOnMobile?: boolean;
-}>`
-  margin: 0;
-  font-weight: 600;
-  font-size: ${fontSize.lg};
-  color: ${(p) => p.theme.text.neutral};
-  text-align: left;
-  ${media.mobile} {
-    text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
-  }
-`;
+export const ModalTitle = /* @__PURE__ */ StyledH2(
+  (props: { centerOnMobile?: boolean }) => {
+    const theme = useCustomTheme();
+    return {
+      margin: 0,
+      fontWeight: 600,
+      fontSize: fontSize.lg,
+      color: theme.colors.primaryText,
+      lineHeight: 1.3,
+      textAlign: "left",
+      [media.mobile]: {
+        textAlign: props.centerOnMobile ? "center" : "left",
+      },
+    };
+  },
+);
 
-export const ModalDescription = styled.p<{
-  theme?: Theme;
+type ModalDescriptionProps = {
   centerOnMobile?: boolean;
   sm?: boolean;
-}>`
-  all: unset;
-  display: block;
-  font-size: ${(p) => (p.sm ? fontSize.sm : fontSize.md)};
-  color: ${(p) => p.theme.text.secondary};
-  line-height: 1.5;
-  ${media.mobile} {
-    text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
-  }
-`;
+};
+
+export const ModalDescription = /* @__PURE__ */ StyledP(
+  (props: ModalDescriptionProps) => {
+    const theme = useCustomTheme();
+    return {
+      all: "unset",
+      display: "block",
+      fontSize: props.sm ? fontSize.sm : fontSize.md,
+      color: theme.colors.secondaryText,
+      lineHeight: 1.5,
+      [media.mobile]: {
+        textAlign: props.centerOnMobile ? "center" : "left",
+      },
+    };
+  },
+);
 
 export const BackButton: React.FC<{
   onClick: () => void;
@@ -40,33 +49,33 @@ export const BackButton: React.FC<{
 }> = (props) => {
   return (
     <IconButton
-      variant="secondary"
       onClick={props.onClick}
-      style={props.style}
+      style={{ transform: "translateX(-25%)", ...props.style }}
       type="button"
     >
-      <ChevronLeftIcon
-        style={{
-          width: iconSize.md,
-          height: iconSize.md,
-        }}
-      />
+      <ChevronLeftIcon width={iconSize.md} height={iconSize.md} />
     </IconButton>
   );
 };
 
-export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
-  all: unset;
-  cursor: pointer;
-  color: ${(p) => p.theme.link.primary};
-  font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
-  text-decoration: none;
-  display: block;
-  ${media.mobile} {
-    text-align: center;
-  }
-  &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
-    text-decoration: none;
-  }
-`;
+export const HelperLink = /* @__PURE__ */ StyledAnchor(
+  (props: { md?: boolean }) => {
+    const theme = useCustomTheme();
+    return {
+      all: "unset",
+      cursor: "pointer",
+      color: theme.colors.accentText,
+      fontSize: props.md ? fontSize.md : fontSize.sm,
+      textDecoration: "none",
+      display: "block",
+      lineHeight: 1.5,
+      [media.mobile]: {
+        textAlign: "center",
+      },
+      "&:hover": {
+        color: theme.colors.primaryText,
+        textDecoration: "none",
+      },
+    };
+  },
+);

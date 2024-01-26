@@ -1,61 +1,121 @@
-import { ThemeProvider } from "@emotion/react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
-  darkTheme,
   fontSize,
   iconSize,
-  lightTheme,
   media,
   radius,
   spacing,
   Theme,
 } from "../../design-system";
-import { scrollbar } from "../../design-system/styles";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
-  ThirdwebThemeContext,
   useChainId,
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import {
-  memo,
-  useCallback,
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useState,
-} from "react";
+import { memo, useCallback, useDeferredValue, useMemo, useState } from "react";
 import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
-import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
-import { Flex } from "../../components/basic";
-import { SecondaryText } from "../../components/text";
+import { Container, Line, ModalHeader } from "../../components/basic";
+import { Text } from "../../components/text";
+import { ModalTitle } from "../../components/modalElements";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../design-system/CustomThemeProvider";
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { StyledButton, StyledP, StyledUl } from "../../design-system/elements";
+import { Skeleton } from "../../components/Skeleton";
 
-type RenderChain = React.FC<{
+export type NetworkSelectorChainProps = {
+  /**
+   * `Chain` object for the chain to be displayed
+   */
   chain: Chain;
+  /**
+   * function to be called for switching to the given chain
+   */
   switchChain: () => void;
+  /**
+   * flag indicating whether the SDK is currently switching to the given chain
+   */
   switching: boolean;
+  /**
+   * flag indicating whether the SDK failed to switch to the given chain
+   */
   switchFailed: boolean;
+  /**
+   * function to close the modal
+   */
   close?: () => void;
-}>;
+};
 
 export type NetworkSelectorProps = {
-  theme?: "dark" | "light";
+  /**
+   * Theme to use in Modal
+   *
+   * Either specify string "dark" or "light" to use the default themes, or provide a custom theme object.
+   *
+   * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
+   *
+   * @example
+   * ```tsx
+   * import { darkTheme } from "@thirdweb-dev/react";
+   *
+   * <NetworkSelector
+   *  open={true}
+   *  theme={darkTheme({
+   *    colors: {
+   *      modalBg: "#000000",
+   *    }
+   *  })}
+   * />
+   * ```
+   */
+  theme?: "dark" | "light" | Theme;
+  /**
+   * Callback to be called when modal is closed by the user
+   */
   onClose?: () => void;
+  /**
+   * Specify whether the Modal should be open or closed
+   */
+  open: boolean;
+  /**
+   * Array of chains to be displayed in the modal
+   */
   chains?: Chain[];
+  /**
+   * Array of chains to be displayed under "Popular" section
+   */
   popularChains?: Chain[];
+  /**
+   * Array of chains to be displayed under "Recent" section
+   */
   recentChains?: Chain[];
-  renderChain?: RenderChain;
+  /**
+   * Override how the chain button is rendered in the Modal
+   */
+  renderChain?: React.FC<NetworkSelectorChainProps>;
+
+  /**
+   * Callback to be called when a chain is successfully switched
+   * @param chain - The new chain that is switched to
+   */
   onSwitch?: (chain: Chain) => void;
+  /**
+   * Callback to be called when the "Add Custom Network" button is clicked
+   *
+   * The "Add Custom Network" button is displayed at the bottom of the modal - only if this prop is provided
+   */
   onCustomClick?: () => void;
 };
 
@@ -73,13 +133,62 @@ const fuseConfig = {
   ],
 };
 
-export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
+/**
+ * Renders a Network Switcher Modal that allows users to switch their wallet to a different network.
+ *
+ * @example
+ * ```tsx
+ * import { NetworkSelector } from "@thirdweb-dev/react";
+ *
+ * function Example() {
+ *  const [open, setOpen] = useState(false);
+ *  return (
+ *    <div>
+ *      <button onClick={() => setOpen(true)}>Open Modal</button>
+ *      <NetworkSelector open={open} onClose={() => setOpen(false)} />
+ *    </div>
+ *  )
+ * }
+ * ```
+ *
+ * @internal
+ */
+export function NetworkSelector(props: NetworkSelectorProps) {
+  const themeFromContext = useCustomTheme();
+  const theme = props.theme || themeFromContext || "dark";
+  const { onClose } = props;
+
+  return (
+    <CustomThemeProvider theme={theme}>
+      <Modal
+        size={"compact"}
+        open={props.open}
+        setOpen={(value) => {
+          if (!value && onClose) {
+            onClose();
+          }
+        }}
+        style={{
+          paddingBottom: props.onCustomClick ? spacing.md : "0px",
+        }}
+      >
+        <NetworkSelectorContent {...props} />
+      </Modal>
+    </CustomThemeProvider>
+  );
+}
+
+export function NetworkSelectorContent(
+  props: NetworkSelectorProps & {
+    onBack?: () => void;
+  },
+) {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
-  const themeFromProvider = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromProvider || "dark";
+
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
+  const locale = useTWLocale().connectWallet.networkSelector;
 
   const _recentChains = props.recentChains;
 
@@ -142,23 +251,17 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   );
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-      <Modal
-        open={true}
-        setOpen={(value) => {
-          if (!value && onClose) {
-            onClose();
-          }
-        }}
-        title="Select Network"
-        style={{
-          maxWidth: "480px",
-          paddingBottom: props.onCustomClick ? spacing.md : "0px",
-        }}
-      >
-        <Spacer y="xl" />
+    <Container>
+      <Container p="lg">
+        {props.onBack ? (
+          <ModalHeader title={locale.title} onBack={props.onBack} />
+        ) : (
+          <ModalTitle>{locale.title}</ModalTitle>
+        )}
+      </Container>
 
-        <Tabs.Root className="TabsRoot" defaultValue="all">
+      <Tabs.Root className="TabsRoot" defaultValue="all">
+        <Container px="lg">
           <Tabs.List
             className="TabsList"
             aria-label="Manage your account"
@@ -168,60 +271,72 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             }}
           >
             <TabButton className="TabsTrigger" value="all">
-              All
+              {locale.allNetworks}
             </TabButton>
             <TabButton className="TabsTrigger" value="mainnet">
-              Mainnets
+              {locale.mainnets}
             </TabButton>
             <TabButton className="TabsTrigger" value="testnet">
-              Testnets
+              {locale.testnets}
             </TabButton>
           </Tabs.List>
+        </Container>
 
-          <Spacer y="lg" />
+        <Spacer y="lg" />
 
-          {/* Search */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <StyledMagnifyingGlassIcon
-              width={iconSize.md}
-              height={iconSize.md}
-            />
-
-            <SearchInput
-              style={{
-                boxShadow: "none",
-              }}
-              tabIndex={isMobile() ? -1 : 0}
-              variant="secondary"
-              placeholder="Search Network or Chain ID"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-            />
-
-            {/* Searching Spinner */}
-            {deferredSearchTerm !== searchTerm && (
+        {chains.length > 10 && (
+          <>
+            <Container px="lg">
+              {/* Search */}
               <div
                 style={{
-                  position: "absolute",
-                  right: spacing.md,
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
                 }}
               >
-                <Spinner size="md" color="link" />
+                <StyledMagnifyingGlassIcon
+                  width={iconSize.md}
+                  height={iconSize.md}
+                />
+
+                <Input
+                  style={{
+                    padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+                  }}
+                  tabIndex={-1}
+                  variant="outline"
+                  placeholder={locale.inputPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                />
+                {/* Searching Spinner */}
+                {deferredSearchTerm !== searchTerm && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: spacing.md,
+                    }}
+                  >
+                    <Spinner size="md" color="accentText" />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </Container>
+            <Spacer y="lg" />
+          </>
+        )}
 
-          <Spacer y="lg" />
-
-          <Tabs.Content className="TabsContent" value="all">
+        <Container px="md">
+          <Tabs.Content
+            className="TabsContent"
+            value="all"
+            style={{
+              outline: "none",
+            }}
+          >
             <NetworkTab
               allChains={allChains}
               type="all"
@@ -233,7 +348,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             />
           </Tabs.Content>
 
-          <Tabs.Content className="TabsContent" value="mainnet">
+          <Tabs.Content
+            className="TabsContent"
+            value="mainnet"
+            style={{
+              outline: "none",
+            }}
+          >
             <NetworkTab
               allChains={allChains}
               type="mainnet"
@@ -245,7 +366,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             />
           </Tabs.Content>
 
-          <Tabs.Content className="TabsContent" value="testnet">
+          <Tabs.Content
+            className="TabsContent"
+            value="testnet"
+            style={{
+              outline: "none",
+            }}
+          >
             <NetworkTab
               allChains={allChains}
               type="testnet"
@@ -256,11 +383,14 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
               close={props.onClose}
             />
           </Tabs.Content>
+        </Container>
 
-          {onCustomClick && (
-            <>
-              <Spacer y="sm" />
+        {onCustomClick && (
+          <>
+            <Line />
+            <Container p="lg">
               <Button
+                fullWidth
                 variant="link"
                 onClick={() => {
                   onCustomClick();
@@ -270,20 +400,19 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 }}
                 style={{
                   display: "flex",
-                  width: "100%",
                   fontSize: fontSize.sm,
                   boxShadow: "none",
                 }}
               >
-                Add Custom Network
+                {locale.addCustomNetwork}
               </Button>
-            </>
-          )}
-        </Tabs.Root>
-      </Modal>
-    </ThemeProvider>
+            </Container>
+          </>
+        )}
+      </Tabs.Root>
+    </Container>
   );
-};
+}
 
 const filterChainByType = (
   chains: Chain[],
@@ -306,7 +435,7 @@ const NetworkTab = (props: {
   popularChains?: Chain[];
   type: "testnet" | "mainnet" | "all";
   onSwitch: (chain: Chain) => void;
-  renderChain?: RenderChain;
+  renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
   const allChains = useMemo(
@@ -321,16 +450,20 @@ const NetworkTab = (props: {
     () => filterChainByType(props.popularChains || [], props.type),
     [props.type, props.popularChains],
   );
+  const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
 
   return (
-    <ScrollContainer
+    <Container
+      scrollY
+      animate="fadein"
       style={{
         height: "330px",
+        paddingBottom: spacing.lg,
       }}
     >
       {recentChains.length > 0 && (
         <div>
-          <SectionLabel>Recently Used</SectionLabel>
+          <SectionLabel>{locale.recentlyUsed}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
             chains={recentChains}
@@ -344,7 +477,7 @@ const NetworkTab = (props: {
 
       {popularChains.length > 0 && (
         <div>
-          <SectionLabel>Popular</SectionLabel>
+          <SectionLabel>{locale.popular}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
             chains={popularChains}
@@ -359,7 +492,7 @@ const NetworkTab = (props: {
       {/* separator  */}
       {(popularChains.length > 0 || recentChains.length > 0) && (
         <>
-          <SectionLabel>All Networks</SectionLabel>
+          <SectionLabel>{locale.others}</SectionLabel>
           <Spacer y="sm" />
         </>
       )}
@@ -370,20 +503,22 @@ const NetworkTab = (props: {
         renderChain={props.renderChain}
         close={props.close}
       />
-    </ScrollContainer>
+    </Container>
   );
 };
 
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   chains: Chain[];
   onSwitch: (chain: Chain) => void;
-  renderChain?: RenderChain;
+  renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) {
   const switchChain = useSwitchChain();
   const activeChainId = useChainId();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
+  const twLocale = useTWLocale();
+  const locale = twLocale.connectWallet.networkSelector;
 
   const close = props.close;
 
@@ -416,22 +551,23 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
 
   useEffect(() => {
     if (isLoading) {
-      setIsLoading(false);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          setIsLoading(false);
+        });
+      }, 150);
     }
   }, [isLoading]);
 
   if (isLoading) {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        style={{
-          height: "250px",
-        }}
-      >
-        {/* Don't put a spinner here - it's gonna freeze */}
-        <SecondaryText>Loading</SecondaryText>
-      </Flex>
+      <Container px="xxs">
+        <NetworkListUl>
+          {new Array(10).fill(0).map((_, i) => (
+            <Skeleton height="48px" key={i} />
+          ))}
+        </NetworkListUl>
+      </Container>
     );
   }
 
@@ -483,25 +619,24 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                   }}
                 >
                   {chainName}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: spacing.xs,
-                    }}
-                  >
+                  <Container animate="fadein" flex="row" gap="xs">
                     {confirming && (
                       <>
-                        <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
-                        <Spinner size="sm" color="link" />
+                        <Text size="xs" color="accentText">
+                          {twLocale.connectWallet.confirmInWallet}
+                        </Text>
+                        <Spinner size="xs" color="accentText" />
                       </>
                     )}
 
                     {switchingFailed && (
-                      <ErrorMessage>
-                        Error: Could not Switch Network
-                      </ErrorMessage>
+                      <Container animate="fadein">
+                        <Text size="xs" color="danger">
+                          {locale.failedToSwitch}
+                        </Text>
+                      </Container>
                     )}
-                  </div>
+                  </Container>
                 </div>
               ) : (
                 chainName
@@ -514,100 +649,81 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   );
 });
 
-const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
-  theme?: Theme;
-}>`
-  all: unset;
-  font-size: ${fontSize.md};
-  font-weight: 500;
-  color: ${(p) => p.theme.text.secondary};
-  cursor: pointer;
-  padding: ${spacing.sm} ${spacing.sm};
-  -webkit-tap-highlight-color: transparent;
-  border-radius: ${radius.lg};
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-  &[data-state="active"] {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
-  }
-`;
+const TabButton = /* @__PURE__ */ (() =>
+  styled(Tabs.Trigger)(() => {
+    const theme = useCustomTheme();
+    return {
+      all: "unset",
+      fontSize: fontSize.sm,
+      fontWeight: 500,
+      color: theme.colors.secondaryText,
+      cursor: "pointer",
+      padding: `${spacing.sm} ${spacing.sm}`,
+      WebkitTapHighlightColor: "transparent",
+      borderRadius: radius.lg,
+      transition: "background 0.2s ease, color 0.2s ease",
 
-const SectionLabel = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.secondary};
-  margin: 0;
-`;
+      "&[data-state='active']": {
+        background: theme.colors.secondaryButtonBg,
+        color: theme.colors.primaryText,
+      },
+    };
+  }))();
 
-const ScrollContainer = styled.div<{ theme?: Theme }>`
-  box-sizing: border-box;
-  overflow: auto;
-  padding-right: 10px;
-  padding-bottom: ${spacing.lg};
-  width: calc(100% + 16px);
-  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
-`;
+const SectionLabel = /* @__PURE__ */ StyledP(() => {
+  const theme = useCustomTheme();
+  return {
+    fontSize: fontSize.sm,
+    color: theme.colors.secondaryText,
+    margin: 0,
+    display: "block",
+    padding: `0 ${spacing.xs}`,
+  };
+});
 
-const NetworkListUl = styled.ul<{ theme?: Theme }>`
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.xs};
-  box-sizing: border-box;
-`;
+const NetworkListUl = /* @__PURE__ */ StyledUl({
+  padding: 0,
+  margin: 0,
+  listStyle: "none",
+  display: "flex",
+  flexDirection: "column",
+  gap: spacing.xs,
+  boxSizing: "border-box",
+});
 
-const NetworkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-  align-items: center;
-  gap: ${spacing.md};
-  padding: ${spacing.sm} ${spacing.md};
-  border-radius: ${radius.md};
-  cursor: pointer;
-  transition: background 0.2s ease;
-  background: ${(p) => p.theme.bg.elevated};
-  color: ${(p) => p.theme.text.neutral};
-  font-weight: 600;
-  font-size: ${fontSize.md};
-  &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
-  }
+const NetworkButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    display: "flex",
+    width: "100%",
+    boxSizing: "border-box",
+    alignItems: "center",
+    gap: spacing.md,
+    padding: `${spacing.xs} ${spacing.sm}`,
+    borderRadius: radius.md,
+    cursor: "pointer",
+    transition: "background 0.2s ease",
+    color: theme.colors.primaryText,
+    fontWeight: 500,
+    fontSize: fontSize.md,
+    "&:hover": {
+      background: theme.colors.secondaryButtonBg,
+    },
 
-  ${media.mobile} {
-    font-size: ${fontSize.sm};
-  }
-`;
+    [media.mobile]: {
+      fontSize: fontSize.sm,
+    },
+  };
+});
 
-const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
-  theme?: Theme;
-}>`
-  color: ${(p) => p.theme.text.secondary};
-  position: absolute;
-  left: 18px;
-`;
-
-const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
-  padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
-`;
-
-const ConfirmMessage = styled.div<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.link.primary};
-`;
-
-const ErrorMessage = styled.div<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.danger};
-`;
+const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
+  () => {
+    const theme = useCustomTheme();
+    return {
+      color: theme.colors.secondaryText,
+      position: "absolute",
+      left: spacing.sm,
+    };
+  },
+);

@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-react-core-solana.cjs.js",
-  "module": "dist/thirdweb-dev-react-core-solana.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-react-core-solana.esm.js": "./dist/thirdweb-dev-react-core-solana.browser.esm.js"
-  }
-}

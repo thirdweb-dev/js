@@ -1,26 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DeFiChain EVM Network Testnet",
   "chain": "defichain-evm-testnet",
-  "status": "incubating",
-  "rpc": [],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "DeFiChain",
-    "symbol": "DFI",
-    "decimals": 18
-  },
-  "infoURL": "https://meta.defichain.com/",
-  "shortName": "DFI-T",
   "chainId": 1131,
-  "networkId": 1131,
+  "explorers": [],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmdR3YL9F95ajwVwfxAGoEzYwm9w7JNsPSfUPjSaQogVjK",
     "width": 512,
     "height": 512,
     "format": "svg"
   },
-  "explorers": [],
-  "testnet": true,
-  "slug": "defichain-evm-network-testnet"
+  "infoURL": "https://meta.defichain.com/",
+  "name": "DeFiChain EVM Network Testnet",
+  "nativeCurrency": {
+    "name": "DeFiChain",
+    "symbol": "DFI",
+    "decimals": 18
+  },
+  "networkId": 1131,
+  "rpc": [],
+  "shortName": "DFI-T",
+  "slip44": 1,
+  "slug": "defichain-evm-network-testnet",
+  "status": "incubating",
+  "testnet": true
 } as const satisfies Chain;

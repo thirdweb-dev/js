@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DAX CHAIN",
   "chain": "DAX",
-  "rpc": [
-    "https://dax-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.prodax.io"
-  ],
+  "chainId": 142,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://prodax.io/",
+  "name": "DAX CHAIN",
   "nativeCurrency": {
     "name": "Prodax",
     "symbol": "DAX",
     "decimals": 18
   },
-  "infoURL": "https://prodax.io/",
-  "shortName": "dax",
-  "chainId": 142,
   "networkId": 142,
-  "testnet": false,
-  "slug": "dax-chain"
+  "rpc": [
+    "https://dax-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.prodax.io"
+  ],
+  "shortName": "dax",
+  "slug": "dax-chain",
+  "testnet": false
 } as const satisfies Chain;

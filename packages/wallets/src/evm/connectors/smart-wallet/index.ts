@@ -1,4 +1,4 @@
-import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -9,26 +9,32 @@ import {
   ProviderConfig,
   SmartWalletConfig,
   SmartWalletConnectionArgs,
+  TransactionOptions,
+  UserOpOptions,
 } from "./types";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, ethers, providers } from "ethers";
+import { BigNumber, constants, ethers, providers, utils } from "ethers";
 import {
-  ChainOrRpcUrl,
   getChainProvider,
+  getGasPrice,
+  SignerPermissionsInput,
+  SignerWithPermissions,
   SmartContract,
   ThirdwebSDK,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
+import { TransactionDetailsForUserOp } from "./lib/transaction-details";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
-  private config: SmartWalletConfig;
+  protected config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
+  chainId?: number;
 
   constructor(config: SmartWalletConfig) {
     super();
@@ -41,28 +47,30 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       clientId: config.clientId,
       secretKey: config.secretKey,
     }) as providers.BaseProvider;
-    const chainSlug = await this.getChainSlug(config.chain, originalProvider);
+    this.chainId = (await originalProvider.getNetwork()).chainId;
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${this.chainId}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
+      this.config.paymasterUrl ||
+      `https://${this.chainId}.bundler.thirdweb.com/v2`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
+    const deployOnSign = config.deployOnSign ?? true;
     const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
       localSigner,
       entryPointAddress,
       bundlerUrl,
-      paymasterAPI: this.config.gasless
+      paymasterAPI: this.config.paymasterAPI
         ? this.config.paymasterAPI
-          ? this.config.paymasterAPI
-          : getVerifyingPaymaster(
-              paymasterUrl,
-              entryPointAddress,
-              this.config.clientId,
-              this.config.secretKey,
-            )
-        : undefined,
+        : getVerifyingPaymaster(
+            paymasterUrl,
+            entryPointAddress,
+            this.config.clientId,
+            this.config.secretKey,
+          ),
+      gasless: config.gasless,
+      deployOnSign: deployOnSign,
       factoryAddress: config.factoryAddress,
       accountAddress: params.accountAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
@@ -72,10 +80,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
-    this.aaProvider = await create4337Provider(
+    this.aaProvider = create4337Provider(
       providerConfig,
       accountApi,
       originalProvider,
+      this.chainId,
     );
     this.accountApi = accountApi;
   }
@@ -122,7 +131,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   async switchChain(chainId: number): Promise<void> {
-    // TODO implement chain switching
     const provider = await this.getProvider();
     const currentChainId = (await provider.getNetwork()).chainId;
     if (currentChainId !== chainId) {
@@ -140,7 +148,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Check whether the connected signer can execute a given transaction using the smart wallet.
-   * @param transaction the transaction to execute using the smart wallet.
+   * @param transaction - The transaction to execute using the smart wallet.
    * @returns whether the connected signer can execute the transaction using the smart wallet.
    */
   async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
@@ -152,78 +160,268 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       (item) =>
         ethers.utils.getAddress(item.signer) ===
         ethers.utils.getAddress(signerAddress),
-    )[0].permissions;
+    )[0]?.permissions;
+
+    if (!restrictions) {
+      return false;
+    }
 
     return restrictions.approvedCallTargets.includes(transaction.getTarget());
   }
 
+  /// PREPARED TRANSACTIONS
+
   /**
-   * Execute a single transaction
-   * @param transactions
-   * @returns the transaction receipt
+   * Send a single transaction without waiting for confirmations
+   * @param transaction - the transaction to send
+   * @param config - optional the transaction configuration
+   * @returns The awaitable transaction
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
+  async send(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<providers.TransactionResponse> {
     const signer = await this.getSigner();
-    const tx = await signer.sendTransaction({
-      to: transaction.getTarget(),
-      data: transaction.encode(),
-      value: await transaction.getValue(),
-    });
+    return signer.sendTransaction(
+      {
+        to: transaction.getTarget(),
+        data: transaction.encode(),
+        value: await transaction.getValue(),
+      },
+      options,
+    );
+  }
+
+  /**
+   * Execute a single transaction (waiting for confirmations)
+   * @param transaction - The transaction to execute
+   * @returns The transaction receipt
+   */
+  async execute(
+    transaction: Transaction,
+    options?: TransactionOptions,
+  ): Promise<TransactionResult> {
+    const tx = await this.send(transaction, options);
     const receipt = await tx.wait();
     return {
       receipt,
     };
+  }
+
+  async sendBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ): Promise<providers.TransactionResponse> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const signer = await this.getSigner();
+    const { tx, batchData } = await this.prepareBatchTx(transactions);
+    return await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: tx.encode(),
+        value: 0,
+      },
+      {
+        ...options,
+        batchData,
+      },
+    );
   }
 
   /**
    * Execute multiple transactions in a single batch
-   * @param transactions
-   * @returns the transaction receipt
+   * @param transactions - The transactions to execute
+   * @returns The transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
-    if (!this.accountApi) {
-      throw new Error("Personal wallet not connected");
-    }
-    const signer = await this.getSigner();
-    const targets = transactions.map((tx) => tx.getTarget());
-    const data = transactions.map((tx) => tx.encode());
-    const values = transactions.map(() => BigNumber.from(0)); // TODO check if we can handle multiple values
-    const callData = await this.accountApi.encodeExecuteBatch(
-      targets,
-      values,
-      data,
-    );
-    const tx = await signer.sendTransaction(
-      {
-        to: await signer.getAddress(),
-        data: callData,
-        value: 0,
-      },
-      true, // batched tx flag
-    );
+  async executeBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ): Promise<TransactionResult> {
+    const tx = await this.sendBatch(transactions, options);
     const receipt = await tx.wait();
     return {
       receipt,
     };
   }
 
-  /**
-   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
-   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
-   * @returns the transaction receipt
-   */
-  async deploy(): Promise<TransactionResult> {
+  /// RAW TRANSACTIONS
+
+  async sendRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
+  ): Promise<providers.TransactionResponse> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    if (await this.accountApi.isAcountDeployed()) {
-      throw new Error("Smart wallet already deployed");
+    const signer = await this.getSigner();
+    return signer.sendTransaction(transaction, options);
+  }
+
+  async executeRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
+  ) {
+    const tx = await this.sendRaw(transaction, options);
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  async sendBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const tx = await signer.sendTransaction({
-      to: await signer.getAddress(),
-      data: "0x",
-    });
+    const batch = await this.prepareBatchRaw(transactions);
+    return signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: batch.tx.encode(),
+        value: 0,
+      },
+      {
+        ...options,
+        batchData: batch.batchData, // batched tx flag
+      },
+    );
+  }
+
+  async executeBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
+  ) {
+    const tx = await this.sendBatchRaw(transactions, options);
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  /// ESTIMATION
+
+  async estimate(transaction: Transaction, options?: TransactionOptions) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    return this.estimateTx(
+      {
+        target: transaction.getTarget(),
+        data: transaction.encode(),
+        value: await transaction.getValue(),
+        gasLimit: await transaction.getOverrides().gasLimit,
+        maxFeePerGas: await transaction.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await transaction.getOverrides()
+          .maxPriorityFeePerGas,
+        nonce: await transaction.getOverrides().nonce,
+      },
+      options,
+    );
+  }
+
+  async estimateRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: TransactionOptions,
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const tx = await ethers.utils.resolveProperties(transaction);
+    return this.estimateTx(
+      {
+        target: tx.to || constants.AddressZero,
+        data: tx.data?.toString() || "",
+        value: tx.value || BigNumber.from(0),
+        gasLimit: tx.gasLimit,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+        nonce: tx.nonce,
+      },
+      options,
+    );
+  }
+
+  async estimateBatch(
+    transactions: Transaction<any>[],
+    options?: TransactionOptions,
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const { tx, batchData } = await this.prepareBatchTx(transactions);
+    return this.estimateTx(
+      {
+        target: tx.getTarget(),
+        data: tx.encode(),
+        value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
+      },
+      {
+        ...options,
+        batchData,
+      },
+    );
+  }
+
+  async estimateBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+    options?: TransactionOptions,
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const { tx, batchData } = await this.prepareBatchRaw(transactions);
+    return this.estimateTx(
+      {
+        target: tx.getTarget(),
+        data: tx.encode(),
+        value: await tx.getValue(),
+        gasLimit: await tx.getOverrides().gasLimit,
+        maxFeePerGas: await tx.getOverrides().maxFeePerGas,
+        maxPriorityFeePerGas: await tx.getOverrides().maxPriorityFeePerGas,
+        nonce: await tx.getOverrides().nonce,
+      },
+      {
+        ...options,
+        batchData,
+      },
+    );
+  }
+
+  //// DEPLOYMENT
+
+  /**
+   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns The transaction receipt
+   */
+  async deploy(options?: TransactionOptions): Promise<TransactionResult> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: "0x",
+      },
+      {
+        ...options,
+        batchData: {
+          targets: [],
+          data: [],
+          values: [],
+        }, // batched tx flag to avoid hitting the Router fallback method
+      },
+    );
     const receipt = await tx.wait();
     return { receipt };
   }
@@ -239,9 +437,70 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return await this.accountApi.isAcountDeployed();
   }
 
+  async deployIfNeeded(options?: TransactionOptions): Promise<void> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      await this.deploy(options);
+    }
+  }
+
+  //// PERMISSIONS
+
+  async grantPermissions(
+    target: string,
+    permissions: SignerPermissionsInput,
+  ): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantPermissions(target, permissions);
+  }
+
+  async revokePermissions(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAccess(target);
+  }
+
+  async addAdmin(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantAdminPermissions(target);
+  }
+
+  async removeAdmin(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAdminPermissions(target);
+  }
+
+  async getAllActiveSigners(): Promise<SignerWithPermissions[]> {
+    const isDeployed = await this.isDeployed();
+    if (isDeployed) {
+      const accountContract = await this.getAccountContract();
+      return accountContract.account.getAllAdminsAndSigners();
+    } else {
+      const personalWallet = await this.personalWallet?.getSigner();
+      if (!personalWallet) {
+        throw new Error("Personal wallet not connected");
+      }
+      return [
+        {
+          isAdmin: true,
+          signer: await personalWallet.getAddress(),
+          permissions: {
+            startDate: new Date(0),
+            expirationDate: new Date(0),
+            nativeTokenLimitPerTransaction: BigNumber.from(0),
+            approvedCallTargets: [],
+          },
+        },
+      ];
+    }
+  }
+
   /**
    * Get the underlying account contract of the smart wallet.
-   * @returns the account contract of the smart wallet.
+   * @returns The account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
     const isDeployed = await this.isDeployed();
@@ -272,7 +531,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /**
    * Get the underlying account factory contract of the smart wallet.
-   * @returns the account factory contract.
+   * @returns The account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
     const sdk = ThirdwebSDK.fromSigner(
@@ -292,30 +551,24 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return sdk.getContract(this.config.factoryAddress);
   }
 
-  private defaultFactoryInfo(): FactoryContractInfo {
+  protected defaultFactoryInfo(): FactoryContractInfo {
     return {
-      createAccount: async (factory: SmartContract, owner: string) => {
+      createAccount: async (factory, owner) => {
         return factory.prepare("createAccount", [
           owner,
           ethers.utils.toUtf8Bytes(""),
         ]);
       },
       getAccountAddress: async (factory, owner) => {
-        try {
-          return await factory.call("getAddress", [
-            owner,
-            ethers.utils.toUtf8Bytes(""),
-          ]);
-        } catch (e) {
-          console.log("Falling back to old factory");
-          // TODO remove after a few versions
-          return factory.call("getAddress", [owner]);
-        }
+        return await factory.call("getAddress", [
+          owner,
+          ethers.utils.toUtf8Bytes(""),
+        ]);
       },
     };
   }
 
-  private defaultAccountInfo(): AccountContractInfo {
+  protected defaultAccountInfo(): AccountContractInfo {
     return {
       execute: async (account, target, value, data) => {
         return account.prepare("execute", [target, value, data]);
@@ -326,28 +579,101 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  private async getChainSlug(
-    chainOrRpc: ChainOrRpcUrl,
-    provider: ethers.providers.Provider,
-  ): Promise<string> {
-    if (typeof chainOrRpc === "object") {
-      return chainOrRpc.slug;
+  /// PRIVATE METHODS
+
+  private async estimateTx(
+    tx: TransactionDetailsForUserOp,
+    options?: UserOpOptions,
+  ) {
+    if (!this.accountApi || !this.aaProvider) {
+      throw new Error("Personal wallet not connected");
     }
-    if (typeof chainOrRpc === "number") {
-      const chain = getChainByChainId(chainOrRpc);
-      return chain.slug;
+    let deployGasLimit = BigNumber.from(0);
+    const [provider, isDeployed] = await Promise.all([
+      this.getProvider(),
+      this.isDeployed(),
+    ]);
+    if (!isDeployed) {
+      deployGasLimit = await this.estimateDeploymentGasLimit();
     }
-    if (typeof chainOrRpc === "string") {
-      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
-        // if it's a url, try to get the chain id from the provider
-        const chainId = (await provider.getNetwork()).chainId;
-        const chain = getChainByChainId(chainId);
-        return chain.slug;
-      }
-      // otherwise its the network name
-      return chainOrRpc;
-    } else {
-      throw new Error(`Invalid network: ${chainOrRpc}`);
+    const [userOp, gasPrice] = await Promise.all([
+      this.accountApi.createUnsignedUserOp(
+        this.aaProvider.httpRpcClient,
+        tx,
+        options,
+      ),
+      getGasPrice(provider),
+    ]);
+    const resolved = await utils.resolveProperties(userOp);
+    const transactionGasLimit = BigNumber.from(resolved.callGasLimit);
+    const transactionCost = transactionGasLimit.mul(gasPrice);
+    const deployCost = deployGasLimit.mul(gasPrice);
+    const totalCost = deployCost.add(transactionCost);
+
+    return {
+      ether: utils.formatEther(totalCost),
+      wei: totalCost,
+      details: {
+        deployGasLimit,
+        transactionGasLimit,
+        gasPrice,
+        transactionCost,
+        deployCost,
+        totalCost,
+      },
+    };
+  }
+
+  private async estimateDeploymentGasLimit() {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
     }
+    const initCode = await this.accountApi.getInitCode();
+    const [initGas, verificationGasLimit] = await Promise.all([
+      this.accountApi.estimateCreationGas(initCode),
+      this.accountApi.getVerificationGasLimit(),
+    ]);
+    return BigNumber.from(verificationGasLimit).add(initGas);
+  }
+
+  private async prepareBatchRaw(
+    transactions: ethers.utils.Deferrable<ethers.providers.TransactionRequest>[],
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const resolvedTxs = await Promise.all(
+      transactions.map((transaction) =>
+        ethers.utils.resolveProperties(transaction),
+      ),
+    );
+    const targets = resolvedTxs.map((tx) => tx.to || constants.AddressZero);
+    const data = resolvedTxs.map((tx) => tx.data || "0x");
+    const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
+    return {
+      tx: await this.accountApi.prepareExecuteBatch(targets, values, data),
+      batchData: {
+        targets,
+        data,
+        values,
+      },
+    };
+  }
+
+  private async prepareBatchTx(transactions: Transaction<any>[]) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const targets = transactions.map((tx) => tx.getTarget());
+    const data = transactions.map((tx) => tx.encode());
+    const values = await Promise.all(transactions.map((tx) => tx.getValue()));
+    return {
+      tx: await this.accountApi.prepareExecuteBatch(targets, values, data),
+      batchData: {
+        targets,
+        data,
+        values,
+      },
+    };
   }
 }

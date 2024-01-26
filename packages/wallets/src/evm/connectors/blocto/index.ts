@@ -1,13 +1,12 @@
 import {
   WagmiConnector,
   WagmiConnectorData,
-} from "../../../lib/wagmi-connectors";
+} from "../../../lib/wagmi-connectors/WagmiConnector";
 import {
   UserRejectedRequestError,
   SwitchChainError,
-  normalizeChainId,
   ConnectorNotFoundError,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import type {
   EthereumProviderConfig,
   EthereumProviderInterface as BloctoProvider,
@@ -17,6 +16,7 @@ import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import type { Chain } from "@thirdweb-dev/chains";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
 type BloctoSigner = providers.JsonRpcSigner;
 type BloctoOptions = Partial<EthereumProviderConfig>;
@@ -114,7 +114,7 @@ export class BloctoConnector extends WagmiConnector<
   getProvider({ chainId }: { chainId?: number } = {}): Promise<BloctoProvider> {
     if (!this.#provider) {
       const _chainId =
-        chainId ?? this.options.chainId ?? this.chains[0].chainId;
+        chainId ?? this.options.chainId ?? this.chains[0]?.chainId ?? 1;
       const _rpc = this.chains.find((x) => x.chainId === _chainId)?.rpc[0];
 
       this.#provider = new BloctoSDK({

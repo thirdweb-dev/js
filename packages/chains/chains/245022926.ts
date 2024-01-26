@@ -1,10 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Neon EVM DevNet",
   "chain": "Solana",
-  "rpc": [
-    "https://neon-evm-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.neonevm.org"
+  "chainId": 245022926,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://neon-devnet.blockscout.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    },
+    {
+      "name": "neonscan",
+      "url": "https://devnet.neonscan.org",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://neonfaucet.org"
@@ -15,38 +29,20 @@ export default {
     "height": 512,
     "format": "png"
   },
+  "infoURL": "https://neon-labs.org",
+  "name": "Neon EVM Devnet",
   "nativeCurrency": {
     "name": "Neon",
     "symbol": "NEON",
     "decimals": 18
   },
-  "infoURL": "https://neon-labs.org",
-  "shortName": "neonevm-devnet",
-  "chainId": 245022926,
   "networkId": 245022926,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://neon-devnet.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
-    {
-      "name": "native",
-      "url": "https://devnet.explorer.neon-labs.org",
-      "standard": "EIP3091"
-    },
-    {
-      "name": "neonscan",
-      "url": "https://devnet.neonscan.org",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://neon-evm-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://245022926.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://devnet.neonevm.org"
   ],
-  "testnet": false,
-  "slug": "neon-evm-devnet"
+  "shortName": "neonevm-devnet",
+  "slug": "neon-evm-devnet",
+  "testnet": false
 } as const satisfies Chain;

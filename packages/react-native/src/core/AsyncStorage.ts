@@ -33,7 +33,9 @@ export class AsyncLocalStorage implements IAsyncStorage {
     );
   }
 }
-
+/**
+ * @internal
+ */
 export class LocalStorage implements SyncStorage {
   name: string;
   asyncStorage: MMKV;
@@ -71,9 +73,11 @@ export class noopStorage implements IAsyncStorage {
 }
 
 /**
+ * @internal
+ *
  * Returns a new instance of AsyncLocalStorage
  *
- * @param name Name to namespace the storage with
+ * @param name - Name to namespace the storage with
  * @returns A new instance of AsyncLocalStorage
  */
 export function createAsyncLocalStorage(name: string) {
@@ -81,9 +85,11 @@ export function createAsyncLocalStorage(name: string) {
 }
 
 /**
+ * @internal
+ *
  * Returns a new instance of LocalStorage
  *
- * @param name Name to namespace the storage with
+ * @param name - Name to namespace the storage with
  * @returns A new instance of LocalStorage
  */
 export function createSyncStorage(name: string) {

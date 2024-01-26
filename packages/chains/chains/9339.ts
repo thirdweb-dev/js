@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dogcoin Testnet",
   "chain": "DOGS",
-  "icon": {
-    "url": "ipfs://QmZCadkExKThak3msvszZjo6UnAbUJKE61dAcg4TixuMC3",
-    "width": 160,
-    "height": 171,
-    "format": "png"
-  },
-  "rpc": [
-    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.dogcoin.me"
-  ],
-  "faucets": [
-    "https://faucet.dogcoin.network"
-  ],
-  "nativeCurrency": {
-    "name": "Dogcoin",
-    "symbol": "DOGS",
-    "decimals": 18
-  },
-  "infoURL": "https://dogcoin.network",
-  "shortName": "DOGSt",
   "chainId": 9339,
-  "networkId": 9339,
   "explorers": [
     {
       "name": "Dogcoin",
@@ -31,6 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "dogcoin-testnet"
+  "faucets": [
+    "https://faucet.dogcoin.network"
+  ],
+  "icon": {
+    "url": "ipfs://QmZCadkExKThak3msvszZjo6UnAbUJKE61dAcg4TixuMC3",
+    "width": 160,
+    "height": 171,
+    "format": "png"
+  },
+  "infoURL": "https://dogcoin.network",
+  "name": "Dogcoin Testnet",
+  "nativeCurrency": {
+    "name": "Dogcoin",
+    "symbol": "DOGS",
+    "decimals": 18
+  },
+  "networkId": 9339,
+  "rpc": [
+    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.dogcoin.me"
+  ],
+  "shortName": "DOGSt",
+  "slip44": 1,
+  "slug": "dogcoin-testnet",
+  "testnet": true
 } as const satisfies Chain;

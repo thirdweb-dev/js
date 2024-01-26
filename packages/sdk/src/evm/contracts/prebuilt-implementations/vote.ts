@@ -1,3 +1,15 @@
+import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
+import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  BigNumber,
+  Contract,
+  utils,
+  type BigNumberish,
+  type CallOverrides,
+} from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
@@ -5,17 +17,16 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { VoteType } from "../../enums";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue } from "../../types/currency";
 import {
   Proposal,
@@ -23,19 +34,7 @@ import {
   ProposalVote,
   VoteSettings,
 } from "../../types/vote";
-import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  type BigNumberish,
-  type CallOverrides,
-  Contract,
-  utils,
-} from "ethers";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { VoteType } from "../../enums/vote/Vote";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -51,6 +50,7 @@ import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
  *
  * @public
  */
+// TODO create extension wrappers for this
 export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;
@@ -123,7 +123,7 @@ export class Vote implements UpdateableNetwork {
    * Get a proposal by id.
    *
    * @param proposalId - The proposal id to get.
-   * @returns - The proposal.
+   * @returns  The proposal.
    */
   public async get(proposalId: BigNumberish): Promise<Proposal> {
     const all = await this.getAll();
@@ -147,27 +147,36 @@ export class Vote implements UpdateableNetwork {
    * console.log(proposals);
    * ```
    *
-   * @returns - All the proposals in the contract.
+   * @returns  All the proposals in the contract.
    */
   public async getAll(): Promise<Proposal[]> {
-    return Promise.all(
-      (await this.contractWrapper.read("getAllProposals", [])).map(
-        async (data) => ({
-          proposalId: data.proposalId,
-          proposer: data.proposer,
-          description: data.description,
-          startBlock: data.startBlock,
-          endBlock: data.endBlock,
-          state: await this.contractWrapper.readContract.state(data.proposalId),
-          votes: await this.getProposalVotes(data.proposalId),
-          executions: data[3].map((c, i) => ({
-            toAddress: data.targets[i],
-            nativeTokenValue: c,
-            transactionData: data.calldatas[i],
-          })),
-        }),
+    const _proposals =
+      (await this.contractWrapper.read("getAllProposals", [])) ?? [];
+    const _items = await Promise.all(
+      _proposals.map((item) =>
+        Promise.all([
+          this.contractWrapper.read("state", [item.proposalId]),
+          this.getProposalVotes(item.proposalId),
+        ]),
       ),
     );
+    return _items.map(([state, votes], index) => {
+      const data = _proposals[index];
+      return {
+        proposalId: data.proposalId,
+        proposer: data.proposer,
+        description: data.description,
+        startBlock: data.startBlock,
+        endBlock: data.endBlock,
+        state: state,
+        votes: votes,
+        executions: data[3].map((c, i) => ({
+          toAddress: data.targets[i],
+          nativeTokenValue: c,
+          transactionData: data.calldatas[i],
+        })),
+      };
+    });
   }
 
   /**
@@ -177,9 +186,9 @@ export class Vote implements UpdateableNetwork {
   public async getProposalVotes(
     proposalId: BigNumber,
   ): Promise<ProposalVote[]> {
-    const votes = await this.contractWrapper.readContract.proposalVotes(
+    const votes = await this.contractWrapper.read("proposalVotes", [
       proposalId,
-    );
+    ]);
     return [
       {
         type: VoteType.Against,
@@ -216,7 +225,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @param proposalId - The unique identifier of a proposal .
    * @param account - (optional) wallet account address. Defaults to connected signer.
-   * @returns - True if the account has already voted on the proposal.
+   * @returns  True if the account has already voted on the proposal.
    */
   public async hasVoted(
     proposalId: string,
@@ -225,10 +234,10 @@ export class Vote implements UpdateableNetwork {
     if (!account) {
       account = await this.contractWrapper.getSignerAddress();
     }
-    return this.contractWrapper.readContract.hasVoted(
+    return this.contractWrapper.read("hasVoted", [
       proposalId,
       await resolveAddress(account),
-    );
+    ]);
   }
 
   /**
@@ -245,7 +254,7 @@ export class Vote implements UpdateableNetwork {
    * ```
    *
    * @param proposalId - The proposal ID to check.
-   * @returns - True if the proposal can be executed, false otherwise.
+   * @returns  True if the proposal can be executed, false otherwise.
    */
   public async canExecute(proposalId: string): Promise<boolean> {
     await this.ensureExists(proposalId);
@@ -268,12 +277,12 @@ export class Vote implements UpdateableNetwork {
   /**
    * Check the balance of the project wallet in the native token of the chain
    *
-   * @returns - The balance of the project in the native token of the chain
+   * @returns  The balance of the project in the native token of the chain
    */
   public async balance(): Promise<CurrencyValue> {
-    const balance = await this.contractWrapper.readContract.provider.getBalance(
-      this.contractWrapper.readContract.address,
-    );
+    const balance = await this.contractWrapper
+      .getProvider()
+      .getBalance(this.contractWrapper.address);
     return {
       name: "",
       symbol: "",
@@ -287,11 +296,14 @@ export class Vote implements UpdateableNetwork {
    * Check the balance of the project wallet in a particular
    * ERC20 token contract
    *
-   * @returns - The balance of the project in the native token of the chain
+   * @returns  The balance of the project in the native token of the chain
    */
   public async balanceOfToken(
     tokenAddress: AddressOrEns,
   ): Promise<CurrencyValue> {
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       await resolveAddress(tokenAddress),
       ERC20Abi,
@@ -300,7 +312,7 @@ export class Vote implements UpdateableNetwork {
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
       tokenAddress,
-      await erc20.balanceOf(this.contractWrapper.readContract.address),
+      await erc20.balanceOf(this.contractWrapper.address),
     );
   }
 
@@ -312,7 +324,7 @@ export class Vote implements UpdateableNetwork {
    */
   private async ensureExists(proposalId: string): Promise<void> {
     try {
-      await this.contractWrapper.readContract.state(proposalId);
+      await this.contractWrapper.read("state", [proposalId]);
     } catch (e) {
       throw Error(`Proposal ${proposalId} not found`);
     }
@@ -329,11 +341,11 @@ export class Vote implements UpdateableNetwork {
       votingQuorumFraction,
       proposalTokenThreshold,
     ] = await Promise.all([
-      this.contractWrapper.readContract.votingDelay(),
-      this.contractWrapper.readContract.votingPeriod(),
-      this.contractWrapper.readContract.token(),
-      this.contractWrapper.readContract["quorumNumerator()"](),
-      this.contractWrapper.readContract.proposalThreshold(),
+      this.contractWrapper.read("votingDelay", []),
+      this.contractWrapper.read("votingPeriod", []),
+      this.contractWrapper.read("token", []),
+      this.contractWrapper.read("quorumNumerator" as "quorumNumerator()", []),
+      this.contractWrapper.read("proposalThreshold", []),
     ]);
     const votingTokenMetadata = await fetchCurrencyMetadata(
       this.contractWrapper.getProvider(),
@@ -385,7 +397,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @param description - The description of the proposal.
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
-   * @returns - The id of the created proposal and the transaction receipt.
+   * @returns  The id of the created proposal and the transaction receipt.
    */
   propose = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -395,7 +407,7 @@ export class Vote implements UpdateableNetwork {
       if (!executions) {
         executions = [
           {
-            toAddress: this.contractWrapper.readContract.address,
+            toAddress: this.contractWrapper.address,
             nativeTokenValue: 0,
             transactionData: "0x",
           },

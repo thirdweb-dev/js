@@ -1,13 +1,14 @@
 import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
+import { hexlifyUserOp, randomNonce } from "./utils";
+import { ProviderConfig, UserOpOptions } from "../types";
 
 export class ERC4337EthersSigner extends Signer {
-  config: ClientConfig;
+  config: ProviderConfig;
   originalSigner: Signer;
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
@@ -15,7 +16,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
-    config: ClientConfig,
+    config: ProviderConfig,
     originalSigner: Signer,
     erc4337provider: ERC4337EthersProvider,
     httpRpcClient: HttpRpcClient,
@@ -35,20 +36,26 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batched: boolean = false,
+    options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const multidimensionalNonce = randomNonce();
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
         value: tx.value,
         gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
       },
-      batched,
+      options,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
@@ -132,24 +139,43 @@ Code: ${errorCode}`;
   }
 
   async signMessage(message: Bytes | string): Promise<string> {
-    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
-    if (isNotDeployed) {
-      console.log(
-        "Account contract not deployed yet. Deploying account before signing message",
-      );
-      const tx = await this.sendTransaction({
-        to: await this.getAddress(),
-        data: "0x",
-      });
-      await tx.wait();
-    }
+      const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+      if (isNotDeployed && this.config.deployOnSign) {
+        console.log(
+          "Account contract not deployed yet. Deploying account before signing message",
+        );
+        const tx = await this.sendTransaction({
+          to: await this.getAddress(),
+          data: "0x",
+        });
+        await tx.wait();
+      }
+    
     return await this.originalSigner.signMessage(message);
   }
 
   async signTransaction(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: UserOpOptions,
   ): Promise<string> {
-    throw new Error("not implemented");
+    const tx = await ethers.utils.resolveProperties(transaction);
+    await this.verifyAllNecessaryFields(tx);
+
+    const multidimensionalNonce = randomNonce();
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
+      {
+        target: tx.to || "",
+        data: tx.data?.toString() || "0x",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
+      },
+      options,
+    );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
+
+    const userOpString = JSON.stringify(await hexlifyUserOp(userOperation));
+    return userOpString;
   }
 }

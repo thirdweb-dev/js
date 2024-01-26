@@ -1,18 +1,19 @@
-import { useAppTheme } from "../../../styles/hooks";
+import { useLocale } from "../../../providers/ui-context-provider";
+import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/WalletLoadingThumbnail";
+import { Box, ImageSvgUri } from "../../base";
 import Text from "../../base/Text";
-import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
-import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
   subHeaderText?: string;
   footer?: ReactNode;
   content?: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   onBackPress: () => void;
-  wallet: WalletConfig;
+  wallet: WalletConfig<any>;
 };
 
 export function ConnectingWallet({
@@ -23,51 +24,46 @@ export function ConnectingWallet({
   onClose,
   onBackPress,
 }: ConnectingWalletProps) {
-  const theme = useAppTheme();
-
-  const onFooterPress = () => {
-    Linking.openURL("https://support.thirdweb.com/");
-  };
-
+  const l = useLocale();
   return (
-    <View>
-      <ConnectWalletHeader
-        onBackPress={onBackPress}
-        walletLogoUrl={wallet.meta.iconURL}
-        subHeaderText={subHeaderText}
-        onClose={onClose}
-      />
+    <Box paddingHorizontal="xl">
+      <Box marginVertical="lg">
+        <ConnectWalletHeader
+          onBackPress={onBackPress}
+          subHeaderText={subHeaderText}
+          onClose={onClose}
+        />
+      </Box>
+      <WalletLoadingThumbnail imageSize={85}>
+        <ImageSvgUri height={80} width={80} imageUrl={wallet.meta.iconURL} />
+      </WalletLoadingThumbnail>
       <View style={styles.connectingContainer}>
-        <ActivityIndicator size="small" color={theme.colors.linkPrimary} />
         {content ? (
           content
         ) : (
-          <Text variant="bodySmallSecondary" mt="md">
-            Connect your wallet through the {wallet.meta.name} application.
-          </Text>
+          <>
+            <Text variant="header" mt="lg">
+              {l.connecting_wallet.connecting_your_wallet}
+            </Text>
+            <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
+              {l.connecting_wallet.connecting_through_pop_up}
+            </Text>
+          </>
         )}
       </View>
-      {footer ? (
-        footer
-      ) : (
-        <ModalFooter
-          footer={`Having troubles connecting to ${wallet.meta.name}?`}
-          onPress={onFooterPress}
-        />
-      )}
-    </View>
+      {footer ? footer : null}
+    </Box>
   );
 }
 
 const styles = StyleSheet.create({
   connectingContainer: {
-    display: "flex",
     flexDirection: "column",
-    flexWrap: "wrap",
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
     paddingHorizontal: 4,
+    marginBottom: 24,
     marginTop: 18,
   },
 });

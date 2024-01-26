@@ -4,8 +4,8 @@ import { extractFunctionsFromAbi } from "./extractFunctionsFromAbi";
 
 /**
  * @internal
- * @param contractAbi
- * @param featureAbis
+ * @param contractAbi - The abi to check
+ * @param featureAbis - The feature abi to check
  * @returns
  */
 export function hasMatchingAbi(
@@ -40,6 +40,9 @@ export function hasMatchingAbi(
   return intersection.length === interfaceFn.length;
 }
 
+/**
+ * @internal
+ */
 export function matchesAbiFromBytecode(
   contractBytecode: string,
   featureAbis: readonly AbiInput[],

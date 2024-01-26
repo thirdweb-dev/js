@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Credit Smart Chain",
   "chain": "CREDIT",
-  "rpc": [
-    "https://credit-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.creditsmartchain.com"
+  "chainId": 13308,
+  "explorers": [
+    {
+      "name": "Creditscan",
+      "url": "https://scan.creditsmartchain.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Credit",
-    "symbol": "CREDIT",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://creditsmartchain.com",
-  "shortName": "Credit",
-  "chainId": 13308,
-  "networkId": 13308,
   "icon": {
     "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
     "width": 1000,
     "height": 1628,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Creditscan",
-      "url": "https://scan.creditsmartchain.com",
-      "icon": {
-        "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
-        "width": 1000,
-        "height": 1628,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://creditsmartchain.com",
+  "name": "Credit Smart Chain",
+  "nativeCurrency": {
+    "name": "Credit",
+    "symbol": "CREDIT",
+    "decimals": 18
+  },
+  "networkId": 13308,
+  "rpc": [
+    "https://credit-smart-chain-credit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.creditsmartchain.com"
   ],
-  "testnet": false,
-  "slug": "credit-smart-chain"
+  "shortName": "Credit",
+  "slug": "credit-smart-chain-credit",
+  "testnet": false
 } as const satisfies Chain;

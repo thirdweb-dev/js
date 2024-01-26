@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ultron Mainnet",
   "chain": "Ultron",
+  "chainId": 1231,
+  "explorers": [
+    {
+      "name": "Ultron Explorer",
+      "url": "https://ulxscan.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
+    }
+  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://ultron.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ultron-rpc.net"
-  ],
-  "faucets": [],
+  "infoURL": "https://ultron.foundation",
+  "name": "Ultron Mainnet",
   "nativeCurrency": {
     "name": "Ultron",
     "symbol": "ULX",
     "decimals": 18
   },
-  "infoURL": "https://ultron.foundation",
-  "shortName": "UtronMainnet",
-  "chainId": 1231,
   "networkId": 1231,
-  "explorers": [
-    {
-      "name": "Ultron Explorer",
-      "url": "https://ulxscan.com",
-      "icon": {
-        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "rpc": [
+    "https://ultron.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ultron-rpc.net"
   ],
-  "testnet": false,
-  "slug": "ultron"
+  "shortName": "UtronMainnet",
+  "slug": "ultron",
+  "testnet": false
 } as const satisfies Chain;

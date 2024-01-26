@@ -1,10 +1,11 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
-import { getPolygonGasPriorityFee } from "../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
+import {
+  fetchContractMetadataFromAddress,
+  getContractMetadataFromCache,
+} from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
-import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
@@ -16,7 +17,7 @@ import type {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
   BaseContract,
   CallOverrides,
@@ -31,7 +32,7 @@ import {
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
-import type { DeployEvents } from "../../types/deploy";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
 import { ForwardRequestMessage, PermitRequestMessage } from "../types";
 import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
@@ -43,11 +44,11 @@ import {
 } from "../../common/forwarder";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
-import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
+import { getCompositeABI } from "../../common/plugin/getCompositePluginABI";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -191,8 +192,10 @@ abstract class TransactionContext {
    * Estimate the total gas cost of this transaction (in both ether and wei)
    */
   public async estimateGasCost() {
-    const gasLimit = await this.estimateGasLimit();
-    const gasPrice = await this.getGasPrice();
+    const [gasLimit, gasPrice] = await Promise.all([
+      this.estimateGasLimit(),
+      this.getGasPrice(),
+    ]);
     const gasCost = gasLimit.mul(gasPrice);
 
     return {
@@ -205,16 +208,7 @@ abstract class TransactionContext {
    * Calculates the gas price for transactions (adding a 10% tip buffer)
    */
   public async getGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
-    const extraTip = gasPrice.div(100).mul(10); // + 10%
-    const txGasPrice = gasPrice.add(extraTip);
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-
-    return txGasPrice;
+    return getGasPrice(this.provider);
   }
 
   /**
@@ -229,63 +223,11 @@ abstract class TransactionContext {
    */
   protected async getGasOverrides() {
     // If we're running in the browser, let users configure gas price in their wallet UI
+    // TODO - should prob only check if its a json rpc signer (browser extension)
     if (isBrowser()) {
       return {};
     }
-
-    const feeData = await this.provider.getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = (await this.provider.getNetwork()).chainId;
-      const block = await this.provider.getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getGasPrice(),
-      };
-    }
-  }
-
-  /**
-   * Calculates the priority fee per gas according (adding a 10% buffer)
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
-    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-    if (txGasPrice.lt(minGasPrice)) {
-      return minGasPrice;
-    }
-
-    return txGasPrice;
+    return getDefaultGasOverrides(this.provider);
   }
 }
 
@@ -494,7 +436,8 @@ export class Transaction<
     if (
       this.gaslessOptions &&
       ("openzeppelin" in this.gaslessOptions ||
-        "biconomy" in this.gaslessOptions)
+        "biconomy" in this.gaslessOptions ||
+        "engine" in this.gaslessOptions)
     ) {
       return this.sendGasless();
     }
@@ -572,8 +515,11 @@ export class Transaction<
     let sentTx;
     let iteration = 1;
     while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
+      try {
+        sentTx = await this.provider.getTransaction(txHash);
+      } catch (err) {
+        // some providers can throw an error if the tx is very recent
+      }
       // Exponential (ish) backoff for polling
       if (!sentTx) {
         await new Promise((resolve) =>
@@ -599,10 +545,12 @@ export class Transaction<
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
-          "biconomy" in this.gaslessOptions),
+          "biconomy" in this.gaslessOptions ||
+          "engine" in this.gaslessOptions),
       "No gasless options set on this transaction!",
     );
 
+    const signerAddress = await this.getSignerAddress();
     const args = [...this.args];
 
     if (
@@ -610,9 +558,8 @@ export class Transaction<
       Array.isArray(this.args[0]) &&
       args[0].length > 0
     ) {
-      const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, signerAddress]),
       );
     }
 
@@ -621,8 +568,10 @@ export class Transaction<
       "Cannot execute gasless transaction without valid signer",
     );
 
-    const chainId = (await this.provider.getNetwork()).chainId;
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [{ chainId }, from] = await Promise.all([
+      this.provider.getNetwork(),
+      this.overrides.from || signerAddress,
+    ]);
     const to = this.contract.address;
     const value = this.overrides?.value || 0;
 
@@ -685,8 +634,10 @@ export class Transaction<
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const to = this.contract.address;
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
@@ -721,17 +672,17 @@ export class Transaction<
     let sources: ContractSource[] | undefined = undefined;
     let contractName: string | undefined = undefined;
     try {
-      const metadata = await fetchContractMetadataFromAddress(
+      const chainId = (await provider.getNetwork()).chainId;
+      const metadata = getContractMetadataFromCache(
         this.contract.address,
-        this.provider,
-        this.storage,
+        chainId,
       );
 
-      if (metadata.name) {
+      if (metadata?.name) {
         contractName = metadata.name;
       }
 
-      if (metadata.metadata.sources) {
+      if (metadata?.metadata.sources) {
         sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
@@ -871,8 +822,10 @@ export class DeployTransaction extends TransactionContext {
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
     const rpcUrl = provider.connection?.url;
@@ -916,7 +869,7 @@ export class DeployTransaction extends TransactionContext {
   }
 }
 
-export async function defaultGaslessSendFunction(
+async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -925,8 +878,17 @@ export async function defaultGaslessSendFunction(
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
+  } else if (gaslessOptions && "openzeppelin" in gaslessOptions) {
+    return defenderSendFunction(
+      transaction,
+      signer,
+      provider,
+      storage,
+      gaslessOptions,
+    );
   }
-  return defenderSendFunction(
+
+  return engineSendFunction(
     transaction,
     signer,
     provider,
@@ -935,7 +897,62 @@ export async function defaultGaslessSendFunction(
   );
 }
 
-export async function biconomySendFunction(
+/**
+ * @internal
+ */
+export async function engineSendFunction(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  invariant(
+    gaslessOptions && "engine" in gaslessOptions,
+    "calling engine gasless transaction without engine config in the SDK options",
+  );
+
+  const request = await enginePrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+  );
+
+  const res = await fetch(gaslessOptions.engine.relayerUrl, {
+    ...request,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error?.message || JSON.stringify(data.error));
+  }
+
+  const queueId = data.result.queueId as string;
+  const engineUrl = gaslessOptions.engine.relayerUrl.split("/relayer/")[0];
+  const startTime = Date.now();
+  while (true) {
+    const txRes = await fetch(`${engineUrl}/transaction/status/${queueId}`);
+    const txData = await txRes.json();
+
+    if (txData.result.transactionHash) {
+      return txData.result.transactionHash as string;
+    }
+
+    // Time out after 30s
+    if (Date.now() - startTime > 30 * 1000) {
+      throw new Error("timeout");
+    }
+
+    // Poll to check if the transaction was mined
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+}
+
+async function biconomySendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -964,7 +981,7 @@ export async function biconomySendFunction(
   );
 }
 
-export async function defenderSendFunction(
+async function defenderSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -998,6 +1015,168 @@ export async function defenderSendFunction(
   );
 }
 
+async function enginePrepareRequest(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+) {
+  try {
+    const metadata = await fetchContractMetadataFromAddress(
+      transaction.to,
+      provider,
+      storage,
+    );
+
+    const chainId = (await provider.getNetwork()).chainId;
+    const abi = await getCompositeABI(
+      transaction.to,
+      metadata.abi,
+      provider,
+      {},
+      storage,
+    );
+    const contract = new ContractWrapper(
+      signer,
+      transaction.to,
+      abi,
+      {},
+      storage,
+    );
+    if (abi.find((item) => item.name === "executeMetaTransaction")) {
+      const name: string = await contract.call("name", []);
+
+      const domain = {
+        name,
+        version: "1",
+        salt: "0x" + chainId.toString(16).padStart(64, "0"), // Use 64 length hex chain id as salt
+        verifyingContract: transaction.to,
+      };
+
+      const types = {
+        MetaTransaction: [
+          { name: "nonce", type: "uint256" },
+          { name: "from", type: "address" },
+          { name: "functionSignature", type: "bytes" },
+        ],
+      };
+
+      const nonce = await contract.call("getNonce", [transaction.from]);
+      const message = {
+        nonce: nonce,
+        from: transaction.from,
+        functionSignature: transaction.data,
+      };
+
+      const { signature } = await signTypedDataInternal(
+        signer,
+        domain,
+        types,
+        message,
+      );
+
+      return {
+        method: "POST",
+        body: JSON.stringify({
+          type: "execute-meta-transaction",
+          request: {
+            from: transaction.from,
+            to: transaction.to,
+            data: transaction.data,
+          },
+          signature,
+        }),
+      };
+    }
+  } catch {
+    // no-op
+  }
+
+  if (
+    transaction.functionName === "approve" &&
+    transaction.functionArgs.length === 2
+  ) {
+    const spender = transaction.functionArgs[0];
+    const amount = transaction.functionArgs[1];
+    // TODO: support DAI permit by signDAIPermit
+    const { message: permit, signature: sig } = await signEIP2612Permit(
+      signer,
+      transaction.to,
+      transaction.from,
+      spender,
+      amount,
+    );
+
+    const message = {
+      to: transaction.to,
+      owner: permit.owner,
+      spender: permit.spender,
+      value: BigNumber.from(permit.value).toString(),
+      nonce: BigNumber.from(permit.nonce).toString(),
+      deadline: BigNumber.from(permit.deadline).toString(),
+    };
+
+    return {
+      method: "POST",
+      body: JSON.stringify({
+        type: "permit",
+        request: message,
+        signature: sig,
+      }),
+    };
+  } else {
+    const forwarderAddress =
+      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+        ?.openzeppelinForwarder ||
+      (await computeForwarderAddress(provider, storage));
+    const ForwarderABI = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+    ).default;
+
+    const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
+    const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+      transaction.from,
+    ]);
+
+    const domain = {
+      name: "GSNv2 Forwarder",
+      version: "0.0.1",
+      chainId: transaction.chainId,
+      verifyingContract: forwarderAddress,
+    };
+    const types = {
+      ForwardRequest,
+    };
+
+    const message = {
+      from: transaction.from,
+      to: transaction.to,
+      value: BigNumber.from(0).toString(),
+      gas: BigNumber.from(transaction.gasLimit).toString(),
+      nonce: BigNumber.from(nonce).toString(),
+      data: transaction.data,
+    };
+
+    const { signature: sig } = await signTypedDataInternal(
+      signer,
+      domain,
+      types,
+      message,
+    );
+    const signature: BytesLike = sig;
+
+    return {
+      method: "POST",
+      body: JSON.stringify({
+        type: "forward",
+        request: message,
+        signature,
+        forwarderAddress,
+      }),
+    };
+  }
+}
+
 async function defenderPrepareRequest(
   transaction: GaslessTransaction,
   signer: Signer,
@@ -1016,13 +1195,15 @@ async function defenderPrepareRequest(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA ||
+        ]?.openzeppelinForwarderEOA ||
         (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder ||
+        ]?.openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
-
+  const ForwarderABI = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+  ).default;
   const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,

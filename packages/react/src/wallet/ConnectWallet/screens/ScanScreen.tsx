@@ -1,15 +1,16 @@
+import { useContext } from "react";
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
 import {
-  BackButton,
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+  Container,
+  ModalHeader,
+  ScreenBottomContainer,
+} from "../../../components/basic";
 import { fontSize, iconSize, spacing } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
-import styled from "@emotion/styled";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { Text } from "../../../components/text";
+import { Button } from "../../../components/buttons";
 
 export const ScanScreen: React.FC<{
   onBack: () => void;
@@ -18,82 +19,71 @@ export const ScanScreen: React.FC<{
   walletName: string;
   walletIconURL: string;
   hideBackButton: boolean;
+  qrScanInstruction: string;
+  getStartedLink: string;
 }> = (props) => {
-  const walletName = props.walletName.toLowerCase().includes("wallet")
-    ? props.walletName
-    : `${props.walletName} wallet`;
+  const modalConfig = useContext(ModalConfigCtx);
   return (
-    <>
-      {!props.hideBackButton && (
-        <BackButton
-          onClick={props.onBack}
-          style={{
-            position: "absolute",
-            zIndex: 10,
-            left: spacing.lg,
-            top: spacing.lg,
-          }}
+    <Container fullHeight flex="column" animate="fadein">
+      <Container p="lg">
+        <ModalHeader
+          onBack={props.hideBackButton ? undefined : props.onBack}
+          title={props.walletName}
         />
-      )}
-      <div
-        style={{
-          textAlign: "center",
-        }}
-      >
-        <QRCode
-          qrCodeUri={props.qrCodeUri}
-          QRIcon={
-            <Img
-              width={iconSize.lg}
-              height={iconSize.lg}
-              src={props.walletIconURL}
-            />
-          }
-        />
+      </Container>
 
-        <Spacer y="xl" />
+      <Spacer y="sm" />
 
-        <ModalTitle
+      <Container expand flex="column" px="lg" center="both">
+        <div
           style={{
             textAlign: "center",
           }}
         >
-          Scan with {walletName}{" "}
-        </ModalTitle>
-        <Spacer y="md" />
+          <QRCode
+            qrCodeUri={props.qrCodeUri}
+            QRIcon={
+              <Img
+                width={iconSize.xxl}
+                height={iconSize.xxl}
+                src={props.walletIconURL}
+              />
+            }
+          />
 
-        <ModalDescription>
-          Scan this QR code with your phone <br />
-          camera or {walletName} to connect
-        </ModalDescription>
+          <Spacer y="lg" />
 
-        <Spacer y="md" />
+          <Text
+            center
+            multiline
+            balance
+            style={{
+              paddingInline: spacing.lg,
+            }}
+          >
+            {props.qrScanInstruction}
+          </Text>
+        </div>
+      </Container>
 
-        <div
+      <Spacer y="lg" />
+
+      <ScreenBottomContainer
+        style={{
+          border: modalConfig.modalSize === "compact" ? undefined : "none",
+        }}
+      >
+        <Button
+          variant="link"
+          onClick={props.onGetStarted}
           style={{
-            display: "flex",
-            justifyContent: "center",
+            fontSize: fontSize.sm,
+            textAlign: "center",
           }}
         >
-          <Spinner size="md" color="link" />
-        </div>
-
-        <Spacer y="xl" />
-
-        <LinkButton onClick={props.onGetStarted}>
-          {`Don't`} have {walletName}?
-        </LinkButton>
-      </div>
-    </>
+          {props.getStartedLink}
+        </Button>
+      </ScreenBottomContainer>
+    </Container>
   );
 };
-
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.link.primary};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
-  }
-`;

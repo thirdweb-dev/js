@@ -1,47 +1,3 @@
-import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  ExtensionNotImplementedError,
-  NotFoundError,
-} from "../../common/error";
-import { assertEnabled } from "../../common/feature-detection/assertEnabled";
-import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { resolveAddress } from "../../common/ens/resolveAddress";
-import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
-import { buildTransactionFunction } from "../../common/transactions";
-import {
-  FEATURE_EDITION,
-  FEATURE_EDITION_BATCH_MINTABLE,
-  FEATURE_EDITION_BURNABLE,
-  FEATURE_EDITION_ENUMERABLE,
-  FEATURE_EDITION_MINTABLE,
-  FEATURE_EDITION_REVEALABLE,
-  FEATURE_EDITION_SIGNATURE_MINTABLE,
-  FEATURE_EDITION_CLAIM_CUSTOM,
-  FEATURE_EDITION_CLAIM_CONDITIONS_V2,
-  FEATURE_EDITION_LAZY_MINTABLE_V2,
-  FEATURE_EDITION_SUPPLY,
-} from "../../constants/erc1155-features";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
-import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
-import type { UploadProgressEvent } from "../../types/events";
-import { AirdropInput } from "../../types/airdrop/airdrop";
-import {
-  BaseClaimConditionERC1155,
-  BaseDropERC1155,
-  BaseERC1155,
-  BaseSignatureMintERC1155,
-} from "../../types/eips";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
-import { Transaction } from "./transactions";
 import type {
   DropERC1155,
   IBurnableERC1155,
@@ -53,17 +9,62 @@ import type {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
+  constants,
   type BigNumberish,
   type BytesLike,
-  constants,
 } from "ethers";
-import { ERC1155Claimable } from "./erc-1155-claimable";
-import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { QueryAllParams } from "../../../core/schema/QueryParams";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  ExtensionNotImplementedError,
+  NotFoundError,
+} from "../../common/error";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import {
+  FEATURE_EDITION,
+  FEATURE_EDITION_BATCH_MINTABLE,
+  FEATURE_EDITION_BURNABLE,
+  FEATURE_EDITION_CLAIM_CONDITIONS_V2,
+  FEATURE_EDITION_CLAIM_CUSTOM,
+  FEATURE_EDITION_ENUMERABLE,
+  FEATURE_EDITION_LAZY_MINTABLE_V2,
+  FEATURE_EDITION_MINTABLE,
+  FEATURE_EDITION_REVEALABLE,
+  FEATURE_EDITION_SIGNATURE_MINTABLE,
+  FEATURE_EDITION_SUPPLY,
+} from "../../constants/erc1155-features";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
+import { AirdropInput } from "../../types/airdrop/airdrop";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import {
+  BaseClaimConditionERC1155,
+  BaseDropERC1155,
+  BaseERC1155,
+  BaseSignatureMintERC1155,
+} from "../../types/eips";
+import type { UploadProgressEvent } from "../../types/events";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { UpdateableNetwork } from "../interfaces/contract";
+import { NetworkInput, TransactionResultWithId } from "../types";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { ERC1155Claimable } from "./internal/erc1155/erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./internal/erc1155/erc-1155-claimable-with-conditions";
+import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
+import { Transaction } from "./transactions";
 
-import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155LazyMintable } from "./erc-1155-lazy-mintable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
+import { ContractEncoder } from "./contract-encoder";
+import { Erc1155Burnable } from "./internal/erc1155/erc-1155-burnable";
+import { Erc1155Enumerable } from "./internal/erc1155/erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./internal/erc1155/erc-1155-lazy-mintable";
+import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
 
 /**
  * Standard ERC1155 NFT functions
@@ -124,7 +125,7 @@ export class Erc1155<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   ////// Standard ERC1155 functions //////
@@ -143,8 +144,12 @@ export class Erc1155<
    */
   public async get(tokenId: BigNumberish): Promise<NFT> {
     const [supply, metadata] = await Promise.all([
-      this.contractWrapper.readContract
-        .totalSupply(tokenId)
+      (
+        this.contractWrapper as ContractWrapper<
+          BaseERC1155 | BaseSignatureMintERC1155
+        >
+      )
+        .read("totalSupply", [tokenId])
         .catch(() => BigNumber.from(0)),
       this.getTokenMetadata(tokenId).catch(() => ({
         id: tokenId.toString(),
@@ -168,12 +173,15 @@ export class Erc1155<
    * const nft = await contract.erc1155.totalSupply(tokenId);
    * ```
    * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
+   * @returns The total supply
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
     if (detectContractFeature(this.contractWrapper, "ERC1155Supply")) {
-      return await this.contractWrapper.readContract.totalSupply(tokenId);
+      return await (this.contractWrapper as ContractWrapper<BaseERC1155>).read(
+        "totalSupply",
+        [tokenId],
+      );
     } else {
       throw new ExtensionNotImplementedError(FEATURE_EDITION_SUPPLY);
     }
@@ -197,10 +205,11 @@ export class Erc1155<
     address: AddressOrEns,
     tokenId: BigNumberish,
   ): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(
-      await resolveAddress(address),
-      tokenId,
-    );
+    return await (
+      this.contractWrapper as ContractWrapper<
+        BaseERC1155 | BaseSignatureMintERC1155
+      >
+    ).read("balanceOf", [await resolveAddress(address), tokenId]);
   }
 
   /**
@@ -222,10 +231,14 @@ export class Erc1155<
     address: AddressOrEns,
     operator: AddressOrEns,
   ): Promise<boolean> {
-    return await this.contractWrapper.readContract.isApprovedForAll(
+    return await (
+      this.contractWrapper as ContractWrapper<
+        BaseERC1155 | BaseSignatureMintERC1155
+      >
+    ).read("isApprovedForAll", [
       await resolveAddress(address),
       await resolveAddress(operator),
-    );
+    ]);
   }
 
   /**
@@ -255,6 +268,41 @@ export class Erc1155<
         contractWrapper: this.contractWrapper,
         method: "safeTransferFrom",
         args: [from, await resolveAddress(to), tokenId, amount, data],
+      });
+    },
+  );
+
+  /**
+   * Transfer multiple NFTs
+   * 
+   * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
+   * 
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   * // The token IDs of the NFTs you want to send
+   * const tokenIds = [0, 1, 2];
+   * // How many copies of the NFTs to transfer
+   * const amounts = [1, 2, 3];
+   * await contract.erc1155.transferBatch(toAddress, tokenIds, amounts);
+   * ```
+   * 
+   * @twfeature ERC1155BatchTransferable
+   */
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+      fromAddress?: AddressOrEns,
+      data: BytesLike = [0],
+    ) => {
+      const from = fromAddress ? await resolveAddress(fromAddress) : await this.contractWrapper.getSignerAddress();
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeBatchTransferFrom",
+        args: [from, await resolveAddress(to), tokenIds, amounts, data],
       });
     },
   );
@@ -353,9 +401,12 @@ export class Erc1155<
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
 
       const balanceOf = await this.balanceOf(from, tokenId);
 
@@ -371,11 +422,15 @@ export class Erc1155<
         );
       }
 
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = input.map(({ address: to, quantity }) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "safeTransferFrom",
-          [from, to, tokenId, quantity, data],
-        );
+        return contractEncoder.encode("safeTransferFrom", [
+          from,
+          to,
+          tokenId,
+          quantity,
+          data,
+        ]);
       });
 
       return Transaction.fromContractWrapper({
@@ -392,7 +447,10 @@ export class Erc1155<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC1155>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
+      return await (this.contractWrapper as ContractWrapper<TokenERC1155>).read(
+        "nextTokenIdToMint",
+        [],
+      );
     } else {
       throw new Error(
         "Contract requires the `nextTokenIdToMint` function available to determine the next token ID to mint",
@@ -431,7 +489,7 @@ export class Erc1155<
    * const count = await contract.erc1155.totalCount();
    * console.log(count);
    * ```
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -443,7 +501,7 @@ export class Erc1155<
    * Get the total supply of a specific NFT
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -471,12 +529,16 @@ export class Erc1155<
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC1155Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).owned(
       walletAddress,
+      queryParams,
     );
   }
 
@@ -951,7 +1013,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -989,7 +1051,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
@@ -1120,7 +1182,12 @@ export class Erc1155<
    * @param tokenId - the token Id to fetch
    */
   public async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.uri(tokenId);
+    const tokenUri = await (
+      this.contractWrapper as ContractWrapper<
+        BaseERC1155 | BaseSignatureMintERC1155
+      >
+    ).read("uri", [tokenId]);
+
     if (!tokenUri) {
       throw new NotFoundError();
     }

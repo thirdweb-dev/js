@@ -1,3 +1,10 @@
+import type {
+  IContractMetadata,
+  IERC20Metadata,
+} from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BaseContract } from "ethers";
+import { z } from "zod";
 import { ExtensionNotImplementedError } from "../../common/error";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
@@ -6,15 +13,8 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  IContractMetadata,
-  IERC20Metadata,
-} from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract } from "ethers";
-import { z } from "zod";
 
 /**
  * @internal
@@ -82,13 +82,13 @@ export class ContractMetadata<
    * console.log(metadata);
    * ```
    * @public
-   * @returns the metadata of the given contract
+   * @returns The metadata of the given contract
    * @twfeature ContractMetadata
    */
   public async get() {
     let data;
     if (this.supportsContractMetadata(this.contractWrapper)) {
-      const uri = await this.contractWrapper.readContract.contractURI();
+      const uri = await this.contractWrapper.read("contractURI", []);
       if (uri && uri.includes("://")) {
         data = await this.storage.downloadJSON(uri);
       }
@@ -100,7 +100,7 @@ export class ContractMetadata<
         let contractName: string | undefined;
         try {
           if (hasFunction<IERC20Metadata>("name", this.contractWrapper)) {
-            contractName = await this.contractWrapper.readContract.name();
+            contractName = await this.contractWrapper.read("name", []);
           }
         } catch (err) {
           // no-op
@@ -109,7 +109,7 @@ export class ContractMetadata<
         let contractSymbol: string | undefined;
         try {
           if (hasFunction<IERC20Metadata>("symbol", this.contractWrapper)) {
-            contractSymbol = await this.contractWrapper.readContract.symbol();
+            contractSymbol = await this.contractWrapper.read("symbol", []);
           }
         } catch (err) {
           // no-op
@@ -118,7 +118,7 @@ export class ContractMetadata<
         let publishedMetadata;
         try {
           publishedMetadata = await fetchContractMetadataFromAddress(
-            this.contractWrapper.readContract.address,
+            this.contractWrapper.address,
             this.contractWrapper.getProvider(),
             this.storage,
             this.contractWrapper.options,

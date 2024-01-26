@@ -1,4 +1,4 @@
-import type { Theme } from "../design-system";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 import { useClipboard } from "../evm/components/hooks/useCopyClipboard";
 import { ToolTip } from "./Tooltip";
 import styled from "@emotion/styled";
@@ -9,6 +9,7 @@ export const CopyIcon: React.FC<{
   tip: string;
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
+  hasCopied?: boolean;
 }> = (props) => {
   const { hasCopied, onCopy } = useClipboard(props.text);
 
@@ -22,12 +23,15 @@ export const CopyIcon: React.FC<{
       }}
     >
       <ToolTip tip={props.tip} side={props.side} align={props.align}>
-        {hasCopied ? <CheckIconStyled /> : <CopyIconSVG />}
+        {props.hasCopied || hasCopied ? <CheckIconStyled /> : <CopyIconSVG />}
       </ToolTip>
     </div>
   );
 };
 
-const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.icon.success};
-`;
+const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.success,
+  };
+});
