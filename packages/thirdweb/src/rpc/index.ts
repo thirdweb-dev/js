@@ -70,7 +70,7 @@ export function getRpcClient(
       // assign ids to each request
       const activeBatch = pendingBatch.slice().map((inflight, index) => {
         // assign the id to the request
-        inflight.request.id = index + index;
+        inflight.request.id = index;
         // also assign the jsonrpc version
         inflight.request.jsonrpc = "2.0";
         return inflight;
