@@ -3,7 +3,7 @@ import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
 declare global {
   interface Window {
-    xdefi?: Ethereum;
+    xfi?: Ethereum;
   }
 }
 
@@ -16,8 +16,8 @@ export function getInjectedXDEFIProvider(): Ethereum | undefined {
   }
 
   if (assertWindowEthereum(globalThis.window)) {
-    if (globalThis.window.ethereum && window.xdefi) {
-      return window.xdefi;
+    if (globalThis.window.ethereum && window.xfi) {
+      return window.xfi;
     }
   }
 }
