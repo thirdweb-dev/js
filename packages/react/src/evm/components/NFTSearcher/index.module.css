@@ -1,0 +1,197 @@
+.searchContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.searchBarContainer {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    width: 500px;
+    border: 3px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+    height: 63.5px;
+    position: relative;
+}
+
+.networkImage {
+    margin-left: 10px;
+    margin-top: 12px;
+    margin-right: 0px;
+    width: 30px;
+}
+
+.searchBar {
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    font-size: 20px;
+    border-radius: 12px;
+    background-color: transparent;
+    padding: 12px 20px 12px 10px;
+    align-items: center;
+    justify-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+.clearButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc;
+    font-size: 1.5em;
+    background-color: rgba(231, 232, 232, 0.407);
+    width: 60px;
+    cursor: pointer;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+
+.suggestionsContainer {
+    position: absolute;
+    left: 0;
+    top: 68px; 
+    justify-self: center;
+    border-radius: 12px;
+    width: 500px;
+    padding: 12px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    flex: 1;
+}
+
+.suggestion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.suggestion:hover {
+    background-color: #e7e8e8;
+    color:#070707;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.suggestionLogo {
+    width: 24px; /* Set width as needed */
+    height: 24px; /* Set height as needed */
+}
+
+.suggestionText {
+    flex: 1; /* Take the remaining space */
+}
+
+/* Additional styling for the logo image */
+.suggestionLogo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.searchBarContainer, .searchBar:focus{
+outline: none;
+}
+
+/* Sreens less than 720px */
+@media (max-width: 720px) {
+
+.searchBarContainer {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-self: center;
+    width: 350px;
+    border: 3px solid #ccc;
+    border-radius: 13px;
+    box-sizing: border-box;
+    height: 63.5px;
+    z-index: 1;
+    left: 0;
+    right: 0;
+}
+
+.searchBar{
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    font-size: 20px;
+    border-radius: 12px;
+    background-color: transparent;
+    padding: 12px 20px 12px 10px;
+    align-items: center;
+    justify-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+.searchBarMatic{
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    font-size: 20px;
+    border-radius: 12px;
+    background-color: transparent;
+    padding: 12px 20px 12px 10px;
+    align-items: center;
+    justify-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+.clearButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc;
+    font-size: 1.5em;
+    background-color: rgba(231, 232, 232, 0.407);
+    width: 60px;
+    cursor: pointer;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.suggestionsContainer {
+    position: relative;
+    top: 5px; 
+    width: 350px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.suggestion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px; /* Add margin between each suggestion */
+}
+
+.suggestionLogo {
+    width: 24px; /* Set width as needed */
+    height: 24px; /* Set height as needed */
+}
+
+.suggestionText {
+    flex: 1; /* Take the remaining space */
+}
+
+/* Additional styling for the logo image */
+.suggestionLogo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+}

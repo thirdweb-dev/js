@@ -45,6 +45,7 @@ export {
   type DefaultChains,
   type ThirdwebProviderProps,
 } from "./providers/thirdweb-provider";
+export { NFTSearcher } from "./components/NFTSearcher";
 
 export type { MediaRendererProps, SharedMediaProps } from "./components/types";
 
