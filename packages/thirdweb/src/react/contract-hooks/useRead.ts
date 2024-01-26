@@ -40,7 +40,8 @@ export function useRead<
     const fn = txInputOrFn as (arg_0: TxOpts<params>) => Promise<result>;
     const opts = fnOpts as TxOpts<params>;
     const { contract: contract_, ...rest } = opts;
-    queryKey = [contract_.chainId, contract_.address, rest] as const;
+    // TODO probably needs better identifier than `fn.name`?
+    queryKey = [contract_.chainId, contract_.address, fn.name, rest] as const;
     queryFn = async () => fn(opts);
   } else {
     // treat as direct call
