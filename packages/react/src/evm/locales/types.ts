@@ -265,6 +265,7 @@ export type ThirdwebLocale = {
       submitEmail: string;
     };
     phantomWallet: ExtensionAndQRScreensLocale;
+    xdefiWallet: ExtensionAndQRScreensLocale;
     rabbyWallet: ExtensionAndQRScreensLocale;
     rainbowWallet: ExtensionAndQRScreensLocale;
     safeWallet: {
