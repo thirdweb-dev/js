@@ -395,7 +395,8 @@ const MagicUI: React.FC<{
             name="magic-input"
             type={type}
             emptyErrorMessage={emptyErrorMessage}
-            errorMessage={(input) => {
+            errorMessage={(_input) => {
+              const input = _input.toLowerCase();
               const isEmail = input.includes("@");
               const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
@@ -474,8 +475,8 @@ function useConnectMagic() {
             data.type === "connect"
               ? {}
               : isEmail
-              ? { email: selectionData, chainId: activeChain.chainId }
-              : { phoneNumber: selectionData, chainId: activeChain.chainId },
+                ? { email: selectionData, chainId: activeChain.chainId }
+                : { phoneNumber: selectionData, chainId: activeChain.chainId },
           );
           connected();
         } catch (e) {

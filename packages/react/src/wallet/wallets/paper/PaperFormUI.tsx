@@ -79,7 +79,7 @@ export const PaperFormUI = (props: {
         name="email"
         type="email"
         errorMessage={(_input) => {
-          const input = _input.replace(/\+/g, "");
+          const input = _input.replace(/\+/g, "").toLowerCase();
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
           const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
