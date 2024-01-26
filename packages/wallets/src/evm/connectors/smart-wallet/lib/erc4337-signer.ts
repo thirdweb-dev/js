@@ -140,7 +140,7 @@ Code: ${errorCode}`;
 
   async signMessage(message: Bytes | string): Promise<string> {
       const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
-      if (isNotDeployed && (this.config.doNotDeployOnSignMessage === undefined || this.config.doNotDeployOnSignMessage === false)) {
+      if (isNotDeployed && this.config.deployOnSign) {
         console.log(
           "Account contract not deployed yet. Deploying account before signing message",
         );

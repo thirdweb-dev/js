@@ -54,7 +54,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       this.config.paymasterUrl ||
       `https://${this.chainId}.bundler.thirdweb.com/v2`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
-    const doNotDeployOnSignMessage = config.doNotDeployOnSignMessage || false;
+    const deployOnSign = config.deployOnSign || true;
     const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
@@ -70,7 +70,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             this.config.secretKey,
           ),
       gasless: config.gasless,
-      doNotDeployOnSignMessage: doNotDeployOnSignMessage,
+      deployOnSign: deployOnSign,
       factoryAddress: config.factoryAddress,
       accountAddress: params.accountAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),

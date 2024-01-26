@@ -22,7 +22,7 @@ export type SmartWalletConfig = {
   paymasterUrl?: string;
   paymasterAPI?: PaymasterAPI;
   entryPointAddress?: string;
-  doNotDeployOnSignMessage?: boolean;
+  deployOnSign?: boolean;
 } & ContractInfoInput &
   WalletConnectReceiverConfig;
 
@@ -43,7 +43,7 @@ export interface ProviderConfig extends ContractInfo {
   accountAddress?: string;
   paymasterAPI: PaymasterAPI;
   gasless: boolean;
-  doNotDeployOnSignMessage?: boolean;
+  deployOnSign?: boolean;
 }
 
 export type ContractInfoInput = {
