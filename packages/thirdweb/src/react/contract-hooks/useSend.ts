@@ -1,16 +1,24 @@
 import type { AbiFunction } from "abitype";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationResult,
+} from "@tanstack/react-query";
 import { execute } from "../../transaction/index.js";
 import type { Transaction } from "../../transaction/transaction.js";
 import { useActiveWallet } from "../providers/wallet-provider.js";
 
-export function useSend<const abiFn extends AbiFunction>() {
+export function useSend<const abiFn extends AbiFunction>(): UseMutationResult<
+  Awaited<ReturnType<typeof execute>>,
+  Error,
+  Transaction<abiFn>
+> {
   const wallet = useActiveWallet();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (tx: Transaction<abiFn>) => {
+    mutationFn: async (tx) => {
       if (!wallet) {
         throw new Error("No active wallet");
       }
