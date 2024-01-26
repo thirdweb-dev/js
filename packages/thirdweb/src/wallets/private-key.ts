@@ -106,7 +106,7 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
 
     // send the tx
     // TODO: move into rpc/methods
-    const { result } = await rpcRequest({
+    const result = await rpcRequest({
       method: "eth_sendRawTransaction",
       params: [signedTx],
     });

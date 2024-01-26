@@ -30,7 +30,7 @@ export async function estimateGas<
 
   // make the call
   // TODO: move into rpc/methods
-  const { result } = await rpcRequest({
+  const result = await rpcRequest({
     method: "eth_estimateGas",
     params: [data],
   });

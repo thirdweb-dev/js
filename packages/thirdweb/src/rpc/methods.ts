@@ -16,15 +16,16 @@ export async function blockByNumber(
   blockNumber: BlockNumber | BlockTag,
   includeTransactions = false,
 ) {
-  const { result } = await client({
+  const result = await client({
     method: "eth_getBlockByNumber",
     params: [blockNumber, includeTransactions],
   });
+  console.log("blockByNumber", { blockNumber, includeTransactions, result });
   return formatBlock(result as RpcBlock);
 }
 
 export async function maxPriorityFeePerGas(client: RPCClient) {
-  const { result } = await client({
+  const result = await client({
     method: "eth_maxPriorityFeePerGas",
     params: [],
   });
@@ -32,7 +33,7 @@ export async function maxPriorityFeePerGas(client: RPCClient) {
 }
 
 export async function gasPrice(client: RPCClient) {
-  const { result } = await client({
+  const result = await client({
     method: "eth_gasPrice",
     params: [],
   });
@@ -44,7 +45,7 @@ export async function transactionCount(
   address: Address,
   blockNumber: BlockNumber | BlockTag = "latest",
 ) {
-  const { result } = await client({
+  const result = await client({
     method: "eth_getTransactionCount",
     params: [address, blockNumber],
   });
@@ -52,7 +53,7 @@ export async function transactionCount(
 }
 
 export async function getTransactionReceipt(client: RPCClient, hash: string) {
-  const { result } = await client({
+  const result = await client({
     method: "eth_getTransactionReceipt",
     params: [hash],
   });
