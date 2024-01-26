@@ -1,10 +1,4 @@
-import { WallerProvider } from "./wallet-provider.js";
-
-export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
-  return <WallerProvider>{children}</WallerProvider>;
-};
+export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
 
 export {
   useSetActiveWallet,
@@ -13,4 +7,8 @@ export {
   useConnectedWallets,
   useActiveWalletAddress,
   WallerProvider,
-} from "./wallet-provider.js";
+} from "./providers/wallet-provider.js";
+
+export { useRead } from "./contract-hooks/useRead.js";
+export { useSend } from "./contract-hooks/useSend.js";
+export { useEstimateGas } from "./contract-hooks/useEstimate.js";

@@ -1,3 +1,5 @@
+"use-client";
+
 import {
   createContext,
   useCallback,
@@ -5,7 +7,7 @@ import {
   useMemo,
   useContext,
 } from "react";
-import type { IWallet } from "../wallets/interfaces/wallet.js";
+import type { IWallet } from "../../wallets/interfaces/wallet.js";
 
 export type WalletWithId = IWallet<any> & { _id: string };
 

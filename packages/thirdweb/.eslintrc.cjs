@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ["thirdweb"],
+  extends: ["thirdweb", "plugin:@tanstack/eslint-plugin-query/recommended"],
   plugins: ["better-tree-shaking", "eslint-plugin-tsdoc"],
   rules: {
     "tsdoc/syntax": "error",

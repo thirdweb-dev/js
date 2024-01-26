@@ -24,18 +24,18 @@ export async function read<
   return readTx(transaction(options));
 }
 
-export async function readTx<const abiFn extends AbiFunction>(
-  tx: Transaction<abiFn>,
-): Promise<
-  // if the outputs are 0 length, return never, invalid case
+export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 length, return never, invalid case
   abiFn["outputs"] extends { length: 0 }
     ? never
     : abiFn["outputs"] extends { length: 1 }
       ? // if the outputs are 1 length, we'll always return the first element
         AbiParametersToPrimitiveTypes<abiFn["outputs"]>[0]
       : // otherwise we'll return the array
-        AbiParametersToPrimitiveTypes<abiFn["outputs"]>
-> {
+        AbiParametersToPrimitiveTypes<abiFn["outputs"]>;
+
+export async function readTx<const abiFn extends AbiFunction>(
+  tx: Transaction<abiFn>,
+): Promise<ReadOutputs<abiFn>> {
   const [encodedData, resolvedAbi] = await Promise.all([
     encode(tx),
     resolveAbi(tx),
