@@ -77,6 +77,13 @@
       },
       "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.cjs.js"
     },
+    "./evm/wallets/xdefi": {
+      "module": {
+        "browser": "./evm/wallets/xdefi/dist/thirdweb-dev-wallets-evm-wallets-xdefi.browser.esm.js",
+        "default": "./evm/wallets/xdefi/dist/thirdweb-dev-wallets-evm-wallets-xdefi.esm.js"
+      },
+      "default": "./evm/wallets/xdefi/dist/thirdweb-dev-wallets-evm-wallets-xdefi.cjs.js"
+    },
     "./evm/wallets/blocto": {
       "module": {
         "browser": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.browser.esm.js",
@@ -251,6 +258,13 @@
         "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.esm.js"
       },
       "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.cjs.js"
+    },
+    "./evm/connectors/xdefi": {
+      "module": {
+        "browser": "./evm/connectors/xdefi/dist/thirdweb-dev-wallets-evm-connectors-xdefi.browser.esm.js",
+        "default": "./evm/connectors/xdefi/dist/thirdweb-dev-wallets-evm-connectors-xdefi.esm.js"
+      },
+      "default": "./evm/connectors/xdefi/dist/thirdweb-dev-wallets-evm-connectors-xdefi.cjs.js"
     },
     "./evm/wallets/rainbow-wallet": {
       "module": {
