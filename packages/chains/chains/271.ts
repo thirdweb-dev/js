@@ -9,9 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.egonscan.com"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
     "width": 512,

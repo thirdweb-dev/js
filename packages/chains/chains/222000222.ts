@@ -5,6 +5,17 @@ export default {
   "explorers": [
     {
       "name": "explorer",
+      "url": "https://testnet.meldscan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+        "width": 4000,
+        "height": 4000,
+        "format": "png"
+      }
+    },
+    {
+      "name": "explorer",
       "url": "https://subnets-test.avax.network/meld",
       "standard": "EIP3091",
       "icon": {
@@ -34,7 +45,7 @@ export default {
   "rpc": [
     "https://kanazawa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://222000222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/meld/testnet/rpc"
+    "https://testnet-rpc.meld.com"
   ],
   "shortName": "kanazawa",
   "slip44": 1,

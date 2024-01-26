@@ -1,7 +1,7 @@
 import { getActiveCookie, getUser } from "../helpers/user";
-import { ThirdwebAuthContext } from "../types";
+import type { ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,14 +10,14 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({
-      error: "Invalid method. Only POST supported.",
+      error: "Invalid method. Only POST supported",
     });
   }
 
   const activeCookie = getActiveCookie(req);
   if (!activeCookie) {
     return res.status(400).json({
-      error: "No logged in user to logout.",
+      error: "No logged in user to logout",
     });
   }
 

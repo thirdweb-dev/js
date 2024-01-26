@@ -149,6 +149,34 @@ export class StandardErc1155<
   );
 
   /**
+   * Transfer multiple NFTs
+   * 
+   * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
+   * 
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFTs to
+   * const toAddress = "{{wallet_address}}";
+   * // Array of token IDs of the NFTs you want to send
+   * const tokenIds = ["0", "1", "2"];
+   * // Array of amounts of the NFTs you want to send
+   * const amounts = [1, 2, 3];
+   * await contract.transferBatch(toAddress, tokenIds, amounts);
+   * ```
+   */
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+      fromAddress?: AddressOrEns,
+      data: BytesLike = [0],
+    ) => {
+      return this.erc1155.transferBatch.prepare(to, tokenIds, amounts, fromAddress, data);
+    },
+  );
+
+  /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @param operator - the operator's address
    * @param approved - whether to approve or remove

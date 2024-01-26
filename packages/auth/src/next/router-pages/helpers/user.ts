@@ -1,18 +1,19 @@
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
-} from "../../constants";
-import { Json } from "../../core";
-import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
-import { GetServerSidePropsContext, NextApiRequest } from "next";
-import { NextRequest } from "next/server";
+} from "../../../constants";
+import type { Json } from "../../../core";
+import type { ThirdwebAuthContext } from "../types";
+import type { ThirdwebAuthUser } from "../../common/types";
+import type { GetServerSidePropsContext, NextApiRequest } from "next";
+import type { NextRequest } from "next/server";
 
 export function getCookie(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
   cookie: string,
 ): string | undefined {
   if (typeof req.cookies.get === "function") {
-    return req.cookies.get(cookie);
+    return req.cookies.get(cookie)?.value;
   }
 
   return (req.cookies as any)[cookie];
