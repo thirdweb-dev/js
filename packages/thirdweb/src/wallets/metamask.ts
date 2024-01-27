@@ -1,7 +1,11 @@
-import { getAddress, toHex, type Hash } from "viem";
+import {
+  getAddress,
+  toHex,
+  type Hash,
+  type TransactionSerializable,
+} from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { AbiFunction, Address } from "abitype";
-import type { Transaction } from "../transaction/transaction.js";
+import type { Address } from "abitype";
 import type { IWallet } from "./interfaces/wallet.js";
 import type { Ethereum } from "./interfaces/ethereum.js";
 
@@ -161,38 +165,26 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
   // sign functions
 
   // tx functions
-  public async sendTransaction<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
+  public async sendTransaction(
+    tx: TransactionSerializable & { chainId: number },
   ) {
     const provider = this.provider;
     if (!provider || !this.address) {
       throw new Error("not connected");
     }
     // switch chain if tx is on different chain
-    if (tx.contract.chainId !== this.connectedChainId) {
-      await this.switchChain(tx.contract.chainId);
+    if (tx.chainId !== this.connectedChainId) {
+      await this.switchChain(tx.chainId);
     }
-
-    const [encode, estimateGas] = await Promise.all([
-      import("../transaction/actions/encode.js").then((m) => m.encode),
-      import("../transaction/actions/estimate-gas.js").then(
-        (m) => m.estimateGas,
-      ),
-    ]);
-
-    const [encodedData, estimatedGas] = await Promise.all([
-      encode(tx),
-      estimateGas(tx, { from: this.address }),
-    ]);
 
     const result = await provider.request({
       method: "eth_sendTransaction",
       params: [
         {
-          gas: toHex(estimatedGas),
+          gas: tx.gas ? toHex(tx.gas) : undefined,
           from: this.address,
-          to: tx.contract.address as Address,
-          data: encodedData,
+          to: tx.to as Address,
+          data: tx.data,
         },
       ],
     });

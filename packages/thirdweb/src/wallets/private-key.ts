@@ -1,5 +1,4 @@
 import type {
-  Address,
   Hash,
   Hex,
   PrivateKeyAccount,
@@ -8,8 +7,8 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { AbiFunction, TypedData } from "abitype";
-import type { Transaction } from "../transaction/transaction.js";
+import type { TypedData } from "abitype";
+
 import type { IWallet } from "./interfaces/wallet.js";
 
 export function privateKeyWallet({ client }: { client: ThirdwebClient }) {
@@ -22,14 +21,14 @@ type PrivateKeyWalletConnectOptions = {
 
 class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
   private account: PrivateKeyAccount | null = null;
+  private client: ThirdwebClient;
 
   get address() {
     return this.account?.address || null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  constructor(_client: ThirdwebClient) {
-    // this.client = client;
+  constructor(client: ThirdwebClient) {
+    this.client = client;
   }
 
   public async connect(options: PrivateKeyWalletConnectOptions) {
@@ -50,13 +49,6 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
     return this.account.signMessage({ message });
   }
 
-  public async signTransaction(tx: TransactionSerializable) {
-    if (!this.account) {
-      throw new Error("not connected");
-    }
-    return this.account.signTransaction(tx);
-  }
-
   public async signTypedData<
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
@@ -68,44 +60,26 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
   }
 
   // tx functions
+  public async signTransaction(tx: TransactionSerializable) {
+    if (!this.account) {
+      throw new Error("not connected");
+    }
+    return this.account.signTransaction(tx);
+  }
 
-  public async sendTransaction<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
+  public async sendTransaction(
+    tx: TransactionSerializable & { chainId: number },
   ) {
     if (!this.account || !this.address) {
       throw new Error("not connected");
     }
+
     const { getRpcClient } = await import("../rpc/index.js");
-    const rpcRequest = getRpcClient(tx.contract, {
-      chainId: tx.contract.chainId,
+    const rpcRequest = getRpcClient(this.client, {
+      chainId: tx.chainId,
     });
 
-    const [getDefaultGasOverrides, encode, transactionCount, estimateGas] =
-      await Promise.all([
-        import("../gas/fee-data.js").then((m) => m.getDefaultGasOverrides),
-        import("../transaction/actions/encode.js").then((m) => m.encode),
-        import("../rpc/methods.js").then((m) => m.transactionCount),
-        import("../transaction/actions/estimate-gas.js").then(
-          (m) => m.estimateGas,
-        ),
-      ]);
-
-    const [gasOverrides, encodedData, nextNonce, estimatedGas] =
-      await Promise.all([
-        getDefaultGasOverrides(tx.contract, tx.contract.chainId),
-        encode(tx),
-        transactionCount(rpcRequest, this.address),
-        estimateGas(tx, { from: this.address }),
-      ]);
-
-    const signedTx = await this.signTransaction({
-      gas: estimatedGas,
-      to: tx.contract.address as Address,
-      chainId: tx.contract.chainId,
-      data: encodedData,
-      nonce: nextNonce,
-      ...gasOverrides,
-    });
+    const signedTx = await this.signTransaction(tx);
 
     // send the tx
     // TODO: move into rpc/methods

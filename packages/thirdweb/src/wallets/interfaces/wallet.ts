@@ -1,7 +1,6 @@
 import type { Address } from "abitype";
-import type { Transaction } from "../../transaction/transaction.js";
+
 import type {
-  AbiFunction,
   Hex,
   SignableMessage,
   TransactionSerializable,
@@ -17,7 +16,6 @@ export interface IWallet<connectOpts> {
   disconnect: () => Promise<void>;
   //
   signMessage?: (_message: SignableMessage) => Promise<Hex>;
-  signTransaction?: (_tx: TransactionSerializable) => Promise<Hex>;
   signTypedData?: <
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
@@ -26,7 +24,8 @@ export interface IWallet<connectOpts> {
   ) => Promise<Hex>;
 
   // TX methods
-  sendTransaction: <abiFn extends AbiFunction>(
-    _tx: Transaction<abiFn>,
+  signTransaction?: (_tx: TransactionSerializable) => Promise<Hex>;
+  sendTransaction: (
+    _tx: TransactionSerializable & { chainId: number },
   ) => Promise<Hex>;
 }

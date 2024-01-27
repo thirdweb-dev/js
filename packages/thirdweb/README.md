@@ -267,7 +267,7 @@ import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
 import { createClient, contract } from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
-import { waitForReceipt } from "thirdweb/transaction";
+import { sendTransaction, waitForReceipt } from "thirdweb/transaction";
 
 // Step 1: create a client
 const client = createClient({
@@ -305,7 +305,7 @@ const tx = mintTo({
 });
 
 // Step 6: execute the transaction with the wallet
-const transactionHash = await wallet.sendTransaction(tx);
+const transactionHash = await sendTransaction(tx, wallet);
 
 console.log("tx hash", transactionHash);
 
@@ -330,7 +330,12 @@ console.log("ending balance", newBalance);
 
 ```ts
 import { contract, createClient } from "thirdweb";
-import { read, transaction, waitForReceipt } from "thirdweb/transaction";
+import {
+  read,
+  sendTransaction,
+  transaction,
+  waitForReceipt,
+} from "thirdweb/transaction";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
 // Step 1: create a client
@@ -370,7 +375,7 @@ const tx = transaction({
 });
 
 // Step 6: execute the transaction with the wallet
-const transactionHash = await wallet.sendTransaction(tx);
+const transactionHash = await sendTransaction(tx, wallet);
 
 console.log("tx hash", transactionHash);
 
