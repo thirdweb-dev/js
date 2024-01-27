@@ -20,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function enDefault() {
+export function enDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "Sign in",
@@ -167,6 +167,7 @@ export function enDefault() {
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
