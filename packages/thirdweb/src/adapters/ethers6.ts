@@ -73,12 +73,11 @@ async function toEthersContract<abi extends Abi = []>(
     );
   }
 
-  const { resolveAbi } = await import("../abi/resolveContractAbi.js");
+  const { resolveContractAbi } = await import(
+    "../contract/actions/resolve-abi.js"
+  );
 
-  const abi = await resolveAbi({
-    chainId: twContract.chainId,
-    contractAddress: twContract.address,
-  });
+  const abi = await resolveContractAbi(twContract);
 
   return new ethers.Contract(
     twContract.address,

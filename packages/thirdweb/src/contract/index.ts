@@ -26,3 +26,5 @@ export function contract<const abi extends Abi = []>(
   const { client, ...rest } = options;
   return { ...client, ...rest } as const;
 }
+
+export { resolveContractAbi } from "./actions/resolve-abi.js";

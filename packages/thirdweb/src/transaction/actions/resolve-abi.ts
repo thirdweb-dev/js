@@ -3,7 +3,7 @@ import type { Transaction, TransactionInput } from "../transaction.js";
 import { isAbiFunction } from "../../abi/resolveAbiFunction.js";
 import type { ParseMethod } from "../../abi/types.js";
 
-const ABI_RESOLUTION_CACHE = new WeakMap<
+const ABI_FN_RESOLUTION_CACHE = new WeakMap<
   Transaction<AbiFunction>,
   Promise<AbiFunction>
 >();
@@ -12,10 +12,10 @@ export function resolveAbi<
   method extends AbiFunction | string,
   abi extends Abi,
 >(tx: TransactionInput<abi, method>): Promise<ParseMethod<abi, method>> {
-  if (ABI_RESOLUTION_CACHE.has(tx as Transaction<AbiFunction>)) {
-    return ABI_RESOLUTION_CACHE.get(tx as Transaction<AbiFunction>) as Promise<
-      ParseMethod<abi, method>
-    >;
+  if (ABI_FN_RESOLUTION_CACHE.has(tx as Transaction<AbiFunction>)) {
+    return ABI_FN_RESOLUTION_CACHE.get(
+      tx as Transaction<AbiFunction>,
+    ) as Promise<ParseMethod<abi, method>>;
   }
   const prom = (async () => {
     if (isAbiFunction(tx.method)) {
@@ -42,14 +42,11 @@ export function resolveAbi<
     }
 
     // if we get here we need to async resolve the ABI and try to find the method on there
-    const { resolveAbi: resolveRemote } = await import(
-      "../../abi/resolveContractAbi.js"
+    const { resolveContractAbi } = await import(
+      "../../contract/actions/resolve-abi.js"
     );
 
-    const abi = await resolveRemote({
-      chainId: tx.contract.chainId,
-      contractAddress: tx.contract.address,
-    });
+    const abi = await resolveContractAbi(tx.contract);
     // we try to find the abiFunction in the abi
     const abiFunction = abi.find((item) => {
       // if the item is not a function we can ignore it
@@ -65,6 +62,6 @@ export function resolveAbi<
     }
     return abiFunction;
   })();
-  ABI_RESOLUTION_CACHE.set(tx as Transaction<AbiFunction>, prom);
+  ABI_FN_RESOLUTION_CACHE.set(tx as Transaction<AbiFunction>, prom);
   return prom;
 }
