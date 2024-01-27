@@ -29,6 +29,11 @@
       "import": "./esm/transaction/index.js",
       "default": "./cjs/transaction/index.js"
     },
+    "./event": {
+      "types": "./types/event/index.d.ts",
+      "import": "./esm/event/index.js",
+      "default": "./cjs/event/index.js"
+    },
     "./react": {
       "types": "./types/react/index.d.ts",
       "import": "./esm/react/index.js",
@@ -63,6 +68,9 @@
       ],
       "transaction": [
         "./types/transaction/index.d.ts"
+      ],
+      "event": [
+        "./types/event/index.d.ts"
       ],
       "storage": [
         "./types/storage/index.d.ts"

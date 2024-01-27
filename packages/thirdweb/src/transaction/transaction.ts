@@ -26,7 +26,7 @@ export type TransactionInput<
   method: method;
 } & ParamsOption<ParseMethod<abi, method>>;
 
-// the only difference here is that
+// the only difference here is that we don't alow string methods
 export type Transaction<abiFn extends AbiFunction> = TransactionInput<
   Abi,
   abiFn
