@@ -1,8 +1,9 @@
-import type { ThirdwebContract } from "../contract/index.js";
+import { contract, type ThirdwebContract } from "../contract/index.js";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
 import type { ThirdwebClient } from "../client/client.js";
+import type { Abi } from "abitype";
 
 type Ethers6 = typeof ethers6;
 
@@ -26,14 +27,23 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
   assertEthers6(ethers);
   return {
-    provider: (client: ThirdwebClient, chainId: number) =>
-      provider(ethers, client, chainId),
-    contract: (twContract: ThirdwebContract, abi?: ethers6.InterfaceAbi) =>
-      contract(ethers, twContract, abi),
+    provider: {
+      toEthers: (client: ThirdwebClient, chainId: number) =>
+        toEthersProvider(ethers, client, chainId),
+    },
+    contract: {
+      toEthers: (twContract: ThirdwebContract) =>
+        toEthersContract(ethers, twContract),
+      fromEthers: fromEthersContract,
+    },
   };
 })();
 
-function provider(ethers: Ethers6, client: ThirdwebClient, chainId: number) {
+function toEthersProvider(
+  ethers: Ethers6,
+  client: ThirdwebClient,
+  chainId: number,
+) {
   const url = `https://${chainId}.rpc.thirdweb.com/${client.clientId}`;
 
   const fetchRequest = new ethers.FetchRequest(url);
@@ -46,34 +56,45 @@ function provider(ethers: Ethers6, client: ThirdwebClient, chainId: number) {
   });
 }
 
-function contract<abi extends ethers6.InterfaceAbi>(
+async function toEthersContract<abi extends Abi = []>(
   ethers: Ethers6,
-  twContract: ThirdwebContract,
-  abi?: abi,
-): abi extends ethers6.InterfaceAbi
-  ? ethers6.Contract
-  : Promise<ethers6.Contract> {
-  // TODO handle signers as well
-  // resolve the ABI if it is not explicitly passed
-  if (!abi) {
-    // @ts-expect-error - typescript can't understand this
-    return import("../abi/resolveContractAbi.js")
-      .then((m) => {
-        return m.resolveAbi({
-          chainId: twContract.chainId,
-          contractAddress: twContract.address,
-        }) as Promise<ethers6.InterfaceAbi>;
-      })
-      .then((abi_) => {
-        // call self again this time with the resolved abi
-        return contract(ethers, twContract, abi_);
-      });
+  twContract: ThirdwebContract<abi>,
+): Promise<ethers6.Contract> {
+  if (twContract.abi) {
+    return new ethers.Contract(
+      twContract.address,
+      JSON.stringify(twContract.abi),
+      toEthersProvider(ethers, twContract, twContract.chainId),
+    );
   }
 
-  // @ts-expect-error - typescript can't understand this
+  const { resolveAbi } = await import("../abi/resolveContractAbi.js");
+
+  const abi = await resolveAbi({
+    chainId: twContract.chainId,
+    contractAddress: twContract.address,
+  });
+
   return new ethers.Contract(
     twContract.address,
-    abi,
-    provider(ethers, twContract, twContract.chainId),
+    JSON.stringify(abi),
+    toEthersProvider(ethers, twContract, twContract.chainId),
   );
+}
+
+async function fromEthersContract<abi extends Abi>({
+  client,
+  ethersContract,
+  chainId,
+}: {
+  client: ThirdwebClient;
+  ethersContract: ethers6.Contract;
+  chainId: number;
+}): Promise<ThirdwebContract<abi>> {
+  return contract({
+    client,
+    address: await ethersContract.getAddress(),
+    abi: JSON.parse(ethersContract.interface.formatJson()) as abi,
+    chainId,
+  });
 }
