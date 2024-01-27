@@ -1,7 +1,8 @@
 import type { Abi } from "abitype";
 import type { ThirdwebContract } from "../../contract/index.js";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { waitForReceipt } from "../../transaction/index.js";
+import type { TransactionReceipt } from "viem";
 
 export function useWaitForReceipt<abi extends Abi>({
   contract,
@@ -9,7 +10,7 @@ export function useWaitForReceipt<abi extends Abi>({
 }: {
   contract: ThirdwebContract<abi>;
   transactionHash?: string;
-}) {
+}): UseQueryResult<TransactionReceipt> {
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [contract.chainId, "waitForReceipt", transactionHash] as const,
