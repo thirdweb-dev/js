@@ -305,12 +305,15 @@ const tx = mintTo({
 });
 
 // Step 6: execute the transaction with the wallet
-const receipt = await wallet.sendTransaction(tx);
+const transactionHash = await wallet.sendTransaction(tx);
 
-console.log("tx hash", receipt.transactionHash);
+console.log("tx hash", transactionHash);
 
 // Step 7: wait for the receipt to be mined
-const txReceipt = await receipt.wait();
+const txReceipt = await waitForReceipt({
+  transactionHash,
+  contract: myContract,
+});
 
 console.log(txReceipt);
 
@@ -367,12 +370,15 @@ const tx = transaction({
 });
 
 // Step 6: execute the transaction with the wallet
-const receipt = await wallet.sendTransaction(tx);
+const transactionHash = await wallet.sendTransaction(tx);
 
-console.log("tx hash", receipt.transactionHash);
+console.log("tx hash", transactionHash);
 
 // Step 7: wait for the receipt to be mined
-const txReceipt = await receipt.wait();
+const txReceipt = await waitForReceipt({
+  contract: myContract,
+  transactionHash,
+});
 
 console.log(txReceipt);
 
