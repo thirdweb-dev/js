@@ -44,6 +44,11 @@ export {
 } from "./wallet/wallets/phantom/phantomWallet";
 
 export {
+  xdefiWallet,
+  type XdefiWalletConfigOptions,
+} from "./wallet/wallets/xdefi/xdefiWallet";
+
+export {
   rainbowWallet,
   type RainbowWalletConfigOptions,
 } from "./wallet/wallets/rainbow/RainbowWallet";
