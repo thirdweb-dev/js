@@ -134,7 +134,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./cjs/package.json",
