@@ -80,11 +80,14 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       chainId: tx.contract.chainId,
     });
 
-    const [getDefaultGasOverrides, encode, transactionCount] =
+    const [getDefaultGasOverrides, encode, transactionCount, estimateGas] =
       await Promise.all([
         import("../gas/fee-data.js").then((m) => m.getDefaultGasOverrides),
         import("../transaction/actions/encode.js").then((m) => m.encode),
         import("../rpc/methods.js").then((m) => m.transactionCount),
+        import("../transaction/actions/estimate-gas.js").then(
+          (m) => m.estimateGas,
+        ),
       ]);
 
     const [gasOverrides, encodedData, nextNonce, estimatedGas] =
@@ -92,7 +95,7 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
         getDefaultGasOverrides(tx.contract, tx.contract.chainId),
         encode(tx),
         transactionCount(rpcRequest, this.address),
-        this.estimateGas(tx),
+        estimateGas(tx, { from: this.address }),
       ]);
 
     const signedTx = await this.signTransaction({
@@ -112,18 +115,6 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
     });
 
     return result as Hash;
-  }
-
-  public async estimateGas<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ): Promise<bigint> {
-    if (!this.account) {
-      throw new Error("not connected");
-    }
-    const { estimateGas } = await import(
-      "../transaction/actions/estimate-gas.js"
-    );
-    return estimateGas(tx, this);
   }
 
   public async disconnect() {

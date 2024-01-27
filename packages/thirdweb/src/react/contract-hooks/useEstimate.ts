@@ -10,6 +10,7 @@ export function useEstimateGas<
   const wallet = useActiveWallet();
 
   return useMutation({
-    mutationFn: (tx) => estimateGas(tx, wallet ?? undefined),
+    mutationFn: (tx) =>
+      estimateGas(tx, wallet?.address ? { from: wallet.address } : undefined),
   });
 }

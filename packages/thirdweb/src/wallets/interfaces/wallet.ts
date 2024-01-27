@@ -29,7 +29,4 @@ export interface IWallet<connectOpts> {
   sendTransaction: <abiFn extends AbiFunction>(
     _tx: Transaction<abiFn>,
   ) => Promise<Hex>;
-  estimateGas: <abiFn extends AbiFunction>(
-    _tx: Transaction<abiFn>,
-  ) => Promise<bigint>;
 }

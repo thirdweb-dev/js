@@ -173,13 +173,16 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
       await this.switchChain(tx.contract.chainId);
     }
 
-    const encode = await import("../transaction/actions/encode.js").then(
-      (m) => m.encode,
-    );
+    const [encode, estimateGas] = await Promise.all([
+      import("../transaction/actions/encode.js").then((m) => m.encode),
+      import("../transaction/actions/estimate-gas.js").then(
+        (m) => m.estimateGas,
+      ),
+    ]);
 
     const [encodedData, estimatedGas] = await Promise.all([
       encode(tx),
-      this.estimateGas(tx),
+      estimateGas(tx, { from: this.address }),
     ]);
 
     const result = await provider.request({
@@ -195,18 +198,6 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
     });
 
     return result as Hash;
-  }
-
-  public async estimateGas<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ): Promise<bigint> {
-    if (!this.address) {
-      throw new Error("not connected");
-    }
-    const { estimateGas } = await import(
-      "../transaction/actions/estimate-gas.js"
-    );
-    return estimateGas(tx, this);
   }
 }
 
