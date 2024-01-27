@@ -6,6 +6,7 @@ import type {
 } from "abitype";
 import type { ThirdwebContract } from "../contract/index.js";
 import type { ParseMethod } from "../abi/types.js";
+import { isObjectWithKeys } from "../utils/type-guards.js";
 
 type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   length: 0;
@@ -44,3 +45,12 @@ export function transaction<
 export type TxOpts<T extends object = object, abi extends Abi = Abi> = {
   contract: ThirdwebContract<abi>;
 } & T;
+
+export function isTxOpts(value: unknown): value is TxOpts {
+  return (
+    isObjectWithKeys(value, ["contract"]) &&
+    isObjectWithKeys(value.contract, ["address", "chainId"]) &&
+    typeof value.contract.chainId === "number" &&
+    typeof value.contract.address === "string"
+  );
+}

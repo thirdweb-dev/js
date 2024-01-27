@@ -4,7 +4,7 @@ import { min } from "../../../utils/bigint.js";
 import { getNFT } from "./getNFT.js";
 import { type TxOpts } from "../../../transaction/transaction.js";
 import { totalSupply } from "./totalSupply.js";
-import { createReadExtension } from "src/utils/extension.js";
+import { createReadExtension } from "../../../utils/extension.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

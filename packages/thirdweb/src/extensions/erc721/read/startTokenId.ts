@@ -1,6 +1,6 @@
 import { type TxOpts } from "../../../transaction/transaction.js";
 import { read } from "../../../transaction/actions/read.js";
-import { createReadExtension } from "src/utils/extension.js";
+import { createReadExtension } from "../../../utils/extension.js";
 
 /**
  * Retrieves the starting token ID of the ERC721 contract.

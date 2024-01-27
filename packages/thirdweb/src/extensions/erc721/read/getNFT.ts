@@ -2,7 +2,7 @@ import { tokenURI, type TokenUriParams } from "./tokenURI.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT } from "../../../utils/nft/parseNft.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
-import { createReadExtension } from "src/utils/extension.js";
+import { createReadExtension } from "../../../utils/extension.js";
 
 /**
  * Parameters for getting an NFT.

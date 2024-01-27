@@ -3,8 +3,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { WallerProvider } from "./wallet-provider.js";
-import type { ThirdwebContract } from "../../contract/index.js";
-import type { Abi } from "abitype";
+import { isTxOpts } from "../../transaction/transaction.js";
+import { isObjectWithKeys } from "../../utils/type-guards.js";
+import { waitForReceipt } from "../../transaction/index.js";
 
 export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
   children,
@@ -19,22 +20,28 @@ export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
                 // TODO: remove - but useful for debug now
                 console.error("[Mutation Error]", error);
               }
-              if (
-                typeof variables === "object" &&
-                !!variables &&
-                "contract" in variables
-              ) {
-                let prom = Promise.resolve();
-                if (typeof data === "object" && !!data && "wait" in data) {
-                  prom = (data as any).wait();
+              if (isTxOpts(variables)) {
+                if (
+                  isObjectWithKeys(data, ["transactionHash"]) &&
+                  typeof data.transactionHash === "string"
+                ) {
+                  waitForReceipt({
+                    transactionHash: data.transactionHash,
+                    contract: variables.contract,
+                  })
+                    .catch((e) => {
+                      // swallow errors for receipts, but log
+                      console.error("[Transaction Error]", e);
+                    })
+                    .then(() => {
+                      return queryClient.invalidateQueries({
+                        queryKey: [
+                          variables.contract.chainId,
+                          variables.contract.address,
+                        ],
+                      });
+                    });
                 }
-                const contract = variables.contract as ThirdwebContract<Abi>;
-                // refetch after the tx is mined...
-                prom.then(() => {
-                  queryClient.invalidateQueries({
-                    queryKey: [contract.chainId, contract.address],
-                  });
-                });
               }
             },
           },
