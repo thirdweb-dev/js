@@ -20,7 +20,6 @@ type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
 
 export type TransactionInput<
   abi extends Abi,
-  // eslint-disable-next-line @typescript-eslint/ban-types
   method extends AbiFunction | string,
 > = TxOpts<object, abi> & {
   method: method;

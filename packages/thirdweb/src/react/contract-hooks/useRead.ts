@@ -1,59 +1,104 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useQuery,
+  type UseQueryResult,
+  type UseQueryOptions,
+} from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
 import type { ParseMethod } from "../../abi/types.js";
 import type { ReadOutputs } from "../../transaction/actions/read.js";
 import { read } from "../../transaction/index.js";
-import type {
-  TransactionInput,
-  TxOpts,
+import {
+  type TransactionInput,
+  type TxOpts,
 } from "../../transaction/transaction.js";
+import {
+  getExtensionId,
+  isReadExtension,
+  type ReadExtension,
+} from "../../utils/extension.js";
+import { stringify } from "../../utils/json.js";
+
+type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
 export function useRead<
-  abi extends Abi,
-  method extends abi extends { length: 0 }
+  const abi extends Abi,
+  const method extends abi extends { length: 0 }
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
 >(
-  opts: TransactionInput<abi, method>,
-): UseQueryResult<ReadOutputs<ParseMethod<abi, method>>, Error>;
-export function useRead<params extends object, result>(
-  fn: (arg_0: TxOpts<params>) => Promise<result>,
-  opts: TxOpts<params>,
-): UseQueryResult<result, Error>;
+  options: TransactionInput<abi, method> & {
+    queryOptions?: PickedQueryOptions;
+  },
+): UseQueryResult<ReadOutputs<ParseMethod<abi, method>>>;
 export function useRead<
-  abi extends Abi,
-  method extends abi extends { length: 0 }
+  const abi extends Abi,
+  const params extends object,
+  result,
+  extension_id extends string,
+>(
+  extension: ReadExtension<params, result, extension_id>,
+  options: TxOpts<params, abi> & {
+    queryOptions?: PickedQueryOptions;
+  },
+): UseQueryResult<result>;
+export function useRead<
+  const abi extends Abi,
+  const method extends abi extends { length: 0 }
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
-  params extends object,
+  const params extends object,
   result,
+  extension_id extends string,
 >(
-  txInputOrFn:
-    | TransactionInput<abi, method>
-    | ((arg_0: TxOpts<params>) => Promise<result>),
-  fnOpts?: TxOpts<params>,
+  extensionOrOptions:
+    | ReadExtension<params, result, extension_id>
+    | (TransactionInput<abi, method> & {
+        queryOptions?: PickedQueryOptions;
+      }),
+  options?: TxOpts<params, abi> & {
+    queryOptions?: PickedQueryOptions;
+  },
 ) {
-  let queryKey;
-  let queryFn: () => any;
-  if (typeof txInputOrFn === "function") {
-    // treat as extension
-    const fn = txInputOrFn as (arg_0: TxOpts<params>) => Promise<result>;
-    const opts = fnOpts as TxOpts<params>;
-    const { contract: contract_, ...rest } = opts;
-    // TODO probably needs better identifier than `fn.name`?
-    queryKey = [contract_.chainId, contract_.address, fn.name, rest] as const;
-    queryFn = async () => fn(opts);
-  } else {
-    // treat as direct call
-    const opts = txInputOrFn as TransactionInput<abi, method>;
-    const { contract: contract_, ...rest } = opts;
-    queryKey = [contract_.chainId, contract_.address, rest] as const;
-    queryFn = async () => read(opts);
+  // extension case
+  if (isReadExtension(extensionOrOptions)) {
+    if (!options) {
+      throw new Error(
+        `Missing second argument for "useRead(<extension>, <options>)" hook.`,
+      ) as never;
+    }
+    const { queryOptions, contract, ...params } = options;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
+      queryKey: [
+        contract.chainId,
+        contract.address,
+        getExtensionId(extensionOrOptions),
+        stringify(params),
+      ] as const,
+      queryFn: () => extensionOrOptions({ ...params, contract }),
+      ...queryOptions,
+    });
+  }
+  // raw tx case
+  if ("method" in extensionOrOptions) {
+    const { queryOptions, ...tx } = extensionOrOptions;
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
+      queryKey: [
+        tx.contract.chainId,
+        tx.contract.address,
+        tx.method,
+        stringify(tx.params),
+      ] as const,
+      queryFn: () => read(extensionOrOptions),
+      ...queryOptions,
+    });
   }
 
-  // actually define the query
-  return useQuery({
-    queryKey,
-    queryFn,
-  });
+  throw new Error(
+    `Invalid "useRead" options. Expected either a read extension or a transaction object.`,
+  ) as never;
 }
