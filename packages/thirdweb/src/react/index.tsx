@@ -12,3 +12,4 @@ export {
 export { useRead } from "./contract-hooks/useRead.js";
 export { useSendTransaction } from "./contract-hooks/useSend.js";
 export { useEstimateGas } from "./contract-hooks/useEstimate.js";
+export { useWaitForReceipt } from "./contract-hooks/useWaitForReceipt.js";

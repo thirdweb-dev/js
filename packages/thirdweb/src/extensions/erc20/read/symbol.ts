@@ -8,7 +8,7 @@ import { createReadExtension } from "../../../utils/extension.js";
  * @returns A promise that resolves to the symbol of the ERC20 token.
  */
 export const symbol = /* @__PURE__ */ createReadExtension("erc20.symbol")(
-  function (options: TxOpts) {
+  function (options: TxOpts): Promise<string> {
     // TODO consider caching this
     return read({
       ...options,

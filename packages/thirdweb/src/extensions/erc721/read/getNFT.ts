@@ -1,6 +1,6 @@
 import { tokenURI, type TokenUriParams } from "./tokenURI.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
-import { parseNFT } from "../../../utils/nft/parseNft.js";
+import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
 import { createReadExtension } from "../../../utils/extension.js";
 
@@ -21,7 +21,7 @@ export type GetNFTParams = TokenUriParams & {
  * @returns A promise that resolves to the parsed ERC721 token information.
  */
 export const getNFT = /*@__PURE__*/ createReadExtension("erc721.getNFT")(
-  async function (options: TxOpts<GetNFTParams>) {
+  async function (options: TxOpts<GetNFTParams>): Promise<NFT<"ERC721">> {
     const [uri, owner] = await Promise.all([
       tokenURI(options),
       options.includeOwner

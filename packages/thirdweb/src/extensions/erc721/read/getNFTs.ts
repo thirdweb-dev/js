@@ -5,6 +5,7 @@ import { getNFT } from "./getNFT.js";
 import { type TxOpts } from "../../../transaction/transaction.js";
 import { totalSupply } from "./totalSupply.js";
 import { createReadExtension } from "../../../utils/extension.js";
+import type { NFT } from "../../../utils/nft/parseNft.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
@@ -34,7 +35,7 @@ export type GetNFTsParams = {
  * @throws An error if the contract does not have either `nextTokenIdToMint` or `totalSupply` function available.
  */
 export const getNFTs = /*@__PURE__*/ createReadExtension("erc721.getNFTs")(
-  async function (options: TxOpts<GetNFTsParams>) {
+  async function (options: TxOpts<GetNFTsParams>): Promise<NFT<"ERC721">[]> {
     const [startTokenId_, maxSupply] = await Promise.allSettled([
       startTokenId(options),
       nextTokenIdToMint(options),

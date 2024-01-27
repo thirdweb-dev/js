@@ -8,7 +8,7 @@ import { createReadExtension } from "../../../utils/extension.js";
  * @returns A promise that resolves to the number of decimal places (uint8).
  */
 export const decimals = /* @__PURE__ */ createReadExtension("erc20.decimals")(
-  function (options: TxOpts) {
+  function (options: TxOpts): Promise<number> {
     // TODO consider caching this
     return read({
       ...options,

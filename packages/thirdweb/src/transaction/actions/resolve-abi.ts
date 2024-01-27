@@ -11,7 +11,7 @@ const ABI_RESOLUTION_CACHE = new WeakMap<
 export function resolveAbi<
   method extends AbiFunction | string,
   abi extends Abi,
->(tx: TransactionInput<abi, method>) {
+>(tx: TransactionInput<abi, method>): Promise<ParseMethod<abi, method>> {
   if (ABI_RESOLUTION_CACHE.has(tx as Transaction<AbiFunction>)) {
     return ABI_RESOLUTION_CACHE.get(tx as Transaction<AbiFunction>) as Promise<
       ParseMethod<abi, method>

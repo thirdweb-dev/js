@@ -9,7 +9,7 @@ import { createReadExtension } from "../../../utils/extension.js";
  */
 export const nextTokenIdToMint = /*@__PURE__*/ createReadExtension(
   "erc721.nextTokenIdToMint",
-)(function (options: TxOpts) {
+)(function (options: TxOpts): Promise<bigint> {
   return read({
     ...options,
     method: "function nextTokenIdToMint() view returns (uint256)",

@@ -8,7 +8,7 @@ const ENCODE_CACHE = new WeakMap();
 
 export async function encode<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
-) {
+): Promise<Hex> {
   if (ENCODE_CACHE.has(tx)) {
     return ENCODE_CACHE.get(tx) as Hex;
   }

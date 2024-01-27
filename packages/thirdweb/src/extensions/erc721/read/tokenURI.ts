@@ -10,7 +10,7 @@ export type TokenUriParams = { tokenId: bigint };
  * @returns A Promise that resolves to the token URI.
  */
 export const tokenURI = /*@__PURE__*/ createReadExtension("erc721.totkenURI")(
-  function (options: TxOpts<TokenUriParams>) {
+  function (options: TxOpts<TokenUriParams>): Promise<string> {
     return read({
       ...options,
       method:

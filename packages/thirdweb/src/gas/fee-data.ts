@@ -16,14 +16,12 @@ export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chainId: number,
 ) {
+  /**
+   * TODO: do we want to re-enable this?
+   */
   // If we're running in the browser, let users configure gas price in their wallet UI
   // if (isBrowser()) {
   //   return {};
-  // }
-
-  // handle smart wallet provider
-  // if ((provider as any).originalProvider) {
-  //   provider = (provider as any).originalProvider;
   // }
 
   const feeData = await getDynamicFeeData(client, chainId);

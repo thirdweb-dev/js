@@ -10,7 +10,7 @@ export type OwnerOfParams = { tokenId: bigint };
  * @returns A promise that resolves to the address of the token owner.
  */
 export const ownerOf = /*@__PURE__*/ createReadExtension("erc721.ownerOf")(
-  function (options: TxOpts<OwnerOfParams>) {
+  function (options: TxOpts<OwnerOfParams>): Promise<string> {
     return read({
       ...options,
       method:

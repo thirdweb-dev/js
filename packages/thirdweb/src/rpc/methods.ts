@@ -20,7 +20,7 @@ export async function blockByNumber(
     method: "eth_getBlockByNumber",
     params: [blockNumber, includeTransactions],
   });
-  console.log("blockByNumber", { blockNumber, includeTransactions, result });
+
   return formatBlock(result as RpcBlock);
 }
 

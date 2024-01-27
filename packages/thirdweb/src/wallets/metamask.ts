@@ -194,18 +194,7 @@ class MetamaskWallet implements IWallet<MetamaskWalletConnectOptions> {
       ],
     });
 
-    return {
-      transactionHash: result as Hash,
-      wait: async () => {
-        const { waitForReceipt } = await import(
-          "../transaction/actions/wait-for-tx-receipt.js"
-        );
-        return waitForReceipt({
-          contract: tx.contract,
-          transactionHash: result,
-        });
-      },
-    };
+    return result as Hash;
   }
 
   public async estimateGas<abiFn extends AbiFunction>(

@@ -10,7 +10,7 @@ import { getRpcClient } from "../../rpc/index.js";
 export async function estimateGas<
   const abiFn extends AbiFunction,
   const wallet extends IWallet<any>,
->(tx: Transaction<abiFn>, wallet?: wallet) {
+>(tx: Transaction<abiFn>, wallet?: wallet): Promise<bigint> {
   const rpcRequest = getRpcClient(tx.contract, {
     chainId: tx.contract.chainId,
   });
