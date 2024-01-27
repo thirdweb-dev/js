@@ -9,8 +9,8 @@ type BalanceOfParams = { address: string };
 
 /**
  * Retrieves the balance of an ERC20 token for a specific address.
- * @param options - The transaction options including the address to check the balance for.
- * @returns An object containing the balance value, display value, and symbol of the ERC20 token.
+ * @param options - The transaction options including the address.
+ * @returns An object containing the balance value, display value, and symbol.
  */
 export const balanceOf = /* @__PURE__ */ createReadExtension("erc20.balanceOf")(
   async function (options: TxOpts<BalanceOfParams>) {

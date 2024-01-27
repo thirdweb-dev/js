@@ -5,7 +5,9 @@ import { execute } from "../../transaction/index.js";
 import type { Transaction } from "../../transaction/transaction.js";
 import { useActiveWallet } from "../providers/wallet-provider.js";
 
-export function useSend<const abiFn extends AbiFunction>(): UseMutationResult<
+export function useSendTransaction<
+  const abiFn extends AbiFunction,
+>(): UseMutationResult<
   Awaited<ReturnType<typeof execute>>,
   Error,
   Transaction<abiFn>

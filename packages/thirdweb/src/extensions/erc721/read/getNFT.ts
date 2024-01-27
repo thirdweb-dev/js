@@ -2,6 +2,7 @@ import { tokenURI, type TokenUriParams } from "./tokenURI.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT } from "../../../utils/nft/parseNft.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
+import { createReadExtension } from "src/utils/extension.js";
 
 /**
  * Parameters for getting an NFT.
@@ -14,29 +15,31 @@ export type GetNFTParams = TokenUriParams & {
 };
 
 /**
- * Retrieves the metadata of a non-fungible token (NFT) from a contract.
- * @param contract - The {@link ThirdwebContract} instance representing the ERC721 contract.
- * @param params - The {@link GetNFTParams} object containing the token ID and additional options.
- * @returns A promise that resolves to a {@link NFT}.
+ * Retrieves information about a specific ERC721 token.
+ *
+ * @param options - The options for retrieving the token information.
+ * @returns A promise that resolves to the parsed ERC721 token information.
  */
-export async function getNFT(options: TxOpts<GetNFTParams>) {
-  const [uri, owner] = await Promise.all([
-    tokenURI(options),
-    options.includeOwner
-      ? import("./ownerOf.js").then((m) => m.ownerOf(options))
-      : null,
-  ]);
-  return parseNFT(
-    await fetchTokenMetadata({
-      client: options.contract,
-      tokenId: options.tokenId,
-      tokenUri: uri,
-    }),
-    {
-      tokenId: options.tokenId,
-      tokenUri: uri,
-      type: "ERC721",
-      owner,
-    },
-  );
-}
+export const getNFT = /*@__PURE__*/ createReadExtension("erc721.getNFT")(
+  async function (options: TxOpts<GetNFTParams>) {
+    const [uri, owner] = await Promise.all([
+      tokenURI(options),
+      options.includeOwner
+        ? import("./ownerOf.js").then((m) => m.ownerOf(options))
+        : null,
+    ]);
+    return parseNFT(
+      await fetchTokenMetadata({
+        client: options.contract,
+        tokenId: options.tokenId,
+        tokenUri: uri,
+      }),
+      {
+        tokenId: options.tokenId,
+        tokenUri: uri,
+        type: "ERC721",
+        owner,
+      },
+    );
+  },
+);

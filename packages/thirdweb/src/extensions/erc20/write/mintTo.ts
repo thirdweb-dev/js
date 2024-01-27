@@ -10,6 +10,12 @@ type MintToParams = { to: string } & (
     }
 );
 
+/**
+ * Mints a specified amount of tokens to a given address.
+ *
+ * @param options - The transaction options.
+ * @returns A promise that resolves to the transaction result.
+ */
 export function mintTo(options: TxOpts<MintToParams>) {
   return transaction({
     ...options,

@@ -10,6 +10,12 @@ type TransferParams = { to: string } & (
     }
 );
 
+/**
+ * Transfers ERC20 tokens from the sender's address to the specified recipient address.
+ *
+ * @param options - The transaction options including the recipient address and the amount of tokens to transfer.
+ * @returns A promise that resolves to the transaction receipt.
+ */
 export function transfer(options: TxOpts<TransferParams>) {
   return transaction({
     ...options,
