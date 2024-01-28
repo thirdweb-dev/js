@@ -51,10 +51,11 @@ export function waitForReceipt<abi extends Abi>({
           const receipt = eth_getTransactionReceipt(request, {
             hash: transactionHash as Hex,
           });
-          if (receipt) {
-            unwatch();
-            return resolve(receipt);
-          }
+
+          // stop the polling
+          unwatch();
+          // resolve the top level promise with the receipt
+          resolve(receipt);
         } catch {
           // noop, we'll try again on the next blocks
         }
