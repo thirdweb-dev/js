@@ -43,7 +43,6 @@ export function waitForReceipt<abi extends Abi>({
       chainId: contract.chainId,
       onNewBlockNumber: () => {
         blocksWaited++;
-        console.log("blocksWaited", blocksWaited);
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
           unwatch();
           reject(new Error("Transaction not found after 10 blocks"));
