@@ -41,24 +41,23 @@ export function waitForReceipt<abi extends Abi>({
     const unwatch = watchBlockNumber({
       client: contract.client,
       chainId: contract.chainId,
-      onNewBlockNumber: () => {
+      onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
           unwatch();
           reject(new Error("Transaction not found after 10 blocks"));
         }
-        eth_getTransactionReceipt(request, {
-          hash: transactionHash as Hex,
-        })
-          .then((receipt) => {
-            if (receipt) {
-              unwatch();
-              return resolve(receipt);
-            }
-          })
-          .catch(() => {
-            // noop, we'll try again on the next blocks
+        try {
+          const receipt = eth_getTransactionReceipt(request, {
+            hash: transactionHash as Hex,
           });
+          if (receipt) {
+            unwatch();
+            return resolve(receipt);
+          }
+        } catch {
+          // noop, we'll try again on the next blocks
+        }
       },
     });
     // remove the promise from the map when it's done (one way or the other)
