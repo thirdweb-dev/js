@@ -117,6 +117,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.17.22",
+    "@types/bun": "^1.0.4",
     "@types/react": "^18.2.48",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
