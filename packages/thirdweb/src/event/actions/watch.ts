@@ -1,26 +1,13 @@
 import {
-  formatAbiItem,
   type Abi,
   type AbiEvent,
   type ExtractAbiEventNames,
-  type AbiParameter,
-  type AbiParameterToPrimitiveType,
   parseAbiItem,
 } from "abitype";
 import { type ContractEventInput } from "../event.js";
-import {
-  hexToBigInt,
-  toHex,
-  type Log,
-  toEventSelector,
-  type Hex,
-  toBytes,
-  keccak256,
-  FilterTypeNotSupportedError,
-  encodeAbiParameters,
-} from "viem";
+import { type GetLogsReturnType } from "viem";
+import { eth_blockNumber, eth_getLogs, getRpcClient } from "../../rpc/index.js";
 import type { ParseEvent } from "../../abi/types.js";
-import { getRpcClient } from "../../rpc/index.js";
 
 type WatchOptions<
   abi extends Abi,
@@ -30,15 +17,12 @@ type WatchOptions<
     : ExtractAbiEventNames<abi>,
 > = {
   onLogs: (
-    logs: Array<
-      Log<
-        bigint,
-        number,
-        boolean,
-        ParseEvent<abi, event>,
-        undefined,
-        abi extends { length: 0 } ? [ParseEvent<abi, event>] : abi
-      >
+    logs: GetLogsReturnType<
+      ParseEvent<abi, event>,
+      [ParseEvent<abi, event>],
+      undefined,
+      bigint,
+      bigint
     >,
   ) => void | undefined;
 } & ContractEventInput<abi, event>;
@@ -50,53 +34,38 @@ export function watch<
     ? AbiEvent | string
     : ExtractAbiEventNames<abi>,
 >(options: WatchOptions<abi, event>) {
-  const rpcRequest = getRpcClient(options.contract, {
+  const rpcRequest = getRpcClient(options.contract.client, {
     chainId: options.contract.chainId,
   });
 
   let lastBlock = 0n;
-  const parsedEvent =
+  const parsedEvent: ParseEvent<abi, event> =
     typeof options.event === "string"
-      ? parseAbiItem(options.event as any)
-      : options.event;
+      ? (parseAbiItem(options.event as string) as ParseEvent<abi, event>)
+      : (options.event as ParseEvent<abi, event>);
   if (parsedEvent.type !== "event") {
     throw new Error("Expected event");
   }
-  rpcRequest({
-    method: "eth_blockNumber",
-    params: [],
-  }).then((x) => {
-    lastBlock = hexToBigInt(x);
+  eth_blockNumber(rpcRequest).then((x) => {
+    lastBlock = x;
   });
 
   const interval = setInterval(async function () {
-    const blockHex = await rpcRequest({
-      method: "eth_blockNumber",
-      params: [],
-    });
-    const newBlock = hexToBigInt(blockHex);
+    const newBlock = await eth_blockNumber(rpcRequest);
 
     if (lastBlock === 0n) {
       lastBlock = newBlock;
     } else if (newBlock > lastBlock) {
-      const logs = await rpcRequest({
-        method: "eth_getLogs",
-        params: [
-          {
-            address: options.contract.address,
-            topics: [
-              encodeEventTopic({
-                event: parsedEvent,
-                params: (options.params || []) as unknown[],
-              }),
-            ],
-            fromBlock: toHex(lastBlock + 1n),
-            toBlock: toHex(newBlock),
-          },
-        ],
+      const logs = await eth_getLogs(rpcRequest, {
+        fromBlock: lastBlock,
+        toBlock: newBlock,
+        address: options.contract.address,
+        event: parsedEvent,
+        // @ts-expect-error - missing | undefined in type
+        args: options.params,
       });
       if (logs.length) {
-        // TODO parsing etc
+        // @ts-expect-error - this works fine
         options.onLogs(logs);
       }
 
@@ -108,60 +77,4 @@ export function watch<
   return function () {
     clearInterval(interval);
   };
-}
-
-// TODO clean all of this up
-
-function encodeEventTopic({
-  event,
-  params,
-}: {
-  event: AbiEvent;
-  params: unknown[];
-}) {
-  const definition = formatAbiItem(event);
-  const signature = toEventSelector(definition);
-
-  let topics: Hex[] = [];
-  if (params && "inputs" in event) {
-    const indexedInputs = event.inputs?.filter(
-      (param) => "indexed" in param && param.indexed,
-    );
-    const args_ = Array.isArray(params)
-      ? params
-      : // TODO: bring this back
-        // : Object.values(args).length > 0
-        // ? indexedInputs?.map((x: any) => (args as any)[x.name]) ?? []
-        [];
-
-    if (args_.length > 0) {
-      topics =
-        indexedInputs?.map((param, i) =>
-          Array.isArray(args_[i])
-            ? (args_[i] as any).map((_: any, j: number) =>
-                encodeArg({ param, value: (args_[i] as any)[j] }),
-              )
-            : args_[i]
-              ? encodeArg({ param, value: args_[i] })
-              : null,
-        ) ?? [];
-    }
-  }
-  return [signature, ...topics];
-}
-
-function encodeArg({
-  param,
-  value,
-}: {
-  param: AbiParameter;
-  value: AbiParameterToPrimitiveType<AbiParameter>;
-}) {
-  if (param.type === "string" || param.type === "bytes") {
-    return keccak256(toBytes(value as string));
-  }
-  if (param.type === "tuple" || param.type.match(/^(.*)\[(\d+)?\]$/)) {
-    throw new FilterTypeNotSupportedError(param.type);
-  }
-  return encodeAbiParameters([param], [value]);
 }

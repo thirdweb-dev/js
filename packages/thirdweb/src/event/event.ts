@@ -7,7 +7,7 @@ import type {
 import type { ThirdwebContract } from "../contract/index.js";
 import type { ParseEvent } from "../abi/types.js";
 
-type Params<event extends AbiEvent> = AbiParametersToPrimitiveTypes<
+export type EventParams<event extends AbiEvent> = AbiParametersToPrimitiveTypes<
   event["inputs"]
 >;
 
@@ -17,7 +17,7 @@ export type ContractEventInput<
 > = {
   contract: ThirdwebContract<abi>;
   event: event;
-  params?: Params<ParseEvent<abi, event>>;
+  params?: EventParams<ParseEvent<abi, event>>;
 };
 
 // the only difference here is that we don't alow string events

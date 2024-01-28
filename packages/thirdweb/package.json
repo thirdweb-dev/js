@@ -34,6 +34,11 @@
       "import": "./esm/event/index.js",
       "default": "./cjs/event/index.js"
     },
+    "./rpc": {
+      "types": "./types/rpc/index.d.ts",
+      "import": "./esm/rpc/index.js",
+      "default": "./cjs/rpc/index.js"
+    },
     "./react": {
       "types": "./types/react/index.d.ts",
       "import": "./esm/react/index.js",
@@ -71,6 +76,9 @@
       ],
       "event": [
         "./types/event/index.d.ts"
+      ],
+      "rpc": [
+        "./types/rpc/index.d.ts"
       ],
       "storage": [
         "./types/storage/index.d.ts"

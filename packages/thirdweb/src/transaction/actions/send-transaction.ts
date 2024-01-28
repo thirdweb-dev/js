@@ -11,27 +11,33 @@ export async function sendTransaction<
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
-  const rpcRequest = getRpcClient(tx.contract, {
+  const rpcRequest = getRpcClient(tx.contract.client, {
     chainId: tx.contract.chainId,
   });
 
-  const [getDefaultGasOverrides, encode, transactionCount, estimateGas] =
+  const [getDefaultGasOverrides, encode, eth_getTransactionCount, estimateGas] =
     await Promise.all([
       import("../../gas/fee-data.js").then((m) => m.getDefaultGasOverrides),
       import("./encode.js").then((m) => m.encode),
-      import("../../rpc/methods.js").then((m) => m.transactionCount),
+      import("../../rpc/actions/eth_getTransactionCount.js").then(
+        (m) => m.eth_getTransactionCount,
+      ),
       import("./estimate-gas.js").then((m) => m.estimateGas),
     ]);
 
   const [gasOverrides, encodedData, nextNonce, estimatedGas] =
     await Promise.all([
-      getDefaultGasOverrides(tx.contract, tx.contract.chainId),
+      getDefaultGasOverrides(tx.contract.client, tx.contract.chainId),
       encode(tx),
-      transactionCount(rpcRequest, wallet.address),
+      eth_getTransactionCount(rpcRequest, {
+        address: wallet.address,
+        blockTag: "pending",
+      }),
       estimateGas(tx, { from: wallet.address }),
     ]);
 
   return wallet.sendTransaction({
+    to: tx.contract.address,
     chainId: tx.contract.chainId,
     data: encodedData,
     gas: estimatedGas,

@@ -1,5 +1,4 @@
 import type {
-  Hash,
   Hex,
   PrivateKeyAccount,
   SignableMessage,
@@ -8,8 +7,8 @@ import type {
 } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import type { TypedData } from "abitype";
-
 import type { IWallet } from "./interfaces/wallet.js";
+import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
 
 export function privateKeyWallet({ client }: { client: ThirdwebClient }) {
   return new PrivateKeyWallet(client);
@@ -74,21 +73,13 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       throw new Error("not connected");
     }
 
-    const { getRpcClient } = await import("../rpc/index.js");
     const rpcRequest = getRpcClient(this.client, {
       chainId: tx.chainId,
     });
 
     const signedTx = await this.signTransaction(tx);
 
-    // send the tx
-    // TODO: move into rpc/methods
-    const result = await rpcRequest({
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-    });
-
-    return result as Hash;
+    return await eth_sendRawTransaction(rpcRequest, signedTx);
   }
 
   public async disconnect() {

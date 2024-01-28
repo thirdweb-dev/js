@@ -68,7 +68,7 @@ async function toEthersContract<abi extends Abi = []>(
     return new ethers.Contract(
       twContract.address,
       JSON.stringify(twContract.abi),
-      toEthersProvider(ethers, twContract, twContract.chainId),
+      toEthersProvider(ethers, twContract.client, twContract.chainId),
     );
   }
 
@@ -81,7 +81,7 @@ async function toEthersContract<abi extends Abi = []>(
   return new ethers.Contract(
     twContract.address,
     JSON.stringify(abi),
-    toEthersProvider(ethers, twContract, twContract.chainId),
+    toEthersProvider(ethers, twContract.client, twContract.chainId),
   );
 }
 

@@ -42,7 +42,7 @@ export function mintTo(options: TxOpts<MintToParams>) {
         // load the upload code if we need it
         const { upload } = await import("../../../storage/upload.js");
         tokenUri = (
-          await upload(options.contract, {
+          await upload(options.contract.client, {
             files: [options.nft],
           })
         )[0] as string;

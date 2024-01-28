@@ -8,7 +8,8 @@ export type ContractOptions<abi extends Abi = []> = {
   readonly abi?: abi;
 };
 
-export type ThirdwebContract<abi extends Abi = []> = ThirdwebClient & {
+export type ThirdwebContract<abi extends Abi = []> = {
+  readonly client: ThirdwebClient;
   readonly address: string;
   readonly chainId: number;
   readonly abi?: abi;
@@ -23,8 +24,7 @@ export type ThirdwebContract<abi extends Abi = []> = ThirdwebClient & {
 export function contract<const abi extends Abi = []>(
   options: ContractOptions<abi>,
 ): ThirdwebContract<abi> {
-  const { client, ...rest } = options;
-  return { ...client, ...rest } as const;
+  return options;
 }
 
 export { resolveContractAbi } from "./actions/resolve-abi.js";

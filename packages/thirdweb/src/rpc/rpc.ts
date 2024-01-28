@@ -1,0 +1,228 @@
+import type { ThirdwebClient } from "../client/client.js";
+import { stringify } from "../utils/json.js";
+import type { EIP1193RequestFn, EIP1474Methods, RpcSchema } from "viem";
+
+type SuccessResult<T> = {
+  method?: never;
+  result: T;
+  error?: never;
+};
+type ErrorResult<T> = {
+  method?: never;
+  result?: never;
+  error: T;
+};
+type Subscription<TResult, TError> = {
+  method: "eth_subscription";
+  error?: never;
+  result?: never;
+  params: {
+    subscription: string;
+  } & (
+    | {
+        result: TResult;
+        error?: never;
+      }
+    | {
+        result?: never;
+        error: TError;
+      }
+  );
+};
+
+export type RpcRequest = {
+  jsonrpc?: "2.0";
+  method: string;
+  params?: any;
+  id?: number;
+};
+
+export type RpcResponse<TResult = any, TError = any> = {
+  jsonrpc: `${number}`;
+  id: number;
+} & (
+  | SuccessResult<TResult>
+  | ErrorResult<TError>
+  | Subscription<TResult, TError>
+);
+
+const RPC_CLIENT_MAP = new WeakMap();
+
+type RPCOptions = {
+  readonly chainId: number;
+};
+
+function getRpcClientMap(client: ThirdwebClient) {
+  if (RPC_CLIENT_MAP.has(client)) {
+    return RPC_CLIENT_MAP.get(client);
+  }
+  const rpcClientMap = new Map();
+  RPC_CLIENT_MAP.set(client, rpcClientMap);
+  return rpcClientMap;
+}
+
+function rpcRequestKey(request: RpcRequest): string {
+  return `${request.method}:${JSON.stringify(request.params)}`;
+}
+
+const DEFAULT_MAX_BATCH_SIZE = 100;
+// default to no timeout (next tick)
+const DEFAULT_BATCH_TIMEOUT_MS = 0;
+
+export function getRpcClient<
+  rpcSchema extends RpcSchema | undefined = undefined,
+>(
+  client: ThirdwebClient,
+  options: RPCOptions,
+): EIP1193RequestFn<rpcSchema extends undefined ? EIP1474Methods : rpcSchema> {
+  const rpcClientMap = getRpcClientMap(client);
+  if (rpcClientMap.has(options.chainId)) {
+    return rpcClientMap.get(options.chainId) as EIP1193RequestFn<
+      rpcSchema extends undefined ? EIP1474Methods : rpcSchema
+    >;
+  }
+
+  const rpcClient: EIP1193RequestFn<
+    rpcSchema extends undefined ? EIP1474Methods : rpcSchema
+  > = (function () {
+    // inflight requests
+    const inflightRequests = new Map<string, Promise<any>>();
+    let pendingBatch: Array<{
+      request: {
+        method: string;
+        params: unknown[];
+        id: number;
+        jsonrpc: "2.0";
+      };
+      resolve: (value: any) => void;
+      reject: (reason?: any) => void;
+      requestKey: string;
+    }> = [];
+    let pendingBatchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function sendPendingBatch() {
+      // clear the timeout if any
+      if (pendingBatchTimeout) {
+        clearTimeout(pendingBatchTimeout);
+        pendingBatchTimeout = null;
+      }
+
+      // assign ids to each request
+      const activeBatch = pendingBatch.slice().map((inflight, index) => {
+        // assign the id to the request
+        inflight.request.id = index;
+        // also assign the jsonrpc version
+        inflight.request.jsonrpc = "2.0";
+        return inflight;
+      });
+      // reset pendingBatch to empty
+      pendingBatch = [];
+
+      fetchRpc(client, {
+        requests: activeBatch.map((inflight) => inflight.request),
+        chainId: options.chainId,
+      })
+        .then((responses) => {
+          // for each response, resolve the inflight request
+          activeBatch.forEach((inflight, index) => {
+            const response = responses[index];
+            // if we didn't get a response at all, reject the inflight request
+            if (!response) {
+              inflight.reject(new Error("No response"));
+              return;
+            }
+            if ("error" in response) {
+              inflight.reject(response.error);
+              // otherwise, resolve the inflight request
+            } else if (response.method === "eth_subscription") {
+              // TODO: handle subscription responses
+              throw new Error("Subscriptions not supported yet");
+            } else {
+              inflight.resolve(response.result);
+            }
+            // remove the inflight request from the inflightRequests map
+            inflightRequests.delete(inflight.requestKey);
+          });
+        })
+        .catch((err) => {
+          // http call failed, reject all inflight requests
+          activeBatch.forEach((inflight) => {
+            inflight.reject(err);
+            // remove the inflight request from the inflightRequests map
+            inflightRequests.delete(inflight.requestKey);
+          });
+        });
+    }
+
+    return async function (request) {
+      const requestKey = rpcRequestKey(request);
+      // if the request for this key is already inflight, return the promise directly
+      if (inflightRequests.has(requestKey)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return inflightRequests.get(requestKey)!;
+      }
+      let resolve: (value: any) => void;
+      let reject: (reason?: any) => void;
+      const promise = new Promise<any>((resolve_, reject_) => {
+        resolve = resolve_;
+        reject = reject_;
+      });
+      inflightRequests.set(requestKey, promise);
+      // @ts-expect-error - they *are* definitely assgined within the promise constructor
+      pendingBatch.push({ request, resolve, reject, requestKey });
+      // if there is no timeout, set one
+      if (!pendingBatchTimeout) {
+        pendingBatchTimeout = setTimeout(
+          sendPendingBatch,
+          DEFAULT_BATCH_TIMEOUT_MS,
+        );
+      }
+      // if the batch is full, send it
+      if (pendingBatch.length >= DEFAULT_MAX_BATCH_SIZE) {
+        sendPendingBatch();
+      }
+      return promise;
+    };
+  })();
+
+  rpcClientMap.set(options.chainId, rpcClient);
+  return rpcClient as EIP1193RequestFn<
+    rpcSchema extends undefined ? EIP1474Methods : rpcSchema
+  >;
+}
+
+type FetchRpcOptions = {
+  requests: RpcRequest[];
+  chainId: number;
+};
+
+async function fetchRpc(
+  client: ThirdwebClient,
+  { requests, chainId }: FetchRpcOptions,
+): Promise<RpcResponse[]> {
+  const headers = new Headers({
+    "Content-Type": "application/json",
+  });
+  if (client.secretKey) {
+    headers.set("x-secret-key", client.secretKey);
+  }
+  const response = await fetch(`https://${chainId}.rpc.thirdweb.com`, {
+    headers,
+    body: stringify(requests),
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`RPC request failed with status ${response.status}`);
+  }
+
+  let result;
+
+  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
+    result = await response.json();
+  } else {
+    result = await response.text();
+  }
+
+  return result;
+}

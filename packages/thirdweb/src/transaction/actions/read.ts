@@ -10,7 +10,7 @@ import {
   type Transaction,
   type TransactionInput,
 } from "../transaction.js";
-import { getRpcClient } from "../../rpc/index.js";
+import { eth_call, getRpcClient } from "../../rpc/index.js";
 import { encode } from "./encode.js";
 import { resolveAbi } from "./resolve-abi.js";
 
@@ -44,18 +44,12 @@ export async function readTx<const abiFn extends AbiFunction>(
     throw new Error("Unable to resolve ABI");
   }
 
-  const rpcRequest = getRpcClient(tx.contract, {
+  const rpcRequest = getRpcClient(tx.contract.client, {
     chainId: tx.contract.chainId,
   });
-  const result = await rpcRequest({
-    method: "eth_call",
-    params: [
-      {
-        to: tx.contract.address,
-        data: encodedData,
-      },
-      "latest",
-    ],
+  const result = await eth_call(rpcRequest, {
+    data: encodedData,
+    to: tx.contract.address,
   });
 
   const decoded = decodeFunctionResult(resolvedAbi, result);

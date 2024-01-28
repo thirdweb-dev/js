@@ -30,7 +30,7 @@ export const getNFT = /*@__PURE__*/ createReadExtension("erc721.getNFT")(
     ]);
     return parseNFT(
       await fetchTokenMetadata({
-        client: options.contract,
+        client: options.contract.client,
         tokenId: options.tokenId,
         tokenUri: uri,
       }),

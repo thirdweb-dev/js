@@ -1,10 +1,11 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { parseUnits } from "viem";
 import {
-  blockByNumber,
-  gasPrice,
-  maxPriorityFeePerGas,
-} from "../rpc/methods.js";
+  eth_gasPrice,
+  eth_getBlockByNumber,
+  eth_maxPriorityFeePerGas,
+  getRpcClient,
+} from "../rpc/index.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
@@ -44,12 +45,11 @@ export async function getDynamicFeeData(
   let maxFeePerGas: null | bigint = null;
   let maxPriorityFeePerGas_: null | bigint = null;
 
-  const { getRpcClient } = await import("../rpc/index.js");
-  const rpcClient = getRpcClient(client, { chainId });
+  const rpcRequest = getRpcClient(client, { chainId });
 
-  const [block, eth_maxPriorityFeePerGas] = await Promise.all([
-    blockByNumber(rpcClient, "latest", false),
-    maxPriorityFeePerGas(rpcClient).catch(() => null),
+  const [block, maxPriorityFeePerGas] = await Promise.all([
+    eth_getBlockByNumber(rpcRequest, { blockTag: "latest" }),
+    eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
   ]);
 
   const baseBlockFee =
@@ -59,9 +59,9 @@ export async function getDynamicFeeData(
   if (chainId === 80001 || chainId === 137) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
-  } else if (eth_maxPriorityFeePerGas) {
+  } else if (maxPriorityFeePerGas) {
     // prioritize fee from eth_maxPriorityFeePerGas
-    maxPriorityFeePerGas_ = eth_maxPriorityFeePerGas;
+    maxPriorityFeePerGas_ = maxPriorityFeePerGas;
   }
   // TODO bring back(?)
   // else {
@@ -103,9 +103,8 @@ export async function getGasPrice(
   client: ThirdwebClient,
   chainId: number,
 ): Promise<bigint> {
-  const { getRpcClient } = await import("../rpc/index.js");
   const rpcClient = getRpcClient(client, { chainId });
-  const gasPrice_ = await gasPrice(rpcClient);
+  const gasPrice_ = await eth_gasPrice(rpcClient);
   const maxGasPrice = 300n; // 300 gwei
   const extraTip = (gasPrice_ / BigInt(100)) * BigInt(10);
   const txGasPrice = gasPrice_ + extraTip;
