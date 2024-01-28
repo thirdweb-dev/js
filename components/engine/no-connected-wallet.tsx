@@ -30,7 +30,11 @@ export const EngineNoConnectedWallet: React.FC = () => {
       <Divider />
 
       <Stack>
-        <Flex justify="space-between">
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          gap={3}
+          justify="space-between"
+        >
           <Stack>
             <Heading size="title.sm">Get Started</Heading>
             <Text>

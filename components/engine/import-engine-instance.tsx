@@ -16,7 +16,7 @@ import {
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel } from "tw-components";
+import { Button, FormLabel, Text, TrackedLink } from "tw-components";
 
 interface ImportEngineInstanceButtonProps {
   refetch: () => void;
@@ -117,6 +117,19 @@ const ModalImportEngine = ({
 
       <ModalBody>
         <Stack spacing={4}>
+          <Text>
+            Import an Engine instance hosted on your infrastructure.
+            <br />
+            <TrackedLink
+              href="https://portal.thirdweb.com/infrastructure/engine/get-started"
+              isExternal
+              category="engine"
+              label="clicked-self-host-instructions"
+              color="blue.500"
+            >
+              Get help setting up Engine for free.
+            </TrackedLink>
+          </Text>
           <FormControl>
             <FormLabel>Name</FormLabel>
             <Input

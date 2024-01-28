@@ -8,13 +8,15 @@ import { THIRDWEB_API_HOST } from "constants/urls";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 // Engine instances
-export interface EngineInstance {
+export type EngineInstance = {
   id: string;
   accountId: string;
   name: string;
   url: string;
   lastAccessedAt: string;
-}
+  cloudDeployedAt: string;
+  status: "active" | "pending" | "requested";
+};
 
 export function useEngineInstances() {
   const { token } = useApiAuthToken();
@@ -35,7 +37,7 @@ export function useEngineInstances() {
       }
 
       const json = await res.json();
-      return json.data?.instances || [];
+      return (json.data?.instances as EngineInstance[]) || [];
     },
     {
       enabled: !!user && !!token,

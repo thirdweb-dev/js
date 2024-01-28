@@ -1,32 +1,22 @@
-import { Spinner } from "@chakra-ui/react";
+import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
+import { EngineInstancesList } from "components/engine/engine-list";
+import { EngineNavigation } from "components/engine/engine-navigation";
+import { EngineNoConnectedWallet } from "components/engine/no-connected-wallet";
 import { EngineSidebar } from "core-ui/sidebar/engine";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { EngineNoConnectedWallet } from "components/engine/no-connected-wallet";
-import {
-  EngineInstance,
-  useEngineInstances,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { EngineNavigation } from "components/engine/engine-navigation";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { EngineInstancesList } from "components/engine/engine-list";
 import { useState } from "react";
+import { ThirdwebNextPage } from "utils/types";
 
 const EngineManage: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();
   const [connectedInstance, setConnectedInstance] = useState<
     EngineInstance | undefined
   >();
-  const instancesQuery = useEngineInstances();
-  const instances: EngineInstance[] = instancesQuery.data ?? [];
 
   if (!isLoggedIn) {
     return <EngineNoConnectedWallet />;
-  }
-
-  if (instancesQuery.isLoading) {
-    <Spinner />;
   }
 
   if (connectedInstance) {
@@ -38,13 +28,7 @@ const EngineManage: ThirdwebNextPage = () => {
     );
   }
 
-  return (
-    <EngineInstancesList
-      instances={instances}
-      refetch={instancesQuery.refetch}
-      setConnectedInstance={setConnectedInstance}
-    />
-  );
+  return <EngineInstancesList setConnectedInstance={setConnectedInstance} />;
 };
 
 EngineManage.getLayout = (page, props) => (
