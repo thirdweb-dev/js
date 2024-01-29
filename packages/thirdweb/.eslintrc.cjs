@@ -1,7 +1,34 @@
+const jsdocRuleOverrides = {
+  "jsdoc/require-jsdoc": [
+    "error",
+    {
+      require: {
+        // class
+        ClassDeclaration: true,
+        ClassExpression: true,
+        // methods
+        MethodDefinition: true,
+        // functions
+        ArrowFunctionExpression: true,
+        FunctionDeclaration: true,
+        FunctionExpression: true,
+      },
+    },
+  ],
+  "jsdoc/check-indentation": "error",
+  "jsdoc/require-asterisk-prefix": "error",
+  "jsdoc/require-description": "error",
+  "jsdoc/jsdoc/require-example": "error",
+};
+
 module.exports = {
   root: true,
-  extends: ["thirdweb", "plugin:@tanstack/eslint-plugin-query/recommended"],
-  plugins: ["better-tree-shaking", "eslint-plugin-tsdoc"],
+  extends: [
+    "thirdweb",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
+    "plugin:jsdoc/recommended-typescript-error",
+  ],
+  plugins: ["better-tree-shaking", "eslint-plugin-tsdoc", "jsdoc"],
   rules: {
     "tsdoc/syntax": "error",
     "better-tree-shaking/no-top-level-side-effects": "error",
@@ -23,5 +50,6 @@ module.exports = {
         message: "Use Uint8Array instead.",
       },
     ],
+    ...jsdocRuleOverrides,
   },
 };

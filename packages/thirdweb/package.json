@@ -123,6 +123,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-tsdoc": "^0.2.16",
+    "eslint-plugin-jsdoc": "^48.0.4",
     "ethers5": "npm:ethers@^5.0.0",
     "ethers6": "npm:ethers@^6.0.0",
     "react": "^18.2.0",
