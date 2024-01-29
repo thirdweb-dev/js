@@ -90,7 +90,7 @@ const supply = await client.readContract({
 npm install ethers
 ```
 
-### Read Contract
+### Hello World
 
 ```javascript
 import { getDefaultProvider, Contract } from 'ethers'
