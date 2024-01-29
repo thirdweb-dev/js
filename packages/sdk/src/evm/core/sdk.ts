@@ -117,6 +117,8 @@ import {
   VoteContractDeployMetadata,
 } from "../types/deploy/deploy-metadata";
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
+import pkg from "../../../package.json";
+import { getOperatingSystem } from "../../core/utils/os";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -309,6 +311,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.options,
       this.storageHandler,
     );
+
+    if (
+      typeof globalThis !== "undefined" &&
+      (globalThis as any).X_SDK_NAME === undefined
+    ) {
+      (globalThis as any).X_SDK_NAME = pkg.name;
+      (globalThis as any).X_SDK_PLATFORM =
+        typeof navigator !== "undefined" && navigator.product === "ReactNative"
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node";
+      (globalThis as any).X_SDK_VERSION = pkg.version;
+      (globalThis as any).X_SDK_OS = getOperatingSystem();
+    }
   }
 
   get auth() {
@@ -592,9 +609,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       } catch (e) {
         // fallback to
         // try resolving the contract type (legacy contracts)
-        const resolvedContractType = await this.resolveContractType(
-          resolvedAddress,
-        );
+        const resolvedContractType =
+          await this.resolveContractType(resolvedAddress);
         if (resolvedContractType && resolvedContractType !== "custom") {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
@@ -721,9 +737,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     walletAddress: AddressOrEns,
     chains: Chain[] = defaultChains,
   ): Promise<ContractWithMetadata[]> {
-    const contracts = await this.multiChainRegistry.getContractAddresses(
-      walletAddress,
-    );
+    const contracts =
+      await this.multiChainRegistry.getContractAddresses(walletAddress);
 
     const chainMap = chains.reduce(
       (acc, chain) => {
@@ -1019,9 +1034,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: NFTContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const parsedMetadata = await LoyaltyCardContractDeploy.parseAsync(
-        metadata,
-      );
+      const parsedMetadata =
+        await LoyaltyCardContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
       const trustedForwarders: string[] = [];
@@ -1078,9 +1092,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: OpenEditionContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const parsedMetadata = await DropErc721ContractSchema.deploy.parseAsync(
-        metadata,
-      );
+      const parsedMetadata =
+        await DropErc721ContractSchema.deploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
       const trustedForwarders: string[] = [];
@@ -1938,9 +1951,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         ?.factoryDeploymentData?.customFactoryInput?.customFactoryAddresses[
         chainId
       ] as AddressOrEns;
-      const resolvedCustomFactoryAddress = await resolveAddress(
-        customFactoryAddress,
-      );
+      const resolvedCustomFactoryAddress =
+        await resolveAddress(customFactoryAddress);
 
       invariant(
         resolvedCustomFactoryAddress,
