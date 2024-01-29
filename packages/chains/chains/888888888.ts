@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Ancient8",
-  "chainId": 28122024,
+  "chainId": 888888888,
   "explorers": [
     {
-      "name": "scan-testnet",
-      "url": "https://scanv2-testnet.ancient8.gg",
+      "name": "Ancient8 Explorer",
+      "url": "https://scan.ancient8.gg",
       "standard": "EIP3091"
     }
   ],
@@ -17,20 +17,19 @@ export default {
     "format": "png"
   },
   "infoURL": "https://ancient8.gg/",
-  "name": "Ancient8 Testnet",
+  "name": "Ancient8",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "networkId": 28122024,
+  "networkId": 888888888,
   "rpc": [
-    "https://ancient8-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://28122024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpcv2-testnet.ancient8.gg"
+    "https://ancient8.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://888888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ancient8.gg"
   ],
-  "shortName": "a8",
-  "slip44": 1,
-  "slug": "ancient8-testnet",
-  "testnet": true
+  "shortName": "ancient8",
+  "slug": "ancient8",
+  "testnet": false
 } as const satisfies Chain;

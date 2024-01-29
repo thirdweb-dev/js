@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 85678,
+  "chainId": 141221,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,20 +12,20 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QI0122I1 Testnet",
+  "name": "Xantus Testnet",
   "nativeCurrency": {
-    "name": "QI0122I1 Testnet Token",
-    "symbol": "KIP",
+    "name": "Xantus Testnet Token",
+    "symbol": "XAN",
     "decimals": 18
   },
-  "networkId": 85678,
+  "networkId": 141221,
   "redFlags": [],
   "rpc": [
-    "https://qi0122i1-testnet-qi0122i1 testnet-85678.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://85678.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://xantus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://141221.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/xantustest/testnet/rpc"
   ],
-  "shortName": "QI0122I1 Testnet",
-  "slug": "qi0122i1-testnet-qi0122i1 testnet-85678",
+  "shortName": "Xantus Testnet",
+  "slug": "xantus-testnet",
   "testnet": true
 } as const satisfies Chain;

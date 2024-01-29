@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 85678,
+  "chainId": 79338,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,20 +12,20 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QI0122I1 Testnet",
+  "name": "QR0122I1 Testnet",
   "nativeCurrency": {
-    "name": "QI0122I1 Testnet Token",
-    "symbol": "KIP",
+    "name": "QR0122I1 Testnet Token",
+    "symbol": "JVTX",
     "decimals": 18
   },
-  "networkId": 85678,
+  "networkId": 79338,
   "redFlags": [],
   "rpc": [
-    "https://qi0122i1-testnet-qi0122i1 testnet-85678.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://85678.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://qr0122i1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://79338.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/qr0122i1te/testnet/rpc"
   ],
-  "shortName": "QI0122I1 Testnet",
-  "slug": "qi0122i1-testnet-qi0122i1 testnet-85678",
+  "shortName": "QR0122I1 Testnet",
+  "slug": "qr0122i1-testnet",
   "testnet": true
 } as const satisfies Chain;
