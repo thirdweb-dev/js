@@ -152,7 +152,7 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
 
   if (typeof globalThis !== "undefined") {
     (globalThis as any).X_SDK_NAME = packageVersion.name;
-    (globalThis as any).X_SDK_PLATFORM = "react-native";
+    (globalThis as any).X_SDK_PLATFORM = "mobile";
     (globalThis as any).X_SDK_VERSION = packageVersion.version;
     (globalThis as any).X_SDK_OS = Platform.OS;
     (globalThis as any).APP_BUNDLE_ID = appBundleId;

@@ -483,7 +483,7 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
 
   if (typeof globalThis !== "undefined") {
     (globalThis as any).X_SDK_NAME = packageJson.name;
-    (globalThis as any).X_SDK_PLATFORM = "react";
+    (globalThis as any).X_SDK_PLATFORM = "browser";
     (globalThis as any).X_SDK_VERSION = packageJson.version;
     (globalThis as any).X_SDK_OS = detectOS();
   }
