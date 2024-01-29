@@ -16,6 +16,8 @@ import { en } from "../locales/en";
 import { ThirdwebLocaleContext } from "./locale-provider";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebLocale } from "../locales/types";
+import packageJson from "../../../package.json";
+import { detectOS } from "../utils/isMobile";
 
 export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -478,6 +480,13 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     theme: _theme,
     ...restProps
   } = props;
+
+  if (typeof globalThis !== "undefined") {
+    (globalThis as any).X_SDK_NAME = packageJson.name;
+    (globalThis as any).X_SDK_PLATFORM = "react";
+    (globalThis as any).X_SDK_VERSION = packageJson.version;
+    (globalThis as any).X_SDK_OS = detectOS();
+  }
 
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";
