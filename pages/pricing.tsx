@@ -28,7 +28,7 @@ const Pricing: ThirdwebNextPage = () => {
   return (
     <LandingLayout
       seo={{
-        title: "thirdweb Pro: Build production-grade web3 apps at scale",
+        title: "thirdweb Growth: Build production-grade web3 apps at scale",
         description:
           "The most efficient way to build web3 apps for millions of users — with a robust infrastructure stack that scales as you grow. Learn more.",
         openGraph: {
