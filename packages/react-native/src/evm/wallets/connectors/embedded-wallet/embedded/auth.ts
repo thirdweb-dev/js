@@ -44,8 +44,24 @@ import {
   appBundleId,
   reactNativePackageVersion,
 } from "../../../../utils/version";
-import { BUNDLE_ID_HEADER } from "../../../../constants/headers";
+import {
+  BUNDLE_ID_HEADER,
+  X_SDK_NAME_HEADER,
+  X_SDK_OS_HEADER,
+  X_SDK_PLATFORM_HEADER,
+  X_SDK_VERSION_HEADER,
+} from "../../../../constants/headers";
 import { ANALYTICS } from "./helpers/analytics";
+
+const HEADERS = {
+  [EWS_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
+  [BUNDLE_ID_HEADER]: (globalThis as any).APP_BUNDLE_ID,
+  [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+  [X_SDK_NAME_HEADER]: (globalThis as any).X_SDK_NAME,
+  [X_SDK_OS_HEADER]: (globalThis as any).X_SDK_OS,
+  [X_SDK_PLATFORM_HEADER]: (globalThis as any).X_SDK_PLATFORM,
+  [X_SDK_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
+};
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -195,9 +211,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 
   const resp = await fetch(headlessLoginLinkWithParams, {
     headers: {
-      [EWS_VERSION_HEADER]: reactNativePackageVersion,
-      [BUNDLE_ID_HEADER]: appBundleId,
-      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+      ...HEADERS,
     },
   });
 
@@ -278,9 +292,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      [EWS_VERSION_HEADER]: reactNativePackageVersion,
-      [BUNDLE_ID_HEADER]: appBundleId,
-      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+      ...HEADERS,
     },
     body: JSON.stringify({
       jwt: jwt,
@@ -328,9 +340,7 @@ export async function authEndpoint(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      [EWS_VERSION_HEADER]: reactNativePackageVersion,
-      [BUNDLE_ID_HEADER]: appBundleId,
-      [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+      ...HEADERS,
     },
     body: JSON.stringify({
       payload: payload,

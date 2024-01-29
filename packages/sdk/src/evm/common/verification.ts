@@ -215,6 +215,7 @@ export async function verify(
     };
 
     const parameters = new URLSearchParams({ ...requestBody });
+    // do we need to pass headers here?
     const result = await fetch(explorerAPIUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -474,9 +475,8 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
       getChainProvider("polygon", {}),
     ) as ContractPublisher;
 
-    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
-      compilerMetaUri,
-    );
+    const publishedMetadataUri =
+      await contract.getPublishedUriFromCompilerUri(compilerMetaUri);
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetaUri}`,

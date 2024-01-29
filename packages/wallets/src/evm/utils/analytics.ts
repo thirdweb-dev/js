@@ -25,6 +25,10 @@ export function track(args: {
     headers: {
       "Content-Type": "application/json",
       "x-client-id": clientId,
+      "x-sdk-version": (globalThis as any).X_SDK_VERSION,
+      "x-sdk-name": (globalThis as any).X_SDK_NAME,
+      "x-sdk-platform": (globalThis as any).X_SDK_PLATFORM,
+      "x-sdk-os": (globalThis as any).X_SDK_OS,
     },
     body: JSON.stringify(body),
   });

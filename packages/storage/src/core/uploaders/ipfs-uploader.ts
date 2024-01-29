@@ -364,6 +364,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-authorize-wallet"] = "true";
     }
 
+    headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
+    headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
+    headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
+    headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
       headers: {

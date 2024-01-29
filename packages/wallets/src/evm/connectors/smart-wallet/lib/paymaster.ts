@@ -75,6 +75,11 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         }`;
         headers["x-authorize-wallet"] = "true";
       }
+
+      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
+      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
+      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
+      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
     }
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
