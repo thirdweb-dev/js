@@ -23,3 +23,17 @@ export function withinDays(dateISO: string, days: number) {
   const today = new Date();
   return differenceInDays(today, date) <= days;
 }
+
+export function remainingDays(isoDate: string) {
+  const currentDate = new Date();
+  const targetDate = new Date(isoDate);
+
+  if (targetDate < currentDate) {
+    return undefined;
+  }
+
+  const timeDifference = targetDate.getTime() - currentDate.getTime();
+  const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  return daysRemaining;
+}

@@ -15,6 +15,8 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const router = useRouter();
   const { data: account } = meQuery;
 
+  const { claimGrowth } = router.query;
+
   useEffect(() => {
     let refetchInterval: ReturnType<typeof setInterval> | undefined;
 
@@ -53,7 +55,9 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
     return null;
   }
 
-  return <Billing account={account} />;
+  return (
+    <Billing account={account} canTrialGrowth={claimGrowth !== undefined} />
+  );
 };
 
 SettingsBillingPage.pageId = PageId.SettingsUsage;

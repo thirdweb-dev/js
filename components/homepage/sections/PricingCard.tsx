@@ -17,21 +17,25 @@ interface PricingCardProps {
   name: AccountPlan;
   ctaProps: TrackedLinkButtonProps;
   ctaTitle?: string;
+  ctaHint?: string;
   onHomepage?: boolean;
   cardProps?: CardProps;
   highlighted?: boolean;
   current?: boolean;
+  striked?: boolean;
   size?: "sm" | "lg";
 }
 
 export const PricingCard: React.FC<PricingCardProps> = ({
   name,
   ctaTitle,
+  ctaHint,
   ctaProps,
   cardProps,
   size = "lg",
   highlighted = false,
   current = false,
+  striked = false,
 }) => {
   const plan = PLANS[name];
   const isCustomPrice = typeof plan.price === "string";
@@ -71,12 +75,15 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               </Badge>
             )}
           </Flex>
-          <Text maxW={320}>{plan.description}</Text>
+          <Text maxW={320} h={12}>
+            {plan.description}
+          </Text>
         </Flex>
         <Flex alignItems="flex-end" gap={2}>
           <Heading
             size={size === "lg" ? "title.2xl" : "title.md"}
             lineHeight={1}
+            textDecor={striked ? "line-through" : "none"}
           >
             {!isCustomPrice && "$"}
             {plan.price}
@@ -101,17 +108,30 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           <FeatureItem key={f} text={f} />
         ))}
       </Flex>
-      {ctaTitle && (
-        <TrackedLinkButton
-          variant="outline"
-          py={6}
-          label={name}
-          size={size === "lg" ? "md" : "sm"}
-          {...ctaProps}
-        >
-          {ctaTitle}
-        </TrackedLinkButton>
-      )}
+      <Flex flexDir="column" gap={3} position="relative" mb={3}>
+        {ctaTitle && (
+          <TrackedLinkButton
+            variant="outline"
+            py={6}
+            label={name}
+            size={size === "lg" ? "md" : "sm"}
+            {...ctaProps}
+          >
+            {ctaTitle}
+          </TrackedLinkButton>
+        )}
+        {ctaHint && (
+          <Text
+            textAlign="center"
+            size="body.sm"
+            position={{ base: "static", md: "absolute" }}
+            left={12}
+            top={ctaTitle ? 14 : -9}
+          >
+            {ctaHint}
+          </Text>
+        )}
+      </Flex>
     </Card>
   );
 

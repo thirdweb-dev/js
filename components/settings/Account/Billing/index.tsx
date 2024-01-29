@@ -22,9 +22,13 @@ import { FiExternalLink } from "react-icons/fi";
 
 interface BillingProps {
   account: Account;
+  canTrialGrowth?: boolean;
 }
 
-export const Billing: React.FC<BillingProps> = ({ account }) => {
+export const Billing: React.FC<BillingProps> = ({
+  account,
+  canTrialGrowth,
+}) => {
   const updatePlanMutation = useUpdateAccountPlan();
   const {
     isOpen: isPaymentMethodOpen,
@@ -70,6 +74,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
       {
         plan,
         feedback,
+        useTrial: canTrialGrowth && validPayment,
       },
       {
         onSuccess: () => {
@@ -244,6 +249,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         onSelect={handlePlanSelect}
         validPayment={validPayment}
         loading={paymentMethodSaving || updatePlanMutation.isLoading}
+        canTrialGrowth={canTrialGrowth}
       />
 
       <TrackedLink

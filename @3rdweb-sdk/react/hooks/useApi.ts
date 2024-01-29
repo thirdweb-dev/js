@@ -316,7 +316,7 @@ export function useUpdateAccountPlan() {
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async (input: { plan: string; feedback?: string }) => {
+    async (input: { plan: string; feedback?: string; useTrial?: boolean }) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
