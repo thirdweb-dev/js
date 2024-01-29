@@ -133,7 +133,7 @@ class ThirdwebBridge implements TWBridge {
 
   public initialize(chain: ChainIdOrName, options: string) {
     if(typeof globalThis !== "undefined"){
-      (globalThis as any).X_SDK_NAME = "UnitySDK";
+      (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
       (globalThis as any).X_SDK_VERSION = "4.5.1";
       (globalThis as any).X_SDK_OS = "webgl";
