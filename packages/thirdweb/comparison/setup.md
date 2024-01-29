@@ -5,7 +5,7 @@
 ### Install
 
 ```bash
-npm install thirdweb
+npm install thirdweb@alpha
 ```
 
 ### Hello World
