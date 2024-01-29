@@ -41,10 +41,6 @@ import {
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { createErrorMessage } from "./helpers/errors";
 import {
-  appBundleId,
-  reactNativePackageVersion,
-} from "../../../../utils/version";
-import {
   BUNDLE_ID_HEADER,
   X_SDK_NAME_HEADER,
   X_SDK_OS_HEADER,

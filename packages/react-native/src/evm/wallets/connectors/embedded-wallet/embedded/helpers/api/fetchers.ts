@@ -21,10 +21,6 @@ import {
 } from "../../../types";
 import { createErrorMessage } from "../errors";
 import {
-  appBundleId,
-  reactNativePackageVersion,
-} from "../../../../../../utils/version";
-import {
   BUNDLE_ID_HEADER,
   X_SDK_NAME_HEADER,
   X_SDK_OS_HEADER,
