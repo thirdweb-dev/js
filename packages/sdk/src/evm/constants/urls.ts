@@ -260,15 +260,10 @@ export function getProviderFromRpcUrl(
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
 
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
-      headers["x-sdk-platform"] = bundleId
-        ? "react-native"
-        : isBrowser()
-        ? (window as any).bridge !== undefined
-          ? "webGL"
-          : "browser"
-        : "node";
+      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
+      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
+      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
+      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
@@ -284,7 +279,7 @@ export function getProviderFromRpcUrl(
           if (existingProvider) {
             return existingProvider;
           }
-          
+
           // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
           let _skipFetchSetup = false;
           if (
@@ -292,7 +287,8 @@ export function getProviderFromRpcUrl(
             "TW_SKIP_FETCH_SETUP" in globalThis &&
             typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
           ) {
-            _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
+            _skipFetchSetup = (globalThis as any)
+              .TW_SKIP_FETCH_SETUP as boolean;
           }
 
           // Otherwise, create a new provider on the specific network

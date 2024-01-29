@@ -282,17 +282,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader("x-bundle-id", bundleId);
       }
 
-      xhr.setRequestHeader("x-sdk-version", pkg.version);
-      xhr.setRequestHeader("x-sdk-name", pkg.name);
+      xhr.setRequestHeader("x-sdk-version", (globalThis as any).X_SDK_VERSION);
+      xhr.setRequestHeader("x-sdk-os", (globalThis as any).X_SDK_OS);
+      xhr.setRequestHeader("x-sdk-name", (globalThis as any).X_SDK_NAME);
       xhr.setRequestHeader(
         "x-sdk-platform",
-        bundleId
-          ? "react-native"
-          : isBrowser()
-          ? (window as any).bridge !== undefined
-            ? "webGL"
-            : "browser"
-          : "node",
+        (globalThis as any).X_SDK_PLATFORM,
       );
 
       // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
