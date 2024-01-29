@@ -73,7 +73,8 @@ class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
       throw new Error("not connected");
     }
 
-    const rpcRequest = getRpcClient(this.client, {
+    const rpcRequest = getRpcClient({
+      client: this.client,
       chainId: tx.chainId,
     });
 

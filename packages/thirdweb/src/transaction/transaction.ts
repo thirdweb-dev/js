@@ -54,3 +54,12 @@ export function isTxOpts(value: unknown): value is TxOpts {
     typeof value.contract.address === "string"
   );
 }
+
+export function isAbiFunction(item: unknown): item is AbiFunction {
+  return !!(
+    item &&
+    typeof item === "object" &&
+    "type" in item &&
+    item.type === "function"
+  );
+}

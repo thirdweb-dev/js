@@ -1,6 +1,9 @@
 import { parseAbiItem, type AbiFunction, type Abi } from "abitype";
-import type { Transaction, TransactionInput } from "../transaction.js";
-import { isAbiFunction } from "../../abi/resolveAbiFunction.js";
+import {
+  isAbiFunction,
+  type Transaction,
+  type TransactionInput,
+} from "../transaction.js";
 import type { ParseMethod } from "../../abi/types.js";
 
 const ABI_FN_RESOLUTION_CACHE = new WeakMap<

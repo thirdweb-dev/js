@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
-import type { EIP1193RequestFn, EIP1474Methods, RpcSchema } from "viem";
+import type { EIP1193RequestFn, EIP1474Methods } from "viem";
 
 type SuccessResult<T> = {
   method?: never;
@@ -49,6 +49,7 @@ export type RpcResponse<TResult = any, TError = any> = {
 const RPC_CLIENT_MAP = new WeakMap();
 
 type RPCOptions = {
+  readonly client: ThirdwebClient;
   readonly chainId: number;
 };
 
@@ -69,22 +70,17 @@ const DEFAULT_MAX_BATCH_SIZE = 100;
 // default to no timeout (next tick)
 const DEFAULT_BATCH_TIMEOUT_MS = 0;
 
-export function getRpcClient<
-  rpcSchema extends RpcSchema | undefined = undefined,
->(
-  client: ThirdwebClient,
+export function getRpcClient(
   options: RPCOptions,
-): EIP1193RequestFn<rpcSchema extends undefined ? EIP1474Methods : rpcSchema> {
-  const rpcClientMap = getRpcClientMap(client);
+): EIP1193RequestFn<EIP1474Methods> {
+  const rpcClientMap = getRpcClientMap(options.client);
   if (rpcClientMap.has(options.chainId)) {
-    return rpcClientMap.get(options.chainId) as EIP1193RequestFn<
-      rpcSchema extends undefined ? EIP1474Methods : rpcSchema
-    >;
+    return rpcClientMap.get(
+      options.chainId,
+    ) as EIP1193RequestFn<EIP1474Methods>;
   }
 
-  const rpcClient: EIP1193RequestFn<
-    rpcSchema extends undefined ? EIP1474Methods : rpcSchema
-  > = (function () {
+  const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
     // inflight requests
     const inflightRequests = new Map<string, Promise<any>>();
     let pendingBatch: Array<{
@@ -118,7 +114,7 @@ export function getRpcClient<
       // reset pendingBatch to empty
       pendingBatch = [];
 
-      fetchRpc(client, {
+      fetchRpc(options.client, {
         requests: activeBatch.map((inflight) => inflight.request),
         chainId: options.chainId,
       })
@@ -186,9 +182,7 @@ export function getRpcClient<
   })();
 
   rpcClientMap.set(options.chainId, rpcClient);
-  return rpcClient as EIP1193RequestFn<
-    rpcSchema extends undefined ? EIP1474Methods : rpcSchema
-  >;
+  return rpcClient as EIP1193RequestFn<EIP1474Methods>;
 }
 
 type FetchRpcOptions = {

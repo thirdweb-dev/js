@@ -10,9 +10,7 @@ export async function estimateGas<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
   options?: { from?: string },
 ): Promise<bigint> {
-  const rpcRequest = getRpcClient(tx.contract.client, {
-    chainId: tx.contract.chainId,
-  });
+  const rpcRequest = getRpcClient(tx.contract);
 
   const [gasOverrides, encodedData] = await Promise.all([
     getDefaultGasOverrides(tx.contract.client, tx.contract.chainId),

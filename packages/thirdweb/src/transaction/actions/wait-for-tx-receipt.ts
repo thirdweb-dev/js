@@ -31,9 +31,7 @@ export function waitForReceipt<abi extends Abi>({
       );
     }
 
-    const request = getRpcClient(contract.client, {
-      chainId: contract.chainId,
-    });
+    const request = getRpcClient(contract);
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;

@@ -1,7 +1,7 @@
 import type { Abi } from "abitype";
-import type { ThirdwebContract } from "../../contract/index.js";
+import type { ThirdwebContract } from "../../../contract/index.js";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { waitForReceipt } from "../../transaction/index.js";
+import { waitForReceipt } from "../../../transaction/index.js";
 import type { TransactionReceipt } from "viem";
 
 export function useWaitForReceipt<abi extends Abi>({

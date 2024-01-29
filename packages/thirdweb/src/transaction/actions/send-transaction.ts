@@ -11,9 +11,7 @@ export async function sendTransaction<
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
-  const rpcRequest = getRpcClient(tx.contract.client, {
-    chainId: tx.contract.chainId,
-  });
+  const rpcRequest = getRpcClient(tx.contract);
 
   const [getDefaultGasOverrides, encode, eth_getTransactionCount, estimateGas] =
     await Promise.all([

@@ -4,4 +4,5 @@ export {
   type ContractEventInput,
 } from "./event.js";
 
-export { watch } from "./actions/watch.js";
+export { watchContractEvents } from "./actions/watch-events.js";
+export { getContractEvents } from "./actions/get-events.js";

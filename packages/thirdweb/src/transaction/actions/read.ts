@@ -44,9 +44,7 @@ export async function readTx<const abiFn extends AbiFunction>(
     throw new Error("Unable to resolve ABI");
   }
 
-  const rpcRequest = getRpcClient(tx.contract.client, {
-    chainId: tx.contract.chainId,
-  });
+  const rpcRequest = getRpcClient(tx.contract);
   const result = await eth_call(rpcRequest, {
     data: encodedData,
     to: tx.contract.address,

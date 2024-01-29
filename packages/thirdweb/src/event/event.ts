@@ -35,3 +35,12 @@ export function contractEvent<
 >(options: ContractEventInput<abi, event>) {
   return options as unknown as ContractEvent<ParseEvent<abi, event>>;
 }
+
+export function isAbiEvent(item: unknown): item is AbiEvent {
+  return !!(
+    item &&
+    typeof item === "object" &&
+    "type" in item &&
+    item.type === "event"
+  );
+}
