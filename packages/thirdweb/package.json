@@ -119,6 +119,7 @@
     "@tanstack/eslint-plugin-query": "^5.17.22",
     "@types/bun": "^1.0.4",
     "@types/react": "^18.2.48",
+    "@thirdweb-dev/sdk": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-tsdoc": "^0.2.16",
@@ -126,6 +127,7 @@
     "ethers6": "npm:ethers@^6.0.0",
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
+    "tinybench": "^2.6.0",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {

@@ -46,9 +46,7 @@ const sdk = new ThirdwebSDK(1, {
   clientId: "<my-client-id>",
 });
 
-const contract = await sdk.getContract({
-  address: "0x...",
-});
+const contract = await sdk.getContract("0x...");
 
 const supply = await contract.erc20.totalSupply();
 ```

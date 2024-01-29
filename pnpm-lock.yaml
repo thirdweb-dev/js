@@ -1433,6 +1433,9 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.17.22
         version: 5.17.22(eslint@8.56.0)(typescript@5.3.3)
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@types/bun':
         specifier: ^1.0.4
         version: 1.0.4
@@ -1460,6 +1463,9 @@ importers:
       rimraf:
         specifier: ^5.0.5
         version: 5.0.5
+      tinybench:
+        specifier: ^2.6.0
+        version: 2.6.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -30446,6 +30452,10 @@ packages:
 
   /tinybench@2.5.1:
     resolution: {integrity: sha512-65NKvSuAVDP/n4CqH+a9w2kTlLReS9vhsAP06MWx+/89nMinJyB2icyl58RIcqCmIggpojIGeuJGhjU1aGMBSg==}
+    dev: true
+
+  /tinybench@2.6.0:
+    resolution: {integrity: sha512-N8hW3PG/3aOoZAN5V/NSAEDz0ZixDSSt5b/a05iqtpgfLWMSVuCo7w0k2vVvEjdrIoeGqZzweX2WlyioNIHchA==}
     dev: true
 
   /title-case@3.0.3:
