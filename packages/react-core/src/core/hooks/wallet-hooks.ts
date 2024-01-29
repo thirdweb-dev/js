@@ -22,6 +22,7 @@ import type {
   TokenBoundSmartWallet,
   TrustWallet,
   WalletConnect,
+  XDEFIWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { WalletInstance } from "../types/wallet";
@@ -54,6 +55,7 @@ export type WalletIdToWalletTypeMap = {
   oneKey: OneKeyWallet;
   cryptoDefiWallet: CryptoDefiWallet;
   rabby: RabbyWallet;
+  xdefi: XDEFIWallet;
 };
 
 /**
