@@ -29,6 +29,11 @@ module.exports = {
     "plugin:jsdoc/recommended-typescript-error",
   ],
   plugins: ["better-tree-shaking", "eslint-plugin-tsdoc", "jsdoc"],
+  settings: {
+    jsdoc: {
+      ignoreInternal: true,
+    },
+  },
   rules: {
     "tsdoc/syntax": "error",
     "better-tree-shaking/no-top-level-side-effects": "error",
