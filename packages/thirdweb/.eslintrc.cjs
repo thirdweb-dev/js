@@ -18,7 +18,7 @@ const jsdocRuleOverrides = {
   "jsdoc/check-indentation": "error",
   "jsdoc/require-asterisk-prefix": "error",
   "jsdoc/require-description": "error",
-  "jsdoc/jsdoc/require-example": "error",
+  "jsdoc/require-example": "error",
 };
 
 module.exports = {
