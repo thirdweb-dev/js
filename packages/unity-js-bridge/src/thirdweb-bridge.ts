@@ -25,6 +25,7 @@ import {
   getChainByChainId,
 } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
+import { detect } from "detect-browser";
 
 declare global {
   interface Window {
@@ -133,10 +134,17 @@ class ThirdwebBridge implements TWBridge {
 
   public initialize(chain: ChainIdOrName, options: string) {
     if(typeof globalThis !== "undefined"){
+      let browser;
+      try {
+         browser = detect();
+      } catch {
+        console.warn("Failed to detect browser");
+        browser = undefined;
+      }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
       (globalThis as any).X_SDK_VERSION = "4.5.1";
-      (globalThis as any).X_SDK_OS = "webgl";
+      (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
