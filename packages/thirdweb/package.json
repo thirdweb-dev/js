@@ -128,7 +128,8 @@
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
     "tinybench": "^2.6.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typedoc-gen": "workspace:*"
   },
   "peerDependencies": {
     "ethers": "^5 || ^6",
@@ -152,7 +153,8 @@
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf esm cjs types",
     "push": "yalc push",
-    "test": "bun test"
+    "test": "bun test",
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "engines": {
     "node": ">=18"
