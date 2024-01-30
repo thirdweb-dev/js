@@ -25,7 +25,7 @@
 							"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 							"line": 41,
 							"character": 13,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L41"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L41"
 						}
 					],
 					"type": {
@@ -48,7 +48,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 											"line": 60,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L60"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L60"
 										}
 									],
 									"type": {
@@ -109,7 +109,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 															"line": 88,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L88"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L88"
 														}
 													],
 													"type": {
@@ -125,7 +125,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																	"line": 176,
 																	"character": 15,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L176"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L176"
 																}
 															],
 															"signatures": [
@@ -168,7 +168,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																			"line": 176,
 																			"character": 15,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L176"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L176"
 																		}
 																	],
 																	"typeParameter": [
@@ -296,7 +296,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 															"line": 71,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L71"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L71"
 														}
 													],
 													"type": {
@@ -312,7 +312,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																	"line": 71,
 																	"character": 16,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L71"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L71"
 																}
 															],
 															"signatures": [
@@ -355,7 +355,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																			"line": 71,
 																			"character": 16,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L71"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L71"
 																		}
 																	],
 																	"parameters": [
@@ -438,7 +438,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 													"line": 60,
 													"character": 14,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L60"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L60"
 												}
 											]
 										}
@@ -456,7 +456,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 											"line": 45,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L45"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L45"
 										}
 									],
 									"type": {
@@ -527,7 +527,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 															"line": 57,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L57"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L57"
 														}
 													],
 													"type": {
@@ -543,7 +543,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																	"line": 57,
 																	"character": 16,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L57"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L57"
 																}
 															],
 															"signatures": [
@@ -586,7 +586,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																			"line": 57,
 																			"character": 16,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L57"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L57"
 																		}
 																	],
 																	"parameters": [
@@ -660,7 +660,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 													"line": 45,
 													"character": 14,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L45"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L45"
 												}
 											]
 										}
@@ -678,7 +678,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 											"line": 90,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L90"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L90"
 										}
 									],
 									"type": {
@@ -739,7 +739,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 															"line": 101,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L101"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L101"
 														}
 													],
 													"type": {
@@ -755,7 +755,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																	"line": 192,
 																	"character": 15,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L192"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L192"
 																}
 															],
 															"signatures": [
@@ -798,7 +798,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 																			"line": 192,
 																			"character": 15,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L192"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L192"
 																		}
 																	],
 																	"parameters": [
@@ -836,7 +836,7 @@
 																		"typeArguments": [
 																			{
 																				"type": "reference",
-																				"target": 851,
+																				"target": 852,
 																				"name": "Wallet",
 																				"package": "thirdweb"
 																			}
@@ -864,7 +864,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 													"line": 90,
 													"character": 12,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L90"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L90"
 												}
 											]
 										}
@@ -887,7 +887,7 @@
 									"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 									"line": 44,
 									"character": 9,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L44"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L44"
 								}
 							]
 						}
@@ -908,7 +908,7 @@
 					"fileName": "packages/thirdweb/src/adapters/ethers5.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers5.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers5.ts#L1"
 				}
 			]
 		},
@@ -932,7 +932,7 @@
 							"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 							"line": 41,
 							"character": 13,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L41"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L41"
 						}
 					],
 					"type": {
@@ -955,7 +955,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 											"line": 60,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L60"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L60"
 										}
 									],
 									"type": {
@@ -1016,7 +1016,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 															"line": 88,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L88"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L88"
 														}
 													],
 													"type": {
@@ -1032,7 +1032,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																	"line": 176,
 																	"character": 15,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L176"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L176"
 																}
 															],
 															"signatures": [
@@ -1075,7 +1075,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																			"line": 176,
 																			"character": 15,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L176"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L176"
 																		}
 																	],
 																	"typeParameter": [
@@ -1203,7 +1203,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 															"line": 71,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L71"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L71"
 														}
 													],
 													"type": {
@@ -1219,7 +1219,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																	"line": 71,
 																	"character": 16,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L71"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L71"
 																}
 															],
 															"signatures": [
@@ -1262,7 +1262,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																			"line": 71,
 																			"character": 16,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L71"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L71"
 																		}
 																	],
 																	"parameters": [
@@ -1345,7 +1345,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 													"line": 60,
 													"character": 14,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L60"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L60"
 												}
 											]
 										}
@@ -1363,7 +1363,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 											"line": 45,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L45"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L45"
 										}
 									],
 									"type": {
@@ -1434,7 +1434,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 															"line": 57,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L57"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L57"
 														}
 													],
 													"type": {
@@ -1450,7 +1450,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																	"line": 57,
 																	"character": 16,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L57"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L57"
 																}
 															],
 															"signatures": [
@@ -1493,7 +1493,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																			"line": 57,
 																			"character": 16,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L57"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L57"
 																		}
 																	],
 																	"parameters": [
@@ -1567,7 +1567,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 													"line": 45,
 													"character": 14,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L45"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L45"
 												}
 											]
 										}
@@ -1585,7 +1585,7 @@
 											"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 											"line": 90,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L90"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L90"
 										}
 									],
 									"type": {
@@ -1646,7 +1646,7 @@
 															"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 															"line": 101,
 															"character": 6,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L101"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L101"
 														}
 													],
 													"type": {
@@ -1662,7 +1662,7 @@
 																	"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																	"line": 195,
 																	"character": 15,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L195"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L195"
 																}
 															],
 															"signatures": [
@@ -1705,7 +1705,7 @@
 																			"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 																			"line": 195,
 																			"character": 15,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L195"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L195"
 																		}
 																	],
 																	"parameters": [
@@ -1743,7 +1743,7 @@
 																		"typeArguments": [
 																			{
 																				"type": "reference",
-																				"target": 851,
+																				"target": 852,
 																				"name": "Wallet",
 																				"package": "thirdweb"
 																			}
@@ -1771,7 +1771,7 @@
 													"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 													"line": 90,
 													"character": 12,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L90"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L90"
 												}
 											]
 										}
@@ -1794,7 +1794,7 @@
 									"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 									"line": 44,
 									"character": 9,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L44"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L44"
 								}
 							]
 						}
@@ -1815,7 +1815,7 @@
 					"fileName": "packages/thirdweb/src/adapters/ethers6.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/adapters/ethers6.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/adapters/ethers6.ts#L1"
 				}
 			]
 		},
@@ -1837,7 +1837,7 @@
 							"fileName": "packages/thirdweb/src/event/index.ts",
 							"line": 3,
 							"character": 7,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L3"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L3"
 						}
 					],
 					"target": 141
@@ -1853,7 +1853,7 @@
 							"fileName": "packages/thirdweb/src/event/index.ts",
 							"line": 4,
 							"character": 31,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L4"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L4"
 						}
 					],
 					"target": 134
@@ -1869,7 +1869,7 @@
 							"fileName": "packages/thirdweb/src/event/index.ts",
 							"line": 8,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L8"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L8"
 						}
 					],
 					"target": 162
@@ -1885,7 +1885,7 @@
 							"fileName": "packages/thirdweb/src/event/index.ts",
 							"line": 2,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L2"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L2"
 						}
 					],
 					"target": 129
@@ -1901,7 +1901,7 @@
 							"fileName": "packages/thirdweb/src/event/index.ts",
 							"line": 7,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L7"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L7"
 						}
 					],
 					"target": 143
@@ -1924,7 +1924,7 @@
 					"fileName": "packages/thirdweb/src/event/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/index.ts#L1"
 				}
 			]
 		},
@@ -1946,7 +1946,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/read/balanceOf.ts",
 							"line": 26,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/balanceOf.ts#L26"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/balanceOf.ts#L26"
 						}
 					],
 					"signatures": [
@@ -1989,7 +1989,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/read/balanceOf.ts",
 									"line": 26,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/balanceOf.ts#L26"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/balanceOf.ts#L26"
 								}
 							],
 							"parameters": [
@@ -2063,7 +2063,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/read/decimals.ts",
 							"line": 17,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/decimals.ts#L17"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/decimals.ts#L17"
 						}
 					],
 					"signatures": [
@@ -2106,7 +2106,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/read/decimals.ts",
 									"line": 17,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/decimals.ts#L17"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/decimals.ts#L17"
 								}
 							],
 							"parameters": [
@@ -2164,7 +2164,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/write/mintTo.ts",
 							"line": 30,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/write/mintTo.ts#L30"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/write/mintTo.ts#L30"
 						}
 					],
 					"signatures": [
@@ -2207,7 +2207,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/write/mintTo.ts",
 									"line": 30,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/write/mintTo.ts#L30"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/write/mintTo.ts#L30"
 								}
 							],
 							"parameters": [
@@ -2557,7 +2557,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/read/symbol.ts",
 							"line": 16,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/symbol.ts#L16"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/symbol.ts#L16"
 						}
 					],
 					"signatures": [
@@ -2600,7 +2600,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/read/symbol.ts",
 									"line": 16,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/symbol.ts#L16"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/symbol.ts#L16"
 								}
 							],
 							"parameters": [
@@ -2658,7 +2658,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/read/totalSupply.ts",
 							"line": 14,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/totalSupply.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/totalSupply.ts#L14"
 						}
 					],
 					"signatures": [
@@ -2701,7 +2701,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/read/totalSupply.ts",
 									"line": 14,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/read/totalSupply.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/read/totalSupply.ts#L14"
 								}
 							],
 							"parameters": [
@@ -2759,7 +2759,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc20/write/transfer.ts",
 							"line": 30,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/write/transfer.ts#L30"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/write/transfer.ts#L30"
 						}
 					],
 					"signatures": [
@@ -2802,7 +2802,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc20/write/transfer.ts",
 									"line": 30,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20/write/transfer.ts#L30"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20/write/transfer.ts#L30"
 								}
 							],
 							"parameters": [
@@ -3160,7 +3160,7 @@
 					"fileName": "packages/thirdweb/src/extensions/erc20.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc20.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc20.ts#L1"
 				}
 			]
 		},
@@ -3190,7 +3190,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFT.ts",
 							"line": 9,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L9"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L9"
 						}
 					],
 					"type": {
@@ -3232,7 +3232,7 @@
 													"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFT.ts",
 													"line": 13,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L13"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L13"
 												}
 											],
 											"type": {
@@ -3254,7 +3254,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFT.ts",
 											"line": 9,
 											"character": 44,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L9"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L9"
 										}
 									]
 								}
@@ -3281,7 +3281,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 							"line": 14,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L14"
 						}
 					],
 					"type": {
@@ -3314,7 +3314,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 											"line": 22,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L22"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L22"
 										}
 									],
 									"type": {
@@ -3343,7 +3343,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 											"line": 26,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L26"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L26"
 										}
 									],
 									"type": {
@@ -3372,7 +3372,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 											"line": 18,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L18"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L18"
 										}
 									],
 									"type": {
@@ -3396,7 +3396,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 									"line": 14,
 									"character": 28,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L14"
 								}
 							]
 						}
@@ -3413,7 +3413,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 							"line": 16,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L16"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L16"
 						}
 					],
 					"type": {
@@ -3436,7 +3436,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 											"line": 18,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L18"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L18"
 										}
 									],
 									"type": {
@@ -3469,7 +3469,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 											"line": 17,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L17"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L17"
 										}
 									],
 									"type": {
@@ -3492,7 +3492,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 									"line": 16,
 									"character": 27,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L16"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L16"
 								}
 							]
 						}
@@ -3509,7 +3509,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/ownerOf.ts",
 							"line": 4,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
 						}
 					],
 					"type": {
@@ -3532,7 +3532,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/ownerOf.ts",
 											"line": 4,
 											"character": 30,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
 										}
 									],
 									"type": {
@@ -3554,7 +3554,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/ownerOf.ts",
 									"line": 4,
 									"character": 28,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L4"
 								}
 							]
 						}
@@ -3571,7 +3571,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/tokenURI.ts",
 							"line": 4,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
 						}
 					],
 					"type": {
@@ -3594,7 +3594,7 @@
 											"fileName": "packages/thirdweb/src/extensions/erc721/read/tokenURI.ts",
 											"line": 4,
 											"character": 31,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
 										}
 									],
 									"type": {
@@ -3616,7 +3616,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/tokenURI.ts",
 									"line": 4,
 									"character": 29,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L4"
 								}
 							]
 						}
@@ -3633,7 +3633,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFT.ts",
 							"line": 29,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L29"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L29"
 						}
 					],
 					"signatures": [
@@ -3676,7 +3676,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFT.ts",
 									"line": 29,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L29"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFT.ts#L29"
 								}
 							],
 							"parameters": [
@@ -3753,7 +3753,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 							"line": 44,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L44"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L44"
 						}
 					],
 					"signatures": [
@@ -3821,7 +3821,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/getNFTs.ts",
 									"line": 44,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L44"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/getNFTs.ts#L44"
 								}
 							],
 							"parameters": [
@@ -3901,7 +3901,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 							"line": 41,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L41"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L41"
 						}
 					],
 					"signatures": [
@@ -3960,7 +3960,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/write/mintTo.ts",
 									"line": 41,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L41"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/write/mintTo.ts#L41"
 								}
 							],
 							"parameters": [
@@ -4307,7 +4307,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts",
 							"line": 14,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts#L14"
 						}
 					],
 					"signatures": [
@@ -4350,7 +4350,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts",
 									"line": 14,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/nextTokenIdToMint.ts#L14"
 								}
 							],
 							"parameters": [
@@ -4408,7 +4408,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/ownerOf.ts",
 							"line": 16,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L16"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L16"
 						}
 					],
 					"signatures": [
@@ -4451,7 +4451,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/ownerOf.ts",
 									"line": 16,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L16"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/ownerOf.ts#L16"
 								}
 							],
 							"parameters": [
@@ -4517,7 +4517,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/startTokenId.ts",
 							"line": 14,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/startTokenId.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/startTokenId.ts#L14"
 						}
 					],
 					"signatures": [
@@ -4560,7 +4560,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/startTokenId.ts",
 									"line": 14,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/startTokenId.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/startTokenId.ts#L14"
 								}
 							],
 							"parameters": [
@@ -4618,7 +4618,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/tokenURI.ts",
 							"line": 16,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L16"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L16"
 						}
 					],
 					"signatures": [
@@ -4661,7 +4661,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/tokenURI.ts",
 									"line": 16,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L16"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/tokenURI.ts#L16"
 								}
 							],
 							"parameters": [
@@ -4727,7 +4727,7 @@
 							"fileName": "packages/thirdweb/src/extensions/erc721/read/totalSupply.ts",
 							"line": 14,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/totalSupply.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/totalSupply.ts#L14"
 						}
 					],
 					"signatures": [
@@ -4770,7 +4770,7 @@
 									"fileName": "packages/thirdweb/src/extensions/erc721/read/totalSupply.ts",
 									"line": 14,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721/read/totalSupply.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721/read/totalSupply.ts#L14"
 								}
 							],
 							"parameters": [
@@ -4848,7 +4848,7 @@
 					"fileName": "packages/thirdweb/src/extensions/erc721.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/extensions/erc721.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/extensions/erc721.ts#L1"
 				}
 			]
 		},
@@ -4870,7 +4870,7 @@
 							"fileName": "packages/thirdweb/src/event/event.ts",
 							"line": 24,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L24"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L24"
 						}
 					],
 					"typeParameters": [
@@ -4927,7 +4927,7 @@
 							"fileName": "packages/thirdweb/src/event/event.ts",
 							"line": 14,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L14"
 						}
 					],
 					"typeParameters": [
@@ -4993,7 +4993,7 @@
 											"fileName": "packages/thirdweb/src/event/event.ts",
 											"line": 18,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L18"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L18"
 										}
 									],
 									"type": {
@@ -5023,7 +5023,7 @@
 											"fileName": "packages/thirdweb/src/event/event.ts",
 											"line": 19,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L19"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L19"
 										}
 									],
 									"type": {
@@ -5047,7 +5047,7 @@
 											"fileName": "packages/thirdweb/src/event/event.ts",
 											"line": 20,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L20"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L20"
 										}
 									],
 									"type": {
@@ -5103,7 +5103,7 @@
 									"fileName": "packages/thirdweb/src/event/event.ts",
 									"line": 17,
 									"character": 4,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L17"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L17"
 								}
 							]
 						}
@@ -5120,7 +5120,7 @@
 							"fileName": "packages/thirdweb/src/contract/index.ts",
 							"line": 4,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L4"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L4"
 						}
 					],
 					"typeParameters": [
@@ -5167,7 +5167,7 @@
 											"fileName": "packages/thirdweb/src/contract/index.ts",
 											"line": 8,
 											"character": 11,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L8"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L8"
 										}
 									],
 									"type": {
@@ -5189,7 +5189,7 @@
 											"fileName": "packages/thirdweb/src/contract/index.ts",
 											"line": 6,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L6"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L6"
 										}
 									],
 									"type": {
@@ -5208,7 +5208,7 @@
 											"fileName": "packages/thirdweb/src/contract/index.ts",
 											"line": 7,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L7"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L7"
 										}
 									],
 									"type": {
@@ -5227,7 +5227,7 @@
 											"fileName": "packages/thirdweb/src/contract/index.ts",
 											"line": 5,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L5"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L5"
 										}
 									],
 									"type": {
@@ -5254,7 +5254,7 @@
 									"fileName": "packages/thirdweb/src/contract/index.ts",
 									"line": 4,
 									"character": 52,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L4"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L4"
 								}
 							]
 						}
@@ -5271,7 +5271,7 @@
 							"fileName": "packages/thirdweb/src/client/client.ts",
 							"line": 3,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L3"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L3"
 						}
 					],
 					"type": {
@@ -5297,7 +5297,7 @@
 													"fileName": "packages/thirdweb/src/client/client.ts",
 													"line": 5,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L5"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L5"
 												}
 											],
 											"type": {
@@ -5318,7 +5318,7 @@
 													"fileName": "packages/thirdweb/src/client/client.ts",
 													"line": 6,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L6"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L6"
 												}
 											],
 											"type": {
@@ -5341,7 +5341,7 @@
 											"fileName": "packages/thirdweb/src/client/client.ts",
 											"line": 4,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L4"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L4"
 										}
 									]
 								}
@@ -5368,7 +5368,7 @@
 													"fileName": "packages/thirdweb/src/client/client.ts",
 													"line": 9,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L9"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L9"
 												}
 											],
 											"type": {
@@ -5387,7 +5387,7 @@
 													"fileName": "packages/thirdweb/src/client/client.ts",
 													"line": 10,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L10"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L10"
 												}
 											],
 											"type": {
@@ -5410,7 +5410,7 @@
 											"fileName": "packages/thirdweb/src/client/client.ts",
 											"line": 8,
 											"character": 4,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L8"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L8"
 										}
 									]
 								}
@@ -5429,7 +5429,7 @@
 							"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 							"line": 11,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L11"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L11"
 						}
 					],
 					"typeParameters": [
@@ -5558,7 +5558,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 											"line": 18,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L18"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L18"
 										}
 									],
 									"type": {
@@ -5590,7 +5590,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 											"line": 19,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L19"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L19"
 										}
 									],
 									"type": {
@@ -5617,7 +5617,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 											"line": 20,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L20"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L20"
 										}
 									],
 									"type": {
@@ -5641,7 +5641,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 											"line": 21,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L21"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L21"
 										}
 									],
 									"type": {
@@ -5669,7 +5669,7 @@
 									"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 									"line": 17,
 									"character": 4,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L17"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L17"
 								}
 							]
 						}
@@ -5686,7 +5686,7 @@
 							"fileName": "packages/thirdweb/src/client/client.ts",
 							"line": 13,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L13"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L13"
 						}
 					],
 					"type": {
@@ -5711,7 +5711,7 @@
 											"fileName": "packages/thirdweb/src/client/client.ts",
 											"line": 14,
 											"character": 11,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L14"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L14"
 										}
 									],
 									"type": {
@@ -5732,7 +5732,7 @@
 											"fileName": "packages/thirdweb/src/client/client.ts",
 											"line": 15,
 											"character": 11,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L15"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L15"
 										}
 									],
 									"type": {
@@ -5764,7 +5764,7 @@
 									"fileName": "packages/thirdweb/src/client/client.ts",
 									"line": 13,
 									"character": 29,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L13"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L13"
 								}
 							]
 						}
@@ -5781,7 +5781,7 @@
 							"fileName": "packages/thirdweb/src/contract/index.ts",
 							"line": 11,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L11"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L11"
 						}
 					],
 					"typeParameters": [
@@ -5843,7 +5843,7 @@
 							"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 							"line": 30,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L30"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L30"
 						}
 					],
 					"typeParameters": [
@@ -5900,7 +5900,7 @@
 							"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 							"line": 22,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L22"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L22"
 						}
 					],
 					"typeParameters": [
@@ -5991,7 +5991,7 @@
 													"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 													"line": 26,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L26"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L26"
 												}
 											],
 											"type": {
@@ -6016,7 +6016,7 @@
 											"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 											"line": 25,
 											"character": 26,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L25"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L25"
 										}
 									]
 								}
@@ -6071,7 +6071,7 @@
 							"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 							"line": 15,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L15"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L15"
 						}
 					],
 					"typeParameters": [
@@ -6150,7 +6150,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 											"line": 23,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L23"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L23"
 										}
 									],
 									"type": {
@@ -6182,7 +6182,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 											"line": 24,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L24"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L24"
 										}
 									],
 									"type": {
@@ -6207,7 +6207,7 @@
 											"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 											"line": 20,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L20"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L20"
 										}
 									],
 									"type": {
@@ -6223,7 +6223,7 @@
 													"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 													"line": 20,
 													"character": 10,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L20"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L20"
 												}
 											],
 											"signatures": [
@@ -6313,7 +6313,7 @@
 									"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 									"line": 19,
 									"character": 4,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L19"
 								}
 							]
 						}
@@ -6330,7 +6330,7 @@
 							"fileName": "packages/thirdweb/src/client/client.ts",
 							"line": 29,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L29"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L29"
 						}
 					],
 					"signatures": [
@@ -6398,7 +6398,7 @@
 									"fileName": "packages/thirdweb/src/client/client.ts",
 									"line": 29,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/client/client.ts#L29"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/client/client.ts#L29"
 								}
 							],
 							"parameters": [
@@ -6444,7 +6444,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/encode.ts",
 							"line": 19,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/encode.ts#L19"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/encode.ts#L19"
 						}
 					],
 					"signatures": [
@@ -6487,7 +6487,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/encode.ts",
 									"line": 19,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/encode.ts#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/encode.ts#L19"
 								}
 							],
 							"typeParameter": [
@@ -6576,7 +6576,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/estimate-gas.ts",
 							"line": 24,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/estimate-gas.ts#L24"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/estimate-gas.ts#L24"
 						}
 					],
 					"signatures": [
@@ -6619,7 +6619,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/estimate-gas.ts",
 									"line": 24,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/estimate-gas.ts#L24"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/estimate-gas.ts#L24"
 								}
 							],
 							"typeParameter": [
@@ -6704,7 +6704,7 @@
 							"fileName": "packages/thirdweb/src/contract/index.ts",
 							"line": 31,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L31"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L31"
 						}
 					],
 					"signatures": [
@@ -6747,7 +6747,7 @@
 									"fileName": "packages/thirdweb/src/contract/index.ts",
 									"line": 31,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/contract/index.ts#L31"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/contract/index.ts#L31"
 								}
 							],
 							"typeParameter": [
@@ -6834,7 +6834,7 @@
 							"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 							"line": 54,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L54"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L54"
 						}
 					],
 					"signatures": [
@@ -6889,7 +6889,7 @@
 									"fileName": "packages/thirdweb/src/event/actions/get-events.ts",
 									"line": 54,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/get-events.ts#L54"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/get-events.ts#L54"
 								}
 							],
 							"typeParameter": [
@@ -7138,7 +7138,7 @@
 							"fileName": "packages/thirdweb/src/event/event.ts",
 							"line": 48,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L48"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L48"
 						}
 					],
 					"signatures": [
@@ -7181,7 +7181,7 @@
 									"fileName": "packages/thirdweb/src/event/event.ts",
 									"line": 48,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/event.ts#L48"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/event.ts#L48"
 								}
 							],
 							"typeParameter": [
@@ -7303,7 +7303,7 @@
 							"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 							"line": 48,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L48"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L48"
 						}
 					],
 					"signatures": [
@@ -7346,7 +7346,7 @@
 									"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 									"line": 48,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L48"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L48"
 								}
 							],
 							"typeParameter": [
@@ -7468,7 +7468,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/read.ts",
 							"line": 30,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/read.ts#L30"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/read.ts#L30"
 						}
 					],
 					"signatures": [
@@ -7511,7 +7511,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/read.ts",
 									"line": 30,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/read.ts#L30"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/read.ts#L30"
 								}
 							],
 							"typeParameter": [
@@ -7647,7 +7647,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/read.ts",
 							"line": 59,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/read.ts#L59"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/read.ts#L59"
 						}
 					],
 					"signatures": [
@@ -7690,7 +7690,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/read.ts",
 									"line": 59,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/read.ts#L59"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/read.ts#L59"
 								}
 							],
 							"typeParameter": [
@@ -7788,7 +7788,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/send-transaction.ts",
 							"line": 28,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/send-transaction.ts#L28"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/send-transaction.ts#L28"
 						}
 					],
 					"signatures": [
@@ -7840,7 +7840,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/send-transaction.ts",
 									"line": 28,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/send-transaction.ts#L28"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/send-transaction.ts#L28"
 								}
 							],
 							"typeParameter": [
@@ -7868,7 +7868,7 @@
 									"flags": {},
 									"type": {
 										"type": "reference",
-										"target": 851,
+										"target": 852,
 										"name": "Wallet",
 										"package": "thirdweb"
 									}
@@ -7961,7 +7961,7 @@
 							"fileName": "packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts",
 							"line": 32,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts#L32"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts#L32"
 						}
 					],
 					"signatures": [
@@ -8004,7 +8004,7 @@
 									"fileName": "packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts",
 									"line": 32,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts#L32"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/actions/wait-for-tx-receipt.ts#L32"
 								}
 							],
 							"typeParameter": [
@@ -8094,7 +8094,7 @@
 							"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 							"line": 59,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L59"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L59"
 						}
 					],
 					"signatures": [
@@ -8149,7 +8149,7 @@
 									"fileName": "packages/thirdweb/src/event/actions/watch-events.ts",
 									"line": 59,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/event/actions/watch-events.ts#L59"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/event/actions/watch-events.ts#L59"
 								}
 							],
 							"typeParameter": [
@@ -8273,7 +8273,7 @@
 											"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 											"line": 107,
 											"character": 20,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
 										}
 									],
 									"signatures": [
@@ -8288,7 +8288,7 @@
 													"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 													"line": 107,
 													"character": 20,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
 												}
 											],
 											"type": {
@@ -8342,7 +8342,7 @@
 					"fileName": "packages/thirdweb/src/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/index.ts#L1"
 				}
 			]
 		},
@@ -8599,7 +8599,7 @@
 							"fileName": "packages/thirdweb/src/react/providers/thirdweb-provider.tsx",
 							"line": 25,
 							"character": 13,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/thirdweb-provider.tsx#L25"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/thirdweb-provider.tsx#L25"
 						}
 					],
 					"signatures": [
@@ -8642,7 +8642,7 @@
 									"fileName": "packages/thirdweb/src/react/providers/thirdweb-provider.tsx",
 									"line": 25,
 									"character": 13,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/thirdweb-provider.tsx#L25"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/thirdweb-provider.tsx#L25"
 								}
 							],
 							"parameters": [
@@ -8751,9 +8751,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 19,
+							"line": 17,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L19"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L17"
 						}
 					],
 					"signatures": [
@@ -8794,9 +8794,9 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 19,
+									"line": 17,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L17"
 								}
 							],
 							"type": {
@@ -8808,11 +8808,8 @@
 									},
 									{
 										"type": "reference",
-										"target": {
-											"sourceFileName": "src/wallets/manager/index.ts",
-											"qualifiedName": "WalletWithId"
-										},
-										"name": "WalletWithId",
+										"target": 852,
+										"name": "Wallet",
 										"package": "thirdweb"
 									}
 								]
@@ -8829,9 +8826,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 34,
+							"line": 32,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L34"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L32"
 						}
 					],
 					"signatures": [
@@ -8872,9 +8869,9 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 34,
+									"line": 32,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L34"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L32"
 								}
 							],
 							"type": {
@@ -8902,9 +8899,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 85,
+							"line": 83,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L85"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L83"
 						}
 					],
 					"signatures": [
@@ -8945,9 +8942,9 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 85,
+									"line": 83,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L85"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L83"
 								}
 							],
 							"type": {
@@ -8968,9 +8965,9 @@
 											"sources": [
 												{
 													"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-													"line": 120,
+													"line": 114,
 													"character": 11,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L120"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L114"
 												}
 											],
 											"type": {
@@ -8984,9 +8981,9 @@
 													"sources": [
 														{
 															"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-															"line": 91,
+															"line": 89,
 															"character": 4,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L91"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L89"
 														}
 													],
 													"signatures": [
@@ -8999,9 +8996,9 @@
 															"sources": [
 																{
 																	"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-																	"line": 91,
+																	"line": 89,
 																	"character": 4,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L91"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L89"
 																}
 															],
 															"parameters": [
@@ -9016,7 +9013,7 @@
 																		"types": [
 																			{
 																				"type": "reference",
-																				"target": 851,
+																				"target": 852,
 																				"name": "Wallet",
 																				"package": "thirdweb"
 																			},
@@ -9031,9 +9028,9 @@
 																					"sources": [
 																						{
 																							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-																							"line": 91,
+																							"line": 89,
 																							"character": 39,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L91"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L89"
 																						}
 																					],
 																					"signatures": [
@@ -9046,9 +9043,9 @@
 																							"sources": [
 																								{
 																									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-																									"line": 91,
+																									"line": 89,
 																									"character": 39,
-																									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L91"
+																									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L89"
 																								}
 																							],
 																							"type": {
@@ -9060,7 +9057,7 @@
 																								"typeArguments": [
 																									{
 																										"type": "reference",
-																										"target": 851,
+																										"target": 852,
 																										"name": "Wallet",
 																										"package": "thirdweb"
 																									}
@@ -9092,7 +9089,7 @@
 																			},
 																			{
 																				"type": "reference",
-																				"target": 851,
+																				"target": 852,
 																				"name": "Wallet",
 																				"package": "thirdweb"
 																			}
@@ -9116,9 +9113,9 @@
 											"sources": [
 												{
 													"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-													"line": 120,
+													"line": 114,
 													"character": 34,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L120"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L114"
 												}
 											],
 											"type": {
@@ -9149,9 +9146,9 @@
 											"sources": [
 												{
 													"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-													"line": 120,
+													"line": 114,
 													"character": 20,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L120"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L114"
 												}
 											],
 											"type": {
@@ -9173,9 +9170,9 @@
 									"sources": [
 										{
 											"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-											"line": 120,
+											"line": 114,
 											"character": 9,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L120"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L114"
 										}
 									]
 								}
@@ -9192,9 +9189,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 49,
+							"line": 47,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L49"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L47"
 						}
 					],
 					"signatures": [
@@ -9235,20 +9232,17 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 49,
+									"line": 47,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L49"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L47"
 								}
 							],
 							"type": {
 								"type": "array",
 								"elementType": {
 									"type": "reference",
-									"target": {
-										"sourceFileName": "src/wallets/manager/index.ts",
-										"qualifiedName": "WalletWithId"
-									},
-									"name": "WalletWithId",
+									"target": 852,
+									"name": "Wallet",
 									"package": "thirdweb"
 								}
 							}
@@ -9266,19 +9260,19 @@
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 							"line": 29,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L29"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L29"
 						},
 						{
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 							"line": 51,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L51"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L51"
 						},
 						{
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 							"line": 62,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L62"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L62"
 						}
 					],
 					"signatures": [
@@ -9321,7 +9315,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 									"line": 29,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L29"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L29"
 								}
 							],
 							"typeParameter": [
@@ -9395,7 +9389,7 @@
 																	"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 																	"line": 59,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L59"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L59"
 																}
 															],
 															"type": {
@@ -9439,7 +9433,7 @@
 															"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 															"line": 58,
 															"character": 71,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L58"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L58"
 														}
 													]
 												}
@@ -9468,7 +9462,7 @@
 																	"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 																	"line": 26,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L26"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L26"
 																}
 															],
 															"type": {
@@ -9493,7 +9487,7 @@
 															"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 															"line": 25,
 															"character": 26,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L25"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L25"
 														}
 													]
 												}
@@ -9556,7 +9550,7 @@
 																	"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 																	"line": 36,
 																	"character": 4,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L36"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L36"
 																}
 															],
 															"type": {
@@ -9583,7 +9577,7 @@
 															"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 															"line": 35,
 															"character": 45,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L35"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L35"
 														}
 													]
 												}
@@ -9679,7 +9673,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 									"line": 51,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L51"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L51"
 								}
 							],
 							"typeParameter": [
@@ -9750,7 +9744,7 @@
 													"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 													"line": 56,
 													"character": 13,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L56"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L56"
 												}
 											],
 											"signatures": [
@@ -9765,7 +9759,7 @@
 															"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 															"line": 56,
 															"character": 13,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L56"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L56"
 														}
 													],
 													"parameters": [
@@ -9862,7 +9856,7 @@
 																	"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 																	"line": 59,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L59"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L59"
 																}
 															],
 															"type": {
@@ -9906,7 +9900,7 @@
 															"fileName": "packages/thirdweb/src/transaction/transaction.ts",
 															"line": 58,
 															"character": 71,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/transaction.ts#L58"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/transaction.ts#L58"
 														}
 													]
 												}
@@ -9940,7 +9934,7 @@
 																	"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 																	"line": 58,
 																	"character": 4,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L58"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L58"
 																}
 															],
 															"type": {
@@ -9967,7 +9961,7 @@
 															"fileName": "packages/thirdweb/src/react/hooks/contract/useRead.ts",
 															"line": 57,
 															"character": 33,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useRead.ts#L57"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useRead.ts#L57"
 														}
 													]
 												}
@@ -10006,9 +10000,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 136,
+							"line": 130,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L136"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L130"
 						}
 					],
 					"signatures": [
@@ -10049,9 +10043,9 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 136,
+									"line": 130,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L136"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L130"
 								}
 							],
 							"type": {
@@ -10072,9 +10066,9 @@
 											"sources": [
 												{
 													"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-													"line": 138,
+													"line": 132,
 													"character": 11,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L138"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L132"
 												}
 											],
 											"type": {
@@ -10088,9 +10082,9 @@
 													"sources": [
 														{
 															"fileName": "packages/thirdweb/src/wallets/manager/index.ts",
-															"line": 41,
+															"line": 43,
 															"character": 27,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/manager/index.ts#L41"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/manager/index.ts#L43"
 														}
 													],
 													"signatures": [
@@ -10103,9 +10097,9 @@
 															"sources": [
 																{
 																	"fileName": "packages/thirdweb/src/wallets/manager/index.ts",
-																	"line": 41,
+																	"line": 43,
 																	"character": 27,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/manager/index.ts#L41"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/manager/index.ts#L43"
 																}
 															],
 															"parameters": [
@@ -10142,9 +10136,9 @@
 									"sources": [
 										{
 											"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-											"line": 138,
+											"line": 132,
 											"character": 9,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L138"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L132"
 										}
 									]
 								}
@@ -10163,7 +10157,7 @@
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useEstimate.ts",
 							"line": 19,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useEstimate.ts#L19"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useEstimate.ts#L19"
 						}
 					],
 					"signatures": [
@@ -10206,7 +10200,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useEstimate.ts",
 									"line": 19,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useEstimate.ts#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useEstimate.ts#L19"
 								}
 							],
 							"typeParameter": [
@@ -10280,7 +10274,7 @@
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useSend.ts",
 							"line": 20,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useSend.ts#L20"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useSend.ts#L20"
 						}
 					],
 					"signatures": [
@@ -10323,7 +10317,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useSend.ts",
 									"line": 20,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useSend.ts#L20"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useSend.ts#L20"
 								}
 							],
 							"typeParameter": [
@@ -10411,9 +10405,9 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-							"line": 67,
+							"line": 65,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L67"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L65"
 						}
 					],
 					"signatures": [
@@ -10454,9 +10448,9 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/react/providers/wallet-provider.tsx",
-									"line": 67,
+									"line": 65,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/providers/wallet-provider.tsx#L67"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/providers/wallet-provider.tsx#L65"
 								}
 							],
 							"type": {
@@ -10470,9 +10464,9 @@
 									"sources": [
 										{
 											"fileName": "packages/thirdweb/src/wallets/manager/index.ts",
-											"line": 53,
+											"line": 55,
 											"character": 28,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/manager/index.ts#L53"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/manager/index.ts#L55"
 										}
 									],
 									"signatures": [
@@ -10485,9 +10479,9 @@
 											"sources": [
 												{
 													"fileName": "packages/thirdweb/src/wallets/manager/index.ts",
-													"line": 53,
+													"line": 55,
 													"character": 28,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/manager/index.ts#L53"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/manager/index.ts#L55"
 												}
 											],
 											"parameters": [
@@ -10534,7 +10528,7 @@
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts",
 							"line": 24,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts#L24"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts#L24"
 						}
 					],
 					"signatures": [
@@ -10577,7 +10571,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts",
 									"line": 24,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts#L24"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useWaitForReceipt.ts#L24"
 								}
 							],
 							"typeParameter": [
@@ -10676,7 +10670,7 @@
 							"fileName": "packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts",
 							"line": 21,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts#L21"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts#L21"
 						}
 					],
 					"signatures": [
@@ -10719,7 +10713,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts",
 									"line": 21,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts#L21"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/rpc/useWatchBlockNumber.ts#L21"
 								}
 							],
 							"parameters": [
@@ -10789,7 +10783,7 @@
 							"fileName": "packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts",
 							"line": 26,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts#L26"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts#L26"
 						}
 					],
 					"signatures": [
@@ -10832,7 +10826,7 @@
 									"fileName": "packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts",
 									"line": 26,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts#L26"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/hooks/contract/useWatchContractEvents.ts#L26"
 								}
 							],
 							"typeParameter": [
@@ -11026,7 +11020,7 @@
 					"fileName": "packages/thirdweb/src/react/index.tsx",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/react/index.tsx#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/react/index.tsx#L1"
 				}
 			]
 		},
@@ -11048,7 +11042,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_blockNumber.ts",
 							"line": 14,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_blockNumber.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_blockNumber.ts#L14"
 						}
 					],
 					"signatures": [
@@ -11091,7 +11085,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_blockNumber.ts",
 									"line": 14,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_blockNumber.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_blockNumber.ts#L14"
 								}
 							],
 							"parameters": [
@@ -11642,7 +11636,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_call.ts",
 							"line": 25,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_call.ts#L25"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_call.ts#L25"
 						}
 					],
 					"signatures": [
@@ -11685,7 +11679,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_call.ts",
 									"line": 25,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_call.ts#L25"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_call.ts#L25"
 								}
 							],
 							"parameters": [
@@ -12265,7 +12259,7 @@
 																	"fileName": "packages/thirdweb/src/rpc/actions/eth_call.ts",
 																	"line": 28,
 																	"character": 4,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_call.ts#L28"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_call.ts#L28"
 																}
 															],
 															"type": {
@@ -12295,7 +12289,7 @@
 																	"fileName": "packages/thirdweb/src/rpc/actions/eth_call.ts",
 																	"line": 29,
 																	"character": 4,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_call.ts#L29"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_call.ts#L29"
 																}
 															],
 															"type": {
@@ -12318,7 +12312,7 @@
 															"fileName": "packages/thirdweb/src/rpc/actions/eth_call.ts",
 															"line": 27,
 															"character": 43,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_call.ts#L27"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_call.ts#L27"
 														}
 													]
 												}
@@ -12361,7 +12355,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_estimateGas.ts",
 							"line": 23,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_estimateGas.ts#L23"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_estimateGas.ts#L23"
 						}
 					],
 					"signatures": [
@@ -12404,7 +12398,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_estimateGas.ts",
 									"line": 23,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_estimateGas.ts#L23"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_estimateGas.ts#L23"
 								}
 							],
 							"parameters": [
@@ -12979,7 +12973,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_gasPrice.ts",
 							"line": 14,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_gasPrice.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_gasPrice.ts#L14"
 						}
 					],
 					"signatures": [
@@ -13022,7 +13016,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_gasPrice.ts",
 									"line": 14,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_gasPrice.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_gasPrice.ts#L14"
 								}
 							],
 							"parameters": [
@@ -13573,7 +13567,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts",
 							"line": 33,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts#L33"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts#L33"
 						}
 					],
 					"signatures": [
@@ -13625,7 +13619,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts",
 									"line": 33,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts#L33"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getBlockByHash.ts#L33"
 								}
 							],
 							"typeParameter": [
@@ -14244,7 +14238,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts",
 							"line": 48,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts#L48"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts#L48"
 						}
 					],
 					"signatures": [
@@ -14296,7 +14290,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts",
 									"line": 48,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts#L48"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getBlockByNumber.ts#L48"
 								}
 							],
 							"typeParameter": [
@@ -14949,7 +14943,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_getLogs.ts",
 							"line": 34,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getLogs.ts#L34"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getLogs.ts#L34"
 						}
 					],
 					"signatures": [
@@ -14992,7 +14986,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_getLogs.ts",
 									"line": 34,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getLogs.ts#L34"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getLogs.ts#L34"
 								}
 							],
 							"typeParameter": [
@@ -15849,7 +15843,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts",
 							"line": 23,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts#L23"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts#L23"
 						}
 					],
 					"signatures": [
@@ -15892,7 +15886,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts",
 									"line": 23,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts#L23"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getTransactionCount.ts#L23"
 								}
 							],
 							"parameters": [
@@ -16467,7 +16461,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts",
 							"line": 25,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts#L25"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts#L25"
 						}
 					],
 					"signatures": [
@@ -16519,7 +16513,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts",
 									"line": 25,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts#L25"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_getTransactionReceipt.ts#L25"
 								}
 							],
 							"parameters": [
@@ -17099,7 +17093,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts",
 							"line": 14,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts#L14"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts#L14"
 						}
 					],
 					"signatures": [
@@ -17142,7 +17136,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts",
 									"line": 14,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_maxPriorityFeePerGas.ts#L14"
 								}
 							],
 							"parameters": [
@@ -17693,7 +17687,7 @@
 							"fileName": "packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts",
 							"line": 15,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts#L15"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts#L15"
 						}
 					],
 					"signatures": [
@@ -17736,7 +17730,7 @@
 									"fileName": "packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts",
 									"line": 15,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts#L15"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/actions/eth_sendRawTransaction.ts#L15"
 								}
 							],
 							"parameters": [
@@ -18324,7 +18318,7 @@
 							"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 							"line": 98,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L98"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L98"
 						}
 					],
 					"signatures": [
@@ -18367,7 +18361,7 @@
 									"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 									"line": 98,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L98"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L98"
 								}
 							],
 							"parameters": [
@@ -18412,7 +18406,7 @@
 																	"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																	"line": 76,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L76"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L76"
 																}
 															],
 															"type": {
@@ -18431,7 +18425,7 @@
 																	"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																	"line": 75,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L75"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L75"
 																}
 															],
 															"type": {
@@ -18454,7 +18448,7 @@
 																	"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																	"line": 77,
 																	"character": 2,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L77"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L77"
 																}
 															],
 															"type": {
@@ -18479,7 +18473,7 @@
 																					"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																					"line": 79,
 																					"character": 4,
-																					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L79"
+																					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L79"
 																				}
 																			],
 																			"type": {
@@ -18500,7 +18494,7 @@
 																					"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																					"line": 78,
 																					"character": 4,
-																					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L78"
+																					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L78"
 																				}
 																			],
 																			"type": {
@@ -18523,7 +18517,7 @@
 																			"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 																			"line": 77,
 																			"character": 11,
-																			"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L77"
+																			"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L77"
 																		}
 																	]
 																}
@@ -18545,7 +18539,7 @@
 															"fileName": "packages/thirdweb/src/rpc/rpc.ts",
 															"line": 74,
 															"character": 27,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/rpc.ts#L74"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/rpc.ts#L74"
 														}
 													]
 												}
@@ -18590,7 +18584,7 @@
 							"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 							"line": 158,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L158"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L158"
 						}
 					],
 					"signatures": [
@@ -18633,7 +18627,7 @@
 									"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 									"line": 158,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L158"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L158"
 								}
 							],
 							"parameters": [
@@ -18675,7 +18669,7 @@
 											"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 											"line": 107,
 											"character": 20,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
 										}
 									],
 									"signatures": [
@@ -18690,7 +18684,7 @@
 													"fileName": "packages/thirdweb/src/rpc/watchBlockNumber.ts",
 													"line": 107,
 													"character": 20,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/watchBlockNumber.ts#L107"
 												}
 											],
 											"type": {
@@ -18730,7 +18724,7 @@
 					"fileName": "packages/thirdweb/src/rpc/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/rpc/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/rpc/index.ts#L1"
 				}
 			]
 		},
@@ -18752,7 +18746,7 @@
 							"fileName": "packages/thirdweb/src/storage/download.ts",
 							"line": 3,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/download.ts#L3"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/download.ts#L3"
 						}
 					],
 					"type": {
@@ -18773,7 +18767,7 @@
 							"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 							"line": 3,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L3"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L3"
 						}
 					],
 					"type": {
@@ -18796,7 +18790,7 @@
 											"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 											"line": 4,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L4"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L4"
 										}
 									],
 									"type": {
@@ -18817,7 +18811,7 @@
 											"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 											"line": 5,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L5"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L5"
 										}
 									],
 									"type": {
@@ -18840,7 +18834,7 @@
 									"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 									"line": 3,
 									"character": 35,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L3"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L3"
 								}
 							]
 						}
@@ -18857,7 +18851,7 @@
 							"fileName": "packages/thirdweb/src/storage/upload.ts",
 							"line": 16,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/upload.ts#L16"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/upload.ts#L16"
 						}
 					],
 					"type": {
@@ -18893,7 +18887,7 @@
 													"fileName": "packages/thirdweb/src/storage/upload.ts",
 													"line": 17,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/upload.ts#L17"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/upload.ts#L17"
 												}
 											],
 											"type": {
@@ -18917,7 +18911,7 @@
 											"fileName": "packages/thirdweb/src/storage/upload.ts",
 											"line": 16,
 											"character": 52,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/upload.ts#L16"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/upload.ts#L16"
 										}
 									]
 								}
@@ -18936,7 +18930,7 @@
 							"fileName": "packages/thirdweb/src/storage/download.ts",
 							"line": 19,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/download.ts#L19"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/download.ts#L19"
 						}
 					],
 					"signatures": [
@@ -18988,7 +18982,7 @@
 									"fileName": "packages/thirdweb/src/storage/download.ts",
 									"line": 19,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/download.ts#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/download.ts#L19"
 								}
 							],
 							"parameters": [
@@ -19048,7 +19042,7 @@
 							"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 							"line": 25,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L25"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L25"
 						}
 					],
 					"signatures": [
@@ -19100,7 +19094,7 @@
 									"fileName": "packages/thirdweb/src/utils/ipfs.ts",
 									"line": 25,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/utils/ipfs.ts#L25"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/utils/ipfs.ts#L25"
 								}
 							],
 							"parameters": [
@@ -19144,7 +19138,7 @@
 							"fileName": "packages/thirdweb/src/storage/upload.ts",
 							"line": 36,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/upload.ts#L36"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/upload.ts#L36"
 						}
 					],
 					"signatures": [
@@ -19196,7 +19190,7 @@
 									"fileName": "packages/thirdweb/src/storage/upload.ts",
 									"line": 36,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/upload.ts#L36"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/upload.ts#L36"
 								}
 							],
 							"parameters": [
@@ -19267,7 +19261,7 @@
 					"fileName": "packages/thirdweb/src/storage/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/storage/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/storage/index.ts#L1"
 				}
 			]
 		},
@@ -19289,7 +19283,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 2,
 							"character": 34,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L2"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L2"
 						}
 					],
 					"target": 96
@@ -19305,7 +19299,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 5,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L5"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L5"
 						}
 					],
 					"target": 103
@@ -19321,7 +19315,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 6,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L6"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L6"
 						}
 					],
 					"target": 107
@@ -19337,7 +19331,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 2,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L2"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L2"
 						}
 					],
 					"target": 91
@@ -19353,7 +19347,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 7,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L7"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L7"
 						}
 					],
 					"target": 111
@@ -19369,7 +19363,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 7,
 							"character": 23,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L7"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L7"
 						}
 					],
 					"target": 116
@@ -19385,7 +19379,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 9,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L9"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L9"
 						}
 					],
 					"target": 124
@@ -19401,7 +19395,7 @@
 							"fileName": "packages/thirdweb/src/transaction/index.ts",
 							"line": 8,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L8"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L8"
 						}
 					],
 					"target": 120
@@ -19427,7 +19421,7 @@
 					"fileName": "packages/thirdweb/src/transaction/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/transaction/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/transaction/index.ts#L1"
 				}
 			]
 		},
@@ -19439,7 +19433,7 @@
 			"flags": {},
 			"children": [
 				{
-					"id": 818,
+					"id": 819,
 					"name": "InjectedWallet",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -19449,24 +19443,24 @@
 							"fileName": "packages/thirdweb/src/wallets/injected.ts",
 							"line": 11,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L11"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L11"
 						}
 					],
 					"type": {
 						"type": "reference",
-						"target": 851,
+						"target": 852,
 						"typeArguments": [
 							{
 								"type": "reflection",
 								"declaration": {
-									"id": 819,
+									"id": 820,
 									"name": "__type",
 									"variant": "declaration",
 									"kind": 65536,
 									"flags": {},
 									"children": [
 										{
-											"id": 820,
+											"id": 821,
 											"name": "switchChain",
 											"variant": "declaration",
 											"kind": 1024,
@@ -19476,13 +19470,13 @@
 													"fileName": "packages/thirdweb/src/wallets/injected.ts",
 													"line": 12,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L12"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L12"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 821,
+													"id": 822,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -19492,19 +19486,19 @@
 															"fileName": "packages/thirdweb/src/wallets/injected.ts",
 															"line": 12,
 															"character": 15,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L12"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L12"
 														}
 													],
 													"signatures": [
 														{
-															"id": 822,
+															"id": 823,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"parameters": [
 																{
-																	"id": 823,
+																	"id": 824,
 																	"name": "newChainId",
 																	"variant": "param",
 																	"kind": 32768,
@@ -19549,7 +19543,7 @@
 										{
 											"title": "Properties",
 											"children": [
-												820
+												821
 											]
 										}
 									],
@@ -19558,7 +19552,7 @@
 											"fileName": "packages/thirdweb/src/wallets/injected.ts",
 											"line": 11,
 											"character": 36,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L11"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L11"
 										}
 									]
 								}
@@ -19569,7 +19563,7 @@
 					}
 				},
 				{
-					"id": 824,
+					"id": 825,
 					"name": "InjectedWalletOptions",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -19579,20 +19573,20 @@
 							"fileName": "packages/thirdweb/src/wallets/injected.ts",
 							"line": 23,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L23"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L23"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 825,
+							"id": 826,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"children": [
 								{
-									"id": 826,
+									"id": 827,
 									"name": "chainId",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19604,7 +19598,7 @@
 											"fileName": "packages/thirdweb/src/wallets/injected.ts",
 											"line": 24,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L24"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L24"
 										}
 									],
 									"type": {
@@ -19622,7 +19616,7 @@
 									}
 								},
 								{
-									"id": 828,
+									"id": 829,
 									"name": "getProvider",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19650,13 +19644,13 @@
 											"fileName": "packages/thirdweb/src/wallets/injected.ts",
 											"line": 35,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L35"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L35"
 										}
 									],
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 829,
+											"id": 830,
 											"name": "__type",
 											"variant": "declaration",
 											"kind": 65536,
@@ -19666,12 +19660,12 @@
 													"fileName": "packages/thirdweb/src/wallets/injected.ts",
 													"line": 35,
 													"character": 16,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L35"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L35"
 												}
 											],
 											"signatures": [
 												{
-													"id": 830,
+													"id": 831,
 													"name": "__type",
 													"variant": "signature",
 													"kind": 4096,
@@ -19716,7 +19710,7 @@
 									}
 								},
 								{
-									"id": 827,
+									"id": 828,
 									"name": "walletId",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19736,12 +19730,12 @@
 											"fileName": "packages/thirdweb/src/wallets/injected.ts",
 											"line": 29,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L29"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L29"
 										}
 									],
 									"type": {
 										"type": "reference",
-										"target": 837,
+										"target": 838,
 										"name": "WalletRDNS",
 										"package": "thirdweb"
 									}
@@ -19751,9 +19745,9 @@
 								{
 									"title": "Properties",
 									"children": [
-										826,
-										828,
-										827
+										827,
+										829,
+										828
 									]
 								}
 							],
@@ -19762,14 +19756,14 @@
 									"fileName": "packages/thirdweb/src/wallets/injected.ts",
 									"line": 23,
 									"character": 36,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L23"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L23"
 								}
 							]
 						}
 					}
 				},
 				{
-					"id": 814,
+					"id": 815,
 					"name": "PrivateKeyWalletOptions",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -19779,20 +19773,20 @@
 							"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 							"line": 8,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L8"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L8"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 815,
+							"id": 816,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"children": [
 								{
-									"id": 816,
+									"id": 817,
 									"name": "client",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19802,7 +19796,7 @@
 											"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 											"line": 9,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L9"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L9"
 										}
 									],
 									"type": {
@@ -19813,7 +19807,7 @@
 									}
 								},
 								{
-									"id": 817,
+									"id": 818,
 									"name": "privateKey",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19823,7 +19817,7 @@
 											"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 											"line": 10,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L10"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L10"
 										}
 									],
 									"type": {
@@ -19836,8 +19830,8 @@
 								{
 									"title": "Properties",
 									"children": [
-										816,
-										817
+										817,
+										818
 									]
 								}
 							],
@@ -19846,14 +19840,14 @@
 									"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 									"line": 8,
 									"character": 38,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L8"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L8"
 								}
 							]
 						}
 					}
 				},
 				{
-					"id": 848,
+					"id": 849,
 					"name": "SpecificInjectedWalletOptions",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -19863,20 +19857,20 @@
 							"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
 							"line": 3,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L3"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L3"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 849,
+							"id": 850,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"children": [
 								{
-									"id": 850,
+									"id": 851,
 									"name": "chainId",
 									"variant": "declaration",
 									"kind": 1024,
@@ -19888,7 +19882,7 @@
 											"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
 											"line": 4,
 											"character": 2,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L4"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L4"
 										}
 									],
 									"type": {
@@ -19910,7 +19904,7 @@
 								{
 									"title": "Properties",
 									"children": [
-										850
+										851
 									]
 								}
 							],
@@ -19919,14 +19913,14 @@
 									"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
 									"line": 3,
 									"character": 44,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L3"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L3"
 								}
 							]
 						}
 					}
 				},
 				{
-					"id": 851,
+					"id": 852,
 					"name": "Wallet",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -19936,12 +19930,12 @@
 							"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 							"line": 12,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L12"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L12"
 						}
 					],
 					"typeParameters": [
 						{
-							"id": 883,
+							"id": 885,
 							"name": "T",
 							"variant": "typeParam",
 							"kind": 131072,
@@ -19962,14 +19956,14 @@
 							{
 								"type": "reflection",
 								"declaration": {
-									"id": 852,
+									"id": 853,
 									"name": "__type",
 									"variant": "declaration",
 									"kind": 65536,
 									"flags": {},
 									"children": [
 										{
-											"id": 853,
+											"id": 854,
 											"name": "address",
 											"variant": "declaration",
 											"kind": 1024,
@@ -19979,7 +19973,7 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 14,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L14"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L14"
 												}
 											],
 											"type": {
@@ -19993,7 +19987,7 @@
 											}
 										},
 										{
-											"id": 860,
+											"id": 861,
 											"name": "chainId",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20005,7 +19999,7 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 20,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L20"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L20"
 												}
 											],
 											"type": {
@@ -20014,7 +20008,7 @@
 											}
 										},
 										{
-											"id": 877,
+											"id": 878,
 											"name": "estimateGas",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20026,13 +20020,13 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 30,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L30"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L30"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 878,
+													"id": 879,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -20042,19 +20036,19 @@
 															"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 															"line": 30,
 															"character": 16,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L30"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L30"
 														}
 													],
 													"signatures": [
 														{
-															"id": 879,
+															"id": 880,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"parameters": [
 																{
-																	"id": 880,
+																	"id": 881,
 																	"name": "tx",
 																	"variant": "param",
 																	"kind": 32768,
@@ -20074,14 +20068,14 @@
 																			{
 																				"type": "reflection",
 																				"declaration": {
-																					"id": 881,
+																					"id": 882,
 																					"name": "__type",
 																					"variant": "declaration",
 																					"kind": 65536,
 																					"flags": {},
 																					"children": [
 																						{
-																							"id": 882,
+																							"id": 883,
 																							"name": "chainId",
 																							"variant": "declaration",
 																							"kind": 1024,
@@ -20091,7 +20085,7 @@
 																									"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																									"line": 31,
 																									"character": 36,
-																									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L31"
+																									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L31"
 																								}
 																							],
 																							"type": {
@@ -20104,7 +20098,7 @@
 																						{
 																							"title": "Properties",
 																							"children": [
-																								882
+																								883
 																							]
 																						}
 																					],
@@ -20113,7 +20107,7 @@
 																							"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																							"line": 31,
 																							"character": 34,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L31"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L31"
 																						}
 																					]
 																				}
@@ -20143,7 +20137,26 @@
 											}
 										},
 										{
-											"id": 854,
+											"id": 884,
+											"name": "id",
+											"variant": "declaration",
+											"kind": 1024,
+											"flags": {},
+											"sources": [
+												{
+													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
+													"line": 33,
+													"character": 2,
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L33"
+												}
+											],
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										},
+										{
+											"id": 855,
 											"name": "sendTransaction",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20153,13 +20166,13 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 15,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L15"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L15"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 855,
+													"id": 856,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -20169,19 +20182,19 @@
 															"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 															"line": 15,
 															"character": 19,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L15"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L15"
 														}
 													],
 													"signatures": [
 														{
-															"id": 856,
+															"id": 857,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"parameters": [
 																{
-																	"id": 857,
+																	"id": 858,
 																	"name": "tx",
 																	"variant": "param",
 																	"kind": 32768,
@@ -20201,14 +20214,14 @@
 																			{
 																				"type": "reflection",
 																				"declaration": {
-																					"id": 858,
+																					"id": 859,
 																					"name": "__type",
 																					"variant": "declaration",
 																					"kind": 65536,
 																					"flags": {},
 																					"children": [
 																						{
-																							"id": 859,
+																							"id": 860,
 																							"name": "chainId",
 																							"variant": "declaration",
 																							"kind": 1024,
@@ -20218,7 +20231,7 @@
 																									"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																									"line": 16,
 																									"character": 36,
-																									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L16"
+																									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L16"
 																								}
 																							],
 																							"type": {
@@ -20231,7 +20244,7 @@
 																						{
 																							"title": "Properties",
 																							"children": [
-																								859
+																								860
 																							]
 																						}
 																					],
@@ -20240,7 +20253,7 @@
 																							"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																							"line": 16,
 																							"character": 34,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L16"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L16"
 																						}
 																					]
 																				}
@@ -20275,7 +20288,7 @@
 											}
 										},
 										{
-											"id": 861,
+											"id": 862,
 											"name": "signMessage",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20287,13 +20300,13 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 21,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 862,
+													"id": 863,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -20303,19 +20316,19 @@
 															"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 															"line": 21,
 															"character": 16,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
 														}
 													],
 													"signatures": [
 														{
-															"id": 863,
+															"id": 864,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"parameters": [
 																{
-																	"id": 864,
+																	"id": 865,
 																	"name": "{ message }",
 																	"variant": "param",
 																	"kind": 32768,
@@ -20323,14 +20336,14 @@
 																	"type": {
 																		"type": "reflection",
 																		"declaration": {
-																			"id": 865,
+																			"id": 866,
 																			"name": "__type",
 																			"variant": "declaration",
 																			"kind": 65536,
 																			"flags": {},
 																			"children": [
 																				{
-																					"id": 866,
+																					"id": 867,
 																					"name": "message",
 																					"variant": "declaration",
 																					"kind": 1024,
@@ -20340,7 +20353,7 @@
 																							"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																							"line": 21,
 																							"character": 32,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
 																						}
 																					],
 																					"type": {
@@ -20358,7 +20371,7 @@
 																				{
 																					"title": "Properties",
 																					"children": [
-																						866
+																						867
 																					]
 																				}
 																			],
@@ -20367,7 +20380,7 @@
 																					"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 																					"line": 21,
 																					"character": 30,
-																					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
+																					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L21"
 																				}
 																			]
 																		}
@@ -20400,7 +20413,7 @@
 											}
 										},
 										{
-											"id": 873,
+											"id": 874,
 											"name": "signTransaction",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20412,13 +20425,13 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 28,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L28"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L28"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 874,
+													"id": 875,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -20428,19 +20441,19 @@
 															"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 															"line": 28,
 															"character": 20,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L28"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L28"
 														}
 													],
 													"signatures": [
 														{
-															"id": 875,
+															"id": 876,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"parameters": [
 																{
-																	"id": 876,
+																	"id": 877,
 																	"name": "tx",
 																	"variant": "param",
 																	"kind": 32768,
@@ -20482,7 +20495,7 @@
 											}
 										},
 										{
-											"id": 867,
+											"id": 868,
 											"name": "signTypedData",
 											"variant": "declaration",
 											"kind": 1024,
@@ -20494,13 +20507,13 @@
 													"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 													"line": 22,
 													"character": 2,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L22"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L22"
 												}
 											],
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 868,
+													"id": 869,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
@@ -20510,19 +20523,19 @@
 															"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 															"line": 22,
 															"character": 18,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L22"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L22"
 														}
 													],
 													"signatures": [
 														{
-															"id": 869,
+															"id": 870,
 															"name": "__type",
 															"variant": "signature",
 															"kind": 4096,
 															"flags": {},
 															"typeParameter": [
 																{
-																	"id": 871,
+																	"id": 872,
 																	"name": "typedData",
 																	"variant": "typeParam",
 																	"kind": 131072,
@@ -20564,7 +20577,7 @@
 																	}
 																},
 																{
-																	"id": 872,
+																	"id": 873,
 																	"name": "primaryType",
 																	"variant": "typeParam",
 																	"kind": 131072,
@@ -20577,7 +20590,7 @@
 																				"operator": "keyof",
 																				"target": {
 																					"type": "reference",
-																					"target": 871,
+																					"target": 872,
 																					"name": "typedData",
 																					"package": "thirdweb",
 																					"refersToTypeParameter": true
@@ -20594,7 +20607,7 @@
 																		"operator": "keyof",
 																		"target": {
 																			"type": "reference",
-																			"target": 871,
+																			"target": 872,
 																			"name": "typedData",
 																			"package": "thirdweb",
 																			"refersToTypeParameter": true
@@ -20604,7 +20617,7 @@
 															],
 															"parameters": [
 																{
-																	"id": 870,
+																	"id": 871,
 																	"name": "_typedData",
 																	"variant": "param",
 																	"kind": 32768,
@@ -20618,14 +20631,14 @@
 																		"typeArguments": [
 																			{
 																				"type": "reference",
-																				"target": 871,
+																				"target": 872,
 																				"name": "typedData",
 																				"package": "thirdweb",
 																				"refersToTypeParameter": true
 																			},
 																			{
 																				"type": "reference",
-																				"target": 872,
+																				"target": 873,
 																				"name": "primaryType",
 																				"package": "thirdweb",
 																				"refersToTypeParameter": true
@@ -20666,13 +20679,14 @@
 										{
 											"title": "Properties",
 											"children": [
-												853,
-												860,
-												877,
 												854,
 												861,
-												873,
-												867
+												878,
+												884,
+												855,
+												862,
+												874,
+												868
 											]
 										}
 									],
@@ -20681,14 +20695,14 @@
 											"fileName": "packages/thirdweb/src/wallets/interfaces/wallet.ts",
 											"line": 12,
 											"character": 48,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/interfaces/wallet.ts#L12"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/interfaces/wallet.ts#L12"
 										}
 									]
 								}
 							},
 							{
 								"type": "reference",
-								"target": 883,
+								"target": 885,
 								"name": "T",
 								"package": "thirdweb",
 								"refersToTypeParameter": true
@@ -20697,7 +20711,7 @@
 					}
 				},
 				{
-					"id": 837,
+					"id": 838,
 					"name": "WalletRDNS",
 					"variant": "declaration",
 					"kind": 2097152,
@@ -20707,7 +20721,7 @@
 							"fileName": "packages/thirdweb/src/wallets/injected.ts",
 							"line": 15,
 							"character": 12,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L15"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L15"
 						}
 					],
 					"type": {
@@ -20739,7 +20753,7 @@
 									{
 										"type": "reflection",
 										"declaration": {
-											"id": 838,
+											"id": 839,
 											"name": "__type",
 											"variant": "declaration",
 											"kind": 65536,
@@ -20749,7 +20763,7 @@
 													"fileName": "packages/thirdweb/src/wallets/injected.ts",
 													"line": 21,
 													"character": 14,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L21"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L21"
 												}
 											]
 										}
@@ -20760,7 +20774,7 @@
 					}
 				},
 				{
-					"id": 834,
+					"id": 835,
 					"name": "injectedProvider",
 					"variant": "declaration",
 					"kind": 64,
@@ -20768,14 +20782,14 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/wallets/injected.ts",
-							"line": 190,
+							"line": 191,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L190"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L191"
 						}
 					],
 					"signatures": [
 						{
-							"id": 835,
+							"id": 836,
 							"name": "injectedProvider",
 							"variant": "signature",
 							"kind": 4096,
@@ -20819,14 +20833,14 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/wallets/injected.ts",
-									"line": 190,
+									"line": 191,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L190"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L191"
 								}
 							],
 							"parameters": [
 								{
-									"id": 836,
+									"id": 837,
 									"name": "walletId",
 									"variant": "param",
 									"kind": 32768,
@@ -20841,7 +20855,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 837,
+										"target": 838,
 										"name": "WalletRDNS",
 										"package": "thirdweb"
 									}
@@ -20869,7 +20883,7 @@
 					]
 				},
 				{
-					"id": 831,
+					"id": 832,
 					"name": "injectedWallet",
 					"variant": "declaration",
 					"kind": 64,
@@ -20879,12 +20893,12 @@
 							"fileName": "packages/thirdweb/src/wallets/injected.ts",
 							"line": 63,
 							"character": 22,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L63"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L63"
 						}
 					],
 					"signatures": [
 						{
-							"id": 832,
+							"id": 833,
 							"name": "injectedWallet",
 							"variant": "signature",
 							"kind": 4096,
@@ -20931,12 +20945,12 @@
 									"fileName": "packages/thirdweb/src/wallets/injected.ts",
 									"line": 63,
 									"character": 22,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injected.ts#L63"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injected.ts#L63"
 								}
 							],
 							"parameters": [
 								{
-									"id": 833,
+									"id": 834,
 									"name": "options",
 									"variant": "param",
 									"kind": 32768,
@@ -20953,7 +20967,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 824,
+										"target": 825,
 										"name": "InjectedWalletOptions",
 										"package": "thirdweb"
 									}
@@ -20968,7 +20982,7 @@
 								"typeArguments": [
 									{
 										"type": "reference",
-										"target": 818,
+										"target": 819,
 										"name": "InjectedWallet",
 										"package": "thirdweb"
 									}
@@ -20980,7 +20994,7 @@
 					]
 				},
 				{
-					"id": 839,
+					"id": 840,
 					"name": "metamaskWallet",
 					"variant": "declaration",
 					"kind": 64,
@@ -20989,13 +21003,13 @@
 						{
 							"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
 							"line": 16,
-							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L16"
+							"character": 22,
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L16"
 						}
 					],
 					"signatures": [
 						{
-							"id": 840,
+							"id": 841,
 							"name": "metamaskWallet",
 							"variant": "signature",
 							"kind": 4096,
@@ -21032,13 +21046,13 @@
 								{
 									"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
 									"line": 16,
-									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L16"
+									"character": 22,
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L16"
 								}
 							],
 							"parameters": [
 								{
-									"id": 841,
+									"id": 842,
 									"name": "options",
 									"variant": "param",
 									"kind": 32768,
@@ -21055,7 +21069,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 848,
+										"target": 849,
 										"name": "SpecificInjectedWalletOptions",
 										"package": "thirdweb"
 									}
@@ -21070,7 +21084,7 @@
 								"typeArguments": [
 									{
 										"type": "reference",
-										"target": 818,
+										"target": 819,
 										"name": "InjectedWallet",
 										"package": "thirdweb"
 									}
@@ -21092,7 +21106,7 @@
 							"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 							"line": 26,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L26"
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L26"
 						}
 					],
 					"signatures": [
@@ -21135,7 +21149,7 @@
 									"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 									"line": 26,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L26"
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L26"
 								}
 							],
 							"parameters": [
@@ -21155,7 +21169,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 814,
+										"target": 815,
 										"name": "PrivateKeyWalletOptions",
 										"package": "thirdweb"
 									}
@@ -21181,7 +21195,7 @@
 													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 													"line": 32,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L32"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L32"
 												}
 											],
 											"type": {
@@ -21189,6 +21203,26 @@
 												"name": "string"
 											},
 											"defaultValue": "account.address"
+										},
+										{
+											"id": 814,
+											"name": "id",
+											"variant": "declaration",
+											"kind": 1024,
+											"flags": {},
+											"sources": [
+												{
+													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
+													"line": 52,
+													"character": 4,
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L52"
+												}
+											],
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											},
+											"defaultValue": "\"private-key\""
 										},
 										{
 											"id": 685,
@@ -21201,7 +21235,7 @@
 													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 													"line": 33,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L33"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L33"
 												}
 											],
 											"type": {
@@ -21217,7 +21251,7 @@
 															"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 															"line": 33,
 															"character": 21,
-															"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L33"
+															"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L33"
 														}
 													],
 													"signatures": [
@@ -21232,7 +21266,7 @@
 																	"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 																	"line": 33,
 																	"character": 21,
-																	"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L33"
+																	"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L33"
 																}
 															],
 															"parameters": [
@@ -21274,7 +21308,7 @@
 																									"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 																									"line": 34,
 																									"character": 38,
-																									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L34"
+																									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L34"
 																								}
 																							],
 																							"type": {
@@ -21296,7 +21330,7 @@
 																							"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 																							"line": 34,
 																							"character": 36,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L34"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L34"
 																						}
 																					]
 																				}
@@ -21332,7 +21366,7 @@
 																							"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 																							"line": 46,
 																							"character": 8,
-																							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L46"
+																							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L46"
 																						}
 																					],
 																					"type": {
@@ -21363,7 +21397,7 @@
 																					"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 																					"line": 45,
 																					"character": 13,
-																					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L45"
+																					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L45"
 																				}
 																			]
 																		}
@@ -21389,7 +21423,7 @@
 													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 													"line": 50,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L50"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L50"
 												}
 											],
 											"type": {
@@ -21523,7 +21557,7 @@
 													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 													"line": 49,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L49"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L49"
 												}
 											],
 											"type": {
@@ -21790,7 +21824,7 @@
 													"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 													"line": 51,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L51"
+													"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L51"
 												}
 											],
 											"type": {
@@ -23188,6 +23222,7 @@
 											"title": "Properties",
 											"children": [
 												684,
+												814,
 												685,
 												701,
 												693,
@@ -23200,7 +23235,7 @@
 											"fileName": "packages/thirdweb/src/wallets/private-key.ts",
 											"line": 31,
 											"character": 9,
-											"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/private-key.ts#L31"
+											"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/private-key.ts#L31"
 										}
 									]
 								}
@@ -23209,7 +23244,7 @@
 					]
 				},
 				{
-					"id": 842,
+					"id": 843,
 					"name": "rainbowWallet",
 					"variant": "declaration",
 					"kind": 64,
@@ -23217,14 +23252,14 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
-							"line": 32,
-							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L32"
+							"line": 34,
+							"character": 22,
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L34"
 						}
 					],
 					"signatures": [
 						{
-							"id": 843,
+							"id": 844,
 							"name": "rainbowWallet",
 							"variant": "signature",
 							"kind": 4096,
@@ -23260,14 +23295,14 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
-									"line": 32,
-									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L32"
+									"line": 34,
+									"character": 22,
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L34"
 								}
 							],
 							"parameters": [
 								{
-									"id": 844,
+									"id": 845,
 									"name": "options",
 									"variant": "param",
 									"kind": 32768,
@@ -23284,7 +23319,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 848,
+										"target": 849,
 										"name": "SpecificInjectedWalletOptions",
 										"package": "thirdweb"
 									}
@@ -23299,7 +23334,7 @@
 								"typeArguments": [
 									{
 										"type": "reference",
-										"target": 818,
+										"target": 819,
 										"name": "InjectedWallet",
 										"package": "thirdweb"
 									}
@@ -23311,7 +23346,7 @@
 					]
 				},
 				{
-					"id": 845,
+					"id": 846,
 					"name": "zerionWallet",
 					"variant": "declaration",
 					"kind": 64,
@@ -23319,14 +23354,14 @@
 					"sources": [
 						{
 							"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
-							"line": 48,
-							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L48"
+							"line": 52,
+							"character": 22,
+							"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L52"
 						}
 					],
 					"signatures": [
 						{
-							"id": 846,
+							"id": 847,
 							"name": "zerionWallet",
 							"variant": "signature",
 							"kind": 4096,
@@ -23362,14 +23397,14 @@
 							"sources": [
 								{
 									"fileName": "packages/thirdweb/src/wallets/injectedWallets.ts",
-									"line": 48,
-									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/injectedWallets.ts#L48"
+									"line": 52,
+									"character": 22,
+									"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/injectedWallets.ts#L52"
 								}
 							],
 							"parameters": [
 								{
-									"id": 847,
+									"id": 848,
 									"name": "options",
 									"variant": "param",
 									"kind": 32768,
@@ -23386,7 +23421,7 @@
 									},
 									"type": {
 										"type": "reference",
-										"target": 848,
+										"target": 849,
 										"name": "SpecificInjectedWalletOptions",
 										"package": "thirdweb"
 									}
@@ -23401,7 +23436,7 @@
 								"typeArguments": [
 									{
 										"type": "reference",
-										"target": 818,
+										"target": 819,
 										"name": "InjectedWallet",
 										"package": "thirdweb"
 									}
@@ -23417,23 +23452,23 @@
 				{
 					"title": "Type Aliases",
 					"children": [
-						818,
-						824,
-						814,
-						848,
-						851,
-						837
+						819,
+						825,
+						815,
+						849,
+						852,
+						838
 					]
 				},
 				{
 					"title": "Functions",
 					"children": [
-						834,
-						831,
-						839,
+						835,
+						832,
+						840,
 						680,
-						842,
-						845
+						843,
+						846
 					]
 				}
 			],
@@ -23442,7 +23477,7 @@
 					"fileName": "packages/thirdweb/src/wallets/index.ts",
 					"line": 1,
 					"character": 0,
-					"url": "https://github.com/thirdweb-dev/js/blob/a5c7159/packages/thirdweb/src/wallets/index.ts#L1"
+					"url": "https://github.com/thirdweb-dev/js/blob/0f37a9f/packages/thirdweb/src/wallets/index.ts#L1"
 				}
 			]
 		}
@@ -26915,35 +26950,35 @@
 		},
 		"814": {
 			"sourceFileName": "src/wallets/private-key.ts",
-			"qualifiedName": "PrivateKeyWalletOptions"
+			"qualifiedName": "__object.id"
 		},
 		"815": {
 			"sourceFileName": "src/wallets/private-key.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "PrivateKeyWalletOptions"
 		},
 		"816": {
 			"sourceFileName": "src/wallets/private-key.ts",
-			"qualifiedName": "__type.client"
+			"qualifiedName": "__type"
 		},
 		"817": {
 			"sourceFileName": "src/wallets/private-key.ts",
-			"qualifiedName": "__type.privateKey"
+			"qualifiedName": "__type.client"
 		},
 		"818": {
-			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "InjectedWallet"
+			"sourceFileName": "src/wallets/private-key.ts",
+			"qualifiedName": "__type.privateKey"
 		},
 		"819": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "InjectedWallet"
 		},
 		"820": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type.switchChain"
+			"qualifiedName": "__type"
 		},
 		"821": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.switchChain"
 		},
 		"822": {
 			"sourceFileName": "src/wallets/injected.ts",
@@ -26951,31 +26986,31 @@
 		},
 		"823": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "newChainId"
+			"qualifiedName": "__type"
 		},
 		"824": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "InjectedWalletOptions"
+			"qualifiedName": "newChainId"
 		},
 		"825": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "InjectedWalletOptions"
 		},
 		"826": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type.chainId"
+			"qualifiedName": "__type"
 		},
 		"827": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type.walletId"
+			"qualifiedName": "__type.chainId"
 		},
 		"828": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type.getProvider"
+			"qualifiedName": "__type.walletId"
 		},
 		"829": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.getProvider"
 		},
 		"830": {
 			"sourceFileName": "src/wallets/injected.ts",
@@ -26983,7 +27018,7 @@
 		},
 		"831": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "injectedWallet"
+			"qualifiedName": "__type"
 		},
 		"832": {
 			"sourceFileName": "src/wallets/injected.ts",
@@ -26991,11 +27026,11 @@
 		},
 		"833": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "options"
+			"qualifiedName": "injectedWallet"
 		},
 		"834": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "injectedProvider"
+			"qualifiedName": "options"
 		},
 		"835": {
 			"sourceFileName": "src/wallets/injected.ts",
@@ -27003,19 +27038,19 @@
 		},
 		"836": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "walletId"
+			"qualifiedName": "injectedProvider"
 		},
 		"837": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "WalletRDNS"
+			"qualifiedName": "walletId"
 		},
 		"838": {
 			"sourceFileName": "src/wallets/injected.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "WalletRDNS"
 		},
 		"839": {
-			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "metamaskWallet"
+			"sourceFileName": "src/wallets/injected.ts",
+			"qualifiedName": "__type"
 		},
 		"840": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
@@ -27023,11 +27058,11 @@
 		},
 		"841": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "options"
+			"qualifiedName": "metamaskWallet"
 		},
 		"842": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "rainbowWallet"
+			"qualifiedName": "options"
 		},
 		"843": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
@@ -27035,11 +27070,11 @@
 		},
 		"844": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "options"
+			"qualifiedName": "rainbowWallet"
 		},
 		"845": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "zerionWallet"
+			"qualifiedName": "options"
 		},
 		"846": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
@@ -27047,39 +27082,39 @@
 		},
 		"847": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "options"
+			"qualifiedName": "zerionWallet"
 		},
 		"848": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "SpecificInjectedWalletOptions"
+			"qualifiedName": "options"
 		},
 		"849": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "SpecificInjectedWalletOptions"
 		},
 		"850": {
 			"sourceFileName": "src/wallets/injectedWallets.ts",
-			"qualifiedName": "__type.chainId"
+			"qualifiedName": "__type"
 		},
 		"851": {
-			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "Wallet"
+			"sourceFileName": "src/wallets/injectedWallets.ts",
+			"qualifiedName": "__type.chainId"
 		},
 		"852": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "Wallet"
 		},
 		"853": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.address"
+			"qualifiedName": "__type"
 		},
 		"854": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.sendTransaction"
+			"qualifiedName": "__type.address"
 		},
 		"855": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.sendTransaction"
 		},
 		"856": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
@@ -27087,15 +27122,15 @@
 		},
 		"857": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "tx"
+			"qualifiedName": "__type"
 		},
 		"858": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "tx"
 		},
 		"859": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.chainId"
+			"qualifiedName": "__type"
 		},
 		"860": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
@@ -27103,31 +27138,31 @@
 		},
 		"861": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.signMessage"
+			"qualifiedName": "__type.chainId"
 		},
 		"862": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.signMessage"
 		},
 		"863": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
 			"qualifiedName": "__type"
 		},
-		"865": {
+		"864": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
 			"qualifiedName": "__type"
 		},
 		"866": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.message"
+			"qualifiedName": "__type"
 		},
 		"867": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.signTypedData"
+			"qualifiedName": "__type.message"
 		},
 		"868": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.signTypedData"
 		},
 		"869": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
@@ -27135,23 +27170,23 @@
 		},
 		"870": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "_typedData"
+			"qualifiedName": "__type"
 		},
 		"871": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "typedData"
+			"qualifiedName": "_typedData"
 		},
 		"872": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "primaryType"
+			"qualifiedName": "typedData"
 		},
 		"873": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.signTransaction"
+			"qualifiedName": "primaryType"
 		},
 		"874": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.signTransaction"
 		},
 		"875": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
@@ -27159,15 +27194,15 @@
 		},
 		"876": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "tx"
+			"qualifiedName": "__type"
 		},
 		"877": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.estimateGas"
+			"qualifiedName": "tx"
 		},
 		"878": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.estimateGas"
 		},
 		"879": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
@@ -27175,17 +27210,25 @@
 		},
 		"880": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "tx"
+			"qualifiedName": "__type"
 		},
 		"881": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "tx"
 		},
 		"882": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
-			"qualifiedName": "__type.chainId"
+			"qualifiedName": "__type"
 		},
 		"883": {
+			"sourceFileName": "src/wallets/interfaces/wallet.ts",
+			"qualifiedName": "__type.chainId"
+		},
+		"884": {
+			"sourceFileName": "src/wallets/interfaces/wallet.ts",
+			"qualifiedName": "__type.id"
+		},
+		"885": {
 			"sourceFileName": "src/wallets/interfaces/wallet.ts",
 			"qualifiedName": "T"
 		}
