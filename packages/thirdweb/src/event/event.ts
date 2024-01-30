@@ -33,7 +33,7 @@ export type ContractEvent<event extends AbiEvent> = ContractEventOptions<
  * @example
  * ```ts
  * import { createClient, getContract } from "thirdweb";
- * import { prepareEvent } from "thirdweb/event";
+ * import { prepareEvent } from "thirdweb";
  * const client = createClient({ clientId: "..." });
  * const contract = getContract({
  *  client,

@@ -12,7 +12,7 @@ const ENCODE_CACHE = new WeakMap();
  * @returns A promise that resolves to the encoded data as a hexadecimal string.
  * @example
  * ```ts
- * import { encode } from "thirdweb/transaction";
+ * import { encode } from "thirdweb";
  * const encodedData = await encode(tx);
  * ```
  */

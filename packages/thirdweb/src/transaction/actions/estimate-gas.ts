@@ -17,7 +17,7 @@ export type EstimateGasOptions = {
  * @returns A promise that resolves to the estimated gas as a bigint.
  * @example
  * ```ts
- * import { estimateGas } from "thirdweb/transaction";
+ * import { estimateGas } from "thirdweb";
  * const gas = await estimateGas(tx);
  * ```
  */

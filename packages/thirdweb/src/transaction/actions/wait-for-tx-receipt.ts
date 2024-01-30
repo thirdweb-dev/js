@@ -22,7 +22,7 @@ export type WaitForReceiptOptions<abi extends Abi> = {
  * @returns A promise that resolves with the transaction receipt.
  * @example
  * ```ts
- * import { waitForReceipt } from "thirdweb/transaction";
+ * import { waitForReceipt } from "thirdweb";
  * const receipt = await waitForReceipt({
  *   contract: myContract,
  *   transactionHash: "0x123...",

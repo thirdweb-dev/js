@@ -11,7 +11,7 @@ import type { IWallet } from "../../wallets/interfaces/wallet.js";
  * @throws If the wallet is not connected.
  * @example
  * ```ts
- * import { sendTransaction } from "thirdweb/transaction";
+ * import { sendTransaction } from "thirdweb";
  * const txHash = await sendTransaction(tx, wallet);
  * ```
  */

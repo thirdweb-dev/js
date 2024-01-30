@@ -38,7 +38,7 @@ export type Transaction<abiFn extends AbiFunction> = TransactionOptions<
  * @returns The prepared transaction.
  * @example
  * ```ts
- * import { prepareTransaction } from "thirdweb/transaction";
+ * import { prepareTransaction } from "thirdweb";
  * const tx = prepareTransaction({
  *  contract,
  *  method: "totalSupply",

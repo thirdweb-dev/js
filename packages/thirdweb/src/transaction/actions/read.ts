@@ -52,7 +52,7 @@ export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 len
  * @returns A promise that resolves to the decoded output of the transaction.
  * @example
  * ```ts
- * import { readTransaction } from "thirdweb/transaction";
+ * import { readTransaction } from "thirdweb";
  * const result = await readTransaction(tx);
  * ```
  */
