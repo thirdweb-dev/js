@@ -6,6 +6,7 @@ import { effect } from "../../reactive/effect.js";
 export type ConnectedWalletsMap = Map<string, Wallet>;
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
+const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
 
 export type ConnectionManagerOptions = {
   storage: {
@@ -47,6 +48,7 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     const currentMap = connectedWalletsMap.getValue();
     const newMap = new Map(currentMap);
     newMap.set(wallet.id, wallet);
+    console.log("connected wallet", wallet.id);
     connectedWalletsMap.setValue(newMap);
   };
 
@@ -67,11 +69,56 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
   };
 
   // side effects
-  effect(() => {
-    const value = connectedWallets.getValue();
-    const ids = value.map((wallet) => wallet.id);
-    storage.set(CONNECTED_WALLET_IDS, JSON.stringify(ids));
-  }, [connectedWallets]);
+
+  // save last connected wallet ids to storage
+  effect(
+    () => {
+      const value = connectedWallets.getValue();
+      const ids = value.map((wallet) => wallet.id);
+      storage.set(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+    },
+    [connectedWallets],
+    false,
+  );
+
+  // save active wallet id to storage
+  effect(
+    () => {
+      const value = activeWalletId.getValue();
+      if (value) {
+        storage.set(ACTIVE_WALLET_ID, value);
+      } else {
+        storage.remove(ACTIVE_WALLET_ID);
+      }
+    },
+    [activeWalletId],
+    false,
+  );
+
+  const getStoredConnectedWalletIds = async (): Promise<string[] | null> => {
+    try {
+      const value = await storage.get(CONNECTED_WALLET_IDS);
+      if (value) {
+        return JSON.parse(value) as string[];
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  };
+
+  const getStoredActiveWalletId = async (): Promise<string | null> => {
+    try {
+      const value = await storage.get(ACTIVE_WALLET_ID);
+      if (value) {
+        return value;
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  };
 
   return {
     activeWalletId,
@@ -80,5 +127,7 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     disconnectWallet,
     setActiveWalletId,
     connectedWallets,
+    getStoredConnectedWalletIds,
+    getStoredActiveWalletId,
   };
 }

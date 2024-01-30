@@ -2,21 +2,7 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../wallets/index.js";
-import { createConnectionManager } from "../../wallets/index.js";
-
-export const connectionManager = /* @__PURE__ */ createConnectionManager({
-  storage: {
-    async get(key) {
-      return localStorage.getItem(key);
-    },
-    async set(key, value) {
-      localStorage.setItem(key, value);
-    },
-    async remove(key) {
-      localStorage.removeItem(key);
-    },
-  },
-});
+import { connectionManager } from "../connectionManager.js";
 
 /**
  * A hook that returns the active wallet.
@@ -100,7 +86,10 @@ export function useConnect() {
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async function (options: Wallet | (() => Promise<Wallet>)) {
+    async function (
+      options: Wallet | (() => Promise<Wallet>),
+      setActive = true,
+    ) {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
@@ -113,7 +102,9 @@ export function useConnect() {
         const wallet = await options();
         // add the uuid for this wallet
         connectWallet(wallet);
-        setActiveWalletId(wallet.id);
+        if (setActive !== false) {
+          setActiveWalletId(wallet.id);
+        }
         return wallet;
       } catch (e) {
         setError(e as Error);

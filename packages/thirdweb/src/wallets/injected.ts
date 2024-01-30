@@ -33,6 +33,13 @@ export type InjectedWalletOptions = {
    * By Default, it will use `() => window.ethereum`.
    */
   getProvider?: () => Ethereum | undefined;
+
+  /**
+   * Specify Connection mode is "autoConnect"
+   * If set to `true` - wallet will only be connected if the accounts are accessible. If they are not already accessible, wallet will not be connected.
+   * If set to `false` - If the accounts are already accessible, wallet will be connected. If they are not already accessible, a connection request will be sent to wallet extension and user will be prompted to connect.
+   */
+  autoConnect?: boolean | undefined;
 };
 
 /**
@@ -92,11 +99,19 @@ export async function injectedWallet(
   }
 
   const provider = getProvider();
+  let accountAddresses: string[] = [];
 
-  // request accounts
-  const accountAddresses = await provider.request({
-    method: "eth_requestAccounts",
-  });
+  if (options?.autoConnect) {
+    const connectedAccounts = await provider.request({
+      method: "eth_accounts",
+    });
+    accountAddresses = connectedAccounts;
+  } else {
+    // request accounts
+    accountAddresses = await provider.request({
+      method: "eth_requestAccounts",
+    });
+  }
 
   if (accountAddresses.length === 0) {
     throw new Error("no accounts available");

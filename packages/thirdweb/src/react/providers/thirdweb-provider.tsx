@@ -7,6 +7,17 @@ import { isObjectWithKeys } from "../../utils/type-guards.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Abi } from "abitype";
+import { useAutoConnect } from "../hooks/connection/useAutoConnect.js";
+import { ThirdwebProviderContext } from "./thirdweb-provider-ctx.js";
+
+import type { WalletConfig } from "../types/wallets.js";
+import { defaultWallets } from "../wallets/defaultWallets.js";
+
+export type ThirdwebProviderProps = {
+  children?: React.ReactNode;
+  wallets?: WalletConfig[];
+  autoConnect?: boolean;
+};
 
 /**
  * The ThirdwebProvider is the root component for all Thirdweb React apps.
@@ -22,7 +33,7 @@ import type { Abi } from "abitype";
  * </ThirdwebProvider>
  * ```
  */
-export const ThirdwebProvider: React.FC<React.PropsWithChildren> = (props) => {
+export function ThirdwebProvider(props: ThirdwebProviderProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -63,9 +74,27 @@ export const ThirdwebProvider: React.FC<React.PropsWithChildren> = (props) => {
         },
       }),
   );
+
   return (
     <QueryClientProvider client={queryClient}>
-      {props.children}
+      <ThirdwebProviderContext.Provider
+        value={{
+          wallets: props.wallets || defaultWallets,
+          autoConnect:
+            props.autoConnect === undefined ? true : props.autoConnect,
+        }}
+      >
+        <AutoConnect />
+        {props.children}
+      </ThirdwebProviderContext.Provider>
     </QueryClientProvider>
   );
-};
+}
+
+/**
+ * @internal
+ */
+function AutoConnect() {
+  useAutoConnect();
+  return <></>;
+}

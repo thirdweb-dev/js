@@ -2,6 +2,7 @@ import { injectedWallet } from "./injected.js";
 
 export type SpecificInjectedWalletOptions = {
   chainId?: bigint | number;
+  autoConnect?: boolean;
 };
 
 /**
@@ -15,8 +16,8 @@ export type SpecificInjectedWalletOptions = {
  */
 export async function metamaskWallet(options?: SpecificInjectedWalletOptions) {
   const wallet = await injectedWallet({
+    ...options,
     walletId: "io.metamask",
-    chainId: options?.chainId,
   });
   wallet.id = "metamask";
   return wallet;
@@ -33,8 +34,8 @@ export async function metamaskWallet(options?: SpecificInjectedWalletOptions) {
  */
 export async function rainbowWallet(options?: SpecificInjectedWalletOptions) {
   const wallet = await injectedWallet({
+    ...options,
     walletId: "me.rainbow",
-    chainId: options?.chainId,
   });
   wallet.id = "rainbow";
   return wallet;
@@ -51,8 +52,8 @@ export async function rainbowWallet(options?: SpecificInjectedWalletOptions) {
  */
 export async function zerionWallet(options?: SpecificInjectedWalletOptions) {
   const wallet = await injectedWallet({
+    ...options,
     walletId: "io.zerion.wallet",
-    chainId: options?.chainId,
   });
   wallet.id = "zerion";
   return wallet;
