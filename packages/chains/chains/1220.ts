@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Flag",
-  "chainId": 220,
+  "chain": "1220",
+  "chainId": 1220,
   "explorers": [
     {
       "name": "flagscan",
-      "url": "https://scan.flagscan.io",
+      "url": "https://testnet-scan.flagscan.io/",
       "standard": "EIP3091"
     }
   ],
@@ -13,25 +13,21 @@ export default {
   "features": [],
   "icon": {
     "url": "ipfs://QmXo2p1i4zsbTNEu41EjjrhdmbKFDGHEHeADXZ3x2fgNKE/1682003789585.jpeg",
-    "width": 200,
-    "height": 200,
+    "width": 3600,
+    "height": 3600,
     "format": "jpeg"
   },
   "infoURL": "https://flagblockchain.com/",
-  "name": "Flag Mainnet",
+  "name": "Flag Testnet",
   "nativeCurrency": {
-    "name": "Flag",
-    "symbol": "Flag",
+    "name": "FLAG",
+    "symbol": "FLAG",
     "decimals": 18
   },
-  "networkId": 220,
+  "networkId": 1220,
   "redFlags": [],
-  "rpc": [
-    "https://flag.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.flagscan.io/"
-  ],
+  "rpc": [],
   "shortName": "Flag",
-  "slug": "flag",
-  "testnet": false
+  "slug": "flag-testnet",
+  "testnet": true
 } as const satisfies Chain;
