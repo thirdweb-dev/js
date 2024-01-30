@@ -1,5 +1,14 @@
 # @thirdweb-dev/auth
 
+## 4.1.26
+
+### Patch Changes
+
+- [#2106](https://github.com/thirdweb-dev/js/pull/2106) [`1a5d41cc`](https://github.com/thirdweb-dev/js/commit/1a5d41cc8afeef5f9882753473aad3bc0c7757ac) Thanks [@hsynlms](https://github.com/hsynlms)! - Add support for Next.js App Router
+
+- Updated dependencies [[`a5653f07`](https://github.com/thirdweb-dev/js/commit/a5653f07f82e3f94e193d2b90c9d0c163223583c), [`bf90fa50`](https://github.com/thirdweb-dev/js/commit/bf90fa5005358e040475627ae23a474f7b263803), [`6fdade6c`](https://github.com/thirdweb-dev/js/commit/6fdade6c45f5d93fb3571d33720ab8103a7d002c), [`4d89dc1e`](https://github.com/thirdweb-dev/js/commit/4d89dc1efa2412b1e121cd14b1e2e72c667fceb0)]:
+  - @thirdweb-dev/wallets@2.4.4
+
 ## 4.1.25
 
 ### Patch Changes
