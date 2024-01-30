@@ -34,83 +34,7 @@ export const CreateEngineInstanceButton = ({
   const toast = useToast();
   const accountQuery = useAccount();
 
-  return (
-    <>
-      <Button
-        onClick={() => {
-          trackEvent({
-            category: "engine",
-            action: "click",
-            label: "add-engine-instance",
-          });
-          cloudHostedModalDisclosure.onOpen();
-        }}
-        colorScheme="blue"
-        leftIcon={<Icon as={FiPlus} boxSize={4} />}
-      >
-        Create instance
-      </Button>
-
-      {cloudHostedModalDisclosure.isOpen && (
-        <RequestCloudHostedEngineModal
-          hasValidPayment={
-            accountQuery.data?.status === AccountStatus.ValidPayment
-          }
-          disclosure={cloudHostedModalDisclosure}
-          onConfirm={() => {
-            // Refetch the Engine list to include the new pending one.
-            refetch();
-            cloudHostedModalDisclosure.onClose();
-          }}
-          onAddPaymentMethod={() => {
-            // Switch the Cloud-hosted Engine modal with the Add Payment modal.
-            cloudHostedModalDisclosure.onClose();
-            paymentDisclosure.onOpen();
-          }}
-        />
-      )}
-
-      <OnboardingModal
-        isOpen={paymentDisclosure.isOpen}
-        onClose={paymentDisclosure.onClose}
-      >
-        <OnboardingBilling
-          onSave={() => {
-            // Invalidate the query and re-open the Cloud-hosted Engine modal in 5 seconds.
-            // Why? account.status is updated from a Stripe webhook which can take a few seconds to receive.
-            toast({
-              status: "success",
-              description:
-                "Thank you for adding your payment details. Please wait...",
-            });
-            paymentDisclosure.onClose();
-            setTimeout(() => {
-              accountQuery.refetch();
-              cloudHostedModalDisclosure.onOpen();
-            }, 5_000);
-          }}
-          onCancel={paymentDisclosure.onClose}
-        />
-      </OnboardingModal>
-    </>
-  );
-};
-
-const RequestCloudHostedEngineModal = ({
-  hasValidPayment,
-  disclosure,
-  onConfirm,
-  onAddPaymentMethod,
-}: {
-  hasValidPayment: boolean;
-  disclosure: UseDisclosureReturn;
-  onConfirm: () => void;
-  onAddPaymentMethod: () => void;
-}) => {
-  const trackEvent = useTrack();
-  const toast = useToast();
-
-  const onClickConfirm = async () => {
+  const requestCloudHostedEngine = async () => {
     trackEvent({
       category: "engine",
       action: "click",
@@ -141,7 +65,9 @@ const RequestCloudHostedEngineModal = ({
         status: "success",
         description: "Thank you! Our team will reach out shortly.",
       });
-      onConfirm();
+
+      // Refresh the engine list to show a pending cloud-hosted Engine instance.
+      refetch();
     } catch (e) {
       toast({
         status: "error",
@@ -151,15 +77,74 @@ const RequestCloudHostedEngineModal = ({
     }
   };
 
-  const onClickAddPaymentMethod = () => {
-    trackEvent({
-      category: "engine",
-      action: "click",
-      label: "clicked-add-payment-method",
-    });
-    onAddPaymentMethod();
-  };
+  return (
+    <>
+      <Button
+        onClick={() => {
+          trackEvent({
+            category: "engine",
+            action: "click",
+            label: "add-engine-instance",
+          });
+          cloudHostedModalDisclosure.onOpen();
+        }}
+        colorScheme="blue"
+        leftIcon={<Icon as={FiPlus} boxSize={4} />}
+      >
+        Create instance
+      </Button>
 
+      {cloudHostedModalDisclosure.isOpen && (
+        <RequestCloudHostedEngineModal
+          hasValidPayment={
+            accountQuery.data?.status === AccountStatus.ValidPayment
+          }
+          disclosure={cloudHostedModalDisclosure}
+          onConfirm={async () => {
+            await requestCloudHostedEngine();
+            cloudHostedModalDisclosure.onClose();
+          }}
+          onAddPaymentMethod={() => {
+            trackEvent({
+              category: "engine",
+              action: "click",
+              label: "clicked-add-payment-method",
+            });
+
+            // Switch the Cloud-hosted Engine modal with the Add Payment modal.
+            cloudHostedModalDisclosure.onClose();
+            paymentDisclosure.onOpen();
+          }}
+        />
+      )}
+
+      <OnboardingModal
+        isOpen={paymentDisclosure.isOpen}
+        onClose={paymentDisclosure.onClose}
+      >
+        <OnboardingBilling
+          onSave={async () => {
+            await requestCloudHostedEngine();
+            paymentDisclosure.onClose();
+          }}
+          onCancel={paymentDisclosure.onClose}
+        />
+      </OnboardingModal>
+    </>
+  );
+};
+
+const RequestCloudHostedEngineModal = ({
+  hasValidPayment,
+  disclosure,
+  onConfirm,
+  onAddPaymentMethod,
+}: {
+  hasValidPayment: boolean;
+  disclosure: UseDisclosureReturn;
+  onConfirm: () => void;
+  onAddPaymentMethod: () => void;
+}) => {
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
@@ -218,30 +203,24 @@ const RequestCloudHostedEngineModal = ({
             </Flex>
 
             <VStack>
-              {hasValidPayment ? (
-                <>
-                  <Button
-                    onClick={onClickConfirm}
-                    colorScheme="blue"
-                    py={6}
-                    w="full"
-                  >
-                    Confirm
-                  </Button>
-                  <Text size="body.sm">
-                    We will reach out within 1 business day.
-                  </Text>
-                </>
-              ) : (
-                <Button
-                  onClick={onClickAddPaymentMethod}
-                  colorScheme="blue"
-                  py={6}
-                  w="full"
-                >
-                  Add payment method
-                </Button>
-              )}
+              <Button
+                onClick={async () => {
+                  if (hasValidPayment) {
+                    await onConfirm();
+                  } else {
+                    await onAddPaymentMethod();
+                  }
+                }}
+                colorScheme="blue"
+                py={6}
+                w="full"
+              >
+                Confirm
+              </Button>
+              <Text size="body.sm" textAlign="center">
+                We will reach out within 1 business day. You won&apos;t be
+                charged until your Engine instance is active.
+              </Text>
             </VStack>
           </Card>
         </ModalBody>
