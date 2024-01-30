@@ -162,6 +162,19 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     }
   };
 
+  const switchActiveWalletChain = async (chainId: number) => {
+    const wallet = activeWallet.getValue();
+    if (!wallet) {
+      throw new Error("no active wallet");
+    }
+
+    if (!wallet.switchChain) {
+      throw new Error("wallet does not support switching chains");
+    }
+
+    await wallet.switchChain(chainId);
+  };
+
   return {
     activeWalletId,
     activeWallet,
@@ -173,5 +186,6 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     getStoredActiveWalletId,
     activeWalletAddress,
     activeWalletChainId,
+    switchActiveWalletChain,
   };
 }

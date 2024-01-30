@@ -8,6 +8,7 @@ export {
   useActiveWallet,
   useConnectedWallets,
   useActiveWalletAddress,
+  useSwitchActiveWalletChain,
 } from "./providers/wallet-provider.js";
 
 // contract related

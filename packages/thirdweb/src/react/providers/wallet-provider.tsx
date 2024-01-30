@@ -35,6 +35,23 @@ export function useActiveWalletAddress() {
 }
 
 /**
+ * Switch to blockchain with given chain id in the active wallet.
+ * @returns A function to switch to blockchain with given chain id in the active wallet.
+ * @example
+ * ```jsx
+ * import { useSwitchActiveWalletChain } from "thirdweb/react";
+ *
+ * const switchChain = useSwitchActiveWalletChain();
+ *
+ * // later in your code
+ * <button onClick={() => switchChain(chainId)}>Switch Chain</button>
+ * ```
+ */
+export function useSwitchActiveWalletChain() {
+  return connectionManager.switchActiveWalletChain;
+}
+
+/**
  * A hook that returns the chain id of the blockchain the active wallet is connected to
  * @returns The chain id of the blockchain the active wallet is connected to or null if no active wallet.
  * @example
