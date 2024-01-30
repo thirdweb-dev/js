@@ -57,10 +57,10 @@ const usageEventSchema = z.object({
   pathname: z.string().optional(),
   contractAddress: z.string().optional(),
   errorCode: z.string().optional(),
-  httpStatusCode: z.string().optional(),
+  httpStatusCode: z.number().int().nonnegative().optional(),
   functionName: z.string().optional(),
   extension: z.string().optional(),
-  retryCount: z.string().optional(),
+  retryCount: z.number().int().nonnegative().optional(),
   policyId: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
