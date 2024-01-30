@@ -73,11 +73,8 @@ const client = createPublicClient({
   transport: http(),
 });
 
-const supply = await client.readContract({
-  address: "0x...",
-  abi,
-  functionName: "totalSupply",
-});
+const contract = getContract({ address: '0x...', abi, client })
+const supply = await contract.read.totalSupply()
 ```
 
 ## `ethers`
