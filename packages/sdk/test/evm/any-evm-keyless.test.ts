@@ -131,7 +131,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: await adminWallet.getAddress(),
       },
-      "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0",
+      "ipfs://QmVmyyBWwTJMvKaqhoNvYvScBCnmMZ6EYc2BnL3L2wByHC/0",
     );
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
@@ -140,7 +140,7 @@ describe("Any EVM Keyless Deploy", async () => {
       publishUri,
       [
         walletAddress, // defaultAdmin
-        "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0", // contractUri
+        "ipfs://QmVmyyBWwTJMvKaqhoNvYvScBCnmMZ6EYc2BnL3L2wByHC/0", // contractUri
         [], // trustedForwarders
         walletAddress, // platform fee recipient
         0, // platform fee bps
@@ -176,7 +176,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmRqErmPh5jpQUEbvKfHx9Wq8FnmjMrokF9x9b8Pw8iGJo/0",
+      "ipfs://QmWpqj5SegQVAfTxnWYwFZyM2tzcMrFP46cuhydWgivLA4/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -193,7 +193,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmSmtyccp5pamJB4GzG8ph3p68aheqSyu88tEPx2qD11gY/0",
+      "ipfs://QmerKQLemhTXjv1wysTw8utFXgHTcC6wAXg7hLWxjPZA15/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -210,7 +210,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmaHC2woTYRbL2tfZujHLt7mDZ5pDJNCCepSGkM5neWYK4/0",
+      "ipfs://Qmc8UzdjPUTPisfAS7Taq3i5vuA3nCxQL72mPmTyVSPd7z/0",
     );
   });
 
