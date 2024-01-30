@@ -1,3 +1,5 @@
 esm/
 cjs/
-types
+types/
+# not /types/ folders in src
+!src/**/types/
