@@ -1,7 +1,11 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { Bench } from "tinybench";
 import { Contract, getDefaultProvider } from "ethers6";
-import { createPublicClient, http } from "viem";
+import {
+  createPublicClient,
+  http,
+  getContract as viem_getContract,
+} from "viem";
 import { mainnet } from "viem/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { createClient, getContract } from "../src";
@@ -15,14 +19,14 @@ bench.add("thirdweb@alpha", async () => {
     clientId: "benchmark",
   });
 
-  const myContract = getContract({
+  const contract = getContract({
     client,
     chainId: 1,
     address: USDC_ADDRESS,
   });
 
   await totalSupply({
-    contract: myContract,
+    contract,
   });
 });
 bench.add("@thirdweb-dev/sdk", async () => {
@@ -53,11 +57,8 @@ bench.add("viem", async () => {
     transport: http(),
   });
 
-  await client.readContract({
-    address: USDC_ADDRESS,
-    abi,
-    functionName: "totalSupply",
-  });
+  const contract = viem_getContract({ address: USDC_ADDRESS, abi, client });
+  await contract.read.totalSupply();
 });
 bench.add("ethers@6", async () => {
   const abi = ["function totalSupply() view returns (uint256)"];
