@@ -11,6 +11,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
+  # cancel any previous runs if they were started before this one
+  cancel-in-progress: true
 
 jobs:
   release-artifacts:
