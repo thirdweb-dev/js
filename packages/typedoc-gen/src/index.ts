@@ -1,6 +1,6 @@
 import TypeDoc from "typedoc";
 import { gzip } from "node:zlib";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, unlink, writeFile } from "node:fs/promises";
 import { promisify } from "node:util";
 
 /**
@@ -30,7 +30,7 @@ export async function typedoc(options: {
   const json = await readFile(jsonOut);
   const gzipped = await promisify(gzip)(json);
   await writeFile(gzipOut, gzipped);
-  // TODO: enable this when /docs has switched over to the new format
+
   // delete the original json file
-  // await unlink(jsonOut);
+  await unlink(jsonOut);
 }

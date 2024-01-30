@@ -53,17 +53,11 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git status
-          git add packages/react/typedoc/documentation.json
           git add packages/react/typedoc/documentation.json.gz
-          git add packages/react-core/typedoc/documentation.json
           git add packages/react-core/typedoc/documentation.json.gz
-          git add packages/react-native/typedoc/documentation.json
           git add packages/react-native/typedoc/documentation.json.gz
-          git add packages/sdk/typedoc/documentation.json
           git add packages/sdk/typedoc/documentation.json.gz
-          git add packages/storage/typedoc/documentation.json
           git add packages/storage/typedoc/documentation.json.gz
-          git add packages/wallets/typedoc/documentation.json
           git add packages/wallets/typedoc/documentation.json.gz
           git add snippets/feature_snippets_react.json
           git add snippets/feature_snippets_sdk.json
