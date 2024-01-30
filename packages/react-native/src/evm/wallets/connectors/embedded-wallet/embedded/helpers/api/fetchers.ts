@@ -1,6 +1,6 @@
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
-  ROUTE_GET_EMBEDDED_WALLET_DETAILS,
+  ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
@@ -92,7 +92,7 @@ export async function getEmbeddedWalletUserDetail(args: {
   email?: string;
   clientId: string;
 }) {
-  const url = new URL(ROUTE_GET_EMBEDDED_WALLET_DETAILS);
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
       url.searchParams.append("email", args.email);
@@ -298,4 +298,23 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
       createErrorMessage("Malformed response from the ews user wallet API", e),
     );
   }
+}
+
+export async function deleteAccount(args: { clientId: string }) {
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
+  const resp = await authFetchEmbeddedWalletUser(
+    { clientId: args.clientId },
+    url.href,
+    {
+      method: "DELETE",
+    },
+  );
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong deleting the active account: ${error.message}`,
+    );
+  }
+
+  return await resp.json();
 }

@@ -6,6 +6,7 @@ import {
   SendEmailOtpReturnType,
 } from "@thirdweb-dev/wallets";
 import {
+  deleteAccount,
   generateAuthTokenFromCognitoEmailOtp,
   getEmbeddedWalletUserDetail,
   sendUserManagedEmailOtp,
@@ -377,4 +378,21 @@ export async function authEndpoint(
       ),
     );
   }
+}
+
+export async function deleteActiveAccount(options: {
+  clientId: string;
+}): Promise<boolean> {
+  await verifyClientId(options.clientId);
+
+  let result;
+  try {
+    result = await deleteAccount({
+      clientId: options.clientId,
+    });
+  } catch (e) {
+    throw new Error(createErrorMessage("Error deleting the active account", e));
+  }
+
+  return result;
 }

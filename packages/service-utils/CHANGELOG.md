@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.13
+
+### Patch Changes
+
+- [#2210](https://github.com/thirdweb-dev/js/pull/2210) [`a5541a1c`](https://github.com/thirdweb-dev/js/commit/a5541a1c5571079e4b73d0c4c24d935977944c3e) Thanks [@assimovt](https://github.com/assimovt)! - update api key metadata
+
+- [#2230](https://github.com/thirdweb-dev/js/pull/2230) [`6fdade6c`](https://github.com/thirdweb-dev/js/commit/6fdade6c45f5d93fb3571d33720ab8103a7d002c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Options to check service policies
+
+- [#2200](https://github.com/thirdweb-dev/js/pull/2200) [`13e389a6`](https://github.com/thirdweb-dev/js/commit/13e389a63e66190556d34b8c443264f31b34cee6) Thanks [@assimovt](https://github.com/assimovt)! - polish usage hit error code
+
 ## 0.4.12
 
 ### Patch Changes
