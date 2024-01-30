@@ -168,7 +168,12 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
  * @internal
  */
 export const RouterTypeInput = /* @__PURE__ */ (() =>
-  z.union([z.literal("none"), z.literal("plugin"), z.literal("dynamic")]))();
+  z.union([
+    z.literal("none"),
+    z.literal("plugin"),
+    z.literal("dynamic"),
+    z.literal("hook-installer"),
+  ]))();
 
 /**
  * @internal

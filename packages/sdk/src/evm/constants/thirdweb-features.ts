@@ -116,6 +116,30 @@ export const getAllExtensionsAbi = [
   },
 ];
 
+export const hookInstallerAbi = [
+  {
+    type: "function",
+    name: "getHookImplementation",
+    inputs: [{ name: "flag", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "impl", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "installHook",
+    inputs: [{ name: "hook", type: "address", internalType: "contract IHook" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "uninstallHook",
+    inputs: [{ name: "hook", type: "address", internalType: "contract IHook" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+];
+
 export const FEATURE_ROYALTY = {
   name: "Royalty",
   namespace: "royalty",
@@ -252,6 +276,18 @@ export const FEATURE_DYNAMIC_CONTRACT = {
     contracts: "IExtensionsManager",
   },
   abis: [getAllExtensionsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_HOOK_INSTALLER = {
+  name: "HookInstaller",
+  namespace: "hook.installer",
+  docLinks: {
+    sdk: "",
+    //TODO
+    contracts: "",
+  },
+  abis: [hookInstallerAbi],
   features: {},
 } as const;
 
