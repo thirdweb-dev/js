@@ -6,7 +6,7 @@ import { parseUnits } from "viem";
 
 type MintToParams = { to: string } & (
   | {
-      amount: number;
+      amount: number | string;
     }
   | {
       amountGwei: bigint;

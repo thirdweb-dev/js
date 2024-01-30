@@ -6,7 +6,7 @@ import { parseUnits } from "viem";
 
 type TransferParams = { to: string } & (
   | {
-      amount: number;
+      amount: number | string;
     }
   | {
       amountGwei: bigint;

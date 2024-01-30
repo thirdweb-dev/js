@@ -18,6 +18,6 @@ export function tokenURI(options: TxOpts<TokenUriParams>): Promise<string> {
     ...options,
     method:
       "function tokenURI(uint256 tokenId) external view returns (string memory)",
-    params: [BigInt(options.tokenId)],
+    params: [options.tokenId],
   });
 }

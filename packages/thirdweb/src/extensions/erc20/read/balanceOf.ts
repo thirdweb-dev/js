@@ -8,6 +8,7 @@ type BalanceOfParams = { address: string };
 
 type BalanceOfResult = {
   value: bigint;
+  decimals: number;
   displayValue: string;
   symbol: string;
 };
@@ -37,6 +38,7 @@ export async function balanceOf(
   ]);
   return {
     value: balanceWei,
+    decimals: decimals_,
     displayValue: formatUnits(balanceWei, decimals_),
     symbol: symbol_,
   };
