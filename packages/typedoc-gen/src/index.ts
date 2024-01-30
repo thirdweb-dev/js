@@ -1,4 +1,7 @@
 import TypeDoc from "typedoc";
+import { gzip } from "node:zlib";
+import { readFile, writeFile } from "node:fs/promises";
+import { promisify } from "node:util";
 
 /**
  *
@@ -8,7 +11,8 @@ export async function typedoc(options: {
   entryPoints: string[];
   exclude: string[];
 }) {
-  const outFile = "typedoc/documentation.json";
+  const jsonOut = "typedoc/documentation.json";
+  const gzipOut = "typedoc/documentation.json.gz";
 
   const app = await TypeDoc.Application.bootstrapWithPlugins({
     entryPoints: options.entryPoints,
@@ -21,5 +25,12 @@ export async function typedoc(options: {
     throw new Error("Failed to create project");
   }
 
-  await app.generateJson(project, outFile);
+  await app.generateJson(project, jsonOut);
+  // then gzip the output
+  const json = await readFile(jsonOut);
+  const gzipped = await promisify(gzip)(json);
+  await writeFile(gzipOut, gzipped);
+  // TODO: enable this when /docs has switched over to the new format
+  // delete the original json file
+  // await unlink(jsonOut);
 }
