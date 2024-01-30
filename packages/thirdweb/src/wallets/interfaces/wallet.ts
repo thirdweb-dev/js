@@ -8,6 +8,7 @@ import type {
   TypedData,
   TypedDataDefinition,
 } from "viem";
+import type { AddListener } from "./listeners.js";
 
 export type Wallet<T extends object = object> = {
   // REQUIRED
@@ -31,4 +32,5 @@ export type Wallet<T extends object = object> = {
     tx: TransactionSerializable & { chainId: number },
   ) => Promise<bigint>;
   id: string;
+  on: AddListener;
 } & T;

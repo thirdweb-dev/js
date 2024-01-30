@@ -50,5 +50,6 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
     signMessage: account.signMessage,
     signTypedData: account.signTypedData,
     id: "private-key",
+    on: () => {},
   } satisfies Wallet;
 }

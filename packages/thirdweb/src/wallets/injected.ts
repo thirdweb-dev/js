@@ -150,8 +150,8 @@ export async function injectedWallet(
     await switchChain(options.chainId);
   }
 
-  return {
-    address,
+  const wallet: InjectedWallet = {
+    address: address,
     chainId: providerChainId,
     sendTransaction: async (tx) => {
       if (normalizeChainId(tx.chainId) !== providerChainId) {
@@ -176,7 +176,26 @@ export async function injectedWallet(
     },
     switchChain,
     id: "injected",
+    on: (event, listener) => {
+      if (!provider.on) {
+        return;
+      }
+
+      provider.on(event, listener);
+    },
   };
+
+  if (provider.on) {
+    provider.on("accountsChanged", (accounts: string[]) => {
+      wallet.address = getAddress(accounts[0] as string);
+    });
+
+    provider.on("chainChanged", (chainId: string) => {
+      wallet.chainId = normalizeChainId(chainId);
+    });
+  }
+
+  return wallet;
 }
 
 /**

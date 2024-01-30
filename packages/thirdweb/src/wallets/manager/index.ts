@@ -48,7 +48,6 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     const currentMap = connectedWalletsMap.getValue();
     const newMap = new Map(currentMap);
     newMap.set(wallet.id, wallet);
-    console.log("connected wallet", wallet.id);
     connectedWalletsMap.setValue(newMap);
   };
 
@@ -66,6 +65,11 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
 
   const setActiveWalletId = (walletId: string | null) => {
     activeWalletId.setValue(walletId);
+    const wallet = connectedWalletsMap.getValue().get(walletId || "");
+
+    if (wallet) {
+      wallet.on("accountsChanged", () => {});
+    }
   };
 
   // side effects

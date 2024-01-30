@@ -212,6 +212,9 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
       };
     },
     id: "ethers6-wallet", // TODO figure this out
+    on(event, listener) {
+      signer.provider?.on(event, listener);
+    },
   } satisfies Wallet;
 }
 
