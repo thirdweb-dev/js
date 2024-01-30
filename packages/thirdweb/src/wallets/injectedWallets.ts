@@ -13,11 +13,13 @@ export type SpecificInjectedWalletOptions = {
  * ```
  * @returns A Promise that resolves to a Wallet instance.
  */
-export function metamaskWallet(options?: SpecificInjectedWalletOptions) {
-  return injectedWallet({
+export async function metamaskWallet(options?: SpecificInjectedWalletOptions) {
+  const wallet = await injectedWallet({
     walletId: "io.metamask",
     chainId: options?.chainId,
   });
+  wallet.id = "metamask";
+  return wallet;
 }
 
 /**
@@ -29,11 +31,13 @@ export function metamaskWallet(options?: SpecificInjectedWalletOptions) {
  * ```
  * @returns A Promise that resolves to a Wallet instance.
  */
-export function rainbowWallet(options?: SpecificInjectedWalletOptions) {
-  return injectedWallet({
+export async function rainbowWallet(options?: SpecificInjectedWalletOptions) {
+  const wallet = await injectedWallet({
     walletId: "me.rainbow",
     chainId: options?.chainId,
   });
+  wallet.id = "rainbow";
+  return wallet;
 }
 
 /**
@@ -45,9 +49,11 @@ export function rainbowWallet(options?: SpecificInjectedWalletOptions) {
  * ```
  * @returns A Promise that resolves to a Wallet instance.
  */
-export function zerionWallet(options?: SpecificInjectedWalletOptions) {
-  return injectedWallet({
+export async function zerionWallet(options?: SpecificInjectedWalletOptions) {
+  const wallet = await injectedWallet({
     walletId: "io.zerion.wallet",
     chainId: options?.chainId,
   });
+  wallet.id = "zerion";
+  return wallet;
 }

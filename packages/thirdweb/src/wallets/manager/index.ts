@@ -1,9 +1,11 @@
 import { createStore } from "../../reactive/store.js";
 import type { Wallet } from "../index.js";
 import { computedStore } from "../../reactive/computedStore.js";
+import { effect } from "../../reactive/effect.js";
 
-export type WalletWithId = Wallet & { _id: string };
-export type ConnectedWalletsMap = Map<string, WalletWithId>;
+export type ConnectedWalletsMap = Map<string, Wallet>;
+
+const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 
 /**
  * Create a connection manager for Wallet connections
@@ -26,16 +28,16 @@ function createConnectionManager() {
   }, [activeWalletId, connectedWalletsMap]);
 
   const connectedWallets = computedStore(() => {
-    return Array.from(connectedWalletsMap.getValue().values());
+    const value = Array.from(connectedWalletsMap.getValue().values());
+    return value;
   }, [connectedWalletsMap]);
 
   // actions
-  const connectWallet = (wallet: WalletWithId) => {
+  const connectWallet = (wallet: Wallet) => {
     const currentMap = connectedWalletsMap.getValue();
     const newMap = new Map(currentMap);
-    newMap.set(wallet._id, wallet);
+    newMap.set(wallet.id, wallet);
     connectedWalletsMap.setValue(newMap);
-    // activeWalletId.setValue(wallet._id); -> should we also set is as active wallet?
   };
 
   const disconnectWallet = (walletId: string) => {
@@ -53,6 +55,14 @@ function createConnectionManager() {
   const setActiveWalletId = (walletId: string | null) => {
     activeWalletId.setValue(walletId);
   };
+
+  // side effects
+  effect(() => {
+    const value = connectedWallets.getValue();
+    const ids = value.map((wallet) => wallet.id);
+    console.log("connected wallets are", ids);
+    localStorage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+  }, [connectedWallets]);
 
   return {
     activeWalletId,

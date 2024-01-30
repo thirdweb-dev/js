@@ -30,4 +30,5 @@ export type Wallet<T extends object = object> = {
   estimateGas?: (
     tx: TransactionSerializable & { chainId: number },
   ) => Promise<bigint>;
+  id: string;
 } & T;

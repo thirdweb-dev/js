@@ -207,6 +207,7 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
         transactionHash: result.hash as Hex,
       };
     },
+    id: "ethers5-wallet", // TODO: figure this out
   } satisfies Wallet;
 }
 

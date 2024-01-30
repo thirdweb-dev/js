@@ -160,6 +160,7 @@ export async function injectedWallet(
       };
     },
     switchChain,
+    id: "injected",
   };
 }
 

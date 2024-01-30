@@ -196,7 +196,6 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
   const address = await signer.getAddress();
   return {
     address,
-
     signMessage: async ({ message }) => {
       return signer.signMessage(
         typeof message === "string" ? message : message.raw,
@@ -212,6 +211,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
         transactionHash,
       };
     },
+    id: "ethers6-wallet", // TODO figure this out
   } satisfies Wallet;
 }
 

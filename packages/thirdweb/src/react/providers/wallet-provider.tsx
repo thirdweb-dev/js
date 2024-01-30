@@ -4,8 +4,6 @@ import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { connectionManager } from "../../wallets/manager/index.js";
 
-export type WalletWithId = Wallet & { _id: string };
-
 /**
  * A hook that returns the active wallet.
  * @returns The active wallet or null if no active wallet.
@@ -92,21 +90,17 @@ export function useConnect() {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
-        const walletWithId = options as WalletWithId;
-        walletWithId._id = fakeUuid();
-        connectWallet(walletWithId);
-        return walletWithId as Wallet;
+        connectWallet(options);
+        return options;
       }
 
       setIsConnecting(true);
       try {
         const wallet = await options();
         // add the uuid for this wallet
-        const walletWithId = wallet as WalletWithId;
-        walletWithId._id = fakeUuid();
-        connectWallet(walletWithId);
-        setActiveWalletId(walletWithId._id);
-        return walletWithId as Wallet;
+        connectWallet(wallet);
+        setActiveWalletId(wallet.id);
+        return wallet;
       } catch (e) {
         setError(e as Error);
       } finally {
@@ -136,15 +130,4 @@ export function useConnect() {
 export function useDisconnect() {
   const disconnectWallet = connectionManager.disconnectWallet;
   return { disconnectWallet };
-}
-
-// helpers //
-
-// TODO replace with more realiable uuid generator
-/**
- *
- * @internal
- */
-function fakeUuid() {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
