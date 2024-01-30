@@ -7,15 +7,25 @@ export type ConnectedWalletsMap = Map<string, Wallet>;
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 
+export type ConnectionManagerOptions = {
+  storage: {
+    get: (key: string) => Promise<string | null>;
+    set: (key: string, value: string) => Promise<void>;
+    remove: (key: string) => Promise<void>;
+  };
+};
+
 /**
  * Create a connection manager for Wallet connections
+ * @param options - The options for creating the connection manager
  * @example
  * ```ts
  * const manager = createConnectionManager();
  * ```
  * @returns A connection manager object
  */
-function createConnectionManager() {
+export function createConnectionManager(options: ConnectionManagerOptions) {
+  const { storage } = options;
   // stores
   const activeWalletId = createStore<string | null>(null);
   const connectedWalletsMap = createStore<ConnectedWalletsMap>(new Map());
@@ -60,8 +70,7 @@ function createConnectionManager() {
   effect(() => {
     const value = connectedWallets.getValue();
     const ids = value.map((wallet) => wallet.id);
-    console.log("connected wallets are", ids);
-    localStorage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+    storage.set(CONNECTED_WALLET_IDS, JSON.stringify(ids));
   }, [connectedWallets]);
 
   return {
@@ -73,5 +82,3 @@ function createConnectionManager() {
     connectedWallets,
   };
 }
-
-export const connectionManager = /* @__PURE__ */ createConnectionManager();

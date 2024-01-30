@@ -19,3 +19,4 @@ export {
 } from "./injectedWallets.js";
 
 export type { Wallet } from "./interfaces/wallet.js";
+export { createConnectionManager } from "./manager/index.js";
