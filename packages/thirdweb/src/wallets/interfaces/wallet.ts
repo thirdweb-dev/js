@@ -8,7 +8,7 @@ import type {
   TypedDataDefinition,
 } from "viem";
 
-export interface IWallet {
+export type Wallet<T extends object = object> = {
   // REQUIRED
   address: Address;
   sendTransaction: (
@@ -25,4 +25,4 @@ export interface IWallet {
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-}
+} & T;

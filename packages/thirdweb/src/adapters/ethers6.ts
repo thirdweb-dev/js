@@ -4,7 +4,7 @@ import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Abi } from "abitype";
-import type { IWallet } from "../wallets/interfaces/wallet.js";
+import type { Wallet } from "../wallets/interfaces/wallet.js";
 import type { Hex, TransactionSerializable } from "viem";
 
 type Ethers6 = typeof ethers6;
@@ -89,9 +89,9 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
     },
     signer: {
       /**
-       * Converts an ethers6 Signer into an IWallet object.
+       * Converts an ethers6 Signer into an Wallet object.
        * @param signer - The ethers6 Signer object.
-       * @returns - A Promise that resolves to an IWallet object.
+       * @returns - A Promise that resolves to an Wallet object.
        * @example
        * ```ts
        * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
@@ -187,12 +187,12 @@ async function fromEthersContract<abi extends Abi>({
 }
 
 /**
- * Converts an ethers5 Signer into an IWallet object.
+ * Converts an ethers5 Signer into an Wallet object.
  * @param signer - The ethers5 Signer object.
- * @returns - A Promise that resolves to an IWallet object.
+ * @returns - A Promise that resolves to an Wallet object.
  * @internal
  */
-async function fromEthersSigner(signer: ethers6.Signer): Promise<IWallet> {
+async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
   const address = await signer.getAddress();
   return {
     address,
@@ -208,7 +208,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<IWallet> {
     sendTransaction: async (tx) => {
       return (await signer.sendTransaction(alignTx(tx))).hash as Hex;
     },
-  } satisfies IWallet;
+  } satisfies Wallet;
 }
 
 /**

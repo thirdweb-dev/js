@@ -1,7 +1,7 @@
 import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 
-import type { IWallet } from "./interfaces/wallet.js";
+import type { Wallet } from "./interfaces/wallet.js";
 import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
 import { privateKeyToAccount } from "viem/accounts";
 
@@ -16,7 +16,7 @@ export type PrivateKeyWalletOptions = {
  * @returns An object representing the private key wallet.
  * @example
  * ```ts
- * import { privateKeyWallet } from "thirdweb/wallets/private-key"
+ * import { privateKeyWallet } from "thirdweb/wallets"
  * const wallet = privateKeyWallet({
  *  client,
  *  privateKey: "...",
@@ -43,5 +43,5 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
     signTransaction: account.signTransaction,
     signMessage: account.signMessage,
     signTypedData: account.signTypedData,
-  } satisfies IWallet;
+  } satisfies Wallet;
 }

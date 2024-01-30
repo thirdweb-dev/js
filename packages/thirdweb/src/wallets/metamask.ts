@@ -2,7 +2,7 @@ import { getAddress, toHex, type Hash } from "viem";
 
 import type { Address } from "abitype";
 
-import type { IWallet } from "./interfaces/wallet.js";
+import type { Wallet } from "./interfaces/wallet.js";
 import type { Ethereum } from "./interfaces/ethereum.js";
 
 export type MetamaskWalletOptions = {
@@ -16,7 +16,7 @@ export type MetamaskWalletOptions = {
  * @throws Error if no injected provider is available or no accounts are available.
  * @example
  * ```ts
- * import { metamaskWallet } from "thirdweb/wallets/metamask";
+ * import { metamaskWallet } from "thirdweb/wallets";
  * const wallet = await metamaskWallet();
  * ```
  */
@@ -84,7 +84,10 @@ export async function metamaskWallet(options?: MetamaskWalletOptions) {
 
       return result as Hash;
     },
-  } satisfies IWallet;
+    switchChain,
+  } satisfies Wallet<{
+    switchChain: (newChainId: bigint | number) => Promise<void>;
+  }>;
 }
 
 // helpers //

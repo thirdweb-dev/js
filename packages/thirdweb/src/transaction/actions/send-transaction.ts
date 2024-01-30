@@ -1,7 +1,7 @@
 import type { AbiFunction } from "abitype";
 import type { Transaction } from "../transaction.js";
 import type { Hash, TransactionSerializable } from "viem";
-import type { IWallet } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 
 /**
  * Sends a transaction using the provided transaction object and wallet.
@@ -17,7 +17,7 @@ import type { IWallet } from "../../wallets/interfaces/wallet.js";
  */
 export async function sendTransaction<
   const abiFn extends AbiFunction,
-  wallet extends IWallet,
+  wallet extends Wallet,
 >(tx: Transaction<abiFn>, wallet: wallet): Promise<Hash> {
   if (!wallet.address) {
     throw new Error("not connected");
