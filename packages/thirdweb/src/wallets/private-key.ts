@@ -38,7 +38,13 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
         chainId: tx.chainId,
       });
       const signedTx = await account.signTransaction(tx);
-      return await eth_sendRawTransaction(rpcRequest, signedTx);
+      const transactionHash = await eth_sendRawTransaction(
+        rpcRequest,
+        signedTx,
+      );
+      return {
+        transactionHash,
+      };
     },
     signTransaction: account.signTransaction,
     signMessage: account.signMessage,

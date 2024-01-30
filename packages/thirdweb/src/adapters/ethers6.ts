@@ -206,7 +206,11 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
       return signer.signTransaction(alignTx(tx)) as Promise<Hex>;
     },
     sendTransaction: async (tx) => {
-      return (await signer.sendTransaction(alignTx(tx))).hash as Hex;
+      const transactionHash = (await signer.sendTransaction(alignTx(tx)))
+        .hash as Hex;
+      return {
+        transactionHash,
+      };
     },
   } satisfies Wallet;
 }

@@ -3,11 +3,13 @@ import type { ThirdwebContract } from "../../../contract/index.js";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { waitForReceipt } from "../../../transaction/index.js";
 import type { TransactionReceipt } from "viem";
+import type { TransactionOrUserOpHash } from "../../../transaction/types.js";
 
-export type TransactionHashOptions<abi extends Abi> = {
-  contract: ThirdwebContract<abi>;
-  transactionHash?: string;
-};
+export type TransactionHashOptions<abi extends Abi> =
+  TransactionOrUserOpHash & {
+    contract: ThirdwebContract<abi>;
+    transactionHash?: string;
+  };
 
 /**
  * A hook to wait for a transaction receipt.
@@ -20,17 +22,17 @@ export type TransactionHashOptions<abi extends Abi> = {
  * ```
  */
 export function useWaitForReceipt<abi extends Abi>(
-  options: TransactionHashOptions<abi>,
+  options: TransactionHashOptions<abi> | undefined,
 ): UseQueryResult<TransactionReceipt> {
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
-      options.contract.chainId,
+      options?.contract.chainId,
       "waitForReceipt",
-      options.transactionHash,
+      options?.transactionHash,
     ] as const,
     queryFn: async () => {
-      if (!options.transactionHash) {
+      if (!options?.transactionHash) {
         throw new Error("No transaction hash");
       }
       return waitForReceipt({
@@ -38,6 +40,6 @@ export function useWaitForReceipt<abi extends Abi>(
         transactionHash: options.transactionHash,
       });
     },
-    enabled: !!options.transactionHash,
+    enabled: !!options?.transactionHash,
   });
 }

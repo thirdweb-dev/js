@@ -28,8 +28,8 @@ export type GetContractEventsOptions<
  * @example
  * ### Get all events for a contract
  * ```ts
- * import { getContractEvents } from "thirdweb";
- * const events = await getContractEvents({
+ * import { getEvents } from "thirdweb";
+ * const events = await getEvents({
  *  contract: myContract,
  *  fromBlock: 4375893n,
  *  toBlock: "latest"
@@ -38,12 +38,12 @@ export type GetContractEventsOptions<
  *
  * ### Get specific events for a contract
  * ```ts
- * import { contractEvent, getContractEvents } from "thirdweb";
+ * import { contractEvent, getEvents } from "thirdweb";
  * const myEvent = contractEvent({
  *  contract: myContract,
  *  event: "MyEvent",
  * });
- * const events = await getContractEvents({
+ * const events = await getEvents({
  *  contract: myContract,
  *  events: [myEvent],
  *  fromBlock: 4375893n,

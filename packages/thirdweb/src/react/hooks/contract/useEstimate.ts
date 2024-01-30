@@ -16,13 +16,15 @@ import { useActiveWallet } from "../../providers/wallet-provider.js";
  * const estimatedGas = await estimateGas(tx);
  * ```
  */
-export function useEstimateGas<
-  const abiFn extends AbiFunction,
->(): UseMutationResult<bigint, Error, Transaction<abiFn>> {
+export function useEstimateGas<abiFn extends AbiFunction>(): UseMutationResult<
+  bigint,
+  Error,
+  Transaction<abiFn>
+> {
   const wallet = useActiveWallet();
 
   return useMutation({
-    mutationFn: (tx) =>
-      estimateGas(tx, wallet?.address ? { from: wallet.address } : undefined),
+    mutationFn: (transaction) =>
+      estimateGas({ transaction, wallet: wallet ?? undefined }),
   });
 }

@@ -1,9 +1,9 @@
-import type { AbiFunction } from "abitype";
+import type { Abi, AbiFunction } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import type { Transaction } from "../../../transaction/transaction.js";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
-import type { Hex } from "viem";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
 
 /**
  * A hook to send a transaction.
@@ -18,16 +18,19 @@ import { sendTransaction } from "../../../transaction/actions/send-transaction.j
  * ```
  */
 export function useSendTransaction<
-  const abiFn extends AbiFunction,
->(): UseMutationResult<Awaited<Hex>, Error, Transaction<abiFn>> {
+  abiFn extends AbiFunction,
+>(): UseMutationResult<WaitForReceiptOptions<Abi>, Error, Transaction<abiFn>> {
   const wallet = useActiveWallet();
 
   return useMutation({
-    mutationFn: async (tx) => {
+    mutationFn: async (transaction) => {
       if (!wallet) {
         throw new Error("No active wallet");
       }
-      return await sendTransaction(tx, wallet);
+      return await sendTransaction({
+        transaction,
+        wallet,
+      });
     },
   });
 }

@@ -5,7 +5,9 @@ import { useState } from "react";
 import { WalletProvider } from "./wallet-provider.js";
 import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
-import { waitForReceipt } from "../../transaction/index.js";
+import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { Abi } from "abitype";
 
 /**
  * The ThirdwebProvider is the root component for all Thirdweb React apps.
@@ -34,13 +36,10 @@ export const ThirdwebProvider: React.FC<React.PropsWithChildren> = (props) => {
               }
               if (isTxOpts(variables)) {
                 if (
-                  isObjectWithKeys(data, ["transactionHash"]) &&
-                  typeof data.transactionHash === "string"
+                  isObjectWithKeys(data, ["transactionHash", "contract"]) ||
+                  isObjectWithKeys(data, ["userOpHash", "contract"])
                 ) {
-                  waitForReceipt({
-                    transactionHash: data.transactionHash,
-                    contract: variables.contract,
-                  })
+                  waitForReceipt(data as WaitForReceiptOptions<Abi>)
                     .catch((e) => {
                       // swallow errors for receipts, but log
                       console.error("[Transaction Error]", e);

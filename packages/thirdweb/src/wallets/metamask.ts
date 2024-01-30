@@ -1,4 +1,4 @@
-import { getAddress, toHex, type Hash } from "viem";
+import { getAddress, toHex, type Hex } from "viem";
 
 import type { Address } from "abitype";
 
@@ -70,7 +70,7 @@ export async function metamaskWallet(options?: MetamaskWalletOptions) {
         await switchChain(tx.chainId);
       }
 
-      const result = await provider.request({
+      const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
         params: [
           {
@@ -80,9 +80,11 @@ export async function metamaskWallet(options?: MetamaskWalletOptions) {
             data: tx.data,
           },
         ],
-      });
+      })) as Hex;
 
-      return result as Hash;
+      return {
+        transactionHash,
+      };
     },
     switchChain,
   } satisfies Wallet<{

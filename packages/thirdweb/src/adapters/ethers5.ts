@@ -193,19 +193,19 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
   const address = await signer.getAddress();
   return {
     address,
-
     signMessage: async ({ message }) => {
       return signer.signMessage(
         typeof message === "string" ? message : message.raw,
       ) as Promise<Hex>;
     },
-
     signTransaction: async (tx) => {
       return signer.signTransaction(alignTx(tx)) as Promise<Hex>;
     },
-
     sendTransaction: async (tx) => {
-      return (await signer.sendTransaction(alignTx(tx))).hash as Hex;
+      const result = await signer.sendTransaction(alignTx(tx));
+      return {
+        transactionHash: result.hash as Hex,
+      };
     },
   } satisfies Wallet;
 }

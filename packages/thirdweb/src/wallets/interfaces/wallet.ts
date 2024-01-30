@@ -1,4 +1,5 @@
 import type { Address } from "abitype";
+import type { TransactionOrUserOpHash } from "../../transaction/types.js";
 
 import type {
   Hex,
@@ -13,7 +14,7 @@ export type Wallet<T extends object = object> = {
   address: Address;
   sendTransaction: (
     tx: TransactionSerializable & { chainId: number },
-  ) => Promise<Hex>;
+  ) => Promise<TransactionOrUserOpHash>;
 
   // OPTIONAL
   chainId?: bigint;
@@ -25,4 +26,8 @@ export type Wallet<T extends object = object> = {
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  // TODO: figure out estimate gas
+  estimateGas?: (
+    tx: TransactionSerializable & { chainId: number },
+  ) => Promise<bigint>;
 } & T;

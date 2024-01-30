@@ -6,13 +6,13 @@ import {
   watchBlockNumber,
 } from "../../rpc/index.js";
 import type { Abi } from "abitype";
+import type { TransactionOrUserOpHash } from "../types.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
-export type WaitForReceiptOptions<abi extends Abi> = {
-  transactionHash: string;
+export type WaitForReceiptOptions<abi extends Abi> = TransactionOrUserOpHash & {
   contract: ThirdwebContract<abi>;
 };
 
@@ -32,14 +32,16 @@ export type WaitForReceiptOptions<abi extends Abi> = {
 export function waitForReceipt<abi extends Abi>(
   options: WaitForReceiptOptions<abi>,
 ): Promise<TransactionReceipt> {
-  const { transactionHash, contract } = options;
-  const key = `${contract.chainId}:${transactionHash}`;
+  const { transactionHash, userOpHash, contract } = options;
+  const prefix = transactionHash ? "tx_" : "userOp_";
+  const key = `${contract.chainId}:${prefix}${transactionHash || userOpHash}`;
 
   if (map.has(key)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return map.get(key)!;
   }
   const promise = new Promise<TransactionReceipt>((resolve, reject) => {
+    // TODO: handle useropHash
     if (!transactionHash) {
       reject(
         new Error("Transaction has no txHash to wait for, did you execute it?"),
