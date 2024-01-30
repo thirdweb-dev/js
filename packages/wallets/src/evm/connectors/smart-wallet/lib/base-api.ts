@@ -231,9 +231,8 @@ export abstract class BaseAccountAPI {
     const gasless =
       options?.gasless !== undefined ? options.gasless : this.gasless;
     if (gasless) {
-      const paymasterResult = await this.paymasterAPI.getPaymasterAndData(
-        partialOp,
-      );
+      const paymasterResult =
+        await this.paymasterAPI.getPaymasterAndData(partialOp);
       const paymasterAndData = paymasterResult.paymasterAndData;
       if (paymasterAndData && paymasterAndData !== "0x") {
         partialOp.paymasterAndData = paymasterAndData;
@@ -267,14 +266,15 @@ export abstract class BaseAccountAPI {
           estimates.preVerificationGas,
         );
         // need paymaster to re-sign after estimates
-        const paymasterResult2 = await this.paymasterAPI.getPaymasterAndData(
-          partialOp,
-        );
-        if (
-          paymasterResult2.paymasterAndData &&
-          paymasterResult2.paymasterAndData !== "0x"
-        ) {
-          partialOp.paymasterAndData = paymasterResult2.paymasterAndData;
+        if (paymasterAndData && paymasterAndData !== "0x") {
+          const paymasterResult2 =
+            await this.paymasterAPI.getPaymasterAndData(partialOp);
+          if (
+            paymasterResult2.paymasterAndData &&
+            paymasterResult2.paymasterAndData !== "0x"
+          ) {
+            partialOp.paymasterAndData = paymasterResult2.paymasterAndData;
+          }
         }
       }
     } else {

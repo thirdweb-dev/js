@@ -246,6 +246,11 @@ export class SmartWallet extends AbstractClientWallet<
    * The entrypoint contract address. Uses v0.6 by default.
    *
    * Must be a `string`.
+   * 
+   * #### deployOnSign
+   * Whether to deploy the smart wallet when the user signs a message. Defaults to true.
+   * 
+   * Must be a `boolean`.
    *
    * #### chains
    * Provide an array of chains you want to support.

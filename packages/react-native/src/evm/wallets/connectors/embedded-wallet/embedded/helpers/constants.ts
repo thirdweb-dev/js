@@ -26,7 +26,7 @@ export const DOMAIN_URL_2023 = "https://embedded-wallet.thirdweb.com";
 const BASE_URL_2023 = `${DOMAIN_URL_2023}/`;
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;
 
-export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;
+export const ROUTE_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;
 export const ROUTE_VERIFY_COGNITO_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-cognito-email-otp`;
 export const ROUTE_COGNITO_IDENTITY_POOL_URL = `cognito-idp.${AWS_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`;
 

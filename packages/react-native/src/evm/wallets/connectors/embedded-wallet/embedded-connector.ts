@@ -14,6 +14,7 @@ import { utils } from "ethers";
 import {
   authEndpoint,
   customJwt,
+  deleteActiveAccount,
   sendVerificationEmail,
   socialLogin,
   validateEmailOTP,
@@ -176,6 +177,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       email: options.email,
       clientId: this.options.clientId,
     });
+  }
+
+  async deleteActiveAccount() {
+    return deleteActiveAccount({ clientId: this.options.clientId });
   }
 
   private async socialLogin(oauthOption: OauthOption): Promise<AuthResult> {

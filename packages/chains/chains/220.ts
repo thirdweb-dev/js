@@ -1,37 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "ETH",
+  "chain": "Flag",
   "chainId": 220,
   "explorers": [
     {
-      "name": "scalind",
-      "url": "https://explorer-sepolia.scalind.com",
+      "name": "flagscan",
+      "url": "https://scan.flagscan.io",
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.scalind.com"
-  ],
+  "faucets": [],
+  "features": [],
   "icon": {
-    "url": "ipfs://QmayuauUTSkYxbT1xi2AkkG5VLEMDhcMeZ18WZHiApPa9M",
-    "width": 512,
-    "height": 512,
-    "format": "png"
+    "url": "ipfs://QmXo2p1i4zsbTNEu41EjjrhdmbKFDGHEHeADXZ3x2fgNKE/1682003789585.jpeg",
+    "width": 200,
+    "height": 200,
+    "format": "jpeg"
   },
-  "infoURL": "https://scalind.com",
-  "name": "Scalind Testnet",
+  "infoURL": "https://flagblockchain.com/",
+  "name": "Flag Mainnet",
   "nativeCurrency": {
-    "name": "Sepolia Ether",
-    "symbol": "ETH",
+    "name": "Flag",
+    "symbol": "Flag",
     "decimals": 18
   },
   "networkId": 220,
+  "redFlags": [],
   "rpc": [
-    "https://scalind-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://flag.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-sepolia.scalind.com"
+    "https://mainnet.flagscan.io/"
   ],
-  "shortName": "sepscal",
-  "slug": "scalind-testnet",
-  "testnet": true
+  "shortName": "Flag",
+  "slug": "flag",
+  "testnet": false
 } as const satisfies Chain;
