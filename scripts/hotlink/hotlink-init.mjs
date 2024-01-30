@@ -11,6 +11,9 @@ async function script() {
 
   console.log("\x1b[34m%s\x1b[0m", "Creating Symlinks");
   await execute([
+    "cd packages/thirdweb",
+    "pnpm link",
+    "cd ../react",
     "cd packages/react",
     "pnpm link",
     "cd ../react-core",

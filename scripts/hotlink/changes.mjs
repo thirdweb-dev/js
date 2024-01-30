@@ -58,6 +58,19 @@ export const changes = [
       "./evm/wallets/smart-wallet": "./src/evm/wallets/smart-wallet.ts",
     },
   },
+  // thirdweb
+  {
+    path: "./packages/thirdweb/package.json",
+    entry: "./src/index.ts",
+    exports: {
+      ".": "./src/index.ts",
+      "./transaction": "./src/transaction/index.ts",
+      "./event": "./src/event/index.ts",
+      "./rpc": "./src/rpc/index.ts",
+      "./storage": "./src/storage/index.ts",
+      "./wallets": "./src/wallets/index.ts",
+    },
+  },
 ];
 
 /**
@@ -80,9 +93,14 @@ export function updatePackages(changeKey) {
     if (changeKey === "hotlink") {
       pkg._main = pkg.main;
       pkg.main = change.entry;
+
+      pkg._module = pkg.module;
+      pkg.module = change.entry;
     } else {
       pkg.main = pkg._main;
       delete pkg._main;
+      pkg.module = pkg._module;
+      delete pkg._module;
     }
 
     if (changeKey === "hotlink") {
@@ -90,8 +108,14 @@ export function updatePackages(changeKey) {
       pkg._exports = JSON.parse(JSON.stringify(pkg.exports));
 
       for (const key in change.exports) {
-        pkg.exports[key].module = change.exports[key];
-        delete pkg.exports[key].default;
+        try {
+          pkg.exports[key] = {};
+          pkg.exports[key].module = change.exports[key];
+          delete pkg.exports[key].default;
+        } catch (e) {
+          console.log("key :", key);
+          throw e;
+        }
       }
     } else {
       // revert pkg.exports
@@ -102,9 +126,18 @@ export function updatePackages(changeKey) {
     if (changeKey === "hotlink") {
       pkg._types = pkg.types;
       pkg.types = "";
+      if (pkg.typings) {
+        pkg._typings = pkg.typings;
+        pkg.typings = "";
+      }
     } else {
       pkg.types = pkg._types;
       delete pkg._types;
+
+      if (pkg._typings) {
+        pkg.typings = pkg._typings;
+        delete pkg._typings;
+      }
     }
 
     // save file

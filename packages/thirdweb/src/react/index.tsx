@@ -3,10 +3,10 @@ export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
 export {
   useSetActiveWallet,
   useConnect,
+  useDisconnect,
   useActiveWallet,
   useConnectedWallets,
   useActiveWalletAddress,
-  WalletProvider,
 } from "./providers/wallet-provider.js";
 
 // contract related

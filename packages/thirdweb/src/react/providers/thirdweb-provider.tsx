@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { WalletProvider } from "./wallet-provider.js";
 import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
@@ -66,7 +65,7 @@ export const ThirdwebProvider: React.FC<React.PropsWithChildren> = (props) => {
   );
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>{props.children}</WalletProvider>
+      {props.children}
     </QueryClientProvider>
   );
 };

@@ -1,99 +1,10 @@
 "use-client";
 
-import {
-  createContext,
-  useCallback,
-  useState,
-  useMemo,
-  useContext,
-} from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import { connectionManager } from "../../wallets/manager/index.js";
 
 export type WalletWithId = Wallet & { _id: string };
-
-type WalletContext = {
-  activeWallet: WalletWithId | null;
-  connectedWallets: WalletWithId[];
-  connectWallet: (wallet: WalletWithId) => void;
-  activateWallet: (wallet: WalletWithId) => void;
-  disconnectWallet: (wallet: WalletWithId) => void;
-};
-
-const WalletContext = /* @__PURE__ */ createContext({} as WalletContext);
-
-/**
- * TODO
- * @internal
- */
-export function WalletProvider({ children }: React.PropsWithChildren) {
-  const [walletState, setWalletState] = useState<{
-    activeWalletId: string | null;
-    walletRecord: Map<string, WalletWithId>;
-    walletIds: Set<string>;
-  }>({
-    activeWalletId: null,
-    walletRecord: new Map(),
-    walletIds: new Set(),
-  });
-
-  const activateWallet = useCallback((wallet: WalletWithId) => {
-    setWalletState((prev) => ({ ...prev, activeWalletId: wallet._id }));
-  }, []);
-
-  const connectWallet = useCallback((wallet: WalletWithId) => {
-    setWalletState((prev) => {
-      return {
-        ...prev,
-        walletRecord: prev.walletRecord.set(wallet._id, wallet),
-        walletIds: prev.walletIds.add(wallet._id),
-        activeWalletId: wallet._id,
-      };
-    });
-  }, []);
-
-  const disconnectWallet = useCallback((wallet: WalletWithId) => {
-    setWalletState((prev) => {
-      const walletRecord = new Map(prev.walletRecord);
-      walletRecord.delete(wallet._id);
-      const walletIds = new Set(prev.walletIds);
-      walletIds.delete(wallet._id);
-      const nextWalletId = [...walletIds][0] || null;
-      return {
-        ...prev,
-        walletRecord,
-        walletIds,
-        activeWalletId: nextWalletId,
-      };
-    });
-  }, []);
-
-  const activeWallet = useMemo(() => {
-    const { activeWalletId, walletRecord } = walletState;
-    return activeWalletId ? walletRecord.get(activeWalletId) || null : null;
-  }, [walletState]);
-
-  const connectedWallets = useMemo(() => {
-    const { walletIds, walletRecord } = walletState;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return [...walletIds].map((id) => walletRecord.get(id)!);
-  }, [walletState]);
-
-  return (
-    <WalletContext.Provider
-      value={{
-        connectWallet,
-        activateWallet,
-        disconnectWallet,
-        activeWallet,
-        connectedWallets,
-      }}
-    >
-      {children}
-    </WalletContext.Provider>
-  );
-}
-
-//hooks
 
 /**
  * A hook that returns the active wallet.
@@ -106,7 +17,8 @@ export function WalletProvider({ children }: React.PropsWithChildren) {
  * ```
  */
 export function useActiveWallet() {
-  return useContext(WalletContext).activeWallet;
+  const store = connectionManager.activeWallet;
+  return useSyncExternalStore(store.subscribe, store.getValue);
 }
 
 /**
@@ -135,7 +47,8 @@ export function useActiveWalletAddress() {
  * ```
  */
 export function useConnectedWallets() {
-  return useContext(WalletContext).connectedWallets;
+  const store = connectionManager.connectedWallets;
+  return useSyncExternalStore(store.subscribe, store.getValue);
 }
 
 /**
@@ -152,8 +65,7 @@ export function useConnectedWallets() {
  * ```
  */
 export function useSetActiveWallet() {
-  const { activateWallet } = useContext(WalletContext);
-  return activateWallet;
+  return connectionManager.setActiveWalletId;
 }
 
 /**
@@ -171,7 +83,7 @@ export function useSetActiveWallet() {
  * ```
  */
 export function useConnect() {
-  const { connectWallet } = useContext(WalletContext);
+  const { connectWallet, setActiveWalletId } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -193,6 +105,7 @@ export function useConnect() {
         const walletWithId = wallet as WalletWithId;
         walletWithId._id = fakeUuid();
         connectWallet(walletWithId);
+        setActiveWalletId(walletWithId._id);
         return walletWithId as Wallet;
       } catch (e) {
         setError(e as Error);
@@ -201,10 +114,28 @@ export function useConnect() {
       }
       return null;
     },
-    [connectWallet],
+    [connectWallet, setActiveWalletId],
   );
 
   return { connect, isConnecting, error } as const;
+}
+
+/**
+ * Disconnect a connected wallet.
+ * @example
+ * ```jsx
+ * import { useDisconnect } from "thirdweb/react";
+ *
+ * const { disconnect } = useDisconnect();
+ *
+ * // later in your code
+ * <button onClick={() => disconnect(wallet)}>Disconnect</button>
+ * ```
+ * @returns An object with a function to disconnect a wallet.
+ */
+export function useDisconnect() {
+  const disconnectWallet = connectionManager.disconnectWallet;
+  return { disconnectWallet };
 }
 
 // helpers //
