@@ -22,8 +22,8 @@ type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
  * @returns a query object.
  * @example
  * ```jsx
- * import { useRead } from "thirdweb/react";
- * const { data, isLoading } = useRead({contract, method: "totalSupply"});
+ * import { useContractRead } from "thirdweb/react";
+ * const { data, isLoading } = useContractRead({contract, method: "totalSupply"});
  * ```
  */
 export function useContractRead<
@@ -43,9 +43,9 @@ export function useContractRead<
  * @returns a query object.
  * @example
  * ```jsx
- * import { useRead } from "thirdweb/react";
+ * import { useContractRead } from "thirdweb/react";
  * import { totalSupply } form "thirdweb/extensions/erc20"
- * const { data, isLoading } = useRead(totalSupply);
+ * const { data, isLoading } = useContractRead(totalSupply);
  * ```
  */
 export function useContractRead<
@@ -80,7 +80,7 @@ export function useContractRead<
   if (typeof extensionOrOptions === "function") {
     if (!options) {
       throw new Error(
-        `Missing second argument for "useRead(<extension>, <options>)" hook.`,
+        `Missing second argument for "useContractRead(<extension>, <options>)" hook.`,
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
@@ -119,6 +119,6 @@ export function useContractRead<
   }
 
   throw new Error(
-    `Invalid "useRead" options. Expected either a read extension or a transaction object.`,
+    `Invalid "useContractRead" options. Expected either a read extension or a transaction object.`,
   ) as never;
 }
