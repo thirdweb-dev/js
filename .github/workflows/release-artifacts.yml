@@ -14,9 +14,15 @@ concurrency:
   # cancel any previous runs if they were started before this one
   cancel-in-progress: true
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TW_SECRET_KEY: ${{ secrets.TW_SECRET_KEY }}
+
 jobs:
   release-artifacts:
-    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    runs-on: ubuntu-latest-16
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
