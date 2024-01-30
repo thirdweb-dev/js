@@ -53,6 +53,15 @@ const usageEventSchema = z.object({
   sdkVersion: z.string().optional(),
   sdkPlatform: z.string().optional(),
   productName: z.string().optional(),
+  transactionValue: z.string().optional(),
+  pathname: z.string().optional(),
+  contractAddress: z.string().optional(),
+  errorCode: z.string().optional(),
+  httpStatusCode: z.string().optional(),
+  functionName: z.string().optional(),
+  extension: z.string().optional(),
+  retryCount: z.string().optional(),
+  policyId: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
