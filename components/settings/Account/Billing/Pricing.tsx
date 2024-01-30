@@ -1,37 +1,41 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { Account, AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
 import { CONTACT_US_URL } from "utils/pricing";
 import { remainingDays } from "utils/date-utils";
 
 interface BillingPricingProps {
-  account: Account;
-  onSelect: (plan: AccountPlan) => void;
+  plan: AccountPlan;
   validPayment: boolean;
+  paymentVerification: boolean;
+  invalidPayment: boolean;
   loading: boolean;
   canTrialGrowth?: boolean;
+  trialPeriodEndedAt?: string;
+  onSelect: (plan: AccountPlan) => void;
 }
 
 export const BillingPricing: React.FC<BillingPricingProps> = ({
-  account,
-  onSelect,
+  plan,
   validPayment,
+  paymentVerification,
+  invalidPayment,
+  trialPeriodEndedAt,
   loading,
   canTrialGrowth,
+  onSelect,
 }) => {
-  const isPro = [AccountPlan.Pro, AccountPlan.Enterprise].includes(
-    account.plan,
-  );
+  const isPro = [AccountPlan.Pro, AccountPlan.Enterprise].includes(plan);
 
   const freeCtaTitle = useMemo(() => {
     if (!validPayment) {
-      return "Add payment method";
+      return "Get started for free";
     }
-    if (account.plan !== AccountPlan.Free) {
+    if (plan !== AccountPlan.Free) {
       return "Downgrade";
     }
-  }, [account, validPayment]);
+  }, [plan, validPayment]);
 
   const growthCtaTitle = useMemo(() => {
     const trialTitle = "Claim your 1-month free";
@@ -44,10 +48,10 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       return "Contact us";
     }
 
-    if (account.plan === AccountPlan.Free) {
+    if (plan === AccountPlan.Free) {
       return canTrialGrowth ? trialTitle : "Upgrade";
     }
-  }, [account, validPayment, isPro, canTrialGrowth]);
+  }, [validPayment, isPro, plan, canTrialGrowth]);
 
   const trialPeriodDays = useMemo(() => {
     let days = undefined;
@@ -57,11 +61,8 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       days = 30;
     }
     // already has trial period
-    else if (
-      account.trialPeriodEndedAt &&
-      account.plan === AccountPlan.Growth
-    ) {
-      days = remainingDays(account.trialPeriodEndedAt);
+    else if (trialPeriodEndedAt && plan === AccountPlan.Growth) {
+      days = remainingDays(trialPeriodEndedAt);
     }
 
     if (!days) {
@@ -69,16 +70,16 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     }
 
     return `Your free trial will end in ${days} days.`;
-  }, [account, canTrialGrowth, isPro]);
+  }, [canTrialGrowth, isPro, plan, trialPeriodEndedAt]);
 
-  const handleSelect = (plan: AccountPlan) => {
-    onSelect(plan);
+  const handleSelect = (newPlan: AccountPlan) => {
+    onSelect(newPlan);
   };
 
   return (
     <SimpleGrid columns={{ base: 1, xl: 3 }} gap={{ base: 6, xl: 8 }}>
       <PricingCard
-        current={account.plan === AccountPlan.Free}
+        current={plan === AccountPlan.Free}
         size="sm"
         name={AccountPlan.Free}
         ctaTitle={freeCtaTitle}
@@ -88,7 +89,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             handleSelect(AccountPlan.Free);
           },
           isLoading: loading,
-          isDisabled: loading,
+          isDisabled: loading || invalidPayment || paymentVerification,
           category: "account",
           label: "freePlan",
           href: "/pricing",
@@ -96,7 +97,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       />
 
       <PricingCard
-        current={account.plan === AccountPlan.Growth}
+        current={plan === AccountPlan.Growth}
         size="sm"
         name={AccountPlan.Growth}
         ctaTitle={growthCtaTitle}
@@ -108,7 +109,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             handleSelect(AccountPlan.Growth);
           },
           isLoading: loading,
-          isDisabled: loading,
+          isDisabled: loading || invalidPayment || paymentVerification,
           category: "account",
           label: "growthPlan",
           href: "/pricing",

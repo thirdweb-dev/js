@@ -30,7 +30,7 @@ export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
       closeOnEsc={false}
       allowPinchZoom
       closeOnOverlayClick={false}
-      isCentered
+      isCentered={!isMobile}
       isOpen={isOpen}
       onClose={onClose}
       trapFocus={false}

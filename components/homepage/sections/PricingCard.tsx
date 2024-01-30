@@ -124,8 +124,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           <Text
             textAlign="center"
             size="body.sm"
-            position={{ base: "static", md: "absolute" }}
-            left={12}
+            w="full"
+            position={{ base: "static", xl: "absolute" }}
             top={ctaTitle ? 14 : -9}
           >
             {ctaHint}

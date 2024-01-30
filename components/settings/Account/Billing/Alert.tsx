@@ -14,11 +14,10 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { useRouter } from "next/router";
 import React, { useCallback, useMemo } from "react";
 import { FiX } from "react-icons/fi";
 
-import { TrackedLink, Text } from "tw-components";
+import { Heading, Text, TrackedLinkButton } from "tw-components";
 
 enum DismissedStorageType {
   Usage_50 = "usage_50",
@@ -132,33 +131,32 @@ export const BillingAlert = () => {
     return null;
   }
 
-  const { status, stripePaymentActionUrl, paymentAttemptCount } = meQuery.data;
+  const { status, stripePaymentActionUrl } = meQuery.data;
 
   if (status === "paymentVerification") {
-    const message = !stripePaymentActionUrl?.startsWith(
+    const message = stripePaymentActionUrl?.startsWith(
       "https://payments.stripe.com/microdeposit",
     )
-      ? "To verify your bank account, we've deposited $0.01 and it should arrive within 1-2 working days. Once you receive it"
-      : "Your card requires further verification. To proceed";
+      ? "To verify your bank account, we've deposited $0.01 and it should arrive within 1-2 working days."
+      : "Your card requires further verification.";
 
     return (
       <BillingTypeAlert
         title="Your payment method is not verified"
         description={message}
         status="warning"
-        ctaText="verify your payment method"
+        label="verifyPaymentAlert"
+        ctaHref={stripePaymentActionUrl}
+        ctaText="Verify your payment method"
       />
     );
   }
 
-  if (
-    status === AccountStatus.InvalidPayment ||
-    (paymentAttemptCount && paymentAttemptCount !== 0)
-  ) {
+  if (status === AccountStatus.InvalidPayment) {
     return (
       <BillingTypeAlert
         title="Your payment method was declined"
-        description="You have an overdue invoice. To continue using thirdweb services without interruption, please"
+        description="You have an overdue invoice. To continue using thirdweb services without interruption, please add your payment method."
         status="error"
       />
     );
@@ -197,9 +195,10 @@ export const BillingAlert = () => {
     return (
       <BillingTypeAlert
         title="You have exceeded your RPC rate limit"
-        description={`You have exceeded your RPC rate limit (${usageQuery.data.rateLimits.rpc} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your`}
-        ctaText="Billing Settings"
+        description={`You have exceeded your RPC rate limit (${usageQuery.data.rateLimits.rpc} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your Billing settings.`}
+        ctaText="Go to Billing"
         status="warning"
+        label="exceededRpcLimitAlert"
         onDismiss={() => handleDismiss(DismissedStorageType.RateRpc)}
       />
     );
@@ -212,9 +211,10 @@ export const BillingAlert = () => {
     return (
       <BillingTypeAlert
         title="You have exceeded your Storage Gateway rate limit"
-        description={`You have exceeded your Storage Gateway rate limit (${usageQuery.data.rateLimits.storage} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your`}
-        ctaText="Billing Settings"
+        description={`You have exceeded your Storage Gateway rate limit (${usageQuery.data.rateLimits.storage} requests per second). Please add your payment method and upgrade your plan to continue using thirdweb services without interruption. You can upgrade to thirdweb Growth by visiting your Billing settings.`}
+        ctaText="Go to Billing"
         status="warning"
+        label="exceededGatewayLimitAlert"
         onDismiss={() => handleDismiss(DismissedStorageType.RateStorage)}
       />
     );
@@ -230,18 +230,18 @@ type BillingTypeAlertProps = {
   description?: string;
   ctaText?: string;
   ctaHref?: string;
+  label?: string;
 };
 
 const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
   status,
   onDismiss,
   title,
-  description = "To ensure there are no future interruptions to your services",
-  ctaText = "add a payment method",
+  description = "To ensure there are no future interruptions to your services, please add your payment method.",
+  ctaText = "Add a payment method",
   ctaHref = "/dashboard/settings/billing",
+  label = "addPaymentAlert",
 }) => {
-  const router = useRouter();
-
   return (
     <Alert
       status={status}
@@ -256,27 +256,23 @@ const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" gap={1} pl={1}>
-          <AlertTitle>{title}</AlertTitle>
-          <AlertDescription>
-            <Text size="body.md" as="span" pr={1}>
-              {description}
-            </Text>
-            {router.pathname.startsWith(ctaHref) ? (
-              <Text as="span">{ctaText}</Text>
-            ) : (
-              <TrackedLink
-                href={ctaHref}
-                category="billing"
-                label="limit_exceeded"
-                fontWeight="medium"
-                color="blue.500"
-              >
-                <Text as="span" color="blue.500">
-                  {ctaText}
-                </Text>
-              </TrackedLink>
-            )}
-            .
+          <AlertTitle>
+            <Heading as="span" size="subtitle.sm">
+              {title}.{"  "}
+            </Heading>
+            <Text as="span">{description}</Text>
+          </AlertTitle>
+          <AlertDescription my={2}>
+            <TrackedLinkButton
+              href={ctaHref}
+              category="billing"
+              label={label}
+              fontWeight="medium"
+              colorScheme="blue"
+              size="sm"
+            >
+              {ctaText}
+            </TrackedLinkButton>
           </AlertDescription>
         </Flex>
       </Flex>

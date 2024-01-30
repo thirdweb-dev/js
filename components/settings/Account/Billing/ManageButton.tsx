@@ -1,5 +1,4 @@
-import { useTrack } from "hooks/analytics/useTrack";
-import { Button } from "tw-components";
+import { TrackedLinkButton } from "tw-components";
 import { MouseEvent, useEffect, useState } from "react";
 import {
   Account,
@@ -20,42 +19,20 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   loadingText,
   onClick,
 }) => {
-  const trackEvent = useTrack();
   const [sessionUrl, setSessionUrl] = useState();
-  const paymentVerification =
-    account?.status === AccountStatus.PaymentVerification &&
-    account.stripePaymentActionUrl;
-  const validPayment =
-    account?.status === AccountStatus.ValidPayment &&
-    !account.paymentAttemptCount;
-
   const mutation = useCreateBillingSession();
 
+  const validPayment = account.status === AccountStatus.ValidPayment;
+  const paymentVerification =
+    account.status === AccountStatus.PaymentVerification;
+
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (paymentVerification) {
-      window.open(account.stripePaymentActionUrl);
-
-      trackEvent({
-        category: "billingAccount",
-        action: "click",
-        label: "verifyPaymentMethod",
-      });
-
-      return;
-    } else if (onClick) {
-      onClick();
-      return;
+    if (onClick || loading || (!sessionUrl && !paymentVerification)) {
+      e.preventDefault();
+      if (onClick) {
+        onClick();
+      }
     }
-
-    window.open(sessionUrl);
-
-    trackEvent({
-      category: "billingAccount",
-      action: "click",
-      label: "manage",
-    });
   };
 
   useEffect(() => {
@@ -70,21 +47,29 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   }, [paymentVerification]);
 
   return (
-    <Button
-      variant="link"
+    <TrackedLinkButton
+      variant="outline"
       isDisabled={loading || (!sessionUrl && !paymentVerification)}
+      href={account.stripePaymentActionUrl || sessionUrl || ""}
       isLoading={loading}
+      category="billingAccount"
+      label={
+        paymentVerification
+          ? "verifyPaymentMethod"
+          : onClick
+            ? "addPayment"
+            : "manage"
+      }
       loadingText={loadingText}
       onClick={handleClick}
-      colorScheme={loading ? "gray" : "blue"}
-      size="sm"
-      fontWeight="normal"
+      color={loading ? "gray" : "blue.500"}
+      fontSize="small"
     >
       {validPayment
         ? "Manage billing"
         : paymentVerification
           ? "Verify payment method →"
           : "Add payment method →"}
-    </Button>
+    </TrackedLinkButton>
   );
 };
