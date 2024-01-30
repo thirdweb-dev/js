@@ -44,7 +44,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 50,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L50"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L50"
 						}
 					],
 					"signatures": [
@@ -59,7 +59,7 @@
 									"fileName": "core/uploaders/ipfs-uploader.ts",
 									"line": 50,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L50"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L50"
 								}
 							],
 							"parameters": [
@@ -102,7 +102,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 47,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L47"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L47"
 						}
 					],
 					"type": {
@@ -124,7 +124,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 48,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L48"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L48"
 						}
 					],
 					"type": {
@@ -145,7 +145,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 46,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L46"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L46"
 						}
 					],
 					"type": {
@@ -174,7 +174,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 45,
 							"character": 9,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L45"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L45"
 						}
 					],
 					"type": {
@@ -200,7 +200,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 77,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L77"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L77"
 						}
 					],
 					"signatures": [
@@ -215,7 +215,7 @@
 									"fileName": "core/uploaders/ipfs-uploader.ts",
 									"line": 77,
 									"character": 10,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L77"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L77"
 								}
 							],
 							"parameters": [
@@ -290,7 +290,7 @@
 													"fileName": "core/uploaders/ipfs-uploader.ts",
 													"line": 169,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L169"
+													"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L169"
 												}
 											],
 											"type": {
@@ -313,7 +313,7 @@
 													"fileName": "core/uploaders/ipfs-uploader.ts",
 													"line": 167,
 													"character": 6,
-													"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L167"
+													"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L167"
 												}
 											],
 											"type": {
@@ -341,7 +341,7 @@
 											"fileName": "core/uploaders/ipfs-uploader.ts",
 											"line": 166,
 											"character": 11,
-											"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L166"
+											"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L166"
 										}
 									]
 								}
@@ -360,7 +360,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 57,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L57"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L57"
 						}
 					],
 					"signatures": [
@@ -394,7 +394,7 @@
 									"fileName": "core/uploaders/ipfs-uploader.ts",
 									"line": 57,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L57"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L57"
 								}
 							],
 							"parameters": [
@@ -493,7 +493,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 173,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L173"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L173"
 						}
 					],
 					"signatures": [
@@ -508,7 +508,7 @@
 									"fileName": "core/uploaders/ipfs-uploader.ts",
 									"line": 173,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L173"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L173"
 								}
 							],
 							"parameters": [
@@ -592,7 +592,7 @@
 							"fileName": "core/uploaders/ipfs-uploader.ts",
 							"line": 327,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L327"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L327"
 						}
 					],
 					"signatures": [
@@ -607,7 +607,7 @@
 									"fileName": "core/uploaders/ipfs-uploader.ts",
 									"line": 327,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L327"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L327"
 								}
 							],
 							"parameters": [
@@ -710,7 +710,7 @@
 					"fileName": "core/uploaders/ipfs-uploader.ts",
 					"line": 44,
 					"character": 13,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/uploaders/ipfs-uploader.ts#L44"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/uploaders/ipfs-uploader.ts#L44"
 				}
 			],
 			"implementedTypes": [
@@ -769,7 +769,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 38,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L38"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L38"
 						}
 					],
 					"signatures": [
@@ -784,7 +784,7 @@
 									"fileName": "core/downloaders/storage-downloader.ts",
 									"line": 38,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L38"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L38"
 								}
 							],
 							"parameters": [
@@ -822,7 +822,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 32,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L32"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L32"
 						}
 					],
 					"type": {
@@ -842,7 +842,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 31,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L31"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L31"
 						}
 					],
 					"type": {
@@ -865,7 +865,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 35,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L35"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L35"
 						}
 					],
 					"type": {
@@ -886,7 +886,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 36,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L36"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L36"
 						}
 					],
 					"type": {
@@ -908,7 +908,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 34,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L34"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L34"
 						}
 					],
 					"type": {
@@ -927,7 +927,7 @@
 							"fileName": "core/downloaders/storage-downloader.ts",
 							"line": 45,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L45"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L45"
 						}
 					],
 					"signatures": [
@@ -961,7 +961,7 @@
 									"fileName": "core/downloaders/storage-downloader.ts",
 									"line": 45,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L45"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L45"
 								}
 							],
 							"parameters": [
@@ -1096,7 +1096,7 @@
 					"fileName": "core/downloaders/storage-downloader.ts",
 					"line": 30,
 					"character": 13,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/downloaders/storage-downloader.ts#L30"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/downloaders/storage-downloader.ts#L30"
 				}
 			],
 			"implementedTypes": [
@@ -1147,7 +1147,7 @@
 							"fileName": "core/storage.ts",
 							"line": 66,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L66"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L66"
 						}
 					],
 					"signatures": [
@@ -1162,7 +1162,7 @@
 									"fileName": "core/storage.ts",
 									"line": 66,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L66"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L66"
 								}
 							],
 							"typeParameter": [
@@ -1242,7 +1242,7 @@
 							"fileName": "core/storage.ts",
 							"line": 64,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L64"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L64"
 						}
 					],
 					"type": {
@@ -1263,7 +1263,7 @@
 							"fileName": "core/storage.ts",
 							"line": 62,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L62"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L62"
 						}
 					],
 					"type": {
@@ -1286,7 +1286,7 @@
 							"fileName": "core/storage.ts",
 							"line": 63,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L63"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L63"
 						}
 					],
 					"type": {
@@ -1309,7 +1309,7 @@
 							"fileName": "core/storage.ts",
 							"line": 61,
 							"character": 10,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L61"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L61"
 						}
 					],
 					"type": {
@@ -1338,7 +1338,7 @@
 							"fileName": "core/storage.ts",
 							"line": 122,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L122"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L122"
 						}
 					],
 					"signatures": [
@@ -1381,7 +1381,7 @@
 									"fileName": "core/storage.ts",
 									"line": 122,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L122"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L122"
 								}
 							],
 							"parameters": [
@@ -1464,7 +1464,7 @@
 							"fileName": "core/storage.ts",
 							"line": 142,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L142"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L142"
 						}
 					],
 					"signatures": [
@@ -1507,7 +1507,7 @@
 									"fileName": "core/storage.ts",
 									"line": 142,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L142"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L142"
 								}
 							],
 							"typeParameter": [
@@ -1600,7 +1600,7 @@
 							"fileName": "core/storage.ts",
 							"line": 246,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L246"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L246"
 						}
 					],
 					"signatures": [
@@ -1615,7 +1615,7 @@
 									"fileName": "core/storage.ts",
 									"line": 246,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L246"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L246"
 								}
 							],
 							"type": {
@@ -1648,7 +1648,7 @@
 							"fileName": "core/storage.ts",
 							"line": 101,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L101"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L101"
 						}
 					],
 					"signatures": [
@@ -1691,7 +1691,7 @@
 									"fileName": "core/storage.ts",
 									"line": 101,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L101"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L101"
 								}
 							],
 							"parameters": [
@@ -1743,7 +1743,7 @@
 							"fileName": "core/storage.ts",
 							"line": 176,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L176"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L176"
 						}
 					],
 					"signatures": [
@@ -1786,7 +1786,7 @@
 									"fileName": "core/storage.ts",
 									"line": 176,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L176"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L176"
 								}
 							],
 							"parameters": [
@@ -1874,7 +1874,7 @@
 							"fileName": "core/storage.ts",
 							"line": 250,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L250"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L250"
 						}
 					],
 					"signatures": [
@@ -1889,7 +1889,7 @@
 									"fileName": "core/storage.ts",
 									"line": 250,
 									"character": 16,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L250"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L250"
 								}
 							],
 							"parameters": [
@@ -1955,7 +1955,7 @@
 							"fileName": "core/storage.ts",
 							"line": 206,
 							"character": 8,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L206"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L206"
 						}
 					],
 					"signatures": [
@@ -1998,7 +1998,7 @@
 									"fileName": "core/storage.ts",
 									"line": 206,
 									"character": 8,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L206"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L206"
 								}
 							],
 							"parameters": [
@@ -2114,7 +2114,7 @@
 					"fileName": "core/storage.ts",
 					"line": 58,
 					"character": 13,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/core/storage.ts#L58"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/core/storage.ts#L58"
 				}
 			],
 			"typeParameters": [
@@ -2167,7 +2167,7 @@
 							"fileName": "types/download.ts",
 							"line": 12,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L12"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L12"
 						}
 					],
 					"signatures": [
@@ -2201,7 +2201,7 @@
 									"fileName": "types/download.ts",
 									"line": 12,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L12"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L12"
 								}
 							],
 							"parameters": [
@@ -2300,7 +2300,7 @@
 					"fileName": "types/download.ts",
 					"line": 4,
 					"character": 17,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L4"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L4"
 				}
 			],
 			"implementedBy": [
@@ -2341,7 +2341,7 @@
 							"fileName": "types/upload.ts",
 							"line": 15,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L15"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L15"
 						}
 					],
 					"type": {
@@ -2360,7 +2360,7 @@
 							"fileName": "types/upload.ts",
 							"line": 23,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L23"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L23"
 						}
 					],
 					"signatures": [
@@ -2394,7 +2394,7 @@
 									"fileName": "types/upload.ts",
 									"line": 23,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L23"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L23"
 								}
 							],
 							"parameters": [
@@ -2490,7 +2490,7 @@
 					"fileName": "types/upload.ts",
 					"line": 11,
 					"character": 17,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L11"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L11"
 				}
 			],
 			"typeParameters": [
@@ -2534,7 +2534,7 @@
 							"fileName": "types/index.ts",
 							"line": 19,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L19"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L19"
 						}
 					],
 					"signatures": [
@@ -2549,7 +2549,7 @@
 									"fileName": "types/index.ts",
 									"line": 19,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L19"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L19"
 								}
 							],
 							"parameters": [
@@ -2614,7 +2614,7 @@
 							"fileName": "types/index.ts",
 							"line": 20,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L20"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L20"
 						}
 					],
 					"signatures": [
@@ -2629,7 +2629,7 @@
 									"fileName": "types/index.ts",
 									"line": 20,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L20"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L20"
 								}
 							],
 							"typeParameter": [
@@ -2689,7 +2689,7 @@
 							"fileName": "types/index.ts",
 							"line": 23,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L23"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L23"
 						}
 					],
 					"signatures": [
@@ -2704,7 +2704,7 @@
 									"fileName": "types/index.ts",
 									"line": 23,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L23"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L23"
 								}
 							],
 							"type": {
@@ -2727,7 +2727,7 @@
 							"fileName": "types/index.ts",
 							"line": 18,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L18"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L18"
 						}
 					],
 					"signatures": [
@@ -2742,7 +2742,7 @@
 									"fileName": "types/index.ts",
 									"line": 18,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L18"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L18"
 								}
 							],
 							"parameters": [
@@ -2776,7 +2776,7 @@
 							"fileName": "types/index.ts",
 							"line": 21,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L21"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L21"
 						}
 					],
 					"signatures": [
@@ -2791,7 +2791,7 @@
 									"fileName": "types/index.ts",
 									"line": 21,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L21"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L21"
 								}
 							],
 							"parameters": [
@@ -2827,7 +2827,7 @@
 													"fileName": "types/index.ts",
 													"line": 21,
 													"character": 30,
-													"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L21"
+													"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L21"
 												}
 											],
 											"indexSignature": {
@@ -2841,7 +2841,7 @@
 														"fileName": "types/index.ts",
 														"line": 21,
 														"character": 32,
-														"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L21"
+														"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L21"
 													}
 												],
 												"parameters": [
@@ -2895,7 +2895,7 @@
 							"fileName": "types/index.ts",
 							"line": 22,
 							"character": 2,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L22"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L22"
 						}
 					],
 					"signatures": [
@@ -2910,7 +2910,7 @@
 									"fileName": "types/index.ts",
 									"line": 22,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L22"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L22"
 								}
 							],
 							"parameters": [
@@ -2949,7 +2949,7 @@
 													"fileName": "types/index.ts",
 													"line": 22,
 													"character": 37,
-													"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L22"
+													"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L22"
 												}
 											],
 											"indexSignature": {
@@ -2963,7 +2963,7 @@
 														"fileName": "types/index.ts",
 														"line": 22,
 														"character": 39,
-														"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L22"
+														"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L22"
 													}
 												],
 												"parameters": [
@@ -3028,7 +3028,7 @@
 					"fileName": "types/index.ts",
 					"line": 17,
 					"character": 17,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L17"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L17"
 				}
 			],
 			"implementedBy": [
@@ -3052,7 +3052,7 @@
 					"fileName": "types/download.ts",
 					"line": 54,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L54"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L54"
 				}
 			],
 			"type": {
@@ -3068,7 +3068,7 @@
 							"fileName": "types/download.ts",
 							"line": 54,
 							"character": 26,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L54"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L54"
 						}
 					],
 					"indexSignature": {
@@ -3082,7 +3082,7 @@
 								"fileName": "types/download.ts",
 								"line": 55,
 								"character": 2,
-								"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L55"
+								"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L55"
 							}
 						],
 						"parameters": [
@@ -3122,7 +3122,7 @@
 					"fileName": "types/download.ts",
 					"line": 22,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L22"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L22"
 				}
 			],
 			"type": {
@@ -3155,7 +3155,7 @@
 									"fileName": "types/download.ts",
 									"line": 33,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L33"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L33"
 								}
 							],
 							"type": {
@@ -3184,7 +3184,7 @@
 									"fileName": "types/download.ts",
 									"line": 27,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L27"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L27"
 								}
 							],
 							"type": {
@@ -3213,7 +3213,7 @@
 									"fileName": "types/download.ts",
 									"line": 37,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L37"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L37"
 								}
 							],
 							"type": {
@@ -3237,7 +3237,7 @@
 							"fileName": "types/download.ts",
 							"line": 22,
 							"character": 36,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L22"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L22"
 						}
 					]
 				}
@@ -3256,7 +3256,7 @@
 					"fileName": "types/upload.ts",
 					"line": 68,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L68"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L68"
 				}
 			],
 			"type": {
@@ -3289,7 +3289,7 @@
 									"fileName": "types/upload.ts",
 									"line": 98,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L98"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L98"
 								}
 							],
 							"type": {
@@ -3318,7 +3318,7 @@
 									"fileName": "types/upload.ts",
 									"line": 94,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L94"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L94"
 								}
 							],
 							"type": {
@@ -3354,7 +3354,7 @@
 									"fileName": "types/upload.ts",
 									"line": 86,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L86"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L86"
 								}
 							],
 							"type": {
@@ -3370,7 +3370,7 @@
 											"fileName": "types/upload.ts",
 											"line": 86,
 											"character": 15,
-											"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L86"
+											"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L86"
 										}
 									],
 									"signatures": [
@@ -3433,7 +3433,7 @@
 									"fileName": "types/upload.ts",
 									"line": 73,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L73"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L73"
 								}
 							],
 							"type": {
@@ -3464,7 +3464,7 @@
 													"fileName": "types/upload.ts",
 													"line": 77,
 													"character": 4,
-													"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L77"
+													"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L77"
 												}
 											],
 											"type": {
@@ -3486,7 +3486,7 @@
 											"fileName": "types/upload.ts",
 											"line": 73,
 											"character": 21,
-											"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L73"
+											"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L73"
 										}
 									]
 								}
@@ -3513,7 +3513,7 @@
 									"fileName": "types/upload.ts",
 									"line": 82,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L82"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L82"
 								}
 							],
 							"type": {
@@ -3542,7 +3542,7 @@
 									"fileName": "types/upload.ts",
 									"line": 90,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L90"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L90"
 								}
 							],
 							"type": {
@@ -3569,7 +3569,7 @@
 							"fileName": "types/upload.ts",
 							"line": 68,
 							"character": 37,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L68"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L68"
 						}
 					]
 				}
@@ -3588,7 +3588,7 @@
 					"fileName": "types/upload.ts",
 					"line": 44,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L44"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L44"
 				}
 			],
 			"type": {
@@ -3621,7 +3621,7 @@
 									"fileName": "types/upload.ts",
 									"line": 53,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L53"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L53"
 								}
 							],
 							"type": {
@@ -3650,7 +3650,7 @@
 									"fileName": "types/upload.ts",
 									"line": 58,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L58"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L58"
 								}
 							],
 							"type": {
@@ -3679,7 +3679,7 @@
 									"fileName": "types/upload.ts",
 									"line": 62,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L62"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L62"
 								}
 							],
 							"type": {
@@ -3708,7 +3708,7 @@
 									"fileName": "types/upload.ts",
 									"line": 48,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L48"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L48"
 								}
 							],
 							"type": {
@@ -3733,7 +3733,7 @@
 							"fileName": "types/upload.ts",
 							"line": 44,
 							"character": 34,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L44"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L44"
 						}
 					]
 				}
@@ -3750,7 +3750,7 @@
 					"fileName": "types/download.ts",
 					"line": 40,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L40"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L40"
 				}
 			],
 			"type": {
@@ -3783,7 +3783,7 @@
 									"fileName": "types/download.ts",
 									"line": 48,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L48"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L48"
 								}
 							],
 							"type": {
@@ -3812,7 +3812,7 @@
 									"fileName": "types/download.ts",
 									"line": 44,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L44"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L44"
 								}
 							],
 							"type": {
@@ -3835,7 +3835,7 @@
 							"fileName": "types/download.ts",
 							"line": 40,
 							"character": 36,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/download.ts#L40"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/download.ts#L40"
 						}
 					]
 				}
@@ -3852,7 +3852,7 @@
 					"fileName": "types/index.ts",
 					"line": 8,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L8"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L8"
 				}
 			],
 			"typeParameters": [
@@ -3892,7 +3892,7 @@
 									"fileName": "types/index.ts",
 									"line": 13,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L13"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L13"
 								}
 							],
 							"type": {
@@ -3913,7 +3913,7 @@
 									"fileName": "types/index.ts",
 									"line": 10,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L10"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L10"
 								}
 							],
 							"type": {
@@ -3936,7 +3936,7 @@
 									"fileName": "types/index.ts",
 									"line": 11,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L11"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L11"
 								}
 							],
 							"type": {
@@ -3971,7 +3971,7 @@
 									"fileName": "types/index.ts",
 									"line": 14,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L14"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L14"
 								}
 							],
 							"type": {
@@ -3992,7 +3992,7 @@
 									"fileName": "types/index.ts",
 									"line": 12,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L12"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L12"
 								}
 							],
 							"type": {
@@ -4013,7 +4013,7 @@
 									"fileName": "types/index.ts",
 									"line": 9,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L9"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L9"
 								}
 							],
 							"type": {
@@ -4050,7 +4050,7 @@
 							"fileName": "types/index.ts",
 							"line": 8,
 							"character": 62,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/index.ts#L8"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/index.ts#L8"
 						}
 					]
 				}
@@ -4069,7 +4069,7 @@
 					"fileName": "types/upload.ts",
 					"line": 6,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L6"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L6"
 				}
 			],
 			"type": {
@@ -4085,7 +4085,7 @@
 							"fileName": "types/upload.ts",
 							"line": 6,
 							"character": 28,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L6"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L6"
 						}
 					],
 					"indexSignature": {
@@ -4099,7 +4099,7 @@
 								"fileName": "types/upload.ts",
 								"line": 6,
 								"character": 30,
-								"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L6"
+								"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L6"
 							}
 						],
 						"parameters": [
@@ -4136,7 +4136,7 @@
 					"fileName": "types/upload.ts",
 					"line": 29,
 					"character": 12,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L29"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L29"
 				}
 			],
 			"type": {
@@ -4167,7 +4167,7 @@
 									"fileName": "types/upload.ts",
 									"line": 33,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L33"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L33"
 								}
 							],
 							"type": {
@@ -4194,7 +4194,7 @@
 									"fileName": "types/upload.ts",
 									"line": 38,
 									"character": 2,
-									"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L38"
+									"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L38"
 								}
 							],
 							"type": {
@@ -4217,7 +4217,7 @@
 							"fileName": "types/upload.ts",
 							"line": 29,
 							"character": 34,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/types/upload.ts#L29"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/types/upload.ts#L29"
 						}
 					]
 				}
@@ -4234,7 +4234,7 @@
 					"fileName": "common/utils.ts",
 					"line": 40,
 					"character": 16,
-					"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/common/utils.ts#L40"
+					"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/common/utils.ts#L40"
 				}
 			],
 			"signatures": [
@@ -4249,7 +4249,7 @@
 							"fileName": "common/utils.ts",
 							"line": 40,
 							"character": 16,
-							"url": "https://github.com/thirdweb-dev/js/blob/52ee9ea/packages/storage/src/common/utils.ts#L40"
+							"url": "https://github.com/thirdweb-dev/js/blob/33df0424a/packages/storage/src/common/utils.ts#L40"
 						}
 					],
 					"parameters": [
