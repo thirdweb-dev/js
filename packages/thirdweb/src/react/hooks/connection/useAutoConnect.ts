@@ -53,7 +53,7 @@ export function useAutoConnect() {
       // connect the active wallet and set it as active
       lastActiveWalletConfig
         ?.createWallet({
-          autoConnect: true,
+          silent: true,
         })
         .then((w) => {
           connectionManager.connectWallet(w);
@@ -64,7 +64,7 @@ export function useAutoConnect() {
       otherWalletConfigs.forEach((config) => {
         config
           .createWallet({
-            autoConnect: true,
+            silent: true,
           })
           .then((w) => {
             connectionManager.connectWallet(w);

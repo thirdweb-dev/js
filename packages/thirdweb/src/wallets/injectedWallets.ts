@@ -1,9 +1,9 @@
-import { injectedWallet } from "./injected.js";
+import { injectedWallet, type InjectedWalletOptions } from "./injected.js";
 
-export type SpecificInjectedWalletOptions = {
-  chainId?: bigint | number;
-  autoConnect?: boolean;
-};
+export type SpecificInjectedWalletOptions = Omit<
+  InjectedWalletOptions,
+  "walletId"
+>;
 
 /**
  * Connect to Injected Metamask Wallet Provider
