@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 4.0.29
+
+### Patch Changes
+
+- [#2215](https://github.com/thirdweb-dev/js/pull/2215) [`b34737d2`](https://github.com/thirdweb-dev/js/commit/b34737d27a71706cd1117485a6e522e50f5ae4d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch to LRU caches for contract metadata
+
+- [#2220](https://github.com/thirdweb-dev/js/pull/2220) [`3d63a2cb`](https://github.com/thirdweb-dev/js/commit/3d63a2cb696310507798889e3e148339de4e3dfe) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [SDK] Add erc1155.transferBatch
+
+- Updated dependencies [[`627d2099`](https://github.com/thirdweb-dev/js/commit/627d20992770670ab0c954ceea0b8679ce4f3088)]:
+  - @thirdweb-dev/chains@0.1.66
+
 ## 4.0.28
 
 ### Patch Changes
