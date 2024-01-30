@@ -11,7 +11,7 @@ export type EventParams<event extends AbiEvent> = AbiParametersToPrimitiveTypes<
   event["inputs"]
 >;
 
-export type ContractEventInput<
+export type ContractEventOptions<
   abi extends Abi,
   event extends AbiEvent | string,
 > = {
@@ -21,21 +21,47 @@ export type ContractEventInput<
 };
 
 // the only difference here is that we don't alow string events
-export type ContractEvent<event extends AbiEvent> = ContractEventInput<
+export type ContractEvent<event extends AbiEvent> = ContractEventOptions<
   Abi,
   event
 >;
 
-export function contractEvent<
+/**
+ * Creates a contract event.
+ * @param options - The options for creating the contract event.
+ * @returns The contract event.
+ * @example
+ * ```ts
+ * import { createClient, getContract } from "thirdweb";
+ * import { prepareEvent } from "thirdweb/event";
+ * const client = createClient({ clientId: "..." });
+ * const contract = getContract({
+ *  client,
+ *  address: "...",
+ * });
+ * const myEvent = prepareEvent({
+ *  contract,
+ *  event: "MyEvent",
+ * });
+ * ```
+ */
+export function prepareEvent<
   const abi extends Abi,
   // if an abi has been passed into the contract, restrict the event to event names of the abi
   const event extends abi extends { length: 0 }
     ? AbiEvent | string
     : ExtractAbiEventNames<abi>,
->(options: ContractEventInput<abi, event>) {
+>(options: ContractEventOptions<abi, event>) {
   return options as unknown as ContractEvent<ParseEvent<abi, event>>;
 }
 
+/**
+ * Determines whether the given item is an ABI event.
+ *
+ * @param item - The item to check.
+ * @returns True if the item is an ABI event, false otherwise.
+ * @internal
+ */
 export function isAbiEvent(item: unknown): item is AbiEvent {
   return !!(
     item &&

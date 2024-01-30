@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import type { ThirdwebClient } from "../../client/client.js";
 import type { UploadOptions } from "./types.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";

@@ -3,9 +3,21 @@ import type { Transaction } from "../transaction.js";
 import type { Hash, TransactionSerializable } from "viem";
 import type { IWallet } from "../../wallets/interfaces/wallet.js";
 
+/**
+ * Sends a transaction using the provided transaction object and wallet.
+ * @param tx - The transaction object.
+ * @param wallet - The wallet object.
+ * @returns A promise that resolves to the transaction hash.
+ * @throws If the wallet is not connected.
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb/transaction";
+ * const txHash = await sendTransaction(tx, wallet);
+ * ```
+ */
 export async function sendTransaction<
   const abiFn extends AbiFunction,
-  wallet extends IWallet<any>,
+  wallet extends IWallet,
 >(tx: Transaction<abiFn>, wallet: wallet): Promise<Hash> {
   if (!wallet.address) {
     throw new Error("not connected");

@@ -16,12 +16,15 @@ export type ThirdwebClient = {
 };
 
 /**
- * Creates a Thirdweb client with the given options.
- * If `secretKey` is provided, the `clientId` is computed from it.
- * If `clientId` is provided, it is used as is.
+ * Creates a Thirdweb client with the provided options.
  * @param options - The options for creating the client.
  * @returns The created Thirdweb client.
- * @throws Error if `clientId` or `secretKey` is not provided.
+ * @throws An error if neither `clientId` nor `secretKey` is provided.
+ * @example
+ * ```ts
+ * import { createClient } from "thirdweb";
+ * const client = createClient({ clientId: "..." });
+ * ```
  */
 export function createClient(options: CreateClientOptions): ThirdwebClient {
   // if secretKey is provided, compute the clientId from it (and ignore any clientId passed in)

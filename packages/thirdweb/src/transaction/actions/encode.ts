@@ -1,11 +1,21 @@
 import { encodeAbiFunction } from "../../abi/encode.js";
 import type { AbiFunction } from "abitype";
 import type { Transaction } from "../transaction.js";
-import { resolveAbi } from "./resolve-abi.js";
+import { resolveAbiFunction } from "./resolve-abi.js";
 import type { Hex } from "viem";
 
 const ENCODE_CACHE = new WeakMap();
 
+/**
+ * Encodes a transaction object into a hexadecimal string representation of the encoded data.
+ * @param tx - The transaction object to encode.
+ * @returns A promise that resolves to the encoded data as a hexadecimal string.
+ * @example
+ * ```ts
+ * import { encode } from "thirdweb/transaction";
+ * const encodedData = await encode(tx);
+ * ```
+ */
 export async function encode<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
 ): Promise<Hex> {
@@ -15,7 +25,7 @@ export async function encode<const abiFn extends AbiFunction>(
 
   const prom = (async () => {
     const [abiFn, params] = await Promise.all([
-      resolveAbi(tx),
+      resolveAbiFunction(tx),
       typeof tx.params === "function" ? tx.params() : tx.params,
     ]);
 

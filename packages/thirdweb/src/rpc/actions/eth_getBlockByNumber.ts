@@ -29,21 +29,35 @@ type GetBlockParameters<
     }
 );
 
+/**
+ * Retrieves a block by its number or tag from the Ethereum blockchain.
+ * @param request - The EIP1193 request function.
+ * @param params - The parameters for retrieving the block.
+ * @returns A promise that resolves to the requested block.
+ * @throws An error if the block is not found.
+ * @example
+ * ```ts
+ * import { getRpcClient, eth_getBlockByNumber } from "thirdweb/rpc";
+ * const rpcRequest = getRpcClient({ client, chainId });
+ * const block = await eth_getBlockByNumber(rpcRequest, {
+ *  blockNumber: 123456,
+ *  includeTransactions: true,
+ * });
+ * ```
+ */
 export async function eth_getBlockByNumber<
   TIncludeTransactions extends boolean = false,
   TBlockTag extends BlockTag = "latest",
 >(
   request: EIP1193RequestFn<EIP1474Methods>,
-  {
-    blockNumber,
-    blockTag: blockTag_,
-    includeTransactions: includeTransactions_,
-  }: GetBlockParameters<TIncludeTransactions, TBlockTag>,
+  params: GetBlockParameters<TIncludeTransactions, TBlockTag>,
 ): Promise<GetBlockReturnType<undefined, TIncludeTransactions, TBlockTag>> {
-  const blockTag = blockTag_ ?? "latest";
-  const includeTransactions = includeTransactions_ ?? false;
+  const blockTag = params.blockTag ?? "latest";
+  const includeTransactions = params.includeTransactions ?? false;
   const blockNumberHex =
-    blockNumber !== undefined ? numberToHex(blockNumber) : undefined;
+    params.blockNumber !== undefined
+      ? numberToHex(params.blockNumber)
+      : undefined;
 
   const block = await request({
     method: "eth_getBlockByNumber",

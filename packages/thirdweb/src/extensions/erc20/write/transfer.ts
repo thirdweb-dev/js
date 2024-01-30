@@ -1,4 +1,7 @@
-import { transaction, type TxOpts } from "../../../transaction/transaction.js";
+import {
+  prepareTransaction,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
 import { parseUnits } from "viem";
 
 type TransferParams = { to: string } & (
@@ -12,12 +15,20 @@ type TransferParams = { to: string } & (
 
 /**
  * Transfers ERC20 tokens from the sender's address to the specified recipient address.
- *
- * @param options - The transaction options including the recipient address and the amount of tokens to transfer.
- * @returns A promise that resolves to the transaction receipt.
+ * @param options - The options for the transfer transaction.
+ * @returns A promise that resolves to the prepared transaction.
+ * @example
+ * ```ts
+ * import { transfer } from "thirdweb/extensions/erc20";
+ * const tx = await transfer({
+ *  contract,
+ *  to: "0x...",
+ *  amount: 100,
+ * });
+ * ```
  */
 export function transfer(options: TxOpts<TransferParams>) {
-  return transaction({
+  return prepareTransaction({
     ...options,
     method: "function transfer(address to, uint256 value)",
     params: async () => {

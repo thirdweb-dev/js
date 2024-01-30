@@ -1,17 +1,19 @@
 import { type TxOpts } from "../../../transaction/transaction.js";
-import { read } from "../../../transaction/actions/read.js";
-import { createReadExtension } from "../../../utils/extension.js";
+import { readContract } from "../../../transaction/actions/read.js";
 
 /**
  * Retrieves the starting token ID for the ERC721 contract.
  * @param options - The transaction options.
  * @returns A promise that resolves to the starting token ID as a bigint.
+ * @example
+ * ```ts
+ * import { startTokenId } from "thirdweb/extensions/erc721";
+ * const startTokenId = await startTokenId({ contract });
+ * ```
  */
-export const startTokenId = /*@__PURE__*/ createReadExtension(
-  "erc721.startTokenId",
-)(function (options: TxOpts): Promise<bigint> {
-  return read({
+export function startTokenId(options: TxOpts): Promise<bigint> {
+  return readContract({
     ...options,
     method: "function startTokenId() view returns (uint256)",
   });
-});
+}

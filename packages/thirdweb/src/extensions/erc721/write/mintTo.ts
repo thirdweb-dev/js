@@ -1,4 +1,4 @@
-import { transaction } from "../../../transaction/index.js";
+import { prepareTransaction } from "../../../transaction/index.js";
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import { type TxOpts } from "../../../transaction/transaction.js";
 
@@ -20,14 +20,26 @@ export type MintToParams = {
 
 /**
  * Mints a new ERC721 token and assigns it to the specified address.
- * If the `params.nft` is a string, it uses the provided URI for the token.
- * If the `params.nft` is a file, it uploads the file to the storage server and uses the generated URI for the token.
- * @param contract - The ThirdwebContract instance.
- * @param params - The parameters for minting the token.
- * @returns The transaction object.
+ * If the `nft` parameter is a string, it will be used as the token URI.
+ * If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
+ * @param options - The transaction options.
+ * @returns A promise that resolves to the transaction result.
+ * @example
+ * ```ts
+ * import { mintTo } from "thirdweb/extensions/erc721";
+ * const tx = await mintTo({
+ *  contract,
+ *  to: "0x...",
+ *  nft: {
+ *    name: "My NFT",
+ *    description: "This is my NFT",
+ *    image: "https://example.com/image.png",
+ *  },
+ * });
+ * ```
  */
 export function mintTo(options: TxOpts<MintToParams>) {
-  return transaction({
+  return prepareTransaction({
     ...options,
     method: "function mintTo(address _to, string memory _tokenURI)",
     params: async () => {
@@ -42,7 +54,8 @@ export function mintTo(options: TxOpts<MintToParams>) {
         // load the upload code if we need it
         const { upload } = await import("../../../storage/upload.js");
         tokenUri = (
-          await upload(options.contract.client, {
+          await upload({
+            client: options.contract.client,
             files: [options.nft],
           })
         )[0] as string;

@@ -28,6 +28,13 @@ type ParseNFTOptions<type extends NFTType> = {
   supply?: bigint;
 };
 
+/**
+ * Parses the NFT metadata and options to create an NFT object.
+ * @param base - The base NFT metadata.
+ * @param options - The options for parsing the NFT.
+ * @returns The parsed NFT object.
+ * @internal
+ */
 export function parseNFT<const type extends NFTType>(
   base: NFTMetadata,
   options: ParseNFTOptions<type>,

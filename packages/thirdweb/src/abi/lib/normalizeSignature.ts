@@ -1,3 +1,15 @@
+// extracted from `viem`: https://github.com/wevm/viem/blob/main/src/utils/hash/normalizeSignature.ts#L8
+// missing export
+// TODO: upstream exporting this from `viem` and then remove this file
+
+/**
+ * Normalizes a signature by removing unnecessary characters and spaces.
+ *
+ * @param signature - The signature to be normalized.
+ * @returns The normalized signature.
+ * @throws Error if the signature cannot be normalized.
+ * @internal
+ */
 export function normalizeSignature(signature: string): string {
   let active = true;
   let current = "";

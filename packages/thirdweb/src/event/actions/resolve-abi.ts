@@ -2,20 +2,33 @@ import { parseAbiItem, type Abi, type AbiEvent } from "abitype";
 import {
   isAbiEvent,
   type ContractEvent,
-  type ContractEventInput,
+  type ContractEventOptions,
 } from "../event.js";
 import type { ParseEvent } from "../../abi/types.js";
 
-const ABI_FN_RESOLUTION_CACHE = new WeakMap<
+const ABI_EVENT_RESOLUTION_CACHE = new WeakMap<
   ContractEvent<AbiEvent>,
   Promise<AbiEvent>
 >();
 
-export function resolveAbi<abiEvent extends AbiEvent | string, abi extends Abi>(
-  contractEvent: ContractEventInput<abi, abiEvent>,
+/**
+ * Resolves the ABI event for a given contract event.
+ *
+ * @param contractEvent - The contract event to resolve the ABI event for.
+ * @returns A promise that resolves to the parsed ABI event.
+ * @throws An error if the ABI event cannot be resolved.
+ * @internal
+ */
+export function resolveAbiEvent<
+  abiEvent extends AbiEvent | string,
+  abi extends Abi,
+>(
+  contractEvent: ContractEventOptions<abi, abiEvent>,
 ): Promise<ParseEvent<abi, abiEvent>> {
-  if (ABI_FN_RESOLUTION_CACHE.has(contractEvent as ContractEvent<AbiEvent>)) {
-    return ABI_FN_RESOLUTION_CACHE.get(
+  if (
+    ABI_EVENT_RESOLUTION_CACHE.has(contractEvent as ContractEvent<AbiEvent>)
+  ) {
+    return ABI_EVENT_RESOLUTION_CACHE.get(
       contractEvent as ContractEvent<AbiEvent>,
     ) as Promise<ParseEvent<abi, abiEvent>>;
   }
@@ -66,6 +79,9 @@ export function resolveAbi<abiEvent extends AbiEvent | string, abi extends Abi>(
     }
     return abiEv;
   })();
-  ABI_FN_RESOLUTION_CACHE.set(contractEvent as ContractEvent<AbiEvent>, prom);
+  ABI_EVENT_RESOLUTION_CACHE.set(
+    contractEvent as ContractEvent<AbiEvent>,
+    prom,
+  );
   return prom;
 }

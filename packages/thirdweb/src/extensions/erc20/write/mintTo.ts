@@ -1,4 +1,7 @@
-import { transaction, type TxOpts } from "../../../transaction/transaction.js";
+import {
+  prepareTransaction,
+  type TxOpts,
+} from "../../../transaction/transaction.js";
 import { parseUnits } from "viem";
 
 type MintToParams = { to: string } & (
@@ -12,12 +15,20 @@ type MintToParams = { to: string } & (
 
 /**
  * Mints a specified amount of tokens to a given address.
- *
- * @param options - The transaction options.
- * @returns A promise that resolves to the transaction result.
+ * @param options - The options for minting tokens.
+ * @returns A prepared transaction object.
+ * @example
+ * ```ts
+ * import { mintTo } from "thirdweb/extensions/erc20";
+ * const tx = await mintTo({
+ *  contract,
+ *  to: "0x...",
+ *  amount: 100,
+ * });
+ * ```
  */
 export function mintTo(options: TxOpts<MintToParams>) {
-  return transaction({
+  return prepareTransaction({
     ...options,
     method: "function mintTo(address to, uint256 amount)",
     params: async () => {

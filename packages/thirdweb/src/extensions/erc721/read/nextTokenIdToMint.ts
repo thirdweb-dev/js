@@ -1,17 +1,19 @@
 import { type TxOpts } from "../../../transaction/transaction.js";
-import { read } from "../../../transaction/actions/read.js";
-import { createReadExtension } from "../../../utils/extension.js";
+import { readContract } from "../../../transaction/actions/read.js";
 
 /**
  * Retrieves the next token ID to be minted in an ERC721 contract.
  * @param options - The transaction options.
- * @returns A promise that resolves to the next token ID to be minted.
+ * @returns A promise that resolves to the next token ID as a bigint.
+ * @example
+ * ```ts
+ * import { nextTokenIdToMint } from "thirdweb/extensions/erc721";
+ * const nextTokenId = await nextTokenIdToMint({ contract });
+ * ```
  */
-export const nextTokenIdToMint = /*@__PURE__*/ createReadExtension(
-  "erc721.nextTokenIdToMint",
-)(function (options: TxOpts): Promise<bigint> {
-  return read({
+export function nextTokenIdToMint(options: TxOpts): Promise<bigint> {
+  return readContract({
     ...options,
     method: "function nextTokenIdToMint() view returns (uint256)",
   });
-});
+}

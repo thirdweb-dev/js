@@ -6,41 +6,59 @@ import {
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
 import type { ParseMethod } from "../../../abi/types.js";
 import type { ReadOutputs } from "../../../transaction/actions/read.js";
-import { read } from "../../../transaction/index.js";
+import { readContract } from "../../../transaction/index.js";
 import {
-  type TransactionInput,
+  type TransactionOptions,
   type TxOpts,
 } from "../../../transaction/transaction.js";
-import {
-  getExtensionId,
-  isReadExtension,
-  type ReadExtension,
-} from "../../../utils/extension.js";
 import { stringify } from "../../../utils/json.js";
+import { getFunctionId } from "../../../utils/function-id.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
+/**
+ * A hook to read from a contract.
+ * @param options - The options for reading from a contract
+ * @returns a query object.
+ * @example
+ * ```jsx
+ * import { useRead } from "thirdweb/react";
+ * const { data, isLoading } = useRead({contract, method: "totalSupply"});
+ * ```
+ */
 export function useRead<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
 >(
-  options: TransactionInput<abi, method> & {
+  options: TransactionOptions<abi, method> & {
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<ReadOutputs<ParseMethod<abi, method>>>;
+/**
+ * A hook to read from a contract.
+ * @param extension - An extension to call.
+ * @param options - The read extension params.
+ * @returns a query object.
+ * @example
+ * ```jsx
+ * import { useRead } from "thirdweb/react";
+ * import { totalSupply } form "thirdweb/extensions/erc20"
+ * const { data, isLoading } = useRead(totalSupply);
+ * ```
+ */
 export function useRead<
   const abi extends Abi,
   const params extends object,
   result,
-  extension_id extends string,
 >(
-  extension: ReadExtension<params, result, extension_id>,
+  extension: (options: TxOpts<params, abi>) => Promise<result>,
   options: TxOpts<params, abi> & {
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<result>;
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function useRead<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
@@ -48,19 +66,18 @@ export function useRead<
     : ExtractAbiFunctionNames<abi>,
   const params extends object,
   result,
-  extension_id extends string,
 >(
   extensionOrOptions:
-    | ReadExtension<params, result, extension_id>
-    | (TransactionInput<abi, method> & {
+    | ((options: TxOpts<params, abi>) => Promise<result>)
+    | (TransactionOptions<abi, method> & {
         queryOptions?: PickedQueryOptions;
       }),
   options?: TxOpts<params, abi> & {
     queryOptions?: PickedQueryOptions;
   },
 ) {
-  // extension case
-  if (isReadExtension(extensionOrOptions)) {
+  // extension case (or really any async function!)
+  if (typeof extensionOrOptions === "function") {
     if (!options) {
       throw new Error(
         `Missing second argument for "useRead(<extension>, <options>)" hook.`,
@@ -73,9 +90,11 @@ export function useRead<
       queryKey: [
         contract.chainId,
         contract.address,
-        getExtensionId(extensionOrOptions),
+        "read",
+        getFunctionId(extensionOrOptions),
         stringify(params),
       ] as const,
+      // @ts-expect-error - TODO: clean up the type issues here
       queryFn: () => extensionOrOptions({ ...params, contract }),
       ...queryOptions,
     });
@@ -90,10 +109,11 @@ export function useRead<
       queryKey: [
         tx.contract.chainId,
         tx.contract.address,
+        "read",
         tx.method,
         stringify(tx.params),
       ] as const,
-      queryFn: () => read(extensionOrOptions),
+      queryFn: () => readContract(extensionOrOptions),
       ...queryOptions,
     });
   }

@@ -12,11 +12,15 @@ type FetchTokenMetadataOptions = {
   tokenUri: string;
 };
 
-export async function fetchTokenMetadata({
-  client,
-  tokenId,
-  tokenUri,
-}: FetchTokenMetadataOptions) {
+/**
+ * Fetches the metadata for a token.
+ *
+ * @param options - The options for fetching the token metadata.
+ * @returns The token metadata.
+ * @internal
+ */
+export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
+  const { client, tokenId, tokenUri } = options;
   // handle case where the URI is a base64 encoded JSON (onchain nft)
   if (isBase64String(tokenUri)) {
     try {
@@ -37,7 +41,7 @@ export async function fetchTokenMetadata({
   // handle non-dynamic uris (most common case -> skip the other checks)
   try {
     if (!tokenUri.includes("{id}")) {
-      return await (await download(client, { uri: tokenUri })).json();
+      return await (await download({ client, uri: tokenUri })).json();
     }
   } catch (e) {
     console.error("Failed to fetch non-dynamic NFT", { tokenId, tokenUri }, e);
@@ -49,14 +53,16 @@ export async function fetchTokenMetadata({
     try {
       // try first dynamic id format
       return await (
-        await download(client, {
+        await download({
+          client,
           uri: tokenUri.replace("{id}", toHex(tokenId, { size: 32 }).slice(2)),
         })
       ).json();
     } catch (err) {
       // otherwise attempt the second format
       return await (
-        await download(client, {
+        await download({
+          client,
           uri: tokenUri.replace("{id}", tokenId.toString()),
         })
       ).json();

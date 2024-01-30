@@ -9,7 +9,7 @@ import {
 } from "react";
 import type { IWallet } from "../../wallets/interfaces/wallet.js";
 
-export type WalletWithId = IWallet<any> & { _id: string };
+export type WalletWithId = IWallet & { _id: string };
 
 type WalletContext = {
   activeWallet: WalletWithId | null;
@@ -21,9 +21,11 @@ type WalletContext = {
 
 const WalletContext = /* @__PURE__ */ createContext({} as WalletContext);
 
-export const WallerProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+/**
+ * TODO
+ * @internal
+ */
+export function WalletProvider({ children }: React.PropsWithChildren) {
   const [walletState, setWalletState] = useState<{
     activeWalletId: string | null;
     walletRecord: Map<string, WalletWithId>;
@@ -89,42 +91,102 @@ export const WallerProvider: React.FC<React.PropsWithChildren> = ({
       {children}
     </WalletContext.Provider>
   );
-};
+}
 
 //hooks
 
+/**
+ * A hook that returns the active wallet.
+ * @returns The active wallet or null if no active wallet.
+ * @example
+ * ```jsx
+ * import { useActiveWallet } from "thirdweb/react";
+ *
+ * const activeWallet = useActiveWallet();
+ * ```
+ */
 export function useActiveWallet() {
   return useContext(WalletContext).activeWallet;
 }
 
+/**
+ * A hook that returns the active wallet address.
+ * @returns The active wallet address or null if no active wallet.
+ * @example
+ * ```jsx
+ * import { useActiveWalletAddress } from "thirdweb/react";
+ *
+ * const activeWalletAddress = useActiveWalletAddress();
+ * ```
+ */
 export function useActiveWalletAddress() {
   const activeWallet = useActiveWallet();
   return activeWallet?.address || null;
 }
 
+/**
+ * A hook that returns all connected wallets.
+ * @returns An array of all connected wallets.
+ * @example
+ * ```jsx
+ * import { useConnectedWallets } from "thirdweb/react";
+ *
+ * const activeWalletChainId = useConnectedWallets();
+ * ```
+ */
 export function useConnectedWallets() {
   return useContext(WalletContext).connectedWallets;
 }
 
+/**
+ * A hook that lets you set the active wallet.
+ * @returns A function that lets you set the active wallet.
+ * @example
+ * ```jsx
+ * import { useSetActiveWallet } from "thirdweb/react";
+ *
+ * const setAciveWallet = useSetActiveWallet();
+ *
+ * // later in your code
+ * setAciveWallet(wallet);
+ * ```
+ */
 export function useSetActiveWallet() {
   const { activateWallet } = useContext(WalletContext);
   return activateWallet;
 }
 
+/**
+ * A hook that lets you connect a wallet.
+ * @returns A function that lets you connect a wallet.
+ * @example
+ * ```jsx
+ * import { useConnect } from "thirdweb/react";
+ * import { metamaskWallet } from "thirdweb/wallets/metamask";
+ *
+ * const { connect, isConnecting, error } = useConnect();
+ *
+ * // later in your code
+ *
+ * const wallet = await connect(() => {
+ *  return metamaskWallet.connect();
+ * });
+ * ```
+ */
 export function useConnect() {
   const { connectWallet } = useContext(WalletContext);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async function <T>(options: IWallet<T> | (() => Promise<IWallet<T>>)) {
+    async function (options: IWallet | (() => Promise<IWallet>)) {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
         const walletWithId = options as WalletWithId;
         walletWithId._id = fakeUuid();
         connectWallet(walletWithId);
-        return walletWithId as IWallet<T>;
+        return walletWithId as IWallet;
       }
 
       setIsConnecting(true);
@@ -134,7 +196,7 @@ export function useConnect() {
         const walletWithId = wallet as WalletWithId;
         walletWithId._id = fakeUuid();
         connectWallet(walletWithId);
-        return walletWithId as IWallet<T>;
+        return walletWithId as IWallet;
       } catch (e) {
         setError(e as Error);
       } finally {
@@ -151,6 +213,10 @@ export function useConnect() {
 // helpers //
 
 // TODO replace with more realiable uuid generator
+/**
+ *
+ * @internal
+ */
 function fakeUuid() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }

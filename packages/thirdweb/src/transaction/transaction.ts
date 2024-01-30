@@ -19,7 +19,7 @@ type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
         | (() => Promise<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>);
     };
 
-export type TransactionInput<
+export type TransactionOptions<
   abi extends Abi,
   method extends AbiFunction | string,
 > = TxOpts<object, abi> & {
@@ -27,18 +27,31 @@ export type TransactionInput<
 } & ParamsOption<ParseMethod<abi, method>>;
 
 // the only difference here is that we don't alow string methods
-export type Transaction<abiFn extends AbiFunction> = TransactionInput<
+export type Transaction<abiFn extends AbiFunction> = TransactionOptions<
   Abi,
   abiFn
 >;
 
-export function transaction<
+/**
+ * Prepares a transaction with the specified options.
+ * @param options - The transaction options.
+ * @returns The prepared transaction.
+ * @example
+ * ```ts
+ * import { prepareTransaction } from "thirdweb/transaction";
+ * const tx = prepareTransaction({
+ *  contract,
+ *  method: "totalSupply",
+ * });
+ * ```
+ */
+export function prepareTransaction<
   const abi extends Abi,
   // if an abi has been passed into the contract, restrict the method to function names of the abi
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
->(options: TransactionInput<abi, method>) {
+>(options: TransactionOptions<abi, method>) {
   return options as Transaction<ParseMethod<abi, method>>;
 }
 
@@ -46,6 +59,12 @@ export type TxOpts<T extends object = object, abi extends Abi = Abi> = {
   contract: ThirdwebContract<abi>;
 } & T;
 
+/**
+ * Checks if the given value is of type TxOpts.
+ * @param value - The value to check.
+ * @returns True if the value is of type TxOpts, false otherwise.
+ * @internal
+ */
 export function isTxOpts(value: unknown): value is TxOpts {
   return (
     isObjectWithKeys(value, ["contract"]) &&
@@ -55,6 +74,12 @@ export function isTxOpts(value: unknown): value is TxOpts {
   );
 }
 
+/**
+ * Checks if the given item is an instance of AbiFunction.
+ * @param item - The item to be checked.
+ * @returns True if the item is an AbiFunction, false otherwise.
+ * @internal
+ */
 export function isAbiFunction(item: unknown): item is AbiFunction {
   return !!(
     item &&

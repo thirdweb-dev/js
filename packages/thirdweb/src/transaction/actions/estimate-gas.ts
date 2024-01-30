@@ -6,9 +6,24 @@ import { formatTransactionRequest } from "viem/utils";
 import type { Address } from "viem";
 import { getRpcClient, eth_estimateGas } from "../../rpc/index.js";
 
+export type EstimateGasOptions = {
+  from?: string;
+};
+
+/**
+ * Estimates the gas required to execute a transaction.
+ * @param tx - The transaction object.
+ * @param options - Additional options for estimating gas.
+ * @returns A promise that resolves to the estimated gas as a bigint.
+ * @example
+ * ```ts
+ * import { estimateGas } from "thirdweb/transaction";
+ * const gas = await estimateGas(tx);
+ * ```
+ */
 export async function estimateGas<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
-  options?: { from?: string },
+  options?: EstimateGasOptions,
 ): Promise<bigint> {
   const rpcRequest = getRpcClient(tx.contract);
 

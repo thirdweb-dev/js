@@ -6,6 +6,24 @@ const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
+/**
+ * Resolves the ABI (Application Binary Interface) for a given contract.
+ * If the contract already has a user-defined ABI, it will be returned.
+ * Otherwise, it will attempt to fetch the ABI from a remote source.
+ * @param contract - The contract for which to resolve the ABI.
+ * @returns A promise that resolves to the ABI of the contract.
+ * @example
+ * ```ts
+ * import { createClient, contract } from "thirdweb";
+ * import { resolveAbi } from "thirdweb/contract"
+ * const client = createClient({ clientId: "..." });
+ * const myContract = contract({
+ *  client,
+ *  address: "...",
+ * });
+ * const abi = await resolveAbi(myContract);
+ * ```
+ */
 export function resolveContractAbi<abi extends Abi>(
   contract: ThirdwebContract<abi>,
 ): Promise<abi> {

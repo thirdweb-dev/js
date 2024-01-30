@@ -5,6 +5,13 @@ import type { Hash } from "viem";
 
 const FN_SELECTOR_CACHE = /*@__PURE__*/ new Map<string, Hash>();
 
+/**
+ * Computes the function selector for a given function name or AbiFunction object.
+ *
+ * @param fn - The function name or AbiFunction object.
+ * @returns The computed function selector.
+ * @internal
+ */
 export function getFunctionSelector(fn: string | AbiFunction): Hash {
   const normalizedFn = getFunctionSignature(fn);
   // if we have already computed the function selector before, return it

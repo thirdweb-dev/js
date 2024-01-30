@@ -1,21 +1,24 @@
+/* eslint-disable jsdoc/require-jsdoc */
+/* eslint-disable jsdoc/require-description */
+/* eslint-disable jsdoc/require-returns */
+/* eslint-disable jsdoc/require-param */
 import { cachedTextDecoder } from "./text-decoder.js";
 
 const uint8ArrayStringified = "[object Uint8Array]";
 
 /**
-Throw a `TypeError` if the given value is not an instance of `Uint8Array`.
-
-@example
-```
-import {assertUint8Array} from 'uint8array-extras';
-
-try {
-	assertUint8Array(new ArrayBuffer(10)); // Throws a TypeError
-} catch (error) {
-	console.error(error.message);
-}
-```
-*/
+ * Throw a `TypeError` if the given value is not an instance of `Uint8Array`.
+ * @example
+ * ```
+ * import {assertUint8Array} from 'uint8array-extras';
+ *
+ * try {
+ * assertUint8Array(new ArrayBuffer(10)); // Throws a TypeError
+ * } catch (error) {
+ * console.error(error.message);
+ * }
+ * ```
+ */
 export function assertUint8Array(value: unknown): asserts value is Uint8Array {
   if (!isUint8Array(value)) {
     throw new TypeError(`Expected \`Uint8Array\`, got \`${typeof value}\``);
@@ -23,24 +26,23 @@ export function assertUint8Array(value: unknown): asserts value is Uint8Array {
 }
 
 /**
-Check if the given value is an instance of `Uint8Array`.
-
-Replacement for [`Buffer.isBuffer()`](https://nodejs.org/api/buffer.html#static-method-bufferisbufferobj).
-
-@example
-```
-import {isUint8Array} from 'uint8array-extras';
-
-console.log(isUint8Array(new Uint8Array()));
-//=> true
-
-console.log(isUint8Array(Buffer.from('x')));
-//=> true
-
-console.log(isUint8Array(new ArrayBuffer(10)));
-//=> false
-```
-*/
+ * Check if the given value is an instance of `Uint8Array`.
+ *
+ * Replacement for [`Buffer.isBuffer()`](https://nodejs.org/api/buffer.html#static-method-bufferisbufferobj).
+ * @example
+ * ```
+ * import {isUint8Array} from 'uint8array-extras';
+ *
+ * console.log(isUint8Array(new Uint8Array()));
+ * //=> true
+ *
+ * console.log(isUint8Array(Buffer.from('x')));
+ * //=> true
+ *
+ * console.log(isUint8Array(new ArrayBuffer(10)));
+ * //=> false
+ * ```
+ */
 export function isUint8Array(value: unknown): value is Uint8Array {
   if (!value) {
     return false;
@@ -54,25 +56,24 @@ export function isUint8Array(value: unknown): value is Uint8Array {
 }
 
 /**
-Check if two arrays are identical by verifying that they contain the same bytes in the same sequence.
-
-Replacement for [`Buffer#equals()`](https://nodejs.org/api/buffer.html#bufequalsotherbuffer).
-
-@example
-```
-import {areUint8ArraysEqual} from 'uint8array-extras';
-
-const a = new Uint8Array([1, 2, 3]);
-const b = new Uint8Array([1, 2, 3]);
-const c = new Uint8Array([4, 5, 6]);
-
-console.log(areUint8ArraysEqual(a, b));
-//=> true
-
-console.log(areUint8ArraysEqual(a, c));
-//=> false
-```
-*/
+ * Check if two arrays are identical by verifying that they contain the same bytes in the same sequence.
+ *
+ * Replacement for [`Buffer#equals()`](https://nodejs.org/api/buffer.html#bufequalsotherbuffer).
+ * @example
+ * ```
+ * import {areUint8ArraysEqual} from 'uint8array-extras';
+ *
+ * const a = new Uint8Array([1, 2, 3]);
+ * const b = new Uint8Array([1, 2, 3]);
+ * const c = new Uint8Array([4, 5, 6]);
+ *
+ * console.log(areUint8ArraysEqual(a, b));
+ * //=> true
+ *
+ * console.log(areUint8ArraysEqual(a, c));
+ * //=> false
+ * ```
+ */
 export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
   assertUint8Array(a);
   assertUint8Array(b);
@@ -95,6 +96,7 @@ export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
 }
 
 let _bytesLookupTable: Array<string>;
+
 const getBytesLookupTable = () => {
   if (!_bytesLookupTable) {
     _bytesLookupTable = Array.from({ length: 256 }, (_, index) =>
@@ -105,20 +107,19 @@ const getBytesLookupTable = () => {
 };
 
 /**
-Convert a `Uint8Array` (containing a UTF-8 string) to a string.
-
-Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
-
-@example
-```
-import {uint8ArrayToString} from 'uint8array-extras';
-
-const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
-
-console.log(uint8ArrayToString(byteArray));
-//=> 'Hello'
-```
-*/
+ * Convert a `Uint8Array` (containing a UTF-8 string) to a string.
+ *
+ * Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
+ * @example
+ * ```
+ * import {uint8ArrayToString} from 'uint8array-extras';
+ *
+ * const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
+ *
+ * console.log(uint8ArrayToString(byteArray));
+ * //=> 'Hello'
+ * ```
+ */
 export function uint8ArrayToHex(array: Uint8Array): string {
   assertUint8Array(array);
 
@@ -134,20 +135,19 @@ export function uint8ArrayToHex(array: Uint8Array): string {
 }
 
 /**
-Convert a `Uint8Array` (containing a UTF-8 string) to a string.
-
-Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
-
-@example
-```
-import {uint8ArrayToString} from 'uint8array-extras';
-
-const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
-
-console.log(uint8ArrayToString(byteArray));
-//=> 'Hello'
-```
-*/
+ * Convert a `Uint8Array` (containing a UTF-8 string) to a string.
+ *
+ * Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
+ * @example
+ * ```
+ * import {uint8ArrayToString} from 'uint8array-extras';
+ *
+ * const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
+ *
+ * console.log(uint8ArrayToString(byteArray));
+ * //=> 'Hello'
+ * ```
+ */
 export function uint8ArrayToString(array: Uint8Array): string {
   assertUint8Array(array);
   return cachedTextDecoder().decode(array);
@@ -164,18 +164,17 @@ function base64UrlToBase64(base64url: string) {
 }
 
 /**
-Convert a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a `Uint8Array`.
-
-Replacement for [`Buffer.from('SGVsbG8=', 'base64')`](https://nodejs.org/api/buffer.html#static-method-bufferfromstring-encoding).
-
-@example
-```
-import {base64ToUint8Array} from 'uint8array-extras';
-
-console.log(base64ToUint8Array('SGVsbG8='));
-//=> Uint8Array [72, 101, 108, 108, 111]
-```
-*/
+ * Convert a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a `Uint8Array`.
+ *
+ * Replacement for [`Buffer.from('SGVsbG8=', 'base64')`](https://nodejs.org/api/buffer.html#static-method-bufferfromstring-encoding).
+ * @example
+ * ```
+ * import {base64ToUint8Array} from 'uint8array-extras';
+ *
+ * console.log(base64ToUint8Array('SGVsbG8='));
+ * //=> Uint8Array [72, 101, 108, 108, 111]
+ * ```
+ */
 export function base64ToUint8Array(base64String: string): Uint8Array {
   assertString(base64String);
   return Uint8Array.from(
@@ -186,18 +185,17 @@ export function base64ToUint8Array(base64String: string): Uint8Array {
 }
 
 /**
-Decode a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a string.
-
-Replacement for `Buffer.from('SGVsbG8=', 'base64').toString()` and [`atob()`](https://developer.mozilla.org/en-US/docs/Web/API/atob).
-
-@example
-```
-import {base64ToString} from 'uint8array-extras';
-
-console.log(base64ToString('SGVsbG8='));
-//=> 'Hello'
-```
-*/
+ * Decode a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a string.
+ *
+ * Replacement for `Buffer.from('SGVsbG8=', 'base64').toString()` and [`atob()`](https://developer.mozilla.org/en-US/docs/Web/API/atob).
+ * @example
+ * ```
+ * import {base64ToString} from 'uint8array-extras';
+ *
+ * console.log(base64ToString('SGVsbG8='));
+ * //=> 'Hello'
+ * ```
+ */
 export function base64ToString(base64String: string): string {
   assertString(base64String);
   return uint8ArrayToString(base64ToUint8Array(base64String));

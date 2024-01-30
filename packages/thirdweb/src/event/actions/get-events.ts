@@ -1,14 +1,14 @@
 import type { Abi, AbiEvent } from "abitype";
 import type { BlockTag } from "viem";
 import { eth_getLogs, getRpcClient } from "../../rpc/index.js";
-import { resolveAbi } from "./resolve-abi.js";
+import { resolveAbiEvent } from "./resolve-abi.js";
 import type { ContractEvent } from "../event.js";
 import {
   resolveContractAbi,
   type ThirdwebContract,
 } from "../../contract/index.js";
 
-type GetContractEventsOptions<
+export type GetContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
   contractEvent extends ContractEvent<abiEvent>,
@@ -21,7 +21,37 @@ type GetContractEventsOptions<
   toBlock?: tBlock;
 };
 
-export async function getContractEvents<
+/**
+ * Retrieves contract events from the blockchain.
+ * @param options - The options for retrieving contract events.
+ * @returns A promise that resolves to an array of contract events.
+ * @example
+ * ### Get all events for a contract
+ * ```ts
+ * import { getContractEvents } from "thirdweb/event";
+ * const events = await getContractEvents({
+ *  contract: myContract,
+ *  fromBlock: 4375893n,
+ *  toBlock: "latest"
+ * });
+ * ```
+ *
+ * ### Get specific events for a contract
+ * ```ts
+ * import { contractEvent, getContractEvents } from "thirdweb/event";
+ * const myEvent = contractEvent({
+ *  contract: myContract,
+ *  event: "MyEvent",
+ * });
+ * const events = await getContractEvents({
+ *  contract: myContract,
+ *  events: [myEvent],
+ *  fromBlock: 4375893n,
+ *  toBlock: "latest"
+ * });
+ * ```
+ */
+export async function getEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
   const contractEvent extends ContractEvent<abiEvent>,
@@ -38,7 +68,7 @@ export async function getContractEvents<
 ) {
   const rpcRequest = getRpcClient(options.contract);
   const parsedEvents = await (options.events
-    ? Promise.all(options.events.map((e) => resolveAbi(e)))
+    ? Promise.all(options.events.map((e) => resolveAbiEvent(e)))
     : // if we don't have events passed then resolve the abi for the contract -> all events!
       (resolveContractAbi(options.contract).then((abi) =>
         abi.filter((item) => item.type === "event"),

@@ -6,22 +6,35 @@ import type {
   ExtractAbiFunctionNames,
 } from "abitype";
 import {
-  transaction,
+  prepareTransaction,
   type Transaction,
-  type TransactionInput,
+  type TransactionOptions,
 } from "../transaction.js";
 import { eth_call, getRpcClient } from "../../rpc/index.js";
 import { encode } from "./encode.js";
-import { resolveAbi } from "./resolve-abi.js";
+import { resolveAbiFunction } from "./resolve-abi.js";
 
-export async function read<
+/**
+ * Reads data from a smart contract.
+ * @param options - The transaction options.
+ * @returns A promise that resolves with the result of the read transaction.
+ * @example
+ * ```ts
+ * import { readContract } from "thirdweb";
+ * const result = await readContract({
+ *  contract,
+ *  method: "totalSupply",
+ * });
+ * ```
+ */
+export async function readContract<
   const abi extends Abi,
   // if an abi has been passed into the contract, restrict the method to function names of the abi
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
->(options: TransactionInput<abi, method>) {
-  return readTx(transaction(options));
+>(options: TransactionOptions<abi, method>) {
+  return readTransaction(prepareTransaction(options));
 }
 
 export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 length, return never, invalid case
@@ -33,15 +46,25 @@ export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 len
       : // otherwise we'll return the array
         AbiParametersToPrimitiveTypes<abiFn["outputs"]>;
 
-export async function readTx<const abiFn extends AbiFunction>(
+/**
+ * Reads the result of a transaction from the blockchain.
+ * @param tx - The transaction to read.
+ * @returns A promise that resolves to the decoded output of the transaction.
+ * @example
+ * ```ts
+ * import { readTransaction } from "thirdweb/transaction";
+ * const result = await readTransaction(tx);
+ * ```
+ */
+export async function readTransaction<const abiFn extends AbiFunction>(
   tx: Transaction<abiFn>,
 ): Promise<ReadOutputs<abiFn>> {
-  const [encodedData, resolvedAbi] = await Promise.all([
+  const [encodedData, resolvedAbiFunction] = await Promise.all([
     encode(tx),
-    resolveAbi(tx),
+    resolveAbiFunction(tx),
   ]);
-  if (!resolvedAbi) {
-    throw new Error("Unable to resolve ABI");
+  if (!resolvedAbiFunction) {
+    throw new Error("Unable to resolve ABI function");
   }
 
   const rpcRequest = getRpcClient(tx.contract);
@@ -50,7 +73,7 @@ export async function readTx<const abiFn extends AbiFunction>(
     to: tx.contract.address,
   });
 
-  const decoded = decodeFunctionResult(resolvedAbi, result);
+  const decoded = decodeFunctionResult(resolvedAbiFunction, result);
 
   if (Array.isArray(decoded) && decoded.length === 1) {
     return decoded[0];

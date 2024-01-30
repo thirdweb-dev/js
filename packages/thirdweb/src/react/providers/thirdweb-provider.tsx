@@ -2,14 +2,26 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { WallerProvider } from "./wallet-provider.js";
+import { WalletProvider } from "./wallet-provider.js";
 import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
 import { waitForReceipt } from "../../transaction/index.js";
 
-export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+/**
+ * The ThirdwebProvider is the root component for all Thirdweb React apps.
+ * It sets up the React Query client and the WalletProvider.
+ * @param props - The props for the ThirdwebProvider
+ * @returns Your app wrapped in the ThirdwebProvider
+ * @example
+ * ```jsx
+ * import { ThirdwebProvider } from "thirdweb/react";
+ *
+ * <ThirdwebProvider>
+ *  <YourApp />
+ * </ThirdwebProvider>
+ * ```
+ */
+export const ThirdwebProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -55,7 +67,7 @@ export const ThirdwebProvider: React.FC<React.PropsWithChildren> = ({
   );
   return (
     <QueryClientProvider client={queryClient}>
-      <WallerProvider>{children}</WallerProvider>
+      <WalletProvider>{props.children}</WalletProvider>
     </QueryClientProvider>
   );
 };

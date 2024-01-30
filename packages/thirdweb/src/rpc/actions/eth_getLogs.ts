@@ -15,6 +15,22 @@ import {
   numberToHex,
 } from "viem";
 
+/**
+ * Retrieves logs from the Ethereum blockchain based on the specified parameters.
+ * @param request - The EIP1193 request function.
+ * @param params - The parameters for retrieving logs.
+ * @returns A promise that resolves to the retrieved logs.
+ * @example
+ * ```ts
+ * import { getRpcClient, eth_getLogs } from "thirdweb/rpc";
+ * const rpcRequest = getRpcClient({ client, chainId });
+ * const logs = await eth_getLogs(rpcRequest, {
+ *  address: "0x...",
+ *  fromBlock: 123456n,
+ *  toBlock: 123456n,
+ * });
+ * ```
+ */
 export async function eth_getLogs<
   const TAbiEvent extends AbiEvent | undefined = undefined,
   const TAbiEvents extends
@@ -26,16 +42,7 @@ export async function eth_getLogs<
   TToBlock extends BlockNumber | BlockTag | undefined = undefined,
 >(
   request: EIP1193RequestFn<EIP1474Methods>,
-  {
-    address,
-    blockHash,
-    fromBlock,
-    toBlock,
-    event,
-    events: events_,
-    args,
-    strict: strict_,
-  }: GetLogsParameters<
+  params: GetLogsParameters<
     TAbiEvent,
     TAbiEvents,
     TStrict,
@@ -45,8 +52,8 @@ export async function eth_getLogs<
 ): Promise<
   GetLogsReturnType<TAbiEvent, TAbiEvents, TStrict, TFromBlock, TToBlock>
 > {
-  const strict = strict_ ?? false;
-  const events = events_ ?? (event ? [event] : undefined);
+  const strict = params.strict ?? false;
+  const events = params.events ?? (params.event ? [params.event] : undefined);
 
   let topics: LogTopic[] = [];
   if (events) {
@@ -55,27 +62,27 @@ export async function eth_getLogs<
         encodeEventTopics({
           abi: [event_],
           eventName: (event_ as AbiEvent).name,
-          args,
+          args: params.args,
         } as EncodeEventTopicsParameters),
       ),
     ];
-    if (event) {
+    if (params.event) {
       topics = topics[0] as LogTopic[];
     }
   }
 
   let logs: RpcLog[];
-  if (blockHash) {
+  if (params.blockHash) {
     const param: {
       address?: string | string[];
       topics: LogTopic[];
       blockHash: `0x${string}`;
     } = {
       topics,
-      blockHash,
+      blockHash: params.blockHash,
     };
-    if (address) {
-      param.address = address;
+    if (params.address) {
+      param.address = params.address;
     }
     logs = await request({
       method: "eth_getLogs",
@@ -97,17 +104,21 @@ export async function eth_getLogs<
           blockHash?: `0x${string}`;
         }
     ) = { topics };
-    if (address) {
-      param.address = address;
+    if (params.address) {
+      param.address = params.address;
     }
 
-    if (fromBlock) {
+    if (params.fromBlock) {
       param.fromBlock =
-        typeof fromBlock === "bigint" ? numberToHex(fromBlock) : fromBlock;
+        typeof params.fromBlock === "bigint"
+          ? numberToHex(params.fromBlock)
+          : params.fromBlock;
     }
-    if (toBlock) {
+    if (params.toBlock) {
       param.toBlock =
-        typeof toBlock === "bigint" ? numberToHex(toBlock) : toBlock;
+        typeof params.toBlock === "bigint"
+          ? numberToHex(params.toBlock)
+          : params.toBlock;
     }
     logs = await request({
       method: "eth_getLogs",

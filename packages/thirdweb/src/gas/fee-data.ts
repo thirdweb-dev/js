@@ -13,6 +13,15 @@ type FeeData = {
   baseFee: null | bigint;
 };
 
+/**
+ * Retrieves the default gas overrides for a given client and chain ID.
+ * If the fee data contains both maxFeePerGas and maxPriorityFeePerGas, it returns an object with those values.
+ * Otherwise, it returns an object with the gasPrice obtained from the client and chain ID.
+ * @param client - The ThirdwebClient instance.
+ * @param chainId - The chain ID.
+ * @returns An object containing the default gas overrides.
+ * @internal
+ */
 export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chainId: number,
@@ -38,6 +47,13 @@ export async function getDefaultGasOverrides(
   }
 }
 
+/**
+ * Retrieves dynamic fee data for a given chain.
+ * @param client - The Thirdweb client.
+ * @param chainId - The chain ID.
+ * @returns A promise that resolves to the fee data.
+ * @internal
+ */
 export async function getDynamicFeeData(
   client: ThirdwebClient,
   chainId: number,
@@ -89,6 +105,13 @@ export async function getDynamicFeeData(
   };
 }
 
+/**
+ * Calculates the preferred priority fee based on the default priority fee per gas and a percent multiplier.
+ * @param defaultPriorityFeePerGas - The default priority fee per gas.
+ * @param percentMultiplier - The percent multiplier to calculate the extra tip. Default is 10.
+ * @returns The total priority fee including the extra tip.
+ * @internal
+ */
 function getPreferredPriorityFee(
   defaultPriorityFeePerGas: bigint,
   percentMultiplier: number = 10,
@@ -99,6 +122,13 @@ function getPreferredPriorityFee(
   return totalPriorityFee;
 }
 
+/**
+ * Retrieves the gas price for a transaction on a specific chain.
+ * @param client - The Thirdweb client.
+ * @param chainId - The ID of the chain.
+ * @returns A promise that resolves to the gas price as a bigint.
+ * @internal
+ */
 export async function getGasPrice(
   client: ThirdwebClient,
   chainId: number,

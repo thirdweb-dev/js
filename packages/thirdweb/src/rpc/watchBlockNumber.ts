@@ -9,6 +9,10 @@ const DEFAULT_OVERPOLL_RATIO = 2; // poll twice as often as the average block ti
 
 const SLIDING_WINDOW_SIZE = 10; // always keep track of the last 10 block times
 
+/**
+ * TODO: document
+ * @internal
+ */
 function getAverageBlockTime(blockTimes: number[]): number {
   // left-pad the blocktimes Array with the DEFAULT_POLL_DELAY
   while (blockTimes.length < SLIDING_WINDOW_SIZE) {
@@ -19,6 +23,10 @@ function getAverageBlockTime(blockTimes: number[]): number {
   return sum / blockTimes.length;
 }
 
+/**
+ * TODO: document
+ * @internal
+ */
 function createBlockNumberPoller(
   client: ThirdwebClient,
   chainId: number,
@@ -33,6 +41,10 @@ function createBlockNumberPoller(
 
   const rpcRequest = getRpcClient({ client, chainId });
 
+  /**
+   * TODO: document
+   * @internal
+   */
   async function poll() {
     // stop polling if there are no more subscriptions
     if (!isActive) {
@@ -103,6 +115,10 @@ function createBlockNumberPoller(
   };
 }
 
+/**
+ * TODO: document
+ * @internal
+ */
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -112,12 +128,34 @@ const existingPollers = new Map<
   ReturnType<typeof createBlockNumberPoller>
 >();
 
-export function watchBlockNumber(opts: {
+export type WatchBlockNumberOptions = {
   client: ThirdwebClient;
   chainId: number;
   onNewBlockNumber: (blockNumber: bigint) => void;
   overPollRatio?: number;
-}) {
+};
+
+/**
+ * Watches the block number for a specific chain.
+ * @param opts - The options for watching the block number.
+ * @returns The unwatch function.
+ * @example
+ * ```ts
+ * import { watchBlockNumber } from "thirdweb";
+ * const unwatch = watchBlockNumber({
+ *  client,
+ *  chainId,
+ *  onNewBlockNumber: (blockNumber) => {
+ *    // do something with the block number
+ *    },
+ * });
+ *
+ * // later stop watching
+ * unwatch();
+ *
+ * ```
+ */
+export function watchBlockNumber(opts: WatchBlockNumberOptions) {
   const { client, chainId, onNewBlockNumber, overPollRatio } = opts;
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);

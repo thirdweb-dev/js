@@ -8,20 +8,27 @@ export type ContractOptions<abi extends Abi = []> = {
   readonly abi?: abi;
 };
 
-export type ThirdwebContract<abi extends Abi = []> = {
-  readonly client: ThirdwebClient;
-  readonly address: string;
-  readonly chainId: number;
-  readonly abi?: abi;
-};
+export type ThirdwebContract<abi extends Abi = []> = Readonly<
+  ContractOptions<abi>
+>;
 
 /**
  * Creates a Thirdweb contract by combining the Thirdweb client and contract options.
- * @param client - The Thirdweb client.
- * @param options - The contract options.
+ * @param options - The options for creating the contract.
  * @returns The Thirdweb contract.
+ * @example
+ * ```ts
+ * import { createClient, getContract } from "thirdweb";
+ * const client = createClient({ clientId: "..." });
+ * const contract = getContract({
+ *  client,
+ *  address: "...",
+ *  // optional ABI
+ *  abi: [...],
+ * });
+ * ```
  */
-export function contract<const abi extends Abi = []>(
+export function getContract<const abi extends Abi = []>(
   options: ContractOptions<abi>,
 ): ThirdwebContract<abi> {
   return options;

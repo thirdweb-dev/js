@@ -11,13 +11,28 @@ const MAX_BLOCKS_WAIT_TIME = 10;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
-export function waitForReceipt<abi extends Abi>({
-  transactionHash,
-  contract,
-}: {
+export type WaitForReceiptOptions<abi extends Abi> = {
   transactionHash: string;
   contract: ThirdwebContract<abi>;
-}): Promise<TransactionReceipt> {
+};
+
+/**
+ * Waits for the transaction receipt of a given transaction hash on a specific contract.
+ * @param options - The options for waiting for the receipt.
+ * @returns A promise that resolves with the transaction receipt.
+ * @example
+ * ```ts
+ * import { waitForReceipt } from "thirdweb/transaction";
+ * const receipt = await waitForReceipt({
+ *   contract: myContract,
+ *   transactionHash: "0x123...",
+ * });
+ * ```
+ */
+export function waitForReceipt<abi extends Abi>(
+  options: WaitForReceiptOptions<abi>,
+): Promise<TransactionReceipt> {
+  const { transactionHash, contract } = options;
   const key = `${contract.chainId}:${transactionHash}`;
 
   if (map.has(key)) {
@@ -46,7 +61,7 @@ export function waitForReceipt<abi extends Abi>({
           reject(new Error("Transaction not found after 10 blocks"));
         }
         try {
-          const receipt = eth_getTransactionReceipt(request, {
+          const receipt = await eth_getTransactionReceipt(request, {
             hash: transactionHash as Hex,
           });
 

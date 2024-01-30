@@ -48,11 +48,9 @@ export type RpcResponse<TResult = any, TError = any> = {
 
 const RPC_CLIENT_MAP = new WeakMap();
 
-type RPCOptions = {
-  readonly client: ThirdwebClient;
-  readonly chainId: number;
-};
-
+/**
+ * @internal
+ */
 function getRpcClientMap(client: ThirdwebClient) {
   if (RPC_CLIENT_MAP.has(client)) {
     return RPC_CLIENT_MAP.get(client);
@@ -62,6 +60,9 @@ function getRpcClientMap(client: ThirdwebClient) {
   return rpcClientMap;
 }
 
+/**
+ * @internal
+ */
 function rpcRequestKey(request: RpcRequest): string {
   return `${request.method}:${JSON.stringify(request.params)}`;
 }
@@ -70,6 +71,30 @@ const DEFAULT_MAX_BATCH_SIZE = 100;
 // default to no timeout (next tick)
 const DEFAULT_BATCH_TIMEOUT_MS = 0;
 
+type RPCOptions = Readonly<{
+  client: ThirdwebClient;
+  chainId: number;
+  config?: {
+    maxBatchSize?: number;
+    batchTimeoutMs?: number;
+  };
+}>;
+
+/**
+ * Returns an RPC request that can be used to make JSON-RPC requests.
+ * @param options - The RPC options.
+ * @returns The RPC request function.
+ * @example
+ * ```ts
+ * import { createClient } from "thirdweb";
+ * import { getRpcClient } from "thirdweb/rpc";
+ * const client = createClient({ clientId: "..." });
+ * const rpcRequest = getRpcClient({ client, chainId: 1 });
+ * const blockNumber = await rpcRequest({
+ *  method: "eth_blockNumber",
+ * });
+ * ```
+ */
 export function getRpcClient(
   options: RPCOptions,
 ): EIP1193RequestFn<EIP1474Methods> {
@@ -81,6 +106,9 @@ export function getRpcClient(
   }
 
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
+    const batchSize = options.config?.maxBatchSize ?? DEFAULT_MAX_BATCH_SIZE;
+    const batchTimeoutMs =
+      options.config?.batchTimeoutMs ?? DEFAULT_BATCH_TIMEOUT_MS;
     // inflight requests
     const inflightRequests = new Map<string, Promise<any>>();
     let pendingBatch: Array<{
@@ -96,6 +124,10 @@ export function getRpcClient(
     }> = [];
     let pendingBatchTimeout: ReturnType<typeof setTimeout> | null = null;
 
+    /**
+     * Sends the pending batch of requests.
+     * @internal
+     */
     function sendPendingBatch() {
       // clear the timeout if any
       if (pendingBatchTimeout) {
@@ -168,13 +200,10 @@ export function getRpcClient(
       pendingBatch.push({ request, resolve, reject, requestKey });
       // if there is no timeout, set one
       if (!pendingBatchTimeout) {
-        pendingBatchTimeout = setTimeout(
-          sendPendingBatch,
-          DEFAULT_BATCH_TIMEOUT_MS,
-        );
+        pendingBatchTimeout = setTimeout(sendPendingBatch, batchTimeoutMs);
       }
       // if the batch is full, send it
-      if (pendingBatch.length >= DEFAULT_MAX_BATCH_SIZE) {
+      if (pendingBatch.length >= batchSize) {
         sendPendingBatch();
       }
       return promise;
@@ -190,6 +219,9 @@ type FetchRpcOptions = {
   chainId: number;
 };
 
+/**
+ * @internal
+ */
 async function fetchRpc(
   client: ThirdwebClient,
   { requests, chainId }: FetchRpcOptions,
@@ -200,11 +232,14 @@ async function fetchRpc(
   if (client.secretKey) {
     headers.set("x-secret-key", client.secretKey);
   }
-  const response = await fetch(`https://${chainId}.rpc.thirdweb.com`, {
-    headers,
-    body: stringify(requests),
-    method: "POST",
-  });
+  const response = await fetch(
+    `https://${chainId}.rpc.thirdweb.com/${client.clientId}`,
+    {
+      headers,
+      body: stringify(requests),
+      method: "POST",
+    },
+  );
 
   if (!response.ok) {
     throw new Error(`RPC request failed with status ${response.status}`);

@@ -4,7 +4,7 @@ import { Contract, getDefaultProvider } from "ethers6";
 import { createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { createClient, contract } from "../src";
+import { createClient, getContract } from "../src";
 import { totalSupply } from "../src/extensions/erc20";
 
 const USDC_ADDRESS = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
@@ -15,7 +15,7 @@ bench.add("thirdweb@alpha", async () => {
     clientId: "benchmark",
   });
 
-  const myContract = contract({
+  const myContract = getContract({
     client,
     chainId: 1,
     address: USDC_ADDRESS,

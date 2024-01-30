@@ -1,6 +1,5 @@
 import { type TxOpts } from "../../../transaction/transaction.js";
-import { read } from "../../../transaction/actions/read.js";
-import { createReadExtension } from "../../../utils/extension.js";
+import { readContract } from "../../../transaction/actions/read.js";
 
 export type TokenUriParams = { tokenId: bigint };
 
@@ -8,14 +7,17 @@ export type TokenUriParams = { tokenId: bigint };
  * Retrieves the URI associated with a specific ERC721 token.
  * @param options - The transaction options.
  * @returns A Promise that resolves to the token URI.
+ * @example
+ * ```ts
+ * import { tokenURI } from "thirdweb/extensions/erc721";
+ * const uri = await tokenURI({ contract, tokenId: 1n });
+ * ```
  */
-export const tokenURI = /*@__PURE__*/ createReadExtension("erc721.totkenURI")(
-  function (options: TxOpts<TokenUriParams>): Promise<string> {
-    return read({
-      ...options,
-      method:
-        "function tokenURI(uint256 tokenId) external view returns (string memory)",
-      params: [BigInt(options.tokenId)],
-    });
-  },
-);
+export function tokenURI(options: TxOpts<TokenUriParams>): Promise<string> {
+  return readContract({
+    ...options,
+    method:
+      "function tokenURI(uint256 tokenId) external view returns (string memory)",
+    params: [BigInt(options.tokenId)],
+  });
+}

@@ -8,9 +8,32 @@ import {
   replaceObjectFilesWithUris,
   replaceObjectGatewayUrlsWithSchemes,
 } from "./upload/helpers.js";
-import type { FileOrBufferOrString, UploadOptions } from "./upload/types.js";
+import type {
+  FileOrBufferOrString,
+  UploadOptions as InternalUploadOptions,
+} from "./upload/types.js";
 
-export async function upload(client: ThirdwebClient, options: UploadOptions) {
+export type UploadOptions = InternalUploadOptions & {
+  client: ThirdwebClient;
+};
+
+/**
+ * Uploads files based on the provided options.
+ * @param options - The upload options.
+ * @returns A promise that resolves to an array of uploaded file URIs.
+ * @throws An error if the upload fails.
+ * @example
+ * ```ts
+ * import { upload } from "thirdweb/storage";
+ * const uris = await upload({
+ *  client,
+ *  files: [
+ *    new File(["hello world"], "hello.txt"),
+ *  ],
+ * });
+ * ```
+ */
+export async function upload(options: UploadOptions) {
   // deal with the differnt file types
 
   // if there are no files, return an empty array immediately
@@ -38,7 +61,7 @@ export async function upload(client: ThirdwebClient, options: UploadOptions) {
     const files = extractObjectFiles(cleaned);
     if (files.length) {
       // Upload all files that came from the object
-      const uris_ = await upload(client, { ...options, files });
+      const uris_ = await upload({ ...options, files });
 
       // Recurse through data and replace files with hashes
       cleaned = replaceObjectFilesWithUris(cleaned, uris_) as unknown[];
@@ -59,8 +82,8 @@ export async function upload(client: ThirdwebClient, options: UploadOptions) {
 
   if (isBrowser()) {
     const { uploadBatchBrowser } = await import("./upload/browser.js");
-    return await uploadBatchBrowser(client, form, fileNames, options);
+    return await uploadBatchBrowser(options.client, form, fileNames, options);
   }
   const { uploadBatchNode } = await import("./upload/node.js");
-  return uploadBatchNode(client, form, fileNames, options);
+  return uploadBatchNode(options.client, form, fileNames, options);
 }

@@ -1,89 +1,47 @@
-import type {
-  Hex,
-  PrivateKeyAccount,
-  SignableMessage,
-  TransactionSerializable,
-  TypedDataDefinition,
-} from "viem";
+import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { TypedData } from "abitype";
+
 import type { IWallet } from "./interfaces/wallet.js";
 import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
+import { privateKeyToAccount } from "viem/accounts";
 
-export function privateKeyWallet({ client }: { client: ThirdwebClient }) {
-  return new PrivateKeyWallet(client);
-}
-
-type PrivateKeyWalletConnectOptions = {
-  pkey: string;
+export type PrivateKeyWalletOptions = {
+  client: ThirdwebClient;
+  privateKey: string;
 };
 
-class PrivateKeyWallet implements IWallet<PrivateKeyWalletConnectOptions> {
-  private account: PrivateKeyAccount | null = null;
-  private client: ThirdwebClient;
-
-  get address() {
-    return this.account?.address || null;
+/**
+ * Creates a private key wallet.
+ * @param options - The options for creating the wallet.
+ * @returns An object representing the private key wallet.
+ * @example
+ * ```ts
+ * import { privateKeyWallet } from "thirdweb/wallets/private-key"
+ * const wallet = privateKeyWallet({
+ *  client,
+ *  privateKey: "...",
+ * });
+ * ```
+ */
+export function privateKeyWallet(options: PrivateKeyWalletOptions) {
+  if (!options.privateKey.startsWith("0x")) {
+    options.privateKey = "0x" + options.privateKey;
   }
-
-  constructor(client: ThirdwebClient) {
-    this.client = client;
-  }
-
-  public async connect(options: PrivateKeyWalletConnectOptions) {
-    let pkey = options.pkey;
-    const { privateKeyToAccount } = await import("viem/accounts");
-    // auto prefix
-    if (typeof pkey === "string" && !pkey.startsWith("0x")) {
-      pkey = "0x" + pkey;
-    }
-    this.account = privateKeyToAccount(pkey as Hex);
-    return this;
-  }
-
-  public async signMessage(message: SignableMessage) {
-    if (!this.account) {
-      throw new Error("not connected");
-    }
-    return this.account.signMessage({ message });
-  }
-
-  public async signTypedData<
-    const typedData extends TypedData | Record<string, unknown>,
-    primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-  >(typedData: TypedDataDefinition<typedData, primaryType>) {
-    if (!this.account) {
-      throw new Error("not connected");
-    }
-    return this.account.signTypedData(typedData);
-  }
-
-  // tx functions
-  public async signTransaction(tx: TransactionSerializable) {
-    if (!this.account) {
-      throw new Error("not connected");
-    }
-    return this.account.signTransaction(tx);
-  }
-
-  public async sendTransaction(
-    tx: TransactionSerializable & { chainId: number },
-  ) {
-    if (!this.account || !this.address) {
-      throw new Error("not connected");
-    }
-
-    const rpcRequest = getRpcClient({
-      client: this.client,
-      chainId: tx.chainId,
-    });
-
-    const signedTx = await this.signTransaction(tx);
-
-    return await eth_sendRawTransaction(rpcRequest, signedTx);
-  }
-
-  public async disconnect() {
-    this.account = null;
-  }
+  const account = privateKeyToAccount(options.privateKey as Hex);
+  return {
+    address: account.address,
+    sendTransaction: async (
+      tx: TransactionSerializable & { chainId: number },
+    ) => {
+      const rpcRequest = getRpcClient({
+        client: options.client,
+        chainId: tx.chainId,
+      });
+      const signedTx = await account.signTransaction(tx);
+      return await eth_sendRawTransaction(rpcRequest, signedTx);
+    },
+    signTransaction: account.signTransaction,
+    signMessage: account.signMessage,
+    signTypedData: account.signTypedData,
+  } satisfies IWallet;
 }

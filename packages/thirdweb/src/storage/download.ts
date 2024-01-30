@@ -1,20 +1,26 @@
-import type { ThirdwebClient } from "../client/client.js";
+import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 
-export type DownloadOptions = {
-  uri: string;
-};
+export type DownloadOptions = ResolveSchemeOptions;
 
-export async function download(
-  client: ThirdwebClient,
-  options: DownloadOptions,
-) {
-  let url: string;
-  if (options.uri.startsWith("ipfs://")) {
-    url = `https://${client.clientId}.ipfscdn.io/ipfs/${options.uri.slice(7)}`;
-  } else if (options.uri.startsWith("http")) {
-    url = options.uri;
-  } else {
-    throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
+/**
+ * Downloads a file from the specified URI.
+ * @param options - The download options.
+ * @returns A Promise that resolves to the downloaded file.
+ * @throws An error if the URI scheme is invalid.
+ * @example
+ * ```ts
+ * import { download } from "thirdweb/storage";
+ * const file = await download({
+ *  client,
+ *  uri: "ipfs://Qm...",
+ * });
+ * ```
+ */
+export async function download(options: DownloadOptions) {
+  const url = resolveScheme(options);
+  const headers: HeadersInit = {};
+  if (options.client.secretKey) {
+    headers["x-secret-key"] = options.client.secretKey;
   }
-  return await fetch(url);
+  return await fetch(url, headers);
 }

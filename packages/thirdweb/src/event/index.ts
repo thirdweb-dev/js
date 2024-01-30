@@ -1,8 +1,8 @@
 export {
-  contractEvent,
+  prepareEvent,
   type ContractEvent,
-  type ContractEventInput,
+  type ContractEventOptions as ContractEventInput,
 } from "./event.js";
 
-export { watchContractEvents } from "./actions/watch-events.js";
-export { getContractEvents } from "./actions/get-events.js";
+export { watchEvents } from "./actions/watch-events.js";
+export { getEvents } from "./actions/get-events.js";

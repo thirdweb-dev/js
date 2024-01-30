@@ -2,7 +2,7 @@ import { parseAbiItem, type AbiFunction, type Abi } from "abitype";
 import {
   isAbiFunction,
   type Transaction,
-  type TransactionInput,
+  type TransactionOptions,
 } from "../transaction.js";
 import type { ParseMethod } from "../../abi/types.js";
 
@@ -11,10 +11,18 @@ const ABI_FN_RESOLUTION_CACHE = new WeakMap<
   Promise<AbiFunction>
 >();
 
-export function resolveAbi<
+/**
+ * Resolves the ABI function for a given transaction input.
+ *
+ * @param tx - The transaction input containing the ABI and method information.
+ * @returns A promise that resolves to the parsed ABI function.
+ * @throws An error if the ABI function cannot be found in the ABI.
+ * @internal
+ */
+export function resolveAbiFunction<
   method extends AbiFunction | string,
   abi extends Abi,
->(tx: TransactionInput<abi, method>): Promise<ParseMethod<abi, method>> {
+>(tx: TransactionOptions<abi, method>): Promise<ParseMethod<abi, method>> {
   if (ABI_FN_RESOLUTION_CACHE.has(tx as Transaction<AbiFunction>)) {
     return ABI_FN_RESOLUTION_CACHE.get(
       tx as Transaction<AbiFunction>,

@@ -14,20 +14,33 @@ type GetBlockByHashParams<TIncludeTransactions extends boolean = false> = {
   blockHash: Hash;
 };
 
+/**
+ * Retrieves a block by its hash.
+ * @param request - The EIP1193 request function.
+ * @param params - The parameters for the block retrieval.
+ * @returns A promise that resolves to the retrieved block.
+ * @throws An error if the block is not found.
+ * @example
+ * ```ts
+ * import { getRpcClient, eth_getBlockByHash } from "thirdweb/rpc";
+ * const rpcRequest = getRpcClient({ client, chainId });
+ * const block = await eth_getBlockByHash(rpcRequest, {
+ * blockHash: "0x...",
+ * includeTransactions: true,
+ * });
+ * ```
+ */
 export async function eth_getBlockByHash<
   TIncludeTransactions extends boolean = false,
 >(
   request: EIP1193RequestFn<EIP1474Methods>,
-  {
-    blockHash,
-    includeTransactions: includeTransactions_,
-  }: GetBlockByHashParams<TIncludeTransactions>,
+  params: GetBlockByHashParams<TIncludeTransactions>,
 ): Promise<GetBlockReturnType<undefined, TIncludeTransactions>> {
-  const includeTransactions = includeTransactions_ ?? false;
+  const includeTransactions = params.includeTransactions ?? false;
 
   const block = await request({
     method: "eth_getBlockByHash",
-    params: [blockHash, includeTransactions],
+    params: [params.blockHash, includeTransactions],
   });
   if (!block) {
     throw new Error("Block not found");

@@ -37,10 +37,10 @@ const client = createClient({
 A "contract" is a wrapper around a smart contract that is deployed on a chain. It is what you use to create [transactions](#transactions) and [read contract state](#read---reading-contract-state).
 
 ```ts
-import { createClient, contract } from "thirdweb";
+import { createClient, getContract } from "thirdweb";
 
 const client = createClient({...})
-const myContract = contract({
+const contract = getContract({
   // pass in the client
   client,
   // pass the contract address
@@ -61,10 +61,10 @@ There are 4 ways to create a transaction, all of these return the same transacti
 ##### Method Signature
 
 ```ts
-import { transaction } from "thirdweb/transaction";
+import { prepareTransaction } from "thirdweb";
 
-const tx = transaction({
-  client: myContract,
+const tx = prepareTransaction({
+  contract,
   // pass the method signature that you want to call
   method: "function mintTo(address to, uint256 amount)",
   // and the params for that method
@@ -76,9 +76,9 @@ const tx = transaction({
 ##### Automatic ABI Resolution
 
 ```ts
-import { transaction } from "thirdweb/transaction";
-const tx = transaction({
-  client: myContract,
+import { prepareTransaction } from "thirdweb";
+const tx = prepareTransaction({
+  contract,
   // in this case we only pass the name of the method we want to call
   method: "mintTo",
   // however using this method we lose type safety for our params
@@ -89,10 +89,9 @@ const tx = transaction({
 ##### Explicit Contract ABI
 
 ```ts
-import { contract } from "thirdweb";
-import { transaction } from "thirdweb/transaction";
+import { getContract, prepareTransaction } from "thirdweb";
 
-const myContract = contract({
+const contract = getContract({
   {...}
   // the abi for the contract is defined here
   abi: [
@@ -115,8 +114,8 @@ const myContract = contract({
   ],
 });
 
-const tx = transaction({
-  client: myContract,
+const tx = prepareTransaction({
+  contract,
   // we get auto-completion for all the available functions on the contract ABI
   method: "mintTo",
   // including full type-safety for the params
@@ -127,9 +126,9 @@ const tx = transaction({
 ##### ABI Snippet
 
 ```ts
-import { transaction } from "thirdweb/transaction";
-const tx = transaction({
-  client: myContract,
+import { prepareTransaction } from "thirdweb";
+const tx = prepareTransaction({
+  client,
   // in this case we pass the piece of the abi for the method we want to call
   abi: {
     name: "mintTo",
@@ -156,15 +155,15 @@ Transactions have a variety of actions that can be called on them, in all cases 
 
 ##### `read` - reading contract state
 
-For reading contract state, there is a shortcut function called `read` that can be used instead of `transaction`:
+For reading contract state, there is a shortcut function called `read` that can be used instead of `prepareTransaction`:
 
 ```ts
-import { read } from "thirdweb/transaction";
+import { readContract } from "thirdweb";
 
 // output type is automatically inferred based on the method signature
-const balance = await read({
+const balance = await readContract({
   //    ^ bigint
-  client: myContract,
+  contract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x123..."],
 });
@@ -173,21 +172,21 @@ const balance = await read({
 Which is the equivalent of doing:
 
 ```ts
-import { transaction, readTx } from "thirdweb/transaction";
+import { prepareTransaction, readTransaction } from "thirdweb";
 
-const tx = transaction({
-  client: myContract,
+const tx = prepareTransaction({
+  contract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x123..."],
 });
 
-const balance = await readTx(tx);
+const balance = await readTransaction(tx);
 ```
 
 ##### `estimateGas` - estimating gas cost for a tx
 
 ```ts
-import { estimateGas } from "thirdweb/transaction";
+import { estimateGas } from "thirdweb";
 
 const gasEstimate = await estimateGas(tx);
 ```
@@ -197,19 +196,23 @@ const gasEstimate = await estimateGas(tx);
 See [Wallets](#wallets) for more information on how to send a transaction.
 
 ```ts
+import { sendTransaction } from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
-const wallet = privateKeyWallet({ client });
+const wallet = privateKeyWallet({ privateKey: "<your private key>" });
 
-const { transactionHash } = await wallet.sendTransaction(tx);
+const { transactionHash } = sendTransaction(tx, wallet);
 ```
 
 ##### `waitForReceipt` - waiting for a transaction to be mined
 
 ```ts
-import { waitForReceipt } from "thirdweb/transaction";
+import { waitForReceipt } from "thirdweb";
 
-const receipt = await waitForReceipt(tx);
+const receipt = await waitForReceipt({
+  contract,
+  transactionHash: "0x...",
+});
 ```
 
 ### Wallets
@@ -225,9 +228,7 @@ For usage in browsers.
 ```ts
 import { metamaskWallet } from "thirdweb/wallets/metamask";
 
-const wallet = metamaskWallet({ client });
-
-await wallet.connect();
+const wallet = await metamaskWallet();
 ```
 
 #### Private Key
@@ -237,11 +238,7 @@ For usage in backend environments.
 ```ts
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
-const wallet = privateKeyWallet({ client });
-
-await wallet.connect({
-  pkey: "<your private key>",
-});
+const wallet = privateKeyWallet({ client, privateKey: "<your private key>" });
 ```
 
 ### Extensions
@@ -264,10 +261,14 @@ import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
 #### With Extensions
 
 ```ts
-import { createClient, contract } from "thirdweb";
+import {
+  createClient,
+  getContract,
+  sendTransaction,
+  waitForReceipt,
+} from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
-import { sendTransaction, waitForReceipt } from "thirdweb/transaction";
 
 // Step 1: create a client
 const client = createClient({
@@ -276,7 +277,7 @@ const client = createClient({
 });
 
 // Step 2: define a contract to interact with
-const myContract = contract({
+const contract = getContract({
   client,
   // the contract address
   address: "0xBCfaB342b73E08858Ce927b1a3e3903Ddd203980",
@@ -286,20 +287,21 @@ const myContract = contract({
 
 // Step 3: read contract state
 const balance = await balanceOf({
-  contract: myContract,
+  contract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
 console.log("beginning balance", balance);
 
 // Step 4: initialize a wallet
-const wallet = privateKeyWallet({ client });
-
-await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
+const wallet = privateKeyWallet({
+  client,
+  privateKey: process.env.PRIVATE_KEY as string,
+});
 
 // Step 5: create a transaction
 const tx = mintTo({
-  contract: myContract,
+  contract,
   to: "0x0890C23024089675D072E984f28A93bb391a35Ab",
   amount: 100,
 });
@@ -312,14 +314,14 @@ console.log("tx hash", transactionHash);
 // Step 7: wait for the receipt to be mined
 const txReceipt = await waitForReceipt({
   transactionHash,
-  contract: myContract,
+  contract,
 });
 
 console.log(txReceipt);
 
 // Step 8: read contract state
 const newBalance = await balanceOf({
-  contract: myContract,
+  contract,
   address: "0x0890C23024089675D072E984f28A93bb391a35Ab",
 });
 
@@ -329,13 +331,14 @@ console.log("ending balance", newBalance);
 #### Without Extensions
 
 ```ts
-import { contract, createClient } from "thirdweb";
 import {
-  read,
+  createClient,
+  getContract,
+  readContract,
   sendTransaction,
-  transaction,
+  prepareTransaction,
   waitForReceipt,
-} from "thirdweb/transaction";
+} from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
 // Step 1: create a client
@@ -345,7 +348,7 @@ const client = createClient({
 });
 
 // Step 2: define a contract to interact with
-const myContract = contract({
+const contract = getContract({
   client,
   // the contract address
   address: "0xBCfaB342b73E08858Ce927b1a3e3903Ddd203980",
@@ -354,8 +357,8 @@ const myContract = contract({
 });
 
 // Step 3: read contract state
-const balance = await read({
-  contract: myContract,
+const balance = await readContract({
+  contract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });
@@ -363,13 +366,14 @@ const balance = await read({
 console.log("beginning balance", balance);
 
 // Step 4: initialize a wallet
-const wallet = privateKeyWallet({ client });
-
-await wallet.connect({ pkey: process.env.PRIVATE_KEY as string });
+const wallet = privateKeyWallet({
+  client,
+  privateKey: process.env.PRIVATE_KEY as string,
+});
 
 // Step 5: create a transaction
-const tx = transaction({
-  contract: myContract,
+const tx = prepareTransaction({
+  contract,
   method: "function mintTo(address to, uint256 amount)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab", 100n * 10n ** 18n],
 });
@@ -381,15 +385,15 @@ console.log("tx hash", transactionHash);
 
 // Step 7: wait for the receipt to be mined
 const txReceipt = await waitForReceipt({
-  contract: myContract,
+  contract,
   transactionHash,
 });
 
 console.log(txReceipt);
 
 // Step 8: read contract state
-const newBalance = await read({
-  contract: myContract,
+const newBalance = await readContract({
+  contract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab"],
 });
