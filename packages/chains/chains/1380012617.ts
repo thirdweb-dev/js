@@ -6,7 +6,7 @@ export default {
   "faucets": [],
   "features": [],
   "icon": {
-    "url": "ipfs://QmUQWUvJxi5yNof638U42ihmUmfTzGiMaYgYatQqzvy3mr/rari.png",
+    "url": "ipfs://QmdAX6818vZ3bAsPRv1DZGrc7qc8XTrgCnRLWrMecixhXb/RARI%20Chain%20Logomark%20Color.png",
     "width": 512,
     "height": 512,
     "format": "png"
@@ -32,7 +32,7 @@ export default {
   "rpc": [
     "https://rari.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1380012617.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rari.calderachain.xyz/http"
+    "https://mainnet.rpc.rarichain.org/http"
   ],
   "shortName": "rari",
   "slug": "rari",

@@ -11,9 +11,9 @@ export default {
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmXLmYMqZ2ZKyaaEjayNjLai4RUo2YmorUDwkk95xmdTUr",
-    "width": 80,
-    "height": 80,
+    "url": "ipfs://bafkreievnqg3xjokaty4kfbxxbrzm5v5y7exbaaia2txrh4sfgrqsalfym",
+    "width": 128,
+    "height": 128,
     "format": "png"
   },
   "infoURL": "https://ancient8.gg/",
