@@ -1,16 +1,12 @@
 import { getAddress, toHex, type Hex } from "viem";
 import type { Address } from "abitype";
-import type { Wallet } from "./interfaces/wallet.js";
 import type { Ethereum } from "./interfaces/ethereum.js";
 import { createStore } from "mipd";
 import { normalizeChainId } from "./utils/normalizeChainId.js";
+import type { Wallet } from "./index.js";
 
 // start provider discovery on page load
 const store = /* @__PURE__ */ createStore();
-
-export type InjectedWallet = Wallet<{
-  switchChain: (newChainId: bigint | number) => Promise<void>;
-}>;
 
 export type WalletRDNS =
   | "io.metamask"
@@ -69,7 +65,7 @@ export type InjectedWalletOptions = {
  */
 export async function injectedWallet(
   options?: InjectedWalletOptions,
-): Promise<InjectedWallet> {
+): Promise<Wallet> {
   /**
    * @internal
    */
@@ -150,7 +146,7 @@ export async function injectedWallet(
     await switchChain(options.chainId);
   }
 
-  const wallet: InjectedWallet = {
+  const wallet: Wallet = {
     address: address,
     chainId: providerChainId,
     sendTransaction: async (tx) => {
@@ -175,19 +171,31 @@ export async function injectedWallet(
       };
     },
     switchChain,
-    id: "injected",
-    on: (event, listener) => {
+    id: options?.walletId || "injected",
+    addListener: (event, listener) => {
       if (!provider.on) {
         return;
       }
 
       provider.on(event, listener);
     },
+    removeListener: (event, listener) => {
+      if (!provider.removeListener) {
+        return;
+      }
+
+      provider.removeListener(event, listener);
+    },
   };
 
   if (provider.on) {
     provider.on("accountsChanged", (accounts: string[]) => {
-      wallet.address = getAddress(accounts[0] as string);
+      const _address = accounts[0];
+      if (!_address) {
+        wallet.address = undefined;
+      } else {
+        wallet.address = getAddress(_address);
+      }
     });
 
     provider.on("chainChanged", (chainId: string) => {

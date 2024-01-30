@@ -2,6 +2,7 @@ export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
 
 export {
   useSetActiveWallet,
+  useActiveWalletChainId,
   useConnect,
   useDisconnect,
   useActiveWallet,

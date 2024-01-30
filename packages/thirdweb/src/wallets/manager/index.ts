@@ -28,7 +28,9 @@ export type ConnectionManagerOptions = {
 export function createConnectionManager(options: ConnectionManagerOptions) {
   const { storage } = options;
   // stores
-  const activeWalletId = createStore<string | null>(null);
+  const activeWalletId = createStore<string | undefined>(undefined);
+  const activeWalletAddress = createStore<string | undefined>(undefined);
+  const activeWalletChainId = createStore<bigint | undefined>(undefined);
   const connectedWalletsMap = createStore<ConnectedWalletsMap>(new Map());
 
   // computed stores
@@ -51,7 +53,7 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     connectedWalletsMap.setValue(newMap);
   };
 
-  const disconnectWallet = (walletId: string) => {
+  const onDisconnect = (walletId: string) => {
     const currentMap = connectedWalletsMap.getValue();
     const newMap = new Map(currentMap);
     newMap.delete(walletId);
@@ -59,16 +61,52 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
 
     // if it is the active wallet, set active wallet to null
     if (activeWalletId.getValue() === walletId) {
-      activeWalletId.setValue(null);
+      activeWalletId.setValue(undefined);
     }
+
+    activeWalletAddress.setValue(undefined);
+    activeWalletChainId.setValue(undefined);
   };
 
-  const setActiveWalletId = (walletId: string | null) => {
+  const disconnectWallet = (walletId: string) => {
+    onDisconnect(walletId);
+  };
+
+  const setActiveWalletId = (walletId: string | undefined) => {
     activeWalletId.setValue(walletId);
     const wallet = connectedWalletsMap.getValue().get(walletId || "");
 
     if (wallet) {
-      wallet.on("accountsChanged", () => {});
+      activeWalletAddress.setValue(wallet.address);
+      activeWalletChainId.setValue(wallet.chainId);
+
+      // setup listeners
+      if (wallet.addListener) {
+        const onAccountsChanged = () => {
+          if (wallet.address) {
+            activeWalletAddress.setValue(wallet.address);
+          } else {
+            onDisconnect(wallet.id);
+          }
+        };
+
+        const onChainChanged = () => {
+          activeWalletChainId.setValue(wallet.chainId);
+        };
+
+        const handleDisconnect = () => {
+          onDisconnect(wallet.id);
+          if (wallet.removeListener) {
+            wallet.removeListener("accountsChanged", onAccountsChanged);
+            wallet.removeListener("chainChanged", onChainChanged);
+            wallet.removeListener("disconnect", handleDisconnect);
+          }
+        };
+
+        wallet.addListener("accountsChanged", onAccountsChanged);
+        wallet.addListener("chainChanged", onChainChanged);
+        wallet.addListener("disconnect", handleDisconnect);
+      }
     }
   };
 
@@ -133,5 +171,7 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     connectedWallets,
     getStoredConnectedWalletIds,
     getStoredActiveWalletId,
+    activeWalletAddress,
+    activeWalletChainId,
   };
 }

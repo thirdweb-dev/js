@@ -4,7 +4,6 @@ export {
 } from "./private-key.js";
 
 export {
-  type InjectedWallet,
   type InjectedWalletOptions,
   injectedWallet,
   injectedProvider,

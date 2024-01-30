@@ -208,8 +208,11 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
       };
     },
     id: "ethers5-wallet", // TODO: figure this out
-    on(event, listener) {
+    addListener(event, listener) {
       signer.provider?.on(event, listener);
+    },
+    removeListener(event, listener) {
+      signer.provider?.removeListener(event, listener);
     },
   } satisfies Wallet;
 }
