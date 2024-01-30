@@ -26,7 +26,7 @@ type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
  * const { data, isLoading } = useRead({contract, method: "totalSupply"});
  * ```
  */
-export function useRead<
+export function useContractRead<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
@@ -48,7 +48,7 @@ export function useRead<
  * const { data, isLoading } = useRead(totalSupply);
  * ```
  */
-export function useRead<
+export function useContractRead<
   const abi extends Abi,
   const params extends object,
   result,
@@ -59,7 +59,7 @@ export function useRead<
   },
 ): UseQueryResult<result>;
 // eslint-disable-next-line jsdoc/require-jsdoc
-export function useRead<
+export function useContractRead<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
