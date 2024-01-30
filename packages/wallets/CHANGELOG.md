@@ -1,5 +1,21 @@
 # @thirdweb-dev/wallets
 
+## 2.4.4
+
+### Patch Changes
+
+- [#2223](https://github.com/thirdweb-dev/js/pull/2223) [`a5653f07`](https://github.com/thirdweb-dev/js/commit/a5653f07f82e3f94e193d2b90c9d0c163223583c) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Docs] Document deployOnSign
+
+- [#2222](https://github.com/thirdweb-dev/js/pull/2222) [`bf90fa50`](https://github.com/thirdweb-dev/js/commit/bf90fa5005358e040475627ae23a474f7b263803) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [AA] Option to not deploy SW on sign message
+
+- [#2230](https://github.com/thirdweb-dev/js/pull/2230) [`6fdade6c`](https://github.com/thirdweb-dev/js/commit/6fdade6c45f5d93fb3571d33720ab8103a7d002c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont refetch paymaster if sponsorship rejected
+
+- [#2221](https://github.com/thirdweb-dev/js/pull/2221) [`4d89dc1e`](https://github.com/thirdweb-dev/js/commit/4d89dc1efa2412b1e121cd14b1e2e72c667fceb0) Thanks [@MananTank](https://github.com/MananTank)! - Update Safe SDK in wallets package
+
+- Updated dependencies [[`b34737d2`](https://github.com/thirdweb-dev/js/commit/b34737d27a71706cd1117485a6e522e50f5ae4d5), [`627d2099`](https://github.com/thirdweb-dev/js/commit/627d20992770670ab0c954ceea0b8679ce4f3088), [`3d63a2cb`](https://github.com/thirdweb-dev/js/commit/3d63a2cb696310507798889e3e148339de4e3dfe)]:
+  - @thirdweb-dev/sdk@4.0.29
+  - @thirdweb-dev/chains@0.1.66
+
 ## 2.4.3
 
 ### Patch Changes
