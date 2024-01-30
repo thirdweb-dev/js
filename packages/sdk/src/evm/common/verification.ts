@@ -215,7 +215,6 @@ export async function verify(
     };
 
     const parameters = new URLSearchParams({ ...requestBody });
-    // do we need to pass headers here?
     const result = await fetch(explorerAPIUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },

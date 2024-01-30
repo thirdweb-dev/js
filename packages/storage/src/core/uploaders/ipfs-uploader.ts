@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import FormData from "form-data";
 import pkg from "../../../package.json";
+import { getOperatingSystem } from "../../utils/os";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -282,12 +283,27 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader("x-bundle-id", bundleId);
       }
 
-      xhr.setRequestHeader("x-sdk-version", (globalThis as any).X_SDK_VERSION);
-      xhr.setRequestHeader("x-sdk-os", (globalThis as any).X_SDK_OS);
-      xhr.setRequestHeader("x-sdk-name", (globalThis as any).X_SDK_NAME);
+      xhr.setRequestHeader(
+        "x-sdk-version",
+        (globalThis as any).X_SDK_VERSION || pkg.version,
+      );
+      xhr.setRequestHeader(
+        "x-sdk-os",
+        (globalThis as any).X_SDK_OS || getOperatingSystem(),
+      );
+      xhr.setRequestHeader(
+        "x-sdk-name",
+        (globalThis as any).X_SDK_NAME || pkg.name,
+      );
       xhr.setRequestHeader(
         "x-sdk-platform",
-        (globalThis as any).X_SDK_PLATFORM,
+        (globalThis as any).X_SDK_PLATFORM ||
+          (typeof navigator !== "undefined" &&
+            navigator.product === "ReactNative")
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node",
       );
 
       // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
@@ -364,10 +380,16 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-authorize-wallet"] = "true";
     }
 
-    headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
-    headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
-    headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
-    headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+    headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION || pkg.version;
+    headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
+    headers["x-sdk-platform"] =
+      (globalThis as any).X_SDK_PLATFORM ||
+      (typeof navigator !== "undefined" && navigator.product === "ReactNative")
+        ? "mobile"
+        : typeof window !== "undefined"
+          ? "browser"
+          : "node";
+    headers["x-sdk-os"] = (globalThis as any).X_SDK_OS || getOperatingSystem();
 
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",

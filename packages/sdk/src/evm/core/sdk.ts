@@ -117,8 +117,6 @@ import {
   VoteContractDeployMetadata,
 } from "../types/deploy/deploy-metadata";
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
-import pkg from "../../../package.json";
-import { getOperatingSystem } from "../../core/utils/os";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -311,21 +309,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.options,
       this.storageHandler,
     );
-
-    if (
-      typeof globalThis !== "undefined" &&
-      (globalThis as any).X_SDK_NAME === undefined
-    ) {
-      (globalThis as any).X_SDK_NAME = pkg.name;
-      (globalThis as any).X_SDK_PLATFORM =
-        typeof navigator !== "undefined" && navigator.product === "ReactNative"
-          ? "mobile"
-          : typeof window !== "undefined"
-            ? "browser"
-            : "node";
-      (globalThis as any).X_SDK_VERSION = pkg.version;
-      (globalThis as any).X_SDK_OS = getOperatingSystem();
-    }
   }
 
   get auth() {

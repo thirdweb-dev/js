@@ -3,6 +3,8 @@ import { hexlifyUserOp } from "./utils";
 import { isTwUrl } from "../../../utils/url";
 import { PaymasterAPI, PaymasterResult } from "../types";
 import { DEBUG } from "./http-rpc-client";
+import { getOperatingSystem } from "../../../utils/os/os";
+import pkg from "../../../../../package.json";
 
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
@@ -76,10 +78,19 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
-      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
-      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+      headers["x-sdk-version"] =
+        (globalThis as any).X_SDK_VERSION || pkg.version;
+      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
+      headers["x-sdk-platform"] =
+        (globalThis as any).X_SDK_PLATFORM ||
+        (typeof navigator !== "undefined" &&
+          navigator.product === "ReactNative")
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node";
+      headers["x-sdk-os"] =
+        (globalThis as any).X_SDK_OS || getOperatingSystem();
     }
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.

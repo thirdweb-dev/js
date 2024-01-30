@@ -1,4 +1,6 @@
 import { isWalletAnalyticsEnabled } from "./setWalletAnaltyicsEnabled";
+import pkg from "../../../package.json";
+import { getOperatingSystem } from "./os/os";
 
 const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
@@ -25,10 +27,17 @@ export function track(args: {
     headers: {
       "Content-Type": "application/json",
       "x-client-id": clientId,
-      "x-sdk-version": (globalThis as any).X_SDK_VERSION,
-      "x-sdk-name": (globalThis as any).X_SDK_NAME,
-      "x-sdk-platform": (globalThis as any).X_SDK_PLATFORM,
-      "x-sdk-os": (globalThis as any).X_SDK_OS,
+      "x-sdk-version": (globalThis as any).X_SDK_VERSION || pkg.version,
+      "x-sdk-name": (globalThis as any).X_SDK_NAME || pkg.name,
+      "x-sdk-platform":
+        (globalThis as any).X_SDK_PLATFORM ||
+        (typeof navigator !== "undefined" &&
+          navigator.product === "ReactNative")
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node",
+      "x-sdk-os": (globalThis as any).X_SDK_OS || getOperatingSystem(),
     },
     body: JSON.stringify(body),
   });

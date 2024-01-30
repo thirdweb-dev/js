@@ -11,6 +11,7 @@ import type { Signer } from "ethers";
 import pkg from "../../../package.json";
 import { isBrowser } from "@thirdweb-dev/storage";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
+import { getOperatingSystem } from "../../core/utils/os";
 
 /**
  * @internal
@@ -260,10 +261,19 @@ export function getProviderFromRpcUrl(
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
 
-      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
-      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
-      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+      headers["x-sdk-version"] =
+        (globalThis as any).X_SDK_VERSION || pkg.version;
+      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
+      headers["x-sdk-platform"] =
+        (globalThis as any).X_SDK_PLATFORM ||
+        (typeof navigator !== "undefined" &&
+          navigator.product === "ReactNative")
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node";
+      headers["x-sdk-os"] =
+        (globalThis as any).X_SDK_OS || getOperatingSystem();
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available

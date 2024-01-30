@@ -7,6 +7,7 @@ import {
   SingleDownloadOptions,
 } from "../../types";
 import pkg from "../../../package.json";
+import { getOperatingSystem } from "../../utils/os";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -126,10 +127,19 @@ export class StorageDownloader implements IStorageDownloader {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
-      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
-      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+      headers["x-sdk-version"] =
+        (globalThis as any).X_SDK_VERSION || pkg.version;
+      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
+      headers["x-sdk-platform"] =
+        (globalThis as any).X_SDK_PLATFORM ||
+        (typeof navigator !== "undefined" &&
+          navigator.product === "ReactNative")
+          ? "mobile"
+          : typeof window !== "undefined"
+            ? "browser"
+            : "node";
+      headers["x-sdk-os"] =
+        (globalThis as any).X_SDK_OS || getOperatingSystem();
     }
 
     if (isTooManyRequests(resolvedUri)) {

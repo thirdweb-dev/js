@@ -654,7 +654,6 @@ export class ContractWrapper<
 
     const request = await this.enginePrepareRequest(transaction);
 
-    // should we pass headers here?
     const res = await fetch(this.options.gasless.engine.relayerUrl, {
       ...request,
       headers: {

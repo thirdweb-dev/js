@@ -133,15 +133,15 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public initialize(chain: ChainIdOrName, options: string) {
-    if(typeof globalThis !== "undefined"){
+    if (typeof globalThis !== "undefined") {
       let browser;
       try {
-         browser = detect();
+        browser = detect();
       } catch {
         console.warn("Failed to detect browser");
         browser = undefined;
       }
-      (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
+      (globalThis as any).X_SDK_NAME = "UnitySDK";
       (globalThis as any).X_SDK_PLATFORM = "unity";
       (globalThis as any).X_SDK_VERSION = "4.5.1";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
@@ -755,8 +755,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
-
-  public async smartWalletGetAllActiveSigners(){
+  public async smartWalletGetAllActiveSigners() {
     if (!this.activeWallet) {
       throw new Error("No wallet connected");
     }
