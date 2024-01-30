@@ -141,7 +141,7 @@ class ThirdwebBridge implements TWBridge {
         console.warn("Failed to detect browser");
         browser = undefined;
       }
-      (globalThis as any).X_SDK_NAME = "UnitySDK";
+      (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
       (globalThis as any).X_SDK_VERSION = "4.5.1";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
