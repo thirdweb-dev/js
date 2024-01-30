@@ -23,7 +23,6 @@ export const PLANS: {
     features: [
       ["1,000 monthly active wallets", "then $0.02/wallet"],
       "Web, Mobile & Gaming SDKs",
-      "Credit card & crypto onramp",
       "Contract & Wallet APIs",
       "Audited smart contracts",
       "Community Support",
@@ -81,18 +80,6 @@ export const SECTIONS = [
         pro: "Custom",
       },
       {
-        title: "NFT checkout - credit card",
-        starter: "4.9% + $0.30/transaction",
-        growth: "4.9% + $0.30/transaction",
-        pro: "Custom",
-      },
-      {
-        title: "NFT checkout - crypto",
-        starter: "1%",
-        growth: "1%",
-        pro: "Custom",
-      },
-      {
         title: "Engine (Basic)",
         starter: "$99/instance",
         growth: "$99/instance",
@@ -140,12 +127,6 @@ export const SECTIONS = [
         title: "Rate Limits on RPC & IPFS gateway",
         starter: "100 requests/sec",
         growth: "500 requests/sec",
-        pro: "Custom",
-      },
-      {
-        title: "Transaction limit for Checkout",
-        starter: "$1,000",
-        growth: "$2,500",
         pro: "Custom",
       },
       {
@@ -290,9 +271,5 @@ export const FAQ_PRICING = [
         service, they are counted as a monthly active wallet.
       </Text>
     ),
-  },
-  {
-    title: "Checkout Transaction Limit",
-    description: <Text>This is the max USD per credit card transaction.</Text>,
   },
 ];
