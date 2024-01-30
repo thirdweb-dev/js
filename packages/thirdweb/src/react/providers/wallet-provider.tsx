@@ -162,15 +162,12 @@ export function useSetActiveWallet() {
  * @example
  * ```jsx
  * import { useConnect } from "thirdweb/react";
- * import { metamaskWallet } from "thirdweb/wallets/metamask";
+ * import { metamaskWallet } from "thirdweb/wallets";
  *
  * const { connect, isConnecting, error } = useConnect();
  *
  * // later in your code
- *
- * const wallet = await connect(() => {
- *  return metamaskWallet.connect();
- * });
+ * <button> onClick={() => connect(metamaskWallet)}>Connect</button>
  * ```
  */
 export function useConnect() {
