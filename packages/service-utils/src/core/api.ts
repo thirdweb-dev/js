@@ -8,6 +8,7 @@ export type UserOpData = {
 };
 
 export type PolicyResult = {
+  policyId: string | null;
   isAllowed: boolean;
   reason: string;
 };

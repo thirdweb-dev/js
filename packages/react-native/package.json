@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -59,7 +59,7 @@
     "@types/react": "^18.2.17",
     "@types/react-native": "^0.71.8",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.2.0",
+    "@typescript-eslint/parser": "^6.19.1",
     "babel-jest": "^29.6.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^8.9.0",
