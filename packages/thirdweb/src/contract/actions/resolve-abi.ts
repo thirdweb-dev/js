@@ -2,7 +2,7 @@ import { type Abi } from "abitype";
 
 import type { ThirdwebContract } from "../index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
-import { getFetchClient } from "../../utils/fetch.js";
+import { getClientFetch } from "../../utils/fetch.js";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
@@ -42,7 +42,7 @@ export function resolveContractAbi<abi extends Abi>(
     const chainId = getChainIdFromChain(contract.chain);
 
     // TODO obviously this has to be a lot more robust
-    const response = await getFetchClient(contract.client)(
+    const response = await getClientFetch(contract.client)(
       `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${contract.address}`,
     );
     const json = await response.json();

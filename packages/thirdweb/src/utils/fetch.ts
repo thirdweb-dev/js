@@ -3,25 +3,46 @@ import type { ThirdwebClient } from "../index.js";
 import { detect, type OperatingSystem } from "detect-browser";
 
 /**
- *
- * @param input -
- * @param init -
  * @internal
  */
-export function getFetchClient(client: ThirdwebClient) {
+export function getClientFetch(client: ThirdwebClient) {
   return async function (url: string, init?: RequestInit) {
     const headers = new Headers(init?.headers);
-    if (client.secretKey) {
-      headers.set("x-secret-key", client.secretKey);
-    } else if (client.clientId) {
-      headers.set("x-client-id", client.clientId);
+    // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
+    if (isThirdwebUrl(url)) {
+      if (client.secretKey) {
+        headers.set("x-secret-key", client.secretKey);
+      } else if (client.clientId) {
+        headers.set("x-client-id", client.clientId);
+      }
+      getPlatformHeaders().forEach(([key, value]) => {
+        headers.set(key, value);
+      });
     }
 
-    getPlatform().forEach(([key, value]) => {
-      headers.set(key, value);
-    });
     return fetch(url, { ...init, headers });
   };
+}
+
+// NOTE: these all start with "." because we want to make sure we don't match (for example) "otherthirdweb.com"
+const THIRDWEB_DOMAINS = [
+  ".thirdweb.com",
+  ".ipfscdn.io",
+  // dev domains
+  ".thirdweb.dev",
+  ".thirdweb-dev.com",
+] as const;
+
+/**
+ * @internal
+ */
+function isThirdwebUrl(url: string) {
+  try {
+    const { hostname } = new URL(url);
+    return THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));
+  } catch {
+    return false;
+  }
 }
 
 const SDK_NAME = "unified-sdk";
@@ -30,7 +51,7 @@ let previousPlatform: [string, string][] | undefined;
 /**
  * @internal
  */
-function getPlatform() {
+export function getPlatformHeaders() {
   if (previousPlatform) {
     return previousPlatform;
   }
@@ -74,10 +95,11 @@ function getPlatform() {
  * @internal
  */
 function parseOs(os: OperatingSystem | NodeJS.Platform) {
-  const lowerCase = os.toLowerCase();
-  if (lowerCase.startsWith("win")) {
+  const osLowerCased = os.toLowerCase();
+  if (osLowerCased.startsWith("win")) {
     return "win";
   }
+  // we do NOT use the lowercase here
   switch (os) {
     case "Mac OS":
       return "mac";
@@ -86,6 +108,7 @@ function parseOs(os: OperatingSystem | NodeJS.Platform) {
     case "Android OS":
       return "android";
     default:
-      return lowerCase.replace(/\s/gi, "_");
+      // if we somehow fall through here, just replace all spaces with underscores and send it
+      return osLowerCased.replace(/\s/gi, "_");
   }
 }

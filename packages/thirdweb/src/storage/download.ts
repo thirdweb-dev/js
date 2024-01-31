@@ -1,4 +1,4 @@
-import { getFetchClient } from "../utils/fetch.js";
+import { getClientFetch } from "../utils/fetch.js";
 import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 
 export type DownloadOptions = ResolveSchemeOptions;
@@ -18,5 +18,5 @@ export type DownloadOptions = ResolveSchemeOptions;
  * ```
  */
 export async function download(options: DownloadOptions) {
-  return await getFetchClient(options.client)(resolveScheme(options));
+  return await getClientFetch(options.client)(resolveScheme(options));
 }

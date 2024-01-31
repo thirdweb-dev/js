@@ -2,7 +2,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { UploadOptions } from "./types.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";
-import { getFetchClient } from "../../utils/fetch.js";
+import { getClientFetch } from "../../utils/fetch.js";
 
 export async function uploadBatchNode(
   client: ThirdwebClient,
@@ -50,7 +50,7 @@ export async function uploadBatchNode(
     headers["x-authorize-wallet"] = "true";
   }
 
-  const res = await getFetchClient(client)(`${UPLOAD_SERVER_URL}/ipfs/upload`, {
+  const res = await getClientFetch(client)(`${UPLOAD_SERVER_URL}/ipfs/upload`, {
     method: "POST",
     headers: {
       ...headers,

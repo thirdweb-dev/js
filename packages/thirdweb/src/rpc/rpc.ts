@@ -1,4 +1,4 @@
-import { getFetchClient } from "../utils/fetch.js";
+import { getClientFetch } from "../utils/fetch.js";
 import {
   getChainIdFromChain,
   type Chain,
@@ -232,7 +232,8 @@ async function fetchRpc(
   { requests, chain }: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
   const rpcUrl = getRpcUrlForChain({ client, chain });
-  const response = await getFetchClient(client)(rpcUrl, {
+
+  const response = await getClientFetch(client)(rpcUrl, {
     headers: { "Content-Type": "application/json" },
     body: stringify(requests),
     method: "POST",

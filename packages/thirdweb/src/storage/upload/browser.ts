@@ -1,4 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
+import { getPlatformHeaders } from "../../utils/fetch.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";
 import type { UploadOptions } from "./types.js";
@@ -102,6 +103,9 @@ export async function uploadBatchBrowser(
     } else if (client.clientId) {
       xhr.setRequestHeader("x-client-id", client.clientId);
     }
+    getPlatformHeaders().forEach(([key, value]) => {
+      xhr.setRequestHeader(key, value);
+    });
 
     const bundleId =
       typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
