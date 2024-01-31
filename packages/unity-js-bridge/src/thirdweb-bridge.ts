@@ -143,7 +143,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.5.1";
+      (globalThis as any).X_SDK_VERSION = "4.6.0";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
