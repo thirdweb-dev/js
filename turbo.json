@@ -72,6 +72,10 @@
       "outputs": ["esm/**", "cjs/**", "types/**"],
       "dependsOn": ["^build"]
     },
+    "thirdweb#update-version": {
+      "inputs": ["package.json"],
+      "outputs": ["src/version.ts"]
+    },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],

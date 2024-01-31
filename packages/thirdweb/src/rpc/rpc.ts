@@ -1,3 +1,4 @@
+import { getFetchClient } from "../utils/fetch.js";
 import {
   getChainIdFromChain,
   type Chain,
@@ -230,16 +231,9 @@ async function fetchRpc(
   client: ThirdwebClient,
   { requests, chain }: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
-  const headers = new Headers({
-    "Content-Type": "application/json",
-  });
-  // TODO extract this
-  if (client.secretKey) {
-    headers.set("x-secret-key", client.secretKey);
-  }
   const rpcUrl = getRpcUrlForChain({ client, chain });
-  const response = await fetch(rpcUrl, {
-    headers,
+  const response = await getFetchClient(client)(rpcUrl, {
+    headers: { "Content-Type": "application/json" },
     body: stringify(requests),
     method: "POST",
   });

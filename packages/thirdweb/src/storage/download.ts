@@ -1,3 +1,4 @@
+import { getFetchClient } from "../utils/fetch.js";
 import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 
 export type DownloadOptions = ResolveSchemeOptions;
@@ -17,10 +18,5 @@ export type DownloadOptions = ResolveSchemeOptions;
  * ```
  */
 export async function download(options: DownloadOptions) {
-  const url = resolveScheme(options);
-  const headers: HeadersInit = {};
-  if (options.client.secretKey) {
-    headers["x-secret-key"] = options.client.secretKey;
-  }
-  return await fetch(url, headers);
+  return await getFetchClient(options.client)(resolveScheme(options));
 }

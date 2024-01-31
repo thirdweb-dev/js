@@ -1423,6 +1423,9 @@ importers:
       abitype:
         specifier: ^1.0.0
         version: 1.0.0(typescript@5.3.3)
+      detect-browser:
+        specifier: ^5.3.0
+        version: 5.3.0
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
