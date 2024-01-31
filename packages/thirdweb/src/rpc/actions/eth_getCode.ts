@@ -1,9 +1,9 @@
-import {
-  type EIP1193RequestFn,
-  type EIP1474Methods,
-  type Address,
-  type Hex,
-  type BlockTag,
+import type {
+  EIP1193RequestFn,
+  EIP1474Methods,
+  Address,
+  Hex,
+  BlockTag,
 } from "viem";
 
 type GetCodeParams = {
