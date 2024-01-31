@@ -8,9 +8,8 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
-import pkg from "../../../package.json";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
-import { getOperatingSystem } from "../../core/utils/os";
+import { setAnalyticsHeaders } from "../../core/utils/headers";
 
 /**
  * @internal
@@ -252,6 +251,8 @@ export function getProviderFromRpcUrl(
         headers["x-authorize-wallet"] = "true";
       }
 
+      setAnalyticsHeaders(headers);
+
       const bundleId =
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
@@ -259,20 +260,6 @@ export function getProviderFromRpcUrl(
       if (!rpcUrl.includes("bundleId")) {
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
-
-      headers["x-sdk-version"] =
-        (globalThis as any).X_SDK_VERSION || pkg.version;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
-      headers["x-sdk-platform"] =
-        (globalThis as any).X_SDK_PLATFORM ||
-        (typeof navigator !== "undefined" &&
-          navigator.product === "ReactNative")
-          ? "mobile"
-          : typeof window !== "undefined"
-            ? "browser"
-            : "node";
-      headers["x-sdk-os"] =
-        (globalThis as any).X_SDK_OS || getOperatingSystem();
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available

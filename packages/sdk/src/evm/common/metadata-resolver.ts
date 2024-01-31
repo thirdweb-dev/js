@@ -14,6 +14,7 @@ import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeat
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
 import { createLruCache } from "./utils";
+import { getAnalyticsHeaders } from "../../core/utils/headers";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
@@ -68,6 +69,11 @@ export async function fetchContractMetadataFromAddress(
     try {
       const response = await fetch(
         `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+        {
+          headers: {
+            ...getAnalyticsHeaders(),
+          },
+        },
       );
       if (response.ok) {
         const resolvedData = await response.json();
