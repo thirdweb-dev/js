@@ -15,3 +15,4 @@ export { eth_estimateGas } from "./actions/eth_estimateGas.js";
 export { eth_call } from "./actions/eth_call.js";
 export { eth_getLogs } from "./actions/eth_getLogs.js";
 export { eth_sendRawTransaction } from "./actions/eth_sendRawTransaction.js";
+export { eth_getCode } from "./actions/eth_getCode.js";
