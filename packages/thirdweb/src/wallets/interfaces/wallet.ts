@@ -12,13 +12,18 @@ import type { Transaction } from "../../transaction/transaction.js";
 
 export type Wallet = {
   // REQUIRED
-  id: string;
   // can't make address undefined, it breaks assumptions
   address: Address;
   sendTransaction: (
     // TODO: figure out how we get our "chain" here
     tx: TransactionSerializable & { chainId: number },
   ) => Promise<TransactionOrUserOpHash>;
+
+  metadata: {
+    id: string;
+    name: string;
+    iconUrl: string;
+  };
 
   // OPTIONAL
   chainId?: bigint;

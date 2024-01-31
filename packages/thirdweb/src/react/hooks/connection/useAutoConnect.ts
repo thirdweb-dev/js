@@ -2,23 +2,27 @@ import { useEffect } from "react";
 import { useThirdwebProviderProps } from "../others/useThirdwebProviderProps.js";
 import { connectionManager } from "../../connectionManager.js";
 import type { WalletConfig } from "../../types/wallets.js";
+import {
+  useConnect,
+  useSetActiveWalletConnectionStatus,
+} from "../../providers/wallet-provider.js";
 
 let autoConnectAttempted = false;
 
 /**
- * An effect that is only runs once on page load that will connect all previously connected wallets and set the last active wallet as active.
- * @example
- * ```ts
- * useAutoConnect();
- * ```
+ * @internal
  */
-export function useAutoConnect() {
-  const { wallets, autoConnect } = useThirdwebProviderProps();
+export function AutoConnect() {
+  const setConnectionStatus = useSetActiveWalletConnectionStatus();
+  const { connect } = useConnect();
+
+  const { isAutoConnecting } = connectionManager;
+  const { wallets } = useThirdwebProviderProps();
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
   // check the storage for last active wallet and set it as active
   useEffect(() => {
-    if (autoConnectAttempted || !autoConnect) {
+    if (autoConnectAttempted) {
       return;
     }
 
@@ -31,39 +35,44 @@ export function useAutoConnect() {
       ]);
 
       if (!lastConnectedWalletIds) {
+        setConnectionStatus("disconnected");
         return;
       }
 
       // connect the last active wallet first
       const lastActiveWalletConfig = wallets.find(
-        (w) => w.id === lastActiveWalletId,
+        (w) => w.metadata.id === lastActiveWalletId,
       );
 
       const otherWalletConfigs: WalletConfig[] = [];
 
       wallets.forEach((w) => {
-        if (w.id === lastActiveWalletId) {
+        if (w.metadata.id === lastActiveWalletId) {
           return;
         }
-        if (lastConnectedWalletIds.includes(w.id)) {
+        if (lastConnectedWalletIds.includes(w.metadata.id)) {
           otherWalletConfigs.push(w);
         }
       });
 
       // connect the active wallet and set it as active
-      lastActiveWalletConfig
-        ?.createWallet({
-          silent: true,
-        })
-        .then((w) => {
-          connectionManager.connectWallet(w);
-          connectionManager.setActiveWalletId(w.id);
-        });
+      if (lastActiveWalletConfig) {
+        try {
+          const wallet = await lastActiveWalletConfig.connect({
+            silent: true,
+          });
+          connect(wallet);
+        } catch (e) {
+          setConnectionStatus("disconnected");
+        }
+      } else {
+        setConnectionStatus("disconnected");
+      }
 
       // connect other wallets
       otherWalletConfigs.forEach((config) => {
         config
-          .createWallet({
+          .connect({
             silent: true,
           })
           .then((w) => {
@@ -72,6 +81,30 @@ export function useAutoConnect() {
       });
     };
 
-    fn();
+    (async () => {
+      isAutoConnecting.setValue(true);
+      await fn();
+      isAutoConnecting.setValue(false);
+    })();
   });
+
+  return null;
+}
+
+let noAutoConnectDone = false;
+
+/**
+ * @internal
+ */
+export function NoAutoConnect() {
+  const setConnectionStatus = useSetActiveWalletConnectionStatus();
+  useEffect(() => {
+    if (noAutoConnectDone) {
+      return;
+    }
+    noAutoConnectDone = true;
+    setConnectionStatus("disconnected");
+  });
+
+  return null;
 }

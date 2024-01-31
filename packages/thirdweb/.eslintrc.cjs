@@ -23,6 +23,35 @@ const jsdocRuleOverrides = {
   "jsdoc/require-asterisk-prefix": "error",
   "jsdoc/require-description": "error",
   "jsdoc/require-example": "error",
+  "jsdoc/check-tag-names": [
+    "error",
+    {
+      definedTags: [
+        "twfeature",
+        "locale",
+        "marketplace",
+        "contract",
+        "claimConditions",
+        "nftDrop",
+        "platformFees",
+        "nft",
+        "metadata",
+        "permissionControl",
+        "networkConnection",
+        "delayedReveal",
+        "token",
+        "walletConnection",
+        "smartWallet",
+        "auth",
+        "storage",
+        "connectWallet",
+        "theme",
+        "locale",
+        "appURI",
+        "wallet",
+      ],
+    },
+  ], // using
 };
 
 module.exports = {
@@ -32,14 +61,13 @@ module.exports = {
     "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:jsdoc/recommended-typescript-error",
   ],
-  plugins: ["better-tree-shaking", "eslint-plugin-tsdoc", "jsdoc"],
+  plugins: ["better-tree-shaking", "jsdoc"],
   settings: {
     jsdoc: {
       ignoreInternal: true,
     },
   },
   rules: {
-    "tsdoc/syntax": "error",
     "better-tree-shaking/no-top-level-side-effects": "error",
     "no-restricted-globals": [
       "error",
@@ -48,6 +76,7 @@ module.exports = {
         message: "Use Uint8Array instead.",
       },
     ],
+    "import/no-cycle": "error",
     "no-restricted-imports": [
       "error",
       {

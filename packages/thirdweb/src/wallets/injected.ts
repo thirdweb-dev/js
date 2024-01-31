@@ -4,6 +4,7 @@ import type { Ethereum } from "./interfaces/ethereum.js";
 import { createStore, type Store } from "mipd";
 import { normalizeChainId } from "./utils/normalizeChainId.js";
 import type { Wallet } from "./index.js";
+import type { WalletMetadata } from "./types.js";
 
 export type WalletRDNS =
   | "io.metamask"
@@ -33,6 +34,8 @@ export type InjectedWalletOptions = {
    * If set to `false` - If the accounts are already accessible, wallet will be connected. If they are not already accessible, a connection request will be sent to wallet extension and user will be prompted to connect.
    */
   silent?: boolean | undefined;
+
+  metadata?: WalletMetadata;
 };
 
 /**
@@ -143,9 +146,31 @@ export async function injectedWallet(
     await switchChain(options.chainId);
   }
 
+  const createMetadata = () => {
+    const metadata = {
+      id: options?.walletId || "injected",
+      name: "injected",
+      iconUrl: "TODO", // find a good default "injected wallet" icon
+    };
+
+    if (options?.walletId && store) {
+      const providerDetail = store.findProvider({ rdns: options.walletId });
+      if (providerDetail?.info.icon) {
+        metadata.iconUrl = providerDetail.info.icon;
+      }
+
+      if (providerDetail?.info.name) {
+        metadata.name = providerDetail.info.name;
+      }
+    }
+
+    return metadata;
+  };
+
   const wallet: Wallet = {
     address: address,
     chainId: providerChainId,
+    metadata: options?.metadata || createMetadata(),
     sendTransaction: async (tx) => {
       if (normalizeChainId(tx.chainId) !== providerChainId) {
         await switchChain(tx.chainId);
@@ -168,7 +193,7 @@ export async function injectedWallet(
       };
     },
     switchChain,
-    id: options?.walletId || "injected",
+
     addListener: (event, listener) => {
       if (!provider.on) {
         return;

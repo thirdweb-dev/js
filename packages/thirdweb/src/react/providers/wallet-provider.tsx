@@ -1,5 +1,3 @@
-"use-client";
-
 import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../wallets/index.js";
 import { connectionManager } from "../connectionManager.js";
@@ -126,6 +124,9 @@ export function useConnect() {
       setError(null);
       if (typeof options !== "function") {
         connectWallet(options);
+        if (setActive !== false) {
+          setActiveWalletId(options.metadata.id);
+        }
         return options;
       }
 
@@ -135,7 +136,7 @@ export function useConnect() {
         // add the uuid for this wallet
         connectWallet(wallet);
         if (setActive !== false) {
-          setActiveWalletId(wallet.id);
+          setActiveWalletId(wallet.metadata.id);
         }
         return wallet;
       } catch (e) {
@@ -165,6 +166,50 @@ export function useConnect() {
  * @returns An object with a function to disconnect a wallet.
  */
 export function useDisconnect() {
-  const disconnectWallet = connectionManager.disconnectWallet;
-  return { disconnectWallet };
+  const disconnect = connectionManager.disconnectWallet;
+  return { disconnect };
+}
+
+/**
+ * A hook that returns the active wallet's connection status.
+ * @example
+ * ```jsx
+ * import { useActiveWalletConnectionStatus } from "thirdweb/react";
+ *
+ * const status = useActiveWalletConnectionStatus();
+ * ```
+ * @returns The active wallet's connection status.
+ */
+export function useActiveWalletConnectionStatus() {
+  const store = connectionManager.activeWalletConnectionStatus;
+  return useSyncExternalStore(store.subscribe, store.getValue);
+}
+
+/**
+ * A hook that returns the active wallet's connection status.
+ * @example
+ * ```jsx
+ * import { useActiveWalletConnectionStatus } from "thirdweb/react";
+ *
+ * const status = useActiveWalletConnectionStatus();
+ * ```
+ * @returns The active wallet's connection status.
+ */
+export function useSetActiveWalletConnectionStatus() {
+  return connectionManager.activeWalletConnectionStatus.setValue;
+}
+
+/**
+ * A hook to check if the auto connect is in progress.
+ * @example
+ * ```jsx
+ * import { useIsAutoConnecting } from "thirdweb/react";
+ *
+ * const isAutoConnecting = useIsAutoConnecting();
+ * ```
+ * @returns A boolean indicating if the auto connect is in progress.
+ */
+export function useIsAutoConnecting() {
+  const store = connectionManager.isAutoConnecting;
+  return useSyncExternalStore(store.subscribe, store.getValue);
 }

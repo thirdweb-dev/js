@@ -1,23 +1,31 @@
-"use-client";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Abi } from "abitype";
-import { useAutoConnect } from "../hooks/connection/useAutoConnect.js";
+import {
+  AutoConnect,
+  NoAutoConnect,
+} from "../hooks/connection/useAutoConnect.js";
 import { ThirdwebProviderContext } from "./thirdweb-provider-ctx.js";
-
 import type { WalletConfig } from "../types/wallets.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
+import { ConnectModal } from "../ui/ConnectWallet/Modal/ConnectModal.js";
 import { getChainIdFromChain } from "../../chain/index.js";
+import { useState } from "react";
+import type { ThirdwebClient } from "../../client/client.js";
+import { en } from "../locales/en.js";
+import { ThirdwebLocaleContext } from "./locale-provider.js";
+import { WalletUIStatesProvider } from "./wallet-ui-states-provider.js";
+import type { ThirdwebLocale } from "../ui/locales/types.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;
   wallets?: WalletConfig[];
   autoConnect?: boolean;
+  client: ThirdwebClient;
+  locale?: ThirdwebLocale;
 };
 
 /**
@@ -80,24 +88,24 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThirdwebProviderContext.Provider
-        value={{
-          wallets: props.wallets || defaultWallets,
-          autoConnect:
-            props.autoConnect === undefined ? true : props.autoConnect,
-        }}
-      >
-        <AutoConnect />
-        {props.children}
-      </ThirdwebProviderContext.Provider>
+      <WalletUIStatesProvider theme="dark">
+        <ThirdwebLocaleContext.Provider value={props.locale || en()}>
+          <ThirdwebProviderContext.Provider
+            value={{
+              wallets: props.wallets || defaultWallets,
+              client: props.client,
+            }}
+          >
+            {props.autoConnect === undefined ? (
+              <AutoConnect />
+            ) : (
+              <NoAutoConnect />
+            )}
+            <ConnectModal />
+            {props.children}
+          </ThirdwebProviderContext.Provider>
+        </ThirdwebLocaleContext.Provider>
+      </WalletUIStatesProvider>
     </QueryClientProvider>
   );
-}
-
-/**
- * @internal
- */
-function AutoConnect() {
-  useAutoConnect();
-  return <></>;
 }

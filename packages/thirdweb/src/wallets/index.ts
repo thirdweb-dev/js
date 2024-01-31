@@ -1,3 +1,5 @@
+export { walletIds } from "./walletIds.js";
+
 export {
   privateKeyWallet,
   type PrivateKeyWalletOptions,
@@ -12,6 +14,8 @@ export {
 
 export {
   metamaskWallet,
+  metamaskMetadata,
+  rainbowWalletMetadata,
   rainbowWallet,
   zerionWallet,
   type SpecificInjectedWalletOptions,

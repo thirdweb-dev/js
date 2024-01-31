@@ -208,7 +208,12 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
         transactionHash: result.hash as Hex,
       };
     },
-    id: "ethers5-wallet", // TODO: figure this out
+    // TODO
+    metadata: {
+      id: "ethers5-wallet",
+      name: "Ethers5 Wallet",
+      iconUrl: "",
+    },
     addListener(event, listener) {
       signer.provider?.on(event, listener);
     },

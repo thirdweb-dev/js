@@ -216,7 +216,12 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
         transactionHash,
       };
     },
-    id: "ethers6-wallet", // TODO figure this out
+    // TODO
+    metadata: {
+      id: "ethers6-wallet",
+      name: "Ethers6 Wallet",
+      iconUrl: "",
+    },
     addListener(event, listener) {
       signer.provider?.on(event, listener);
     },

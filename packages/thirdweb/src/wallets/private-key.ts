@@ -51,6 +51,11 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
     signTransaction: account.signTransaction,
     signMessage: account.signMessage,
     signTypedData: account.signTypedData,
-    id: "private-key",
+    // TODO
+    metadata: {
+      id: "private-key",
+      name: "Private Key",
+      iconUrl: "TODO",
+    },
   } satisfies Wallet;
 }
