@@ -36,3 +36,4 @@ export function getContract<const abi extends Abi = []>(
 }
 
 export { resolveContractAbi } from "./actions/resolve-abi.js";
+export { getByteCode } from "./actions/get-bytecode.js";
