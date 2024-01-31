@@ -85,7 +85,7 @@ export function useContractRead<
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
-    const chainId = getChainIdFromChain(contract.chain);
+    const chainId = getChainIdFromChain(contract.chain).toString();
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery({
@@ -105,7 +105,7 @@ export function useContractRead<
   // raw tx case
   if ("method" in extensionOrOptions) {
     const { queryOptions, ...tx } = extensionOrOptions;
-    const chainId = getChainIdFromChain(tx.contract.chain);
+    const chainId = getChainIdFromChain(tx.contract.chain).toString();
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery({

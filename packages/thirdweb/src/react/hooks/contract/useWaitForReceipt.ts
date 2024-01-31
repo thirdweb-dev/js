@@ -26,7 +26,7 @@ export function useWaitForReceipt<abi extends Abi>(
   options: TransactionHashOptions<abi> | undefined,
 ): UseQueryResult<TransactionReceipt> {
   // TODO: here cotract can be undfined so we go to a `-1` chain but this feels wrong
-  const chainId = getChainIdFromChain(options?.contract.chain ?? -1);
+  const chainId = getChainIdFromChain(options?.contract.chain ?? -1).toString();
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [chainId, "waitForReceipt", options?.transactionHash] as const,

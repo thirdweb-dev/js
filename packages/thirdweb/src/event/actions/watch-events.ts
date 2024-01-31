@@ -15,13 +15,13 @@ import {
 export type WatchContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-  contractEvent extends ContractEvent<abiEvent>,
+  contractEvents extends ContractEvent<abiEvent>[],
 > = {
   onLogs: (
     logs: GetLogsReturnType<undefined, abiEvent[], undefined, bigint, bigint>,
   ) => void | undefined;
   contract: ThirdwebContract<abi>;
-  events?: contractEvent[] | undefined;
+  events?: contractEvents | undefined;
 };
 
 /**
@@ -59,8 +59,8 @@ export type WatchContractEventsOptions<
 export function watchEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
-  const contractEvent extends ContractEvent<abiEvent>,
->(options: WatchContractEventsOptions<abi, abiEvent, contractEvent>) {
+  const contractEvents extends ContractEvent<abiEvent>[],
+>(options: WatchContractEventsOptions<abi, abiEvent, contractEvents>) {
   const rpcRequest = getRpcClient(options.contract);
   const resolveAbiPromise = options.events
     ? Promise.all(options.events.map((e) => resolveAbiEvent(e)))

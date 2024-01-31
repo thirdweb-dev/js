@@ -11,12 +11,12 @@ import {
 export type GetContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-  contractEvent extends ContractEvent<abiEvent>,
+  contractEvents extends ContractEvent<abiEvent>[],
   fBlock extends bigint | BlockTag,
   tBlock extends bigint | BlockTag,
 > = {
   contract: ThirdwebContract<abi>;
-  events?: contractEvent[];
+  events?: contractEvents;
   fromBlock?: fBlock;
   toBlock?: tBlock;
 };
@@ -54,14 +54,14 @@ export type GetContractEventsOptions<
 export async function getEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
-  const contractEvent extends ContractEvent<abiEvent>,
+  const contractEvents extends ContractEvent<abiEvent>[],
   const fBlock extends bigint | BlockTag,
   const tBlock extends bigint | BlockTag,
 >(
   options: GetContractEventsOptions<
     abi,
     abiEvent,
-    contractEvent,
+    contractEvents,
     fBlock,
     tBlock
   >,
@@ -70,9 +70,10 @@ export async function getEvents<
   const parsedEvents = await (options.events
     ? Promise.all(options.events.map((e) => resolveAbiEvent(e)))
     : // if we don't have events passed then resolve the abi for the contract -> all events!
+      // TODO: can we do this lazily when we receive events, and not all upfront?
       (resolveContractAbi(options.contract).then((abi) =>
         abi.filter((item) => item.type === "event"),
-      ) as Promise<AbiEvent[]>));
+      ) as Promise<abiEvent[]>));
 
   return await eth_getLogs(rpcRequest, {
     fromBlock: options.fromBlock,

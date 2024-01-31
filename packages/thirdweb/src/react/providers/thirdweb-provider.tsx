@@ -58,7 +58,9 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                     .then(() => {
                       return queryClient.invalidateQueries({
                         queryKey: [
-                          getChainIdFromChain(variables.contract.chain),
+                          getChainIdFromChain(
+                            variables.contract.chain,
+                          ).toString(),
                           variables.contract.address,
                         ],
                       });
