@@ -2,11 +2,26 @@ import { version } from "../version.js";
 import type { ThirdwebClient } from "../index.js";
 import { detect, type OperatingSystem } from "detect-browser";
 
+const FETCH_CACHE = new WeakMap<
+  ThirdwebClient,
+  (url: string, init?: RequestInit) => Promise<Response>
+>();
+
 /**
  * @internal
  */
 export function getClientFetch(client: ThirdwebClient) {
-  return async function (url: string, init?: RequestInit) {
+  if (FETCH_CACHE.has(client)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return FETCH_CACHE.get(client)!;
+  }
+  /**
+   * @internal
+   */
+  async function fetchWithHeaders(
+    url: string,
+    init?: RequestInit,
+  ): Promise<Response> {
     const headers = new Headers(init?.headers);
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
     if (isThirdwebUrl(url)) {
@@ -21,7 +36,9 @@ export function getClientFetch(client: ThirdwebClient) {
     }
 
     return fetch(url, { ...init, headers });
-  };
+  }
+  FETCH_CACHE.set(client, fetchWithHeaders);
+  return fetchWithHeaders;
 }
 
 // NOTE: these all start with "." because we want to make sure we don't match (for example) "otherthirdweb.com"
