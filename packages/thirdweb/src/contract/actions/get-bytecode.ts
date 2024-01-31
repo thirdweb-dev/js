@@ -1,8 +1,7 @@
 import { type Abi } from "abitype";
 import type { ThirdwebContract } from "../index.js";
 import type { Hex } from "viem";
-import { getRpcClient } from "src/rpc/rpc.js";
-import { eth_getCode } from "src/rpc/index.js";
+import { getRpcClient, eth_getCode } from "../../rpc/index.js";
 
 const BYTECODE_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Hex>>();
 

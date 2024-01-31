@@ -75,7 +75,7 @@ export function prepareTransaction<
   return options as Transaction<ParseMethod<abi, method>>;
 }
 
-export type TxOpts<T extends object = object, abi extends Abi = Abi> = {
+export type TxOpts<T extends object = object, abi extends Abi = []> = {
   contract: ThirdwebContract<abi>;
 } & T;
 
