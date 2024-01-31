@@ -28,7 +28,13 @@ interface CreateEngineInstanceButtonProps {
 export const CreateEngineInstanceButton = ({
   refetch,
 }: CreateEngineInstanceButtonProps) => {
-  const cloudHostedModalDisclosure = useDisclosure();
+  const showModalOnLoad =
+    window &&
+    new URLSearchParams(window.location.search).has("requestCloudHosted");
+
+  const cloudHostedModalDisclosure = useDisclosure({
+    defaultIsOpen: showModalOnLoad,
+  });
   const paymentDisclosure = useDisclosure();
   const trackEvent = useTrack();
   const toast = useToast();
