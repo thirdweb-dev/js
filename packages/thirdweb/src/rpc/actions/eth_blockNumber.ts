@@ -7,7 +7,7 @@ import { type EIP1193RequestFn, type EIP1474Methods, hexToBigInt } from "viem";
  * @example
  * ```ts
  * import { getRpcClient, eth_blockNumber } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const blockNumber = await eth_blockNumber(rpcRequest);
  * ```
  */

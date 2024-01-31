@@ -14,7 +14,7 @@ import {
  * @example
  * ```ts
  * import { getRpcClient, eth_getTransactionCount } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const transactionCount = await eth_getTransactionCount(rpcRequest, {
  *  address: "0x...",
  * });

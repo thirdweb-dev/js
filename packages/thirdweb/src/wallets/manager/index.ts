@@ -162,7 +162,7 @@ export function createConnectionManager(options: ConnectionManagerOptions) {
     }
   };
 
-  const switchActiveWalletChain = async (chainId: number) => {
+  const switchActiveWalletChain = async (chainId: number | bigint) => {
     const wallet = activeWallet.getValue();
     if (!wallet) {
       throw new Error("no active wallet");

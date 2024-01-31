@@ -8,7 +8,7 @@ import type { EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
  * @example
  * ```ts
  * import { getRpcClient, eth_sendRawTransaction } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const transactionHash = await eth_sendRawTransaction(rpcRequest, "0x...");
  * ```
  */

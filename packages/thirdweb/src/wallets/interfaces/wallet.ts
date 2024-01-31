@@ -15,6 +15,7 @@ export type Wallet = {
   id: string;
   address?: Address | undefined;
   sendTransaction: (
+    // TODO: figure out how we get our "chain" here
     tx: TransactionSerializable & { chainId: number },
   ) => Promise<TransactionOrUserOpHash>;
 
@@ -30,6 +31,7 @@ export type Wallet = {
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   // TODO: figure out estimate gas
   estimateGas?: (
+    // TODO: figure out how we get our "chain" here
     tx: TransactionSerializable & { chainId: number },
   ) => Promise<bigint>;
   addListener?: AddListener;

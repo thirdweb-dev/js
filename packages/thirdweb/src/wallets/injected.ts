@@ -1,12 +1,9 @@
 import { getAddress, toHex, type Hex } from "viem";
 import type { Address } from "abitype";
 import type { Ethereum } from "./interfaces/ethereum.js";
-import { createStore } from "mipd";
+import { createStore, type Store } from "mipd";
 import { normalizeChainId } from "./utils/normalizeChainId.js";
 import type { Wallet } from "./index.js";
-
-// start provider discovery on page load
-const store = /* @__PURE__ */ createStore();
 
 export type WalletRDNS =
   | "io.metamask"
@@ -218,6 +215,10 @@ function defaultInjectedProvider(): Ethereum | undefined {
   return undefined;
 }
 
+// if we're in the browser -> create the store once immediately
+let store: Store | undefined = /* @__PURE__ */ (() =>
+  typeof window !== "undefined" ? createStore() : undefined)();
+
 /**
  * Get the details of Injected Provider with given a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.
  * @param walletId - The Wallet Id (rdns) to check.
@@ -231,6 +232,10 @@ function defaultInjectedProvider(): Ethereum | undefined {
  * @returns The details of the Injected Provider if it exists. `undefined` otherwise.
  */
 export function injectedProvider(walletId: WalletRDNS): Ethereum | undefined {
+  if (!store) {
+    // note this will throw if we're not in the browser, which is fine, no one should try to use this in node
+    store = createStore();
+  }
   const providerDetail = store.findProvider({ rdns: walletId });
 
   if (providerDetail) {

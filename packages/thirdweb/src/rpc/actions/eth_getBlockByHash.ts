@@ -23,7 +23,7 @@ type GetBlockByHashParams<TIncludeTransactions extends boolean = false> = {
  * @example
  * ```ts
  * import { getRpcClient, eth_getBlockByHash } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const block = await eth_getBlockByHash(rpcRequest, {
  * blockHash: "0x...",
  * includeTransactions: true,

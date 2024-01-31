@@ -15,7 +15,7 @@ import {
  * @example
  * ```ts
  * import { getRpcClient, eth_call } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const result = await eth_call(rpcRequest, {
  *  to: "0x...",
  *  ...

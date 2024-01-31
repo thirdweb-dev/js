@@ -12,6 +12,9 @@ export {
   type ThirdwebClient,
 } from "./client/client.js";
 
+// chain
+export { type Chain, defineChain } from "./chain/index.js";
+
 // contract
 export {
   getContract,

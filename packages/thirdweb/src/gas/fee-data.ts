@@ -6,6 +6,7 @@ import {
   eth_maxPriorityFeePerGas,
   getRpcClient,
 } from "../rpc/index.js";
+import { getChainIdFromChain, type Chain } from "../chain/index.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
@@ -18,13 +19,13 @@ type FeeData = {
  * If the fee data contains both maxFeePerGas and maxPriorityFeePerGas, it returns an object with those values.
  * Otherwise, it returns an object with the gasPrice obtained from the client and chain ID.
  * @param client - The ThirdwebClient instance.
- * @param chainId - The chain ID.
+ * @param chain - The chain ID.
  * @returns An object containing the default gas overrides.
  * @internal
  */
 export async function getDefaultGasOverrides(
   client: ThirdwebClient,
-  chainId: number,
+  chain: Chain,
 ) {
   /**
    * TODO: do we want to re-enable this?
@@ -34,7 +35,7 @@ export async function getDefaultGasOverrides(
   //   return {};
   // }
 
-  const feeData = await getDynamicFeeData(client, chainId);
+  const feeData = await getDynamicFeeData(client, chain);
   if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
     return {
       maxFeePerGas: feeData.maxFeePerGas,
@@ -42,7 +43,7 @@ export async function getDefaultGasOverrides(
     };
   } else {
     return {
-      gasPrice: await getGasPrice(client, chainId),
+      gasPrice: await getGasPrice(client, chain),
     };
   }
 }
@@ -50,18 +51,18 @@ export async function getDefaultGasOverrides(
 /**
  * Retrieves dynamic fee data for a given chain.
  * @param client - The Thirdweb client.
- * @param chainId - The chain ID.
+ * @param chain - The chain ID.
  * @returns A promise that resolves to the fee data.
  * @internal
  */
 export async function getDynamicFeeData(
   client: ThirdwebClient,
-  chainId: number,
+  chain: Chain,
 ): Promise<FeeData> {
   let maxFeePerGas: null | bigint = null;
   let maxPriorityFeePerGas_: null | bigint = null;
 
-  const rpcRequest = getRpcClient({ client, chainId });
+  const rpcRequest = getRpcClient({ client, chain });
 
   const [block, maxPriorityFeePerGas] = await Promise.all([
     eth_getBlockByNumber(rpcRequest, { blockTag: "latest" }),
@@ -71,8 +72,9 @@ export async function getDynamicFeeData(
   const baseBlockFee =
     block && block.baseFeePerGas ? block.baseFeePerGas : 100n;
 
+  const chainId = getChainIdFromChain(chain);
   // mumbai & polygon
-  if (chainId === 80001 || chainId === 137) {
+  if (chainId === 80001n || chainId === 137n) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
   } else if (maxPriorityFeePerGas) {
@@ -80,12 +82,11 @@ export async function getDynamicFeeData(
     maxPriorityFeePerGas_ = maxPriorityFeePerGas;
   }
   // TODO bring back(?)
-  // else {
-  //   // if eth_maxPriorityFeePerGas is not available, use 1.5 gwei default
-  //   const feeData = await provider.getFeeData();
-  //   maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
-
-  // }
+  else {
+    //   // if eth_maxPriorityFeePerGas is not available, use 1.5 gwei default
+    //   const feeData = await provider.getFeeData();
+    //   maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+  }
 
   if (!maxPriorityFeePerGas_) {
     // chain does not support eip-1559, return null for both
@@ -125,15 +126,15 @@ function getPreferredPriorityFee(
 /**
  * Retrieves the gas price for a transaction on a specific chain.
  * @param client - The Thirdweb client.
- * @param chainId - The ID of the chain.
+ * @param chain - The ID of the chain.
  * @returns A promise that resolves to the gas price as a bigint.
  * @internal
  */
 export async function getGasPrice(
   client: ThirdwebClient,
-  chainId: number,
+  chain: Chain,
 ): Promise<bigint> {
-  const rpcClient = getRpcClient({ client, chainId });
+  const rpcClient = getRpcClient({ client, chain });
   const gasPrice_ = await eth_gasPrice(rpcClient);
   const maxGasPrice = 300n; // 300 gwei
   const extraTip = (gasPrice_ / BigInt(100)) * BigInt(10);
@@ -149,11 +150,11 @@ export async function getGasPrice(
 /**
  * @internal
  */
-function getGasStationUrl(chainId: 137 | 80001): string {
+function getGasStationUrl(chainId: 137n | 80001n): string {
   switch (chainId) {
-    case 137:
+    case 137n:
       return "https://gasstation.polygon.technology/v2";
-    case 80001:
+    case 80001n:
       return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
@@ -165,11 +166,11 @@ const MIN_MUMBAI_GAS_PRICE = 1n; // 1 gwei
 /**
  * @internal
  */
-function getDefaultGasFee(chainId: 137 | 80001): bigint {
+function getDefaultGasFee(chainId: 137n | 80001n): bigint {
   switch (chainId) {
-    case 137:
+    case 137n:
       return MIN_POLYGON_GAS_PRICE;
-    case 80001:
+    case 80001n:
       return MIN_MUMBAI_GAS_PRICE;
   }
 }
@@ -180,7 +181,7 @@ function getDefaultGasFee(chainId: 137 | 80001): bigint {
  * @internal
  */
 export async function getPolygonGasPriorityFee(
-  chainId: 137 | 80001,
+  chainId: 137n | 80001n,
 ): Promise<bigint> {
   const gasStationUrl = getGasStationUrl(chainId);
   try {

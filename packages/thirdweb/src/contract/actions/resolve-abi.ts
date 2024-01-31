@@ -1,6 +1,7 @@
 import { type Abi } from "abitype";
 
 import type { ThirdwebContract } from "../index.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
@@ -37,10 +38,11 @@ export function resolveContractAbi<abi extends Abi>(
       return contract.abi as abi;
     }
     // if the method starts with the string `function ` we always will want to try to parse it
+    const chainId = getChainIdFromChain(contract.chain);
 
     // TODO obviously this has to be a lot more robust
     const response = await fetch(
-      `${CONTRACT_RESOLVER_BASE_URL}/${contract.chainId}/${contract.address}`,
+      `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${contract.address}`,
     );
     const json = await response.json();
     // abi is in json.output.abi

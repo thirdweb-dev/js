@@ -31,11 +31,13 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
   return {
     address: account.address,
     sendTransaction: async (
+      // TODO: figure out how we would pass our "chain" object in here?
+      // maybe we *do* actually have to take in a tx object instead of the raw tx?
       tx: TransactionSerializable & { chainId: number },
     ) => {
       const rpcRequest = getRpcClient({
         client: options.client,
-        chainId: tx.chainId,
+        chain: tx.chainId,
       });
       const signedTx = await account.signTransaction(tx);
       const transactionHash = await eth_sendRawTransaction(

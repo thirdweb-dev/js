@@ -13,7 +13,7 @@ import {
  * @example
  * ```ts
  * import { getRpcClient, eth_estimateGas } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const gas = await eth_estimateGas(rpcRequest, {
  *  to: "0x...",
  *  ...

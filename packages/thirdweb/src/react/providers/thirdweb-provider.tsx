@@ -12,6 +12,7 @@ import { ThirdwebProviderContext } from "./thirdweb-provider-ctx.js";
 
 import type { WalletConfig } from "../types/wallets.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;
@@ -57,7 +58,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                     .then(() => {
                       return queryClient.invalidateQueries({
                         queryKey: [
-                          variables.contract.chainId,
+                          getChainIdFromChain(variables.contract.chain),
                           variables.contract.address,
                         ],
                       });

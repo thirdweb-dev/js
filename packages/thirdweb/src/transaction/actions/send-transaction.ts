@@ -2,6 +2,7 @@ import type { Transaction } from "../transaction.js";
 import type { Abi, AbiFunction, TransactionSerializable } from "viem";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 type SendTransactionOptions<
   abiFn extends AbiFunction,
@@ -51,7 +52,7 @@ export async function sendTransaction<
     await Promise.all([
       getDefaultGasOverrides(
         options.transaction.contract.client,
-        options.transaction.contract.chainId,
+        options.transaction.contract.chain,
       ),
       encode(options.transaction),
       eth_getTransactionCount(rpcRequest, {
@@ -63,7 +64,7 @@ export async function sendTransaction<
 
   const result = await options.wallet.sendTransaction({
     to: options.transaction.contract.address,
-    chainId: options.transaction.contract.chainId,
+    chainId: Number(getChainIdFromChain(options.transaction.contract.chain)),
     data: encodedData,
     gas: estimatedGas,
     ...gasOverrides,

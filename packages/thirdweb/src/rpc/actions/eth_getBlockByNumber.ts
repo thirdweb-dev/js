@@ -38,7 +38,7 @@ type GetBlockParameters<
  * @example
  * ```ts
  * import { getRpcClient, eth_getBlockByNumber } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const block = await eth_getBlockByNumber(rpcRequest, {
  *  blockNumber: 123456,
  *  includeTransactions: true,

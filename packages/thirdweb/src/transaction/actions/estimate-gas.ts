@@ -29,7 +29,7 @@ export async function estimateGas<abiFn extends AbiFunction>(
   const [gasOverrides, encodedData] = await Promise.all([
     getDefaultGasOverrides(
       options.transaction.contract.client,
-      options.transaction.contract.chainId,
+      options.transaction.contract.chain,
     ),
     encode(options.transaction),
   ]);

@@ -1,6 +1,7 @@
 import { getRpcClient } from "./rpc.js";
 import { eth_blockNumber } from "./actions/eth_blockNumber.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getChainIdFromChain, type Chain } from "../chain/index.js";
 
 const MAX_POLL_DELAY = 5000; // 5 seconds
 const DEFAULT_POLL_DELAY = 1000; // 1 second
@@ -29,7 +30,7 @@ function getAverageBlockTime(blockTimes: number[]): number {
  */
 function createBlockNumberPoller(
   client: ThirdwebClient,
-  chainId: number,
+  chain: Chain,
   overPollRatio?: number,
 ) {
   let subscribers: Array<(blockNumber: bigint) => void> = [];
@@ -39,7 +40,7 @@ function createBlockNumberPoller(
   let lastBlockNumber: bigint | undefined;
   let lastBlockAt: number | undefined;
 
-  const rpcRequest = getRpcClient({ client, chainId });
+  const rpcRequest = getRpcClient({ client, chain });
 
   /**
    * TODO: document
@@ -124,13 +125,13 @@ function sleep(ms: number) {
 }
 
 const existingPollers = new Map<
-  number,
+  bigint,
   ReturnType<typeof createBlockNumberPoller>
 >();
 
 export type WatchBlockNumberOptions = {
   client: ThirdwebClient;
-  chainId: number;
+  chain: Chain;
   onNewBlockNumber: (blockNumber: bigint) => void;
   overPollRatio?: number;
 };
@@ -156,7 +157,8 @@ export type WatchBlockNumberOptions = {
  * ```
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
-  const { client, chainId, onNewBlockNumber, overPollRatio } = opts;
+  const { client, chain, onNewBlockNumber, overPollRatio } = opts;
+  const chainId = getChainIdFromChain(chain);
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller

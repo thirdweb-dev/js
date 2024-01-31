@@ -23,7 +23,7 @@ import {
  * @example
  * ```ts
  * import { getRpcClient, eth_getLogs } from "thirdweb/rpc";
- * const rpcRequest = getRpcClient({ client, chainId });
+ * const rpcRequest = getRpcClient({ client, chain });
  * const logs = await eth_getLogs(rpcRequest, {
  *  address: "0x...",
  *  fromBlock: 123456n,

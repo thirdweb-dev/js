@@ -6,6 +6,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { Abi } from "abitype";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
 import type { Hex, TransactionSerializable } from "viem";
+import { getRpcUrlForChain, type Chain } from "../chain/index.js";
 
 type Ethers5 = typeof ethers5;
 
@@ -46,7 +47,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
       /**
        * Converts a Thirdweb client and chain ID into an ethers.js provider.
        * @param client - The Thirdweb client.
-       * @param chainId - The chain ID.
+       * @param chain - The chain.
        * @returns The ethers.js provider.
        * @example
        * ```ts
@@ -54,8 +55,8 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const provider = ethers5Adapter.provider.toEthers(client, chainId);
        * ```
        */
-      toEthers: (client: ThirdwebClient, chainId: number) =>
-        toEthersProvider(ethers, client, chainId),
+      toEthers: (client: ThirdwebClient, chain: Chain) =>
+        toEthersProvider(ethers, client, chain),
     },
     contract: {
       /**
@@ -107,16 +108,16 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
  * Converts a Thirdweb client and chain ID into an ethers.js provider.
  * @param ethers - The ethers.js library instance.
  * @param client - The Thirdweb client.
- * @param chainId - The chain ID.
+ * @param chain - The chain.
  * @returns The ethers.js provider.
  * @internal
  */
 function toEthersProvider(
   ethers: Ethers5,
   client: ThirdwebClient,
-  chainId: number,
+  chain: Chain,
 ): ethers5.providers.Provider {
-  const url = `https://${chainId}.rpc.thirdweb.com/${client.clientId}`;
+  const url = getRpcUrlForChain({ chain, client });
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -144,7 +145,7 @@ async function toEthersContract<abi extends Abi = []>(
     return new ethers.Contract(
       twContract.address,
       JSON.stringify(twContract.abi),
-      toEthersProvider(ethers, twContract.client, twContract.chainId),
+      toEthersProvider(ethers, twContract.client, twContract.chain),
     );
   }
 
@@ -157,14 +158,14 @@ async function toEthersContract<abi extends Abi = []>(
   return new ethers.Contract(
     twContract.address,
     JSON.stringify(abi),
-    toEthersProvider(ethers, twContract.client, twContract.chainId),
+    toEthersProvider(ethers, twContract.client, twContract.chain),
   );
 }
 
 type FromEthersContractOptions = {
   client: ThirdwebClient;
   ethersContract: ethers5.Contract;
-  chainId: number;
+  chain: Chain;
 };
 
 /**
@@ -179,7 +180,7 @@ async function fromEthersContract<abi extends Abi>(
   return getContract({
     client: options.client,
     address: await options.ethersContract.getAddress(),
-    chainId: options.chainId,
+    chain: options.chain,
   });
 }
 

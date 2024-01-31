@@ -13,6 +13,7 @@ import {
 } from "../../../transaction/transaction.js";
 import { stringify } from "../../../utils/json.js";
 import { getFunctionId } from "../../../utils/function-id.js";
+import { getChainIdFromChain } from "../../../chain/index.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
@@ -84,11 +85,13 @@ export function useContractRead<
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
+    const chainId = getChainIdFromChain(contract.chain);
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
-        contract.chainId,
+        chainId,
         contract.address,
         "read",
         getFunctionId(extensionOrOptions),
@@ -102,12 +105,13 @@ export function useContractRead<
   // raw tx case
   if ("method" in extensionOrOptions) {
     const { queryOptions, ...tx } = extensionOrOptions;
+    const chainId = getChainIdFromChain(tx.contract.chain);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
-        tx.contract.chainId,
+        chainId,
         tx.contract.address,
         "read",
         tx.method,

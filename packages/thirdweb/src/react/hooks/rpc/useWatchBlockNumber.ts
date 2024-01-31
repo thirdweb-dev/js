@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import type { ThirdwebClient } from "../../../index.js";
 import { watchBlockNumber } from "../../../rpc/watchBlockNumber.js";
+import type { Chain } from "../../../chain/index.js";
 
 export type UseWatchBlockNumberOptions = {
   client: ThirdwebClient;
-  chainId: number;
+  chain: Chain;
   enabled?: boolean;
 };
 
@@ -19,7 +20,7 @@ export type UseWatchBlockNumberOptions = {
  * ```
  */
 export function useWatchBlockNumber(options: UseWatchBlockNumberOptions) {
-  const { client, chainId, enabled = true } = options;
+  const { client, chain, enabled = true } = options;
   const [blockNumber, setBlockNumber] = useState<bigint | undefined>(undefined);
 
   useEffect(() => {
@@ -29,10 +30,10 @@ export function useWatchBlockNumber(options: UseWatchBlockNumberOptions) {
     }
     return watchBlockNumber({
       client,
-      chainId,
+      chain,
       onNewBlockNumber: setBlockNumber,
     });
-  }, [client, chainId, enabled]);
+  }, [client, chain, enabled]);
 
   return blockNumber;
 }

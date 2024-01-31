@@ -4,6 +4,7 @@ import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { waitForReceipt } from "../../../transaction/index.js";
 import type { TransactionReceipt } from "viem";
 import type { TransactionOrUserOpHash } from "../../../transaction/types.js";
+import { getChainIdFromChain } from "../../../chain/index.js";
 
 export type TransactionHashOptions<abi extends Abi> =
   TransactionOrUserOpHash & {
@@ -24,13 +25,11 @@ export type TransactionHashOptions<abi extends Abi> =
 export function useWaitForReceipt<abi extends Abi>(
   options: TransactionHashOptions<abi> | undefined,
 ): UseQueryResult<TransactionReceipt> {
+  // TODO: here cotract can be undfined so we go to a `-1` chain but this feels wrong
+  const chainId = getChainIdFromChain(options?.contract.chain ?? -1);
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: [
-      options?.contract.chainId,
-      "waitForReceipt",
-      options?.transactionHash,
-    ] as const,
+    queryKey: [chainId, "waitForReceipt", options?.transactionHash] as const,
     queryFn: async () => {
       if (!options?.transactionHash) {
         throw new Error("No transaction hash");

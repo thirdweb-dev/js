@@ -1,3 +1,8 @@
+import {
+  getChainIdFromChain,
+  type Chain,
+  getRpcUrlForChain,
+} from "../chain/index.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
@@ -73,7 +78,7 @@ const DEFAULT_BATCH_TIMEOUT_MS = 0;
 
 type RPCOptions = Readonly<{
   client: ThirdwebClient;
-  chainId: number;
+  chain: Chain;
   config?: {
     maxBatchSize?: number;
     batchTimeoutMs?: number;
@@ -89,7 +94,7 @@ type RPCOptions = Readonly<{
  * import { createClient } from "thirdweb";
  * import { getRpcClient } from "thirdweb/rpc";
  * const client = createClient({ clientId: "..." });
- * const rpcRequest = getRpcClient({ client, chainId: 1 });
+ * const rpcRequest = getRpcClient({ client, chain: 1 });
  * const blockNumber = await rpcRequest({
  *  method: "eth_blockNumber",
  * });
@@ -99,10 +104,9 @@ export function getRpcClient(
   options: RPCOptions,
 ): EIP1193RequestFn<EIP1474Methods> {
   const rpcClientMap = getRpcClientMap(options.client);
-  if (rpcClientMap.has(options.chainId)) {
-    return rpcClientMap.get(
-      options.chainId,
-    ) as EIP1193RequestFn<EIP1474Methods>;
+  const chainId = getChainIdFromChain(options.chain);
+  if (rpcClientMap.has(chainId)) {
+    return rpcClientMap.get(chainId) as EIP1193RequestFn<EIP1474Methods>;
   }
 
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
@@ -148,7 +152,7 @@ export function getRpcClient(
 
       fetchRpc(options.client, {
         requests: activeBatch.map((inflight) => inflight.request),
-        chainId: options.chainId,
+        chain: options.chain,
       })
         .then((responses) => {
           // for each response, resolve the inflight request
@@ -210,13 +214,13 @@ export function getRpcClient(
     };
   })();
 
-  rpcClientMap.set(options.chainId, rpcClient);
+  rpcClientMap.set(chainId, rpcClient);
   return rpcClient as EIP1193RequestFn<EIP1474Methods>;
 }
 
 type FetchRpcOptions = {
   requests: RpcRequest[];
-  chainId: number;
+  chain: Chain;
 };
 
 /**
@@ -224,22 +228,21 @@ type FetchRpcOptions = {
  */
 async function fetchRpc(
   client: ThirdwebClient,
-  { requests, chainId }: FetchRpcOptions,
+  { requests, chain }: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
   const headers = new Headers({
     "Content-Type": "application/json",
   });
+  // TODO extract this
   if (client.secretKey) {
     headers.set("x-secret-key", client.secretKey);
   }
-  const response = await fetch(
-    `https://${chainId}.rpc.thirdweb.com/${client.clientId}`,
-    {
-      headers,
-      body: stringify(requests),
-      method: "POST",
-    },
-  );
+  const rpcUrl = getRpcUrlForChain({ client, chain });
+  const response = await fetch(rpcUrl, {
+    headers,
+    body: stringify(requests),
+    method: "POST",
+  });
 
   if (!response.ok) {
     throw new Error(`RPC request failed with status ${response.status}`);

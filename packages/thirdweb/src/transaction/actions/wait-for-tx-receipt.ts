@@ -7,6 +7,7 @@ import {
 } from "../../rpc/index.js";
 import type { Abi } from "abitype";
 import type { TransactionOrUserOpHash } from "../types.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
@@ -34,7 +35,8 @@ export function waitForReceipt<abi extends Abi>(
 ): Promise<TransactionReceipt> {
   const { transactionHash, userOpHash, contract } = options;
   const prefix = transactionHash ? "tx_" : "userOp_";
-  const key = `${contract.chainId}:${prefix}${transactionHash || userOpHash}`;
+  const chainId = getChainIdFromChain(contract.chain);
+  const key = `${chainId}:${prefix}${transactionHash || userOpHash}`;
 
   if (map.has(key)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -55,7 +57,7 @@ export function waitForReceipt<abi extends Abi>(
 
     const unwatch = watchBlockNumber({
       client: contract.client,
-      chainId: contract.chainId,
+      chain: contract.chain,
       onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
