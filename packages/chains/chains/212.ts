@@ -1,32 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "MAP",
+  "chain": "MAPO",
   "chainId": 212,
   "explorers": [
     {
-      "name": "mapscan",
-      "url": "https://testnet.mapscan.io",
+      "name": "maposcan",
+      "url": "https://testnet.maposcan.io",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://faucet.maplabs.io"
+    "https://faucet.mapprotocol.io"
   ],
-  "infoURL": "https://maplabs.io",
-  "name": "MAP Makalu",
+  "infoURL": "https://mapprotocol.io/",
+  "name": "MAPO Makalu",
   "nativeCurrency": {
-    "name": "Makalu MAP",
-    "symbol": "MAP",
+    "name": "Makalu MAPO",
+    "symbol": "MAPO",
     "decimals": 18
   },
   "networkId": 212,
   "rpc": [
-    "https://map-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mapo-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://212.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.maplabs.io"
   ],
   "shortName": "makalu",
-  "slug": "map-makalu",
+  "slug": "mapo-makalu",
   "testnet": true,
-  "title": "MAP Testnet Makalu"
+  "title": "MAPO Testnet Makalu"
 } as const satisfies Chain;
