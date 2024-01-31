@@ -1,9 +1,6 @@
 name: Sync chains every hour
 
 on:
-  pull_request:
-    branches:
-      - main
   schedule:
     - cron: "0 * * * *" # Runs every hour
   workflow_dispatch: # Allows you to manually run the workflow from the Actions tab
