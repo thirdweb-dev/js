@@ -24,10 +24,14 @@ jobs:
       - name: Check for Changes
         id: git-check
         run: |
-          git diff --exit-code || echo "step.git-check.outputs.changes=true" >> $GITHUB_ENV
+          if git diff --quiet; then
+            echo "CHANGES_FOUND=false" >> $GITHUB_ENV
+          else
+            echo "CHANGES_FOUND=true" >> $GITHUB_ENV
+          fi
 
       - name: Commit Changes
-        if: env.step.git-check.outputs.changes == 'true'
+        if: env.CHANGES_FOUND == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -35,10 +39,10 @@ jobs:
           git commit -m "chore(chains): sync from db"
 
       - name: Create or Update Pull Request
-        if: env.step.git-check.outputs.changes == 'true'
+        if: env.CHANGES_FOUND == 'true'
         uses: peter-evans/create-pull-request@v3
         with:
           title: "chore(chains): update chains"
-          branch: "sync-chains" # You can specify a different branch name if you wish
+          branch: "sync-chains"
           body: "This PR was automatically created by a GitHub Action. It updates the chains package with the latest changes from the database."
           commit-message: "chore(chains): sync from db"
