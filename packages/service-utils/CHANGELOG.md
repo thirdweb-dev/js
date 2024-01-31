@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.14
+
+### Patch Changes
+
+- [#2235](https://github.com/thirdweb-dev/js/pull/2235) [`173b3b2a`](https://github.com/thirdweb-dev/js/commit/173b3b2ad97bbe1935432f3ffd51b1bd959e5a08) Thanks [@farhanW3](https://github.com/farhanW3)! - added 'engine' as a source to usage event schema & updated schema to accomodate new values
+
+- [#2238](https://github.com/thirdweb-dev/js/pull/2238) [`c9f1fd8f`](https://github.com/thirdweb-dev/js/commit/c9f1fd8fc225eea0342ce2111751212169791e09) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update types
+
 ## 0.4.13
 
 ### Patch Changes

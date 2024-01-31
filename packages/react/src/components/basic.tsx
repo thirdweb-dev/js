@@ -21,13 +21,13 @@ export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-export const noScrollBar: CSSObject = /* @__PURE__ */ {
+export const noScrollBar = /* @__PURE__ */ {
   scrollbarWidth: "none",
   "&::-webkit-scrollbar": {
     width: 0,
     display: "none",
   },
-};
+} satisfies CSSObject;
 
 export function ModalHeader(props: {
   onBack?: () => void;
