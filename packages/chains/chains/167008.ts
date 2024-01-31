@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
@@ -24,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 167008,
+  "redFlags": [],
   "rpc": [
     "https://taiko-katla-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://167008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -32,5 +34,5 @@ export default {
   "shortName": "tko-katla",
   "slug": "taiko-katla-l2",
   "status": "active",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
