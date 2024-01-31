@@ -12,8 +12,6 @@ import {
   IStorageUploader,
 } from "../../types";
 import FormData from "form-data";
-import pkg from "../../../package.json";
-import { getOperatingSystem } from "../../utils/os";
 import {
   setAnalyticsHeaders,
   setAnalyticsHeadersForXhr,

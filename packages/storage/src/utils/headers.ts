@@ -1,4 +1,4 @@
-import pkg from "../../../../package.json";
+import pkg from "../../package.json";
 import { getOperatingSystem } from "./os";
 
 export function setAnalyticsHeaders(headers: Record<string, string>) {

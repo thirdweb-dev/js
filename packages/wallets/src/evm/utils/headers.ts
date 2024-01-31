@@ -1,5 +1,12 @@
-import pkg from "../../../../../package.json";
+import pkg from "../../../package.json";
 import { getOperatingSystem } from "./os/os";
+
+// const pkg: {
+//   version: string;
+//   name: string;
+//   // this is on purpose because we can't import package.json as a module as it is outside rootDir
+//   // eslint-disable-next-line @typescript-eslint/no-var-requires, better-tree-shaking/no-top-level-side-effects
+// } = require("../../../package.json");
 
 export function setAnalyticsHeaders(headers: Record<string, string>) {
   const globals = getAnalyticsGlobals();

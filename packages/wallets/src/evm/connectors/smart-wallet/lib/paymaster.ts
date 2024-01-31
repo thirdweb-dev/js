@@ -3,8 +3,6 @@ import { hexlifyUserOp } from "./utils";
 import { isTwUrl } from "../../../utils/url";
 import { PaymasterAPI, PaymasterResult } from "../types";
 import { DEBUG } from "./http-rpc-client";
-import { getOperatingSystem } from "../../../utils/os/os";
-import pkg from "../../../../../package.json";
 import { setAnalyticsHeaders } from "../../../utils/headers";
 
 export const SIG_SIZE = 65;

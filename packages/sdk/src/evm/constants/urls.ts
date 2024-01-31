@@ -9,7 +9,6 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
 import pkg from "../../../package.json";
-import { isBrowser } from "@thirdweb-dev/storage";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
 import { getOperatingSystem } from "../../core/utils/os";
 
