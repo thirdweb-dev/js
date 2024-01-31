@@ -189,6 +189,8 @@ export async function injectedWallet(
     provider.on("accountsChanged", (accounts: string[]) => {
       const _address = accounts[0];
       if (!_address) {
+        // TODO figure out a way to handle this, address is not allowed to be undefined
+        // @ts-expect-error - address is not allowed to be undefined
         wallet.address = undefined;
       } else {
         wallet.address = getAddress(_address);
