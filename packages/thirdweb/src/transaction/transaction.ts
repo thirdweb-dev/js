@@ -2,11 +2,14 @@ import type {
   Abi,
   AbiFunction,
   AbiParametersToPrimitiveTypes,
+  Address,
   ExtractAbiFunctionNames,
 } from "abitype";
 import type { ThirdwebContract } from "../contract/index.js";
 import type { ParseMethod } from "../abi/types.js";
 import { isObjectWithKeys } from "../utils/type-guards.js";
+import type { Hex } from "viem";
+import type { FeeDataParams } from "../gas/fee-data.js";
 
 type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   length: 0;
@@ -16,15 +19,32 @@ type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   : {
       params:
         | AbiParametersToPrimitiveTypes<abiFn["inputs"]>
-        | (() => Promise<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>);
+        | (() => Promise<
+            | AbiParametersToPrimitiveTypes<abiFn["inputs"]>
+            | {
+                params: AbiParametersToPrimitiveTypes<abiFn["inputs"]>;
+                overrides: Partial<DynamicTransactionOverrides>;
+              }
+          >);
     };
+
+export type TransactionOverrides = {
+  // all other normal transaction options
+  accessList?: Array<{ address: Address; storageKeys: Hex[] }>;
+  gas?: bigint;
+  nonce?: number;
+  value?: bigint;
+} & FeeDataParams;
+
+export type DynamicTransactionOverrides = Pick<TransactionOverrides, "value">;
 
 export type TransactionOptions<
   abi extends Abi,
   method extends AbiFunction | string,
 > = TxOpts<object, abi> & {
   method: method;
-} & ParamsOption<ParseMethod<abi, method>>;
+} & ParamsOption<ParseMethod<abi, method>> &
+  TransactionOverrides;
 
 // the only difference here is that we don't alow string methods
 export type Transaction<abiFn extends AbiFunction> = TransactionOptions<

@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../client/client.js";
-import { parseUnits } from "viem";
+import { parseUnits, type AbiFunction } from "viem";
 import {
   eth_gasPrice,
   eth_getBlockByNumber,
@@ -7,12 +7,54 @@ import {
   getRpcClient,
 } from "../rpc/index.js";
 import { getChainIdFromChain, type Chain } from "../chain/index.js";
+import type { Transaction } from "../transaction/transaction.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
   maxPriorityFeePerGas: null | bigint;
-  baseFee: null | bigint;
 };
+
+export type FeeDataParams =
+  | {
+      gasPrice?: never;
+      maxFeePerGas?: bigint;
+      maxPriorityFeePerGas?: bigint;
+    }
+  | {
+      gasPrice?: bigint;
+      maxFeePerGas?: never;
+      maxPriorityFeePerGas?: never;
+    };
+
+/**
+ *
+ * @internal
+ */
+export async function getGasOverridesForTransaction<abiFn extends AbiFunction>(
+  transaction: Transaction<abiFn>,
+): Promise<FeeDataParams> {
+  // if we have a `gasPrice` param in the transaction, use that.
+  if ("gasPrice" in transaction && !transaction.gasPrice) {
+    return { gasPrice: transaction.gasPrice };
+  }
+  // if we have a maxFeePerGas and maxPriorityFeePerGas, use those
+  if (
+    "maxFeePerGas" in transaction &&
+    "maxPriorityFeePerGas" in transaction &&
+    !transaction.maxFeePerGas &&
+    !transaction.maxPriorityFeePerGas
+  ) {
+    return {
+      maxFeePerGas: transaction.maxFeePerGas,
+      maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+    };
+  }
+  // otherwise call getDefaultGasOverrides
+  return getDefaultGasOverrides(
+    transaction.contract.client,
+    transaction.contract.chain,
+  );
+}
 
 /**
  * Retrieves the default gas overrides for a given client and chain ID.
@@ -55,7 +97,7 @@ export async function getDefaultGasOverrides(
  * @returns A promise that resolves to the fee data.
  * @internal
  */
-export async function getDynamicFeeData(
+async function getDynamicFeeData(
   client: ThirdwebClient,
   chain: Chain,
 ): Promise<FeeData> {
@@ -90,7 +132,7 @@ export async function getDynamicFeeData(
 
   if (!maxPriorityFeePerGas_) {
     // chain does not support eip-1559, return null for both
-    return { maxFeePerGas: null, maxPriorityFeePerGas: null, baseFee: null };
+    return { maxFeePerGas: null, maxPriorityFeePerGas: null };
   }
 
   // add 10% tip to maxPriorityFeePerGas for faster processing
@@ -102,7 +144,6 @@ export async function getDynamicFeeData(
   return {
     maxFeePerGas,
     maxPriorityFeePerGas: maxPriorityFeePerGas_,
-    baseFee: baseBlockFee,
   };
 }
 

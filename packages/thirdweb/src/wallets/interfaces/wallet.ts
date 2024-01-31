@@ -1,6 +1,5 @@
-import type { Address } from "abitype";
+import type { AbiFunction, Address } from "abitype";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
-
 import type {
   Hex,
   SignableMessage,
@@ -9,6 +8,7 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { AddListener, RemoveListener } from "./listeners.js";
+import type { Transaction } from "../../transaction/transaction.js";
 
 export type Wallet = {
   // REQUIRED
@@ -29,10 +29,9 @@ export type Wallet = {
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-  // TODO: figure out estimate gas
-  estimateGas?: (
-    // TODO: figure out how we get our "chain" here
-    tx: TransactionSerializable & { chainId: number },
+
+  estimateGas?: <abiFn extends AbiFunction>(
+    tx: Transaction<abiFn>,
   ) => Promise<bigint>;
   addListener?: AddListener;
   removeListener?: RemoveListener;

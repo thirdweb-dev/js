@@ -3,6 +3,7 @@ import type { AbiFunction } from "abitype";
 import type { Transaction } from "../transaction.js";
 import { resolveAbiFunction } from "./resolve-abi.js";
 import type { Hex } from "viem";
+import { resolveParams } from "./resolve-params.js";
 
 const ENCODE_CACHE = new WeakMap();
 
@@ -23,15 +24,16 @@ export async function encode<const abiFn extends AbiFunction>(
     return ENCODE_CACHE.get(tx) as Hex;
   }
 
-  const prom = (async () => {
-    const [abiFn, params] = await Promise.all([
+  const encodePromise = (async () => {
+    const [abiFn, { params }] = await Promise.all([
       resolveAbiFunction(tx),
-      typeof tx.params === "function" ? tx.params() : tx.params,
+      resolveParams(tx),
     ]);
 
+    // @ts-expect-error - this works fine, dig into why later
     return encodeAbiFunction(abiFn, params ?? []);
   })();
 
-  ENCODE_CACHE.set(tx, prom);
-  return prom;
+  ENCODE_CACHE.set(tx, encodePromise);
+  return encodePromise;
 }

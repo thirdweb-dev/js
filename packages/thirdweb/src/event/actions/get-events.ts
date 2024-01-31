@@ -74,7 +74,6 @@ export async function getEvents<
         abi.filter((item) => item.type === "event"),
       ) as Promise<AbiEvent[]>));
 
-  // @ts-expect-error - fromBlock and toBlock ARE allowed to be undefined
   return await eth_getLogs(rpcRequest, {
     fromBlock: options.fromBlock,
     toBlock: options.toBlock,

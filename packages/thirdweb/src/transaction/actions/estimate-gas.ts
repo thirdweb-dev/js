@@ -1,8 +1,8 @@
 import type { Transaction } from "../transaction.js";
-import { getDefaultGasOverrides } from "../../gas/fee-data.js";
+import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest } from "viem/utils";
-import type { AbiFunction, Address } from "viem";
+import type { AbiFunction } from "viem";
 import { getRpcClient, eth_estimateGas } from "../../rpc/index.js";
 import type { Wallet } from "../../wallets/index.js";
 
@@ -27,25 +27,21 @@ export async function estimateGas<abiFn extends AbiFunction>(
   const rpcRequest = getRpcClient(options.transaction.contract);
 
   const [gasOverrides, encodedData] = await Promise.all([
-    getDefaultGasOverrides(
-      options.transaction.contract.client,
-      options.transaction.contract.chain,
-    ),
+    getGasOverridesForTransaction(options.transaction),
     encode(options.transaction),
   ]);
 
-  // format the tx request
-  const data = formatTransactionRequest({
-    to: options.transaction.contract.address as Address,
-    data: encodedData,
-    ...gasOverrides,
-    from: (options.wallet?.address ?? undefined) as Address,
-  });
-
   if (options.wallet && options.wallet.estimateGas) {
-    // TODO add this but fix types first
-    // return options.wallet.estimateGas(data);
+    return options.wallet.estimateGas(options.transaction);
   }
 
-  return eth_estimateGas(rpcRequest, data);
+  return eth_estimateGas(
+    rpcRequest,
+    formatTransactionRequest({
+      to: options.transaction.contract.address,
+      data: encodedData,
+      ...gasOverrides,
+      from: options.wallet?.address ?? undefined,
+    }),
+  );
 }
