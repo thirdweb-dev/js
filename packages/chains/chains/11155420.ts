@@ -42,5 +42,5 @@ export default {
   "shortName": "opsep",
   "slip44": 1,
   "slug": "op-sepolia-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;
