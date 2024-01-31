@@ -21,13 +21,13 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
 }) => {
   const [sessionUrl, setSessionUrl] = useState();
   const mutation = useCreateBillingSession();
-
   const validPayment = account.status === AccountStatus.ValidPayment;
   const paymentVerification =
     account.status === AccountStatus.PaymentVerification;
+  const invalidPayment = account.status === AccountStatus.InvalidPayment;
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (onClick || loading || (!sessionUrl && !paymentVerification)) {
+    if (onClick || loading || !sessionUrl) {
       e.preventDefault();
       if (onClick) {
         onClick();
@@ -36,7 +36,7 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   };
 
   useEffect(() => {
-    if (!paymentVerification) {
+    if (!onClick) {
       mutation.mutate(undefined, {
         onSuccess: (data) => {
           setSessionUrl(data.url);
@@ -44,18 +44,18 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paymentVerification]);
+  }, [onClick]);
 
   return (
     <TrackedLinkButton
       variant="outline"
-      isDisabled={loading || (!sessionUrl && !paymentVerification)}
-      href={account.stripePaymentActionUrl || sessionUrl || ""}
+      isDisabled={loading || (!onClick && !sessionUrl)}
+      href={sessionUrl || ""}
       isLoading={loading}
       category="billingAccount"
       label={
-        paymentVerification
-          ? "verifyPaymentMethod"
+        paymentVerification || invalidPayment
+          ? "addAnotherPayment"
           : onClick
             ? "addPayment"
             : "manage"
@@ -67,8 +67,8 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
     >
       {validPayment
         ? "Manage billing"
-        : paymentVerification
-          ? "Verify payment method →"
+        : paymentVerification || invalidPayment
+          ? "Add another payment method →"
           : "Add payment method →"}
     </TrackedLinkButton>
   );
