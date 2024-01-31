@@ -474,9 +474,8 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
       getChainProvider("polygon", {}),
     ) as ContractPublisher;
 
-    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
-      compilerMetaUri,
-    );
+    const publishedMetadataUri =
+      await contract.getPublishedUriFromCompilerUri(compilerMetaUri);
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetaUri}`,
