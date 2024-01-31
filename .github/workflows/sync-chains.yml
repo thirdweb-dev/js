@@ -30,6 +30,15 @@ jobs:
             echo "CHANGES_FOUND=true" >> $GITHUB_ENV
           fi
 
+      - name: Create or Update sync-chains.md
+        if: env.CHANGES_FOUND == 'true'
+        run: |
+          echo '---' > .changeset/sync-chains.md
+          echo '"@thirdweb-dev/chains": patch' >> .changeset/sync-chains.md
+          echo '---' >> .changeset/sync-chains.md
+          echo '' >> .changeset/sync-chains.md
+          echo 'Synced Chains Package' >> .changeset/sync-chains.md
+
       - name: Commit Changes
         if: env.CHANGES_FOUND == 'true'
         run: |
