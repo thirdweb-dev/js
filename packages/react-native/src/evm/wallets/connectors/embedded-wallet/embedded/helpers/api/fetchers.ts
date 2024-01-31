@@ -20,14 +20,8 @@ import {
   VerifiedTokenResponse,
 } from "../../../types";
 import { createErrorMessage } from "../errors";
-import {
-  BUNDLE_ID_HEADER,
-  X_SDK_NAME_HEADER,
-  X_SDK_OS_HEADER,
-  X_SDK_PLATFORM_HEADER,
-  X_SDK_VERSION_HEADER,
-} from "../../../../../../constants/headers";
 import { ANALYTICS } from "../analytics";
+import { getAnalyticsHeaders } from "../../../../../../../core/storage/utils";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
@@ -35,12 +29,8 @@ const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
 const HEADERS = {
   "Content-Type": "application/json",
   [EWS_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
-  [BUNDLE_ID_HEADER]: (globalThis as any).APP_BUNDLE_ID,
   [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
-  [X_SDK_NAME_HEADER]: (globalThis as any).X_SDK_NAME,
-  [X_SDK_OS_HEADER]: (globalThis as any).X_SDK_OS,
-  [X_SDK_PLATFORM_HEADER]: (globalThis as any).X_SDK_PLATFORM,
-  [X_SDK_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
+  ...getAnalyticsHeaders(),
 };
 
 export const verifyClientId = async (clientId: string) => {

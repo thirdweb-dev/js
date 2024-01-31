@@ -17,8 +17,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import type { Locale } from "../i18n/types";
-import { appBundleId, packageVersion } from "../utils/version";
-import { Platform } from "react-native";
+import { getAnalyticsGlobals } from "../../core/storage/utils";
 
 export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -150,13 +149,7 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     ...restProps
   } = props;
 
-  if (typeof globalThis !== "undefined") {
-    (globalThis as any).X_SDK_NAME = packageVersion.name;
-    (globalThis as any).X_SDK_PLATFORM = "mobile";
-    (globalThis as any).X_SDK_VERSION = packageVersion.version;
-    (globalThis as any).X_SDK_OS = Platform.OS;
-    (globalThis as any).APP_BUNDLE_ID = appBundleId;
-  }
+  getAnalyticsGlobals();
 
   const coinbaseWalletObj = supportedWallets.find(
     (w) => w.id === walletIds.coinbase,

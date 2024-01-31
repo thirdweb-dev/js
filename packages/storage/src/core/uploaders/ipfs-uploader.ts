@@ -14,6 +14,10 @@ import {
 import FormData from "form-data";
 import pkg from "../../../package.json";
 import { getOperatingSystem } from "../../utils/os";
+import {
+  setAnalyticsHeaders,
+  setAnalyticsHeadersForXhr,
+} from "../../utils/headers";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -275,36 +279,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader("x-client-id", this.clientId);
       }
 
-      const bundleId =
-        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-          ? ((globalThis as any).APP_BUNDLE_ID as string)
-          : undefined;
-      if (bundleId) {
-        xhr.setRequestHeader("x-bundle-id", bundleId);
-      }
-
-      xhr.setRequestHeader(
-        "x-sdk-version",
-        (globalThis as any).X_SDK_VERSION || pkg.version,
-      );
-      xhr.setRequestHeader(
-        "x-sdk-os",
-        (globalThis as any).X_SDK_OS || getOperatingSystem(),
-      );
-      xhr.setRequestHeader(
-        "x-sdk-name",
-        (globalThis as any).X_SDK_NAME || pkg.name,
-      );
-      xhr.setRequestHeader(
-        "x-sdk-platform",
-        (globalThis as any).X_SDK_PLATFORM ||
-          (typeof navigator !== "undefined" &&
-            navigator.product === "ReactNative")
-          ? "mobile"
-          : typeof window !== "undefined"
-            ? "browser"
-            : "node",
-      );
+      setAnalyticsHeadersForXhr(xhr);
 
       // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
       if (
@@ -352,11 +327,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-client-id"] = this.clientId;
     }
 
-    // if we have a bundle id on global context then add that to the headers
-    if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
-      headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
-    }
-
     // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
     if (
       typeof globalThis !== "undefined" &&
@@ -380,16 +350,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-authorize-wallet"] = "true";
     }
 
-    headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION || pkg.version;
-    headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
-    headers["x-sdk-platform"] =
-      (globalThis as any).X_SDK_PLATFORM ||
-      (typeof navigator !== "undefined" && navigator.product === "ReactNative")
-        ? "mobile"
-        : typeof window !== "undefined"
-          ? "browser"
-          : "node";
-    headers["x-sdk-os"] = (globalThis as any).X_SDK_OS || getOperatingSystem();
+    setAnalyticsHeaders(headers);
 
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",

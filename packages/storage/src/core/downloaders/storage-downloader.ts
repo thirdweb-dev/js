@@ -1,13 +1,12 @@
 import { isTwGatewayUrl } from "../../common/urls";
-import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { replaceSchemeWithGatewayUrl } from "../../common/utils";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
   SingleDownloadOptions,
 } from "../../types";
-import pkg from "../../../package.json";
-import { getOperatingSystem } from "../../utils/os";
+import { getAnalyticsGlobals, setAnalyticsHeaders } from "../../utils/headers";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -87,10 +86,7 @@ export class StorageDownloader implements IStorageDownloader {
 
     let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
-      const bundleId =
-        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-          ? ((globalThis as any).APP_BUNDLE_ID as string)
-          : undefined;
+      const bundleId = getAnalyticsGlobals().app_bundle_id;
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
@@ -127,19 +123,7 @@ export class StorageDownloader implements IStorageDownloader {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] =
-        (globalThis as any).X_SDK_VERSION || pkg.version;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
-      headers["x-sdk-platform"] =
-        (globalThis as any).X_SDK_PLATFORM ||
-        (typeof navigator !== "undefined" &&
-          navigator.product === "ReactNative")
-          ? "mobile"
-          : typeof window !== "undefined"
-            ? "browser"
-            : "node";
-      headers["x-sdk-os"] =
-        (globalThis as any).X_SDK_OS || getOperatingSystem();
+      setAnalyticsHeaders(headers);
     }
 
     if (isTooManyRequests(resolvedUri)) {

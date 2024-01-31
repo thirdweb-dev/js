@@ -5,6 +5,7 @@ import { PaymasterAPI, PaymasterResult } from "../types";
 import { DEBUG } from "./http-rpc-client";
 import { getOperatingSystem } from "../../../utils/os/os";
 import pkg from "../../../../../package.json";
+import { setAnalyticsHeaders } from "../../../utils/headers";
 
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
@@ -78,19 +79,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] =
-        (globalThis as any).X_SDK_VERSION || pkg.version;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME || pkg.name;
-      headers["x-sdk-platform"] =
-        (globalThis as any).X_SDK_PLATFORM ||
-        (typeof navigator !== "undefined" &&
-          navigator.product === "ReactNative")
-          ? "mobile"
-          : typeof window !== "undefined"
-            ? "browser"
-            : "node";
-      headers["x-sdk-os"] =
-        (globalThis as any).X_SDK_OS || getOperatingSystem();
+      setAnalyticsHeaders(headers);
     }
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.

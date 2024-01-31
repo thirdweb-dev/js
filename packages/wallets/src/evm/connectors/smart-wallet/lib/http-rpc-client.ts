@@ -2,6 +2,7 @@ import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { isTwUrl } from "../../../utils/url";
 import { hexlifyUserOp } from "./utils";
+import { setAnalyticsHeaders } from "../../../utils/headers";
 
 export const DEBUG = false; // TODO set as public flag
 
@@ -65,10 +66,7 @@ export class HttpRpcClient {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] = (globalThis as any).X_SDK_VERSION;
-      headers["x-sdk-name"] = (globalThis as any).X_SDK_NAME;
-      headers["x-sdk-platform"] = (globalThis as any).X_SDK_PLATFORM;
-      headers["x-sdk-os"] = (globalThis as any).X_SDK_OS;
+      setAnalyticsHeaders(headers);
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(

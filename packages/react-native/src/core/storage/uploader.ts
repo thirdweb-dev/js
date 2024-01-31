@@ -5,7 +5,7 @@ import {
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
-import { BUNDLE_ID_HEADER } from "../../evm/constants/headers";
+import { getAnalyticsHeaders, setAnalyticsHeaders } from "./utils";
 
 const METADATA_NAME = "Storage React Native SDK";
 
@@ -136,24 +136,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader(
-          BUNDLE_ID_HEADER,
-          (globalThis as any).APP_BUNDLE_ID,
-        ); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
 
-        xhr.setRequestHeader(
-          "x-sdk-version",
-          (globalThis as any).X_SDK_VERSION,
-        );
-        xhr.setRequestHeader("x-sdk-os", (globalThis as any).X_SDK_OS);
-        xhr.setRequestHeader("x-sdk-name", (globalThis as any).X_SDK_NAME);
-        xhr.setRequestHeader(
-          "x-sdk-platform",
-          (globalThis as any).X_SDK_PLATFORM,
-        );
+        setAnalyticsHeaders(xhr);
 
         xhr.send(form);
       });
@@ -171,13 +158,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             {
               method: "POST",
               headers: {
-                [BUNDLE_ID_HEADER]: (globalThis as any).APP_BUNDLE_ID,
                 ...(this.clientId ? { "x-client-id": this.clientId } : {}),
                 "Content-Type": "application/json",
-                "x-sdk-version": (globalThis as any).X_SDK_VERSION,
-                "x-sdk-name": (globalThis as any).X_SDK_NAME,
-                "x-sdk-platform": (globalThis as any).X_SDK_PLATFORM,
-                "x-sdk-os": (globalThis as any).X_SDK_OS,
+                ...getAnalyticsHeaders(),
               },
               body: fetchBody,
             },
