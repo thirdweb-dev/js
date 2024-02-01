@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useContext, useState, useMemo } from "react";
+import { useContext, useState, useMemo, useEffect } from "react";
 import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
 import {
@@ -548,6 +548,11 @@ export function ConnectWallet(props: ConnectWalletProps) {
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
   const locale = useTWLocale();
+
+  // preload the modal component
+  useEffect(() => {
+    import("./Modal/ConnectModal.js");
+  }, []);
 
   const walletConfigs = useThirdwebProviderProps().wallets;
   const isLoading =

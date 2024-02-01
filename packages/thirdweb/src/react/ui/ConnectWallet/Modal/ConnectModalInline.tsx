@@ -20,11 +20,11 @@ import {
 } from "../constants.js";
 import type { WelcomeScreen } from "../screens/types.js";
 import { SyncedWalletUIStates } from "./ConnectEmbed.js";
-import { ConnectModalContent } from "./ConnectModal.js";
 import { useScreen } from "./screen.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { isMobile } from "../../../utils/isMobile.js";
+import { ConnectModalContent } from "./ConnectModalContent.js";
 
 /**
  * @internal

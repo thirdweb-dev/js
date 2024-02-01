@@ -7,7 +7,6 @@ import {
   defaultTheme,
   reservedScreens,
 } from "../constants.js";
-import { ConnectModalContent } from "./ConnectModal.js";
 import { useScreen } from "./screen.js";
 import { type ComponentProps, useContext, useEffect } from "react";
 import { Spinner } from "../../components/Spinner.js";
@@ -27,6 +26,7 @@ import {
   useIsAutoConnecting,
 } from "../../../providers/wallet-provider.js";
 import { isMobile } from "../../../utils/isMobile.js";
+import { ConnectModalContent } from "./ConnectModalContent.js";
 
 export type ConnectEmbedProps = {
   /**

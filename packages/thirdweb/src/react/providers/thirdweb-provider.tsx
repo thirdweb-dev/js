@@ -13,7 +13,6 @@ import {
 import { ThirdwebProviderContext } from "./thirdweb-provider-ctx.js";
 import type { WalletConfig } from "../types/wallets.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
-import { ConnectModal } from "../ui/ConnectWallet/Modal/ConnectModal.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -21,6 +20,7 @@ import { ThirdwebLocaleContext } from "./locale-provider.js";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider.js";
 import type { ThirdwebLocale } from "../ui/locales/types.js";
 import { en } from "../ui/locales/en.js";
+import { LazyConnectModal } from "../ui/ConnectWallet/Modal/LazyConnectModal.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;
@@ -107,8 +107,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
             }}
           >
             {props.autoConnect === false ? <NoAutoConnect /> : <AutoConnect />}
-            {/* TODO: only load this when its needed, it pulls a ton of dependencies */}
-            <ConnectModal />
+            <LazyConnectModal />
             {props.children}
           </ThirdwebProviderContext.Provider>
         </ThirdwebLocaleContext.Provider>
