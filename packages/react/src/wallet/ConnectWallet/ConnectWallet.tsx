@@ -574,6 +574,20 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```tsx
  * <ConnectWallet hideDisconnect={true} />
  * ```
+ *
+ * ### detailsModalFooter
+ * Render custom UI at the bottom of the ConnectWallet Details Modal.
+ *
+ * The given function is passed an object with a `close` function which can be used to close the modal.
+ *
+ * ```tsx
+ * <ConnectWallet
+ *  detailsModalFooter={(props) => {
+ *    const { close } = props;
+ *    return <div> ... </div>
+ *  })
+ * />
+ * ```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
