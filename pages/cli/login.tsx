@@ -129,15 +129,15 @@ const LoginPage: ThirdwebNextPage = () => {
       if (!token) {
         setErrorText(
           <Text color="red" fontSize="lg">
-            Something went wrong, please reach out to us on Discord:{" "}
-            <Link color="blue.200" href="https://discord.gg/thirdweb">
-              https://discord.gg/thirdweb
+            Something went wrong. Please visit our{" "}
+            <Link color="blue.200" href="/support">
+              support site
             </Link>
           </Text>,
         );
         setLoading(false);
         console.error(
-          `Something went wrong, please reach out to us on Discord: discord.gg/thirdweb.`,
+          `Something went wrong, please visit our support site: https://thirdweb.com/support`,
         );
         // Tell the CLI that something went wrong.
         try {
@@ -168,15 +168,15 @@ const LoginPage: ThirdwebNextPage = () => {
         // This should never happen, but just in case
         setErrorText(
           <Text color="red" fontSize="lg">
-            Something went wrong, please reach out to us on Discord:{" "}
-            <Link color="blue.200" href="https://discord.gg/thirdweb">
-              https://discord.gg/thirdweb
+            Something went wrong. Please visit our{" "}
+            <Link color="blue.200" href="/support">
+              support site.
             </Link>
           </Text>,
         );
         setLoading(false);
         console.error(
-          `Something went wrong: ${response.statusText}, please reach out to us on Discord: discord.gg/thirdweb.`,
+          `Something went wrong, please visit our support site: https://thirdweb.com/support`,
         );
         trackEvent({
           category: "cli-login",
@@ -198,9 +198,9 @@ const LoginPage: ThirdwebNextPage = () => {
       setLoading(false);
       setErrorText(
         <Text color="red" fontSize="lg">
-          Something went wrong, please reach out to us on Discord:{" "}
-          <Link color="blue.200" href="https://discord.gg/thirdweb">
-            https://discord.gg/thirdweb
+          Something went wrong. Please visit our{" "}
+          <Link color="blue.200" href="/support">
+            support site.
           </Link>
         </Text>,
       );

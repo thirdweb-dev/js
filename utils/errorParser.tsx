@@ -4,14 +4,9 @@ import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
-    If you believe this is incorrect or the error persists, please reach out in{" "}
-    <Link
-      fontWeight="700"
-      href="https://discord.gg/thirdweb"
-      isExternal
-      textDecor="underline"
-    >
-      discord
+    If you believe this is incorrect or the error persists, please visit our{" "}
+    <Link fontWeight="700" href="/support" isExternal textDecor="underline">
+      support site
     </Link>
     .
   </Text>

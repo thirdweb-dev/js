@@ -446,6 +446,35 @@ export function useConfirmEmail() {
   );
 }
 
+export interface CreateTicketInput {
+  markdown: string;
+  product: string;
+}
+
+export function useCreateTicket() {
+  const { user } = useLoggedInUser();
+
+  return useMutationWithInvalidate(async (input: CreateTicketInput) => {
+    invariant(user?.address, "walletAddress is required");
+
+    const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/createTicket`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+    const json = await res.json();
+
+    if (json.error) {
+      throw new Error(json.error.message);
+    }
+
+    return json.data;
+  });
+}
+
 export function useConfirmEmbeddedWallet() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();

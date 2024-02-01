@@ -1,6 +1,5 @@
 import { fetchChainsFromApi } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  ButtonGroup,
   Flex,
   GridItem,
   Icon,
@@ -15,7 +14,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import type { Chain } from "@thirdweb-dev/chains";
-import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ChainIcon } from "components/icons/ChainIcon";
 

@@ -6,7 +6,6 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import type { TransactionError } from "@thirdweb-dev/sdk";
 import {
   createContext,
@@ -15,7 +14,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { FiAlertTriangle, FiCheck, FiCopy } from "react-icons/fi";
+import { FiAlertTriangle, FiCheck, FiCopy, FiHelpCircle } from "react-icons/fi";
 import { Button, Drawer, Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -104,13 +103,13 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           <Divider my={2} borderColor="borderColor" />
           <Heading size="subtitle.md">Need help with this error?</Heading>
           <LinkButton
-            colorScheme="discord"
+            colorScheme="primary"
             isExternal
             noIcon
-            href="https://discord.gg/thirdweb"
-            leftIcon={<Icon boxSize="1rem" as={SiDiscord} />}
+            href="/support"
+            leftIcon={<Icon boxSize="1rem" as={FiHelpCircle} />}
           >
-            Join our Discord
+            Visit our support site
           </LinkButton>
           <Button
             onClick={onCopy}

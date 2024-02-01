@@ -289,4 +289,5 @@ export enum PageId {
   Learn = "learn",
   Ambassadors = "ambassadors",
   Community = "community",
+  Support = "support",
 }

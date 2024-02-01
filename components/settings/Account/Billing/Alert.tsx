@@ -16,6 +16,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import React, { useCallback, useMemo } from "react";
 import { FiX } from "react-icons/fi";
+import { useRouter } from "next/router";
 
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 
@@ -33,6 +34,7 @@ export const BillingAlert = () => {
   const { isLoggedIn } = useLoggedInUser();
   const usageQuery = useAccountUsage();
   const meQuery = useAccount();
+  const router = useRouter();
 
   const [dismissedAlert, setDismissedAlert] = useLocalStorage<
     DismissedStorage | undefined
@@ -126,7 +128,8 @@ export const BillingAlert = () => {
     meQuery.isLoading ||
     !meQuery.data ||
     usageQuery.isLoading ||
-    !usageQuery.data
+    !usageQuery.data ||
+    router.pathname.includes("support")
   ) {
     return null;
   }

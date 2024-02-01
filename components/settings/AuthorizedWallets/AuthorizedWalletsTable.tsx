@@ -127,7 +127,8 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
       });
       toast({
         title: "Something went wrong while revoking the device",
-        description: "Please contact us at https://discord.gg/thirdweb",
+        description:
+          "Something went wrong while revoking the device. Please visit our support site: https://thirdweb.com/support",
         status: "error",
         duration: 5000,
         isClosable: true,

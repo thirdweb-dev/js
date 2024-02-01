@@ -7,7 +7,6 @@ import {
   Grid,
   GridItem,
   Icon,
-  IconButton,
 } from "@chakra-ui/react";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
@@ -15,10 +14,16 @@ import { Logo } from "components/logo";
 import { BillingAlert } from "components/settings/Account/Billing/Alert";
 import { UpgradeButton } from "components/settings/Account/Billing/UpgradeButton";
 import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { FiHelpCircle } from "react-icons/fi";
-import { Button, Link, LinkButton, Text, TrackedLink } from "tw-components";
+import {
+  Button,
+  Link,
+  LinkButton,
+  Text,
+  TrackedIconButton,
+  TrackedLink,
+} from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
@@ -84,7 +89,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
 
 const AppHeader: React.FC = () => {
   const { pathname, route } = useRouter();
-  const trackEvent = useTrack();
 
   return (
     <GridItem
@@ -127,20 +131,15 @@ const AppHeader: React.FC = () => {
             Docs
           </Button>
 
-          <IconButton
+          <TrackedIconButton
             bg="transparent"
             size="sm"
             aria-label="get-help"
             icon={<Icon as={FiHelpCircle} />}
-            onClick={() => {
-              trackEvent({
-                category: "header",
-                action: "click",
-                label: "support",
-              });
-
-              window.open("https://support.thirdweb.com", "_blank");
-            }}
+            category="header"
+            label="support"
+            as={LinkButton}
+            href="/support"
           />
 
           <ColorModeToggle />
