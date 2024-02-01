@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styles from './index.module.css';
+import getStyles from './styles'
 import {
-    MediaRenderer,
     useNFTs,
     useContract,
-} from "@thirdweb-dev/react";
+} from "@thirdweb-dev/react-core";
+import { MediaRenderer } from "../MediaRenderer";
 
-interface SearchBarProps {
+
+export interface SearchBarProps {
     activeNetwork?: string;
     limit?: number;
     start?: number;
@@ -34,7 +35,7 @@ interface SearchBarProps {
     };
 }
 
-interface Collection {
+export interface Collection {
     name?: string;
     contract?: string;
     image?: string;
@@ -42,11 +43,11 @@ interface Collection {
 }
 
 
-interface Collections {
+export interface Collections {
     [key: string]: Collection[];
 }
 
-const NFTSearcher = ({
+export const NFTSearcher = ({
     activeNetwork, 
     limit, 
     start,
@@ -81,6 +82,7 @@ const NFTSearcher = ({
   const darkTheme = useMemo(() => theme === 'dark', [theme]);
   const [lastUsedContractAddress, setLastUsedContractAddress] = useState<string>('');
   onNFTsFetched = onNFTsFetched || (() => {});
+  const styles = getStyles(darkTheme);
 
   const darkMode = useMemo(() => ({
     searchBarContainer: {
@@ -132,7 +134,7 @@ const NFTSearcher = ({
     });
 
     useEffect(() => {
-        if (nfts && nfts.length > 0) {
+        if (nfts && nfts.length > 0 && onNFTsFetched) {
             onNFTsFetched(nfts);
             setIsProcessing(false);
         } else {
@@ -155,11 +157,15 @@ const NFTSearcher = ({
     useEffect(() => {
         const fetchCollections = async () => {
             // Check cache first
-            if (collectionCache[network]) {
-                setCollections(collectionCache[network]);
-                return;
+            const cache = collectionCache[network];
+            if (cache) {
+            setCollections((prevCollections) => [
+                ...prevCollections,
+                ...(Array.isArray(cache) ? cache : []),
+            ]);
+            return;
             }
-        
+
             try {
                 let url;
                 switch (network) {
@@ -183,10 +189,17 @@ const NFTSearcher = ({
                 }
         
                 const response = await fetch(url);
-                const data = await response.json();
-                
-                setCollections(data);
-                setCollectionCache({ ...collectionCache, [network]: data });
+                if (!response.ok) {
+                    console.log('Error: URL returned no content');
+                } else {
+                    const data = await response.json();
+                    if (data === null || data === undefined) {
+                        console.log('Error: Invalid JSON data received from server');
+                    } else {
+                        setCollections(data);
+                        setCollectionCache({ ...collectionCache, [network]: data });
+                    }
+                }
             } catch (error) {
                 console.error(`Suggestions: ${error}`);
             }
@@ -281,37 +294,44 @@ const NFTSearcher = ({
             style={style.suggestionsContainer && darkMode ? darkMode.suggestionsContainer : style.suggestionsContainer}
             className={`${styles.suggestionsContainer} ${classNames.suggestionsContainer || ""} `}
         >
-          {collections && collections
-              .filter((collection) =>
-              {return collection.name && collection.name.toLowerCase().includes(contractAddress.toLowerCase())}
-              )
-              .slice(0, 6)
-              .map((collection, index) => (
+            {collections && collections.length > 0 ? 
+                collections
+                .filter((collection) =>
+                {return collection.name && collection.name.toLowerCase().includes(contractAddress.toLowerCase())}
+                )
+                .slice(0, 6)
+                .map((collection, index) => (
+                    <div
+                        key={index}
+                        style={style.suggestion}
+                        className={`${styles.suggestion} ${classNames.suggestion || ""}`}
+                        onClick={() => {
+                            if (collection.contract){
+                            handleSuggestionClick(collection.contract);
+                            }
+                        }}
+                    >
+                        <MediaRenderer 
+                            src={collection.image} 
+                            alt={collection.contract}
+                            style={style.suggestionLogo}
+                            className={`${styles.suggestionLogo} ${classNames.suggestionLogo || ""}`} 
+                            width={"20px"} 
+                            height={"20px"}
+                        />
+                        <span>{collection.name}</span>
+                    </div>
+                ))
+            :
                 <div
-                    key={index}
                     style={style.suggestion}
                     className={`${styles.suggestion} ${classNames.suggestion || ""}`}
-                    onClick={() => {
-                        if (collection.contract){
-                        handleSuggestionClick(collection.contract);
-                        }
-                    }}
                 >
-                    <MediaRenderer 
-                        src={collection.image} 
-                        alt={collection.contract}
-                        style={style.suggestionLogo}
-                        className={`${styles.suggestionLogo} ${classNames.suggestionLogo || ""}`} 
-                        width={"20px"} 
-                        height={"20px"}
-                    />
-                    <span>{collection.name}</span>
+                    <span>{'No Collection Found'}</span>
                 </div>
-            ))}
+            }
         </div>
         )}
     </div>
   );
 };
-
-export default NFTSearcher;
