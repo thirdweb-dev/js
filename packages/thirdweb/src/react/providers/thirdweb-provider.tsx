@@ -17,10 +17,10 @@ import { ConnectModal } from "../ui/ConnectWallet/Modal/ConnectModal.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../client/client.js";
-import { en } from "../locales/en.js";
 import { ThirdwebLocaleContext } from "./locale-provider.js";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider.js";
 import type { ThirdwebLocale } from "../ui/locales/types.js";
+import { en } from "../ui/locales/en.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;

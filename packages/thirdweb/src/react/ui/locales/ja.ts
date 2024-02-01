@@ -7,27 +7,6 @@ import type { ThirdwebLocale } from "./types.js";
 /**
  * @internal
  */
-function extensionAndQRScanScreens(walletName: string) {
-  return {
-    connectionScreen: {
-      inProgress: "確認待ち",
-      failed: "接続に失敗しました",
-      instruction: `${walletName}のウォレットで接続リクエストを承認してください`,
-      retry: "再試行",
-    },
-    getStartedScreen: {
-      instruction: `QRコードをスキャンして${walletName}アプリをダウンロードしてください`,
-    },
-    scanScreen: {
-      instruction: `${walletName}のウォレットアプリでQRコードをスキャンして接続してください`,
-    },
-    getStartedLink: `${walletName}のウォレットを持っていませんか？`,
-  };
-}
-
-/**
- * @internal
- */
 export function jaDefault(): ThirdwebLocale {
   return {
     connectWallet: {
@@ -134,6 +113,23 @@ export function jaDefault(): ThirdwebLocale {
       },
     },
     wallets: {
+      injectedWallet(walletName: string) {
+        return {
+          connectionScreen: {
+            inProgress: "確認待ち",
+            failed: "接続に失敗しました",
+            instruction: `${walletName}のウォレットで接続リクエストを承認してください`,
+            retry: "再試行",
+          },
+          getStartedScreen: {
+            instruction: `QRコードをスキャンして${walletName}アプリをダウンロードしてください`,
+          },
+          scanScreen: {
+            instruction: `${walletName}のウォレットアプリでQRコードをスキャンして接続してください`,
+          },
+          getStartedLink: `${walletName}のウォレットを持っていませんか？`,
+        };
+      },
       walletConnect: {
         scanInstruction:
           "接続するためにウォレットアプリでこちらをスキャンしてください",
@@ -174,19 +170,6 @@ export function jaDefault(): ThirdwebLocale {
           safeAddress: "Safeアドレス",
         },
       },
-      coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
-      metamaskWallet: extensionAndQRScanScreens("MetaMask"),
-      okxWallet: extensionAndQRScanScreens("OKX"),
-      coreWallet: extensionAndQRScanScreens("Core"),
-      coin98Wallet: extensionAndQRScanScreens("Coin98"),
-      phantomWallet: extensionAndQRScanScreens("Phantom"),
-      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
-      rainbowWallet: extensionAndQRScanScreens("Rainbow"),
-      trustWallet: extensionAndQRScanScreens("Trust"),
-      zerionWallet: extensionAndQRScanScreens("Zerion"),
-      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
-      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
-      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "サインイン",
         signInWithGoogle: "Googleでサインイン",
@@ -320,7 +303,6 @@ export function jaDefault(): ThirdwebLocale {
         },
       },
       frameWallet: {
-        ...extensionAndQRScanScreens("Frame"),
         connectionFailedScreen: {
           title: "Frameに接続できませんでした",
           description:

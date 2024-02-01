@@ -7,27 +7,6 @@ import type { ThirdwebLocale } from "./types.js";
 /**
  * @internal
  */
-function extensionAndQRScanScreens(walletName: string) {
-  return {
-    connectionScreen: {
-      inProgress: "Esperando confirmación",
-      failed: "Conexión fallida",
-      instruction: `Acepta la solicitud de conexión en tu cartera ${walletName}`,
-      retry: "Intentar de nuevo",
-    },
-    getStartedScreen: {
-      instruction: `Escanea el código QR para descargar la aplicación ${walletName}`,
-    },
-    scanScreen: {
-      instruction: `Escanea el código QR con la aplicación de cartera ${walletName} para conectarte`,
-    },
-    getStartedLink: `¿No tienes la cartera ${walletName}?`,
-  };
-}
-
-/**
- * @internal
- */
 export function esDefault(): ThirdwebLocale {
   return {
     connectWallet: {
@@ -134,6 +113,23 @@ export function esDefault(): ThirdwebLocale {
       },
     },
     wallets: {
+      injectedWallet(walletName: string) {
+        return {
+          connectionScreen: {
+            inProgress: "Esperando confirmación",
+            failed: "Conexión fallida",
+            instruction: `Acepta la solicitud de conexión en tu cartera ${walletName}`,
+            retry: "Intentar de nuevo",
+          },
+          getStartedScreen: {
+            instruction: `Escanea el código QR para descargar la aplicación ${walletName}`,
+          },
+          scanScreen: {
+            instruction: `Escanea el código QR con la aplicación de cartera ${walletName} para conectarte`,
+          },
+          getStartedLink: `¿No tienes la cartera ${walletName}?`,
+        };
+      },
       walletConnect: {
         scanInstruction:
           "Escanea esto con tu aplicación de cartera para conectar",
@@ -173,19 +169,6 @@ export function esDefault(): ThirdwebLocale {
           safeAddress: "Dirección de Safe",
         },
       },
-      coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
-      metamaskWallet: extensionAndQRScanScreens("MetaMask"),
-      okxWallet: extensionAndQRScanScreens("OKX"),
-      coreWallet: extensionAndQRScanScreens("Core"),
-      coin98Wallet: extensionAndQRScanScreens("Coin98"),
-      phantomWallet: extensionAndQRScanScreens("Phantom"),
-      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
-      rainbowWallet: extensionAndQRScanScreens("Rainbow"),
-      trustWallet: extensionAndQRScanScreens("Trust"),
-      zerionWallet: extensionAndQRScanScreens("Zerion"),
-      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
-      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
-      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "Iniciar sesión",
         signInWithGoogle: "Iniciar sesión con Google",
@@ -325,7 +308,6 @@ export function esDefault(): ThirdwebLocale {
         },
       },
       frameWallet: {
-        ...extensionAndQRScanScreens("Frame"),
         connectionFailedScreen: {
           title: "Fallo al conectar con Frame",
           description:

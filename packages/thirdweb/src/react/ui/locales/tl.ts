@@ -5,28 +5,6 @@ import {
 import type { ThirdwebLocale } from "./types.js";
 
 /**
- *
- * @internal
- */
-function extensionAndQRScanScreens(walletName: string) {
-  return {
-    connectionScreen: {
-      inProgress: "Naghihintay ng Kumpirmasyon",
-      failed: "Nabigo ang Pagkakonekta",
-      instruction: `Tanggapin ang connection request sa ${walletName} wallet`,
-      retry: "Subukan Muli",
-    },
-    getStartedScreen: {
-      instruction: `I-scan ang QR code para ma-download ang ${walletName} app`,
-    },
-    scanScreen: {
-      instruction: `I-scan ang QR code gamit ang ${walletName} wallet app para makonekta`,
-    },
-    getStartedLink: `Wala kang ${walletName} wallet?`,
-  };
-}
-
-/**
  * @internal
  */
 export function tlDefault(): ThirdwebLocale {
@@ -135,6 +113,23 @@ export function tlDefault(): ThirdwebLocale {
       },
     },
     wallets: {
+      injectedWallet(walletName: string) {
+        return {
+          connectionScreen: {
+            inProgress: "Naghihintay ng Kumpirmasyon",
+            failed: "Nabigo ang Pagkakonekta",
+            instruction: `Tanggapin ang connection request sa ${walletName} wallet`,
+            retry: "Subukan Muli",
+          },
+          getStartedScreen: {
+            instruction: `I-scan ang QR code para ma-download ang ${walletName} app`,
+          },
+          scanScreen: {
+            instruction: `I-scan ang QR code gamit ang ${walletName} wallet app para makonekta`,
+          },
+          getStartedLink: `Wala kang ${walletName} wallet?`,
+        };
+      },
       walletConnect: {
         scanInstruction:
           "I-scan ito gamit ang iyong wallet app para makakonekta",
@@ -177,19 +172,6 @@ export function tlDefault(): ThirdwebLocale {
           safeAddress: "Safe Address",
         },
       },
-      coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
-      metamaskWallet: extensionAndQRScanScreens("MetaMask"),
-      okxWallet: extensionAndQRScanScreens("OKX"),
-      phantomWallet: extensionAndQRScanScreens("Phantom"),
-      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
-      rainbowWallet: extensionAndQRScanScreens("Rainbow"),
-      trustWallet: extensionAndQRScanScreens("Trust"),
-      zerionWallet: extensionAndQRScanScreens("Zerion"),
-      coreWallet: extensionAndQRScanScreens("Core"),
-      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
-      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
-      rabbyWallet: extensionAndQRScanScreens("Rabby"),
-      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {
         signIn: "Mag-sign in",
         signInWithGoogle: "Mag-sign in gamit ang Google",
@@ -326,7 +308,6 @@ export function tlDefault(): ThirdwebLocale {
         },
       },
       frameWallet: {
-        ...extensionAndQRScanScreens("Frame"),
         connectionFailedScreen: {
           title: "Hindi nakapag-connect sa Frame",
           description:

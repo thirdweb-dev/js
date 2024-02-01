@@ -1,21 +1,6 @@
 /**
  * @locale
  */
-export type ExtensionAndQRScreensLocale = {
-  connectionScreen: {
-    failed: string;
-    inProgress: string;
-    instruction: string;
-    retry: string;
-  };
-  getStartedLink: string;
-  getStartedScreen: { instruction: string };
-  scanScreen: { instruction: string };
-};
-
-/**
- * @locale
- */
 export type ThirdwebLocale = {
   connectWallet: {
     agreement: {
@@ -107,7 +92,7 @@ export type ThirdwebLocale = {
     welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
   };
   wallets: {
-    coin98Wallet: {
+    injectedWallet: (wallet: string) => {
       connectionScreen: {
         failed: string;
         inProgress: string;
@@ -118,9 +103,6 @@ export type ThirdwebLocale = {
       getStartedScreen: { instruction: string };
       scanScreen: { instruction: string };
     };
-    coinbaseWallet: ExtensionAndQRScreensLocale;
-    coreWallet: ExtensionAndQRScreensLocale;
-    cryptoDefiWallet: ExtensionAndQRScreensLocale;
     embeddedWallet: {
       createPassword: {
         confirmation: string;
@@ -173,15 +155,6 @@ export type ThirdwebLocale = {
         supportLink: string;
         title: string;
       };
-      connectionScreen: {
-        failed: string;
-        inProgress: string;
-        instruction: string;
-        retry: string;
-      };
-      getStartedLink: string;
-      getStartedScreen: { instruction: string };
-      scanScreen: { instruction: string };
     };
     localWallet: {
       confirmPasswordLabel: string;
@@ -235,9 +208,6 @@ export type ThirdwebLocale = {
       signIn: string;
       submitEmail: string;
     };
-    metamaskWallet: ExtensionAndQRScreensLocale;
-    okxWallet: ExtensionAndQRScreensLocale;
-    oneKeyWallet: ExtensionAndQRScreensLocale;
     paperWallet: {
       emailLoginScreen: {
         enterCodeSendTo: string;
@@ -264,10 +234,6 @@ export type ThirdwebLocale = {
       signInWithGoogle: string;
       submitEmail: string;
     };
-    phantomWallet: ExtensionAndQRScreensLocale;
-    xdefiWallet: ExtensionAndQRScreensLocale;
-    rabbyWallet: ExtensionAndQRScreensLocale;
-    rainbowWallet: ExtensionAndQRScreensLocale;
     safeWallet: {
       accountDetailsScreen: {
         connectToSafe: string;
@@ -301,8 +267,6 @@ export type ThirdwebLocale = {
         title: string;
       };
     };
-    trustWallet: ExtensionAndQRScreensLocale;
     walletConnect: { scanInstruction: string };
-    zerionWallet: ExtensionAndQRScreensLocale;
   };
 };

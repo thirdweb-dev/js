@@ -229,6 +229,8 @@ export const ConnectModal = () => {
   const [hideModal, setHideModal] = useState(false);
   // const connectionStatus = useConnectionStatus();
 
+  console.log("initial screen is", initialScreen);
+
   const closeModal = useCallback(() => {
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
