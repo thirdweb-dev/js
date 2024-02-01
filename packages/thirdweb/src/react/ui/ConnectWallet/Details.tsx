@@ -1,4 +1,8 @@
-import { ExitIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import {
+  ExitIcon,
+  ChevronRightIcon,
+  TextAlignJustifyIcon,
+} from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import {
@@ -39,10 +43,11 @@ import { useChainQuery } from "../../hooks/others/useChainQuery.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
+import { FundsIcon } from "./icons/FundsIcon.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
-// const LocalhostChainId = 1337;
+const LocalhostChainId = 1337;
 
 type WalletDetailsModalScreen =
   | "main"
@@ -63,7 +68,7 @@ export const ConnectedWalletDetails: React.FC<{
   >;
   className?: string;
   detailsBtn?: () => JSX.Element;
-  hideTestnetFaucet?: boolean;
+  showTestnetFaucet?: boolean;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
@@ -273,9 +278,8 @@ export const ConnectedWalletDetails: React.FC<{
     </MenuButton>
   );
 
-  // by default we hide faucet link
-  // const showFaucet =
-  //   props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
+  const showFaucet =
+    props.showTestnetFaucet === undefined ? false : props.showTestnetFaucet;
 
   let content = (
     <div>
@@ -334,7 +338,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Text>
       </Container>
 
-      {/* <Spacer y="lg" /> */}
+      <Spacer y="sm" />
 
       {/* <Container px="lg"> */}
       {/* <ConnectedToSmartWallet /> */}
@@ -443,20 +447,22 @@ export const ConnectedWalletDetails: React.FC<{
             )} */}
 
           {/* Request Testnet funds */}
-          {/* {showFaucet &&
-            ((chain?.faucets && chain.faucets.length > 0) ||
-              chain?.chainId === LocalhostChainId) && (
+          {showFaucet &&
+            ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
+              chainQuery.data?.chainId === LocalhostChainId) && (
               <MenuLink
-                href={chain?.faucets ? chain.faucets[0] : "#"}
+                href={
+                  chainQuery.data?.faucets ? chainQuery.data.faucets[0] : "#"
+                }
                 target="_blank"
                 as="a"
-                onClick={async (e) => {
-                  if (chain.chainId === LocalhostChainId) {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    await sdk?.wallet.requestFunds(10);
-                    await balanceQuery.refetch();
-                  }
+                onClick={async () => {
+                  // if (chain.chainId === LocalhostChainId) {
+                  //   e.preventDefault();
+                  //   setIsOpen(false);
+                  //   await sdk?.wallet.requestFunds(10);
+                  //   await balanceQuery.refetch();
+                  // }
                 }}
                 style={{
                   textDecoration: "none",
@@ -468,12 +474,12 @@ export const ConnectedWalletDetails: React.FC<{
                 </Container>
                 {locale.requestTestnetFunds}
               </MenuLink>
-            )} */}
+            )}
 
           {/* Explorer link */}
-          {/* {chain?.explorers && chain.explorers[0]?.url && (
+          {chainQuery.data?.explorers && chainQuery.data?.explorers[0]?.url && (
             <MenuLink
-              href={chain.explorers[0].url + "/address/" + address}
+              href={chainQuery.data.explorers[0].url + "/address/" + address}
               target="_blank"
               as="a"
               style={{
@@ -489,7 +495,7 @@ export const ConnectedWalletDetails: React.FC<{
               </Container>
               {locale.transactionHistory}
             </MenuLink>
-          )} */}
+          )}
 
           {/* Export  Wallet */}
           {/* {activeWallet?.walletId === walletIds.localWallet && (
@@ -692,7 +698,7 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
   };
 });
 
-// const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
+const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,

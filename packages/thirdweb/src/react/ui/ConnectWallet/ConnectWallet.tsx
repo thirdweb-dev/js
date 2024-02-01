@@ -142,15 +142,15 @@ export type ConnectWalletProps = {
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "open">;
 
   /**
-   * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
+   * Show a "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
    *
-   * By default it is `true`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
+   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`
    * @example
    * ```tsx
-   * <ConnectWallet hideTestnetFaucet={false} />
+   * <ConnectWallet showTestnetFaucet={true} />
    * ```
    */
-  hideTestnetFaucet?: boolean;
+  showTestnetFaucet?: boolean;
 
   /**
    * Whether to show "Switch Network" button if the wallet is connected,
@@ -736,7 +736,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             className={props.className}
             style={props.style}
             detailsBtn={props.detailsBtn}
-            hideTestnetFaucet={props.hideTestnetFaucet}
+            showTestnetFaucet={props.showTestnetFaucet}
             supportedTokens={supportedTokens}
             displayBalanceToken={props.displayBalanceToken}
             onDisconnect={() => {
