@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 2.0.9
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
 ## 2.0.8
 
 ### Patch Changes
