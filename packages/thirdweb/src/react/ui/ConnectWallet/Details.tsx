@@ -220,13 +220,6 @@ export const ConnectedWalletDetails: React.FC<{
           <Skeleton height={fontSize.sm} width="88px" />
         )}
 
-        <Text
-          className={`${TW_CONNECTED_WALLET}__balance`}
-          size="xs"
-          weight={500}
-        >
-          {"<balance>"}
-        </Text>
         {/* Balance */}
         {balanceQuery.data ? (
           <Text
@@ -267,8 +260,7 @@ export const ConnectedWalletDetails: React.FC<{
         )}
       </div>
       <Text color="primaryText" multiline>
-        chain id: {Number(walletChainId)}
-        {/* {chain?.name || `Unknown chain #${walletChainId}`} */}
+        {chainQuery.data?.name || `Unknown chain #${walletChainId}`}
       </Text>
       <StyledChevronRightIcon
         width={iconSize.sm}
@@ -333,14 +325,12 @@ export const ConnectedWalletDetails: React.FC<{
 
         {/* Balance */}
         <Text weight={500} size="sm">
-          {"<balance>"}
-          {/* {" "}
           {balanceQuery.data ? (
             Number(balanceQuery.data.displayValue).toFixed(3)
           ) : (
             <Skeleton height="1em" width="100px" />
           )}{" "}
-          {balanceQuery.data?.symbol}{" "} */}
+          {balanceQuery.data?.symbol}{" "}
         </Text>
       </Container>
 

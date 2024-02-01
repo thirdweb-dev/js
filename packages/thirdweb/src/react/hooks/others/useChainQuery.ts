@@ -5,6 +5,7 @@ import { getChainDataForChainId } from "../../../chain/index.js";
  * @internal
  */
 function getChainQuery(chainId?: bigint) {
+  // TODO make this aware of local overrides (developer passed into provider or something)
   return queryOptions({
     queryKey: ["chain", `${chainId}`] as const,
     queryFn: async () => {

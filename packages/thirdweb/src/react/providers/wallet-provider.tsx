@@ -14,7 +14,7 @@ import { connectionManager } from "../connectionManager.js";
  */
 export function useActiveWallet() {
   const store = connectionManager.activeWallet;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(store.subscribe, store.getValue, () => undefined);
 }
 
 /**
@@ -29,7 +29,7 @@ export function useActiveWallet() {
  */
 export function useActiveWalletAddress() {
   const store = connectionManager.activeWalletAddress;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(store.subscribe, store.getValue, () => undefined);
 }
 
 /**
@@ -61,7 +61,7 @@ export function useSwitchActiveWalletChain() {
  */
 export function useActiveWalletChainId() {
   const store = connectionManager.activeWalletChainId;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(store.subscribe, store.getValue, () => undefined);
 }
 
 /**
@@ -76,7 +76,7 @@ export function useActiveWalletChainId() {
  */
 export function useConnectedWallets() {
   const store = connectionManager.connectedWallets;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(store.subscribe, store.getValue, () => []);
 }
 
 /**
@@ -182,7 +182,11 @@ export function useDisconnect() {
  */
 export function useActiveWalletConnectionStatus() {
   const store = connectionManager.activeWalletConnectionStatus;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(
+    store.subscribe,
+    store.getValue,
+    () => "disconnected" as const,
+  );
 }
 
 /**
@@ -211,5 +215,5 @@ export function useSetActiveWalletConnectionStatus() {
  */
 export function useIsAutoConnecting() {
   const store = connectionManager.isAutoConnecting;
-  return useSyncExternalStore(store.subscribe, store.getValue);
+  return useSyncExternalStore(store.subscribe, store.getValue, () => false);
 }
