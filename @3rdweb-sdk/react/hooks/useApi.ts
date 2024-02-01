@@ -973,7 +973,9 @@ export async function fetchApiKeyAvailability(name: string) {
  *
  */
 export async function fetchChainsFromApi() {
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains`, {
+  // always fetch from prod for chains for now
+  // TODO: re-visit this
+  const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
     method: "GET",
     // do not inclue credentials for chains endpoint
     // credentials: "include",

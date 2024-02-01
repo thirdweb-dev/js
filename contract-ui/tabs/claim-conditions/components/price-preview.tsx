@@ -37,8 +37,8 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
           {foundCurrency
             ? foundCurrency.symbol
             : isAddressZero(currencyAddress || "")
-            ? chain?.nativeCurrency.symbol || "(Native Token)"
-            : `(${shortenIfAddress(currencyAddress)})`}
+              ? chain?.nativeCurrency.symbol || "(Native Token)"
+              : `(${shortenIfAddress(currencyAddress)})`}
         </Text>
       )}
     </Flex>

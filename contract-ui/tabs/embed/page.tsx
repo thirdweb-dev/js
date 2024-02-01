@@ -24,14 +24,14 @@ export const CustomContractEmbedPage: React.FC<
     contractType === "marketplace"
       ? "marketplace"
       : isMarketplaceV3
-      ? "marketplace-v3"
-      : erc20
-      ? "erc20"
-      : erc1155
-      ? "erc1155"
-      : erc721
-      ? "erc721"
-      : null;
+        ? "marketplace-v3"
+        : erc20
+          ? "erc20"
+          : erc1155
+            ? "erc1155"
+            : erc721
+              ? "erc721"
+              : null;
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this

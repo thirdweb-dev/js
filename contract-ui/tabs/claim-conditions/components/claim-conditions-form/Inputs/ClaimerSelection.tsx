@@ -96,8 +96,8 @@ export const ClaimerSelection = () => {
     claimConditionType === "overrides"
       ? "Add Override Snapshot"
       : claimConditionType === "specific"
-      ? "Add Allowlist"
-      : `Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`;
+        ? "Add Allowlist"
+        : `Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`;
 
   return (
     <CustomFormControl

@@ -18,20 +18,20 @@
     "downlevelIteration": true,
     "paths": {
       "tw-components": ["tw-components"],
-      "tw-components/*": ["tw-components/*"]
+      "tw-components/*": ["tw-components/*"],
     },
     "plugins": [
       {
-        "name": "next"
-      }
-    ]
+        "name": "next",
+      },
+    ],
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "additional.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
   ],
-  "exclude": ["node_modules", ".next", "lib/__generated__"]
+  "exclude": ["node_modules", ".next", "lib/__generated__"],
 }

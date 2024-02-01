@@ -353,8 +353,8 @@ const ListingCards: React.FC<ListingCardsProps> = ({
             isMarketplaceV1
               ? listingsHref
               : listing.type === "direct-listing"
-              ? directListingsHref
-              : englishAuctionsHref
+                ? directListingsHref
+                : englishAuctionsHref
           }
           _hover={{ opacity: 0.75, textDecoration: "none" }}
         >

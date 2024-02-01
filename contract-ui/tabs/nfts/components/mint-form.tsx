@@ -129,8 +129,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
         setValue("external_url", undefined);
       }
     } else if (
-      ["text", "application/pdf"].some(
-        (type: string) => file.type?.includes(type),
+      ["text", "application/pdf"].some((type: string) =>
+        file.type?.includes(type),
       )
     ) {
       // text and pdf files
@@ -146,19 +146,19 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     watch("animation_url") instanceof File
       ? watch("animation_url")
       : watch("external_url") instanceof File
-      ? watch("external_url")
-      : watch("image") instanceof File
-      ? imageUrl
-      : undefined;
+        ? watch("external_url")
+        : watch("image") instanceof File
+          ? imageUrl
+          : undefined;
 
   const mediaFileError =
     watch("animation_url") instanceof File
       ? errors?.animation_url
       : watch("external_url") instanceof File
-      ? errors?.external_url
-      : watch("image") instanceof File
-      ? errors?.image
-      : undefined;
+        ? errors?.external_url
+        : watch("image") instanceof File
+          ? errors?.image
+          : undefined;
 
   const externalUrl = watch("external_url");
   const externalIsTextFile =
@@ -472,8 +472,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           {sharedMetadataMutation
             ? "Set NFT Metadata"
             : lazyMintMutation
-            ? "Lazy Mint NFT"
-            : "Mint NFT"}
+              ? "Lazy Mint NFT"
+              : "Mint NFT"}
         </TransactionButton>
       </DrawerFooter>
     </>

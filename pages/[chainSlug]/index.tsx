@@ -48,7 +48,6 @@ import {
 } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { ThirdwebNextPage } from "utils/types";
-import { THIRDWEB_API_HOST } from "constants/urls";
 
 type EVMContractProps = {
   chain: Chain;
@@ -602,7 +601,9 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
     };
   }
 
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/${chainSlug}`);
+  // always fetch from prod for chains for now
+  // TODO: re-visit this
+  const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainSlug}`);
   const chain = (await res.json()).data as Chain | null;
 
   if (!chain) {

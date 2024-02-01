@@ -153,8 +153,8 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
             {members.includes(address)
               ? "Address already has this role"
               : !utils.isAddress(address)
-              ? "Not a valid address"
-              : ""}
+                ? "Not a valid address"
+                : ""}
           </FormErrorMessage>
         </FormControl>
       </AdminOnly>

@@ -202,8 +202,8 @@ export function useContractRouteConfig(
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "marketplace"
-        ? "enabled"
-        : "disabled",
+          ? "enabled"
+          : "disabled",
       component: LazyContractListingsPage,
     },
     {
@@ -212,8 +212,8 @@ export function useContractRouteConfig(
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "split"
-        ? "enabled"
-        : "disabled",
+          ? "enabled"
+          : "disabled",
       component: LazyContractSplitPage,
     },
     {
@@ -222,8 +222,8 @@ export function useContractRouteConfig(
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "vote"
-        ? "enabled"
-        : "disabled",
+          ? "enabled"
+          : "disabled",
       component: LazyContractProposalsPage,
     },
     {
@@ -276,34 +276,34 @@ export function useContractRouteConfig(
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "marketplace"
-        ? "enabled"
-        : extensionDetectedState({
-            contractQuery,
-            matchStrategy: "any",
-            feature: [
-              // erc 721
-              "ERC721ClaimPhasesV1",
-              "ERC721ClaimPhasesV2",
-              "ERC721ClaimConditionsV1",
-              "ERC721ClaimConditionsV2",
+          ? "enabled"
+          : extensionDetectedState({
+              contractQuery,
+              matchStrategy: "any",
+              feature: [
+                // erc 721
+                "ERC721ClaimPhasesV1",
+                "ERC721ClaimPhasesV2",
+                "ERC721ClaimConditionsV1",
+                "ERC721ClaimConditionsV2",
 
-              // erc 1155
-              "ERC1155ClaimPhasesV1",
-              "ERC1155ClaimPhasesV2",
-              "ERC1155ClaimConditionsV1",
-              "ERC1155ClaimConditionsV2",
+                // erc 1155
+                "ERC1155ClaimPhasesV1",
+                "ERC1155ClaimPhasesV2",
+                "ERC1155ClaimConditionsV1",
+                "ERC1155ClaimConditionsV2",
 
-              // erc 20
-              "ERC20ClaimConditionsV1",
-              "ERC20ClaimConditionsV2",
-              "ERC20ClaimPhasesV1",
-              "ERC20ClaimPhasesV2",
+                // erc 20
+                "ERC20ClaimConditionsV1",
+                "ERC20ClaimConditionsV2",
+                "ERC20ClaimPhasesV1",
+                "ERC20ClaimPhasesV2",
 
-              // marketplace v3
-              "DirectListings",
-              "EnglishAuctions",
-            ],
-          }),
+                // marketplace v3
+                "DirectListings",
+                "EnglishAuctions",
+              ],
+            }),
     },
     {
       title: "Settings",

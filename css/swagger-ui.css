@@ -1,473 +1,505 @@
 .swagger-ui html {
-  box-sizing: border-box!important;
+  box-sizing: border-box !important;
 }
 
 .swagger-ui *,
 .swagger-ui :after,
 .swagger-ui :before {
-  box-sizing: inherit!important;
+  box-sizing: inherit !important;
 }
 
 .swagger-ui {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui body {
-  margin: 0!important;
-  background: #0E0E10!important;
+  margin: 0 !important;
+  background: #0e0e10 !important;
 }
 
 .swagger-ui .wrapper {
-  width: 100%!important;
-  max-width: 1460px!important;
-  margin: 0 auto!important;
-  padding: 0 20px!important;
+  width: 100% !important;
+  max-width: 1460px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
 }
 
 .swagger-ui .opblock-tag-section {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-orient: vertical!important;
-  -webkit-box-direction: normal!important;
-  -ms-flex-direction: column!important;
-  flex-direction: column!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-box-direction: normal !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
 }
 
 .swagger-ui .opblock-tag {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 10px 10px 10px 10px!important;
-  cursor: pointer!important;
-  -webkit-transition: all 0.2s!important;
-  transition: all 0.2s!important;
-  border-bottom: 1px solid #272B30!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 10px 10px 10px 10px !important;
+  cursor: pointer !important;
+  -webkit-transition: all 0.2s !important;
+  transition: all 0.2s !important;
+  border-bottom: 1px solid #272b30 !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .opblock-tag:hover {
-  background: rgba(0, 0, 0, 0.02)!important;
+  background: rgba(0, 0, 0, 0.02) !important;
 }
 
 .swagger-ui .opblock-tag {
-  font-size: 24px!important;
-  margin: 0 0 5px!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #5189f8!important;
+  font-size: 24px !important;
+  margin: 0 0 5px !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #5189f8 !important;
 }
 
 .swagger-ui .opblock-tag.no-desc span {
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
 }
 
 .swagger-ui .opblock-tag svg {
-  -webkit-transition: all 0.4s!important;
-  transition: all 0.4s!important;
+  -webkit-transition: all 0.4s !important;
+  transition: all 0.4s !important;
 }
 
 .swagger-ui .opblock-tag small {
-  font-size: 14px!important;
-  font-weight: 400!important;
-  padding: 0 10px!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  padding: 0 10px !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .parаmeter__type {
-  font-size: 12px!important;
-  padding: 5px 0!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  padding: 5px 0 !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .view-line-link {
-  position: relative!important;
-  top: 3px!important;
-  width: 20px!important;
-  margin: 0 5px!important;
-  cursor: pointer!important;
-  -webkit-transition: all 0.5s!important;
-  transition: all 0.5s!important;
+  position: relative !important;
+  top: 3px !important;
+  width: 20px !important;
+  margin: 0 5px !important;
+  cursor: pointer !important;
+  -webkit-transition: all 0.5s !important;
+  transition: all 0.5s !important;
 }
 
 .swagger-ui .opblock {
-  margin: 0 0 15px!important;
-  border: 1px solid #0E0E10!important;
-  border-radius: 4px!important;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.19)!important;
+  margin: 0 0 15px !important;
+  border: 1px solid #0e0e10 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.19) !important;
 }
 
 .swagger-ui .opblock.is-open .opblock-summary {
-  border-bottom: 1px solid #0E0E10!important;
+  border-bottom: 1px solid #0e0e10 !important;
 }
 
 .swagger-ui .opblock .opblock-section-header {
-  padding: 8px 20px!important;
-  background: hsla(0, 0%, 100%, 0.8)!important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)!important;
+  padding: 8px 20px !important;
+  background: hsla(0, 0%, 100%, 0.8) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .swagger-ui .opblock .opblock-section-header,
 .swagger-ui .opblock .opblock-section-header label {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
-  background: #0E0E10!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
+  background: #0e0e10 !important;
 }
 
 .swagger-ui .opblock .opblock-section-header label {
-  font-size: 12px!important;
-  font-weight: 700!important;
-  margin: 0!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock .opblock-section-header label span {
-  padding: 0 10px 0 0!important;
+  padding: 0 10px 0 0 !important;
 }
 
 .swagger-ui .opblock .opblock-section-header h4 {
-  font-size: 14px!important;
-  margin: 0!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-  font-size: 14px!important;
-  font-weight: 700!important;
-  min-width: 80px!important;
-  padding: 6px 15px!important;
-  text-align: center!important;
-  border-radius: 3px!important;
-  background: #0E0E10!important;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1)!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  min-width: 80px !important;
+  padding: 6px 15px !important;
+  text-align: center !important;
+  border-radius: 3px !important;
+  background: #0e0e10 !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1) !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock .opblock-summary-path,
 .swagger-ui .opblock .opblock-summary-path__deprecated {
-  font-size: 16px!important;
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 0 10px!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fafbfc!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  font-size: 16px !important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 0 10px !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fafbfc !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .opblock .opblock-summary-path .view-line-link,
 .swagger-ui .opblock .opblock-summary-path__deprecated .view-line-link {
-  position: relative!important;
-  top: 2px!important;
-  width: 0!important;
-  margin: 0!important;
-  cursor: pointer!important;
-  -webkit-transition: all 0.5s!important;
-  transition: all 0.5s!important;
+  position: relative !important;
+  top: 2px !important;
+  width: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  -webkit-transition: all 0.5s !important;
+  transition: all 0.5s !important;
 }
 
 .swagger-ui .opblock .opblock-summary-path:hover .view-line-link,
 .swagger-ui .opblock .opblock-summary-path__deprecated:hover .view-line-link {
-  width: 18px!important;
-  margin: 0 5px!important;
+  width: 18px !important;
+  margin: 0 5px !important;
 }
 
 .swagger-ui .opblock .opblock-summary-path__deprecated {
-  text-decoration: line-through!important;
+  text-decoration: line-through !important;
 }
 
 .swagger-ui .opblock .opblock-summary-description {
-  font-size: 13px!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 13px !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock .opblock-summary {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 5px!important;
-  cursor: pointer!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 5px !important;
+  cursor: pointer !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .opblock.opblock-post {
-  border-color: #49cc90!important;
-  background: #fff!important;
+  border-color: #49cc90 !important;
+  background: #fff !important;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-  background: #49cc90!important;
+  background: #49cc90 !important;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary {
-  border-color: #49cc90!important;
+  border-color: #49cc90 !important;
 }
 
 .swagger-ui .opblock.opblock-put {
-  border-color: #fca130!important;
-  background: #fff!important;
+  border-color: #fca130 !important;
+  background: #fff !important;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-  background: #fca130!important;
+  background: #fca130 !important;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary {
-  border-color: #fca130!important;
+  border-color: #fca130 !important;
 }
 
 .swagger-ui .opblock.opblock-delete {
-  border-color: #f93e3e!important;
-  background: #fff!important;
+  border-color: #f93e3e !important;
+  background: #fff !important;
 }
 
 .swagger-ui .opblock.opblock-delete .opblock-summary-method {
-  background: #f93e3e!important;
+  background: #f93e3e !important;
 }
 
 .swagger-ui .opblock.opblock-delete .opblock-summary {
-  border-color: #f93e3e!important;
+  border-color: #f93e3e !important;
 }
 
 .swagger-ui .opblock.opblock-get {
-  border-color: #61affe!important;
-  background: rgba(97, 175, 254, 0.1)!important;
+  border-color: #61affe !important;
+  background: rgba(97, 175, 254, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-  background: #61affe!important;
+  background: #61affe !important;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary {
-  border-color: #61affe!important;
+  border-color: #61affe !important;
 }
 
 .swagger-ui .opblock.opblock-patch {
-  border-color: #50e3c2!important;
-  background: #fff!important;
+  border-color: #50e3c2 !important;
+  background: #fff !important;
 }
 
 .swagger-ui .opblock.opblock-patch .opblock-summary-method {
-  background: #50e3c2!important;
+  background: #50e3c2 !important;
 }
 
 .swagger-ui .opblock.opblock-patch .opblock-summary {
-  border-color: #50e3c2!important;
+  border-color: #50e3c2 !important;
 }
 
 .swagger-ui .opblock.opblock-head {
-  border-color: #9012fe!important;
-  background: rgba(144, 18, 254, 0.1)!important;
+  border-color: #9012fe !important;
+  background: rgba(144, 18, 254, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-head .opblock-summary-method {
-  background: #9012fe!important;
+  background: #9012fe !important;
 }
 
 .swagger-ui .opblock.opblock-head .opblock-summary {
-  border-color: #9012fe!important;
+  border-color: #9012fe !important;
 }
 
 .swagger-ui .opblock.opblock-options {
-  border-color: #0d5aa7!important;
-  background: rgba(13, 90, 167, 0.1)!important;
+  border-color: #0d5aa7 !important;
+  background: rgba(13, 90, 167, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-options .opblock-summary-method {
-  background: #0d5aa7!important;
+  background: #0d5aa7 !important;
 }
 
 .swagger-ui .opblock.opblock-options .opblock-summary {
-  border-color: #0d5aa7!important;
+  border-color: #0d5aa7 !important;
 }
 
 .swagger-ui .opblock.opblock-deprecated {
-  opacity: 0.6!important;
-  border-color: #ebebeb!important;
-  background: hsla(0, 0%, 92%, 0.1)!important;
+  opacity: 0.6 !important;
+  border-color: #ebebeb !important;
+  background: hsla(0, 0%, 92%, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-deprecated .opblock-summary-method {
-  background: #ebebeb!important;
+  background: #ebebeb !important;
 }
 
 .swagger-ui .opblock.opblock-deprecated .opblock-summary {
-  border-color: #ebebeb!important;
+  border-color: #ebebeb !important;
 }
 
 .swagger-ui .tab {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  margin: 20px 0 10px!important;
-  padding: 0!important;
-  list-style: none!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  margin: 20px 0 10px !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
 .swagger-ui .tab li {
-  font-size: 12px!important;
-  min-width: 100px!important;
-  min-width: 90px!important;
-  padding: 0!important;
-  cursor: pointer!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  min-width: 100px !important;
+  min-width: 90px !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .tab li:first-of-type {
-  position: relative!important;
-  padding-left: 0!important;
+  position: relative !important;
+  padding-left: 0 !important;
 }
 
 .swagger-ui .tab li:first-of-type:after {
-  position: absolute!important;
-  top: 0!important;
-  right: 6px!important;
-  width: 1px!important;
-  height: 100%!important;
-  content: ""!important;
-  background: rgba(0, 0, 0, 0.2)!important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 6px !important;
+  width: 1px !important;
+  height: 100% !important;
+  content: "" !important;
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 
 .swagger-ui .tab li.active {
-  font-weight: 700!important;
+  font-weight: 700 !important;
 }
 
 .swagger-ui .opblock-description-wrapper,
 .swagger-ui .opblock-title_normal {
-  padding: 15px 20px!important;
+  padding: 15px 20px !important;
 }
 
 .swagger-ui .opblock-description-wrapper,
 .swagger-ui .opblock-description-wrapper h4,
 .swagger-ui .opblock-title_normal,
 .swagger-ui .opblock-title_normal h4 {
-  font-size: 12px!important;
-  margin: 0 0 5px!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  margin: 0 0 5px !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock-description-wrapper p,
 .swagger-ui .opblock-title_normal p {
-  font-size: 14px!important;
-  margin: 0!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .execute-wrapper {
-  padding: 20px!important;
-  text-align: right!important;
+  padding: 20px !important;
+  text-align: right !important;
 }
 
 .swagger-ui .execute-wrapper .btn {
-  width: 100%!important;
-  padding: 8px 40px!important;
+  width: 100% !important;
+  padding: 8px 40px !important;
 }
 
 .swagger-ui .body-param-options {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-orient: vertical!important;
-  -webkit-box-direction: normal!important;
-  -ms-flex-direction: column!important;
-  flex-direction: column!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-box-direction: normal !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
 }
 
 .swagger-ui .body-param-options .body-param-edit {
-  padding: 10px 0!important;
+  padding: 10px 0 !important;
 }
 
 .swagger-ui .body-param-options label {
-  padding: 8px 0!important;
+  padding: 8px 0 !important;
 }
 
 .swagger-ui .body-param-options label select {
-  margin: 3px 0 0!important;
+  margin: 3px 0 0 !important;
 }
 
 .swagger-ui .responses-inner {
-  padding: 20px!important;
+  padding: 20px !important;
 }
 
 .swagger-ui .responses-inner h4,
 .swagger-ui .responses-inner h5 {
-  font-size: 12px!important;
-  margin: 10px 0 5px!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  margin: 10px 0 5px !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .response-col_status {
-  font-size: 14px!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .response-col_status .response-undocumented {
-  font-size: 11px!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #999!important;
+  font-size: 11px !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #999 !important;
 }
 
 .swagger-ui .response-col_description__inner span {
-  font-size: 12px!important;
-  font-style: italic!important;
-  display: block!important;
-  margin: 10px 0!important;
-  padding: 10px!important;
-  border-radius: 4px!important;
-  background: #41444e!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  display: block !important;
+  margin: 10px 0 !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  background: #41444e !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .response-col_description__inner span p {
-  margin: 0!important;
+  margin: 0 !important;
 }
 
 .swagger-ui .opblock-body pre {
-  font-size: 12px!important;
-  margin: 0!important;
-  padding: 10px!important;
-  white-space: pre-wrap!important;
-  border-radius: 4px!important;
-  background: #41444e!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  white-space: pre-wrap !important;
+  border-radius: 4px !important;
+  background: #41444e !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock-body pre span {
@@ -475,1078 +507,1148 @@
 }
 
 .swagger-ui .scheme-container {
-  display: none!important;
+  display: none !important;
 }
 
 .swagger-ui .loading-container {
-  padding: 40px 0 60px!important;
-  border-radius: 36px!important;
-  color: #fff!important;
+  padding: 40px 0 60px !important;
+  border-radius: 36px !important;
+  color: #fff !important;
 }
 
 .swagger-ui .loading-container .loading {
-  position: relative!important;
+  position: relative !important;
 }
 
 .swagger-ui .loading-container .loading:after {
-  font-size: 10px!important;
-  font-weight: 700!important;
-  position: absolute!important;
-  top: 50%!important;
-  left: 50%!important;
-  content: "loading"!important;
-  -webkit-transform: translate(-50%, -50%)!important;
-  transform: translate(-50%, -50%)!important;
-  text-transform: uppercase!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  content: "loading" !important;
+  -webkit-transform: translate(-50%, -50%) !important;
+  transform: translate(-50%, -50%) !important;
+  text-transform: uppercase !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .loading-container .loading:before {
-  position: absolute!important;
-  top: 50%!important;
-  left: 50%!important;
-  display: block!important;
-  width: 60px!important;
-  height: 60px!important;
-  margin: -30px!important;
-  content: ""!important;
-  -webkit-animation: rotation 1s infinite linear, opacity 0.5s!important;
-  animation: rotation 1s infinite linear, opacity 0.5s!important;
-  opacity: 1!important;
-  border: 2px solid #fff!important;
-  border-top-color: rgba(0, 0, 0, 0.6)!important;
-  border-radius: 100%!important;
-  -webkit-backface-visibility: hidden!important;
-  backface-visibility: hidden!important;
-  fill: pink!important;
-  background-color: #333333!important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  display: block !important;
+  width: 60px !important;
+  height: 60px !important;
+  margin: -30px !important;
+  content: "" !important;
+  -webkit-animation:
+    rotation 1s infinite linear,
+    opacity 0.5s !important;
+  animation:
+    rotation 1s infinite linear,
+    opacity 0.5s !important;
+  opacity: 1 !important;
+  border: 2px solid #fff !important;
+  border-top-color: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 100% !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  fill: pink !important;
+  background-color: #333333 !important;
 }
 
 @-webkit-keyframes rotation {
   to {
-    -webkit-transform: rotate(1turn)!important;
-    transform: rotate(1turn)!important;
+    -webkit-transform: rotate(1turn) !important;
+    transform: rotate(1turn) !important;
   }
 }
 
 @keyframes rotation {
   to {
-    -webkit-transform: rotate(1turn)!important;
-    transform: rotate(1turn)!important;
+    -webkit-transform: rotate(1turn) !important;
+    transform: rotate(1turn) !important;
   }
 }
 
 @-webkit-keyframes blinker {
   50% {
-    opacity: 0!important;
+    opacity: 0 !important;
   }
 }
 
 @keyframes blinker {
   50% {
-    opacity: 0!important;
+    opacity: 0 !important;
   }
 }
 
 .swagger-ui .btn {
-  font-size: 14px!important;
-  font-weight: 700!important;
-  padding: 5px 23px!important;
-  -webkit-transition: all 0.3s!important;
-  transition: all 0.3s!important;
-  border: 2px solid #888!important;
-  border-radius: 4px!important;
-  background: transparent!important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 5px 23px !important;
+  -webkit-transition: all 0.3s !important;
+  transition: all 0.3s !important;
+  border: 2px solid #888 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .btn[disabled] {
-  cursor: not-allowed!important;
-  opacity: 0.3!important;
+  cursor: not-allowed !important;
+  opacity: 0.3 !important;
 }
 
 .swagger-ui .btn:hover {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3)!important;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
 }
 
 .swagger-ui .btn.cancel {
-  border-color: #ff6060!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #ff6060!important;
+  border-color: #ff6060 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #ff6060 !important;
 }
 
 .swagger-ui .btn.authorize {
-  line-height: 1!important;
-  display: inline!important;
-  color: #49cc90!important;
-  border-color: #49cc90!important;
+  line-height: 1 !important;
+  display: inline !important;
+  color: #49cc90 !important;
+  border-color: #49cc90 !important;
 }
 
 .swagger-ui .btn.authorize span {
-  float: left!important;
-  padding: 4px 20px 0 0!important;
+  float: left !important;
+  padding: 4px 20px 0 0 !important;
 }
 
 .swagger-ui .btn.authorize svg {
-  fill: #49cc90!important;
+  fill: #49cc90 !important;
 }
 
 .swagger-ui .btn.execute {
-  -webkit-animation: pulse 2s infinite!important;
-  animation: pulse 2s infinite!important;
-  color: #fff!important;
-  border-color: #4990e2!important;
+  -webkit-animation: pulse 2s infinite !important;
+  animation: pulse 2s infinite !important;
+  color: #fff !important;
+  border-color: #4990e2 !important;
 }
 
 @-webkit-keyframes pulse {
   0% {
-    color: #fff!important;
-    background: #4990e2!important;
-    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0.8)!important;
+    color: #fff !important;
+    background: #4990e2 !important;
+    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0.8) !important;
   }
   70% {
-    box-shadow: 0 0 0 5px rgba(73, 144, 226, 0)!important;
+    box-shadow: 0 0 0 5px rgba(73, 144, 226, 0) !important;
   }
   to {
-    color: #fff!important;
-    background: #4990e2!important;
-    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0)!important;
+    color: #fff !important;
+    background: #4990e2 !important;
+    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0) !important;
   }
 }
 
 @keyframes pulse {
   0% {
-    color: #fff!important;
-    background: #4990e2!important;
-    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0.8)!important;
+    color: #fff !important;
+    background: #4990e2 !important;
+    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0.8) !important;
   }
   70% {
-    box-shadow: 0 0 0 5px rgba(73, 144, 226, 0)!important;
+    box-shadow: 0 0 0 5px rgba(73, 144, 226, 0) !important;
   }
   to {
-    color: #fff!important;
-    background: #4990e2!important;
-    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0)!important;
+    color: #fff !important;
+    background: #4990e2 !important;
+    box-shadow: 0 0 0 0 rgba(73, 144, 226, 0) !important;
   }
 }
 
 .swagger-ui .btn-group {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 30px!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 30px !important;
 }
 
 .swagger-ui .btn-group .btn {
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
 }
 
 .swagger-ui .btn-group .btn:first-child {
-  border-radius: 4px 0 0 4px!important;
+  border-radius: 4px 0 0 4px !important;
 }
 
 .swagger-ui .btn-group .btn:last-child {
-  border-radius: 0 4px 4px 0!important;
+  border-radius: 0 4px 4px 0 !important;
 }
 
 .swagger-ui .authorization__btn {
-  padding: 0 5px 0 0!important;
+  padding: 0 5px 0 0 !important;
 }
 
 .swagger-ui .authorization__btn svg {
- fill: #f4f4f4!important;
+  fill: #f4f4f4 !important;
 }
 
 .swagger-ui .authorization__btn.locked {
-  opacity: 1!important;
+  opacity: 1 !important;
 }
 
 .swagger-ui .authorization__btn.unlocked {
-  opacity: 0.4!important;
+  opacity: 0.4 !important;
 }
 
 .swagger-ui .expand-methods,
 .swagger-ui .expand-operation {
-  border: none!important;
-  background-color: transparent!important;
-  padding: 4px!important;
-  border-radius: 1000px!important;
-  overflow: hidden!important;
+  border: none !important;
+  background-color: transparent !important;
+  padding: 4px !important;
+  border-radius: 1000px !important;
+  overflow: hidden !important;
 }
 
 .swagger-ui .expand-methods svg,
 .swagger-ui .expand-operation svg {
-  width: 18px!important;
-  height: 18px!important; 
+  width: 18px !important;
+  height: 18px !important;
   background-color: transparent;
-  fill:#fff!important;
+  fill: #fff !important;
 }
 
 .swagger-ui .expand-methods {
-  padding: 0 10px!important;
+  padding: 0 10px !important;
 }
 
 .swagger-ui .expand-methods:hover svg {
-  fill: #fff!important;
+  fill: #fff !important;
 }
 
 .swagger-ui .expand-methods svg {
-  -webkit-transition: all 0.3s!important;
-  transition: all 0.3s!important;
-  fill: #777!important;
+  -webkit-transition: all 0.3s !important;
+  transition: all 0.3s !important;
+  fill: #777 !important;
 }
 
 .swagger-ui button {
-  cursor: pointer!important;
-  outline: none!important;
+  cursor: pointer !important;
+  outline: none !important;
 }
 
 .swagger-ui select {
-  font-size: 14px!important;
-  font-weight: 700!important;
-  padding: 5px 40px 5px 10px!important;
-  border: 2px solid #41444e!important;
-  border-radius: 4px!important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 5px 40px 5px 10px !important;
+  border: 2px solid #41444e !important;
+  border-radius: 4px !important;
   background: #f7f7f7
     url(data:image/svg+xml!important;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+ICAgIDxwYXRoIGQ9Ik0xMy40MTggNy44NTljLjI3MS0uMjY4LjcwOS0uMjY4Ljk3OCAwIC4yNy4yNjguMjcyLjcwMSAwIC45NjlsLTMuOTA4IDMuODNjLS4yNy4yNjgtLjcwNy4yNjgtLjk3OSAwbC0zLjkwOC0zLjgzYy0uMjctLjI2Ny0uMjctLjcwMSAwLS45NjkuMjcxLS4yNjguNzA5LS4yNjguOTc4IDBMMTAgMTFsMy40MTgtMy4xNDF6Ii8+PC9zdmc+)
-    right 10px center no-repeat!important;
-  background-size: 20px!important;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25)!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #0E0E10!important;
-  -webkit-appearance: none!important;
-  -moz-appearance: none!important;
-  appearance: none!important;
+    right 10px center no-repeat !important;
+  background-size: 20px !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25) !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #0e0e10 !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
 
 .swagger-ui select[multiple] {
-  margin: 5px 0!important;
-  padding: 5px!important;
-  background: #f7f7f7!important;
+  margin: 5px 0 !important;
+  padding: 5px !important;
+  background: #f7f7f7 !important;
 }
 
 .swagger-ui .opblock-body select {
-  min-width: 230px!important;
+  min-width: 230px !important;
 }
 
 .swagger-ui label {
-  font-size: 12px!important;
-  font-weight: 700!important;
-  margin: 0 0 5px!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  margin: 0 0 5px !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui input[type="email"],
 .swagger-ui input[type="password"],
 .swagger-ui input[type="search"],
 .swagger-ui input[type="text"] {
-  min-width: 100px!important;
-  margin: 5px 0!important;
-  padding: 8px 10px!important;
-  border-radius: 4px!important;
-  background: #333333!important;
+  min-width: 100px !important;
+  margin: 5px 0 !important;
+  padding: 8px 10px !important;
+  border-radius: 4px !important;
+  background: #333333 !important;
 }
 
 .swagger-ui input[type="email"].invalid,
 .swagger-ui input[type="password"].invalid,
 .swagger-ui input[type="search"].invalid,
 .swagger-ui input[type="text"].invalid {
-  -webkit-animation: shake 0.4s 1!important;
-  animation: shake 0.4s 1!important;
-  border-color: #f93e3e!important;
-  background: #333333!important;
+  -webkit-animation: shake 0.4s 1 !important;
+  animation: shake 0.4s 1 !important;
+  border-color: #f93e3e !important;
+  background: #333333 !important;
 }
 
 @-webkit-keyframes shake {
   10%,
   90% {
-    -webkit-transform: translate3d(-1px, 0, 0)!important;
-    transform: translate3d(-1px, 0, 0)!important;
+    -webkit-transform: translate3d(-1px, 0, 0) !important;
+    transform: translate3d(-1px, 0, 0) !important;
   }
   20%,
   80% {
-    -webkit-transform: translate3d(2px, 0, 0)!important;
-    transform: translate3d(2px, 0, 0)!important;
+    -webkit-transform: translate3d(2px, 0, 0) !important;
+    transform: translate3d(2px, 0, 0) !important;
   }
   30%,
   50%,
   70% {
-    -webkit-transform: translate3d(-4px, 0, 0)!important;
-    transform: translate3d(-4px, 0, 0)!important;
+    -webkit-transform: translate3d(-4px, 0, 0) !important;
+    transform: translate3d(-4px, 0, 0) !important;
   }
   40%,
   60% {
-    -webkit-transform: translate3d(4px, 0, 0)!important;
-    transform: translate3d(4px, 0, 0)!important;
+    -webkit-transform: translate3d(4px, 0, 0) !important;
+    transform: translate3d(4px, 0, 0) !important;
   }
 }
 
 @keyframes shake {
   10%,
   90% {
-    -webkit-transform: translate3d(-1px, 0, 0)!important;
-    transform: translate3d(-1px, 0, 0)!important;
+    -webkit-transform: translate3d(-1px, 0, 0) !important;
+    transform: translate3d(-1px, 0, 0) !important;
   }
   20%,
   80% {
-    -webkit-transform: translate3d(2px, 0, 0)!important;
-    transform: translate3d(2px, 0, 0)!important;
+    -webkit-transform: translate3d(2px, 0, 0) !important;
+    transform: translate3d(2px, 0, 0) !important;
   }
   30%,
   50%,
   70% {
-    -webkit-transform: translate3d(-4px, 0, 0)!important;
-    transform: translate3d(-4px, 0, 0)!important;
+    -webkit-transform: translate3d(-4px, 0, 0) !important;
+    transform: translate3d(-4px, 0, 0) !important;
   }
   40%,
   60% {
-    -webkit-transform: translate3d(4px, 0, 0)!important;
-    transform: translate3d(4px, 0, 0)!important;
+    -webkit-transform: translate3d(4px, 0, 0) !important;
+    transform: translate3d(4px, 0, 0) !important;
   }
 }
 
 .swagger-ui textarea {
-  font-size: 12px!important;
-  width: 100%!important;
-  min-height: 280px!important;
-  padding: 10px!important;
-  border: none!important;
-  border-radius: 4px!important;
-  outline: none!important;
-  background: hsla(220, 50%, 65%, 0.8)!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  width: 100% !important;
+  min-height: 280px !important;
+  padding: 10px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  outline: none !important;
+  background: hsla(220, 50%, 65%, 0.8) !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui textarea:focus {
-  border: 2px solid #61affe!important;
+  border: 2px solid #61affe !important;
 }
 
 .swagger-ui textarea.curl {
-  font-size: 12px!important;
-  min-height: 100px!important;
-  margin: 0!important;
-  padding: 10px!important;
-  resize: none!important;
-  border-radius: 4px!important;
-  background: #41444e!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  min-height: 100px !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  resize: none !important;
+  border-radius: 4px !important;
+  background: #41444e !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .checkbox {
-  padding: 5px 0 10px!important;
-  -webkit-transition: opacity 0.5s!important;
-  transition: opacity 0.5s!important;
-  color: #333!important;
+  padding: 5px 0 10px !important;
+  -webkit-transition: opacity 0.5s !important;
+  transition: opacity 0.5s !important;
+  color: #333 !important;
 }
 
 .swagger-ui .checkbox label {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
 }
 
 .swagger-ui .checkbox p {
   font-weight: 400 !important;
-  font-style: italic!important;
+  font-style: italic !important;
   margin: 0 !important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .checkbox input[type="checkbox"] {
-  display: none!important;
+  display: none !important;
 }
 
 .swagger-ui .checkbox input[type="checkbox"] + label > .item {
-  position: relative!important;
-  top: 3px!important;
-  display: inline-block!important;
-  width: 16px!important;
-  height: 16px!important;
-  margin: 0 8px 0 0!important;
-  padding: 5px!important;
-  cursor: pointer!important;
-  border-radius: 1px!important;
-  background: #e8e8e8!important;
-  box-shadow: 0 0 0 2px #e8e8e8!important;
-  -webkit-box-flex: 0!important;
-  -ms-flex: none!important;
-  flex: none!important;
+  position: relative !important;
+  top: 3px !important;
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 8px 0 0 !important;
+  padding: 5px !important;
+  cursor: pointer !important;
+  border-radius: 1px !important;
+  background: #e8e8e8 !important;
+  box-shadow: 0 0 0 2px #e8e8e8 !important;
+  -webkit-box-flex: 0 !important;
+  -ms-flex: none !important;
+  flex: none !important;
 }
 
 .swagger-ui .checkbox input[type="checkbox"] + label > .item:active {
-  -webkit-transform: scale(0.9)!important;
-  transform: scale(0.9)!important;
+  -webkit-transform: scale(0.9) !important;
+  transform: scale(0.9) !important;
 }
 
 .swagger-ui .checkbox input[type="checkbox"]:checked + label > .item {
   background: #e8e8e8
     url("data:image/svg+xml!important;charset=utf-8,%3Csvg width='10' height='8' viewBox='3 7 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%2341474E' fill-rule='evenodd' d='M6.333 15L3 11.667l1.333-1.334 2 2L11.667 7 13 8.333z'/%3E%3C/svg%3E")
-    50% no-repeat!important;
+    50% no-repeat !important;
 }
 
 .swagger-ui .dialog-ux {
-  position: fixed!important;
-  z-index: 9999!important;
-  top: 0!important;
-  right: 0!important;
-  bottom: 0!important;
-  left: 0!important;
+  position: fixed !important;
+  z-index: 9999 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
 }
 
 .swagger-ui .dialog-ux .backdrop-ux {
-  position: fixed!important;
-  top: 0!important;
-  right: 0!important;
-  bottom: 0!important;
-  left: 0!important;
-  background: rgba(0, 0, 0, 0.8)!important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  background: rgba(0, 0, 0, 0.8) !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux {
-  position: absolute!important;
-  z-index: 9999!important;
-  top: 50%!important;
-  left: 50%!important;
-  width: 100%!important;
-  min-width: 300px!important;
-  max-width: 650px!important;
-  -webkit-transform: translate(-50%, -50%)!important;
-  transform: translate(-50%, -50%)!important;
-  border: 1px solid #ebebeb!important;
-  border-radius: 4px!important;
-  background: #0E0E10!important;
-  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.2)!important;
+  position: absolute !important;
+  z-index: 9999 !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 100% !important;
+  min-width: 300px !important;
+  max-width: 650px !important;
+  -webkit-transform: translate(-50%, -50%) !important;
+  transform: translate(-50%, -50%) !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 4px !important;
+  background: #0e0e10 !important;
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.2) !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-content {
-  overflow-y: auto!important;
-  max-height: 540px!important;
-  padding: 20px!important;
+  overflow-y: auto !important;
+  max-height: 540px !important;
+  padding: 20px !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-content p {
-  font-size: 12px!important;
-  margin: 0 0 5px!important;
-  color: #41444e!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #0E0E10!important;
+  font-size: 12px !important;
+  margin: 0 0 5px !important;
+  color: #41444e !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #0e0e10 !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-content h4 {
-  font-size: 18px!important;
-  font-weight: 600!important;
-  margin: 15px 0 0!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #0E0E10!important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin: 15px 0 0 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #0e0e10 !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-header {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 12px 0!important;
-  border-bottom: 1px solid #ebebeb!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 12px 0 !important;
+  border-bottom: 1px solid #ebebeb !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-header .close-modal {
-  padding: 0 10px!important;
-  -webkit-appearance: none!important;
-  -moz-appearance: none!important;
-  appearance: none!important;
+  padding: 0 10px !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
 
 .swagger-ui .dialog-ux .modal-ux-header h3 {
-  font-size: 20px!important;
-  font-weight: 600!important;
-  margin: 0!important;
-  padding: 0 20px!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  padding: 0 20px !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .auth-container h4 {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui .model {
-  font-size: 12px!important;
-  font-weight: 300!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .model-toggle {
-  font-size: 10px!important;
-  position: relative!important;
-  top: 6px!important;
-  display: inline-block!important;
-  margin: 1.5em!important;
-  cursor: pointer!important;
-  -webkit-transition: -webkit-transform 0.15s ease-in!important;
-  transition: -webkit-transform 0.15s ease-in!important;
-  transition: transform 0.15s ease-in!important;
-  transition: transform 0.15s ease-in, -webkit-transform 0.15s ease-in!important;
-  -webkit-transform: rotate(90deg)!important;
-  transform: rotate(90deg)!important;
-  -webkit-transform-origin: 50% 50%!important;
-  transform-origin: 50% 50%!important;
-  background: #fff!important;
+  font-size: 10px !important;
+  position: relative !important;
+  top: 6px !important;
+  display: inline-block !important;
+  margin: 1.5em !important;
+  cursor: pointer !important;
+  -webkit-transition: -webkit-transform 0.15s ease-in !important;
+  transition: -webkit-transform 0.15s ease-in !important;
+  transition: transform 0.15s ease-in !important;
+  transition:
+    transform 0.15s ease-in,
+    -webkit-transform 0.15s ease-in !important;
+  -webkit-transform: rotate(90deg) !important;
+  transform: rotate(90deg) !important;
+  -webkit-transform-origin: 50% 50% !important;
+  transform-origin: 50% 50% !important;
+  background: #fff !important;
 }
 
 .swagger-ui .model-toggle.collapsed {
-  -webkit-transform: rotate(0deg)!important;
-  transform: rotate(0deg)!important;
+  -webkit-transform: rotate(0deg) !important;
+  transform: rotate(0deg) !important;
 }
 
 .swagger-ui .model-toggle:after {
-  display: block!important;
-  width: 20px!important;
-  height: 20px!important;
-  content: ""!important;
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  content: "" !important;
   background: url("data:image/svg+xml!important;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E")
-    50% no-repeat!important;
-  background-size: 100%!important;
+    50% no-repeat !important;
+  background-size: 100% !important;
 }
 
 .swagger-ui .model-jump-to-path {
-  position: relative!important;
-  cursor: pointer!important;
+  position: relative !important;
+  cursor: pointer !important;
 }
 
 .swagger-ui .model-jump-to-path .view-line-link {
-  position: absolute!important;
-  top: -0.4em!important;
-  cursor: pointer!important;
+  position: absolute !important;
+  top: -0.4em !important;
+  cursor: pointer !important;
 }
 
 .swagger-ui .model-title {
-  position: relative!important;
+  position: relative !important;
 }
 
 .swagger-ui .model-title:hover .model-hint {
-  visibility: visible!important;
+  visibility: visible !important;
 }
 
 .swagger-ui .model-hint {
-  position: absolute!important;
-  top: -1.8em!important;
-  visibility: hidden!important;
-  padding: 0.1em 0.5em!important;
-  white-space: nowrap!important;
-  color: #ebebeb!important;
-  border-radius: 4px!important;
-  background: rgba(0, 0, 0, 0.7)!important;
+  position: absolute !important;
+  top: -1.8em !important;
+  visibility: hidden !important;
+  padding: 0.1em 0.5em !important;
+  white-space: nowrap !important;
+  color: #ebebeb !important;
+  border-radius: 4px !important;
+  background: rgba(0, 0, 0, 0.7) !important;
 }
 
 .swagger-ui section.models {
-  margin: 30px 0!important;
-  border: 1px solid rgba(59, 65, 81, 0.3)!important;
-  border-radius: 4px!important;
+  margin: 30px 0 !important;
+  border: 1px solid rgba(59, 65, 81, 0.3) !important;
+  border-radius: 4px !important;
 }
 
 .swagger-ui section.models.is-open {
-  padding: 0 0 20px!important;
+  padding: 0 0 20px !important;
 }
 
 .swagger-ui section.models.is-open h4 {
-  margin: 0 0 5px!important;
-  border-bottom: 1px solid rgba(59, 65, 81, 0.3)!important;
+  margin: 0 0 5px !important;
+  border-bottom: 1px solid rgba(59, 65, 81, 0.3) !important;
 }
 
 .swagger-ui section.models.is-open h4 svg {
-  -webkit-transform: rotate(90deg)!important;
-  transform: rotate(90deg)!important;
+  -webkit-transform: rotate(90deg) !important;
+  transform: rotate(90deg) !important;
 }
 
 .swagger-ui section.models h4 {
-  font-size: 16px!important;
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  margin: 0!important;
-  padding: 10px 20px 10px 10px!important;
-  cursor: pointer!important;
-  -webkit-transition: all 0.2s!important;
-  transition: all 0.2s!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #777!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  font-size: 16px !important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  margin: 0 !important;
+  padding: 10px 20px 10px 10px !important;
+  cursor: pointer !important;
+  -webkit-transition: all 0.2s !important;
+  transition: all 0.2s !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #777 !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui section.models h4 svg {
-  -webkit-transition: all 0.4s!important;
-  transition: all 0.4s!important;
+  -webkit-transition: all 0.4s !important;
+  transition: all 0.4s !important;
 }
 
 .swagger-ui section.models h4 span {
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
 }
 
 .swagger-ui section.models h4:hover {
-  background: rgba(0, 0, 0, 0.02)!important;
+  background: rgba(0, 0, 0, 0.02) !important;
 }
 
 .swagger-ui section.models h5 {
-  font-size: 16px!important;
-  margin: 0 0 10px!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #777!important;
+  font-size: 16px !important;
+  margin: 0 0 10px !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #777 !important;
 }
 
 .swagger-ui section.models .model-jump-to-path {
-  position: relative!important;
-  top: 5px!important;
+  position: relative !important;
+  top: 5px !important;
 }
 
 .swagger-ui section.models .model-container {
-  margin: 0 20px 15px!important;
-  -webkit-transition: all 0.5s!important;
-  transition: all 0.5s!important;
-  border-radius: 4px!important;
-  background: rgba(0, 0, 0, 0.05)!important;
+  margin: 0 20px 15px !important;
+  -webkit-transition: all 0.5s !important;
+  transition: all 0.5s !important;
+  border-radius: 4px !important;
+  background: rgba(0, 0, 0, 0.05) !important;
 }
 
 .swagger-ui section.models .model-container:hover {
-  background: rgba(0, 0, 0, 0.07)!important;
+  background: rgba(0, 0, 0, 0.07) !important;
 }
 
 .swagger-ui section.models .model-container:first-of-type {
-  margin: 20px!important;
+  margin: 20px !important;
 }
 
 .swagger-ui section.models .model-container:last-of-type {
-  margin: 0 20px!important;
+  margin: 0 20px !important;
 }
 
 .swagger-ui section.models .model-box {
-  background: none!important;
+  background: none !important;
 }
 
 .swagger-ui .model-box {
-  padding: 10px!important;
-  border-radius: 4px!important;
-  background: rgb(245 239 239 / 10%)!important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  background: rgb(245 239 239 / 10%) !important;
 }
 
 .swagger-ui .model-box .model-jump-to-path {
-  position: relative!important;
-  top: 4px!important;
+  position: relative !important;
+  top: 4px !important;
 }
 
 .swagger-ui .model-title {
-  font-size: 16px!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #555!important;
+  font-size: 16px !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #555 !important;
 }
 
 .swagger-ui span > span.model,
 .swagger-ui span > span.model .brace-close {
-  padding: 0 0 0 10px!important;
+  padding: 0 0 0 10px !important;
 }
 
 .swagger-ui .prop-type {
-  color: #55a!important;
+  color: #55a !important;
 }
 
 .swagger-ui .prop-enum {
-  display: block!important;
+  display: block !important;
 }
 
 .swagger-ui .prop-format {
-  color: #999!important;
+  color: #999 !important;
 }
 
 .swagger-ui table {
-  width: 100%!important;
-  padding: 0 10px!important;
-  border-collapse: collapse!important;
+  width: 100% !important;
+  padding: 0 10px !important;
+  border-collapse: collapse !important;
 }
 
 .swagger-ui table.model tbody tr td {
-  padding: 0!important;
-  vertical-align: top!important;
+  padding: 0 !important;
+  vertical-align: top !important;
 }
 
 .swagger-ui table.model tbody tr td:first-of-type {
-  width: 100px!important;
-  padding: 0!important;
+  width: 100px !important;
+  padding: 0 !important;
 }
 
 .swagger-ui table.headers td {
-  font-size: 12px!important;
-  font-weight: 300!important;
-  vertical-align: middle!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  vertical-align: middle !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui table tbody tr td {
-  padding: 10px 0 0!important;
-  vertical-align: top!important;
+  padding: 10px 0 0 !important;
+  vertical-align: top !important;
 }
 
 .swagger-ui table tbody tr td:first-of-type {
-  width: 20%!important;
-  padding: 10px 0!important;
+  width: 20% !important;
+  padding: 10px 0 !important;
 }
 
 .swagger-ui table thead tr td,
 .swagger-ui table thead tr th {
-  font-size: 12px!important;
-  font-weight: 700!important;
-  padding: 12px 0!important;
-  text-align: left!important;
-  border-bottom: 1px solid rgba(59, 65, 81, 0.2)!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 12px 0 !important;
+  text-align: left !important;
+  border-bottom: 1px solid rgba(59, 65, 81, 0.2) !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .parameters-col_description p {
-  font-size: 14px!important;
-  margin: 0!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .parameters-col_description input[type="text"] {
-  width: 100%!important;
-  max-width: 340px!important;
+  width: 100% !important;
+  max-width: 340px !important;
 }
 
 .swagger-ui .parameter__name {
-  font-size: 16px!important;
-  font-weight: 400!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .parameter__name.required {
-  font-weight: 700!important;
+  font-weight: 700 !important;
 }
 
 .swagger-ui .parameter__name.required:after {
-  font-size: 10px!important;
-  position: relative!important;
-  top: -6px!important;
-  padding: 5px!important;
-  content: "required"!important;
-  color: rgba(255, 0, 0, 0.6)!important;
+  font-size: 10px !important;
+  position: relative !important;
+  top: -6px !important;
+  padding: 5px !important;
+  content: "required" !important;
+  color: rgba(255, 0, 0, 0.6) !important;
 }
 
 .swagger-ui .parameter__in {
-  font-size: 12px!important;
-  font-style: italic!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #888!important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #888 !important;
 }
 
 .swagger-ui .table-container {
-  padding: 20px!important;
+  padding: 20px !important;
 }
 
 .swagger-ui .topbar {
-  padding: 8px 30px!important;
-  background-color: #89bf04!important;
+  padding: 8px 30px !important;
+  background-color: #89bf04 !important;
 }
 
 .swagger-ui .topbar .topbar-wrapper {
-  -ms-flex-align: center!important;
+  -ms-flex-align: center !important;
 }
 
 .swagger-ui .topbar .topbar-wrapper,
 .swagger-ui .topbar a {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-align: center!important;
-  align-items: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .topbar a {
-  font-size: 1.5em!important;
-  font-weight: 700!important;
-  text-decoration: none!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  -ms-flex-align: center!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 1.5em !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  -ms-flex-align: center !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .topbar a span {
-  margin: 0!important;
-  padding: 0 10px!important;
+  margin: 0 !important;
+  padding: 0 10px !important;
 }
 
 .swagger-ui .topbar .download-url-wrapper {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
 }
 
 .swagger-ui .topbar .download-url-wrapper input[type="text"] {
-  min-width: 350px!important;
-  margin: 0!important;
-  border: 2px solid #547f00!important;
-  border-radius: 4px 0 0 4px!important;
-  outline: none!important;
+  min-width: 350px !important;
+  margin: 0 !important;
+  border: 2px solid #547f00 !important;
+  border-radius: 4px 0 0 4px !important;
+  outline: none !important;
 }
 
 .swagger-ui .topbar .download-url-wrapper .download-url-button {
-  font-size: 16px!important;
-  font-weight: 700!important;
-  padding: 4px 40px!important;
-  border: none!important;
-  border-radius: 0 4px 4px 0!important;
-  background: #547f00!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  padding: 4px 40px !important;
+  border: none !important;
+  border-radius: 0 4px 4px 0 !important;
+  background: #547f00 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .information-container.wrapper .info {
-  display: none!important;
+  display: none !important;
 }
 
 .swagger-ui .info hgroup.main {
-  margin: 0 0 20px!important;
+  margin: 0 0 20px !important;
 }
 
 .swagger-ui .info hgroup.main a {
-  font-size: 12px!important;
+  font-size: 12px !important;
 }
 
 .swagger-ui .info p {
-  font-size: 14px!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .info code {
-  padding: 3px 5px!important;
-  border-radius: 4px!important;
-  background: rgba(0, 0, 0, 0.05)!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #9012fe!important;
+  padding: 3px 5px !important;
+  border-radius: 4px !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #9012fe !important;
 }
 
 .swagger-ui .info a {
-  font-size: 14px!important;
-  -webkit-transition: all 0.4s!important;
-  transition: all 0.4s!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #4990e2!important;
+  font-size: 14px !important;
+  -webkit-transition: all 0.4s !important;
+  transition: all 0.4s !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #4990e2 !important;
 }
 
 .swagger-ui .info a:hover {
-  color: #1f69c0!important;
+  color: #1f69c0 !important;
 }
 
 .swagger-ui .info > div {
-  margin: 0 0 5px!important;
+  margin: 0 0 5px !important;
 }
 
 .swagger-ui .info .base-url {
-  font-size: 12px!important;
+  font-size: 12px !important;
   font-weight: 300 !important;
-  margin: 0!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  margin: 0 !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .info .title {
-  font-size: 36px!important;
-  margin: 0!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 36px !important;
+  margin: 0 !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .info .title small {
-  font-size: 10px!important;
-  position: relative!important;
-  top: -5px!important;
-  display: inline-block!important;
-  margin: 0 0 0 5px!important;
-  padding: 2px 4px!important;
-  vertical-align: super!important;
-  border-radius: 57px!important;
-  background: #7d8492!important;
+  font-size: 10px !important;
+  position: relative !important;
+  top: -5px !important;
+  display: inline-block !important;
+  margin: 0 0 0 5px !important;
+  padding: 2px 4px !important;
+  vertical-align: super !important;
+  border-radius: 57px !important;
+  background: #7d8492 !important;
 }
 
 .swagger-ui .info .title small pre {
-  margin: 0!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  margin: 0 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .auth-btn-wrapper {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  padding: 10px 0!important;
-  -webkit-box-pack: center!important;
-  -ms-flex-pack: center!important;
-  justify-content: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  padding: 10px 0 !important;
+  -webkit-box-pack: center !important;
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
 }
 
 .swagger-ui .auth-wrapper {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  -webkit-box-pack: end!important;
-  -ms-flex-pack: end!important;
-  justify-content: flex-end!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  -webkit-box-pack: end !important;
+  -ms-flex-pack: end !important;
+  justify-content: flex-end !important;
 }
 
 .swagger-ui .auth-wrapper .authorize {
-  padding-right: 20px!important;
+  padding-right: 20px !important;
 }
 
 .swagger-ui .auth-container {
-  margin: 0 0 10px!important;
-  padding: 10px 20px!important;
-  border-bottom: 1px solid #ebebeb!important;
+  margin: 0 0 10px !important;
+  padding: 10px 20px !important;
+  border-bottom: 1px solid #ebebeb !important;
 }
 
 .swagger-ui .auth-container:last-of-type {
-  margin: 0!important;
-  padding: 10px 20px!important;
-  border: 0!important;
+  margin: 0 !important;
+  padding: 10px 20px !important;
+  border: 0 !important;
 }
 
 .swagger-ui .auth-container h4 {
   margin: 5px 0 15px !important;
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui .auth-container .wrapper {
-  margin: 0!important;
-  padding: 0!important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .swagger-ui .auth-container input[type="password"],
 .swagger-ui .auth-container input[type="text"] {
-  min-width: 230px!important;
+  min-width: 230px !important;
 }
 
 .swagger-ui .auth-container .errors {
-  font-size: 12px!important;
-  padding: 10px!important;
-  border-radius: 4px!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 12px !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .scopes h2 {
-  font-size: 14px!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .scope-def {
-  padding: 0 0 20px!important;
+  padding: 0 0 20px !important;
 }
 
 .swagger-ui .errors-wrapper {
-  margin: 20px!important;
-  padding: 10px 20px!important;
-  -webkit-animation: scaleUp 0.5s!important;
-  animation: scaleUp 0.5s!important;
-  border: 2px solid #f93e3e!important;
-  border-radius: 4px!important;
-  background: rgba(249, 62, 62, 0.1)!important;
+  margin: 20px !important;
+  padding: 10px 20px !important;
+  -webkit-animation: scaleUp 0.5s !important;
+  animation: scaleUp 0.5s !important;
+  border: 2px solid #f93e3e !important;
+  border-radius: 4px !important;
+  background: rgba(249, 62, 62, 0.1) !important;
 }
 
 .swagger-ui .errors-wrapper .error-wrapper {
-  margin: 0 0 10px!important;
+  margin: 0 0 10px !important;
 }
 
 .swagger-ui .errors-wrapper .errors h4 {
-  font-size: 14px!important;
-  margin: 0!important;
-  font-family: Source Code Pro, monospace!important;
-  font-weight: 600!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  font-family:
+    Source Code Pro,
+    monospace !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .swagger-ui .errors-wrapper hgroup {
-  display: -webkit-box!important;
-  display: -ms-flexbox!important;
-  display: flex!important;
-  -webkit-box-align: center!important;
-  -ms-flex-align: center!important;
-  align-items: center!important;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
 }
 
 .swagger-ui .errors-wrapper hgroup h4 {
-  font-size: 20px!important;
-  margin: 0!important;
-  -webkit-box-flex: 1!important;
-  -ms-flex: 1!important;
-  flex: 1!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 20px !important;
+  margin: 0 !important;
+  -webkit-box-flex: 1 !important;
+  -ms-flex: 1 !important;
+  flex: 1 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 @-webkit-keyframes scaleUp {
   0% {
-    -webkit-transform: scale(0.8)!important;
-    transform: scale(0.8)!important;
-    opacity: 0!important;
+    -webkit-transform: scale(0.8) !important;
+    transform: scale(0.8) !important;
+    opacity: 0 !important;
   }
   to {
-    -webkit-transform: scale(1)!important;
-    transform: scale(1)!important;
-    opacity: 1!important;
+    -webkit-transform: scale(1) !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
   }
 }
 
 @keyframes scaleUp {
   0% {
-    -webkit-transform: scale(0.8)!important;
-    transform: scale(0.8)!important;
-    opacity: 0!important;
+    -webkit-transform: scale(0.8) !important;
+    transform: scale(0.8) !important;
+    opacity: 0 !important;
   }
   to {
-    -webkit-transform: scale(1)!important;
-    transform: scale(1)!important;
-    opacity: 1!important;
+    -webkit-transform: scale(1) !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
   }
 }
 
 .swagger-ui .Resizer.vertical.disabled {
-  display: none!important;
+  display: none !important;
 }
 
 /*# sourceMappingURL=swagger-ui.css.map*/
@@ -1560,200 +1662,204 @@
  */
 
 .swagger-ui .opblock.opblock-post {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-  background: #30A46C!important;
+  background: #30a46c !important;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-put {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-  background: #222222!important;
+  background: #222222 !important;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-delete {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-delete .opblock-summary-method {
-  background: #222222!important;
+  background: #222222 !important;
 }
 
 .swagger-ui .opblock.opblock-delete .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-get {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-  background: #3385FF!important;
+  background: #3385ff !important;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-patch {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-patch .opblock-summary-method {
-  background: #222222!important;
+  background: #222222 !important;
 }
 
 .swagger-ui .opblock.opblock-patch .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-head {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-head .opblock-summary-method {
-  background: #222222!important;
+  background: #222222 !important;
 }
 
 .swagger-ui .opblock.opblock-head .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .opblock.opblock-options {
-  border-color: #272B30!important;
-  background: rgba(34, 34, 34, 0.1)!important;
+  border-color: #272b30 !important;
+  background: rgba(34, 34, 34, 0.1) !important;
 }
 
 .swagger-ui .opblock.opblock-options .opblock-summary-method {
-  background: #222222!important;
+  background: #222222 !important;
 }
 
 .swagger-ui .opblock.opblock-options .opblock-summary {
-  border-color: #272B30!important;
+  border-color: #272b30 !important;
 }
 
 .swagger-ui .topbar {
-  padding: 8px 30px!important;
-  background-color: #222222!important;
+  padding: 8px 30px !important;
+  background-color: #222222 !important;
 }
 .swagger-ui .topbar .download-url-wrapper input[type="text"] {
-  min-width: 350px!important;
-  margin: 0!important;
-  border: 2px solid #272B30!important;
-  border-radius: 4px 0 0 4px!important;
-  outline: none!important;
+  min-width: 350px !important;
+  margin: 0 !important;
+  border: 2px solid #272b30 !important;
+  border-radius: 4px 0 0 4px !important;
+  outline: none !important;
 }
 
 .swagger-ui .topbar .download-url-wrapper .download-url-button {
-  font-size: 16px!important;
-  font-weight: 700!important;
-  padding: 4px 40px!important;
-  border: none!important;
-  border-radius: 0 4px 4px 0!important;
-  background: #272B30!important;
-  font-family: Titillium Web, sans-serif!important;
-  color: #fff!important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  padding: 4px 40px !important;
+  border: none !important;
+  border-radius: 0 4px 4px 0 !important;
+  background: #272b30 !important;
+  font-family:
+    Titillium Web,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .info a {
-  font-size: 14px!important;
-  -webkit-transition: all 0.4s!important;
-  transition: all 0.4s!important;
-  font-family: Open Sans, sans-serif!important;
-  color: #fff!important;
+  font-size: 14px !important;
+  -webkit-transition: all 0.4s !important;
+  transition: all 0.4s !important;
+  font-family:
+    Open Sans,
+    sans-serif !important;
+  color: #fff !important;
 }
 
 .swagger-ui .info a:hover {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui .btn.authorize {
-  line-height: 1!important;
-  display: inline!important;
+  line-height: 1 !important;
+  display: inline !important;
   /* color: #0E0E10!important;
   border-color: #fff!important;
   background: #fff!important; */
 }
 .swagger-ui .btn.authorize svg {
-  fill: #49cc90!important;
+  fill: #49cc90 !important;
 }
 
 .swagger-ui .parameter__type {
-  color: #5189f8!important;
+  color: #5189f8 !important;
 }
 
 .swagger-ui .parameter__in {
-  color: orange!important;
+  color: orange !important;
 }
 
 .swager-ui .opblock .tab-header .tab-item.active {
-  color: #0E0E10!important;
+  color: #0e0e10 !important;
 }
 
 .swagger-ui .model .property,
 .swagger-ui .model .property.primitive {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui .auth-btn-wrapper .btn-done {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui .opblock-control-arrow {
-  background: none!important;
-  border: none!important;
-  text-align: center!important;
-  padding: 4px!important;
-  border-radius: 1000px!important;
-  overflow: hidden!important;
+  background: none !important;
+  border: none !important;
+  text-align: center !important;
+  padding: 4px !important;
+  border-radius: 1000px !important;
+  overflow: hidden !important;
 }
 
 .swagger-ui .button {
-  margin-right: 5px!important;
+  margin-right: 5px !important;
 }
 
 .swagger-ui .renderedMarkdown {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui textarea {
-  background-color: #333333!important;
+  background-color: #333333 !important;
 }
 
 .swagger-ui .copy-to-clipboard {
-  display: none!important;
+  display: none !important;
 }
 
 .swagger-ui .response-col_links i {
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .swagger-ui input {
-  border: none!important;
+  border: none !important;
 }
 
 .swagger-ui .nostyle span {
-  font-size: 20px!important;
+  font-size: 20px !important;
 }
 
 .swagger-ui .opblock-summary-path .nostyle span {
-  font-size: 14px!important;
+  font-size: 14px !important;
 }

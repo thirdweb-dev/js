@@ -301,10 +301,10 @@ export function formatSnippet(
         !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
           ? '"ethereum"'
           : preSupportedSlugs.includes(chainName as any)
-          ? `"${chainName}"`
-          : env === "javascript"
-          ? getExportName(chainName)
-          : `{ ${getExportName(chainName)} }`,
+            ? `"${chainName}"`
+            : env === "javascript"
+              ? getExportName(chainName)
+              : `{ ${getExportName(chainName)} }`,
       )
       ?.replace(/{{function}}/gm, fn || "")
       ?.replace(
@@ -468,8 +468,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               {isAccountFactory
                 ? "Direct contract interaction (advanced)"
                 : chain
-                ? `Getting Started with ${chain.name}`
-                : "Getting Started"}
+                  ? `Getting Started with ${chain.name}`
+                  : "Getting Started"}
             </Heading>
           </Flex>
           {(noSidebar || isMobile) && (
@@ -788,13 +788,13 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                           tab === "read"
                             ? read?.name
                             : tab === "write"
-                            ? write?.name
-                            : event?.name,
+                              ? write?.name
+                              : event?.name,
                         args: (tab === "read"
                           ? readFunctions
                           : tab === "write"
-                          ? writeFunctions
-                          : events
+                            ? writeFunctions
+                            : events
                         )
                           ?.find(
                             (f) =>
@@ -802,8 +802,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                               (tab === "read"
                                 ? read?.name
                                 : tab === "write"
-                                ? write?.name
-                                : event?.name),
+                                  ? write?.name
+                                  : event?.name),
                           )
                           ?.inputs?.map((i) => i.name),
                         chainName,

@@ -9,7 +9,7 @@ export function useImageFileOrUrl(image?: string | File): string {
     return typeof image === "string"
       ? image
       : isBrowser()
-      ? URL.createObjectURL(image)
-      : "";
+        ? URL.createObjectURL(image)
+        : "";
   }, [image]);
 }

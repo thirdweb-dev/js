@@ -496,8 +496,8 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
           return maxClaimable === "0" || !maxClaimable
             ? "Default"
             : maxClaimable === "unlimited"
-            ? "Unlimited"
-            : maxClaimable;
+              ? "Unlimited"
+              : maxClaimable;
         },
       },
     ] as Column<SnapshotAddressInput>[];
@@ -510,8 +510,8 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
             return price === "0"
               ? "Free"
               : !price || price === "unlimited"
-              ? "Default"
-              : price;
+                ? "Default"
+                : price;
           },
         },
         {
