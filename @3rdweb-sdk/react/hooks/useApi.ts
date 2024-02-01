@@ -975,7 +975,8 @@ export async function fetchApiKeyAvailability(name: string) {
 export async function fetchChainsFromApi() {
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains`, {
     method: "GET",
-    credentials: "include",
+    // do not inclue credentials for chains endpoint
+    // credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
