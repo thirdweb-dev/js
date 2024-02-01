@@ -1,5 +1,24 @@
 # @thirdweb-dev/react-native
 
+## 0.7.0
+
+### Minor Changes
+
+- [#2225](https://github.com/thirdweb-dev/js/pull/2225) [`2e3cc7cd`](https://github.com/thirdweb-dev/js/commit/2e3cc7cdd4017df8a5b00ebdd6e37334432e0b82) Thanks [@iketw](https://github.com/iketw)! - Adds support for RN 0.73
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds global sdk vars
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/storage@2.0.9
+  - @thirdweb-dev/wallets@2.4.6
+  - @thirdweb-dev/sdk@4.0.31
+  - @thirdweb-dev/chains@0.1.68
+  - @thirdweb-dev/react-core@4.4.3
+
 ## 0.6.5
 
 ### Patch Changes
