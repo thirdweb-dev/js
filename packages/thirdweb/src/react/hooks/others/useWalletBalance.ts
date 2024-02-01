@@ -16,6 +16,7 @@ export function useWalletBalance(options: Partial<GetTokenBalanceOptions>) {
   const query = queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
+      "walletBalance",
       `${getChainIdFromChain(chain ?? -1)}`,
       wallet?.address || "0x0",
       { tokenAddress },

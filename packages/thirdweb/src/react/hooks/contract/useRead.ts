@@ -90,6 +90,7 @@ export function useContractRead<
 
     const query = defineQuery({
       queryKey: [
+        "readContract",
         chainId,
         contract.address,
         "read",
@@ -112,6 +113,7 @@ export function useContractRead<
     const query = defineQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
+        "readContract",
         chainId,
         tx.contract.address,
         "read",

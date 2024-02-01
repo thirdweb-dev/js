@@ -64,12 +64,20 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                       console.error("[Transaction Error]", e);
                     })
                     .then(() => {
+                      const chainId = getChainIdFromChain(
+                        getChainIdFromChain(variables.contract.chain),
+                      ).toString();
                       return queryClient.invalidateQueries({
                         queryKey: [
-                          getChainIdFromChain(
-                            variables.contract.chain,
-                          ).toString(),
-                          variables.contract.address,
+                          // invalidate any readContract queries for this chainId:contractAddress
+                          [
+                            "readContract",
+                            chainId,
+                            variables.contract.address,
+                          ] as const,
+                          // invalidate any walletBalance queries for this chainId
+                          // TODO: add wallet address in here if we can get it somehow
+                          ["walletBalance", chainId] as const,
                         ],
                       });
                     });
