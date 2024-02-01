@@ -1,41 +1,42 @@
 import {
   injectedProvider,
-  zerionWallet,
-  zerionWalletMetadata,
+  rainbowWallet,
+  rainbowWalletMetadata,
 } from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 
 /**
- * Integrate Zerion wallet connection into your app.
+ * Integrate Rainbow wallet connection into your app.
  * @example
  * ```tsx
  * <ThirdwebProvider
  *  client={client}>
- *  wallets={[  zerionConfig() ]}
+ *  wallets={[  metamaskConfig() ]}
  *  <App />
  * </ThirdwebProvider>
  * ```
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
-export const zerionConfig = (): WalletConfig => {
+export const rainbowConfig = (): WalletConfig => {
   return {
-    connect: zerionWallet,
-    metadata: zerionWalletMetadata,
+    connect: rainbowWallet,
+    metadata: rainbowWalletMetadata,
     connectUI(props) {
       return (
         <InjectedConnectUI
           {...props}
           links={{
-            extension: "https://zerion.io/extension",
-            android: "https://link.zerion.io/901o6IN0jqb",
-            ios: "https://link.zerion.io/a11o6IN0jqb",
+            extension:
+              "https://chrome.google.com/webstore/detail/rainbow/opfgelmcmbiajamepnmloijbpoleiama",
+            android: "https://rnbwapp.com/e/Va41HWS6Oxb",
+            ios: "https://rnbwapp.com/e/OeMdmkJ6Oxb",
           }}
         />
       );
     },
     isInstalled() {
-      return !!injectedProvider("io.zerion.wallet");
+      return !!injectedProvider("me.rainbow");
     },
   };
 };

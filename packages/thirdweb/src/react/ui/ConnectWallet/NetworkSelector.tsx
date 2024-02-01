@@ -199,7 +199,7 @@ const fuseConfig = {
 
 /**
  * Renders a Network Switcher Modal that allows users to switch their wallet to a different network.
- *
+ * @param props - NetworkSelectorProps
  * @example
  * ```tsx
  * import { NetworkSelector } from "@thirdweb-dev/react";
@@ -214,8 +214,7 @@ const fuseConfig = {
  *  )
  * }
  * ```
- *
- * @internal
+ * @returns A React component that renders a modal
  */
 export function NetworkSelector(props: NetworkSelectorProps) {
   const themeFromContext = useCustomTheme();

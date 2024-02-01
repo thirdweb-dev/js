@@ -558,7 +558,6 @@ export const ConnectedWalletDetails: React.FC<{
         }
         open={true}
         theme={props.theme}
-        // chains={chains}
         {...props.networkSelector}
         onClose={() => {
           setIsOpen(false);
