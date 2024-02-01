@@ -358,7 +358,7 @@ export class TransactionError extends Error {
     }
 
     errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
-    errorMessage += `Need helping debugging? Join our Discord: https://discord.gg/thirdweb`;
+    errorMessage += `Need helping debugging? Visit our support site: https://thirdweb.com/support`;
     errorMessage += `\n\n`;
 
     super(errorMessage);
