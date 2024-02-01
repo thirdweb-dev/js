@@ -22,7 +22,6 @@ import {
   FormLabel,
   CodeBlock,
   TrackedLink,
-  ChakraNextLink,
 } from "tw-components";
 import { ChakraNextImage } from "components/Image";
 import { format } from "prettier/standalone";
@@ -53,6 +52,8 @@ import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
+
+const TRACKING_CATEGORY = "connect-wallet-playground";
 
 type OptionalUrl = { url: string; enabled: boolean };
 export const ConnectWalletPlayground: React.FC<{
@@ -1233,40 +1234,53 @@ export const ConnectWalletPlayground: React.FC<{
             <CodeBlock
               language="jsx"
               code={code}
-              maxH="400px"
+              maxH="300px"
               overflowY="auto"
               onClick={() => {
                 trackCustomize("code");
               }}
             />
-            <Spacer height={2} />
-            <Box
+
+            <Flex
               as="article"
-              bg="bgWhite"
-              border="1px solid"
-              borderColor="borderColor"
-              borderRadius="lg"
-              overflow="hidden"
-              py="8"
-              px="8"
+              justifyContent="space-between"
+              alignItems="center"
+              flexDir={{ base: "column", md: "row" }}
+              py="2"
+              px="4"
             >
-              <Heading fontSize={20}>Try it out on mobile</Heading>
-              <Heading as="label" size="label.sm">
-                (iOS demo app coming soon)
-              </Heading>
-              <Spacer height={2} />
-              <ChakraNextLink
+              <Heading size={"title.sm"}>Try it out on mobile</Heading>
+              <TrackedLink
+                isExternal
+                noIcon
                 href={
                   "https://play.google.com/store/search?q=thirdweb&c=apps&hl=en_US&gl=US"
                 }
-                isExternal
+                bg="transparent"
+                category={TRACKING_CATEGORY}
+                label="google-play-button"
               >
                 <ChakraNextImage
                   alt=""
                   src={require("public/assets/connect-wallet/google-play-button.svg")}
                 />
-              </ChakraNextLink>
-            </Box>
+              </TrackedLink>
+              <TrackedLink
+                isExternal
+                noIcon
+                href={
+                  "https://apps.apple.com/us/app/thirdweb-connect/id6471451064"
+                }
+                bg="transparent"
+                category={TRACKING_CATEGORY}
+                label="apple-store-button"
+              >
+                <ChakraNextImage
+                  alt=""
+                  src={require("public/assets/connect-wallet/apple-store-button.svg")}
+                />
+              </TrackedLink>
+            </Flex>
           </Box>
         </GridItem>
       </Grid>
