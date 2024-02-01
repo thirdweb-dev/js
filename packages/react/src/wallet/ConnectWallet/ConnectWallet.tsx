@@ -12,7 +12,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -337,6 +337,21 @@ export type ConnectWalletProps = {
    *
    */
   onConnect?: () => void;
+
+  /**
+   * Render custom UI at the bottom of the ConnectWallet Details Modal
+   * @param props - props passed to the footer component which includes a function to close the modal
+   * @example
+   * ```tsx
+   * <ConnectWallet
+   *  detailsModalFooter={(props) => {
+   *    const { close } = props;
+   *    return <div> ... </div>
+   *  })
+   * />
+   * ```
+   */
+  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -559,6 +574,20 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```tsx
  * <ConnectWallet hideDisconnect={true} />
  * ```
+ *
+ * ### detailsModalFooter
+ * Render custom UI at the bottom of the ConnectWallet Details Modal.
+ *
+ * The given function is passed an object with a `close` function which can be used to close the modal.
+ *
+ * ```tsx
+ * <ConnectWallet
+ *  detailsModalFooter={(props) => {
+ *    const { close } = props;
+ *    return <div> ... </div>
+ *  })
+ * />
+ * ```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -754,6 +783,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
+            detailsModalFooter={props.detailsModalFooter}
           />
         );
       })()}
