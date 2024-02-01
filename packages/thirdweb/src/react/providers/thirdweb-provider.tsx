@@ -106,11 +106,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
               client: props.client,
             }}
           >
-            {props.autoConnect === undefined ? (
-              <AutoConnect />
-            ) : (
-              <NoAutoConnect />
-            )}
+            {props.autoConnect === false ? <NoAutoConnect /> : <AutoConnect />}
             {/* TODO: only load this when its needed, it pulls a ton of dependencies */}
             <ConnectModal />
             {props.children}
