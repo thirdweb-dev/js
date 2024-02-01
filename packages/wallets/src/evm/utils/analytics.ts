@@ -1,4 +1,5 @@
 import { isWalletAnalyticsEnabled } from "./setWalletAnaltyicsEnabled";
+import { getAnalyticsHeaders } from "./headers";
 
 const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
@@ -25,6 +26,7 @@ export function track(args: {
     headers: {
       "Content-Type": "application/json",
       "x-client-id": clientId,
+      ...getAnalyticsHeaders(),
     },
     body: JSON.stringify(body),
   });

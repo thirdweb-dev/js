@@ -6,17 +6,23 @@ export default {
     {
       "name": "AlveyScan",
       "url": "https://alveyscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
+        "width": 2048,
+        "height": 1538,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmSwczpPLBG6ob1a8WLoujthiCPzwEyJNp7WdKRi52qbWX",
-    "width": 310,
-    "height": 310,
+    "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
+    "width": 2048,
+    "height": 1538,
     "format": "png"
   },
-  "infoURL": "https://alveyscan.com/rpc",
+  "infoURL": "https://alveychain.com/",
   "name": "AlveyChain Mainnet",
   "nativeCurrency": {
     "name": "AlveyCoin",
@@ -27,8 +33,9 @@ export default {
   "rpc": [
     "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3797.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.alveychain.com/rpc",
-    "https://rpc2.alvey.io/rpc"
+    "https://elves-core1.alvey.io",
+    "https://elves-core2.alvey.io",
+    "https://elves-core3.alvey.io"
   ],
   "shortName": "alv",
   "slug": "alveychain",

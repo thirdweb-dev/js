@@ -49,15 +49,12 @@ export function ChooseWallet({
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) =>
-      w.id === walletIds.magicLink ||
-      (w.id === walletIds.embeddedWallet && w.selectUI),
+    (w) => w.id === walletIds.embeddedWallet && w.selectUI,
   );
 
   const walletsToDisplay = useMemo(() => {
     const filteredWallets = wallets.filter(
       (wallet) =>
-        wallet.id !== walletIds.magicLink &&
         wallet.id !== walletIds.embeddedWallet &&
         wallet.id !== walletIds.localWallet,
     );

@@ -1,12 +1,12 @@
 import { isTwGatewayUrl } from "../../common/urls";
-import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { replaceSchemeWithGatewayUrl } from "../../common/utils";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
   SingleDownloadOptions,
 } from "../../types";
-import pkg from "../../../package.json";
+import { getAnalyticsGlobals, setAnalyticsHeaders } from "../../utils/headers";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -86,10 +86,7 @@ export class StorageDownloader implements IStorageDownloader {
 
     let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
-      const bundleId =
-        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-          ? ((globalThis as any).APP_BUNDLE_ID as string)
-          : undefined;
+      const bundleId = getAnalyticsGlobals().app_bundle_id;
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
@@ -126,15 +123,7 @@ export class StorageDownloader implements IStorageDownloader {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
-      headers["x-sdk-platform"] = bundleId
-        ? "react-native"
-        : isBrowser()
-        ? (window as any).bridge !== undefined
-          ? "webGL"
-          : "browser"
-        : "node";
+      setAnalyticsHeaders(headers);
     }
 
     if (isTooManyRequests(resolvedUri)) {

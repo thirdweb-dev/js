@@ -592,9 +592,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       } catch (e) {
         // fallback to
         // try resolving the contract type (legacy contracts)
-        const resolvedContractType = await this.resolveContractType(
-          resolvedAddress,
-        );
+        const resolvedContractType =
+          await this.resolveContractType(resolvedAddress);
         if (resolvedContractType && resolvedContractType !== "custom") {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
@@ -721,9 +720,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     walletAddress: AddressOrEns,
     chains: Chain[] = defaultChains,
   ): Promise<ContractWithMetadata[]> {
-    const contracts = await this.multiChainRegistry.getContractAddresses(
-      walletAddress,
-    );
+    const contracts =
+      await this.multiChainRegistry.getContractAddresses(walletAddress);
 
     const chainMap = chains.reduce(
       (acc, chain) => {
@@ -1019,9 +1017,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: NFTContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const parsedMetadata = await LoyaltyCardContractDeploy.parseAsync(
-        metadata,
-      );
+      const parsedMetadata =
+        await LoyaltyCardContractDeploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
       const trustedForwarders: string[] = [];
@@ -1078,9 +1075,8 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: OpenEditionContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const parsedMetadata = await DropErc721ContractSchema.deploy.parseAsync(
-        metadata,
-      );
+      const parsedMetadata =
+        await DropErc721ContractSchema.deploy.parseAsync(metadata);
       const contractURI = await this.storage.upload(parsedMetadata);
 
       const trustedForwarders: string[] = [];
@@ -1938,9 +1934,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         ?.factoryDeploymentData?.customFactoryInput?.customFactoryAddresses[
         chainId
       ] as AddressOrEns;
-      const resolvedCustomFactoryAddress = await resolveAddress(
-        customFactoryAddress,
-      );
+      const resolvedCustomFactoryAddress =
+        await resolveAddress(customFactoryAddress);
 
       invariant(
         resolvedCustomFactoryAddress,

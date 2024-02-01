@@ -1,5 +1,48 @@
 # @thirdweb-dev/react-native
 
+## 0.7.0
+
+### Minor Changes
+
+- [#2225](https://github.com/thirdweb-dev/js/pull/2225) [`2e3cc7cd`](https://github.com/thirdweb-dev/js/commit/2e3cc7cdd4017df8a5b00ebdd6e37334432e0b82) Thanks [@iketw](https://github.com/iketw)! - Adds support for RN 0.73
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds global sdk vars
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/storage@2.0.9
+  - @thirdweb-dev/wallets@2.4.6
+  - @thirdweb-dev/sdk@4.0.31
+  - @thirdweb-dev/chains@0.1.68
+  - @thirdweb-dev/react-core@4.4.3
+
+## 0.6.5
+
+### Patch Changes
+
+- Updated dependencies [[`39e79282`](https://github.com/thirdweb-dev/js/commit/39e79282acb70959ba8140c779fa521c41c80a5f), [`69c3eb91`](https://github.com/thirdweb-dev/js/commit/69c3eb910feb2265833a07b7472e32fac5a79d90)]:
+  - @thirdweb-dev/chains@0.1.67
+  - @thirdweb-dev/react-core@4.4.2
+  - @thirdweb-dev/sdk@4.0.30
+  - @thirdweb-dev/wallets@2.4.5
+
+## 0.6.4
+
+### Patch Changes
+
+- [#2199](https://github.com/thirdweb-dev/js/pull/2199) [`57320957`](https://github.com/thirdweb-dev/js/commit/57320957aae56d063eca526a05df8bea8b38ba2a) Thanks [@iketw](https://github.com/iketw)! - Adds ability to delete the active ews account
+
+- [#2217](https://github.com/thirdweb-dev/js/pull/2217) [`7f35caff`](https://github.com/thirdweb-dev/js/commit/7f35caff5d9d331e66125bab3797d7ca84f6cef1) Thanks [@MananTank](https://github.com/MananTank)! - Update defaultTokens used in ConnectWallet component's Send Funds screen
+
+- Updated dependencies [[`a5653f07`](https://github.com/thirdweb-dev/js/commit/a5653f07f82e3f94e193d2b90c9d0c163223583c), [`b34737d2`](https://github.com/thirdweb-dev/js/commit/b34737d27a71706cd1117485a6e522e50f5ae4d5), [`bf90fa50`](https://github.com/thirdweb-dev/js/commit/bf90fa5005358e040475627ae23a474f7b263803), [`627d2099`](https://github.com/thirdweb-dev/js/commit/627d20992770670ab0c954ceea0b8679ce4f3088), [`3d63a2cb`](https://github.com/thirdweb-dev/js/commit/3d63a2cb696310507798889e3e148339de4e3dfe), [`6fdade6c`](https://github.com/thirdweb-dev/js/commit/6fdade6c45f5d93fb3571d33720ab8103a7d002c), [`4d89dc1e`](https://github.com/thirdweb-dev/js/commit/4d89dc1efa2412b1e121cd14b1e2e72c667fceb0)]:
+  - @thirdweb-dev/wallets@2.4.4
+  - @thirdweb-dev/sdk@4.0.29
+  - @thirdweb-dev/chains@0.1.66
+  - @thirdweb-dev/react-core@4.4.1
+
 ## 0.6.3
 
 ### Patch Changes
