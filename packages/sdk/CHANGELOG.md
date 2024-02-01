@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 4.0.32
+
+### Patch Changes
+
+- [#2248](https://github.com/thirdweb-dev/js/pull/2248) [`4f52c296`](https://github.com/thirdweb-dev/js/commit/4f52c2961131636eed323a66568a519246d9f91d) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update link for support
+
+- Updated dependencies [[`374671fd`](https://github.com/thirdweb-dev/js/commit/374671fd9ac97a93263b09c6c0a53cfd129881d7)]:
+  - @thirdweb-dev/chains@0.1.69
+
 ## 4.0.31
 
 ### Patch Changes
