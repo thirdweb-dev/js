@@ -6,17 +6,16 @@ const jsdocRuleOverrides = {
         // class
         ClassDeclaration: true,
         ClassExpression: true,
-        // methods
         MethodDefinition: true,
+        // methods
       },
       contexts: [
-        // ignore ArrowFunctionExpression inside functions and passed as call expressions
-        "ArrowFunctionExpression:not(FunctionDeclaration ArrowFunctionExpression, FunctionExpression ArrowFunctionExpression, ArrowFunctionExpression ArrowFunctionExpression):not(CallExpression ArrowFunctionExpression)",
-        // ignore FunctionDeclaration inside functions
-        "FunctionDeclaration:not(FunctionDeclaration FunctionDeclaration, FunctionExpression FunctionDeclaration, ArrowFunctionExpression FunctionDeclaration):not(CallExpression FunctionDeclaration)",
-        // ignore FunctionExpression inside functions
-        "FunctionExpression:not(FunctionDeclaration FunctionExpression, FunctionExpression FunctionExpression, ArrowFunctionExpression FunctionExpression):not(CallExpression FunctionExpression)",
+        // const foo = () => {}
+        "Program > VariableDeclaration > VariableDeclarator > ArrowFunctionExpression",
+        // export const foo = () => {}
+        "Program > ExportNamedDeclaration > VariableDeclaration > VariableDeclarator > ArrowFunctionExpression",
       ],
+      publicOnly: true,
     },
   ],
   "jsdoc/check-indentation": "error",

@@ -1435,6 +1435,12 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.18.0
         version: 5.18.0(react@18.2.0)
+      '@walletconnect/ethereum-provider':
+        specifier: ^2.9.1
+        version: 2.9.1(@walletconnect/modal@2.6.1)
+      '@walletconnect/modal':
+        specifier: ^2.6.1
+        version: 2.6.1(react@18.2.0)
       abitype:
         specifier: ^1.0.0
         version: 1.0.0(typescript@5.3.3)
@@ -17487,7 +17493,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}

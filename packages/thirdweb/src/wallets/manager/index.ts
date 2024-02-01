@@ -2,6 +2,7 @@ import { createStore } from "../../reactive/store.js";
 import type { Wallet } from "../index.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
+import { walletStorage, type WalletStorage } from "./storage.js";
 
 export type ConnectedWalletsMap = Map<string, Wallet>;
 export type ConnectionStatus =
@@ -14,11 +15,7 @@ const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
 
 export type ConnectionManagerOptions = {
-  storage: {
-    get: (key: string) => Promise<string | null>;
-    set: (key: string, value: string) => Promise<void>;
-    remove: (key: string) => Promise<void>;
-  };
+  storage?: WalletStorage;
 };
 
 /**
@@ -30,8 +27,8 @@ export type ConnectionManagerOptions = {
  * ```
  * @returns A connection manager object
  */
-export function createConnectionManager(options: ConnectionManagerOptions) {
-  const { storage } = options;
+export function createConnectionManager(options?: ConnectionManagerOptions) {
+  const storage = options?.storage || walletStorage;
   // stores
   const activeWalletId = createStore<string | undefined>(undefined);
   const activeWalletAddress = createStore<string | undefined>(undefined);
