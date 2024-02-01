@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "1220",
   "chainId": 1220,
-  "explorers": [
-    {
-      "name": "flagscan",
-      "url": "https://testnet-scan.flagscan.io/",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "faucets": [],
   "features": [],
   "icon": {
@@ -26,7 +20,11 @@ export default {
   },
   "networkId": 1220,
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://flag-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.flagscan.io"
+  ],
   "shortName": "Flag",
   "slug": "flag-testnet",
   "testnet": true
