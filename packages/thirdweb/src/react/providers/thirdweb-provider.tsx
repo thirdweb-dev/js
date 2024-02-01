@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";

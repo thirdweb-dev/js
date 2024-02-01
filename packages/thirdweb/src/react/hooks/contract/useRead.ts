@@ -1,3 +1,4 @@
+/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import {
   useQuery,
   queryOptions as defineQuery,
@@ -93,7 +94,6 @@ export function useContractRead<
         "readContract",
         chainId,
         contract.address,
-        "read",
         getFunctionId(extensionOrOptions),
         stringify(params),
       ] as const,
@@ -116,7 +116,6 @@ export function useContractRead<
         "readContract",
         chainId,
         tx.contract.address,
-        "read",
         tx.method,
         stringify(tx.params),
       ] as const,
@@ -130,4 +129,48 @@ export function useContractRead<
   throw new Error(
     `Invalid "useContractRead" options. Expected either a read extension or a transaction object.`,
   ) as never;
+}
+
+const READ_HOOK_CACHE = new WeakMap();
+
+/**
+ * Creates a hook for reading data from a smart contract.
+ * @param extension - A function that performs the contract function call and returns the result.
+ * @returns An object containing the created `useRead` hook.
+ * @example
+ * ```jsx
+ * import { createReadHook } from "thirdweb/react";
+ * import { totalSupply } from "thirdweb/extensions/erc20";
+ * const { data, isLoading } = createReadHook(totalSupply).useRead({ contract });
+ * ```
+ */
+export function createReadHook<opts extends object, result, abi extends Abi>(
+  extension: (options: TxOpts<opts, abi>) => Promise<result>,
+) {
+  if (READ_HOOK_CACHE.has(extension)) {
+    return READ_HOOK_CACHE.get(extension) as {
+      useRead: (options: TxOpts<opts, abi>) => UseQueryResult<result, Error>;
+    };
+  }
+  const hooks = {
+    useRead: (options: TxOpts<opts, abi>) => {
+      const { contract, ...params } = options;
+      const chainId = getChainIdFromChain(contract.chain).toString();
+
+      const query = defineQuery({
+        queryKey: [
+          "readContract",
+          chainId,
+          contract.address,
+          getFunctionId(extension),
+          stringify(params),
+        ] as const,
+        queryFn: () => extension(options),
+        enabled: !!options.contract.chain,
+      });
+      return useQuery(query);
+    },
+  };
+  READ_HOOK_CACHE.set(extension, hooks);
+  return hooks;
 }
