@@ -96,16 +96,16 @@ export type NetworkSelectorProps = {
    */
   open: boolean;
 
-  chains: bigint[];
+  chains?: number[];
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
-  popularChains?: bigint[];
+  popularChains?: number[];
   /**
    * Array of chains to be displayed under "Recent" section
    */
-  recentChains?: bigint[];
+  recentChains?: number[];
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -250,11 +250,13 @@ export function NetworkSelectorContent(
     onBack?: () => void;
   },
 ) {
-  const allChainIds = new Set([
-    ...props.chains,
-    ...(props.popularChains || []),
-    ...(props.recentChains || []),
-  ]);
+  const allChainIds = new Set(
+    [
+      ...(props.chains || []),
+      ...(props.popularChains || []),
+      ...(props.recentChains || []),
+    ].map((c) => BigInt(c)),
+  );
 
   // TODO: @manan - instead of doing this here and then passing the chains down we can consider the following approach:
   // 1. use the useChainsQuery hook wherever we need the search index
@@ -276,7 +278,7 @@ export function NetworkSelectorContent(
     return [chains, atLeastOneChainIsLoading];
   }, [chainsQueries]);
 
-  const chainsSet = useMemo(() => {
+  const chainMap = useMemo(() => {
     const map = new Map<bigint, ApiChain>();
     if (!allChains) {
       return map;
@@ -308,12 +310,12 @@ export function NetworkSelectorContent(
       {...props}
       chains={allChains}
       recentChains={
-        props.recentChains?.map((chainId) => chainsSet.get(chainId)) as
+        props.recentChains?.map((chainId) => chainMap.get(BigInt(chainId))) as
           | ApiChain[]
           | undefined
       }
       popularChains={
-        props.popularChains?.map((chainId) => chainsSet.get(chainId)) as
+        props.popularChains?.map((chainId) => chainMap.get(BigInt(chainId))) as
           | ApiChain[]
           | undefined
       }

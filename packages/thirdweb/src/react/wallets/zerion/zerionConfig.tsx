@@ -1,7 +1,7 @@
 import {
   injectedProvider,
-  metamaskMetadata,
-  metamaskWallet,
+  zerionWallet,
+  zerionWalletMetadata,
 } from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
@@ -18,26 +18,24 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
  * ```
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
-export const metamaskConfig = (): WalletConfig => {
+export const zerionConfig = (): WalletConfig => {
   return {
-    connect: metamaskWallet,
-    metadata: metamaskMetadata,
+    connect: zerionWallet,
+    metadata: zerionWalletMetadata,
     connectUI(props) {
       return (
         <InjectedConnectUI
           {...props}
           links={{
-            extension:
-              "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
-            android:
-              "https://play.google.com/store/apps/details?id=io.metamask",
-            ios: "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202",
+            extension: "https://zerion.io/extension",
+            android: "https://link.zerion.io/901o6IN0jqb",
+            ios: "https://link.zerion.io/a11o6IN0jqb",
           }}
         />
       );
     },
     isInstalled() {
-      return !!injectedProvider("io.metamask");
+      return !!injectedProvider("io.zerion.wallet");
     },
   };
 };

@@ -139,10 +139,7 @@ export type ConnectWalletProps = {
   /**
    * customize the Network selector shown
    */
-  networkSelector?: Omit<
-    NetworkSelectorProps,
-    "theme" | "onClose" | "chains" | "open"
-  >;
+  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "open">;
 
   /**
    * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
@@ -322,8 +319,6 @@ export type ConnectWalletProps = {
    *
    */
   onConnect?: () => void;
-
-  chains?: bigint[];
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -558,7 +553,6 @@ export function ConnectWallet(props: ConnectWalletProps) {
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
 
-  console.log("connectionStatus", connectionStatus);
   const btnTitle = props.btnTitle || locale.connectWallet.defaultButtonTitle;
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
@@ -748,7 +742,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
-            chainIds={props.chains || []}
+            chainIds={props.networkSelector?.chains || []}
           />
         );
       })()}

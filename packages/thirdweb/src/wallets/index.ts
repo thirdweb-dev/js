@@ -18,6 +18,7 @@ export {
   rainbowWalletMetadata,
   rainbowWallet,
   zerionWallet,
+  zerionWalletMetadata,
   type SpecificInjectedWalletOptions,
 } from "./injectedWallets.js";
 

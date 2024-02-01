@@ -11,9 +11,9 @@ import { wait } from "../../utils/wait.js";
 export const InjectedConnectUI = (
   props: ConnectUIProps & {
     links: {
-      chromeExtension?: string;
-      googlePlayStore?: string;
-      appleStore?: string;
+      extension?: string;
+      android?: string;
+      ios?: string;
     };
   },
 ) => {
@@ -99,9 +99,9 @@ export const InjectedConnectUI = (
         }}
         walletIconURL={walletConfig.metadata.iconUrl}
         walletName={walletConfig.metadata.name}
-        chromeExtensionLink={props.links.chromeExtension}
-        googlePlayStoreLink={props.links.googlePlayStore}
-        appleStoreLink={props.links.appleStore}
+        chromeExtensionLink={props.links.extension}
+        googlePlayStoreLink={props.links.android}
+        appleStoreLink={props.links.ios}
         onBack={() => {
           setScreen("connecting");
         }}
