@@ -1,6 +1,6 @@
 import { css } from '@emotion/css'
 
-const getStyles = (darkTheme:boolean) => ({
+const getStyles = () => ({
   searchContainer: css`
     position: relative;
     display: inline-block;
@@ -11,12 +11,11 @@ const getStyles = (darkTheme:boolean) => ({
     margin-right: auto;
     justify-self: center;
     width: 500px;
-    border: 3px solid ${darkTheme ? '#666' : '#ccc'};
+    border: 3px solid: #ccc;
     border-radius: 13px;
     box-sizing: border-box;
     height: 63.5px;
     position: relative;
-    background-color: ${darkTheme ? '#333' : '#fff'};
 
     &:focus {
       outline: none;
@@ -44,15 +43,14 @@ const getStyles = (darkTheme:boolean) => ({
     justify-self: center;
     border: none;
     cursor: pointer;
-    color: ${darkTheme ? '#fff' : '#000'};
   `,
   clearButton: css`
     background: none;
     border: none;
     cursor: pointer;
-    color: ${darkTheme ? '#aaa' : '#ccc'};
+    color: #ccc;
     font-size: 1.5em;
-    background-color: ${darkTheme ? 'rgba(50, 50, 50, 0.407)' : 'rgba(231, 232, 232, 0.407)'};
+    background-color: rgba(231, 232, 232, 0.407);
     width: 60px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -69,8 +67,6 @@ const getStyles = (darkTheme:boolean) => ({
     margin-right: auto;
     cursor: pointer;
     flex: 1;
-    background-color: ${darkTheme ? '#222' : '#fff'};
-    color: ${darkTheme ? '#fff' : '#000'};
 
     @media (max-width: 720px) {
       width: 350px;
@@ -84,8 +80,8 @@ const getStyles = (darkTheme:boolean) => ({
     margin-top: 8px;
 
     &:hover {
-      background-color: ${darkTheme ? '#3a3a3a' : '#e7e8e8'};
-      color: ${darkTheme ? '#fff' : '#070707'};
+      background-color: #e7e8e8;
+      color: #070707;
       border-radius: 5px;
       padding: 5px;
     }
@@ -102,20 +98,6 @@ const getStyles = (darkTheme:boolean) => ({
   `,
   suggestionText: css`
     flex: 1;
-  `,
-  searchBarMatic: css`
-    height: 100%;
-    width: 100%;
-    flex: 1;
-    font-size: 20px;
-    border-radius: 12px;
-    background-color: transparent;
-    padding: 12px 20px 12px 10px;
-    align-items: center;
-    justify-self: center;
-    border: none;
-    cursor: pointer;
-    color: ${darkTheme ? '#fff' : '#000'};
   `,
 });
 

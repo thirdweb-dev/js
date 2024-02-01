@@ -82,7 +82,7 @@ export const NFTSearcher = ({
   const darkTheme = useMemo(() => theme === 'dark', [theme]);
   const [lastUsedContractAddress, setLastUsedContractAddress] = useState<string>('');
   onNFTsFetched = onNFTsFetched || (() => {});
-  const styles = getStyles(darkTheme);
+  const styles = getStyles();
 
   const darkMode = useMemo(() => ({
     searchBarContainer: {
