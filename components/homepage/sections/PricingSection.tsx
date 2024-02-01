@@ -7,11 +7,13 @@ import { CONTACT_US_URL } from "utils/pricing";
 interface PricingSectionProps {
   trackingCategory: string;
   onHomepage?: boolean;
+  canTrialGrowth?: boolean;
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({
   trackingCategory,
   onHomepage,
+  canTrialGrowth,
 }) => {
   return (
     <Container maxW="6xl">
@@ -56,10 +58,19 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 
           <PricingCard
             highlighted
-            ctaTitle="Get started"
+            ctaTitle={
+              canTrialGrowth ? "Claim your 1-month free" : "Get started"
+            }
             name={AccountPlan.Growth}
+            ctaHint={
+              canTrialGrowth
+                ? `Your free trial will end in 30 days.`
+                : undefined
+            }
+            striked={canTrialGrowth}
             ctaProps={{
               category: trackingCategory,
+              label: canTrialGrowth ? "claimGrowthTrial" : undefined,
               href: "/dashboard/settings/billing",
               bgColor: "white",
               color: "black",

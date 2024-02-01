@@ -111,7 +111,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           isLoading: loading,
           isDisabled: loading || invalidPayment || paymentVerification,
           category: "account",
-          label: "growthPlan",
+          label: canTrialGrowth ? "claimGrowthTrial" : "growthPlan",
           href: "/pricing",
           variant: "solid",
           colorScheme: "blue",

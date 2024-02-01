@@ -113,7 +113,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           <TrackedLinkButton
             variant="outline"
             py={6}
-            label={name}
+            label={ctaProps.label ?? name}
             size={size === "lg" ? "md" : "sm"}
             {...ctaProps}
           >
