@@ -13,7 +13,7 @@ env:
 jobs:
   deploy-check:
     # this just checks if ur allowed to do the action so does not need to run on a fast machine
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     steps:
       - name: acknowledge deployment request to commenter
         id: check
@@ -44,7 +44,7 @@ jobs:
       comment_body: ${{ github.event.comment.body }}
 
   deploy:
-    runs-on: ubuntu-latest-16
+    runs-on: macos-14
     timeout-minutes: 30
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
