@@ -101,6 +101,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
             ) : (
               <NoAutoConnect />
             )}
+            {/* TODO: only load this when its needed, it pulls a ton of dependencies */}
             <ConnectModal />
             {props.children}
           </ThirdwebProviderContext.Provider>
