@@ -5,14 +5,14 @@ type Icon = {
   format: string;
 };
 
-export type ChainExplorer = {
+type ChainExplorer = {
   name: string;
   url: string;
   icon?: Icon;
   standard: string;
 };
 
-export type ChainMeta = {
+export type ApiChain = {
   name: string;
   title?: string;
   chain: string;

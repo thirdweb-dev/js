@@ -29,7 +29,6 @@ import {
   radius,
   media,
 } from "../design-system/index.js";
-import type { ChainMeta } from "../../types/chain.js";
 import type { Theme } from "../design-system/index.js";
 import Fuse from "fuse.js";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -40,12 +39,14 @@ import {
 import { Text } from "../components/text.js";
 import { useChainsQuery } from "../../hooks/others/useChainQuery.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
+import type { ApiChain } from "../../../chain/types.js";
+import type React from "react";
 
 export type NetworkSelectorChainProps = {
   /**
    * `Chain` object for the chain to be displayed
    */
-  chain: ChainMeta;
+  chain: ApiChain;
   /**
    * function to be called for switching to the given chain
    */
@@ -154,16 +155,16 @@ type NetworkSelectorInnerProps = {
    */
   open: boolean;
 
-  chains: ChainMeta[];
+  chains: ApiChain[];
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
-  popularChains?: ChainMeta[];
+  popularChains?: ApiChain[];
   /**
    * Array of chains to be displayed under "Recent" section
    */
-  recentChains?: ChainMeta[];
+  recentChains?: ApiChain[];
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -173,7 +174,7 @@ type NetworkSelectorInnerProps = {
    * Callback to be called when a chain is successfully switched
    * @param chain - The new chain that is switched to
    */
-  onSwitch?: (chain: ChainMeta) => void;
+  onSwitch?: (chain: ApiChain) => void;
   /**
    * Callback to be called when the "Add Custom Network" button is clicked
    *
@@ -255,21 +256,39 @@ export function NetworkSelectorContent(
     ...(props.recentChains || []),
   ]);
 
-  const chainsQuery = useChainsQuery([...allChainIds]);
+  // TODO: @manan - instead of doing this here and then passing the chains down we can consider the following approach:
+  // 1. use the useChainsQuery hook wherever we need the search index
+  // 2. pass only the chainIds through (for all, recent, popular)
+  // 3. then in each Chain component, use the useChainQuery hook to get the chain data where we need it (can have local placeholder state while isLoading)
+  // => things will render faster, all queries get re-used, and we don't have to pass the chains down everywhere
+  const chainsQueries = useChainsQuery([...allChainIds]);
+
+  const [allChains, isLoading] = useMemo(() => {
+    let atLeastOneChainIsLoading = false;
+    const chains = chainsQueries
+      .map((chainQuery) => {
+        if (chainQuery.isLoading) {
+          atLeastOneChainIsLoading = true;
+        }
+        return chainQuery.data;
+      })
+      .filter((d) => !!d) as ApiChain[];
+    return [chains, atLeastOneChainIsLoading];
+  }, [chainsQueries]);
 
   const chainsSet = useMemo(() => {
-    const map = new Map<bigint, ChainMeta>();
-    if (!chainsQuery.data) {
+    const map = new Map<bigint, ApiChain>();
+    if (!allChains) {
       return map;
     }
 
-    for (const chain of chainsQuery.data) {
+    for (const chain of allChains) {
       map.set(BigInt(chain.chainId), chain);
     }
     return map;
-  }, [chainsQuery.data]);
+  }, [allChains]);
 
-  if (chainsQuery.isLoading || !chainsQuery.data) {
+  if (isLoading || !allChains) {
     return (
       <Container
         flex="row"
@@ -287,15 +306,15 @@ export function NetworkSelectorContent(
   return (
     <NetworkSelectorContentInner
       {...props}
-      chains={chainsQuery.data}
+      chains={allChains}
       recentChains={
         props.recentChains?.map((chainId) => chainsSet.get(chainId)) as
-          | ChainMeta[]
+          | ApiChain[]
           | undefined
       }
       popularChains={
         props.popularChains?.map((chainId) => chainsSet.get(chainId)) as
-          | ChainMeta[]
+          | ApiChain[]
           | undefined
       }
       onSwitch={(chain) => {
@@ -372,7 +391,7 @@ export function NetworkSelectorContentInner(
   const { onClose, onSwitch, onCustomClick } = props;
 
   const handleSwitch = useCallback(
-    (chain: ChainMeta) => {
+    (chain: ApiChain) => {
       if (onSwitch) {
         onSwitch(chain);
       }
@@ -552,7 +571,7 @@ export function NetworkSelectorContentInner(
  * @internal
  */
 const filterChainByType = (
-  chains: ChainMeta[],
+  chains: ApiChain[],
   type: "testnet" | "mainnet" | "all",
 ) => {
   if (type === "all") {
@@ -571,11 +590,11 @@ const filterChainByType = (
  * @internal
  */
 const NetworkTab = (props: {
-  allChains: ChainMeta[];
-  recentChains?: ChainMeta[];
-  popularChains?: ChainMeta[];
+  allChains: ApiChain[];
+  recentChains?: ApiChain[];
+  popularChains?: ApiChain[];
   type: "testnet" | "mainnet" | "all";
-  onSwitch: (chain: ChainMeta) => void;
+  onSwitch: (chain: ApiChain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
@@ -648,12 +667,16 @@ const NetworkTab = (props: {
   );
 };
 
-const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
-  chains: ChainMeta[];
-  onSwitch: (chain: ChainMeta) => void;
+type NetworkListProps = {
+  chains: ApiChain[];
+  onSwitch: (chain: ApiChain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
-}) {
+};
+
+const NetworkList = /* @__PURE__ */ memo(function NetworkList(
+  props: NetworkListProps,
+) {
   const switchChain = useSwitchActiveWalletChain();
   const activeChainId = useActiveWalletChainId();
   const [switchingChainId, setSwitchingChainId] = useState(BigInt(-1));
@@ -674,7 +697,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
     }
   }, [switchingChainId, close, activeChainId]);
 
-  const handleSwitch = async (chain: ChainMeta) => {
+  const handleSwitch = async (chain: ApiChain) => {
     setErrorSwitchingChainId(BigInt(-1));
     setSwitchingChainId(BigInt(chain.chainId));
 
@@ -790,7 +813,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
       })}
     </NetworkListUl>
   );
-});
+} as React.FC<NetworkListProps>);
 
 const TabButton = /* @__PURE__ */ (() =>
   styled(Tabs.Trigger)(() => {

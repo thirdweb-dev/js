@@ -23,3 +23,8 @@ export {
 
 export type { Wallet } from "./interfaces/wallet.js";
 export { createConnectionManager } from "./manager/index.js";
+
+export {
+  getTokenBalance,
+  type GetTokenBalanceOptions,
+} from "./utils/getTokenBalance.js";

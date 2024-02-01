@@ -1,9 +1,16 @@
+import { withCache } from "../utils/promise/withCache.js";
 import type { ThirdwebClient } from "../client/client.js";
+import type { ApiChain } from "./types.js";
 
 export type Chain =
   | {
       id: bigint | number;
       rpc: string;
+      nativeCurrency?: {
+        name?: string;
+        symbol?: string;
+        decimals?: number;
+      };
     }
   // TODO: add all possible chainIds somehow for autocompletion
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -68,4 +75,90 @@ export function getChainIdFromChain(chain: Chain): bigint {
     return BigInt(chain);
   }
   return BigInt(chain.id);
+}
+
+/**
+ * Retrieves the chain symbol from the provided chain.
+ * @param chain - The chain.
+ * @returns The chain symbol.
+ * @internal
+ */
+export async function getChainSymbol(chain: Chain): Promise<string> {
+  if (
+    typeof chain === "bigint" ||
+    typeof chain === "number" ||
+    !chain.nativeCurrency?.symbol
+  ) {
+    const chainId = getChainIdFromChain(chain);
+    return getChainDataForChainId(chainId)
+      .then((data) => data.nativeCurrency.symbol)
+      .catch(() => {
+        // if we fail to fetch the chain data, return "ETH" as a fallback
+        return "ETH";
+      });
+  }
+  // if we have a symbol, return it
+  return chain.nativeCurrency.symbol;
+}
+
+/**
+ * Retrieves the number of decimals for the native currency of a given chain.
+ * If the chain is not recognized or the data cannot be fetched, it returns a fallback value of 18.
+ * @param chain - The chain for which to retrieve the decimals.
+ * @returns A promise that resolves to the number of decimals for the native currency of the chain.
+ * @internal
+ */
+export async function getChainDecimals(chain: Chain): Promise<number> {
+  if (
+    typeof chain === "bigint" ||
+    typeof chain === "number" ||
+    !chain.nativeCurrency?.decimals
+  ) {
+    const chainId = getChainIdFromChain(chain);
+    return getChainDataForChainId(chainId)
+      .then((data) => data.nativeCurrency.decimals)
+      .catch(() => {
+        // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
+        return 18;
+      });
+  }
+  // if we have a symbol, return it
+  return chain.nativeCurrency.decimals;
+}
+
+type FetchChainResponse =
+  | {
+      data: ApiChain;
+      error?: never;
+    }
+  | {
+      data?: never;
+      error: unknown;
+    };
+
+/**
+ * @internal
+ */
+export function getChainDataForChainId(chainId: bigint): Promise<ApiChain> {
+  return withCache(
+    async () => {
+      const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
+
+      const response = (await res.json()) as FetchChainResponse;
+      if (response.error) {
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
+      if (!response.data) {
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
+      return response.data;
+    },
+    {
+      cacheKey: `chain:${chainId}`,
+      cacheTime: 5 * 60 * 1000, // 5 minutes
+    },
+  );
 }

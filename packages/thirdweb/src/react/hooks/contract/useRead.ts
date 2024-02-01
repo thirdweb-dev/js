@@ -1,5 +1,6 @@
 import {
   useQuery,
+  queryOptions as defineQuery,
   type UseQueryResult,
   type UseQueryOptions,
 } from "@tanstack/react-query";
@@ -77,7 +78,7 @@ export function useContractRead<
     queryOptions?: PickedQueryOptions;
   },
 ) {
-  // extension case (or really any async function!)
+  // extension case
   if (typeof extensionOrOptions === "function") {
     if (!options) {
       throw new Error(
@@ -87,9 +88,7 @@ export function useContractRead<
     const { queryOptions, contract, ...params } = options;
     const chainId = getChainIdFromChain(contract.chain).toString();
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQuery({
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    const query = defineQuery({
       queryKey: [
         chainId,
         contract.address,
@@ -101,14 +100,16 @@ export function useContractRead<
       queryFn: () => extensionOrOptions({ ...params, contract }),
       ...queryOptions,
     });
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery(query);
   }
   // raw tx case
   if ("method" in extensionOrOptions) {
     const { queryOptions, ...tx } = extensionOrOptions;
     const chainId = getChainIdFromChain(tx.contract.chain).toString();
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQuery({
+    const query = defineQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
         chainId,
@@ -120,6 +121,8 @@ export function useContractRead<
       queryFn: () => readContract(extensionOrOptions),
       ...queryOptions,
     });
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery(query);
   }
 
   throw new Error(

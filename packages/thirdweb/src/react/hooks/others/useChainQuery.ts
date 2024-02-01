@@ -1,55 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
-import type { ChainMeta } from "../../types/chain.js";
+import { useQueries, useQuery, queryOptions } from "@tanstack/react-query";
+import { getChainDataForChainId } from "../../../chain/index.js";
 
 /**
- *
  * @internal
  */
-export function useChainQuery(chainId?: bigint) {
-  const chainIdStr = chainId?.toString();
-  return useQuery({
-    queryKey: ["chain", chainIdStr],
+function getChainQuery(chainId?: bigint) {
+  return queryOptions({
+    queryKey: ["chain", `${chainId}`] as const,
     queryFn: async () => {
-      const res = await fetch(
-        `https://api.thirdweb.com/v1/chains/${chainIdStr}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const json = await res.json();
-      return json.data as ChainMeta;
+      if (!chainId) {
+        throw new Error("chainId is required");
+      }
+      return getChainDataForChainId(chainId);
     },
     enabled: !!chainId,
   });
 }
 
-// TODO - add an endpoint to get an array of chains at once
+/**
+ * @internal
+ */
+export function useChainQuery(chainId?: bigint) {
+  return useQuery(getChainQuery(chainId));
+}
 
 /**
- *
  * @internal
  */
 export function useChainsQuery(chainIds: bigint[]) {
-  const key = chainIds.join(",");
-  return useQuery({
-    queryKey: ["chains", key],
-    queryFn: async () => {
-      return Promise.all(
-        chainIds.map(async (chainId) => {
-          const res = await fetch(
-            `https://api.thirdweb.com/v1/chains/${chainId}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            },
-          );
-          const json = await res.json();
-          return json.data as ChainMeta;
-        }),
-      );
-    },
+  // this way the underlying queries end up shared with the single query!
+  return useQueries({
+    queries: chainIds.map(getChainQuery),
   });
 }

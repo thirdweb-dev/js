@@ -37,6 +37,8 @@ import { shortenString } from "../../utils/addresses.js";
 import { Img } from "../components/Img.js";
 import { useChainQuery } from "../../hooks/others/useChainQuery.js";
 import { ChainIcon } from "../components/ChainIcon.js";
+import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
+import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -70,24 +72,27 @@ export const ConnectedWalletDetails: React.FC<{
   chainIds: bigint[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
+  const activeWallet = useActiveWallet();
   const walletChainId = useActiveWalletChainId();
   const chainQuery = useChainQuery(walletChainId);
   const { disconnect } = useDisconnect();
+  const { client } = useThirdwebProviderProps();
 
   // const chains = useSupportedChains();
   const address = useActiveWalletAddress();
 
-  // const token =
-  //   walletChainId && props.displayBalanceToken
-  //     ? props.displayBalanceToken[Number(walletChainId)]
-  //     : undefined;
+  const tokenAddress =
+    walletChainId && props.displayBalanceToken
+      ? props.displayBalanceToken[Number(walletChainId)]
+      : undefined;
 
-  // const balanceQuery = useContractRead(balanceOf, {
-  //   address: token,
+  const balanceQuery = useWalletBalance({
+    chain: walletChainId,
+    client,
+    tokenAddress,
+    wallet: activeWallet,
+  });
 
-  // })
-
-  const activeWallet = useActiveWallet();
   // const activeWalletConfig = undefined;
   // const activeWalletConfig = useWalletConfig();
   // const ensQuery = useENS();
@@ -223,7 +228,7 @@ export const ConnectedWalletDetails: React.FC<{
           {"<balance>"}
         </Text>
         {/* Balance */}
-        {/* {balanceQuery.data ? (
+        {balanceQuery.data ? (
           <Text
             className={`${TW_CONNECTED_WALLET}__balance`}
             size="xs"
@@ -234,7 +239,7 @@ export const ConnectedWalletDetails: React.FC<{
           </Text>
         ) : (
           <Skeleton height={fontSize.xs} width="82px" />
-        )} */}
+        )}
       </Container>
     </WalletInfoButton>
   );
