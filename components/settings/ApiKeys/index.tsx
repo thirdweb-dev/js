@@ -34,7 +34,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
     columnHelper.accessor("key", {
       header: "Client ID",
       cell: (cell) => (
-        <CopyApiKeyButton apiKey={cell.getValue()} label="API Key" />
+        <CopyApiKeyButton apiKey={cell.getValue()} label="Client ID" />
       ),
     }),
 
