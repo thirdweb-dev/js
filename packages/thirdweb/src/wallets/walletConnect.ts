@@ -12,10 +12,29 @@ import { type Wallet } from "./index.js";
 import type { DAppMetaData, WalletMetadata } from "./types.js";
 import type { ThirdwebClient } from "../index.js";
 import { getChainDataForChainId, getRpcUrlForChain } from "../chain/index.js";
-import type { WalletConnectModalConfig } from "@walletconnect/modal";
 import { walletStorage } from "./manager/storage.js";
 import { utils } from "ethers5";
 import type { ApiChain } from "../chain/types.js";
+import {
+  EthereumProvider,
+  OPTIONAL_EVENTS,
+  OPTIONAL_METHODS,
+} from "@walletconnect/ethereum-provider";
+
+type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
+type QRCodeModalOptions = Pick<
+  NonNullable<EthereumProviderOptions["qrModalOptions"]>,
+  | "themeMode"
+  | "themeVariables"
+  | "desktopWallets"
+  | "enableExplorer"
+  | "explorerRecommendedWalletIds"
+  | "explorerExcludedWalletIds"
+  | "mobileWallets"
+  | "privacyPolicyUrl"
+  | "termsOfServiceUrl"
+  | "walletImages"
+>;
 
 // TODO: - this is very messy rn - will clean it up later
 
@@ -48,7 +67,8 @@ export type WalletConnectOptions = {
   showQrModal?: boolean;
   dappMetadata?: DAppMetaData;
   client: ThirdwebClient;
-  qrModalOptions?: WalletConnectModalConfig;
+
+  qrModalOptions?: QRCodeModalOptions;
   /** If provided, will attempt to connect to an existing pairing. */
   pairingTopic?: string;
 };
@@ -298,10 +318,6 @@ export async function walletConnect(
   }
 
   /// ------------------- start -------------------
-
-  const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } = await import(
-    "@walletconnect/ethereum-provider"
-  );
 
   const isNewChainsStale = false; // do we need to make this configurable?
 
