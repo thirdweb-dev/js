@@ -41,7 +41,7 @@ export function isIOS(): boolean {
 /**
  * @internal
  */
-function detectOS() {
+export function detectOS() {
   const env = detectEnv();
   return env?.os ? env.os : undefined;
 }

@@ -16,6 +16,7 @@ import { ThemeProvider, ThemeType } from "../styles/ThemeProvider";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import type { Locale } from "../i18n/types";
+import { getAnalyticsGlobals } from "../../core/storage/utils";
 
 export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -146,6 +147,8 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     locale = "en",
     ...restProps
   } = props;
+
+  getAnalyticsGlobals();
 
   const coinbaseWalletObj = supportedWallets.find(
     (w) => w.id === walletIds.coinbase,
