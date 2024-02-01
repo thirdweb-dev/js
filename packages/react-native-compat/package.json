@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/react-native-compat",
   "description": "Shims for Thirdweb in React Native Projects",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native-compat",
   "license": "Apache-2.0",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
-    "@walletconnect/react-native-compat": "^2.8.6",
+    "@walletconnect/react-native-compat": "2.9.2",
     "base-64": "^1.0.0",
     "big-integer": "^1.6.51",
     "react-native-get-random-values": "^1.10.0",

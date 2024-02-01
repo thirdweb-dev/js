@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.7.0
+
+### Minor Changes
+
+- [#2225](https://github.com/thirdweb-dev/js/pull/2225) [`2e3cc7cd`](https://github.com/thirdweb-dev/js/commit/2e3cc7cdd4017df8a5b00ebdd6e37334432e0b82) Thanks [@iketw](https://github.com/iketw)! - Adds support for RN 0.73
+
 ## 0.6.5
 
 ## 0.6.4

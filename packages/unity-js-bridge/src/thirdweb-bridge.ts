@@ -25,6 +25,7 @@ import {
   getChainByChainId,
 } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
+import { detect } from "detect-browser";
 
 declare global {
   interface Window {
@@ -132,6 +133,19 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public initialize(chain: ChainIdOrName, options: string) {
+    if (typeof globalThis !== "undefined") {
+      let browser;
+      try {
+        browser = detect();
+      } catch {
+        console.warn("Failed to detect browser");
+        browser = undefined;
+      }
+      (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
+      (globalThis as any).X_SDK_PLATFORM = "unity";
+      (globalThis as any).X_SDK_VERSION = "4.6.0";
+      (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
+    }
     this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
@@ -741,8 +755,7 @@ class ThirdwebBridge implements TWBridge {
     return JSON.stringify({ result: result }, bigNumberReplacer);
   }
 
-
-  public async smartWalletGetAllActiveSigners(){
+  public async smartWalletGetAllActiveSigners() {
     if (!this.activeWallet) {
       throw new Error("No wallet connected");
     }

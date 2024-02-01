@@ -1,5 +1,20 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.3.11
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds global sdk vars
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/storage@2.0.9
+  - @thirdweb-dev/wallets@2.4.6
+  - @thirdweb-dev/sdk@4.0.31
+  - @thirdweb-dev/chains@0.1.68
+  - @thirdweb-dev/auth@4.1.28
+
 ## 0.3.10
 
 ### Patch Changes

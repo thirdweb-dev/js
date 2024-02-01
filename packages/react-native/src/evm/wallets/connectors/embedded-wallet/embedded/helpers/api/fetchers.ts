@@ -20,20 +20,17 @@ import {
   VerifiedTokenResponse,
 } from "../../../types";
 import { createErrorMessage } from "../errors";
-import {
-  appBundleId,
-  reactNativePackageVersion,
-} from "../../../../../../utils/version";
-import { BUNDLE_ID_HEADER } from "../../../../../../constants/headers";
 import { ANALYTICS } from "../analytics";
+import { getAnalyticsHeaders } from "../../../../../../../core/storage/utils";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
+
 const HEADERS = {
   "Content-Type": "application/json",
-  [BUNDLE_ID_HEADER]: appBundleId,
-  [EWS_VERSION_HEADER]: reactNativePackageVersion,
+  [EWS_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
   [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+  ...getAnalyticsHeaders(),
 };
 
 export const verifyClientId = async (clientId: string) => {
@@ -68,19 +65,15 @@ export const authFetchEmbeddedWalletUser = async (
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
-        [EWS_VERSION_HEADER]: reactNativePackageVersion,
-        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+        ...HEADERS,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
-        [EWS_VERSION_HEADER]: reactNativePackageVersion,
-        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+        ...HEADERS,
       };
   return fetch(url, params);
 };
