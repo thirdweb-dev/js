@@ -12,7 +12,7 @@ export default defineConfig({
       reporters: process.env.CI ? ["json"] : ["verbose"],
     },
     coverage: {
-      all: false,
+      all: true,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: ["**/*.test.ts", "**/test/**"],
