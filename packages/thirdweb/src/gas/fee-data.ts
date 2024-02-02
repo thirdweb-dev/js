@@ -115,19 +115,18 @@ async function getDynamicFeeData(
     block && block.baseFeePerGas ? block.baseFeePerGas : 100n;
 
   const chainId = getChainIdFromChain(chain);
-  // mumbai & polygon
-  if (chainId === 80001n || chainId === 137n) {
+  // flag chain testnet & flag chain
+  if (chainId === 220n || chainId === 1220n) {
+    // these does not support eip-1559, for some reason even though `eth_maxPriorityFeePerGas` is available?!?
+    // return null because otherwise TX break
+    return { maxFeePerGas: null, maxPriorityFeePerGas: null };
+    // mumbai & polygon
+  } else if (chainId === 80001n || chainId === 137n) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
   } else if (maxPriorityFeePerGas) {
     // prioritize fee from eth_maxPriorityFeePerGas
     maxPriorityFeePerGas_ = maxPriorityFeePerGas;
-  }
-  // TODO bring back(?)
-  else {
-    //   // if eth_maxPriorityFeePerGas is not available, use 1.5 gwei default
-    //   const feeData = await provider.getFeeData();
-    //   maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
   }
 
   if (!maxPriorityFeePerGas_) {
