@@ -5,6 +5,71 @@ import {
 } from "@thirdweb-dev/react-core";
 import { MediaRenderer } from "../MediaRenderer";
 
+// Example Usage
+// import { ConnectWallet, useAddress, useChain, NFTSearcher } from "@thirdweb-dev/react";
+// import styles from "../styles/Home.module.css";
+// import { NextPage } from "next";
+// import { useEffect, useState, useCallback } from "react";
+
+// const Home: NextPage = () => {
+//       const [fetchedNFTs, setFetchedNFTs] = useState<any[]>([]);
+//       const [loading, setLoading] = useState<boolean>(false);
+//       const [darkMode, setDarkMode] = useState<boolean>(false);
+//       const [allNFTs, setAllNFTs] = useState<any[]>([]);
+//       const chain = useChain();
+//       const [network, setNetwork] = useState<string>("");
+    
+//       // Set network for NFTSearcher based on chain
+//       useEffect(() => {
+//         if (chain && chain.chain.toLowerCase() === "eth" && chain.slug === "eth") {
+//           setNetwork("ethereum");
+//         } else if (chain && chain.chain.toLowerCase() === "polygon") {
+//           setNetwork("polygon");
+//         } else if (chain && chain.chain.toLowerCase() === "avax") {
+//           setNetwork("avalanche");
+//         } else if (chain && chain.chain.toLowerCase() === "ftm") {
+//           setNetwork("fantom");
+//         } else if (chain && chain.slug === "frame-testnet") {
+//           setNetwork("frame-testnet");
+//         }
+//       }, [chain]);
+    
+//       console.log(fetchedNFTs)
+    
+//       // handle fetched NFTs
+//       const handleNFTsFetched = useCallback((nfts: any[]) => {
+//         setLoading(true);
+//         setFetchedNFTs(nfts);
+//         setLoading(false);
+//     }, [setLoading, setFetchedNFTs]);
+    
+    
+//       // search params
+//       const [limit, setLimit] = useState<number>(100);
+//       const [start, setStart] = useState<number>(0);
+
+//   return (
+//     <main className={styles.main}>
+//       <div className={styles.container}>
+//         <h4 className={styles.title}>
+//           edit <code>`pages/index.tsx`</code> to begin.
+//         </h4>
+//           <div>
+//             <NFTSearcher 
+//             activeNetwork={network}
+//             theme={"dark"} // "light" or "dark"
+//             onNFTsFetched={handleNFTsFetched}
+//             limit={limit}
+//             start={start}
+//         />
+//           </div>
+//       </div>
+//     </main>
+//   );
+// };
+
+// export default Home;
+
 type Styling = {
     searchContainer: React.CSSProperties;
     searchBarContainer: React.CSSProperties;
@@ -15,7 +80,6 @@ type Styling = {
     suggestion: React.CSSProperties;
     suggestionLogo: React.CSSProperties;
   };
-
 
 export interface SearchBarProps {
     activeNetwork?: string;
@@ -85,7 +149,7 @@ export const NFTSearcher = ({
         marginLeft: 'auto',
         marginRight: 'auto',
         justifySelf: 'center',
-        width: '500px',
+        width: '350px',
         border: '3px solid #ccc',
         borderRadius: '13px',
         boxSizing: 'border-box',
@@ -133,7 +197,7 @@ export const NFTSearcher = ({
         top: '68px',
         justifySelf: 'center',
         borderRadius: '12px',
-        width: '500px', 
+        width: '350px',
         padding: '12px 20px',
         marginLeft: 'auto',
         marginRight: 'auto',
