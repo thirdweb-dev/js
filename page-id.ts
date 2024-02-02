@@ -157,6 +157,9 @@ export enum PageId {
   // thirdweb.com/events
   Events = "events",
 
+  // thirdweb..com/mission
+  Mission = "mission",
+
   // thirdweb.com/explore/[category]
   ExploreCategory = "explore-category",
 

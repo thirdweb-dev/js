@@ -65,6 +65,11 @@ export const COMPANY: FooterLinkInfo[] = [
     link: "/about",
   },
   {
+    name: "Mission",
+    label: "mission",
+    link: "/mission",
+  },
+  {
     label: "blog",
     name: "Blog",
     link: "https://blog.thirdweb.com",

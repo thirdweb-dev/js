@@ -1,4 +1,4 @@
-import { Box, DarkMode, Flex } from "@chakra-ui/react";
+import { Box, BoxProps, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
@@ -8,12 +8,14 @@ import { ComponentWithChildren } from "types/component-with-children";
 interface LandingLayoutProps {
   seo: NextSeoProps;
   bgColor?: string;
+  py?: BoxProps["py"];
 }
 
 export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
   seo,
   bgColor = "#000",
   children,
+  py,
 }) => {
   return (
     <DarkMode>
@@ -32,7 +34,11 @@ export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
       >
         <HomepageTopNav />
         {/* pull it up by as much as the topnav is tall */}
-        <Box mt="-80px" overflowX="hidden" py={{ base: "120px", md: "80px" }}>
+        <Box
+          mt="-80px"
+          overflowX="hidden"
+          py={py ?? { base: "120px", md: "80px" }}
+        >
           {children}
         </Box>
         <NewsletterSection />

@@ -49,9 +49,11 @@ export const LandingFAQ: React.FC<LandingFAQProps> = ({
         lg: "container.md",
       }}
     >
-      <Heading size={titleSize || "title.md"} alignSelf="center">
-        {title}
-      </Heading>
+      {title && (
+        <Heading size={titleSize || "title.md"} alignSelf="center">
+          {title}
+        </Heading>
+      )}
       <Accordion mt={8} allowMultiple rounded="xl">
         {faqs.map((faq) => (
           <AccordionItem key={faq.title} borderColor="borderColor">
