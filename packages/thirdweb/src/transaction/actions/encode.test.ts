@@ -9,7 +9,7 @@ const fetchSpy = vi.spyOn(globalThis, "fetch");
 const USDC_TRANSFER_ENCODE_RESULT =
   "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064";
 
-describe("encode", () => {
+describe("transaction: encode", () => {
   it("should encode correctly (human-readable)", async () => {
     const tx = prepareTransaction({
       contract: USDC_CONTRACT,

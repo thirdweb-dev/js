@@ -111,12 +111,15 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
       - run: pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/sdk/coverage/evm/lcov.info
+          files: ./packages/sdk/coverage/evm/lcov.info,./packages/thirdweb/coverage/lcov.info
 
   e2e:
     timeout-minutes: 15

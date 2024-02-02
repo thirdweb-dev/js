@@ -164,6 +164,7 @@ export function getRpcClient(
               inflight.reject(new Error("No response"));
               return;
             }
+
             if ("error" in response) {
               inflight.reject(response.error);
               // otherwise, resolve the inflight request

@@ -8,7 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "~thirdweb/*": ["./src/*"],
-      "~test/*": ["./test/*"]
+      "~test/*": ["./test/src/*"]
     }
   }
 }

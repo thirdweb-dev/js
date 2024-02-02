@@ -94,6 +94,7 @@ module.exports = {
       files: ["*.test.ts", "test/**/*"],
       rules: {
         "better-tree-shaking/no-top-level-side-effects": "off",
+        "jsdoc/require-jsdoc": "off",
       },
     },
   ],
