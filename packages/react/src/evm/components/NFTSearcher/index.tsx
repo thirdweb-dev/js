@@ -283,22 +283,22 @@ export const NFTSearcher = ({
                 let url;
                 switch (network) {
                     case "ethereum":
-                        url = "https://lib.locatia.app/eth-directory/twdirectory.json";
+                        url = "https://lib.locatia.app/eth-directory/thirdweb.json";
                         break;
                     case "polygon":
-                        url = "https://lib.locatia.app/poly-directory/twdirectory.json";
+                        url = "https://lib.locatia.app/poly-directory/thirdweb.json";
                         break;
                     case "fantom":
-                        url = "https://lib.locatia.app/ftm-directory/twdirectory.json";
+                        url = "https://lib.locatia.app/ftm-directory/thirdweb.json";
                         break;
                     case "avalanche":
-                        url = "https://lib.locatia.app/avax-directory/twdirectory.json";
+                        url = "https://lib.locatia.app/avax-directory/thirdweb.json";
                         break;
                     case "frame-testnet":
-                        url = "https://lib.locatia.app/frame-testnet/twdirectory.json";
+                        url = "https://lib.locatia.app/frame-testnet/thirdweb.json";
                         break;
                     default:
-                        url = "https://lib.locatia.app/eth-directory/twdirectory.json";
+                        url = "https://lib.locatia.app/eth-directory/thirdweb.json";
                 }
         
                 const response = await fetch(url);
