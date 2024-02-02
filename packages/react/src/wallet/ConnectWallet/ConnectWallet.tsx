@@ -21,7 +21,6 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { isMobile } from "../../evm/utils/isMobile";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -34,6 +33,7 @@ import { LockIcon } from "./icons/LockIcon";
 import { SignatureScreen } from "./SignatureScreen";
 import { Modal } from "../../components/Modal";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { canFitWideModal } from "../../evm/utils/canFitWIdeModal";
 
 export type ConnectWalletProps = {
   /**
@@ -691,7 +691,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               onClick={() => {
                 let modalSize = props.modalSize || "wide";
 
-                if (isMobile() || walletConfigs.length === 1) {
+                if (!canFitWideModal() || walletConfigs.length === 1) {
                   modalSize = "compact";
                 }
 

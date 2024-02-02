@@ -10,7 +10,6 @@ import {
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
@@ -20,6 +19,7 @@ import {
 import { StyledDiv } from "../../../design-system/elements";
 import { SyncedWalletUIStates } from "./ConnectEmbed";
 import { WelcomeScreen } from "../screens/types";
+import { canFitWideModal } from "../../../evm/utils/canFitWIdeModal";
 
 /**
  * @internal
@@ -79,7 +79,9 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
   const modalSize =
-    isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+    !canFitWideModal() || walletConfigs.length === 1
+      ? "compact"
+      : props.modalSize;
   const ctxTheme = useCustomTheme();
 
   const content = (
