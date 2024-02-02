@@ -14,7 +14,7 @@ export default defineConfig({
     coverage: {
       all: false,
       provider: "v8",
-      reporter: ["lcov"],
+      reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: ["**/*.test.ts", "**/test/**"],
     },
     environment: "node",

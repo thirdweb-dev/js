@@ -77,10 +77,10 @@
       "outputs": ["src/version.ts"]
     },
     "test": {
-      "outputs": [],
+      "outputs": ["codecov/**"],
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["build"],
-      "env": ["TW_SECRET_KEY"]
+      "env": ["TW_SECRET_KEY", "CI"]
     },
     "e2e": {
       "outputs": [],
