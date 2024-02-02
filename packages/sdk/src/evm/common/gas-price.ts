@@ -1,6 +1,6 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
-import { Mumbai, Polygon } from "@thirdweb-dev/chains";
+import { Mumbai, Polygon, Flag, FlagTestnet } from "@thirdweb-dev/chains";
 
 type FeeData = {
   maxFeePerGas: null | BigNumber;
@@ -46,7 +46,11 @@ export async function getDynamicFeeData(
       ? block.baseFeePerGas
       : utils.parseUnits("100", "wei");
 
-  if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
+  // flag-chain overrides
+  if (chainId === Flag.chainId || chainId === FlagTestnet.chainId) {
+    // chains does not support eip-1559, return null for all
+    return { maxFeePerGas: null, maxPriorityFeePerGas: null, baseFee: null };
+  } else if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
   } else if (eth_maxPriorityFeePerGas) {

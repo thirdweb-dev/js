@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 4.0.33
+
+### Patch Changes
+
+- [#2256](https://github.com/thirdweb-dev/js/pull/2256) [`1decd52a`](https://github.com/thirdweb-dev/js/commit/1decd52a36c303e540679ac43d206942ea83fc83) Thanks [@jnsdls](https://github.com/jnsdls)! - add gas fee overrides for flag chains
+
+- Updated dependencies [[`1e50caee`](https://github.com/thirdweb-dev/js/commit/1e50caeed1b85f91a6d2efb2e5204f3acf300134)]:
+  - @thirdweb-dev/chains@0.1.70
+
 ## 4.0.32
 
 ### Patch Changes
