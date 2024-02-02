@@ -13,7 +13,6 @@ import type { DAppMetaData, WalletMetadata } from "./types.js";
 import type { ThirdwebClient } from "../index.js";
 import { getChainDataForChainId, getRpcUrlForChain } from "../chain/index.js";
 import { walletStorage } from "./manager/storage.js";
-import { utils } from "ethers5";
 import type { ApiChain } from "../chain/types.js";
 import {
   EthereumProvider,
@@ -183,7 +182,7 @@ export async function walletConnect(
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
-              chainId: utils.hexValue(chain.chainId),
+              chainId: toHex(chain.chainId),
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
               rpcUrls: getValidPublicRPCUrl(chain), // no clientId on purpose
@@ -197,7 +196,7 @@ export async function walletConnect(
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: utils.hexValue(chainId) }],
+        params: [{ chainId: toHex(chainId) }],
       });
     } catch (error: any) {
       const message =
