@@ -207,6 +207,7 @@ export const NFTSearcher = ({
             // Check cache first
             const cache = collectionCache[network];
             if (cache) {
+            setCollections([]);
             setCollections((prevCollections) => [
                 ...prevCollections,
                 ...(Array.isArray(cache) ? cache : []),
