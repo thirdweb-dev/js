@@ -34,7 +34,9 @@ import { Extensions } from "contract-ui/tabs/overview/components/Extensions";
 import { format } from "date-fns";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { NextSeo } from "next-seo";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { PublishedContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
@@ -271,6 +273,19 @@ Deploy it in one click`,
           ],
         }}
       />
+
+      {/* Farcaster frames headers */}
+      <Head>
+        <meta property="fc:frame" content="vNext" />
+        <meta property="fc:frame:image" content={ogImageUrl.toString()} />
+        <meta
+          property="fc:frame:post_url"
+          content={`${getAbsoluteUrl()}/api/frame/redirect`}
+        />
+        <meta property="fc:frame:button:1" content="Deploy now" />
+        <meta name="fc:frame:button:1:action" content="post_redirect"></meta>
+      </Head>
+
       <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
           {address === contract.publisher && (
