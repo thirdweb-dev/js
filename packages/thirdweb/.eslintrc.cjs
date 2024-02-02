@@ -91,7 +91,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.test.ts", "test/**/*.ts"],
+      files: ["*.test.ts", "test/**/*"],
       rules: {
         "better-tree-shaking/no-top-level-side-effects": "off",
       },

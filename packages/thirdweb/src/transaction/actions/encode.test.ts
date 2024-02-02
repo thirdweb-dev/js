@@ -2,9 +2,9 @@ import { USDC_CONTRACT, USDC_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { prepareTransaction } from "~thirdweb/transaction/transaction.js";
 import { encode } from "./encode.js";
-import { describe, it, expect, spyOn } from "bun:test";
+import { describe, it, expect, vi } from "vitest";
 
-const fetchSpy = spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 const USDC_TRANSFER_ENCODE_RESULT =
   "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064";
