@@ -1,5 +1,26 @@
 # @thirdweb-dev/react
 
+## 4.4.4
+
+### Patch Changes
+
+- [#2252](https://github.com/thirdweb-dev/js/pull/2252) [`439a377a`](https://github.com/thirdweb-dev/js/commit/439a377aa77ce86631a78daa4a409e00e48f69be) Thanks [@MananTank](https://github.com/MananTank)! - Add `detailsModalFooter` prop on `<ConnectWallet />` component to allow rendering a custom UI at the bottom of the details modal.
+
+  ```tsx
+  <ConnectWallet
+    detailsModalFooter={(props) => {
+      const { close } = props;
+      return <div> .... </div>;
+    }}
+  />
+  ```
+
+- Updated dependencies [[`4f52c296`](https://github.com/thirdweb-dev/js/commit/4f52c2961131636eed323a66568a519246d9f91d), [`374671fd`](https://github.com/thirdweb-dev/js/commit/374671fd9ac97a93263b09c6c0a53cfd129881d7)]:
+  - @thirdweb-dev/sdk@4.0.32
+  - @thirdweb-dev/chains@0.1.69
+  - @thirdweb-dev/react-core@4.4.4
+  - @thirdweb-dev/wallets@2.4.7
+
 ## 4.4.3
 
 ### Patch Changes

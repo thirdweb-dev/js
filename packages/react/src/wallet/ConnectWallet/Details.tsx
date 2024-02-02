@@ -96,6 +96,7 @@ export const ConnectedWalletDetails: React.FC<{
   displayBalanceToken?: Record<number, string>;
   hideSwitchToPersonalWallet?: boolean;
   hideDisconnect?: boolean;
+  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
@@ -516,6 +517,10 @@ export const ConnectedWalletDetails: React.FC<{
                 <Text color="primaryText">{locale.backupWallet}</Text>
               </MenuButton>
             </div>
+          )}
+
+          {props.detailsModalFooter && (
+            <props.detailsModalFooter close={() => setIsOpen(false)} />
           )}
         </Container>
 
