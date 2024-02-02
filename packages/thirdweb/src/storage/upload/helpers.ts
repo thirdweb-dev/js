@@ -1,5 +1,8 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
+import {
+  areUint8ArraysEqual,
+  isUint8Array,
+} from "~thirdweb/utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
   BuildFormDataOptions,

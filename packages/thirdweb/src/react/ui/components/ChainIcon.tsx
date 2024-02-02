@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import type { ApiChain } from "../../../chain/types.js";
-import { resolveScheme } from "../../../utils/ipfs.js";
+import type { ApiChain } from "~thirdweb/chain/types.js";
+import { resolveScheme } from "~thirdweb/utils/ipfs.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { StyledDiv } from "../design-system/elements.js";
 

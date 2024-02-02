@@ -6,16 +6,16 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
-import type { ParseMethod } from "../../../abi/types.js";
-import type { ReadOutputs } from "../../../transaction/actions/read.js";
-import { readContract } from "../../../transaction/index.js";
+import type { ParseMethod } from "~thirdweb/abi/types.js";
+import type { ReadOutputs } from "~thirdweb/transaction/actions/read.js";
+import { readContract } from "~thirdweb/transaction/index.js";
 import {
   type TransactionOptions,
   type TxOpts,
-} from "../../../transaction/transaction.js";
-import { stringify } from "../../../utils/json.js";
-import { getFunctionId } from "../../../utils/function-id.js";
-import { getChainIdFromChain } from "../../../chain/index.js";
+} from "~thirdweb/transaction/transaction.js";
+import { stringify } from "~thirdweb/utils/json.js";
+import { getFunctionId } from "~thirdweb/utils/function-id.js";
+import { getChainIdFromChain } from "~thirdweb/chain/index.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 

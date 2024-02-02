@@ -5,6 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
+import { walletIds } from "~thirdweb/wallets/index.js";
 import {
   useActiveWallet,
   useActiveWalletAddress,
@@ -12,7 +13,6 @@ import {
   useDisconnect,
 } from "../../providers/wallet-provider.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
-import { walletIds } from "../../../wallets/index.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";

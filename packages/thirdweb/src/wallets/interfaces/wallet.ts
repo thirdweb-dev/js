@@ -1,5 +1,5 @@
 import type { AbiFunction, Address } from "abitype";
-import type { TransactionOrUserOpHash } from "../../transaction/types.js";
+import type { TransactionOrUserOpHash } from "~thirdweb/transaction/types.js";
 import type {
   Hex,
   SignableMessage,
@@ -8,7 +8,7 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { AddListener, RemoveListener } from "./listeners.js";
-import type { Transaction } from "../../transaction/transaction.js";
+import type { Transaction } from "~thirdweb/transaction/transaction.js";
 
 export type Wallet = {
   // REQUIRED

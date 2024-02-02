@@ -39,7 +39,7 @@ import {
 import { Text } from "../components/text.js";
 import { useChainsQuery } from "../../hooks/others/useChainQuery.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
-import type { ApiChain } from "../../../chain/types.js";
+import type { ApiChain } from "~thirdweb/chain/types.js";
 import type React from "react";
 
 export type NetworkSelectorChainProps = {

@@ -1,13 +1,13 @@
-import type { ThirdwebClient } from "../client/client.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import { parseUnits, type AbiFunction } from "viem";
 import {
   eth_gasPrice,
   eth_getBlockByNumber,
   eth_maxPriorityFeePerGas,
   getRpcClient,
-} from "../rpc/index.js";
-import { getChainIdFromChain, type Chain } from "../chain/index.js";
-import type { Transaction } from "../transaction/transaction.js";
+} from "~thirdweb/rpc/index.js";
+import { getChainIdFromChain, type Chain } from "~thirdweb/chain/index.js";
+import type { Transaction } from "~thirdweb/transaction/transaction.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;

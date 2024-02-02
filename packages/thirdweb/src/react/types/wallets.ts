@@ -1,5 +1,5 @@
-import type { ConnectionStatus } from "../../wallets/manager/index.js";
-import { type Wallet } from "../../wallets/index.js";
+import type { ConnectionStatus } from "~thirdweb/wallets/manager/index.js";
+import { type Wallet } from "~thirdweb/wallets/index.js";
 
 /**
  * @wallet

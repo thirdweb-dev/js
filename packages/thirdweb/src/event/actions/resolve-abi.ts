@@ -4,7 +4,7 @@ import {
   type ContractEvent,
   type ContractEventOptions,
 } from "../event.js";
-import type { ParseEvent } from "../../abi/types.js";
+import type { ParseEvent } from "~thirdweb/abi/types.js";
 
 const ABI_EVENT_RESOLUTION_CACHE = new WeakMap<
   ContractEvent<AbiEvent>,

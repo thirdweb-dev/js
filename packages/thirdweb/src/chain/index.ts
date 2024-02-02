@@ -1,5 +1,5 @@
-import { withCache } from "../utils/promise/withCache.js";
-import type { ThirdwebClient } from "../client/client.js";
+import { withCache } from "~thirdweb/utils/promise/withCache.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import type { ApiChain } from "./types.js";
 
 export type Chain =

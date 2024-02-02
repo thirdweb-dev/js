@@ -4,11 +4,11 @@ import {
   watchEvents,
   type ContractEvent,
   getEvents,
-} from "../../../event/index.js";
-import type { WatchContractEventsOptions } from "../../../event/actions/watch-events.js";
+} from "~thirdweb/event/index.js";
+import type { WatchContractEventsOptions } from "~thirdweb/event/actions/watch-events.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChainIdFromChain } from "../../../chain/index.js";
-import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
+import { getChainIdFromChain } from "~thirdweb/chain/index.js";
+import { eth_blockNumber, getRpcClient } from "~thirdweb/rpc/index.js";
 
 export type UseWatchEventsOptions<
   abi extends Abi,

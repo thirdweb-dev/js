@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { isTxOpts } from "../../transaction/transaction.js";
-import { isObjectWithKeys } from "../../utils/type-guards.js";
-import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
-import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import { isTxOpts } from "~thirdweb/transaction/transaction.js";
+import { isObjectWithKeys } from "~thirdweb/utils/type-guards.js";
+import { waitForReceipt } from "~thirdweb/transaction/actions/wait-for-tx-receipt.js";
+import type { WaitForReceiptOptions } from "~thirdweb/transaction/actions/wait-for-tx-receipt.js";
 import type { Abi } from "abitype";
 import {
   AutoConnect,
@@ -13,9 +13,9 @@ import {
 import { ThirdwebProviderContext } from "./thirdweb-provider-ctx.js";
 import type { WalletConfig } from "../types/wallets.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
-import { getChainIdFromChain } from "../../chain/index.js";
+import { getChainIdFromChain } from "~thirdweb/chain/index.js";
 import { useState } from "react";
-import type { ThirdwebClient } from "../../client/client.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import { ThirdwebLocaleContext } from "./locale-provider.js";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider.js";
 import type { ThirdwebLocale } from "../ui/locales/types.js";

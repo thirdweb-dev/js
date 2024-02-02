@@ -1,10 +1,10 @@
 import type { Transaction } from "../transaction.js";
-import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
+import { getGasOverridesForTransaction } from "~thirdweb/gas/fee-data.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest } from "viem/utils";
 import type { AbiFunction } from "viem";
-import { getRpcClient, eth_estimateGas } from "../../rpc/index.js";
-import type { Wallet } from "../../wallets/index.js";
+import { getRpcClient, eth_estimateGas } from "~thirdweb/rpc/index.js";
+import type { Wallet } from "~thirdweb/wallets/index.js";
 
 export type EstimateGasOptions<abiFn extends AbiFunction> = {
   transaction: Transaction<abiFn>;

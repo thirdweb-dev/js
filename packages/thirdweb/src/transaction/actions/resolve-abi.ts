@@ -4,7 +4,7 @@ import {
   type Transaction,
   type TransactionOptions,
 } from "../transaction.js";
-import type { ParseMethod } from "../../abi/types.js";
+import type { ParseMethod } from "~thirdweb/abi/types.js";
 
 const ABI_FN_RESOLUTION_CACHE = new WeakMap<
   Transaction<AbiFunction>,

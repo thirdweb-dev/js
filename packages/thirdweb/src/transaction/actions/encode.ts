@@ -1,4 +1,4 @@
-import { encodeAbiFunction } from "../../abi/encode.js";
+import { encodeAbiFunction } from "~thirdweb/abi/encode.js";
 import type { AbiFunction } from "abitype";
 import type { Transaction } from "../transaction.js";
 import { resolveAbiFunction } from "./resolve-abi.js";

@@ -1,8 +1,8 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import type { ThirdwebClient } from "../../client/client.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import type { UploadOptions } from "./types.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";
-import { getClientFetch } from "../../utils/fetch.js";
+import { getClientFetch } from "~thirdweb/utils/fetch.js";
 
 export async function uploadBatchNode(
   client: ThirdwebClient,

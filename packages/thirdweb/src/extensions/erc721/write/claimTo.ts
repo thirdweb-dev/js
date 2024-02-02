@@ -1,5 +1,5 @@
-import { prepareTransaction } from "../../../transaction/index.js";
-import { type TxOpts } from "../../../transaction/transaction.js";
+import { prepareTransaction } from "~thirdweb/transaction/index.js";
+import { type TxOpts } from "~thirdweb/transaction/transaction.js";
 import type { Address } from "abitype";
 
 const CLAIM_ABI = {

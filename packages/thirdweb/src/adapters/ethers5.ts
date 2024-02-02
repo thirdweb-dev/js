@@ -1,12 +1,15 @@
-import { getContract, type ThirdwebContract } from "../contract/index.js";
+import {
+  getContract,
+  type ThirdwebContract,
+} from "~thirdweb/contract/index.js";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
-import type { ThirdwebClient } from "../client/client.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import type { Abi } from "abitype";
-import type { Wallet } from "../wallets/interfaces/wallet.js";
+import type { Wallet } from "~thirdweb/wallets/interfaces/wallet.js";
 import type { Hex, TransactionSerializable } from "viem";
-import { getRpcUrlForChain, type Chain } from "../chain/index.js";
+import { getRpcUrlForChain, type Chain } from "~thirdweb/chain/index.js";
 
 type Ethers5 = typeof ethers5;
 

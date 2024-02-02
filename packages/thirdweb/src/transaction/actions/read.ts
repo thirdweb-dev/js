@@ -1,4 +1,4 @@
-import { decodeFunctionResult } from "../../abi/decode.js";
+import { decodeFunctionResult } from "~thirdweb/abi/decode.js";
 import type {
   Abi,
   AbiFunction,
@@ -10,7 +10,7 @@ import {
   type Transaction,
   type TransactionOptions,
 } from "../transaction.js";
-import { eth_call, getRpcClient } from "../../rpc/index.js";
+import { eth_call, getRpcClient } from "~thirdweb/rpc/index.js";
 import { encode } from "./encode.js";
 import { resolveAbiFunction } from "./resolve-abi.js";
 

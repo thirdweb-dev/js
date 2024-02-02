@@ -18,7 +18,7 @@ import {
 import { Modal } from "../../components/Modal.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
-import type { Wallet } from "../../../../wallets/index.js";
+import type { Wallet } from "~thirdweb/wallets/index.js";
 import {
   useActiveWalletConnectionStatus,
   useSetActiveWalletConnectionStatus,

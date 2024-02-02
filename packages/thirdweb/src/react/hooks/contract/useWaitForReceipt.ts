@@ -1,10 +1,10 @@
 import type { Abi } from "abitype";
-import type { ThirdwebContract } from "../../../contract/index.js";
+import type { ThirdwebContract } from "~thirdweb/contract/index.js";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { waitForReceipt } from "../../../transaction/index.js";
+import { waitForReceipt } from "~thirdweb/transaction/index.js";
 import type { TransactionReceipt } from "viem";
-import type { TransactionOrUserOpHash } from "../../../transaction/types.js";
-import { getChainIdFromChain } from "../../../chain/index.js";
+import type { TransactionOrUserOpHash } from "~thirdweb/transaction/types.js";
+import { getChainIdFromChain } from "~thirdweb/chain/index.js";
 
 export type TransactionHashOptions<abi extends Abi> =
   TransactionOrUserOpHash & {

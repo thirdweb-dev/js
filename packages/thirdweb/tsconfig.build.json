@@ -5,6 +5,9 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "sourceMap": true,
-    "rootDir": "./src"
+    "rootDir": ".",
+    "paths": {
+      "~thirdweb/*": ["./src/*"]
+    }
   }
 }

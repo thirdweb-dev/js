@@ -24,7 +24,7 @@ import { StyledUl, StyledButton } from "../design-system/elements.js";
 import { iconSize, spacing, radius } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
 import { TWIcon } from "./icons/twIcon.js";
-import { walletIds } from "../../../wallets/index.js";
+import { walletIds } from "~thirdweb/wallets/index.js";
 import { Text } from "../components/text.js";
 
 type WalletSelectUIProps = {

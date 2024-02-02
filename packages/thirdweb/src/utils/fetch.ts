@@ -1,5 +1,5 @@
-import { version } from "../version.js";
-import type { ThirdwebClient } from "../index.js";
+import { version } from "~thirdweb/version.js";
+import type { ThirdwebClient } from "~thirdweb/index.js";
 import { detect, type OperatingSystem } from "detect-browser";
 
 const FETCH_CACHE = new WeakMap<

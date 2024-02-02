@@ -1,6 +1,6 @@
-import { prepareTransaction } from "../../../transaction/index.js";
-import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
-import { type TxOpts } from "../../../transaction/transaction.js";
+import { prepareTransaction } from "~thirdweb/transaction/index.js";
+import type { FileOrBufferOrString } from "~thirdweb/storage/upload/types.js";
+import { type TxOpts } from "~thirdweb/transaction/transaction.js";
 
 export type NFTInput = {
   name?: string;

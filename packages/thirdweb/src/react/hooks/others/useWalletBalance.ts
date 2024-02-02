@@ -2,8 +2,8 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import {
   getTokenBalance,
   type GetTokenBalanceOptions,
-} from "../../../wallets/index.js";
-import { getChainIdFromChain } from "../../../chain/index.js";
+} from "~thirdweb/wallets/index.js";
+import { getChainIdFromChain } from "~thirdweb/chain/index.js";
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.

@@ -1,4 +1,4 @@
-import { computeClientIdFromSecretKey } from "../utils/client-id.js";
+import { computeClientIdFromSecretKey } from "~thirdweb/utils/client-id.js";
 
 export type CreateClientOptions =
   | {

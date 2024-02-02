@@ -1,5 +1,8 @@
-import { getClientFetch } from "../utils/fetch.js";
-import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
+import { getClientFetch } from "~thirdweb/utils/fetch.js";
+import {
+  resolveScheme,
+  type ResolveSchemeOptions,
+} from "~thirdweb/utils/ipfs.js";
 
 export type DownloadOptions = ResolveSchemeOptions;
 

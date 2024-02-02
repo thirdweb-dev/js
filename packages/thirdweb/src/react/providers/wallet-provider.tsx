@@ -1,5 +1,5 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
-import type { Wallet } from "../../wallets/index.js";
+import type { Wallet } from "~thirdweb/wallets/index.js";
 import { connectionManager } from "../connectionManager.js";
 
 /**

@@ -2,7 +2,7 @@ import {
   injectedProvider,
   zerionWallet,
   zerionWalletMetadata,
-} from "../../../wallets/index.js";
+} from "~thirdweb/wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 

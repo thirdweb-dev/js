@@ -89,4 +89,12 @@ module.exports = {
     ],
     ...jsdocRuleOverrides,
   },
+  overrides: [
+    {
+      files: ["*.test.ts", "test/**/*.ts"],
+      rules: {
+        "better-tree-shaking/no-top-level-side-effects": "off",
+      },
+    },
+  ],
 };

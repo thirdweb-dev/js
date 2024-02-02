@@ -1,13 +1,13 @@
-import type { ThirdwebClient } from "../../client/client.js";
+import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import {
   getChainSymbol,
   type Chain,
   getChainDecimals,
-} from "../../chain/index.js";
+} from "~thirdweb/chain/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
-import { getContract } from "../../index.js";
-import { getRpcClient } from "../../rpc/rpc.js";
-import { eth_getBalance } from "../../rpc/index.js";
+import { getContract } from "~thirdweb/index.js";
+import { getRpcClient } from "~thirdweb/rpc/rpc.js";
+import { eth_getBalance } from "~thirdweb/rpc/index.js";
 import { formatUnits } from "viem/utils";
 
 export type GetTokenBalanceOptions = {

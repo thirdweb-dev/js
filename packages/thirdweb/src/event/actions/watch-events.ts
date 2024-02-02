@@ -4,13 +4,13 @@ import {
   eth_getLogs,
   getRpcClient,
   watchBlockNumber,
-} from "../../rpc/index.js";
+} from "~thirdweb/rpc/index.js";
 import { resolveAbiEvent } from "./resolve-abi.js";
 import type { ContractEvent } from "../event.js";
 import {
   resolveContractAbi,
   type ThirdwebContract,
-} from "../../contract/index.js";
+} from "~thirdweb/contract/index.js";
 
 export type WatchContractEventsOptions<
   abi extends Abi,
