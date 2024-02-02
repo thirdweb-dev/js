@@ -1,10 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import getStyles from './styles'
 import {
     useNFTs,
     useContract,
 } from "@thirdweb-dev/react-core";
 import { MediaRenderer } from "../MediaRenderer";
+
+type Styling = {
+    searchContainer: React.CSSProperties;
+    searchBarContainer: React.CSSProperties;
+    networkImage: React.CSSProperties;
+    searchBar: React.CSSProperties;
+    clearButton: React.CSSProperties;
+    suggestionsContainer: React.CSSProperties;
+    suggestion: React.CSSProperties;
+    suggestionLogo: React.CSSProperties;
+  };
 
 
 export interface SearchBarProps {
@@ -13,16 +23,6 @@ export interface SearchBarProps {
     start?: number;
     theme?: string;
     onNFTsFetched?: (nfts: any[]) => void;
-    style?: {
-        searchBarContainer?: React.CSSProperties;
-        selectNetwork?: React.CSSProperties;
-        searchBar?: React.CSSProperties;
-        searchBarMatic?: React.CSSProperties;
-        clearButton?: React.CSSProperties;
-        suggestionsContainer?: React.CSSProperties;
-        suggestion?: React.CSSProperties;
-        suggestionLogo?: React.CSSProperties;
-    };
     classNames?: {
         searchBarContainer?: string;
         selectNetwork?: string;
@@ -53,16 +53,6 @@ export const NFTSearcher = ({
     start,
     theme, 
     onNFTsFetched, 
-    style = {
-        searchBarContainer: {},
-        selectNetwork: {},
-        searchBar: {},
-        searchBarMatic: {},
-        clearButton: {},
-        suggestionsContainer: {},
-        suggestion: {},
-        suggestionLogo: {},
-    },
     classNames = {
         searchBarContainer: "",
         selectNetwork: "",
@@ -79,42 +69,98 @@ export const NFTSearcher = ({
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [collectionCache, setCollectionCache] = useState<Collections>({});
-  const darkTheme = useMemo(() => theme === 'dark', [theme]);
   const [lastUsedContractAddress, setLastUsedContractAddress] = useState<string>('');
   onNFTsFetched = onNFTsFetched || (() => {});
-  const styles = getStyles();
 
-  const darkMode = useMemo(() => ({
-    searchBarContainer: {
+  // Styling and theme
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const darkTheme = useMemo(() => theme === 'dark', [theme]);
+  const styling: Styling = {
+    searchContainer: {
+        position: 'relative',
+        display: 'inline-block',
+      },
+      searchBarContainer: {
+        display: 'flex',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        justifySelf: 'center',
+        width: '500px',
+        border: '3px solid #ccc',
+        borderRadius: '13px',
+        boxSizing: 'border-box',
+        height: '63.5px',
+        position: 'relative',
         backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
         color: darkTheme ? '#fff' : '#000',
-        ...style.searchBarContainer,
-    },
-    searchBar: {
+        outline: 'none',
+      },
+      networkImage: {
+        marginLeft: '10px',
+        marginTop: '12px',
+        marginRight: '0px',
+        width: '30px',
+      },
+      searchBar: {
+        height: '100%',
+        width: '100%',
+        flex: 1,
+        fontSize: '20px',
+        borderRadius: '12px',
+        backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
+        padding: '12px 20px 12px 10px',
+        alignItems: 'center',
+        justifySelf: 'center',
+        border: 'none',
+        cursor: 'pointer',
+        color: darkTheme ? '#fff' : '#000',
+        outline: 'none',
+      },
+      clearButton: {
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        color: '#ccc',
+        fontSize: '1.5em',
+        backgroundColor: 'rgba(231, 232, 232, 0.407)',
+        width: '60px',
+        borderTopRightRadius: '8px',
+        borderBottomRightRadius: '8px',
+      },
+      suggestionsContainer: {
+        position: 'absolute',
+        left: 0,
+        top: '68px',
+        justifySelf: 'center',
+        borderRadius: '12px',
+        width: '500px', 
+        padding: '12px 20px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        cursor: 'pointer',
+        flex: 1,
         backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
         color: darkTheme ? '#fff' : '#000',
-        ...style.searchBar,
-    },
-    searchBarMatic: {
+      },
+      suggestion:{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '8px',
+        marginTop: '8px',
+      },
+      suggestionLogo: {
+        width: '24px',
+        height: '24px',
         backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
         color: darkTheme ? '#fff' : '#000',
-        ...style.searchBarMatic,
-    },
-    suggestionsContainer: {
-        backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
-        color: darkTheme ? '#fff' : '#000',
-        ...style.suggestionsContainer,
-    },
-    suggestionLogo: {
-        backgroundColor: darkTheme ? '#1f1f1f' : '#fff',
-        color: darkTheme ? '#fff' : '#000',
-        ...style.suggestionLogo,
-    },
- }), [darkTheme, style]);
+      },
+  };
 
+  // Active Network
  const network = useMemo(() => {
     return activeNetwork || 'ethereum';
-}, [activeNetwork]);
+    }, [activeNetwork]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const search = e.target.value;
@@ -154,6 +200,8 @@ export const NFTSearcher = ({
     };
     
     
+
+    // Directory
     useEffect(() => {
         const fetchCollections = async () => {
             // Check cache first
@@ -210,12 +258,16 @@ export const NFTSearcher = ({
 
     
   return (
-    <div className={styles.searchContainer}>
-        <div className={`${styles.searchBarContainer} ${classNames.searchBarContainer || ""}`} 
-        style={style.searchBarContainer && darkMode ? darkMode.searchBarContainer : style.searchBarContainer}>
+    <div 
+        style={styling.searchContainer}
+        >
+        <div 
+            className={`${classNames.searchBarContainer || ""}`} 
+            style={styling.searchBarContainer}
+        >
             {network === "ethereum" ? (
                 <MediaRenderer 
-                    className={styles.networkImage}
+                    style={styling.networkImage}
                     src="https://bafybeie3c5fcqjhrfma6wljpwzzldpsttu2lonutagoxwikeslersqzdwe.ipfs.dweb.link/eth.png"
                     alt="ethereum"
                     width={"30px"} 
@@ -223,7 +275,7 @@ export const NFTSearcher = ({
                 />
             ) : network === "polygon" ? (
                 <MediaRenderer 
-                    className={styles.networkImage}
+                style={styling.networkImage}
                     src="https://bafybeigzgztdmt3qdt52wuhyrrvpqp5qt4t2uja23wmfhsccqt332ek7da.ipfs.dweb.link/polygon/512.png"
                     alt="polygon"
                     width={"30px"} 
@@ -231,7 +283,7 @@ export const NFTSearcher = ({
                 />
             ) : network === "fantom" ? (
                 <MediaRenderer 
-                    className={styles.networkImage}
+                    style={styling.networkImage}
                     src="https://bafybeigzgztdmt3qdt52wuhyrrvpqp5qt4t2uja23wmfhsccqt332ek7da.ipfs.dweb.link/fantom/512.png"
                     alt="fantom"
                     width={"30px"} 
@@ -239,7 +291,7 @@ export const NFTSearcher = ({
                 />
             ) : network === "avalanche" ? (
                 <MediaRenderer 
-                    className={styles.networkImage}
+                    style={styling.networkImage}
                     src="https://bafybeigzgztdmt3qdt52wuhyrrvpqp5qt4t2uja23wmfhsccqt332ek7da.ipfs.dweb.link/avalanche/512.png"
                     alt="avalanche"
                     width={"30px"} 
@@ -247,16 +299,15 @@ export const NFTSearcher = ({
                 />
              ) : network === "frame-testnet" ? (
                     <MediaRenderer 
-                        className={styles.networkImage}
                         src="https://5830d53ec6e6754ea216cead1b68e681.ipfscdn.io/ipfs/bafybeibvzodeiunfwwkffke35wcrgup2gcc6rn4izzt3u74xcstf74k3o4/"
                         alt="frametestnet"
                         width={"30px"} 
                         height={"30px"}
-                        style={{borderRadius: "50%"}}
+                        style={{ borderRadius: "50%", ...styling.networkImage }}
                     />
             ) : (
                 <MediaRenderer 
-                    className={styles.networkImage}
+                    style={styling.networkImage}
                     src="https://bafybeie3c5fcqjhrfma6wljpwzzldpsttu2lonutagoxwikeslersqzdwe.ipfs.dweb.link/eth.png"
                     alt="ethereum"
                     width={"30px"} 
@@ -265,8 +316,8 @@ export const NFTSearcher = ({
             )    
             }
             <input
-                style={style.searchBar && darkMode ? darkMode.searchBar : style.searchBar}
-                className={`${styles.searchBar} ${styles.searchBar || ""}`}
+                style={styling.searchBar}
+                className={`${classNames.searchBar || ""}`}
                 type="text"
                 value={contractAddress}
                 placeholder={isProcessing ? "searching..." : "Name/Contract Address"}
@@ -280,8 +331,8 @@ export const NFTSearcher = ({
             />
             {contractAddress && (
             <button 
-                style={style.clearButton}
-                className={`${styles.clearButton} ${classNames.clearButton || ""}`} 
+                style={styling.clearButton}
+                className={`${classNames.clearButton || ""}`} 
                 onClick={handleClearSearch} 
                 aria-label="Clear search"
             >
@@ -291,8 +342,8 @@ export const NFTSearcher = ({
         </div>
         {showSuggestions && (
         <div
-            style={style.suggestionsContainer && darkMode ? darkMode.suggestionsContainer : style.suggestionsContainer}
-            className={`${styles.suggestionsContainer} ${classNames.suggestionsContainer || ""} `}
+            style={styling.suggestionsContainer}
+            className={`${classNames.suggestionsContainer || ""} `}
         >
             {collections && collections.length > 0 ? 
                 collections
@@ -303,8 +354,16 @@ export const NFTSearcher = ({
                 .map((collection, index) => (
                     <div
                         key={index}
-                        style={style.suggestion}
-                        className={`${styles.suggestion} ${classNames.suggestion || ""}`}
+                        style={{
+                            ...styling.suggestion,
+                            backgroundColor: hoveredIndex === index ? '#e7e8e8' : 'transparent',
+                            color: hoveredIndex === index ? '#070707' : 'inherit',
+                            borderRadius: hoveredIndex === index ? '5px' : '0',
+                            padding: hoveredIndex === index ? '5px' : '0',
+                        }}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                        className={`${classNames.suggestion || ""}`}
                         onClick={() => {
                             if (collection.contract){
                             handleSuggestionClick(collection.contract);
@@ -314,8 +373,8 @@ export const NFTSearcher = ({
                         <MediaRenderer 
                             src={collection.image} 
                             alt={collection.contract}
-                            style={style.suggestionLogo}
-                            className={`${styles.suggestionLogo} ${classNames.suggestionLogo || ""}`} 
+                            style={styling.suggestionLogo}
+                            className={`${classNames.suggestionLogo || ""}`} 
                             width={"20px"} 
                             height={"20px"}
                         />
@@ -324,8 +383,8 @@ export const NFTSearcher = ({
                 ))
             :
                 <div
-                    style={style.suggestion}
-                    className={`${styles.suggestion} ${classNames.suggestion || ""}`}
+                    style={styling.suggestion}
+                    className={`${classNames.suggestion || ""}`}
                 >
                     <span>{'No Collection Found'}</span>
                 </div>
