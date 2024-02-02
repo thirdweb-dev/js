@@ -1,7 +1,7 @@
-import { getContract } from "~thirdweb/contract/index.js";
 import { CLIENT_ID_CLIENT } from "./test-clients.js";
 import { USDC_ABI } from "./abis/usdc.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
+import { getContract } from "../../src/contract/index.js";
 
 // ERC20
 
