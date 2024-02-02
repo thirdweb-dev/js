@@ -1,8 +1,8 @@
 import type { AbiFunction } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { estimateGas } from "~thirdweb/transaction/index.js";
-import type { Transaction } from "~thirdweb/transaction/transaction.js";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
+import type { Transaction } from "../../../transaction/transaction.js";
+import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
 
 /**
  * A hook to estimate the gas for a given transaction.

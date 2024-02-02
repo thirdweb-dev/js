@@ -1,8 +1,7 @@
 import { type Abi } from "abitype";
-
-import type { ThirdwebContract } from "~thirdweb/index.js";
-import { getChainIdFromChain } from "~thirdweb/chain/index.js";
-import { getClientFetch } from "~thirdweb/utils/fetch.js";
+import type { ThirdwebContract } from "../index.js";
+import { getChainIdFromChain } from "../../chain/index.js";
+import { getClientFetch } from "../../utils/fetch.js";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 

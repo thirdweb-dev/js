@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createClient } from "./client.js";
-import { computeClientIdFromSecretKey } from "~thirdweb/utils/client-id.js";
+import { computeClientIdFromSecretKey } from "../utils/client-id.js";
 
 describe("client", () => {
   it("should create a client with a clientId", () => {

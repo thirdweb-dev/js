@@ -1,7 +1,7 @@
-import { createStore } from "~thirdweb/reactive/store.js";
+import { computedStore } from "../../reactive/computedStore.js";
+import { effect } from "../../reactive/effect.js";
+import { createStore } from "../../reactive/store.js";
 import type { Wallet } from "../index.js";
-import { computedStore } from "~thirdweb/reactive/computedStore.js";
-import { effect } from "~thirdweb/reactive/effect.js";
 import { walletStorage, type WalletStorage } from "./storage.js";
 
 export type ConnectedWalletsMap = Map<string, Wallet>;

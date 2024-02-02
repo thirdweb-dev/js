@@ -1,14 +1,14 @@
 import { useEffect, useMemo } from "react";
 import type { Abi, AbiEvent } from "abitype";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ContractEvent } from "../../../event/event.js";
 import {
   watchEvents,
-  type ContractEvent,
-  getEvents,
-} from "~thirdweb/event/index.js";
-import type { WatchContractEventsOptions } from "~thirdweb/event/actions/watch-events.js";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChainIdFromChain } from "~thirdweb/chain/index.js";
-import { eth_blockNumber, getRpcClient } from "~thirdweb/rpc/index.js";
+  type WatchContractEventsOptions,
+} from "../../../event/actions/watch-events.js";
+import { getChainIdFromChain } from "../../../chain/index.js";
+import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
+import { getEvents } from "../../../event/actions/get-events.js";
 
 export type UseWatchEventsOptions<
   abi extends Abi,

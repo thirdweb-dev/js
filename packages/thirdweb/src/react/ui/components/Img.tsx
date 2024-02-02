@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import type { ThirdwebClient } from "~thirdweb/index.js";
-import { resolveScheme } from "~thirdweb/utils/ipfs.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { resolveScheme } from "../../../utils/ipfs.js";
 
 /**
  * @internal

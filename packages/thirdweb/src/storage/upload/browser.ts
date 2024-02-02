@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { getPlatformHeaders } from "~thirdweb/utils/fetch.js";
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getPlatformHeaders } from "../../utils/fetch.js";
 import { UPLOAD_SERVER_URL } from "./constants.js";
 import type { UploadOptions } from "./types.js";
 

@@ -1,9 +1,9 @@
 import type { Abi, AbiFunction } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import type { Transaction } from "~thirdweb/transaction/transaction.js";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
-import { sendTransaction } from "~thirdweb/transaction/actions/send-transaction.js";
-import type { WaitForReceiptOptions } from "~thirdweb/transaction/actions/wait-for-tx-receipt.js";
+import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import type { Transaction } from "../../../transaction/transaction.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 
 /**
  * A hook to send a transaction.

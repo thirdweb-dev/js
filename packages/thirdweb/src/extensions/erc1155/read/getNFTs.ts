@@ -1,8 +1,8 @@
 import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
-import { min } from "~thirdweb/utils/bigint.js";
 import { getNFT } from "./getNFT.js";
-import { type TxOpts } from "~thirdweb/transaction/transaction.js";
-import type { NFT } from "~thirdweb/utils/nft/parseNft.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
+import type { NFT } from "../../../utils/nft/parseNft.js";
+import { min } from "../../../utils/bigint.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

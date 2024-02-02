@@ -1,9 +1,12 @@
 import { useEffect, useMemo } from "react";
-import type { ThirdwebClient } from "~thirdweb/index.js";
-import { watchBlockNumber } from "~thirdweb/rpc/watchBlockNumber.js";
-import { getChainIdFromChain, type Chain } from "~thirdweb/chain/index.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { eth_blockNumber, getRpcClient } from "~thirdweb/rpc/index.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getChainIdFromChain, type Chain } from "../../../chain/index.js";
+import {
+  eth_blockNumber,
+  getRpcClient,
+  watchBlockNumber,
+} from "../../../rpc/index.js";
 
 export type UseBlockNumberOptions = {
   client: ThirdwebClient;

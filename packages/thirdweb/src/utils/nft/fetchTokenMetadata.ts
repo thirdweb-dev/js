@@ -1,6 +1,6 @@
 import { toHex } from "viem";
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
 import { isBase64String, parseBase64String } from "./base64.js";
+import type { ThirdwebClient } from "../../client/client.js";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",

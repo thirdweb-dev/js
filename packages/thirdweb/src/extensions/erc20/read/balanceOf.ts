@@ -1,8 +1,8 @@
-import { readContract } from "~thirdweb/transaction/actions/read.js";
 import { decimals } from "./decimals.js";
 import { formatUnits } from "viem";
 import { symbol } from "./symbol.js";
-import { type TxOpts } from "~thirdweb/transaction/transaction.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
+import { readContract } from "../../../transaction/actions/read.js";
 
 const METHOD = "function balanceOf(address) view returns (uint256)" as const;
 

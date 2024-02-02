@@ -5,11 +5,11 @@ import type {
   Address,
   ExtractAbiFunctionNames,
 } from "abitype";
-import type { ThirdwebContract } from "~thirdweb/contract/index.js";
-import type { ParseMethod } from "~thirdweb/abi/types.js";
-import { isObjectWithKeys } from "~thirdweb/utils/type-guards.js";
 import type { Hex } from "viem";
-import type { FeeDataParams } from "~thirdweb/gas/fee-data.js";
+import type { FeeDataParams } from "../gas/fee-data.js";
+import type { ParseMethod } from "../abi/types.js";
+import type { ThirdwebContract } from "../contract/index.js";
+import { isObjectWithKeys } from "../utils/type-guards.js";
 
 type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   length: 0;

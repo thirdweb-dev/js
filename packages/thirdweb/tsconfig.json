@@ -7,7 +7,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~thirdweb/*": ["./src/*"],
       "~test/*": ["./test/src/*"]
     }
   }

@@ -14,91 +14,91 @@
   "bin": {
     "thirdweb": "node_modules/@thirdweb-dev/cli/dist/cli/index.js"
   },
-  "main": "./cjs/index.js",
-  "module": "./esm/index.js",
-  "types": "./types/index.d.ts",
-  "typings": "./types/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "import": "./esm/index.js",
-      "default": "./cjs/index.js"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/cjs/index.js"
     },
     "./transaction": {
-      "types": "./types/transaction/index.d.ts",
-      "import": "./esm/transaction/index.js",
-      "default": "./cjs/transaction/index.js"
+      "types": "./dist/types/transaction/index.d.ts",
+      "import": "./dist/esm/transaction/index.js",
+      "default": "./dist/cjs/transaction/index.js"
     },
     "./event": {
-      "types": "./types/event/index.d.ts",
-      "import": "./esm/event/index.js",
-      "default": "./cjs/event/index.js"
+      "types": "./dist/types/event/index.d.ts",
+      "import": "./dist/esm/event/index.js",
+      "default": "./dist/cjs/event/index.js"
     },
     "./rpc": {
-      "types": "./types/rpc/index.d.ts",
-      "import": "./esm/rpc/index.js",
-      "default": "./cjs/rpc/index.js"
+      "types": "./dist/types/rpc/index.d.ts",
+      "import": "./dist/esm/rpc/index.js",
+      "default": "./dist/cjs/rpc/index.js"
     },
     "./react": {
-      "types": "./types/react/index.d.ts",
-      "import": "./esm/react/index.js",
-      "default": "./cjs/react/index.js"
+      "types": "./dist/types/react/index.d.ts",
+      "import": "./dist/esm/react/index.js",
+      "default": "./dist/cjs/react/index.js"
     },
     "./storage": {
-      "types": "./types/storage/index.d.ts",
-      "import": "./esm/storage/index.js",
-      "default": "./cjs/storage/index.js"
+      "types": "./dist/types/storage/index.d.ts",
+      "import": "./dist/esm/storage/index.js",
+      "default": "./dist/cjs/storage/index.js"
     },
     "./wallets": {
-      "types": "./types/wallets/index.d.ts",
-      "import": "./esm/wallets/index.js",
-      "default": "./cjs/wallets/index.js"
+      "types": "./dist/types/wallets/index.d.ts",
+      "import": "./dist/esm/wallets/index.js",
+      "default": "./dist/cjs/wallets/index.js"
     },
     "./wallets/*": {
-      "types": "./types/wallets/*.d.ts",
-      "import": "./esm/wallets/*.js",
-      "default": "./cjs/wallets/*.js"
+      "types": "./dist/types/wallets/*.d.ts",
+      "import": "./dist/esm/wallets/*.js",
+      "default": "./dist/cjs/wallets/*.js"
     },
     "./extensions/*": {
-      "types": "./types/extensions/*.d.ts",
-      "import": "./esm/extensions/*.js",
-      "default": "./cjs/extensions/*.js"
+      "types": "./dist/types/extensions/*.d.ts",
+      "import": "./dist/esm/extensions/*.js",
+      "default": "./dist/cjs/extensions/*.js"
     },
     "./adapters/*": {
-      "types": "./types/adapters/*.d.ts",
-      "import": "./esm/adapters/*.js",
-      "default": "./cjs/adapters/*.js"
+      "types": "./dist/types/adapters/*.d.ts",
+      "import": "./dist/esm/adapters/*.js",
+      "default": "./dist/cjs/adapters/*.js"
     },
     "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
       "react": [
-        "./types/react/index.d.ts"
+        "./dist/types/react/index.d.ts"
       ],
       "transaction": [
-        "./types/transaction/index.d.ts"
+        "./dist/types/transaction/index.d.ts"
       ],
       "event": [
-        "./types/event/index.d.ts"
+        "./dist/types/event/index.d.ts"
       ],
       "rpc": [
-        "./types/rpc/index.d.ts"
+        "./dist/types/rpc/index.d.ts"
       ],
       "storage": [
-        "./types/storage/index.d.ts"
+        "./dist/types/storage/index.d.ts"
       ],
       "wallets": [
-        "./types/wallets/index.d.ts"
+        "./dist/types/wallets/index.d.ts"
       ],
       "wallets/*": [
-        "./types/wallets/*.d.ts"
+        "./dist/types/wallets/*.d.ts"
       ],
       "extensions/*": [
-        "./types/extensions/*.d.ts"
+        "./dist/types/extensions/*.d.ts"
       ],
       "adapters/*": [
-        "./types/adapters/*.d.ts"
+        "./dist/types/adapters/*.d.ts"
       ]
     }
   },
@@ -107,9 +107,7 @@
   },
   "sideEffects": false,
   "files": [
-    "cjs/*",
-    "esm/*",
-    "types/*",
+    "dist/*",
     "!**/*.tsbuildinfo",
     "!**/*.test.ts",
     "!**/*.test.ts.snap",
@@ -176,10 +174,10 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
-    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./cjs/package.json",
-    "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./esm/package.json",
-    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./types --emitDeclarationOnly --declaration --declarationMap",
-    "clean": "rimraf esm cjs types",
+    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "clean": "rimraf dist",
     "push": "yalc push",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
     "test": "CI=true vitest -c ./test/vitest.config.ts --coverage --retry=3 --bail=1 --pool=forks",

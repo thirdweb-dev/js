@@ -1,4 +1,4 @@
-import type { TxOpts } from "~thirdweb/transaction/transaction.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
 import { getClaimConditionById } from "./claimConditioById.js";
 import { claimCondition } from "./claimCondition.js";
 import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";

@@ -1,10 +1,10 @@
 import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { getNFT } from "./getNFT.js";
-import { type TxOpts } from "~thirdweb/transaction/transaction.js";
-import type { NFT } from "~thirdweb/utils/nft/parseNft.js";
-import type { Wallet } from "~thirdweb/wallets/interfaces/wallet.js";
 import { balanceOfBatch } from "./balanceOfBatch.js";
 import type { Address } from "abitype";
+import type { TxOpts } from "../../../transaction/transaction.js";
+import type { NFT } from "../../../utils/nft/parseNft.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
 

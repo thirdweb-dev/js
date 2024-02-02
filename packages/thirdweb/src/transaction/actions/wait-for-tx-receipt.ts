@@ -1,13 +1,13 @@
 import type { Hex, TransactionReceipt } from "viem";
-import type { ThirdwebContract } from "~thirdweb/contract/index.js";
-import {
-  getRpcClient,
-  eth_getTransactionReceipt,
-  watchBlockNumber,
-} from "~thirdweb/rpc/index.js";
 import type { Abi } from "abitype";
 import type { TransactionOrUserOpHash } from "../types.js";
-import { getChainIdFromChain } from "~thirdweb/chain/index.js";
+import type { ThirdwebContract } from "../../contract/index.js";
+import { getChainIdFromChain } from "../../chain/index.js";
+import {
+  eth_getTransactionReceipt,
+  getRpcClient,
+  watchBlockNumber,
+} from "../../rpc/index.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 

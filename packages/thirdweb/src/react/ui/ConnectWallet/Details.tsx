@@ -5,7 +5,6 @@ import {
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
-import { walletIds } from "~thirdweb/wallets/index.js";
 import {
   useActiveWallet,
   useActiveWalletAddress,
@@ -44,6 +43,7 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { walletIds } from "../../../wallets/walletIds.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 

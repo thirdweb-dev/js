@@ -1,8 +1,8 @@
 import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
-import { prepareTransaction } from "~thirdweb/transaction/transaction.js";
 import { describe, it, expect, vi } from "vitest";
 import { estimateGas } from "./estimate-gas.js";
+import { prepareTransaction } from "../transaction.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 

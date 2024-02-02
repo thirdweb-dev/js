@@ -3,7 +3,7 @@ import type {
   Transaction,
   DynamicTransactionOverrides,
 } from "../transaction.js";
-import { isObjectWithKeys } from "~thirdweb/utils/type-guards.js";
+import { isObjectWithKeys } from "../../utils/type-guards.js";
 
 const PARAMS_CACHE = new WeakMap();
 

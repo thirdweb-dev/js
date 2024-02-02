@@ -1,5 +1,5 @@
 import { useQueries, useQuery, queryOptions } from "@tanstack/react-query";
-import { getChainDataForChainId } from "~thirdweb/chain/index.js";
+import { getChainDataForChainId } from "../../../chain/index.js";
 
 /**
  * @internal

@@ -1,7 +1,7 @@
+import type { TxOpts } from "../../../transaction/transaction.js";
+import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
+import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
 import { tokenURI, type TokenUriParams } from "./tokenURI.js";
-import { fetchTokenMetadata } from "~thirdweb/utils/nft/fetchTokenMetadata.js";
-import { parseNFT, type NFT } from "~thirdweb/utils/nft/parseNft.js";
-import type { TxOpts } from "~thirdweb/transaction/transaction.js";
 
 /**
  * Parameters for getting an NFT.

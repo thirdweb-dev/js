@@ -1,5 +1,5 @@
-import { type TxOpts } from "~thirdweb/transaction/transaction.js";
-import { readContract } from "~thirdweb/transaction/actions/read.js";
+import { readContract } from "../../../transaction/actions/read.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
 
 export type BalanceOfBatchParams = {
   owners: readonly string[];

@@ -1,7 +1,7 @@
 import { getRpcClient } from "./rpc.js";
 import { eth_blockNumber } from "./actions/eth_blockNumber.js";
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
-import { getChainIdFromChain, type Chain } from "~thirdweb/chain/index.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { getChainIdFromChain, type Chain } from "../chain/index.js";
 
 const MAX_POLL_DELAY = 5000; // 5 seconds
 const DEFAULT_POLL_DELAY = 1000; // 1 second

@@ -1,9 +1,9 @@
 import type { Transaction } from "../transaction.js";
 import type { Abi, AbiFunction, TransactionSerializable } from "viem";
-import type { Wallet } from "~thirdweb/wallets/interfaces/wallet.js";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
-import { getChainIdFromChain } from "~thirdweb/chain/index.js";
 import { resolveParams } from "./resolve-params.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 type SendTransactionOptions<
   abiFn extends AbiFunction,

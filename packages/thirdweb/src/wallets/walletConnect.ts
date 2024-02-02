@@ -10,18 +10,15 @@ import type { Address } from "abitype";
 import { normalizeChainId } from "./utils/normalizeChainId.js";
 import { type Wallet } from "./index.js";
 import type { DAppMetaData, WalletMetadata } from "./types.js";
-import type { ThirdwebClient } from "~thirdweb/index.js";
-import {
-  getChainDataForChainId,
-  getRpcUrlForChain,
-} from "~thirdweb/chain/index.js";
 import { walletStorage } from "./manager/storage.js";
-import type { ApiChain } from "~thirdweb/chain/types.js";
 import {
   EthereumProvider,
   OPTIONAL_EVENTS,
   OPTIONAL_METHODS,
 } from "@walletconnect/ethereum-provider";
+import type { ThirdwebClient } from "../client/client.js";
+import { getChainDataForChainId, getRpcUrlForChain } from "../chain/index.js";
+import type { ApiChain } from "../chain/types.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 type QRCodeModalOptions = Pick<

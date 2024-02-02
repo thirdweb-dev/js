@@ -1,5 +1,5 @@
-import { stringify } from "~thirdweb/utils/json.js";
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { stringify } from "../utils/json.js";
 import {
   buildFormData,
   extractObjectFiles,

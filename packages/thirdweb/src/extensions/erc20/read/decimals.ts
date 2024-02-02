@@ -1,8 +1,7 @@
-import { type TxOpts } from "~thirdweb/transaction/transaction.js";
-import { readContract } from "~thirdweb/transaction/actions/read.js";
-import { type ThirdwebContract } from "~thirdweb/contract/index.js";
-
-import { detectMethod } from "~thirdweb/utils/extensions/detect.js";
+import type { ThirdwebContract } from "../../../contract/index.js";
+import { readContract } from "../../../transaction/actions/read.js";
+import type { TxOpts } from "../../../transaction/transaction.js";
+import { detectMethod } from "../../../utils/extensions/detect.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();
 

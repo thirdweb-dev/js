@@ -1,7 +1,6 @@
-import type { ThirdwebContract } from "~thirdweb/index.js";
 import type { AbiFunction } from "abitype";
-import { getByteCode } from "~thirdweb/contract/actions/get-bytecode.js";
-import { getFunctionSelector } from "~thirdweb/abi/lib/getFunctionSelector.js";
+import { getByteCode, type ThirdwebContract } from "../../contract/index.js";
+import { getFunctionSelector } from "../../abi/lib/getFunctionSelector.js";
 
 export type DetectExtensionOptions = {
   contract: ThirdwebContract;

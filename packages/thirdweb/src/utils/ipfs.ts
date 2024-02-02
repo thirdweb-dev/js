@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
 
 export type ResolveSchemeOptions = {
   client: ThirdwebClient;

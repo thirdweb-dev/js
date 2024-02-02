@@ -4,8 +4,8 @@ import type {
   AbiParametersToPrimitiveTypes,
   ExtractAbiEventNames,
 } from "abitype";
-import type { ThirdwebContract } from "~thirdweb/contract/index.js";
-import type { ParseEvent } from "~thirdweb/abi/types.js";
+import type { ThirdwebContract } from "../contract/index.js";
+import type { ParseEvent } from "../abi/types.js";
 
 export type EventParams<event extends AbiEvent> = AbiParametersToPrimitiveTypes<
   event["inputs"]

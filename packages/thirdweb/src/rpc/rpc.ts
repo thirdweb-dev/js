@@ -1,12 +1,12 @@
-import { getClientFetch } from "~thirdweb/utils/fetch.js";
+import type { EIP1193RequestFn, EIP1474Methods } from "viem";
+import type { ThirdwebClient } from "../client/client.js";
 import {
   getChainIdFromChain,
   type Chain,
   getRpcUrlForChain,
-} from "~thirdweb/chain/index.js";
-import type { ThirdwebClient } from "~thirdweb/client/client.js";
-import { stringify } from "~thirdweb/utils/json.js";
-import type { EIP1193RequestFn, EIP1474Methods } from "viem";
+} from "../chain/index.js";
+import { getClientFetch } from "../utils/fetch.js";
+import { stringify } from "../utils/json.js";
 
 type SuccessResult<T> = {
   method?: never;
