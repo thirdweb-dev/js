@@ -4,6 +4,8 @@ import { formatUnits } from "viem";
 import { symbol } from "./symbol.js";
 import { type TxOpts } from "~thirdweb/transaction/transaction.js";
 
+const METHOD = "function balanceOf(address) view returns (uint256)" as const;
+
 type BalanceOfParams = { address: string };
 
 type BalanceOfResult = {
@@ -30,7 +32,7 @@ export async function balanceOf(
   const [balanceWei, decimals_, symbol_] = await Promise.all([
     readContract({
       ...options,
-      method: "function balanceOf(address) view returns (uint256)",
+      method: METHOD,
       params: [options.address],
     }),
     decimals(options),

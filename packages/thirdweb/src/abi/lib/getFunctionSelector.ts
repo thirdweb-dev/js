@@ -3,7 +3,7 @@ import { getFunctionSignature } from "./getFunctionSignature.js";
 import { toFunctionSelector } from "viem";
 import type { Hash } from "viem";
 
-const FN_SELECTOR_CACHE = /*@__PURE__*/ new Map<string, Hash>();
+const FN_SELECTOR_CACHE = /*@__PURE__*/ new Map<string | AbiFunction, Hash>();
 
 /**
  * Computes the function selector for a given function name or AbiFunction object.

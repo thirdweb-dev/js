@@ -1,8 +1,31 @@
 import { type TxOpts } from "~thirdweb/transaction/transaction.js";
 import { readContract } from "~thirdweb/transaction/actions/read.js";
-import type { ThirdwebContract } from "~thirdweb/contract/index.js";
+import { type ThirdwebContract } from "~thirdweb/contract/index.js";
+
+import { detectMethod } from "~thirdweb/utils/extensions/detect.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();
+
+const METHOD = "function decimals() view returns (uint8)" as const;
+
+/**
+ * Detects if the contract has a function to retrieve the number of decimals.
+ * @param contract The ThirdwebContract instance representing the contract.
+ * @returns A Promise that resolves to a boolean indicating whether the contract has a decimals function.
+ * @example
+ * ```ts
+ * import { detectDecimals } from "thirdweb/extensions/erc20";
+ * const supports = await detectDecimals(contract);
+ * ```
+ */
+export async function detectDecimals(
+  contract: ThirdwebContract,
+): Promise<boolean> {
+  return detectMethod({
+    contract,
+    method: METHOD,
+  });
+}
 
 /**
  * Retrieves the number of decimal places for an ERC20 token.
@@ -22,7 +45,7 @@ export function decimals(options: TxOpts): Promise<number> {
   }
   const prom = readContract({
     ...options,
-    method: "function decimals() view returns (uint8)",
+    method: METHOD,
   });
   cache.set(options.contract, prom);
   return prom;

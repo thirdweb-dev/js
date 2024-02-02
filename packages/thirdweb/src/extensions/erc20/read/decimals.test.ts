@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { USDC_CONTRACT } from "~test/test-contracts.js";
-import { decimals } from "./decimals.js";
+import { DOODLES_CONTRACT, USDC_CONTRACT } from "~test/test-contracts.js";
+import { decimals, detectDecimals } from "./decimals.js";
+import { VITALIK_WALLET } from "~test/addresses.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -29,5 +30,31 @@ describe("erc20.decimals", () => {
     expect(balance2).toBe(6);
     // it should still only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("erc20.detectDecimals", () => {
+  it("should return true for a contract with a decimals function", async () => {
+    const result = await detectDecimals({
+      ...USDC_CONTRACT,
+      // TODO: need bytecode merging (for implementation contract)
+      address: "0x43506849D7C04F9138D1A2050bbF3A0c054402dd",
+    });
+    expect(result).toBe(true);
+  });
+
+  it("should return false if something is not a contract", async () => {
+    const result = await detectDecimals({
+      ...USDC_CONTRACT,
+      address: VITALIK_WALLET,
+    });
+    expect(result).toBe(false);
+  });
+
+  it("should return false if something is a contract without decimals", async () => {
+    const result = await detectDecimals({
+      ...DOODLES_CONTRACT,
+    });
+    expect(result).toBe(false);
   });
 });
