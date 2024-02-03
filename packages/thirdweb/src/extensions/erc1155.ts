@@ -14,3 +14,4 @@ export {
   totalSupply,
   type TotalSupplyParams,
 } from "./erc1155/read/totalSupply.js";
+export { balanceOf, type BalanceOfParams } from "./erc1155/read/balanceOf.js";

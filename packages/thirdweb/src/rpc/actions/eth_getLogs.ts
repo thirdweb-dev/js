@@ -6,7 +6,6 @@ import {
   type EIP1193RequestFn,
   type EIP1474Methods,
   type GetLogsParameters,
-  type GetLogsReturnType,
   type LogTopic,
   type EncodeEventTopicsParameters,
   type RpcLog,
@@ -14,6 +13,7 @@ import {
   parseEventLogs,
   numberToHex,
 } from "viem";
+import type { EventLog } from "../../event/event.js";
 
 /**
  * Retrieves logs from the Ethereum blockchain based on the specified parameters.
@@ -32,7 +32,7 @@ import {
  * ```
  */
 export async function eth_getLogs<
-  const TAbiEvent extends AbiEvent | undefined = undefined,
+  const TAbiEvent extends AbiEvent,
   const TAbiEvents extends
     | readonly AbiEvent[]
     | readonly unknown[]
@@ -49,9 +49,7 @@ export async function eth_getLogs<
     TFromBlock,
     TToBlock
   > = {},
-): Promise<
-  GetLogsReturnType<TAbiEvent, TAbiEvents, TStrict, TFromBlock, TToBlock>
-> {
+): Promise<EventLog<TAbiEvent>[]> {
   const strict = params.strict ?? false;
   const events = params.events ?? (params.event ? [params.event] : undefined);
 
@@ -128,23 +126,11 @@ export async function eth_getLogs<
 
   const formattedLogs = logs.map((log) => formatLog(log));
   if (!events) {
-    return formattedLogs as GetLogsReturnType<
-      TAbiEvent,
-      TAbiEvents,
-      TStrict,
-      TFromBlock,
-      TToBlock
-    >;
+    return formattedLogs as EventLog<TAbiEvent>[];
   }
   return parseEventLogs({
     abi: events,
     logs: formattedLogs,
     strict,
-  }) as unknown as GetLogsReturnType<
-    TAbiEvent,
-    TAbiEvents,
-    TStrict,
-    TFromBlock,
-    TToBlock
-  >;
+  }) as unknown as EventLog<TAbiEvent>[];
 }

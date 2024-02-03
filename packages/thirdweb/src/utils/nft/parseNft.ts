@@ -1,4 +1,6 @@
 type NFTMetadata = {
+  id: bigint;
+  uri: string;
   name?: string;
   description?: string;
   image?: string;

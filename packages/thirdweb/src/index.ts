@@ -42,6 +42,7 @@ export {
   prepareEvent,
   type ContractEventOptions,
   type ContractEvent,
+  type EventLog,
 } from "./event/event.js";
 
 // event actions

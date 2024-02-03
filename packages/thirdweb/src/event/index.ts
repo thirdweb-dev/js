@@ -1,5 +1,6 @@
 export {
   prepareEvent,
+  type EventLog,
   type ContractEvent,
   type ContractEventOptions as ContractEventInput,
 } from "./event.js";

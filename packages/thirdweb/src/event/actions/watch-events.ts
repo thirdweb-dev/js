@@ -1,7 +1,6 @@
 import type { Abi, AbiEvent } from "abitype";
-import type { GetLogsReturnType } from "viem";
 import { resolveAbiEvent } from "./resolve-abi.js";
-import type { ContractEvent } from "../event.js";
+import type { ContractEvent, EventLog } from "../event.js";
 import {
   resolveContractAbi,
   type ThirdwebContract,
@@ -17,9 +16,7 @@ export type WatchContractEventsOptions<
   abiEvent extends AbiEvent,
   contractEvents extends ContractEvent<abiEvent>[],
 > = {
-  onLogs: (
-    logs: GetLogsReturnType<undefined, abiEvent[], undefined, bigint, bigint>,
-  ) => void | undefined;
+  onLogs: (logs: EventLog<abiEvent>[]) => void | undefined;
   contract: ThirdwebContract<abi>;
   events?: contractEvents | undefined;
 };
@@ -91,13 +88,7 @@ export function watchEvents<
         toBlock: blockNumber,
         address: options.contract.address,
         events: parsedEvents,
-      })) as GetLogsReturnType<
-        undefined,
-        abiEvent[],
-        undefined,
-        bigint,
-        bigint
-      >;
+      })) as EventLog<abiEvent>[];
       // if there were any logs associated with our event(s)
       if (logs.length) {
         options.onLogs(logs);

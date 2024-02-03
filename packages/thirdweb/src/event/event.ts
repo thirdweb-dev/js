@@ -6,6 +6,17 @@ import type {
 } from "abitype";
 import type { ThirdwebContract } from "../contract/index.js";
 import type { ParseEvent } from "../abi/types.js";
+import type { Log } from "viem";
+
+export type EventLog<abiEvent extends AbiEvent = AbiEvent> = Log<
+  bigint,
+  number,
+  false,
+  abiEvent,
+  false,
+  [abiEvent],
+  abiEvent["name"]
+>;
 
 export type EventParams<event extends AbiEvent> = AbiParametersToPrimitiveTypes<
   event["inputs"]

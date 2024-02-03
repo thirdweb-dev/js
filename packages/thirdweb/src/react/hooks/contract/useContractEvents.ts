@@ -1,7 +1,11 @@
 import { useEffect, useMemo } from "react";
 import type { Abi, AbiEvent } from "abitype";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ContractEvent } from "../../../event/event.js";
+import {
+  useQuery,
+  useQueryClient,
+  type UseQueryResult,
+} from "@tanstack/react-query";
+import type { ContractEvent, EventLog } from "../../../event/event.js";
 import {
   watchEvents,
   type WatchContractEventsOptions,
@@ -37,7 +41,9 @@ export function useContractEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
   const contractEvents extends ContractEvent<abiEvent>[],
->(options: UseContractEventsOptions<abi, abiEvent, contractEvents>) {
+>(
+  options: UseContractEventsOptions<abi, abiEvent, contractEvents>,
+): UseQueryResult<EventLog<AbiEvent>[], Error> {
   const {
     contract,
     events,
@@ -117,5 +123,5 @@ export function useContractEvents<
     });
   }, [contract, enabled, events, limit, queryClient, queryKey, watch]);
 
-  return query.data;
+  return query;
 }
