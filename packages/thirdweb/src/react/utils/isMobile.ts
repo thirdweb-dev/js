@@ -1,10 +1,14 @@
-import { detect } from "../../utils/detect-browser.js";
+import { detectOS } from "../../utils/detect-browser.js";
 
 /**
  * @internal
  */
 function isAndroid(): boolean {
-  const os = detect()?.os;
+  // can only detect if useragent is defined
+  if (typeof navigator === "undefined") {
+    return false;
+  }
+  const os = detectOS(navigator.userAgent);
   return os ? os.toLowerCase().includes("android") : false;
 }
 
@@ -12,7 +16,11 @@ function isAndroid(): boolean {
  * @internal
  */
 function isIOS(): boolean {
-  const os = detect()?.os;
+  // can only detect if useragent is defined
+  if (typeof navigator === "undefined") {
+    return false;
+  }
+  const os = detectOS(navigator.userAgent);
   return os
     ? os.toLowerCase().includes("ios") ||
         (os.toLowerCase().includes("mac") && navigator.maxTouchPoints > 1)

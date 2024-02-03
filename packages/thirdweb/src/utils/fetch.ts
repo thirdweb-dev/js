@@ -1,6 +1,10 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
-import { detect, type OperatingSystem } from "./detect-browser.js";
+import {
+  detectOS,
+  detectPlatform,
+  type OperatingSystem,
+} from "./detect-browser.js";
 
 const FETCH_CACHE = new WeakMap<
   ThirdwebClient,
@@ -73,37 +77,17 @@ export function getPlatformHeaders() {
     return previousPlatform;
   }
 
-  let ua: string | undefined;
-  try {
-    if (typeof navigator !== "undefined" && "userAgent" in navigator) {
-      ua = navigator.userAgent;
-    }
-  } catch {
-    // ignore
+  let os: OperatingSystem | null = null;
+  if (typeof navigator !== "undefined") {
+    os = detectOS(navigator.userAgent);
   }
 
-  const info = detect(ua);
-
-  if (!info) {
-    previousPlatform = Object.entries({
-      "x-sdk-platform": "unknown",
-      "x-sdk-version": version,
-      "x-sdk-os": "unknown",
-      "x-sdk-name": SDK_NAME,
-    });
-  } else {
-    previousPlatform = Object.entries({
-      "x-sdk-platform":
-        info.type === "react-native"
-          ? "mobile"
-          : info.type === "browser"
-            ? "browser"
-            : "node",
-      "x-sdk-version": version,
-      "x-sdk-os": info.os ? parseOs(info.os) : "unknown",
-      "x-sdk-name": SDK_NAME,
-    });
-  }
+  previousPlatform = Object.entries({
+    "x-sdk-platform": detectPlatform(),
+    "x-sdk-version": version,
+    "x-sdk-os": os ? parseOs(os) : "unknown",
+    "x-sdk-name": SDK_NAME,
+  });
 
   return previousPlatform;
 }
