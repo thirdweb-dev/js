@@ -84,6 +84,7 @@ import { Transaction } from "./transactions";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc721.transfer(walletAddress, tokenId);
  * ```
+ * @erc721
  * @public
  */
 export class Erc721<
