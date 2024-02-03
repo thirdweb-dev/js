@@ -130,7 +130,6 @@
     "@tanstack/react-query": "^5.18.0",
     "@walletconnect/ethereum-provider": "^2.11.0",
     "abitype": "^1.0.0",
-    "detect-browser": "^5.3.0",
     "fuse.js": "^7.0.0",
     "mipd": "^0.0.5",
     "qrcode": "^1.5.3",
@@ -159,7 +158,8 @@
   },
   "peerDependencies": {
     "ethers": "^5 || ^6",
-    "react": ">=18"
+    "react": ">=18",
+    "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -167,13 +167,16 @@
     },
     "ethers": {
       "optional": true
+    },
+    "typescript": {
+      "optional": true
     }
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
-    "build": "pnpm clean && pnpm build:cjs & pnpm build:esm & pnpm build:types",
+    "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
