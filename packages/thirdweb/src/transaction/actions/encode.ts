@@ -30,7 +30,6 @@ export async function encode<const abiFn extends AbiFunction>(
       resolveParams(tx),
     ]);
 
-    // @ts-expect-error - this works fine, dig into why later
     return encodeAbiFunction(abiFn, params ?? []);
   })();
 

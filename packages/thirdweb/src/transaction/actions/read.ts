@@ -79,6 +79,5 @@ export async function readTransaction<const abiFn extends AbiFunction>(
     return decoded[0];
   }
 
-  // @ts-expect-error - not sure why this complains but it works fine
-  return decoded;
+  return decoded as ReadOutputs<abiFn>;
 }

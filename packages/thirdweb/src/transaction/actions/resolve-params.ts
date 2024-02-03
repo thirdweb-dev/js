@@ -1,4 +1,8 @@
-import type { AbiFunction, AbiParametersToPrimitiveTypes } from "abitype";
+import type {
+  AbiFunction,
+  AbiParameter,
+  AbiParametersToPrimitiveTypes,
+} from "abitype";
 import type {
   Transaction,
   DynamicTransactionOverrides,
@@ -15,12 +19,18 @@ const PARAMS_CACHE = new WeakMap();
  * @throws An error if the parameters are invalid.
  * @internal
  */
-export async function resolveParams<const abiFn extends AbiFunction>(
+export async function resolveParams<
+  const abiFn extends AbiFunction,
+  const TParams = AbiParametersToPrimitiveTypes<abiFn["inputs"]>,
+>(
   tx: Transaction<abiFn>,
-) {
+): Promise<{
+  params: TParams extends readonly AbiParameter[] ? TParams : never;
+  overrides: Partial<DynamicTransactionOverrides>;
+}> {
   if (PARAMS_CACHE.has(tx)) {
     return PARAMS_CACHE.get(tx) as Promise<{
-      params: AbiParametersToPrimitiveTypes<abiFn["inputs"]>;
+      params: TParams extends readonly AbiParameter[] ? TParams : never;
       overrides: Partial<DynamicTransactionOverrides>;
     }>;
   }
@@ -58,7 +68,7 @@ export async function resolveParams<const abiFn extends AbiFunction>(
 
   PARAMS_CACHE.set(tx, paramsPromise);
   return paramsPromise as Promise<{
-    params: AbiParametersToPrimitiveTypes<abiFn["inputs"]>;
+    params: TParams extends readonly AbiParameter[] ? TParams : never;
     overrides: Partial<DynamicTransactionOverrides>;
   }>;
 }

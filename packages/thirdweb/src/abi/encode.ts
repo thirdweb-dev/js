@@ -1,7 +1,11 @@
 import { concatHex, encodeAbiParameters } from "viem";
 import { getFunctionSelector } from "./lib/getFunctionSelector.js";
 
-import type { AbiFunction, AbiParametersToPrimitiveTypes } from "abitype";
+import type {
+  AbiFunction,
+  AbiParameter,
+  AbiParametersToPrimitiveTypes,
+} from "abitype";
 
 /**
  * Encodes an ABI function with its arguments into a hexadecimal string.
@@ -11,15 +15,18 @@ import type { AbiFunction, AbiParametersToPrimitiveTypes } from "abitype";
  * @returns The encoded ABI function as a hexadecimal string.
  * @internal
  */
-export function encodeAbiFunction<const abiFn extends AbiFunction>(
-  abiFn: abiFn,
-  args: AbiParametersToPrimitiveTypes<abiFn["inputs"]> | readonly unknown[],
+export function encodeAbiFunction<
+  const TAbiFunction extends AbiFunction,
+  const TParams = AbiParametersToPrimitiveTypes<TAbiFunction["inputs"]>,
+>(
+  abiFn: TAbiFunction,
+  args: TParams extends readonly AbiParameter[] ? TParams : never,
 ) {
   const signature = getFunctionSelector(abiFn);
-  const data =
-    "inputs" in abiFn && abiFn.inputs && abiFn.inputs.length > 0
-      ? // @ts-expect-error - missing typecheck for inputs actually having a length etc
-        encodeAbiParameters<abiFn["inputs"]>(abiFn.inputs, args ?? [])
-      : undefined;
+  // if there are no inputs, we can return the signature as is
+  if (abiFn.inputs.length === 0) {
+    return signature;
+  }
+  const data = encodeAbiParameters(abiFn.inputs, args ?? []);
   return concatHex([signature, data ?? "0x"]);
 }
