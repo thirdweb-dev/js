@@ -10,7 +10,7 @@ import { getChainIdFromChain } from "../../../chain/index.js";
 import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
 import { getEvents } from "../../../event/actions/get-events.js";
 
-export type UseWatchEventsOptions<
+export type UseContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
   contractEvents extends ContractEvent<abiEvent>[],
@@ -25,7 +25,7 @@ export type UseWatchEventsOptions<
 
 /**
  * Watches contract events and returns the logs.
- * @param options - The {@link UseWatchEventsOptions | options} for watching contract events.
+ * @param options - The {@link UseContractEventsOptions | options} for watching contract events.
  * @returns The contract events of the watched contract events.
  * @example
  * ```jsx
@@ -37,7 +37,7 @@ export function useContractEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
   const contractEvents extends ContractEvent<abiEvent>[],
->(options: UseWatchEventsOptions<abi, abiEvent, contractEvents>) {
+>(options: UseContractEventsOptions<abi, abiEvent, contractEvents>) {
   const {
     contract,
     events,

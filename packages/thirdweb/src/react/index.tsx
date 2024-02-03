@@ -18,7 +18,7 @@ export { useContractRead, createReadHook } from "./hooks/contract/useRead.js";
 export { useSendTransaction } from "./hooks/contract/useSend.js";
 export { useEstimateGas } from "./hooks/contract/useEstimate.js";
 export { useWaitForReceipt } from "./hooks/contract/useWaitForReceipt.js";
-export { useContractEvents as useWatchEvents } from "./hooks/contract/useWatchEvents.js";
+export { useContractEvents } from "./hooks/contract/useContractEvents.js";
 
 // rpc related
 export { useBlockNumber } from "./hooks/rpc/useBlockNumber.js";

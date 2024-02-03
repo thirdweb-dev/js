@@ -53,3 +53,6 @@ export {
   getEvents,
   type GetContractEventsOptions,
 } from "./event/actions/get-events.js";
+
+// types
+export type { NFT } from "./utils/nft/parseNft.js";
