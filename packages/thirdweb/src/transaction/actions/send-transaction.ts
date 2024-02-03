@@ -1,15 +1,12 @@
 import type { Transaction } from "../transaction.js";
-import type { Abi, AbiFunction, TransactionSerializable } from "viem";
+import type { Abi, TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import { resolveParams } from "./resolve-params.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 
-type SendTransactionOptions<
-  abiFn extends AbiFunction,
-  wallet extends Wallet,
-> = {
-  transaction: Transaction<abiFn>;
+type SendTransactionOptions<wallet extends Wallet> = {
+  transaction: Transaction<any>;
   wallet: wallet;
 };
 
@@ -27,11 +24,8 @@ type SendTransactionOptions<
  * });
  * ```
  */
-export async function sendTransaction<
-  abiFn extends AbiFunction,
-  wallet extends Wallet,
->(
-  options: SendTransactionOptions<abiFn, wallet>,
+export async function sendTransaction<wallet extends Wallet>(
+  options: SendTransactionOptions<wallet>,
 ): Promise<WaitForReceiptOptions<Abi>> {
   if (!options.wallet.address) {
     throw new Error("not connected");

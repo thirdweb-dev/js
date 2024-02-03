@@ -1,4 +1,4 @@
-import type { Abi, AbiFunction } from "abitype";
+import type { Abi } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
 import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
@@ -17,9 +17,11 @@ import { sendTransaction } from "../../../transaction/actions/send-transaction.j
  * const transactionHash = await sendTx(tx);
  * ```
  */
-export function useSendTransaction<
-  abiFn extends AbiFunction,
->(): UseMutationResult<WaitForReceiptOptions<Abi>, Error, Transaction<abiFn>> {
+export function useSendTransaction(): UseMutationResult<
+  WaitForReceiptOptions<Abi>,
+  Error,
+  Transaction<any>
+> {
   const wallet = useActiveWallet();
 
   return useMutation({

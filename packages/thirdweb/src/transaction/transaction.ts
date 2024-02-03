@@ -15,16 +15,18 @@ type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   length: 0;
 }
   ? // allow omitting "params" if there are no inputs
-    { params?: unknown[] }
+    { params?: readonly unknown[] }
   : {
       params:
-        | AbiParametersToPrimitiveTypes<abiFn["inputs"]>
+        | Readonly<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>
         | (() => Promise<
-            | AbiParametersToPrimitiveTypes<abiFn["inputs"]>
-            | {
-                params: AbiParametersToPrimitiveTypes<abiFn["inputs"]>;
-                overrides: Partial<DynamicTransactionOverrides>;
-              }
+            | Readonly<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>
+            | Readonly<{
+                params: Readonly<
+                  AbiParametersToPrimitiveTypes<abiFn["inputs"]>
+                >;
+                overrides: Readonly<Partial<DynamicTransactionOverrides>>;
+              }>
           >);
     };
 
