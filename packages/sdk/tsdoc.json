@@ -5,9 +5,19 @@
     {
       "tagName": "@twfeature",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@deploy",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@contract",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
-    "@twfeature": true
+    "@twfeature": true,
+    "@deploy": true,
+    "@contract": true
   }
 }

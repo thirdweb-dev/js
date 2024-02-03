@@ -54,9 +54,8 @@ export async function getDeployArguments<
   switch (contractType) {
     case NFTDropInitializer.contractType:
     case NFTCollectionInitializer.contractType:
-      const erc721metadata = await NFTDropInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const erc721metadata =
+        await NFTDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc721metadata.name,
@@ -132,9 +131,8 @@ export async function getDeployArguments<
       ];
     case TokenDropInitializer.contractType:
     case TokenInitializer.contractType:
-      const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const erc20metadata =
+        await TokenInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc20metadata.name,
@@ -152,9 +150,8 @@ export async function getDeployArguments<
         erc20metadata.platform_fee_basis_points,
       ];
     case VoteInitializer.contractType:
-      const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const voteMetadata =
+        await VoteInitializer.schema.deploy.parseAsync(metadata);
       return [
         voteMetadata.name,
         contractURI,
@@ -166,9 +163,8 @@ export async function getDeployArguments<
         voteMetadata.voting_quorum_fraction,
       ];
     case SplitInitializer.contractType:
-      const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const splitsMetadata =
+        await SplitInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         contractURI,
@@ -191,9 +187,8 @@ export async function getDeployArguments<
         marketplaceMetadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:
-      const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const packsMetadata =
+        await PackInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         packsMetadata.name,
@@ -208,6 +203,11 @@ export async function getDeployArguments<
   }
 }
 
+/**
+ * Get the default trusted forwarders for gasless relaying
+ * @deploy
+ * @public
+ */
 export async function getTrustedForwarders(
   provider: providers.Provider,
   storage: ThirdwebStorage,
@@ -219,8 +219,8 @@ export async function getTrustedForwarders(
     contractName && contractName === PackInitializer.name
       ? []
       : chainEnum
-      ? getDefaultTrustedForwarders(chainId)
-      : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
+        ? getDefaultTrustedForwarders(chainId)
+        : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
 
   return trustedForwarders;
 }
