@@ -23,12 +23,9 @@ export const InjectedConnectUI = (
   const locale = useTWLocale().wallets.injectedWallet(
     props.walletConfig.metadata.name,
   );
-  const { walletConfig, connected } = props;
-  const [errorConnecting, setErrorConnecting] = useState(false);
-  const { connect } = props;
 
-  const hideBackButton = props.wallets.length === 1;
-  const { goBack } = props;
+  const { walletConfig, done, screenConfig } = props;
+  const [errorConnecting, setErrorConnecting] = useState(false);
 
   const connectToExtension = useCallback(async () => {
     try {
@@ -36,13 +33,14 @@ export const InjectedConnectUI = (
       setScreen("connecting");
       setErrorConnecting(false);
       await wait(1000);
-      const wallet = await connect();
-      connected(wallet);
+      const wallet = walletConfig.create();
+      await wallet.connect();
+      done(wallet);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect]);
+  }, [walletConfig, done]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -50,21 +48,16 @@ export const InjectedConnectUI = (
       return;
     }
 
-    const isInstalled = walletConfig.isInstalled
-      ? walletConfig.isInstalled()
-      : false;
+    const isInjected = walletConfig.isInstalled?.() || false;
 
     (async () => {
-      if (isInstalled) {
+      if (isInjected) {
         connectToExtension();
-      }
-
-      // if phantom is not injected
-      else {
+      } else {
         setScreen("get-started");
       }
     })();
-  }, [walletConfig, connected, connect, goBack, connectToExtension]);
+  }, [walletConfig, connectToExtension]);
 
   if (screen === "connecting") {
     return (
@@ -76,8 +69,7 @@ export const InjectedConnectUI = (
           inProgress: locale.connectionScreen.inProgress,
           failed: locale.connectionScreen.failed,
         }}
-        hideBackButton={hideBackButton}
-        onBack={props.goBack}
+        onBack={screenConfig.goBack}
         walletName={walletConfig.metadata.name}
         walletIconURL={walletConfig.metadata.iconUrl}
         onGetStarted={() => {

@@ -12,11 +12,10 @@ import { Text } from "../../components/text.js";
  * @internal
  */
 export const ConnectingScreen: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   walletIconURL: string;
   walletName: string;
   onGetStarted: () => void;
-  hideBackButton: boolean;
   errorConnecting: boolean;
   onRetry: () => void;
   locale: {
@@ -37,10 +36,7 @@ export const ConnectingScreen: React.FC<{
           paddingBottom: 0,
         }}
       >
-        <ModalHeader
-          title={props.walletName}
-          onBack={props.hideBackButton ? undefined : props.onBack}
-        />
+        <ModalHeader title={props.walletName} onBack={props.onBack} />
       </Container>
 
       <Container

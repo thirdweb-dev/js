@@ -15,6 +15,7 @@ function getChainQuery(chainId?: bigint) {
       return getChainDataForChainId(chainId);
     },
     enabled: !!chainId,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 }
 

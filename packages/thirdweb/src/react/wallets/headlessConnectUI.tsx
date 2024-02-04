@@ -12,26 +12,27 @@ import { Text } from "../ui/components/text.js";
  * @internal
  */
 export const HeadlessConnectUI = (props: ConnectUIProps) => {
-  const { connected, hide, show, connect, wallets } = props;
+  const { walletConfig, screenConfig, done } = props;
 
   const prompted = useRef(false);
   const [connectionFailed, setConnectionFailed] = useState(false);
-  const showBack = wallets.length > 1;
+  const { setModalVisibility } = screenConfig;
 
   const handleConnect = useCallback(async () => {
     setConnectionFailed(false);
     try {
       await wait(1000);
-      hide();
-      const wallet = await connect();
-      connected(wallet);
-      show();
+      setModalVisibility(false);
+      const wallet = walletConfig.create();
+      await wallet.connect();
+      setModalVisibility(true);
+      done(wallet);
     } catch (e) {
       setConnectionFailed(true);
-      show();
+      setModalVisibility(true);
       console.error(e);
     }
-  }, [connect, connected, hide, show]);
+  }, [done, setModalVisibility, walletConfig]);
 
   useEffect(() => {
     if (prompted.current) {
@@ -60,9 +61,9 @@ export const HeadlessConnectUI = (props: ConnectUIProps) => {
   return (
     <Container p="lg">
       <ModalHeader
-        onBack={showBack ? props.goBack : undefined}
-        title={props.walletConfig.metadata.name}
-        imgSrc={props.walletConfig.metadata.iconUrl}
+        onBack={screenConfig.goBack}
+        title={walletConfig.metadata.name}
+        imgSrc={walletConfig.metadata.iconUrl}
       />
       <Container
         flex="column"

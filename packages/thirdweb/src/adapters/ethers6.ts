@@ -222,12 +222,21 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
       name: "Ethers6 Wallet",
       iconUrl: "",
     },
-    addListener(event, listener) {
-      signer.provider?.on(event, listener);
+    events: {
+      addListener(event, listener) {
+        signer.provider?.on(event, listener);
+      },
+      removeListener(event, listener) {
+        signer.provider?.removeListener(event, listener);
+      },
     },
-    removeListener(event, listener) {
-      signer.provider?.removeListener(event, listener);
+    async connect() {
+      return address;
     },
+    async autoConnect() {
+      return address;
+    },
+    async disconnect() {},
   } satisfies Wallet;
 }
 

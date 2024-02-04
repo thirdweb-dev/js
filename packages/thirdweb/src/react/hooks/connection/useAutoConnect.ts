@@ -58,9 +58,8 @@ export function AutoConnect() {
       // connect the active wallet and set it as active
       if (lastActiveWalletConfig) {
         try {
-          const wallet = await lastActiveWalletConfig.connect({
-            silent: true,
-          });
+          const wallet = lastActiveWalletConfig.create();
+          await wallet.autoConnect();
           connect(wallet);
         } catch (e) {
           setConnectionStatus("disconnected");
@@ -70,14 +69,10 @@ export function AutoConnect() {
       }
 
       // connect other wallets
-      otherWalletConfigs.forEach((config) => {
-        config
-          .connect({
-            silent: true,
-          })
-          .then((w) => {
-            connectionManager.connectWallet(w);
-          });
+      otherWalletConfigs.forEach(async (config) => {
+        const wallet = config.create();
+        await wallet.autoConnect();
+        connectionManager.connectWallet(wallet);
       });
     };
 

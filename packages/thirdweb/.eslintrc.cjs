@@ -50,7 +50,7 @@ const jsdocRuleOverrides = {
         "wallet",
       ],
     },
-  ], // using
+  ],
 };
 
 module.exports = {
@@ -75,7 +75,6 @@ module.exports = {
         message: "Use Uint8Array instead.",
       },
     ],
-    "import/no-cycle": "error",
     "no-restricted-imports": [
       "error",
       {

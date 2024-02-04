@@ -86,31 +86,34 @@ export function createConnectionManager(options?: ConnectionManagerOptions) {
       activeWalletConnectionStatus.setValue("connected");
 
       // setup listeners
-      if (wallet.addListener) {
-        const onAccountsChanged = () => {
-          if (wallet.address) {
-            activeWalletAddress.setValue(wallet.address);
+      if (wallet.events) {
+        const onAccountsChanged = (accounts: string[]) => {
+          const address = accounts[0];
+          if (address) {
+            activeWalletAddress.setValue(address);
           } else {
             onDisconnect(wallet.metadata.id);
           }
         };
 
-        const onChainChanged = () => {
-          activeWalletChainId.setValue(wallet.chainId);
+        const onChainChanged = (chainId: string) => {
+          activeWalletChainId.setValue(BigInt(chainId));
         };
 
         const handleDisconnect = () => {
           onDisconnect(wallet.metadata.id);
-          if (wallet.removeListener) {
-            wallet.removeListener("accountsChanged", onAccountsChanged);
-            wallet.removeListener("chainChanged", onChainChanged);
-            wallet.removeListener("disconnect", handleDisconnect);
+          if (wallet.events) {
+            wallet.events.removeListener("accountsChanged", onAccountsChanged);
+            wallet.events.removeListener("chainChanged", onChainChanged);
+            wallet.events.removeListener("disconnect", handleDisconnect);
           }
         };
 
-        wallet.addListener("accountsChanged", onAccountsChanged);
-        wallet.addListener("chainChanged", onChainChanged);
-        wallet.addListener("disconnect", handleDisconnect);
+        if (wallet.events) {
+          wallet.events.addListener("accountsChanged", onAccountsChanged);
+          wallet.events.addListener("chainChanged", onChainChanged);
+          wallet.events.addListener("disconnect", handleDisconnect);
+        }
       }
     }
   };

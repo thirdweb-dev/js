@@ -6,9 +6,15 @@ import type {
   TypedData,
   TypedDataDefinition,
 } from "viem";
-import type { AddListener, RemoveListener } from "./listeners.js";
+import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
 import type { Transaction } from "../../transaction/transaction.js";
+
+export type SendTransactionOption = TransactionSerializable & {
+  chainId: number;
+};
+
+export type WalletConnectionOptions = { chainId?: number | bigint };
 
 export type Wallet = {
   // REQUIRED
@@ -16,7 +22,7 @@ export type Wallet = {
   address: Address;
   sendTransaction: (
     // TODO: figure out how we get our "chain" here
-    tx: TransactionSerializable & { chainId: number },
+    tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
 
   metadata: {
@@ -24,6 +30,10 @@ export type Wallet = {
     name: string;
     iconUrl: string;
   };
+
+  connect: (options?: WalletConnectionOptions) => Promise<string>;
+  autoConnect: (options?: WalletConnectionOptions) => Promise<string>;
+  disconnect: () => Promise<void>;
 
   // OPTIONAL
   chainId?: bigint;
@@ -39,7 +49,11 @@ export type Wallet = {
   estimateGas?: <abiFn extends AbiFunction>(
     tx: Transaction<abiFn>,
   ) => Promise<bigint>;
-  addListener?: AddListener;
-  removeListener?: RemoveListener;
+
+  events?: {
+    addListener: WalletEventListener;
+    removeListener: WalletEventListener;
+  };
+
   switchChain?: (newChainId: bigint | number) => Promise<void>;
 };

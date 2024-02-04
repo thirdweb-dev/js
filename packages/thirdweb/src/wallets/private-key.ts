@@ -56,5 +56,14 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
       name: "Private Key",
       iconUrl: "TODO",
     },
+    async connect() {
+      return account.address;
+    },
+    async autoConnect() {
+      return account.address;
+    },
+    async disconnect() {
+      return;
+    },
   } satisfies Wallet;
 }

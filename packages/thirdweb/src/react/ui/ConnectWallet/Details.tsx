@@ -43,7 +43,10 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
-import { walletIds } from "../../../wallets/walletIds.js";
+// import { walletIds } from "../../../wallets/walletIds.js";
+
+// TEMP
+const LocalWalletId = "localWallet";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -202,7 +205,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.metadata.id === walletIds.localWallet ? (
+        {activeWallet?.metadata.id === LocalWalletId ? (
           <Text
             color="danger"
             size="xs"

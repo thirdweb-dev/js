@@ -1,6 +1,6 @@
 import {
   ModalConfigCtx,
-  SetModalConfigCtx,
+  // SetModalConfigCtx,
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "../../../providers/wallet-ui-states-provider.js";
@@ -11,18 +11,13 @@ import { ScreenContext, useScreen } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
 import {
-  useActiveWalletAddress,
   useActiveWallet,
   useConnect,
 } from "../../../providers/wallet-provider.js";
 import { Modal } from "../../components/Modal.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
-import {
-  useActiveWalletConnectionStatus,
-  useSetActiveWalletConnectionStatus,
-} from "../../../providers/wallet-provider.js";
-import type { WalletConfig } from "../../../types/wallets.js";
+import type { ScreenConfig, WalletConfig } from "../../../types/wallets.js";
 import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
@@ -45,10 +40,10 @@ export const ConnectModalContent = (props: {
   const { wallets } = useThirdwebProviderProps();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
-  const setModalConfig = useContext(SetModalConfigCtx);
-  const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
-  const setActiveWalletConnectionStatus = useSetActiveWalletConnectionStatus();
-  const activeWallet = useActiveWallet();
+  // const setModalConfig = useContext(SetModalConfigCtx);
+  // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
+  // const setActiveWalletConnectionStatus = useSetActiveWalletConnectionStatus();
+  // const activeWallet = useActiveWallet();
   const { connect } = useConnect();
 
   const title = modalConfig.title;
@@ -111,10 +106,28 @@ export const ConnectModalContent = (props: {
     // disconnect
   ]);
 
-  const address = useActiveWalletAddress();
+  // const address = useActiveWalletAddress();
 
   // const { setConnectionStatus, createWalletInstance, activeWallet } =
   //   useWalletContext();
+
+  const setModalVisibility = useCallback(
+    (value: boolean) => {
+      if (value) {
+        onShow();
+      } else {
+        onHide();
+      }
+    },
+    [onHide, onShow],
+  );
+
+  const screenConfig: ScreenConfig = {
+    setModalVisibility,
+    theme: typeof theme === "string" ? theme : theme.type,
+    goBack: handleBack,
+    size: modalConfig.modalSize,
+  };
 
   const walletList = (
     <WalletSelector
@@ -125,11 +138,12 @@ export const ConnectModalContent = (props: {
       }}
       selectWallet={setScreen}
       selectUIProps={{
-        activeWalletConnectionStatus,
-        connected: handleConnected,
-        setActiveWalletConnectionStatus,
-        activeWallet,
-        activeWalletAddress: address,
+        screenConfig: screenConfig,
+        // activeWalletConnectionStatus,
+        // connected: handleConnected,
+        // setActiveWalletConnectionStatus,
+        // activeWallet,
+        // activeWalletAddress: address,
       }}
     />
   );
@@ -141,27 +155,21 @@ export const ConnectModalContent = (props: {
 
     return (
       <ConnectUI
-        wallets={wallets}
-        theme={typeof theme === "string" ? theme : theme.type}
-        goBack={handleBack}
-        connected={handleConnected}
-        isOpen={props.isOpen}
-        show={onShow}
-        hide={onHide}
-        modalSize={modalConfig.modalSize}
-        selectionData={modalConfig.data}
-        activeWallet={activeWallet}
-        activeWalletAddress={address}
-        setSelectionData={(data: any) => {
-          setModalConfig((config) => ({
-            ...config,
-            data,
-          }));
-        }}
-        activeWalletConnectionStatus={activeWalletConnectionStatus}
-        setActiveWalletConnectionStatus={setActiveWalletConnectionStatus}
-        connect={walletConfig.connect}
         walletConfig={walletConfig}
+        screenConfig={screenConfig}
+        done={handleConnected}
+        // selectionData={modalConfig.data}
+        // activeWallet={activeWallet}
+        // activeWalletAddress={address}
+        // setSelectionData={(data: any) => {
+        //   setModalConfig((config) => ({
+        //     ...config,
+        //     data,
+        //   }));
+        // }}
+        // activeWalletConnectionStatus={activeWalletConnectionStatus}
+        // setActiveWalletConnectionStatus={setActiveWalletConnectionStatus}
+        // connect={walletConfig.connect}
       />
     );
   };

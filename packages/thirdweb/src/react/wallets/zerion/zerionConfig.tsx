@@ -1,8 +1,8 @@
-import { injectedProvider } from "../../../wallets/injected.js";
 import {
   zerionWallet,
   zerionWalletMetadata,
-} from "../../../wallets/injectedWallets.js";
+  injectedZerionProvider,
+} from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 
@@ -20,7 +20,9 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
  */
 export const zerionConfig = (): WalletConfig => {
   return {
-    connect: zerionWallet,
+    create() {
+      return zerionWallet();
+    },
     metadata: zerionWalletMetadata,
     connectUI(props) {
       return (
@@ -35,7 +37,7 @@ export const zerionConfig = (): WalletConfig => {
       );
     },
     isInstalled() {
-      return !!injectedProvider("io.zerion.wallet");
+      return !!injectedZerionProvider;
     },
   };
 };

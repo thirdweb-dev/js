@@ -1,8 +1,8 @@
-import { injectedProvider } from "../../../wallets/injected.js";
 import {
+  injectedRainbowProvider,
   rainbowWallet,
   rainbowWalletMetadata,
-} from "../../../wallets/injectedWallets.js";
+} from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 
@@ -20,7 +20,9 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
  */
 export const rainbowConfig = (): WalletConfig => {
   return {
-    connect: rainbowWallet,
+    create() {
+      return rainbowWallet();
+    },
     metadata: rainbowWalletMetadata,
     connectUI(props) {
       return (
@@ -36,7 +38,7 @@ export const rainbowConfig = (): WalletConfig => {
       );
     },
     isInstalled() {
-      return !!injectedProvider("me.rainbow");
+      return !!injectedRainbowProvider();
     },
   };
 };

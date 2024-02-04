@@ -1,8 +1,8 @@
-import { injectedProvider } from "../../../wallets/injected.js";
 import {
-  metamaskMetadata,
   metamaskWallet,
-} from "../../../wallets/injectedWallets.js";
+  metamaskMetadata,
+  injectedMetamaskProvider,
+} from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 
@@ -20,8 +20,10 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
  */
 export const metamaskConfig = (): WalletConfig => {
   return {
-    connect: metamaskWallet,
     metadata: metamaskMetadata,
+    create() {
+      return metamaskWallet();
+    },
     connectUI(props) {
       return (
         <InjectedConnectUI
@@ -37,7 +39,7 @@ export const metamaskConfig = (): WalletConfig => {
       );
     },
     isInstalled() {
-      return !!injectedProvider("io.metamask");
+      return !!injectedMetamaskProvider();
     },
   };
 };

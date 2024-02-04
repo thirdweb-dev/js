@@ -140,6 +140,7 @@ export function useConnect() {
         }
         return wallet;
       } catch (e) {
+        console.error(e);
         setError(e as Error);
       } finally {
         setIsConnecting(false);
