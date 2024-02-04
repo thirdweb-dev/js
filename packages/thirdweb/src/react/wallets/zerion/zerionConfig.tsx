@@ -37,7 +37,7 @@ export const zerionConfig = (): WalletConfig => {
       );
     },
     isInstalled() {
-      return !!injectedZerionProvider;
+      return !!injectedZerionProvider();
     },
   };
 };
