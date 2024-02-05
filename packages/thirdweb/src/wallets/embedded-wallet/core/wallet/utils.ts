@@ -1,12 +1,12 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { AuthUserType } from "./authentication.type.js";
-import type { StorageType, WalletStorageFormatType } from "./storage.type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AuthUserType } from "../authentication/type.js";
+import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 import type {
   CreateWalletOverrideType,
   SaveWalletArgType,
   SensitiveWalletDetailType,
   WalletDetailType,
-} from "./wallet.type.js";
+} from "./type.js";
 
 export const getWalletUniqueId = (
   walletDetail: WalletDetailType,
@@ -16,7 +16,7 @@ export const getWalletUniqueId = (
 };
 
 export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
-  const { ROUTE_FETCH_USER_WALLETS } = await import("./routes.js");
+  const { ROUTE_FETCH_USER_WALLETS } = await import("../routes.js");
 
   const resp = await fetch(ROUTE_FETCH_USER_WALLETS(), {
     headers: {
@@ -38,8 +38,8 @@ export const createWallet = async ({
   authUser?: AuthUserType | undefined;
   format: WalletStorageFormatType;
 }): Promise<SensitiveWalletDetailType> => {
-  const { EmbeddedWalletError } = await import("./wallet.error.js");
-  const { ROUTE_NEW_STORAGE } = await import("./routes.js");
+  const { EmbeddedWalletError } = await import("./error.js");
+  const { ROUTE_NEW_STORAGE } = await import("../routes.js");
 
   const secretKey = client.secretKey;
   const walletIdResp = await fetch(ROUTE_NEW_STORAGE(), {
@@ -152,7 +152,7 @@ export const loadWallet = async ({
   storage: StorageType;
   walletDetail: WalletDetailType;
 }): Promise<SensitiveWalletDetailType> => {
-  const { EmbeddedWalletError } = await import("./wallet.error.js");
+  const { EmbeddedWalletError } = await import("./error.js");
   if (storage.format !== walletDetail.format) {
     throw new EmbeddedWalletError(
       `Wallet storage format mismatched. Wallet storage format: ${walletDetail.format}, provided storage format: ${storage.format}`,
@@ -213,7 +213,7 @@ export async function createShares(keyMaterial: string): Promise<{
   shares: [string, string, string];
 }> {
   const { share } = await import("secrets.js-34r7h");
-  const { utf8ToHex } = await import("../../../utils/hex.js");
+  const { utf8ToHex } = await import("../../../../utils/hex.js");
   let stringToShard = "";
 
   // Salt to prevent share corruption through tampering
@@ -233,8 +233,8 @@ export async function createShares(keyMaterial: string): Promise<{
 
 export async function combineShares(shares: string[]) {
   const { combine } = await import("secrets.js-34r7h");
-  const { hexToUtf8 } = await import("../../../utils/hex.js");
-  const { EmbeddedWalletError } = await import("./wallet.error.js");
+  const { hexToUtf8 } = await import("../../../../utils/hex.js");
+  const { EmbeddedWalletError } = await import("./error.js");
 
   const privateKeyHex = combine(shares);
   const privateKey = hexToUtf8(privateKeyHex);

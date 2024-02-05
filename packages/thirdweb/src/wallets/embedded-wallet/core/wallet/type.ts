@@ -1,5 +1,5 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { StorageType, WalletStorageFormatType } from "./storage.type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 
 export type WalletStateType = "loaded" | "pending_load" | "read_only";
 export type KeyGenerationSourceType = "developer" | "thirdweb";

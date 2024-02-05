@@ -7,15 +7,15 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import { type Address } from "viem/accounts";
-import type { Transaction } from "../../../transaction/transaction.js";
-import type { IWallet } from "../../interfaces/wallet.js";
-import type { StorageType } from "./storage.type.js";
+import type { Transaction } from "../../../../transaction/transaction.js";
+import type { IWallet } from "../../../interfaces/wallet.js";
+import type { StorageType } from "../storage/type.js";
 import type {
   CreateWalletOverrideType,
   SaveWalletArgType,
   SensitiveWalletDetailType,
   WalletDetailType,
-} from "./wallet.type.js";
+} from "./type.js";
 
 export const embeddedWallet = async (arg: { storage: StorageType }) => {
   const wallet = new EmbeddedWallet({
@@ -40,7 +40,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   }
 
   async loadOrCreateWallet() {
-    const { getUserWalletDetail } = await import("./wallet.utils.js");
+    const { getUserWalletDetail } = await import("./utils.js");
 
     if (!this.storage.authUser) {
       throw new Error(
@@ -75,7 +75,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   }
 
   async getWalletDetails() {
-    const { getUserWalletDetail } = await import("./wallet.utils.js");
+    const { getUserWalletDetail } = await import("./utils.js");
     if (!this.storage.authUser) {
       // todo: check secret key path
       return [];
@@ -87,7 +87,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   }
 
   async createWallet(arg?: { createWalletOverride: CreateWalletOverrideType }) {
-    const { createWallet } = await import("./wallet.utils.js");
+    const { createWallet } = await import("./utils.js");
     return await createWallet({
       createWalletOverride: arg?.createWalletOverride,
       client: this.storage.client,
@@ -100,7 +100,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
     arg: Omit<SaveWalletArgType, "storage"> & { storageOverride?: StorageType },
   ) {
     const storage = arg.storageOverride ?? this.storage;
-    const { saveWallet } = await import("./wallet.utils.js");
+    const { saveWallet } = await import("./utils.js");
     return await saveWallet({
       walletDetail: arg.walletDetail,
       storage,
@@ -114,7 +114,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
     walletDetail: WalletDetailType;
     storageOverride?: StorageType;
   }) {
-    const { loadWallet } = await import("./wallet.utils.js");
+    const { loadWallet } = await import("./utils.js");
 
     const storage = storageOverride ?? this.storage;
 
@@ -192,16 +192,18 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
     if (!this.activeWallet || !this.address) {
       throw new Error("not connected");
     }
-    const { getRpcClient } = await import("../../../rpc/index.js");
+    const { getRpcClient } = await import("../../../../rpc/index.js");
     const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
 
     const [getDefaultGasOverrides, encode, transactionCount] =
       await Promise.all([
-        import("../../../gas/fee-data.js").then(
+        import("../../../../gas/fee-data.js").then(
           (m) => m.getDefaultGasOverrides,
         ),
-        import("../../../transaction/actions/encode.js").then((m) => m.encode),
-        import("../../../rpc/methods.js").then((m) => m.transactionCount),
+        import("../../../../transaction/actions/encode.js").then(
+          (m) => m.encode,
+        ),
+        import("../../../../rpc/methods.js").then((m) => m.transactionCount),
       ]);
 
     const [gasOverrides, encodedData, nextNonce, estimatedGas] =
@@ -241,7 +243,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
       throw new Error("not connected");
     }
     const { estimateGas } = await import(
-      "../../../transaction/actions/estimate-gas.js"
+      "../../../../transaction/actions/estimate-gas.js"
     );
     return estimateGas(tx, this);
   }

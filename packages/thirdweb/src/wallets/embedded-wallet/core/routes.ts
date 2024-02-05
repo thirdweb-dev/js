@@ -1,4 +1,4 @@
-import type { AuthMethodType } from "./authentication.type.js";
+import type { AuthMethodType } from "./authentication/type.js";
 import { getBaseUrl } from "./base-url.js";
 
 export const ROUTE_FETCH_USER = () => `${getBaseUrl()}/v2/user/me`;

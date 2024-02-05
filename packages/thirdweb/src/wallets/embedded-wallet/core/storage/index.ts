@@ -1,5 +1,6 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { AuthUserType } from "./authentication.type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AuthUserType } from "../authentication/type.js";
+import type { WalletDetailType } from "../wallet/type.js";
 import type {
   EncryptionType,
   LoadKeyType,
@@ -8,11 +9,10 @@ import type {
   SaveKeyValueType,
   StorageType,
   WalletStorageFormatType,
-} from "./storage.type.js";
-import type { WalletDetailType } from "./wallet.type.js";
+} from "./type.js";
 
 export const getUserAuthToken = async (authUser?: AuthUserType) => {
-  const { StorageError } = await import("./storage.error.js");
+  const { StorageError } = await import("./error.js");
 
   const token = authUser?.authToken;
   if (!token) {
@@ -30,8 +30,8 @@ export const saveEncryptedInThirdweb = (arg: {
   encryptValue: EncryptionType;
 }): SaveKeyType => {
   return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
-    const { ROUTE_STORAGE } = await import("./routes.js");
-    const { StorageError } = await import("./storage.error.js");
+    const { ROUTE_STORAGE } = await import("../routes.js");
+    const { StorageError } = await import("./error.js");
 
     const secretKey = walletDetail.client.secretKey;
     if (!secretKey && !authUser) {
@@ -83,8 +83,8 @@ export const saveEncryptedInThirdweb = (arg: {
  */
 export const saveInThirdweb = (): SaveKeyType => {
   return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
-    const { ROUTE_STORAGE } = await import("./routes.js");
-    const { StorageError } = await import("./storage.error.js");
+    const { ROUTE_STORAGE } = await import("../routes.js");
+    const { StorageError } = await import("./error.js");
 
     const secretKey = walletDetail.client.secretKey;
     if (!secretKey && !authUser) {
@@ -158,8 +158,8 @@ export const loadEncryptedFromThirdweb = (arg: {
   decryptValue: EncryptionType;
 }): LoadKeyType => {
   return async ({ walletDetail, authUser, uniqueId }) => {
-    const { ROUTE_STORAGE } = await import("./routes.js");
-    const { StorageError } = await import("./storage.error.js");
+    const { ROUTE_STORAGE } = await import("../routes.js");
+    const { StorageError } = await import("./error.js");
 
     const secretKey = walletDetail.client.secretKey;
     if (!secretKey && !authUser) {
@@ -202,8 +202,8 @@ export const loadEncryptedFromThirdweb = (arg: {
  */
 export const loadFromThirdweb = (): LoadKeyType => {
   return async ({ walletDetail, authUser, uniqueId }) => {
-    const { ROUTE_STORAGE } = await import("./routes.js");
-    const { StorageError } = await import("./storage.error.js");
+    const { ROUTE_STORAGE } = await import("../routes.js");
+    const { StorageError } = await import("./error.js");
 
     const secretKey = walletDetail.client.secretKey;
     if (!secretKey && !authUser) {

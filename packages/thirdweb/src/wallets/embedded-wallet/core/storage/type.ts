@@ -1,6 +1,6 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { AuthUserType } from "./authentication.type.js";
-import type { WalletDetailType } from "./wallet.type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AuthUserType } from "../authentication/type.js";
+import type { WalletDetailType } from "../wallet/type.js";
 
 export type WalletStorageFormatType = "privateKey" | "sharded";
 export type EncryptionType = (arg: {

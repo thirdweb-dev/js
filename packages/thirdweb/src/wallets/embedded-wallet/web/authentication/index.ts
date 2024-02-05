@@ -1,9 +1,9 @@
-import { createAuthStorage } from "../core/authentication.js";
+import { createAuthStorage } from "../../core/authentication/index.js";
 import type {
   AuthArgsType,
   AuthTokenStorageType,
   AuthUserType,
-} from "../core/authentication.type.js";
+} from "../../core/authentication/type.js";
 
 const createAuthLocalStorage = () => {
   return createAuthStorage({
@@ -23,7 +23,7 @@ export const getAuthenticatedUser = async (arg?: {
   storage: AuthTokenStorageType;
 }) => {
   const { getAuthenticatedUser: getAuthenticatedUserCore } = await import(
-    "../core/authentication.js"
+    "../../core/authentication/index.js"
   );
   if (arg) {
     return getAuthenticatedUserCore(arg);
@@ -37,17 +37,17 @@ export const authenticate = async (
     Partial<Pick<AuthArgsType, "storage">>,
 ) => {
   const { authenticate: authenticateCore } = await import(
-    "../core/authentication.js"
+    "../../core/authentication/index.js"
   );
-  const { getBaseUrl } = await import("../core/base-url.js");
-  const { openPopUp } = await import("./authentication.utils.js");
+  const { getBaseUrl } = await import("../../core/base-url.js");
+  const { openPopUp } = await import("./utils.js");
   const {
     AuthenticationError,
     USER_ABORT_AUTHENTICATION_ERROR_MESSAGE,
     UserAbortError,
-  } = await import("../core/authentication.error.js");
+  } = await import("../../core/authentication/error.js");
   const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
-    "../core/authentication.constant.js"
+    "../../core/authentication/constant.js"
   );
 
   const storage = arg.storage ?? createAuthLocalStorage();
@@ -107,7 +107,9 @@ export const authenticate = async (
 };
 
 export const logout = async (arg?: { storage: AuthTokenStorageType }) => {
-  const { logout: logoutCore } = await import("../core/authentication.js");
+  const { logout: logoutCore } = await import(
+    "../../core/authentication/index.js"
+  );
   const storage = arg?.storage ?? createAuthLocalStorage();
   return logoutCore({ storage });
 };
@@ -117,4 +119,4 @@ export {
   linkAuthentication,
   pre2FA,
   preLinkAuthentication,
-} from "../core/authentication.js";
+} from "../../core/authentication/index.js";

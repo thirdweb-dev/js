@@ -7,7 +7,7 @@ import type {
   LinkAuthArgsType,
   MultiStepAuthArgsType,
   MultiStepAuthProviderType,
-} from "./authentication.type.js";
+} from "./type.js";
 
 export const createAuthStorage = ({
   fetchToken,
@@ -20,10 +20,8 @@ export const createAuthStorage = ({
 export const getAuthenticatedUser = async (arg: {
   storage: AuthTokenStorageType;
 }) => {
-  const { ROUTE_FETCH_USER } = await import("./routes.js");
-  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
-    "./authentication.constant.js"
-  );
+  const { ROUTE_FETCH_USER } = await import("../routes.js");
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import("./constant.js");
 
   const token = await arg.storage.fetchToken({ key: THIRDWEB_AUTH_TOKEN_KEY });
   if (!token) {
@@ -62,7 +60,7 @@ export const getAuthenticatedUser = async (arg: {
 export const preAuthenticate = async (
   arg: InitiateAuthArgsType,
 ): Promise<InitiateAuthResultType> => {
-  const { ROUTE_INITIATE_AUTH } = await import("./routes.js");
+  const { ROUTE_INITIATE_AUTH } = await import("../routes.js");
 
   switch (arg.provider) {
     case "email": {
@@ -105,7 +103,7 @@ export const authenticate = async (
   },
 ): Promise<AuthUserType> => {
   const { ROUTE_INITIATE_AUTH, ROUTE_COMPLETE_AUTH } = await import(
-    "./routes.js"
+    "../routes.js"
   );
 
   switch (arg.provider) {
@@ -166,11 +164,9 @@ export const authenticate = async (
 export const pre2FA = async (
   arg: MultiStepAuthProviderType & { storage: AuthTokenStorageType },
 ): Promise<InitiateAuthResultType> => {
-  const { ROUTE_INITIATE_2FA_AUTH } = await import("./routes.js");
-  const { AuthenticationError } = await import("./authentication.error.js");
-  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
-    "./authentication.constant.js"
-  );
+  const { ROUTE_INITIATE_2FA_AUTH } = await import("../routes.js");
+  const { AuthenticationError } = await import("./error.js");
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import("./constant.js");
 
   const token = await arg.storage.fetchToken({
     key: THIRDWEB_AUTH_TOKEN_KEY,
@@ -237,10 +233,8 @@ export const linkAuthentication = (arg: LinkAuthArgsType) => {
 };
 
 export const logout = async (arg: { storage: AuthTokenStorageType }) => {
-  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
-    "./authentication.constant.js"
-  );
-  const { ROUTE_LOGOUT } = await import("./routes.js");
+  const { THIRDWEB_AUTH_TOKEN_KEY } = await import("./constant.js");
+  const { ROUTE_LOGOUT } = await import("../routes.js");
 
   const token = await arg.storage.fetchToken({
     key: THIRDWEB_AUTH_TOKEN_KEY,
