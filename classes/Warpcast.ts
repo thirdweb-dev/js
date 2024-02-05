@@ -10,7 +10,7 @@ const validateMessageSchema = z.object({
 });
 
 export const untrustedMetaDataSchema = z.object({
-  url: z.string().startsWith("https://"),
+  url: z.string().startsWith("https://thirdweb.com"),
 });
 
 export class Warpcast {
