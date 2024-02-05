@@ -1,5 +1,51 @@
 # @thirdweb-dev/sdk
 
+## 4.0.33
+
+### Patch Changes
+
+- [#2256](https://github.com/thirdweb-dev/js/pull/2256) [`1decd52a`](https://github.com/thirdweb-dev/js/commit/1decd52a36c303e540679ac43d206942ea83fc83) Thanks [@jnsdls](https://github.com/jnsdls)! - add gas fee overrides for flag chains
+
+- Updated dependencies [[`1e50caee`](https://github.com/thirdweb-dev/js/commit/1e50caeed1b85f91a6d2efb2e5204f3acf300134)]:
+  - @thirdweb-dev/chains@0.1.70
+
+## 4.0.32
+
+### Patch Changes
+
+- [#2248](https://github.com/thirdweb-dev/js/pull/2248) [`4f52c296`](https://github.com/thirdweb-dev/js/commit/4f52c2961131636eed323a66568a519246d9f91d) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update link for support
+
+- Updated dependencies [[`374671fd`](https://github.com/thirdweb-dev/js/commit/374671fd9ac97a93263b09c6c0a53cfd129881d7)]:
+  - @thirdweb-dev/chains@0.1.69
+
+## 4.0.31
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/storage@2.0.9
+  - @thirdweb-dev/chains@0.1.68
+
+## 4.0.30
+
+### Patch Changes
+
+- Updated dependencies [[`39e79282`](https://github.com/thirdweb-dev/js/commit/39e79282acb70959ba8140c779fa521c41c80a5f), [`69c3eb91`](https://github.com/thirdweb-dev/js/commit/69c3eb910feb2265833a07b7472e32fac5a79d90)]:
+  - @thirdweb-dev/chains@0.1.67
+
+## 4.0.29
+
+### Patch Changes
+
+- [#2215](https://github.com/thirdweb-dev/js/pull/2215) [`b34737d2`](https://github.com/thirdweb-dev/js/commit/b34737d27a71706cd1117485a6e522e50f5ae4d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch to LRU caches for contract metadata
+
+- [#2220](https://github.com/thirdweb-dev/js/pull/2220) [`3d63a2cb`](https://github.com/thirdweb-dev/js/commit/3d63a2cb696310507798889e3e148339de4e3dfe) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [SDK] Add erc1155.transferBatch
+
+- Updated dependencies [[`627d2099`](https://github.com/thirdweb-dev/js/commit/627d20992770670ab0c954ceea0b8679ce4f3088)]:
+  - @thirdweb-dev/chains@0.1.66
+
 ## 4.0.28
 
 ### Patch Changes

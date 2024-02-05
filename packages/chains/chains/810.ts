@@ -8,10 +8,10 @@ export default {
       "url": "https://testnet-explorer.haven1.org",
       "standard": "EIP3091",
       "icon": {
-        "url": "ipfs://QmbSwngVDEiGaw3JzdME7fz5mYBWKbbz1ZerTpimaAxNXR",
-        "width": 32,
-        "height": 33,
-        "format": "svg"
+        "url": "ipfs://bafkreih4jq33lz2mjwvu62hmo2ptt277et5l6oqi5ejuyxv2dir2iohsai",
+        "width": 128,
+        "height": 128,
+        "format": "png"
       }
     }
   ],
@@ -27,10 +27,10 @@ export default {
     }
   ],
   "icon": {
-    "url": "ipfs://QmbSwngVDEiGaw3JzdME7fz5mYBWKbbz1ZerTpimaAxNXR",
-    "width": 32,
-    "height": 33,
-    "format": "svg"
+    "url": "ipfs://bafkreih4jq33lz2mjwvu62hmo2ptt277et5l6oqi5ejuyxv2dir2iohsai",
+    "width": 128,
+    "height": 128,
+    "format": "png"
   },
   "infoURL": "https://www.haven1.org",
   "name": "Haven1 Testnet",

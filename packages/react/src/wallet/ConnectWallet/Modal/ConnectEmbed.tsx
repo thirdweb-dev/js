@@ -9,7 +9,6 @@ import {
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
   CustomThemeProvider,
@@ -28,6 +27,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { Container } from "../../../components/basic";
 import { Spinner } from "../../../components/Spinner";
+import { canFitWideModal } from "../../../evm/utils/canFitWIdeModal";
 
 export type ConnectEmbedProps = {
   /**
@@ -397,7 +397,7 @@ export function SyncedWalletUIStates(
       ...c,
       title: props.title || locale.connectWallet.defaultModalTitle,
       theme: props.theme || "dark",
-      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
+      modalSize: (!canFitWideModal() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
       privacyPolicyUrl: props.privacyPolicyUrl,
       welcomeScreen: props.welcomeScreen,
