@@ -32,7 +32,7 @@ export type Wallet = {
   };
 
   connect: (options?: WalletConnectionOptions) => Promise<string>;
-  autoConnect: (options?: WalletConnectionOptions) => Promise<string>;
+  autoConnect: () => Promise<string>;
   disconnect: () => Promise<void>;
 
   // OPTIONAL

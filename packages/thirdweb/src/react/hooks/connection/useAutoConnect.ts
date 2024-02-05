@@ -15,9 +15,8 @@ let autoConnectAttempted = false;
 export function AutoConnect() {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect();
-
   const { isAutoConnecting } = connectionManager;
-  const { wallets } = useThirdwebProviderProps();
+  const { wallets, client, dappMetadata } = useThirdwebProviderProps();
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
   // check the storage for last active wallet and set it as active
@@ -58,10 +57,15 @@ export function AutoConnect() {
       // connect the active wallet and set it as active
       if (lastActiveWalletConfig) {
         try {
-          const wallet = lastActiveWalletConfig.create();
+          const wallet = lastActiveWalletConfig.create({
+            client,
+            dappMetadata,
+          });
           await wallet.autoConnect();
           connect(wallet);
         } catch (e) {
+          console.log("failed to auto connect last active wallet");
+          console.error(e);
           setConnectionStatus("disconnected");
         }
       } else {
@@ -70,7 +74,10 @@ export function AutoConnect() {
 
       // connect other wallets
       otherWalletConfigs.forEach(async (config) => {
-        const wallet = config.create();
+        const wallet = config.create({
+          client,
+          dappMetadata,
+        });
         await wallet.autoConnect();
         connectionManager.connectWallet(wallet);
       });

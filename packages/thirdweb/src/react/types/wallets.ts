@@ -14,7 +14,7 @@ export type WalletConfig = {
     iconUrl: string;
   };
 
-  create: (options?: {
+  create: (options: {
     client: ThirdwebClient;
     dappMetadata?: DAppMetaData;
   }) => Wallet;
@@ -106,6 +106,17 @@ export type ConnectUIProps = {
    * when wallet connection is complete, call the `complete` function with the `wallet` instance
    */
   done: (wallet: Wallet) => void;
+
+  /**
+   * Chain Id to connect the wallet to
+   */
+  chainId?: bigint;
+
+  /**
+   * Create a wallet instance
+   * Calling this function uses calls the `WalletConfig.create` method with the required options
+   */
+  createInstance: () => Wallet;
 };
 
 /**

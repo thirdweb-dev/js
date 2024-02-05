@@ -22,6 +22,7 @@ export type ModalConfig = {
   };
   isEmbed?: boolean;
   onConnect?: () => void;
+  chainId?: bigint;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -59,6 +60,7 @@ export const WalletUIStatesProvider = (
       onLogout?: () => void;
     };
     onConnect?: () => void;
+    chainId?: bigint;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -77,6 +79,7 @@ export const WalletUIStatesProvider = (
     isEmbed: props.isEmbed,
     auth: props.auth,
     onConnect: props.onConnect,
+    chainId: props.chainId,
   });
 
   return (

@@ -30,7 +30,13 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
  * @internal
  */
 export type ConnectModalInlineProps = {
+  /**
+   * Connect a wallet and switch to a blockchain with the given chainId
+   */
+  chainId?: bigint;
+
   className?: string;
+
   theme?: "dark" | "light" | Theme;
 
   /**
@@ -102,6 +108,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
         onShow={() => {
           // no op
         }}
+        chainId={props.chainId}
       />
 
       {/* close icon */}
@@ -127,6 +134,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.modalTitleIconUrl,
+    chainId: props.chainId,
   };
 
   return (

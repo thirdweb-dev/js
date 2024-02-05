@@ -28,7 +28,7 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 
 export type ConnectWalletProps = {
-  chainId?: bigint;
+  chainId?: bigint | number;
 
   /**
    * CSS class to apply to the button element
@@ -669,6 +669,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
                   onConnect: props.onConnect,
+                  chainId: props.chainId ? BigInt(props.chainId) : undefined,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -695,7 +696,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               style={props.style}
               className={props.className}
               switchNetworkBtnTitle={props.switchNetworkBtnTitle}
-              targetChainId={props.chainId}
+              targetChainId={BigInt(props.chainId)}
             />
           );
         }

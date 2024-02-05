@@ -16,12 +16,11 @@ import { Text } from "../../components/text.js";
  * @internal
  */
 export const ScanScreen: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   onGetStarted: () => void;
   qrCodeUri?: string;
   walletName: string;
   walletIconURL: string;
-  hideBackButton: boolean;
   qrScanInstruction: string;
   getStartedLink: string;
 }> = (props) => {
@@ -29,10 +28,7 @@ export const ScanScreen: React.FC<{
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader
-          onBack={props.hideBackButton ? undefined : props.onBack}
-          title={props.walletName}
-        />
+        <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
 
       <Spacer y="sm" />

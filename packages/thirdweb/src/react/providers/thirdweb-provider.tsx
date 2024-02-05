@@ -23,6 +23,7 @@ import {
   type WaitForReceiptOptions,
 } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getChainIdFromChain } from "../../chain/index.js";
+import type { DAppMetaData } from "../../wallets/types.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;
@@ -30,6 +31,7 @@ export type ThirdwebProviderProps = {
   autoConnect?: boolean;
   client: ThirdwebClient;
   locale?: ThirdwebLocale;
+  dappMetadata?: DAppMetaData;
 };
 
 /**
@@ -106,6 +108,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
             value={{
               wallets: props.wallets || defaultWallets,
               client: props.client,
+              dappMetadata: props.dappMetadata,
             }}
           >
             {props.autoConnect === false ? <NoAutoConnect /> : <AutoConnect />}

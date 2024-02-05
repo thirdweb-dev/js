@@ -30,6 +30,11 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 
 export type ConnectEmbedProps = {
   /**
+   * Chain Id to connect to
+   */
+  chainId?: number | bigint;
+
+  /**
    * Class name to be added to the root element of ConnectEmbed
    */
   className?: string;
@@ -355,6 +360,7 @@ const ConnectEmbedContent = (
         onShow={() => {
           // no op
         }}
+        chainId={props.chainId ? BigInt(props.chainId) : undefined}
       />
     );
   }
@@ -368,6 +374,7 @@ const ConnectEmbedContent = (
     isEmbed: true,
     auth: props.auth,
     onConnect: props.onConnect,
+    chainId: props.chainId ? BigInt(props.chainId) : undefined,
   };
 
   return (

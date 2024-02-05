@@ -9,7 +9,12 @@ import {
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { DAppMetaData } from "../types.js";
-import { walletStorage } from "../manager/storage.js";
+import {
+  deleteConnectParamsFromStorage,
+  getSavedConnectParamsFromStorage,
+  saveConnectParamsToStorage,
+  walletStorage,
+} from "../manager/storage.js";
 import {
   EthereumProvider,
   OPTIONAL_EVENTS,
@@ -39,8 +44,8 @@ const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 const storageKeys = {
-  requestedChains: "tw.requestedChains",
-  lastUsedChainId: "tw.lastUsedChainId",
+  requestedChains: "tw.wc.requestedChains",
+  lastUsedChainId: "tw.wc.lastUsedChainId",
 };
 
 const isNewChainsStale = false; // do we need to make this configurable?
@@ -61,6 +66,14 @@ export function walletConnect(options: WalletConnectCreationOptions) {
   return new WalletConnect(options);
 }
 
+export type WalletConnectEvents = NonNullable<Wallet["events"]> & {
+  addListener(event: "display_uri", listener: (uri: string) => void): void;
+  removeListener(event: "display_uri", listener: (uri: string) => void): void;
+
+  addListener(event: "wc_session_request_sent", listener: () => void): void;
+  removeListener(event: "wc_session_request_sent", listener: () => void): void;
+};
+
 /**
  * Class to connect to a wallet using WalletConnect protocol.
  */
@@ -70,7 +83,7 @@ export class WalletConnect implements Wallet {
 
   address: Wallet["address"];
   chainId: Wallet["chainId"];
-  events: Wallet["events"];
+  events: WalletConnectEvents | undefined;
   metadata: Wallet["metadata"];
 
   /**
@@ -97,15 +110,19 @@ export class WalletConnect implements Wallet {
 
   /**
    * Auto connect to already connected wallet connect session.
-   * @param options - Options for Auto connecting the wallet.
    * @example
    * ```ts
    * await wallet.autoConnect();
    * ```
    * @returns A Promise that resolves to the connected wallet address.
    */
-  async autoConnect(options?: WalletConnectConnectionOptions): Promise<string> {
-    const provider = await this.#initProvider(false, options);
+  async autoConnect(): Promise<string> {
+    const savedOptions = await getSavedConnectParamsFromStorage(
+      this.metadata.id,
+    );
+
+    const provider = await this.#initProvider(true, savedOptions || undefined);
+
     this.chainId = normalizeChainId(provider.chainId);
 
     const account = provider.accounts[0];
@@ -113,6 +130,8 @@ export class WalletConnect implements Wallet {
     if (!account) {
       throw new Error("No accounts found on provider.");
     }
+
+    this.address = account;
 
     return this.address;
   }
@@ -127,7 +146,7 @@ export class WalletConnect implements Wallet {
    * @returns A Promise that resolves to the connected wallet address.
    */
   async connect(options?: WalletConnectConnectionOptions) {
-    const provider = await this.#initProvider(true, options);
+    const provider = await this.#initProvider(false, options);
     const isStale = await this.#isChainsStale(provider.chainId);
     const targetChainId = Number(options?.chainId || defaultChainId);
 
@@ -135,6 +154,35 @@ export class WalletConnect implements Wallet {
       chain: targetChainId,
       client: this.#options.client,
     });
+
+    const { onUri, onWalletConnectSessionRequest } = options || {};
+
+    if (onUri || onWalletConnectSessionRequest) {
+      const events = this.events;
+      if (!events) {
+        throw new Error("Events not initialized but is required");
+      }
+
+      if (onUri) {
+        events.addListener("display_uri", onUri);
+        events.addListener("disconnect", () => {
+          events.removeListener("display_uri", onUri);
+        });
+      }
+
+      if (onWalletConnectSessionRequest) {
+        events.addListener(
+          "wc_session_request_sent",
+          onWalletConnectSessionRequest,
+        );
+        events.addListener("disconnect", () => {
+          events.removeListener(
+            "wc_session_request_sent",
+            onWalletConnectSessionRequest,
+          );
+        });
+      }
+    }
 
     // If there no active session, or the chain is state, force connect.
     if (!provider.session || isStale) {
@@ -158,6 +206,11 @@ export class WalletConnect implements Wallet {
 
     this.address = account;
     this.chainId = normalizeChainId(provider.chainId);
+
+    if (options) {
+      saveConnectParamsToStorage(this.metadata.id, options);
+    }
+
     return this.address;
   }
 
@@ -169,9 +222,12 @@ export class WalletConnect implements Wallet {
    * ```
    */
   async disconnect() {
-    const provider = this.#assertProvider();
-    this.#onDisconnect();
-    await provider.disconnect();
+    const provider = this.#provider;
+    if (provider) {
+      this.#onDisconnect();
+      await provider.disconnect();
+      deleteConnectParamsFromStorage(this.metadata.id);
+    }
   }
 
   /**
@@ -273,7 +329,7 @@ export class WalletConnect implements Wallet {
    * @internal
    */
   async #initProvider(
-    switchChainRequired: boolean,
+    isAutoConnect: boolean,
     connectionOptions?: WalletConnectConnectionOptions,
   ) {
     const targetChainId = Number(connectionOptions?.chainId || 1);
@@ -311,10 +367,12 @@ export class WalletConnect implements Wallet {
 
     this.#provider = provider;
 
-    const isStale = await this.#isChainsStale(Number(this.chainId));
-
-    if (isStale && provider.session) {
-      await provider.disconnect();
+    // const isStale = await this.#isChainsStale(Number(this.chainId));
+    // isStale &&
+    if (!isAutoConnect) {
+      if (provider.session) {
+        await provider.disconnect();
+      }
     }
 
     // setup listeners
@@ -333,7 +391,7 @@ export class WalletConnect implements Wallet {
       } catch (e) {
         console.error("Failed to Switch chain to target chain");
         console.error(e);
-        if (switchChainRequired) {
+        if (!isAutoConnect) {
           throw e;
         }
       }

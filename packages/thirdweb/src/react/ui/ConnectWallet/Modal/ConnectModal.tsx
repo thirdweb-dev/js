@@ -15,7 +15,7 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
  * @internal
  */
 export const ConnectModal = () => {
-  const { theme, modalSize } = useContext(ModalConfigCtx);
+  const { theme, modalSize, chainId } = useContext(ModalConfigCtx);
 
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
@@ -123,6 +123,7 @@ export const ConnectModal = () => {
           onShow={onShow}
           isOpen={isWalletModalOpen}
           onClose={closeModal}
+          chainId={chainId}
         />
       </Modal>
     </CustomThemeProvider>

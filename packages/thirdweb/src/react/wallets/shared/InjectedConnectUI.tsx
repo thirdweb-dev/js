@@ -24,7 +24,7 @@ export const InjectedConnectUI = (
     props.walletConfig.metadata.name,
   );
 
-  const { walletConfig, done, screenConfig } = props;
+  const { walletConfig, done, screenConfig, createInstance } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const connectToExtension = useCallback(async () => {
@@ -33,14 +33,16 @@ export const InjectedConnectUI = (
       setScreen("connecting");
       setErrorConnecting(false);
       await wait(1000);
-      const wallet = walletConfig.create();
-      await wallet.connect();
+      const wallet = createInstance();
+      await wallet.connect({
+        chainId: props.chainId,
+      });
       done(wallet);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [walletConfig, done]);
+  }, [createInstance, done, props.chainId]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {

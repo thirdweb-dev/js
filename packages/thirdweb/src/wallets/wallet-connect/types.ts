@@ -30,4 +30,6 @@ export type WalletConnectConnectionOptions = {
   showQrModal?: boolean;
   pairingTopic?: string;
   qrModalOptions?: QRCodeModalOptions;
+  onUri?: (uri: string) => void;
+  onWalletConnectSessionRequest?: () => void;
 };
