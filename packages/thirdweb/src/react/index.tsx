@@ -11,6 +11,9 @@ export {
   useConnectedWallets,
   useActiveWalletAddress,
   useSwitchActiveWalletChain,
+  useActiveWalletConnectionStatus,
+  useSetActiveWalletConnectionStatus,
+  useIsAutoConnecting,
 } from "./providers/wallet-provider.js";
 
 // contract related
