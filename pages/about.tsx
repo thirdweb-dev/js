@@ -10,14 +10,6 @@ import { ThirdwebNextPage } from "utils/types";
 
 const employees = [
   {
-    name: "Abbas Khan",
-    twitter: "KhanAbbas201",
-  },
-  {
-    name: "Adam Majmudar",
-    twitter: "MajmudarAdam",
-  },
-  {
     name: "Andrew Begafria",
     twitter: "akbmotion",
   },
@@ -121,10 +113,6 @@ const employees = [
     twitter: "MonkeyMeaning",
   },
   {
-    name: "Lakshay Garg",
-    twitter: "lakshayg18",
-  },
-  {
     name: "Mago Khamidov",
     twitter: "thirdwebmago",
   },
@@ -163,10 +151,6 @@ const employees = [
   {
     name: "Sian Morton",
     twitter: "Sian_Morton",
-  },
-  {
-    name: "Tair Asim",
-    twitter: "tair",
   },
   {
     name: "Waren Gonzaga",
