@@ -14,6 +14,8 @@ export {
 
 // injected
 export { injectedWallet } from "./injected/index.js";
+export { getMIPDStore } from "./injected/mipdStore.js";
+
 export type {
   WalletRDNS,
   InjectedWalletOptions,
@@ -26,6 +28,12 @@ export {
   metamaskWallet,
   metamaskMetadata,
 } from "./injected/wallets/metamask.js";
+
+export {
+  injectedCoinbaseProvider,
+  coinbaseMetadata,
+  coinbaseWallet,
+} from "./injected/wallets/coinbase.js";
 
 export {
   rainbowWallet,

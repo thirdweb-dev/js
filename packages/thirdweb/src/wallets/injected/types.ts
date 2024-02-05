@@ -3,7 +3,7 @@ import type { WalletMetadata } from "../types.js";
 
 export type WalletRDNS =
   | "io.metamask"
-  | "com.coinbase"
+  | "com.coinbase.wallet"
   | "io.zerion.wallet"
   | "me.rainbow"
   // eslint-disable-next-line @typescript-eslint/ban-types
