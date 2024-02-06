@@ -6,7 +6,7 @@ import type {
   TransactionSerializable,
   TypedDataDefinition,
 } from "viem";
-import { type Address } from "viem/accounts";
+import type { Address } from "viem/accounts";
 import type { Transaction } from "../../../../transaction/transaction.js";
 import type { IWallet } from "../../../interfaces/wallet.js";
 import type { StorageType } from "../storage/type.js";

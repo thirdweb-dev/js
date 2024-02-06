@@ -189,9 +189,8 @@ export const loadEncryptedFromThirdweb = (arg: {
         "Failed to get encrypted key material from thirdweb.",
       );
     }
-    const { encryptedKeyMaterial }: { encryptedKeyMaterial: string } =
-      await encryptedKeyMaterialResp.json();
-    return await arg.decryptValue({ value: encryptedKeyMaterial });
+    const { value }: { value: string } = await encryptedKeyMaterialResp.json();
+    return await arg.decryptValue({ value });
   };
 };
 
@@ -238,9 +237,8 @@ export const loadFromThirdweb = (): LoadKeyType => {
     if (!keyMaterialResp.ok) {
       throw new StorageError("Failed to get key material from thirdweb.");
     }
-    const { keyMaterial }: { keyMaterial: string } =
-      await keyMaterialResp.json();
-    return keyMaterial;
+    const { value }: { value: string } = await keyMaterialResp.json();
+    return value;
   };
 };
 
