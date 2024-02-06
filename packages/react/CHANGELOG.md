@@ -1,5 +1,14 @@
 # @thirdweb-dev/react
 
+## 4.4.6
+
+### Patch Changes
+
+- [#2260](https://github.com/thirdweb-dev/js/pull/2260) [`6a3cacb6`](https://github.com/thirdweb-dev/js/commit/6a3cacb62257c1774b5bac739b89e17495f42655) Thanks [@MananTank](https://github.com/MananTank)! - Enforce compact modal size in ConnectWallet based on available space instead of just on mobile device
+
+- Updated dependencies [[`433d49e3`](https://github.com/thirdweb-dev/js/commit/433d49e3aba03df33678f429f19f426fd107b7eb)]:
+  - @thirdweb-dev/react-core@4.4.6
+
 ## 4.4.5
 
 ### Patch Changes
