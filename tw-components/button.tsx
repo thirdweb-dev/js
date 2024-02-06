@@ -149,10 +149,11 @@ TrackedLinkButton.displayName = "TrackedLinkButton";
 export interface TrackedIconButtonProps extends IconButtonProps {
   category: string;
   label?: string;
+  trackingProps?: Record<string, string>;
 }
 
 export const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
-  ({ category, label, ...restButtonProps }, ref) => {
+  ({ category, label, trackingProps, ...restButtonProps }, ref) => {
     const trackEvent = useTrack();
     return (
       <IconButton
@@ -165,6 +166,7 @@ export const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
             category,
             action: "click",
             label,
+            ...trackingProps,
           })
         }
         {...restButtonProps}
