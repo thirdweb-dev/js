@@ -9,6 +9,8 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
+import { getChainDataForChainId } from "../../chain/index.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
 
 /**
  * Connect to Injected Wallet Provider
@@ -131,7 +133,7 @@ export class InjectedWallet implements Wallet {
     return this.#onConnect({
       provider,
       accounts: accountAddresses,
-      targetChainId: options?.chainId,
+      targetChainId: options?.chainId ? BigInt(options.chainId) : undefined,
     });
   }
 
@@ -194,12 +196,32 @@ export class InjectedWallet implements Wallet {
       throw new Error("no provider available");
     }
 
-    await this.#provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: toHex(chainId) }],
-    });
+    try {
+      await this.#provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: toHex(chainId) }],
+      });
+    } catch (e: any) {
+      // if chain does not exist, add the chain
+      if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
+        const chain = await getChainDataForChainId(BigInt(chainId));
+        await this.#provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: toHex(chainId),
+              chainName: chain.name,
+              nativeCurrency: chain.nativeCurrency,
+              rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
+              blockExplorerUrls: chain.explorers?.map((x) => x.url),
+            },
+          ],
+        });
+      } else {
+        throw e;
+      }
+    }
 
-    // TODO handle add chain case etc
     this.chainId = normalizeChainId(chainId);
   }
 
@@ -208,7 +230,7 @@ export class InjectedWallet implements Wallet {
    * @internal
    */
   async #onConnect(data: {
-    targetChainId?: number | bigint;
+    targetChainId?: bigint;
     provider: Ethereum;
     accounts: string[];
   }): Promise<typeof this> {
