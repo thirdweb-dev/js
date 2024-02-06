@@ -116,7 +116,7 @@ export class WalletConnect implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected wallet address.
    */
-  async autoConnect(): Promise<string> {
+  async autoConnect(): Promise<typeof this> {
     const savedOptions = await getSavedConnectParamsFromStorage(
       this.metadata.id,
     );
@@ -133,7 +133,7 @@ export class WalletConnect implements Wallet {
 
     this.address = account;
 
-    return this.address;
+    return this;
   }
 
   /**
@@ -145,7 +145,9 @@ export class WalletConnect implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected wallet address.
    */
-  async connect(options?: WalletConnectConnectionOptions) {
+  async connect(
+    options?: WalletConnectConnectionOptions,
+  ): Promise<typeof this> {
     const provider = await this.#initProvider(false, options);
     const isStale = await this.#isChainsStale(provider.chainId);
     const targetChainId = Number(options?.chainId || defaultChainId);
@@ -211,7 +213,7 @@ export class WalletConnect implements Wallet {
       saveConnectParamsToStorage(this.metadata.id, options);
     }
 
-    return this.address;
+    return this;
   }
 
   /**

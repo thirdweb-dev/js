@@ -194,7 +194,7 @@ async function fromEthersContract<abi extends Abi>(
  */
 async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
   const address = await signer.getAddress();
-  return {
+  const wallet: Wallet = {
     address,
     signMessage: async ({ message }) => {
       return signer.signMessage(
@@ -225,13 +225,14 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
       },
     },
     async connect() {
-      return address;
+      return wallet;
     },
     async autoConnect() {
-      return address;
+      return wallet;
     },
     async disconnect() {},
-  } satisfies Wallet;
+  };
+  return wallet;
 }
 
 /**

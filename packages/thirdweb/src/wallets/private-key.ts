@@ -27,7 +27,7 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
     options.privateKey = "0x" + options.privateKey;
   }
   const account = privateKeyToAccount(options.privateKey as Hex);
-  return {
+  const wallet: Wallet = {
     address: account.address,
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
@@ -57,13 +57,14 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
       iconUrl: "TODO",
     },
     async connect() {
-      return account.address;
+      return wallet;
     },
     async autoConnect() {
-      return account.address;
+      return wallet;
     },
     async disconnect() {
       return;
     },
-  } satisfies Wallet;
+  };
+  return wallet;
 }

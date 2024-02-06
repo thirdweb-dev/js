@@ -211,7 +211,7 @@ export class InjectedWallet implements Wallet {
     targetChainId?: number | bigint;
     provider: Ethereum;
     accounts: string[];
-  }): Promise<string> {
+  }): Promise<typeof this> {
     const { accounts, provider, targetChainId } = data;
     const account = accounts[0];
     if (!account) {
@@ -252,7 +252,7 @@ export class InjectedWallet implements Wallet {
       },
     };
 
-    return this.address;
+    return this;
   }
 
   /**

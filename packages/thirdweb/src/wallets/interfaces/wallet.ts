@@ -31,8 +31,8 @@ export type Wallet = {
     iconUrl: string;
   };
 
-  connect: (options?: WalletConnectionOptions) => Promise<string>;
-  autoConnect: () => Promise<string>;
+  connect: (options?: WalletConnectionOptions) => Promise<Wallet>;
+  autoConnect: () => Promise<Wallet>;
   disconnect: () => Promise<void>;
 
   // OPTIONAL

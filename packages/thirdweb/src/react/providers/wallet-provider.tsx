@@ -107,7 +107,15 @@ export function useSetActiveWallet() {
  * const { connect, isConnecting, error } = useConnect();
  *
  * // later in your code
- * <button> onClick={() => connect(metamaskWallet)}>Connect</button>
+ * <button
+ *    onClick={() =>
+ *      connect(() => {
+ *        return metamaskWallet().connect();
+ *      })
+ *    }
+ *  >
+ *    Connect
+ *  </button>
  * ```
  */
 export function useConnect() {
