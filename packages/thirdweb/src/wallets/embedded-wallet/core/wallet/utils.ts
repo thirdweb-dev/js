@@ -2,31 +2,31 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AuthUserType } from "../authentication/type.js";
 import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 import type {
-  CreateWalletOverrideType,
-  SensitiveWalletDetailType,
-  WalletDetailType,
+  AccountDetailType,
+  CreateAccountOverrideType,
+  SensitiveAccountDetailType,
 } from "./type.js";
 
 /**
  * @internal
- * @param walletDetail - Information about the wallet
+ * @param accountDetail - Information about the wallet
  * @param keyPiece - The piece of the wallet key to get the unique id for
  * @example
  * ```ts
- * const walletDetail = {
+ * const accountDetail = {
  *     walletId: "123",
  *     // ...
  * };
- * const uniqueId = getWalletUniqueId(walletDetail, "pKey");
+ * const uniqueId = getWalletUniqueId(accountDetail, "pKey");
  * // "123-pKey"
  * console.log(uniqueId);
  * ```
  */
 export const getWalletUniqueId = (
-  walletDetail: WalletDetailType,
+  accountDetail: AccountDetailType,
   keyPiece: "pKey" | "shareA" | "shareB" | "shareC",
 ) => {
-  return `${walletDetail.walletId}-${keyPiece}`;
+  return `${accountDetail.accountId}-${keyPiece}`;
 };
 
 /**
@@ -35,21 +35,21 @@ export const getWalletUniqueId = (
  * @param arg.user - The authenticated user for which we want to get the wallet details of
  * @example
  * ```ts
- * import { getUserWalletDetail } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
- * const wallets = await getUserWalletDetail({
+ * import { getUserAccountDetail } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * const accounts = await getUserAccountDetail({
  *  user: {
  *    authToken
  *    // ...
  *  }
  * });
  *
- * console.log(wallets);
+ * console.log(accounts);
  * ```
  * @returns A Promise that resolves to the wallet details of the user
  */
-export const getUserWalletDetail = async (arg: {
+export const getUserAccountDetail = async (arg: {
   user: AuthUserType;
-}): Promise<WalletDetailType[]> => {
+}): Promise<AccountDetailType[]> => {
   const { ROUTE_FETCH_USER_WALLETS } = await import("../routes.js");
 
   const resp = await fetch(ROUTE_FETCH_USER_WALLETS(), {
@@ -58,7 +58,7 @@ export const getUserWalletDetail = async (arg: {
     },
   });
   const result = await resp.json();
-  return result as WalletDetailType[];
+  return result as AccountDetailType[];
 };
 
 /**
@@ -67,31 +67,31 @@ export const getUserWalletDetail = async (arg: {
  * @param arg.client - The thirdweb client
  * @param arg.authUser - The authenticated user for which we want to create the wallet for
  * @param arg.format - The storage format for the wallet
- * @param arg.createWalletOverride - Optional. A function to override the default wallet creation function
+ * @param arg.createAccountOverride - Optional. A function to override the default wallet creation function
  * @example
  * ```ts
- * import { createWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { createAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
  *
- * const wallet = await createWallet({
+ * const account = await createAccount({
  *    client,
  *    authUser,
  *    format: "sharded",
  * });
- * console.log(wallet);
+ * console.log(account);
  * ```
- * @returns A Promise that resolves to the wallet details of the user
+ * @returns A Promise that resolves to the account details of the user
  */
-export const createWallet = async ({
-  createWalletOverride,
+export const createAccount = async ({
+  createAccountOverride,
   client,
   authUser,
   format,
 }: {
-  createWalletOverride?: CreateWalletOverrideType | undefined;
+  createAccountOverride?: CreateAccountOverrideType | undefined;
   client: ThirdwebClient;
   authUser?: AuthUserType | undefined;
   format: WalletStorageFormatType;
-}): Promise<SensitiveWalletDetailType> => {
+}): Promise<SensitiveAccountDetailType> => {
   const { EmbeddedWalletError } = await import("./error.js");
   const { ROUTE_NEW_STORAGE } = await import("../routes.js");
 
@@ -107,12 +107,12 @@ export const createWallet = async ({
   if (!walletIdResp.ok) {
     throw new EmbeddedWalletError("Failed to create wallet");
   }
-  const { uuid: walletId } = await walletIdResp.json();
+  const { uuid: accountId } = await walletIdResp.json();
 
-  if (createWalletOverride) {
-    const wallet = await createWalletOverride();
+  if (createAccountOverride) {
+    const wallet = await createAccountOverride();
     return {
-      walletId,
+      accountId,
       address: wallet.address,
       keyMaterial: wallet.privateKey,
       keyGenerationSource: "developer",
@@ -131,7 +131,7 @@ export const createWallet = async ({
   const privateKey = generatePrivateKey();
   const account = privateKeyToAccount(privateKey);
   return {
-    walletId,
+    accountId,
     address: account.address,
     keyMaterial: privateKey,
     keyGenerationSource: "thirdweb",
@@ -146,37 +146,37 @@ export const createWallet = async ({
 /**
  * Saves the embedded wallet to the storage
  * @param arg - The options for saving the wallet
- * @param arg.walletDetail - The wallet details to save
+ * @param arg.accountDetail - The wallet details to save
  * @param arg.storage - The storage option containing info to save the wallet
  * @example
  * ```ts
- * import { saveWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { saveAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
  *
- * const wallet = await saveWallet({
- *   walletDetail,
+ * const account = await saveAccount({
+ *   accountDetail,
  *   storage,
  * });
- * console.log(wallet);
+ * console.log(account);
  * ```
- * @returns A Promise that resolves to the wallet detail that was saved
+ * @returns A Promise that resolves to the account detail that was saved
  */
-export const saveWallet = async ({
+export const saveAccount = async ({
   storage,
-  walletDetail,
+  accountDetail,
 }: {
-  walletDetail: SensitiveWalletDetailType;
+  accountDetail: SensitiveAccountDetailType;
   storage: StorageType;
-}): Promise<SensitiveWalletDetailType> => {
-  const { keyMaterial } = walletDetail;
-  const censoredWalletDetail: WalletDetailType = {
-    address: walletDetail.address,
-    client: walletDetail.client,
-    userId: walletDetail.userId,
-    walletState: walletDetail.walletState,
-    createdAt: walletDetail.createdAt,
-    format: walletDetail.format,
-    keyGenerationSource: walletDetail.keyGenerationSource,
-    walletId: walletDetail.walletId,
+}): Promise<SensitiveAccountDetailType> => {
+  const { keyMaterial } = accountDetail;
+  const censoredAccountDetail: AccountDetailType = {
+    address: accountDetail.address,
+    client: accountDetail.client,
+    userId: accountDetail.userId,
+    walletState: accountDetail.walletState,
+    createdAt: accountDetail.createdAt,
+    format: accountDetail.format,
+    keyGenerationSource: accountDetail.keyGenerationSource,
+    accountId: accountDetail.accountId,
   };
 
   switch (storage.format) {
@@ -184,8 +184,8 @@ export const saveWallet = async ({
       await storage.save({
         keyMaterial,
         authUser: storage.authUser,
-        walletDetail: censoredWalletDetail,
-        uniqueId: getWalletUniqueId(censoredWalletDetail, "pKey"),
+        accountDetail: censoredAccountDetail,
+        uniqueId: getWalletUniqueId(censoredAccountDetail, "pKey"),
       });
       break;
     }
@@ -197,85 +197,85 @@ export const saveWallet = async ({
         storage.shareA.save({
           keyMaterial: shareA,
           authUser: storage.authUser,
-          uniqueId: getWalletUniqueId(censoredWalletDetail, "shareA"),
-          walletDetail: censoredWalletDetail,
+          uniqueId: getWalletUniqueId(censoredAccountDetail, "shareA"),
+          accountDetail: censoredAccountDetail,
         }),
         storage.shareB.save({
           keyMaterial: shareB,
           authUser: storage.authUser,
-          uniqueId: getWalletUniqueId(censoredWalletDetail, "shareB"),
-          walletDetail: censoredWalletDetail,
+          uniqueId: getWalletUniqueId(censoredAccountDetail, "shareB"),
+          accountDetail: censoredAccountDetail,
         }),
         storage.shareC.save({
           keyMaterial: shareC,
           authUser: storage.authUser,
-          uniqueId: getWalletUniqueId(censoredWalletDetail, "shareC"),
-          walletDetail: censoredWalletDetail,
+          uniqueId: getWalletUniqueId(censoredAccountDetail, "shareC"),
+          accountDetail: censoredAccountDetail,
         }),
       ]);
       break;
     }
   }
-  return { ...walletDetail };
+  return { ...accountDetail };
 };
 
 /**
  * Loads the embedded wallet from the storage
  * @param arg - The options for loading the wallet
  * @param arg.storage - The storage option containing info to load the wallet
- * @param arg.walletDetail - The wallet details to load
+ * @param arg.accountDetail - The wallet details to load
  * @example
  * ```ts
- * import { loadWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { loadAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
  *
- * const wallet = await loadWallet({
+ * const account = await loadAccount({
  *  storage,
  *  walletDetail,
  * });
- * console.log(wallet);
+ * console.log(account);
  * ```
- * @returns A Promise that resolves to the wallet detail that was passed in
+ * @returns A Promise that resolves to the account detail that was passed in
  */
-export const loadWallet = async ({
+export const loadAccount = async ({
   storage,
-  walletDetail,
+  accountDetail,
 }: {
   storage: StorageType;
-  walletDetail: WalletDetailType;
-}): Promise<SensitiveWalletDetailType> => {
+  accountDetail: AccountDetailType;
+}): Promise<SensitiveAccountDetailType> => {
   const { EmbeddedWalletError } = await import("./error.js");
-  if (storage.format !== walletDetail.format) {
+  if (storage.format !== accountDetail.format) {
     throw new EmbeddedWalletError(
-      `Wallet storage format mismatched. Wallet storage format: ${walletDetail.format}, provided storage format: ${storage.format}`,
+      `Wallet storage format mismatched. Wallet storage format: ${accountDetail.format}, provided storage format: ${storage.format}`,
     );
   }
   switch (storage.format) {
     case "privateKey": {
       const keyMaterial = await storage.load({
-        uniqueId: getWalletUniqueId(walletDetail, "pKey"),
-        walletDetail,
+        uniqueId: getWalletUniqueId(accountDetail, "pKey"),
+        accountDetail,
         authUser: storage.authUser,
       });
       return {
-        ...walletDetail,
+        ...accountDetail,
         keyMaterial,
       };
     }
     case "sharded": {
       const [shareA, shareB, shareC] = await Promise.all([
         storage.shareA.load({
-          uniqueId: getWalletUniqueId(walletDetail, "shareA"),
-          walletDetail,
+          uniqueId: getWalletUniqueId(accountDetail, "shareA"),
+          accountDetail,
           authUser: storage.authUser,
         }),
         storage.shareB.load({
-          uniqueId: getWalletUniqueId(walletDetail, "shareB"),
-          walletDetail,
+          uniqueId: getWalletUniqueId(accountDetail, "shareB"),
+          accountDetail,
           authUser: storage.authUser,
         }),
         storage.shareC.load({
-          uniqueId: getWalletUniqueId(walletDetail, "shareC"),
-          walletDetail,
+          uniqueId: getWalletUniqueId(accountDetail, "shareC"),
+          accountDetail,
           authUser: storage.authUser,
         }),
       ]);
@@ -290,14 +290,14 @@ export const loadWallet = async ({
       const keyMaterial = await combineShares(validShares);
 
       if (validShares.length === 2) {
-        await saveWallet({
+        await saveAccount({
           storage,
-          walletDetail: { ...walletDetail, keyMaterial },
+          accountDetail: { ...accountDetail, keyMaterial },
         });
       }
 
       return {
-        ...walletDetail,
+        ...accountDetail,
         keyMaterial,
       };
     }

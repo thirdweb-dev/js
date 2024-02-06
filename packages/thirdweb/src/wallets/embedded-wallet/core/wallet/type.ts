@@ -4,8 +4,8 @@ import type { WalletStorageFormatType } from "../storage/type.js";
 export type WalletStateType = "loaded" | "pending_load" | "read_only";
 export type KeyGenerationSourceType = "developer" | "thirdweb";
 
-export type WalletDetailType = {
-  walletId: string;
+export type AccountDetailType = {
+  accountId: string;
   address: Readonly<string>;
   client: ThirdwebClient;
   userId?: string | undefined;
@@ -14,10 +14,10 @@ export type WalletDetailType = {
   format: WalletStorageFormatType;
   createdAt: number; // unix timestamp
 };
-export type SensitiveWalletDetailType = WalletDetailType & {
+export type SensitiveAccountDetailType = AccountDetailType & {
   keyMaterial: Readonly<string>;
 };
 
-export type CreateWalletOverrideType = () =>
+export type CreateAccountOverrideType = () =>
   | Promise<{ address: string; privateKey: string }>
   | { address: string; privateKey: string };

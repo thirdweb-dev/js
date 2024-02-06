@@ -48,16 +48,16 @@ export const ROUTE_INITIATE_2FA_AUTH = (provider: AuthMethodType) =>
 export const ROUTE_STORAGE = ({
   type,
   uniqueId,
-  walletId,
+  accountId,
 }: {
   uniqueId: string;
   type: "basic" | "encrypted";
-  walletId: string;
+  accountId: string;
 }) => {
   const url = new URL(`${getBaseUrl()}/v2/storage`);
   url.searchParams.set("uniqueId", uniqueId);
   url.searchParams.set("type", type);
-  url.searchParams.set("walletId", walletId);
+  url.searchParams.set("accountId", accountId);
   return url.href;
 };
 

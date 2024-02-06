@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AuthUserType } from "../authentication/type.js";
-import type { WalletDetailType } from "../wallet/type.js";
+import type { AccountDetailType } from "../wallet/type.js";
 import type {
   EncryptionType,
   LoadKeyType,
@@ -53,11 +53,11 @@ const getUserAuthToken = async (authUser?: AuthUserType) => {
 export const saveEncryptedInThirdweb = (arg: {
   encryptValue: EncryptionType;
 }): SaveKeyType => {
-  return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
+  return async ({ accountDetail, uniqueId, keyMaterial, authUser }) => {
     const { ROUTE_STORAGE } = await import("../routes.js");
     const { StorageError } = await import("./error.js");
 
-    const secretKey = walletDetail.client.secretKey;
+    const secretKey = accountDetail.client.secretKey;
     if (!secretKey && !authUser) {
       throw new StorageError(
         "Either a client with secret key or and authenticated user is required to save the key material with thirdweb",
@@ -76,7 +76,7 @@ export const saveEncryptedInThirdweb = (arg: {
       ROUTE_STORAGE({
         uniqueId,
         type: "encrypted",
-        walletId: walletDetail.walletId,
+        accountId: accountDetail.accountId,
       }),
       {
         method: "POST",
@@ -86,7 +86,7 @@ export const saveEncryptedInThirdweb = (arg: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          walletDetail,
+          accountDetail,
           uniqueId,
           value: encrypted,
         }),
@@ -113,18 +113,18 @@ export const saveEncryptedInThirdweb = (arg: {
  * @returns A function that saves the key material to thirdweb
  */
 export const saveInThirdweb = (): SaveKeyType => {
-  return async ({ walletDetail, uniqueId, keyMaterial, authUser }) => {
+  return async ({ accountDetail, uniqueId, keyMaterial, authUser }) => {
     const { ROUTE_STORAGE } = await import("../routes.js");
     const { StorageError } = await import("./error.js");
 
-    const secretKey = walletDetail.client.secretKey;
+    const secretKey = accountDetail.client.secretKey;
     if (!secretKey && !authUser) {
       throw new StorageError(
         "Either a client with secret key or and authenticated user is required to save the key material with thirdweb",
       );
     }
 
-    if (walletDetail.format === "privateKey") {
+    if (accountDetail.format === "privateKey") {
       throw new StorageError(
         "Invalid storage format. format must be 'sharded' to use saveInThirdweb",
       );
@@ -136,7 +136,7 @@ export const saveInThirdweb = (): SaveKeyType => {
       ROUTE_STORAGE({
         uniqueId,
         type: "basic",
-        walletId: walletDetail.walletId,
+        accountId: accountDetail.accountId,
       }),
       {
         method: "POST",
@@ -146,7 +146,7 @@ export const saveInThirdweb = (): SaveKeyType => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          walletDetail,
+          accountDetail,
           uniqueId,
           value: keyMaterial,
         }),
@@ -179,13 +179,13 @@ export const saveInThirdweb = (): SaveKeyType => {
  */
 export const saveInKeyValueStore = (arg: {
   preSave?: (args: {
-    walletDetail: WalletDetailType;
+    accountDetail: AccountDetailType;
     authUser: AuthUserType | undefined;
   }) => Promise<void> | void;
   saveItem: SaveKeyValueType;
 }): SaveKeyType => {
-  return async ({ uniqueId, keyMaterial, walletDetail, authUser }) => {
-    await arg.preSave?.({ walletDetail, authUser });
+  return async ({ uniqueId, keyMaterial, accountDetail, authUser }) => {
+    await arg.preSave?.({ accountDetail, authUser });
     await arg.saveItem({
       key: uniqueId,
       value: keyMaterial,
@@ -213,11 +213,11 @@ export const saveInKeyValueStore = (arg: {
 export const loadEncryptedFromThirdweb = (arg: {
   decryptValue: EncryptionType;
 }): LoadKeyType => {
-  return async ({ walletDetail, authUser, uniqueId }) => {
+  return async ({ accountDetail, authUser, uniqueId }) => {
     const { ROUTE_STORAGE } = await import("../routes.js");
     const { StorageError } = await import("./error.js");
 
-    const secretKey = walletDetail.client.secretKey;
+    const secretKey = accountDetail.client.secretKey;
     if (!secretKey && !authUser) {
       throw new StorageError(
         "Either a client with secret key or and authenticated user is required to load the key material from thirdweb",
@@ -230,7 +230,7 @@ export const loadEncryptedFromThirdweb = (arg: {
       ROUTE_STORAGE({
         uniqueId,
         type: "encrypted",
-        walletId: walletDetail.walletId,
+        accountId: accountDetail.accountId,
       }),
       {
         method: "GET",
@@ -263,18 +263,18 @@ export const loadEncryptedFromThirdweb = (arg: {
  * @returns A function that loads the key material from thirdweb
  */
 export const loadFromThirdweb = (): LoadKeyType => {
-  return async ({ walletDetail, authUser, uniqueId }) => {
+  return async ({ accountDetail, authUser, uniqueId }) => {
     const { ROUTE_STORAGE } = await import("../routes.js");
     const { StorageError } = await import("./error.js");
 
-    const secretKey = walletDetail.client.secretKey;
+    const secretKey = accountDetail.client.secretKey;
     if (!secretKey && !authUser) {
       throw new StorageError(
         "Either a client with secret key or and authenticated user is required to load the key material from thirdweb",
       );
     }
 
-    if (walletDetail.format === "privateKey") {
+    if (accountDetail.format === "privateKey") {
       throw new StorageError(
         "Invalid storage format. format must be 'sharded' to use loadFromThirdweb",
       );
@@ -286,7 +286,7 @@ export const loadFromThirdweb = (): LoadKeyType => {
       ROUTE_STORAGE({
         uniqueId,
         type: "basic",
-        walletId: walletDetail.walletId,
+        accountId: accountDetail.accountId,
       }),
       {
         method: "GET",
@@ -324,13 +324,13 @@ export const loadFromThirdweb = (): LoadKeyType => {
  */
 export const loadFromKeyValueStore = (arg: {
   preLoad?: (args: {
-    walletDetail: WalletDetailType;
+    accountDetail: AccountDetailType;
     authUser: AuthUserType | undefined;
   }) => Promise<void> | void;
   loadItem: LoadKeyValueType;
 }): LoadKeyType => {
-  return async ({ uniqueId, walletDetail, authUser }) => {
-    await arg.preLoad?.({ walletDetail, authUser });
+  return async ({ uniqueId, accountDetail, authUser }) => {
+    await arg.preLoad?.({ accountDetail, authUser });
     return await arg.loadItem({
       key: uniqueId,
     });
