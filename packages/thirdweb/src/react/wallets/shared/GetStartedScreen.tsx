@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { useTWLocale } from "../../../providers/locale-provider.js";
-import { isMobile } from "../../../utils/isMobile.js";
-import { Img } from "../../components/Img.js";
-import { QRCode } from "../../components/QRCode.js";
-import { Spacer } from "../../components/Spacer.js";
-import { Container, ModalHeader } from "../../components/basic.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
-import { StyledButton } from "../../design-system/elements.js";
-import { iconSize, spacing, radius } from "../../design-system/index.js";
-import { AppleIcon } from "../icons/AppleIcon.js";
-import { ChromeIcon } from "../icons/ChromeIcon.js";
-import { PlayStoreIcon } from "../icons/PlayStoreIcon.js";
-import { Text } from "../../components/text.js";
-import { openWindow } from "../../../utils/openWindow.js";
+import { useTWLocale } from "../../providers/locale-provider.js";
+import { isMobile } from "../../utils/isMobile.js";
+import { Img } from "../../ui/components/Img.js";
+import { QRCode } from "../../ui/components/QRCode.js";
+import { Spacer } from "../../ui/components/Spacer.js";
+import { Container, ModalHeader } from "../../ui/components/basic.js";
+import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import { StyledButton } from "../../ui/design-system/elements.js";
+import { iconSize, spacing, radius } from "../../ui/design-system/index.js";
+import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
+import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
+import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
+import { Text } from "../../ui/components/text.js";
+import { openWindow } from "../../utils/openWindow.js";
 
 /**
  * @internal

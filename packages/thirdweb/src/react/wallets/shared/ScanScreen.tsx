@@ -1,16 +1,16 @@
 import { useContext } from "react";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
-import { Img } from "../../components/Img.js";
-import { QRCode } from "../../components/QRCode.js";
-import { Spacer } from "../../components/Spacer.js";
+import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { Img } from "../../ui/components/Img.js";
+import { QRCode } from "../../ui/components/QRCode.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import {
   Container,
   ModalHeader,
   ScreenBottomContainer,
-} from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
-import { iconSize, spacing, fontSize } from "../../design-system/index.js";
-import { Text } from "../../components/text.js";
+} from "../../ui/components/basic.js";
+import { Button } from "../../ui/components/buttons.js";
+import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
+import { Text } from "../../ui/components/text.js";
 
 /**
  * @internal
