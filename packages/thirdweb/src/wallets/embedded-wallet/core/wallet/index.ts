@@ -12,7 +12,6 @@ import type { IWallet } from "../../../interfaces/wallet.js";
 import type { StorageType } from "../storage/type.js";
 import type {
   CreateWalletOverrideType,
-  SaveWalletArgType,
   SensitiveWalletDetailType,
   WalletDetailType,
 } from "./type.js";
@@ -54,12 +53,8 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
 
     if (wallets.length === 0) {
       const newSensitiveWalletDetail = await this.createWallet();
-      const sensitiveWalletDetail = await this.saveWallet({
+      await this.saveWallet({
         walletDetail: newSensitiveWalletDetail,
-      });
-      this.wallets[sensitiveWalletDetail.walletId] = sensitiveWalletDetail;
-      await this.setActiveWallet({
-        wallet: sensitiveWalletDetail,
       });
       return this;
     }
@@ -88,21 +83,37 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
 
   async createWallet(arg?: { createWalletOverride: CreateWalletOverrideType }) {
     const { createWallet } = await import("./utils.js");
-    return await createWallet({
+    const wallet = await createWallet({
       createWalletOverride: arg?.createWalletOverride,
       client: this.storage.client,
       format: this.storage.format,
       authUser: this.storage.authUser,
     });
+    this.wallets[wallet.walletId] = wallet;
+    return wallet;
   }
 
-  async saveWallet(
-    arg: Omit<SaveWalletArgType, "storage"> & { storageOverride?: StorageType },
-  ) {
-    const storage = arg.storageOverride ?? this.storage;
+  async saveWallet(arg: {
+    walletDetail: WalletDetailType;
+    storageOverride?: StorageType;
+  }) {
     const { saveWallet } = await import("./utils.js");
+    const { EmbeddedWalletError } = await import("./error.js");
+
+    const storage = arg.storageOverride ?? this.storage;
+    let sensitiveWalletDetail = this.wallets[arg.walletDetail.walletId];
+    if (!sensitiveWalletDetail) {
+      sensitiveWalletDetail = await this.loadWallet({
+        walletDetail: arg.walletDetail,
+      });
+    }
+    if (!sensitiveWalletDetail) {
+      throw new EmbeddedWalletError(
+        "Unauthorized. Attempting to save a wallet that cannot be loaded by given credentials.",
+      );
+    }
     return await saveWallet({
-      walletDetail: arg.walletDetail,
+      walletDetail: sensitiveWalletDetail,
       storage,
     });
   }
@@ -122,24 +133,31 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
       walletDetail,
       storage,
     });
-    this.wallets[sensitiveWalletDetail.walletId] = sensitiveWalletDetail;
 
     await this.setActiveWallet({
-      wallet: sensitiveWalletDetail,
+      walletDetail: sensitiveWalletDetail,
     });
     return sensitiveWalletDetail;
   }
 
   async setActiveWallet(arg: {
-    wallet: SensitiveWalletDetailType | WalletDetailType;
+    walletDetail: SensitiveWalletDetailType | WalletDetailType;
   }) {
-    if ("keyMaterial" in arg.wallet) {
-      this.activeWallet = arg.wallet;
+    if (this.wallets[arg.walletDetail.walletId]) {
+      const wallet = this.wallets[arg.walletDetail.walletId];
+      if (!wallet) {
+        throw new Error(`BAD STATE: wallet is empty even after check.`);
+      }
+      this.activeWallet = wallet;
+    } else if ("keyMaterial" in arg.walletDetail) {
+      this.wallets[arg.walletDetail.walletId] = arg.walletDetail;
+      this.activeWallet = arg.walletDetail;
     } else {
       await this.loadWallet({
-        walletDetail: arg.wallet,
+        walletDetail: arg.walletDetail,
       });
     }
+    return arg.walletDetail;
   }
 
   // TODO: DRY this with PrivateKeyWallet and figure out what connect takes

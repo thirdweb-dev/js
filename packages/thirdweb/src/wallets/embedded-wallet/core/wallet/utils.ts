@@ -3,7 +3,6 @@ import type { AuthUserType } from "../authentication/type.js";
 import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 import type {
   CreateWalletOverrideType,
-  SaveWalletArgType,
   SensitiveWalletDetailType,
   WalletDetailType,
 } from "./type.js";
@@ -92,7 +91,10 @@ export const createWallet = async ({
 export const saveWallet = async ({
   storage,
   walletDetail,
-}: SaveWalletArgType): Promise<SensitiveWalletDetailType> => {
+}: {
+  walletDetail: SensitiveWalletDetailType;
+  storage: StorageType;
+}): Promise<SensitiveWalletDetailType> => {
   const { keyMaterial } = walletDetail;
   const censoredWalletDetail: WalletDetailType = {
     address: walletDetail.address,
@@ -195,7 +197,6 @@ export const loadWallet = async ({
           authUser: storage.authUser,
         }),
       ]);
-      console.log("[shareA, shareB, shareC]", [shareA, shareB, shareC]);
       const keyMaterial = await combineShares([shareA, shareB, shareC]);
       return {
         ...walletDetail,
@@ -233,7 +234,7 @@ export async function createShares(keyMaterial: string): Promise<{
 }
 
 async function combineShares(shares: string[]) {
-  // ! we need full import because combine relies on extractShareComponent which gets dropped in import if we import combine directly
+  // !we need full import because combine relies on extractShareComponent which gets dropped in import if we import combine directly
   const secrets = await import("secrets.js-34r7h");
   const { hexToUtf8 } = await import("../../../../utils/hex.js");
   const { EmbeddedWalletError } = await import("./error.js");
