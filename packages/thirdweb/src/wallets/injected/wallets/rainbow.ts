@@ -14,9 +14,9 @@ export const rainbowWalletMetadata = {
  * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @example
  * ```ts
- * const wallet = await rainbowWallet();
+ * const wallet = rainbowWallet();
  * ```
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
  */
 export function rainbowWallet(options?: SpecificInjectedWalletOptions) {
   return new InjectedWallet({

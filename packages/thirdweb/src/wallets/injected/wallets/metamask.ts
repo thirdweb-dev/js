@@ -15,9 +15,9 @@ export const metamaskMetadata: WalletMetadata = {
  * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @example
  * ```ts
- * const wallet = await metamaskWallet();
+ * const wallet = metamaskWallet();
  * ```
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
  */
 export function metamaskWallet(options?: SpecificInjectedWalletOptions) {
   return new InjectedWallet({

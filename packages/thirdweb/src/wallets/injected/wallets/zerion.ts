@@ -14,9 +14,9 @@ export const zerionWalletMetadata = {
  * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @example
  * ```ts
- * const wallet = await zerionWallet();
+ * const wallet = zerionWallet();
  * ```
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
  */
 export function zerionWallet(options?: SpecificInjectedWalletOptions) {
   return new InjectedWallet({

@@ -15,9 +15,9 @@ export const coinbaseMetadata: WalletMetadata = {
  * @param options - The options for connecting to the Injected Coinbase Wallet Provider.
  * @example
  * ```ts
- * const wallet = await coinbaseWallet();
+ * const wallet = coinbaseWallet();
  * ```
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
  */
 export function coinbaseWallet(options?: SpecificInjectedWalletOptions) {
   return new InjectedWallet({
