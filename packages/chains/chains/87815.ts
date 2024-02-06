@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 95395,
+  "chainId": 87815,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,20 +12,20 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "Testnet",
+  "name": "QI M 2402056",
   "nativeCurrency": {
-    "name": "Testnet Token",
-    "symbol": "MFD",
+    "name": "QI M 2402056 Token",
+    "symbol": "ACI",
     "decimals": 18
   },
-  "networkId": 95395,
+  "networkId": 87815,
   "redFlags": [],
   "rpc": [
-    "https://testnet-testnet-95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://qi-m-2402056.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://87815.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avacloud-dev.io/c908add6-74c5-4407-8091-18762786a0b9"
   ],
-  "shortName": "Testnet",
-  "slug": "testnet-testnet-95395",
+  "shortName": "QI M 2402056",
+  "slug": "qi-m-2402056",
   "testnet": true
 } as const satisfies Chain;

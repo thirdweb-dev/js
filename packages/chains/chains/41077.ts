@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 95395,
+  "chainId": 41077,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,20 +12,20 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "Testnet",
+  "name": "REALLY",
   "nativeCurrency": {
-    "name": "Testnet Token",
-    "symbol": "MFD",
+    "name": "REALLY Token",
+    "symbol": "FAN",
     "decimals": 18
   },
-  "networkId": 95395,
+  "networkId": 41077,
   "redFlags": [],
   "rpc": [
-    "https://testnet-testnet-95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://really.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://41077.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/really/testnet/rpc"
   ],
-  "shortName": "Testnet",
-  "slug": "testnet-testnet-95395",
+  "shortName": "REALLY",
+  "slug": "really",
   "testnet": true
 } as const satisfies Chain;

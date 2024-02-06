@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 95395,
+  "chainId": 30266,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,20 +12,20 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "Testnet",
+  "name": "Tnet02-06",
   "nativeCurrency": {
-    "name": "Testnet Token",
-    "symbol": "MFD",
+    "name": "Tnet02-06 Token",
+    "symbol": "LFC",
     "decimals": 18
   },
-  "networkId": 95395,
+  "networkId": 30266,
   "redFlags": [],
   "rpc": [
-    "https://testnet-testnet-95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://95395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://tnet02-06.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://30266.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
-  "shortName": "Testnet",
-  "slug": "testnet-testnet-95395",
+  "shortName": "Tnet02-06",
+  "slug": "tnet02-06",
   "testnet": true
 } as const satisfies Chain;
