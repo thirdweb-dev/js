@@ -1,14 +1,14 @@
-import type { AbiFunction, TypedData } from "abitype";
+import type { TypedData } from "abitype";
 import type {
-  Hash,
   Hex,
   SignableMessage,
   TransactionSerializable,
   TypedDataDefinition,
 } from "viem";
-import type { Address } from "viem/accounts";
-import type { Transaction } from "../../../../transaction/transaction.js";
-import type { IWallet } from "../../../interfaces/wallet.js";
+import type {
+  Wallet,
+  WalletConnectionOptions,
+} from "../../../interfaces/wallet.js";
 import type { StorageType } from "../storage/type.js";
 import type {
   CreateWalletOverrideType,
@@ -16,6 +16,23 @@ import type {
   WalletDetailType,
 } from "./type.js";
 
+/**
+ * Connect to Injected Wallet Provider
+ * @param arg - The options for connecting to the embedded wallet Provider.
+ * @param arg.storage - The storage options for the wallet sensitive information
+ * @returns A Promise that resolves to a Wallet instance.
+ * @throws Error if no injected provider is available or no accounts are available.
+ * @example
+ * ```ts
+ * import { embeddedWallet } from "thirdweb/wallets";
+ *
+ * const storage = createManagedStorage({})
+ * const wallet = await embeddedWallet({
+ *  storage,
+ * });
+ *
+ * ```
+ */
 export const embeddedWallet = async (arg: { storage: StorageType }) => {
   const wallet = new EmbeddedWallet({
     storage: arg.storage,
@@ -23,23 +40,27 @@ export const embeddedWallet = async (arg: { storage: StorageType }) => {
   return wallet.loadOrCreateWallet();
 };
 
-type EmbeddedWalletConnectOptions = Record<string, never>;
-
-class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
+class EmbeddedWallet implements Wallet {
   private storage: StorageType;
   private activeWallet: SensitiveWalletDetailType | null = null;
   private wallets: Record<string, SensitiveWalletDetailType> = {};
 
-  get address() {
-    return this.activeWallet?.address || null;
-  }
+  public metadata = {
+    id: "embedded-wallet",
+    name: "Embedded Wallet",
+    iconUrl: "TODO",
+  };
+
+  address: string;
 
   constructor(arg: { storage: StorageType }) {
     this.storage = arg.storage;
+    this.address = "";
   }
 
   async loadOrCreateWallet() {
     const { getUserWalletDetail } = await import("./utils.js");
+    const { EmbeddedWalletError } = await import("./error.js");
 
     if (!this.storage.authUser) {
       throw new Error(
@@ -61,7 +82,7 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
 
     const wallet = wallets[0];
     if (!wallet) {
-      throw new Error(`BAD STATE: Wallets array is empty`);
+      throw new EmbeddedWalletError(`BAD STATE: Wallets array is empty`);
     }
     await this.loadWallet({
       walletDetail: wallet,
@@ -157,17 +178,18 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
         walletDetail: arg.walletDetail,
       });
     }
+    this.address = arg.walletDetail.address;
     return arg.walletDetail;
   }
 
   // TODO: DRY this with PrivateKeyWallet and figure out what connect takes
-  public async connect(options: EmbeddedWalletConnectOptions) {
+  public async connect(options: WalletConnectionOptions | undefined) {
     // hack to satisfy linter
     void options;
     return this;
   }
 
-  public async signMessage(message: SignableMessage) {
+  public async signMessage({ message }: { message: SignableMessage }) {
     const { privateKeyToAccount } = await import("viem/accounts");
 
     if (!this.activeWallet) {
@@ -204,66 +226,31 @@ class EmbeddedWallet implements IWallet<EmbeddedWalletConnectOptions> {
   }
 
   // tx functions
-  public async sendTransaction<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
+  async sendTransaction(
+    // TODO: figure out how we would pass our "chain" object in here?
+    // maybe we *do* actually have to take in a tx object instead of the raw tx?
+    tx: TransactionSerializable & { chainId: number },
   ) {
     if (!this.activeWallet || !this.address) {
       throw new Error("not connected");
     }
-    const { getRpcClient } = await import("../../../../rpc/index.js");
-    const rpcRequest = getRpcClient(tx.client, { chainId: tx.chainId });
+    const { getRpcClient, eth_sendRawTransaction } = await import(
+      "../../../../rpc/index.js"
+    );
 
-    const [getDefaultGasOverrides, encode, transactionCount] =
-      await Promise.all([
-        import("../../../../gas/fee-data.js").then(
-          (m) => m.getDefaultGasOverrides,
-        ),
-        import("../../../../transaction/actions/encode.js").then(
-          (m) => m.encode,
-        ),
-        import("../../../../rpc/methods.js").then((m) => m.transactionCount),
-      ]);
-
-    const [gasOverrides, encodedData, nextNonce, estimatedGas] =
-      await Promise.all([
-        getDefaultGasOverrides(tx.client, tx.chainId),
-        encode(tx),
-        transactionCount(rpcRequest, this.address),
-        this.estimateGas(tx),
-      ]);
-
-    const signedTx = await this.signTransaction({
-      gas: estimatedGas,
-      to: tx.contractAddress as Address,
-      chainId: tx.chainId,
-      data: encodedData,
-      nonce: nextNonce,
-      ...gasOverrides,
+    const rpcRequest = getRpcClient({
+      client: this.storage.client,
+      chain: tx.chainId,
     });
-
-    // send the tx
-    // TODO: move into rpc/methods
-    const { result } = await rpcRequest({
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-    });
-    tx.transactionHash = result as Hash;
-
+    const signedTx = await this.signTransaction(tx);
+    const transactionHash = await eth_sendRawTransaction(rpcRequest, signedTx);
     return {
-      transactionHash: result as Hash,
+      transactionHash,
     };
   }
 
-  public async estimateGas<abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ): Promise<bigint> {
-    if (!this.activeWallet) {
-      throw new Error("not connected");
-    }
-    const { estimateGas } = await import(
-      "../../../../transaction/actions/estimate-gas.js"
-    );
-    return estimateGas(tx, this);
+  public async autoConnect() {
+    return this;
   }
 
   public async disconnect() {

@@ -7,6 +7,21 @@ import type {
   WalletDetailType,
 } from "./type.js";
 
+/**
+ * @internal
+ * @param walletDetail - Information about the wallet
+ * @param keyPiece - The piece of the wallet key to get the unique id for
+ * @example
+ * ```ts
+ * const walletDetail = {
+ *     walletId: "123",
+ *     // ...
+ * };
+ * const uniqueId = getWalletUniqueId(walletDetail, "pKey");
+ * // "123-pKey"
+ * console.log(uniqueId);
+ * ```
+ */
 export const getWalletUniqueId = (
   walletDetail: WalletDetailType,
   keyPiece: "pKey" | "shareA" | "shareB" | "shareC",
@@ -14,7 +29,27 @@ export const getWalletUniqueId = (
   return `${walletDetail.walletId}-${keyPiece}`;
 };
 
-export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
+/**
+ * Fetches the wallet details for an authenticated user
+ * @param arg - The options for fetching the user wallet detail
+ * @param arg.user - The authenticated user for which we want to get the wallet details of
+ * @example
+ * ```ts
+ * import { getUserWalletDetail } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * const wallets = await getUserWalletDetail({
+ *  user: {
+ *    authToken
+ *    // ...
+ *  }
+ * });
+ *
+ * console.log(wallets);
+ * ```
+ * @returns A Promise that resolves to the wallet details of the user
+ */
+export const getUserWalletDetail = async (arg: {
+  user: AuthUserType;
+}): Promise<WalletDetailType[]> => {
   const { ROUTE_FETCH_USER_WALLETS } = await import("../routes.js");
 
   const resp = await fetch(ROUTE_FETCH_USER_WALLETS(), {
@@ -26,6 +61,26 @@ export const getUserWalletDetail = async (arg: { user: AuthUserType }) => {
   return result as WalletDetailType[];
 };
 
+/**
+ * Creates a new embedded wallet
+ * @param arg - The options for creating a new embedded wallet
+ * @param arg.client - The thirdweb client
+ * @param arg.authUser - The authenticated user for which we want to create the wallet for
+ * @param arg.format - The storage format for the wallet
+ * @param arg.createWalletOverride - Optional. A function to override the default wallet creation function
+ * @example
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ *
+ * const wallet = await createWallet({
+ *    client,
+ *    authUser,
+ *    format: "sharded",
+ * });
+ * console.log(wallet);
+ * ```
+ * @returns A Promise that resolves to the wallet details of the user
+ */
 export const createWallet = async ({
   createWalletOverride,
   client,
@@ -88,6 +143,23 @@ export const createWallet = async ({
   };
 };
 
+/**
+ * Saves the embedded wallet to the storage
+ * @param arg - The options for saving the wallet
+ * @param arg.walletDetail - The wallet details to save
+ * @param arg.storage - The storage option containing info to save the wallet
+ * @example
+ * ```ts
+ * import { saveWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ *
+ * const wallet = await saveWallet({
+ *   walletDetail,
+ *   storage,
+ * });
+ * console.log(wallet);
+ * ```
+ * @returns A Promise that resolves to the wallet detail that was saved
+ */
 export const saveWallet = async ({
   storage,
   walletDetail,
@@ -147,6 +219,23 @@ export const saveWallet = async ({
   return { ...walletDetail };
 };
 
+/**
+ * Loads the embedded wallet from the storage
+ * @param arg - The options for loading the wallet
+ * @param arg.storage - The storage option containing info to load the wallet
+ * @param arg.walletDetail - The wallet details to load
+ * @example
+ * ```ts
+ * import { loadWallet } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ *
+ * const wallet = await loadWallet({
+ *  storage,
+ *  walletDetail,
+ * });
+ * console.log(wallet);
+ * ```
+ * @returns A Promise that resolves to the wallet detail that was passed in
+ */
 export const loadWallet = async ({
   storage,
   walletDetail,
