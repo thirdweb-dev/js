@@ -195,6 +195,7 @@ export const loadWallet = async ({
           authUser: storage.authUser,
         }),
       ]);
+      console.log("[shareA, shareB, shareC]", [shareA, shareB, shareC]);
       const keyMaterial = await combineShares([shareA, shareB, shareC]);
       return {
         ...walletDetail,
@@ -231,12 +232,13 @@ export async function createShares(keyMaterial: string): Promise<{
   };
 }
 
-export async function combineShares(shares: string[]) {
-  const { combine } = await import("secrets.js-34r7h");
+async function combineShares(shares: string[]) {
+  // ! we need full import because combine relies on extractShareComponent which gets dropped in import if we import combine directly
+  const secrets = await import("secrets.js-34r7h");
   const { hexToUtf8 } = await import("../../../../utils/hex.js");
   const { EmbeddedWalletError } = await import("./error.js");
 
-  const privateKeyHex = combine(shares);
+  const privateKeyHex = secrets.combine(shares);
   const privateKey = hexToUtf8(privateKeyHex);
 
   if (!privateKey.startsWith(WALLET_PRIVATE_KEY_PREFIX)) {

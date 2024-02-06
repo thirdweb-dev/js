@@ -13,7 +13,7 @@ export function utf8ToHex(str: string) {
 export function hexToUtf8(hex: string) {
   let str = "";
   for (let i = 0; i < hex.length; i += 2) {
-    const hexValue = hex.substring(i, 2);
+    const hexValue = hex.substring(i, i + 2);
     const decimalValue = parseInt(hexValue, 16);
     str += String.fromCharCode(decimalValue);
   }
