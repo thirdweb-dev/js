@@ -19,11 +19,10 @@ export type EngineInstance = {
 };
 
 export function useEngineInstances() {
-  const { token } = useApiAuthToken();
-  const { user } = useLoggedInUser();
+  const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
-    engineKeys.instances(user?.address ?? ""),
+    engineKeys.instances(user?.address as string),
     async (): Promise<EngineInstance[]> => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "GET",
@@ -39,9 +38,7 @@ export function useEngineInstances() {
       const json = await res.json();
       return (json.data?.instances as EngineInstance[]) || [];
     },
-    {
-      enabled: !!user && !!token,
-    },
+    { enabled: !!user?.address && isLoggedIn },
   );
 }
 
