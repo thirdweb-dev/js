@@ -77,9 +77,12 @@ class EmbeddedWallet implements Wallet {
     });
 
     if (wallets.length === 0) {
-      const newsensitiveAccountDetail = await this.createAccount();
+      const newSensitiveAccountDetail = await this.createAccount();
       await this.saveAccount({
-        accountDetail: newsensitiveAccountDetail,
+        accountDetail: newSensitiveAccountDetail,
+      });
+      this.setActiveAccount({
+        accountDetail: newSensitiveAccountDetail,
       });
       return this;
     }
@@ -88,8 +91,11 @@ class EmbeddedWallet implements Wallet {
     if (!wallet) {
       throw new EmbeddedWalletError(`BAD STATE: Wallets array is empty`);
     }
-    await this.loadAccount({
+    const account = await this.loadAccount({
       accountDetail: wallet,
+    });
+    this.setActiveAccount({
+      accountDetail: account,
     });
     return this;
   }
@@ -160,10 +166,8 @@ class EmbeddedWallet implements Wallet {
       accountDetail,
       storage,
     });
+    this.wallets[sensitiveAccountDetail.accountId] = sensitiveAccountDetail;
 
-    await this.setActiveAccount({
-      accountDetail: sensitiveAccountDetail,
-    });
     return sensitiveAccountDetail;
   }
 
@@ -181,15 +185,15 @@ class EmbeddedWallet implements Wallet {
       }
       this.activeWallet = wallet;
     } else if ("keyMaterial" in arg.accountDetail) {
-      this.wallets[arg.accountDetail.accountId] = arg.accountDetail;
       this.activeWallet = arg.accountDetail;
     } else {
-      await this.loadAccount({
+      const account = await this.loadAccount({
         accountDetail: arg.accountDetail,
       });
+      this.activeWallet = account;
     }
     this.address = arg.accountDetail.address;
-    return arg.accountDetail;
+    return this.activeWallet;
   }
 
   // TODO: DRY this with PrivateKeyWallet and figure out what connect takes
