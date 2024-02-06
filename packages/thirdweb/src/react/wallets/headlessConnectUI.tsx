@@ -24,9 +24,9 @@ export const HeadlessConnectUI = (props: ConnectUIProps) => {
       await wait(1000);
       setModalVisibility(false);
       const wallet = createInstance();
-      await wallet.connect();
+      const account = await wallet.connect();
       setModalVisibility(true);
-      done(wallet);
+      done(account);
     } catch (e) {
       setConnectionFailed(true);
       setModalVisibility(true);

@@ -10,7 +10,7 @@ import {
   getChainIdFromChain,
 } from "../chain/index.js";
 import { getContract, type ThirdwebContract } from "../contract/index.js";
-import type { Wallet } from "../wallets/interfaces/wallet.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 
 type Ethers6 = typeof ethers6;
 
@@ -192,14 +192,17 @@ async function fromEthersContract<abi extends Abi>({
 }
 
 /**
- * Converts an ethers5 Signer into an Wallet object.
+ * Converts an ethers5 Signer into an Account object.
  * @param signer - The ethers5 Signer object.
- * @returns - A Promise that resolves to an Wallet object.
+ * @returns - A Promise that resolves to an Account object.
  * @internal
  */
-async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
+async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
   const address = await signer.getAddress();
-  const wallet: Wallet = {
+  const chainId = await signer.provider
+    ?.getNetwork()
+    .then((network) => network.chainId);
+  const account: Account = {
     address,
     signMessage: async ({ message }) => {
       return signer.signMessage(
@@ -216,29 +219,31 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Wallet> {
         transactionHash,
       };
     },
-    // TODO
-    metadata: {
-      id: "ethers6-wallet",
-      name: "Ethers6 Wallet",
-      iconUrl: "",
-    },
-    events: {
-      addListener(event, listener) {
-        signer.provider?.on(event, listener);
+    wallet: {
+      metadata: {
+        id: "ethers-6-wallet",
+        iconUrl: "", // TODO
+        name: "Ethers 6 Wallet",
       },
-      removeListener(event, listener) {
-        signer.provider?.removeListener(event, listener);
+      autoConnect: async () => account,
+      connect: async () => account,
+      disconnect: async () => {},
+      chainId: chainId,
+      switchChain: async () => {
+        // TODO
+      },
+      events: {
+        addListener(events, listener) {
+          signer.provider?.on(events, listener);
+        },
+        removeListener(events, listener) {
+          signer.provider?.off(events, listener);
+        },
       },
     },
-    async connect() {
-      return wallet;
-    },
-    async autoConnect() {
-      return wallet;
-    },
-    async disconnect() {},
   };
-  return wallet;
+
+  return account;
 }
 
 /**

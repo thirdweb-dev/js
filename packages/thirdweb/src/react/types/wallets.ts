@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../index.js";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 
 /**
@@ -105,7 +105,7 @@ export type ConnectUIProps = {
   /**
    * when wallet connection is complete, call the `complete` function with the `wallet` instance
    */
-  done: (wallet: Wallet) => void;
+  done: (account: Account) => void;
 
   /**
    * Chain Id to connect the wallet to

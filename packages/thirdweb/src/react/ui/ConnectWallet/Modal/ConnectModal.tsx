@@ -7,7 +7,7 @@ import { useCallback, useEffect, useContext, useState } from "react";
 import { reservedScreens, onModalUnmount } from "../constants.js";
 import { useScreen } from "./screen.js";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
-import { useActiveWallet } from "../../../providers/wallet-provider.js";
+import { useActiveAccount } from "../../../providers/wallet-provider.js";
 import { Modal } from "../../components/Modal.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 
@@ -39,7 +39,7 @@ export const ConnectModal = () => {
 
   // const disconnect = useDisconnect();
 
-  const wallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   // const isWrapperConnected = !!wallet?.getPersonalWallet();
 
   // const isWrapperScreen =
@@ -78,7 +78,11 @@ export const ConnectModal = () => {
 
   // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
   useEffect(() => {
-    if (isWalletModalOpen && screen === reservedScreens.signIn && !wallet) {
+    if (
+      isWalletModalOpen &&
+      screen === reservedScreens.signIn &&
+      !activeAccount
+    ) {
       setScreen(initialScreen);
       setIsWalletModalOpen(false);
     }
@@ -88,7 +92,7 @@ export const ConnectModal = () => {
     screen,
     setIsWalletModalOpen,
     setScreen,
-    wallet,
+    activeAccount,
   ]);
 
   return (

@@ -1,5 +1,4 @@
 import {
-  getAddress,
   toHex,
   type Hex,
   ProviderRpcError,
@@ -24,7 +23,11 @@ import {
   getChainDataForChainId,
   getRpcUrlForChain,
 } from "../../chain/index.js";
-import type { SendTransactionOption, Wallet } from "../interfaces/wallet.js";
+import type {
+  Account,
+  SendTransactionOption,
+  Wallet,
+} from "../interfaces/wallet.js";
 import type {
   WalletConnectConnectionOptions,
   WalletConnectCreationOptions,
@@ -73,7 +76,6 @@ export class WalletConnect implements Wallet {
   #options: WalletConnectCreationOptions;
   #provider: InstanceType<typeof EthereumProvider> | undefined;
 
-  address: Wallet["address"];
   chainId: Wallet["chainId"];
   events: Wallet["events"];
   metadata: Wallet["metadata"];
@@ -91,7 +93,6 @@ export class WalletConnect implements Wallet {
    */
   constructor(options: WalletConnectCreationOptions) {
     this.#options = options;
-    this.address = ""; // TODO - allow making the address undefined
     this.metadata = options?.metadata || {
       name: "WalletConnect",
       iconUrl:
@@ -108,23 +109,60 @@ export class WalletConnect implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected wallet address.
    */
-  async autoConnect(): Promise<typeof this> {
+  async autoConnect(): Promise<Account> {
     const savedOptions = await getSavedConnectParamsFromStorage(
       this.metadata.id,
     );
 
     const provider = await this.#initProvider(true, savedOptions || undefined);
 
-    const account = provider.accounts[0];
+    const address = provider.accounts[0];
 
-    if (!account) {
+    if (!address) {
       throw new Error("No accounts found on provider.");
     }
 
     this.chainId = normalizeChainId(provider.chainId);
-    this.address = account;
 
-    return this;
+    return this.#onConnect(address);
+  }
+
+  /**
+   * @internal
+   */
+  #onConnect(address: string): Account {
+    const wallet = this;
+    return {
+      wallet,
+      address,
+      async sendTransaction(tx: SendTransactionOption) {
+        const provider = wallet.#assertProvider();
+
+        if (!wallet.chainId || !this.address) {
+          throw new Error("Invalid chainId or address");
+        }
+
+        if (normalizeChainId(tx.chainId) !== wallet.chainId) {
+          await wallet.switchChain(tx.chainId);
+        }
+
+        const transactionHash = (await provider.request({
+          method: "eth_sendTransaction",
+          params: [
+            {
+              gas: tx.gas ? toHex(tx.gas) : undefined,
+              from: this.address,
+              to: tx.to as Address,
+              data: tx.data,
+            },
+          ],
+        })) as Hex;
+
+        return {
+          transactionHash,
+        };
+      },
+    };
   }
 
   /**
@@ -136,9 +174,7 @@ export class WalletConnect implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected wallet address.
    */
-  async connect(
-    options?: WalletConnectConnectionOptions,
-  ): Promise<typeof this> {
+  async connect(options?: WalletConnectConnectionOptions): Promise<Account> {
     const provider = await this.#initProvider(false, options);
     const isStale = await this.#isChainsStale(provider.chainId);
     const targetChainId = Number(options?.chainId || defaultChainId);
@@ -183,20 +219,19 @@ export class WalletConnect implements Wallet {
     }
 
     // If session exists and chains are authorized, enable provider for required chain
-    const accounts = await provider.enable();
-    const account = accounts[0];
-    if (!account) {
+    const addresses = await provider.enable();
+    const address = addresses[0];
+    if (!address) {
       throw new Error("No accounts found on provider.");
     }
 
-    this.address = account;
     this.chainId = normalizeChainId(provider.chainId);
 
     if (options) {
       saveConnectParamsToStorage(this.metadata.id, options);
     }
 
-    return this;
+    return this.#onConnect(address);
   }
 
   /**
@@ -271,43 +306,6 @@ export class WalletConnect implements Wallet {
   }
 
   /**
-   * Send a transaction to the blockchain.
-   * @param tx - The transaction to send.
-   * @example
-   * ```ts
-   * const { transactionHash } = await wallet.sendTransaction(tx)
-   * ```
-   * @returns A Promise that resolves to an object with transaction hash.
-   */
-  async sendTransaction(tx: SendTransactionOption) {
-    const provider = this.#assertProvider();
-
-    if (!this.chainId || !this.address) {
-      throw new Error("Invalid chainId or address");
-    }
-
-    if (normalizeChainId(tx.chainId) !== this.chainId) {
-      await this.switchChain(tx.chainId);
-    }
-
-    const transactionHash = (await provider.request({
-      method: "eth_sendTransaction",
-      params: [
-        {
-          gas: tx.gas ? toHex(tx.gas) : undefined,
-          from: this.address,
-          to: tx.to as Address,
-          data: tx.data,
-        },
-      ],
-    })) as Hex;
-
-    return {
-      transactionHash,
-    };
-  }
-
-  /**
    * Initialize the WalletConnect provider.
    * @param switchChainRequired - Whether to switch chain is required or not.
    * @param connectionOptions - Options for connecting to the wallet.
@@ -363,7 +361,6 @@ export class WalletConnect implements Wallet {
     // setup listeners
     provider.on("disconnect", this.#onDisconnect);
     provider.on("session_delete", this.#onDisconnect);
-    provider.on("accountsChanged", this.#onAccountsChanged);
     provider.on("chainChanged", this.#onChainChanged);
 
     // try switching to correct chain
@@ -413,19 +410,6 @@ export class WalletConnect implements Wallet {
     }
 
     return this.#provider;
-  }
-
-  /**
-   * update the `address` on accountsChanged event.
-   * @internal
-   */
-  #onAccountsChanged(accounts: string[]) {
-    const _address = accounts[0];
-    if (!_address) {
-      this.address = ""; // TODO: make address undefined able
-    } else {
-      this.address = getAddress(_address);
-    }
   }
 
   /**
@@ -504,7 +488,6 @@ export class WalletConnect implements Wallet {
       provider.removeListener("chainChanged", this.#onChainChanged);
       provider.removeListener("disconnect", this.#onDisconnect);
       provider.removeListener("session_delete", this.#onDisconnect);
-      provider.removeListener("accountsChanged", this.#onAccountsChanged);
     }
   }
 

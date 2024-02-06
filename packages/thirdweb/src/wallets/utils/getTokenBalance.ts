@@ -6,11 +6,11 @@ import {
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/index.js";
 import { eth_getBalance, getRpcClient } from "../../rpc/index.js";
-import type { Wallet } from "../interfaces/wallet.js";
+import type { Account } from "../interfaces/wallet.js";
 import { formatUnits } from "viem/utils";
 
 export type GetTokenBalanceOptions = {
-  wallet: Pick<Wallet, "address">;
+  account: Pick<Account, "address">;
   client: ThirdwebClient;
   chain: Chain;
   /**
@@ -33,13 +33,13 @@ type GetTokenBalanceResult = {
  * @example
  * ```ts
  * import { getTokenBalance } from "thirdweb/wallets";
- * const balance = await getTokenBalance({ wallet, client, chain, tokenAddress });
+ * const balance = await getTokenBalance({ account, client, chain, tokenAddress });
  * ```
  */
 export async function getTokenBalance(
   options: GetTokenBalanceOptions,
 ): Promise<GetTokenBalanceResult> {
-  const { wallet, client, chain, tokenAddress } = options;
+  const { account, client, chain, tokenAddress } = options;
   // erc20 case
   if (tokenAddress) {
     // load balanceOf dynamically to avoid circular dependency
@@ -48,7 +48,7 @@ export async function getTokenBalance(
     );
     return balanceOf({
       contract: getContract({ client, chain, address: tokenAddress }),
-      address: wallet.address,
+      address: account.address,
     });
   }
   // native token case
@@ -57,7 +57,7 @@ export async function getTokenBalance(
   const [nativeSymbol, nativeDecimals, nativeBalance] = await Promise.all([
     getChainSymbol(chain),
     getChainDecimals(chain),
-    eth_getBalance(rpcRequest, { address: wallet.address }),
+    eth_getBalance(rpcRequest, { address: account.address }),
   ]);
 
   return {
