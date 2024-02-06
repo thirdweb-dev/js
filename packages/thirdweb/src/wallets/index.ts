@@ -8,8 +8,8 @@ export {
 
 // private-key
 export {
-  privateKeyWallet,
-  type PrivateKeyWalletOptions,
+  privateKeyAccount,
+  type PrivateKeyAccountOptions as PrivateKeyWalletOptions,
 } from "./private-key.js";
 
 // injected

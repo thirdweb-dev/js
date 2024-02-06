@@ -61,8 +61,8 @@ export function AutoConnect() {
             client,
             dappMetadata,
           });
-          await wallet.autoConnect();
-          connect(wallet);
+          const account = await wallet.autoConnect();
+          connect(account);
         } catch (e) {
           console.log("failed to auto connect last active wallet");
           console.error(e);
@@ -78,8 +78,8 @@ export function AutoConnect() {
           client,
           dappMetadata,
         });
-        await wallet.autoConnect();
-        connectionManager.connectWallet(wallet);
+        const account = await wallet.autoConnect();
+        connectionManager.setConnectedAccount(account);
       });
     };
 

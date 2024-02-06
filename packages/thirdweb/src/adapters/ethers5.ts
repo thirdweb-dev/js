@@ -8,7 +8,7 @@ import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import { getRpcUrlForChain, type Chain } from "../chain/index.js";
 import { getContract, type ThirdwebContract } from "../contract/index.js";
-import type { Wallet } from "../wallets/interfaces/wallet.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 
 type Ethers5 = typeof ethers5;
 
@@ -187,14 +187,15 @@ async function fromEthersContract<abi extends Abi>(
 }
 
 /**
- * Converts an ethers5 Signer into an Wallet object.
+ * Converts an ethers5 Signer into an Account object.
  * @param signer - The ethers5 Signer object.
- * @returns - A Promise that resolves to an Wallet object.
+ * @returns - A Promise that resolves to an Account object.
  * @internal
  */
-async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
+async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
   const address = await signer.getAddress();
-  const wallet: Wallet = {
+  const chainId = await signer.provider?.getNetwork().then((n) => n.chainId);
+  const account: Account = {
     address,
     signMessage: async ({ message }) => {
       return signer.signMessage(
@@ -210,29 +211,30 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Wallet> {
         transactionHash: result.hash as Hex,
       };
     },
-    // TODO
-    metadata: {
-      id: "ethers5-wallet",
-      name: "Ethers5 Wallet",
-      iconUrl: "",
-    },
-    events: {
-      addListener(event, listener) {
-        signer.provider?.on(event, listener);
+    wallet: {
+      metadata: {
+        id: "ethers-5-wallet",
+        iconUrl: "", // TODO
+        name: "Ethers 5 Wallet",
       },
-      removeListener(event, listener) {
-        signer.provider?.removeListener(event, listener);
+      autoConnect: async () => account,
+      connect: async () => account,
+      disconnect: async () => {},
+      chainId: chainId ? BigInt(chainId) : undefined,
+      switchChain: async () => {
+        // TODO
+      },
+      events: {
+        addListener(events, listener) {
+          signer.provider?.on(events, listener);
+        },
+        removeListener(events, listener) {
+          signer.provider?.off(events, listener);
+        },
       },
     },
-    async connect() {
-      return wallet;
-    },
-    async autoConnect() {
-      return wallet;
-    },
-    async disconnect() {},
   };
-  return wallet;
+  return account;
 }
 
 /**

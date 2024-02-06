@@ -1,10 +1,10 @@
 import type { Hex, TransactionSerializable } from "viem";
-import type { Wallet } from "./interfaces/wallet.js";
+import type { Account } from "./interfaces/wallet.js";
 import { privateKeyToAccount } from "viem/accounts";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
 
-export type PrivateKeyWalletOptions = {
+export type PrivateKeyAccountOptions = {
   client: ThirdwebClient;
   privateKey: string;
 };
@@ -23,13 +23,13 @@ export type PrivateKeyWalletOptions = {
  * });
  * ```
  */
-export function privateKeyWallet(options: PrivateKeyWalletOptions) {
+export function privateKeyAccount(options: PrivateKeyAccountOptions) {
   if (!options.privateKey.startsWith("0x")) {
     options.privateKey = "0x" + options.privateKey;
   }
-  const account = privateKeyToAccount(options.privateKey as Hex);
-  const wallet: Wallet = {
-    address: account.address,
+  const viemAccount = privateKeyToAccount(options.privateKey as Hex);
+  const account: Account = {
+    address: viemAccount.address,
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
       // maybe we *do* actually have to take in a tx object instead of the raw tx?
@@ -39,7 +39,7 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
         client: options.client,
         chain: tx.chainId,
       });
-      const signedTx = await account.signTransaction(tx);
+      const signedTx = await viemAccount.signTransaction(tx);
       const transactionHash = await eth_sendRawTransaction(
         rpcRequest,
         signedTx,
@@ -48,24 +48,19 @@ export function privateKeyWallet(options: PrivateKeyWalletOptions) {
         transactionHash,
       };
     },
-    signTransaction: account.signTransaction,
-    signMessage: account.signMessage,
-    signTypedData: account.signTypedData,
-    // TODO
-    metadata: {
-      id: "private-key",
-      name: "Private Key",
-      iconUrl: "TODO",
-    },
-    async connect() {
-      return wallet;
-    },
-    async autoConnect() {
-      return wallet;
-    },
-    async disconnect() {
-      return;
+    signTransaction: viemAccount.signTransaction,
+    signMessage: viemAccount.signMessage,
+    signTypedData: viemAccount.signTypedData,
+    wallet: {
+      connect: async () => account,
+      autoConnect: async () => account,
+      disconnect: async () => {},
+      metadata: {
+        name: "Private Key",
+        iconUrl: "", // TODO
+        id: "private-key",
+      },
     },
   };
-  return wallet;
+  return account;
 }

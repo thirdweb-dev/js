@@ -15,7 +15,7 @@ import { type SupportedTokens, defaultTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
 import { isMobile } from "../../utils/isMobile.js";
 import {
-  useActiveWallet,
+  useActiveAccount,
   useActiveWalletChainId,
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
@@ -542,7 +542,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @returns - ConnectWallet component
  */
 export function ConnectWallet(props: ConnectWalletProps) {
-  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   const activeWalletChainId = useActiveWalletChainId();
   const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
@@ -631,7 +631,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
 
       {(() => {
         // wallet is not connected
-        if (!activeWallet) {
+        if (!activeAccount) {
           // Connect Wallet button
           return (
             <AnimatedButton

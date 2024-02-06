@@ -3,13 +3,12 @@ export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
 export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
 
 export {
-  useSetActiveWallet,
+  useSetActiveAccount,
   useActiveWalletChainId,
   useConnect,
   useDisconnect,
-  useActiveWallet,
-  useConnectedWallets,
-  useActiveWalletAddress,
+  useActiveAccount,
+  useConnectedAccounts,
   useSwitchActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSetActiveWalletConnectionStatus,

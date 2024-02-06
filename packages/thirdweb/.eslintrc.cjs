@@ -71,6 +71,7 @@ module.exports = {
       },
     ],
     ...jsdocRuleOverrides,
+    "@typescript-eslint/no-this-alias": "off",
   },
   overrides: [
     {
