@@ -5,6 +5,7 @@ import type { EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
  * @param request - The EIP1193 request function.
  * @param signedTransaction - The signed transaction in hex format.
  * @returns A promise that resolves to the transaction hash.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_sendRawTransaction } from "thirdweb/rpc";

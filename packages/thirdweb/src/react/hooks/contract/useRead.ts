@@ -27,11 +27,11 @@ type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
  * @returns a query object.
  * @example
  * ```jsx
- * import { useContractRead } from "thirdweb/react";
- * const { data, isLoading } = useContractRead({contract, method: "totalSupply"});
+ * import { useReadContract } from "thirdweb/react";
+ * const { data, isLoading } = useReadContract({contract, method: "totalSupply"});
  * ```
  */
-export function useContractRead<
+export function useReadContract<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
@@ -48,12 +48,12 @@ export function useContractRead<
  * @returns a query object.
  * @example
  * ```jsx
- * import { useContractRead } from "thirdweb/react";
+ * import { useReadContract } from "thirdweb/react";
  * import { totalSupply } form "thirdweb/extensions/erc20"
- * const { data, isLoading } = useContractRead(totalSupply);
+ * const { data, isLoading } = useReadContract(totalSupply);
  * ```
  */
-export function useContractRead<
+export function useReadContract<
   const abi extends Abi,
   const params extends object,
   result,
@@ -64,7 +64,7 @@ export function useContractRead<
   },
 ): UseQueryResult<result>;
 // eslint-disable-next-line jsdoc/require-jsdoc
-export function useContractRead<
+export function useReadContract<
   const abi extends Abi,
   const method extends abi extends { length: 0 }
     ? AbiFunction | string
@@ -85,7 +85,7 @@ export function useContractRead<
   if (typeof extensionOrOptions === "function") {
     if (!options) {
       throw new Error(
-        `Missing second argument for "useContractRead(<extension>, <options>)" hook.`,
+        `Missing second argument for "useReadContract(<extension>, <options>)" hook.`,
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
@@ -129,9 +129,14 @@ export function useContractRead<
   }
 
   throw new Error(
-    `Invalid "useContractRead" options. Expected either a read extension or a transaction object.`,
+    `Invalid "useReadContract" options. Expected either a read extension or a transaction object.`,
   ) as never;
 }
+
+/**
+ * @deprecated Use {@link useReadContract} instead.
+ */
+export const useContractRead = useReadContract;
 
 const READ_HOOK_CACHE = new WeakMap();
 

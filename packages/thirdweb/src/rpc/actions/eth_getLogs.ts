@@ -20,6 +20,7 @@ import type { EventLog } from "../../event/event.js";
  * @param request - The EIP1193 request function.
  * @param params - The parameters for retrieving logs.
  * @returns A promise that resolves to the retrieved logs.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getLogs } from "thirdweb/rpc";

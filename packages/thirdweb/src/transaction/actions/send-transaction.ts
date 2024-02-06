@@ -15,6 +15,7 @@ type SendTransactionOptions<wallet extends Wallet> = {
  * @param options - The options for sending the transaction.
  * @returns A promise that resolves to the transaction hash.
  * @throws An error if the wallet is not connected.
+ * @transaction
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

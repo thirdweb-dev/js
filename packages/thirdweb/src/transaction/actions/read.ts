@@ -18,6 +18,7 @@ import { decodeFunctionResult } from "../../abi/decode.js";
  * Reads data from a smart contract.
  * @param options - The transaction options.
  * @returns A promise that resolves with the result of the read transaction.
+ * @transaction
  * @example
  * ```ts
  * import { readContract } from "thirdweb";

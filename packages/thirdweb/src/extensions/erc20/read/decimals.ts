@@ -30,6 +30,7 @@ export async function detectDecimals(
  * Retrieves the number of decimal places for an ERC20 token.
  * @param options - The transaction options.
  * @returns A promise that resolves to the number of decimal places (uint8).
+ * @extension ERC20
  * @example
  * ```ts
  * import { decimals } from "thirdweb/extensions/erc20";

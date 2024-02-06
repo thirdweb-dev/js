@@ -7,6 +7,7 @@ export type OwnerOfParams = { tokenId: bigint };
  * Retrieves the owner of a specific ERC721 token.
  * @param options - The transaction options.
  * @returns A promise that resolves to the address of the token owner.
+ * @extension ERC721
  * @example
  * ```ts
  * import { ownerOf } from "thirdweb/extensions/erc721";

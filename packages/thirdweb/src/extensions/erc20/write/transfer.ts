@@ -17,6 +17,7 @@ type TransferParams = { to: string } & (
  * Transfers ERC20 tokens from the sender's address to the specified recipient address.
  * @param options - The options for the transfer transaction.
  * @returns A promise that resolves to the prepared transaction.
+ * @extension ERC20
  * @example
  * ```ts
  * import { transfer } from "thirdweb/extensions/erc20";

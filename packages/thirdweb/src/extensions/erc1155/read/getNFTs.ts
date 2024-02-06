@@ -24,6 +24,7 @@ export type GetNFTsParams = {
  * Retrieves an array of NFTs ("ERC1155") based on the provided options.
  * @param options - The options for retrieving the NFTs.
  * @returns A promise that resolves to an array of NFTs.
+ * @extension ERC1155
  * @example
  * ```ts
  * import { getNFTs } from "thirdweb/extensions/erc1155";

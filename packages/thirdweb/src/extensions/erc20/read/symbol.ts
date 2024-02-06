@@ -7,6 +7,7 @@ const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
  * Retrieves the symbol of the ERC20 token.
  * @param options - The transaction options.
  * @returns A promise that resolves to the symbol of the ERC20 token.
+ * @extension ERC20
  * @example
  * ```ts
  * import { symbol } from "thirdweb/extensions/erc20";

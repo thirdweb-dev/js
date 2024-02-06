@@ -31,6 +31,7 @@ export type GetNFTsParams = {
  * @param options - The options for retrieving the NFTs.
  * @returns A promise that resolves to an array of NFTs.
  * @throws An error if the contract requires either `nextTokenIdToMint` or `totalSupply` function to determine the next token ID to mint.
+ * @extension ERC721
  * @example
  * ```ts
  * import { getNFTs } from "thirdweb/extensions/erc721";

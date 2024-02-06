@@ -58,8 +58,15 @@ const ABI = {
 } as const;
 
 /**
- *
- * @internal
+ * Claims the condition for a transaction.
+ * @param options The transaction options.
+ * @returns A promise that resolves with the result of the read contract.
+ * @extension
+ * @example
+ * ```ts
+ * import { claimCondition } from "thirdweb/extensions/drops";
+ * const claimCondition = await claimCondition({ contract });
+ * ```
  */
 export async function claimCondition(options: TxOpts) {
   return readContract({

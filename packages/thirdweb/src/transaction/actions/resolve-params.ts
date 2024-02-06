@@ -17,6 +17,7 @@ const PARAMS_CACHE = new WeakMap();
  * @param tx - The transaction object.
  * @returns A promise that resolves to an object containing the resolved parameters and overrides.
  * @throws An error if the parameters are invalid.
+ * @transaction
  * @internal
  */
 export async function resolveParams<

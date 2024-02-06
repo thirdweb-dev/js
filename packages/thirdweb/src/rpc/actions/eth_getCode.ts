@@ -16,6 +16,7 @@ type GetCodeParams = {
  * @param request - The EIP1193 request function.
  * @param params - The parameters for the eth_getCode method.
  * @returns A promise that resolves to the bytecode of the smart contract.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getCode } from "thirdweb/rpc";

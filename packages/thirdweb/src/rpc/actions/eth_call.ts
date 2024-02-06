@@ -12,6 +12,7 @@ import {
  * @param request - The EIP1193 request function.
  * @param params - The parameters for the call or transaction.
  * @returns A promise that resolves to the result of the call or transaction.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_call } from "thirdweb/rpc";
