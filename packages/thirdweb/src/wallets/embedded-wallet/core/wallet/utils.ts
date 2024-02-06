@@ -249,12 +249,6 @@ export const loadWallet = async ({
       `Wallet storage format mismatched. Wallet storage format: ${walletDetail.format}, provided storage format: ${storage.format}`,
     );
   }
-  const walletId = walletDetail.walletId;
-  if (!walletId) {
-    throw new EmbeddedWalletError(
-      "Cannot load a wallet without a walletId. Try saving the wallet first.",
-    );
-  }
   switch (storage.format) {
     case "privateKey": {
       const keyMaterial = await storage.load({
@@ -264,7 +258,6 @@ export const loadWallet = async ({
       });
       return {
         ...walletDetail,
-        walletId,
         keyMaterial,
       };
     }
@@ -286,10 +279,25 @@ export const loadWallet = async ({
           authUser: storage.authUser,
         }),
       ]);
-      const keyMaterial = await combineShares([shareA, shareB, shareC]);
+      const shares = [shareA, shareB, shareC];
+      const validShares = shares.filter((share) => !!share);
+      if (validShares.length < 2) {
+        throw new EmbeddedWalletError(
+          `At least 2 valid shares are required to recreate account`,
+        );
+      }
+
+      const keyMaterial = await combineShares(validShares);
+
+      if (validShares.length === 2) {
+        await saveWallet({
+          storage,
+          walletDetail: { ...walletDetail, keyMaterial },
+        });
+      }
+
       return {
         ...walletDetail,
-        walletId,
         keyMaterial,
       };
     }
