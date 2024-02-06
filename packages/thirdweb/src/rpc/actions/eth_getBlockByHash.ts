@@ -20,6 +20,7 @@ type GetBlockByHashParams<TIncludeTransactions extends boolean = false> = {
  * @param params - The parameters for the block retrieval.
  * @returns A promise that resolves to the retrieved block.
  * @throws An error if the block is not found.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getBlockByHash } from "thirdweb/rpc";

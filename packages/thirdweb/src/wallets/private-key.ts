@@ -13,6 +13,7 @@ export type PrivateKeyAccountOptions = {
  * Creates a private key wallet.
  * @param options - The options for creating the wallet.
  * @returns An object representing the private key wallet.
+ * @wallet
  * @example
  * ```ts
  * import { privateKeyWallet } from "thirdweb/wallets"

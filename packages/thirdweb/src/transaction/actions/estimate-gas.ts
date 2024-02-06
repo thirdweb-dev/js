@@ -15,6 +15,7 @@ export type EstimateGasOptions<abiFn extends AbiFunction> = {
  * Estimates the gas required to execute a transaction.
  * @param options - The options for estimating gas.
  * @returns A promise that resolves to the estimated gas as a bigint.
+ * @transaction
  * @example
  * ```ts
  * import { estimateGas } from "thirdweb";

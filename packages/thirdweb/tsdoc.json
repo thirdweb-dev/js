@@ -1,0 +1,33 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+  "extends": ["@microsoft/api-extractor/extends/tsdoc-base.json"],
+  "tagDefinitions": [
+    {
+      "tagName": "@contract",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@wallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@extension",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@rpc",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@transaction",
+      "syntaxKind": "block"
+    }
+  ],
+  "supportForTags": {
+    "@contract": true,
+    "@wallet": true,
+    "@extension": true,
+    "@rpc": true,
+    "@transaction": true
+  }
+}

@@ -17,6 +17,7 @@ type MintToParams = { to: string } & (
  * Mints a specified amount of tokens to a given address.
  * @param options - The options for minting tokens.
  * @returns A prepared transaction object.
+ * @extension ERC20
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc20";

@@ -30,6 +30,7 @@ export type GetOwnedNFTsParams = {
  * Retrieves the owned ERC1155 NFTs for a given wallet address.
  * @param options - The transaction options and parameters.
  * @returns A promise that resolves to an array of ERC1155 NFTs owned by the wallet address, along with the quantity owned.
+ * @extension ERC1155
  * @example
  * ```ts
  * import { getOwnedNFTs } from "thirdweb/extensions/erc1155";

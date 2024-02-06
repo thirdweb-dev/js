@@ -19,6 +19,7 @@ type BalanceOfResult = {
  * Retrieves the balance of an ERC20 token for a specific address.
  * @param options - The transaction options including the address.
  * @returns An object containing the balance value, display value, and symbol.
+ * @extension ERC20
  * @example
  * ```ts
  * import { balanceOf } from "thirdweb/extensions/erc20";

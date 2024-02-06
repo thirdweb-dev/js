@@ -13,6 +13,7 @@ import {
  * @param params - The parameters for retrieving the transaction receipt.
  * @returns A promise that resolves to the transaction receipt.
  * @throws An error if the transaction receipt is not found.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getTransactionReceipt } from "thirdweb/rpc";

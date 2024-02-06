@@ -11,6 +11,7 @@ import {
  * @param request - The EIP1193 request function.
  * @param params - The parameters for retrieving the transaction count.
  * @returns A promise that resolves to the transaction count as a number.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getTransactionCount } from "thirdweb/rpc";

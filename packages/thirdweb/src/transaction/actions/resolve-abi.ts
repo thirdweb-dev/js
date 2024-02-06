@@ -17,6 +17,7 @@ const ABI_FN_RESOLUTION_CACHE = new WeakMap<
  * @param tx - The transaction input containing the ABI and method information.
  * @returns A promise that resolves to the parsed ABI function.
  * @throws An error if the ABI function cannot be found in the ABI.
+ * @transaction
  * @internal
  */
 export function resolveAbiFunction<

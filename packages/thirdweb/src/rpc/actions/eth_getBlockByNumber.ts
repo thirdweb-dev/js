@@ -35,6 +35,7 @@ type GetBlockParameters<
  * @param params - The parameters for retrieving the block.
  * @returns A promise that resolves to the requested block.
  * @throws An error if the block is not found.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getBlockByNumber } from "thirdweb/rpc";

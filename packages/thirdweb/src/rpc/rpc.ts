@@ -90,6 +90,7 @@ type RPCOptions = Readonly<{
  * Returns an RPC request that can be used to make JSON-RPC requests.
  * @param options - The RPC options.
  * @returns The RPC request function.
+ * @rpc
  * @example
  * ```ts
  * import { createClient } from "thirdweb";

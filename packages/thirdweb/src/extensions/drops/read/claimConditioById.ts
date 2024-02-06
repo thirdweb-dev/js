@@ -66,8 +66,17 @@ const ABI = {
 type GetClaimConditionByIdParams = { conditionId: bigint };
 
 /**
- *
- * @internal
+ * Retrieves the claim condition by its ID.
+ * @param options The transaction options.
+ * @returns A promise that resolves to the claim condition.
+ * @extension
+ * @example
+ * ```ts
+ * import { getClaimConditionById } from "thirdweb/extensions/drops";
+ * const claimCondition = await getClaimConditionById({
+ *  contract,
+ *  conditionId: 1n,
+ * });
  */
 export async function getClaimConditionById(
   options: TxOpts<GetClaimConditionByIdParams>,

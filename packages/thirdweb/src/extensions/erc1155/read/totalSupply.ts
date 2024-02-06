@@ -7,6 +7,7 @@ export type TotalSupplyParams = { tokenId: bigint };
  * Retrieves the total supply of an ERC1155 token.
  * @param options - The transaction options.
  * @returns A promise that resolves to the total supply as a bigint.
+ * @extension ERC1155
  * @example
  * ```ts
  * import { totalSupply } from "thirdweb/extensions/erc1155";
