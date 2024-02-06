@@ -66,14 +66,6 @@ export function walletConnect(options: WalletConnectCreationOptions) {
   return new WalletConnect(options);
 }
 
-export type WalletConnectEvents = NonNullable<Wallet["events"]> & {
-  addListener(event: "display_uri", listener: (uri: string) => void): void;
-  removeListener(event: "display_uri", listener: (uri: string) => void): void;
-
-  addListener(event: "wc_session_request_sent", listener: () => void): void;
-  removeListener(event: "wc_session_request_sent", listener: () => void): void;
-};
-
 /**
  * Class to connect to a wallet using WalletConnect protocol.
  */
@@ -83,7 +75,7 @@ export class WalletConnect implements Wallet {
 
   address: Wallet["address"];
   chainId: Wallet["chainId"];
-  events: WalletConnectEvents | undefined;
+  events: Wallet["events"];
   metadata: Wallet["metadata"];
 
   /**
@@ -123,14 +115,13 @@ export class WalletConnect implements Wallet {
 
     const provider = await this.#initProvider(true, savedOptions || undefined);
 
-    this.chainId = normalizeChainId(provider.chainId);
-
     const account = provider.accounts[0];
 
     if (!account) {
       throw new Error("No accounts found on provider.");
     }
 
+    this.chainId = normalizeChainId(provider.chainId);
     this.address = account;
 
     return this;
@@ -157,30 +148,22 @@ export class WalletConnect implements Wallet {
       client: this.#options.client,
     });
 
-    const { onUri, onWalletConnectSessionRequest } = options || {};
+    const { onDisplayUri, onSessionRequestSent } = options || {};
 
-    if (onUri || onWalletConnectSessionRequest) {
-      const events = this.events;
-      if (!events) {
-        throw new Error("Events not initialized but is required");
-      }
-
-      if (onUri) {
-        events.addListener("display_uri", onUri);
-        events.addListener("disconnect", () => {
-          events.removeListener("display_uri", onUri);
+    if (onDisplayUri || onSessionRequestSent) {
+      if (onDisplayUri) {
+        provider.events.addListener("display_uri", onDisplayUri);
+        provider.events.addListener("disconnect", () => {
+          provider.events.removeListener("display_uri", onDisplayUri);
         });
       }
 
-      if (onWalletConnectSessionRequest) {
-        events.addListener(
-          "wc_session_request_sent",
-          onWalletConnectSessionRequest,
-        );
-        events.addListener("disconnect", () => {
-          events.removeListener(
-            "wc_session_request_sent",
-            onWalletConnectSessionRequest,
+      if (onSessionRequestSent) {
+        provider.signer.client.on("session_request_sent", onSessionRequestSent);
+        provider.events.addListener("disconnect", () => {
+          provider.signer.client.off(
+            "session_request_sent",
+            onSessionRequestSent,
           );
         });
       }
@@ -386,7 +369,7 @@ export class WalletConnect implements Wallet {
     // try switching to correct chain
     if (
       connectionOptions?.chainId &&
-      this.chainId !== BigInt(connectionOptions?.chainId)
+      BigInt(provider.chainId) !== BigInt(connectionOptions?.chainId)
     ) {
       try {
         await this.switchChain(connectionOptions.chainId);

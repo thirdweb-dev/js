@@ -44,7 +44,7 @@ export const WalletConnectScan: React.FC<{
       projectId,
     });
 
-    const onWalletConnectSessionRequest = isMobile()
+    const onSessionRequestSent = isMobile()
       ? () => handelWCSessionRequest(platformUris)
       : undefined;
 
@@ -52,10 +52,10 @@ export const WalletConnectScan: React.FC<{
       .connect({
         chainId,
         showQrModal: false,
-        onUri(uri) {
+        onDisplayUri(uri) {
           setQrCodeUri(uri);
         },
-        onWalletConnectSessionRequest,
+        onSessionRequestSent,
       })
       .then(() => {
         done(wallet);
