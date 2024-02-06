@@ -16,7 +16,8 @@ import { getValidPublicRPCUrl } from "../utils/chains.js";
 /**
  * Connect to Injected Wallet Provider
  * @param options - The options for connecting to the Injected Wallet Provider.
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
+ * @wallet
  * @throws Error if no injected provider is available or no accounts are available.
  * @example
  * ```ts
@@ -38,7 +39,7 @@ import { getValidPublicRPCUrl } from "../utils/chains.js";
  * const wallet = await injectedWallet();
  * ```
  */
-export async function injectedWallet(options?: InjectedWalletOptions) {
+export function injectedWallet(options?: InjectedWalletOptions) {
   return new InjectedWallet(options);
 }
 

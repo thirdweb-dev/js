@@ -13,6 +13,7 @@ export const metamaskMetadata: WalletMetadata = {
 /**
  * Connect to Injected Metamask Wallet Provider
  * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
+ * @wallet
  * @example
  * ```ts
  * const wallet = metamaskWallet();
