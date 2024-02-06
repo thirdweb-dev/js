@@ -211,7 +211,7 @@ export const loadWallet = async ({
 };
 
 const WALLET_PRIVATE_KEY_PREFIX = "thirdweb_";
-export async function createShares(keyMaterial: string): Promise<{
+async function createShares(keyMaterial: string): Promise<{
   shares: [string, string, string];
 }> {
   const { share } = await import("secrets.js-34r7h");
