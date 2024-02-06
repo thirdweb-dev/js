@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.15
+
+### Patch Changes
+
+- [#2266](https://github.com/thirdweb-dev/js/pull/2266) [`5a3f7fa1`](https://github.com/thirdweb-dev/js/commit/5a3f7fa12361f5c0c90acccdd129aed37825e9ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to logHttpRequest
+
 ## 0.4.14
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.3.14
+
+### Patch Changes
+
+- [#2268](https://github.com/thirdweb-dev/js/pull/2268) [`3857cba8`](https://github.com/thirdweb-dev/js/commit/3857cba8ab3aad04744121d1a94d4a1893142bbc) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity v4.6.1
+
 ## 0.3.13
 
 ### Patch Changes
