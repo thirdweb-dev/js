@@ -167,6 +167,10 @@ class EmbeddedWallet implements Wallet {
     return sensitiveAccountDetail;
   }
 
+  getActiveAccount() {
+    return this.activeAccount;
+  }
+
   async setActiveAccount(arg: {
     accountDetail: SensitiveAccountDetailType | AccountDetailType;
   }) {
