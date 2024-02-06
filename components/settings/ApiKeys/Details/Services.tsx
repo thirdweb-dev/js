@@ -13,7 +13,14 @@ import {
   getServiceByName,
 } from "@thirdweb-dev/service-utils";
 import { useMemo } from "react";
-import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
+import {
+  Badge,
+  Card,
+  CodeBlock,
+  Heading,
+  LinkButton,
+  Text,
+} from "tw-components";
 import { DetailsRow } from "../DetailsRow";
 import { HIDDEN_SERVICES } from "../validations";
 
@@ -22,7 +29,7 @@ interface ServicesDetailsProps {
 }
 
 export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
-  const { name, redirectUrls, services } = apiKey;
+  const { name, redirectUrls, services, key } = apiKey;
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
 
   const redirectUrlContent = useMemo(() => {
@@ -120,16 +127,6 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
     );
   };
 
-  const renderServicesContent = (service: ApiKeyService) => {
-    if (service.targetAddresses.length === 0) {
-      return "None";
-    }
-    if (service.targetAddresses.includes("*")) {
-      return "Any";
-    }
-    return <CodeBlock code={service.targetAddresses.join("\n")} />;
-  };
-
   const sortedServices = useMemo(() => {
     return (
       services?.sort((a, b) => {
@@ -165,40 +162,20 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                 </Text>
 
                 {service.name === "bundler" && (
-                  <DetailsRow
-                    title="Destination Contracts"
-                    tooltip={`Restrict contracts your wallets can interact with through the thirdweb ${service.title} service.`}
-                    content={renderServicesContent(srv)}
-                  />
+                  <LinkButton
+                    colorScheme="primary"
+                    href={`/dashboard/wallets/smart-wallet?tab=1&clientId=${key}`}
+                  >
+                    Go to configuration
+                  </LinkButton>
                 )}
                 {service.name === "embeddedWallets" && (
-                  <Flex flexDir="column" gap={4}>
-                    <DetailsRow
-                      title="Application Name"
-                      content={applicationNameContent(srv)}
-                    />
-
-                    <DetailsRow
-                      title="Application Image URL"
-                      content={applicationImageUrlContent(srv)}
-                    />
-
-                    <DetailsRow
-                      title="Redirect URIs"
-                      tooltip={`Prevent phishing attacks restricting redirect URIs to your application deep links. Currently only relevant on Unity and React Native platforms.`}
-                      content={redirectUrlContent}
-                    />
-
-                    <DetailsRow
-                      title="Custom JWT Auth"
-                      content={renderCustomAuthContent(srv)}
-                    />
-
-                    <DetailsRow
-                      title="Custom Authentication Endpoint"
-                      content={renderCustomAuthenticationEndpoint(srv)}
-                    />
-                  </Flex>
+                  <LinkButton
+                    colorScheme="primary"
+                    href={`/dashboard/wallets/embedded?tab=1&clientId=${key}`}
+                  >
+                    Go to configuration
+                  </LinkButton>
                 )}
 
                 {srv.actions.length > 0 && (

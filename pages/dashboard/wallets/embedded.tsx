@@ -15,10 +15,14 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { SupportedPlatformLink } from "../../../components/wallets/SupportedPlatformLink";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { useRouter } from "next/router";
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
 const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
+  const router = useRouter();
+  const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
+  const defaultClientId = router.query.clientId?.toString();
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
 
@@ -41,11 +45,20 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
       return;
     }
     if (apiKeys.length > 0) {
-      setSelectedKey(apiKeys[0]);
+      if (defaultClientId) {
+        const key = apiKeys.find((k) => k.key === defaultClientId);
+        if (key) {
+          setSelectedKey(key);
+        } else {
+          setSelectedKey(apiKeys[0]);
+        }
+      } else {
+        setSelectedKey(apiKeys[0]);
+      }
     } else {
       setSelectedKey(undefined);
     }
-  }, [apiKeys, selectedKey]);
+  }, [apiKeys, selectedKey, defaultClientId]);
 
   if (!isLoggedIn) {
     return <ConnectWalletPrompt description="manage embedded wallets" />;
@@ -91,7 +104,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {!hasApiKeys && <NoApiKeys />}
+      {!hasApiKeys && <NoApiKeys service="embedded wallets" />}
 
       {hasApiKeys && selectedKey && (
         <EmbeddedWallets
@@ -100,6 +113,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
           isLoading={walletsQuery.isLoading}
           isFetched={walletsQuery.isFetched}
           trackingCategory={TRACKING_CATEGORY}
+          defaultTabIndex={defaultTabIndex}
         />
       )}
 

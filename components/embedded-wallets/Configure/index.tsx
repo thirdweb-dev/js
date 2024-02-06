@@ -11,7 +11,9 @@ import {
   HStack,
   IconButton,
   Input,
+  Spacer,
   Stack,
+  Textarea,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
@@ -37,6 +39,7 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
+import { toArrFromList } from "utils/string";
 
 interface ConfigureProps {
   apiKey: ApiKey;
@@ -62,15 +65,23 @@ export const Configure: React.FC<ConfigureProps> = ({
   const trackEvent = useTrack();
   const toast = useToast();
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
+  const hasCustomBranding =
+    !!config.applicationImageUrl?.length || !!config.applicationName?.length;
 
   const form = useForm<ApiKeyEmbeddedWalletsValidationSchema>({
     resolver: zodResolver(apiKeyEmbeddedWalletsValidationSchema),
     defaultValues: {
-      recoveryShareManagement: config.recoveryShareManagement,
       customAuthEndpoint: config.customAuthEndpoint,
       customAuthentication: config.customAuthentication,
-      applicationName: config.applicationName,
-      applicationImageUrl: config.applicationImageUrl,
+      ...(hasCustomBranding
+        ? {
+            branding: {
+              applicationName: config.applicationName,
+              applicationImageUrl: config.applicationImageUrl,
+            },
+          }
+        : undefined),
+      redirectUrls: apiKey.redirectUrls.join("\n"),
     },
   });
   const customHeaderFields = useFieldArray({
@@ -79,13 +90,18 @@ export const Configure: React.FC<ConfigureProps> = ({
   });
   useEffect(() => {
     form.reset({
-      recoveryShareManagement: config.recoveryShareManagement,
       customAuthEndpoint: config.customAuthEndpoint,
       customAuthentication: config.customAuthentication,
-      applicationName: config.applicationName,
-      applicationImageUrl: config.applicationImageUrl,
+      ...(hasCustomBranding
+        ? {
+            branding: {
+              applicationName: config.applicationName,
+              applicationImageUrl: config.applicationImageUrl,
+            },
+          }
+        : undefined),
     });
-  }, [config, form]);
+  }, [config, form, hasCustomBranding]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Embedded Wallet API Key configuration updated",
@@ -93,7 +109,8 @@ export const Configure: React.FC<ConfigureProps> = ({
   );
 
   const handleSubmit = form.handleSubmit((values) => {
-    const { customAuthentication, customAuthEndpoint } = values;
+    const { customAuthentication, customAuthEndpoint, branding, redirectUrls } =
+      values;
 
     if (
       customAuthentication &&
@@ -130,7 +147,7 @@ export const Configure: React.FC<ConfigureProps> = ({
       label: "attempt",
     });
 
-    const { id, name, domains, bundleIds, redirectUrls } = apiKey;
+    const { id, name, domains, bundleIds } = apiKey;
 
     // FIXME: This must match components/settings/ApiKeys/Edit/index.tsx
     //        Make it more generic w/o me thinking of values
@@ -139,6 +156,8 @@ export const Configure: React.FC<ConfigureProps> = ({
       ...services[serviceIdx],
       customAuthentication,
       customAuthEndpoint,
+      applicationImageUrl: branding?.applicationImageUrl,
+      applicationName: branding?.applicationName || apiKey.name,
     };
 
     const formattedValues = {
@@ -146,7 +165,7 @@ export const Configure: React.FC<ConfigureProps> = ({
       name,
       domains,
       bundleIds,
-      redirectUrls,
+      redirectUrls: toArrFromList(redirectUrls || "", true),
       services: newServices,
     };
 
@@ -158,6 +177,7 @@ export const Configure: React.FC<ConfigureProps> = ({
           action: "configuration-update",
           label: "success",
           data: {
+            hasCustomBranding: !!branding,
             hasCustomJwt: !!customAuthentication,
             hasCustomAuthEndpoint: !!customAuthEndpoint,
           },
@@ -177,21 +197,132 @@ export const Configure: React.FC<ConfigureProps> = ({
 
   return (
     <Flex flexDir="column">
-      <Flex flexDir="column" gap={6}>
-        <Heading size="title.sm">Authentication</Heading>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-          autoComplete="off"
-        >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        autoComplete="off"
+      >
+        <Flex flexDir="column" gap={4}>
+          <Heading size="title.sm">Branding</Heading>
           <Flex flexDir="column" gap={8}>
             <FormControl>
               <HStack justifyContent="space-between" alignItems="flex-start">
                 <Box>
-                  <FormLabel mt={3}>Custom JSON Web Token</FormLabel>
+                  <FormLabel pointerEvents={"none"}>
+                    Custom email logo and name
+                  </FormLabel>
+                  <Text>
+                    Pass a custom logo and app name to be used in the emails
+                    sent to users.
+                  </Text>
+                </Box>
+
+                <GatedSwitch
+                  trackingLabel="customEmailLogoAndName"
+                  colorScheme="primary"
+                  isChecked={!!form.watch("branding")}
+                  onChange={() =>
+                    form.setValue(
+                      "branding",
+                      !form.watch("branding")
+                        ? {
+                            applicationImageUrl: "",
+                            applicationName: "",
+                          }
+                        : undefined,
+                    )
+                  }
+                />
+              </HStack>
+            </FormControl>
+
+            {!!form.watch("branding") && (
+              <GatedFeature>
+                <Flex flexDir="column" gap={6}>
+                  <FormControl
+                    isInvalid={
+                      !!form.getFieldState(
+                        `branding.applicationName`,
+                        form.formState,
+                      ).error
+                    }
+                  >
+                    <FormLabel size="label.sm">Application Name</FormLabel>
+                    <Input
+                      placeholder="Application Name"
+                      type="text"
+                      {...form.register(`branding.applicationName`)}
+                    />
+                    {!form.getFieldState(
+                      `branding.applicationName`,
+                      form.formState,
+                    ).error ? (
+                      <FormHelperText>
+                        Name that will display in the emails sent to users.
+                        Defaults to your API Key&apos;s name.
+                      </FormHelperText>
+                    ) : (
+                      <FormErrorMessage>
+                        {
+                          form.getFieldState(
+                            `branding.applicationName`,
+                            form.formState,
+                          ).error?.message
+                        }
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <FormControl
+                    isInvalid={
+                      !!form.getFieldState(
+                        `branding.applicationImageUrl`,
+                        form.formState,
+                      ).error
+                    }
+                  >
+                    <FormLabel size="label.sm">Application Image URL</FormLabel>
+                    <Input
+                      placeholder="https://"
+                      type="text"
+                      {...form.register(`branding.applicationImageUrl`)}
+                    />
+                    {!form.getFieldState(
+                      `branding.applicationImageUrl`,
+                      form.formState,
+                    ).error ? (
+                      <FormHelperText>
+                        Logo that will display in the emails sent to users. The
+                        image must be squared with recommended size of 72x72 px.
+                      </FormHelperText>
+                    ) : (
+                      <FormErrorMessage>
+                        {
+                          form.getFieldState(
+                            `branding.applicationImageUrl`,
+                            form.formState,
+                          ).error?.message
+                        }
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+                </Flex>
+              </GatedFeature>
+            )}
+          </Flex>
+          <Spacer />
+          <Divider />
+          <Spacer />
+          <Heading size="title.sm">Authentication</Heading>
+          <Flex flexDir="column" gap={8}>
+            <FormControl>
+              <HStack justifyContent="space-between" alignItems="flex-start">
+                <Box>
+                  <FormLabel pointerEvents={"none"}>
+                    Custom JSON Web Token
+                  </FormLabel>
                   <Text>
                     Optionally allow users to authenticate with a custom JWT.{" "}
                     <TrackedLink
@@ -219,7 +350,6 @@ export const Configure: React.FC<ConfigureProps> = ({
                             aud: "",
                           }
                         : undefined,
-                      { shouldDirty: true },
                     );
                   }}
                 />
@@ -299,12 +429,12 @@ export const Configure: React.FC<ConfigureProps> = ({
               </GatedFeature>
             )}
 
-            <Divider />
-
             <FormControl>
               <HStack justifyContent="space-between" alignItems="flex-start">
                 <Box>
-                  <FormLabel mt={3}>Custom Authentication Endpoint</FormLabel>
+                  <FormLabel pointerEvents={"none"}>
+                    Custom Authentication Endpoint
+                  </FormLabel>
                   <Text>
                     Optionally allow users to authenticate with any arbitrary
                     payload that you provide.{" "}
@@ -333,7 +463,6 @@ export const Configure: React.FC<ConfigureProps> = ({
                             customHeaders: [],
                           }
                         : undefined,
-                      { shouldDirty: true },
                     );
                   }}
                 />
@@ -455,16 +584,54 @@ export const Configure: React.FC<ConfigureProps> = ({
                 </Card>
               </GatedFeature>
             )}
-            <Divider />
-
-            <Box alignSelf="flex-end">
-              <Button type="submit" colorScheme="primary">
-                Save changes
-              </Button>
-            </Box>
           </Flex>
-        </form>
-      </Flex>
+          <Spacer />
+          <Divider />
+          <Spacer />
+          <Heading size="title.sm">Native Apps</Heading>
+          <Flex flexDir="column" gap={8}>
+            <FormControl
+              isInvalid={
+                !!form.getFieldState(`redirectUrls`, form.formState).error
+              }
+            >
+              <Box my={3}>
+                <FormLabel>Allowed redirect URIs (native apps only)</FormLabel>
+                <Text>
+                  Enter redirect URIs separated by commas or new lines. This is
+                  often your application&apos;s deep link.
+                </Text>
+              </Box>
+
+              <Textarea
+                placeholder="thirdweb://"
+                {...form.register(`redirectUrls`)}
+              />
+              {!form.getFieldState(`redirectUrls`, form.formState).error ? (
+                <FormHelperText>
+                  Currently only used in Unity and React Native platform when
+                  users authenticate through social logins.
+                </FormHelperText>
+              ) : (
+                <FormErrorMessage>
+                  {
+                    form.getFieldState(`redirectUrls`, form.formState).error
+                      ?.message
+                  }
+                </FormErrorMessage>
+              )}
+            </FormControl>
+          </Flex>
+          <Spacer />
+          <Divider />
+
+          <Box alignSelf="flex-end">
+            <Button type="submit" colorScheme="primary">
+              Save changes
+            </Button>
+          </Box>
+        </Flex>
+      </form>
     </Flex>
   );
 };

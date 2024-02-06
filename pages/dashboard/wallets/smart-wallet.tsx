@@ -1,8 +1,8 @@
 import {
   Flex,
+  HStack,
   ListItem,
   SimpleGrid,
-  Spinner,
   UnorderedList,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
@@ -16,76 +16,67 @@ import {
   TrackedLink,
   TrackedLinkButton,
 } from "tw-components";
-import { ContractWithMetadata, useSupportedChains } from "@thirdweb-dev/react";
-import { useQuery } from "@tanstack/react-query";
 import {
   AccountStatus,
+  ApiKey,
   useAccount,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import React, { useMemo } from "react";
-import invariant from "tiny-invariant";
+import React, { useEffect, useMemo, useState } from "react";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
-import { FactoryContracts } from "components/contract-components/tables/factory-contracts";
 import { NextSeo } from "next-seo";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { FiPlus } from "react-icons/fi";
-import { getEVMThirdwebSDK } from "lib/sdk";
-import { Polygon } from "@thirdweb-dev/chains";
-import { getDashboardChainRpc } from "lib/rpc";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { SmartWallets } from "components/smart-wallets";
+import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
+import { useRouter } from "next/router";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
-const useFactories = () => {
-  const { user, isLoggedIn } = useLoggedInUser();
-  const configuredChains = useSupportedChains();
-  return useQuery(
-    [
-      "dashboard-registry",
-      user?.address,
-      "multichain-contract-list",
-      "factories",
-    ],
-    async () => {
-      invariant(user?.address, "user should be logged in");
-      const polygonSDK = getEVMThirdwebSDK(
-        Polygon.chainId,
-        getDashboardChainRpc(Polygon),
-      );
-      const contractList = await polygonSDK.getMultichainContractList(
-        user.address,
-        configuredChains,
-      );
-
-      const contractWithExtensions = await Promise.all(
-        contractList.map(async (c) => {
-          const extensions =
-            "extensions" in c ? await c.extensions().catch(() => []) : [];
-          return extensions.includes("AccountFactory") ? c : null;
-        }),
-      );
-
-      return contractWithExtensions.filter((f) => f !== null);
-    },
-    {
-      enabled: !!user?.address && isLoggedIn,
-    },
-  );
-};
 export type SmartWalletFormData = {
   chainAndFactoryAddress: string;
   clientId: string;
 };
 
 const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
+  const router = useRouter();
+  const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
+  const defaultClientId = router.query.clientId?.toString();
   const { isLoggedIn } = useLoggedInUser();
-  const factories = useFactories();
   const keysQuery = useApiKeys();
+  const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
   const meQuery = useAccount();
   const account = meQuery?.data;
-  const apiKeys = keysQuery?.data;
+
+  const apiKeys = useMemo(() => {
+    return (keysQuery?.data || []).filter((key) => {
+      return !!(key.services || []).find((srv) => srv.name === "bundler");
+    });
+  }, [keysQuery]);
+
+  const hasApiKeys = apiKeys.length > 0;
+
+  useEffect(() => {
+    if (selectedKey) {
+      return;
+    }
+    if (apiKeys.length > 0) {
+      if (defaultClientId) {
+        const key = apiKeys.find((k) => k.key === defaultClientId);
+        if (key) {
+          setSelectedKey(key);
+        } else {
+          setSelectedKey(apiKeys[0]);
+        }
+      } else {
+        setSelectedKey(apiKeys[0]);
+      }
+    } else {
+      setSelectedKey(undefined);
+    }
+  }, [apiKeys, selectedKey, defaultClientId]);
 
   const hasSmartWalletsWithoutBilling = useMemo(() => {
     if (!account || !apiKeys) {
@@ -128,66 +119,57 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         }}
       />
 
-      <Flex flexDir="column" gap={4}>
-        <Flex gap={8} alignItems={"center"}>
-          <Heading size="title.lg" as="h1">
-            Smart Wallet
-          </Heading>
-          <TrackedLinkButton
-            category={TRACKING_CATEGORY}
-            variant={"solid"}
-            label="docs-wallets"
-            href="https://portal.thirdweb.com/wallets/smart-wallet"
-            isExternal
-          >
-            View Documentation
-          </TrackedLinkButton>
-        </Flex>
-        <Text>
-          Easily integrate Account abstraction (ERC-4337) compliant smart
-          accounts into your apps.
-        </Text>
-      </Flex>
-
       <Flex
         flexDir={{ base: "column", lg: "row" }}
-        gap={8}
+        gap={4}
+        alignContent={"top"}
         justifyContent={"space-between"}
-        alignItems={"left"}
       >
-        <Flex flexDir={"column"} gap={4}>
-          <Heading size="title.md" as="h1">
-            Your account factories
-          </Heading>
+        <Flex flexDir="column" gap={4}>
+          <Flex gap={8} alignItems={"center"}>
+            <Heading size="title.lg" as="h1">
+              Account Abstraction
+            </Heading>
+            <TrackedLinkButton
+              category={TRACKING_CATEGORY}
+              variant={"solid"}
+              label="docs-wallets"
+              href="https://portal.thirdweb.com/wallets/smart-wallet"
+              isExternal
+            >
+              View Documentation
+            </TrackedLinkButton>
+          </Flex>
           <Text>
-            Click an account factory contract to view analytics and accounts
-            created.
+            Easily integrate Account abstraction (ERC-4337) compliant smart
+            accounts into your apps.
           </Text>
         </Flex>
-
-        <TrackedLinkButton
-          leftIcon={<FiPlus />}
-          category={TRACKING_CATEGORY}
-          label="create-factory"
-          colorScheme="primary"
-          href="/explore/smart-wallet"
-        >
-          Deploy an Account Factory
-        </TrackedLinkButton>
+        {hasApiKeys && (
+          <HStack gap={3}>
+            {selectedKey && (
+              <ApiKeysMenu
+                apiKeys={apiKeys}
+                selectedKey={selectedKey}
+                onSelect={setSelectedKey}
+              />
+            )}
+          </HStack>
+        )}
       </Flex>
-
-      {factories.isLoading ? (
-        <Spinner />
-      ) : (
-        <FactoryContracts
-          contracts={(factories.data || []) as ContractWithMetadata[]}
-          isLoading={factories.isLoading}
-          isFetched={factories.isFetched}
-        />
-      )}
 
       {isLoggedIn && hasSmartWalletsWithoutBilling && (
         <SmartWalletsBillingAlert />
+      )}
+
+      {!hasApiKeys && <NoApiKeys service="smart wallets" />}
+
+      {hasApiKeys && selectedKey && (
+        <SmartWallets
+          apiKey={selectedKey}
+          trackingCategory={TRACKING_CATEGORY}
+          defaultTabIndex={defaultTabIndex}
+        />
       )}
 
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap={4}>

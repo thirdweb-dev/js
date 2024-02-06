@@ -174,7 +174,7 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
 
         <Flex flexDir="column" gap={10}>
           <EditGeneral form={form} />
-          <EditServices form={form} apiKeyName={apiKey.name} />
+          <EditServices form={form} apiKey={apiKey} />
 
           <HStack gap={3} alignSelf="flex-end">
             {actions}

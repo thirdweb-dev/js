@@ -49,7 +49,6 @@ import { constants } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { WALLETS_SNIPPETS } from "pages/dashboard/wallets/wallet-sdk";
 import { useMemo, useState } from "react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -241,6 +240,99 @@ export default function Component() {
     go: `events, err := contract.GetEvents("{{function}}", {{args}})`,
   },
 };
+
+const WALLETS_SNIPPETS = [
+  {
+    id: "smart-wallet",
+    name: "Smart Wallet",
+    description: "Deploy smart contract wallets for your users",
+    iconUrl:
+      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
+    link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
+    supportedLanguages: {
+      javascript: `import {{chainName}} from "@thirdweb-dev/chains";
+import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
+
+// First, connect the personal wallet, which can be any wallet (metamask, walletconnect, etc.)
+// Here we're just generating a new local wallet which can be saved later
+const personalWallet = new LocalWallet();
+await personalWallet.generate();
+
+// Setup the Smart Wallet configuration
+const config = {
+  chain: {{chainName}}, // the chain where your smart wallet will be or is deployed
+  factoryAddress: "{{factory_address}}", // your own deployed account factory address
+  clientId: "YOUR_CLIENT_ID", // or use secretKey for backend/node scripts
+  gasless: true, // enable or disable gasless transactions
+};
+
+// Then, connect the Smart wallet
+const wallet = new SmartWallet(config);
+await wallet.connect({
+  personalWallet,
+});`,
+      react: `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react";
+
+export default function App() {
+return (
+    <ThirdwebProvider
+      clientId="YOUR_CLIENT_ID"
+      activeChain={{chainName}}
+      supportedWallets={[
+        smartWallet({
+          factoryAddress: "{{factory_address}}",
+          gasless: true,
+          personalWallets={[...]}
+        })
+      ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+      "react-native": `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react-native";
+
+export default function App() {
+return (
+    <ThirdwebProvider
+      clientId="YOUR_CLIENT_ID"
+      activeChain={{chainName}}
+      supportedWallets={[
+        smartWallet({
+          factoryAddress: "{{factory_address}}",
+          gasless: true,
+          personalWallets={[...]}
+        })
+      ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+      unity: `using Thirdweb;
+
+public async void ConnectWallet()
+{
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.SmartWallet,        // The wallet provider you want to connect to (Required)
+      chainId: 1,                                  // The chain you want to connect to (Required)
+      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional)
+      email: "email@email.com",                    // If using an email wallet as personal wallet (Optional)
+      personalWallet: WalletProvider.LocalWallet   // The personal wallet you want to use with your Smart Wallet (Optional)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
+}`,
+    },
+  },
+];
 
 function getExportName(slug: string) {
   let exportName = slug

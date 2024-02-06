@@ -1,11 +1,11 @@
 import { ContractWithMetadata } from "@thirdweb-dev/react";
-import { AsyncContractNameCell } from "./cells";
 import { createColumnHelper } from "@tanstack/react-table";
 import { getChainByChainId } from "@thirdweb-dev/chains";
 import { TWTable } from "components/shared/TWTable";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { AsyncFactoryAccountCell } from "./account-cell";
+import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
+import { AsyncContractNameCell } from "components/contract-components/tables/cells";
 
 interface FactoryContractsProps {
   contracts: ContractWithMetadata[];

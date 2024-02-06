@@ -88,6 +88,37 @@ export type ApiKeyCustomAuthEndpoint = {
   customHeaders: { key: string; value: string }[];
 };
 
+// MAP to api-server types in PolicyService.ts
+export type ApiKeyServicePolicy = {
+  allowedChainIds?: number[] | null;
+  allowedContractAddresses?: string[] | null;
+  serverVerifier?: {
+    url: string;
+    headers: { key: string; value: string }[] | null;
+  } | null;
+  limits?: ApiKeyServicePolicyLimits | null;
+};
+
+export type ApiKeyServicePolicyLimits = {
+  global?: {
+    // in dollars or ETH
+    maxSpend: string;
+    maxSpendUnit: "usd" | "native";
+  } | null;
+  // ----------------------
+  // TODO implement perUser limits
+  perUserSpend?: {
+    // in dollars or ETH
+    maxSpend: string | null;
+    maxSpendUnit: "usd" | "native";
+    maxSpendPeriod: "day" | "week" | "month";
+  } | null;
+  perUserTransactions?: {
+    maxTransactions: number;
+    maxTransactionsPeriod: "day" | "week" | "month";
+  } | null;
+};
+
 export type ApiKeyService = {
   id: string;
   name: string;
@@ -145,7 +176,7 @@ export interface UpdateKeyInput {
 
 export interface UsageBundler {
   chainId: number;
-  sumTransactionFee: number;
+  sumTransactionFee: string;
 }
 
 export interface UsageStorage {
@@ -751,6 +782,59 @@ export function useGenerateApiKey() {
     },
   );
 }
+
+export const usePolicies = (serviceId?: string) => {
+  return useQuery({
+    queryKey: ["policies", serviceId],
+    queryFn: async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/policies?serviceId=${serviceId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await res.json();
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+      return json.data as ApiKeyServicePolicy;
+    },
+    enabled: !!serviceId,
+  });
+};
+
+export const useUpdatePolicies = () => {
+  const queryClient = useQueryClient();
+  return useMutationWithInvalidate(
+    async (input: { serviceId: string; data: ApiKeyServicePolicy }) => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/policies`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          serviceId: input.serviceId,
+          data: input.data,
+        }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+      return json.data as ApiKeyServicePolicy;
+    },
+    {
+      onSuccess: (_, variables) => {
+        return queryClient.invalidateQueries(["policies", variables.serviceId]);
+      },
+    },
+  );
+};
 
 export function useAuthorizeWalletWithAccount() {
   const { user } = useLoggedInUser();

@@ -114,11 +114,16 @@ export const apiKeyValidationSchema = z.object({
 });
 
 export const apiKeyEmbeddedWalletsValidationSchema = z.object({
-  recoveryShareManagement: recoverManagementValidation,
   customAuthentication: customAuthValidation,
   customAuthEndpoint: customAuthEndpointValidation,
-  applicationName: applicationNameValidation,
-  applicationImageUrl: applicationImageUrlValidation,
+  branding: z.union([
+    z.undefined(),
+    z.object({
+      applicationName: applicationNameValidation,
+      applicationImageUrl: applicationImageUrlValidation,
+    }),
+  ]),
+  redirectUrls: z.union([z.undefined(), z.string()]),
 });
 
 export type ApiKeyCreateValidationSchema = z.infer<
