@@ -179,9 +179,16 @@ export const saveAccount = async ({
     accountId: accountDetail.accountId,
   };
 
-  switch (storage.format) {
+  const { StorageError } = await import("../storage/error.js");
+
+  switch (accountDetail.format) {
     case "privateKey": {
-      await storage.save({
+      if (!storage.privateKey) {
+        throw new StorageError(
+          'Missing "privateKey" Storage options. Please double check your storage type and make sure you set-up the "privateKey" storage.',
+        );
+      }
+      await storage.privateKey.save({
         keyMaterial,
         authUser: storage.authUser,
         accountDetail: censoredAccountDetail,
@@ -190,23 +197,29 @@ export const saveAccount = async ({
       break;
     }
     case "sharded": {
+      if (!storage.sharded) {
+        throw new StorageError(
+          'Missing "sharded" Storage options. Please double check your storage type and make sure you set-up the "sharded" storage.',
+        );
+      }
+
       const {
         shares: [shareA, shareB, shareC],
       } = await createShares(keyMaterial);
       await Promise.all([
-        storage.shareA.save({
+        storage.sharded.shareA.save({
           keyMaterial: shareA,
           authUser: storage.authUser,
           uniqueId: getWalletUniqueId(censoredAccountDetail, "shareA"),
           accountDetail: censoredAccountDetail,
         }),
-        storage.shareB.save({
+        storage.sharded.shareB.save({
           keyMaterial: shareB,
           authUser: storage.authUser,
           uniqueId: getWalletUniqueId(censoredAccountDetail, "shareB"),
           accountDetail: censoredAccountDetail,
         }),
-        storage.shareC.save({
+        storage.sharded.shareC.save({
           keyMaterial: shareC,
           authUser: storage.authUser,
           uniqueId: getWalletUniqueId(censoredAccountDetail, "shareC"),
@@ -244,14 +257,17 @@ export const loadAccount = async ({
   accountDetail: AccountDetailType;
 }): Promise<SensitiveAccountDetailType> => {
   const { EmbeddedWalletError } = await import("./error.js");
-  if (storage.format !== accountDetail.format) {
-    throw new EmbeddedWalletError(
-      `Wallet storage format mismatched. Wallet storage format: ${accountDetail.format}, provided storage format: ${storage.format}`,
-    );
-  }
-  switch (storage.format) {
+  const { StorageError } = await import("../storage/error.js");
+
+  switch (accountDetail.format) {
     case "privateKey": {
-      const keyMaterial = await storage.load({
+      if (!storage.privateKey) {
+        throw new StorageError(
+          'Missing "privateKey" Storage options. Please double check your storage type and make sure you set-up the privateKey storage.',
+        );
+      }
+
+      const keyMaterial = await storage.privateKey.load({
         uniqueId: getWalletUniqueId(accountDetail, "pKey"),
         accountDetail,
         authUser: storage.authUser,
@@ -262,18 +278,24 @@ export const loadAccount = async ({
       };
     }
     case "sharded": {
+      if (!storage.sharded) {
+        throw new StorageError(
+          'Missing "sharded" Storage options. Please double check your storage type and make sure you set-up the "sharded" storage.',
+        );
+      }
+
       const [shareA, shareB, shareC] = await Promise.all([
-        storage.shareA.load({
+        storage.sharded.shareA.load({
           uniqueId: getWalletUniqueId(accountDetail, "shareA"),
           accountDetail,
           authUser: storage.authUser,
         }),
-        storage.shareB.load({
+        storage.sharded.shareB.load({
           uniqueId: getWalletUniqueId(accountDetail, "shareB"),
           accountDetail,
           authUser: storage.authUser,
         }),
-        storage.shareC.load({
+        storage.sharded.shareC.load({
           uniqueId: getWalletUniqueId(accountDetail, "shareC"),
           accountDetail,
           authUser: storage.authUser,

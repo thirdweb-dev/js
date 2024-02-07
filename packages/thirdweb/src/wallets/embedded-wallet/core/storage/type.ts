@@ -39,17 +39,14 @@ export type SaveLoadKeyType = {
 /**
  * The interface for the storage of a wallet
  */
-export type StorageType =
-  | ({
-      format: "privateKey";
-      client: ThirdwebClient;
-      authUser?: AuthUserType | undefined;
-    } & SaveLoadKeyType)
-  | {
-      format: "sharded";
-      client: ThirdwebClient;
-      authUser?: AuthUserType | undefined;
-      shareA: SaveLoadKeyType;
-      shareB: SaveLoadKeyType;
-      shareC: SaveLoadKeyType;
-    };
+export type StorageType = {
+  client: ThirdwebClient;
+  authUser?: AuthUserType | undefined;
+  defaultFormat: WalletStorageFormatType;
+  privateKey?: SaveLoadKeyType;
+  sharded?: {
+    shareA: SaveLoadKeyType;
+    shareB: SaveLoadKeyType;
+    shareC: SaveLoadKeyType;
+  };
+};

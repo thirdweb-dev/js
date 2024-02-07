@@ -342,7 +342,7 @@ export const loadFromKeyValueStore = (arg: {
  * @param arg - The arguments for creating a thirdweb managed storage
  * @param arg.client - The thirdweb client
  * @param arg.authUser - The authenticated user
- * @param arg.format - The format of the wallet storage
+ * @param arg.defaultFormat - The default format of how wallets will be stored.
  * @param arg.encryptValue - The function to be called to encrypt the value before sending it to thirdweb.
  * @param arg.decryptValue - The function to be called to decrypt the value when loading an encrypted wallet
  * @param arg.saveKeyValue - a function to be called to save the key, value pair.
@@ -371,55 +371,56 @@ export const loadFromKeyValueStore = (arg: {
  * ```
  * @returns A storage object for the wallet that can be used to save and load the wallet
  */
-export const createManagedStorage = (arg: {
+export const createManagedStorage = ({
+  client,
+  decryptValue,
+  defaultFormat,
+  encryptValue,
+  loadKeyValue,
+  saveKeyValue,
+  authUser,
+}: {
   client: ThirdwebClient;
   authUser?: AuthUserType;
-  format: WalletStorageFormatType;
+  defaultFormat: WalletStorageFormatType;
   encryptValue: EncryptionType;
   decryptValue: EncryptionType;
   saveKeyValue: SaveKeyValueType;
   loadKeyValue: LoadKeyValueType;
 }): StorageType => {
-  switch (arg.format) {
-    case "privateKey": {
-      return {
-        format: "privateKey",
-        client: arg.client,
-        authUser: arg.authUser,
+  return {
+    client,
+    defaultFormat,
+    authUser,
+    privateKey: {
+      save: saveEncryptedInThirdweb({
+        encryptValue: encryptValue,
+      }),
+      load: loadEncryptedFromThirdweb({
+        decryptValue: decryptValue,
+      }),
+    },
+    sharded: {
+      shareA: {
+        save: saveInKeyValueStore({
+          saveItem: saveKeyValue,
+        }),
+        load: loadFromKeyValueStore({
+          loadItem: loadKeyValue,
+        }),
+      },
+      shareB: {
         save: saveEncryptedInThirdweb({
-          encryptValue: arg.encryptValue,
+          encryptValue: encryptValue,
         }),
         load: loadEncryptedFromThirdweb({
-          decryptValue: arg.decryptValue,
+          decryptValue: decryptValue,
         }),
-      };
-    }
-    case "sharded": {
-      return {
-        format: "sharded",
-        client: arg.client,
-        authUser: arg.authUser,
-        shareA: {
-          save: saveInKeyValueStore({
-            saveItem: arg.saveKeyValue,
-          }),
-          load: loadFromKeyValueStore({
-            loadItem: arg.loadKeyValue,
-          }),
-        },
-        shareB: {
-          save: saveEncryptedInThirdweb({
-            encryptValue: arg.encryptValue,
-          }),
-          load: loadEncryptedFromThirdweb({
-            decryptValue: arg.decryptValue,
-          }),
-        },
-        shareC: {
-          save: saveInThirdweb(),
-          load: loadFromThirdweb(),
-        },
-      };
-    }
-  }
+      },
+      shareC: {
+        save: saveInThirdweb(),
+        load: loadFromThirdweb(),
+      },
+    },
+  };
 };

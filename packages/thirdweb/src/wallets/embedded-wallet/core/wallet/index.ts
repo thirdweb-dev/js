@@ -119,7 +119,7 @@ class EmbeddedWallet implements Wallet {
     const wallet = await createAccount({
       createAccountOverride: arg?.createWalletOverride,
       client: this.storage.client,
-      format: this.storage.format,
+      format: this.storage.defaultFormat,
       authUser: this.storage.authUser,
     });
     this.wallets[wallet.accountId] = wallet;
@@ -142,11 +142,14 @@ class EmbeddedWallet implements Wallet {
     }
     if (!sensitiveAccountDetail) {
       throw new EmbeddedWalletError(
-        "Unauthorized. Attempting to save a wallet that cannot be loaded by given credentials.",
+        "Unauthorized. Attempting to save a wallet that cannot be loaded with given credentials.",
       );
     }
     return await saveAccount({
-      accountDetail: sensitiveAccountDetail,
+      accountDetail: {
+        ...arg.accountDetail,
+        keyMaterial: sensitiveAccountDetail.keyMaterial,
+      },
       storage,
     });
   }
