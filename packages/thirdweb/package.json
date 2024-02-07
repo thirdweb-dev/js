@@ -136,7 +136,6 @@
     "@walletconnect/ethereum-provider": "^2.11.1",
     "abitype": "^1.0.0",
     "bs58": "^5.0.0",
-    "cbor-x": "^1.5.8",
     "fuse.js": "^7.0.0",
     "mipd": "^0.0.5",
     "qrcode": "^1.5.3",

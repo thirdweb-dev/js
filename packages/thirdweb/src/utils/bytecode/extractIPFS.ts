@@ -1,6 +1,6 @@
 import { hexToBytes } from "@noble/hashes/utils";
-import { decode } from "cbor-x/decode";
 import { encode } from "bs58";
+import { decode } from "./cbor-decode.js";
 
 /**
  * Extracts the IPFS URI from the given bytecode.
