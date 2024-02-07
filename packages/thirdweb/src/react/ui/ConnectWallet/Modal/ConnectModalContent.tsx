@@ -125,7 +125,7 @@ export const ConnectModalContent = (props: {
   const screenConfig: ScreenConfig = {
     setModalVisibility,
     theme: typeof theme === "string" ? theme : theme.type,
-    goBack: handleBack,
+    goBack: wallets.length > 1 ? handleBack : undefined,
     size: modalConfig.modalSize,
   };
 

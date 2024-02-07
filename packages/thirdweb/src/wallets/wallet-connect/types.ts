@@ -4,7 +4,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 
-type QRCodeModalOptions = Pick<
+type WalletConnectQRCodeModalOptions = Pick<
   NonNullable<EthereumProviderOptions["qrModalOptions"]>,
   | "themeMode"
   | "themeVariables"
@@ -30,7 +30,7 @@ export type WalletConnectConnectionOptions = {
   optionalChains?: (number | bigint)[];
   showQrModal?: boolean;
   pairingTopic?: string;
-  qrModalOptions?: QRCodeModalOptions;
+  qrModalOptions?: WalletConnectQRCodeModalOptions;
   onDisplayUri?: (uri: string) => void;
   onSessionRequestSent?: () => void;
 };

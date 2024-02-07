@@ -35,3 +35,10 @@ export { useBlockNumber } from "./hooks/rpc/useBlockNumber.js";
 
 // utils
 export { createContractQuery } from "./utils/createQuery.js";
+
+// wallets
+export { metamaskConfig } from "./wallets/metamask/metamaskConfig.js";
+export { coinbaseConfig } from "./wallets/coinbase/coinbaseConfig.js";
+export { rainbowConfig } from "./wallets/rainbow/rainbowConfig.js";
+export { walletConnectConfig } from "./wallets/walletConnect/walletConnectConfig.js";
+export { zerionConfig } from "./wallets/zerion/zerionConfig.js";
