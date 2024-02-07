@@ -1400,90 +1400,90 @@ importers:
   packages/thirdweb:
     dependencies:
       '@emotion/css':
-        specifier: ^11.11.2
+        specifier: 11.11.2
         version: 11.11.2
       '@emotion/react':
-        specifier: ^11.11.3
+        specifier: 11.11.3
         version: 11.11.3(@types/react@18.2.17)(react@18.2.0)
       '@emotion/styled':
-        specifier: ^11.11.0
+        specifier: 11.11.0
         version: 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.17)(react@18.2.0)
       '@noble/hashes':
-        specifier: ^1.3.3
+        specifier: 1.3.3
         version: 1.3.3
       '@radix-ui/colors':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0
       '@radix-ui/react-dialog':
-        specifier: ^1.0.5
+        specifier: 1.0.5
         version: 1.0.5(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-focus-scope':
-        specifier: ^1.0.4
+        specifier: 1.0.4
         version: 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-icons':
-        specifier: ^1.3.0
+        specifier: 1.3.0
         version: 1.3.0(react@18.2.0)
       '@radix-ui/react-popover':
-        specifier: ^1.0.7
+        specifier: 1.0.7
         version: 1.0.7(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-tabs':
-        specifier: ^1.0.4
+        specifier: 1.0.4
         version: 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-tooltip':
-        specifier: ^1.0.7
+        specifier: 1.0.7
         version: 1.0.7(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.18.1
+        specifier: 5.18.1
         version: 5.18.1(react@18.2.0)
       '@walletconnect/ethereum-provider':
-        specifier: ^2.11.1
+        specifier: 2.11.1
         version: 2.11.1(@types/react@18.2.17)(react@18.2.0)
       abitype:
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0(typescript@5.3.3)
       bs58:
-        specifier: ^5.0.0
+        specifier: 5.0.0
         version: 5.0.0
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
       fuse.js:
-        specifier: ^7.0.0
+        specifier: 7.0.0
         version: 7.0.0
       mipd:
-        specifier: ^0.0.5
+        specifier: 0.0.5
         version: 0.0.5(typescript@5.3.3)
       qrcode:
-        specifier: ^1.5.3
+        specifier: 1.5.3
         version: 1.5.3
       viem:
-        specifier: ^2.7.6
+        specifier: 2.7.6
         version: 2.7.6(typescript@5.3.3)
     devDependencies:
       '@tanstack/eslint-plugin-query':
-        specifier: ^5.18.1
+        specifier: 5.18.1
         version: 5.18.1(eslint@8.56.0)(typescript@5.3.3)
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
       '@types/bun':
-        specifier: ^1.0.5
+        specifier: 1.0.5
         version: 1.0.5
       '@types/qrcode':
-        specifier: ^1.5.5
+        specifier: 1.5.5
         version: 1.5.5
       '@types/react':
         specifier: 18.2.17
         version: 18.2.17
       '@viem/anvil':
-        specifier: ^0.0.7
+        specifier: 0.0.7
         version: 0.0.7
       '@vitest/coverage-v8':
-        specifier: ^1.2.2
+        specifier: 1.2.2
         version: 1.2.2(vitest@1.2.2)
       dotenv-mono:
-        specifier: ^1.3.10
-        version: 1.3.10
+        specifier: 1.3.13
+        version: 1.3.13
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
@@ -1491,28 +1491,28 @@ importers:
         specifier: 0.0.4
         version: 0.0.4(eslint@8.56.0)
       eslint-plugin-jsdoc:
-        specifier: ^48.0.6
+        specifier: 48.0.6
         version: 48.0.6(eslint@8.56.0)
       ethers5:
-        specifier: npm:ethers@^5.0.0
+        specifier: npm:ethers@5.7.2
         version: /ethers@5.7.2
       ethers6:
-        specifier: npm:ethers@^6.0.0
+        specifier: npm:ethers@6.10.0
         version: /ethers@6.10.0
       react:
-        specifier: ^18.2.0
+        specifier: 18.2.0
         version: 18.2.0
       rimraf:
-        specifier: ^5.0.5
+        specifier: 5.0.5
         version: 5.0.5
       typedoc-gen:
         specifier: workspace:*
         version: link:../typedoc-gen
       typescript:
-        specifier: ^5.3.3
+        specifier: 5.3.3
         version: 5.3.3
       vitest:
-        specifier: ^1.2.2
+        specifier: 1.2.2
         version: 1.2.2(@types/node@18.17.1)
 
   packages/tw-tsconfig: {}
@@ -6984,7 +6984,7 @@ packages:
     dependencies:
       '@emotion/babel-plugin': 11.11.0
       '@emotion/cache': 11.11.0
-      '@emotion/serialize': 1.1.2
+      '@emotion/serialize': 1.1.3
       '@emotion/sheet': 1.2.2
       '@emotion/utils': 1.2.1
     dev: false
@@ -7083,7 +7083,7 @@ packages:
       '@emotion/babel-plugin': 11.11.0
       '@emotion/is-prop-valid': 1.2.1
       '@emotion/react': 11.11.1(@types/react@18.2.17)(react@18.2.0)
-      '@emotion/serialize': 1.1.2
+      '@emotion/serialize': 1.1.3
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@18.2.0)
       '@emotion/utils': 1.2.1
       '@types/react': 18.2.17
@@ -7104,7 +7104,7 @@ packages:
       '@emotion/babel-plugin': 11.11.0
       '@emotion/is-prop-valid': 1.2.1
       '@emotion/react': 11.11.3(@types/react@18.2.17)(react@18.2.0)
-      '@emotion/serialize': 1.1.2
+      '@emotion/serialize': 1.1.3
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@18.2.0)
       '@emotion/utils': 1.2.1
       '@types/react': 18.2.17
@@ -8105,7 +8105,7 @@ packages:
       node-fetch: 2.6.12
       open: 8.4.2
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.0
       serialize-error: 6.0.0
       temp-dir: 2.0.0
     transitivePeerDependencies:
@@ -8145,7 +8145,7 @@ packages:
       node-fetch: 2.6.12
       parse-png: 2.1.0
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.0
       tempy: 0.3.0
     transitivePeerDependencies:
       - encoding
@@ -8227,7 +8227,7 @@ packages:
       expo-modules-autolinking: 1.0.2
       fs-extra: 9.1.0
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.0
       xml2js: 0.6.0
     transitivePeerDependencies:
       - encoding
@@ -9536,7 +9536,7 @@ packages:
     resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.5.4
+      semver: 7.6.0
     dev: false
 
   /@npmcli/move-file@1.1.2:
@@ -13105,7 +13105,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.4
+      semver: 7.6.0
       tsutils: 3.21.0(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
@@ -13187,7 +13187,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.3.3)
       eslint: 8.56.0
       eslint-scope: 5.1.1
-      semver: 7.5.4
+      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -15818,7 +15818,7 @@ packages:
       check-error: 1.0.3
       deep-eql: 4.1.3
       get-func-name: 2.0.2
-      loupe: 2.3.6
+      loupe: 2.3.7
       pathval: 1.1.1
       type-detect: 4.0.8
     dev: true
@@ -17039,6 +17039,13 @@ packages:
       dotenv-expand: 10.0.0
     dev: true
 
+  /dotenv-mono@1.3.13:
+    resolution: {integrity: sha512-A9El6MGAxqeh/y9M/TmqmJSYTABLeek/o6JIWGYcT9YDcMSsF6OO/cC5FA5CeDOWxqjsJEb4dYMEjjJ2ayTcQA==}
+    dependencies:
+      dotenv: 16.3.1
+      dotenv-expand: 10.0.0
+    dev: true
+
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
@@ -18163,7 +18170,7 @@ packages:
   /estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
     dependencies:
-      '@types/estree': 1.0.0
+      '@types/estree': 1.0.5
     dev: true
 
   /esutils@2.0.3:
@@ -22513,7 +22520,7 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /make-error@1.3.6:
@@ -23765,7 +23772,7 @@ packages:
     dependencies:
       hosted-git-info: 3.0.8
       osenv: 0.1.5
-      semver: 7.5.4
+      semver: 7.6.0
       validate-npm-package-name: 3.0.0
     dev: false
 
@@ -26125,7 +26132,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
