@@ -1,4 +1,8 @@
 export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
+export {
+  TransactionButton,
+  type TransactionButtonProps,
+} from "./ui/TransactionButton/index.js";
 
 export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
 
