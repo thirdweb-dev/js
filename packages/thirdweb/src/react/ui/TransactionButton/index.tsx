@@ -16,6 +16,8 @@ export type TransactionButtonProps = React.PropsWithChildren<
     transaction: Transaction<any>;
     onSuccess?: (transactionHash: WaitForReceiptOptions<Abi>) => void;
     onError?: (error: Error) => void;
+    onSubmit?: () => void;
+    className?: string;
   }
 >;
 
@@ -37,7 +39,15 @@ export type TransactionButtonProps = React.PropsWithChildren<
  * ```
  */
 export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
-  const { children, transaction, onSuccess, onError, ...buttonProps } = props;
+  const {
+    children,
+    transaction,
+    onSuccess,
+    onError,
+    onSubmit,
+    className,
+    ...buttonProps
+  } = props;
   const { address } = useActiveAccount() || {};
   const connectedWalletChainId = useActiveWalletChainId();
   const switchChain = useSwitchActiveWalletChain();
@@ -49,6 +59,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
     return (
       <Button
         {...buttonProps}
+        className={className}
         onClick={() => {
           switchChain(txChainId);
         }}
@@ -62,7 +73,9 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
 
   return (
     <Button
+      gap="sm"
       {...buttonProps}
+      className={className}
       disabled={!address || isPending}
       data-is-loading={isPending}
       onClick={() => {
@@ -70,6 +83,9 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
           onSuccess,
           onError,
         });
+        if (onSubmit) {
+          onSubmit();
+        }
       }}
     >
       {isPending && <Spinner size="sm" color="primaryButtonText" />}
