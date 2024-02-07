@@ -88,7 +88,8 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * });
        * ```
        */
-      fromEthers: fromEthersContract,
+      fromEthers: (options: FromEthersContractOptions) =>
+        fromEthersContract(options),
     },
     signer: {
       /**
@@ -101,7 +102,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const wallet = await ethers5Adapter.signer.fromEthersSigner(signer);
        * ```
        */
-      fromEthers: fromEthersSigner,
+      fromEthers: (signer: ethers5.Signer) => fromEthersSigner(signer),
     },
   };
 })();
