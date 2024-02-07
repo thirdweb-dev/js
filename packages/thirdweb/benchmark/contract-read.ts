@@ -21,7 +21,7 @@ bench.add("thirdweb@alpha", async () => {
 
   const contract = getContract({
     client,
-    chainId: 1,
+    chain: 1,
     address: USDC_ADDRESS,
   });
 
