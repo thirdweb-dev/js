@@ -17,6 +17,7 @@ export type GetNFTParams = TokenUriParams & {
  * Retrieves information about a specific ERC721 non-fungible token (NFT).
  * @param options - The options for retrieving the NFT.
  * @returns A promise that resolves to the NFT object.
+ * @extension ERC721
  * @example
  * ```ts
  * import { getNFT } from "thirdweb/extensions/erc721";

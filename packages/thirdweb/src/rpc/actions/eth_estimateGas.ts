@@ -10,6 +10,7 @@ import {
  * @param request - The EIP1193 request function.
  * @param transactionRequest - The transaction request object.
  * @returns A promise that resolves to the estimated gas as a bigint.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_estimateGas } from "thirdweb/rpc";

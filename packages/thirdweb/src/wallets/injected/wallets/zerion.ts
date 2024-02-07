@@ -12,6 +12,7 @@ export const zerionWalletMetadata = {
 /**
  * Connect to Injected Zerion Wallet Provider
  * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
+ * @wallet
  * @example
  * ```ts
  * const wallet = zerionWallet();

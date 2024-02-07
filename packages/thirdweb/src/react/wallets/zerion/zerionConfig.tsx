@@ -2,12 +2,18 @@ import {
   zerionWallet,
   zerionWalletMetadata,
   injectedZerionProvider,
+  walletConnect,
 } from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
-import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
+import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
+
+export type ZerionConfigOptions = {
+  projectId?: string;
+};
 
 /**
  * Integrate Zerion wallet connection into your app.
+ * @param options - Options for configuring the Zerion wallet.
  * @example
  * ```tsx
  * <ThirdwebProvider
@@ -18,20 +24,34 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
  * ```
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
-export const zerionConfig = (): WalletConfig => {
-  return {
-    create() {
-      return zerionWallet();
+export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
+  const config: WalletConfig = {
+    create(createOptions) {
+      if (config.isInstalled && config.isInstalled()) {
+        return zerionWallet();
+      }
+
+      return walletConnect({
+        client: createOptions.client,
+        dappMetadata: createOptions.dappMetadata,
+        metadata: zerionWalletMetadata,
+      });
     },
     metadata: zerionWalletMetadata,
     connectUI(props) {
       return (
-        <InjectedConnectUI
+        <InjectedAndWCConnectUI
           {...props}
+          projectId={options?.projectId}
           links={{
             extension: "https://zerion.io/extension",
             android: "https://link.zerion.io/901o6IN0jqb",
             ios: "https://link.zerion.io/a11o6IN0jqb",
+          }}
+          platformUris={{
+            ios: "zerion://",
+            android: "https://link.zerion.io/pt3gdRP0njb/",
+            other: "https://link.zerion.io/pt3gdRP0njb/",
           }}
         />
       );
@@ -40,4 +60,6 @@ export const zerionConfig = (): WalletConfig => {
       return !!injectedZerionProvider();
     },
   };
+
+  return config;
 };

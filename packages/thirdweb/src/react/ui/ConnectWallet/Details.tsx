@@ -6,8 +6,7 @@ import {
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import {
-  useActiveWallet,
-  useActiveWalletAddress,
+  useActiveAccount,
   useActiveWalletChainId,
   useDisconnect,
 } from "../../providers/wallet-provider.js";
@@ -80,14 +79,11 @@ export const ConnectedWalletDetails: React.FC<{
   chainIds: number[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
-  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   const walletChainId = useActiveWalletChainId();
   const chainQuery = useChainQuery(walletChainId);
   const { disconnect } = useDisconnect();
   const { client } = useThirdwebProviderProps();
-
-  // const chains = useSupportedChains();
-  const address = useActiveWalletAddress();
 
   const tokenAddress =
     walletChainId && props.displayBalanceToken
@@ -98,7 +94,7 @@ export const ConnectedWalletDetails: React.FC<{
     chain: walletChainId,
     client,
     tokenAddress,
-    wallet: activeWallet,
+    account: activeAccount,
   });
 
   // const activeWalletConfig = undefined;
@@ -136,7 +132,9 @@ export const ConnectedWalletDetails: React.FC<{
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
 
   // const shortAddress = "<address>";
-  const shortAddress = address ? shortenString(address, false) : "";
+  const shortAddress = activeAccount?.address
+    ? shortenString(activeAccount.address, false)
+    : "";
 
   const addressOrENS = shortAddress;
   // const avatarUrl = undefined;
@@ -180,7 +178,7 @@ export const ConnectedWalletDetails: React.FC<{
   // const walletIconUrl =
   //   overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
   // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
-  const avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
+  const avatarOrWalletIconUrl = activeAccount?.wallet.metadata.iconUrl || "";
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -205,7 +203,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.metadata.id === LocalWalletId ? (
+        {activeAccount?.wallet.metadata.id === LocalWalletId ? (
           <Text
             color="danger"
             size="xs"
@@ -309,7 +307,7 @@ export const ConnectedWalletDetails: React.FC<{
             transform: "translateX(10px)",
           }}
           data-test="connected-wallet-address"
-          data-address={address}
+          data-address={activeAccount?.address}
         >
           <Text color="primaryText" weight={500} size="md">
             {addressOrENS}
@@ -321,7 +319,7 @@ export const ConnectedWalletDetails: React.FC<{
             data-test="copy-address"
           >
             <CopyIcon
-              text={address || ""}
+              text={activeAccount?.address || ""}
               tip={locale.copyAddress}
               side="top"
             />
@@ -482,7 +480,11 @@ export const ConnectedWalletDetails: React.FC<{
           {/* Explorer link */}
           {chainQuery.data?.explorers && chainQuery.data?.explorers[0]?.url && (
             <MenuLink
-              href={chainQuery.data.explorers[0].url + "/address/" + address}
+              href={
+                chainQuery.data.explorers[0].url +
+                "/address/" +
+                activeAccount?.address
+              }
               target="_blank"
               as="a"
               style={{
@@ -530,8 +532,8 @@ export const ConnectedWalletDetails: React.FC<{
               data-variant="danger"
               type="button"
               onClick={() => {
-                if (activeWallet) {
-                  disconnect(activeWallet.metadata.id);
+                if (activeAccount) {
+                  disconnect(activeAccount);
                   props.onDisconnect();
                 }
               }}

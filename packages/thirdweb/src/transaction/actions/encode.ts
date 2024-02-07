@@ -11,6 +11,7 @@ const ENCODE_CACHE = new WeakMap();
  * Encodes a transaction object into a hexadecimal string representation of the encoded data.
  * @param tx - The transaction object to encode.
  * @returns A promise that resolves to the encoded data as a hexadecimal string.
+ * @transaction
  * @example
  * ```ts
  * import { encode } from "thirdweb";

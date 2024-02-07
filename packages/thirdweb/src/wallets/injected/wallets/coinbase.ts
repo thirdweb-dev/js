@@ -13,6 +13,7 @@ export const coinbaseMetadata: WalletMetadata = {
 /**
  * Connect to Injected Coinbase Wallet Provider
  * @param options - The options for connecting to the Injected Coinbase Wallet Provider.
+ * @wallet
  * @example
  * ```ts
  * const wallet = coinbaseWallet();

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../types/wallets.js";
-import { ConnectingScreen } from "../../ui/ConnectWallet/screens/ConnectingScreen.js";
-import { GetStartedScreen } from "../../ui/ConnectWallet/screens/GetStartedScreen.js";
+import { ConnectingScreen } from "./ConnectingScreen.js";
 import { wait } from "../../utils/wait.js";
 
 /**
@@ -10,16 +9,9 @@ import { wait } from "../../utils/wait.js";
  */
 export const InjectedConnectUI = (
   props: ConnectUIProps & {
-    links: {
-      extension?: string;
-      android?: string;
-      ios?: string;
-    };
+    onGetStarted: () => void;
   },
 ) => {
-  const [screen, setScreen] = useState<"connecting" | "get-started">(
-    "connecting",
-  );
   const locale = useTWLocale().wallets.injectedWallet(
     props.walletConfig.metadata.name,
   );
@@ -30,14 +22,13 @@ export const InjectedConnectUI = (
   const connectToExtension = useCallback(async () => {
     try {
       connectPrompted.current = true;
-      setScreen("connecting");
       setErrorConnecting(false);
       await wait(1000);
       const wallet = createInstance();
-      await wallet.connect({
+      const account = await wallet.connect({
         chainId: props.chainId,
       });
-      done(wallet);
+      done(account);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
@@ -50,58 +41,26 @@ export const InjectedConnectUI = (
       return;
     }
 
-    const isInjected = walletConfig.isInstalled?.() || false;
-
-    (async () => {
-      if (isInjected) {
-        connectToExtension();
-      } else {
-        setScreen("get-started");
-      }
-    })();
+    connectToExtension();
   }, [walletConfig, connectToExtension]);
 
-  if (screen === "connecting") {
-    return (
-      <ConnectingScreen
-        locale={{
-          getStartedLink: locale.getStartedLink,
-          instruction: locale.connectionScreen.instruction,
-          tryAgain: locale.connectionScreen.retry,
-          inProgress: locale.connectionScreen.inProgress,
-          failed: locale.connectionScreen.failed,
-        }}
-        onBack={screenConfig.goBack}
-        walletName={walletConfig.metadata.name}
-        walletIconURL={walletConfig.metadata.iconUrl}
-        onGetStarted={() => {
-          setScreen("get-started");
-        }}
-        onRetry={() => {
-          connectToExtension();
-        }}
-        errorConnecting={errorConnecting}
-      />
-    );
-  }
-
-  if (screen === "get-started") {
-    return (
-      <GetStartedScreen
-        locale={{
-          scanToDownload: locale.getStartedScreen.instruction,
-        }}
-        walletIconURL={walletConfig.metadata.iconUrl}
-        walletName={walletConfig.metadata.name}
-        chromeExtensionLink={props.links.extension}
-        googlePlayStoreLink={props.links.android}
-        appleStoreLink={props.links.ios}
-        onBack={() => {
-          setScreen("connecting");
-        }}
-      />
-    );
-  }
-
-  return null;
+  return (
+    <ConnectingScreen
+      locale={{
+        getStartedLink: locale.getStartedLink,
+        instruction: locale.connectionScreen.instruction,
+        tryAgain: locale.connectionScreen.retry,
+        inProgress: locale.connectionScreen.inProgress,
+        failed: locale.connectionScreen.failed,
+      }}
+      onBack={screenConfig.goBack}
+      walletName={walletConfig.metadata.name}
+      walletIconURL={walletConfig.metadata.iconUrl}
+      onGetStarted={props.onGetStarted}
+      onRetry={() => {
+        connectToExtension();
+      }}
+      errorConnecting={errorConnecting}
+    />
+  );
 };

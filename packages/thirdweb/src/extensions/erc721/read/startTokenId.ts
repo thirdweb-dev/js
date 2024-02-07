@@ -5,6 +5,7 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * Retrieves the starting token ID for the ERC721 contract.
  * @param options - The transaction options.
  * @returns A promise that resolves to the starting token ID as a bigint.
+ * @extension ERC721
  * @example
  * ```ts
  * import { startTokenId } from "thirdweb/extensions/erc721";

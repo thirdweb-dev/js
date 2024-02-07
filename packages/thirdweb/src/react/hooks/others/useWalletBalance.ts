@@ -12,13 +12,13 @@ import { getChainIdFromChain } from "../../../chain/index.js";
  * @internal
  */
 export function useWalletBalance(options: Partial<GetTokenBalanceOptions>) {
-  const { chain, client, wallet, tokenAddress } = options;
+  const { chain, client, account, tokenAddress } = options;
   const query = queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "walletBalance",
       `${getChainIdFromChain(chain ?? -1)}`,
-      wallet?.address || "0x0",
+      account?.address || "0x0",
       { tokenAddress },
     ] as const,
     queryFn: async () => {
@@ -28,10 +28,10 @@ export function useWalletBalance(options: Partial<GetTokenBalanceOptions>) {
       if (!client) {
         throw new Error("client is required");
       }
-      if (!wallet) {
-        throw new Error("wallet is required");
+      if (!account) {
+        throw new Error("account is required");
       }
-      return getTokenBalance({ chain, client, wallet, tokenAddress });
+      return getTokenBalance({ chain, client, account, tokenAddress });
     },
   });
   return useQuery(query);

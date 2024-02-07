@@ -5,10 +5,7 @@ import {
   walletConnect,
 } from "../../../wallets/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
-import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
-import { WalletConnectScan } from "../shared/WalletConnectScanUI.js";
-
-const isMetamaskInjected = () => !!injectedMetamaskProvider();
+import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type MetamaskConfigOptions = {
   projectId?: string;
@@ -30,41 +27,24 @@ export type MetamaskConfigOptions = {
 export const metamaskConfig = (
   options?: MetamaskConfigOptions,
 ): WalletConfig => {
-  return {
+  const config: WalletConfig = {
     metadata: metamaskMetadata,
     create(createOptions) {
-      if (!isMetamaskInjected()) {
-        return walletConnect({
-          client: createOptions.client,
-          dappMetadata: createOptions.dappMetadata,
-          metadata: metamaskMetadata,
-        });
+      if (config.isInstalled && config.isInstalled()) {
+        return metamaskWallet();
       }
 
-      return metamaskWallet();
+      return walletConnect({
+        client: createOptions.client,
+        dappMetadata: createOptions.dappMetadata,
+        metadata: metamaskMetadata,
+      });
     },
     connectUI(props) {
-      if (!isMetamaskInjected()) {
-        return (
-          <WalletConnectScan
-            connectUIProps={props}
-            onGetStarted={() => {
-              // TODO
-            }}
-            platformUris={{
-              ios: "metamask://",
-              android: "https://metamask.app.link/",
-              other: "https://metamask.app.link/",
-            }}
-            onBack={props.screenConfig.goBack}
-            projectId={options?.projectId}
-          />
-        );
-      }
-
       return (
-        <InjectedConnectUI
+        <InjectedAndWCConnectUI
           {...props}
+          projectId={options?.projectId}
           links={{
             extension:
               "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
@@ -72,9 +52,18 @@ export const metamaskConfig = (
               "https://play.google.com/store/apps/details?id=io.metamask",
             ios: "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202",
           }}
+          platformUris={{
+            ios: "metamask://",
+            android: "https://metamask.app.link/",
+            other: "https://metamask.app.link/",
+          }}
         />
       );
     },
-    isInstalled: isMetamaskInjected,
+    isInstalled() {
+      return !!injectedMetamaskProvider();
+    },
   };
+
+  return config;
 };

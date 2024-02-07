@@ -21,7 +21,7 @@ import {
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { useTWLocale } from "../../../providers/locale-provider.js";
 import {
-  useActiveWallet,
+  useActiveAccount,
   useActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../../../providers/wallet-provider.js";
@@ -178,11 +178,11 @@ function useSignInRequired(loginOptional?: boolean) {
  * @returns `true` if the `<ConnectEmbed />` should be rendered.
  */
 export function useShowConnectEmbed(loginOptional?: boolean) {
-  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   // const connectionStatus = useConnectionStatus();
   const signInRequired = useSignInRequired(loginOptional);
 
-  return !activeWallet || signInRequired;
+  return !activeAccount || signInRequired;
 }
 
 /**

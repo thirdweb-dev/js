@@ -11,7 +11,7 @@ import { ScreenContext, useScreen } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
 import {
-  useActiveWallet,
+  useActiveAccount,
   useConnect,
 } from "../../../providers/wallet-provider.js";
 import { Modal } from "../../components/Modal.js";
@@ -22,7 +22,7 @@ import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
 } from "./ConnectModalSkeleton.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * @internal
@@ -57,8 +57,8 @@ export const ConnectModalContent = (props: {
   // const authConfig = useThirdwebAuthContext();
 
   const handleConnected = useCallback(
-    (wallet: Wallet) => {
-      connect(wallet);
+    (account: Account) => {
+      connect(account);
 
       if (onConnect) {
         onConnect();
@@ -245,7 +245,7 @@ export const ConnectModal = () => {
 
   // const disconnect = useDisconnect();
 
-  const wallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   // const isWrapperConnected = !!wallet?.getPersonalWallet();
 
   // const isWrapperScreen =
@@ -284,7 +284,11 @@ export const ConnectModal = () => {
 
   // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
   useEffect(() => {
-    if (isWalletModalOpen && screen === reservedScreens.signIn && !wallet) {
+    if (
+      isWalletModalOpen &&
+      screen === reservedScreens.signIn &&
+      !activeAccount
+    ) {
       setScreen(initialScreen);
       setIsWalletModalOpen(false);
     }
@@ -294,7 +298,7 @@ export const ConnectModal = () => {
     screen,
     setIsWalletModalOpen,
     setScreen,
-    wallet,
+    activeAccount,
   ]);
 
   return (

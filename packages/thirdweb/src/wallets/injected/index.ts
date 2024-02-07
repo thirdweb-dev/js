@@ -8,12 +8,16 @@ import type {
   WalletConnectionOptions,
   SendTransactionOption,
   Wallet,
+  Account,
 } from "../interfaces/wallet.js";
+import { getChainDataForChainId } from "../../chain/index.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
 
 /**
  * Connect to Injected Wallet Provider
  * @param options - The options for connecting to the Injected Wallet Provider.
- * @returns A Promise that resolves to a Wallet instance.
+ * @returns The Wallet instance.
+ * @wallet
  * @throws Error if no injected provider is available or no accounts are available.
  * @example
  * ```ts
@@ -35,7 +39,7 @@ import type {
  * const wallet = await injectedWallet();
  * ```
  */
-export async function injectedWallet(options?: InjectedWalletOptions) {
+export function injectedWallet(options?: InjectedWalletOptions) {
   return new InjectedWallet(options);
 }
 
@@ -43,7 +47,6 @@ export async function injectedWallet(options?: InjectedWalletOptions) {
  * Connect to an Injected Wallet Provider
  */
 export class InjectedWallet implements Wallet {
-  address: Wallet["address"];
   metadata: Wallet["metadata"];
   chainId: Wallet["chainId"];
   events: Wallet["events"];
@@ -74,7 +77,6 @@ export class InjectedWallet implements Wallet {
    */
   constructor(options?: InjectedWalletOptions) {
     this.#options = options;
-    this.address = ""; // TODO: allow undefined address in Wallet interface
     this.metadata = this.#options?.metadata || {
       id: "injected",
       name: "injected",
@@ -95,13 +97,13 @@ export class InjectedWallet implements Wallet {
     this.#provider = provider;
 
     // connected accounts
-    const accounts = await provider.request({
+    const addresses = await provider.request({
       method: "eth_accounts",
     });
 
     return this.#onConnect({
       provider,
-      accounts,
+      addresses,
       // do not force switch chain on autoConnect
       targetChainId: undefined,
     });
@@ -124,50 +126,15 @@ export class InjectedWallet implements Wallet {
     const provider = this.#getProvider();
     this.#provider = provider;
 
-    const accountAddresses = await provider.request({
+    const addresses = await provider.request({
       method: "eth_requestAccounts",
     });
 
     return this.#onConnect({
       provider,
-      accounts: accountAddresses,
-      targetChainId: options?.chainId,
+      addresses,
+      targetChainId: options?.chainId ? BigInt(options.chainId) : undefined,
     });
-  }
-
-  /**
-   * Send a transaction using the Injected Wallet Provider
-   * @param tx - Transaction object
-   * @example
-   * ```ts
-   * const { transactionHash } = await wallet.sendTransaction(tx)
-   * ```
-   * @returns A Promise that resolves to the transaction hash.
-   */
-  async sendTransaction(tx: SendTransactionOption) {
-    if (!this.chainId || !this.#provider || !this.address) {
-      throw new Error("Provider not setup");
-    }
-
-    if (normalizeChainId(tx.chainId) !== this.chainId) {
-      await this.switchChain(tx.chainId);
-    }
-
-    const transactionHash = (await this.#provider.request({
-      method: "eth_sendTransaction",
-      params: [
-        {
-          gas: tx.gas ? toHex(tx.gas) : undefined,
-          from: this.address,
-          to: tx.to as Address,
-          data: tx.data,
-        },
-      ],
-    })) as Hex;
-
-    return {
-      transactionHash,
-    };
   }
 
   /**
@@ -194,12 +161,32 @@ export class InjectedWallet implements Wallet {
       throw new Error("no provider available");
     }
 
-    await this.#provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: toHex(chainId) }],
-    });
+    try {
+      await this.#provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: toHex(chainId) }],
+      });
+    } catch (e: any) {
+      // if chain does not exist, add the chain
+      if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
+        const chain = await getChainDataForChainId(BigInt(chainId));
+        await this.#provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: toHex(chainId),
+              chainName: chain.name,
+              nativeCurrency: chain.nativeCurrency,
+              rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
+              blockExplorerUrls: chain.explorers?.map((x) => x.url),
+            },
+          ],
+        });
+      } else {
+        throw e;
+      }
+    }
 
-    // TODO handle add chain case etc
     this.chainId = normalizeChainId(chainId);
   }
 
@@ -208,18 +195,18 @@ export class InjectedWallet implements Wallet {
    * @internal
    */
   async #onConnect(data: {
-    targetChainId?: number | bigint;
+    targetChainId?: bigint;
     provider: Ethereum;
-    accounts: string[];
-  }): Promise<typeof this> {
-    const { accounts, provider, targetChainId } = data;
-    const account = accounts[0];
-    if (!account) {
+    addresses: string[];
+  }): Promise<Account> {
+    const { addresses, provider, targetChainId } = data;
+    const addr = addresses[0];
+    if (!addr) {
       throw new Error("no accounts available");
     }
 
     // use the first account
-    this.address = getAddress(account);
+    const address = getAddress(addr);
 
     // get the chainId the provider is on
     this.chainId = await provider
@@ -234,7 +221,6 @@ export class InjectedWallet implements Wallet {
     }
 
     if (provider.on) {
-      provider.on("accountsChanged", this.#onAccountsChanged);
       provider.on("chainChanged", this.#onChainChanged);
       provider.on("disconnect", this.#onDisconnect);
     }
@@ -252,24 +238,40 @@ export class InjectedWallet implements Wallet {
       },
     };
 
-    return this;
-  }
+    const wallet = this;
 
-  /**
-   * Note: must use arrow function
-   * @internal
-   */
-  #onAccountsChanged = (accounts: string[]) => {
-    const _address = accounts[0];
-    if (!_address) {
-      // TODO figure out a way to handle this, address is not allowed to be undefined
-      // @ts-expect-error - address is not allowed to be undefined
-      this.address = undefined;
-      this.#onDisconnect();
-    } else {
-      this.address = getAddress(_address);
-    }
-  };
+    const account: Account = {
+      address,
+      async sendTransaction(tx: SendTransactionOption) {
+        if (!wallet.chainId || !wallet.#provider || !account.address) {
+          throw new Error("Provider not setup");
+        }
+
+        if (normalizeChainId(tx.chainId) !== wallet.chainId) {
+          await wallet.switchChain(tx.chainId);
+        }
+
+        const transactionHash = (await wallet.#provider.request({
+          method: "eth_sendTransaction",
+          params: [
+            {
+              gas: tx.gas ? toHex(tx.gas) : undefined,
+              from: this.address,
+              to: tx.to as Address,
+              data: tx.data,
+            },
+          ],
+        })) as Hex;
+
+        return {
+          transactionHash,
+        };
+      },
+      wallet,
+    };
+
+    return account;
+  }
 
   /**
    * Call this method when the wallet provider chain is changed
@@ -287,12 +289,10 @@ export class InjectedWallet implements Wallet {
    */
   #onDisconnect = () => {
     if (this.#provider?.removeListener) {
-      this.#provider.removeListener("accountsChanged", this.#onAccountsChanged);
       this.#provider.removeListener("chainChanged", this.#onChainChanged);
     }
 
     this.chainId = undefined;
-    this.address = ""; // TODO: allow undefined address in Wallet interface
   };
 
   /**

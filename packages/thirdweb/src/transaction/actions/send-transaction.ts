@@ -2,12 +2,12 @@ import type { Transaction } from "../transaction.js";
 import type { Abi, TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import { resolveParams } from "./resolve-params.js";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 
-type SendTransactionOptions<wallet extends Wallet> = {
+type SendTransactionOptions = {
   transaction: Transaction<any>;
-  wallet: wallet;
+  account: Account;
 };
 
 /**
@@ -15,19 +15,20 @@ type SendTransactionOptions<wallet extends Wallet> = {
  * @param options - The options for sending the transaction.
  * @returns A promise that resolves to the transaction hash.
  * @throws An error if the wallet is not connected.
+ * @transaction
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";
  * const transactionHash = await sendTransaction({
- *  wallet,
+ *  account,
  *  transaction
  * });
  * ```
  */
-export async function sendTransaction<wallet extends Wallet>(
-  options: SendTransactionOptions<wallet>,
+export async function sendTransaction(
+  options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions<Abi>> {
-  if (!options.wallet.address) {
+  if (!options.account.address) {
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
@@ -57,7 +58,7 @@ export async function sendTransaction<wallet extends Wallet>(
       options.transaction.nonce ??
         // otherwise get the next nonce
         eth_getTransactionCount(rpcRequest, {
-          address: options.wallet.address,
+          address: options.account.address,
           blockTag: "pending",
         }),
       // if user has specified a gas value, use that
@@ -65,12 +66,12 @@ export async function sendTransaction<wallet extends Wallet>(
         // otherwise estimate the gas
         estimateGas({
           transaction: options.transaction,
-          wallet: options.wallet,
+          account: options.account,
         }),
       resolveParams(options.transaction),
     ]);
 
-  const result = await options.wallet.sendTransaction({
+  const result = await options.account.sendTransaction({
     to: options.transaction.contract.address,
     chainId: Number(getChainIdFromChain(options.transaction.contract.chain)),
     data,

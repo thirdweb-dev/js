@@ -28,12 +28,15 @@ export const coinbaseConfig = (): WalletConfig => {
       return (
         <InjectedConnectUI
           {...props}
-          links={{
-            extension:
-              "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
-            android: "https://play.google.com/store/apps/details?id=org.toshi",
-            ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
+          onGetStarted={() => {
+            // TODO
           }}
+          // links={{
+          //   extension:
+          //     "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
+          //   android: "https://play.google.com/store/apps/details?id=org.toshi",
+          //   ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
+          // }}
         />
       );
     },

@@ -15,7 +15,7 @@ describe("transaction: estimate-gas", () => {
     });
     const estimate = await estimateGas({
       transaction: tx,
-      wallet: { address: TEST_WALLET_A },
+      account: { address: TEST_WALLET_A },
     });
     expect(estimate).toMatchInlineSnapshot(`40504n`);
     // we should have made exactly 2 network requests

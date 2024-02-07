@@ -26,6 +26,7 @@ export type MintToParams = {
  * If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
  * @param options - The transaction options.
  * @returns A promise that resolves to the transaction result.
+ * @extension ERC721
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc721";

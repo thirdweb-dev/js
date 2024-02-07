@@ -17,6 +17,7 @@ type GetBalanceParams = {
  * @param request - The EIP1193 request function.
  * @param params - The parameters for retrieving the balance.
  * @returns A promise that resolves to the balance of the address in wei as bigint.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_getBalance } from "thirdweb/rpc";

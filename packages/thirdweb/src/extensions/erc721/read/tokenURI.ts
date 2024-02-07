@@ -7,6 +7,7 @@ export type TokenUriParams = { tokenId: bigint };
  * Retrieves the URI associated with a specific ERC721 token.
  * @param options - The transaction options.
  * @returns A Promise that resolves to the token URI.
+ * @extension ERC721
  * @example
  * ```ts
  * import { tokenURI } from "thirdweb/extensions/erc721";

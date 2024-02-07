@@ -4,6 +4,7 @@ import { type EIP1193RequestFn, type EIP1474Methods, hexToBigInt } from "viem";
  * Retrieves the current block number from the Ethereum blockchain.
  * @param request - The EIP1193 request function.
  * @returns A promise that resolves to the current block number as a bigint.
+ * @rpc
  * @example
  * ```ts
  * import { getRpcClient, eth_blockNumber } from "thirdweb/rpc";

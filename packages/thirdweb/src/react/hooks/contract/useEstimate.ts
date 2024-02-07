@@ -1,6 +1,6 @@
 import type { AbiFunction } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { useActiveWallet } from "../../providers/wallet-provider.js";
+import { useActiveAccount } from "../../providers/wallet-provider.js";
 import type { Transaction } from "../../../transaction/transaction.js";
 import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
 
@@ -21,10 +21,9 @@ export function useEstimateGas<abiFn extends AbiFunction>(): UseMutationResult<
   Error,
   Transaction<abiFn>
 > {
-  const wallet = useActiveWallet();
+  const account = useActiveAccount();
 
   return useMutation({
-    mutationFn: (transaction) =>
-      estimateGas({ transaction, wallet: wallet ?? undefined }),
+    mutationFn: (transaction) => estimateGas({ transaction, account }),
   });
 }

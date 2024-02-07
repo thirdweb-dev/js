@@ -21,6 +21,7 @@ export type WaitForReceiptOptions<abi extends Abi> = TransactionOrUserOpHash & {
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
  * @param options - The options for waiting for the receipt.
  * @returns A promise that resolves with the transaction receipt.
+ * @transaction
  * @example
  * ```ts
  * import { waitForReceipt } from "thirdweb";

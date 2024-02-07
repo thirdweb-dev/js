@@ -2,23 +2,26 @@ import type { Transaction } from "../transaction.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest } from "viem/utils";
 import type { AbiFunction } from "viem";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 import { eth_estimateGas, getRpcClient } from "../../rpc/index.js";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 
 export type EstimateGasOptions<abiFn extends AbiFunction> = {
   transaction: Transaction<abiFn>;
-  wallet?: Partial<Wallet> | undefined;
+  account?: Partial<Account> | undefined;
 };
 
 /**
  * Estimates the gas required to execute a transaction.
  * @param options - The options for estimating gas.
  * @returns A promise that resolves to the estimated gas as a bigint.
+ * @transaction
  * @example
  * ```ts
  * import { estimateGas } from "thirdweb";
- * const gas = await estimateGas(tx);
+ * const gas = await estimateGas({
+ *  transaction,
+ * });
  * ```
  */
 export async function estimateGas<abiFn extends AbiFunction>(
@@ -31,8 +34,12 @@ export async function estimateGas<abiFn extends AbiFunction>(
     encode(options.transaction),
   ]);
 
-  if (options.wallet && options.wallet.estimateGas) {
-    return options.wallet.estimateGas(options.transaction);
+  if (
+    options.account &&
+    options.account.wallet &&
+    options.account.wallet.estimateGas
+  ) {
+    return options.account.wallet.estimateGas(options.transaction);
   }
 
   return eth_estimateGas(
@@ -41,7 +48,7 @@ export async function estimateGas<abiFn extends AbiFunction>(
       to: options.transaction.contract.address,
       data: encodedData,
       ...gasOverrides,
-      from: options.wallet?.address ?? undefined,
+      from: options.account?.address ?? undefined,
     }),
   );
 }

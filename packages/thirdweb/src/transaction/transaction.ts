@@ -58,6 +58,7 @@ export type Transaction<abiFn extends AbiFunction> = TransactionOptions<
  * Prepares a transaction with the specified options.
  * @param options - The transaction options.
  * @returns The prepared transaction.
+ * @transaction
  * @example
  * ```ts
  * import { prepareTransaction } from "thirdweb";

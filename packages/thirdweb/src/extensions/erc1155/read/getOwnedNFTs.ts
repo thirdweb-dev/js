@@ -4,7 +4,7 @@ import { balanceOfBatch } from "./balanceOfBatch.js";
 import type { Address } from "abitype";
 import type { TxOpts } from "../../../transaction/transaction.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
 
@@ -21,15 +21,16 @@ export type GetOwnedNFTsParams = {
    */
   count?: number;
   /**
-   * The wallet address of the wallet to get the NFTs of.
+   * The address of the wallet to get the NFTs of.
    */
-  wallet: Pick<Wallet, "address">;
+  account: Pick<Account, "address">;
 };
 
 /**
  * Retrieves the owned ERC1155 NFTs for a given wallet address.
  * @param options - The transaction options and parameters.
  * @returns A promise that resolves to an array of ERC1155 NFTs owned by the wallet address, along with the quantity owned.
+ * @extension ERC1155
  * @example
  * ```ts
  * import { getOwnedNFTs } from "thirdweb/extensions/erc1155";
@@ -37,7 +38,7 @@ export type GetOwnedNFTsParams = {
  *  contract,
  *  start: 0,
  *  count: 10,
- *  wallet: { address: "0x123..." },
+ *  account: { address: "0x123..." },
  * });
  * ```
  */
@@ -50,7 +51,7 @@ export async function getOwnedNFTs(
   const owners: Address[] = [];
   const tokenIds: bigint[] = [];
   for (let i = 0n; i < maxId; i++) {
-    owners.push(options.wallet.address);
+    owners.push(options.account.address);
     tokenIds.push(i);
   }
 
@@ -83,7 +84,7 @@ export async function getOwnedNFTs(
 
   return nfts.map((nft, index) => ({
     ...nft,
-    owner: options.wallet.address,
+    owner: options.account.address,
     quantityOwned: ownedBalances[index]?.balance || 0n,
   }));
 }

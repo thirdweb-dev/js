@@ -8,6 +8,7 @@ import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.
+ * @extension
  * @example
  * ```ts
  * import { getActiveClaimCondition } from "thirdweb/extensions/drops";
