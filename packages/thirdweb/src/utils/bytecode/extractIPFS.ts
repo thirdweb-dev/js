@@ -1,5 +1,5 @@
 import { hexToBytes } from "@noble/hashes/utils";
-import { decode } from "cbor-x";
+import { decode } from "cbor-x/decode";
 import { encode } from "bs58";
 
 /**
