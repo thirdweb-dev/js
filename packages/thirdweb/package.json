@@ -56,6 +56,11 @@
       "import": "./dist/esm/utils/index.js",
       "default": "./dist/cjs/utils/index.js"
     },
+    "./contract": {
+      "types": "./dist/types/contract/index.d.ts",
+      "import": "./dist/esm/contract/index.js",
+      "default": "./dist/cjs/contract/index.js"
+    },
     "./wallets/*": {
       "types": "./dist/types/wallets/*.d.ts",
       "import": "./dist/esm/wallets/*.js",
@@ -95,6 +100,9 @@
       ],
       "utils": [
         "./dist/types/utils/index.d.ts"
+      ],
+      "contract": [
+        "./dist/types/contract/index.d.ts"
       ],
       "wallets/*": [
         "./dist/types/wallets/*.d.ts"
