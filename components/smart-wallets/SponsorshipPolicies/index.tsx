@@ -37,6 +37,7 @@ import { fromArrayToList, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { isAddress } from "ethers/lib/utils";
 import { useEffect } from "react";
+import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 
 interface SponsorshipPoliciesProps {
   apiKey: ApiKey;
@@ -389,7 +390,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   </Text>
                 </Box>
 
-                <Switch
+                <GatedSwitch
                   colorScheme="primary"
                   isChecked={!!form.watch("serverVerifier")}
                   onChange={() => {
