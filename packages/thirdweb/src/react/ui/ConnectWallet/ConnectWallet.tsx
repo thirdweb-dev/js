@@ -28,7 +28,15 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 
 export type ConnectWalletProps = {
+  /**
+   * If specified, Wallet will be prompted to switch to this chain after connecting if it is not already connected to this chain.
+   */
   chainId?: bigint | number;
+
+  /**
+   * Array of chain ids that the app supports
+   */
+  chains?: (bigint | number)[];
 
   /**
    * CSS class to apply to the button element
@@ -670,6 +678,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   auth: props.auth,
                   onConnect: props.onConnect,
                   chainId: props.chainId ? BigInt(props.chainId) : undefined,
+                  chains: props.chains?.map(BigInt),
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -748,7 +757,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
-            chainIds={props.networkSelector?.chains || []}
+            chains={props?.chains?.map(BigInt) || []}
           />
         );
       })()}

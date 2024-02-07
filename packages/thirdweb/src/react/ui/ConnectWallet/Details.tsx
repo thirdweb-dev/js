@@ -76,7 +76,7 @@ export const ConnectedWalletDetails: React.FC<{
   displayBalanceToken?: Record<number, string>;
   hideSwitchToPersonalWallet?: boolean;
   hideDisconnect?: boolean;
-  chainIds: number[];
+  chains: bigint[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const activeAccount = useActiveAccount();
@@ -564,8 +564,8 @@ export const ConnectedWalletDetails: React.FC<{
       <NetworkSelectorContent
         chains={
           walletChainId
-            ? [...new Set([Number(walletChainId), ...props.chainIds])]
-            : props.chainIds
+            ? [...new Set([walletChainId, ...props.chains])]
+            : props.chains
         }
         open={true}
         theme={props.theme}

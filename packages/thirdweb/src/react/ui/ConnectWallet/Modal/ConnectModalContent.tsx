@@ -35,7 +35,6 @@ export const ConnectModalContent = (props: {
   onShow: () => void;
   isOpen: boolean;
   onClose: () => void;
-  chainId?: bigint;
 }) => {
   const { screen, setScreen, initialScreen, onHide, onShow, onClose } = props;
   const { wallets, client, dappMetadata } = useThirdwebProviderProps();
@@ -171,13 +170,15 @@ export const ConnectModalContent = (props: {
         // activeWalletConnectionStatus={activeWalletConnectionStatus}
         // setActiveWalletConnectionStatus={setActiveWalletConnectionStatus}
         // connect={walletConfig.connect}
+
         createInstance={() => {
           return walletConfig.create({
             client,
             dappMetadata,
           });
         }}
-        chainId={props.chainId}
+        chains={modalConfig.chains}
+        chainId={modalConfig.chainId}
       />
     );
   };
@@ -221,7 +222,7 @@ export const ConnectModalContent = (props: {
  * @internal
  */
 export const ConnectModal = () => {
-  const { theme, modalSize, chainId } = useContext(ModalConfigCtx);
+  const { theme, modalSize } = useContext(ModalConfigCtx);
 
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
@@ -333,7 +334,6 @@ export const ConnectModal = () => {
           onShow={onShow}
           isOpen={isWalletModalOpen}
           onClose={closeModal}
-          chainId={chainId}
         />
       </Modal>
     </CustomThemeProvider>

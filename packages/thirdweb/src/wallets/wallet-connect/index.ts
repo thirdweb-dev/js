@@ -51,9 +51,15 @@ const storageKeys = {
   lastUsedChainId: "tw.wc.lastUsedChainId",
 };
 
-const isNewChainsStale = false; // do we need to make this configurable?
+const isNewChainsStale = true;
 const defaultShowQrModal = true;
-const defaultChainId = 1;
+const defaultChainId = /* @__PURE__ */ BigInt(1);
+
+type SavedConnectParams = {
+  optionalChains?: string[];
+  chainId: string;
+  pairingTopic?: string;
+};
 
 /**
  * Connect to a wallet using WalletConnect protocol.
@@ -110,11 +116,19 @@ export class WalletConnect implements Wallet {
    * @returns A Promise that resolves to the connected wallet address.
    */
   async autoConnect(): Promise<Account> {
-    const savedOptions = await getSavedConnectParamsFromStorage(
-      this.metadata.id,
-    );
+    const savedConnectParams: SavedConnectParams | null =
+      await getSavedConnectParamsFromStorage(this.metadata.id);
 
-    const provider = await this.initProvider(true, savedOptions || undefined);
+    const provider = await this.initProvider(
+      true,
+      savedConnectParams
+        ? {
+            chainId: BigInt(savedConnectParams.chainId),
+            pairingTopic: savedConnectParams.pairingTopic,
+            optionalChains: savedConnectParams.optionalChains?.map(BigInt),
+          }
+        : undefined,
+    );
 
     const address = provider.accounts[0];
 
@@ -176,8 +190,12 @@ export class WalletConnect implements Wallet {
    */
   async connect(options?: WalletConnectConnectionOptions): Promise<Account> {
     const provider = await this.initProvider(false, options);
-    const isStale = await this.isChainsStale(provider.chainId);
-    const targetChainId = Number(options?.chainId || defaultChainId);
+
+    const isChainsState = await this.isChainsStale(
+      [provider.chainId, ...(options?.optionalChains || [])].map(BigInt),
+    );
+
+    const targetChainId = BigInt(options?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
@@ -189,9 +207,6 @@ export class WalletConnect implements Wallet {
     if (onDisplayUri || onSessionRequestSent) {
       if (onDisplayUri) {
         provider.events.addListener("display_uri", onDisplayUri);
-        provider.events.addListener("disconnect", () => {
-          provider.events.removeListener("display_uri", onDisplayUri);
-        });
       }
 
       if (onSessionRequestSent) {
@@ -206,12 +221,12 @@ export class WalletConnect implements Wallet {
     }
 
     // If there no active session, or the chain is state, force connect.
-    if (!provider.session || isStale) {
+    if (!provider.session || isChainsState) {
       await provider.connect({
         pairingTopic: options?.pairingTopic,
-        chains: [targetChainId],
+        chains: [Number(targetChainId)],
         rpcMap: {
-          [targetChainId]: rpc,
+          [targetChainId.toString()]: rpc,
         },
       });
 
@@ -228,7 +243,17 @@ export class WalletConnect implements Wallet {
     this.chainId = normalizeChainId(provider.chainId);
 
     if (options) {
-      saveConnectParamsToStorage(this.metadata.id, options);
+      const savedParams: SavedConnectParams = {
+        optionalChains: options.optionalChains?.map(String),
+        chainId: String(options.chainId),
+        pairingTopic: options.pairingTopic,
+      };
+
+      saveConnectParamsToStorage(this.metadata.id, savedParams);
+    }
+
+    if (options?.onDisplayUri) {
+      provider.events.removeListener("display_uri", options.onDisplayUri);
     }
 
     return this.onConnect(address);
@@ -245,8 +270,8 @@ export class WalletConnect implements Wallet {
     const provider = this.provider;
     if (provider) {
       this.onDisconnect();
-      await provider.disconnect();
       deleteConnectParamsFromStorage(this.metadata.id);
+      provider.disconnect();
     }
   }
 
@@ -260,11 +285,11 @@ export class WalletConnect implements Wallet {
    */
   async switchChain(chainId: number | bigint) {
     const provider = this.assertProvider();
-    const chainIdNum = Number(chainId);
+    const chainIdBigInt = BigInt(chainId);
     try {
-      const namespaceChains = this.getNamespaceChainsIds();
+      const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
       const namespaceMethods = this.getNamespaceMethods();
-      const isChainApproved = namespaceChains.includes(chainIdNum);
+      const isChainApproved = namespaceChains.includes(chainIdBigInt);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
         const chain = await getChainDataForChainId(BigInt(chainId));
@@ -284,8 +309,10 @@ export class WalletConnect implements Wallet {
             },
           ],
         });
-        const requestedChains = await this.getRequestedChainsIds();
-        requestedChains.push(chainIdNum);
+        const requestedChains = (await this.getRequestedChainsIds()).map(
+          BigInt,
+        );
+        requestedChains.push(chainIdBigInt);
         this.setRequestedChainsIds(requestedChains);
       }
       await provider.request({
@@ -315,7 +342,7 @@ export class WalletConnect implements Wallet {
     isAutoConnect: boolean,
     connectionOptions?: WalletConnectConnectionOptions,
   ) {
-    const targetChainId = Number(connectionOptions?.chainId || 1);
+    const targetChainId = BigInt(connectionOptions?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
@@ -330,8 +357,7 @@ export class WalletConnect implements Wallet {
       projectId: this.options?.projectId || defaultWCProjectId,
       optionalMethods: OPTIONAL_METHODS,
       optionalEvents: OPTIONAL_EVENTS,
-      chains: [targetChainId],
-      // optionalChains: [],
+      optionalChains: [Number(targetChainId)],
       metadata: {
         name: this.options.dappMetadata?.name || defaultDappMetadata.name,
         description:
@@ -343,17 +369,23 @@ export class WalletConnect implements Wallet {
         ],
       },
       rpcMap: {
-        [targetChainId]: rpc,
+        [targetChainId.toString()]: rpc,
       },
       qrModalOptions: connectionOptions?.qrModalOptions,
+      disableProviderPing: true,
     });
 
+    provider.events.setMaxListeners(Infinity);
     this.provider = provider;
 
-    // const isStale = await this.#isChainsStale(Number(this.chainId));
-    // isStale &&
     if (!isAutoConnect) {
-      if (provider.session) {
+      const chains = [
+        targetChainId,
+        ...(connectionOptions?.optionalChains || []),
+      ].map(BigInt);
+
+      const isStale = await this.isChainsStale(chains);
+      if (isStale && provider.session) {
         await provider.disconnect();
       }
     }
@@ -416,9 +448,9 @@ export class WalletConnect implements Wallet {
    * Get the last requested chains from the storage.
    * @internal
    */
-  private async getRequestedChainsIds(): Promise<number[]> {
+  private async getRequestedChainsIds(): Promise<bigint[]> {
     const data = await walletStorage.get(storageKeys.requestedChains);
-    return data ? JSON.parse(data) : [];
+    return (data ? JSON.parse(data) : []).map(BigInt);
   }
 
   /**
@@ -442,44 +474,51 @@ export class WalletConnect implements Wallet {
    * @param connectToChainId
    * @internal
    */
-  private async isChainsStale(connectToChainId: number) {
+  private async isChainsStale(chains: bigint[]) {
     const namespaceMethods = this.getNamespaceMethods();
 
+    // if chain adding method is available, then chains are not stale
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       return false;
     }
 
+    // if new chains are considered stale, then return true
     if (!isNewChainsStale) {
       return false;
     }
 
     const requestedChains = await this.getRequestedChainsIds();
-    const connectorChains = [connectToChainId];
-    const namespaceChains = this.getNamespaceChainsIds();
+    const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
 
+    // if any of the requested chains are not in the namespace chains, then they are stale
     if (
       namespaceChains.length &&
-      !namespaceChains.some((id) => connectorChains.includes(id))
+      !namespaceChains.some((id) => chains.includes(id))
     ) {
       return false;
     }
 
-    return !connectorChains.every((id) => requestedChains.includes(Number(id)));
+    // if chain was requested earlier, then they are not stale
+    return !chains.every((id) => requestedChains.includes(id));
   }
 
   /**
    * Set the requested chains to the storage.
    * @internal
    */
-  private setRequestedChainsIds(chains: number[]) {
-    walletStorage.set(storageKeys.requestedChains, JSON.stringify(chains));
+  private setRequestedChainsIds(chains: bigint[]) {
+    walletStorage.set(
+      storageKeys.requestedChains,
+      JSON.stringify(chains.map(Number)),
+    );
   }
 
   /**
    * Disconnect the wallet and clear the session and perform cleanup.
+   * Note: must use arrow function to preserve `this` when it's passed down as a callback to the provider.
    * @internal
    */
-  private onDisconnect() {
+  private onDisconnect = () => {
     this.setRequestedChainsIds([]);
     walletStorage.remove(storageKeys.lastUsedChainId);
 
@@ -489,14 +528,15 @@ export class WalletConnect implements Wallet {
       provider.removeListener("disconnect", this.onDisconnect);
       provider.removeListener("session_delete", this.onDisconnect);
     }
-  }
+  };
 
   /**
    * Update the `chainId` on chainChanged event.
+   * Note: must use arrow function to preserve `this` when it's passed down as a callback to the provider.
    * @internal
    */
-  private onChainChanged(chainId: number | string) {
+  private onChainChanged = (chainId: number | string) => {
     this.chainId = normalizeChainId(chainId);
     walletStorage.set(storageKeys.lastUsedChainId, String(chainId));
-  }
+  };
 }

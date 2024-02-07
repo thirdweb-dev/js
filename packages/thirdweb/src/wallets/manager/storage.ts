@@ -29,9 +29,10 @@ const CONNECT_PARAMS_MAP_KEY = "tw:connected-wallet-params";
  * @param params
  * @internal
  */
-export async function saveConnectParamsToStorage<
-  T extends WalletConnectionOptions,
->(walletId: string, params: T) {
+export async function saveConnectParamsToStorage<T extends object>(
+  walletId: string,
+  params: T,
+) {
   // params must be stringifiable
   if (!isStringifiable(params)) {
     console.debug("params", params);
@@ -89,9 +90,9 @@ export async function deleteConnectParamsFromStorage(walletId: string) {
  * Get the saved connection params from storage for given wallet id
  * @internal
  */
-export async function getSavedConnectParamsFromStorage<
-  T extends WalletConnectionOptions,
->(walletId: string): Promise<T | null> {
+export async function getSavedConnectParamsFromStorage<T extends object>(
+  walletId: string,
+): Promise<T | null> {
   const valueStr = await walletStorage.get(CONNECT_PARAMS_MAP_KEY);
 
   if (!valueStr) {
@@ -102,7 +103,7 @@ export async function getSavedConnectParamsFromStorage<
     const value = JSON.parse(valueStr);
 
     if (value && value[walletId]) {
-      return value[walletId] as T;
+      return value[walletId];
     }
 
     return null;

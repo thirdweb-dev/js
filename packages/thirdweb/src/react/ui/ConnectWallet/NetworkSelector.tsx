@@ -96,16 +96,16 @@ export type NetworkSelectorProps = {
    */
   open: boolean;
 
-  chains?: number[];
+  chains?: (number | bigint)[];
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
-  popularChains?: number[];
+  popularChains?: (number | bigint)[];
   /**
    * Array of chains to be displayed under "Recent" section
    */
-  recentChains?: number[];
+  recentChains?: (number | bigint)[];
   /**
    * Override how the chain button is rendered in the Modal
    */

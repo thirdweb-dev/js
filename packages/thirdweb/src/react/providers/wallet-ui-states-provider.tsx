@@ -23,6 +23,7 @@ export type ModalConfig = {
   isEmbed?: boolean;
   onConnect?: () => void;
   chainId?: bigint;
+  chains?: bigint[];
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -61,6 +62,7 @@ export const WalletUIStatesProvider = (
     };
     onConnect?: () => void;
     chainId?: bigint;
+    chains?: bigint[];
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -80,6 +82,7 @@ export const WalletUIStatesProvider = (
     auth: props.auth,
     onConnect: props.onConnect,
     chainId: props.chainId,
+    chains: props.chains,
   });
 
   return (
@@ -235,6 +238,9 @@ export type ModalConfigOptions = {
    * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` instead
    */
   onConnect?: () => void;
+
+  chainId?: bigint;
+  chains?: bigint[];
 };
 
 /**

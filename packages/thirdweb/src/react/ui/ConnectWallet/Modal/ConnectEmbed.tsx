@@ -35,6 +35,11 @@ export type ConnectEmbedProps = {
   chainId?: number | bigint;
 
   /**
+   * List of all chains that the app supports
+   */
+  chains?: bigint[];
+
+  /**
    * Class name to be added to the root element of ConnectEmbed
    */
   className?: string;
@@ -360,7 +365,6 @@ const ConnectEmbedContent = (
         onShow={() => {
           // no op
         }}
-        chainId={props.chainId ? BigInt(props.chainId) : undefined}
       />
     );
   }
@@ -375,6 +379,7 @@ const ConnectEmbedContent = (
     auth: props.auth,
     onConnect: props.onConnect,
     chainId: props.chainId ? BigInt(props.chainId) : undefined,
+    chains: props.chains,
   };
 
   return (

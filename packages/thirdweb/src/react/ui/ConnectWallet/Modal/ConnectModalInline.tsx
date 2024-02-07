@@ -35,6 +35,11 @@ export type ConnectModalInlineProps = {
    */
   chainId?: bigint;
 
+  /**
+   * List of all chains that the app supports
+   */
+  chains?: (bigint | number)[];
+
   className?: string;
 
   theme?: "dark" | "light" | Theme;
@@ -108,7 +113,6 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
         onShow={() => {
           // no op
         }}
-        chainId={props.chainId}
       />
 
       {/* close icon */}
@@ -135,6 +139,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
     welcomeScreen: props.welcomeScreen,
     titleIconUrl: props.modalTitleIconUrl,
     chainId: props.chainId,
+    chains: props.chains?.map(BigInt),
   };
 
   return (
