@@ -1,10 +1,10 @@
-import { type Abi } from "abitype";
-import { type ThirdwebContract } from "../index.js";
+import type { Abi } from "abitype";
+import type { ThirdwebContract } from "../index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getByteCode } from "./get-bytecode.js";
-import { extractIPFSUri } from "../../utils/index.js";
 import { download } from "../../storage/download.js";
+import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
