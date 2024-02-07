@@ -22,7 +22,7 @@ describe("contract: resolve-abi", () => {
     expect(abi1).toMatchObject(USDC_ABI);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy).toHaveBeenCalledWith(
-      `https://contract.thirdweb.com/metadata/1/${USDC_CONTRACT_CLONE.address}`,
+      `https://contract.thirdweb.com/abi/1/${USDC_CONTRACT_CLONE.address}`,
       expect.any(Object),
     );
     const abi2 = await resolveContractAbi(USDC_CONTRACT_CLONE);

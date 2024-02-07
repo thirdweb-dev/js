@@ -64,6 +64,7 @@ export async function readTransaction<const abiFn extends AbiFunction>(
     encode(tx),
     resolveAbiFunction(tx),
   ]);
+
   if (!resolvedAbiFunction) {
     throw new Error("Unable to resolve ABI function");
   }

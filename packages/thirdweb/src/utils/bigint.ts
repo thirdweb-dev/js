@@ -3,7 +3,10 @@
  * @param a - The first BigInt value.
  * @param b - The second BigInt value.
  * @returns The smaller of the two BigInt values.
- * @internal
+ * @example
+ * ```ts
+ * min(1n, 2n)
+ * // 1n
  */
 export function min(a: bigint, b: bigint) {
   return a < b ? a : b;
@@ -14,7 +17,10 @@ export function min(a: bigint, b: bigint) {
  * @param a - The first BigInt value.
  * @param b - The second BigInt value.
  * @returns The larger of the two BigInt values.
- * @internal
+ * @example
+ * ```ts
+ * max(1n, 2n)
+ * // 2n
  */
 export function max(a: bigint, b: bigint) {
   return a > b ? a : b;

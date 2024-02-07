@@ -57,3 +57,13 @@ export {
 
 // types
 export type { NFT } from "./utils/nft/parseNft.js";
+
+// units
+export {
+  formatEther,
+  formatGwei,
+  formatUnits,
+  parseEther,
+  parseGwei,
+  parseUnits,
+} from "./utils/units.js";

@@ -3,7 +3,7 @@ import type { ThirdwebContract } from "../index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { getClientFetch } from "../../utils/fetch.js";
 
-const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
+const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/abi";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -47,7 +47,7 @@ export function resolveContractAbi<abi extends Abi>(
     const json = await response.json();
     // abi is in json.output.abi
 
-    return json.output.abi as abi;
+    return json as abi;
   })();
   ABI_RESOLUTION_CACHE.set(contract, prom);
   return prom;

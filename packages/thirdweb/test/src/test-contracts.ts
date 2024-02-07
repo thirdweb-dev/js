@@ -27,13 +27,13 @@ export const DOODLES_ADDRESS = "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e";
 
 export const DOODLES_CONTRACT = getContract({
   client: CLIENT_ID_CLIENT,
-  address: USDC_CONTRACT_ADDRESS,
+  address: DOODLES_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
 });
 
 export const DOODLES_CONTRACT_WITH_ABI = getContract({
   client: CLIENT_ID_CLIENT,
-  address: USDC_CONTRACT_ADDRESS,
+  address: DOODLES_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
   abi: USDC_ABI,
 });

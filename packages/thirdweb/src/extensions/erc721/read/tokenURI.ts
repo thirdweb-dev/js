@@ -17,8 +17,7 @@ export type TokenUriParams = { tokenId: bigint };
 export function tokenURI(options: TxOpts<TokenUriParams>): Promise<string> {
   return readContract({
     ...options,
-    method:
-      "function tokenURI(uint256 tokenId) external view returns (string memory)",
+    method: "function tokenURI(uint256 tokenId) returns (string memory)",
     params: [options.tokenId],
   });
 }

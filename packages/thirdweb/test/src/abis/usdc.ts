@@ -22,7 +22,6 @@ export const USDC_ABI = [
       },
     ],
     name: "Approval",
-    outputs: [],
     type: "event",
   },
   {
@@ -42,7 +41,6 @@ export const USDC_ABI = [
       },
     ],
     name: "AuthorizationCanceled",
-    outputs: [],
     type: "event",
   },
   {
@@ -62,7 +60,6 @@ export const USDC_ABI = [
       },
     ],
     name: "AuthorizationUsed",
-    outputs: [],
     type: "event",
   },
   {
@@ -76,7 +73,6 @@ export const USDC_ABI = [
       },
     ],
     name: "Blacklisted",
-    outputs: [],
     type: "event",
   },
   {
@@ -90,7 +86,6 @@ export const USDC_ABI = [
       },
     ],
     name: "BlacklisterChanged",
-    outputs: [],
     type: "event",
   },
   {
@@ -110,7 +105,6 @@ export const USDC_ABI = [
       },
     ],
     name: "Burn",
-    outputs: [],
     type: "event",
   },
   {
@@ -124,7 +118,6 @@ export const USDC_ABI = [
       },
     ],
     name: "MasterMinterChanged",
-    outputs: [],
     type: "event",
   },
   {
@@ -136,12 +129,7 @@ export const USDC_ABI = [
         name: "minter",
         type: "address",
       },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
       {
         indexed: false,
         internalType: "uint256",
@@ -150,7 +138,6 @@ export const USDC_ABI = [
       },
     ],
     name: "Mint",
-    outputs: [],
     type: "event",
   },
   {
@@ -170,7 +157,6 @@ export const USDC_ABI = [
       },
     ],
     name: "MinterConfigured",
-    outputs: [],
     type: "event",
   },
   {
@@ -184,7 +170,6 @@ export const USDC_ABI = [
       },
     ],
     name: "MinterRemoved",
-    outputs: [],
     type: "event",
   },
   {
@@ -204,16 +189,9 @@ export const USDC_ABI = [
       },
     ],
     name: "OwnershipTransferred",
-    outputs: [],
     type: "event",
   },
-  {
-    anonymous: false,
-    inputs: [],
-    name: "Pause",
-    outputs: [],
-    type: "event",
-  },
+  { anonymous: false, inputs: [], name: "Pause", type: "event" },
   {
     anonymous: false,
     inputs: [
@@ -225,7 +203,6 @@ export const USDC_ABI = [
       },
     ],
     name: "PauserChanged",
-    outputs: [],
     type: "event",
   },
   {
@@ -239,24 +216,13 @@ export const USDC_ABI = [
       },
     ],
     name: "RescuerChanged",
-    outputs: [],
     type: "event",
   },
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
       {
         indexed: false,
         internalType: "uint256",
@@ -265,7 +231,6 @@ export const USDC_ABI = [
       },
     ],
     name: "Transfer",
-    outputs: [],
     type: "event",
   },
   {
@@ -279,180 +244,83 @@ export const USDC_ABI = [
       },
     ],
     name: "UnBlacklisted",
-    outputs: [],
     type: "event",
   },
-  {
-    anonymous: false,
-    inputs: [],
-    name: "Unpause",
-    outputs: [],
-    type: "event",
-  },
+  { anonymous: false, inputs: [], name: "Unpause", type: "event" },
   {
     inputs: [],
     name: "CANCEL_AUTHORIZATION_TYPEHASH",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "DOMAIN_SEPARATOR",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "PERMIT_TYPEHASH",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "TRANSFER_WITH_AUTHORIZATION_TYPEHASH",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
     ],
     name: "allowance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
     ],
     name: "approve",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "authorizer",
-        type: "address",
-      },
-      {
-        internalType: "bytes32",
-        name: "nonce",
-        type: "bytes32",
-      },
+      { internalType: "address", name: "authorizer", type: "address" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
     ],
     name: "authorizationState",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
     name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_account",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "_account", type: "address" }],
     name: "blacklist",
     outputs: [],
     stateMutability: "nonpayable",
@@ -461,24 +329,12 @@ export const USDC_ABI = [
   {
     inputs: [],
     name: "blacklister",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }],
     name: "burn",
     outputs: [],
     stateMutability: "nonpayable",
@@ -486,31 +342,11 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "authorizer",
-        type: "address",
-      },
-      {
-        internalType: "bytes32",
-        name: "nonce",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint8",
-        name: "v",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32",
-        name: "r",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "s",
-        type: "bytes32",
-      },
+      { internalType: "address", name: "authorizer", type: "address" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "uint8", name: "v", type: "uint8" },
+      { internalType: "bytes32", name: "r", type: "bytes32" },
+      { internalType: "bytes32", name: "s", type: "bytes32" },
     ],
     name: "cancelAuthorization",
     outputs: [],
@@ -519,144 +355,69 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "minter",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "minterAllowedAmount",
-        type: "uint256",
-      },
+      { internalType: "address", name: "authorizer", type: "address" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "bytes", name: "signature", type: "bytes" },
+    ],
+    name: "cancelAuthorization",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "minter", type: "address" },
+      { internalType: "uint256", name: "minterAllowedAmount", type: "uint256" },
     ],
     name: "configureMinter",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
     name: "currency",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "decimals",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "decrement",
-        type: "uint256",
-      },
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "decrement", type: "uint256" },
     ],
     name: "decreaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "increment",
-        type: "uint256",
-      },
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "increment", type: "uint256" },
     ],
     name: "increaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "string",
-        name: "tokenName",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "tokenSymbol",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "tokenCurrency",
-        type: "string",
-      },
-      {
-        internalType: "uint8",
-        name: "tokenDecimals",
-        type: "uint8",
-      },
-      {
-        internalType: "address",
-        name: "newMasterMinter",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "newPauser",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "newBlacklister",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
+      { internalType: "string", name: "tokenName", type: "string" },
+      { internalType: "string", name: "tokenSymbol", type: "string" },
+      { internalType: "string", name: "tokenCurrency", type: "string" },
+      { internalType: "uint8", name: "tokenDecimals", type: "uint8" },
+      { internalType: "address", name: "newMasterMinter", type: "address" },
+      { internalType: "address", name: "newPauser", type: "address" },
+      { internalType: "address", name: "newBlacklister", type: "address" },
+      { internalType: "address", name: "newOwner", type: "address" },
     ],
     name: "initialize",
     outputs: [],
@@ -664,13 +425,7 @@ export const USDC_ABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "newName",
-        type: "string",
-      },
-    ],
+    inputs: [{ internalType: "string", name: "newName", type: "string" }],
     name: "initializeV2",
     outputs: [],
     stateMutability: "nonpayable",
@@ -678,11 +433,7 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "lostAndFound",
-        type: "address",
-      },
+      { internalType: "address", name: "lostAndFound", type: "address" },
     ],
     name: "initializeV2_1",
     outputs: [],
@@ -692,139 +443,73 @@ export const USDC_ABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_account",
-        type: "address",
+        internalType: "address[]",
+        name: "accountsToBlacklist",
+        type: "address[]",
       },
+      { internalType: "string", name: "newSymbol", type: "string" },
     ],
+    name: "initializeV2_2",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_account", type: "address" }],
     name: "isBlacklisted",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
     name: "isMinter",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "masterMinter",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
+      { internalType: "address", name: "_to", type: "address" },
+      { internalType: "uint256", name: "_amount", type: "uint256" },
     ],
     name: "mint",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "minter",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "minter", type: "address" }],
     name: "minterAllowance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "owner", type: "address" }],
     name: "nonces",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -838,66 +523,24 @@ export const USDC_ABI = [
   {
     inputs: [],
     name: "paused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "pauser",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
-      {
-        internalType: "uint8",
-        name: "v",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32",
-        name: "r",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "s",
-        type: "bytes32",
-      },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "deadline", type: "uint256" },
+      { internalType: "bytes", name: "signature", type: "bytes" },
     ],
     name: "permit",
     outputs: [],
@@ -906,51 +549,28 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "validAfter",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "validBefore",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32",
-        name: "nonce",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint8",
-        name: "v",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32",
-        name: "r",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "s",
-        type: "bytes32",
-      },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "deadline", type: "uint256" },
+      { internalType: "uint8", name: "v", type: "uint8" },
+      { internalType: "bytes32", name: "r", type: "bytes32" },
+      { internalType: "bytes32", name: "s", type: "bytes32" },
+    ],
+    name: "permit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "validAfter", type: "uint256" },
+      { internalType: "uint256", name: "validBefore", type: "uint256" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "bytes", name: "signature", type: "bytes" },
     ],
     name: "receiveWithAuthorization",
     outputs: [],
@@ -959,20 +579,25 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "minter",
-        type: "address",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "validAfter", type: "uint256" },
+      { internalType: "uint256", name: "validBefore", type: "uint256" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "uint8", name: "v", type: "uint8" },
+      { internalType: "bytes32", name: "r", type: "bytes32" },
+      { internalType: "bytes32", name: "s", type: "bytes32" },
     ],
+    name: "receiveWithAuthorization",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "minter", type: "address" }],
     name: "removeMinter",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -983,16 +608,8 @@ export const USDC_ABI = [
         name: "tokenContract",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
     ],
     name: "rescueERC20",
     outputs: [],
@@ -1002,103 +619,47 @@ export const USDC_ABI = [
   {
     inputs: [],
     name: "rescuer",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "symbol",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
     ],
     name: "transfer",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
     ],
     name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1106,51 +667,13 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "validAfter",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "validBefore",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32",
-        name: "nonce",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint8",
-        name: "v",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32",
-        name: "r",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "s",
-        type: "bytes32",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "validAfter", type: "uint256" },
+      { internalType: "uint256", name: "validBefore", type: "uint256" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "bytes", name: "signature", type: "bytes" },
     ],
     name: "transferWithAuthorization",
     outputs: [],
@@ -1159,12 +682,23 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_account",
-        type: "address",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+      { internalType: "uint256", name: "validAfter", type: "uint256" },
+      { internalType: "uint256", name: "validBefore", type: "uint256" },
+      { internalType: "bytes32", name: "nonce", type: "bytes32" },
+      { internalType: "uint8", name: "v", type: "uint8" },
+      { internalType: "bytes32", name: "r", type: "bytes32" },
+      { internalType: "bytes32", name: "s", type: "bytes32" },
     ],
+    name: "transferWithAuthorization",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_account", type: "address" }],
     name: "unBlacklist",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1179,11 +713,7 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_newBlacklister",
-        type: "address",
-      },
+      { internalType: "address", name: "_newBlacklister", type: "address" },
     ],
     name: "updateBlacklister",
     outputs: [],
@@ -1192,11 +722,7 @@ export const USDC_ABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_newMasterMinter",
-        type: "address",
-      },
+      { internalType: "address", name: "_newMasterMinter", type: "address" },
     ],
     name: "updateMasterMinter",
     outputs: [],
@@ -1204,26 +730,14 @@ export const USDC_ABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_newPauser",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "_newPauser", type: "address" }],
     name: "updatePauser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newRescuer",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "newRescuer", type: "address" }],
     name: "updateRescuer",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1232,14 +746,8 @@ export const USDC_ABI = [
   {
     inputs: [],
     name: "version",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "pure",
     type: "function",
   },
 ] as const;
