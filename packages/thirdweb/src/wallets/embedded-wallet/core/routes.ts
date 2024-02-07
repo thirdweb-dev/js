@@ -10,7 +10,7 @@ export const ROUTE_FETCH_USER = () => `${getBaseUrl()}/v2/user/me`;
  * @internal
  */
 export const ROUTE_FETCH_USER_WALLETS = () =>
-  `${getBaseUrl()}/v2/user/wallet-accounts`;
+  `${getBaseUrl()}/v2/user/me/wallet-accounts`;
 
 /**
  * @internal
