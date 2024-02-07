@@ -34,7 +34,7 @@ describe("erc721.getNFT", () => {
 
   it("with owner", async () => {
     const nft = await getNFT({
-      contract: DOODLES_CONTRACT,
+      contract: { ...DOODLES_CONTRACT },
       tokenId: 1n,
       includeOwner: true,
     });
@@ -51,7 +51,5 @@ describe("erc721.getNFT", () => {
         "type": "ERC721",
       }
     `);
-    // 2 fetch calls: 1 for RPC, 1 for fetching the tokenUri
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 });

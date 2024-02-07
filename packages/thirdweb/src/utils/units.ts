@@ -1,11 +1,13 @@
 const etherUnits = {
   gwei: 9,
   wei: 18,
-};
+} as const;
 const gweiUnits = {
   ether: -9,
   wei: 9,
-};
+} as const;
+
+// const preparedRegex = new RegExp(/(0+)$/);
 
 /**
  * Formats a bigint value into a string representation with the specified number of decimal places.
@@ -18,25 +20,36 @@ const gweiUnits = {
  * // '420'
  * ```
  */
-export function formatUnits(value: bigint, decimals: number) {
-  let display = value.toString();
+export function formatUnits(value: bigint, decimals: number): string {
+  // Convert to string once and handle negativity.
+  const stringValue = value.toString();
+  const prefix = stringValue[0] === "-" ? "-" : "";
+  // Abusing that string "-" is truthy
+  const absStringValue = prefix ? stringValue.slice(1) : stringValue;
 
-  const negative = display.startsWith("-");
-  if (negative) {
-    display = display.slice(1);
+  // Ensure we have enough digits for the fractional part.
+  const paddedValue = absStringValue.padStart(decimals + 1, "0");
+  const splitIndex = paddedValue.length - decimals;
+
+  // Extract integer and fraction parts directly.
+  const integerPart = paddedValue.slice(0, splitIndex) || "0";
+  let fractionPart = paddedValue.slice(splitIndex);
+
+  // Manually trim trailing zeros from the fraction part.
+  for (let i = fractionPart.length - 1; i >= 0; i--) {
+    if (fractionPart[i] !== "0") {
+      fractionPart = fractionPart.slice(0, i + 1);
+      break;
+    }
+    // check if the next digit is a zero also
+    // If all zeros, make fraction part empty
+    if (i === 0) {
+      fractionPart = "";
+    }
   }
 
-  display = display.padStart(decimals, "0");
-
-  // eslint-disable-next-line prefer-const
-  let [integer, fraction] = [
-    display.slice(0, display.length - decimals),
-    display.slice(display.length - decimals),
-  ];
-  fraction = fraction.replace(/(0+)$/, "");
-  return `${negative ? "-" : ""}${integer || "0"}${
-    fraction ? `.${fraction}` : ""
-  }`;
+  // Construct and return the formatted string.
+  return `${prefix}${integerPart}${fractionPart ? `.${fractionPart}` : ""}`;
 }
 
 /**
@@ -80,51 +93,40 @@ export function formatGwei(wei: bigint, unit: "wei" = "wei") {
  * // 420000000000n
  * ```
  */
-export function parseUnits(value: string, decimals: number) {
-  let [integer, fraction = "0"] = value.split(".") as [
-    string,
-    string | undefined,
-  ];
-
-  const negative = integer.startsWith("-");
-  if (negative) {
-    integer = integer.slice(1);
+export function parseUnits(value: string, decimals: number): bigint {
+  let [integerPart, fractionPart = ""] = value.split(".") as [string, string];
+  const prefix = integerPart[0] === "-" ? "-" : "";
+  // Once again, abusing that string "-" is truthy
+  if (prefix) {
+    integerPart = integerPart.slice(1);
   }
 
-  // trim leading zeros.
-  fraction = fraction.replace(/(0+)$/, "");
+  // Ensure the fraction part is not longer than necessary.
+  fractionPart = fractionPart.substring(0, decimals).padEnd(decimals, "0");
 
-  // round off if the fraction is larger than the number of decimals.
-  if (decimals === 0) {
-    if (Math.round(Number(`.${fraction}`)) === 1) {
-      integer = `${BigInt(integer) + 1n}`;
-    }
-    fraction = "";
-  } else if (fraction.length > decimals) {
-    const [left, unit, right] = [
-      fraction.slice(0, decimals - 1),
-      fraction.slice(decimals - 1, decimals),
-      fraction.slice(decimals),
-    ];
-
-    const rounded = Math.round(Number(`${unit}.${right}`));
-    if (rounded > 9) {
-      fraction = `${BigInt(left) + BigInt(1)}0`.padStart(left.length + 1, "0");
+  // Handle rounding when fractionPart is longer than decimals.
+  if (decimals > 0 && fractionPart.length > decimals) {
+    const roundingPart = fractionPart[decimals];
+    if (roundingPart && parseInt(roundingPart, 10) >= 5) {
+      // Add 1 to the last digit of the needed fraction part and handle carry.
+      const roundedFraction = (
+        BigInt(fractionPart.substring(0, decimals)) + 1n
+      ).toString();
+      if (roundedFraction.length > decimals) {
+        // Handle carry to the integer part.
+        integerPart = (BigInt(integerPart) + 1n).toString();
+        fractionPart = roundedFraction.substring(1);
+      } else {
+        fractionPart = roundedFraction;
+      }
     } else {
-      fraction = `${left}${rounded}`;
+      // No rounding needed, just trim the fraction part.
+      fractionPart = fractionPart.substring(0, decimals);
     }
-
-    if (fraction.length > decimals) {
-      fraction = fraction.slice(1);
-      integer = `${BigInt(integer) + 1n}`;
-    }
-
-    fraction = fraction.slice(0, decimals);
-  } else {
-    fraction = fraction.padEnd(decimals, "0");
   }
 
-  return BigInt(`${negative ? "-" : ""}${integer}${fraction}`);
+  // Convert to BigInt. Assuming here that the decimal part is effectively "moved" to the integer part by padding with zeros.
+  return BigInt(`${prefix}${integerPart}${fractionPart.padEnd(decimals, "0")}`);
 }
 
 /**

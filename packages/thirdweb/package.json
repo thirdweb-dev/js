@@ -172,6 +172,7 @@
     }
   },
   "scripts": {
+    "bench": "vitest bench",
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
