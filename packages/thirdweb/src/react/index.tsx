@@ -22,7 +22,6 @@ export {
 // contract related
 export {
   useReadContract,
-  createReadHook,
   // deprecated, use useReadContract instead
   useContractRead,
 } from "./hooks/contract/useRead.js";
@@ -33,3 +32,6 @@ export { useContractEvents } from "./hooks/contract/useContractEvents.js";
 
 // rpc related
 export { useBlockNumber } from "./hooks/rpc/useBlockNumber.js";
+
+// utils
+export { createContractQuery } from "./utils/createQuery.js";
