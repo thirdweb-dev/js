@@ -35,5 +35,9 @@ export function getContract<const abi extends Abi = []>(
   return options;
 }
 
-export { resolveContractAbi } from "./actions/resolve-abi.js";
+export {
+  resolveContractAbi,
+  resolveAbiFromBytecode,
+  resolveAbiFromContractApi,
+} from "./actions/resolve-abi.js";
 export { getByteCode } from "./actions/get-bytecode.js";
