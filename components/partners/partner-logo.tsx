@@ -74,6 +74,18 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/courtyard.png"),
     filter: "brightness(0) invert(1)",
   },
+  infinigods: {
+    img: require("./logos/infinigods.png"),
+    filter: "grayscale(1)",
+  },
+  revv: {
+    img: require("./logos/revv.png"),
+    filter: "grayscale(1)",
+  },
+  torque: {
+    img: require("./logos/torque.png"),
+    filter: "grayscale(1)",
+  },
 } as const;
 
 export type Partner = keyof typeof PARTNER_LOGO_MAP;
