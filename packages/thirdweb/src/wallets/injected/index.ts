@@ -51,8 +51,8 @@ export class InjectedWallet implements Wallet {
   chainId: Wallet["chainId"];
   events: Wallet["events"];
 
-  #options?: InjectedWalletOptions;
-  #provider?: Ethereum;
+  private options?: InjectedWalletOptions;
+  private provider?: Ethereum;
 
   /**
    * Create a new Injected Wallet
@@ -76,8 +76,8 @@ export class InjectedWallet implements Wallet {
    * ```
    */
   constructor(options?: InjectedWalletOptions) {
-    this.#options = options;
-    this.metadata = this.#options?.metadata || {
+    this.options = options;
+    this.metadata = this.options?.metadata || {
       id: "injected",
       name: "injected",
       iconUrl: "TODO", // find a good default "injected wallet" icon
@@ -93,15 +93,15 @@ export class InjectedWallet implements Wallet {
    * @returns A Promise that resolves to the connected address.
    */
   async autoConnect() {
-    const provider = this.#getProvider();
-    this.#provider = provider;
+    const provider = this.getProvider();
+    this.provider = provider;
 
     // connected accounts
     const addresses = await provider.request({
       method: "eth_accounts",
     });
 
-    return this.#onConnect({
+    return this.onConnect({
       provider,
       addresses,
       // do not force switch chain on autoConnect
@@ -123,14 +123,14 @@ export class InjectedWallet implements Wallet {
    * @returns A Promise that resolves to the connected address.
    */
   async connect(options?: WalletConnectionOptions) {
-    const provider = this.#getProvider();
-    this.#provider = provider;
+    const provider = this.getProvider();
+    this.provider = provider;
 
     const addresses = await provider.request({
       method: "eth_requestAccounts",
     });
 
-    return this.#onConnect({
+    return this.onConnect({
       provider,
       addresses,
       targetChainId: options?.chainId ? BigInt(options.chainId) : undefined,
@@ -145,7 +145,7 @@ export class InjectedWallet implements Wallet {
    * ```
    */
   async disconnect() {
-    this.#onDisconnect();
+    this.onDisconnect();
   }
 
   /**
@@ -157,12 +157,12 @@ export class InjectedWallet implements Wallet {
    * ```
    */
   async switchChain(chainId: bigint | number) {
-    if (!this.#provider) {
+    if (!this.provider) {
       throw new Error("no provider available");
     }
 
     try {
-      await this.#provider.request({
+      await this.provider.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: toHex(chainId) }],
       });
@@ -170,7 +170,7 @@ export class InjectedWallet implements Wallet {
       // if chain does not exist, add the chain
       if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
         const chain = await getChainDataForChainId(BigInt(chainId));
-        await this.#provider.request({
+        await this.provider.request({
           method: "wallet_addEthereumChain",
           params: [
             {
@@ -194,7 +194,7 @@ export class InjectedWallet implements Wallet {
    * Call this method when the wallet provider is connected or auto connected
    * @internal
    */
-  async #onConnect(data: {
+  private async onConnect(data: {
     targetChainId?: bigint;
     provider: Ethereum;
     addresses: string[];
@@ -213,7 +213,7 @@ export class InjectedWallet implements Wallet {
       .request({ method: "eth_chainId" })
       .then(normalizeChainId);
 
-    this.#updateMetadata();
+    this.updateMetadata();
 
     // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
     if (targetChainId && targetChainId !== this.chainId) {
@@ -221,8 +221,8 @@ export class InjectedWallet implements Wallet {
     }
 
     if (provider.on) {
-      provider.on("chainChanged", this.#onChainChanged);
-      provider.on("disconnect", this.#onDisconnect);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
     }
 
     this.events = {
@@ -243,7 +243,7 @@ export class InjectedWallet implements Wallet {
     const account: Account = {
       address,
       async sendTransaction(tx: SendTransactionOption) {
-        if (!wallet.chainId || !wallet.#provider || !account.address) {
+        if (!wallet.chainId || !wallet.provider || !account.address) {
           throw new Error("Provider not setup");
         }
 
@@ -251,7 +251,7 @@ export class InjectedWallet implements Wallet {
           await wallet.switchChain(tx.chainId);
         }
 
-        const transactionHash = (await wallet.#provider.request({
+        const transactionHash = (await wallet.provider.request({
           method: "eth_sendTransaction",
           params: [
             {
@@ -278,7 +278,7 @@ export class InjectedWallet implements Wallet {
    * Note: must use arrow function
    * @internal
    */
-  #onChainChanged = (chainId: string) => {
+  private onChainChanged = (chainId: string) => {
     this.chainId = normalizeChainId(chainId);
   };
 
@@ -287,9 +287,9 @@ export class InjectedWallet implements Wallet {
    * Note: must use arrow function
    * @internal
    */
-  #onDisconnect = () => {
-    if (this.#provider?.removeListener) {
-      this.#provider.removeListener("chainChanged", this.#onChainChanged);
+  private onDisconnect = () => {
+    if (this.provider?.removeListener) {
+      this.provider.removeListener("chainChanged", this.onChainChanged);
     }
 
     this.chainId = undefined;
@@ -299,20 +299,20 @@ export class InjectedWallet implements Wallet {
    * Method to get the injected provider
    * @internal
    */
-  #getProvider(): Ethereum {
+  private getProvider(): Ethereum {
     let _provider: Ethereum | undefined;
 
     // if walletId is specified, get the provider from the store using EIP-6963
-    if (this.#options?.walletId) {
-      _provider = injectedProvider(this.#options.walletId);
+    if (this.options?.walletId) {
+      _provider = injectedProvider(this.options.walletId);
       if (_provider) {
         return _provider;
       }
     }
 
     // if getProvider is specified, use that
-    else if (this.#options?.getProvider) {
-      _provider = this.#options.getProvider();
+    else if (this.options?.getProvider) {
+      _provider = this.options.getProvider();
       if (_provider) {
         return _provider;
       }
@@ -334,16 +334,16 @@ export class InjectedWallet implements Wallet {
    * Update the metadata property of the wallet after wallet is connected
    * @internal
    */
-  #updateMetadata() {
+  private updateMetadata() {
     // if a custom metadata is specified, return
     // if the walletId is not specified, return
-    if (!this.#options?.metadata || !this.#options?.walletId) {
+    if (!this.options?.metadata || !this.options?.walletId) {
       return;
     }
 
     const store = getMIPDStore();
     const providerDetail = store.findProvider({
-      rdns: this.#options.walletId,
+      rdns: this.options.walletId,
     });
 
     if (!providerDetail) {
@@ -351,7 +351,7 @@ export class InjectedWallet implements Wallet {
     }
 
     this.metadata = {
-      id: this.#options.walletId,
+      id: this.options.walletId,
       name: providerDetail.info.name,
       iconUrl: providerDetail.info.icon,
     };

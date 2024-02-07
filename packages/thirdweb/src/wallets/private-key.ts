@@ -23,7 +23,7 @@ export type PrivateKeyAccountOptions = {
  * });
  * ```
  */
-export function privateKeyAccount(options: PrivateKeyAccountOptions) {
+export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
   if (!options.privateKey.startsWith("0x")) {
     options.privateKey = "0x" + options.privateKey;
   }

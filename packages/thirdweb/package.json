@@ -151,7 +151,6 @@
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
     "tinybench": "^2.6.0",
-    "tslib": "^2.6.2",
     "typedoc-gen": "workspace:*",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"

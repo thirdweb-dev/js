@@ -73,8 +73,8 @@ export function walletConnect(options: WalletConnectCreationOptions) {
  * Class to connect to a wallet using WalletConnect protocol.
  */
 export class WalletConnect implements Wallet {
-  #options: WalletConnectCreationOptions;
-  #provider: InstanceType<typeof EthereumProvider> | undefined;
+  private options: WalletConnectCreationOptions;
+  private provider: InstanceType<typeof EthereumProvider> | undefined;
 
   chainId: Wallet["chainId"];
   events: Wallet["events"];
@@ -92,7 +92,7 @@ export class WalletConnect implements Wallet {
    * ```
    */
   constructor(options: WalletConnectCreationOptions) {
-    this.#options = options;
+    this.options = options;
     this.metadata = options?.metadata || {
       name: "WalletConnect",
       iconUrl:
@@ -114,7 +114,7 @@ export class WalletConnect implements Wallet {
       this.metadata.id,
     );
 
-    const provider = await this.#initProvider(true, savedOptions || undefined);
+    const provider = await this.initProvider(true, savedOptions || undefined);
 
     const address = provider.accounts[0];
 
@@ -124,19 +124,19 @@ export class WalletConnect implements Wallet {
 
     this.chainId = normalizeChainId(provider.chainId);
 
-    return this.#onConnect(address);
+    return this.onConnect(address);
   }
 
   /**
    * @internal
    */
-  #onConnect(address: string): Account {
+  private onConnect(address: string): Account {
     const wallet = this;
     return {
       wallet,
       address,
       async sendTransaction(tx: SendTransactionOption) {
-        const provider = wallet.#assertProvider();
+        const provider = wallet.assertProvider();
 
         if (!wallet.chainId || !this.address) {
           throw new Error("Invalid chainId or address");
@@ -175,13 +175,13 @@ export class WalletConnect implements Wallet {
    * @returns A Promise that resolves to the connected wallet address.
    */
   async connect(options?: WalletConnectConnectionOptions): Promise<Account> {
-    const provider = await this.#initProvider(false, options);
-    const isStale = await this.#isChainsStale(provider.chainId);
+    const provider = await this.initProvider(false, options);
+    const isStale = await this.isChainsStale(provider.chainId);
     const targetChainId = Number(options?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
-      client: this.#options.client,
+      client: this.options.client,
     });
 
     const { onDisplayUri, onSessionRequestSent } = options || {};
@@ -215,7 +215,7 @@ export class WalletConnect implements Wallet {
         },
       });
 
-      this.#setRequestedChainsIds([targetChainId]);
+      this.setRequestedChainsIds([targetChainId]);
     }
 
     // If session exists and chains are authorized, enable provider for required chain
@@ -231,7 +231,7 @@ export class WalletConnect implements Wallet {
       saveConnectParamsToStorage(this.metadata.id, options);
     }
 
-    return this.#onConnect(address);
+    return this.onConnect(address);
   }
 
   /**
@@ -242,9 +242,9 @@ export class WalletConnect implements Wallet {
    * ```
    */
   async disconnect() {
-    const provider = this.#provider;
+    const provider = this.provider;
     if (provider) {
-      this.#onDisconnect();
+      this.onDisconnect();
       await provider.disconnect();
       deleteConnectParamsFromStorage(this.metadata.id);
     }
@@ -259,11 +259,11 @@ export class WalletConnect implements Wallet {
    * ```
    */
   async switchChain(chainId: number | bigint) {
-    const provider = this.#assertProvider();
+    const provider = this.assertProvider();
     const chainIdNum = Number(chainId);
     try {
-      const namespaceChains = this.#getNamespaceChainsIds();
-      const namespaceMethods = this.#getNamespaceMethods();
+      const namespaceChains = this.getNamespaceChainsIds();
+      const namespaceMethods = this.getNamespaceMethods();
       const isChainApproved = namespaceChains.includes(chainIdNum);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
@@ -284,9 +284,9 @@ export class WalletConnect implements Wallet {
             },
           ],
         });
-        const requestedChains = await this.#getRequestedChainsIds();
+        const requestedChains = await this.getRequestedChainsIds();
         requestedChains.push(chainIdNum);
-        this.#setRequestedChainsIds(requestedChains);
+        this.setRequestedChainsIds(requestedChains);
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
@@ -311,7 +311,7 @@ export class WalletConnect implements Wallet {
    * @param connectionOptions - Options for connecting to the wallet.
    * @internal
    */
-  async #initProvider(
+  private async initProvider(
     isAutoConnect: boolean,
     connectionOptions?: WalletConnectConnectionOptions,
   ) {
@@ -319,7 +319,7 @@ export class WalletConnect implements Wallet {
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
-      client: this.#options.client,
+      client: this.options.client,
     });
 
     const provider = await EthereumProvider.init({
@@ -327,19 +327,19 @@ export class WalletConnect implements Wallet {
         connectionOptions?.showQrModal === undefined
           ? defaultShowQrModal
           : connectionOptions.showQrModal,
-      projectId: this.#options?.projectId || defaultWCProjectId,
+      projectId: this.options?.projectId || defaultWCProjectId,
       optionalMethods: OPTIONAL_METHODS,
       optionalEvents: OPTIONAL_EVENTS,
       chains: [targetChainId],
       // optionalChains: [],
       metadata: {
-        name: this.#options.dappMetadata?.name || defaultDappMetadata.name,
+        name: this.options.dappMetadata?.name || defaultDappMetadata.name,
         description:
-          this.#options.dappMetadata?.description ||
+          this.options.dappMetadata?.description ||
           defaultDappMetadata.description,
-        url: this.#options.dappMetadata?.url || defaultDappMetadata.url,
+        url: this.options.dappMetadata?.url || defaultDappMetadata.url,
         icons: [
-          this.#options.dappMetadata?.logoUrl || defaultDappMetadata.logoUrl,
+          this.options.dappMetadata?.logoUrl || defaultDappMetadata.logoUrl,
         ],
       },
       rpcMap: {
@@ -348,7 +348,7 @@ export class WalletConnect implements Wallet {
       qrModalOptions: connectionOptions?.qrModalOptions,
     });
 
-    this.#provider = provider;
+    this.provider = provider;
 
     // const isStale = await this.#isChainsStale(Number(this.chainId));
     // isStale &&
@@ -359,9 +359,9 @@ export class WalletConnect implements Wallet {
     }
 
     // setup listeners
-    provider.on("disconnect", this.#onDisconnect);
-    provider.on("session_delete", this.#onDisconnect);
-    provider.on("chainChanged", this.#onChainChanged);
+    provider.on("disconnect", this.onDisconnect);
+    provider.on("session_delete", this.onDisconnect);
+    provider.on("chainChanged", this.onChainChanged);
 
     // try switching to correct chain
     if (
@@ -395,8 +395,8 @@ export class WalletConnect implements Wallet {
    * Get the methods available in the wallet connect session.
    * @internal
    */
-  #getNamespaceMethods() {
-    const provider = this.#assertProvider();
+  private getNamespaceMethods() {
+    const provider = this.assertProvider();
     return provider.session?.namespaces[NAMESPACE]?.methods || [];
   }
 
@@ -404,19 +404,19 @@ export class WalletConnect implements Wallet {
    * Throw an error if provider is not initialized.
    * @internal
    */
-  #assertProvider() {
-    if (!this.#provider) {
+  private assertProvider() {
+    if (!this.provider) {
       throw new Error("Provider not initialized");
     }
 
-    return this.#provider;
+    return this.provider;
   }
 
   /**
    * Get the last requested chains from the storage.
    * @internal
    */
-  async #getRequestedChainsIds(): Promise<number[]> {
+  private async getRequestedChainsIds(): Promise<number[]> {
     const data = await walletStorage.get(storageKeys.requestedChains);
     return data ? JSON.parse(data) : [];
   }
@@ -425,8 +425,8 @@ export class WalletConnect implements Wallet {
    * Get the chainIds from the wallet connect session.
    * @internal
    */
-  #getNamespaceChainsIds(): number[] {
-    const provider = this.#provider;
+  private getNamespaceChainsIds(): number[] {
+    const provider = this.provider;
     if (!provider) {
       return [];
     }
@@ -442,8 +442,8 @@ export class WalletConnect implements Wallet {
    * @param connectToChainId
    * @internal
    */
-  async #isChainsStale(connectToChainId: number) {
-    const namespaceMethods = this.#getNamespaceMethods();
+  private async isChainsStale(connectToChainId: number) {
+    const namespaceMethods = this.getNamespaceMethods();
 
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       return false;
@@ -453,9 +453,9 @@ export class WalletConnect implements Wallet {
       return false;
     }
 
-    const requestedChains = await this.#getRequestedChainsIds();
+    const requestedChains = await this.getRequestedChainsIds();
     const connectorChains = [connectToChainId];
-    const namespaceChains = this.#getNamespaceChainsIds();
+    const namespaceChains = this.getNamespaceChainsIds();
 
     if (
       namespaceChains.length &&
@@ -471,7 +471,7 @@ export class WalletConnect implements Wallet {
    * Set the requested chains to the storage.
    * @internal
    */
-  #setRequestedChainsIds(chains: number[]) {
+  private setRequestedChainsIds(chains: number[]) {
     walletStorage.set(storageKeys.requestedChains, JSON.stringify(chains));
   }
 
@@ -479,15 +479,15 @@ export class WalletConnect implements Wallet {
    * Disconnect the wallet and clear the session and perform cleanup.
    * @internal
    */
-  #onDisconnect() {
-    this.#setRequestedChainsIds([]);
+  private onDisconnect() {
+    this.setRequestedChainsIds([]);
     walletStorage.remove(storageKeys.lastUsedChainId);
 
-    const provider = this.#provider;
+    const provider = this.provider;
     if (provider) {
-      provider.removeListener("chainChanged", this.#onChainChanged);
-      provider.removeListener("disconnect", this.#onDisconnect);
-      provider.removeListener("session_delete", this.#onDisconnect);
+      provider.removeListener("chainChanged", this.onChainChanged);
+      provider.removeListener("disconnect", this.onDisconnect);
+      provider.removeListener("session_delete", this.onDisconnect);
     }
   }
 
@@ -495,7 +495,7 @@ export class WalletConnect implements Wallet {
    * Update the `chainId` on chainChanged event.
    * @internal
    */
-  #onChainChanged(chainId: number | string) {
+  private onChainChanged(chainId: number | string) {
     this.chainId = normalizeChainId(chainId);
     walletStorage.set(storageKeys.lastUsedChainId, String(chainId));
   }
