@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-core
 
+## 4.4.6
+
+### Patch Changes
+
+- [#2270](https://github.com/thirdweb-dev/js/pull/2270) [`433d49e3`](https://github.com/thirdweb-dev/js/commit/433d49e3aba03df33678f429f19f426fd107b7eb) Thanks [@MananTank](https://github.com/MananTank)! - Keep the wallet states like signer, chainId, address in sync by setting their states at once synchronously
+
 ## 4.4.5
 
 ### Patch Changes
