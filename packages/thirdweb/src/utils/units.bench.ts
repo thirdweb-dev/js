@@ -38,7 +38,7 @@ describe("formatUnits", () => {
   });
 });
 
-describe.only("parseUnits", () => {
+describe("parseUnits", () => {
   bench("thirdweb", () => {
     parseUnits("40", 18);
   });

@@ -93,38 +93,45 @@ export function formatGwei(wei: bigint, unit: "wei" = "wei") {
  */
 export function parseUnits(value: string, decimals: number): bigint {
   let [integerPart, fractionPart = ""] = value.split(".") as [string, string];
-  const prefix = integerPart[0] === "-" ? "-" : "";
-  // Once again, abusing that string "-" is truthy
+  const prefix = integerPart.startsWith("-") ? "-" : "";
   if (prefix) {
     integerPart = integerPart.slice(1);
   }
 
-  // Ensure the fraction part is not longer than necessary.
-  fractionPart = fractionPart.substring(0, decimals).padEnd(decimals, "0");
+  fractionPart = fractionPart.padEnd(decimals, "0"); // Ensure fraction part is at least 'decimals' long.
 
-  // Handle rounding when fractionPart is longer than decimals.
-  if (decimals > 0 && fractionPart.length > decimals) {
-    const roundingPart = fractionPart[decimals];
-    if (roundingPart && parseInt(roundingPart, 10) >= 5) {
-      // Add 1 to the last digit of the needed fraction part and handle carry.
-      const roundedFraction = (
-        BigInt(fractionPart.substring(0, decimals)) + 1n
-      ).toString();
-      if (roundedFraction.length > decimals) {
-        // Handle carry to the integer part.
-        integerPart = (BigInt(integerPart) + 1n).toString();
-        fractionPart = roundedFraction.substring(1);
-      } else {
-        fractionPart = roundedFraction;
-      }
-    } else {
-      // No rounding needed, just trim the fraction part.
-      fractionPart = fractionPart.substring(0, decimals);
+  if (decimals === 0) {
+    // Check if there's any fraction part that would necessitate rounding up the integer part.
+    if (fractionPart[0] && parseInt(fractionPart[0]) >= 5) {
+      integerPart = (BigInt(integerPart) + 1n).toString();
     }
+    fractionPart = ""; // No fraction part is needed when decimals === 0.
+  } else {
+    // When decimals > 0, handle potential rounding based on the digit right after the specified decimal places.
+    if (fractionPart.length > decimals) {
+      const roundingDigit = fractionPart[decimals];
+      if (roundingDigit && parseInt(roundingDigit, 10) >= 5) {
+        // If rounding is needed, add 1 to the last included digit of the fraction part.
+        const roundedFraction =
+          BigInt(fractionPart.substring(0, decimals)) + 1n;
+        fractionPart = roundedFraction.toString().padStart(decimals, "0");
+
+        if (fractionPart.length > decimals) {
+          // If rounding the fraction results in a length increase (e.g., .999 -> 1.000), increment the integer part.
+          integerPart = (BigInt(integerPart) + 1n).toString();
+          // Adjust the fraction part if it's longer than the specified decimals due to rounding up.
+          fractionPart = fractionPart.substring(fractionPart.length - decimals);
+        }
+      } else {
+        // If no rounding is necessary, just truncate the fraction part to the specified number of decimals.
+        fractionPart = fractionPart.substring(0, decimals);
+      }
+    }
+    // If the fraction part is shorter than the specified decimals, it's already handled by padEnd() above.
   }
 
-  // Convert to BigInt. Assuming here that the decimal part is effectively "moved" to the integer part by padding with zeros.
-  return BigInt(`${prefix}${integerPart}${fractionPart.padEnd(decimals, "0")}`);
+  // Combine the integer and fraction parts into the final BigInt representation.
+  return BigInt(`${prefix}${integerPart}${fractionPart}`);
 }
 
 /**
