@@ -64,13 +64,16 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="polygon" />
         <PartnerLogo partner="aws" />
         <PartnerLogo partner="rarible" />
+        <PartnerLogo partner="pixels" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="avacloud" />
         <PartnerLogo partner="animoca" />
         <PartnerLogo partner="courtyard" />
-        <PartnerLogo partner="pixels" />
+        <PartnerLogo partner="infinigods" />
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="fractal" />
+        <PartnerLogo partner="torque" />
+        <PartnerLogo partner="revv" />
         <PartnerLogo partner="buildspace" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
@@ -86,6 +89,7 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="courtyard" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="avacloud" />
+        <PartnerLogo partner="infinigods" />
         <PartnerLogo partner="paradigm" />
       </Marquee>
 
@@ -99,6 +103,8 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
         <PartnerLogo partner="fractal" />
+        <PartnerLogo partner="torque" />
+        <PartnerLogo partner="revv" />
         <PartnerLogo partner="buildspace" />
         <PartnerLogo partner="layer3" />
       </Marquee>
