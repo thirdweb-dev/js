@@ -63,7 +63,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   return (
     <Button
       {...buttonProps}
-      disabled={!!address || isPending}
+      disabled={!address || isPending}
       data-is-loading={isPending}
       onClick={() => {
         mutate(transaction, {
