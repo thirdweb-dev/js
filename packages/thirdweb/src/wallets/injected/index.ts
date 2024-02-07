@@ -51,6 +51,7 @@ export class InjectedWallet implements Wallet {
   chainId: Wallet["chainId"];
   events: Wallet["events"];
 
+  // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
   private options?: InjectedWalletOptions;
   private provider?: Ethereum;
 
