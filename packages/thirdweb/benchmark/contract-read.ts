@@ -10,8 +10,7 @@ import { mainnet } from "viem/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { createClient, getContract } from "../src";
 import { totalSupply } from "../src/extensions/erc20";
-
-const USDC_ADDRESS = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+import { USDC_CONTRACT_ADDRESS } from "../test/src/test-contracts";
 
 const bench = new Bench({ iterations: 10, warmupIterations: 1, throws: true });
 bench.add("thirdweb@alpha", async () => {
@@ -22,7 +21,7 @@ bench.add("thirdweb@alpha", async () => {
   const contract = getContract({
     client,
     chain: 1,
-    address: USDC_ADDRESS,
+    address: USDC_CONTRACT_ADDRESS,
   });
 
   await totalSupply({
@@ -32,7 +31,7 @@ bench.add("thirdweb@alpha", async () => {
 bench.add("@thirdweb-dev/sdk", async () => {
   const sdk = new ThirdwebSDK(1);
 
-  const c = await sdk.getContract(USDC_ADDRESS);
+  const c = await sdk.getContract(USDC_CONTRACT_ADDRESS);
 
   await c.erc20.totalSupply();
 });
@@ -57,7 +56,11 @@ bench.add("viem", async () => {
     transport: http(),
   });
 
-  const contract = viem_getContract({ address: USDC_ADDRESS, abi, client });
+  const contract = viem_getContract({
+    address: USDC_CONTRACT_ADDRESS,
+    abi,
+    client,
+  });
   await contract.read.totalSupply();
 });
 bench.add("ethers@6", async () => {
@@ -65,7 +68,7 @@ bench.add("ethers@6", async () => {
 
   const provider = getDefaultProvider(1);
 
-  const c = new Contract(USDC_ADDRESS, abi, provider);
+  const c = new Contract(USDC_CONTRACT_ADDRESS, abi, provider);
   await c.totalSupply();
 });
 
