@@ -7,8 +7,6 @@ const gweiUnits = {
   wei: 9,
 } as const;
 
-// const preparedRegex = new RegExp(/(0+)$/);
-
 /**
  * Formats a bigint value into a string representation with the specified number of decimal places.
  * @param value - The bigint value to format.
