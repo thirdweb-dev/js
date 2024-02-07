@@ -36,7 +36,18 @@ export function useEngineInstances() {
       }
 
       const json = await res.json();
-      return (json.data?.instances as EngineInstance[]) || [];
+      const instances = (json.data?.instances as EngineInstance[]) || [];
+
+      return instances.map((instance) => {
+        // Sanitize: Add trailing slash if not present.
+        const url = instance.url.endsWith("/")
+          ? instance.url
+          : `${instance.url}/`;
+        return {
+          ...instance,
+          url,
+        };
+      });
     },
     { enabled: !!user?.address && isLoggedIn },
   );
