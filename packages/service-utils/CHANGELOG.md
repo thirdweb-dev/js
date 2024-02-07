@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.16
+
+### Patch Changes
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to logHttpRequest
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to CF worker logs
+
 ## 0.4.15
 
 ### Patch Changes
