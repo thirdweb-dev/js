@@ -130,17 +130,32 @@ const AppHeader: React.FC = () => {
           >
             Docs
           </Button>
-
-          <TrackedIconButton
-            bg="transparent"
-            size="sm"
-            aria-label="get-help"
-            icon={<Icon as={FiHelpCircle} />}
-            category="header"
-            label="support"
-            as={LinkButton}
+          <Button
+            as={TrackedLink}
+            variant="link"
             href="/support"
-          />
+            category="header"
+            label="docs"
+            color="bgBlack"
+            display={{ base: "none", md: "block" }}
+            size="sm"
+            mx={1.5}
+          >
+            Support
+          </Button>
+
+          <Flex display={{ base: "flex", md: "none" }}>
+            <TrackedIconButton
+              bg="transparent"
+              size="sm"
+              aria-label="get-help"
+              icon={<Icon as={FiHelpCircle} />}
+              category="header"
+              label="support"
+              as={LinkButton}
+              href="/support"
+            />
+          </Flex>
 
           <ColorModeToggle />
 
