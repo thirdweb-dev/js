@@ -1,10 +1,3 @@
-import type { TypedData } from "abitype";
-import type {
-  Hex,
-  SignableMessage,
-  TransactionSerializable,
-  TypedDataDefinition,
-} from "viem";
 import type {
   Wallet,
   WalletConnectionOptions,
@@ -42,8 +35,8 @@ export const embeddedWallet = async (arg: { storage: StorageType }) => {
 
 class EmbeddedWallet implements Wallet {
   private storage: StorageType;
-  private activeWallet: SensitiveAccountDetailType | null = null;
-  private wallets: Record<string, SensitiveAccountDetailType> = {};
+  private activeWalletAccount: SensitiveAccountDetailType | null = null;
+  private walletAccounts: Record<string, SensitiveAccountDetailType> = {};
 
   public metadata = {
     id: "embedded-wallet",
@@ -56,10 +49,6 @@ class EmbeddedWallet implements Wallet {
   constructor(arg: { storage: StorageType }) {
     this.storage = arg.storage;
     this.address = "";
-  }
-
-  get activeAccount() {
-    return this.activeWallet;
   }
 
   async loadOrCreateAccount() {
@@ -122,7 +111,7 @@ class EmbeddedWallet implements Wallet {
       format: this.storage.defaultFormat,
       authUser: this.storage.authUser,
     });
-    this.wallets[wallet.accountId] = wallet;
+    this.walletAccounts[wallet.accountId] = wallet;
     return wallet;
   }
 
@@ -134,7 +123,8 @@ class EmbeddedWallet implements Wallet {
     const { EmbeddedWalletError } = await import("./error.js");
 
     const storage = arg.storageOverride ?? this.storage;
-    let sensitiveAccountDetail = this.wallets[arg.accountDetail.accountId];
+    let sensitiveAccountDetail =
+      this.walletAccounts[arg.accountDetail.accountId];
     if (!sensitiveAccountDetail) {
       sensitiveAccountDetail = await this.loadAccount({
         accountDetail: arg.accountDetail,
@@ -169,108 +159,58 @@ class EmbeddedWallet implements Wallet {
       accountDetail,
       storage,
     });
-    this.wallets[sensitiveAccountDetail.accountId] = sensitiveAccountDetail;
+    this.walletAccounts[sensitiveAccountDetail.accountId] =
+      sensitiveAccountDetail;
 
     return sensitiveAccountDetail;
   }
 
-  getActiveAccount() {
-    return this.activeAccount;
+  get activeAccount() {
+    return this.activeWalletAccount;
   }
 
   async setActiveAccount(arg: {
     accountDetail: SensitiveAccountDetailType | AccountDetailType;
   }) {
-    if (this.wallets[arg.accountDetail.accountId]) {
-      const wallet = this.wallets[arg.accountDetail.accountId];
+    if (this.walletAccounts[arg.accountDetail.accountId]) {
+      const wallet = this.walletAccounts[arg.accountDetail.accountId];
       if (!wallet) {
         throw new Error(`BAD STATE: wallet is empty even after check.`);
       }
-      this.activeWallet = wallet;
+      this.activeWalletAccount = wallet;
     } else if ("keyMaterial" in arg.accountDetail) {
-      this.activeWallet = arg.accountDetail;
+      this.activeWalletAccount = arg.accountDetail;
     } else {
       const account = await this.loadAccount({
         accountDetail: arg.accountDetail,
       });
-      this.activeWallet = account;
+      this.activeWalletAccount = account;
     }
     this.address = arg.accountDetail.address;
-    return this.activeWallet;
+    return this.activeWalletAccount;
   }
 
-  // TODO: DRY this with PrivateKeyWallet and figure out what connect takes
   public async connect(options: WalletConnectionOptions | undefined) {
-    // hack to satisfy linter
+    // Hack to satisfy linter
     void options;
-    return this;
-  }
 
-  public async signMessage({ message }: { message: SignableMessage }) {
-    const { privateKeyToAccount } = await import("viem/accounts");
-
-    if (!this.activeWallet) {
-      throw new Error("not connected");
-    }
-
-    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
-    return account.signMessage({ message });
-  }
-
-  public async signTransaction(tx: TransactionSerializable) {
-    const { privateKeyToAccount } = await import("viem/accounts");
-
-    if (!this.activeWallet) {
-      throw new Error("not connected");
-    }
-
-    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
-    return account.signTransaction(tx);
-  }
-
-  public async signTypedData<
-    const typedData extends TypedData | Record<string, unknown>,
-    primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-  >(typedData: TypedDataDefinition<typedData, primaryType>) {
-    const { privateKeyToAccount } = await import("viem/accounts");
-
-    if (!this.activeWallet) {
-      throw new Error("not connected");
-    }
-
-    const account = privateKeyToAccount(this.activeWallet.keyMaterial as Hex);
-    return account.signTypedData(typedData);
-  }
-
-  // tx functions
-  async sendTransaction(
-    // TODO: figure out how we would pass our "chain" object in here?
-    // maybe we *do* actually have to take in a tx object instead of the raw tx?
-    tx: TransactionSerializable & { chainId: number },
-  ) {
-    if (!this.activeWallet || !this.address) {
-      throw new Error("not connected");
-    }
-    const { getRpcClient, eth_sendRawTransaction } = await import(
-      "../../../../rpc/index.js"
-    );
-
-    const rpcRequest = getRpcClient({
-      client: this.storage.client,
-      chain: tx.chainId,
-    });
-    const signedTx = await this.signTransaction(tx);
-    const transactionHash = await eth_sendRawTransaction(rpcRequest, signedTx);
-    return {
-      transactionHash,
-    };
+    return this.autoConnect();
   }
 
   public async autoConnect() {
-    return this;
+    const { privateKeyAccount } = await import("../../../private-key.js");
+
+    if (!this.activeWalletAccount) {
+      throw new Error("No active wallet");
+    }
+
+    return privateKeyAccount({
+      client: this.storage.client,
+      privateKey: this.activeWalletAccount.keyMaterial,
+    });
   }
 
   public async disconnect() {
-    this.activeWallet = null;
+    this.activeWalletAccount = null;
   }
 }
