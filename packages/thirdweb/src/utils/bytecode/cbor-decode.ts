@@ -1,139 +1,49 @@
 // original source: https://github.com/kriszyp/cbor-x/blob/master/decode.js
-// TODO: go over this file in detail
+// heavily modified to remove all non-essential code
 
-/* eslint-disable */
+// TODO: re-enable typescript and properly type this
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { cachedTextDecoder } from "../text-decoder.js";
 
-const decoder = cachedTextDecoder();
 let src;
 let srcEnd;
 let position = 0;
 
 const EMPTY_ARRAY = [];
-const LEGACY_RECORD_INLINE_ID = 105;
-const RECORD_DEFINITIONS_ID = 0xdffe;
-const RECORD_INLINE_ID = 0xdfff; // temporary first-come first-serve tag // proposed tag: 0x7265 // 're'
-const BUNDLED_STRINGS_ID = 0xdff9;
-const PACKED_REFERENCE_TAG_ID = 6;
-const STOP_CODE = {};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let strings = EMPTY_ARRAY;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let stringPosition = 0;
 let currentDecoder = {};
 let currentStructures;
 let srcString;
-let srcStringStart = 0;
+const srcStringStart = 0;
 let srcStringEnd = 0;
 let bundledStrings;
 let referenceMap;
 const currentExtensions = [];
-const currentExtensionRanges = [];
+
 let packedValues;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let dataView;
 let restoreMapsAsObject;
+
 const defaultOptions = {
   useRecords: false,
   mapsAsObjects: true,
 };
-let sequentialMode = false;
-let inlineObjectReadThreshold = Infinity;
-let BlockedFunction; // we use search and replace to change the next call to BlockedFunction to avoid CSP issues for
 
 class Decoder {
-  constructor(options) {
-    if (options) {
-      if ((options.keyMap || options._keyMap) && !options.useRecords) {
-        options.useRecords = false;
-        options.mapsAsObjects = true;
-      }
-      if (options.useRecords === false && options.mapsAsObjects === undefined) {
-        options.mapsAsObjects = true;
-      }
-      if (options.getStructures) {
-        options.getShared = options.getStructures;
-      }
-      if (options.getShared && !options.structures) {
-        (options.structures = []).uninitialized = true;
-      } // this is what we use to denote an uninitialized structures
-      if (options.keyMap) {
-        this.mapKey = new Map();
-        for (const [k, v] of Object.entries(options.keyMap)) {
-          this.mapKey.set(v, k);
-        }
-      }
-    }
-    Object.assign(this, options);
+  constructor() {
+    Object.assign(this, defaultOptions);
   }
-  /*
-	decodeKey(key) {
-		return this.keyMap
-			? Object.keys(this.keyMap)[Object.values(this.keyMap).indexOf(key)] || key
-			: key
-	}
-	*/
+
   decodeKey(key) {
-    return this.keyMap ? this.mapKey.get(key) || key : key;
-  }
-
-  encodeKey(key) {
-    return this.keyMap && this.keyMap.hasOwnProperty(key)
-      ? this.keyMap[key]
-      : key;
-  }
-
-  encodeKeys(rec) {
-    if (!this._keyMap) {
-      return rec;
-    }
-    const map = new Map();
-    for (const [k, v] of Object.entries(rec)) {
-      map.set(this._keyMap.hasOwnProperty(k) ? this._keyMap[k] : k, v);
-    }
-    return map;
-  }
-
-  decodeKeys(map) {
-    if (!this._keyMap || map.constructor.name != "Map") {
-      return map;
-    }
-    if (!this._mapKey) {
-      this._mapKey = new Map();
-      for (const [k, v] of Object.entries(this._keyMap)) {
-        this._mapKey.set(v, k);
-      }
-    }
-    const res = {};
-    //map.forEach((v,k) => res[Object.keys(this._keyMap)[Object.values(this._keyMap).indexOf(k)] || k] = v)
-    map.forEach(
-      (v, k) =>
-        (res[safeKey(this._mapKey.has(k) ? this._mapKey.get(k) : k)] = v),
-    );
-    return res;
-  }
-
-  mapDecode(source, end) {
-    const res = this.decode(source);
-    if (this._keyMap) {
-      //Experiemntal support for Optimised KeyMap  decoding
-      switch (res.constructor.name) {
-        case "Array":
-          return res.map((r) => this.decodeKeys(r));
-        //case 'Map': return this.decodeKeys(res)
-      }
-    }
-    return res;
+    return key;
   }
 
   decode(source, end?: number = -1) {
-    if (src) {
-      // re-entrant execution, save the state and restore it after we do this decode
-      return saveState(() => {
-        clearSource();
-        return this
-          ? this.decode(source, end)
-          : Decoder.prototype.decode.call(defaultOptions, source, end);
-      });
-    }
     srcEnd = end > -1 ? end : source.length;
     position = 0;
     stringPosition = 0;
@@ -175,10 +85,7 @@ class Decoder {
               this.sharedValues,
             )
           : this.sharedValues);
-      if (this.structures) {
-        currentStructures = this.structures;
-        return checkedRead();
-      } else if (!currentStructures || currentStructures.length > 0) {
+      if (!currentStructures || currentStructures.length > 0) {
         currentStructures = [];
       }
     } else {
@@ -190,46 +97,8 @@ class Decoder {
     }
     return checkedRead();
   }
-  decodeMultiple(source, forEach) {
-    let values,
-      lastPosition = 0;
-    try {
-      const size = source.length;
-      sequentialMode = true;
-      const value = this
-        ? this.decode(source, size)
-        : defaultDecoder.decode(source, size);
-      if (forEach) {
-        if (forEach(value) === false) {
-          return;
-        }
-        while (position < size) {
-          lastPosition = position;
-          if (forEach(checkedRead()) === false) {
-            return;
-          }
-        }
-      } else {
-        values = [value];
-        while (position < size) {
-          lastPosition = position;
-          values.push(checkedRead());
-        }
-        return values;
-      }
-    } catch (error) {
-      error.lastPosition = lastPosition;
-      error.values = values;
-      throw error;
-    } finally {
-      sequentialMode = false;
-      clearSource();
-    }
-  }
 }
-function getPosition() {
-  return position;
-}
+
 function checkedRead() {
   try {
     const result = read();
@@ -244,7 +113,7 @@ function checkedRead() {
       bundledStrings = null;
     }
 
-    if (position == srcEnd) {
+    if (position === srcEnd) {
       // finished reading this source, cleanup references
       currentStructures = null;
       src = null;
@@ -256,7 +125,7 @@ function checkedRead() {
       const error = new Error("Unexpected end of CBOR data");
       error.incomplete = true;
       throw error;
-    } else if (!sequentialMode) {
+    } else {
       throw new Error("Data read, but end of buffer not reached");
     }
     // else more to read, but we are reading sequentially, so don't clear source yet
@@ -282,120 +151,12 @@ function read() {
       case 0x18:
         token = src[position++];
         break;
-      case 0x19:
-        if (majorType == 7) {
-          return getFloat16();
-        }
-        token = dataView.getUint16(position);
-        position += 2;
-        break;
-      case 0x1a:
-        if (majorType == 7) {
-          const value = dataView.getFloat32(position);
-          if (currentDecoder.useFloat32 > 2) {
-            // this does rounding of numbers that were encoded in 32-bit float to nearest significant decimal digit that could be preserved
-            const multiplier =
-              mult10[((src[position] & 0x7f) << 1) | (src[position + 1] >> 7)];
-            position += 4;
-            return (
-              ((multiplier * value + (value > 0 ? 0.5 : -0.5)) >> 0) /
-              multiplier
-            );
-          }
-          position += 4;
-          return value;
-        }
-        token = dataView.getUint32(position);
-        position += 4;
-        break;
-      case 0x1b:
-        if (majorType == 7) {
-          const value = dataView.getFloat64(position);
-          position += 8;
-          return value;
-        }
-        if (majorType > 1) {
-          if (dataView.getUint32(position) > 0) {
-            throw new Error(
-              "JavaScript does not support arrays, maps, or strings with length over 4294967295",
-            );
-          }
-          token = dataView.getUint32(position + 4);
-        } else if (currentDecoder.int64AsNumber) {
-          token = dataView.getUint32(position) * 0x100000000;
-          token += dataView.getUint32(position + 4);
-        } else {
-          token = dataView.getBigUint64(position);
-        }
-        position += 8;
-        break;
-      case 0x1f:
-        // indefinite length
-        switch (majorType) {
-          case 2: // byte string
-          case 3: // text string
-            throw new Error(
-              "Indefinite length not supported for byte or text strings",
-            );
-          case 4: // array
-            const array = [];
-            let value,
-              i = 0;
-            while ((value = read()) != STOP_CODE) {
-              array[i++] = value;
-            }
-            return majorType == 4
-              ? array
-              : majorType == 3
-                ? array.join("")
-                : Buffer.concat(array);
-          case 5: // map
-            let key;
-            if (currentDecoder.mapsAsObjects) {
-              const object = {};
-              if (currentDecoder.keyMap) {
-                while ((key = read()) != STOP_CODE) {
-                  object[safeKey(currentDecoder.decodeKey(key))] = read();
-                }
-              } else {
-                while ((key = read()) != STOP_CODE) {
-                  object[safeKey(key)] = read();
-                }
-              }
-              return object;
-            } else {
-              if (restoreMapsAsObject) {
-                currentDecoder.mapsAsObjects = true;
-                restoreMapsAsObject = false;
-              }
-              const map = new Map();
-              if (currentDecoder.keyMap) {
-                while ((key = read()) != STOP_CODE) {
-                  map.set(currentDecoder.decodeKey(key), read());
-                }
-              } else {
-                while ((key = read()) != STOP_CODE) {
-                  map.set(key, read());
-                }
-              }
-              return map;
-            }
-          case 7:
-            return STOP_CODE;
-          default:
-            throw new Error(
-              "Invalid major type for indefinite length " + majorType,
-            );
-        }
+
       default:
         throw new Error("Unknown token " + token);
     }
   }
   switch (majorType) {
-    case 0: // positive int
-      return token;
-    case 1: // negative int
-      return ~token;
     case 2: // buffer
       return readBin(token);
     case 3: // string
@@ -405,23 +166,16 @@ function read() {
           (position += token) - srcStringStart,
         );
       }
-      if (srcStringEnd == 0 && srcEnd < 140 && token < 32) {
+      if (srcStringEnd === 0 && srcEnd < 140 && token < 32) {
         // for small blocks, avoiding the overhead of the extract call is helpful
         const string =
           token < 16 ? shortStringInJS(token) : longStringInJS(token);
-        if (string != null) {
+        if (string !== null) {
           return string;
         }
       }
       return readFixedString(token);
-    case 4: // array
-      const array = new Array(token);
-      //if (currentDecoder.keyMap) for (let i = 0; i < token; i++) array[i] = currentDecoder.decodeKey(read())
-      //else
-      for (let i = 0; i < token; i++) {
-        array[i] = read();
-      }
-      return array;
+
     case 5: // map
       if (currentDecoder.mapsAsObjects) {
         const object = {};
@@ -452,94 +206,7 @@ function read() {
         }
         return map;
       }
-    case 6: // extension
-      if (token >= BUNDLED_STRINGS_ID) {
-        let structure = currentStructures[token & 0x1fff]; // check record structures first
-        // At some point we may provide an option for dynamic tag assignment with a range like token >= 8 && (token < 16 || (token > 0x80 && token < 0xc0) || (token > 0x130 && token < 0x4000))
-        if (structure) {
-          if (!structure.read) {
-            structure.read = createStructureReader(structure);
-          }
-          return structure.read();
-        }
-        if (token < 0x10000) {
-          if (token == RECORD_INLINE_ID) {
-            // we do a special check for this so that we can keep the
-            // currentExtensions as densely stored array (v8 stores arrays densely under about 3000 elements)
-            const length = readJustLength();
-            const id = read();
-            const structure = read();
-            recordDefinition(id, structure);
-            const object = {};
-            if (currentDecoder.keyMap) {
-              for (let i = 2; i < length; i++) {
-                const key = currentDecoder.decodeKey(structure[i - 2]);
-                object[safeKey(key)] = read();
-              }
-            } else {
-              for (let i = 2; i < length; i++) {
-                const key = structure[i - 2];
-                object[safeKey(key)] = read();
-              }
-            }
-            return object;
-          } else if (token == RECORD_DEFINITIONS_ID) {
-            const length = readJustLength();
-            let id = read();
-            for (let i = 2; i < length; i++) {
-              recordDefinition(id++, read());
-            }
-            return read();
-          } else if (token == BUNDLED_STRINGS_ID) {
-            return readBundleExt();
-          }
-          if (currentDecoder.getShared) {
-            loadShared();
-            structure = currentStructures[token & 0x1fff];
-            if (structure) {
-              if (!structure.read) {
-                structure.read = createStructureReader(structure);
-              }
-              return structure.read();
-            }
-          }
-        }
-      }
-      const extension = currentExtensions[token];
-      if (extension) {
-        if (extension.handlesRead) {
-          return extension(read);
-        } else {
-          return extension(read());
-        }
-      } else {
-        const input = read();
-        for (let i = 0; i < currentExtensionRanges.length; i++) {
-          const value = currentExtensionRanges[i](token, input);
-          if (value !== undefined) {
-            return value;
-          }
-        }
-        return new Tag(input, token);
-      }
-    case 7: // fixed value
-      switch (token) {
-        case 0x14:
-          return false;
-        case 0x15:
-          return true;
-        case 0x16:
-          return null;
-        case 0x17:
-          return; // undefined
-        case 0x1f:
-        default:
-          const packedValue = (packedValues || getPackedValues())[token];
-          if (packedValue !== undefined) {
-            return packedValue;
-          }
-          throw new Error("Unknown token " + token);
-      }
+
     default: // negative int
       if (isNaN(token)) {
         const error = new Error("Unexpected end of CBOR data");
@@ -548,93 +215,6 @@ function read() {
       }
       throw new Error("Unknown CBOR token " + token);
   }
-}
-const validName = /^[a-zA-Z_$][a-zA-Z\d_$]*$/;
-function createStructureReader(structure) {
-  function readObject() {
-    // get the array size from the header
-    let length = src[position++];
-    //let majorType = token >> 5
-    length = length & 0x1f;
-    if (length > 0x17) {
-      switch (length) {
-        case 0x18:
-          length = src[position++];
-          break;
-        case 0x19:
-          length = dataView.getUint16(position);
-          position += 2;
-          break;
-        case 0x1a:
-          length = dataView.getUint32(position);
-          position += 4;
-          break;
-        default:
-          throw new Error(
-            "Expected array header, but got " + src[position - 1],
-          );
-      }
-    }
-    // This initial function is quick to instantiate, but runs slower. After several iterations pay the cost to build the faster function
-    let compiledReader = this.compiledReader; // first look to see if we have the fast compiled function
-    while (compiledReader) {
-      // we have a fast compiled object literal reader
-      if (compiledReader.propertyCount === length) {
-        return compiledReader(read);
-      } // with the right length, so we use it
-      compiledReader = compiledReader.next; // see if there is another reader with the right length
-    }
-    // WE DISABLE THIS
-    // if (this.slowReads++ >= inlineObjectReadThreshold) {
-    //   // create a fast compiled reader
-    //   const array = this.length == length ? this : this.slice(0, length);
-    //   compiledReader = currentDecoder.keyMap
-    //     ? new Function(
-    //         "r",
-    //         "return {" +
-    //           array
-    //             .map((k) => currentDecoder.decodeKey(k))
-    //             .map((k) =>
-    //               validName.test(k)
-    //                 ? safeKey(k) + ":r()"
-    //                 : "[" + JSON.stringify(k) + "]:r()",
-    //             )
-    //             .join(",") +
-    //           "}",
-    //       )
-    //     : new Function(
-    //         "r",
-    //         "return {" +
-    //           array
-    //             .map((key) =>
-    //               validName.test(key)
-    //                 ? safeKey(key) + ":r()"
-    //                 : "[" + JSON.stringify(key) + "]:r()",
-    //             )
-    //             .join(",") +
-    //           "}",
-    //       );
-    //   if (this.compiledReader) {
-    //     compiledReader.next = this.compiledReader;
-    //   } // if there is an existing one, we store multiple readers as a linked list because it is usually pretty rare to have multiple readers (of different length) for the same structure
-    //   compiledReader.propertyCount = length;
-    //   this.compiledReader = compiledReader;
-    //   return compiledReader(read);
-    // }
-    const object = {};
-    if (currentDecoder.keyMap) {
-      for (let i = 0; i < length; i++) {
-        object[safeKey(currentDecoder.decodeKey(this[i]))] = read();
-      }
-    } else {
-      for (let i = 0; i < length; i++) {
-        object[safeKey(this[i])] = read();
-      }
-    }
-    return object;
-  }
-  structure.slowReads = 0;
-  return readObject;
 }
 
 function safeKey(key) {
@@ -649,108 +229,6 @@ function safeKey(key) {
   throw new Error("Invalid property name type " + typeof key);
 }
 
-let readFixedString = readStringJS;
-let readString8 = readStringJS;
-let readString16 = readStringJS;
-let readString32 = readStringJS;
-
-let isNativeAccelerationEnabled = false;
-function setExtractor(extractStrings) {
-  isNativeAccelerationEnabled = true;
-  readFixedString = readString(1);
-  readString8 = readString(2);
-  readString16 = readString(3);
-  readString32 = readString(5);
-  function readString(headerLength) {
-    return function readString(length) {
-      let string = strings[stringPosition++];
-      if (string == null) {
-        if (bundledStrings) {
-          return readStringJS(length);
-        }
-        const extraction = extractStrings(position, srcEnd, length, src);
-        if (typeof extraction === "string") {
-          string = extraction;
-          strings = EMPTY_ARRAY;
-        } else {
-          strings = extraction;
-          stringPosition = 1;
-          srcStringEnd = 1; // even if a utf-8 string was decoded, must indicate we are in the midst of extracted strings and can't skip strings
-          string = strings[0];
-          if (string === undefined) {
-            throw new Error("Unexpected end of buffer");
-          }
-        }
-      }
-      const srcStringLength = string.length;
-      if (srcStringLength <= length) {
-        position += length;
-        return string;
-      }
-      srcString = string;
-      srcStringStart = position;
-      srcStringEnd = position + srcStringLength;
-      position += length;
-      return string.slice(0, length); // we know we just want the beginning
-    };
-  }
-}
-function readStringJS(length) {
-  let result;
-  if (length < 16) {
-    if ((result = shortStringInJS(length))) {
-      return result;
-    }
-  }
-  if (length > 64 && decoder) {
-    return decoder.decode(src.subarray(position, (position += length)));
-  }
-  const end = position + length;
-  const units = [];
-  result = "";
-  while (position < end) {
-    const byte1 = src[position++];
-    if ((byte1 & 0x80) === 0) {
-      // 1 byte
-      units.push(byte1);
-    } else if ((byte1 & 0xe0) === 0xc0) {
-      // 2 bytes
-      const byte2 = src[position++] & 0x3f;
-      units.push(((byte1 & 0x1f) << 6) | byte2);
-    } else if ((byte1 & 0xf0) === 0xe0) {
-      // 3 bytes
-      const byte2 = src[position++] & 0x3f;
-      const byte3 = src[position++] & 0x3f;
-      units.push(((byte1 & 0x1f) << 12) | (byte2 << 6) | byte3);
-    } else if ((byte1 & 0xf8) === 0xf0) {
-      // 4 bytes
-      const byte2 = src[position++] & 0x3f;
-      const byte3 = src[position++] & 0x3f;
-      const byte4 = src[position++] & 0x3f;
-      let unit =
-        ((byte1 & 0x07) << 0x12) | (byte2 << 0x0c) | (byte3 << 0x06) | byte4;
-      if (unit > 0xffff) {
-        unit -= 0x10000;
-        units.push(((unit >>> 10) & 0x3ff) | 0xd800);
-        unit = 0xdc00 | (unit & 0x3ff);
-      }
-      units.push(unit);
-    } else {
-      units.push(byte1);
-    }
-
-    if (units.length >= 0x1000) {
-      result += fromCharCode.apply(String, units);
-      units.length = 0;
-    }
-  }
-
-  if (units.length > 0) {
-    result += fromCharCode.apply(String, units);
-  }
-
-  return result;
-}
 const fromCharCode = String.fromCharCode;
 function longStringInJS(length) {
   const start = position;
@@ -925,213 +403,14 @@ function readBin(length) {
       Uint8Array.prototype.slice.call(src, position, (position += length))
     : src.subarray(position, (position += length));
 }
-function readExt(length) {
-  const type = src[position++];
-  if (currentExtensions[type]) {
-    return currentExtensions[type](
-      src.subarray(position, (position += length)),
-    );
-  } else {
-    throw new Error("Unknown extension type " + type);
-  }
-}
-const f32Array = new Float32Array(1);
-const u8Array = new Uint8Array(f32Array.buffer, 0, 4);
-function getFloat16() {
-  const byte0 = src[position++];
-  const byte1 = src[position++];
-  const exponent = (byte0 & 0x7f) >> 2;
-  if (exponent === 0x1f) {
-    // specials
-    if (byte1 || byte0 & 3) {
-      return NaN;
-    }
-    return byte0 & 0x80 ? -Infinity : Infinity;
-  }
-  if (exponent === 0) {
-    // sub-normals
-    // significand with 10 fractional bits and divided by 2^14
-    const abs = (((byte0 & 3) << 8) | byte1) / (1 << 24);
-    return byte0 & 0x80 ? -abs : abs;
-  }
 
-  u8Array[3] =
-    (byte0 & 0x80) | // sign bit
-    ((exponent >> 1) + 56); // 4 of 5 of the exponent bits, re-offset-ed
-  u8Array[2] =
-    ((byte0 & 7) << 5) | // last exponent bit and first two mantissa bits
-    (byte1 >> 3); // next 5 bits of mantissa
-  u8Array[1] = byte1 << 5; // last three bits of mantissa
-  u8Array[0] = 0;
-  return f32Array[0];
-}
-
-const keyCache = new Array(4096);
-function readKey() {
-  let length = src[position++];
-  if (length >= 0x60 && length < 0x78) {
-    // fixstr, potentially use key cache
-    length = length - 0x60;
-    if (srcStringEnd >= position) {
-      // if it has been extracted, must use it (and faster anyway)
-      return srcString.slice(
-        position - srcStringStart,
-        (position += length) - srcStringStart,
-      );
-    } else if (!(srcStringEnd == 0 && srcEnd < 180)) {
-      return readFixedString(length);
-    }
-  } else {
-    // not cacheable, go back and do a standard read
-    position--;
-    return read();
-  }
-  const key =
-    ((length << 5) ^
-      (length > 1
-        ? dataView.getUint16(position)
-        : length > 0
-          ? src[position]
-          : 0)) &
-    0xfff;
-  let entry = keyCache[key];
-  let checkPosition = position;
-  let end = position + length - 3;
-  let chunk;
-  let i = 0;
-  if (entry && entry.bytes == length) {
-    while (checkPosition < end) {
-      chunk = dataView.getUint32(checkPosition);
-      if (chunk != entry[i++]) {
-        checkPosition = 0x70000000;
-        break;
-      }
-      checkPosition += 4;
-    }
-    end += 3;
-    while (checkPosition < end) {
-      chunk = src[checkPosition++];
-      if (chunk != entry[i++]) {
-        checkPosition = 0x70000000;
-        break;
-      }
-    }
-    if (checkPosition === end) {
-      position = checkPosition;
-      return entry.string;
-    }
-    end -= 3;
-    checkPosition = position;
-  }
-  entry = [];
-  keyCache[key] = entry;
-  entry.bytes = length;
-  while (checkPosition < end) {
-    chunk = dataView.getUint32(checkPosition);
-    entry.push(chunk);
-    checkPosition += 4;
-  }
-  end += 3;
-  while (checkPosition < end) {
-    chunk = src[checkPosition++];
-    entry.push(chunk);
-  }
-  // for small blocks, avoiding the overhead of the extract call is helpful
-  const string = length < 16 ? shortStringInJS(length) : longStringInJS(length);
-  if (string != null) {
-    return (entry.string = string);
-  }
-  return (entry.string = readFixedString(length));
-}
-
-class Tag {
-  constructor(value, tag) {
-    this.value = value;
-    this.tag = tag;
-  }
-}
-
-currentExtensions[0] = (dateString) => {
-  // string date extension
-  return new Date(dateString);
-};
-
-currentExtensions[1] = (epochSec) => {
-  // numeric date extension
-  return new Date(Math.round(epochSec * 1000));
-};
-
-currentExtensions[2] = (buffer) => {
-  // bigint extension
-  let value = BigInt(0);
-  for (let i = 0, l = buffer.byteLength; i < l; i++) {
-    value = (BigInt(buffer[i]) + value) << BigInt(8);
-  }
-  return value;
-};
-
-currentExtensions[3] = (buffer) => {
-  // negative bigint extension
-  return BigInt(-1) - currentExtensions[2](buffer);
-};
-currentExtensions[4] = (fraction) => {
-  // best to reparse to maintain accuracy
-  return Number(fraction[1] + "e" + fraction[0]);
-};
-
-currentExtensions[5] = (fraction) => {
-  // probably not sufficiently accurate
-  return fraction[1] * Math.exp(fraction[0] * Math.log(2));
-};
-
-// the registration of the record definition extension
-const recordDefinition = (id, structure) => {
-  id = id - 0xe000;
-  const existingStructure = currentStructures[id];
-  if (existingStructure && existingStructure.isShared) {
-    (currentStructures.restoreStructures ||
-      (currentStructures.restoreStructures = []))[id] = existingStructure;
-  }
-  currentStructures[id] = structure;
-
-  structure.read = createStructureReader(structure);
-};
-currentExtensions[LEGACY_RECORD_INLINE_ID] = (data) => {
-  const length = data.length;
-  const structure = data[1];
-  recordDefinition(data[0], structure);
-  const object = {};
-  for (let i = 2; i < length; i++) {
-    const key = structure[i - 2];
-    object[safeKey(key)] = data[i];
-  }
-  return object;
-};
-currentExtensions[14] = (value) => {
-  if (bundledStrings) {
-    return bundledStrings[0].slice(
-      bundledStrings.position0,
-      (bundledStrings.position0 += value),
-    );
-  }
-  return new Tag(value, 14);
-};
-currentExtensions[15] = (value) => {
-  if (bundledStrings) {
-    return bundledStrings[1].slice(
-      bundledStrings.position1,
-      (bundledStrings.position1 += value),
-    );
-  }
-  return new Tag(value, 15);
-};
 const glbl = { Error, RegExp };
 currentExtensions[27] = (data) => {
   // http://cbor.schmorp.de/generic-object
   return (glbl[data[0]] || Error)(data[1], data[2]);
 };
-const packedTable = (read) => {
-  if (src[position++] != 0x84) {
+const packedTable = (read_) => {
+  if (src[position++] !== 0x84) {
     const error = new Error(
       "Packed values structure must be followed by a 4 element array",
     );
@@ -1140,7 +419,7 @@ const packedTable = (read) => {
     }
     throw error;
   }
-  const newPackedValues = read(); // packed values
+  const newPackedValues = read_(); // packed values
   if (!newPackedValues || !newPackedValues.length) {
     const error = new Error(
       "Packed values structure must be followed by a 4 element array",
@@ -1151,50 +430,13 @@ const packedTable = (read) => {
   packedValues = packedValues
     ? newPackedValues.concat(packedValues.slice(newPackedValues.length))
     : newPackedValues;
-  packedValues.prefixes = read();
-  packedValues.suffixes = read();
-  return read(); // read the rump
+  packedValues.prefixes = read_();
+  packedValues.suffixes = read_();
+  return read_(); // read the rump
 };
 packedTable.handlesRead = true;
-currentExtensions[51] = packedTable;
 
-currentExtensions[PACKED_REFERENCE_TAG_ID] = (data) => {
-  // packed reference
-  if (!packedValues) {
-    if (currentDecoder.getShared) {
-      loadShared();
-    } else {
-      return new Tag(data, PACKED_REFERENCE_TAG_ID);
-    }
-  }
-  if (typeof data === "number") {
-    return packedValues[16 + (data >= 0 ? 2 * data : -2 * data - 1)];
-  }
-  const error = new Error("No support for non-integer packed references yet");
-  if (data === undefined) {
-    error.incomplete = true;
-  }
-  throw error;
-};
-
-// The following code is an incomplete implementation of http://cbor.schmorp.de/stringref
-// the real thing would need to implemennt more logic to populate the stringRefs table and
-// maintain a stack of stringRef "namespaces".
-//
-// currentExtensions[25] = (id) => {
-// 	return stringRefs[id]
-// }
-// currentExtensions[256] = (read) => {
-// 	stringRefs = []
-// 	try {
-// 		return read()
-// 	} finally {
-// 		stringRefs = null
-// 	}
-// }
-// currentExtensions[256].handlesRead = true
-
-currentExtensions[28] = (read) => {
+currentExtensions[28] = (read_) => {
   // shareable http://cbor.schmorp.de/value-sharing (for structured clones)
   if (!referenceMap) {
     referenceMap = new Map();
@@ -1205,7 +447,7 @@ currentExtensions[28] = (read) => {
   let target;
   // TODO: handle Maps, Sets, and other types that can cycle; this is complicated, because you potentially need to read
   // ahead past references to record structure definitions
-  if (token >> 5 == 4) {
+  if (token >> 5 === 4) {
     target = [];
   } else {
     target = {};
@@ -1213,7 +455,7 @@ currentExtensions[28] = (read) => {
 
   const refEntry = { target }; // a placeholder object
   referenceMap.set(id, refEntry);
-  const targetProperties = read(); // read the next value as the target object to id
+  const targetProperties = read_(); // read the next value as the target object to id
   if (refEntry.used) {
     // there is a cycle, so we have to assign properties to original target
     return Object.assign(target, targetProperties);
@@ -1221,263 +463,7 @@ currentExtensions[28] = (read) => {
   refEntry.target = targetProperties; // the placeholder wasn't used, replace with the deserialized one
   return targetProperties; // no cycle, can just use the returned read object
 };
-currentExtensions[28].handlesRead = true;
 
-currentExtensions[29] = (id) => {
-  // sharedref http://cbor.schmorp.de/value-sharing (for structured clones)
-  const refEntry = referenceMap.get(id);
-  refEntry.used = true;
-  return refEntry.target;
-};
-
-currentExtensions[258] = (array) => new Set(array); // https://github.com/input-output-hk/cbor-sets-spec/blob/master/CBOR_SETS.md
-(currentExtensions[259] = (read) => {
-  // https://github.com/shanewholloway/js-cbor-codec/blob/master/docs/CBOR-259-spec
-  // for decoding as a standard Map
-  if (currentDecoder.mapsAsObjects) {
-    currentDecoder.mapsAsObjects = false;
-    restoreMapsAsObject = true;
-  }
-  return read();
-}).handlesRead = true;
-function combine(a, b) {
-  if (typeof a === "string") {
-    return a + b;
-  }
-  if (a instanceof Array) {
-    return a.concat(b);
-  }
-  return Object.assign({}, a, b);
-}
-function getPackedValues() {
-  if (!packedValues) {
-    if (currentDecoder.getShared) {
-      loadShared();
-    } else {
-      throw new Error("No packed values available");
-    }
-  }
-  return packedValues;
-}
-const SHARED_DATA_TAG_ID = 0x53687264; // ascii 'Shrd'
-currentExtensionRanges.push((tag, input) => {
-  if (tag >= 225 && tag <= 255) {
-    return combine(getPackedValues().prefixes[tag - 224], input);
-  }
-  if (tag >= 28704 && tag <= 32767) {
-    return combine(getPackedValues().prefixes[tag - 28672], input);
-  }
-  if (tag >= 1879052288 && tag <= 2147483647) {
-    return combine(getPackedValues().prefixes[tag - 1879048192], input);
-  }
-  if (tag >= 216 && tag <= 223) {
-    return combine(input, getPackedValues().suffixes[tag - 216]);
-  }
-  if (tag >= 27647 && tag <= 28671) {
-    return combine(input, getPackedValues().suffixes[tag - 27639]);
-  }
-  if (tag >= 1811940352 && tag <= 1879048191) {
-    return combine(input, getPackedValues().suffixes[tag - 1811939328]);
-  }
-  if (tag == SHARED_DATA_TAG_ID) {
-    // we do a special check for this so that we can keep the currentExtensions as densely stored array (v8 stores arrays densely under about 3000 elements)
-    return {
-      packedValues: packedValues,
-      structures: currentStructures.slice(0),
-      version: input,
-    };
-  }
-  if (tag == 55799) {
-    // self-descriptive CBOR tag, just return input value
-    return input;
-  }
-});
-
-const isLittleEndianMachine =
-  new Uint8Array(new Uint16Array([1]).buffer)[0] == 1;
-const typedArrays = [
-  Uint8Array,
-  Uint8ClampedArray,
-  Uint16Array,
-  Uint32Array,
-  typeof BigUint64Array === "undefined"
-    ? { name: "BigUint64Array" }
-    : BigUint64Array,
-  Int8Array,
-  Int16Array,
-  Int32Array,
-  typeof BigInt64Array === "undefined"
-    ? { name: "BigInt64Array" }
-    : BigInt64Array,
-  Float32Array,
-  Float64Array,
-];
-const typedArrayTags = [64, 68, 69, 70, 71, 72, 77, 78, 79, 85, 86];
-for (let i = 0; i < typedArrays.length; i++) {
-  registerTypedArray(typedArrays[i], typedArrayTags[i]);
-}
-function registerTypedArray(TypedArray, tag) {
-  const dvMethod = "get" + TypedArray.name.slice(0, -5);
-  let bytesPerElement;
-  if (typeof TypedArray === "function") {
-    bytesPerElement = TypedArray.BYTES_PER_ELEMENT;
-  } else {
-    TypedArray = null;
-  }
-  for (let littleEndian = 0; littleEndian < 2; littleEndian++) {
-    if (!littleEndian && bytesPerElement == 1) {
-      continue;
-    }
-    const sizeShift =
-      bytesPerElement == 2
-        ? 1
-        : bytesPerElement == 4
-          ? 2
-          : bytesPerElement == 8
-            ? 3
-            : 0;
-    currentExtensions[littleEndian ? tag : tag - 4] =
-      bytesPerElement == 1 || littleEndian == isLittleEndianMachine
-        ? (buffer) => {
-            if (!TypedArray) {
-              throw new Error("Could not find typed array for code " + tag);
-            }
-            if (!currentDecoder.copyBuffers) {
-              // try provide a direct view, but will only work if we are byte-aligned
-              if (
-                bytesPerElement === 1 ||
-                (bytesPerElement === 2 && !(buffer.byteOffset & 1)) ||
-                (bytesPerElement === 4 && !(buffer.byteOffset & 3)) ||
-                (bytesPerElement === 8 && !(buffer.byteOffset & 7))
-              ) {
-                return new TypedArray(
-                  buffer.buffer,
-                  buffer.byteOffset,
-                  buffer.byteLength >> sizeShift,
-                );
-              }
-            }
-            // we have to slice/copy here to get a new ArrayBuffer, if we are not word/byte aligned
-            return new TypedArray(
-              Uint8Array.prototype.slice.call(buffer, 0).buffer,
-            );
-          }
-        : (buffer) => {
-            if (!TypedArray) {
-              throw new Error("Could not find typed array for code " + tag);
-            }
-            const dv = new DataView(
-              buffer.buffer,
-              buffer.byteOffset,
-              buffer.byteLength,
-            );
-            const elements = buffer.length >> sizeShift;
-            const ta = new TypedArray(elements);
-            const method = dv[dvMethod];
-            for (let i = 0; i < elements; i++) {
-              ta[i] = method.call(dv, i << sizeShift, littleEndian);
-            }
-            return ta;
-          };
-  }
-}
-
-function readBundleExt() {
-  const length = readJustLength();
-  const bundlePosition = position + read();
-  for (let i = 2; i < length; i++) {
-    // skip past bundles that were already read
-    const bundleLength = readJustLength(); // this will increment position, so must add to position afterwards
-    position += bundleLength;
-  }
-  const dataPosition = position;
-  position = bundlePosition;
-  bundledStrings = [
-    readStringJS(readJustLength()),
-    readStringJS(readJustLength()),
-  ];
-  bundledStrings.position0 = 0;
-  bundledStrings.position1 = 0;
-  bundledStrings.postBundlePosition = position;
-  position = dataPosition;
-  return read();
-}
-
-function readJustLength() {
-  let token = src[position++] & 0x1f;
-  if (token > 0x17) {
-    switch (token) {
-      case 0x18:
-        token = src[position++];
-        break;
-      case 0x19:
-        token = dataView.getUint16(position);
-        position += 2;
-        break;
-      case 0x1a:
-        token = dataView.getUint32(position);
-        position += 4;
-        break;
-    }
-  }
-  return token;
-}
-
-function loadShared() {
-  if (currentDecoder.getShared) {
-    const sharedData =
-      saveState(() => {
-        // save the state in case getShared modifies our buffer
-        src = null;
-        return currentDecoder.getShared();
-      }) || {};
-    const updatedStructures = sharedData.structures || [];
-    currentDecoder.sharedVersion = sharedData.version;
-    packedValues = currentDecoder.sharedValues = sharedData.packedValues;
-    if (currentStructures === true) {
-      currentDecoder.structures = currentStructures = updatedStructures;
-    } else {
-      currentStructures.splice.apply(
-        currentStructures,
-        [0, updatedStructures.length].concat(updatedStructures),
-      );
-    }
-  }
-}
-
-function saveState(callback) {
-  const savedSrcEnd = srcEnd;
-  const savedPosition = position;
-  const savedStringPosition = stringPosition;
-  const savedSrcStringStart = srcStringStart;
-  const savedSrcStringEnd = srcStringEnd;
-  const savedSrcString = srcString;
-  const savedStrings = strings;
-  const savedReferenceMap = referenceMap;
-  const savedBundledStrings = bundledStrings;
-
-  // TODO: We may need to revisit this if we do more external calls to user code (since it could be slow)
-  const savedSrc = new Uint8Array(src.slice(0, srcEnd)); // we copy the data in case it changes while external data is processed
-  const savedStructures = currentStructures;
-  const savedDecoder = currentDecoder;
-  const savedSequentialMode = sequentialMode;
-  const value = callback();
-  srcEnd = savedSrcEnd;
-  position = savedPosition;
-  stringPosition = savedStringPosition;
-  srcStringStart = savedSrcStringStart;
-  srcStringEnd = savedSrcStringEnd;
-  srcString = savedSrcString;
-  strings = savedStrings;
-  referenceMap = savedReferenceMap;
-  bundledStrings = savedBundledStrings;
-  src = savedSrc;
-  sequentialMode = savedSequentialMode;
-  currentStructures = savedStructures;
-  currentDecoder = savedDecoder;
-  dataView = new DataView(src.buffer, src.byteOffset, src.byteLength);
-  return value;
-}
 function clearSource() {
   src = null;
   referenceMap = null;
@@ -1486,7 +472,8 @@ function clearSource() {
 
 const mult10 = new Array(147); // this is a table matching binary exponents to the multiplier to determine significant digit rounding
 for (let i = 0; i < 256; i++) {
-  mult10[i] = Number("1e" + Math.floor(45.15 - i * 0.30103));
+  mult10[i] = /* @__PURE__ */ (() =>
+    Number("1e" + Math.floor(45.15 - i * 0.30103)))();
 }
-const defaultDecoder = new Decoder({ useRecords: false });
+const defaultDecoder = new Decoder();
 export const decode = defaultDecoder.decode;

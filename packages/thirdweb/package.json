@@ -149,6 +149,7 @@
     "@types/react": "18.2.17",
     "@viem/anvil": "^0.0.7",
     "@vitest/coverage-v8": "^1.2.2",
+    "dotenv-mono": "^1.3.10",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-jsdoc": "^48.0.6",

@@ -9,7 +9,7 @@ describe("erc721.tokenUri", () => {
   afterEach(() => {
     fetchSpy.mockClear();
   });
-  it.only("should return the correct tokenUri", async () => {
+  it("should return the correct tokenUri", async () => {
     const uri = await tokenURI({
       contract: DOODLES_CONTRACT,
       tokenId: 1n,
