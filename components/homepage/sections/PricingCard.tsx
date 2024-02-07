@@ -1,4 +1,4 @@
-import { Box, CardProps, Center, Flex, Icon, Tooltip } from "@chakra-ui/react";
+import { Box, CardProps, Center, Flex } from "@chakra-ui/react";
 import {
   TrackedLinkButton,
   Heading,
@@ -8,21 +8,21 @@ import {
   Badge,
 } from "tw-components";
 
-import { IoCheckmarkCircle } from "react-icons/io5";
 import { PLANS } from "utils/pricing";
 import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { AiOutlineDollarCircle } from "react-icons/ai";
+import { FeatureItem } from "./FeatureItem";
+import { UpgradeModal } from "./UpgradeModal";
 
 interface PricingCardProps {
   name: AccountPlan;
   ctaProps: TrackedLinkButtonProps;
   ctaTitle?: string;
   ctaHint?: string;
-  onHomepage?: boolean;
+  onDashboard?: boolean;
   cardProps?: CardProps;
   highlighted?: boolean;
   current?: boolean;
-  striked?: boolean;
+  canTrialGrowth?: boolean;
   size?: "sm" | "lg";
 }
 
@@ -32,10 +32,11 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   ctaHint,
   ctaProps,
   cardProps,
+  onDashboard,
   size = "lg",
   highlighted = false,
   current = false,
-  striked = false,
+  canTrialGrowth = false,
 }) => {
   const plan = PLANS[name];
   const isCustomPrice = typeof plan.price === "string";
@@ -79,11 +80,11 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             {plan.description}
           </Text>
         </Flex>
-        <Flex alignItems="flex-end" gap={2}>
+        <Flex alignItems={{ base: "center", md: "flex-end" }} gap={2}>
           <Heading
             size={size === "lg" ? "title.2xl" : "title.md"}
             lineHeight={1}
-            textDecor={striked ? "line-through" : "none"}
+            textDecor={canTrialGrowth ? "line-through" : "none"}
           >
             {!isCustomPrice && "$"}
             {plan.price}
@@ -108,30 +109,40 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           <FeatureItem key={f} text={f} />
         ))}
       </Flex>
-      <Flex flexDir="column" gap={3} position="relative" mb={3}>
-        {ctaTitle && (
-          <TrackedLinkButton
-            variant="outline"
-            py={6}
-            label={ctaProps.label ?? name}
-            size={size === "lg" ? "md" : "sm"}
-            {...ctaProps}
-          >
-            {ctaTitle}
-          </TrackedLinkButton>
-        )}
-        {ctaHint && (
-          <Text
-            textAlign="center"
-            size="body.sm"
-            w="full"
-            position={{ base: "static", xl: "absolute" }}
-            top={ctaTitle ? 14 : -9}
-          >
-            {ctaHint}
-          </Text>
-        )}
-      </Flex>
+      {name === AccountPlan.Growth && onDashboard ? (
+        <UpgradeModal
+          name={name}
+          ctaProps={ctaProps}
+          ctaTitle={ctaTitle}
+          ctaHint={ctaHint}
+          canTrialGrowth={canTrialGrowth}
+        />
+      ) : (
+        <Flex flexDir="column" gap={3} position="relative" mb={3}>
+          {ctaTitle && (
+            <TrackedLinkButton
+              variant="outline"
+              py={6}
+              label={ctaProps.label ?? name}
+              size={size === "lg" ? "md" : "sm"}
+              {...ctaProps}
+            >
+              {ctaTitle}
+            </TrackedLinkButton>
+          )}
+          {ctaHint && (
+            <Text
+              textAlign="center"
+              size="body.sm"
+              w="full"
+              position={{ base: "static", xl: "absolute" }}
+              top={ctaTitle ? 14 : -9}
+            >
+              {ctaHint}
+            </Text>
+          )}
+        </Flex>
+      )}
     </Card>
   );
 
@@ -155,53 +166,4 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   }
 
   return content;
-};
-
-interface FeatureItemProps {
-  text: string | string[];
-}
-
-const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
-  const titleStr = Array.isArray(text) ? text[0] : text;
-
-  return (
-    <Flex gap={2} alignItems="flex-start">
-      <Icon as={IoCheckmarkCircle} boxSize={5} mt={0.5} />{" "}
-      {Array.isArray(text) ? (
-        <Flex alignItems="center" justifyItems="center" gap={2}>
-          <Text>{titleStr}</Text>
-          <Tooltip
-            label={
-              <Card
-                py={2}
-                px={4}
-                bgColor="backgroundHighlight"
-                borderRadius="lg"
-              >
-                <Text size="label.sm" lineHeight={1.5}>
-                  {text[1]}
-                </Text>
-              </Card>
-            }
-            p={0}
-            bg="transparent"
-            boxShadow="none"
-          >
-            <Box pt={1} display={{ base: "none", md: "block" }}>
-              <Icon as={AiOutlineDollarCircle} boxSize={4} color="blue.500" />
-            </Box>
-          </Tooltip>
-          <Text
-            color="gray.700"
-            minW="max-content"
-            display={{ base: "block", md: "none" }}
-          >
-            {text[1]}
-          </Text>
-        </Flex>
-      ) : (
-        <Text>{titleStr}</Text>
-      )}
-    </Flex>
-  );
 };

@@ -85,6 +85,7 @@ export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
             label: "freePlan",
             href: "/",
           }}
+          onDashboard
         />
 
         <PricingCard
@@ -102,6 +103,7 @@ export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
             variant: "solid",
             colorScheme: "blue",
           }}
+          onDashboard
         />
       </SimpleGrid>
     </>

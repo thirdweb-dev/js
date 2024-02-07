@@ -67,7 +67,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 ? `Your free trial will end in 30 days.`
                 : undefined
             }
-            striked={canTrialGrowth}
+            canTrialGrowth={canTrialGrowth}
             ctaProps={{
               category: trackingCategory,
               label: canTrialGrowth ? "claimGrowthTrial" : undefined,

@@ -1,6 +1,5 @@
 import { Box, Flex, List, ListItem, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import React, { Fragment } from "react";
 import { Heading, Text } from "tw-components";
 
 const reasons = [

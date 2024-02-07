@@ -1,8 +1,5 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { Aurora } from "components/homepage/Aurora";
 import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
-import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
-import React, { Fragment } from "react";
 import { Heading, Text } from "tw-components";
 
 const MissionSection = () => {
