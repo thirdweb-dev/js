@@ -42,6 +42,7 @@ export const PLANS: {
       "Custom branding",
       "User analytics",
       "Third party auth support",
+      "Advanced paymaster rules",
     ],
   },
   [AccountPlan.Pro]: {
