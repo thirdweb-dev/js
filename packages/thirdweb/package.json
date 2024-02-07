@@ -11,9 +11,6 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "type": "module",
-  "bin": {
-    "thirdweb": "node_modules/@thirdweb-dev/cli/dist/cli/index.js"
-  },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -54,6 +51,11 @@
       "import": "./dist/esm/wallets/index.js",
       "default": "./dist/cjs/wallets/index.js"
     },
+    "./utils": {
+      "types": "./dist/types/utils/index.d.ts",
+      "import": "./dist/esm/utils/index.js",
+      "default": "./dist/cjs/utils/index.js"
+    },
     "./wallets/*": {
       "types": "./dist/types/wallets/*.d.ts",
       "import": "./dist/esm/wallets/*.js",
@@ -91,6 +93,9 @@
       "wallets": [
         "./dist/types/wallets/index.d.ts"
       ],
+      "utils": [
+        "./dist/types/utils/index.d.ts"
+      ],
       "wallets/*": [
         "./dist/types/wallets/*.d.ts"
       ],
@@ -127,30 +132,31 @@
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tanstack/react-query": "^5.18.0",
-    "@walletconnect/ethereum-provider": "^2.11.0",
+    "@tanstack/react-query": "^5.18.1",
+    "@walletconnect/ethereum-provider": "^2.11.1",
     "abitype": "^1.0.0",
+    "bs58": "^5.0.0",
+    "cbor-x": "^1.5.8",
     "fuse.js": "^7.0.0",
     "mipd": "^0.0.5",
     "qrcode": "^1.5.3",
-    "viem": "^2.7.1"
+    "viem": "^2.7.6"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^5.18.0",
+    "@tanstack/eslint-plugin-query": "^5.18.1",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@types/bun": "^1.0.4",
+    "@types/bun": "^1.0.5",
     "@types/qrcode": "^1.5.5",
     "@types/react": "18.2.17",
     "@viem/anvil": "^0.0.7",
     "@vitest/coverage-v8": "^1.2.2",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
-    "eslint-plugin-jsdoc": "^48.0.4",
+    "eslint-plugin-jsdoc": "^48.0.6",
     "ethers5": "npm:ethers@^5.0.0",
     "ethers6": "npm:ethers@^6.0.0",
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
-    "tinybench": "^2.6.0",
     "typedoc-gen": "workspace:*",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
