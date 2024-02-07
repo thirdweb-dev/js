@@ -1,8 +1,8 @@
-import { parseUnits } from "viem";
 import {
   prepareTransaction,
   type TxOpts,
 } from "../../../transaction/transaction.js";
+import { parseUnits } from "../../../utils/units.js";
 
 type TransferParams = { to: string } & (
   | {
