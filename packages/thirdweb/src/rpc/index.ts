@@ -18,3 +18,4 @@ export { eth_sendRawTransaction } from "./actions/eth_sendRawTransaction.js";
 export { eth_getCode } from "./actions/eth_getCode.js";
 export { eth_getBalance } from "./actions/eth_getBalance.js";
 export { eth_getStorageAt } from "./actions/eth_getStorageAt.js";
+export { eth_getTransactionByHash } from "./actions/eth_getTransactionByHash.js";
