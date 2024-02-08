@@ -1,7 +1,10 @@
+import { getRequestTimeoutConfig } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 
-export type DownloadOptions = ResolveSchemeOptions;
+export type DownloadOptions = ResolveSchemeOptions & {
+  requestTimeoutMs?: number;
+};
 
 /**
  * Downloads a file from the specified URI.
@@ -18,5 +21,13 @@ export type DownloadOptions = ResolveSchemeOptions;
  * ```
  */
 export async function download(options: DownloadOptions) {
-  return await getClientFetch(options.client)(resolveScheme(options));
+  const requestTimeoutMs = getRequestTimeoutConfig(
+    options.client,
+    "storage",
+    options.requestTimeoutMs,
+  );
+
+  return getClientFetch(options.client)(resolveScheme(options), {
+    requestTimeoutMs,
+  });
 }

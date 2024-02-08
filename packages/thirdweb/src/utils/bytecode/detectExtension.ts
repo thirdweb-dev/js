@@ -26,12 +26,28 @@ export async function detectMethod(
   options: DetectExtensionOptions,
 ): Promise<boolean> {
   const bytecode = await getByteCode(options.contract);
+  return detectMethodInBytecode({ bytecode, method: options.method });
+}
+
+type DetectExtensionInBytecodeOptions = {
+  bytecode: string;
+  method: string | AbiFunction;
+};
+/**
+ * Detects if a specific method is present in the bytecode of a contract.
+ * @param options - The options for detecting the method in the bytecode.
+ * @returns A boolean indicating whether the method is present in the bytecode.
+ * @internal
+ */
+export function detectMethodInBytecode(
+  options: DetectExtensionInBytecodeOptions,
+) {
   // if we can't get the bytecode we know the contract is not deployed
-  if (bytecode === "0x") {
+  if (options.bytecode === "0x") {
     return false;
   }
   // we strip the leading `0x` from the function selector
   const fnSelector = getFunctionSelector(options.method).slice(2);
   // indexOf is slightly faster than includes
-  return bytecode.indexOf(fnSelector) > -1;
+  return options.bytecode.indexOf(fnSelector) > -1;
 }

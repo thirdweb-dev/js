@@ -1,5 +1,8 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
-import type { ThirdwebClient } from "../client/client.js";
+import {
+  getRequestTimeoutConfig,
+  type ThirdwebClient,
+} from "../client/client.js";
 import {
   getChainIdFromChain,
   type Chain,
@@ -83,6 +86,7 @@ type RPCOptions = Readonly<{
   config?: {
     maxBatchSize?: number;
     batchTimeoutMs?: number;
+    requestTimeoutMs?: number;
   };
 }>;
 
@@ -155,6 +159,7 @@ export function getRpcClient(
       fetchRpc(options.client, {
         requests: activeBatch.map((inflight) => inflight.request),
         chain: options.chain,
+        requestTimeoutMs: options.config?.requestTimeoutMs,
       })
         .then((responses) => {
           // for each response, resolve the inflight request
@@ -224,6 +229,7 @@ export function getRpcClient(
 type FetchRpcOptions = {
   requests: RpcRequest[];
   chain: Chain;
+  requestTimeoutMs?: number;
 };
 
 /**
@@ -231,14 +237,20 @@ type FetchRpcOptions = {
  */
 async function fetchRpc(
   client: ThirdwebClient,
-  { requests, chain }: FetchRpcOptions,
+  options: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
-  const rpcUrl = getRpcUrlForChain({ client, chain });
+  const rpcUrl = getRpcUrlForChain({ client, chain: options.chain });
+  const requestTimeoutMs = getRequestTimeoutConfig(
+    client,
+    "storage",
+    options.requestTimeoutMs,
+  );
 
   const response = await getClientFetch(client)(rpcUrl, {
     headers: { "Content-Type": "application/json" },
-    body: stringify(requests),
+    body: stringify(options.requests),
     method: "POST",
+    requestTimeoutMs,
   });
 
   if (!response.ok) {

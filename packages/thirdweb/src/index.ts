@@ -13,7 +13,7 @@ export {
 } from "./client/client.js";
 
 // chain
-export { type Chain, defineChain } from "./chain/index.js";
+export { type Chain, defineChain, getChainIdFromChain } from "./chain/index.js";
 
 // contract
 export {

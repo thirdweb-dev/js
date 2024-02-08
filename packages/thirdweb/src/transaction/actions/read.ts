@@ -11,8 +11,7 @@ import {
 } from "../transaction.js";
 import { encode } from "./encode.js";
 import { resolveAbiFunction } from "./resolve-abi.js";
-import { eth_call, getRpcClient } from "../../rpc/index.js";
-import { decodeFunctionResult } from "../../abi/decode.js";
+import { readTransactionRaw } from "./raw/raw-read.js";
 
 /**
  * Reads data from a smart contract.
@@ -49,7 +48,7 @@ export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 len
 
 /**
  * Reads the result of a transaction from the blockchain.
- * @param tx - The transaction to read.
+ * @param transaction - The transaction to read.
  * @returns A promise that resolves to the decoded output of the transaction.
  * @example
  * ```ts
@@ -58,28 +57,20 @@ export type ReadOutputs<abiFn extends AbiFunction> = // if the outputs are 0 len
  * ```
  */
 export async function readTransaction<const abiFn extends AbiFunction>(
-  tx: Transaction<abiFn>,
+  transaction: Transaction<abiFn>,
 ): Promise<ReadOutputs<abiFn>> {
   const [encodedData, resolvedAbiFunction] = await Promise.all([
-    encode(tx),
-    resolveAbiFunction(tx),
+    encode(transaction),
+    resolveAbiFunction(transaction),
   ]);
 
   if (!resolvedAbiFunction) {
     throw new Error("Unable to resolve ABI function");
   }
 
-  const rpcRequest = getRpcClient(tx.contract);
-  const result = await eth_call(rpcRequest, {
-    data: encodedData,
-    to: tx.contract.address,
+  return readTransactionRaw<abiFn>({
+    transaction,
+    abiFunction: resolvedAbiFunction as abiFn,
+    encodedData,
   });
-
-  const decoded = decodeFunctionResult(resolvedAbiFunction, result);
-
-  if (Array.isArray(decoded) && decoded.length === 1) {
-    return decoded[0];
-  }
-
-  return decoded as ReadOutputs<abiFn>;
 }

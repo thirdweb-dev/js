@@ -24,9 +24,11 @@ export function getClientFetch(client: ThirdwebClient) {
    */
   async function fetchWithHeaders(
     url: string,
-    init?: RequestInit,
+    init?: Omit<RequestInit, "signal"> & { requestTimeoutMs?: number },
   ): Promise<Response> {
-    const headers = new Headers(init?.headers);
+    const { requestTimeoutMs, ...restInit } = init || {};
+
+    const headers = new Headers(restInit?.headers);
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
     if (isThirdwebUrl(url)) {
       if (client.secretKey) {
@@ -39,7 +41,22 @@ export function getClientFetch(client: ThirdwebClient) {
       });
     }
 
-    return fetch(url, { ...init, headers });
+    let abortController: AbortController | undefined;
+    let abortTimeout: ReturnType<typeof setTimeout> | undefined;
+    if (requestTimeoutMs) {
+      abortController = new AbortController();
+      abortTimeout = setTimeout(abortController.abort, requestTimeoutMs);
+    }
+
+    return fetch(url, {
+      ...restInit,
+      headers,
+      signal: abortController?.signal,
+    }).finally(() => {
+      if (abortTimeout) {
+        clearTimeout(abortTimeout);
+      }
+    });
   }
   FETCH_CACHE.set(client, fetchWithHeaders);
   return fetchWithHeaders;
