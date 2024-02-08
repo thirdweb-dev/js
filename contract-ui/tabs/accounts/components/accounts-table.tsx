@@ -42,6 +42,9 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
       title="account"
       columns={columns}
       data={data.map((account) => ({ account }))}
+      showMore={{
+        pageSize: 50,
+      }}
       isLoading={accountsQuery.isLoading}
       isFetched={accountsQuery.isFetched}
       onRowClick={(row) => {
