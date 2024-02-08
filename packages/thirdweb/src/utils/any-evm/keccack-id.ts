@@ -1,4 +1,4 @@
-import { keccak256, toBytes, type Hex } from "viem";
+import { keccak256, type Hex, stringToBytes } from "viem";
 
 /**
  * Calculates the keccak ID of the given input.
@@ -10,6 +10,6 @@ import { keccak256, toBytes, type Hex } from "viem";
  * const keccakId = keccackId(input);
  * ```
  */
-export function keccackId(input: string | number | bigint | boolean): Hex {
-  return keccak256(toBytes(input));
+export function keccackId(input: string): Hex {
+  return keccak256(stringToBytes(input));
 }

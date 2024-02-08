@@ -2,7 +2,7 @@ import { formatAbi, type Abi, parseAbi } from "abitype";
 import type { ThirdwebContract } from "../index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getByteCode } from "./get-bytecode.js";
+import { getBytecode } from "./get-bytecode.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { detectMethodInBytecode } from "../../utils/bytecode/detectExtension.js";
@@ -106,15 +106,21 @@ export async function resolveAbiFromContractApi(
 export async function resolveAbiFromBytecode(
   contract: ThirdwebContract<any>,
 ): Promise<Abi> {
-  const bytecode = await getByteCode(contract);
+  const bytecode = await getBytecode(contract);
   const ipfsUri = extractIPFSUri(bytecode);
   if (!ipfsUri) {
-    throw new Error("No IPFS URI found in bytecode");
+    // just early exit if we can't find an IPFS URI
+    return [];
   }
-  const res = await download({ uri: ipfsUri, client: contract.client });
-  const json = await res.json();
-  // ABI is at `json.output.abi`
-  return json.output.abi;
+  try {
+    const res = await download({ uri: ipfsUri, client: contract.client });
+    const json = await res.json();
+    // ABI is at `json.output.abi`
+    return json.output.abi;
+  } catch {
+    // if we can't resolve the ABI from the IPFS URI, return an empty array
+    return [];
+  }
 }
 
 const PLUGINS_ABI = {
@@ -252,7 +258,7 @@ export async function resolveCompositeAbiFromBytecode(
 ) {
   const [rootAbi, bytecode] = await Promise.all([
     resolveAbiFromBytecode(contract),
-    getByteCode(contract),
+    getBytecode(contract),
   ]);
 
   // check if contract is plugin-pattern / dynamic

@@ -3,7 +3,7 @@ import type { ThirdwebContract } from "../../index.js";
 import { eth_getStorageAt, getRpcClient } from "../../rpc/index.js";
 import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
-import { getByteCode } from "../../contract/actions/get-bytecode.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
 // TODO: move to const exports
 export const AddressZero = "0x0000000000000000000000000000000000000000";
@@ -22,7 +22,7 @@ export async function resolveImplementation(
   contract: ThirdwebContract<any>,
 ): Promise<{ address: string; bytecode: string }> {
   const [bytecode, beacon] = await Promise.all([
-    getByteCode(contract),
+    getBytecode(contract),
     getBeaconFromStorageSlot(contract),
   ]);
   // check minimal proxy first synchronously
@@ -31,7 +31,7 @@ export async function resolveImplementation(
   if (minimalProxyImplementationAddress) {
     return {
       address: minimalProxyImplementationAddress,
-      bytecode: await getByteCode({
+      bytecode: await getBytecode({
         ...contract,
         address: minimalProxyImplementationAddress,
       }),
@@ -57,7 +57,7 @@ export async function resolveImplementation(
     ) {
       return {
         address: implementationAddress,
-        bytecode: await getByteCode({
+        bytecode: await getBytecode({
           ...contract,
           address: implementationAddress,
         }),

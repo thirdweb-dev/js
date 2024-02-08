@@ -1,5 +1,5 @@
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { getByteCode } from "../../contract/actions/get-bytecode.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
 /**
  * Checks if a contract is deployed by verifying its bytecode.
@@ -18,5 +18,5 @@ import { getByteCode } from "../../contract/actions/get-bytecode.js";
 export async function isContractDeployed(
   contract: ThirdwebContract,
 ): Promise<boolean> {
-  return (await getByteCode(contract)) !== "0x";
+  return (await getBytecode(contract)) !== "0x";
 }

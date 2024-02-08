@@ -27,7 +27,11 @@ export async function download(options: DownloadOptions) {
     options.requestTimeoutMs,
   );
 
-  return getClientFetch(options.client)(resolveScheme(options), {
+  const res = await getClientFetch(options.client)(resolveScheme(options), {
     requestTimeoutMs,
   });
+  if (!res.ok) {
+    throw new Error(`Failed to download file: ${res.statusText}`);
+  }
+  return res;
 }
