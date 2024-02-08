@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tag,
   UseDisclosureReturn,
   VStack,
   useDisclosure,
@@ -171,13 +172,15 @@ const RequestCloudHostedEngineModal = ({
           >
             <Flex flexDir="column" gap={6}>
               <Flex flexDir="column" gap={3}>
-                <Flex gap={2}>
-                  <Heading as="h3" size="title.md" textTransform="capitalize">
-                    Cloud-Hosted Engine
-                  </Heading>
-                </Flex>
+                <Tag colorScheme="green" w="fit-content">
+                  Add-on
+                </Tag>
+                <Heading as="h3" size="title.md">
+                  Cloud-Hosted Engine
+                </Heading>
                 <Text maxW={320}>Host Engine on thirdweb with no setup.</Text>
               </Flex>
+
               <Flex alignItems="flex-end" gap={2}>
                 <Heading size="title.md" lineHeight={1}>
                   $99
@@ -208,7 +211,7 @@ const RequestCloudHostedEngineModal = ({
               ))}
             </Flex>
 
-            <VStack>
+            <VStack gap={3}>
               <Button
                 onClick={async () => {
                   if (hasValidPayment) {
@@ -221,7 +224,7 @@ const RequestCloudHostedEngineModal = ({
                 py={6}
                 w="full"
               >
-                Confirm
+                Add to my plan
               </Button>
               <Text size="body.sm" textAlign="center">
                 We will reach out within 1 business day. You won&apos;t be
