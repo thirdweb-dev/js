@@ -62,6 +62,8 @@ const usageEventSchema = z.object({
   extension: z.string().optional(),
   retryCount: z.number().int().nonnegative().optional(),
   policyId: z.string().optional(),
+  msSinceQueue: z.number().nonnegative().optional(),
+  msSinceSend: z.number().nonnegative().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
