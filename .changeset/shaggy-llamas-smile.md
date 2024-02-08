@@ -2,4 +2,4 @@
 "@thirdweb-dev/service-utils": patch
 ---
 
-Add latency prop to logHttpRequest
+Added new properties to usage
