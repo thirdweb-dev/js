@@ -6,8 +6,8 @@ export function useLoggedInUser(): ReturnType<typeof useUser> {
 
   // user is not considered logged in if the connected address does not match the user's address
   if (
-    userQuery.isLoggedIn &&
-    connectedAddress &&
+    !userQuery.isLoggedIn ||
+    !connectedAddress ||
     userQuery.user?.address !== connectedAddress
   ) {
     return {
