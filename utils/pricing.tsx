@@ -148,6 +148,18 @@ export const PRICING_SECTIONS: PricingSection[] = [
         pro: "checkmark",
       },
       {
+        title: "Global paymaster sponsorship rules",
+        starter: "checkmark",
+        growth: "checkmark",
+        pro: "checkmark",
+      },
+      {
+        title: "Server based sponsorship rules",
+        starter: "N/A",
+        growth: "checkmark",
+        pro: "checkmark",
+      },
+      {
         title: "SLAs",
         starter: "N/A",
         growth: "N/A",
