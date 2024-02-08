@@ -114,7 +114,7 @@ export const PRICING_SECTIONS: PricingSection[] = [
       {
         title: "Support Channel",
         starter: "Community + AI",
-        growth: "Ticketing",
+        growth: "Prioritized support",
         pro: "Dedicated",
       },
       {
