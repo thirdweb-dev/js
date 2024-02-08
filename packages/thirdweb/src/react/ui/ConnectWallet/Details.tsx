@@ -27,10 +27,7 @@ import {
   spacing,
   media,
 } from "../design-system/index.js";
-import {
-  type NetworkSelectorProps,
-  NetworkSelectorContent,
-} from "./NetworkSelector.js";
+import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { Text } from "../components/text.js";
@@ -42,6 +39,10 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import type {
+  ConnectWallet_DetailsButtonOptions,
+  ConnectWallet_DetailsModalOptions,
+} from "./ConnectWalletProps.js";
 // import { walletIds } from "../../../wallets/walletIds.js";
 
 // TEMP
@@ -63,19 +64,10 @@ type WalletDetailsModalScreen =
  */
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
-  style?: React.CSSProperties;
-  networkSelector?: Omit<
-    NetworkSelectorProps,
-    "theme" | "onClose" | "chains" | "open"
-  >;
-  className?: string;
-  detailsBtn?: () => JSX.Element;
-  showTestnetFaucet?: boolean;
+  detailsButton?: ConnectWallet_DetailsButtonOptions;
+  detailsModal?: ConnectWallet_DetailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
-  displayBalanceToken?: Record<number, string>;
-  hideSwitchToPersonalWallet?: boolean;
-  hideDisconnect?: boolean;
   chains: bigint[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
@@ -86,8 +78,8 @@ export const ConnectedWalletDetails: React.FC<{
   const { client } = useThirdwebProviderProps();
 
   const tokenAddress =
-    walletChainId && props.displayBalanceToken
-      ? props.displayBalanceToken[Number(walletChainId)]
+    walletChainId && props.detailsButton?.displayBalanceToken
+      ? props.detailsButton.displayBalanceToken[Number(walletChainId)]
       : undefined;
 
   const balanceQuery = useWalletBalance({
@@ -180,15 +172,17 @@ export const ConnectedWalletDetails: React.FC<{
   // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
   const avatarOrWalletIconUrl = activeAccount?.wallet.metadata.iconUrl || "";
 
-  const trigger = props.detailsBtn ? (
+  const trigger = props.detailsButton?.render ? (
     <div>
-      <props.detailsBtn />
+      <props.detailsButton.render />
     </div>
   ) : (
     <WalletInfoButton
       type="button"
-      className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
-      style={props.style}
+      className={`${TW_CONNECTED_WALLET} ${
+        props.detailsButton?.className || ""
+      }`}
+      style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
       <Img
@@ -278,9 +272,6 @@ export const ConnectedWalletDetails: React.FC<{
       />
     </MenuButton>
   );
-
-  const showFaucet =
-    props.showTestnetFaucet === undefined ? false : props.showTestnetFaucet;
 
   let content = (
     <div>
@@ -448,7 +439,7 @@ export const ConnectedWalletDetails: React.FC<{
             )} */}
 
           {/* Request Testnet funds */}
-          {showFaucet &&
+          {(props.detailsModal?.showTestnetFaucet ?? false) &&
             ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
               chainQuery.data?.chainId === LocalhostChainId) && (
               <MenuLink
@@ -523,7 +514,7 @@ export const ConnectedWalletDetails: React.FC<{
         <Spacer y="md" />
       </Container>
 
-      {props.hideDisconnect !== true && (
+      {props.detailsModal?.hideDisconnect !== true && (
         <Container>
           <Line />
           <Spacer y="sm" />
@@ -569,7 +560,7 @@ export const ConnectedWalletDetails: React.FC<{
         }
         open={true}
         theme={props.theme}
-        {...props.networkSelector}
+        {...props.detailsModal?.networkSelector}
         onClose={() => {
           setIsOpen(false);
         }}

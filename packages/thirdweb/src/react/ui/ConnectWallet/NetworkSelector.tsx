@@ -74,7 +74,7 @@ export type NetworkSelectorProps = {
    * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
    * @example
    * ```tsx
-   * import { darkTheme } from "@thirdweb-dev/react";
+   * import { darkTheme } from "thirdweb/react";
    *
    * <NetworkSelector
    *  open={true}
@@ -133,7 +133,7 @@ type NetworkSelectorInnerProps = {
    * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
    * @example
    * ```tsx
-   * import { darkTheme } from "@thirdweb-dev/react";
+   * import { darkTheme } from "thirdweb/react";
    *
    * <NetworkSelector
    *  open={true}
@@ -202,7 +202,7 @@ const fuseConfig = {
  * @param props - NetworkSelectorProps
  * @example
  * ```tsx
- * import { NetworkSelector } from "@thirdweb-dev/react";
+ * import { NetworkSelector } from "thirdweb/react";
  *
  * function Example() {
  *  const [open, setOpen] = useState(false);

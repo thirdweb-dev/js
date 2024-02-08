@@ -51,10 +51,10 @@ export type ConnectEmbedProps = {
    *
    * theme can be set to either "dark" or "light" or a custom theme object.
    *
-   * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+   * You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
    * @example
    * ```ts
-   * import { lightTheme } from "@thirdweb-dev/react";
+   * import { lightTheme } from "thirdweb/react";
    * const customTheme = lightTheme({
    *  colors: {
    *    modalBg: 'red'
@@ -234,10 +234,10 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  *
  * theme can be set to either "dark" or "light" or a custom theme object.
  *
- * You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+ * You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
  *
  * ```ts
- * import { lightTheme } from "@thirdweb-dev/react";
+ * import { lightTheme } from "thirdweb/react";
  * const customTheme = lightTheme({
  *  colors: {
  *    modalBg: 'red'

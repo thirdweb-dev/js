@@ -1,4 +1,15 @@
+export { darkTheme, lightTheme } from "./ui/design-system/index.js";
+
 export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
+
+export type {
+  ConnectWalletProps,
+  ConnectWallet_ConnectButtonOptions,
+  ConnectWallet_ConnectModalOptions,
+  ConnectWallet_DetailsButtonOptions,
+  ConnectWallet_DetailsModalOptions,
+} from "./ui/ConnectWallet/ConnectWalletProps.js";
+
 export {
   TransactionButton,
   type TransactionButtonProps,
