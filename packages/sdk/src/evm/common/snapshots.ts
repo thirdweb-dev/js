@@ -57,7 +57,7 @@ export async function createSnapshot(
  * @param version - optional version of the snapshot format (default V1)
  * @returns The generated MerkleTree
  */
-export async function createMerkleTreeeFromAllowList(
+export async function createMerkleTreeFromAllowList(
   snapshotInput: SnapshotInput,
   tokenDecimals: number = 18,
   version: SnapshotFormatVersion = SnapshotFormatVersion.V1,
