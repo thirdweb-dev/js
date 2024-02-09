@@ -23,7 +23,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = ({
 
   return (
     <Tooltip
-      closeDelay={1000}
+      closeDelay={3000}
       isDisabled={!!account?.advancedEnabled}
       p={0}
       bg="transparent"
