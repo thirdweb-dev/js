@@ -118,6 +118,18 @@ export type ConnectEmbedProps = {
    *
    */
   onConnect?: () => void;
+
+  /**
+   * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.
+   *
+   * If you want to hide it, set this to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectEmbed showThirdwebBranding={false} />
+   * ```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**
@@ -364,6 +376,7 @@ const ConnectEmbedContent = (
     isEmbed: true,
     auth: props.auth,
     onConnect: props.onConnect,
+    showThirdwebBranding: props.showThirdwebBranding,
   };
 
   return (

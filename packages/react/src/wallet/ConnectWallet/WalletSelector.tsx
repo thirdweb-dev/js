@@ -31,6 +31,7 @@ import { useTWLocale } from "../../evm/providers/locale-provider";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { StyledButton, StyledUl } from "../../design-system/elements";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import { PoweredByThirdweb } from "./PoweredByTW";
 
 type WalletSelectUIProps = {
   connect: (
@@ -429,7 +430,14 @@ export const WalletSelector: React.FC<{
         {topSection}
       </Container>
 
-      {bottomSection}
+      <div>
+        {bottomSection}
+        {isCompact && modalConfig.showThirdwebBranding !== false && (
+          <Container py="md">
+            <PoweredByThirdweb />
+          </Container>
+        )}
+      </div>
     </Container>
   );
 };

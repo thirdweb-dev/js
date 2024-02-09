@@ -6,6 +6,8 @@ import { Buffer } from "buffer";
 
 if (typeof window !== "undefined") {
   // Coinbase SDK uses Buffer for rendering the QRCode which requires a global polyfill
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   window.Buffer = Buffer;
 }
 
