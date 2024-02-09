@@ -8,7 +8,7 @@ import {
   reservedScreens,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
-import { ScreenSetup, useSetupScreen } from "./screen";
+import { useSetupScreen } from "./screen";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
   CustomThemeProvider,
@@ -299,8 +299,43 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;
-  const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
+
+  const contextTheme = useCustomTheme();
+
+  const walletUIStatesProps = {
+    theme: props.theme || contextTheme || defaultTheme,
+    modalSize: "compact" as const,
+    title: undefined,
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
+    isEmbed: true,
+    auth: props.auth,
+    onConnect: props.onConnect,
+    showThirdwebBranding: props.showThirdwebBranding,
+  };
+
+  if (show) {
+    return (
+      <WalletUIStatesProvider {...walletUIStatesProps}>
+        <CustomThemeProvider theme={walletUIStatesProps.theme}>
+          <ConnectEmbedContent {...props} onConnect={props.onConnect} />
+          <SyncedWalletUIStates {...walletUIStatesProps} />
+        </CustomThemeProvider>
+      </WalletUIStatesProvider>
+    );
+  }
+
+  return <div></div>;
+}
+
+const ConnectEmbedContent = (
+  props: Omit<ConnectEmbedProps, "onConnect"> & {
+    onConnect?: () => void;
+    loginOptional?: boolean;
+  },
+) => {
+  const requiresSignIn = useSignInRequired(props.loginOptional);
   const screenSetup = useSetupScreen();
   const { screen, setScreen, initialScreen } = screenSetup;
 
@@ -311,33 +346,8 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     }
   }, [requiresSignIn, screen, setScreen]);
 
-  if (show) {
-    return (
-      <ConnectEmbedContent
-        {...props}
-        onClose={() => {
-          setScreen(initialScreen);
-        }}
-        screenSetup={screenSetup}
-        onConnect={props.onConnect}
-      />
-    );
-  }
-
-  return <div></div>;
-}
-
-const ConnectEmbedContent = (
-  props: Omit<ConnectEmbedProps, "onConnect"> & {
-    onClose: () => void;
-    screenSetup: ScreenSetup;
-    onConnect?: () => void;
-  },
-) => {
-  const modalSize = "compact" as const;
   const connectionStatus = useConnectionStatus();
   const { isAutoConnecting } = useWalletContext();
-  const contextTheme = useCustomTheme();
 
   let content = null;
 
@@ -357,9 +367,11 @@ const ConnectEmbedContent = (
   } else {
     content = (
       <ConnectModalContent
-        screenSetup={props.screenSetup}
+        screenSetup={screenSetup}
         isOpen={true}
-        onClose={props.onClose}
+        onClose={() => {
+          setScreen(initialScreen);
+        }}
         onHide={() => {
           // no op
         }}
@@ -370,34 +382,17 @@ const ConnectEmbedContent = (
     );
   }
 
-  const walletUIStatesProps = {
-    theme: props.theme || contextTheme || defaultTheme,
-    modalSize: modalSize,
-    title: undefined,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    isEmbed: true,
-    auth: props.auth,
-    onConnect: props.onConnect,
-    showThirdwebBranding: props.showThirdwebBranding,
-  };
-
   return (
-    <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <EmbedContainer
-          className={props.className}
-          style={{
-            height: "auto",
-            maxWidth: modalMaxWidthCompact,
-            ...props.style,
-          }}
-        >
-          <DynamicHeight> {content} </DynamicHeight>
-          <SyncedWalletUIStates {...walletUIStatesProps} />
-        </EmbedContainer>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <EmbedContainer
+      className={props.className}
+      style={{
+        height: "auto",
+        maxWidth: modalMaxWidthCompact,
+        ...props.style,
+      }}
+    >
+      <DynamicHeight> {content} </DynamicHeight>
+    </EmbedContainer>
   );
 };
 
