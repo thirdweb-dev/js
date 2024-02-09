@@ -11,10 +11,10 @@ import {
   EmbeddedWalletConnectionArgs,
 } from "../../connectors/embedded-wallet/types";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
+import { WalletMeta } from "@thirdweb-dev/wallets/dist/declarations/src/evm/wallets/base";
 import { AUTH_OPTIONS_ICONS } from "../../types/embedded-wallet";
 import { getRandomString } from "../../connectors/embedded-wallet/embedded/helpers/getRandomValues";
 import { ANALYTICS } from "../../connectors/embedded-wallet/embedded/helpers/analytics";
-import { WalletMeta } from "@thirdweb-dev/wallets/src/evm/wallets/base";
 
 export type EmbeddedWalletOptions = WalletOptions<
   EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
