@@ -239,6 +239,7 @@ const DIAMOND_ABI = {
  * If the contract follows the base router pattern, it resolves the ABIs for the plugins and merges them with the root ABI.
  * If the contract follows the diamond pattern, it resolves the ABIs for the facets and merges them with the root ABI.
  * @param contract The contract for which to resolve the ABI.
+ * @param rootAbi The root ABI to use for the contract. If not provided, it resolves the ABI from the contract's bytecode.
  * @returns The resolved ABI for the contract.
  * @example
  * ```ts
@@ -255,9 +256,10 @@ const DIAMOND_ABI = {
  */
 export async function resolveCompositeAbiFromBytecode(
   contract: ThirdwebContract<any>,
+  rootAbi?: Abi,
 ) {
-  const [rootAbi, bytecode] = await Promise.all([
-    resolveAbiFromBytecode(contract),
+  const [rootAbi_, bytecode] = await Promise.all([
+    rootAbi ? rootAbi : resolveAbiFromBytecode(contract),
     getBytecode(contract),
   ]);
 
@@ -270,14 +272,14 @@ export async function resolveCompositeAbiFromBytecode(
       });
       // if there are no plugins, return the root ABI
       if (!pluginMap.length) {
-        return rootAbi;
+        return rootAbi_;
       }
       // get all the plugin addresses
       const plugins = [...new Set(pluginMap.map((item) => item.pluginAddress))];
       // resolve all the plugin ABIs
       const pluginAbis = await getAbisForPlugins({ contract, plugins });
       // return the merged ABI
-      return joinAbis({ pluginAbis, rootAbi });
+      return joinAbis({ pluginAbis, rootAbi: rootAbi_ });
     } catch (err) {
       console.warn("[resolveCompositeAbi:dynamic] ", err);
     }
@@ -292,7 +294,7 @@ export async function resolveCompositeAbiFromBytecode(
       });
       // if there are no plugins, return the root ABI
       if (!pluginMap.length) {
-        return rootAbi;
+        return rootAbi_;
       }
       // get all the plugin addresses
       const plugins = [
@@ -301,7 +303,7 @@ export async function resolveCompositeAbiFromBytecode(
       // resolve all the plugin ABIs
       const pluginAbis = await getAbisForPlugins({ contract, plugins });
       // return the merged ABI
-      return joinAbis({ pluginAbis, rootAbi });
+      return joinAbis({ pluginAbis, rootAbi: rootAbi_ });
     } catch (err) {
       console.warn("[resolveCompositeAbi:base-router] ", err);
     }
@@ -313,17 +315,17 @@ export async function resolveCompositeAbiFromBytecode(
       const facets = await readContractRaw({ contract, method: DIAMOND_ABI });
       // if there are no facets, return the root ABI
       if (!facets.length) {
-        return rootAbi;
+        return rootAbi_;
       }
       // get all the plugin addresses
       const plugins = facets.map((item) => item.facetAddress);
       const pluginAbis = await getAbisForPlugins({ contract, plugins });
-      return joinAbis({ pluginAbis, rootAbi });
+      return joinAbis({ pluginAbis, rootAbi: rootAbi_ });
     } catch (err) {
       console.warn("[resolveCompositeAbi:diamond] ", err);
     }
   }
-  return rootAbi;
+  return rootAbi_;
 }
 
 type GetAbisForPluginsOptions = {
