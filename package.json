@@ -28,7 +28,7 @@
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-icons/all-files": "^4.1.0",
     "@sentry/nextjs": "^7.80.0",
-    "@stripe/react-stripe-js": "^2.3.2",
+    "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.1.11",
     "@tanstack/query-async-storage-persister": "^4.33.0",
     "@tanstack/react-query": "^4.35.7",

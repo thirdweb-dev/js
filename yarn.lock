@@ -4470,10 +4470,10 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@stripe/react-stripe-js@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-2.3.2.tgz#75111cf929fdc27f59947726c282f8a8a14d6f16"
-  integrity sha512-3sKdD4w6X/Hs1wbFNU9lc9uJP86YrNLNcfJpZpiD1lWAg46ROfi9EkT1HiEmWWPYEjjXereJ4C2Eg90uYMq1uQ==
+"@stripe/react-stripe-js@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-2.4.0.tgz#b69d383a2b13e1104c5766695e7a865899cc84fb"
+  integrity sha512-1jVQEL3OuhuzNlf4OdfqovHt+MkWh8Uh8xpLxx/xUFUDdF+7/kDOrGKy+xJO3WLCfZUL7NAy+/ypwXbbYZi0tg==
   dependencies:
     prop-types "^15.7.2"
 
