@@ -36,6 +36,19 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
+    id: "mintcaster",
+    title: "Mintcaster",
+    homepage: "https://mintcaster.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/mintcaster/",
+    description:
+      "Bootstrap your own client on Farcaster — with a feed, cast functionality, and Sign-in with Farcaster auth. Add NFT minting functionality with thirdweb Engine.",
+    img: "/assets/templates/mintcaster.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Engine", "Farcaster"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
     id: "web3warriors",
     title: "Web3 Warriors",
     homepage: "https://web3warriors.thirdweb.com/",
