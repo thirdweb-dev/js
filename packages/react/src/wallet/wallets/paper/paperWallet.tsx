@@ -99,7 +99,7 @@ const PaperSelectionUI: React.FC<
     providers?: OAuthProvider[];
   }
 > = (props) => {
-  const screen = useScreenContext();
+  const { screen } = useScreenContext();
 
   // show the icon + text if
   // wide -

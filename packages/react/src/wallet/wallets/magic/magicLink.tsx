@@ -242,7 +242,7 @@ const MagicSelectUI = (
     oauthProviders?: OauthProvider[];
   },
 ) => {
-  const screen = useScreenContext();
+  const { screen } = useScreenContext();
 
   if (
     props.modalSize === "wide" ||
@@ -305,7 +305,7 @@ const MagicUI: React.FC<{
   }
 
   const showInputUI = isEmailEnabled || isSMSEnabled;
-  const screen = useScreenContext();
+  const { screen } = useScreenContext();
   const showSeparator =
     props.modalSize === "wide" ||
     (screen !== reservedScreens.main && props.modalSize === "compact");

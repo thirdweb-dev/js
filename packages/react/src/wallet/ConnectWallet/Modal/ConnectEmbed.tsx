@@ -8,7 +8,7 @@ import {
   reservedScreens,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
-import { useScreen } from "./screen";
+import { ScreenSetup, useSetupScreen } from "./screen";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
   CustomThemeProvider,
@@ -19,7 +19,6 @@ import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
 import { Theme, radius } from "../../../design-system";
 import {
-  WalletConfig,
   useConnectionStatus,
   useThirdwebAuthContext,
   useUser,
@@ -302,7 +301,8 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;
   const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
-  const { screen, setScreen, initialScreen } = useScreen();
+  const screenSetup = useSetupScreen();
+  const { screen, setScreen, initialScreen } = screenSetup;
 
   // if showing main screen but signIn is required, switch to signIn screen
   useEffect(() => {
@@ -318,9 +318,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
         onClose={() => {
           setScreen(initialScreen);
         }}
-        screen={screen}
-        setScreen={setScreen}
-        initialScreen={initialScreen}
+        screenSetup={screenSetup}
         onConnect={props.onConnect}
       />
     );
@@ -332,9 +330,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 const ConnectEmbedContent = (
   props: Omit<ConnectEmbedProps, "onConnect"> & {
     onClose: () => void;
-    screen: string | WalletConfig;
-    setScreen: (screen: string | WalletConfig) => void;
-    initialScreen: string | WalletConfig;
+    screenSetup: ScreenSetup;
     onConnect?: () => void;
   },
 ) => {
@@ -361,9 +357,7 @@ const ConnectEmbedContent = (
   } else {
     content = (
       <ConnectModalContent
-        initialScreen={props.initialScreen}
-        screen={props.screen}
-        setScreen={props.setScreen}
+        screenSetup={props.screenSetup}
         isOpen={true}
         onClose={props.onClose}
         onHide={() => {

@@ -9,7 +9,7 @@ import {
   modalMaxWidthWide,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
-import { useScreen } from "./screen";
+import { useSetupScreen } from "./screen";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
@@ -41,7 +41,7 @@ export type ConnectModalInlineProps = {
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const { screen, setScreen, initialScreen } = useScreen();
+  const screenSetup = useSetupScreen();
   const walletConfigs = useWallets();
   const modalSize =
     !canFitWideModal() || walletConfigs.length === 1
@@ -52,9 +52,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const content = (
     <>
       <ConnectModalContent
-        initialScreen={initialScreen}
-        screen={screen}
-        setScreen={setScreen}
+        screenSetup={screenSetup}
         onHide={() => {
           // no op
         }}

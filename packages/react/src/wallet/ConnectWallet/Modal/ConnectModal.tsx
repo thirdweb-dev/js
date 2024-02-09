@@ -26,7 +26,7 @@ import {
 } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import { Container, noScrollBar } from "../../../components/basic";
-import { ScreenContext, useScreen } from "./screen";
+import { ScreenSetup, ScreenSetupContext, useSetupScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
 import {
   CustomThemeProvider,
@@ -36,15 +36,14 @@ import { SignatureScreen } from "../SignatureScreen";
 import { StyledDiv } from "../../../design-system/elements";
 
 export const ConnectModalContent = (props: {
-  screen: string | WalletConfig;
-  initialScreen: string | WalletConfig;
-  setScreen: (screen: string | WalletConfig) => void;
+  screenSetup: ScreenSetup;
   onHide: () => void;
   onShow: () => void;
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { screen, setScreen, initialScreen, onHide, onShow, onClose } = props;
+  const { onHide, onShow, onClose } = props;
+  const { screen, setScreen, initialScreen } = props.screenSetup;
 
   const walletConfigs = useWallets();
   const connectionStatus = useConnectionStatus();
@@ -173,7 +172,7 @@ export const ConnectModalContent = (props: {
   );
 
   return (
-    <ScreenContext.Provider value={screen}>
+    <ScreenSetupContext.Provider value={props.screenSetup}>
       {isWideModal ? (
         <div
           style={{
@@ -205,14 +204,15 @@ export const ConnectModalContent = (props: {
           {typeof screen !== "string" && getWalletUI(screen)}
         </Container>
       )}
-    </ScreenContext.Provider>
+    </ScreenSetupContext.Provider>
   );
 };
 
 export const ConnectModal = () => {
   const { theme, modalSize } = useContext(ModalConfigCtx);
 
-  const { screen, setScreen, initialScreen } = useScreen();
+  const screenSetup = useSetupScreen();
+  const { screen, setScreen, initialScreen } = screenSetup;
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const [hideModal, setHideModal] = useState(false);
@@ -311,9 +311,7 @@ export const ConnectModal = () => {
         }}
       >
         <ConnectModalContent
-          initialScreen={initialScreen}
-          screen={screen}
-          setScreen={setScreen}
+          screenSetup={screenSetup}
           onHide={onHide}
           onShow={onShow}
           isOpen={isWalletModalOpen}
