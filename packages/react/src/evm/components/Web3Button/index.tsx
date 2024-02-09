@@ -308,7 +308,6 @@ export const Web3Button = <TAction extends ActionFn>(
         theme={theme}
         className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
         {...connectWallet}
-        showThirdwebBranding={true} // TODO: remove this
       />
     );
   }

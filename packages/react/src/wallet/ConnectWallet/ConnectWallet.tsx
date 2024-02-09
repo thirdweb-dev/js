@@ -600,6 +600,16 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *  })
  * />
  * ```
+ *
+ *
+ * ### showThirdwebBranding
+ * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+ *
+ * If you want to hide the branding, set this prop to `false`
+ *
+ * ```tsx
+ * <ConnectWallet showThirdwebBranding={false} />
+ *```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
