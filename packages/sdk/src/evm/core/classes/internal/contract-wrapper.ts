@@ -689,6 +689,11 @@ export class ContractWrapper<
   }
 
   private async enginePrepareRequest(transaction: GaslessTransaction) {
+    invariant(
+      this.options.gasless && "engine" in this.options.gasless,
+      "calling engine gasless transaction without openzeppelin config in the SDK options",
+    );
+
     const signer = this.getSigner();
     const provider = this.getProvider();
     const storage = this.storage;
@@ -793,6 +798,7 @@ export class ContractWrapper<
       };
     } else {
       const forwarderAddress =
+        this.options.gasless.engine.relayerForwarderAddress ||
         CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
         ]?.openzeppelinForwarder ||
@@ -806,24 +812,51 @@ export class ContractWrapper<
         transaction.from,
       ]);
 
-      const domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
-        chainId: transaction.chainId,
-        verifyingContract: forwarderAddress,
-      };
-      const types = {
-        ForwardRequest,
-      };
+      let domain;
+      let types;
+      let message: ForwardRequestMessage;
 
-      const message = {
-        from: transaction.from,
-        to: transaction.to,
-        value: BigNumber.from(0).toString(),
-        gas: BigNumber.from(transaction.gasLimit).toString(),
-        nonce: BigNumber.from(nonce).toString(),
-        data: transaction.data,
-      };
+      if (this.options.gasless.experimentalChainlessSupport) {
+        domain = {
+          name: "GSNv2 Forwarder",
+          version: "0.0.1",
+          verifyingContract: forwarderAddress,
+        };
+
+        types = {
+          ForwardRequest: ChainAwareForwardRequest,
+        };
+
+        message = {
+          from: transaction.from,
+          to: transaction.to,
+          value: BigNumber.from(0).toString(),
+          gas: BigNumber.from(transaction.gasLimit).toString(),
+          nonce: BigNumber.from(nonce).toString(),
+          data: transaction.data,
+          chainid: BigNumber.from(transaction.chainId).toString(),
+        };
+      } else {
+        domain = {
+          name: this.options.gasless.engine.domainName,
+          version: this.options.gasless.engine.domainVersion,
+          chainId: transaction.chainId,
+          verifyingContract: forwarderAddress,
+        };
+
+        types = {
+          ForwardRequest,
+        };
+
+        message = {
+          from: transaction.from,
+          to: transaction.to,
+          value: BigNumber.from(0).toString(),
+          gas: BigNumber.from(transaction.gasLimit).toString(),
+          nonce: BigNumber.from(nonce).toString(),
+          data: transaction.data,
+        };
+      }
 
       const { signature: sig } = await signTypedDataInternal(
         signer,
