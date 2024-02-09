@@ -1,7 +1,6 @@
 import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 import {
   ConnectUIProps,
-  SelectUIProps,
   WalletOptions,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
@@ -15,7 +14,6 @@ import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
 import styled from "@emotion/styled";
-import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import {
   emailAndPhoneIcon,
   emailIcon,
@@ -177,7 +175,6 @@ export function magicLink(
   }
 
   return {
-    category: "socialLogin",
     id: MagicLink.id,
     recommended: config?.recommended,
     isHeadless: true,
@@ -215,56 +212,11 @@ export function magicLink(
 
       return <MagicConnectingUI {...props} type={type} />;
     },
-    // select UI only for auth
-    selectUI:
-      config.type === "connect"
-        ? undefined
-        : (props) => {
-            return (
-              <MagicSelectUI
-                {...props}
-                emailLoginEnabled={emailLoginEnabled}
-                smsLoginEnabled={smsLoginEnabled}
-                oauthProviders={oauthProviders}
-              />
-            );
-          },
     isInstalled() {
       return false;
     },
   };
 }
-
-const MagicSelectUI = (
-  props: SelectUIProps<MagicLink> & {
-    emailLoginEnabled: boolean;
-    smsLoginEnabled: boolean;
-    oauthProviders?: OauthProvider[];
-  },
-) => {
-  const { screen } = useScreenContext();
-
-  if (
-    props.modalSize === "wide" ||
-    (screen !== reservedScreens.main && props.modalSize === "compact")
-  ) {
-    return (
-      <WalletEntryButton
-        walletConfig={props.walletConfig}
-        selectWallet={() => props.onSelect(undefined)}
-      />
-    );
-  }
-
-  return (
-    <MagicUI
-      {...props}
-      emailLogin={props.emailLoginEnabled}
-      smsLogin={props.smsLoginEnabled}
-      oauthProviders={props.oauthProviders}
-    />
-  );
-};
 
 type OauthProvider = Exclude<
   MagicLinkAdditionalOptions["oauthOptions"],
