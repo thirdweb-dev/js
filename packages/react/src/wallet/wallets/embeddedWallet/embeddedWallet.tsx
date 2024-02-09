@@ -123,7 +123,7 @@ const EmbeddedWalletSelectionUI: React.FC<
     authOptions: AuthOption[];
   }
 > = (props) => {
-  const screen = useScreenContext();
+  const { screen } = useScreenContext();
 
   // show the icon + text if
   // wide -

@@ -9,7 +9,7 @@ import {
   modalMaxWidthWide,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
-import { useScreen } from "./screen";
+import { useSetupScreen } from "./screen";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import {
@@ -41,7 +41,6 @@ export type ConnectModalInlineProps = {
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
   const modalSize =
     !canFitWideModal() || walletConfigs.length === 1
@@ -49,12 +48,41 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
       : props.modalSize;
   const ctxTheme = useCustomTheme();
 
+  const walletUIStatesProps = {
+    theme: props.theme || ctxTheme,
+    modalSize: modalSize,
+    title: props.modalTitle,
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
+    welcomeScreen: props.welcomeScreen,
+    titleIconUrl: props.modalTitleIconUrl,
+    showThirdwebBranding: props.showThirdwebBranding,
+  };
+
+  return (
+    <WalletUIStatesProvider {...walletUIStatesProps}>
+      <CustomThemeProvider theme={walletUIStatesProps.theme}>
+        <ConnectModalInlineContent
+          className={props.className}
+          modalSize={modalSize}
+        />
+        <SyncedWalletUIStates {...walletUIStatesProps} />
+      </CustomThemeProvider>
+    </WalletUIStatesProvider>
+  );
+};
+
+function ConnectModalInlineContent(props: {
+  className?: string;
+  modalSize?: "compact" | "wide";
+  style?: React.CSSProperties;
+}) {
+  const screenSetup = useSetupScreen();
+
   const content = (
     <>
       <ConnectModalContent
-        initialScreen={initialScreen}
-        screen={screen}
-        setScreen={setScreen}
+        screenSetup={screenSetup}
         onHide={() => {
           // no op
         }}
@@ -82,42 +110,26 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
     </>
   );
 
-  const walletUIStatesProps = {
-    theme: props.theme || ctxTheme,
-    modalSize: modalSize,
-    title: props.modalTitle,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    welcomeScreen: props.welcomeScreen,
-    titleIconUrl: props.modalTitleIconUrl,
-    showThirdwebBranding: props.showThirdwebBranding,
-  };
-
   return (
-    <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <ConnectModalInlineContainer
-          className={props.className}
-          style={{
-            height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
-            maxWidth:
-              modalSize === "compact"
-                ? modalMaxWidthCompact
-                : modalMaxWidthWide,
-            ...props.style,
-          }}
-        >
-          {modalSize === "compact" ? (
-            <DynamicHeight> {content} </DynamicHeight>
-          ) : (
-            content
-          )}
-          <SyncedWalletUIStates {...walletUIStatesProps} />
-        </ConnectModalInlineContainer>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <ConnectModalInlineContainer
+      className={props.className}
+      style={{
+        height: props.modalSize === "compact" ? "auto" : wideModalMaxHeight,
+        maxWidth:
+          props.modalSize === "compact"
+            ? modalMaxWidthCompact
+            : modalMaxWidthWide,
+        ...props.style,
+      }}
+    >
+      {props.modalSize === "compact" ? (
+        <DynamicHeight> {content} </DynamicHeight>
+      ) : (
+        content
+      )}
+    </ConnectModalInlineContainer>
   );
-};
+}
 
 const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
