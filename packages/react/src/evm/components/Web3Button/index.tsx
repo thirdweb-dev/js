@@ -185,6 +185,11 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
      * Either provide a component to replace the default screen entirely or an object with title, subtitle and imgSrc to change the content of the default screen
      */
     welcomeScreen?: WelcomeScreen;
+
+    /**
+     * By default the ConnectWallet Modal shows "Powered by Thirdweb" at the bottom. If you want to hide it, set it to `false`
+     */
+    showThirdwebBranding?: boolean;
   };
 
   /**

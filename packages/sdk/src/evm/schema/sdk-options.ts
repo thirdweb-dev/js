@@ -55,7 +55,11 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
                 .string()
                 .url()
                 .transform((url) => url.replace(/\/$/, "")),
+              relayerForwarderAddress: z.string().optional(),
+              domainName: z.string().default("GSNv2 Forwarder"),
+              domainVersion: z.string().default("0.0.1"),
             }),
+            experimentalChainlessSupport: z.boolean().default(false),
           }),
         ])
         .optional(),
