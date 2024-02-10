@@ -9,7 +9,7 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * @example
  * ```ts
  * import { totalSupply } from "thirdweb/extensions/erc20";
- * const totalSupply = await totalSupply({ contract });
+ * const totalTokenSupply = await totalSupply({ contract });
  * ```
  */
 export function totalSupply(options: TxOpts): Promise<bigint> {
