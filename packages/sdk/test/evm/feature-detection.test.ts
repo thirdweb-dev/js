@@ -96,7 +96,7 @@ describe("Feature Detection", async () => {
     ).to.eq(true);
 
     // Drop
-    features = detectFeatures(TokenERC721__factory.abi);
+    features = detectFeatures(DropERC721__factory.abi);
     expect(
       isExtensionEnabled(
         DropERC721__factory.abi,

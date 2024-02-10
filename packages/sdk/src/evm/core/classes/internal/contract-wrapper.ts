@@ -117,6 +117,8 @@ export class ContractWrapper<
     ) as TContract;
 
     this.abi = AbiSchema.parse(updatedAbi);
+    this.functions = extractFunctionsFromAbi(this.abi);
+    this.extensions = detectFeatures(this.abi);
   }
 
   /**
