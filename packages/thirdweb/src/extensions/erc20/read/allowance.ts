@@ -2,7 +2,7 @@ import type { Address } from "abitype";
 import { readContract } from "../../../transaction/actions/read.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
 
-export type AllowanceOptions = {
+export type AllowanceParams = {
   owner: Address;
   spender: Address;
 };
@@ -18,7 +18,7 @@ export type AllowanceOptions = {
  * const spenderAllowance = await allowance({ contract, owner, spender });
  * ```
  */
-export function allowance(options: TxOpts<AllowanceOptions>): Promise<bigint> {
+export function allowance(options: TxOpts<AllowanceParams>): Promise<bigint> {
   return readContract({
     ...options,
     method:
