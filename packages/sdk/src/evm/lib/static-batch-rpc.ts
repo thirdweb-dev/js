@@ -30,8 +30,8 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
     batchOptions: BatchOptions = DEFAULT_BATCH_OPTIONS,
   ) {
     super(url, network);
-    this._timeLimitMs = batchOptions.timeLimitMs || DEFAULT_BATCH_SIZE_LIMIT;
-    this._sizeLimit = batchOptions.sizeLimit || DEFAULT_BATCH_TIME_LIMIT_MS;
+    this._timeLimitMs = batchOptions.timeLimitMs || DEFAULT_BATCH_TIME_LIMIT_MS;
+    this._sizeLimit = batchOptions.sizeLimit || DEFAULT_BATCH_SIZE_LIMIT;
     this._pendingBatchAggregator = null;
     this._pendingBatch = null;
   }
