@@ -3,7 +3,7 @@ import {
   getAllPluginsAbi,
 } from "../../constants/thirdweb-features";
 import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
-import { Abi, AbiSchema } from "../../schema/contracts/custom";
+import { Abi } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { isExtensionEnabled } from "../feature-detection/isFeatureEnabled";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

@@ -32,11 +32,7 @@ import { signTypedDataInternal } from "../../../common/sign";
 import { CONTRACT_ADDRESSES } from "../../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../../constants/addresses/getContractAddressByChainId";
 import { EventType } from "../../../constants/events";
-import {
-  AbiFunction,
-  AbiSchema,
-  ContractSource,
-} from "../../../schema/contracts/custom";
+import { AbiSchema, ContractSource } from "../../../schema/contracts/custom";
 import { SDKOptions } from "../../../schema/sdk-options";
 import { Address } from "../../../schema/shared/Address";
 import { CallOverrideSchema } from "../../../schema/shared/CallOverrideSchema";
