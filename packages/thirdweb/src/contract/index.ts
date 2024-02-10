@@ -8,7 +8,7 @@ export {
   resolveContractAbi,
   resolveAbiFromBytecode,
   resolveAbiFromContractApi,
-  resolveCompositeAbiFromBytecode,
+  resolveCompositeAbi,
 } from "./actions/resolve-abi.js";
 
 export { formatCompilerMetadata } from "./actions/compiler-metadata.js";
