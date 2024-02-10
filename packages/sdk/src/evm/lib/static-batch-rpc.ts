@@ -1,7 +1,7 @@
 import { providers, utils } from "ethers";
 
-const DEFAULT_BATCH_TIME_LIMIT_MS = 50;
-const DEFAULT_BATCH_SIZE_LIMIT = 250;
+const DEFAULT_BATCH_TIME_LIMIT_MS = 10;
+const DEFAULT_BATCH_SIZE_LIMIT = 200;
 
 const DEFAULT_BATCH_OPTIONS = {
   timeLimitMs: DEFAULT_BATCH_TIME_LIMIT_MS,
