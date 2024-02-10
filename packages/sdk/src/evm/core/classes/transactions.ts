@@ -5,7 +5,6 @@ import {
   getContractMetadataFromCache,
 } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
@@ -448,17 +447,6 @@ export class Transaction<
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
-      try {
-        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
-        const abi = JSON.parse(
-          this.contract.interface.format("json") as string,
-        );
-        if (isRouterContract(abi)) {
-          overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
-        }
-      } catch (err) {
-        console.warn("Error raising gas limit", err);
-      }
     }
 
     // Now there should be no gas estimate errors

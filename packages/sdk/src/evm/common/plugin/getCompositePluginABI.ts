@@ -10,6 +10,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { joinABIs } from "./joinABIs";
 import { getPluginABI } from "./getPluginABI";
+import { detectFeatures } from "../feature-detection/detectFeatures";
 
 /**
  * @internal
@@ -24,21 +25,21 @@ export async function getCompositeABI(
   let pluginABIs: Abi[] = [];
 
   try {
+    // TODO this should not be needed here, should only be done once in getContract()
+    const features = detectFeatures(abi);
     // check if contract is plugin-pattern / dynamic
     const isPluginRouter: boolean = isExtensionEnabled(
-      AbiSchema.parse(abi),
+      abi,
       "PluginRouter",
+      features,
     );
     const isbaseRouter: boolean = isExtensionEnabled(
-      AbiSchema.parse(abi),
+      abi,
       "DynamicContract",
+      features,
     );
-
     // check if the contract has fallback function - we'll further check for diamond pattern if needed
-    const isFallback: boolean = isExtensionEnabled(
-      AbiSchema.parse(abi),
-      "Fallback",
-    );
+    const isFallback: boolean = isExtensionEnabled(abi, "Fallback", features);
 
     if (isbaseRouter) {
       const contract = new ContractWrapper(
