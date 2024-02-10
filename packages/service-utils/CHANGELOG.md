@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.17
+
+### Patch Changes
+
+- [#2281](https://github.com/thirdweb-dev/js/pull/2281) [`77400fcf`](https://github.com/thirdweb-dev/js/commit/77400fcf212b7dba138e3422c05136d6043fe361) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new properties to usage
+
+- [#2287](https://github.com/thirdweb-dev/js/pull/2287) [`537e5e06`](https://github.com/thirdweb-dev/js/commit/537e5e063db282e8777e01bdd1e9afcdec7c9ef5) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new field to capture response time
+
 ## 0.4.16
 
 ### Patch Changes
