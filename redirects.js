@@ -195,6 +195,11 @@ function redirects() {
       destination: "/solutions/loyalty",
       permanent: false,
     },
+    {
+      source: "/hackathon/base-consumer-crypto",
+      destination: "/hackathon/consumer-crypto",
+      permanent: false,
+    },
   ];
 }
 
