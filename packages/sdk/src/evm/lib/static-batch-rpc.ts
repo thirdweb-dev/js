@@ -55,7 +55,6 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
       request: utils.deepCopy(request),
       provider: this,
     });
-
     return utils.fetchJson(this.connection, JSON.stringify(request_)).then(
       (result) => {
         this.emit("debug", {

@@ -44,6 +44,7 @@ import {
 } from "../../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { isBrowser } from "../../../common/utils";
+import { detectFeatures } from "../../../common/feature-detection/detectFeatures";
 
 /**
  * @internal
@@ -61,6 +62,8 @@ export class ContractWrapper<
   public readContract;
   public abi;
   public address;
+  public functions;
+  public extensions;
 
   constructor(
     network: NetworkInput,
@@ -70,7 +73,7 @@ export class ContractWrapper<
     storage: ThirdwebStorage,
   ) {
     super(network, options);
-    this.abi = contractAbi;
+    this.abi = AbiSchema.parse(contractAbi);
     this.address = contractAddress;
     // set up the contract
     this.writeContract = new Contract(
@@ -83,6 +86,8 @@ export class ContractWrapper<
       this.getProvider(),
     ) as TContract;
     this.storage = storage;
+    this.functions = extractFunctionsFromAbi(this.abi);
+    this.extensions = detectFeatures(this.abi);
   }
 
   public override updateSignerOrProvider(network: NetworkInput): void {
@@ -112,6 +117,8 @@ export class ContractWrapper<
     ) as TContract;
 
     this.abi = AbiSchema.parse(updatedAbi);
+    this.functions = extractFunctionsFromAbi(this.abi);
+    this.extensions = detectFeatures(this.abi);
   }
 
   /**
@@ -215,10 +222,7 @@ export class ContractWrapper<
       ? Awaited<ReturnType<OverrideContract["functions"][FnName]>>[0]
       : Awaited<ReturnType<OverrideContract["functions"][FnName]>>
   > {
-    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
-      (f) => f.name === functionName,
-    );
-
+    const functions = this.functions.filter((f) => f.name === functionName);
     if (!functions.length) {
       throw new Error(
         `Function "${functionName.toString()}" not found in contract. Check your dashboard for the list of functions available`,
