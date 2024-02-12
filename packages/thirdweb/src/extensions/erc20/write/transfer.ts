@@ -4,7 +4,7 @@ import {
 } from "../../../transaction/transaction.js";
 import { parseUnits } from "../../../utils/units.js";
 
-type TransferParams = { to: string } & (
+export type TransferParams = { to: string } & (
   | {
       amount: number | string;
     }

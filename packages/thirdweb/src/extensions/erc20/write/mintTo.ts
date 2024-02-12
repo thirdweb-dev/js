@@ -4,7 +4,7 @@ import {
 } from "../../../transaction/transaction.js";
 import { parseUnits } from "../../../utils/units.js";
 
-type MintToParams = { to: string } & (
+export type MintToParams = { to: string } & (
   | {
       amount: number | string;
     }
