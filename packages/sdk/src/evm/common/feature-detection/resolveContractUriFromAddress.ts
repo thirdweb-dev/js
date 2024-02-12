@@ -80,15 +80,15 @@ export async function resolveImplementation(
           address: implementationAddress,
           bytecode: implBytecode,
         };
-      } catch (e: any) {
-        if (
-          !e
-            .toString()
-            .includes(
+      } catch (e) {
+        if (e instanceof Error) {
+          if (
+            !e.message.includes(
               `Contract at ${implementationAddress} does not exist on chain`,
             )
-        ) {
-          throw new Error(e);
+          ) {
+            throw e;
+          }
         }
       }
     }
