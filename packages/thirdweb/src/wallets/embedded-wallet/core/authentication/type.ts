@@ -123,6 +123,7 @@ export type LinkAuthConflictType =
   | "override_current_account"
   | "override_linked_account"
   | "merge";
-export type LinkAuthArgsType = Omit<AuthArgsType, "config"> & {
+export type LinkAuthArgsType = AuthArgsType & {
   onConflict: LinkAuthConflictType;
+  config: never;
 };

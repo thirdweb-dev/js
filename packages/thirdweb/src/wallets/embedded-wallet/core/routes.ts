@@ -1,4 +1,7 @@
-import type { AuthMethodType } from "./authentication/type.js";
+import type {
+  AuthMethodType,
+  LinkAuthConflictType,
+} from "./authentication/type.js";
 import { getBaseUrl } from "./base-url.js";
 
 /**
@@ -36,6 +39,20 @@ export const ROUTE_INITIATE_AUTH = (
  */
 export const ROUTE_COMPLETE_AUTH = (provider: AuthMethodType) =>
   `${getBaseUrl()}/v2/login/${provider}/callback`;
+
+/**
+ * @internal
+ */
+export const ROUTE_INITIATE_LINK = (
+  provider: AuthMethodType,
+  clientId: string,
+  onConflict: LinkAuthConflictType,
+) => {
+  const url = new URL(`${getBaseUrl()}/v2/login/${provider}`);
+  url.searchParams.set("clientId", clientId);
+  url.searchParams.set("onConflict", onConflict);
+  return url.href;
+};
 
 /**
  * @internal
