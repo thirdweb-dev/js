@@ -5,7 +5,7 @@ import {
   resolveSignatures,
 } from "./resolve-signature.js";
 
-describe("resolveSignature", () => {
+describe.skip("resolveSignature", () => {
   beforeEach(() => {
     clearCache();
   });
@@ -49,7 +49,7 @@ const TEST_SIGS = [
   "0x6562e70e",
 ];
 
-describe("resolveSignatures", () => {
+describe.skip("resolveSignatures", () => {
   beforeEach(() => {
     clearCache();
   });

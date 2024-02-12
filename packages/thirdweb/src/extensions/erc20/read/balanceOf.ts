@@ -1,5 +1,5 @@
 import { decimals } from "./decimals.js";
-import { symbol } from "./symbol.js";
+import { symbol } from "../../common/read/symbol.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
 import { readContract } from "../../../transaction/actions/read.js";
 import { formatUnits } from "../../../utils/units.js";
