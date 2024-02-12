@@ -36,6 +36,7 @@ export async function getNFT(
       ? import("./ownerOf.js").then((m) => m.ownerOf(options))
       : null,
   ]);
+
   return parseNFT(
     await fetchTokenMetadata({
       client: options.contract.client,

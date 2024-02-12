@@ -48,4 +48,9 @@ export {
 } from "./injected/wallets/zerion.js";
 
 // wallet-connect
-export { walletConnect } from "./wallet-connect/index.js";
+export {
+  walletConnect,
+  walletConnectMetadata,
+} from "./wallet-connect/index.js";
+
+export type { WalletConnectConnectionOptions } from "./wallet-connect/types.js";

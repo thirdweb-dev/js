@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
-import { CLIENT_ID_CLIENT } from "~test/test-clients.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import { eth_getBalance } from "./eth_getBalance.js";
 import {
   UNCLAIMED_ADDRESS,
@@ -13,7 +13,7 @@ const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 const rpcClient = getRpcClient({
   chain: FORKED_ETHEREUM_CHAIN,
-  client: CLIENT_ID_CLIENT,
+  client: TEST_CLIENT,
 });
 
 describe("eth_getBalance", () => {

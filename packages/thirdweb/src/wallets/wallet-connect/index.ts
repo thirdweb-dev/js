@@ -7,7 +7,7 @@ import {
 } from "viem";
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { DAppMetaData } from "../types.js";
+import type { DAppMetaData, WalletMetadata } from "../types.js";
 import {
   deleteConnectParamsFromStorage,
   getSavedConnectParamsFromStorage,
@@ -51,9 +51,22 @@ const storageKeys = {
   lastUsedChainId: "tw.wc.lastUsedChainId",
 };
 
-const isNewChainsStale = false; // do we need to make this configurable?
+const isNewChainsStale = true;
 const defaultShowQrModal = true;
-const defaultChainId = 1;
+const defaultChainId = /* @__PURE__ */ BigInt(1);
+
+type SavedConnectParams = {
+  optionalChains?: string[];
+  chainId: string;
+  pairingTopic?: string;
+};
+
+export const walletConnectMetadata: WalletMetadata = {
+  name: "WalletConnect",
+  iconUrl:
+    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMxQzdERkMiLz4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9InVybCgjcGFpbnQwX3JhZGlhbF8xXzQ2KSIvPgo8cGF0aCBkPSJNMjYuNDIyNyAzMS40NzMxQzMzLjkxNzEgMjQuMTc1NiA0Ni4wODI5IDI0LjE3NTYgNTMuNTc3MyAzMS40NzMxTDU0LjQ3OTYgMzIuMzU4QzU0Ljg1OCAzMi43MjA3IDU0Ljg1OCAzMy4zMTU1IDU0LjQ3OTYgMzMuNjc4Mkw1MS4zOTQ1IDM2LjY4MTNDNTEuMjA1MyAzNi44Njk5IDUwLjg5OTcgMzYuODY5OSA1MC43MTA1IDM2LjY4MTNMNDkuNDczNiAzNS40NzcyQzQ0LjIzNDcgMzAuMzg1IDM1Ljc2NTMgMzAuMzg1IDMwLjUyNjQgMzUuNDc3MkwyOS4yMDIxIDM2Ljc2ODRDMjkuMDEzIDM2Ljk1NyAyOC43MDc0IDM2Ljk1NyAyOC41MTgyIDM2Ljc2ODRMMjUuNDMzMSAzMy43NjUzQzI1LjA1NDcgMzMuNDAyNiAyNS4wNTQ3IDMyLjgwNzggMjUuNDMzMSAzMi40NDUxTDI2LjQyMjcgMzEuNDczMVpNNTkuOTY1OCAzNy42ODI0TDYyLjcxNjIgNDAuMzUxOEM2My4wOTQ2IDQwLjcxNDUgNjMuMDk0NiA0MS4zMDkzIDYyLjcxNjIgNDEuNjcyTDUwLjMzMjIgNTMuNzI4QzQ5Ljk1MzggNTQuMDkwNyA0OS4zNDI2IDU0LjA5MDcgNDguOTc4OCA1My43MjhMNDAuMTg5MiA0NS4xNjg0QzQwLjEwMTkgNDUuMDgxMyAzOS45NDE4IDQ1LjA4MTMgMzkuODU0NSA0NS4xNjg0TDMxLjA2NDkgNTMuNzI4QzMwLjY4NjUgNTQuMDkwNyAzMC4wNzUzIDU0LjA5MDcgMjkuNzExNSA1My43MjhMMTcuMjgzOCA0MS42NzJDMTYuOTA1NCA0MS4zMDkzIDE2LjkwNTQgNDAuNzE0NSAxNy4yODM4IDQwLjM1MThMMjAuMDM0MiAzNy42ODI0QzIwLjQxMjUgMzcuMzE5NyAyMS4wMjM3IDM3LjMxOTcgMjEuMzg3NSAzNy42ODI0TDMwLjE3NzIgNDYuMjQyQzMwLjI2NDUgNDYuMzI5IDMwLjQyNDUgNDYuMzI5IDMwLjUxMTkgNDYuMjQyTDM5LjMwMTUgMzcuNjgyNEMzOS42Nzk5IDM3LjMxOTcgNDAuMjkxIDM3LjMxOTcgNDAuNjU0OSAzNy42ODI0TDQ5LjQ0NDUgNDYuMjQyQzQ5LjUzMTggNDYuMzI5IDQ5LjY5MTkgNDYuMzI5IDQ5Ljc3OTIgNDYuMjQyTDU4LjU2ODggMzcuNjgyNEM1OC45NzYzIDM3LjMxOTcgNTkuNTg3NSAzNy4zMTk3IDU5Ljk2NTggMzcuNjgyNFoiIGZpbGw9IndoaXRlIi8+CjxkZWZzPgo8cmFkaWFsR3JhZGllbnQgaWQ9InBhaW50MF9yYWRpYWxfMV80NiIgY3g9IjAiIGN5PSIwIiByPSIxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDI0Nzk1NSA0MC4wMDEyKSBzY2FsZSg4MCkiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNUQ5REY2Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwNkZGRiIvPgo8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=",
+  id: "walletconnect",
+};
 
 /**
  * Connect to a wallet using WalletConnect protocol.
@@ -73,8 +86,8 @@ export function walletConnect(options: WalletConnectCreationOptions) {
  * Class to connect to a wallet using WalletConnect protocol.
  */
 export class WalletConnect implements Wallet {
-  #options: WalletConnectCreationOptions;
-  #provider: InstanceType<typeof EthereumProvider> | undefined;
+  private options: WalletConnectCreationOptions;
+  private provider: InstanceType<typeof EthereumProvider> | undefined;
 
   chainId: Wallet["chainId"];
   events: Wallet["events"];
@@ -92,13 +105,8 @@ export class WalletConnect implements Wallet {
    * ```
    */
   constructor(options: WalletConnectCreationOptions) {
-    this.#options = options;
-    this.metadata = options?.metadata || {
-      name: "WalletConnect",
-      iconUrl:
-        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMxQzdERkMiLz4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9InVybCgjcGFpbnQwX3JhZGlhbF8xXzQ2KSIvPgo8cGF0aCBkPSJNMjYuNDIyNyAzMS40NzMxQzMzLjkxNzEgMjQuMTc1NiA0Ni4wODI5IDI0LjE3NTYgNTMuNTc3MyAzMS40NzMxTDU0LjQ3OTYgMzIuMzU4QzU0Ljg1OCAzMi43MjA3IDU0Ljg1OCAzMy4zMTU1IDU0LjQ3OTYgMzMuNjc4Mkw1MS4zOTQ1IDM2LjY4MTNDNTEuMjA1MyAzNi44Njk5IDUwLjg5OTcgMzYuODY5OSA1MC43MTA1IDM2LjY4MTNMNDkuNDczNiAzNS40NzcyQzQ0LjIzNDcgMzAuMzg1IDM1Ljc2NTMgMzAuMzg1IDMwLjUyNjQgMzUuNDc3MkwyOS4yMDIxIDM2Ljc2ODRDMjkuMDEzIDM2Ljk1NyAyOC43MDc0IDM2Ljk1NyAyOC41MTgyIDM2Ljc2ODRMMjUuNDMzMSAzMy43NjUzQzI1LjA1NDcgMzMuNDAyNiAyNS4wNTQ3IDMyLjgwNzggMjUuNDMzMSAzMi40NDUxTDI2LjQyMjcgMzEuNDczMVpNNTkuOTY1OCAzNy42ODI0TDYyLjcxNjIgNDAuMzUxOEM2My4wOTQ2IDQwLjcxNDUgNjMuMDk0NiA0MS4zMDkzIDYyLjcxNjIgNDEuNjcyTDUwLjMzMjIgNTMuNzI4QzQ5Ljk1MzggNTQuMDkwNyA0OS4zNDI2IDU0LjA5MDcgNDguOTc4OCA1My43MjhMNDAuMTg5MiA0NS4xNjg0QzQwLjEwMTkgNDUuMDgxMyAzOS45NDE4IDQ1LjA4MTMgMzkuODU0NSA0NS4xNjg0TDMxLjA2NDkgNTMuNzI4QzMwLjY4NjUgNTQuMDkwNyAzMC4wNzUzIDU0LjA5MDcgMjkuNzExNSA1My43MjhMMTcuMjgzOCA0MS42NzJDMTYuOTA1NCA0MS4zMDkzIDE2LjkwNTQgNDAuNzE0NSAxNy4yODM4IDQwLjM1MThMMjAuMDM0MiAzNy42ODI0QzIwLjQxMjUgMzcuMzE5NyAyMS4wMjM3IDM3LjMxOTcgMjEuMzg3NSAzNy42ODI0TDMwLjE3NzIgNDYuMjQyQzMwLjI2NDUgNDYuMzI5IDMwLjQyNDUgNDYuMzI5IDMwLjUxMTkgNDYuMjQyTDM5LjMwMTUgMzcuNjgyNEMzOS42Nzk5IDM3LjMxOTcgNDAuMjkxIDM3LjMxOTcgNDAuNjU0OSAzNy42ODI0TDQ5LjQ0NDUgNDYuMjQyQzQ5LjUzMTggNDYuMzI5IDQ5LjY5MTkgNDYuMzI5IDQ5Ljc3OTIgNDYuMjQyTDU4LjU2ODggMzcuNjgyNEM1OC45NzYzIDM3LjMxOTcgNTkuNTg3NSAzNy4zMTk3IDU5Ljk2NTggMzcuNjgyNFoiIGZpbGw9IndoaXRlIi8+CjxkZWZzPgo8cmFkaWFsR3JhZGllbnQgaWQ9InBhaW50MF9yYWRpYWxfMV80NiIgY3g9IjAiIGN5PSIwIiByPSIxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDI0Nzk1NSA0MC4wMDEyKSBzY2FsZSg4MCkiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNUQ5REY2Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwNkZGRiIvPgo8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=",
-      id: "walletconnect",
-    };
+    this.options = options;
+    this.metadata = options?.metadata || walletConnectMetadata;
   }
 
   /**
@@ -110,11 +118,19 @@ export class WalletConnect implements Wallet {
    * @returns A Promise that resolves to the connected wallet address.
    */
   async autoConnect(): Promise<Account> {
-    const savedOptions = await getSavedConnectParamsFromStorage(
-      this.metadata.id,
-    );
+    const savedConnectParams: SavedConnectParams | null =
+      await getSavedConnectParamsFromStorage(this.metadata.id);
 
-    const provider = await this.#initProvider(true, savedOptions || undefined);
+    const provider = await this.initProvider(
+      true,
+      savedConnectParams
+        ? {
+            chainId: BigInt(savedConnectParams.chainId),
+            pairingTopic: savedConnectParams.pairingTopic,
+            optionalChains: savedConnectParams.optionalChains?.map(BigInt),
+          }
+        : undefined,
+    );
 
     const address = provider.accounts[0];
 
@@ -124,19 +140,19 @@ export class WalletConnect implements Wallet {
 
     this.chainId = normalizeChainId(provider.chainId);
 
-    return this.#onConnect(address);
+    return this.onConnect(address);
   }
 
   /**
    * @internal
    */
-  #onConnect(address: string): Account {
+  private onConnect(address: string): Account {
     const wallet = this;
     return {
       wallet,
       address,
       async sendTransaction(tx: SendTransactionOption) {
-        const provider = wallet.#assertProvider();
+        const provider = wallet.assertProvider();
 
         if (!wallet.chainId || !this.address) {
           throw new Error("Invalid chainId or address");
@@ -175,13 +191,17 @@ export class WalletConnect implements Wallet {
    * @returns A Promise that resolves to the connected wallet address.
    */
   async connect(options?: WalletConnectConnectionOptions): Promise<Account> {
-    const provider = await this.#initProvider(false, options);
-    const isStale = await this.#isChainsStale(provider.chainId);
-    const targetChainId = Number(options?.chainId || defaultChainId);
+    const provider = await this.initProvider(false, options);
+
+    const isChainsState = await this.isChainsStale(
+      [provider.chainId, ...(options?.optionalChains || [])].map(BigInt),
+    );
+
+    const targetChainId = BigInt(options?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
-      client: this.#options.client,
+      client: this.options.client,
     });
 
     const { onDisplayUri, onSessionRequestSent } = options || {};
@@ -189,9 +209,6 @@ export class WalletConnect implements Wallet {
     if (onDisplayUri || onSessionRequestSent) {
       if (onDisplayUri) {
         provider.events.addListener("display_uri", onDisplayUri);
-        provider.events.addListener("disconnect", () => {
-          provider.events.removeListener("display_uri", onDisplayUri);
-        });
       }
 
       if (onSessionRequestSent) {
@@ -206,16 +223,16 @@ export class WalletConnect implements Wallet {
     }
 
     // If there no active session, or the chain is state, force connect.
-    if (!provider.session || isStale) {
+    if (!provider.session || isChainsState) {
       await provider.connect({
         pairingTopic: options?.pairingTopic,
-        chains: [targetChainId],
+        chains: [Number(targetChainId)],
         rpcMap: {
-          [targetChainId]: rpc,
+          [targetChainId.toString()]: rpc,
         },
       });
 
-      this.#setRequestedChainsIds([targetChainId]);
+      this.setRequestedChainsIds([targetChainId]);
     }
 
     // If session exists and chains are authorized, enable provider for required chain
@@ -228,10 +245,20 @@ export class WalletConnect implements Wallet {
     this.chainId = normalizeChainId(provider.chainId);
 
     if (options) {
-      saveConnectParamsToStorage(this.metadata.id, options);
+      const savedParams: SavedConnectParams = {
+        optionalChains: options.optionalChains?.map(String),
+        chainId: String(options.chainId),
+        pairingTopic: options.pairingTopic,
+      };
+
+      saveConnectParamsToStorage(this.metadata.id, savedParams);
     }
 
-    return this.#onConnect(address);
+    if (options?.onDisplayUri) {
+      provider.events.removeListener("display_uri", options.onDisplayUri);
+    }
+
+    return this.onConnect(address);
   }
 
   /**
@@ -242,11 +269,11 @@ export class WalletConnect implements Wallet {
    * ```
    */
   async disconnect() {
-    const provider = this.#provider;
+    const provider = this.provider;
     if (provider) {
-      this.#onDisconnect();
-      await provider.disconnect();
+      this.onDisconnect();
       deleteConnectParamsFromStorage(this.metadata.id);
+      provider.disconnect();
     }
   }
 
@@ -259,12 +286,12 @@ export class WalletConnect implements Wallet {
    * ```
    */
   async switchChain(chainId: number | bigint) {
-    const provider = this.#assertProvider();
-    const chainIdNum = Number(chainId);
+    const provider = this.assertProvider();
+    const chainIdBigInt = BigInt(chainId);
     try {
-      const namespaceChains = this.#getNamespaceChainsIds();
-      const namespaceMethods = this.#getNamespaceMethods();
-      const isChainApproved = namespaceChains.includes(chainIdNum);
+      const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
+      const namespaceMethods = this.getNamespaceMethods();
+      const isChainApproved = namespaceChains.includes(chainIdBigInt);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
         const chain = await getChainDataForChainId(BigInt(chainId));
@@ -284,9 +311,11 @@ export class WalletConnect implements Wallet {
             },
           ],
         });
-        const requestedChains = await this.#getRequestedChainsIds();
-        requestedChains.push(chainIdNum);
-        this.#setRequestedChainsIds(requestedChains);
+        const requestedChains = (await this.getRequestedChainsIds()).map(
+          BigInt,
+        );
+        requestedChains.push(chainIdBigInt);
+        this.setRequestedChainsIds(requestedChains);
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
@@ -311,15 +340,15 @@ export class WalletConnect implements Wallet {
    * @param connectionOptions - Options for connecting to the wallet.
    * @internal
    */
-  async #initProvider(
+  private async initProvider(
     isAutoConnect: boolean,
     connectionOptions?: WalletConnectConnectionOptions,
   ) {
-    const targetChainId = Number(connectionOptions?.chainId || 1);
+    const targetChainId = BigInt(connectionOptions?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
-      client: this.#options.client,
+      client: this.options.client,
     });
 
     const provider = await EthereumProvider.init({
@@ -327,41 +356,46 @@ export class WalletConnect implements Wallet {
         connectionOptions?.showQrModal === undefined
           ? defaultShowQrModal
           : connectionOptions.showQrModal,
-      projectId: this.#options?.projectId || defaultWCProjectId,
+      projectId: this.options?.projectId || defaultWCProjectId,
       optionalMethods: OPTIONAL_METHODS,
       optionalEvents: OPTIONAL_EVENTS,
-      chains: [targetChainId],
-      // optionalChains: [],
+      optionalChains: [Number(targetChainId)],
       metadata: {
-        name: this.#options.dappMetadata?.name || defaultDappMetadata.name,
+        name: this.options.dappMetadata?.name || defaultDappMetadata.name,
         description:
-          this.#options.dappMetadata?.description ||
+          this.options.dappMetadata?.description ||
           defaultDappMetadata.description,
-        url: this.#options.dappMetadata?.url || defaultDappMetadata.url,
+        url: this.options.dappMetadata?.url || defaultDappMetadata.url,
         icons: [
-          this.#options.dappMetadata?.logoUrl || defaultDappMetadata.logoUrl,
+          this.options.dappMetadata?.logoUrl || defaultDappMetadata.logoUrl,
         ],
       },
       rpcMap: {
-        [targetChainId]: rpc,
+        [targetChainId.toString()]: rpc,
       },
       qrModalOptions: connectionOptions?.qrModalOptions,
+      disableProviderPing: true,
     });
 
-    this.#provider = provider;
+    provider.events.setMaxListeners(Infinity);
+    this.provider = provider;
 
-    // const isStale = await this.#isChainsStale(Number(this.chainId));
-    // isStale &&
     if (!isAutoConnect) {
-      if (provider.session) {
+      const chains = [
+        targetChainId,
+        ...(connectionOptions?.optionalChains || []),
+      ].map(BigInt);
+
+      const isStale = await this.isChainsStale(chains);
+      if (isStale && provider.session) {
         await provider.disconnect();
       }
     }
 
     // setup listeners
-    provider.on("disconnect", this.#onDisconnect);
-    provider.on("session_delete", this.#onDisconnect);
-    provider.on("chainChanged", this.#onChainChanged);
+    provider.on("disconnect", this.onDisconnect);
+    provider.on("session_delete", this.onDisconnect);
+    provider.on("chainChanged", this.onChainChanged);
 
     // try switching to correct chain
     if (
@@ -395,8 +429,8 @@ export class WalletConnect implements Wallet {
    * Get the methods available in the wallet connect session.
    * @internal
    */
-  #getNamespaceMethods() {
-    const provider = this.#assertProvider();
+  private getNamespaceMethods() {
+    const provider = this.assertProvider();
     return provider.session?.namespaces[NAMESPACE]?.methods || [];
   }
 
@@ -404,29 +438,29 @@ export class WalletConnect implements Wallet {
    * Throw an error if provider is not initialized.
    * @internal
    */
-  #assertProvider() {
-    if (!this.#provider) {
+  private assertProvider() {
+    if (!this.provider) {
       throw new Error("Provider not initialized");
     }
 
-    return this.#provider;
+    return this.provider;
   }
 
   /**
    * Get the last requested chains from the storage.
    * @internal
    */
-  async #getRequestedChainsIds(): Promise<number[]> {
+  private async getRequestedChainsIds(): Promise<bigint[]> {
     const data = await walletStorage.get(storageKeys.requestedChains);
-    return data ? JSON.parse(data) : [];
+    return (data ? JSON.parse(data) : []).map(BigInt);
   }
 
   /**
    * Get the chainIds from the wallet connect session.
    * @internal
    */
-  #getNamespaceChainsIds(): number[] {
-    const provider = this.#provider;
+  private getNamespaceChainsIds(): number[] {
+    const provider = this.provider;
     if (!provider) {
       return [];
     }
@@ -442,61 +476,69 @@ export class WalletConnect implements Wallet {
    * @param connectToChainId
    * @internal
    */
-  async #isChainsStale(connectToChainId: number) {
-    const namespaceMethods = this.#getNamespaceMethods();
+  private async isChainsStale(chains: bigint[]) {
+    const namespaceMethods = this.getNamespaceMethods();
 
+    // if chain adding method is available, then chains are not stale
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       return false;
     }
 
+    // if new chains are considered stale, then return true
     if (!isNewChainsStale) {
       return false;
     }
 
-    const requestedChains = await this.#getRequestedChainsIds();
-    const connectorChains = [connectToChainId];
-    const namespaceChains = this.#getNamespaceChainsIds();
+    const requestedChains = await this.getRequestedChainsIds();
+    const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
 
+    // if any of the requested chains are not in the namespace chains, then they are stale
     if (
       namespaceChains.length &&
-      !namespaceChains.some((id) => connectorChains.includes(id))
+      !namespaceChains.some((id) => chains.includes(id))
     ) {
       return false;
     }
 
-    return !connectorChains.every((id) => requestedChains.includes(Number(id)));
+    // if chain was requested earlier, then they are not stale
+    return !chains.every((id) => requestedChains.includes(id));
   }
 
   /**
    * Set the requested chains to the storage.
    * @internal
    */
-  #setRequestedChainsIds(chains: number[]) {
-    walletStorage.set(storageKeys.requestedChains, JSON.stringify(chains));
+  private setRequestedChainsIds(chains: bigint[]) {
+    walletStorage.set(
+      storageKeys.requestedChains,
+      JSON.stringify(chains.map(Number)),
+    );
   }
 
   /**
    * Disconnect the wallet and clear the session and perform cleanup.
+   * Note: must use arrow function to preserve `this` when it's passed down as a callback to the provider.
    * @internal
    */
-  #onDisconnect() {
-    this.#setRequestedChainsIds([]);
+  private onDisconnect = () => {
+    this.setRequestedChainsIds([]);
     walletStorage.remove(storageKeys.lastUsedChainId);
 
-    const provider = this.#provider;
+    const provider = this.provider;
     if (provider) {
-      provider.removeListener("chainChanged", this.#onChainChanged);
-      provider.removeListener("disconnect", this.#onDisconnect);
-      provider.removeListener("session_delete", this.#onDisconnect);
+      provider.removeListener("chainChanged", this.onChainChanged);
+      provider.removeListener("disconnect", this.onDisconnect);
+      provider.removeListener("session_delete", this.onDisconnect);
     }
-  }
+  };
 
   /**
    * Update the `chainId` on chainChanged event.
+   * Note: must use arrow function to preserve `this` when it's passed down as a callback to the provider.
    * @internal
    */
-  #onChainChanged(chainId: number | string) {
+  private onChainChanged = (chainId: number | string) => {
     this.chainId = normalizeChainId(chainId);
     walletStorage.set(storageKeys.lastUsedChainId, String(chainId));
-  }
+  };
 }

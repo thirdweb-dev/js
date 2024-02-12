@@ -33,6 +33,7 @@ export const WalletConnectConnection: React.FC<{
   const { client, dappMetadata } = useThirdwebProviderProps();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
+  const optionalChains = connectUIProps.chains;
 
   const connect = useCallback(() => {
     const wallet = walletConnect({
@@ -71,6 +72,7 @@ export const WalletConnectConnection: React.FC<{
           }
         },
         onSessionRequestSent,
+        optionalChains,
       })
       .then((account) => {
         done(account);
@@ -87,6 +89,7 @@ export const WalletConnectConnection: React.FC<{
     platformUris,
     projectId,
     walletConfig.metadata,
+    optionalChains,
   ]);
 
   const scanStarted = useRef(false);

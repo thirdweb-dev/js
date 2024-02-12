@@ -21,6 +21,18 @@
     {
       "tagName": "@transaction",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@connectWallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@theme",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@locale",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -28,6 +40,9 @@
     "@wallet": true,
     "@extension": true,
     "@rpc": true,
-    "@transaction": true
+    "@transaction": true,
+    "@connectWallet": true,
+    "@theme": true,
+    "@locale": true
   }
 }

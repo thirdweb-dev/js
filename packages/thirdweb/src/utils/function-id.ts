@@ -1,5 +1,5 @@
 import { sha256 } from "@noble/hashes/sha256";
-import { uint8ArrayToString } from "./uint8-array.js";
+import { uint8ArrayToHex } from "./uint8-array.js";
 
 type AnyFunction = (...args: any[]) => any;
 
@@ -19,7 +19,7 @@ export function getFunctionId(fn: AnyFunction) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return functionIdCache.get(fn)!;
   }
-  const id = uint8ArrayToString(sha256(fn.toString()));
+  const id = uint8ArrayToHex(sha256(fn.toString()));
   functionIdCache.set(fn, id);
   return id;
 }

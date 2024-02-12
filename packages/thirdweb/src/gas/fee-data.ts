@@ -1,4 +1,4 @@
-import { parseUnits, type AbiFunction } from "viem";
+import type { AbiFunction } from "viem";
 import type { Transaction } from "../transaction/transaction.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getChainIdFromChain, type Chain } from "../chain/index.js";
@@ -8,6 +8,7 @@ import {
   eth_maxPriorityFeePerGas,
   getRpcClient,
 } from "../rpc/index.js";
+import { parseUnits } from "../utils/units.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;

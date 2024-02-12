@@ -3,14 +3,15 @@ import { readContract } from "../../../transaction/actions/read.js";
 import type { TxOpts } from "../../../transaction/transaction.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
+
 /**
- * Retrieves the symbol of the ERC20 token.
+ * Retrieves the symbol of a contract.
  * @param options - The transaction options.
- * @returns A promise that resolves to the symbol of the ERC20 token.
- * @extension ERC20
+ * @returns A promise that resolves to the symbol of the contract.
+ * @extension
  * @example
  * ```ts
- * import { symbol } from "thirdweb/extensions/erc20";
+ * import { symbol } from "thirdweb/extensions/common";
  * const symbol = await symbol({ contract });
  * ```
  */

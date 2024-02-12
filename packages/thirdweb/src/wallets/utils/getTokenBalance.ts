@@ -6,8 +6,8 @@ import {
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/index.js";
 import { eth_getBalance, getRpcClient } from "../../rpc/index.js";
+import { formatUnits } from "../../utils/units.js";
 import type { Account } from "../interfaces/wallet.js";
-import { formatUnits } from "viem/utils";
 
 export type GetTokenBalanceOptions = {
   account: Pick<Account, "address">;

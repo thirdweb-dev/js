@@ -1,5 +1,5 @@
 import { toHex } from "viem";
-import { isBase64String, parseBase64String } from "./base64.js";
+import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
 
 const FALLBACK_METADATA = {
@@ -22,7 +22,7 @@ type FetchTokenMetadataOptions = {
 export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
   const { client, tokenId, tokenUri } = options;
   // handle case where the URI is a base64 encoded JSON (onchain nft)
-  if (isBase64String(tokenUri)) {
+  if (isBase64JSON(tokenUri)) {
     try {
       return JSON.parse(parseBase64String(tokenUri));
     } catch (e) {

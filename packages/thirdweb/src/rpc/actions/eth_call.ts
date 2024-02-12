@@ -5,7 +5,52 @@ import {
   type EIP1474Methods,
   type RpcTransactionRequest,
   type Hex,
+  type RpcStateOverride,
+  type RpcStateMapping,
 } from "viem";
+
+export type StateOverride = Record<
+  string,
+  {
+    /**
+     * Fake balance to set for the account before executing the call.
+     */
+    balance?: bigint;
+    /**
+     * Fake nonce to set for the account before executing the call.
+     */
+    nonce?: number;
+    /**
+     * Fake EVM bytecode to inject into the account before executing the call.
+     */
+    code?: Hex;
+    /**
+     * Fake key-value mapping to override **all** slots in the account storage before executing the call.
+     */
+    state?: RpcStateMapping;
+    /**
+     * Fake key-value mapping to override **individual** slots in the account storage before executing the call.
+     */
+    stateDiff?: RpcStateMapping;
+  }
+>;
+
+function encodeStateOverrides(overrides: StateOverride): RpcStateOverride {
+  return Object.fromEntries(
+    Object.entries(overrides).map(([address, override]) => {
+      return [
+        address,
+        {
+          balance: override.balance ? numberToHex(override.balance) : undefined,
+          nonce: override.nonce ? numberToHex(override.nonce) : undefined,
+          code: override.code,
+          state: override.state,
+          stateDiff: override.stateDiff,
+        },
+      ];
+    }),
+  );
+}
 
 /**
  * Executes a call or a transaction on the Ethereum network.
@@ -28,17 +73,22 @@ export async function eth_call(
   params: Partial<RpcTransactionRequest> & {
     blockNumber?: bigint | number;
     blockTag?: BlockTag;
+    stateOverrides?: StateOverride;
   },
 ): Promise<Hex> {
   const { blockNumber, blockTag, ...txRequest } = params;
   const blockNumberHex = blockNumber ? numberToHex(blockNumber) : undefined;
-  // TODO: per RPC spec omitting the block is allowed, however for some reason our RPCs don't like it, so we default to "latest" here
+  // default to "latest" if no block is provided
   const block = blockNumberHex || blockTag || "latest";
 
   return await request({
     method: "eth_call",
-    params: block
-      ? [txRequest as Partial<RpcTransactionRequest>, block]
-      : [txRequest as Partial<RpcTransactionRequest>],
+    params: params.stateOverrides
+      ? [
+          txRequest as Partial<RpcTransactionRequest>,
+          block,
+          encodeStateOverrides(params.stateOverrides),
+        ]
+      : [txRequest as Partial<RpcTransactionRequest>, block],
   });
 }

@@ -1,3 +1,7 @@
 import { createClient } from "../../src/client/client.js";
 
-export const CLIENT_ID_CLIENT = createClient({ clientId: "TEST" });
+const secretKey = process.env.TW_SECRET_KEY;
+
+export const TEST_CLIENT = createClient(
+  secretKey ? { secretKey } : { clientId: "TEST" },
+);

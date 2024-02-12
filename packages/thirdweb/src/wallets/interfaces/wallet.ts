@@ -56,6 +56,7 @@ export type Account = {
   ) => Promise<Hex>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
 
+  // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
   /**
    * The wallet that the account belongs to
    * @internal

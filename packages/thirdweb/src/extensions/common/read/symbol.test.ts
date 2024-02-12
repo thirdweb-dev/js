@@ -4,7 +4,7 @@ import { symbol } from "./symbol.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-describe("erc20.symbol", () => {
+describe("shared.symbol", () => {
   afterEach(() => {
     fetchSpy.mockClear();
   });

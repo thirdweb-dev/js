@@ -9,3 +9,7 @@ export { totalSupply } from "./erc721/read/totalSupply.js";
 
 // WRITE
 export { mintTo, type MintToParams } from "./erc721/write/mintTo.js";
+export {
+  transferFrom,
+  type TransferFromParams,
+} from "./erc721/write/transferFrom.js";

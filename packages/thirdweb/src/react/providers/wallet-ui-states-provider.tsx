@@ -23,6 +23,7 @@ export type ModalConfig = {
   isEmbed?: boolean;
   onConnect?: () => void;
   chainId?: bigint;
+  chains?: bigint[];
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -61,6 +62,7 @@ export const WalletUIStatesProvider = (
     };
     onConnect?: () => void;
     chainId?: bigint;
+    chains?: bigint[];
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -80,6 +82,7 @@ export const WalletUIStatesProvider = (
     auth: props.auth,
     onConnect: props.onConnect,
     chainId: props.chainId,
+    chains: props.chains,
   });
 
   return (
@@ -153,10 +156,10 @@ export type ModalConfigOptions = {
    * By default it is set to "dark" if `theme` is not set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
    * If a `theme` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) then that theme will be used by default
    *
-   * theme can be set to either `"dark"` or `"light"` or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+   * theme can be set to either `"dark"` or `"light"` or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
    *
    * ```ts
-   * import { lightTheme } from "@thirdweb-dev/react";
+   * import { lightTheme } from "thirdweb/react";
    * const customTheme = lightTheme({
    *  colors: {
    *    modalBg: 'red'
@@ -235,6 +238,9 @@ export type ModalConfigOptions = {
    * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` instead
    */
   onConnect?: () => void;
+
+  chainId?: bigint;
+  chains?: bigint[];
 };
 
 /**
@@ -270,10 +276,10 @@ export type ModalConfigOptions = {
  * By default it is set to "dark" if `theme` is not set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
  * If a `theme` is set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) then that theme will be used by default
  *
- * theme can be set to either `"dark"` or `"light"` or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `@thirdweb-dev/react` to use the default themes as base and overrides parts of it.
+ * theme can be set to either `"dark"` or `"light"` or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
  *
  * ```ts
- * import { lightTheme } from "@thirdweb-dev/react";
+ * import { lightTheme } from "thirdweb/react";
  * const customTheme = lightTheme({
  *  colors: {
  *    modalBg: 'red'

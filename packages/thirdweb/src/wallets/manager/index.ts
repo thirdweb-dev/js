@@ -71,6 +71,7 @@ export function createConnectionManager(options?: ConnectionManagerOptions) {
 
   const disconnect = (account: Account) => {
     onAccountDisconnect(account);
+    account.wallet.disconnect();
   };
 
   const setActiveAccount = (account: Account) => {

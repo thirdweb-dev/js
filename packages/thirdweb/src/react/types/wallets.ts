@@ -35,7 +35,7 @@ export type WalletConfig = {
    *
    * This is only required if your wallet requires a personal wallet to be connected such as a Safe Wallet or Smart Wallet
    *
-   * providing the `personalWallets` ensures that autoconnect and ConnectWallet modal works properly for your wallet.
+   * providing the `personalWallets` ensures that auto connect and ConnectWallet modal works properly for your wallet.
    * auto-connect will connect the last connected personal wallet first and then connect your wallet
    * ConnectWallet modal will reopen once the personal wallet is connected so that you can render UI for connecting your wallet as the next step
    */
@@ -111,6 +111,11 @@ export type ConnectUIProps = {
    * Chain Id to connect the wallet to
    */
   chainId?: bigint;
+
+  /**
+   * List of all chains supported by the app
+   */
+  chains?: bigint[];
 
   /**
    * Create a wallet instance

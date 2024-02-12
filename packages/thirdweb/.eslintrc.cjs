@@ -32,6 +32,9 @@ const jsdocRuleOverrides = {
         "rpc",
         "transaction",
         "wallet",
+        "connectWallet",
+        "theme",
+        "locale",
       ],
     },
   ],
@@ -75,7 +78,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.test.ts", "test/**/*"],
+      files: ["*.bench.ts", "*.test.ts", "test/**/*"],
       rules: {
         "better-tree-shaking/no-top-level-side-effects": "off",
         "jsdoc/require-jsdoc": "off",
