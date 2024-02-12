@@ -10,7 +10,7 @@ export type TransferFromParams = { to: Address; from: Address } & (
       amount: number | string;
     }
   | {
-      amountGwei: bigint;
+      amountWei: bigint;
     }
 );
 
@@ -45,7 +45,7 @@ export function transferFrom(options: TxOpts<TransferFromParams>) {
         // turn ether into gwei
         amount = parseUnits(options.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = options.amountWei;
       }
       return [options.from, options.to, amount] as const;
     },

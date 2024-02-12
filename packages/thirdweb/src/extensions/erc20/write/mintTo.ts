@@ -9,7 +9,7 @@ export type MintToParams = { to: string } & (
       amount: number | string;
     }
   | {
-      amountGwei: bigint;
+      amountWei: bigint;
     }
 );
 
@@ -42,7 +42,7 @@ export function mintTo(options: TxOpts<MintToParams>) {
         // turn ether into gwei
         amount = parseUnits(options.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = options.amountWei;
       }
       return [options.to, amount] as const;
     },

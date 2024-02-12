@@ -10,7 +10,7 @@ export type ApproveParams = { spender: Address } & (
       amount: number | string;
     }
   | {
-      amountGwei: bigint;
+      amountWei: bigint;
     }
 );
 
@@ -43,7 +43,7 @@ export function approve(options: TxOpts<ApproveParams>) {
         // turn ether into gwei
         amount = parseUnits(options.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = options.amountWei;
       }
       return [options.spender, amount] as const;
     },
