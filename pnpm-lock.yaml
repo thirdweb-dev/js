@@ -717,6 +717,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.0.0
         version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.56.0)(prettier@3.1.1)
+      eslint-plugin-svg-jsx:
+        specifier: ^1.2.2
+        version: 1.2.2
       eslint-plugin-tsdoc:
         specifier: ^0.2.16
         version: 0.2.17
@@ -18560,6 +18563,11 @@ packages:
       resolve: 2.0.0-next.4
       semver: 7.5.4
       string.prototype.matchall: 4.0.8
+
+  /eslint-plugin-svg-jsx@1.2.2:
+    resolution: {integrity: sha512-7TXN/8aW3x+/7Y0lniWML2+BeX8oxB87r/ATG+m7a5n5WO/pWMYChZ4bI+hVkXU8v/oHPCBXrqeVKoeSl72xJA==}
+    engines: {node: '>=5.0.0'}
+    dev: true
 
   /eslint-plugin-testing-library@5.10.2(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-f1DmDWcz5SDM+IpCkEX0lbFqrrTs8HRsEElzDEqN/EBI0hpRj8Cns5+IVANXswE8/LeybIJqPAOQIFu2j5Y5sw==}
