@@ -3,11 +3,7 @@ import {
   Flex,
   FormControl,
   HStack,
-  IconButton,
-  Input,
-  Stack,
   Switch,
-  Textarea,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -17,22 +13,8 @@ import {
   UseFormReturn,
   useFieldArray,
 } from "react-hook-form";
-import { LuTrash2 } from "react-icons/lu";
-import {
-  Button,
-  Card,
-  Checkbox,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
-import { NoTargetAddressesAlert } from "../Alerts";
+import { Card, Checkbox, Heading, LinkButton, Text } from "tw-components";
 import { ApiKeyValidationSchema, HIDDEN_SERVICES } from "../validations";
-import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
-import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 
 interface EditServicesProps {
@@ -72,8 +54,6 @@ export const EditServices: React.FC<EditServicesProps> = ({ form, apiKey }) => {
       <Flex flexDir="column" gap={6}>
         {fields.map((srv, idx) => {
           const service = getServiceByName(srv.name as ServiceName);
-          const customBrandingEnabled =
-            !!srv.applicationImageUrl?.length || !!srv.applicationName?.length;
 
           return service ? (
             <Card
@@ -164,96 +144,5 @@ export const EditServices: React.FC<EditServicesProps> = ({ form, apiKey }) => {
         })}
       </Flex>
     </Flex>
-  );
-};
-
-// to prevent the useFieldArray from inserting an empty array into the form values until needed
-// TODO: consolidate this with the component in embedded-wallet/Configure/index.tsx when we refactor the embedded wallet settings to somehow share types properly
-const CustomAuthHeaders = ({
-  form,
-  serviceIdx,
-}: {
-  form: UseFormReturn<ApiKeyValidationSchema, any>;
-  serviceIdx: number;
-}) => {
-  const customAuthEndpointHeaderField = useFieldArray({
-    control: form.control,
-    name: `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
-  });
-
-  return (
-    <FormControl
-      isInvalid={
-        !!form.getFieldState(
-          `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
-          form.formState,
-        ).error
-      }
-    >
-      <FormLabel size="label.sm">Custom Headers</FormLabel>
-      <Stack gap={3} alignItems={"end"}>
-        {customAuthEndpointHeaderField.fields.map((_, customHeaderIdx) => {
-          return (
-            <Flex key={customHeaderIdx} gap={2} w="full">
-              <Input
-                placeholder="Key"
-                type="text"
-                {...form.register(
-                  `services.${serviceIdx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
-                )}
-              />
-              <Input
-                placeholder="Value"
-                type="text"
-                {...form.register(
-                  `services.${serviceIdx}.customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
-                )}
-              />
-              <IconButton
-                aria-label="Remove header"
-                icon={<LuTrash2 />}
-                onClick={() => {
-                  customAuthEndpointHeaderField.remove(customHeaderIdx);
-                }}
-              />
-            </Flex>
-          );
-        })}
-        <Button
-          onClick={() => {
-            customAuthEndpointHeaderField.append({
-              key: "",
-              value: "",
-            });
-          }}
-          w={
-            customAuthEndpointHeaderField.fields.length === 0
-              ? "full"
-              : "fit-content"
-          }
-        >
-          Add header
-        </Button>
-      </Stack>
-
-      {!form.getFieldState(
-        `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
-        form.formState,
-      ).error && (
-        <FormHelperText>
-          Set custom headers to be sent along the request with the payload to
-          the authentication endpoint above. You can set values to verify the
-          incoming request here.
-        </FormHelperText>
-      )}
-      <FormErrorMessage>
-        {
-          form.getFieldState(
-            `services.${serviceIdx}.customAuthEndpoint.customHeaders`,
-            form.formState,
-          ).error?.message
-        }
-      </FormErrorMessage>
-    </FormControl>
   );
 };

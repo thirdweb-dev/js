@@ -17,7 +17,6 @@ import { Button, FormLabel, Heading } from "tw-components";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
   CreateTicketInput,
-  useAccount,
   useCreateTicket,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { ConnectWallet } from "@thirdweb-dev/react";

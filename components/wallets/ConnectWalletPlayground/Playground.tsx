@@ -51,7 +51,6 @@ import { PreviewThirdwebProvider } from "./PreviewThirdwebProvider";
 import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
-import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 
 const TRACKING_CATEGORY = "connect-wallet-playground";
 
@@ -886,9 +885,7 @@ export const ConnectWalletPlayground: React.FC<{
             addOn={
               <Flex gap={3} alignItems="center">
                 <Text>{modalTitleIconUrl.enabled ? "Custom" : "Default"}</Text>
-                <GatedSwitch
-                  togglable
-                  trackingLabel="customConnect"
+                <Switch
                   size="lg"
                   isChecked={modalTitleIconUrl.enabled}
                   onChange={() => {
@@ -927,9 +924,7 @@ export const ConnectWalletPlayground: React.FC<{
             label="thirdweb Branding"
             description="Hide/Show 'Powered by thirdweb' branding at the bottom of the modal"
             addOn={
-              <GatedSwitch
-                togglable
-                trackingLabel="customConnect"
+              <Switch
                 size="lg"
                 isChecked={showThirdwebBranding === true}
                 onChange={() => {
