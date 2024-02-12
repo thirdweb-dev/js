@@ -130,13 +130,13 @@ export const PRICING_SECTIONS: PricingSection[] = [
         pro: "Custom",
       },
       {
-        title: "Custom branding on UI Elements",
+        title: "Custom branding for emails",
         starter: "N/A",
         growth: "checkmark",
         pro: "checkmark",
       },
       {
-        title: "Custom auth for Connect",
+        title: "Custom auth for embedded wallets",
         starter: "N/A",
         growth: "checkmark",
         pro: "checkmark",
