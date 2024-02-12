@@ -71,10 +71,28 @@ export async function resolveImplementation(
       utils.isAddress(implementationAddress) &&
       implementationAddress !== constants.AddressZero
     ) {
-      return {
-        address: implementationAddress,
-        bytecode: await fetchBytecode(implementationAddress, provider),
-      };
+      try {
+        const implBytecode = await fetchBytecode(
+          implementationAddress,
+          provider,
+        );
+        return {
+          address: implementationAddress,
+          bytecode: implBytecode,
+        };
+      } catch (e) {
+        if (e instanceof Error) {
+          // Ignore if fetchBytecode throws the error below, implying that bytecode is 0x.
+          // In that case we don't want to throw, and just return the original contract address and bytecode.
+          if (
+            !e.message.includes(
+              `Contract at ${implementationAddress} does not exist on chain`,
+            )
+          ) {
+            throw e;
+          }
+        }
+      }
     }
   }
 

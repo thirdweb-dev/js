@@ -1,5 +1,25 @@
 # @thirdweb-dev/sdk
 
+## 4.0.35
+
+### Patch Changes
+
+- [#2286](https://github.com/thirdweb-dev/js/pull/2286) [`09de55f1`](https://github.com/thirdweb-dev/js/commit/09de55f13cbd29b4e0eb57808e0d30f9c1b3ba94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utilities for creating merkle trees
+
+- [#2291](https://github.com/thirdweb-dev/js/pull/2291) [`53786fc3`](https://github.com/thirdweb-dev/js/commit/53786fc3068568758f033a1c63975c94a8e407f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Perfomance improvements by memoizing extensions
+
+- [#2233](https://github.com/thirdweb-dev/js/pull/2233) [`a86478bf`](https://github.com/thirdweb-dev/js/commit/a86478bf248786423d03f4a20d9dc7c02270c371) Thanks [@IDubuque](https://github.com/IDubuque)! - Added support for engine relayer with custom forwarder
+
+- Updated dependencies [[`23d0e553`](https://github.com/thirdweb-dev/js/commit/23d0e553088321edfe3971950c2e7f27209d9aaf)]:
+  - @thirdweb-dev/chains@0.1.72
+
+## 4.0.34
+
+### Patch Changes
+
+- Updated dependencies [[`357886e3`](https://github.com/thirdweb-dev/js/commit/357886e31b37aad950731ce8f013a101190ebd07)]:
+  - @thirdweb-dev/chains@0.1.71
+
 ## 4.0.33
 
 ### Patch Changes

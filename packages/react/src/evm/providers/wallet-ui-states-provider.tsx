@@ -22,6 +22,7 @@ export type ModalConfig = {
   };
   isEmbed?: boolean;
   onConnect?: () => void;
+  showThirdwebBranding?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -56,6 +57,7 @@ export const WalletUIStatesProvider = (
       onLogout?: () => void;
     };
     onConnect?: () => void;
+    showThirdwebBranding?: boolean;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -74,6 +76,7 @@ export const WalletUIStatesProvider = (
     isEmbed: props.isEmbed,
     auth: props.auth,
     onConnect: props.onConnect,
+    showThirdwebBranding: props.showThirdwebBranding,
   });
 
   return (
@@ -233,6 +236,13 @@ export type ModalConfigOptions = {
    * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` instead
    */
   onConnect?: () => void;
+
+  /**
+   * By default the ConnectWallet Modal shows "powered by thirdweb" branding at the bottom of the modal.
+   *
+   * If you want to hide the branding, set this to `false`
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**

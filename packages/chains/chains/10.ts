@@ -52,7 +52,6 @@ export default {
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
-    "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.optimism.io",
     "https://optimism.publicnode.com",
     "wss://optimism.publicnode.com",

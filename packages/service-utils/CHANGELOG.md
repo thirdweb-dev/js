@@ -1,5 +1,21 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.17
+
+### Patch Changes
+
+- [#2281](https://github.com/thirdweb-dev/js/pull/2281) [`77400fcf`](https://github.com/thirdweb-dev/js/commit/77400fcf212b7dba138e3422c05136d6043fe361) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new properties to usage
+
+- [#2287](https://github.com/thirdweb-dev/js/pull/2287) [`537e5e06`](https://github.com/thirdweb-dev/js/commit/537e5e063db282e8777e01bdd1e9afcdec7c9ef5) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new field to capture response time
+
+## 0.4.16
+
+### Patch Changes
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to logHttpRequest
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to CF worker logs
+
 ## 0.4.15
 
 ### Patch Changes
