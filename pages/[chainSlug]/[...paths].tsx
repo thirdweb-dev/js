@@ -38,6 +38,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { fetchChain } from "utils/fetchChain";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -323,18 +324,24 @@ EVMContractPage.getLayout = (page, props: EVMContractProps) => {
             url,
           }}
         />
-        {page}
+        <ClientOnly ssr={<PageSkeleton />}>{page}</ClientOnly>
       </>
     </AppLayout>
   );
 };
 
-// app layout has to come first in both getLayout and fallback
-EVMContractPage.fallback = (
-  <AppLayout layout={"custom-contract"} noSEOOverride hasSidebar={true}>
+function PageSkeleton() {
+  return (
     <Flex h="100%" justifyContent="center" alignItems="center">
       <Spinner size="xl" />
     </Flex>
+  );
+}
+
+// app layout has to come first in both getLayout and fallback
+EVMContractPage.fallback = (
+  <AppLayout layout={"custom-contract"} noSEOOverride hasSidebar={true}>
+    <PageSkeleton />
   </AppLayout>
 );
 

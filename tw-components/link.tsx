@@ -11,7 +11,9 @@ import React, { useCallback } from "react";
 export type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;
 export const ChakraNextLink = forwardRef<ChakraNextLinkProps, "a">(
-  (props, ref) => <ChakraLink as={_NextLink} {...props} ref={ref} />,
+  (props, ref) => (
+    <ChakraLink as={_NextLink} {...props} ref={ref} prefetch={false} />
+  ),
 );
 
 interface LinkProps
