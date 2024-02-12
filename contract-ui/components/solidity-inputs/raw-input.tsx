@@ -9,12 +9,13 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
   solidityComponents,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name, ...restOfInputProps } = inputProps;
+  const inputName = name as string;
+
   const typeWithoutArray = solidityType.replace("[]", "");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
-
     form.setValue(inputName, value);
 
     const invalidInputError = {
@@ -50,7 +51,7 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
       <Textarea
         fontFamily="mono"
         placeholder={solidityType}
-        {...(inputProps as TextareaProps)}
+        {...(restOfInputProps as TextareaProps)}
         value={form.watch(inputName)}
         onChange={handleChange}
       />

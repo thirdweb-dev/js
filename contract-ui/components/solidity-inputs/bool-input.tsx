@@ -6,7 +6,8 @@ export const SolidityBoolInput: React.FC<SolidityInputProps> = ({
   formContext: form,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name } = inputProps;
+  const inputName = name as string;
   const watchInput = form.watch(inputName);
   return (
     <Flex>

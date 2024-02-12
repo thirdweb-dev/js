@@ -10,7 +10,8 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
   solidityType,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name, ...restOfInputProps } = inputProps;
+  const inputName = name as string;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -49,7 +50,7 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
     <InputGroup>
       <Input
         placeholder={solidityType}
-        {...inputProps}
+        {...restOfInputProps}
         value={form.watch(inputName)}
         onChange={handleChange}
       />

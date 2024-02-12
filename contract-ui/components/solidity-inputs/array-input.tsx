@@ -13,18 +13,14 @@ export const SolidityArrayInput: React.FC<SolidityInputWithTypeProps> = ({
   solidityType,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name, ...restOfInputProps } = inputProps;
+  const inputName = name as string;
   const [showRawInput, setShowRawInput] = useState(false);
   const localForm = useForm({ defaultValues: { array: [{ value: "" }] } });
   const { fields, append, remove } = useFieldArray({
     name: "array",
     control: localForm.control,
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    form.setValue(inputName, val);
-  };
 
   const typeWithoutArray = solidityType.replace("[]", "");
 
@@ -34,8 +30,8 @@ export const SolidityArrayInput: React.FC<SolidityInputWithTypeProps> = ({
         <SolidityRawInput
           formContext={form}
           solidityType={solidityType}
-          {...inputProps}
-          onChange={handleChange}
+          {...restOfInputProps}
+          name={inputName}
         />
         <Text
           size="label.sm"

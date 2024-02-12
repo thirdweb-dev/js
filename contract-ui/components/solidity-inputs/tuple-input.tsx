@@ -9,7 +9,8 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
   solidityComponents,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name, ...restOfInputProps } = inputProps;
+  const inputName = name as string;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
@@ -52,7 +53,8 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
       <Textarea
         fontFamily="mono"
         placeholder={solidityType}
-        {...(inputProps as TextareaProps)}
+        {...(restOfInputProps as TextareaProps)}
+        value={form.watch(inputName)}
         onChange={handleChange}
       />
       <FormHelperText>

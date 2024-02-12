@@ -12,7 +12,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   formContext: form,
   ...inputProps
 }) => {
-  const inputName = inputProps.name as string;
+  const { name, ...restOfInputProps } = inputProps;
+  const inputName = name as string;
   const inputNameWatch = form.watch(inputName);
   const [localInput, setLocalInput] = useState(inputNameWatch);
   const address = useAddress();
@@ -98,7 +99,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
         placeholder="address"
         // probably OK but obviously can be longer if ens name is passed?
         maxLength={42}
-        {...inputProps}
+        {...restOfInputProps}
         onChange={(e) => handleChange(e.target.value)}
         // if we don't have a value from the form, use the local input (but if value is empty string then that's valid)
         value={(localInput ?? inputNameWatch) || ""}

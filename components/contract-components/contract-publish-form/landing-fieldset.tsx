@@ -172,8 +172,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             <TabPanels pt={2}>
               <TabPanel px={0} pb={0}>
                 <Textarea
-                  value={form.watch("readme")}
-                  onChange={(e) => form.setValue("readme", e.target.value)}
+                  {...form.register("readme")}
                   rows={12}
                   placeholder="Describe how users can use this contract. Add links if relevant."
                 />
@@ -209,8 +208,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               )}
             </Flex>
             <Input
-              value={form.watch("version")}
               placeholder={placeholderVersion}
+              value={form.watch("version")}
               onChange={handleVersionChange}
             />
             <FormErrorMessage>
@@ -236,10 +235,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                 <TabPanels pt={2}>
                   <TabPanel px={0} pb={0}>
                     <Textarea
-                      value={form.watch("changelog")}
-                      onChange={(e) =>
-                        form.setValue("changelog", e.target.value)
-                      }
+                      {...form.register("changelog")}
                       placeholder="Mention what is new in this version of your contract."
                     />
                     <FormErrorMessage>
