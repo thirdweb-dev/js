@@ -71,10 +71,16 @@ export async function resolveImplementation(
       utils.isAddress(implementationAddress) &&
       implementationAddress !== constants.AddressZero
     ) {
-      return {
-        address: implementationAddress,
-        bytecode: await fetchBytecode(implementationAddress, provider),
-      };
+      try {
+        const implBytecode = await fetchBytecode(
+          implementationAddress,
+          provider,
+        );
+        return {
+          address: implementationAddress,
+          bytecode: implBytecode,
+        };
+      } catch (e) {}
     }
   }
 
