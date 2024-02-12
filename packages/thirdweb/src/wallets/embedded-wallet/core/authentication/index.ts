@@ -353,7 +353,11 @@ export const linkAuthentication = async (
   switch (arg.provider) {
     case "google": {
       const baseUrl = new URL(
-        ROUTE_INITIATE_LINK(arg.provider, arg.client.clientId, arg.onConflict),
+        ROUTE_INITIATE_LINK(
+          arg.provider,
+          arg.client.clientId,
+          arg.authUser.authToken,
+        ),
       );
       if (arg.googleOauthPrompt) {
         baseUrl.searchParams.set("prompt", arg.googleOauthPrompt);
@@ -362,8 +366,19 @@ export const linkAuthentication = async (
         url: baseUrl.href,
       });
     }
+    case "discord": {
+      const baseUrl = new URL(
+        ROUTE_INITIATE_LINK(
+          arg.provider,
+          arg.client.clientId,
+          arg.authUser.authToken,
+        ),
+      );
+      return arg.handleOauth({
+        url: baseUrl.href,
+      });
+    }
     case "phone":
-    case "discord":
     case "email":
     default: {
       throw new Error(`Invalid authentication provider`);

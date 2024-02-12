@@ -118,12 +118,7 @@ export type AuthUserType = {
 };
 
 // Authentication Linking Type
-export type LinkAuthConflictType =
-  | "error"
-  | "override_current_account"
-  | "override_linked_account"
-  | "merge";
 export type LinkAuthArgsType = AuthArgsType & {
-  onConflict: LinkAuthConflictType;
-  config: never;
+  authUser: AuthUserType;
+  config?: never;
 };

@@ -1,7 +1,4 @@
-import type {
-  AuthMethodType,
-  LinkAuthConflictType,
-} from "./authentication/type.js";
+import type { AuthMethodType } from "./authentication/type.js";
 import { getBaseUrl } from "./base-url.js";
 
 /**
@@ -46,11 +43,11 @@ export const ROUTE_COMPLETE_AUTH = (provider: AuthMethodType) =>
 export const ROUTE_INITIATE_LINK = (
   provider: AuthMethodType,
   clientId: string,
-  onConflict: LinkAuthConflictType,
+  authToken: string,
 ) => {
-  const url = new URL(`${getBaseUrl()}/v2/login/${provider}`);
+  const url = new URL(`${getBaseUrl()}/v2/link/${provider}`);
   url.searchParams.set("clientId", clientId);
-  url.searchParams.set("onConflict", onConflict);
+  url.searchParams.set("sessionId", authToken);
   return url.href;
 };
 

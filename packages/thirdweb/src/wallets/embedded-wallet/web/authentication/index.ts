@@ -2,7 +2,7 @@ import { createAuthStorage } from "../../core/authentication/index.js";
 import type {
   AuthArgsType,
   AuthTokenStorageType,
-  AuthUserType,
+  LinkAuthArgsType,
 } from "../../core/authentication/type.js";
 
 const createAuthLocalStorage = () => {
@@ -65,53 +65,9 @@ export const authenticate = async (
   const { authenticate: authenticateCore } = await import(
     "../../core/authentication/index.js"
   );
-  const { getBaseUrl } = await import("../../core/base-url.js");
-  const { openPopUp } = await import("./utils.js");
-  const {
-    AuthenticationError,
-    USER_ABORT_AUTHENTICATION_ERROR_MESSAGE,
-    UserAbortError,
-  } = await import("../../core/authentication/error.js");
-  const { THIRDWEB_AUTH_TOKEN_KEY } = await import(
-    "../../core/authentication/constant.js"
-  );
+  const { openPopUp, oauthListener } = await import("./utils.js");
 
   const storage = arg.storage ?? createAuthLocalStorage();
-
-  const oauthListener = (popup: Window | null) =>
-    new Promise<AuthUserType>((res, rej) => {
-      const interval = setInterval(() => {
-        if (popup?.closed) {
-          clearInterval(interval);
-          rej(new UserAbortError());
-        }
-      }, 1000); // 1 second
-
-      const authSuccessListener = async (event: MessageEvent) => {
-        if (event.origin !== getBaseUrl()) {
-          return;
-        }
-        if (event.data.eventType === "oauthSuccessResult") {
-          window.removeEventListener("message", authSuccessListener);
-          const authResult = event.data.authResult as AuthUserType;
-          await storage.storeToken({
-            key: THIRDWEB_AUTH_TOKEN_KEY,
-            value: authResult.authToken,
-          });
-          popup?.close();
-          res(authResult);
-        } else if (event.data.eventType === "oauthFailureResult") {
-          window.removeEventListener("message", authSuccessListener);
-          popup?.close();
-          const errorString = event.data.errorString as string;
-          if (errorString === USER_ABORT_AUTHENTICATION_ERROR_MESSAGE) {
-            return rej(new UserAbortError());
-          }
-          rej(new AuthenticationError(errorString));
-        }
-      };
-      window.addEventListener("message", authSuccessListener);
-    });
 
   return authenticateCore({
     ...(arg as any),
@@ -127,7 +83,51 @@ export const authenticate = async (
       }
 
       const popup = openPopUp(url, popUpSize);
-      return oauthListener(popup);
+      return oauthListener(storage)(popup);
+    },
+  });
+};
+
+/**
+ * Links an existing user account with a new authentication provider.
+ * @param arg - The options for linking the user account
+ * @example
+ * ```ts
+ * import { linkAuthentication } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * await linkAuthentication({
+ *     provider: "google",
+ *     googleOauthPrompt: "select_account",
+ * });
+ * ```
+ * @returns A Promise that resolves to the authenticated user.
+ */
+export const linkAuthentication = async (
+  arg: Omit<LinkAuthArgsType, "storage" | "handleOauth"> &
+    Partial<Pick<LinkAuthArgsType, "storage">>,
+) => {
+  const { linkAuthentication: linkAuthenticationCore } = await import(
+    "../../core/authentication/index.js"
+  );
+  const { openPopUp, oauthListener } = await import("./utils.js");
+
+  const storage = arg.storage ?? createAuthLocalStorage();
+
+  return linkAuthenticationCore({
+    ...(arg as any),
+    client: arg.client,
+    storage,
+    handleOauth: ({ url }) => {
+      let popUpSize: string | undefined;
+      switch (arg.provider) {
+        case "discord":
+          popUpSize = "width=450,height=600";
+          break;
+        default:
+          break;
+      }
+
+      const popup = openPopUp(url, popUpSize);
+      return oauthListener(storage)(popup);
     },
   });
 };
@@ -154,7 +154,6 @@ export const logout = async (arg?: { storage: AuthTokenStorageType }) => {
 
 export {
   confirm2FA,
-  linkAuthentication,
   pre2FA,
   preLinkAuthentication,
 } from "../../core/authentication/index.js";
