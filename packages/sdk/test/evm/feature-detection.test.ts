@@ -75,6 +75,16 @@ describe("Feature Detection", async () => {
     );
   });
 
+  it("should extract implementation address for new minimal proxy pattern", async () => {
+    const code =
+      "0x36600080376020600036600073bebebebebebebebebebebebebebebebebebebebe6102c65a03f41515602d57fe5b60206000f3";
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(code);
+    expect(implementationAddress).to.equal(
+      "0xbebebebebebebebebebebebebebebebebebebebe",
+    );
+  });
+
   it("should extract features", async () => {
     let features = detectFeatures(TokenERC721__factory.abi);
     expect(

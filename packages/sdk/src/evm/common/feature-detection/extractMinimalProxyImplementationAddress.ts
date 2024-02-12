@@ -31,5 +31,10 @@ export function extractMinimalProxyImplementationAddress(
     return `0x${implementationAddress}`;
   }
 
+  if (bytecode.startsWith("0x36600080376020600036600073")) {
+    const implementationAddress = bytecode.slice(28, 28 + 40);
+    return `0x${implementationAddress}`;
+  }
+
   return undefined;
 }

@@ -97,6 +97,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-svg-jsx": "^1.2.2",
     "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
     "prettier": "^3.1.1",
