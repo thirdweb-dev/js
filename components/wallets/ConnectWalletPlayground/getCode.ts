@@ -19,6 +19,7 @@ type WalletSetupOptions = {
     welcomeScreen?: string;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    showThirdwebBranding?: string;
   };
   baseTheme: "light" | "dark";
   colorOverrides: Record<string, string>;

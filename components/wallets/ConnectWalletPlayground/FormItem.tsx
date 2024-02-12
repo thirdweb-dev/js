@@ -10,11 +10,7 @@ export const FormItem: React.FC<{
 }> = (props) => {
   return (
     <FormControl>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        mb={props.addOn ? 4 : 2}
-      >
+      <Flex alignItems="center" justifyContent="space-between" mb={2}>
         <Flex gap={2} alignItems="center">
           <FormLabel m={0}>{props.label}</FormLabel>
           {props.description && (

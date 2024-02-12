@@ -86,7 +86,24 @@ export const ConnectWalletPlayground: React.FC<{
     useState<OptionalUrl>(defaultOptionalUrl);
   const [modalTitleIconUrl, setModalTitleIconUrl] =
     useState<OptionalUrl>(defaultOptionalUrl);
-  const [welcomeScreen, setWelcomeScreen] = useState<WelcomeScreen>({});
+  const [showThirdwebBranding, setShowThirdwebBranding] =
+    useState<boolean>(true);
+
+  const [welcomeScreen, setWelcomeScreen] = useState<WelcomeScreen | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    if (welcomeScreen) {
+      if (
+        !welcomeScreen.img &&
+        !welcomeScreen.title &&
+        !welcomeScreen.subtitle
+      ) {
+        setWelcomeScreen(undefined);
+      }
+    }
+  }, [welcomeScreen]);
 
   const { colorMode, toggleColorMode } = useColorMode();
   const selectedTheme = colorMode === "light" ? "light" : "dark";
@@ -203,10 +220,11 @@ export const ConnectWalletPlayground: React.FC<{
         auth: authEnabled ? "{ loginOptional: false }" : undefined,
         switchToActiveChain: switchToActiveChain ? "true" : undefined,
         modalSize: `"${modalSize}"`,
-        welcomeScreen:
-          Object.keys(welcomeScreen).length > 0
+        welcomeScreen: welcomeScreen
+          ? Object.keys(welcomeScreen).length > 0
             ? JSON.stringify(welcomeScreen)
-            : undefined,
+            : undefined
+          : undefined,
         modalTitleIconUrl: modalTitleIconUrl.enabled
           ? `"${modalTitleIconUrl.url}"`
           : undefined,
@@ -214,6 +232,8 @@ export const ConnectWalletPlayground: React.FC<{
         privacyPolicyUrl: privacyPolicyUrl.enabled
           ? `"${privacyPolicyUrl.url}"`
           : undefined,
+        showThirdwebBranding:
+          showThirdwebBranding === false ? "false" : undefined,
       },
     });
 
@@ -240,6 +260,7 @@ export const ConnectWalletPlayground: React.FC<{
     privacyPolicyUrl,
     locale,
     socialOptions,
+    showThirdwebBranding,
   ]);
 
   const welcomeScreenContent = (
@@ -255,7 +276,7 @@ export const ConnectWalletPlayground: React.FC<{
             trackCustomize("welcome-screen-title");
           }}
           placeholder="Your gateway to the decentralized world"
-          value={welcomeScreen.title}
+          value={welcomeScreen?.title}
           onChange={(e) => {
             setWelcomeScreen({
               ...welcomeScreen,
@@ -272,7 +293,7 @@ export const ConnectWalletPlayground: React.FC<{
             trackCustomize("welcome-screen-subtitle");
           }}
           placeholder="Connect a wallet to get started"
-          value={welcomeScreen.subtitle}
+          value={welcomeScreen?.subtitle}
           onChange={(e) => {
             setWelcomeScreen({
               ...welcomeScreen,
@@ -287,15 +308,15 @@ export const ConnectWalletPlayground: React.FC<{
         label="Splash Image"
         addOn={
           <Flex gap={3} alignItems="center">
-            <Text>{welcomeScreen.img ? "Custom" : "Default"}</Text>
+            <Text>{welcomeScreen?.img ? "Custom" : "Default"}</Text>
             <Switch
               size="lg"
-              isChecked={!!welcomeScreen.img}
+              isChecked={!!welcomeScreen?.img}
               onChange={() => {
                 trackCustomize("splash-image-switch");
                 setWelcomeScreen({
                   ...welcomeScreen,
-                  img: welcomeScreen.img
+                  img: welcomeScreen?.img
                     ? undefined
                     : {
                         src: "",
@@ -308,7 +329,7 @@ export const ConnectWalletPlayground: React.FC<{
           </Flex>
         }
       >
-        {welcomeScreen.img && (
+        {welcomeScreen?.img && (
           <Flex flexDir="column" gap={3}>
             <Box>
               <FormLabel m={0} mb={2}>
@@ -598,6 +619,7 @@ export const ConnectWalletPlayground: React.FC<{
               privacyPolicyUrl={
                 privacyPolicyUrl.enabled ? privacyPolicyUrl.url : undefined
               }
+              showThirdwebBranding={showThirdwebBranding}
             />
           </PreviewThirdwebProvider>
         </Box>
@@ -636,6 +658,7 @@ export const ConnectWalletPlayground: React.FC<{
                 privacyPolicyUrl={
                   privacyPolicyUrl.enabled ? privacyPolicyUrl.url : undefined
                 }
+                showThirdwebBranding={showThirdwebBranding}
               />
             )}
 
@@ -897,6 +920,29 @@ export const ConnectWalletPlayground: React.FC<{
                 }}
               />
             )}
+          </FormItem>
+
+          {/* Show Thirdweb Branding */}
+          <FormItem
+            label="thirdweb Branding"
+            description="Hide/Show 'Powered by thirdweb' branding at the bottom of the modal"
+            addOn={
+              <GatedSwitch
+                togglable
+                trackingLabel="customConnect"
+                size="lg"
+                isChecked={showThirdwebBranding === true}
+                onChange={() => {
+                  if (showThirdwebBranding) {
+                    trackCustomize("modal-tw-branding-switch");
+                  }
+
+                  setShowThirdwebBranding((c) => !c);
+                }}
+              />
+            }
+          >
+            {null}
           </FormItem>
         </Flex>
 

@@ -36,6 +36,7 @@ export const ConnectModalInlinePreview = (props: {
   welcomeScreen?: WelcomeScreen | (() => React.ReactNode);
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
+  showThirdwebBranding?: boolean;
 }) => {
   const isMobile = useBreakpointValue(
     { base: true, md: false },
@@ -60,6 +61,7 @@ export const ConnectModalInlinePreview = (props: {
         welcomeScreen={props.welcomeScreen}
         termsOfServiceUrl={props.termsOfServiceUrl}
         privacyPolicyUrl={props.privacyPolicyUrl}
+        showThirdwebBranding={props.showThirdwebBranding}
       />
     </Flex>
   );

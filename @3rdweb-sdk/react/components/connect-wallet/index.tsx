@@ -46,6 +46,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({ auth }) => {
         },
         renderChain: CustomChainRenderer,
       }}
+      showThirdwebBranding={false}
     />
   );
 };

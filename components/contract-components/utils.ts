@@ -5,6 +5,7 @@ import {
   AddContractInput,
   ValidContractInstance,
   isExtensionEnabled,
+  detectFeatures as detectFeaturesFromSdk,
 } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -22,14 +23,16 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
     return false;
   }
 
+  const extensions = detectFeaturesFromSdk(contract.abi as Abi);
+
   if (strategy === "any") {
     return features.some((feature) =>
-      isExtensionEnabled(contract.abi as Abi, feature),
+      isExtensionEnabled(contract.abi as Abi, feature, extensions),
     );
   }
 
   return features.every((feature) =>
-    isExtensionEnabled(contract.abi as Abi, feature),
+    isExtensionEnabled(contract.abi as Abi, feature, extensions),
   );
 }
 

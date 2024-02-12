@@ -20,6 +20,7 @@ import {
   Abi,
   CONTRACT_ADDRESSES,
   ExtraPublishMetadataSchemaInput,
+  detectFeatures,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -227,15 +228,26 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       ? constructorParams
       : initializerParams;
 
+  const extensions = detectFeatures(publishMetadata.data?.abi as Abi);
+
   const isPluginRouter = useMemo(
-    () => isExtensionEnabled(publishMetadata.data?.abi as Abi, "PluginRouter"),
-    [publishMetadata.data?.abi],
+    () =>
+      isExtensionEnabled(
+        publishMetadata.data?.abi as Abi,
+        "PluginRouter",
+        extensions,
+      ),
+    [publishMetadata.data?.abi, extensions],
   );
 
   const isDynamicContract = useMemo(
     () =>
-      isExtensionEnabled(publishMetadata.data?.abi as Abi, "DynamicContract"),
-    [publishMetadata.data?.abi],
+      isExtensionEnabled(
+        publishMetadata.data?.abi as Abi,
+        "DynamicContract",
+        extensions,
+      ),
+    [publishMetadata.data?.abi, extensions],
   );
 
   const hasExtensionsParam = useMemo(
