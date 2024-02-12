@@ -9586,7 +9586,7 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fflate@^0.4.1:
+fflate@^0.4.1, fflate@^0.4.8:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.4.8.tgz#f90b82aefbd8ac174213abb338bd7ef848f0f5ae"
   integrity sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==
@@ -13685,17 +13685,18 @@ postcss@8.4.31, postcss@^8.1.7, postcss@^8.4.23:
   dependencies:
     fflate "^0.4.1"
 
-posthog-js@^1.96.1:
-  version "1.96.1"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.96.1.tgz#4f9719a24e4e14037b0e72d430194d7cdb576447"
-  integrity sha512-kv1vQqYMt2BV3YHS+wxsbGuP+tz+M3y1AzNhz8TfkpY1HT8W/ONT0i0eQpeRr9Y+d4x/fZ6M4cXG5GMvi9lRCA==
+posthog-js@^1.105.7:
+  version "1.105.7"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.105.7.tgz#7d0d505efedc849248ec570783b43dc3db6884d8"
+  integrity sha512-skpVufQrYllZ4Hi5bdBfe1F9pzeym1rlXUuvKbEYbMhmA+FCz47ZZ0zDX6a72A5hqPW5h7ZBTEJZbwad7jYt1A==
   dependencies:
-    fflate "^0.4.1"
+    fflate "^0.4.8"
+    preact "^10.19.3"
 
-preact@^10.5.9:
-  version "10.18.1"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-10.18.1.tgz#3b84bb305f0b05f4ad5784b981d15fcec4e105da"
-  integrity sha512-mKUD7RRkQQM6s7Rkmi7IFkoEHjuFqRQUaXamO61E6Nn7vqF/bo7EZCmSyrUnp2UWHw0O7XjZ2eeXis+m7tf4lg==
+preact@^10.19.3, preact@^10.5.9:
+  version "10.19.4"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.19.4.tgz#735d331d5b1bd2182cc36f2ba481fd6f0da3fe3b"
+  integrity sha512-dwaX5jAh0Ga8uENBX1hSOujmKWgx9RtL80KaKUFLc6jb4vCEAc3EeZ0rnQO/FO4VgjfPMfoLFWnNG8bHuZ9VLw==
 
 prebuild-install@^7.1.1:
   version "7.1.1"
