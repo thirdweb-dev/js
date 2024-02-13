@@ -43,15 +43,15 @@ export type Account = {
     // TODO: figure out how we get our "chain" here
     tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
-
-  // OPTIONAL
-  signMessage?: ({ message }: { message: SignableMessage }) => Promise<Hex>;
-  signTypedData?: <
+  signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
+  signTypedData: <
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
+
+  // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
 
   // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
