@@ -36,7 +36,7 @@ export const embeddedWallet = async (arg: { storage: StorageType }) => {
 
 class EmbeddedWallet implements Wallet {
   private storage: StorageType;
-  private activeWalletAccount: SensitiveAccountDetailType | null = null;
+  private activeWalletAccountDetail: SensitiveAccountDetailType | null = null;
   private walletAccounts: Record<string, SensitiveAccountDetailType> = {};
 
   public metadata = {
@@ -135,7 +135,7 @@ class EmbeddedWallet implements Wallet {
   async saveAccount(arg: {
     account: Account;
     update?: {
-      format?: "sharded";
+      format?: WalletStorageFormatType;
     };
     storageOverride?: StorageType;
   }) {
@@ -221,19 +221,27 @@ class EmbeddedWallet implements Wallet {
     });
   }
 
-  get activeAccount() {
-    return this.activeWalletAccount;
+  async getActiveAccount() {
+    const { privateKeyAccount } = await import("../../../private-key.js");
+
+    if (this.activeWalletAccountDetail) {
+      return privateKeyAccount({
+        client: this.storage.client,
+        privateKey: this.activeWalletAccountDetail.keyMaterial,
+      });
+    }
+    return;
   }
 
   async setActiveAccount(arg: { account: Account }) {
     const { EmbeddedWalletError } = await import("./error.js");
 
     if (this.walletAccounts[arg.account.address]) {
-      const wallet = this.walletAccounts[arg.account.address];
-      if (!wallet) {
+      const walletDetail = this.walletAccounts[arg.account.address];
+      if (!walletDetail) {
         throw new Error(`BAD STATE: wallet is empty even after check.`);
       }
-      this.activeWalletAccount = wallet;
+      this.activeWalletAccountDetail = walletDetail;
     } else {
       await this.createAccount({
         createWalletOverride: () => {
@@ -249,11 +257,11 @@ class EmbeddedWallet implements Wallet {
           };
         },
       });
-      const wallet = this.walletAccounts[arg.account.address];
-      if (!wallet) {
+      const walletDetail = this.walletAccounts[arg.account.address];
+      if (!walletDetail) {
         throw new Error(`BAD STATE: wallet is empty even after initializing.`);
       }
-      this.activeWalletAccount = wallet;
+      this.activeWalletAccountDetail = walletDetail;
     }
     this.address = arg.account.address;
     return arg.account;
@@ -269,17 +277,17 @@ class EmbeddedWallet implements Wallet {
   public async autoConnect() {
     const { privateKeyAccount } = await import("../../../private-key.js");
 
-    if (!this.activeWalletAccount) {
+    if (!this.activeWalletAccountDetail) {
       throw new Error("No active wallet");
     }
 
     return privateKeyAccount({
       client: this.storage.client,
-      privateKey: this.activeWalletAccount.keyMaterial,
+      privateKey: this.activeWalletAccountDetail.keyMaterial,
     });
   }
 
   public async disconnect() {
-    this.activeWalletAccount = null;
+    this.activeWalletAccountDetail = null;
   }
 }
