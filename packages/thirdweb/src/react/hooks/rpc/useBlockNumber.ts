@@ -17,7 +17,7 @@ export type UseBlockNumberOptions = {
 
 /**
  * Hook that watches for changes in the block number on a given chain.
- * @param options - The {@link UseBlockNumberOptions | options} for the hook.
+ * @param options - The options for the hook.
  * @returns The latest block number.
  * @example
  * ```jsx

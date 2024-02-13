@@ -12,14 +12,17 @@ export type {
   ConnectWallet_DetailsModalOptions,
 } from "./ui/ConnectWallet/ConnectWalletProps.js";
 export type { WelcomeScreen } from "./ui/ConnectWallet/screens/types.js";
-export type { NetworkSelectorProps } from "./ui/ConnectWallet/NetworkSelector.js";}
+export type { NetworkSelectorProps } from "./ui/ConnectWallet/NetworkSelector.js";
 
 export {
   TransactionButton,
   type TransactionButtonProps,
 } from "./ui/TransactionButton/index.js";
 
-export { ThirdwebProvider, type ThirdwebProviderProps  } from "./providers/thirdweb-provider.js";
+export {
+  ThirdwebProvider,
+  type ThirdwebProviderProps,
+} from "./providers/thirdweb-provider.js";
 
 export {
   useSetActiveAccount,
@@ -46,7 +49,10 @@ export { useWaitForReceipt } from "./hooks/contract/useWaitForReceipt.js";
 export { useContractEvents } from "./hooks/contract/useContractEvents.js";
 
 // rpc related
-export { useBlockNumber } from "./hooks/rpc/useBlockNumber.js";
+export {
+  useBlockNumber,
+  type UseBlockNumberOptions,
+} from "./hooks/rpc/useBlockNumber.js";
 
 // utils
 export { createContractQuery } from "./utils/createQuery.js";
