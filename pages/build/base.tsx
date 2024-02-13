@@ -507,7 +507,7 @@ const Base: ThirdwebNextPage = () => {
                         },
                         {
                           text: "Browse templates",
-                          href: "https://thirdweb.com/templates",
+                          href: "/templates",
                         },
                       ],
                     },
@@ -533,7 +533,7 @@ const Base: ThirdwebNextPage = () => {
                         },
                         {
                           text: "Browse templates",
-                          href: "https://thirdweb.com/templates",
+                          href: "/templates",
                         },
                       ],
                     },
@@ -551,7 +551,7 @@ const Base: ThirdwebNextPage = () => {
                         },
                         {
                           text: "Browse templates",
-                          href: "https://thirdweb.com/templates",
+                          href: "/templates",
                         },
                       ],
                     },

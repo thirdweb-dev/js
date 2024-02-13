@@ -276,7 +276,7 @@ You can claim one too at:`,
         </ButtonGroup>
         <Button
           as="a"
-          href="https://thirdweb.com"
+          href="/"
           target="_blank"
           bg={colorMode === "light" ? "black" : "white"}
           color={colorMode === "light" ? "white" : "black"}

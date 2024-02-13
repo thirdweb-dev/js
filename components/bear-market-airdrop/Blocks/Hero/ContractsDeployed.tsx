@@ -226,7 +226,7 @@ export const ContractsDeployed: React.FC<ContractsDeployedProps> = ({
             />
             <Text>Want to be eligible for future airdrops?</Text>
             <TrackedLink
-              href="https://thirdweb.com/dashboard/contracts/deploy"
+              href="/dashboard/contracts/deploy"
               target="_blank"
               category={BEAR_MARKET_TRACKING_CATEGORY}
               label="contracts_deployed"

@@ -88,7 +88,7 @@ const communitySections = [
     cards: [
       {
         image: "/assets/community/home/ambassadors.svg",
-        link: "https://thirdweb.com/ambassadors",
+        link: "/ambassadors",
         title: "Ambassadors",
         description: "",
       },

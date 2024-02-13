@@ -176,7 +176,7 @@ const Web3SDK: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description="Plug-and-play UI Components for common web3 use cases, e.g. Connect Wallet button, Web3 button, NFT renderer, and IPFS renderer."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://thirdweb.com/ui-components"
+            href="/ui-components"
           />
           <ProductLearnMoreCard
             title="Game Engine SDK"

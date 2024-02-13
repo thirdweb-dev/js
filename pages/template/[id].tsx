@@ -116,11 +116,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
                 ERC721Claimable
               </Link>
               , such as the{" "}
-              <Link
-                href="https://thirdweb.com/thirdweb.eth/DropERC721"
-                isExternal
-                color="blue.300"
-              >
+              <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
                 NFT Drop
               </Link>
               .
@@ -195,7 +191,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           <div>
             Deploy a new{" "}
             <Link
-              href="https://thirdweb.com/thirdweb.eth/DropERC721"
+              href="/thirdweb.eth/DropERC721"
               isExternal
               color="blue.300"
               fontWeight="500"
@@ -204,7 +200,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             </Link>{" "}
             or import your existing one using the{" "}
             <Link
-              href="https://thirdweb.com/dashboard"
+              href="/dashboard"
               isExternal
               color="blue.300"
               fontWeight="500"
@@ -299,7 +295,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           <div>
             Deploy a new{" "}
             <Link
-              href="https://thirdweb.com/thirdweb.eth/MarketplaceV3"
+              href="/thirdweb.eth/MarketplaceV3"
               isExternal
               color="blue.300"
               fontWeight="500"
@@ -308,7 +304,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             </Link>{" "}
             smart contract using the{" "}
             <Link
-              href="https://thirdweb.com/dashboard"
+              href="/dashboard"
               isExternal
               color="blue.300"
               fontWeight="500"
@@ -396,7 +392,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           <div>
             Deploy a new{" "}
             <Link
-              href="https://thirdweb.com/thirdweb.eth/TokenERC721"
+              href="/thirdweb.eth/TokenERC721"
               isExternal
               color="blue.300"
               fontWeight="500"
@@ -405,7 +401,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             </Link>{" "}
             or import your existing one using the{" "}
             <Link
-              href="https://thirdweb.com/dashboard"
+              href="/dashboard"
               isExternal
               color="blue.300"
               fontWeight="500"

@@ -479,7 +479,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           <Text>
             Import so I can find it in the list of my contracts at{" "}
             <TrackedLink
-              href="https://thirdweb.com/dashboard"
+              href="/dashboard"
               isExternal
               category="custom-contract"
               label="visit-dashboard"

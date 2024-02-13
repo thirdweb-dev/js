@@ -17,8 +17,10 @@ import { EditProfile } from "components/contract-components/publisher/edit-profi
 import { PublisherAvatar } from "components/contract-components/publisher/masked-avatar";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
+import { THIRDWEB_DOMAIN } from "constants/urls";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAllExplorePublishers } from "data/explore";
+import { getAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -59,7 +61,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
     ens?.data?.ensName || props.profileAddress,
   ).replace("deployer.thirdweb.eth", "thirdweb.eth");
 
-  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
+  const currentRoute = `${THIRDWEB_DOMAIN}${router.asPath}`.replace(
     "deployer.thirdweb.eth",
     "thirdweb.eth",
   );
@@ -229,9 +231,14 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     };
   }
 
+  const lowercaseAddress = profileAddress.toLowerCase();
+  const checksummedAdress = lowercaseAddress.endsWith("eth")
+    ? lowercaseAddress
+    : getAddress(lowercaseAddress);
+
   let address: string | null, ensName: string | null;
   try {
-    const info = await queryClient.fetchQuery(ensQuery(profileAddress));
+    const info = await queryClient.fetchQuery(ensQuery(checksummedAdress));
     address = info.address;
     ensName = info.ensName;
   } catch (e) {
@@ -252,7 +259,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     };
   }
 
-  const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
+  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAdress))];
   if (ensName) {
     ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
   }
@@ -268,7 +275,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      profileAddress: address,
+      profileAddress: checksummedAdress,
     },
   };
 };

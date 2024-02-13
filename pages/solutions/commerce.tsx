@@ -154,7 +154,7 @@ const Commerce: ThirdwebNextPage = () => {
             directly from a user interface, e.g. view all the NFTs that have
             been minted to your most loyal customers."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://thirdweb.com/dashboard"
+            href="/dashboard"
           />
         </SimpleGrid>
       </ProductSection>

@@ -136,7 +136,7 @@ export const templates: TemplateCardProps[] = [
     authorENS: "thirdweb.eth",
     authorIcon: "/assets/templates/thirdweb-eth.png",
     contractName: "NFTDrop",
-    contractLink: "https://thirdweb.com/thirdweb.eth/DropERC721",
+    contractLink: "/thirdweb.eth/DropERC721",
   },
   {
     id: "marketplace-v3",
@@ -151,7 +151,7 @@ export const templates: TemplateCardProps[] = [
     authorENS: "thirdweb.eth",
     authorIcon: "/assets/templates/thirdweb-eth.png",
     contractName: "Marketplace",
-    contractLink: "https://thirdweb.com/thirdweb.eth/MarketplaceV3",
+    contractLink: "/thirdweb.eth/MarketplaceV3",
   },
   {
     id: "nft-gated-website",

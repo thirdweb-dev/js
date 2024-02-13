@@ -39,6 +39,8 @@ import { fetchChain } from "utils/fetchChain";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
+import { THIRDWEB_DOMAIN } from "constants/urls";
+import { getAddress } from "ethers/lib/utils";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -269,7 +271,7 @@ EVMContractPage.getLayout = (page, props: EVMContractProps) => {
     .replace("Mainnet", "")
     .replace("Testnet", "")
     .trim();
-  const url = `https://thirdweb.com/${props.contractInfo?.chainSlug}/${props.contractInfo?.contractAddress}/`;
+  const url = `${THIRDWEB_DOMAIN}/${props.contractInfo?.chainSlug}/${props.contractInfo?.contractAddress}/`;
   const SEOTitle = `${displayName} | ${
     cleanedChainName ? `${cleanedChainName} ` : ""
   }Smart Contract`;
@@ -354,8 +356,15 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   let address: string | null = null;
   const queryClient = new QueryClient();
 
+  const lowercaseAddress = contractAddress.toLowerCase();
+  const checksummedAdress = lowercaseAddress.endsWith("eth")
+    ? lowercaseAddress
+    : getAddress(lowercaseAddress);
+
   try {
-    const queryResult = await queryClient.fetchQuery(ensQuery(contractAddress));
+    const queryResult = await queryClient.fetchQuery(
+      ensQuery(checksummedAdress),
+    );
     address = queryResult?.address;
   } catch {
     return {
@@ -413,7 +422,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       dehydratedState: dehydrate(queryClient),
       contractInfo: {
         chainSlug,
-        contractAddress,
+        contractAddress: checksummedAdress,
         chain,
       },
       detectedExtension,

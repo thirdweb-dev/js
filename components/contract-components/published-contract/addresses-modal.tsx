@@ -1,4 +1,5 @@
 import { Flex, Link, useDisclosure } from "@chakra-ui/react";
+import { THIRDWEB_DOMAIN } from "constants/urls";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { Drawer, Heading, Text } from "tw-components";
 
@@ -61,7 +62,7 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
                     {chainIdToChainRecord[parseInt(chainId)]?.name}
                   </Text>
                   <Link
-                    href={`https://thirdweb.com/${chainId}/${address}`}
+                    href={`${THIRDWEB_DOMAIN}/${chainId}/${address}`}
                     isExternal
                     color="blue.500"
                   >
