@@ -169,12 +169,12 @@ export function prepareContractCall<
   }
   return prepareTransaction(
     {
+      ...rest,
       // these always inferred from the contract
       to: contract.address,
       chain: contract.chain,
       client: contract.client,
       data: encodeData_,
-      ...rest,
     },
     {
       abiFn: resolveAbiFunction_,
