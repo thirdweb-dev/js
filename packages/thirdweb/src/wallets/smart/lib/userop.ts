@@ -147,8 +147,8 @@ export async function signUserOp(args: {
     entryPoint: options.entrypointAddress || ENTRYPOINT_ADDRESS,
     chainId: getChainIdFromChain(options.chain),
   });
-  if (options.signingAccount.signMessage) {
-    const signature = await options.signingAccount.signMessage({
+  if (options.personalAccount.signMessage) {
+    const signature = await options.personalAccount.signMessage({
       message: {
         raw: userOpHash,
       },
@@ -168,7 +168,7 @@ async function getAccountInitCode(args: {
 }): Promise<Hex> {
   const { factoryContract, options } = args;
   const accountAddress =
-    options.accountAddress || options.signingAccount.address;
+    options.accountAddress || options.personalAccount.address;
   const extraData = toHex(options.accountExtradata || "");
   const deployTx = prepareTransaction({
     contract: factoryContract,

@@ -43,7 +43,7 @@ export function useContractEvents<
   const contractEvents extends ContractEvent<abiEvent>[],
 >(
   options: UseContractEventsOptions<abi, abiEvent, contractEvents>,
-): UseQueryResult<EventLog<AbiEvent>[], Error> {
+): UseQueryResult<EventLog<abiEvent>[], Error> {
   const {
     contract,
     events,

@@ -11,7 +11,19 @@ import { readContract } from "../../transaction/actions/read.js";
 import { toHex } from "viem";
 
 /**
- * @internal
+ * Creates a smart wallet.
+ * @param options - The options for the smart wallet.
+ * @returns The created wallet.
+ * @example
+ * ```ts
+ * import { smartWallet } from "thirdweb";
+ * const wallet = await smartWallet({
+ *  client,
+ *  chain,
+ *  personalAccount: myAccount,
+ *  gasless: true,
+ * });
+ * ```
  */
 export function smartWallet(options: SmartWalletOptions): Wallet {
   const wallet = {
@@ -84,7 +96,7 @@ async function predictAddress(
   options: SmartWalletOptions,
 ): Promise<string> {
   const accountAddress =
-    options.accountAddress || options.signingAccount.address;
+    options.accountAddress || options.personalAccount.address;
   const extraData = toHex(options.accountExtradata || "");
   return readContract({
     contract: factoryContract,

@@ -8,8 +8,7 @@ import {
   getRpcClient,
   watchBlockNumber,
 } from "../../rpc/index.js";
-import { getEvents } from "../../index.js";
-import { ENTRYPOINT_ADDRESS } from "../../wallets/smart/lib/constants.js";
+import { getUserOpEventFromEntrypoint } from "../../wallets/smart/lib/receipts.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
@@ -57,6 +56,7 @@ export function waitForReceipt<abi extends Abi>(
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;
+    let lastBlockNumber: bigint | undefined;
 
     const unwatch = watchBlockNumber({
       client: contract.client,
@@ -79,27 +79,14 @@ export function waitForReceipt<abi extends Abi>(
             resolve(receipt);
           } else if (userOpHash) {
             // TODO block range configurable?
-            const fromBlock =
-              blockNumber > 2000n ? blockNumber - 2000n : blockNumber;
-            const entryPointContract = {
-              address: ENTRYPOINT_ADDRESS,
+            const event = await getUserOpEventFromEntrypoint({
+              blockNumber: blockNumber,
+              blockRange: lastBlockNumber ? 2n : 2000n, // query backwards further on first tick
               chain: contract.chain,
               client: contract.client,
-            };
-            const events = await getEvents({
-              contract: entryPointContract,
-              events: [
-                {
-                  contract: entryPointContract,
-                  event: userOpEventAbi,
-                },
-              ],
-              fromBlock,
+              userOpHash: userOpHash,
             });
-            // FIXME typing
-            const event = events.find(
-              (e) => (e.args as any).userOpHash === userOpHash,
-            );
+            lastBlockNumber = blockNumber;
             if (event) {
               console.log("event", event);
               const receipt = await eth_getTransactionReceipt(request, {
@@ -127,38 +114,3 @@ export function waitForReceipt<abi extends Abi>(
   map.set(key, promise);
   return promise;
 }
-
-const userOpEventAbi = {
-  type: "event",
-  name: "UserOperationEvent",
-  inputs: [
-    {
-      name: "userOpHash",
-      type: "bytes32",
-      indexed: true,
-      internalType: "bytes32",
-    },
-    { name: "sender", type: "address", indexed: true, internalType: "address" },
-    {
-      name: "paymaster",
-      type: "address",
-      indexed: true,
-      internalType: "address",
-    },
-    { name: "nonce", type: "uint256", indexed: false, internalType: "uint256" },
-    { name: "success", type: "bool", indexed: false, internalType: "bool" },
-    {
-      name: "actualGasCost",
-      type: "uint256",
-      indexed: false,
-      internalType: "uint256",
-    },
-    {
-      name: "actualGasUsed",
-      type: "uint256",
-      indexed: false,
-      internalType: "uint256",
-    },
-  ],
-  anonymous: false,
-} as const;
