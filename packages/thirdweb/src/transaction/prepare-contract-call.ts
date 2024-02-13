@@ -167,12 +167,17 @@ export function prepareContractCall<
     // @ts-expect-error -- to complicated
     return encodeAbiFunction(rAbiFn, rParams);
   }
-  return prepareTransaction({
-    // these always inferred from the contract
-    to: contract.address,
-    chain: contract.chain,
-    client: contract.client,
-    data: encodeData_,
-    ...rest,
-  });
+  return prepareTransaction(
+    {
+      // these always inferred from the contract
+      to: contract.address,
+      chain: contract.chain,
+      client: contract.client,
+      data: encodeData_,
+      ...rest,
+    },
+    {
+      abiFn: resolveAbiFunction_,
+    },
+  );
 }
