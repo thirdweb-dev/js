@@ -109,11 +109,7 @@ export type AuthUserType = {
     userId: string;
     linkedAccounts: AuthMethodType[];
   };
-  accounts: {
-    discord?: DiscordAuthDetailsType;
-    google?: GoogleAuthDetailsType;
-    email?: EmailAuthDetailsType;
-  };
+  accounts: AuthProviderDetailType[];
   authToken: string;
 };
 
