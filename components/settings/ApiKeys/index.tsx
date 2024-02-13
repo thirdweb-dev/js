@@ -5,7 +5,7 @@ import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
 import { TWTable } from "components/shared/TWTable";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { useRouter } from "next/router";
 import { Badge, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";

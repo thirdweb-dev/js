@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DASHBOARD_STORAGE_URL } from "lib/sdk";
 import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
-import { formatDistance } from "date-fns";
+import { formatDistance } from "date-fns/formatDistance";
 import { useCallback, useState } from "react";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { toSize } from "utils/number";

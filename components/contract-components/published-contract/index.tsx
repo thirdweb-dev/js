@@ -32,7 +32,7 @@ import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { Extensions } from "contract-ui/tabs/overview/components/Extensions";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";
 import { getAbsoluteUrl } from "lib/vercel-utils";

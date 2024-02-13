@@ -5,7 +5,7 @@ import {
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { useState } from "react";
 import { Button, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";

@@ -16,7 +16,7 @@ import {
   useDisclosure,
   Stack,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { Button, FormLabel, Text, FormErrorMessage } from "tw-components";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";

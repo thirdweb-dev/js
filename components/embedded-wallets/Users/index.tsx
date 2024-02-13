@@ -2,7 +2,7 @@ import { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { Flex, Switch } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { useMemo, useState } from "react";
 import { Text } from "tw-components";
 import { withinDays } from "utils/date-utils";

@@ -11,7 +11,7 @@ import { GameShowcase } from "components/hackathon/gaming/GameShowcase";
 import { Resources } from "components/hackathon/gaming/Resources";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
-import { isAfter } from "date-fns";
+import { isAfter } from "date-fns/isAfter";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";

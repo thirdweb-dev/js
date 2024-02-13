@@ -1,7 +1,7 @@
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { useAddress, useSDKChainId } from "@thirdweb-dev/react";
 import { SignerWithPermissions } from "@thirdweb-dev/sdk";
-import { formatDistance } from "date-fns";
+import { formatDistance } from "date-fns/formatDistance";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { Badge, Card, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";

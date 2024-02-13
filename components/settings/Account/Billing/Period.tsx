@@ -3,7 +3,7 @@ import {
   UsageBillableByService,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { Text } from "tw-components";
-import { format } from "date-fns";
+import { format } from "date-fns/format";
 import { useMemo } from "react";
 import { VStack } from "@chakra-ui/react";
 

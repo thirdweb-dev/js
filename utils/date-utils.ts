@@ -1,4 +1,7 @@
-import { differenceInDays, format, isValid, parseISO } from "date-fns";
+import { differenceInDays } from "date-fns/differenceInDays";
+import { format } from "date-fns/format";
+import { isValid } from "date-fns/isValid";
+import { parseISO } from "date-fns/parseISO";
 
 const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd HH:mm";
 

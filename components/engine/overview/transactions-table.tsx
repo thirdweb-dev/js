@@ -28,7 +28,8 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
-import { format, formatDistanceToNowStrict } from "date-fns";
+import { format } from "date-fns/format";
+import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRef, useState } from "react";
