@@ -7,8 +7,8 @@ declare module "abitype" {
 
 // client
 export {
-  createClient,
-  type CreateClientOptions,
+  createThirdwebClient,
+  type CreateThirdwebClientOptions,
   type ThirdwebClient,
 } from "./client/client.js";
 
@@ -31,6 +31,9 @@ export {
   type PreparedTransaction,
   type PrepareTransactionOptions,
 } from "./transaction/transaction.js";
+
+// method resolver
+export { resolveMethod } from "./transaction/resolve-method.js";
 
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";

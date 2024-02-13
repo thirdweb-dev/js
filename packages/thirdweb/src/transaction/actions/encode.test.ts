@@ -3,7 +3,7 @@ import { TEST_WALLET_A } from "~test/addresses.js";
 import { encode } from "./encode.js";
 import { describe, it, expect, vi } from "vitest";
 import { prepareContractCall } from "../transaction.js";
-import { autoResolveMethod } from "../auto-resolve-method.js";
+import { resolveMethod } from "../resolve-method.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -59,7 +59,7 @@ describe("transaction: encode", () => {
   it("should encode correctly (auto-abi)", async () => {
     const tx = prepareContractCall({
       contract: USDC_CONTRACT,
-      method: autoResolveMethod("transfer"),
+      method: resolveMethod("transfer"),
       params: [TEST_WALLET_A, 100n],
     });
     const encoded = await encode(tx);

@@ -19,8 +19,8 @@ export type ThirdwebContract<abi extends Abi = []> = Readonly<
  * @returns The Thirdweb contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
- * const client = createClient({ clientId: "..." });
+ * import { createThirdwebClient, getContract } from "thirdweb";
+ * const client = createThirdwebClient({ clientId: "..." });
  * const contract = getContract({
  *  client,
  *  address: "...",

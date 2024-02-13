@@ -5,14 +5,23 @@ import type { ThirdwebContract } from "../index.js";
 /**
  * Resolves and returns the ABI function with the specified method name.
  * Throws an error if the function is not found in the ABI.
- *
  * @template abiFn - The type of the ABI function.
  * @param method - The name of the method to resolve.
  * @returns The resolved ABI function.
  * @throws Error if the function is not found in the ABI.
- * @internal
+ * @example
+ * ```ts
+ * import { resolveMethod, prepareContractCall } from "thirdweb";
+ * const tx = prepareContractCall({
+ *  contract,
+ *  // automatically resolves the necessary abi to encode the transaction
+ *  method: resolveMethod("transfer"),
+ *  // however there is no type completion for params in this case (as the resolution is async and happens at runtime)
+ *  params: [to, value],
+ * });
+ * ```
  */
-export function autoResolveMethod<abiFn extends AbiFunction>(method: string) {
+export function resolveMethod<abiFn extends AbiFunction>(method: string) {
   return async function (contract: ThirdwebContract) {
     const resolvedAbi = await resolveContractAbi<Abi>(contract);
     // we try to find the abiFunction in the abi

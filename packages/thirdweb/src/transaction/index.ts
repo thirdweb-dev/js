@@ -7,8 +7,8 @@ export {
   type PrepareTransactionOptions,
 } from "./transaction.js";
 
-// auto abi resolver
-export { autoResolveMethod } from "./auto-resolve-method.js";
+// method resolver
+export { resolveMethod } from "./resolve-method.js";
 
 // tx actions
 export { encode } from "./actions/encode.js";
