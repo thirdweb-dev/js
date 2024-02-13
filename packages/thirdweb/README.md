@@ -22,9 +22,9 @@ npm install thirdweb@alpha
 A client is the entry point to the thirdweb SDK. It is required for all other actions.
 
 ```ts
-import { createClient } from "thirdweb";
+import { createThirdwebClient } from "thirdweb";
 
-const client = createClient({
+const client = createThirdwebClient({
   // one of these is required to initialize a client - create a free api key at https://thirdweb.com/dashboard
   secretKey: "<you secret key>",
   // or
@@ -37,9 +37,9 @@ const client = createClient({
 A "contract" is a wrapper around a smart contract that is deployed on a chain. It is what you use to create [transactions](#transactions) and [read contract state](#read---reading-contract-state).
 
 ```ts
-import { createClient, getContract } from "thirdweb";
+import { createThirdwebClient, getContract } from "thirdweb";
 
-const client = createClient({...})
+const client = createThirdwebClient({...})
 const contract = getContract({
   // pass in the client
   client,
@@ -61,9 +61,9 @@ There are 4 ways to create a transaction, all of these return the same transacti
 ##### Method Signature
 
 ```ts
-import { prepareTransaction } from "thirdweb";
+import { prepareContractCall } from "thirdweb";
 
-const tx = prepareTransaction({
+const tx = prepareContractCall({
   contract,
   // pass the method signature that you want to call
   method: "function mintTo(address to, uint256 amount)",
@@ -76,8 +76,8 @@ const tx = prepareTransaction({
 ##### Automatic ABI Resolution
 
 ```ts
-import { prepareTransaction } from "thirdweb";
-const tx = prepareTransaction({
+import { prepareContractCall } from "thirdweb";
+const tx = prepareContractCall({
   contract,
   // in this case we only pass the name of the method we want to call
   method: "mintTo",
@@ -89,7 +89,7 @@ const tx = prepareTransaction({
 ##### Explicit Contract ABI
 
 ```ts
-import { getContract, prepareTransaction } from "thirdweb";
+import { getContract, prepareContractCall } from "thirdweb";
 
 const contract = getContract({
   {...}
@@ -114,7 +114,7 @@ const contract = getContract({
   ],
 });
 
-const tx = prepareTransaction({
+const tx = prepareContractCall({
   contract,
   // we get auto-completion for all the available functions on the contract ABI
   method: "mintTo",
@@ -126,8 +126,8 @@ const tx = prepareTransaction({
 ##### ABI Snippet
 
 ```ts
-import { prepareTransaction } from "thirdweb";
-const tx = prepareTransaction({
+import { prepareContractCall } from "thirdweb";
+const tx = prepareContractCall({
   client,
   // in this case we pass the piece of the abi for the method we want to call
   abi: {
@@ -155,7 +155,7 @@ Transactions have a variety of actions that can be called on them, in all cases 
 
 ##### `read` - reading contract state
 
-For reading contract state, there is a shortcut function called `read` that can be used instead of `prepareTransaction`:
+For reading contract state, there is a shortcut function called `read` that can be used instead of `prepareContractCall`:
 
 ```ts
 import { readContract } from "thirdweb";
@@ -172,9 +172,9 @@ const balance = await readContract({
 Which is the equivalent of doing:
 
 ```ts
-import { prepareTransaction, readTransaction } from "thirdweb";
+import { prepareContractCall, readTransaction } from "thirdweb";
 
-const tx = prepareTransaction({
+const tx = prepareContractCall({
   contract,
   method: "function balanceOf(address) view returns (uint256)",
   params: ["0x123..."],
@@ -262,7 +262,7 @@ import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
 
 ```ts
 import {
-  createClient,
+  createThirdwebClient,
   getContract,
   sendTransaction,
   waitForReceipt,
@@ -271,7 +271,7 @@ import { privateKeyWallet } from "thirdweb/wallets/private-key";
 import { balanceOf, mintTo } from "thirdweb/extensions/erc20";
 
 // Step 1: create a client
-const client = createClient({
+const client = createThirdwebClient({
   // create a secret key at https://thirdweb.com/dashboard
   secretKey: process.env.SECRET_KEY as string,
 });
@@ -332,17 +332,17 @@ console.log("ending balance", newBalance);
 
 ```ts
 import {
-  createClient,
+  createThirdwebClient,
   getContract,
   readContract,
   sendTransaction,
-  prepareTransaction,
+  prepareContractCall,
   waitForReceipt,
 } from "thirdweb";
 import { privateKeyWallet } from "thirdweb/wallets/private-key";
 
 // Step 1: create a client
-const client = createClient({
+const client = createThirdwebClient({
   // create a secret key at https://thirdweb.com/dashboard
   secretKey: process.env.SECRET_KEY as string,
 });
@@ -372,7 +372,7 @@ const wallet = privateKeyWallet({
 });
 
 // Step 5: create a transaction
-const tx = prepareTransaction({
+const tx = prepareContractCall({
   contract,
   method: "function mintTo(address to, uint256 amount)",
   params: ["0x0890C23024089675D072E984f28A93bb391a35Ab", 100n * 10n ** 18n],

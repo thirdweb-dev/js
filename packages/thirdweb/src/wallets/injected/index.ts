@@ -1,4 +1,13 @@
-import { getAddress, toHex, type Hex } from "viem";
+import {
+  getAddress,
+  toHex,
+  isHex,
+  stringToHex,
+  getTypesForEIP712Domain,
+  validateTypedData,
+  type Hex,
+  type SignTypedDataParameters,
+} from "viem";
 import type { Address } from "abitype";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
@@ -12,6 +21,7 @@ import type {
 } from "../interfaces/wallet.js";
 import { getChainDataForChainId } from "../../chain/index.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { stringify } from "../../utils/json.js";
 
 /**
  * Connect to Injected Wallet Provider
@@ -268,6 +278,49 @@ export class InjectedWallet implements Wallet {
           transactionHash,
         };
       },
+      async signMessage({ message }) {
+        if (!wallet.provider || !account.address) {
+          throw new Error("Provider not setup");
+        }
+
+        const messageToSign = (() => {
+          if (typeof message === "string") return stringToHex(message);
+          if (message.raw instanceof Uint8Array) return toHex(message.raw);
+          return message.raw;
+        })();
+
+        return await wallet.provider.request({
+          method: "personal_sign",
+          params: [messageToSign, account.address],
+        });
+      },
+      async signTypedData(data) {
+        if (!wallet.provider || !account.address) {
+          throw new Error("Provider not setup");
+        }
+        const { domain, message, primaryType } =
+          data as unknown as SignTypedDataParameters;
+
+        const types = {
+          EIP712Domain: getTypesForEIP712Domain({ domain }),
+          ...data.types,
+        };
+
+        // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
+        // as we can't statically check this with TypeScript.
+        validateTypedData({ domain, message, primaryType, types });
+
+        const typedData = stringify(
+          { domain: domain ?? {}, message, primaryType, types },
+          (_, value) => (isHex(value) ? value.toLowerCase() : value),
+        );
+
+        return await wallet.provider.request({
+          method: "eth_signTypedData_v4",
+          params: [account.address, typedData],
+        });
+      },
+
       wallet,
     };
 

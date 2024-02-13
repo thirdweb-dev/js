@@ -5,7 +5,7 @@ import {
 } from "../../../providers/wallet-ui-states-provider.js";
 import { useCallback, useEffect, useContext, useState } from "react";
 import { reservedScreens, onModalUnmount } from "../constants.js";
-import { useScreen } from "./screen.js";
+import { useSetupScreen } from "./screen.js";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
 import { useActiveAccount } from "../../../providers/wallet-provider.js";
 import { Modal } from "../../components/Modal.js";
@@ -17,7 +17,8 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 export const ConnectModal = () => {
   const { theme, modalSize } = useContext(ModalConfigCtx);
 
-  const { screen, setScreen, initialScreen } = useScreen();
+  const screenSetup = useSetupScreen();
+  const { screen, setScreen, initialScreen } = screenSetup;
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const [hideModal, setHideModal] = useState(false);
@@ -120,9 +121,7 @@ export const ConnectModal = () => {
         }}
       >
         <ConnectModalContent
-          initialScreen={initialScreen}
-          screen={screen}
-          setScreen={setScreen}
+          screenSetup={screenSetup}
           onHide={onHide}
           onShow={onShow}
           isOpen={isWalletModalOpen}

@@ -1,8 +1,8 @@
 import type { Address } from "abitype";
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type TransferFromParams = {
   from: Address;
@@ -29,8 +29,10 @@ export type TransferFromParams = {
  * // Send the transaction
  * ```
  */
-export function transferFrom(options: TxOpts<TransferFromParams>) {
-  return prepareTransaction({
+export function transferFrom(
+  options: BaseTransactionOptions<TransferFromParams>,
+) {
+  return prepareContractCall({
     contract: options.contract,
     method: "function transferFrom(address from, address to, uint256 tokenId)",
     params: [options.from, options.to, options.tokenId],

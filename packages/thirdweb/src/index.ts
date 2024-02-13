@@ -7,8 +7,8 @@ declare module "abitype" {
 
 // client
 export {
-  createClient,
-  type CreateClientOptions,
+  createThirdwebClient,
+  type CreateThirdwebClientOptions,
   type ThirdwebClient,
 } from "./client/client.js";
 
@@ -26,14 +26,26 @@ export {
 
 export {
   prepareTransaction,
-  type TransactionOptions,
-  type Transaction,
-} from "./transaction/transaction.js";
+  type PrepareTransactionOptions,
+  type PreparedTransaction,
+} from "./transaction/prepare-transaction.js";
+
+export {
+  prepareContractCall,
+  type PrepareContractCallOptions,
+} from "./transaction/prepare-contract-call.js";
+
+export {
+  readContract,
+  type ReadContractOptions,
+} from "./transaction/read-contract.js";
+
+// method resolver
+export { resolveMethod } from "./transaction/resolve-method.js";
 
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";
 export { estimateGas } from "./transaction/actions/estimate-gas.js";
-export { readContract, readTransaction } from "./transaction/actions/read.js";
 export { waitForReceipt } from "./transaction/actions/wait-for-tx-receipt.js";
 export { sendTransaction } from "./transaction/actions/send-transaction.js";
 

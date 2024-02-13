@@ -1,6 +1,8 @@
 import type { ThirdwebContract } from "../../../contract/index.js";
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 import { detectMethod } from "../../../utils/bytecode/detectExtension.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();
@@ -37,7 +39,7 @@ export async function detectDecimals(
  * const decimals = await decimals({ contract });
  * ```
  */
-export function decimals(options: TxOpts): Promise<number> {
+export function decimals(options: BaseTransactionOptions): Promise<number> {
   // "decimals" cannot change so we can cache this result for the lifetime of the contract
   if (cache.has(options.contract)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

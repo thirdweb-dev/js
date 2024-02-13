@@ -47,13 +47,14 @@ module.exports = {
     "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:jsdoc/recommended-typescript-error",
   ],
-  plugins: ["better-tree-shaking", "jsdoc"],
+  plugins: ["better-tree-shaking", "jsdoc", "svg-jsx"],
   settings: {
     jsdoc: {
       ignoreInternal: true,
     },
   },
   rules: {
+    "svg-jsx/camel-case-dash": "error",
     "better-tree-shaking/no-top-level-side-effects": "error",
     "no-restricted-globals": [
       "error",

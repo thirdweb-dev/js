@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type OwnerOfParams = { tokenId: bigint };
 
@@ -14,7 +16,9 @@ export type OwnerOfParams = { tokenId: bigint };
  * const owner = await ownerOf({ contract, tokenId: 1n });
  * ```
  */
-export function ownerOf(options: TxOpts<OwnerOfParams>): Promise<string> {
+export function ownerOf(
+  options: BaseTransactionOptions<OwnerOfParams>,
+): Promise<string> {
   return readContract({
     ...options,
     method:

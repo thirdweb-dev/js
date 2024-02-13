@@ -1,9 +1,7 @@
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
-
 import type { Abi } from "abitype";
-
 import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import { getRpcUrlForChain, type Chain } from "../chain/index.js";
@@ -211,6 +209,13 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
       return {
         transactionHash: result.hash as Hex,
       };
+    },
+    signTypedData: async (data) => {
+      return (await (signer as ethers5.providers.JsonRpcSigner)._signTypedData(
+        data.domain as ethers5.TypedDataDomain,
+        data.types as Record<string, ethers5.TypedDataField[]>,
+        data.message as Record<string, any>,
+      )) as Hex;
     },
     wallet: {
       metadata: {

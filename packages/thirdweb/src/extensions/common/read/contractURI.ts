@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 /**
  * Retrieves the contract URI for a given transaction options.
@@ -12,7 +14,7 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * const uri = await contractURI({ contract });
  * ```
  */
-export function contractURI(options: TxOpts): Promise<string> {
+export function contractURI(options: BaseTransactionOptions): Promise<string> {
   return readContract({
     ...options,
     method: "function contractURI() returns (string)",

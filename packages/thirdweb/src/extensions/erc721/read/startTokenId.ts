@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 /**
  * Retrieves the starting token ID for the ERC721 contract.
@@ -12,7 +14,7 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * const startTokenId = await startTokenId({ contract });
  * ```
  */
-export function startTokenId(options: TxOpts): Promise<bigint> {
+export function startTokenId(options: BaseTransactionOptions): Promise<bigint> {
   return readContract({
     ...options,
     method: "function startTokenId() view returns (uint256)",

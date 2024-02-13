@@ -2,9 +2,9 @@ import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { getNFT } from "./getNFT.js";
 import { balanceOfBatch } from "./balanceOfBatch.js";
 import type { Address } from "abitype";
-import type { TxOpts } from "../../../transaction/transaction.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
 
@@ -43,7 +43,7 @@ export type GetOwnedNFTsParams = {
  * ```
  */
 export async function getOwnedNFTs(
-  options: TxOpts<GetOwnedNFTsParams>,
+  options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<(NFT<"ERC1155"> & { quantityOwned: bigint })[]> {
   const maxId = await nextTokenIdToMint(options);
 
