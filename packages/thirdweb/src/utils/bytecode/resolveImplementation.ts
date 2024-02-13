@@ -21,13 +21,13 @@ export const AddressZero = "0x0000000000000000000000000000000000000000";
 export async function resolveImplementation(
   contract: ThirdwebContract<any>,
 ): Promise<{ address: string; bytecode: string }> {
-  const [bytecode, beacon] = await Promise.all([
+  const [originalBytecode, beacon] = await Promise.all([
     getBytecode(contract),
     getBeaconFromStorageSlot(contract),
   ]);
   // check minimal proxy first synchronously
   const minimalProxyImplementationAddress =
-    extractMinimalProxyImplementationAddress(bytecode);
+    extractMinimalProxyImplementationAddress(originalBytecode);
   if (minimalProxyImplementationAddress) {
     return {
       address: minimalProxyImplementationAddress,
@@ -55,17 +55,26 @@ export async function resolveImplementation(
       isAddress(implementationAddress) &&
       implementationAddress !== AddressZero
     ) {
+      const implementationBytecode = await getBytecode({
+        ...contract,
+        address: implementationAddress,
+      });
+      // return the original contract bytecode if the implementation bytecode is empty
+      if (implementationBytecode === "0x") {
+        return {
+          address: contract.address,
+          bytecode: originalBytecode,
+        };
+      }
+
       return {
         address: implementationAddress,
-        bytecode: await getBytecode({
-          ...contract,
-          address: implementationAddress,
-        }),
+        bytecode: implementationBytecode,
       };
     }
   }
 
-  return { address: contract.address, bytecode };
+  return { address: contract.address, bytecode: originalBytecode };
 }
 
 async function getBeaconFromStorageSlot(
