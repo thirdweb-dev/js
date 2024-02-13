@@ -23,68 +23,25 @@ import { SyncedWalletUIStates } from "./ConnectEmbed.js";
 import { useScreen } from "./screen.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
-import { isMobile } from "../../../utils/isMobile.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 
 /**
  * @internal
  */
 export type ConnectModalInlineProps = {
-  /**
-   * Connect a wallet and switch to a blockchain with the given chainId
-   */
   chainId?: bigint;
-
-  /**
-   * List of all chains that the app supports
-   */
   chains?: (bigint | number)[];
-
   className?: string;
-
   theme?: "dark" | "light" | Theme;
-
-  /**
-   * Set a custom title for the modal
-   * The default is `"Connect"`
-   */
   modalTitle?: string;
-
-  /**
-   * Replace the thirdweb icon next to modalTitle and set your own iconUrl
-   *
-   * Set to empty string to hide the icon
-   */
   modalTitleIconUrl?: string;
-
   style?: React.CSSProperties;
-
-  /**
-   * Set the size of the modal - `compact` or `wide` on desktop
-   *
-   * Modal size is always `compact` on mobile
-   * The default is `"wide"`
-   */
   modalSize?: "compact" | "wide";
-
-  /**
-   * If provided, Modal will show a Terms of Service message at the bottom with below link
-   */
   termsOfServiceUrl?: string;
-
-  /**
-   * If provided, Modal will show a Privacy Policy message at the bottom with below link
-   */
   privacyPolicyUrl?: string;
-
-  /**
-   * Customize the welcome screen
-   *
-   * Either provide a component to replace the default screen entirely
-   *
-   * or an object with title, subtitle and imgSrc to change the content of the default screen
-   */
   welcomeScreen?: WelcomeScreen;
+  showThirdwebBranding?: boolean;
 };
 
 /**
@@ -94,7 +51,9 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useThirdwebProviderProps().wallets;
   const modalSize =
-    isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+    !canFitWideModal() || walletConfigs.length === 1
+      ? "compact"
+      : props.modalSize;
   const ctxTheme = useCustomTheme();
 
   const content = (
@@ -140,6 +99,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
     titleIconUrl: props.modalTitleIconUrl,
     chainId: props.chainId,
     chains: props.chains?.map(BigInt),
+    showThirdwebBranding: props.showThirdwebBranding,
   };
 
   return (

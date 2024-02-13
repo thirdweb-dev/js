@@ -1,6 +1,7 @@
 export { darkTheme, lightTheme } from "./ui/design-system/index.js";
 
 export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
+export { ConnectEmbed } from "./ui/ConnectWallet/Modal/ConnectEmbed.js";
 
 export type {
   ConnectWalletProps,

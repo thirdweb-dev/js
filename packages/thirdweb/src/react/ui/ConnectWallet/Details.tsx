@@ -509,6 +509,10 @@ export const ConnectedWalletDetails: React.FC<{
               </MenuButton>
             </div>
           )} */}
+
+          {props.detailsModal?.footer && (
+            <props.detailsModal.footer close={() => setIsOpen(false)} />
+          )}
         </Container>
 
         <Spacer y="md" />

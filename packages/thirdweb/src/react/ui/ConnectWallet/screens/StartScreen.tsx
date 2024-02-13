@@ -11,6 +11,8 @@ import { Text } from "../../components/text.js";
 import { GlobeIcon } from "../icons/GlobalIcon.js";
 import { useTWLocale } from "../../../providers/locale-provider.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { spacing } from "../../design-system/index.js";
+import { PoweredByThirdweb } from "../PoweredByTW.js";
 
 /**
  * @internal
@@ -20,6 +22,7 @@ export function StartScreen() {
     termsOfServiceUrl,
     privacyPolicyUrl,
     welcomeScreen: WelcomeScreen,
+    showThirdwebBranding,
   } = useContext(ModalConfigCtx);
   const locale = useTWLocale().connectWallet;
 
@@ -84,9 +87,9 @@ export function StartScreen() {
         >
           {subtitle}
         </Text>
-      </Container>
 
-      <Container py="lg" flex="column" gap="lg">
+        <Spacer y="lg" />
+
         <Link
           target="_blank"
           center
@@ -94,13 +97,27 @@ export function StartScreen() {
         >
           {locale.newToWallets}
         </Link>
+      </Container>
 
-        {showTOS && (
-          <TOS
-            termsOfServiceUrl={termsOfServiceUrl}
-            privacyPolicyUrl={privacyPolicyUrl}
-          />
-        )}
+      <Container py="lg" flex="column" gap="lg">
+        <div>
+          {showTOS && (
+            <TOS
+              termsOfServiceUrl={termsOfServiceUrl}
+              privacyPolicyUrl={privacyPolicyUrl}
+            />
+          )}
+
+          {showThirdwebBranding !== false && (
+            <Container
+              style={{
+                paddingTop: spacing.xl,
+              }}
+            >
+              <PoweredByThirdweb />
+            </Container>
+          )}
+        </div>
       </Container>
     </Container>
   );

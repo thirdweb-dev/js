@@ -25,6 +25,7 @@ import { iconSize, spacing, radius } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
 import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
+import { PoweredByThirdweb } from "./PoweredByTW.js";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
@@ -426,6 +427,11 @@ export const WalletSelector: React.FC<{
       </Container>
 
       {bottomSection}
+      {isCompact && modalConfig.showThirdwebBranding !== false && (
+        <Container py="md">
+          <PoweredByThirdweb />
+        </Container>
+      )}
     </Container>
   );
 };
