@@ -126,6 +126,17 @@ export type ConnectEmbedProps = {
    *
    */
   onConnect?: () => void;
+
+  /**
+   * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.
+   *
+   * If you want to hide it, set this to `false`
+   * @example
+   * ```tsx
+   * <ConnectEmbed showThirdwebBranding={false} />
+   * ```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**
@@ -380,6 +391,7 @@ const ConnectEmbedContent = (
     onConnect: props.onConnect,
     chainId: props.chainId ? BigInt(props.chainId) : undefined,
     chains: props.chains,
+    showThirdwebBranding: props.showThirdwebBranding,
   };
 
   return (
@@ -421,6 +433,7 @@ export function SyncedWalletUIStates(
       privacyPolicyUrl: props.privacyPolicyUrl,
       welcomeScreen: props.welcomeScreen,
       titleIconUrl: props.titleIconUrl,
+      showThirdwebBranding: props.showThirdwebBranding,
     }));
   }, [
     props.title,
@@ -432,6 +445,7 @@ export function SyncedWalletUIStates(
     props.titleIconUrl,
     setModalConfig,
     locale.connectWallet.defaultModalTitle,
+    props.showThirdwebBranding,
   ]);
 
   return <WalletUIStatesProvider {...props} />;

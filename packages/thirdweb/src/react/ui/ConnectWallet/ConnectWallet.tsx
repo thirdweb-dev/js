@@ -172,6 +172,8 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   onConnect: props.onConnect,
                   chainId: props.chainId ? BigInt(props.chainId) : undefined,
                   chains: props.chains?.map(BigInt),
+                  showThirdwebBranding:
+                    props.connectModal?.showThirdwebBranding,
                 });
                 setIsWalletModalOpen(true);
               }}

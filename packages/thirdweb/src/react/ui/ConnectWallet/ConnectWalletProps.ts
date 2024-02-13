@@ -239,6 +239,19 @@ export type ConnectWallet_ConnectModalOptions = {
    * ```
    */
   welcomeScreen?: WelcomeScreen;
+
+  /**
+   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   *
+   * If you want to hide the branding, set this prop to `false`
+   * @example
+   * ```tsx
+   * <ConnectWallet connectModal={{
+   *  showThirdwebBranding: false
+   * }} />
+   *```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**

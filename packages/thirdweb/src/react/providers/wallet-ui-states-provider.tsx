@@ -24,6 +24,7 @@ export type ModalConfig = {
   onConnect?: () => void;
   chainId?: bigint;
   chains?: bigint[];
+  showThirdwebBranding?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -63,6 +64,7 @@ export const WalletUIStatesProvider = (
     onConnect?: () => void;
     chainId?: bigint;
     chains?: bigint[];
+    showThirdwebBranding?: boolean;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -83,6 +85,7 @@ export const WalletUIStatesProvider = (
     onConnect: props.onConnect,
     chainId: props.chainId,
     chains: props.chains,
+    showThirdwebBranding: props.showThirdwebBranding,
   });
 
   return (
@@ -241,6 +244,13 @@ export type ModalConfigOptions = {
 
   chainId?: bigint;
   chains?: bigint[];
+
+  /**
+   * By default the ConnectWallet Modal shows "powered by thirdweb" branding at the bottom of the modal.
+   *
+   * If you want to hide the branding, set this to `false`
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**
