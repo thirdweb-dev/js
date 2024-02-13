@@ -24,27 +24,30 @@ import { getChainIdFromChain } from "../../chain/index.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 import { isBaseTransactionOptions } from "../../transaction/index.js";
 
-export type ThirdwebProviderProps = {
-  children?: React.ReactNode;
-  wallets?: WalletConfig[];
-  autoConnect?: boolean;
-  client: ThirdwebClient;
-  locale?: ThirdwebLocale;
-  dappMetadata?: DAppMetaData;
-};
-
 /**
- * The ThirdwebProvider is the root component for all Thirdweb React apps.
- * It sets up the React Query client and the WalletProvider.
+ * The ThirdwebProvider is component is a provider component that sets up the React Query client and Wallet Connection Manager.
+ * To you thirdweb React SDK's hooks and components, you have to wrap your App component in a ThirdwebProvider.
+ *
+ * `ThirdwebProvider` requires a `client` prop which you can create using the `createClient` function.  You must provide a `clientId` or `secretKey` in order to initialize a `client`.
+ * You can create an Api key for free at from the [Thirdweb Dashboard](https://thirdweb.com/create-api-key).
  * @param props - The props for the ThirdwebProvider
  * @returns Your app wrapped in the ThirdwebProvider
  * @example
  * ```jsx
+ * import { createClient } from "thirdweb";
  * import { ThirdwebProvider } from "thirdweb/react";
  *
- * <ThirdwebProvider>
- *  <YourApp />
- * </ThirdwebProvider>
+ * const client = createClient({
+ *  clientId: "<your_client_id>",
+ * })
+ *
+ * function Example() {
+ *  return (
+ *    <ThirdwebProvider client={client}>
+ *      <App />
+ *    </ThirdwebProvider>
+ *   )
+ * }
  * ```
  */
 export function ThirdwebProvider(props: ThirdwebProviderProps) {
@@ -119,3 +122,133 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
     </QueryClientProvider>
   );
 }
+
+export type ThirdwebProviderProps = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions. You can create a client using the `createClient` function
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createClient } from "thirdweb";
+   *
+   * const client = createClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+
+  /**
+   * Wrap component in ThirdwebProvider to use thirdweb hooks and components inside that component.
+   * @example
+   * ```tsx
+   * <ThirdwebProvider client={client}>
+   *  <App />
+   * </ThirdwebProvider>
+   * ```
+   */
+  children?: React.ReactNode;
+  /**
+   * Array of supported wallets. If not provided, default wallets will be used.
+   *
+   * Wallets provided here appear in the `ConnectWallet` Modal or in `ConnectEmbed` component's UI
+   * @example
+   * ```tsx
+   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   *
+   * function Example() {
+   *  return (
+   *    <ThirdwebProvider client={client}
+   *       wallets={[
+   *         metamaskConfig(),
+   *         coinbaseConfig(),
+   *         walletConnectConfig(),
+   *       ]}>
+   *      <App />
+   *    </ThirdwebProvider>
+   *  )
+   * }
+   * ```
+   */
+  wallets?: WalletConfig[];
+
+  /**
+   * When the user has connected their wallet to your site, this flag determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
+   *
+   * Defaults to `true`
+   */
+  autoConnect?: boolean;
+
+  /**
+   * locale object contains text used for all thirdweb components
+   *
+   * It allows you to change the language used in UI components or override the texts used in the UI
+   *
+   * React SDK comes out of the box with English (`en`), Spanish (`es`), Japanese (`js`) and Tagalog (`tl`) locale functions, but you can add support for any language you want just by passing an object with the required strings
+   *
+   * #### Using Built-in Locales
+   *
+   * ```tsx
+   * import { ThirdwebProvider, es } from "thirdweb/react";
+   *
+   * const spanish = es();
+   *
+   * function Example() {
+   *  return (
+   *   <ThirdwebProvider locale={spanish}>
+   *      <App />
+   *   </ThirdwebProvider>
+   *  )
+   * }
+   * ```
+   *
+   * ##### Overriding the locale
+   *
+   * ```tsx
+   * import { ThirdwebProvider, en } from "thirdweb/react";
+   *
+   * // override some texts
+   * const english = en({
+   *   connectWallet: {
+   *     confirmInWallet: "Confirm in your wallet",
+   *   },
+   *   wallets: {
+   *     metamaskWallet: {
+   *       connectionScreen: {
+   *         inProgress: "Awaiting Confirmation",
+   *         instruction: "Accept connection request in your MetaMask wallet",
+   *       },
+   *     },
+   *   },
+   * });
+   *
+   * function Example() {
+   *  return (
+   *   <ThirdwebProvider locale={english}>
+   *      <App />
+   *   </ThirdwebProvider>
+   *  )
+   * }
+   * ```
+   *
+   * #### Custom locale object
+   *
+   * ```tsx
+   * import { ThirdwebProvider } from "thirdweb/react";
+   *
+   * function Example() {
+   *  return (
+   *   <ThirdwebProvider locale={customObject}>
+   *      <App />
+   *   </ThirdwebProvider>
+   *  )
+   * }
+   * ```
+   */
+  locale?: ThirdwebLocale;
+  /**
+   * Metadata of the dApp that will be passed to connected wallet. Some wallets may display this information to the user.
+   */
+  dappMetadata?: DAppMetaData;
+};

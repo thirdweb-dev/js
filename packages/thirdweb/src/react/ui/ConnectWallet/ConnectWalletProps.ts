@@ -1,3 +1,4 @@
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { type Theme } from "../design-system/index.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import { type SupportedTokens } from "./defaultTokens.js";
@@ -374,12 +375,12 @@ export type ConnectWalletProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The callback is called with the connected account
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(account) => {
+   *    console.log("connected to", account)
    *  }}
    * />
    * ```
@@ -397,5 +398,5 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (account: Account) => void;
 };

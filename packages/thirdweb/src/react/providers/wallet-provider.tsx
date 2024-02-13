@@ -82,27 +82,32 @@ export function useSetActiveAccount() {
 }
 
 /**
- * A hook that lets you connect a wallet.
+ * A hook that to set an account as the active account and add it to the list of connected accounts.
  * @returns A function that lets you connect a wallet.
  * @example
  * ```jsx
  * import { useConnect } from "thirdweb/react";
  * import { metamaskWallet } from "thirdweb/wallets";
  *
- * const { connect, isConnecting, error } = useConnect();
- *
- * // later in your code
- * <button
- *    onClick={() =>
- *      connect(async () => {
- *        const wallet = metamaskWallet();
- *        const account = await wallet.connect();
- *        return account;
- *      })
- *    }
- *  >
- *    Connect
- *  </button>
+ * function Example() {
+ *   const { connect, isConnecting, error } = useConnect();
+ *   return (
+ *     <button
+ *       onClick={() =>
+ *         connect(async () => {
+ *           // instantiate wallet
+ *           const wallet = metamaskWallet();
+ *           // connect wallet and get account
+ *           const account = await wallet.connect();
+ *           // return account
+ *           return account;
+ *         })
+ *       }
+ *     >
+ *       Connect
+ *     </button>
+ *   );
+ * }
  * ```
  */
 export function useConnect() {
@@ -149,17 +154,22 @@ export function useConnect() {
 }
 
 /**
- * Disconnect a connected wallet.
+ * Disconnect from given account
  * @example
  * ```jsx
  * import { useDisconnect } from "thirdweb/react";
  *
- * const { disconnect } = useDisconnect();
+ * function Example() {
+ *   const { disconnect } = useDisconnect();
  *
- * // later in your code
- * <button onClick={() => disconnect(wallet)}>Disconnect</button>
+ *   return (
+ *     <button onClick={() => disconnect(account)}>
+ *       Disconnect
+ *     </button>
+ *   );
+ * }
  * ```
- * @returns An object with a function to disconnect a wallet.
+ * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
   const disconnect = connectionManager.disconnectWallet;
@@ -167,12 +177,16 @@ export function useDisconnect() {
 }
 
 /**
- * A hook that returns the active wallet's connection status.
+ * A hook that returns the active account's connection status.
  * @example
  * ```jsx
  * import { useActiveWalletConnectionStatus } from "thirdweb/react";
  *
- * const status = useActiveWalletConnectionStatus();
+ * function Example() {
+ *   const status = useActiveWalletConnectionStatus();
+ *   console.log(status);
+ *   return <div> ... </div>;
+ * }
  * ```
  * @returns The active wallet's connection status.
  */
@@ -185,9 +199,12 @@ export function useActiveWalletConnectionStatus() {
  * A hook that returns the active wallet's connection status.
  * @example
  * ```jsx
- * import { useActiveWalletConnectionStatus } from "thirdweb/react";
+ * function Example() {
+ *   const setActive = useSetActiveWalletConnectionStatus();
  *
- * const status = useActiveWalletConnectionStatus();
+ *   // when you want to set an account as active
+ *   setActive(account)
+ * }
  * ```
  * @returns The active wallet's connection status.
  */
@@ -199,9 +216,11 @@ export function useSetActiveWalletConnectionStatus() {
  * A hook to check if the auto connect is in progress.
  * @example
  * ```jsx
- * import { useIsAutoConnecting } from "thirdweb/react";
+ * function Example() {
+ *   const isAutoConnecting = useIsAutoConnecting();
  *
- * const isAutoConnecting = useIsAutoConnecting();
+ *   return <div> ... </div>;
+ * }
  * ```
  * @returns A boolean indicating if the auto connect is in progress.
  */
