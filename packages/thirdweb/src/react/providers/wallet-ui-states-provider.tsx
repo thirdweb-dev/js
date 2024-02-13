@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from "react";
 import type { WelcomeScreen } from "../ui/ConnectWallet/screens/types.js";
-import { isMobile } from "../utils/isMobile.js";
 import { useTWLocale } from "./locale-provider.js";
 import type { Theme } from "../ui/design-system/index.js";
+import { canFitWideModal } from "../utils/canFitWideModal.js";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -24,6 +24,7 @@ export type ModalConfig = {
   onConnect?: () => void;
   chainId?: bigint;
   chains?: bigint[];
+  showThirdwebBranding?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -63,17 +64,18 @@ export const WalletUIStatesProvider = (
     onConnect?: () => void;
     chainId?: bigint;
     chains?: bigint[];
+    showThirdwebBranding?: boolean;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const _isMobile = isMobile();
+  const enforceCompact = !canFitWideModal();
   const locale = useTWLocale();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
     title: props.title || locale.connectWallet.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
-    modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",
+    modalSize: (enforceCompact ? "compact" : props.modalSize) || "wide",
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
@@ -83,6 +85,7 @@ export const WalletUIStatesProvider = (
     onConnect: props.onConnect,
     chainId: props.chainId,
     chains: props.chains,
+    showThirdwebBranding: props.showThirdwebBranding,
   });
 
   return (
@@ -241,6 +244,13 @@ export type ModalConfigOptions = {
 
   chainId?: bigint;
   chains?: bigint[];
+
+  /**
+   * By default the ConnectWallet Modal shows "powered by thirdweb" branding at the bottom of the modal.
+   *
+   * If you want to hide the branding, set this to `false`
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**
@@ -411,7 +421,7 @@ export type ModalConfigOptions = {
  */
 export const useSetWalletModalConfig = () => {
   const context = useContext(SetModalConfigCtx);
-  const _isMobile = isMobile();
+  const enforceCompact = !canFitWideModal();
   const locale = useTWLocale();
 
   if (context === undefined) {
@@ -425,7 +435,7 @@ export const useSetWalletModalConfig = () => {
       title: title || locale.connectWallet.defaultModalTitle,
       data: undefined,
       theme: theme || "dark",
-      modalSize: (_isMobile ? "compact" : modalSize) || "wide",
+      modalSize: (enforceCompact ? "compact" : modalSize) || "wide",
       ...rest,
     });
   };
