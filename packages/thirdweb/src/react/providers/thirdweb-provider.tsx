@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Abi } from "abitype";
 import {
   AutoConnect,
   NoAutoConnect,
@@ -16,7 +15,6 @@ import type { ThirdwebLocale } from "../ui/locales/types.js";
 import { en } from "../ui/locales/en.js";
 import { LazyConnectModal } from "../ui/ConnectWallet/Modal/LazyConnectModal.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
 import {
   waitForReceipt,
@@ -24,6 +22,7 @@ import {
 } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import type { DAppMetaData } from "../../wallets/types.js";
+import { isBaseTransactionOptions } from "../../transaction/index.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client and Wallet Connection Manager.
@@ -62,12 +61,12 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                 // TODO: remove - but useful for debug now
                 console.error("[Mutation Error]", error);
               }
-              if (isTxOpts(variables)) {
+              if (isBaseTransactionOptions(variables)) {
                 if (
-                  isObjectWithKeys(data, ["transactionHash", "contract"]) ||
-                  isObjectWithKeys(data, ["userOpHash", "contract"])
+                  isObjectWithKeys(data, ["transactionHash", "transaction"]) ||
+                  isObjectWithKeys(data, ["userOpHash", "transaction"])
                 ) {
-                  waitForReceipt(data as WaitForReceiptOptions<Abi>)
+                  waitForReceipt(data as WaitForReceiptOptions)
                     .catch((e) => {
                       // swallow errors for receipts, but log
                       console.error("[Transaction Error]", e);

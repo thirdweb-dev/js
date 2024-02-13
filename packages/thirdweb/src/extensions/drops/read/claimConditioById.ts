@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 const ABI = {
   inputs: [
@@ -79,7 +81,7 @@ type GetClaimConditionByIdParams = { conditionId: bigint };
  * });
  */
 export async function getClaimConditionById(
-  options: TxOpts<GetClaimConditionByIdParams>,
+  options: BaseTransactionOptions<GetClaimConditionByIdParams>,
 ) {
   return readContract({
     ...options,

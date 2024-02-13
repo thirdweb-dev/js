@@ -1,4 +1,4 @@
-import type { TxOpts } from "../../../transaction/transaction.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
 import { tokenURI, type TokenUriParams } from "./tokenURI.js";
@@ -24,7 +24,7 @@ export type GetNFTParams = TokenUriParams;
  * ```
  */
 export async function getNFT(
-  options: TxOpts<GetNFTParams>,
+  options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT<"ERC1155">> {
   const [uri, supply] = await Promise.all([
     tokenURI(options),

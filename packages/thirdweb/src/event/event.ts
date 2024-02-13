@@ -43,9 +43,9 @@ export type ContractEvent<event extends AbiEvent> = ContractEventOptions<
  * @returns The contract event.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { prepareEvent } from "thirdweb";
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const contract = getContract({
  *  client,
  *  address: "...",

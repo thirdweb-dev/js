@@ -1,4 +1,4 @@
-import type { AbiFunction, Address } from "abitype";
+import type { Address } from "abitype";
 import type {
   Hex,
   SignableMessage,
@@ -8,8 +8,8 @@ import type {
 } from "viem";
 import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
-import type { Transaction } from "../../transaction/transaction.js";
 import type { WalletMetadata } from "../types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
@@ -26,9 +26,7 @@ export type Wallet = {
 
   // OPTIONAL
   chainId?: bigint;
-  estimateGas?: <abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ) => Promise<bigint>;
+  estimateGas?: (transaction: PreparedTransaction) => Promise<bigint>;
 
   events?: {
     addListener: WalletEventListener;

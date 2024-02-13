@@ -1,9 +1,9 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import type { TxOpts } from "../../transaction/transaction.js";
 import type { Abi } from "abitype";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { getFunctionId } from "../../utils/function-id.js";
 import { stringify } from "../../utils/json.js";
+import type { BaseTransactionOptions } from "../../transaction/index.js";
 
 const CONTRACT_QUERY_CACHE = new WeakMap();
 
@@ -24,17 +24,19 @@ export function createContractQuery<
   result,
   abi extends Abi,
 >(
-  readCall: (options: TxOpts<opts, abi>) => Promise<result>,
+  readCall: (options: BaseTransactionOptions<opts, abi>) => Promise<result>,
 ): (
-  options: TxOpts<opts, abi> & { queryOptions?: Partial<{ enabled: boolean }> },
+  options: BaseTransactionOptions<opts, abi> & {
+    queryOptions?: Partial<{ enabled: boolean }>;
+  },
 ) => UseQueryResult<result, Error> {
   if (CONTRACT_QUERY_CACHE.has(readCall)) {
     return CONTRACT_QUERY_CACHE.get(readCall) as (
-      options: TxOpts<opts, abi>,
+      options: BaseTransactionOptions<opts, abi>,
     ) => UseQueryResult<result, Error>;
   }
   function useRead(
-    options: TxOpts<opts, abi> & {
+    options: BaseTransactionOptions<opts, abi> & {
       queryOptions?: Partial<{ enabled: boolean }>;
     },
   ) {
