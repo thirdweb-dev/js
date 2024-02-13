@@ -26,6 +26,7 @@ import {
 } from "../../../providers/wallet-provider.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -101,12 +102,12 @@ export type ConnectEmbedProps = {
   };
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The callback is called with the connected account
    *
    * ```tsx
    * <ConnectEmbed
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(account) => {
+   *    console.log("connected to", account)
    *  }}
    * />
    * ```
@@ -124,7 +125,7 @@ export type ConnectEmbedProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (account: Account) => void;
 
   /**
    * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.
@@ -334,8 +335,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
  * @internal
  */
 const ConnectEmbedContent = (
-  props: Omit<ConnectEmbedProps, "onConnect"> & {
-    onConnect?: () => void;
+  props: ConnectEmbedProps & {
     loginOptional?: boolean;
   },
 ) => {

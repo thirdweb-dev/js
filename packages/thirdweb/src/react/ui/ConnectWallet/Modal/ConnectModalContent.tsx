@@ -52,7 +52,7 @@ export const ConnectModalContent = (props: {
       connect(account);
 
       if (onConnect) {
-        onConnect();
+        onConnect(account);
       }
 
       const requiresSignIn = false;

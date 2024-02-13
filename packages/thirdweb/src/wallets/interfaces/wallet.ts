@@ -59,7 +59,6 @@ export type Account = {
   // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
   /**
    * The wallet that the account belongs to
-   * @internal
    */
   wallet: Wallet;
 };

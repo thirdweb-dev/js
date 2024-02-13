@@ -3,6 +3,7 @@ import type { WelcomeScreen } from "../ui/ConnectWallet/screens/types.js";
 import { useTWLocale } from "./locale-provider.js";
 import type { Theme } from "../ui/design-system/index.js";
 import { canFitWideModal } from "../utils/canFitWideModal.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -21,7 +22,7 @@ export type ModalConfig = {
     onLogout?: () => void;
   };
   isEmbed?: boolean;
-  onConnect?: () => void;
+  onConnect?: (account: Account) => void;
   chainId?: bigint;
   chains?: bigint[];
   showThirdwebBranding?: boolean;
@@ -61,7 +62,7 @@ export const WalletUIStatesProvider = (
       onLogin?: (token: string) => void;
       onLogout?: () => void;
     };
-    onConnect?: () => void;
+    onConnect?: (account: Account) => void;
     chainId?: bigint;
     chains?: bigint[];
     showThirdwebBranding?: boolean;
