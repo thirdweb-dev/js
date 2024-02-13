@@ -1,4 +1,5 @@
 export { darkTheme, lightTheme } from "./ui/design-system/index.js";
+export type { Theme, ThemeOverrides } from "./ui/design-system/index.js";
 
 export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
 export { ConnectEmbed } from "./ui/ConnectWallet/Modal/ConnectEmbed.js";
@@ -10,13 +11,15 @@ export type {
   ConnectWallet_DetailsButtonOptions,
   ConnectWallet_DetailsModalOptions,
 } from "./ui/ConnectWallet/ConnectWalletProps.js";
+export type { WelcomeScreen } from "./ui/ConnectWallet/screens/types.js";
+export type { NetworkSelectorProps } from "./ui/ConnectWallet/NetworkSelector.js";}
 
 export {
   TransactionButton,
   type TransactionButtonProps,
 } from "./ui/TransactionButton/index.js";
 
-export { ThirdwebProvider } from "./providers/thirdweb-provider.js";
+export { ThirdwebProvider, type ThirdwebProviderProps  } from "./providers/thirdweb-provider.js";
 
 export {
   useSetActiveAccount,
@@ -54,3 +57,6 @@ export { coinbaseConfig } from "./wallets/coinbase/coinbaseConfig.js";
 export { rainbowConfig } from "./wallets/rainbow/rainbowConfig.js";
 export { walletConnectConfig } from "./wallets/walletConnect/walletConnectConfig.js";
 export { zerionConfig } from "./wallets/zerion/zerionConfig.js";
+
+export type { SupportedTokens } from "./ui/ConnectWallet/defaultTokens.js";
+export { defaultTokens } from "./ui/ConnectWallet/defaultTokens.js";
