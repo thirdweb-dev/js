@@ -54,3 +54,6 @@ export {
 } from "./wallet-connect/index.js";
 
 export type { WalletConnectConnectionOptions } from "./wallet-connect/types.js";
+
+// smart
+export { smartWallet } from "./smart/index.js";

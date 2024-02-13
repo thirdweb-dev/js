@@ -8,6 +8,7 @@ import { getChainIdFromChain } from "../../chain/index.js";
 type SendTransactionOptions = {
   transaction: Transaction<any>;
   account: Account;
+  gasless?: boolean;
 };
 
 /**

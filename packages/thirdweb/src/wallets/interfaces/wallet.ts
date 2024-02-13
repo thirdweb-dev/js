@@ -26,9 +26,6 @@ export type Wallet = {
 
   // OPTIONAL
   chainId?: bigint;
-  estimateGas?: <abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ) => Promise<bigint>;
 
   events?: {
     addListener: WalletEventListener;
@@ -55,6 +52,9 @@ export type Account = {
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  estimateGas?: <abiFn extends AbiFunction>(
+    tx: Transaction<abiFn>,
+  ) => Promise<bigint>;
 
   // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
   /**

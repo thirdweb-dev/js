@@ -70,14 +70,6 @@ export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chain: Chain,
 ) {
-  /**
-   * TODO: do we want to re-enable this?
-   */
-  // If we're running in the browser, let users configure gas price in their wallet UI
-  // if (isBrowser()) {
-  //   return {};
-  // }
-
   const feeData = await getDynamicFeeData(client, chain);
   if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
     return {
@@ -140,6 +132,11 @@ async function getDynamicFeeData(
   // eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
   // good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
   maxFeePerGas = baseBlockFee * 2n + maxPriorityFeePerGas_;
+
+  // special cased for Celo gas fees
+  if (chainId === 42220n || chainId === 44787n || chainId === 62320n) {
+    maxPriorityFeePerGas_ = maxFeePerGas;
+  }
 
   return {
     maxFeePerGas,

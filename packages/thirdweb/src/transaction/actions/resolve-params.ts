@@ -48,7 +48,6 @@ export async function resolveParams<
     });
   } else {
     paramsPromise = tx.params().then((result) => {
-      console.log("resolveParams!", result);
       // handle return case: result === params[]
       if (Array.isArray(result)) {
         return {

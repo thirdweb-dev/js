@@ -29,18 +29,14 @@ export async function estimateGas<abiFn extends AbiFunction>(
 ): Promise<bigint> {
   const rpcRequest = getRpcClient(options.transaction.contract);
 
+  if (options.account && options.account.estimateGas) {
+    return options.account.estimateGas(options.transaction);
+  }
+
   const [gasOverrides, encodedData] = await Promise.all([
     getGasOverridesForTransaction(options.transaction),
     encode(options.transaction),
   ]);
-
-  if (
-    options.account &&
-    options.account.wallet &&
-    options.account.wallet.estimateGas
-  ) {
-    return options.account.wallet.estimateGas(options.transaction);
-  }
 
   return eth_estimateGas(
     rpcRequest,

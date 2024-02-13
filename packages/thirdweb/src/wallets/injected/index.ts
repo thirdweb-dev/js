@@ -268,6 +268,8 @@ export class InjectedWallet implements Wallet {
           transactionHash,
         };
       },
+      // TODO signMessage
+      // TODO signTypedData
       wallet,
     };
 

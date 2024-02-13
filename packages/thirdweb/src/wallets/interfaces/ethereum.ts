@@ -126,9 +126,12 @@ export interface Ethereum extends InjectedProviders {
 
   request(args: {
     method: "eth_sendTransaction";
-    params: [
-      any
-    ];
+    params: [any];
+  }): Promise<string>;
+
+  request(args: {
+    method: "personal_sign";
+    params: [string, string]; // challenge, signer address
   }): Promise<string>;
 }
 
