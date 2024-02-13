@@ -1,5 +1,3 @@
-import type { AbiFunction } from "viem";
-import type { Transaction } from "../transaction/transaction.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getChainIdFromChain, type Chain } from "../chain/index.js";
 import {
@@ -9,6 +7,7 @@ import {
   getRpcClient,
 } from "../rpc/index.js";
 import { parseUnits } from "../utils/units.js";
+import type { PreparedTransaction } from "../transaction/transaction.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
@@ -31,8 +30,8 @@ export type FeeDataParams =
  *
  * @internal
  */
-export async function getGasOverridesForTransaction<abiFn extends AbiFunction>(
-  transaction: Transaction<abiFn>,
+export async function getGasOverridesForTransaction(
+  transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
   // if we have a `gasPrice` param in the transaction, use that.
   if ("gasPrice" in transaction && !transaction.gasPrice) {
@@ -51,10 +50,7 @@ export async function getGasOverridesForTransaction<abiFn extends AbiFunction>(
     };
   }
   // otherwise call getDefaultGasOverrides
-  return getDefaultGasOverrides(
-    transaction.contract.client,
-    transaction.contract.chain,
-  );
+  return getDefaultGasOverrides(transaction.client, transaction.chain);
 }
 
 /**

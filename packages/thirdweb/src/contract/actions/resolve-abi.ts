@@ -5,7 +5,6 @@ import { getClientFetch } from "../../utils/fetch.js";
 import { getBytecode } from "./get-bytecode.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
-import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -299,7 +298,8 @@ async function resolvePluginPatternAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const pluginMap = await readContractRaw({
+    const { readContract } = await import("../../transaction/actions/read.js");
+    const pluginMap = await readContract({
       contract,
       method: PLUGINS_ABI,
     });
@@ -319,7 +319,8 @@ async function resolveBaseRouterAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const pluginMap = await readContractRaw({
+    const { readContract } = await import("../../transaction/actions/read.js");
+    const pluginMap = await readContract({
       contract,
       method: BASE_ROUTER_ABI,
     });
@@ -339,7 +340,8 @@ async function resolveDiamondFacetAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const facets = await readContractRaw({ contract, method: DIAMOND_ABI });
+    const { readContract } = await import("../../transaction/actions/read.js");
+    const facets = await readContract({ contract, method: DIAMOND_ABI });
     // if there are no facets, return the root ABI
     if (!facets.length) {
       return [];

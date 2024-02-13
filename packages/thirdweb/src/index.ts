@@ -26,14 +26,16 @@ export {
 
 export {
   prepareTransaction,
-  type TransactionOptions,
-  type Transaction,
+  prepareContractCall,
+  type PrepareContractCallOptions,
+  type PreparedTransaction,
+  type PrepareTransactionOptions,
 } from "./transaction/transaction.js";
 
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";
 export { estimateGas } from "./transaction/actions/estimate-gas.js";
-export { readContract, readTransaction } from "./transaction/actions/read.js";
+export { readContract } from "./transaction/actions/read.js";
 export { waitForReceipt } from "./transaction/actions/wait-for-tx-receipt.js";
 export { sendTransaction } from "./transaction/actions/send-transaction.js";
 

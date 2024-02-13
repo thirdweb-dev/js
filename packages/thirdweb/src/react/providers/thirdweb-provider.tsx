@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Abi } from "abitype";
 import {
   AutoConnect,
   NoAutoConnect,
@@ -61,10 +60,10 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
               }
               if (isTxOpts(variables)) {
                 if (
-                  isObjectWithKeys(data, ["transactionHash", "contract"]) ||
-                  isObjectWithKeys(data, ["userOpHash", "contract"])
+                  isObjectWithKeys(data, ["transactionHash", "transaction"]) ||
+                  isObjectWithKeys(data, ["userOpHash", "transaction"])
                 ) {
-                  waitForReceipt(data as WaitForReceiptOptions<Abi>)
+                  waitForReceipt(data as WaitForReceiptOptions)
                     .catch((e) => {
                       // swallow errors for receipts, but log
                       console.error("[Transaction Error]", e);

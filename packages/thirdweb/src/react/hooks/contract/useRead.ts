@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
 import type {
-  TransactionOptions,
+  PrepareContractCallOptions,
   TxOpts,
 } from "../../../transaction/transaction.js";
 import {
@@ -37,7 +37,7 @@ export function useReadContract<
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
 >(
-  options: TransactionOptions<abi, method> & {
+  options: PrepareContractCallOptions<abi, method> & {
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<ReadOutputs<ParseMethod<abi, method>>>;
@@ -74,7 +74,7 @@ export function useReadContract<
 >(
   extensionOrOptions:
     | ((options: TxOpts<params, abi>) => Promise<result>)
-    | (TransactionOptions<abi, method> & {
+    | (PrepareContractCallOptions<abi, method> & {
         queryOptions?: PickedQueryOptions;
       }),
   options?: TxOpts<params, abi> & {

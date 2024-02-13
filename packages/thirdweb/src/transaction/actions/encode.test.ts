@@ -2,7 +2,8 @@ import { USDC_CONTRACT, USDC_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { encode } from "./encode.js";
 import { describe, it, expect, vi } from "vitest";
-import { prepareTransaction } from "../transaction.js";
+import { prepareContractCall } from "../transaction.js";
+import { autoResolveMethod } from "../auto-resolve-method.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -11,7 +12,7 @@ const USDC_TRANSFER_ENCODE_RESULT =
 
 describe("transaction: encode", () => {
   it("should encode correctly (human-readable)", async () => {
-    const tx = prepareTransaction({
+    const tx = prepareContractCall({
       contract: USDC_CONTRACT,
       method: "function transfer(address to, uint256 value) returns (bool)",
       params: [TEST_WALLET_A, 100n],
@@ -23,7 +24,7 @@ describe("transaction: encode", () => {
   });
 
   it("should encode correctly (transaction abi)", async () => {
-    const tx = prepareTransaction({
+    const tx = prepareContractCall({
       contract: USDC_CONTRACT,
       method: {
         inputs: [
@@ -44,7 +45,7 @@ describe("transaction: encode", () => {
   });
 
   it("should encode correctly (contract abi)", async () => {
-    const tx = prepareTransaction({
+    const tx = prepareContractCall({
       contract: USDC_CONTRACT_WITH_ABI,
       method: "transfer",
       params: [TEST_WALLET_A, 100n],
@@ -56,9 +57,9 @@ describe("transaction: encode", () => {
   });
 
   it("should encode correctly (auto-abi)", async () => {
-    const tx = prepareTransaction({
+    const tx = prepareContractCall({
       contract: USDC_CONTRACT,
-      method: "transfer",
+      method: autoResolveMethod("transfer"),
       params: [TEST_WALLET_A, 100n],
     });
     const encoded = await encode(tx);

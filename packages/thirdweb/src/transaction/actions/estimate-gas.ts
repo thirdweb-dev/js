@@ -1,13 +1,12 @@
-import type { Transaction } from "../transaction.js";
 import { encode } from "./encode.js";
 import { formatTransactionRequest } from "viem/utils";
-import type { AbiFunction } from "viem";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { eth_estimateGas, getRpcClient } from "../../rpc/index.js";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
+import type { PreparedTransaction } from "../transaction.js";
 
-export type EstimateGasOptions<abiFn extends AbiFunction> = {
-  transaction: Transaction<abiFn>;
+export type EstimateGasOptions = {
+  transaction: PreparedTransaction;
   account?: Partial<Account> | undefined;
 };
 
@@ -24,14 +23,19 @@ export type EstimateGasOptions<abiFn extends AbiFunction> = {
  * });
  * ```
  */
-export async function estimateGas<abiFn extends AbiFunction>(
-  options: EstimateGasOptions<abiFn>,
+export async function estimateGas(
+  options: EstimateGasOptions,
 ): Promise<bigint> {
-  const rpcRequest = getRpcClient(options.transaction.contract);
+  const rpcRequest = getRpcClient(options.transaction);
 
-  const [gasOverrides, encodedData] = await Promise.all([
+  const [gasOverrides, encodedData, toAddress] = await Promise.all([
     getGasOverridesForTransaction(options.transaction),
     encode(options.transaction),
+    typeof options.transaction.to === "string"
+      ? options.transaction.to
+      : typeof options.transaction.to === "function"
+        ? options.transaction.to()
+        : undefined,
   ]);
 
   if (
@@ -45,7 +49,7 @@ export async function estimateGas<abiFn extends AbiFunction>(
   return eth_estimateGas(
     rpcRequest,
     formatTransactionRequest({
-      to: options.transaction.contract.address,
+      to: toAddress,
       data: encodedData,
       ...gasOverrides,
       from: options.account?.address ?? undefined,

@@ -1,9 +1,9 @@
 import { isAddress } from "viem";
-import type { ThirdwebContract } from "../../index.js";
 import { eth_getStorageAt, getRpcClient } from "../../rpc/index.js";
-import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
+import { readContract } from "../../transaction/actions/read.js";
 
 // TODO: move to const exports
 export const AddressZero = "0x0000000000000000000000000000000000000000";
@@ -132,7 +132,7 @@ async function getImplementationFromContractCall(
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   try {
-    return await readContractRaw({ contract, method: UPGRADEABLE_PROXY_ABI });
+    return await readContract({ contract, method: UPGRADEABLE_PROXY_ABI });
   } catch {
     return undefined;
   }

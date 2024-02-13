@@ -1,12 +1,14 @@
-import type { Transaction } from "../transaction.js";
-import type { Abi, TransactionSerializable } from "viem";
+import type { TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
-import { resolveParams } from "./resolve-params.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getChainIdFromChain } from "../../chain/index.js";
+import {
+  resolvePossiblyAsyncValue,
+  type PreparedTransaction,
+} from "../transaction.js";
 
 type SendTransactionOptions = {
-  transaction: Transaction<any>;
+  transaction: PreparedTransaction;
   account: Account;
 };
 
@@ -27,12 +29,12 @@ type SendTransactionOptions = {
  */
 export async function sendTransaction(
   options: SendTransactionOptions,
-): Promise<WaitForReceiptOptions<Abi>> {
+): Promise<WaitForReceiptOptions> {
   if (!options.account.address) {
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
-  const rpcRequest = getRpcClient(options.transaction.contract);
+  const rpcRequest = getRpcClient(options.transaction);
 
   const [
     getGasOverridesForTransaction,
@@ -50,36 +52,40 @@ export async function sendTransaction(
     import("./estimate-gas.js").then((m) => m.estimateGas),
   ]);
 
-  const [gasOverrides, data, nonce, gas, { overrides: dynamicOverrides }] =
+  const [gasOverrides, data, nonce, gas, to, accessList, value] =
     await Promise.all([
       getGasOverridesForTransaction(options.transaction),
       encode(options.transaction),
       // if the user has specified a nonce, use that
-      options.transaction.nonce ??
-        // otherwise get the next nonce
-        eth_getTransactionCount(rpcRequest, {
-          address: options.account.address,
-          blockTag: "pending",
-        }),
+      options.transaction.nonce
+        ? resolvePossiblyAsyncValue(options.transaction.nonce)
+        : // otherwise get the next nonce
+          eth_getTransactionCount(rpcRequest, {
+            address: options.account.address,
+            blockTag: "pending",
+          }),
       // if user has specified a gas value, use that
-      options.transaction.gas ??
-        // otherwise estimate the gas
-        estimateGas({
-          transaction: options.transaction,
-          account: options.account,
-        }),
-      resolveParams(options.transaction),
+      options.transaction.gas
+        ? resolvePossiblyAsyncValue(options.transaction.gas)
+        : // otherwise estimate the gas
+          estimateGas({
+            transaction: options.transaction,
+            account: options.account,
+          }),
+      resolvePossiblyAsyncValue(options.transaction.to),
+      resolvePossiblyAsyncValue(options.transaction.accessList),
+      resolvePossiblyAsyncValue(options.transaction.value),
     ]);
 
   const result = await options.account.sendTransaction({
-    to: options.transaction.contract.address,
-    chainId: Number(getChainIdFromChain(options.transaction.contract.chain)),
+    to,
+    chainId: Number(getChainIdFromChain(options.transaction.chain)),
     data,
     gas,
     ...gasOverrides,
     nonce,
-    accessList: options.transaction.accessList,
-    value: options.transaction.value ?? dynamicOverrides.value,
+    accessList,
+    value,
   } satisfies TransactionSerializable);
-  return { ...result, contract: options.transaction.contract };
+  return { ...result, transaction: options.transaction };
 }

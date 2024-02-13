@@ -1,6 +1,6 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import {
-  prepareTransaction,
+  prepareContractCall,
   type TxOpts,
 } from "../../../transaction/transaction.js";
 
@@ -42,7 +42,7 @@ export type MintToParams = {
  * ```
  */
 export function mintTo(options: TxOpts<MintToParams>) {
-  return prepareTransaction({
+  return prepareContractCall({
     ...options,
     method: "function mintTo(address _to, string memory _tokenURI)",
     params: async () => {

@@ -1,8 +1,7 @@
-import type { Abi } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useActiveAccount } from "../../providers/wallet-provider.js";
 import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
-import type { Transaction } from "../../../transaction/transaction.js";
+import type { PreparedTransaction } from "../../../transaction/transaction.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 
 /**
@@ -18,9 +17,9 @@ import { sendTransaction } from "../../../transaction/actions/send-transaction.j
  * ```
  */
 export function useSendTransaction(): UseMutationResult<
-  WaitForReceiptOptions<Abi>,
+  WaitForReceiptOptions,
   Error,
-  Transaction<any>
+  PreparedTransaction
 > {
   const account = useActiveAccount();
 

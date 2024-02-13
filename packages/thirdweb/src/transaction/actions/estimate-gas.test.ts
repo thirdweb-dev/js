@@ -2,13 +2,13 @@ import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { describe, it, expect, vi } from "vitest";
 import { estimateGas } from "./estimate-gas.js";
-import { prepareTransaction } from "../transaction.js";
+import { prepareContractCall } from "../transaction.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("transaction: estimate-gas", () => {
   it("should estimate gas correctly (human-readable)", async () => {
-    const tx = prepareTransaction({
+    const tx = prepareContractCall({
       contract: USDC_CONTRACT,
       method: "function transfer(address to, uint256 value) returns (bool)",
       params: [TEST_WALLET_A, 100n],

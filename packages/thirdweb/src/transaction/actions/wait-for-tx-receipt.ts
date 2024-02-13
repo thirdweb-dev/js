@@ -1,20 +1,19 @@
 import type { Hex, TransactionReceipt } from "viem";
-import type { Abi } from "abitype";
 import type { TransactionOrUserOpHash } from "../types.js";
-import type { ThirdwebContract } from "../../contract/index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import {
   eth_getTransactionReceipt,
   getRpcClient,
   watchBlockNumber,
 } from "../../rpc/index.js";
+import type { PreparedTransaction } from "../transaction.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
-export type WaitForReceiptOptions<abi extends Abi> = TransactionOrUserOpHash & {
-  contract: ThirdwebContract<abi>;
+export type WaitForReceiptOptions = TransactionOrUserOpHash & {
+  transaction: PreparedTransaction;
 };
 
 /**
@@ -31,12 +30,12 @@ export type WaitForReceiptOptions<abi extends Abi> = TransactionOrUserOpHash & {
  * });
  * ```
  */
-export function waitForReceipt<abi extends Abi>(
-  options: WaitForReceiptOptions<abi>,
+export function waitForReceipt(
+  options: WaitForReceiptOptions,
 ): Promise<TransactionReceipt> {
-  const { transactionHash, userOpHash, contract } = options;
+  const { transactionHash, userOpHash, transaction } = options;
   const prefix = transactionHash ? "tx_" : "userOp_";
-  const chainId = getChainIdFromChain(contract.chain);
+  const chainId = getChainIdFromChain(transaction.chain);
   const key = `${chainId}:${prefix}${transactionHash || userOpHash}`;
 
   if (map.has(key)) {
@@ -51,14 +50,14 @@ export function waitForReceipt<abi extends Abi>(
       );
     }
 
-    const request = getRpcClient(contract);
+    const request = getRpcClient(transaction);
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;
 
     const unwatch = watchBlockNumber({
-      client: contract.client,
-      chain: contract.chain,
+      client: transaction.client,
+      chain: transaction.chain,
       onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
