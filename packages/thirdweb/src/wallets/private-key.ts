@@ -1,8 +1,8 @@
 import type { Hex, TransactionSerializable } from "viem";
-import type { Account } from "./interfaces/wallet.js";
 import { privateKeyToAccount } from "viem/accounts";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
+import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyAccountOptions = {
   client: ThirdwebClient;
@@ -30,6 +30,7 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
   const viemAccount = privateKeyToAccount(options.privateKey as Hex);
   const account: Account = {
     address: viemAccount.address,
+    [Symbol("privateKey")]: options.privateKey,
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
       // maybe we *do* actually have to take in a tx object instead of the raw tx?
