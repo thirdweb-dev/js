@@ -19,6 +19,7 @@ import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
 import { Theme, radius } from "../../../design-system";
 import {
+  WalletInstance,
   useConnectionStatus,
   useThirdwebAuthContext,
   useUser,
@@ -93,12 +94,12 @@ export type ConnectEmbedProps = {
   };
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The callback is called with the connected wallet instance as the first argument
    *
    * ```tsx
    * <ConnectEmbed
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -116,7 +117,7 @@ export type ConnectEmbedProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
 
   /**
    * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.
@@ -330,8 +331,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 }
 
 const ConnectEmbedContent = (
-  props: Omit<ConnectEmbedProps, "onConnect"> & {
-    onConnect?: () => void;
+  props: ConnectEmbedProps & {
     loginOptional?: boolean;
   },
 ) => {

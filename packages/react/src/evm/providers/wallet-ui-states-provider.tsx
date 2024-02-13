@@ -3,6 +3,7 @@ import { Theme } from "../../design-system";
 import { WelcomeScreen } from "../../wallet/ConnectWallet/screens/types";
 import { useTWLocale } from "./locale-provider";
 import { canFitWideModal } from "../utils/canFitWIdeModal";
+import { WalletInstance } from "@thirdweb-dev/react-core";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -21,7 +22,7 @@ export type ModalConfig = {
     onLogout?: () => void;
   };
   isEmbed?: boolean;
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
   showThirdwebBranding?: boolean;
 };
 
@@ -56,7 +57,7 @@ export const WalletUIStatesProvider = (
       onLogin?: (token: string) => void;
       onLogout?: () => void;
     };
-    onConnect?: () => void;
+    onConnect?: (wallet: WalletInstance) => void;
     showThirdwebBranding?: boolean;
   }>,
 ) => {
