@@ -83,6 +83,23 @@ export type ConnectWallet_DetailsModalOptions = {
    * ```
    */
   hideDisconnect?: boolean;
+
+  /**
+   * Render custom UI at the bottom of the ConnectWallet Details Modal
+   * @param props - props passed to the footer component which includes a function to close the modal
+   * @example
+   * ```tsx
+   * <ConnectWallet
+   *  detailsModal={{
+   *    footer(props) {
+   *      const { close } = props;
+   *      return <div> ... </div>
+   *    }
+   *  }}
+   * />
+   * ```
+   */
+  footer?: (props: { close: () => void }) => JSX.Element;
 };
 
 /**
