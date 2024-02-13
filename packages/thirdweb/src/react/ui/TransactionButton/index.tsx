@@ -9,7 +9,7 @@ import {
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
-import type { PreparedTransaction } from "../../../transaction/transaction.js";
+import type { PreparedTransaction } from "../../../transaction/index.js";
 
 export type TransactionButtonProps = React.PropsWithChildren<
   ButtonProps & {

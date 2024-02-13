@@ -1,7 +1,7 @@
 import {
   prepareContractCall,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 import { parseUnits } from "../../../utils/units.js";
 
 export type MintToParams = { to: string } & (
@@ -28,7 +28,7 @@ export type MintToParams = { to: string } & (
  * });
  * ```
  */
-export function mintTo(options: TxOpts<MintToParams>) {
+export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     ...options,
     method: "function mintTo(address to, uint256 amount)",

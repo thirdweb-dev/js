@@ -6,18 +6,17 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
-import type {
-  PrepareContractCallOptions,
-  TxOpts,
-} from "../../../transaction/transaction.js";
-import {
-  readContract,
-  type ReadOutputs,
-} from "../../../transaction/actions/read.js";
 import type { ParseMethod } from "../../../abi/types.js";
 import { getChainIdFromChain } from "../../../chain/index.js";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { stringify } from "../../../utils/json.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+  type PrepareContractCallOptions,
+  type ReadContractResult,
+} from "../../../transaction/index.js";
+import type { ThirdwebContract } from "../../../contract/index.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
@@ -40,7 +39,7 @@ export function useReadContract<
   options: PrepareContractCallOptions<abi, method> & {
     queryOptions?: PickedQueryOptions;
   },
-): UseQueryResult<ReadOutputs<ParseMethod<abi, method>>>;
+): UseQueryResult<ReadContractResult<ParseMethod<abi, method>>>;
 /**
  * A hook to read from a contract.
  * @param extension - An extension to call.
@@ -58,26 +57,31 @@ export function useReadContract<
   const params extends object,
   result,
 >(
-  extension: (options: TxOpts<params, abi>) => Promise<result>,
-  options: TxOpts<params, abi> & {
+  extension: (options: BaseTransactionOptions<params, abi>) => Promise<result>,
+  options: BaseTransactionOptions<params, abi> & {
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<result>;
 // eslint-disable-next-line jsdoc/require-jsdoc
 export function useReadContract<
   const abi extends Abi,
-  const method extends abi extends { length: 0 }
-    ? AbiFunction | string
+  const method extends abi extends {
+    length: 0;
+  }
+    ?
+        | AbiFunction
+        | `function ${string}`
+        | ((contract: ThirdwebContract<abi>) => Promise<AbiFunction>)
     : ExtractAbiFunctionNames<abi>,
   const params extends object,
   result,
 >(
   extensionOrOptions:
-    | ((options: TxOpts<params, abi>) => Promise<result>)
+    | ((options: BaseTransactionOptions<params, abi>) => Promise<result>)
     | (PrepareContractCallOptions<abi, method> & {
         queryOptions?: PickedQueryOptions;
       }),
-  options?: TxOpts<params, abi> & {
+  options?: BaseTransactionOptions<params, abi> & {
     queryOptions?: PickedQueryOptions;
   },
 ) {

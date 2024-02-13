@@ -298,7 +298,7 @@ async function resolvePluginPatternAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const { readContract } = await import("../../transaction/actions/read.js");
+    const { readContract } = await import("../../transaction/read-contract.js");
     const pluginMap = await readContract({
       contract,
       method: PLUGINS_ABI,
@@ -319,7 +319,7 @@ async function resolveBaseRouterAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const { readContract } = await import("../../transaction/actions/read.js");
+    const { readContract } = await import("../../transaction/read-contract.js");
     const pluginMap = await readContract({
       contract,
       method: BASE_ROUTER_ABI,
@@ -340,7 +340,7 @@ async function resolveDiamondFacetAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const { readContract } = await import("../../transaction/actions/read.js");
+    const { readContract } = await import("../../transaction/read-contract.js");
     const facets = await readContract({ contract, method: DIAMOND_ABI });
     // if there are no facets, return the root ABI
     if (!facets.length) {

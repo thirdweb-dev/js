@@ -2,8 +2,9 @@ import { USDC_CONTRACT, USDC_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { encode } from "./encode.js";
 import { describe, it, expect, vi } from "vitest";
-import { prepareContractCall } from "../transaction.js";
+
 import { resolveMethod } from "../resolve-method.js";
+import { prepareContractCall } from "../prepare-contract-call.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 

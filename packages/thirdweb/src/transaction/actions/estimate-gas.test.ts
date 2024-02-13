@@ -2,7 +2,7 @@ import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { describe, it, expect, vi } from "vitest";
 import { estimateGas } from "./estimate-gas.js";
-import { prepareContractCall } from "../transaction.js";
+import { prepareContractCall } from "../prepare-contract-call.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -17,7 +17,7 @@ describe("transaction: estimate-gas", () => {
       transaction: tx,
       account: { address: TEST_WALLET_A },
     });
-    expect(estimate).toMatchInlineSnapshot(`40504n`);
+    expect(estimate.gas).toMatchInlineSnapshot(`40504n`);
     // we should have made exactly 2 network requests
     expect(fetchSpy).toHaveBeenCalledTimes(2);
     expect(fetchSpy).toHaveBeenNthCalledWith(

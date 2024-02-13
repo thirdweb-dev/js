@@ -3,7 +3,7 @@ import { eth_getStorageAt, getRpcClient } from "../../rpc/index.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { readContract } from "../../transaction/actions/read.js";
+import { readContract } from "../../transaction/read-contract.js";
 
 // TODO: move to const exports
 export const AddressZero = "0x0000000000000000000000000000000000000000";

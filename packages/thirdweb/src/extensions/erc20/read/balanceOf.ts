@@ -1,7 +1,9 @@
 import { decimals } from "./decimals.js";
 import { symbol } from "../../common/read/symbol.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
-import { readContract } from "../../../transaction/actions/read.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 import { formatUnits } from "../../../utils/units.js";
 
 const METHOD = "function balanceOf(address) view returns (uint256)" as const;
@@ -28,7 +30,7 @@ type BalanceOfResult = {
  * ```
  */
 export async function balanceOf(
-  options: TxOpts<BalanceOfParams>,
+  options: BaseTransactionOptions<BalanceOfParams>,
 ): Promise<BalanceOfResult> {
   const [balanceWei, decimals_, symbol_] = await Promise.all([
     readContract({

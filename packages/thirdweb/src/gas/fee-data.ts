@@ -7,7 +7,7 @@ import {
   getRpcClient,
 } from "../rpc/index.js";
 import { parseUnits } from "../utils/units.js";
-import type { PreparedTransaction } from "../transaction/transaction.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;

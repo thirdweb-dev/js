@@ -1,9 +1,9 @@
 import type { Address } from "abitype";
+import { parseUnits } from "../../../utils/units.js";
 import {
   prepareContractCall,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
-import { parseUnits } from "../../../utils/units.js";
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type ApproveParams = { spender: Address } & (
   | {
@@ -29,7 +29,7 @@ export type ApproveParams = { spender: Address } & (
  * });
  * ```
  */
-export function approve(options: TxOpts<ApproveParams>) {
+export function approve(options: BaseTransactionOptions<ApproveParams>) {
   return prepareContractCall({
     ...options,
     method: "function approve(address spender, uint256 value) returns (bool)",

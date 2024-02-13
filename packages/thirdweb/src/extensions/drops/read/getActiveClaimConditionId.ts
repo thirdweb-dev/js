@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 /**
  * Retrieves the active claim condition ID.
@@ -12,7 +14,9 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * const activeClaimConditionId = await getActiveClaimConditionId({ contract });
  * ```
  */
-export async function getActiveClaimConditionId(options: TxOpts) {
+export async function getActiveClaimConditionId(
+  options: BaseTransactionOptions,
+) {
   return readContract({
     ...options,
     method: "function getActiveClaimConditionId() returns (uint256)",

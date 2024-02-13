@@ -8,9 +8,8 @@ import type {
 } from "viem";
 import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
-
 import type { WalletMetadata } from "../types.js";
-import type { PreparedTransaction } from "../../transaction/transaction.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;

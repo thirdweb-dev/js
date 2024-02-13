@@ -1,4 +1,4 @@
-import type { TxOpts } from "../../../transaction/transaction.js";
+import type { BaseTransactionOptions } from "../../../transaction/index.js";
 import { getClaimConditionById } from "./claimConditioById.js";
 import { claimCondition } from "./claimCondition.js";
 import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
@@ -15,7 +15,7 @@ import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
  * const activeClaimCondition = await getActiveClaimCondition({ contract });
  * ```
  */
-export async function getActiveClaimCondition(options: TxOpts) {
+export async function getActiveClaimCondition(options: BaseTransactionOptions) {
   const [cc, cId] = await Promise.allSettled([
     claimCondition(options),
     getActiveClaimConditionId(options),

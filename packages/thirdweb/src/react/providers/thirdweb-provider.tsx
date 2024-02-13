@@ -15,7 +15,6 @@ import type { ThirdwebLocale } from "../ui/locales/types.js";
 import { en } from "../ui/locales/en.js";
 import { LazyConnectModal } from "../ui/ConnectWallet/Modal/LazyConnectModal.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { isTxOpts } from "../../transaction/transaction.js";
 import { isObjectWithKeys } from "../../utils/type-guards.js";
 import {
   waitForReceipt,
@@ -23,6 +22,7 @@ import {
 } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import type { DAppMetaData } from "../../wallets/types.js";
+import { isBaseTransactionOptions } from "../../transaction/index.js";
 
 export type ThirdwebProviderProps = {
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                 // TODO: remove - but useful for debug now
                 console.error("[Mutation Error]", error);
               }
-              if (isTxOpts(variables)) {
+              if (isBaseTransactionOptions(variables)) {
                 if (
                   isObjectWithKeys(data, ["transactionHash", "transaction"]) ||
                   isObjectWithKeys(data, ["userOpHash", "transaction"])

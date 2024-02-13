@@ -1,5 +1,5 @@
 import type { Hex } from "viem";
-import type { PreparedTransaction } from "../transaction.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
 
 /**
  * Encodes a transaction object into a hexadecimal string representation of the encoded data.

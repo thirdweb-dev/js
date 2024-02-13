@@ -6,7 +6,7 @@ import {
   getRpcClient,
   watchBlockNumber,
 } from "../../rpc/index.js";
-import type { PreparedTransaction } from "../transaction.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 

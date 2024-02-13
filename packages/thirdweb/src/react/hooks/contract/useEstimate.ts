@@ -1,7 +1,10 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useActiveAccount } from "../../providers/wallet-provider.js";
-import type { PreparedTransaction } from "../../../transaction/transaction.js";
-import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
+import {
+  estimateGas,
+  type EstimateGasResult,
+} from "../../../transaction/actions/estimate-gas.js";
+import type { PreparedTransaction } from "../../../transaction/index.js";
 
 /**
  * A hook to estimate the gas for a given transaction.
@@ -16,7 +19,7 @@ import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
  * ```
  */
 export function useEstimateGas(): UseMutationResult<
-  bigint,
+  EstimateGasResult,
   Error,
   PreparedTransaction
 > {

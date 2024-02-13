@@ -1,8 +1,8 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import {
   prepareContractCall,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type NFTInput = {
   name?: string;
@@ -41,7 +41,7 @@ export type MintToParams = {
  * });
  * ```
  */
-export function mintTo(options: TxOpts<MintToParams>) {
+export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     ...options,
     method: "function mintTo(address _to, string memory _tokenURI)",

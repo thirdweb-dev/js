@@ -1,7 +1,7 @@
 import {
   prepareContractCall,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type SetContractURIParams = {
   uri: string;
@@ -22,7 +22,9 @@ export type SetContractURIParams = {
  * });
  * ```
  */
-export function setContractURI(options: TxOpts<SetContractURIParams>) {
+export function setContractURI(
+  options: BaseTransactionOptions<SetContractURIParams>,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: "function setContractURI(string uri)",

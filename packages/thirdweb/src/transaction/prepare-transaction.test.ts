@@ -1,9 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { prepareTransaction } from "./transaction.js";
+
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
 import { parseEther } from "../utils/index.js";
 import { estimateGas } from "./actions/estimate-gas.js";
+import { prepareTransaction } from "./prepare-transaction.js";
 
 describe("prepareTransaction", () => {
   test("should prepare a transaction", () => {
@@ -30,6 +31,6 @@ describe("prepareTransaction", () => {
     });
     // TODO: figure out why this is not `21000n`?
     // - a raw transfer SHOULD be 21000gwei always?
-    expect(estimate).toMatchInlineSnapshot(`21060n`);
+    expect(estimate.gas).toMatchInlineSnapshot(`21060n`);
   });
 });

@@ -1,10 +1,9 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import type { TransactionReceipt } from "viem";
 import type { TransactionOrUserOpHash } from "../../../transaction/types.js";
-
 import { getChainIdFromChain } from "../../../chain/index.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
-import type { PreparedTransaction } from "../../../transaction/transaction.js";
+import type { PreparedTransaction } from "../../../transaction/index.js";
 
 export type TransactionHashOptions = TransactionOrUserOpHash & {
   transaction: PreparedTransaction;

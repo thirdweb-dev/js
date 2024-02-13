@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type TokenUriParams = { tokenId: bigint };
 
@@ -14,7 +16,9 @@ export type TokenUriParams = { tokenId: bigint };
  * const uri = await tokenURI({ contract, tokenId: 1n });
  * ```
  */
-export function tokenURI(options: TxOpts<TokenUriParams>): Promise<string> {
+export function tokenURI(
+  options: BaseTransactionOptions<TokenUriParams>,
+): Promise<string> {
   return readContract({
     ...options,
     method:

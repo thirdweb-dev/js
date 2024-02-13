@@ -26,11 +26,19 @@ export {
 
 export {
   prepareTransaction,
+  type PrepareTransactionOptions,
+  type PreparedTransaction,
+} from "./transaction/prepare-transaction.js";
+
+export {
   prepareContractCall,
   type PrepareContractCallOptions,
-  type PreparedTransaction,
-  type PrepareTransactionOptions,
-} from "./transaction/transaction.js";
+} from "./transaction/prepare-contract-call.js";
+
+export {
+  readContract,
+  type ReadContractOptions,
+} from "./transaction/read-contract.js";
 
 // method resolver
 export { resolveMethod } from "./transaction/resolve-method.js";
@@ -38,7 +46,6 @@ export { resolveMethod } from "./transaction/resolve-method.js";
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";
 export { estimateGas } from "./transaction/actions/estimate-gas.js";
-export { readContract } from "./transaction/actions/read.js";
 export { waitForReceipt } from "./transaction/actions/wait-for-tx-receipt.js";
 export { sendTransaction } from "./transaction/actions/send-transaction.js";
 

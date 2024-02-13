@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/download.js";
-import { readContract } from "../../transaction/actions/read.js";
+import { readContract } from "../../transaction/index.js";
 import { extractIPFSUri, resolveImplementation } from "../../utils/index.js";
 import { getContract, type ThirdwebContract } from "../contract.js";
 

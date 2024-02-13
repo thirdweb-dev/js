@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 const ABI = {
   inputs: [],
@@ -68,7 +70,7 @@ const ABI = {
  * const claimCondition = await claimCondition({ contract });
  * ```
  */
-export async function claimCondition(options: TxOpts) {
+export async function claimCondition(options: BaseTransactionOptions) {
   return readContract({
     ...options,
     method: ABI,
