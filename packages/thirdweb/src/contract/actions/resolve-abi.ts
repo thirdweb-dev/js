@@ -18,9 +18,9 @@ const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveContractAbi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -60,9 +60,9 @@ export function resolveContractAbi<abi extends Abi>(
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromContractApi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -90,9 +90,9 @@ export async function resolveAbiFromContractApi(
  * @throws Error if no IPFS URI is found in the bytecode.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -242,9 +242,9 @@ const DIAMOND_ABI = {
  * @returns The resolved ABI for the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveCompositeAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
