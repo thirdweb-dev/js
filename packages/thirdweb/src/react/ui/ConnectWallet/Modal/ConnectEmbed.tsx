@@ -25,8 +25,8 @@ import {
   useActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../../../providers/wallet-provider.js";
-import { isMobile } from "../../../utils/isMobile.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -416,7 +416,7 @@ export function SyncedWalletUIStates(
       ...c,
       title: props.title || locale.connectWallet.defaultModalTitle,
       theme: props.theme || "dark",
-      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
+      modalSize: (!canFitWideModal() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
       privacyPolicyUrl: props.privacyPolicyUrl,
       welcomeScreen: props.welcomeScreen,

@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from "react";
 import type { WelcomeScreen } from "../ui/ConnectWallet/screens/types.js";
-import { isMobile } from "../utils/isMobile.js";
 import { useTWLocale } from "./locale-provider.js";
 import type { Theme } from "../ui/design-system/index.js";
+import { canFitWideModal } from "../utils/canFitWideModal.js";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -66,14 +66,14 @@ export const WalletUIStatesProvider = (
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const _isMobile = isMobile();
+  const enforceCompact = !canFitWideModal();
   const locale = useTWLocale();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
     title: props.title || locale.connectWallet.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
-    modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",
+    modalSize: (enforceCompact ? "compact" : props.modalSize) || "wide",
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
@@ -411,7 +411,7 @@ export type ModalConfigOptions = {
  */
 export const useSetWalletModalConfig = () => {
   const context = useContext(SetModalConfigCtx);
-  const _isMobile = isMobile();
+  const enforceCompact = !canFitWideModal();
   const locale = useTWLocale();
 
   if (context === undefined) {
@@ -425,7 +425,7 @@ export const useSetWalletModalConfig = () => {
       title: title || locale.connectWallet.defaultModalTitle,
       data: undefined,
       theme: theme || "dark",
-      modalSize: (_isMobile ? "compact" : modalSize) || "wide",
+      modalSize: (enforceCompact ? "compact" : modalSize) || "wide",
       ...rest,
     });
   };

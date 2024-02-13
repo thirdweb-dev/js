@@ -23,8 +23,8 @@ import { SyncedWalletUIStates } from "./ConnectEmbed.js";
 import { useScreen } from "./screen.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
-import { isMobile } from "../../../utils/isMobile.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 
 /**
  * @internal
@@ -94,7 +94,9 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useThirdwebProviderProps().wallets;
   const modalSize =
-    isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+    !canFitWideModal() || walletConfigs.length === 1
+      ? "compact"
+      : props.modalSize;
   const ctxTheme = useCustomTheme();
 
   const content = (

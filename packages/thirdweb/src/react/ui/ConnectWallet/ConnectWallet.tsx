@@ -9,7 +9,6 @@ import {
 import { fadeInAnimation } from "../design-system/animations.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import { defaultTokens } from "./defaultTokens.js";
-import { isMobile } from "../../utils/isMobile.js";
 import {
   useActiveAccount,
   useActiveWalletChainId,
@@ -23,6 +22,7 @@ import {
   SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectWalletProps } from "./ConnectWalletProps.js";
+import { canFitWideModal } from "../../utils/canFitWideModal.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -153,7 +153,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               onClick={() => {
                 let modalSize = props.connectModal?.size || "wide";
 
-                if (isMobile() || walletConfigs.length === 1) {
+                if (!canFitWideModal() || walletConfigs.length === 1) {
                   modalSize = "compact";
                 }
 
