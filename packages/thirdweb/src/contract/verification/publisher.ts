@@ -6,7 +6,7 @@ import { getContract, type ThirdwebContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
 
-// TODO: clea this up
+// TODO: clean this up
 /**
  *
  * @param contract
