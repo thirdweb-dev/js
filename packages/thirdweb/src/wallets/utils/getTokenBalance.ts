@@ -2,6 +2,7 @@ import {
   getChainSymbol,
   type Chain,
   getChainDecimals,
+  getChainNativeCurrencyName,
 } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/index.js";
@@ -24,6 +25,7 @@ type GetTokenBalanceResult = {
   decimals: number;
   displayValue: string;
   symbol: string;
+  name: string;
 };
 
 /**
@@ -54,16 +56,19 @@ export async function getTokenBalance(
   // native token case
   const rpcRequest = getRpcClient({ client, chain });
 
-  const [nativeSymbol, nativeDecimals, nativeBalance] = await Promise.all([
-    getChainSymbol(chain),
-    getChainDecimals(chain),
-    eth_getBalance(rpcRequest, { address: account.address }),
-  ]);
+  const [nativeSymbol, nativeDecimals, nativeName, nativeBalance] =
+    await Promise.all([
+      getChainSymbol(chain),
+      getChainDecimals(chain),
+      getChainNativeCurrencyName(chain),
+      eth_getBalance(rpcRequest, { address: account.address }),
+    ]);
 
   return {
     value: nativeBalance,
     decimals: nativeDecimals,
     displayValue: formatUnits(nativeBalance, nativeDecimals),
     symbol: nativeSymbol,
+    name: nativeName,
   };
 }
