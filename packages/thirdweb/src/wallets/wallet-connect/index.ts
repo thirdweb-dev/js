@@ -172,6 +172,7 @@ export class WalletConnect implements Wallet {
           params: [
             {
               gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
