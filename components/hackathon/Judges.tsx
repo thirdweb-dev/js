@@ -9,7 +9,7 @@ interface JudgesProps {
 export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
   const judges = [
     {
-      name: "Furqan Rhydan",
+      name: "Furqan Rydhan",
       twitter: "FurqanR",
       description: "Founder, thirdweb",
       image: "/assets/landingpage/furqan-rydhan.png",
