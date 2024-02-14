@@ -35,43 +35,48 @@ export async function sendTransaction(
   const { getRpcClient } = await import("../../rpc/index.js");
   const rpcRequest = getRpcClient(options.transaction);
 
-  const [encode, eth_getTransactionCount, estimateGas] = await Promise.all([
-    import("./encode.js").then((m) => m.encode),
-    import("../../rpc/actions/eth_getTransactionCount.js").then(
-      (m) => m.eth_getTransactionCount,
-    ),
-    import("./estimate-gas.js").then((m) => m.estimateGas),
+  const [
+    { encode },
+    { eth_getTransactionCount },
+    { estimateGas },
+    { getGasOverridesForTransaction },
+  ] = await Promise.all([
+    import("./encode.js"),
+    import("../../rpc/actions/eth_getTransactionCount.js"),
+    import("./estimate-gas.js"),
+    import("../../gas/fee-data.js"),
   ]);
 
-  const [data, nonce, gasEstimationResult, to, accessList, value] =
-    await Promise.all([
-      encode(options.transaction),
-      // if the user has specified a nonce, use that
-      options.transaction.nonce
-        ? resolvePromisedValue(options.transaction.nonce)
-        : // otherwise get the next nonce
-          eth_getTransactionCount(rpcRequest, {
-            address: options.account.address,
-            blockTag: "pending",
-          }),
-      // if user has specified a gas value, use that
-      estimateGas({
-        transaction: options.transaction,
-        account: options.account,
-      }),
-      resolvePromisedValue(options.transaction.to),
-      resolvePromisedValue(options.transaction.accessList),
-      resolvePromisedValue(options.transaction.value),
-    ]);
+  const [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
+    encode(options.transaction),
+    // if the user has specified a nonce, use that
+    options.transaction.nonce
+      ? resolvePromisedValue(options.transaction.nonce)
+      : // otherwise get the next nonce
+        eth_getTransactionCount(rpcRequest, {
+          address: options.account.address,
+          blockTag: "pending",
+        }),
+    // if user has specified a gas value, use that
+    estimateGas({
+      transaction: options.transaction,
+      account: options.account,
+    }),
+    getGasOverridesForTransaction(options.transaction),
+    resolvePromisedValue(options.transaction.to),
+    resolvePromisedValue(options.transaction.accessList),
+    resolvePromisedValue(options.transaction.value),
+  ]);
 
   const result = await options.account.sendTransaction({
     to,
     chainId: Number(getChainIdFromChain(options.transaction.chain)),
     data,
-    ...gasEstimationResult,
+    gas,
     nonce,
     accessList,
     value,
+    ...feeData,
   } satisfies TransactionSerializable);
   return { ...result, transaction: options.transaction };
 }

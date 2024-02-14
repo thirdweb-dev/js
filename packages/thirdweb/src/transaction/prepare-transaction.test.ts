@@ -31,6 +31,6 @@ describe("prepareTransaction", () => {
     });
     // TODO: figure out why this is not `21000n`?
     // - a raw transfer SHOULD be 21000gwei always?
-    expect(estimate.gas).toMatchInlineSnapshot(`21060n`);
+    expect(estimate).toMatchInlineSnapshot(`21060n`);
   });
 });

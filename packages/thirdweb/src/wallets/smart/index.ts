@@ -64,7 +64,6 @@ async function smartAccount(
     wallet,
     address: accountAddress,
     async sendTransaction(tx: SendTransactionOption) {
-      console.log(tx);
       const unsignedUserOp = await createUnsignedUserOp({
         factoryContract,
         accountContract,
