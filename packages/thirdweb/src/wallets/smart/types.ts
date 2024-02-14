@@ -8,7 +8,7 @@ export type SmartWalletOptions = {
   personalAccount: Account;
   chain: Chain;
   gasless: boolean;
-  factoryAddress?: string;
+  factoryAddress: string; // TODO make this optional
   accountExtradata?: string;
   accountAddress?: string;
   entrypointAddress?: string;

@@ -51,7 +51,7 @@ async function smartAccount(
 ): Promise<Account> {
   const factoryContract = getContract({
     client: options.client,
-    address: options.factoryAddress || "0x123", // FIXME universal factory address,
+    address: options.factoryAddress,
     chain: options.chain,
   });
   const accountAddress = await predictAddress(factoryContract, options);
