@@ -1,7 +1,7 @@
 import type { Abi, AbiEvent } from "abitype";
 import type { BlockTag } from "viem";
 import { resolveAbiEvent } from "./resolve-abi.js";
-import type { ContractEvent } from "../event.js";
+import type { ContractEvent, EventLog } from "../event.js";
 import {
   resolveContractAbi,
   type ThirdwebContract,
@@ -75,10 +75,10 @@ export async function getEvents<
         abi.filter((item) => item.type === "event"),
       ) as Promise<abiEvent[]>));
 
-  return await eth_getLogs(rpcRequest, {
+  return (await eth_getLogs(rpcRequest, {
     fromBlock: options.fromBlock,
     toBlock: options.toBlock,
     address: options.contract.address,
     events: parsedEvents,
-  });
+  })) as EventLog<abiEvent>[];
 }

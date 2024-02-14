@@ -8,6 +8,7 @@ import type { PreparedTransaction } from "../prepare-transaction.js";
 type SendTransactionOptions = {
   transaction: PreparedTransaction;
   account: Account;
+  gasless?: boolean;
 };
 
 /**

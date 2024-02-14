@@ -284,8 +284,12 @@ export class InjectedWallet implements Wallet {
         }
 
         const messageToSign = (() => {
-          if (typeof message === "string") return stringToHex(message);
-          if (message.raw instanceof Uint8Array) return toHex(message.raw);
+          if (typeof message === "string") {
+            return stringToHex(message);
+          }
+          if (message.raw instanceof Uint8Array) {
+            return toHex(message.raw);
+          }
           return message.raw;
         })();
 
