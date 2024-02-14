@@ -69,6 +69,7 @@ export {
   smartWallet,
   SmartWallet,
   smartWalletMetadata,
+  personalAccountToSmartAccountMap,
 } from "./smart/index.js";
 export type { SmartWalletOptions } from "./smart/types.js";
 

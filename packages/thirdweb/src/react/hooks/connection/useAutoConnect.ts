@@ -38,75 +38,82 @@ export function AutoConnect() {
         connectionManager.getStoredActiveWalletId(),
       ]);
 
+      // if no wallets were last connected
       if (!lastConnectedWalletIds) {
         setConnectionStatus("disconnected");
         return;
       }
 
-      // connect the last active wallet first
-      const lastActiveWalletConfig = wallets.find(
+      async function handleWalletConnection(walletConfig: WalletConfig) {
+        // if this wallet requires a personal wallet to be connected
+        if (walletConfig.personalWalletConfigs) {
+          // get saved connection params for this wallet
+          const savedParams = await getSavedConnectParamsFromStorage(
+            walletConfig.metadata.id,
+          );
+
+          // if must be an object with `personalWalletId` property
+          if (!isValidWithPersonalWalletConnectionOptions(savedParams)) {
+            throw new Error("Invalid connection params");
+          }
+
+          // find the personal wallet config
+          const personalWalletConfig = walletConfig.personalWalletConfigs.find(
+            (w) => w.metadata.id === savedParams.personalWalletId,
+          );
+
+          if (!personalWalletConfig) {
+            throw new Error("Personal wallet not found");
+          }
+
+          // create and auto connect the personal wallet to get personal account
+          const personalWallet = personalWalletConfig.create({
+            client,
+            dappMetadata,
+          });
+
+          const personalAccount = await personalWallet.autoConnect();
+
+          // create wallet
+          const wallet = walletConfig.create({
+            client,
+            dappMetadata,
+          }) as WalletWithPersonalAccount;
+
+          // auto connect the wallet using the personal account
+          const account = await wallet.autoConnect({
+            personalAccount,
+          });
+
+          return account;
+        }
+
+        // if this wallet does not require a personal wallet to be connected
+        else {
+          const wallet = walletConfig.create({
+            client,
+            dappMetadata,
+          });
+          const account = await wallet.autoConnect();
+          return account;
+        }
+      }
+
+      // connect the last active wallet and set it as active
+      const activeWalletConfig = wallets.find(
         (w) => w.metadata.id === lastActiveWalletId,
       );
 
-      // connect the active wallet and set it as active
-      if (lastActiveWalletConfig) {
-        // ------------ TRY ------------
+      if (activeWalletConfig) {
         try {
-          // if this wallet requires a personal wallet to be connected
-          if (lastActiveWalletConfig.personalWalletConfigs) {
-            // get saved connection params for this wallet
-            const savedParams = await getSavedConnectParamsFromStorage(
-              lastActiveWalletConfig.metadata.id,
-            );
-
-            // if must be an object with `personalWalletId` property
-            if (!isValidWithPersonalWalletConnectionOptions(savedParams)) {
-              throw new Error("Invalid connection params");
-            }
-
-            // find the personal wallet config
-            const personalWalletConfig =
-              lastActiveWalletConfig.personalWalletConfigs.find(
-                (w) => w.metadata.id === savedParams.personalWalletId,
-              );
-
-            if (!personalWalletConfig) {
-              throw new Error("Personal wallet not found");
-            }
-
-            // create and auto connect the personal wallet to get personal account
-            const personalWallet = personalWalletConfig.create({
-              client,
-              dappMetadata,
-            });
-
-            const personalAccount = await personalWallet.autoConnect();
-
-            // create wallet
-            const wallet = lastActiveWalletConfig.create({
-              client,
-              dappMetadata,
-            }) as WalletWithPersonalAccount;
-
-            // auto connect the wallet using the personal account
-            const account = await wallet.autoConnect({
-              personalAccount,
-            });
-
+          const account = await handleWalletConnection(activeWalletConfig);
+          if (account) {
             connect(account);
-          }
-
-          // if this wallet does not require a personal wallet to be connected
-          else {
-            const wallet = lastActiveWalletConfig.create({
-              client,
-              dappMetadata,
-            });
-            const account = await wallet.autoConnect();
-            connect(account);
+          } else {
+            setConnectionStatus("disconnected");
           }
         } catch (e) {
-          console.log("failed to auto connect last active wallet");
+          console.error("Failed to auto connect last active wallet");
           console.error(e);
           setConnectionStatus("disconnected");
         }
@@ -114,24 +121,18 @@ export function AutoConnect() {
         setConnectionStatus("disconnected");
       }
 
-      const otherWalletConfigs: WalletConfig[] = [];
-      wallets.forEach((w) => {
-        if (w.metadata.id === lastActiveWalletId) {
-          return;
-        }
-        if (lastConnectedWalletIds.includes(w.metadata.id)) {
-          otherWalletConfigs.push(w);
-        }
-      });
+      // then connect wallets that were last connected but were not set as active
+      const otherWallets = wallets.filter(
+        (w) =>
+          w.metadata.id !== lastActiveWalletId &&
+          lastConnectedWalletIds.includes(w.metadata.id),
+      );
 
-      // connect other wallets
-      otherWalletConfigs.forEach(async (config) => {
-        const wallet = config.create({
-          client,
-          dappMetadata,
-        });
-        const account = await wallet.autoConnect();
-        connectionManager.setConnectedAccount(account);
+      otherWallets.forEach(async (config) => {
+        const account = await handleWalletConnection(config);
+        if (account) {
+          connectionManager.setConnectedAccount(account);
+        }
       });
     };
 

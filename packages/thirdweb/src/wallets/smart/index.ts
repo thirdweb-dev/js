@@ -44,6 +44,12 @@ export const smartWalletMetadata = {
 };
 
 /**
+ * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
+ * @internal
+ */
+export const personalAccountToSmartAccountMap = new WeakMap<Account, Account>();
+
+/**
  *
  */
 export class SmartWallet implements WalletWithPersonalAccount {
@@ -51,6 +57,7 @@ export class SmartWallet implements WalletWithPersonalAccount {
   personalAccount: Account | undefined;
   metadata: Wallet["metadata"];
   chainId?: bigint | undefined;
+  isSmartWallet: true;
 
   /**
    * Create an instance of the SmartWallet.
@@ -63,6 +70,7 @@ export class SmartWallet implements WalletWithPersonalAccount {
   constructor(options: SmartWalletOptions) {
     this.options = options;
     this.metadata = options.metadata || smartWalletMetadata;
+    this.isSmartWallet = true;
   }
 
   /**
@@ -98,7 +106,19 @@ export class SmartWallet implements WalletWithPersonalAccount {
 
     saveConnectParamsToStorage(this.metadata.id, paramsToSave);
 
-    return smartAccount(this, { ...this.options, ...connectionOptions });
+    // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
+
+    const account = await smartAccount(this, {
+      ...this.options,
+      ...connectionOptions,
+    });
+
+    personalAccountToSmartAccountMap.set(
+      connectionOptions.personalAccount,
+      account,
+    );
+
+    return account;
   }
 
   /**
