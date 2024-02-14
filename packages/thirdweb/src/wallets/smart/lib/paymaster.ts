@@ -43,7 +43,7 @@ export async function getPaymasterAndData(args: {
       jsonrpc: "2.0",
       id: 1,
       method: "pm_sponsorUserOperation",
-      params: [await hexlifyUserOp(userOp), entrypoint],
+      params: [hexlifyUserOp(userOp), entrypoint],
     }),
   });
   const res = await response.json();

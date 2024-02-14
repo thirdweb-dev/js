@@ -41,6 +41,20 @@ export type UserOperation = {
   signature: Hex | Uint8Array;
 };
 
+export type UserOperationHexed = {
+  sender: Address;
+  nonce: Hex;
+  initCode: Hex;
+  callData: Hex;
+  callGasLimit: Hex;
+  verificationGasLimit: Hex;
+  preVerificationGas: Hex;
+  maxFeePerGas: Hex;
+  maxPriorityFeePerGas: Hex;
+  paymasterAndData: Hex;
+  signature: Hex;
+};
+
 export type PaymasterResult = {
   paymasterAndData: string;
   preVerificationGas?: bigint;

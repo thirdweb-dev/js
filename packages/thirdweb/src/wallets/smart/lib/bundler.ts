@@ -51,11 +51,7 @@ async function sendBundlerRequest(args: {
   operation: "eth_estimateUserOperationGas" | "eth_sendUserOperation";
 }) {
   const { userOp, options, operation } = args;
-  const hexifiedUserOp = await hexlifyUserOp(userOp);
-  const jsonRequestData: [UserOperation, string] = [
-    hexifiedUserOp,
-    options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
-  ];
+
   const bundlerUrl =
     options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
@@ -68,7 +64,10 @@ async function sendBundlerRequest(args: {
       jsonrpc: "2.0",
       id: 1,
       method: operation,
-      params: jsonRequestData,
+      params: [
+        hexlifyUserOp(userOp),
+        options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+      ],
     }),
   });
   const res = await response.json();

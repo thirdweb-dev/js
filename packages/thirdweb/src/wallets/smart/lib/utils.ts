@@ -1,5 +1,5 @@
-import { concat, toHex } from "viem";
-import type { UserOperation } from "../types.js";
+import { concat, isHex, toHex } from "viem";
+import type { UserOperation, UserOperationHexed } from "../types.js";
 
 const generateRandomUint192 = (): bigint => {
   const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));
@@ -28,20 +28,12 @@ export const randomNonce = () => {
 /**
  * @internal
  */
-export async function hexlifyUserOp(userOp: UserOperation): Promise<any> {
-  return Object.keys(userOp)
-    .map((key) => {
-      let val = (userOp as any)[key];
-      if (typeof val !== "string" || !val.startsWith("0x")) {
-        val = toHex(val);
-      }
-      return [key, val];
-    })
-    .reduce(
-      (set, [k, v]) => ({
-        ...set,
-        [k]: v,
-      }),
-      {},
-    );
+export function hexlifyUserOp(userOp: UserOperation): UserOperationHexed {
+  return Object.fromEntries(
+    Object.entries(userOp).map(([key, val]) => [
+      key,
+      // turn any value that's not hex into hex
+      isHex(val) ? val : toHex(val),
+    ]),
+  ) as UserOperationHexed;
 }
