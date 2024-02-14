@@ -1,9 +1,9 @@
-import { decodeAbiParameters } from "viem";
+import { decodeAbiParameters, type Hex } from "viem";
 import type { Chain } from "../../../chain/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
-import { getEvents, prepareEvent } from "../../../event/index.js";
-import { ENTRYPOINT_ADDRESS, USER_OP_EVENT_ABI } from "./constants.js";
+import { getContractEvents, prepareEvent } from "../../../event/index.js";
+import { ENTRYPOINT_ADDRESS } from "./constants.js";
 
 /**
  * @internal
@@ -25,30 +25,37 @@ export async function getUserOpEventFromEntrypoint(args: {
     client: client,
   });
   const userOpEvent = prepareEvent({
-    contract: entryPointContract,
-    event: USER_OP_EVENT_ABI,
+    signature:
+      "event UserOperationEvent(bytes32 indexed userOpHash, address indexed sender, address indexed paymaster, uint256 nonce, bool success, uint256 actualGasCost, uint256 actualGasUsed)",
+    // actually only want *this* userOpHash, so we can filter here
+    filters: {
+      userOpHash: userOpHash as Hex,
+      // TODO can we filter by sender and paymaster, too?
+    },
   });
-  const events = await getEvents({
+  const events = await getContractEvents({
     contract: entryPointContract,
     events: [userOpEvent],
     fromBlock,
   });
-  // FIXME typing
-  const event = events.find((e) => (e.args as any).userOpHash === userOpHash);
+
+  // no longe need to `find` here because we already filter in the getContractEvents() call above
+  const event = events[0];
   // UserOp can revert, so we need to surface revert reason
-  if ((event?.args as any)?.success === false) {
+  if (event?.args.success === false) {
     const revertOpEvent = prepareEvent({
-      contract: entryPointContract,
-      event: "UserOperationRevertReason",
+      signature:
+        "event UserOperationRevertReasonEvent(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
     });
-    const revertEvent = await getEvents({
+    const revertEvent = await getContractEvents({
       contract: entryPointContract,
       events: [revertOpEvent],
       fromBlock: event?.blockNumber,
       toBlock: event?.blockNumber,
     });
-    if (revertEvent && revertEvent.length > 0) {
-      let message: string = (revertEvent[0]?.args as any)?.revertReason;
+    const firstRevertEvent = revertEvent[0];
+    if (firstRevertEvent) {
+      let message: string = firstRevertEvent.args.revertReason;
       if (message.startsWith("0x08c379a0")) {
         message = decodeAbiParameters(
           [{ type: "string" }],

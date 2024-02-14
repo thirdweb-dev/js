@@ -52,11 +52,11 @@ export async function simulateTransaction<const abiFn extends AbiFunction>(
 
   const result = await eth_call(rpcRequest, serializedTx);
 
-  if (!options.transaction.__abiFn) {
+  if (!options.transaction.__abi) {
     return result;
   }
 
-  const abiFnResolved = await options.transaction.__abiFn();
+  const abiFnResolved = await options.transaction.__abi();
 
   const decoded = decodeFunctionResult(abiFnResolved, result);
 

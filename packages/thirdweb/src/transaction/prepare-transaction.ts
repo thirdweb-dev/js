@@ -21,12 +21,12 @@ export type PrepareTransactionOptions = {
 };
 
 type Additional<abiFn extends AbiFunction = AbiFunction> = {
-  abiFn: () => Promise<abiFn>;
+  abi: () => Promise<abiFn>;
 };
 
 export type PreparedTransaction<abiFn extends AbiFunction = AbiFunction> =
   Readonly<PrepareTransactionOptions> & {
-    __abiFn?: () => Promise<abiFn>;
+    __abi?: () => Promise<abiFn>;
   };
 
 /**
@@ -49,5 +49,5 @@ export type PreparedTransaction<abiFn extends AbiFunction = AbiFunction> =
 export function prepareTransaction<
   const abiFn extends AbiFunction = AbiFunction,
 >(options: PrepareTransactionOptions, info?: Additional<abiFn>) {
-  return { ...options, __abiFn: info?.abiFn } as PreparedTransaction<abiFn>;
+  return { ...options, __abi: info?.abi } as PreparedTransaction<abiFn>;
 }
