@@ -148,6 +148,8 @@ export class SmartWallet implements WalletWithPersonalAccount {
   async disconnect(): Promise<void> {
     this.personalAccount?.wallet.disconnect();
   }
+
+  // TODO: add isDeployed
 }
 
 async function smartAccount(
