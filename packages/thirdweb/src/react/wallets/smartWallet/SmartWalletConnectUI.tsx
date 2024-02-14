@@ -37,10 +37,7 @@ export const SmartConnectUI = (props: {
       done(account: Account) {
         setPersonalAccount(account);
       },
-      // for headless wallets - directly connect to the target chain
-      chainId: personalWalletConfig.isHeadless
-        ? props.smartWalletChainId
-        : undefined,
+      chainId: props.smartWalletChainId,
     };
 
     if (personalWalletConfig.connectUI) {
