@@ -67,3 +67,13 @@ export {
   parseGwei,
   parseUnits,
 } from "./utils/units.js";
+
+// pay
+export {
+  getRoute,
+  getSwapStatus,
+  type SwapRouteRequest,
+  type SwapRouteResponse,
+  type SwapStatusRequest,
+  type SwapStatusResponse,
+} from "./pay/index.js";
