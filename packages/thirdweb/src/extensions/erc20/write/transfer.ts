@@ -1,7 +1,7 @@
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 import { parseUnits } from "../../../utils/units.js";
 
 export type TransferParams = { to: string } & (
@@ -28,9 +28,9 @@ export type TransferParams = { to: string } & (
  * });
  * ```
  */
-export function transfer(options: TxOpts<TransferParams>) {
-  return prepareTransaction({
-    ...options,
+export function transfer(options: BaseTransactionOptions<TransferParams>) {
+  return prepareContractCall({
+    contract: options.contract,
     method: "function transfer(address to, uint256 value)",
     params: async () => {
       let amount: bigint;

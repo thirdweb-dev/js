@@ -9,7 +9,7 @@ type ClientOptions = {
       };
 };
 
-export type CreateClientOptions = (
+export type CreateThirdwebClientOptions = (
   | {
       clientId: string;
       secretKey?: never;
@@ -33,11 +33,13 @@ export type ThirdwebClient = {
  * @throws An error if neither `clientId` nor `secretKey` is provided.
  * @example
  * ```ts
- * import { createClient } from "thirdweb";
- * const client = createClient({ clientId: "..." });
+ * import { createThirdwebClient } from "thirdweb";
+ * const client = createThirdwebClient({ clientId: "..." });
  * ```
  */
-export function createClient(options: CreateClientOptions): ThirdwebClient {
+export function createThirdwebClient(
+  options: CreateThirdwebClientOptions,
+): ThirdwebClient {
   const { clientId, secretKey, ...rest } = options;
   // if secretKey is provided, compute the clientId from it (and ignore any clientId passed in)
   if (secretKey) {

@@ -1,4 +1,12 @@
-export type { Wallet } from "./interfaces/wallet.js";
+export type {
+  Wallet,
+  Account,
+  WalletConnectionOptions,
+} from "./interfaces/wallet.js";
+export type { WalletEventListener } from "./interfaces/listeners.js";
+export type { WalletMetadata } from "./types.js";
+
+export type { ConnectionStatus } from "./manager/index.js";
 export { createConnectionManager } from "./manager/index.js";
 
 export {

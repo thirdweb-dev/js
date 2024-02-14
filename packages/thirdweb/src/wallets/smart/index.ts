@@ -7,8 +7,8 @@ import type { SmartWalletOptions } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp } from "./lib/bundler.js";
 import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { readContract } from "../../transaction/actions/read.js";
 import { toHex } from "viem";
+import { readContract } from "../../transaction/read-contract.js";
 
 /**
  * Creates a smart wallet.
@@ -83,9 +83,17 @@ async function smartAccount(
         userOpHash,
       };
     },
-    async estimateGas(tx) {
+    async estimateGas() {
       // TODO break down the process so estimate gas does the userOp estimation without doing double work
-      return tx.gas || 0n;
+      return 0n;
+    },
+    async signMessage({ message }) {
+      // TODO optionally deploy on sign
+      return options.personalAccount.signMessage({ message });
+    },
+    async signTypedData(typedData) {
+      // TODO optionally deploy on sign
+      return options.personalAccount.signTypedData(typedData);
     },
   };
 }

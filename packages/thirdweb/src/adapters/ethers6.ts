@@ -220,6 +220,13 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
         transactionHash,
       };
     },
+    signTypedData: async (data) => {
+      return (await signer.signTypedData(
+        data.domain as ethers6.TypedDataDomain,
+        data.types as Record<string, ethers6.ethers.TypedDataField[]>,
+        data.message as Record<string, any>,
+      )) as Hex;
+    },
     wallet: {
       metadata: {
         id: "ethers-6-wallet",

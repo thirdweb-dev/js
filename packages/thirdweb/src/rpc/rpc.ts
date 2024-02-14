@@ -97,9 +97,9 @@ type RPCOptions = Readonly<{
  * @rpc
  * @example
  * ```ts
- * import { createClient } from "thirdweb";
+ * import { createThirdwebClient } from "thirdweb";
  * import { getRpcClient } from "thirdweb/rpc";
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const rpcRequest = getRpcClient({ client, chain: 1 });
  * const blockNumber = await rpcRequest({
  *  method: "eth_blockNumber",

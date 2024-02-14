@@ -1,6 +1,7 @@
+import { decodeAbiParameters } from "viem";
 import type { Chain } from "../../../chain/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { getContract } from "../../../contract/index.js";
+import { getContract } from "../../../contract/contract.js";
 import { getEvents, prepareEvent } from "../../../event/index.js";
 import { ENTRYPOINT_ADDRESS, USER_OP_EVENT_ABI } from "./constants.js";
 
@@ -35,18 +36,29 @@ export async function getUserOpEventFromEntrypoint(args: {
   // FIXME typing
   const event = events.find((e) => (e.args as any).userOpHash === userOpHash);
   // UserOp can revert, so we need to surface revert reason
-  //   if ((event?.args as any)?.success === false) {
-  //     const revertOpEvent = prepareEvent({
-  //       contract: entryPointContract,
-  //       event: "UserOperationRevertReason",
-  //     });
-  //     const revertEvent = await getEvents({
-  //       contract: entryPointContract,
-  //       events: [revertOpEvent],
-  //       fromBlock: event?.blockNumber,
-  //       toBlock: event?.blockNumber,
-  //     });
-  //     console.log("revertEvent", revertEvent[0]?.args);
-  //   }
+  if ((event?.args as any)?.success === false) {
+    const revertOpEvent = prepareEvent({
+      contract: entryPointContract,
+      event: "UserOperationRevertReason",
+    });
+    const revertEvent = await getEvents({
+      contract: entryPointContract,
+      events: [revertOpEvent],
+      fromBlock: event?.blockNumber,
+      toBlock: event?.blockNumber,
+    });
+    if (revertEvent && revertEvent.length > 0) {
+      let message: string = (revertEvent[0]?.args as any)?.revertReason;
+      if (message.startsWith("0x08c379a0")) {
+        message = decodeAbiParameters(
+          [{ type: "string" }],
+          `0x${message.substring(10)}`,
+        )[0];
+      }
+      throw new Error(`UserOp failed with reason: ${message}`);
+    } else {
+      throw new Error("UserOp failed with unknown reason");
+    }
+  }
   return event;
 }

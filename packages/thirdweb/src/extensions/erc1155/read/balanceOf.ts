@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type BalanceOfParams = {
   address: string;
@@ -14,10 +16,12 @@ export type BalanceOfParams = {
  * @example
  * ```ts
  * import { nextTokenIdToMint } from "thirdweb/extensions/erc1155";
- * const nextTokenId = await nextTokenIdToMint({ contract });
+ * const nextTokenId = await nextTokenIdToMint({ contract, address: "0x...", tokenId: 1n });
  * ```
  */
-export function balanceOf(options: TxOpts<BalanceOfParams>): Promise<bigint> {
+export function balanceOf(
+  options: BaseTransactionOptions<BalanceOfParams>,
+): Promise<bigint> {
   return readContract({
     ...options,
     method:

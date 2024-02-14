@@ -161,6 +161,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-jsdoc": "48.0.6",
+    "eslint-plugin-svg-jsx": "^1.2.2",
     "ethers5": "npm:ethers@5.7.2",
     "ethers6": "npm:ethers@6.11.0",
     "react": "18.2.0",

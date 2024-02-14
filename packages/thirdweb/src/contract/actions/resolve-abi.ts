@@ -5,7 +5,6 @@ import { getClientFetch } from "../../utils/fetch.js";
 import { getBytecode } from "./get-bytecode.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
-import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -19,9 +18,9 @@ const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveContractAbi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -61,9 +60,9 @@ export function resolveContractAbi<abi extends Abi>(
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromContractApi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -91,9 +90,9 @@ export async function resolveAbiFromContractApi(
  * @throws Error if no IPFS URI is found in the bytecode.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -243,9 +242,9 @@ const DIAMOND_ABI = {
  * @returns The resolved ABI for the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveCompositeAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -299,7 +298,8 @@ async function resolvePluginPatternAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const pluginMap = await readContractRaw({
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const pluginMap = await readContract({
       contract,
       method: PLUGINS_ABI,
     });
@@ -319,7 +319,8 @@ async function resolveBaseRouterAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const pluginMap = await readContractRaw({
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const pluginMap = await readContract({
       contract,
       method: BASE_ROUTER_ABI,
     });
@@ -339,7 +340,8 @@ async function resolveDiamondFacetAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const facets = await readContractRaw({ contract, method: DIAMOND_ABI });
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const facets = await readContract({ contract, method: DIAMOND_ABI });
     // if there are no facets, return the root ABI
     if (!facets.length) {
       return [];

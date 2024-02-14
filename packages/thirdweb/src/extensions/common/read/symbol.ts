@@ -1,6 +1,8 @@
 import type { ThirdwebContract } from "../../../contract/index.js";
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
 
@@ -15,7 +17,7 @@ const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
  * const symbol = await symbol({ contract });
  * ```
  */
-export function symbol(options: TxOpts): Promise<string> {
+export function symbol(options: BaseTransactionOptions): Promise<string> {
   // "symbol" cannot change so we can cache this result for the lifetime of the contract
   if (cache.has(options.contract)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

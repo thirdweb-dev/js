@@ -7,11 +7,10 @@ import {
   defaultTheme,
   reservedScreens,
 } from "../constants.js";
-import { useScreen } from "./screen.js";
+import { useSetupScreen } from "./screen.js";
 import { type ComponentProps, useContext, useEffect } from "react";
 import { Spinner } from "../../components/Spinner.js";
 import { Container } from "../../components/basic.js";
-import type { WalletConfig } from "../../../types/wallets.js";
 import { radius, type Theme } from "../../design-system/index.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import {
@@ -25,8 +24,9 @@ import {
   useActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../../../providers/wallet-provider.js";
-import { isMobile } from "../../../utils/isMobile.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -102,12 +102,12 @@ export type ConnectEmbedProps = {
   };
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The callback is called with the connected account
    *
    * ```tsx
    * <ConnectEmbed
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(account) => {
+   *    console.log("connected to", account)
    *  }}
    * />
    * ```
@@ -125,7 +125,18 @@ export type ConnectEmbedProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (account: Account) => void;
+
+  /**
+   * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.
+   *
+   * If you want to hide it, set this to `false`
+   * @example
+   * ```tsx
+   * <ConnectEmbed showThirdwebBranding={false} />
+   * ```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 /**
@@ -290,29 +301,30 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;
-  const requiresSignIn = useSignInRequired(loginOptional);
   const show = useShowConnectEmbed(loginOptional);
-  const { screen, setScreen, initialScreen } = useScreen();
 
-  // if showing main screen but signIn is required, switch to signIn screen
-  useEffect(() => {
-    if (requiresSignIn && screen === reservedScreens.main) {
-      setScreen(reservedScreens.signIn);
-    }
-  }, [requiresSignIn, screen, setScreen]);
+  const contextTheme = useCustomTheme();
+
+  const walletUIStatesProps = {
+    theme: props.theme || contextTheme || defaultTheme,
+    modalSize: "compact" as const,
+    title: undefined,
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
+    isEmbed: true,
+    auth: props.auth,
+    onConnect: props.onConnect,
+    showThirdwebBranding: props.showThirdwebBranding,
+  };
 
   if (show) {
     return (
-      <ConnectEmbedContent
-        {...props}
-        onClose={() => {
-          setScreen(initialScreen);
-        }}
-        screen={screen}
-        setScreen={setScreen}
-        initialScreen={initialScreen}
-        onConnect={props.onConnect}
-      />
+      <WalletUIStatesProvider {...walletUIStatesProps}>
+        <CustomThemeProvider theme={walletUIStatesProps.theme}>
+          <ConnectEmbedContent {...props} onConnect={props.onConnect} />
+          <SyncedWalletUIStates {...walletUIStatesProps} />
+        </CustomThemeProvider>
+      </WalletUIStatesProvider>
     );
   }
 
@@ -323,18 +335,23 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
  * @internal
  */
 const ConnectEmbedContent = (
-  props: Omit<ConnectEmbedProps, "onConnect"> & {
-    onClose: () => void;
-    screen: string | WalletConfig;
-    setScreen: (screen: string | WalletConfig) => void;
-    initialScreen: string | WalletConfig;
-    onConnect?: () => void;
+  props: ConnectEmbedProps & {
+    loginOptional?: boolean;
   },
 ) => {
-  const modalSize = "compact" as const;
+  const requiresSignIn = useSignInRequired(props.loginOptional);
+  const screenSetup = useSetupScreen();
+  const { screen, setScreen, initialScreen } = screenSetup;
+
+  // if showing main screen but signIn is required, switch to signIn screen
+  useEffect(() => {
+    if (requiresSignIn && screen === reservedScreens.main) {
+      setScreen(reservedScreens.signIn);
+    }
+  }, [requiresSignIn, screen, setScreen]);
+
   const connectionStatus = useActiveWalletConnectionStatus();
   const isAutoConnecting = useIsAutoConnecting();
-  const contextTheme = useCustomTheme();
 
   let content = null;
 
@@ -354,11 +371,11 @@ const ConnectEmbedContent = (
   } else {
     content = (
       <ConnectModalContent
-        initialScreen={props.initialScreen}
-        screen={props.screen}
-        setScreen={props.setScreen}
+        screenSetup={screenSetup}
         isOpen={true}
-        onClose={props.onClose}
+        onClose={() => {
+          setScreen(initialScreen);
+        }}
         onHide={() => {
           // no op
         }}
@@ -369,35 +386,17 @@ const ConnectEmbedContent = (
     );
   }
 
-  const walletUIStatesProps = {
-    theme: props.theme || contextTheme || defaultTheme,
-    modalSize: modalSize,
-    title: undefined,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    isEmbed: true,
-    auth: props.auth,
-    onConnect: props.onConnect,
-    chainId: props.chainId ? BigInt(props.chainId) : undefined,
-    chains: props.chains,
-  };
-
   return (
-    <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <EmbedContainer
-          className={props.className}
-          style={{
-            height: "auto",
-            maxWidth: modalMaxWidthCompact,
-            ...props.style,
-          }}
-        >
-          <DynamicHeight> {content} </DynamicHeight>
-          <SyncedWalletUIStates {...walletUIStatesProps} />
-        </EmbedContainer>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <EmbedContainer
+      className={props.className}
+      style={{
+        height: "auto",
+        maxWidth: modalMaxWidthCompact,
+        ...props.style,
+      }}
+    >
+      <DynamicHeight> {content} </DynamicHeight>
+    </EmbedContainer>
   );
 };
 
@@ -416,11 +415,12 @@ export function SyncedWalletUIStates(
       ...c,
       title: props.title || locale.connectWallet.defaultModalTitle,
       theme: props.theme || "dark",
-      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
+      modalSize: (!canFitWideModal() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
       privacyPolicyUrl: props.privacyPolicyUrl,
       welcomeScreen: props.welcomeScreen,
       titleIconUrl: props.titleIconUrl,
+      showThirdwebBranding: props.showThirdwebBranding,
     }));
   }, [
     props.title,
@@ -432,6 +432,7 @@ export function SyncedWalletUIStates(
     props.titleIconUrl,
     setModalConfig,
     locale.connectWallet.defaultModalTitle,
+    props.showThirdwebBranding,
   ]);
 
   return <WalletUIStatesProvider {...props} />;

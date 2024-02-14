@@ -1,15 +1,18 @@
-import type { Transaction } from "../transaction.js";
-import { encode } from "./encode.js";
 import { formatTransactionRequest } from "viem/utils";
-import type { AbiFunction } from "viem";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { eth_estimateGas, getRpcClient } from "../../rpc/index.js";
-import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
+import {
+  getGasOverridesForTransaction,
+  type FeeDataParams,
+} from "../../gas/fee-data.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
 
-export type EstimateGasOptions<abiFn extends AbiFunction> = {
-  transaction: Transaction<abiFn>;
+export type EstimateGasOptions = {
+  transaction: PreparedTransaction;
   account?: Partial<Account> | undefined;
 };
+
+export type EstimateGasResult = FeeDataParams & { gas: bigint };
 
 /**
  * Estimates the gas required to execute a transaction.
@@ -24,27 +27,49 @@ export type EstimateGasOptions<abiFn extends AbiFunction> = {
  * });
  * ```
  */
-export async function estimateGas<abiFn extends AbiFunction>(
-  options: EstimateGasOptions<abiFn>,
-): Promise<bigint> {
-  const rpcRequest = getRpcClient(options.transaction.contract);
-
-  if (options.account && options.account.estimateGas) {
-    return options.account.estimateGas(options.transaction);
+export async function estimateGas(
+  options: EstimateGasOptions,
+): Promise<EstimateGasResult> {
+  const [gasOverrides, predefinedGas] = await Promise.all([
+    getGasOverridesForTransaction(options.transaction),
+    resolvePromisedValue(options.transaction.gas),
+  ]);
+  // if we have a predefined gas value in the TX -> always use that
+  if (predefinedGas) {
+    return {
+      ...gasOverrides,
+      gas: predefinedGas,
+    };
   }
 
-  const [gasOverrides, encodedData] = await Promise.all([
-    getGasOverridesForTransaction(options.transaction),
+  // if the account itself overrides the estimateGas function, use that
+  if (options.account && options.account.estimateGas) {
+    const gas = await options.account.estimateGas(options.transaction);
+    return { ...gasOverrides, gas };
+  }
+
+  // load up encode function if we need it
+  const { encode } = await import("./encode.js");
+  const [encodedData, toAddress] = await Promise.all([
     encode(options.transaction),
+    resolvePromisedValue(options.transaction.to),
   ]);
 
-  return eth_estimateGas(
+  // load up the rpc client and the estimateGas function if we need it
+  const [{ getRpcClient }, { eth_estimateGas }] = await Promise.all([
+    import("../../rpc/rpc.js"),
+    import("../../rpc/actions/eth_estimateGas.js"),
+  ]);
+
+  const rpcRequest = getRpcClient(options.transaction);
+  const gas = await eth_estimateGas(
     rpcRequest,
     formatTransactionRequest({
-      to: options.transaction.contract.address,
+      to: toAddress,
       data: encodedData,
       ...gasOverrides,
       from: options.account?.address ?? undefined,
     }),
   );
+  return { ...gasOverrides, gas };
 }

@@ -25,6 +25,8 @@ import { iconSize, spacing, radius } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
 import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
+import { PoweredByThirdweb } from "./PoweredByTW.js";
+import { useScreenContext } from "./Modal/screen.js";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
@@ -426,6 +428,11 @@ export const WalletSelector: React.FC<{
       </Container>
 
       {bottomSection}
+      {isCompact && modalConfig.showThirdwebBranding !== false && (
+        <Container py="md">
+          <PoweredByThirdweb />
+        </Container>
+      )}
     </Container>
   );
 };
@@ -487,12 +494,15 @@ export function WalletEntryButton(props: {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
   const locale = useTWLocale().connectWallet;
+  const { screen } = useScreenContext();
+
   return (
     <WalletButton
       type="button"
       onClick={() => {
         selectWallet();
       }}
+      data-active={screen === walletConfig}
     >
       <Img
         src={walletConfig.metadata.iconUrl}
@@ -552,6 +562,9 @@ const WalletButton = /* @__PURE__ */ StyledButton(() => {
     "&:hover": {
       backgroundColor: theme.colors.walletSelectorButtonHoverBg,
       transform: "scale(1.01)",
+    },
+    '&[data-active="true"]': {
+      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
     },
     transition: "background-color 200ms ease, transform 200ms ease",
   };

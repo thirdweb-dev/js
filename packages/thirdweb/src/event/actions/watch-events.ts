@@ -1,15 +1,13 @@
 import type { Abi, AbiEvent } from "abitype";
 import { resolveAbiEvent } from "./resolve-abi.js";
 import type { ContractEvent, EventLog } from "../event.js";
-import {
-  resolveContractAbi,
-  type ThirdwebContract,
-} from "../../contract/index.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import {
   eth_getLogs,
   getRpcClient,
   watchBlockNumber,
 } from "../../rpc/index.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
 
 export type WatchContractEventsOptions<
   abi extends Abi,

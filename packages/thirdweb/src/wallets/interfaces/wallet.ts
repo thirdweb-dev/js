@@ -1,4 +1,4 @@
-import type { AbiFunction, Address } from "abitype";
+import type { Address } from "abitype";
 import type {
   Hex,
   SignableMessage,
@@ -8,8 +8,8 @@ import type {
 } from "viem";
 import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
-import type { Transaction } from "../../transaction/transaction.js";
 import type { WalletMetadata } from "../types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
@@ -42,24 +42,21 @@ export type Account = {
     // TODO: figure out how we get our "chain" here
     tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
-
-  // OPTIONAL
-  signMessage?: ({ message }: { message: SignableMessage }) => Promise<Hex>;
-  signTypedData?: <
+  signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
+  signTypedData: <
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
+
+  // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-  estimateGas?: <abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ) => Promise<bigint>;
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
 
   // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
   /**
    * The wallet that the account belongs to
-   * @internal
    */
   wallet: Wallet;
 };

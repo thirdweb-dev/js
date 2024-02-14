@@ -3,10 +3,9 @@ import type { SmartWalletOptions, UserOperationStruct } from "../types.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { prepareTransaction } from "../../../transaction/transaction.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
-import { getChainIdFromChain } from "../../../index.js";
+import { getChainIdFromChain, prepareContractCall } from "../../../index.js";
 import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
@@ -170,7 +169,7 @@ async function getAccountInitCode(args: {
   const accountAddress =
     options.accountAddress || options.personalAccount.address;
   const extraData = toHex(options.accountExtradata || "");
-  const deployTx = prepareTransaction({
+  const deployTx = prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) public returns (address)",
     params: [accountAddress, extraData],
@@ -185,7 +184,7 @@ function prepareExecute(
   value: bigint,
   data: Hex,
 ) {
-  const tx = prepareTransaction({
+  const tx = prepareContractCall({
     contract: accountContract,
     method: "function execute(address, uint256, bytes)",
     params: [target, value, data],

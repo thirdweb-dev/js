@@ -1,8 +1,8 @@
 import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { getNFT } from "./getNFT.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { min } from "../../../utils/bigint.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
@@ -36,7 +36,7 @@ export type GetNFTsParams = {
  * ```
  */
 export async function getNFTs(
-  options: TxOpts<GetNFTsParams>,
+  options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT<"ERC1155">[]> {
   const start = BigInt(options.start || 0);
   const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);

@@ -1,7 +1,8 @@
-import { USDC_CONTRACT } from "~test/test-contracts.js";
-import { VITALIK_WALLET } from "~test/addresses.js";
 import { describe, it, expect, vi } from "vitest";
-import { readContract } from "./read.js";
+
+import { USDC_CONTRACT } from "../../test/src/test-contracts.js";
+import { VITALIK_WALLET } from "../../test/src/addresses.js";
+import { readContract } from "./read-contract.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 

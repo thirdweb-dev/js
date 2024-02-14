@@ -1,8 +1,10 @@
-import type { AbiFunction } from "abitype";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useActiveAccount } from "../../providers/wallet-provider.js";
-import type { Transaction } from "../../../transaction/transaction.js";
-import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
+import {
+  estimateGas,
+  type EstimateGasResult,
+} from "../../../transaction/actions/estimate-gas.js";
+import type { PreparedTransaction } from "../../../transaction/index.js";
 
 /**
  * A hook to estimate the gas for a given transaction.
@@ -16,10 +18,10 @@ import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
  * const estimatedGas = await estimateGas(tx);
  * ```
  */
-export function useEstimateGas<abiFn extends AbiFunction>(): UseMutationResult<
-  bigint,
+export function useEstimateGas(): UseMutationResult<
+  EstimateGasResult,
   Error,
-  Transaction<abiFn>
+  PreparedTransaction
 > {
   const account = useActiveAccount();
 

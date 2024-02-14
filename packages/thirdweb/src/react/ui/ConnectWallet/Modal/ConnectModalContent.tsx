@@ -1,20 +1,13 @@
 import {
   ModalConfigCtx,
   // SetModalConfigCtx,
-  useIsWalletModalOpen,
-  useSetIsWalletModalOpen,
 } from "../../../providers/wallet-ui-states-provider.js";
-import { useCallback, useEffect, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { reservedScreens, onModalUnmount } from "../constants.js";
 import { HeadlessConnectUI } from "../../../wallets/headlessConnectUI.js";
-import { ScreenContext, useScreen } from "./screen.js";
+import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
-import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
-import {
-  useActiveAccount,
-  useConnect,
-} from "../../../providers/wallet-provider.js";
-import { Modal } from "../../components/Modal.js";
+import { useConnect } from "../../../providers/wallet-provider.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { useThirdwebProviderProps } from "../../../hooks/others/useThirdwebProviderProps.js";
 import type { ScreenConfig, WalletConfig } from "../../../types/wallets.js";
@@ -28,15 +21,14 @@ import type { Account } from "../../../../wallets/interfaces/wallet.js";
  * @internal
  */
 export const ConnectModalContent = (props: {
-  screen: string | WalletConfig;
-  initialScreen: string | WalletConfig;
-  setScreen: (screen: string | WalletConfig) => void;
+  screenSetup: ScreenSetup;
   onHide: () => void;
   onShow: () => void;
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { screen, setScreen, initialScreen, onHide, onShow, onClose } = props;
+  const { onHide, onShow, onClose } = props;
+  const { screen, setScreen, initialScreen } = props.screenSetup;
   const { wallets, client, dappMetadata } = useThirdwebProviderProps();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
@@ -60,7 +52,7 @@ export const ConnectModalContent = (props: {
       connect(account);
 
       if (onConnect) {
-        onConnect();
+        onConnect(account);
       }
 
       const requiresSignIn = false;
@@ -193,7 +185,7 @@ export const ConnectModalContent = (props: {
   // );
 
   return (
-    <ScreenContext.Provider value={screen}>
+    <ScreenSetupContext.Provider value={props.screenSetup}>
       {isWideModal ? (
         <ConnectModalWideLayout
           left={walletList}
@@ -214,128 +206,6 @@ export const ConnectModalContent = (props: {
           {typeof screen !== "string" && getWalletUI(screen)}
         </ConnectModalCompactLayout>
       )}
-    </ScreenContext.Provider>
-  );
-};
-
-/**
- * @internal
- */
-export const ConnectModal = () => {
-  const { theme, modalSize } = useContext(ModalConfigCtx);
-
-  const { screen, setScreen, initialScreen } = useScreen();
-  const isWalletModalOpen = useIsWalletModalOpen();
-  const setIsWalletModalOpen = useSetIsWalletModalOpen();
-  const [hideModal, setHideModal] = useState(false);
-  // const connectionStatus = useConnectionStatus();
-
-  const closeModal = useCallback(() => {
-    setIsWalletModalOpen(false);
-    onModalUnmount(() => {
-      setScreen(initialScreen);
-    });
-  }, [initialScreen, setIsWalletModalOpen, setScreen]);
-
-  // const [prevConnectionStatus, setPrevConnectionStatus] =
-  //   useState(connectionStatus);
-
-  // useEffect(() => {
-  //   setPrevConnectionStatus(connectionStatus);
-  // }, [connectionStatus]);
-
-  // const disconnect = useDisconnect();
-
-  const activeAccount = useActiveAccount();
-  // const isWrapperConnected = !!wallet?.getPersonalWallet();
-
-  // const isWrapperScreen =
-  //   typeof screen !== "string" && !!screen.personalWallets;
-
-  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
-  // useEffect(() => {
-  //   if (
-  //     // !isWrapperConnected &&
-  //     isWrapperScreen &&
-  //     !isWalletModalOpen &&
-  //     // connectionStatus === "connected" &&
-  //     // prevConnectionStatus === "connecting"
-  //   ) {
-  //     setIsWalletModalOpen(true);
-  //   }
-  // }, [
-  //   isWalletModalOpen,
-  //   connectionStatus,
-  //   setIsWalletModalOpen,
-  //   isWrapperScreen,
-  //   // isWrapperConnected,
-  //   prevConnectionStatus,
-  // ]);
-
-  useEffect(() => {
-    if (!isWalletModalOpen) {
-      onModalUnmount(() => {
-        setHideModal(false);
-      });
-    }
-  }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
-
-  const onHide = useCallback(() => setHideModal(true), []);
-  const onShow = useCallback(() => setHideModal(false), []);
-
-  // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
-  useEffect(() => {
-    if (
-      isWalletModalOpen &&
-      screen === reservedScreens.signIn &&
-      !activeAccount
-    ) {
-      setScreen(initialScreen);
-      setIsWalletModalOpen(false);
-    }
-  }, [
-    initialScreen,
-    isWalletModalOpen,
-    screen,
-    setIsWalletModalOpen,
-    setScreen,
-    activeAccount,
-  ]);
-
-  return (
-    <CustomThemeProvider theme={theme}>
-      <Modal
-        hide={hideModal}
-        size={modalSize}
-        open={isWalletModalOpen}
-        setOpen={(value) => {
-          if (hideModal) {
-            return;
-          }
-
-          setIsWalletModalOpen(value);
-
-          if (!value) {
-            onModalUnmount(() => {
-              // if (connectionStatus === "connecting") {
-              //   disconnect();
-              // }
-
-              setScreen(initialScreen);
-            });
-          }
-        }}
-      >
-        <ConnectModalContent
-          initialScreen={initialScreen}
-          screen={screen}
-          setScreen={setScreen}
-          onHide={onHide}
-          onShow={onShow}
-          isOpen={isWalletModalOpen}
-          onClose={closeModal}
-        />
-      </Modal>
-    </CustomThemeProvider>
+    </ScreenSetupContext.Provider>
   );
 };

@@ -1,8 +1,8 @@
-import type { TxOpts } from "../../../transaction/transaction.js";
 import { fetchContractMetadata } from "../../../utils/contract/fetchContractMetadata.js";
 import { contractURI } from "./contractURI.js";
 import { name } from "./name.js";
 import { symbol } from "./symbol.js";
+import type { BaseTransactionOptions } from "../../../transaction/index.js";
 
 /**
  * Retrieves the contract metadata including name and symbol.
@@ -15,7 +15,7 @@ import { symbol } from "./symbol.js";
  * const metadata = await getContractMetadata({ contract });
  * ```
  */
-export async function getContractMetadata(options: TxOpts) {
+export async function getContractMetadata(options: BaseTransactionOptions) {
   const [resolvedMetadata, resolvedName, resolvedSymbol] = await Promise.all([
     contractURI(options)
       .then((uri) => {
