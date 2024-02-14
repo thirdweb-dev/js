@@ -36,6 +36,20 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
+    id: "unity-iap-client",
+    title: "Unity IAP Client",
+    homepage:
+      "https://blog.thirdweb.com/guides/enhancing-unity-iap-with-blockchain-interactions/",
+    repo: "https://github.com/thirdweb-example/unity-iap-client/",
+    description:
+      "Blockchain integration with Unity IAP and server side validation.",
+    img: "/assets/templates/unity-iap.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Engine", "Unity"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
     id: "mintcaster",
     title: "Mintcaster",
     homepage: "https://mintcaster.thirdweb-example.com/",
