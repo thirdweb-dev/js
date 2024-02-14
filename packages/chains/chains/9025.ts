@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Nexa Testnet",
-  "chainId": 9024,
+  "chain": "Nexa Mainnet",
+  "chainId": 9025,
   "explorers": [
     {
-      "name": "Nexablock Testnet Explorer",
-      "url": "https://testnet.nexablockscan.io",
+      "name": "Nexablock Mainnet Explorer",
+      "url": "https://nexablockscan.io",
       "standard": "none",
       "icon": {
         "url": "ipfs://bafkreib2t2lcaoh6iixrx4gjjvepws5tlsszfla5hb36b3mgyq7clve35y",
@@ -15,9 +15,7 @@ export default {
       }
     }
   ],
-  "faucets": [
-    "https://testnet.nexablockscan.io/faucet"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://bafkreib2t2lcaoh6iixrx4gjjvepws5tlsszfla5hb36b3mgyq7clve35y",
     "width": 192,
@@ -25,19 +23,19 @@ export default {
     "format": "png"
   },
   "infoURL": "https://www.nexablock.io",
-  "name": "Nexa Testnet Block",
+  "name": "Nexa Mainnet Block",
   "nativeCurrency": {
-    "name": "Nexa Testnet Token",
+    "name": "Nexa Mainnet Token",
     "symbol": "NEXB",
     "decimals": 18
   },
-  "networkId": 9024,
+  "networkId": 9025,
   "rpc": [
-    "https://nexa-testnet-block.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://9024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet-nodes.nexablockscan.io"
+    "https://nexa-block.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9025.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-nodes.nexablockscan.io"
   ],
-  "shortName": "NexaTestnet",
-  "slug": "nexa-testnet-block",
-  "testnet": true
+  "shortName": "Nexa",
+  "slug": "nexa-block",
+  "testnet": false
 } as const satisfies Chain;
