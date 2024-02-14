@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { PreparedTransaction, ThirdwebContract } from "../../index.js";
 import type { Account } from "../interfaces/wallet.js";
 import type { Address, Hex } from "viem";
+import type { WalletMetadata } from "../types.js";
 
 export type SmartWalletOptions = {
   client: ThirdwebClient;
@@ -24,6 +25,7 @@ export type SmartWalletOptions = {
       data: string,
     ) => PreparedTransaction;
   };
+  metadata?: WalletMetadata;
 };
 
 export type SmartWalletConnectionOptions = {

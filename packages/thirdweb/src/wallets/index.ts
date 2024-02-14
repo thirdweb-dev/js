@@ -1,4 +1,8 @@
-export type { Wallet, Account } from "./interfaces/wallet.js";
+export type {
+  Wallet,
+  Account,
+  WalletWithPersonalAccount,
+} from "./interfaces/wallet.js";
 export type { WalletEventListener } from "./interfaces/listeners.js";
 export type { WalletMetadata } from "./types.js";
 
@@ -61,5 +65,17 @@ export {
 export type { WalletConnectConnectionOptions } from "./wallet-connect/types.js";
 
 // smart
-export { smartWallet, SmartWallet } from "./smart/index.js";
+export {
+  smartWallet,
+  SmartWallet,
+  smartWalletMetadata,
+} from "./smart/index.js";
 export type { SmartWalletOptions } from "./smart/types.js";
+
+// storage
+export {
+  getSavedConnectParamsFromStorage,
+  saveConnectParamsToStorage,
+  deleteConnectParamsFromStorage,
+} from "./manager/storage.js";
+export type { WithPersonalWalletConnectionOptions } from "./manager/storage.js";

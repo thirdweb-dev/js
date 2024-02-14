@@ -54,6 +54,15 @@ export type WalletConfig = {
    * By default is set to `false`
    */
   isHeadless?: boolean;
+
+  /**
+   * An array of `WalletConfig` that users can use as a personal wallet to connect to your wallet
+   *
+   * This is only required if your wallet requires a personal wallet to be connected such as a Safe Wallet or Smart Wallet
+   *
+   * providing the `personalWalletConfigs` ensures that auto connect will connect the last connected personal wallet first and then connect this wallet
+   */
+  personalWalletConfigs?: WalletConfig[];
 };
 
 export type ScreenConfig = {

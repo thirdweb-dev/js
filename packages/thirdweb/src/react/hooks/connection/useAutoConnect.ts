@@ -6,6 +6,11 @@ import {
   useConnect,
   useSetActiveWalletConnectionStatus,
 } from "../../providers/wallet-provider.js";
+import {
+  getSavedConnectParamsFromStorage,
+  type WalletWithPersonalAccount,
+  type WithPersonalWalletConnectionOptions,
+} from "../../../wallets/index.js";
 
 let autoConnectAttempted = false;
 
@@ -43,26 +48,63 @@ export function AutoConnect() {
         (w) => w.metadata.id === lastActiveWalletId,
       );
 
-      const otherWalletConfigs: WalletConfig[] = [];
-
-      wallets.forEach((w) => {
-        if (w.metadata.id === lastActiveWalletId) {
-          return;
-        }
-        if (lastConnectedWalletIds.includes(w.metadata.id)) {
-          otherWalletConfigs.push(w);
-        }
-      });
-
       // connect the active wallet and set it as active
       if (lastActiveWalletConfig) {
+        // ------------ TRY ------------
         try {
-          const wallet = lastActiveWalletConfig.create({
-            client,
-            dappMetadata,
-          });
-          const account = await wallet.autoConnect();
-          connect(account);
+          // if this wallet requires a personal wallet to be connected
+          if (lastActiveWalletConfig.personalWalletConfigs) {
+            // get saved connection params for this wallet
+            const savedParams = await getSavedConnectParamsFromStorage(
+              lastActiveWalletConfig.metadata.id,
+            );
+
+            // if must be an object with `personalWalletId` property
+            if (!isValidWithPersonalWalletConnectionOptions(savedParams)) {
+              throw new Error("Invalid connection params");
+            }
+
+            // find the personal wallet config
+            const personalWalletConfig =
+              lastActiveWalletConfig.personalWalletConfigs.find(
+                (w) => w.metadata.id === savedParams.personalWalletId,
+              );
+
+            if (!personalWalletConfig) {
+              throw new Error("Personal wallet not found");
+            }
+
+            // create and auto connect the personal wallet to get personal account
+            const personalWallet = personalWalletConfig.create({
+              client,
+              dappMetadata,
+            });
+
+            const personalAccount = await personalWallet.autoConnect();
+
+            // create wallet
+            const wallet = lastActiveWalletConfig.create({
+              client,
+              dappMetadata,
+            }) as WalletWithPersonalAccount;
+
+            // auto connect the wallet using the personal account
+            const account = await wallet.autoConnect({
+              personalAccount,
+            });
+
+            connect(account);
+          }
+
+          // if this wallet does not require a personal wallet to be connected
+          else {
+            const wallet = lastActiveWalletConfig.create({
+              client,
+              dappMetadata,
+            });
+            const account = await wallet.autoConnect();
+            connect(account);
+          }
         } catch (e) {
           console.log("failed to auto connect last active wallet");
           console.error(e);
@@ -71,6 +113,16 @@ export function AutoConnect() {
       } else {
         setConnectionStatus("disconnected");
       }
+
+      const otherWalletConfigs: WalletConfig[] = [];
+      wallets.forEach((w) => {
+        if (w.metadata.id === lastActiveWalletId) {
+          return;
+        }
+        if (lastConnectedWalletIds.includes(w.metadata.id)) {
+          otherWalletConfigs.push(w);
+        }
+      });
 
       // connect other wallets
       otherWalletConfigs.forEach(async (config) => {
@@ -109,4 +161,14 @@ export function NoAutoConnect() {
   });
 
   return null;
+}
+
+function isValidWithPersonalWalletConnectionOptions(
+  options: any,
+): options is WithPersonalWalletConnectionOptions {
+  return (
+    typeof options === "object" &&
+    options !== null &&
+    typeof options.personalWalletId === "string"
+  );
 }

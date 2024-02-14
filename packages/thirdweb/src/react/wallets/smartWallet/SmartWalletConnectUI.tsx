@@ -1,11 +1,10 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ConnectUIProps, WalletConfig } from "../../types/wallets.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
 import { SmartWallet, type Account } from "../../../wallets/index.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useTWLocale } from "../../providers/locale-provider.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -22,9 +21,7 @@ export const SmartConnectUI = (props: {
   smartWalletChainId: bigint;
 }) => {
   const [personalAccount, setPersonalAccount] = useState<Account | null>(null);
-  // const { personalWalletConnection } = useWalletContext();
   const { personalWalletConfig } = props;
-
   const { client, dappMetadata } = useThirdwebProviderProps();
 
   if (!personalAccount) {
@@ -40,7 +37,6 @@ export const SmartConnectUI = (props: {
       done(account: Account) {
         setPersonalAccount(account);
       },
-      chains: [],
       chainId: props.smartWalletChainId,
     };
 
@@ -57,15 +53,6 @@ export const SmartConnectUI = (props: {
       personalWalletConfig={personalWalletConfig}
       personalAccount={personalAccount}
       smartWalletChainId={props.smartWalletChainId}
-      // onBack={props.goBack}
-      // onConnect={() => {
-      //   props.connected();
-      // }}
-      // smartWallet={walletConfig}
-      // personalWalletConfig={personalWalletConfig}
-      // personalWallet={personalWalletConnection.activeWallet}
-      // personalWalletChainId={personalWalletConnection.chainId || 1}
-      // switchChainPersonalWallet={personalWalletConnection.switchChain}
     />
   );
 };
@@ -77,22 +64,17 @@ const SmartWalletConnecting = (props: {
   smartWalletChainId: bigint;
 }) => {
   const locale = useTWLocale().wallets.smartWallet;
-  // const { personalWallet, personalWalletChainId, switchChainPersonalWallet } =
-  //   props;
   const createSmartWalletInstance = props.connectUIProps.createInstance;
-  const wrongNetwork =
-    props.personalAccount.wallet.chainId !== props.smartWalletChainId;
   const { personalAccount } = props;
   const { done } = props.connectUIProps;
+  const modalSize = props.connectUIProps.screenConfig.size;
+  const wrongNetwork =
+    props.personalAccount.wallet.chainId !== props.smartWalletChainId;
 
   const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
     useState<"connecting" | "connect-error" | "idle">("idle");
   const [personalWalletChainSwitchStatus, setPersonalWalletChainSwitchStatus] =
     useState<"switching" | "switch-error" | "idle">("idle");
-
-  const connectStarted = useRef(false);
-
-  const modalSize = useContext(ModalConfigCtx).modalSize;
 
   const handleConnect = useCallback(async () => {
     if (!personalAccount) {
@@ -115,6 +97,7 @@ const SmartWalletConnecting = (props: {
     }
   }, [createSmartWalletInstance, done, personalAccount]);
 
+  const connectStarted = useRef(false);
   useEffect(() => {
     if (!wrongNetwork && !connectStarted.current) {
       handleConnect();

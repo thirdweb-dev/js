@@ -33,6 +33,11 @@ export type Wallet = {
   switchChain?: (newChainId: bigint | number) => Promise<void>;
 };
 
+export interface WalletWithPersonalAccount extends Wallet {
+  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
+  personalAccount?: Account;
+}
+
 export type Account = {
   // REQUIRED
   address: Address;
