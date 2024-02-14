@@ -64,6 +64,12 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
         ])
         .optional(),
       gatewayUrls: z.array(z.string()).optional(),
+      rpcBatchSettings: z
+        .object({
+          sizeLimit: z.number().default(200),
+          timeLimit: z.number().default(10),
+        })
+        .optional(),
     })
     .default({
       gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
