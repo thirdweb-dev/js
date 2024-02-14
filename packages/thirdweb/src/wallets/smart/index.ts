@@ -6,9 +6,8 @@ import type {
 import type { SmartWalletOptions } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp } from "./lib/bundler.js";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { toHex } from "viem";
-import { readContract } from "../../transaction/read-contract.js";
+import { getContract } from "../../contract/contract.js";
+import { predictAddress } from "./lib/calls.js";
 
 /**
  * Creates a smart wallet.
@@ -36,7 +35,8 @@ export function smartWallet(options: SmartWalletOptions): Wallet {
       return smartAccount(wallet, options);
     },
     async autoConnect(): Promise<Account> {
-      throw new Error("Method not implemented.");
+      // TODO autoconnect personal account too
+      return smartAccount(wallet, options);
     },
     async disconnect(): Promise<void> {
       // TODO
@@ -83,7 +83,7 @@ async function smartAccount(
       };
     },
     async estimateGas() {
-      // TODO break down the process so estimate gas does the userOp estimation without doing double work
+      // estimation is done in createUnsignedUserOp
       return 0n;
     },
     async signMessage({ message }) {
@@ -95,19 +95,4 @@ async function smartAccount(
       return options.personalAccount.signTypedData(typedData);
     },
   };
-}
-
-// TODO ppl should be able to override this
-async function predictAddress(
-  factoryContract: ThirdwebContract,
-  options: SmartWalletOptions,
-): Promise<string> {
-  const accountAddress =
-    options.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.accountExtradata || "");
-  return readContract({
-    contract: factoryContract,
-    method: "function getAddress(address, bytes) returns (address)",
-    params: [accountAddress, extraData],
-  });
 }

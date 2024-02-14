@@ -1,15 +1,16 @@
-import { keccak256, concat, type Hex, toHex, encodeAbiParameters } from "viem";
-import type { SmartWalletOptions, UserOperationStruct } from "../types.js";
+import { keccak256, concat, type Hex, encodeAbiParameters } from "viem";
+import type { SmartWalletOptions, UserOperation } from "../types.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
-import { getChainIdFromChain, prepareContractCall } from "../../../index.js";
+import { getChainIdFromChain } from "../../../index.js";
 import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
 import { randomNonce } from "./utils.js";
+import { prepareCreateAccount, prepareExecute } from "./calls.js";
 
 /**
  * Create an unsigned user operation
@@ -24,7 +25,7 @@ export async function createUnsignedUserOp(args: {
   accountContract: ThirdwebContract;
   transaction: SendTransactionOption;
   options: SmartWalletOptions;
-}): Promise<UserOperationStruct> {
+}): Promise<UserOperation> {
   const { factoryContract, accountContract, transaction, options } = args;
   const isDeployed = await isContractDeployed(accountContract);
   const initCode = isDeployed
@@ -33,12 +34,13 @@ export async function createUnsignedUserOp(args: {
         factoryContract,
         options,
       });
-  const executeTx = prepareExecute(
+  const executeTx = prepareExecute({
     accountContract,
-    transaction.to || "", // TODO check if this works with direct deploys
-    transaction.value || 0n,
-    transaction.data || "0x",
-  );
+    options,
+    target: transaction.to || "",
+    value: transaction.value || 0n,
+    data: transaction.data || "0x",
+  });
   const callData = await encode(executeTx);
   let { maxFeePerGas, maxPriorityFeePerGas } = transaction;
   if (!maxFeePerGas || !maxPriorityFeePerGas) {
@@ -57,7 +59,7 @@ export async function createUnsignedUserOp(args: {
   //const nonce = BigInt(transaction.nonce || randomNonce());
   const nonce = randomNonce(); // FIXME getNonce should be overrideable by the wallet
 
-  const partialOp: UserOperationStruct = {
+  const partialOp: UserOperation = {
     sender: accountContract.address,
     nonce,
     initCode,
@@ -80,7 +82,7 @@ export async function createUnsignedUserOp(args: {
     console.log("PM", paymasterResult);
     const paymasterAndData = paymasterResult.paymasterAndData;
     if (paymasterAndData && paymasterAndData !== "0x") {
-      partialOp.paymasterAndData = paymasterAndData;
+      partialOp.paymasterAndData = paymasterAndData as Hex;
     }
     // paymaster can have the gas limits in the response
     if (
@@ -110,7 +112,7 @@ export async function createUnsignedUserOp(args: {
           paymasterResult2.paymasterAndData &&
           paymasterResult2.paymasterAndData !== "0x"
         ) {
-          partialOp.paymasterAndData = paymasterResult2.paymasterAndData;
+          partialOp.paymasterAndData = paymasterResult2.paymasterAndData as Hex;
         }
       }
     }
@@ -137,13 +139,13 @@ export async function createUnsignedUserOp(args: {
  * @internal
  */
 export async function signUserOp(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   options: SmartWalletOptions;
-}): Promise<UserOperationStruct> {
+}): Promise<UserOperation> {
   const { userOp, options } = args;
   const userOpHash = getUserOpHash({
     userOp,
-    entryPoint: options.entrypointAddress || ENTRYPOINT_ADDRESS,
+    entryPoint: options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS,
     chainId: getChainIdFromChain(options.chain),
   });
   if (options.personalAccount.signMessage) {
@@ -166,37 +168,18 @@ async function getAccountInitCode(args: {
   options: SmartWalletOptions;
 }): Promise<Hex> {
   const { factoryContract, options } = args;
-  const accountAddress =
-    options.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.accountExtradata || "");
-  const deployTx = prepareContractCall({
-    contract: factoryContract,
-    method: "function createAccount(address, bytes) public returns (address)",
-    params: [accountAddress, extraData],
+  const deployTx = prepareCreateAccount({
+    factoryContract,
+    options,
   });
   return concat([factoryContract.address as Hex, await encode(deployTx)]);
-}
-
-// TODO should be able to be overriden in options
-function prepareExecute(
-  accountContract: ThirdwebContract,
-  target: string,
-  value: bigint,
-  data: Hex,
-) {
-  const tx = prepareContractCall({
-    contract: accountContract,
-    method: "function execute(address, uint256, bytes)",
-    params: [target, value, data],
-  });
-  return tx;
 }
 
 /**
  * @internal
  */
 export function getUserOpHash(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   entryPoint: string;
   chainId: bigint;
 }): Hex {

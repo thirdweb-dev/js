@@ -3,7 +3,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   EstimationResult,
   SmartWalletOptions,
-  UserOperationStruct,
+  UserOperation,
 } from "../types.js";
 import {
   DEBUG,
@@ -16,7 +16,7 @@ import { hexlifyUserOp } from "./utils.js";
  * @internal
  */
 export async function bundleUserOp(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   options: SmartWalletOptions;
 }): Promise<Hex> {
   return sendBundlerRequest({
@@ -29,7 +29,7 @@ export async function bundleUserOp(args: {
  * @internal
  */
 export async function estimateUserOpGas(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   options: SmartWalletOptions;
 }): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
@@ -46,17 +46,18 @@ export async function estimateUserOpGas(args: {
 }
 
 async function sendBundlerRequest(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   options: SmartWalletOptions;
   operation: "eth_estimateUserOperationGas" | "eth_sendUserOperation";
 }) {
   const { userOp, options, operation } = args;
   const hexifiedUserOp = await hexlifyUserOp(userOp);
-  const jsonRequestData: [UserOperationStruct, string] = [
+  const jsonRequestData: [UserOperation, string] = [
     hexifiedUserOp,
-    options.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+    options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
   ];
-  const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
+  const bundlerUrl =
+    options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
     method: "POST",

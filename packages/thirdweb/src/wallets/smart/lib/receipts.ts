@@ -30,7 +30,7 @@ export async function getUserOpEventFromEntrypoint(args: {
     // actually only want *this* userOpHash, so we can filter here
     filters: {
       userOpHash: userOpHash as Hex,
-      // TODO can we filter by sender and paymaster, too?
+      // TODO: @joaquim can we filter by sender and paymaster, too?
     },
   });
   const events = await getContractEvents({

@@ -1,5 +1,5 @@
 import { concat, toHex } from "viem";
-import type { UserOperationStruct } from "../types.js";
+import type { UserOperation } from "../types.js";
 
 const generateRandomUint192 = (): bigint => {
   const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));
@@ -28,7 +28,7 @@ export const randomNonce = () => {
 /**
  * @internal
  */
-export async function hexlifyUserOp(userOp: UserOperationStruct): Promise<any> {
+export async function hexlifyUserOp(userOp: UserOperation): Promise<any> {
   return Object.keys(userOp)
     .map((key) => {
       let val = (userOp as any)[key];
