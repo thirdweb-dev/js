@@ -14,12 +14,12 @@ export async function predictAddress(
   factoryContract: ThirdwebContract,
   options: SmartWalletOptions,
 ): Promise<string> {
-  if (options.predictAddressOverride) {
-    return options.predictAddressOverride();
+  if (options.overrides?.predictAddress) {
+    return options.overrides.predictAddress(factoryContract);
   }
   const accountAddress =
-    options.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.accountExtraData || "");
+    options.overrides?.accountAddress || options.personalAccount.address;
+  const extraData = toHex(options.overrides?.accountSalt ?? "");
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
@@ -35,15 +35,15 @@ export function prepareCreateAccount(args: {
   options: SmartWalletOptions;
 }): PreparedTransaction {
   const { factoryContract, options } = args;
-  if (options.createAccountOverride) {
-    return options.createAccountOverride();
+  if (options.overrides?.createAccount) {
+    return options.overrides.createAccount(factoryContract);
   }
   return prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) public returns (address)",
     params: [
-      options.accountAddress || options.personalAccount.address,
-      toHex(options.accountExtraData || ""),
+      options.overrides?.accountAddress || options.personalAccount.address,
+      toHex(options.overrides?.accountSalt ?? ""),
     ],
   });
 }
@@ -59,8 +59,8 @@ export function prepareExecute(args: {
   data: Hex;
 }): PreparedTransaction {
   const { accountContract, options, target, value, data } = args;
-  if (options.executeOverride) {
-    return options.executeOverride(target, value, data);
+  if (options.overrides?.execute) {
+    return options.overrides.execute(accountContract, target, value, data);
   }
   return prepareContractCall({
     contract: accountContract,

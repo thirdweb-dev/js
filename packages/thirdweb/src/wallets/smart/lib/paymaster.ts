@@ -3,7 +3,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   PaymasterResult,
   SmartWalletOptions,
-  UserOperationStruct,
+  UserOperation,
 } from "../types.js";
 import {
   DEBUG,
@@ -17,17 +17,22 @@ import { hexlifyUserOp } from "./utils.js";
  * @internal
  */
 export async function getPaymasterAndData(args: {
-  userOp: UserOperationStruct;
+  userOp: UserOperation;
   options: SmartWalletOptions;
 }): Promise<PaymasterResult> {
   const { userOp, options } = args;
+
+  if (options.overrides?.paymaster) {
+    return options.overrides?.paymaster(userOp);
+  }
+
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
   const client = options.client;
   const paymasterUrl = getDefaultPaymasterUrl(options.chain);
-  const entrypoint = options.entrypointAddress ?? ENTRYPOINT_ADDRESS;
+  const entrypoint = options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS;
 
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);

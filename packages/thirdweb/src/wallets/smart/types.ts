@@ -1,6 +1,6 @@
 import type { Chain } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { PreparedTransaction } from "../../index.js";
+import type { PreparedTransaction, ThirdwebContract } from "../../index.js";
 import type { Account } from "../interfaces/wallet.js";
 import type { Address, Hex } from "viem";
 
@@ -10,20 +10,24 @@ export type SmartWalletOptions = {
   chain: Chain;
   gasless: boolean;
   factoryAddress: string; // TODO make this optional
-  accountExtraData?: string;
-  accountAddress?: string;
-  entrypointAddress?: string;
-  bundlerUrl?: string;
-  predictAddressOverride?: () => Promise<string>;
-  createAccountOverride?: () => PreparedTransaction;
-  executeOverride?: (
-    target: string,
-    value: bigint,
-    data: string,
-  ) => PreparedTransaction;
+  overrides?: {
+    bundlerUrl?: string;
+    accountAddress?: string;
+    accountSalt?: string;
+    entrypointAddress?: string;
+    paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
+    predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
+    createAccount?: (factoryContract: ThirdwebContract) => PreparedTransaction;
+    execute?: (
+      accountContract: ThirdwebContract,
+      target: string,
+      value: bigint,
+      data: string,
+    ) => PreparedTransaction;
+  };
 };
 
-export type UserOperationStruct = {
+export type UserOperation = {
   sender: Address;
   nonce: bigint;
   initCode: Hex | Uint8Array;
@@ -38,7 +42,7 @@ export type UserOperationStruct = {
 };
 
 export type PaymasterResult = {
-  paymasterAndData: Hex;
+  paymasterAndData: string;
   preVerificationGas?: bigint;
   verificationGasLimit?: bigint;
   callGasLimit?: bigint;

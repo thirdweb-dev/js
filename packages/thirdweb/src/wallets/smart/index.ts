@@ -6,9 +6,8 @@ import type {
 import type { SmartWalletOptions } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp } from "./lib/bundler.js";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { toHex } from "viem";
-import { readContract } from "../../transaction/read-contract.js";
+import { getContract } from "../../contract/contract.js";
+import { predictAddress } from "./lib/calls.js";
 
 /**
  * Creates a smart wallet.
@@ -55,9 +54,7 @@ async function smartAccount(
     address: options.factoryAddress,
     chain: options.chain,
   });
-  const accountAddress = options.predictAddressOverride
-    ? await options.predictAddressOverride()
-    : await predictAddress(factoryContract, options);
+  const accountAddress = await predictAddress(factoryContract, options);
   const accountContract = getContract({
     client: options.client,
     address: accountAddress,
