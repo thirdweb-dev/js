@@ -1,8 +1,4 @@
-export type {
-  Wallet,
-  Account,
-  WalletConnectionOptions,
-} from "./interfaces/wallet.js";
+export type { Wallet, Account } from "./interfaces/wallet.js";
 export type { WalletEventListener } from "./interfaces/listeners.js";
 export type { WalletMetadata } from "./types.js";
 
@@ -28,6 +24,7 @@ export type {
   WalletRDNS,
   InjectedWalletOptions,
   SpecificInjectedWalletOptions,
+  InjectedWalletConnectOptions,
 } from "./injected/types.js";
 export { injectedProvider } from "./injected/mipdStore.js";
 
@@ -64,4 +61,5 @@ export {
 export type { WalletConnectConnectionOptions } from "./wallet-connect/types.js";
 
 // smart
-export { smartWallet } from "./smart/index.js";
+export { smartWallet, SmartWallet } from "./smart/index.js";
+export type { SmartWalletOptions } from "./smart/types.js";

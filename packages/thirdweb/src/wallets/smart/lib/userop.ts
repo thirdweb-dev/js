@@ -11,6 +11,7 @@ import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
 import { randomNonce } from "./utils.js";
 import { prepareCreateAccount, prepareExecute } from "./calls.js";
+import type { Account } from "../../interfaces/wallet.js";
 
 /**
  * Create an unsigned user operation
@@ -24,7 +25,7 @@ export async function createUnsignedUserOp(args: {
   factoryContract: ThirdwebContract;
   accountContract: ThirdwebContract;
   transaction: SendTransactionOption;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { personalAccount: Account };
 }): Promise<UserOperation> {
   const { factoryContract, accountContract, transaction, options } = args;
   const isDeployed = await isContractDeployed(accountContract);
@@ -140,7 +141,7 @@ export async function createUnsignedUserOp(args: {
  */
 export async function signUserOp(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { personalAccount: Account };
 }): Promise<UserOperation> {
   const { userOp, options } = args;
   const userOpHash = getUserOpHash({
@@ -165,7 +166,7 @@ export async function signUserOp(args: {
 
 async function getAccountInitCode(args: {
   factoryContract: ThirdwebContract;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { personalAccount: Account };
 }): Promise<Hex> {
   const { factoryContract, options } = args;
   const deployTx = prepareCreateAccount({

@@ -15,13 +15,11 @@ export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-export type WalletConnectionOptions = { chainId?: number | bigint };
-
 export type Wallet = {
   // REQUIRED
   metadata: WalletMetadata;
-  connect: (options?: WalletConnectionOptions) => Promise<Account>;
-  autoConnect: () => Promise<Account>;
+  connect: (options?: any) => Promise<Account>;
+  autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
 
   // OPTIONAL

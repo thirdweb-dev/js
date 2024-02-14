@@ -117,7 +117,8 @@ export const ConnectedWalletDetails: React.FC<{
   // const wrapperWalletConfig =
   //   wrapperWallet && walletContext.getWalletConfig(wrapperWallet);
 
-  const disableSwitchChain = false;
+  const disableSwitchChain = !activeAccount?.wallet.switchChain;
+
   // const disableSwitchChain = !!personalWallet;
 
   // const isActuallyMetaMask =

@@ -6,13 +6,14 @@ import {
   prepareContractCall,
   type PreparedTransaction,
 } from "../../../index.js";
+import type { Account } from "../../index.js";
 
 /**
  * @internal
  */
 export async function predictAddress(
   factoryContract: ThirdwebContract,
-  options: SmartWalletOptions,
+  options: SmartWalletOptions & { personalAccount: Account },
 ): Promise<string> {
   if (options.overrides?.predictAddress) {
     return options.overrides.predictAddress(factoryContract);
@@ -32,7 +33,7 @@ export async function predictAddress(
  */
 export function prepareCreateAccount(args: {
   factoryContract: ThirdwebContract;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { personalAccount: Account };
 }): PreparedTransaction {
   const { factoryContract, options } = args;
   if (options.overrides?.createAccount) {

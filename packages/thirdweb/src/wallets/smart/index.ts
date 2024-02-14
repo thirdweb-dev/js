@@ -3,7 +3,10 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import type { SmartWalletOptions } from "./types.js";
+import type {
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp } from "./lib/bundler.js";
 import { getContract } from "../../contract/contract.js";
@@ -25,29 +28,96 @@ import { predictAddress } from "./lib/calls.js";
  * ```
  */
 export function smartWallet(options: SmartWalletOptions): Wallet {
-  const wallet = {
-    metadata: {
+  return new SmartWallet(options);
+}
+
+/**
+ *
+ */
+export class SmartWallet implements Wallet {
+  private options: SmartWalletOptions;
+  metadata: Wallet["metadata"];
+  chainId?: bigint | undefined;
+
+  /**
+   * Create an instance of the SmartWallet.
+   * @param options - The options for the smart wallet.
+   * @example
+   * ```ts
+   * const wallet = new SmartWallet(options)
+   * ```
+   */
+  constructor(options: SmartWalletOptions) {
+    this.options = options;
+    this.metadata = {
       name: "SmartWallet",
       id: "smart-wallet",
       iconUrl: "",
-    },
-    async connect(): Promise<Account> {
-      return smartAccount(wallet, options);
-    },
-    async autoConnect(): Promise<Account> {
-      // TODO autoconnect personal account too
-      return smartAccount(wallet, options);
-    },
-    async disconnect(): Promise<void> {
-      // TODO
-    },
-  };
-  return wallet;
+    };
+  }
+
+  /**
+   * Connect to the smart wallet using a personal account.
+   * @param connectionOptions - The options for connecting to the smart wallet.
+   * @example
+   * ```ts
+   * const smartAccount = await wallet.connect({
+   *  personalAccount,
+   * })
+   * ```
+   * @returns The connected smart account.
+   */
+  async connect(
+    connectionOptions: SmartWalletConnectionOptions,
+  ): Promise<Account> {
+    const chainId = BigInt(
+      typeof this.options.chain === "object"
+        ? this.options.chain.id
+        : this.options.chain,
+    );
+
+    if (connectionOptions.personalAccount.wallet.chainId !== chainId) {
+      throw new Error(
+        "Personal account's wallet is on a different chain than the smart wallet.",
+      );
+    }
+
+    return smartAccount(this, { ...this.options, ...connectionOptions });
+  }
+
+  /**
+   * Auto connect the smart wallet using a personal account.
+   * @param connectionOptions - The options for connecting to the smart wallet.
+   * @example
+   * ```ts
+   * const smartAccount = await wallet.autoConnect({
+   *  personalAccount,
+   * })
+   * ```
+   * @returns The connected smart account.
+   */
+  async autoConnect(
+    connectionOptions: SmartWalletConnectionOptions,
+  ): Promise<Account> {
+    return this.connect(connectionOptions);
+  }
+
+  /**
+   * Disconnect smart wallet.
+   * @example
+   * ```ts
+   * await wallet.disconnect()
+   * ```
+   */
+  async disconnect(): Promise<void> {
+    // noop
+    // should we disconnect the personal account?
+  }
 }
 
 async function smartAccount(
   wallet: Wallet,
-  options: SmartWalletOptions,
+  options: SmartWalletOptions & { personalAccount: Account },
 ): Promise<Account> {
   const factoryContract = getContract({
     client: options.client,
@@ -60,6 +130,12 @@ async function smartAccount(
     address: accountAddress,
     chain: options.chain,
   });
+
+  wallet.chainId =
+    typeof options.chain === "object"
+      ? BigInt(options.chain.id)
+      : BigInt(options.chain);
+
   return {
     wallet,
     address: accountAddress,

@@ -11,10 +11,12 @@ import {
 import type { Address } from "abitype";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { InjectedWalletOptions } from "./types.js";
+import type {
+  InjectedWalletConnectOptions,
+  InjectedWalletOptions,
+} from "./types.js";
 import { getMIPDStore, injectedProvider } from "./mipdStore.js";
 import type {
-  WalletConnectionOptions,
   SendTransactionOption,
   Wallet,
   Account,
@@ -133,7 +135,7 @@ export class InjectedWallet implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected address.
    */
-  async connect(options?: WalletConnectionOptions) {
+  async connect(options?: InjectedWalletConnectOptions) {
     const provider = this.getProvider();
     this.provider = provider;
 

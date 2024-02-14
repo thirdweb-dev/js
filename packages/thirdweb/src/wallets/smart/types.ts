@@ -6,7 +6,6 @@ import type { Address, Hex } from "viem";
 
 export type SmartWalletOptions = {
   client: ThirdwebClient;
-  personalAccount: Account;
   chain: Chain;
   gasless: boolean;
   factoryAddress: string; // TODO make this optional
@@ -25,6 +24,10 @@ export type SmartWalletOptions = {
       data: string,
     ) => PreparedTransaction;
   };
+};
+
+export type SmartWalletConnectionOptions = {
+  personalAccount: Account;
 };
 
 export type UserOperation = {
