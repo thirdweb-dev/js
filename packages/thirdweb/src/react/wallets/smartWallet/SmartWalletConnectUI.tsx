@@ -37,7 +37,10 @@ export const SmartConnectUI = (props: {
       done(account: Account) {
         setPersonalAccount(account);
       },
-      chainId: props.smartWalletChainId,
+      // for headless wallets - directly connect to the target chain
+      chainId: personalWalletConfig.isHeadless
+        ? props.smartWalletChainId
+        : undefined,
     };
 
     if (personalWalletConfig.connectUI) {
@@ -68,8 +71,29 @@ const SmartWalletConnecting = (props: {
   const { personalAccount } = props;
   const { done } = props.connectUIProps;
   const modalSize = props.connectUIProps.screenConfig.size;
-  const wrongNetwork =
-    props.personalAccount.wallet.chainId !== props.smartWalletChainId;
+
+  const [personalWalletChainId, setPersonalWalletChainId] = useState<
+    bigint | undefined
+  >(props.personalAccount.wallet.chainId);
+
+  useEffect(() => {
+    function handleChainChanged(chain: string) {
+      setPersonalWalletChainId(BigInt(chain));
+    }
+    props.personalAccount.wallet.events?.addListener(
+      "chainChanged",
+      handleChainChanged,
+    );
+
+    return () => {
+      props.personalAccount.wallet.events?.removeListener(
+        "chainChanged",
+        handleChainChanged,
+      );
+    };
+  }, [props.personalAccount.wallet.events]);
+
+  const wrongNetwork = personalWalletChainId !== props.smartWalletChainId;
 
   const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
     useState<"connecting" | "connect-error" | "idle">("idle");
@@ -184,20 +208,19 @@ const SmartWalletConnecting = (props: {
                 gap: spacing.sm,
               }}
               onClick={async () => {
-                // setConnectError(false);
-                // setSwitchError(false);
-                // setSwitchingNetwork(true);
-                const switchPersonalWalletChain =
-                  personalAccount.wallet.switchChain;
-                if (!switchPersonalWalletChain) {
+                if (!personalAccount.wallet.switchChain) {
                   setPersonalWalletChainSwitchStatus("switch-error");
                   throw new Error("No switchChain method");
                 }
 
                 try {
-                  await switchPersonalWalletChain(props.smartWalletChainId);
+                  setPersonalWalletChainSwitchStatus("switching");
+                  await personalAccount.wallet.switchChain(
+                    props.smartWalletChainId,
+                  );
                   setPersonalWalletChainSwitchStatus("idle");
                 } catch (e) {
+                  console.error(e);
                   setPersonalWalletChainSwitchStatus("switch-error");
                 }
               }}
