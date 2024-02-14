@@ -298,30 +298,30 @@ export class InjectedWallet implements Wallet {
           params: [messageToSign, account.address],
         });
       },
-      async signTypedData(data) {
+      async signTypedData(typedData) {
         if (!wallet.provider || !account.address) {
           throw new Error("Provider not setup");
         }
         const { domain, message, primaryType } =
-          data as unknown as SignTypedDataParameters;
+          typedData as unknown as SignTypedDataParameters;
 
         const types = {
           EIP712Domain: getTypesForEIP712Domain({ domain }),
-          ...data.types,
+          ...typedData.types,
         };
 
         // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
         // as we can't statically check this with TypeScript.
         validateTypedData({ domain, message, primaryType, types });
 
-        const typedData = stringify(
+        const stringifiedData = stringify(
           { domain: domain ?? {}, message, primaryType, types },
           (_, value) => (isHex(value) ? value.toLowerCase() : value),
         );
 
         return await wallet.provider.request({
           method: "eth_signTypedData_v4",
-          params: [account.address, typedData],
+          params: [account.address, stringifiedData],
         });
       },
 
