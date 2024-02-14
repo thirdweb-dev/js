@@ -10,6 +10,7 @@ import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
 import { randomNonce } from "./utils.js";
+import { prepareCreateAccount, prepareExecute } from "./calls.js";
 
 /**
  * Create an unsigned user operation
@@ -33,12 +34,13 @@ export async function createUnsignedUserOp(args: {
         factoryContract,
         options,
       });
-  const executeTx = prepareExecute(
+  const executeTx = prepareExecute({
     accountContract,
-    transaction.to || "", // TODO check if this works with direct deploys
-    transaction.value || 0n,
-    transaction.data || "0x",
-  );
+    options,
+    target: transaction.to || "",
+    value: transaction.value || 0n,
+    data: transaction.data || "0x",
+  });
   const callData = await encode(executeTx);
   let { maxFeePerGas, maxPriorityFeePerGas } = transaction;
   if (!maxFeePerGas || !maxPriorityFeePerGas) {
@@ -166,30 +168,11 @@ async function getAccountInitCode(args: {
   options: SmartWalletOptions;
 }): Promise<Hex> {
   const { factoryContract, options } = args;
-  const accountAddress =
-    options.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.accountExtradata || "");
-  const deployTx = prepareContractCall({
-    contract: factoryContract,
-    method: "function createAccount(address, bytes) public returns (address)",
-    params: [accountAddress, extraData],
+  const deployTx = prepareCreateAccount({
+    factoryContract,
+    options,
   });
   return concat([factoryContract.address as Hex, await encode(deployTx)]);
-}
-
-// TODO should be able to be overriden in options
-function prepareExecute(
-  accountContract: ThirdwebContract,
-  target: string,
-  value: bigint,
-  data: Hex,
-) {
-  const tx = prepareContractCall({
-    contract: accountContract,
-    method: "function execute(address, uint256, bytes)",
-    params: [target, value, data],
-  });
-  return tx;
 }
 
 /**

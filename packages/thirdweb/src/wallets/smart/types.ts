@@ -1,5 +1,6 @@
 import type { Chain } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { PreparedTransaction } from "../../index.js";
 import type { Account } from "../interfaces/wallet.js";
 import type { Address, Hex } from "viem";
 
@@ -9,10 +10,17 @@ export type SmartWalletOptions = {
   chain: Chain;
   gasless: boolean;
   factoryAddress: string; // TODO make this optional
-  accountExtradata?: string;
+  accountExtraData?: string;
   accountAddress?: string;
   entrypointAddress?: string;
   bundlerUrl?: string;
+  predictAddressOverride?: () => Promise<string>;
+  createAccountOverride?: () => PreparedTransaction;
+  executeOverride?: (
+    target: string,
+    value: bigint,
+    data: string,
+  ) => PreparedTransaction;
 };
 
 export type UserOperationStruct = {

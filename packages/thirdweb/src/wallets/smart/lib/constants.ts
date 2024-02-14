@@ -61,3 +61,25 @@ export const USER_OP_EVENT_ABI = {
   ],
   anonymous: false,
 } as const;
+
+export const USER_OP_REVERT_REASON_EVENT_ABI = {
+  type: "event",
+  name: "UserOperationRevertReason",
+  inputs: [
+    {
+      name: "userOpHash",
+      type: "bytes32",
+      indexed: true,
+      internalType: "bytes32",
+    },
+    { name: "sender", type: "address", indexed: true, internalType: "address" },
+    { name: "nonce", type: "uint256", indexed: false, internalType: "uint256" },
+    {
+      name: "revertReason",
+      type: "bytes",
+      indexed: false,
+      internalType: "bytes",
+    },
+  ],
+  anonymous: false,
+} as const;

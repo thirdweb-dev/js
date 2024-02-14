@@ -3,7 +3,11 @@ import type { Chain } from "../../../chain/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
 import { getEvents, prepareEvent } from "../../../event/index.js";
-import { ENTRYPOINT_ADDRESS, USER_OP_EVENT_ABI } from "./constants.js";
+import {
+  ENTRYPOINT_ADDRESS,
+  USER_OP_EVENT_ABI,
+  USER_OP_REVERT_REASON_EVENT_ABI,
+} from "./constants.js";
 
 /**
  * @internal
@@ -39,7 +43,7 @@ export async function getUserOpEventFromEntrypoint(args: {
   if ((event?.args as any)?.success === false) {
     const revertOpEvent = prepareEvent({
       contract: entryPointContract,
-      event: "UserOperationRevertReason",
+      event: USER_OP_REVERT_REASON_EVENT_ABI,
     });
     const revertEvent = await getEvents({
       contract: entryPointContract,

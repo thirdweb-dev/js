@@ -36,7 +36,8 @@ export function smartWallet(options: SmartWalletOptions): Wallet {
       return smartAccount(wallet, options);
     },
     async autoConnect(): Promise<Account> {
-      throw new Error("Method not implemented.");
+      // TODO autoconnect personal account too
+      return smartAccount(wallet, options);
     },
     async disconnect(): Promise<void> {
       // TODO
@@ -54,7 +55,9 @@ async function smartAccount(
     address: options.factoryAddress,
     chain: options.chain,
   });
-  const accountAddress = await predictAddress(factoryContract, options);
+  const accountAddress = options.predictAddressOverride
+    ? await options.predictAddressOverride()
+    : await predictAddress(factoryContract, options);
   const accountContract = getContract({
     client: options.client,
     address: accountAddress,
@@ -83,7 +86,7 @@ async function smartAccount(
       };
     },
     async estimateGas() {
-      // TODO break down the process so estimate gas does the userOp estimation without doing double work
+      // estimation is done in createUnsignedUserOp
       return 0n;
     },
     async signMessage({ message }) {
@@ -95,19 +98,4 @@ async function smartAccount(
       return options.personalAccount.signTypedData(typedData);
     },
   };
-}
-
-// TODO ppl should be able to override this
-async function predictAddress(
-  factoryContract: ThirdwebContract,
-  options: SmartWalletOptions,
-): Promise<string> {
-  const accountAddress =
-    options.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.accountExtradata || "");
-  return readContract({
-    contract: factoryContract,
-    method: "function getAddress(address, bytes) returns (address)",
-    params: [accountAddress, extraData],
-  });
 }
