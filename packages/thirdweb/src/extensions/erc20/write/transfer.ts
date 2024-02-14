@@ -30,7 +30,7 @@ export type TransferParams = { to: string } & (
  */
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return prepareContractCall({
-    ...options,
+    contract: options.contract,
     method: "function transfer(address to, uint256 value)",
     params: async () => {
       let amount: bigint;

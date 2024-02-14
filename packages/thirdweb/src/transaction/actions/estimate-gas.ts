@@ -29,6 +29,7 @@ export async function estimateGas(
   options: EstimateGasOptions,
 ): Promise<EstimateGasResult> {
   if (cache.has(options.transaction)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return cache.get(options.transaction)!;
   }
   const promise = (async () => {
@@ -38,21 +39,17 @@ export async function estimateGas(
       return predefinedGas;
     }
 
+    // if the account itself overrides the estimateGas function, use that
+    if (options.account && options.account.estimateGas) {
+      return await options.account.estimateGas(options.transaction);
+    }
+
     // load up encode function if we need it
     const { encode } = await import("./encode.js");
     const [encodedData, toAddress] = await Promise.all([
       encode(options.transaction),
       resolvePromisedValue(options.transaction.to),
     ]);
-
-    // if the account itself overrides the estimateGas function, use that
-    if (
-      options.account &&
-      options.account.wallet &&
-      options.account.wallet.estimateGas
-    ) {
-      return await options.account.wallet.estimateGas(options.transaction);
-    }
 
     // load up the rpc client and the estimateGas function if we need it
     const [{ getRpcClient }, { eth_estimateGas }] = await Promise.all([

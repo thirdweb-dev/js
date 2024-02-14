@@ -26,7 +26,6 @@ export type Wallet = {
 
   // OPTIONAL
   chainId?: bigint;
-  estimateGas?: (transaction: PreparedTransaction) => Promise<bigint>;
 
   events?: {
     addListener: WalletEventListener;
@@ -53,6 +52,7 @@ export type Account = {
 
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
 
   // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
   /**
