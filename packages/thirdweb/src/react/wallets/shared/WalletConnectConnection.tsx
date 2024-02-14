@@ -74,8 +74,8 @@ export const WalletConnectConnection: React.FC<{
         onSessionRequestSent,
         optionalChains,
       })
-      .then((account) => {
-        done(account);
+      .then(() => {
+        done(wallet);
       })
       .catch((e) => {
         setErrorConnecting(true);

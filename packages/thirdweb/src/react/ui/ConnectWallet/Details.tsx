@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import {
   useActiveAccount,
+  useActiveWallet,
   useActiveWalletChainId,
   useConnect,
   useDisconnect,
@@ -47,9 +48,9 @@ import type {
 } from "./ConnectWalletProps.js";
 import {
   smartWalletMetadata,
-  type Account,
-  type WalletWithPersonalAccount,
-  personalAccountToSmartAccountMap,
+  type Wallet,
+  type WalletWithPersonalWallet,
+  personalWalletToSmartAccountMap,
 } from "../../../wallets/index.js";
 import { connectionManager } from "../../connectionManager.js";
 // import { walletIds } from "../../../wallets/walletIds.js";
@@ -80,6 +81,7 @@ export const ConnectedWalletDetails: React.FC<{
   chains: bigint[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
+  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChainId = useActiveWalletChainId();
   const chainQuery = useChainQuery(walletChainId);
@@ -117,14 +119,14 @@ export const ConnectedWalletDetails: React.FC<{
 
   // const sdk = useSDK();
 
-  const personalAccount = (activeAccount?.wallet as WalletWithPersonalAccount)
-    ?.personalAccount;
+  const personalWallet = (activeWallet as WalletWithPersonalWallet)
+    ?.personalWallet;
 
-  const smartAccount = activeAccount
-    ? personalAccountToSmartAccountMap.get(activeAccount)
+  const smartWallet = activeWallet
+    ? personalWalletToSmartAccountMap.get(activeWallet)
     : undefined;
 
-  const disableSwitchChain = !activeAccount?.wallet.switchChain;
+  const disableSwitchChain = !activeWallet?.switchChain;
 
   // const disableSwitchChain = !!personalWallet;
 
@@ -178,9 +180,9 @@ export const ConnectedWalletDetails: React.FC<{
   // const walletIconUrl =
   //   overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
   // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
-  let avatarOrWalletIconUrl = activeAccount?.wallet.metadata.iconUrl || "";
+  let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
 
-  if (activeAccount && "isSmartWallet" in activeAccount.wallet) {
+  if (activeWallet && "isSmartWallet" in activeWallet) {
     avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   }
 
@@ -209,7 +211,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeAccount?.wallet.metadata.id === LocalWalletId ? (
+        {activeWallet?.metadata.id === LocalWalletId ? (
           <Text
             color="danger"
             size="xs"
@@ -411,17 +413,17 @@ export const ConnectedWalletDetails: React.FC<{
           {networkSwitcherButton}
 
           {/* Switch to Personal Wallet  */}
-          {personalAccount &&
+          {personalWallet &&
             !props.detailsModal?.hideSwitchToPersonalWallet && (
               <AccountSwitcher
-                account={personalAccount}
+                wallet={personalWallet}
                 name={locale.personalWallet}
               />
             )}
 
           {/* Switch to Smart Wallet */}
-          {smartAccount && (
-            <AccountSwitcher name={locale.smartWallet} account={smartAccount} />
+          {smartWallet && (
+            <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )}
 
           {/* Switch Account for Metamask */}
@@ -531,8 +533,8 @@ export const ConnectedWalletDetails: React.FC<{
               data-variant="danger"
               type="button"
               onClick={() => {
-                if (activeAccount) {
-                  disconnect(activeAccount);
+                if (activeWallet) {
+                  disconnect(activeWallet);
                   props.onDisconnect();
                 }
               }}
@@ -713,28 +715,21 @@ export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   };
 });
 
-function AccountSwitcher({
-  account,
-  name,
-}: {
-  account: Account;
-  name: string;
-}) {
+function AccountSwitcher(props: { wallet: Wallet; name: string }) {
   const { connect } = useConnect();
   const locale = useTWLocale().connectWallet;
-  const currentActiveAccount = useActiveAccount();
-  const removeConnectedAccount = connectionManager.removeConnectedAccount;
+  const activeWallet = useActiveWallet();
 
   return (
     <MenuButton
       type="button"
       onClick={() => {
         // remove the current active account as "connected"
-        if (currentActiveAccount) {
-          removeConnectedAccount(currentActiveAccount);
+        if (activeWallet) {
+          connectionManager.removeConnectedWallet(activeWallet);
         }
         // set as connected and active
-        connect(account);
+        connect(props.wallet);
       }}
       style={{
         fontSize: fontSize.sm,
@@ -742,7 +737,7 @@ function AccountSwitcher({
     >
       <EnterIcon width={iconSize.md} height={iconSize.md} />
       <Text color="primaryText">
-        {locale.switchTo} {name}
+        {locale.switchTo} {props.name}
       </Text>
     </MenuButton>
   );
@@ -759,11 +754,10 @@ const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
 });
 
 function ConnectedToSmartWallet() {
-  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
   const chainId = useActiveWalletChainId();
   const locale = useTWLocale().connectWallet;
-  const isSmartWallet =
-    activeAccount && "isSmartWallet" in activeAccount.wallet;
+  const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
   const [isSmartWalletDeployed] = useState(false);
 
@@ -784,14 +778,14 @@ function ConnectedToSmartWallet() {
     </Container>
   );
 
-  if (chainId && activeAccount && isSmartWallet) {
+  if (chainId && activeWallet?.account && isSmartWallet) {
     return (
       <>
         {isSmartWalletDeployed ? (
           <Link
             color="secondaryText"
             hoverColor="primaryText"
-            href={`https://thirdweb.com/${chainId}/${activeAccount.address}/account`}
+            href={`https://thirdweb.com/${chainId}/${activeWallet.account.address}/account`}
             target="_blank"
             size="sm"
           >

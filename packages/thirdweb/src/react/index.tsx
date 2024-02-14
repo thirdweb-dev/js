@@ -25,12 +25,13 @@ export {
 } from "./providers/thirdweb-provider.js";
 
 export {
-  useSetActiveAccount,
+  useSetActiveWallet,
   useActiveWalletChainId,
   useConnect,
   useDisconnect,
   useActiveAccount,
-  useConnectedAccounts,
+  useActiveWallet,
+  useConnectedWallets,
   useSwitchActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSetActiveWalletConnectionStatus,

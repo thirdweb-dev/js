@@ -62,6 +62,7 @@ export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
   chainId: Wallet["chainId"];
   events: Wallet["events"];
+  account?: Account | undefined;
 
   // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
   private options?: InjectedWalletOptions;
@@ -326,9 +327,9 @@ export class InjectedWallet implements Wallet {
           params: [account.address, stringifiedData],
         });
       },
-
-      wallet,
     };
+
+    this.account = account;
 
     return account;
   }
@@ -352,6 +353,7 @@ export class InjectedWallet implements Wallet {
       this.provider.removeListener("chainChanged", this.onChainChanged);
     }
 
+    this.account = undefined;
     this.chainId = undefined;
   };
 

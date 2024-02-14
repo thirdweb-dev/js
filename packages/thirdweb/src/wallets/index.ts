@@ -1,7 +1,7 @@
 export type {
   Wallet,
   Account,
-  WalletWithPersonalAccount,
+  WalletWithPersonalWallet,
 } from "./interfaces/wallet.js";
 export type { WalletEventListener } from "./interfaces/listeners.js";
 export type { WalletMetadata } from "./types.js";
@@ -17,7 +17,7 @@ export {
 // private-key
 export {
   privateKeyAccount,
-  type PrivateKeyAccountOptions as PrivateKeyWalletOptions,
+  type PrivateKeyAccountOptions,
 } from "./private-key.js";
 
 // injected
@@ -69,7 +69,7 @@ export {
   smartWallet,
   SmartWallet,
   smartWalletMetadata,
-  personalAccountToSmartAccountMap,
+  personalWalletToSmartAccountMap,
 } from "./smart/index.js";
 export type { SmartWalletOptions } from "./smart/types.js";
 
@@ -80,3 +80,8 @@ export {
   deleteConnectParamsFromStorage,
 } from "./manager/storage.js";
 export type { WithPersonalWalletConnectionOptions } from "./manager/storage.js";
+
+export {
+  getStoredActiveWalletId,
+  getStoredConnectedWalletIds,
+} from "./manager/index.js";

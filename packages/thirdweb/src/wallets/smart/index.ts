@@ -2,7 +2,7 @@ import type {
   Account,
   SendTransactionOption,
   Wallet,
-  WalletWithPersonalAccount,
+  WalletWithPersonalWallet,
 } from "../interfaces/wallet.js";
 import type {
   SmartWalletConnectionOptions,
@@ -48,17 +48,18 @@ export const smartWalletMetadata = {
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
  * @internal
  */
-export const personalAccountToSmartAccountMap = new WeakMap<Account, Account>();
+export const personalWalletToSmartAccountMap = new WeakMap<Wallet, Wallet>();
 
 /**
  *
  */
-export class SmartWallet implements WalletWithPersonalAccount {
+export class SmartWallet implements WalletWithPersonalWallet {
   private options: SmartWalletOptions;
-  personalAccount: Account | undefined;
+  personalWallet: Wallet | undefined;
   metadata: Wallet["metadata"];
   chainId?: bigint | undefined;
   isSmartWallet: true;
+  account?: Account | undefined;
 
   /**
    * Create an instance of the SmartWallet.
@@ -91,7 +92,12 @@ export class SmartWallet implements WalletWithPersonalAccount {
   ): Promise<Account> {
     const chainId = getChainIdFromChain(this.options.chain);
 
-    const personalWallet = connectionOptions.personalAccount.wallet;
+    const { personalWallet } = connectionOptions;
+
+    if (!personalWallet.account) {
+      throw new Error("Personal wallet does not have an account");
+    }
+
     if (personalWallet.chainId !== chainId) {
       throw new Error(
         "Personal account's wallet is on a different chain than the smart wallet.",
@@ -104,20 +110,16 @@ export class SmartWallet implements WalletWithPersonalAccount {
 
     saveConnectParamsToStorage(this.metadata.id, paramsToSave);
 
-    this.personalAccount = connectionOptions.personalAccount;
-
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
 
-    const account = await smartAccount(this, {
+    const account = await smartAccount({
       ...this.options,
-      ...connectionOptions,
+      personalAccount: personalWallet.account,
     });
 
-    personalAccountToSmartAccountMap.set(
-      connectionOptions.personalAccount,
-      account,
-    );
-
+    personalWalletToSmartAccountMap.set(connectionOptions.personalWallet, this);
+    this.personalWallet = personalWallet;
+    this.account = account;
     return account;
   }
 
@@ -146,14 +148,14 @@ export class SmartWallet implements WalletWithPersonalAccount {
    * ```
    */
   async disconnect(): Promise<void> {
-    this.personalAccount?.wallet.disconnect();
+    this.personalWallet?.disconnect();
+    this.personalWallet = undefined;
+    this.account = undefined;
+    this.chainId = undefined;
   }
-
-  // TODO: add isDeployed
 }
 
 async function smartAccount(
-  wallet: WalletWithPersonalAccount,
   options: SmartWalletOptions & { personalAccount: Account },
 ): Promise<Account> {
   const factoryContract = getContract({
@@ -169,7 +171,6 @@ async function smartAccount(
   });
 
   return {
-    wallet,
     address: accountAddress,
     async sendTransaction(tx: SendTransactionOption) {
       const unsignedUserOp = await createUnsignedUserOp({

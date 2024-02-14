@@ -8,7 +8,9 @@ import {
 } from "../../providers/wallet-provider.js";
 import {
   getSavedConnectParamsFromStorage,
-  type WalletWithPersonalAccount,
+  getStoredActiveWalletId,
+  getStoredConnectedWalletIds,
+  type WalletWithPersonalWallet,
   type WithPersonalWalletConnectionOptions,
 } from "../../../wallets/index.js";
 
@@ -34,8 +36,8 @@ export function AutoConnect() {
 
     const fn = async () => {
       const [lastConnectedWalletIds, lastActiveWalletId] = await Promise.all([
-        connectionManager.getStoredConnectedWalletIds(),
-        connectionManager.getStoredActiveWalletId(),
+        getStoredConnectedWalletIds(),
+        getStoredActiveWalletId(),
       ]);
 
       // if no wallets were last connected
@@ -72,20 +74,20 @@ export function AutoConnect() {
             dappMetadata,
           });
 
-          const personalAccount = await personalWallet.autoConnect();
+          await personalWallet.autoConnect();
 
           // create wallet
           const wallet = walletConfig.create({
             client,
             dappMetadata,
-          }) as WalletWithPersonalAccount;
+          }) as WalletWithPersonalWallet;
 
           // auto connect the wallet using the personal account
-          const account = await wallet.autoConnect({
-            personalAccount,
+          await wallet.autoConnect({
+            personalWallet,
           });
 
-          return account;
+          return wallet;
         }
 
         // if this wallet does not require a personal wallet to be connected
@@ -94,8 +96,8 @@ export function AutoConnect() {
             client,
             dappMetadata,
           });
-          const account = await wallet.autoConnect();
-          return account;
+          await wallet.autoConnect();
+          return wallet;
         }
       }
 
@@ -106,9 +108,9 @@ export function AutoConnect() {
 
       if (activeWalletConfig) {
         try {
-          const account = await handleWalletConnection(activeWalletConfig);
-          if (account) {
-            connect(account);
+          const wallet = await handleWalletConnection(activeWalletConfig);
+          if (wallet) {
+            connect(wallet);
           } else {
             setConnectionStatus("disconnected");
           }
@@ -131,7 +133,7 @@ export function AutoConnect() {
       otherWallets.forEach(async (config) => {
         const account = await handleWalletConnection(config);
         if (account) {
-          connectionManager.setConnectedAccount(account);
+          connectionManager.addConnectedWallet(account);
         }
       });
     };

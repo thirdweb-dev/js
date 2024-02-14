@@ -1,7 +1,7 @@
 import type { Chain } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { PreparedTransaction, ThirdwebContract } from "../../index.js";
-import type { Account } from "../interfaces/wallet.js";
+import type { Wallet } from "../interfaces/wallet.js";
 import type { Address, Hex } from "viem";
 import type { WalletMetadata } from "../types.js";
 
@@ -29,7 +29,7 @@ export type SmartWalletOptions = {
 };
 
 export type SmartWalletConnectionOptions = {
-  personalAccount: Account;
+  personalWallet: Wallet;
 };
 
 export type UserOperation = {

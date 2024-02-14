@@ -31,11 +31,12 @@ export type Wallet = {
   };
 
   switchChain?: (newChainId: bigint | number) => Promise<void>;
+  account?: Account;
 };
 
-export interface WalletWithPersonalAccount extends Wallet {
-  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
-  personalAccount?: Account;
+export interface WalletWithPersonalWallet extends Wallet {
+  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
+  personalWallet?: Wallet;
 }
 
 export type Account = {
@@ -56,10 +57,4 @@ export type Account = {
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
-
-  // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
-  /**
-   * The wallet that the account belongs to
-   */
-  wallet: Wallet;
 };
