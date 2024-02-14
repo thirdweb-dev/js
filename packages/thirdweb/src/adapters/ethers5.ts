@@ -1,9 +1,7 @@
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
-
 import type { Abi } from "abitype";
-
 import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import { getRpcUrlForChain, type Chain } from "../chain/index.js";
@@ -195,7 +193,6 @@ async function fromEthersContract<abi extends Abi>(
  */
 async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
   const address = await signer.getAddress();
-  const chainId = await signer.provider?.getNetwork().then((n) => n.chainId);
   const account: Account = {
     address,
     signMessage: async ({ message }) => {
@@ -212,27 +209,12 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
         transactionHash: result.hash as Hex,
       };
     },
-    wallet: {
-      metadata: {
-        id: "ethers-5-wallet",
-        iconUrl: "", // TODO
-        name: "Ethers 5 Wallet",
-      },
-      autoConnect: async () => account,
-      connect: async () => account,
-      disconnect: async () => {},
-      chainId: chainId ? BigInt(chainId) : undefined,
-      switchChain: async () => {
-        // TODO
-      },
-      events: {
-        addListener(events, listener) {
-          signer.provider?.on(events, listener);
-        },
-        removeListener(events, listener) {
-          signer.provider?.off(events, listener);
-        },
-      },
+    signTypedData: async (data) => {
+      return (await (signer as ethers5.providers.JsonRpcSigner)._signTypedData(
+        data.domain as ethers5.TypedDataDomain,
+        data.types as Record<string, ethers5.TypedDataField[]>,
+        data.message as Record<string, any>,
+      )) as Hex;
     },
   };
   return account;

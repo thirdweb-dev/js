@@ -37,7 +37,7 @@ export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   ];
   return {
     name,
-    abi: metadata.output.abi,
+    abi: metadata?.output?.abi || [],
     metadata,
     info,
     licenses,

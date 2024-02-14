@@ -1,17 +1,20 @@
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import { parseUnits } from "../../../utils/units.js";
 
-type MintToParams = { to: string } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountGwei: bigint;
-    }
-);
+export type MintToParams = Prettify<
+  { to: string } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Mints a specified amount of tokens to a given address.
@@ -28,8 +31,8 @@ type MintToParams = { to: string } & (
  * });
  * ```
  */
-export function mintTo(options: TxOpts<MintToParams>) {
-  return prepareTransaction({
+export function mintTo(options: BaseTransactionOptions<MintToParams>) {
+  return prepareContractCall({
     ...options,
     method: "function mintTo(address to, uint256 amount)",
     params: async () => {
@@ -42,7 +45,7 @@ export function mintTo(options: TxOpts<MintToParams>) {
         // turn ether into gwei
         amount = parseUnits(options.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = options.amountWei;
       }
       return [options.to, amount] as const;
     },

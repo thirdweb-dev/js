@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type TotalSupplyParams = { tokenId: bigint };
 
@@ -15,7 +17,7 @@ export type TotalSupplyParams = { tokenId: bigint };
  * ```
  */
 export function totalSupply(
-  options: TxOpts<TotalSupplyParams>,
+  options: BaseTransactionOptions<TotalSupplyParams>,
 ): Promise<bigint> {
   return readContract({
     ...options,

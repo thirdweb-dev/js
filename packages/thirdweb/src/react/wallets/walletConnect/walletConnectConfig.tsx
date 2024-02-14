@@ -95,14 +95,14 @@ const ConnectUI = (
       // TODO: fix the type in ConnectUIProps
       const wallet = createInstance() as WalletConnect;
 
-      const account = await wallet.connect({
+      await wallet.connect({
         chainId: chainId,
         showQrModal: true,
         qrModalOptions: props.wcConfig.qrModalOptions,
         optionalChains: props.chains,
       });
 
-      done(account);
+      done(wallet);
       setModalVisibility(true);
     } catch {
       setModalVisibility(true);
@@ -195,8 +195,8 @@ function WalletConnectQRScanConnect(
         optionalChains: chains,
         showQrModal: false,
       })
-      .then((account) => {
-        done(account);
+      .then(() => {
+        done(wallet);
       });
   }, [chainId, chains, createInstance, done, setQrCodeUri]);
 

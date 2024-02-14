@@ -1,7 +1,12 @@
-import type { Chain } from "../../chain/index.js";
+import { getChainIdFromChain, type Chain } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { eth_sendRawTransaction } from "../../rpc/index.js";
 import { getRpcClient } from "../../rpc/rpc.js";
+
+// it's OK to cache this forever because:
+// 1. the results can't change
+// 2. the total size can be max <number of chains> * boolean
+const EIP_ENFORCED_CACHE = new Map<bigint, boolean>();
 
 type IsEIP155EnforcedOptions = {
   chain: Chain;
@@ -22,6 +27,12 @@ type IsEIP155EnforcedOptions = {
 export async function isEIP155Enforced(
   options: IsEIP155EnforcedOptions,
 ): Promise<boolean> {
+  const chainId = getChainIdFromChain(options.chain);
+  // cache because the result cannot change
+  if (EIP_ENFORCED_CACHE.has(chainId)) {
+    return EIP_ENFORCED_CACHE.get(chainId) as boolean;
+  }
+  let result = false;
   try {
     // TODO: Find a better way to check this.
 
@@ -37,11 +48,11 @@ export async function isEIP155Enforced(
     const errorJson = JSON.stringify(e).toLowerCase();
 
     if (matchError(errorMsg) || matchError(errorJson)) {
-      return true;
+      result = true;
     }
-    return false;
   }
-  return false;
+  EIP_ENFORCED_CACHE.set(chainId, result);
+  return result;
 }
 
 const ERROR_SUBSTRINGS_COMPOSITE = [

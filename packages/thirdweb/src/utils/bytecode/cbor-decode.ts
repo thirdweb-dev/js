@@ -27,7 +27,6 @@ const currentExtensions = [];
 let packedValues;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let dataView;
-let restoreMapsAsObject;
 
 const defaultOptions = {
   useRecords: false,
@@ -157,6 +156,10 @@ function read() {
     }
   }
   switch (majorType) {
+    case 0: // positive int
+      return token;
+    case 1: // negative int
+      return ~token;
     case 2: // buffer
       return readBin(token);
     case 3: // string
@@ -175,38 +178,19 @@ function read() {
         }
       }
       return readFixedString(token);
+    case 4: // array
+      const array = new Array(token);
+      for (let i = 0; i < token; i++) {
+        array[i] = read();
+      }
+      return array;
 
     case 5: // map
-      if (currentDecoder.mapsAsObjects) {
-        const object = {};
-        if (currentDecoder.keyMap) {
-          for (let i = 0; i < token; i++) {
-            object[safeKey(currentDecoder.decodeKey(read()))] = read();
-          }
-        } else {
-          for (let i = 0; i < token; i++) {
-            object[safeKey(read())] = read();
-          }
-        }
-        return object;
-      } else {
-        if (restoreMapsAsObject) {
-          currentDecoder.mapsAsObjects = true;
-          restoreMapsAsObject = false;
-        }
-        const map = new Map();
-        if (currentDecoder.keyMap) {
-          for (let i = 0; i < token; i++) {
-            map.set(currentDecoder.decodeKey(read()), read());
-          }
-        } else {
-          for (let i = 0; i < token; i++) {
-            map.set(read(), read());
-          }
-        }
-        return map;
+      const object = {};
+      for (let i = 0; i < token; i++) {
+        object[safeKey(read())] = read();
       }
-
+      return object;
     default: // negative int
       if (isNaN(token)) {
         const error = new Error("Unexpected end of CBOR data");

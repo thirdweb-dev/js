@@ -31,6 +31,8 @@ import { useTWLocale } from "../../evm/providers/locale-provider";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { StyledButton, StyledUl } from "../../design-system/elements";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import { PoweredByThirdweb } from "./PoweredByTW";
+import { useScreenContext } from "./Modal/screen";
 
 type WalletSelectUIProps = {
   connect: (
@@ -429,7 +431,14 @@ export const WalletSelector: React.FC<{
         {topSection}
       </Container>
 
-      {bottomSection}
+      <div>
+        {bottomSection}
+        {isCompact && modalConfig.showThirdwebBranding !== false && (
+          <Container py="md">
+            <PoweredByThirdweb />
+          </Container>
+        )}
+      </div>
     </Container>
   );
 };
@@ -499,12 +508,15 @@ export function WalletEntryButton(props: {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
   const locale = useTWLocale().connectWallet;
+  const { screen } = useScreenContext();
+
   return (
     <WalletButton
       type="button"
       onClick={() => {
         selectWallet();
       }}
+      data-active={screen === props.walletConfig}
     >
       <Img
         src={walletConfig.meta.iconURL}
@@ -564,6 +576,9 @@ const WalletButton = /* @__PURE__ */ StyledButton(() => {
     "&:hover": {
       backgroundColor: theme.colors.walletSelectorButtonHoverBg,
       transform: "scale(1.01)",
+    },
+    '&[data-active="true"]': {
+      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
     },
     transition: "background-color 200ms ease, transform 200ms ease",
   };

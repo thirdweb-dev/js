@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 /**
  * Retrieves the next token ID to be minted in an ERC721 contract.
@@ -12,7 +14,9 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * const nextTokenId = await nextTokenIdToMint({ contract });
  * ```
  */
-export function nextTokenIdToMint(options: TxOpts): Promise<bigint> {
+export function nextTokenIdToMint(
+  options: BaseTransactionOptions,
+): Promise<bigint> {
   return readContract({
     ...options,
     method: "function nextTokenIdToMint() view returns (uint256)",

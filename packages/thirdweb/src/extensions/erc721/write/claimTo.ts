@@ -1,8 +1,8 @@
 import type { Address } from "abitype";
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 const CLAIM_ABI = {
   inputs: [
@@ -78,8 +78,8 @@ export type ClaimToParams = {
  * @internal
  */
 // TODO: finish implementing this
-export function claimTo(options: TxOpts<ClaimToParams>) {
-  return prepareTransaction({
+export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
+  return prepareContractCall({
     contract: options.contract,
     method: CLAIM_ABI,
     params: async () => {

@@ -1,6 +1,7 @@
 import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails } from "./Details";
 import {
+  WalletInstance,
   useAddress,
   useConnectionStatus,
   useLogout,
@@ -313,12 +314,12 @@ export type ConnectWalletProps = {
   hideDisconnect?: boolean;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The connected wallet instance is passed as an argument to the callback
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -336,7 +337,7 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
 
   /**
    * Render custom UI at the bottom of the ConnectWallet Details Modal
@@ -352,6 +353,18 @@ export type ConnectWalletProps = {
    * ```
    */
   detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+
+  /**
+   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   *
+   * If you want to hide the branding, set this prop to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet showThirdwebBranding={false} />
+   *```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -588,6 +601,16 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *  })
  * />
  * ```
+ *
+ *
+ * ### showThirdwebBranding
+ * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+ *
+ * If you want to hide the branding, set this prop to `false`
+ *
+ * ```tsx
+ * <ConnectWallet showThirdwebBranding={false} />
+ *```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -707,6 +730,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
                   onConnect: props.onConnect,
+                  showThirdwebBranding: props.showThirdwebBranding,
                 });
                 setIsWalletModalOpen(true);
               }}

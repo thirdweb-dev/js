@@ -5,23 +5,19 @@ import {
   useQueryClient,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { ContractEvent, EventLog } from "../../../event/event.js";
 import {
-  watchEvents,
+  watchContractEvents,
   type WatchContractEventsOptions,
 } from "../../../event/actions/watch-events.js";
 import { getChainIdFromChain } from "../../../chain/index.js";
 import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
-import { getEvents } from "../../../event/actions/get-events.js";
+import { getContractEvents } from "../../../event/actions/get-events.js";
+import type { ParseEventLogsResult } from "../../../event/index.js";
 
 export type UseContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-  contractEvents extends ContractEvent<abiEvent>[],
-> = Omit<
-  WatchContractEventsOptions<abi, abiEvent, contractEvents>,
-  "onLogs"
-> & {
+> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onLogs"> & {
   limit?: number;
   enabled?: boolean;
   watch?: boolean;
@@ -40,10 +36,9 @@ export type UseContractEventsOptions<
 export function useContractEvents<
   const abi extends Abi,
   const abiEvent extends AbiEvent,
-  const contractEvents extends ContractEvent<abiEvent>[],
 >(
-  options: UseContractEventsOptions<abi, abiEvent, contractEvents>,
-): UseQueryResult<EventLog<AbiEvent>[], Error> {
+  options: UseContractEventsOptions<abi, abiEvent>,
+): UseQueryResult<ParseEventLogsResult<abiEvent, true>, Error> {
   const {
     contract,
     events,
@@ -57,10 +52,8 @@ export function useContractEvents<
   const eventsKey = useMemo(
     () =>
       events?.reduce((acc, curr) => {
-        if (typeof curr.event === "string") {
-          return acc + curr.event + "_";
-        }
-        return acc + curr.event.name + "_";
+        // we can use the event hash as a unique identifier?
+        return acc + `${curr.hash}_`;
       }, "") || "__all__",
     [events],
   );
@@ -82,13 +75,7 @@ export function useContractEvents<
     queryFn: async () => {
       const rpcRequest = getRpcClient(contract);
       const currentBlockNumber = await eth_blockNumber(rpcRequest);
-      const initialEvents = await getEvents<
-        abi,
-        abiEvent,
-        contractEvents,
-        bigint,
-        bigint
-      >({
+      const initialEvents = await getContractEvents({
         contract,
         events: events,
         toBlock: currentBlockNumber,
@@ -110,11 +97,11 @@ export function useContractEvents<
       return;
     }
     // the return is important here because it will unwatch the events
-    return watchEvents<abi, abiEvent, contractEvents>({
+    return watchContractEvents<abi, abiEvent>({
       contract,
-      onLogs: (logs) => {
-        queryClient.setQueryData(queryKey, (oldLogs: any = []) => {
-          const newLogs = [...oldLogs, ...logs];
+      onEvents: (newEvents) => {
+        queryClient.setQueryData(queryKey, (oldEvents: any = []) => {
+          const newLogs = [...oldEvents, ...newEvents];
           // take the last events from the new logs (based on "limit")
           return newLogs.slice(-limit);
         });

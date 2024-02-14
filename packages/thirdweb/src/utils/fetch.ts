@@ -41,21 +41,18 @@ export function getClientFetch(client: ThirdwebClient) {
       });
     }
 
-    let abortController: AbortController | undefined;
+    const controller = new AbortController();
     let abortTimeout: ReturnType<typeof setTimeout> | undefined;
     if (requestTimeoutMs) {
-      abortController = new AbortController();
-      abortTimeout = setTimeout(abortController.abort, requestTimeoutMs);
+      abortTimeout = setTimeout(() => controller.abort(), requestTimeoutMs);
     }
 
     return fetch(url, {
       ...restInit,
       headers,
-      signal: abortController?.signal,
+      signal: controller?.signal,
     }).finally(() => {
-      if (abortTimeout) {
-        clearTimeout(abortTimeout);
-      }
+      clearTimeout(abortTimeout);
     });
   }
   FETCH_CACHE.set(client, fetchWithHeaders);

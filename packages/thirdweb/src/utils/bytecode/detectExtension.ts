@@ -2,7 +2,7 @@ import type { AbiFunction } from "abitype";
 
 import { getFunctionSelector } from "../../abi/lib/getFunctionSelector.js";
 import { type ThirdwebContract } from "../../contract/contract.js";
-import { getByteCode } from "../../contract/actions/get-bytecode.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
 export type DetectExtensionOptions = {
   contract: ThirdwebContract;
@@ -25,7 +25,7 @@ export type DetectExtensionOptions = {
 export async function detectMethod(
   options: DetectExtensionOptions,
 ): Promise<boolean> {
-  const bytecode = await getByteCode(options.contract);
+  const bytecode = await getBytecode(options.contract);
   return detectMethodInBytecode({ bytecode, method: options.method });
 }
 

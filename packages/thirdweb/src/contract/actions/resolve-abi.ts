@@ -1,12 +1,10 @@
-import { formatAbi, type Abi, parseAbi } from "abitype";
+import { type Abi, parseAbi, formatAbi } from "abitype";
 import type { ThirdwebContract } from "../index.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getByteCode } from "./get-bytecode.js";
+import { getBytecode } from "./get-bytecode.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
-import { detectMethodInBytecode } from "../../utils/bytecode/detectExtension.js";
-import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -20,9 +18,9 @@ const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveContractAbi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -48,7 +46,7 @@ export function resolveContractAbi<abi extends Abi>(
       return await resolveAbiFromContractApi(contract, contractApiBaseUrl);
     } catch (e) {
       // if that fails, try to resolve it from the bytecode
-      return await resolveCompositeAbiFromBytecode(contract);
+      return await resolveCompositeAbi(contract as ThirdwebContract<any>);
     }
   })();
   ABI_RESOLUTION_CACHE.set(contract, prom);
@@ -62,9 +60,9 @@ export function resolveContractAbi<abi extends Abi>(
  * @returns A promise that resolves to the ABI of the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromContractApi } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -92,9 +90,9 @@ export async function resolveAbiFromContractApi(
  * @throws Error if no IPFS URI is found in the bytecode.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -106,15 +104,21 @@ export async function resolveAbiFromContractApi(
 export async function resolveAbiFromBytecode(
   contract: ThirdwebContract<any>,
 ): Promise<Abi> {
-  const bytecode = await getByteCode(contract);
+  const bytecode = await getBytecode(contract);
   const ipfsUri = extractIPFSUri(bytecode);
   if (!ipfsUri) {
-    throw new Error("No IPFS URI found in bytecode");
+    // just early exit if we can't find an IPFS URI
+    return [];
   }
-  const res = await download({ uri: ipfsUri, client: contract.client });
-  const json = await res.json();
-  // ABI is at `json.output.abi`
-  return json.output.abi;
+  try {
+    const res = await download({ uri: ipfsUri, client: contract.client });
+    const json = await res.json();
+    // ABI is at `json.output.abi`
+    return json.output.abi;
+  } catch {
+    // if we can't resolve the ABI from the IPFS URI, return an empty array
+    return [];
+  }
 }
 
 const PLUGINS_ABI = {
@@ -233,12 +237,14 @@ const DIAMOND_ABI = {
  * If the contract follows the base router pattern, it resolves the ABIs for the plugins and merges them with the root ABI.
  * If the contract follows the diamond pattern, it resolves the ABIs for the facets and merges them with the root ABI.
  * @param contract The contract for which to resolve the ABI.
+ * @param rootAbi The root ABI to use for the contract. If not provided, it resolves the ABI from the contract's bytecode.
+ * @param resolveSubAbi A function to resolve the ABI for a sub-contract. If not provided, it uses the default ABI resolution logic.
  * @returns The resolved ABI for the contract.
  * @example
  * ```ts
- * import { createClient, getContract } from "thirdweb";
+ * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveCompositeAbiFromBytecode } from "thirdweb/contract"
- * const client = createClient({ clientId: "..." });
+ * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
@@ -247,94 +253,130 @@ const DIAMOND_ABI = {
  * const abi = await resolveCompositeAbiFromBytecode(myContract);
  * ```
  */
-export async function resolveCompositeAbiFromBytecode(
-  contract: ThirdwebContract<any>,
+export async function resolveCompositeAbi(
+  contract: ThirdwebContract,
+  rootAbi?: Abi,
+  resolveSubAbi?: (contract: ThirdwebContract) => Promise<Abi>,
 ) {
-  const [rootAbi, bytecode] = await Promise.all([
-    resolveAbiFromBytecode(contract),
-    getByteCode(contract),
+  const [
+    rootAbi_,
+    pluginPatternAddresses,
+    baseRouterAddresses,
+    diamondFacetAddresses,
+  ] = await Promise.all([
+    rootAbi ? rootAbi : resolveAbiFromBytecode(contract),
+    // check these all at the same time
+    resolvePluginPatternAddresses(contract),
+    resolveBaseRouterAddresses(contract),
+    resolveDiamondFacetAddresses(contract),
   ]);
 
-  // check if contract is plugin-pattern / dynamic
-  if (detectMethodInBytecode({ bytecode, method: PLUGINS_ABI })) {
-    try {
-      const pluginMap = await readContractRaw({
-        contract,
-        method: PLUGINS_ABI,
-      });
-      // if there are no plugins, return the root ABI
-      if (!pluginMap.length) {
-        return rootAbi;
-      }
-      // get all the plugin addresses
-      const plugins = [...new Set(pluginMap.map((item) => item.pluginAddress))];
-      // resolve all the plugin ABIs
-      const pluginAbis = await getAbisForPlugins({ contract, plugins });
-      // return the merged ABI
-      return joinAbis({ pluginAbis, rootAbi });
-    } catch (err) {
-      console.warn("[resolveCompositeAbi:dynamic] ", err);
-    }
-  }
+  const mergedPlugins = [
+    ...new Set([
+      ...pluginPatternAddresses,
+      ...baseRouterAddresses,
+      ...diamondFacetAddresses,
+    ]),
+  ];
 
-  // check for "base router" pattern
-  if (detectMethodInBytecode({ bytecode, method: BASE_ROUTER_ABI })) {
-    try {
-      const pluginMap = await readContractRaw({
-        contract,
-        method: BASE_ROUTER_ABI,
-      });
-      // if there are no plugins, return the root ABI
-      if (!pluginMap.length) {
-        return rootAbi;
-      }
-      // get all the plugin addresses
-      const plugins = [
-        ...new Set(pluginMap.map((item) => item.metadata.implementation)),
-      ];
-      // resolve all the plugin ABIs
-      const pluginAbis = await getAbisForPlugins({ contract, plugins });
-      // return the merged ABI
-      return joinAbis({ pluginAbis, rootAbi });
-    } catch (err) {
-      console.warn("[resolveCompositeAbi:base-router] ", err);
-    }
+  // no plugins
+  if (!mergedPlugins.length) {
+    return rootAbi_;
   }
+  // get all the abis for the plugins
+  const pluginAbis = await getAbisForPlugins({
+    contract,
+    plugins: mergedPlugins,
+    resolveSubAbi,
+  });
 
-  // detect diamond pattern
-  if (detectMethodInBytecode({ bytecode, method: DIAMOND_ABI })) {
-    try {
-      const facets = await readContractRaw({ contract, method: DIAMOND_ABI });
-      // if there are no facets, return the root ABI
-      if (!facets.length) {
-        return rootAbi;
-      }
-      // get all the plugin addresses
-      const plugins = facets.map((item) => item.facetAddress);
-      const pluginAbis = await getAbisForPlugins({ contract, plugins });
-      return joinAbis({ pluginAbis, rootAbi });
-    } catch (err) {
-      console.warn("[resolveCompositeAbi:diamond] ", err);
+  // join them together
+  return joinAbis({ rootAbi: rootAbi_, pluginAbis });
+}
+
+async function resolvePluginPatternAddresses(
+  contract: ThirdwebContract,
+): Promise<string[]> {
+  try {
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const pluginMap = await readContract({
+      contract,
+      method: PLUGINS_ABI,
+    });
+    // if there are no plugins, return the root ABI
+    if (!pluginMap.length) {
+      return [];
     }
+    // get all the plugin addresses
+    return [...new Set(pluginMap.map((item) => item.pluginAddress))];
+  } catch {
+    // no-op, expected because not everything supports this
   }
-  return rootAbi;
+  return [];
+}
+
+async function resolveBaseRouterAddresses(
+  contract: ThirdwebContract,
+): Promise<string[]> {
+  try {
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const pluginMap = await readContract({
+      contract,
+      method: BASE_ROUTER_ABI,
+    });
+    // if there are no plugins, return the root ABI
+    if (!pluginMap.length) {
+      return [];
+    }
+    // get all the plugin addresses
+    return [...new Set(pluginMap.map((item) => item.metadata.implementation))];
+  } catch {
+    // no-op, expected because not everything supports this
+  }
+  return [];
+}
+
+async function resolveDiamondFacetAddresses(
+  contract: ThirdwebContract,
+): Promise<string[]> {
+  try {
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const facets = await readContract({ contract, method: DIAMOND_ABI });
+    // if there are no facets, return the root ABI
+    if (!facets.length) {
+      return [];
+    }
+    // get all the plugin addresses
+    return facets.map((item) => item.facetAddress);
+  } catch {
+    // no-op, expected because not everything supports this
+  }
+  return [];
 }
 
 type GetAbisForPluginsOptions = {
   contract: ThirdwebContract<any>;
   plugins: string[];
+  resolveSubAbi?: (contract: ThirdwebContract) => Promise<Abi>;
 };
 
 async function getAbisForPlugins(
   options: GetAbisForPluginsOptions,
 ): Promise<Abi[]> {
   return Promise.all(
-    options.plugins.map((pluginAddress) =>
-      resolveAbiFromBytecode({
+    options.plugins.map((pluginAddress) => {
+      const newContract = {
         ...options.contract,
         address: pluginAddress,
-      }),
-    ),
+      };
+      // if we have a method passed in that tells us how to resove the sub-api, use that
+      if (options.resolveSubAbi) {
+        return options.resolveSubAbi(newContract);
+      } else {
+        // otherwise default logic
+        return resolveAbiFromBytecode(newContract);
+      }
+    }),
   );
 }
 
@@ -344,17 +386,19 @@ type JoinAbisOptions = {
 };
 
 function joinAbis(options: JoinAbisOptions): Abi {
-  const mergedPlugins = options.pluginAbis
+  let mergedPlugins = options.pluginAbis
     .flat()
     .filter((item) => item.type !== "constructor");
 
   if (options.rootAbi) {
-    mergedPlugins.push(...options.rootAbi);
+    mergedPlugins = [...(options.rootAbi || []), ...mergedPlugins].filter(
+      Boolean,
+    );
   }
 
   // unique by formatting every abi and then throwing them in a set
   // TODO: this may not be super efficient...
-  const humanReadableAbi = [...new Set(...formatAbi(mergedPlugins))];
+  const humanReadableAbi = [...new Set(formatAbi(mergedPlugins))];
   // finally parse it back out
   return parseAbi(humanReadableAbi);
 }

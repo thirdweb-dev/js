@@ -11,10 +11,10 @@ npm install thirdweb@alpha
 ### Hello World
 
 ```javascript
-import { createClient, getContract } from "thirdweb";
+import { createThirdwebClient, getContract } from "thirdweb";
 import { totalSupply } from "thirdweb/extensions/erc20";
 
-const client = createClient({
+const client = createThirdwebClient({
   clientId: "<my-client-id>",
 });
 

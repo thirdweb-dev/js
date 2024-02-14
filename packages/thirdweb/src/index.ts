@@ -5,60 +5,86 @@ declare module "abitype" {
   }
 }
 
-// client
+/**
+ * CLIENT
+ */
 export {
-  createClient,
-  type CreateClientOptions,
+  createThirdwebClient,
+  type CreateThirdwebClientOptions,
   type ThirdwebClient,
 } from "./client/client.js";
 
-// chain
+/**
+ * CHAIN
+ */
 export { type Chain, defineChain, getChainIdFromChain } from "./chain/index.js";
 
-// contract
+/**
+ * CONTRACT
+ */
 export {
   getContract,
   type ContractOptions,
   type ThirdwebContract,
 } from "./contract/index.js";
 
-// transactions
+/**
+ * TRANSACTIONS
+ */
 
 export {
   prepareTransaction,
-  type TransactionOptions,
-  type Transaction,
-} from "./transaction/transaction.js";
+  type PrepareTransactionOptions,
+  type PreparedTransaction,
+} from "./transaction/prepare-transaction.js";
+
+export {
+  prepareContractCall,
+  type PrepareContractCallOptions,
+} from "./transaction/prepare-contract-call.js";
+
+export {
+  readContract,
+  type ReadContractOptions,
+} from "./transaction/read-contract.js";
+
+// method resolver
+export { resolveMethod } from "./transaction/resolve-method.js";
 
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";
 export { estimateGas } from "./transaction/actions/estimate-gas.js";
-export { readContract, readTransaction } from "./transaction/actions/read.js";
 export { waitForReceipt } from "./transaction/actions/wait-for-tx-receipt.js";
 export { sendTransaction } from "./transaction/actions/send-transaction.js";
+export { simulateTransaction } from "./transaction/actions/simulate.js";
 
-// events
+/**
+ * EVENTS
+ */
 export {
   prepareEvent,
-  type ContractEventOptions,
-  type ContractEvent,
-  type EventLog,
-} from "./event/event.js";
+  type PrepareEventOptions,
+  type PreparedEvent,
+} from "./event/index.js";
 
 // event actions
 export {
-  watchEvents,
+  watchContractEvents,
   type WatchContractEventsOptions,
 } from "./event/actions/watch-events.js";
 export {
-  getEvents,
+  getContractEvents,
   type GetContractEventsOptions,
 } from "./event/actions/get-events.js";
 
-// types
+/**
+ * TYPES
+ */
 export type { NFT } from "./utils/nft/parseNft.js";
 
-// units
+/**
+ * UNITS
+ */
 export {
   formatEther,
   formatGwei,

@@ -1,16 +1,10 @@
-import type { Abi } from "abitype";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import type { TransactionReceipt } from "viem";
-import type { TransactionOrUserOpHash } from "../../../transaction/types.js";
-import type { ThirdwebContract } from "../../../contract/index.js";
 import { getChainIdFromChain } from "../../../chain/index.js";
-import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
-
-export type TransactionHashOptions<abi extends Abi> =
-  TransactionOrUserOpHash & {
-    contract: ThirdwebContract<abi>;
-    transactionHash?: string;
-  };
+import {
+  waitForReceipt,
+  type WaitForReceiptOptions,
+} from "../../../transaction/actions/wait-for-tx-receipt.js";
 
 /**
  * A hook to wait for a transaction receipt.
@@ -22,23 +16,27 @@ export type TransactionHashOptions<abi extends Abi> =
  * const { data: receipt, isLoading } = useWaitForReceipt({contract, transactionHash});
  * ```
  */
-export function useWaitForReceipt<abi extends Abi>(
-  options: TransactionHashOptions<abi> | undefined,
+export function useWaitForReceipt(
+  options: WaitForReceiptOptions | undefined,
 ): UseQueryResult<TransactionReceipt> {
   // TODO: here contract can be undfined so we go to a `-1` chain but this feels wrong
-  const chainId = getChainIdFromChain(options?.contract.chain ?? -1).toString();
+  const chainId = getChainIdFromChain(
+    options?.transaction.chain ?? -1,
+  ).toString();
   return useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ["waitForReceipt", chainId, options?.transactionHash] as const,
+    queryKey: [
+      "waitForReceipt",
+      chainId,
+      options?.transactionHash || options?.userOpHash,
+    ] as const,
     queryFn: async () => {
-      if (!options?.transactionHash) {
-        throw new Error("No transaction hash");
+      if (!options?.transactionHash && !options?.userOpHash) {
+        throw new Error("No transaction hash or user op hash provided");
       }
-      return waitForReceipt({
-        contract: options.contract,
-        transactionHash: options.transactionHash,
-      });
+      return waitForReceipt(options);
     },
-    enabled: !!options?.transactionHash,
+    enabled: !!options?.transactionHash || !!options?.userOpHash,
+    retry: false,
   });
 }

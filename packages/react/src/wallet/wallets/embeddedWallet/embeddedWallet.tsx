@@ -82,6 +82,21 @@ export const embeddedWallet = (
 
   const { auth } = finalOptions;
 
+  let name = "Email & Socials";
+
+  // if only email is enabled, show the name as "Email"
+  if (
+    finalOptions?.auth?.options.length === 1 &&
+    finalOptions.auth.options[0] === "email"
+  ) {
+    name = "Email";
+  }
+
+  // if email is not enabled, show the name as "Social Login"
+  if (finalOptions?.auth?.options.indexOf("email") === -1) {
+    name = "Social Login";
+  }
+
   return {
     category: "socialLogin",
     isHeadless: true,
@@ -89,7 +104,7 @@ export const embeddedWallet = (
     recommended: finalOptions?.recommended,
     meta: {
       ...EmbeddedWallet.meta,
-      name: "Email",
+      name,
       iconURL: emailIcon,
     },
     create(walletOptions: WalletOptions) {
@@ -123,7 +138,7 @@ const EmbeddedWalletSelectionUI: React.FC<
     authOptions: AuthOption[];
   }
 > = (props) => {
-  const screen = useScreenContext();
+  const { screen } = useScreenContext();
 
   // show the icon + text if
   // wide -

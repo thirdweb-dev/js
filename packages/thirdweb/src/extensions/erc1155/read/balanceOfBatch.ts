@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 export type BalanceOfBatchParams = {
   owners: readonly string[];
@@ -14,11 +16,11 @@ export type BalanceOfBatchParams = {
  * @example
  * ```ts
  * import { nextTokenIdToMint } from "thirdweb/extensions/erc1155";
- * const nextTokenId = await nextTokenIdToMint({ contract });
+ * const nextTokenId = await nextTokenIdToMint({ contract, owners, tokenIds });
  * ```
  */
 export function balanceOfBatch(
-  options: TxOpts<BalanceOfBatchParams>,
+  options: BaseTransactionOptions<BalanceOfBatchParams>,
 ): Promise<readonly bigint[]> {
   return readContract({
     ...options,

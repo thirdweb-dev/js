@@ -1,17 +1,20 @@
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import { parseUnits } from "../../../utils/units.js";
 
-type TransferParams = { to: string } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountGwei: bigint;
-    }
-);
+export type TransferParams = Prettify<
+  { to: string } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Transfers ERC20 tokens from the sender's address to the specified recipient address.
@@ -28,9 +31,9 @@ type TransferParams = { to: string } & (
  * });
  * ```
  */
-export function transfer(options: TxOpts<TransferParams>) {
-  return prepareTransaction({
-    ...options,
+export function transfer(options: BaseTransactionOptions<TransferParams>) {
+  return prepareContractCall({
+    contract: options.contract,
     method: "function transfer(address to, uint256 value)",
     params: async () => {
       let amount: bigint;
@@ -42,7 +45,7 @@ export function transfer(options: TxOpts<TransferParams>) {
         // turn ether into gwei
         amount = parseUnits(options.amount.toString(), d);
       } else {
-        amount = options.amountGwei;
+        amount = options.amountWei;
       }
       return [options.to, amount] as const;
     },

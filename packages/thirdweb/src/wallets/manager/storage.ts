@@ -1,5 +1,3 @@
-import type { WalletConnectionOptions } from "../interfaces/wallet.js";
-
 export type WalletStorage = {
   get: (key: string) => Promise<string | null>;
   set: (key: string, value: string) => Promise<void>;
@@ -72,7 +70,7 @@ export async function saveConnectParamsToStorage<T extends object>(
 export async function deleteConnectParamsFromStorage(walletId: string) {
   const currentValueStr = await walletStorage.get(CONNECT_PARAMS_MAP_KEY);
 
-  let value: Record<string, WalletConnectionOptions>;
+  let value: Record<string, object>;
 
   if (currentValueStr) {
     try {
@@ -120,3 +118,11 @@ function isStringifiable(value: any): boolean {
     return false;
   }
 }
+
+/**
+ * Wallet that uses a personal wallet must save the connection params to storage of this type
+ */
+export type WithPersonalWalletConnectionOptions = {
+  // last connected personal wallet's id
+  personalWalletId: string;
+};

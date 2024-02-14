@@ -109,7 +109,7 @@ export async function verifyContract(
   const encodedArgs = options.encodedConstructorArgs
     ? options.encodedConstructorArgs
     : await fetchConstructorParams({
-        abi: compilerMetadata.metadata.output.abi,
+        abi: compilerMetadata?.metadata?.output?.abi || [],
         contract: options.contract,
         explorerApiUrl: options.explorerApiUrl,
         explorerApiKey: options.explorerApiKey,

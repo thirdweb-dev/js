@@ -1,5 +1,5 @@
 import { toHex } from "viem";
-import { isBase64JSON, parseBase64String } from "./base64.js";
+import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
 
 const FALLBACK_METADATA = {

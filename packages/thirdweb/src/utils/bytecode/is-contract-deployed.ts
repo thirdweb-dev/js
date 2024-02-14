@@ -1,5 +1,10 @@
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { getByteCode } from "../../contract/actions/get-bytecode.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
+
+// we use a weak set to cache *if* a contract *is* deployed
+// aka: we add it to this set if it's deployed, and only if it is deployed
+// instead of using a map with: true only (because we only want to cache if it's deployed)
+const cache = new WeakSet<ThirdwebContract>();
 
 /**
  * Checks if a contract is deployed by verifying its bytecode.
@@ -18,5 +23,15 @@ import { getByteCode } from "../../contract/actions/get-bytecode.js";
 export async function isContractDeployed(
   contract: ThirdwebContract,
 ): Promise<boolean> {
-  return (await getByteCode(contract)) !== "0x";
+  if (cache.has(contract)) {
+    // it's only in there if it's deployed
+    return true;
+  }
+  // this already dedupes requests for the same contract
+  const isDeployed = (await getBytecode(contract)) !== "0x";
+  // if it's deployed, we add it to the cache
+  if (isDeployed) {
+    cache.add(contract);
+  }
+  return isDeployed;
 }

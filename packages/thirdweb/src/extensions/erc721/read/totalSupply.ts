@@ -1,5 +1,7 @@
-import { readContract } from "../../../transaction/actions/read.js";
-import type { TxOpts } from "../../../transaction/transaction.js";
+import {
+  readContract,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
 
 /**
  * Retrieves the total supply of ERC721 tokens.
@@ -12,7 +14,7 @@ import type { TxOpts } from "../../../transaction/transaction.js";
  * const totalSupply = await totalSupply({ contract });
  * ```
  */
-export function totalSupply(options: TxOpts): Promise<bigint> {
+export function totalSupply(options: BaseTransactionOptions): Promise<bigint> {
   return readContract({
     ...options,
     method: "function totalSupply() view returns (uint256)",

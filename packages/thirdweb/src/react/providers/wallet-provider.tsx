@@ -1,6 +1,6 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
 import { connectionManager } from "../connectionManager.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 
 /**
  * A hook that returns the active account
@@ -14,6 +14,21 @@ import type { Account } from "../../wallets/interfaces/wallet.js";
  */
 export function useActiveAccount() {
   const store = connectionManager.activeAccount;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+}
+
+/**
+ * A hook that returns the active wallet
+ * @returns The active `Wallet` or `undefined` if no active wallet is set.
+ * @example
+ * ```jsx
+ * import { useActiveWallet } from "thirdweb/react";
+ *
+ * const wallet = useActiveWallet();
+ * ```
+ */
+export function useActiveWallet() {
+  const store = connectionManager.activeWallet;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
@@ -59,8 +74,8 @@ export function useActiveWalletChainId() {
  * const accounts = useConnectedAccounts();
  * ```
  */
-export function useConnectedAccounts() {
-  const store = connectionManager.connectedAccounts;
+export function useConnectedWallets() {
+  const store = connectionManager.connectedWallets;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
@@ -77,63 +92,59 @@ export function useConnectedAccounts() {
  * setActiveAccount(account);
  * ```
  */
-export function useSetActiveAccount() {
-  return connectionManager.setActiveAccount;
+export function useSetActiveWallet() {
+  return connectionManager.setActiveWallet;
 }
 
 /**
- * A hook that lets you connect a wallet.
+ * A hook to set a wallet as active wallet
  * @returns A function that lets you connect a wallet.
  * @example
  * ```jsx
  * import { useConnect } from "thirdweb/react";
  * import { metamaskWallet } from "thirdweb/wallets";
  *
- * const { connect, isConnecting, error } = useConnect();
- *
- * // later in your code
- * <button
- *    onClick={() =>
- *      connect(async () => {
- *        const wallet = metamaskWallet();
- *        const account = await wallet.connect();
- *        return account;
- *      })
- *    }
- *  >
- *    Connect
- *  </button>
+ * function Example() {
+ *   const { connect, isConnecting, error } = useConnect();
+ *   return (
+ *     <button
+ *       onClick={() =>
+ *         connect(async () => {
+ *           // instantiate wallet
+ *           const wallet = metamaskWallet();
+ *           // connect wallet
+ *           await wallet.connect();
+ *           // return the wallet
+ *           return wallet;
+ *         })
+ *       }
+ *     >
+ *       Connect
+ *     </button>
+ *   );
+ * }
  * ```
  */
 export function useConnect() {
-  const { setConnectedAccount, setActiveAccount } = connectionManager;
+  const { setActiveWallet } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async function (
-      options: Account | (() => Promise<Account>),
-      setActive = true,
-    ) {
+    async function (options: Wallet | (() => Promise<Wallet>)) {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
-        setConnectedAccount(options);
-        if (setActive !== false) {
-          setActiveAccount(options);
-        }
+        setActiveWallet(options);
         return options;
       }
 
       setIsConnecting(true);
       try {
-        const account = await options();
+        const wallet = await options();
         // add the uuid for this wallet
-        setConnectedAccount(account);
-        if (setActive !== false) {
-          setActiveAccount(account);
-        }
-        return account;
+        setActiveWallet(wallet);
+        return wallet;
       } catch (e) {
         console.error(e);
         setError(e as Error);
@@ -142,24 +153,29 @@ export function useConnect() {
       }
       return null;
     },
-    [setActiveAccount, setConnectedAccount],
+    [setActiveWallet],
   );
 
   return { connect, isConnecting, error } as const;
 }
 
 /**
- * Disconnect a connected wallet.
+ * Disconnect from given account
  * @example
  * ```jsx
  * import { useDisconnect } from "thirdweb/react";
  *
- * const { disconnect } = useDisconnect();
+ * function Example() {
+ *   const { disconnect } = useDisconnect();
  *
- * // later in your code
- * <button onClick={() => disconnect(wallet)}>Disconnect</button>
+ *   return (
+ *     <button onClick={() => disconnect(account)}>
+ *       Disconnect
+ *     </button>
+ *   );
+ * }
  * ```
- * @returns An object with a function to disconnect a wallet.
+ * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
   const disconnect = connectionManager.disconnectWallet;
@@ -167,12 +183,16 @@ export function useDisconnect() {
 }
 
 /**
- * A hook that returns the active wallet's connection status.
+ * A hook that returns the active account's connection status.
  * @example
  * ```jsx
  * import { useActiveWalletConnectionStatus } from "thirdweb/react";
  *
- * const status = useActiveWalletConnectionStatus();
+ * function Example() {
+ *   const status = useActiveWalletConnectionStatus();
+ *   console.log(status);
+ *   return <div> ... </div>;
+ * }
  * ```
  * @returns The active wallet's connection status.
  */
@@ -185,9 +205,12 @@ export function useActiveWalletConnectionStatus() {
  * A hook that returns the active wallet's connection status.
  * @example
  * ```jsx
- * import { useActiveWalletConnectionStatus } from "thirdweb/react";
+ * function Example() {
+ *   const setActive = useSetActiveWalletConnectionStatus();
  *
- * const status = useActiveWalletConnectionStatus();
+ *   // when you want to set an account as active
+ *   setActive(account)
+ * }
  * ```
  * @returns The active wallet's connection status.
  */
@@ -199,9 +222,11 @@ export function useSetActiveWalletConnectionStatus() {
  * A hook to check if the auto connect is in progress.
  * @example
  * ```jsx
- * import { useIsAutoConnecting } from "thirdweb/react";
+ * function Example() {
+ *   const isAutoConnecting = useIsAutoConnecting();
  *
- * const isAutoConnecting = useIsAutoConnecting();
+ *   return <div> ... </div>;
+ * }
  * ```
  * @returns A boolean indicating if the auto connect is in progress.
  */

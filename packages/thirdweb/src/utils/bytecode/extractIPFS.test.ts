@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getByteCode } from "../../contract/index.js";
+import { getBytecode } from "../../contract/index.js";
 import {
   DOODLES_CONTRACT,
   USDC_CONTRACT,
@@ -9,7 +9,7 @@ import { extractIPFSUri } from "./extractIPFS.js";
 describe("extractIPFSUri", () => {
   it("works if ipfs is there", async () => {
     //  get some bytecode
-    const bytecode = await getByteCode(DOODLES_CONTRACT);
+    const bytecode = await getBytecode(DOODLES_CONTRACT);
     //  extract IPFS hash
     const ipfsHash = extractIPFSUri(bytecode);
 
@@ -21,7 +21,7 @@ describe("extractIPFSUri", () => {
 
   it("does not work if ipfs is not there", async () => {
     //  get some bytecode
-    const bytecode = await getByteCode(USDC_CONTRACT);
+    const bytecode = await getBytecode(USDC_CONTRACT);
     //  extract IPFS hash
     const ipfsHash = extractIPFSUri(bytecode);
 

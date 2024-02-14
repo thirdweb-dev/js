@@ -200,9 +200,6 @@ async function fromEthersContract<abi extends Abi>({
  */
 async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
   const address = await signer.getAddress();
-  const chainId = await signer.provider
-    ?.getNetwork()
-    .then((network) => network.chainId);
   const account: Account = {
     address,
     signMessage: async ({ message }) => {
@@ -220,27 +217,12 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
         transactionHash,
       };
     },
-    wallet: {
-      metadata: {
-        id: "ethers-6-wallet",
-        iconUrl: "", // TODO
-        name: "Ethers 6 Wallet",
-      },
-      autoConnect: async () => account,
-      connect: async () => account,
-      disconnect: async () => {},
-      chainId: chainId,
-      switchChain: async () => {
-        // TODO
-      },
-      events: {
-        addListener(events, listener) {
-          signer.provider?.on(events, listener);
-        },
-        removeListener(events, listener) {
-          signer.provider?.off(events, listener);
-        },
-      },
+    signTypedData: async (data) => {
+      return (await signer.signTypedData(
+        data.domain as ethers6.TypedDataDomain,
+        data.types as Record<string, ethers6.ethers.TypedDataField[]>,
+        data.message as Record<string, any>,
+      )) as Hex;
     },
   };
 

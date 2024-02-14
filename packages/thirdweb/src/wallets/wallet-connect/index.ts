@@ -4,6 +4,10 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
+  type SignTypedDataParameters,
+  getTypesForEIP712Domain,
+  validateTypedData,
+  isHex,
 } from "viem";
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
@@ -33,6 +37,7 @@ import type {
   WalletConnectCreationOptions,
 } from "./types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { stringify } from "../../utils/json.js";
 
 export const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
 export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
@@ -92,6 +97,7 @@ export class WalletConnect implements Wallet {
   chainId: Wallet["chainId"];
   events: Wallet["events"];
   metadata: Wallet["metadata"];
+  account?: Account | undefined;
 
   /**
    * Create a new WalletConnect instance to connect to a wallet using WalletConnect protocol.
@@ -148,8 +154,7 @@ export class WalletConnect implements Wallet {
    */
   private onConnect(address: string): Account {
     const wallet = this;
-    return {
-      wallet,
+    const account: Account = {
       address,
       async sendTransaction(tx: SendTransactionOption) {
         const provider = wallet.assertProvider();
@@ -167,6 +172,7 @@ export class WalletConnect implements Wallet {
           params: [
             {
               gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -178,7 +184,42 @@ export class WalletConnect implements Wallet {
           transactionHash,
         };
       },
+      async signMessage({ message }) {
+        const provider = wallet.assertProvider();
+        return provider.request({
+          method: "personal_sign",
+          params: [message, this.address],
+        });
+      },
+      async signTypedData(data) {
+        const provider = wallet.assertProvider();
+        const { domain, message, primaryType } =
+          data as unknown as SignTypedDataParameters;
+
+        const types = {
+          EIP712Domain: getTypesForEIP712Domain({ domain }),
+          ...data.types,
+        };
+
+        // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
+        // as we can't statically check this with TypeScript.
+        validateTypedData({ domain, message, primaryType, types });
+
+        const typedData = stringify(
+          { domain: domain ?? {}, message, primaryType, types },
+          (_, value) => (isHex(value) ? value.toLowerCase() : value),
+        );
+
+        return await provider.request({
+          method: "eth_signTypedData_v4",
+          params: [this.address, typedData],
+        });
+      },
     };
+
+    this.account = account;
+
+    return account;
   }
 
   /**
@@ -530,6 +571,9 @@ export class WalletConnect implements Wallet {
       provider.removeListener("disconnect", this.onDisconnect);
       provider.removeListener("session_delete", this.onDisconnect);
     }
+
+    this.account = undefined;
+    this.chainId = undefined;
   };
 
   /**

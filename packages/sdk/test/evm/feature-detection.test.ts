@@ -11,6 +11,7 @@ import {
   IERC1155__factory,
 } from "@thirdweb-dev/contracts-js";
 import {
+  detectFeatures,
   getAllDetectedExtensionNames,
   isExtensionEnabled,
   matchesAbiFromBytecode,
@@ -74,27 +75,51 @@ describe("Feature Detection", async () => {
     );
   });
 
+  it("should extract implementation address for new minimal proxy pattern", async () => {
+    const code =
+      "0x36600080376020600036600073bebebebebebebebebebebebebebebebebebebebe6102c65a03f41515602d57fe5b60206000f3";
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(code);
+    expect(implementationAddress).to.equal(
+      "0xbebebebebebebebebebebebebebebebebebebebe",
+    );
+  });
+
   it("should extract features", async () => {
+    let features = detectFeatures(TokenERC721__factory.abi);
     expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
+      isExtensionEnabled(
+        TokenERC721__factory.abi,
+        "ERC721Enumerable",
+        features,
+      ),
     ).to.eq(true);
     expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable"),
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable", features),
     ).to.eq(true);
     expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+      isExtensionEnabled(
+        TokenERC721__factory.abi,
+        "ERC721BatchMintable",
+        features,
+      ),
     ).to.eq(true);
 
     // Drop
+    features = detectFeatures(DropERC721__factory.abi);
     expect(
-      isExtensionEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
+      isExtensionEnabled(
+        DropERC721__factory.abi,
+        "ERC721ClaimPhasesV2",
+        features,
+      ),
     ).to.eq(true);
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
-      true,
-    );
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
-      false,
-    );
+    expect(
+      isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply", features),
+    ).to.eq(true);
+    expect(
+      isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable", features),
+    ).to.eq(false);
   });
 
   it("should extract all features", async () => {

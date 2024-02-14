@@ -1,9 +1,9 @@
 import { isAddress } from "viem";
-import type { ThirdwebContract } from "../../index.js";
 import { eth_getStorageAt, getRpcClient } from "../../rpc/index.js";
-import { readContractRaw } from "../../transaction/actions/raw/raw-read.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
-import { getByteCode } from "../../contract/actions/get-bytecode.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
+import { readContract } from "../../transaction/read-contract.js";
 
 // TODO: move to const exports
 export const AddressZero = "0x0000000000000000000000000000000000000000";
@@ -21,17 +21,17 @@ export const AddressZero = "0x0000000000000000000000000000000000000000";
 export async function resolveImplementation(
   contract: ThirdwebContract<any>,
 ): Promise<{ address: string; bytecode: string }> {
-  const [bytecode, beacon] = await Promise.all([
-    getByteCode(contract),
+  const [originalBytecode, beacon] = await Promise.all([
+    getBytecode(contract),
     getBeaconFromStorageSlot(contract),
   ]);
   // check minimal proxy first synchronously
   const minimalProxyImplementationAddress =
-    extractMinimalProxyImplementationAddress(bytecode);
+    extractMinimalProxyImplementationAddress(originalBytecode);
   if (minimalProxyImplementationAddress) {
     return {
       address: minimalProxyImplementationAddress,
-      bytecode: await getByteCode({
+      bytecode: await getBytecode({
         ...contract,
         address: minimalProxyImplementationAddress,
       }),
@@ -55,17 +55,26 @@ export async function resolveImplementation(
       isAddress(implementationAddress) &&
       implementationAddress !== AddressZero
     ) {
+      const implementationBytecode = await getBytecode({
+        ...contract,
+        address: implementationAddress,
+      });
+      // return the original contract bytecode if the implementation bytecode is empty
+      if (implementationBytecode === "0x") {
+        return {
+          address: contract.address,
+          bytecode: originalBytecode,
+        };
+      }
+
       return {
         address: implementationAddress,
-        bytecode: await getByteCode({
-          ...contract,
-          address: implementationAddress,
-        }),
+        bytecode: implementationBytecode,
       };
     }
   }
 
-  return { address: contract.address, bytecode };
+  return { address: contract.address, bytecode: originalBytecode };
 }
 
 async function getBeaconFromStorageSlot(
@@ -132,7 +141,7 @@ async function getImplementationFromContractCall(
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   try {
-    return await readContractRaw({ contract, method: UPGRADEABLE_PROXY_ABI });
+    return await readContract({ contract, method: UPGRADEABLE_PROXY_ABI });
   } catch {
     return undefined;
   }

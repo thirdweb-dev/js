@@ -1,13 +1,14 @@
-import type { Transaction } from "../transaction.js";
-import type { Abi, TransactionSerializable } from "viem";
+import type { TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
-import { resolveParams } from "./resolve-params.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getChainIdFromChain } from "../../chain/index.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
 
 type SendTransactionOptions = {
-  transaction: Transaction<any>;
+  transaction: PreparedTransaction;
   account: Account;
+  gasless?: boolean;
 };
 
 /**
@@ -27,59 +28,55 @@ type SendTransactionOptions = {
  */
 export async function sendTransaction(
   options: SendTransactionOptions,
-): Promise<WaitForReceiptOptions<Abi>> {
+): Promise<WaitForReceiptOptions> {
   if (!options.account.address) {
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
-  const rpcRequest = getRpcClient(options.transaction.contract);
+  const rpcRequest = getRpcClient(options.transaction);
 
   const [
-    getGasOverridesForTransaction,
-    encode,
-    eth_getTransactionCount,
-    estimateGas,
+    { encode },
+    { eth_getTransactionCount },
+    { estimateGas },
+    { getGasOverridesForTransaction },
   ] = await Promise.all([
-    import("../../gas/fee-data.js").then(
-      (m) => m.getGasOverridesForTransaction,
-    ),
-    import("./encode.js").then((m) => m.encode),
-    import("../../rpc/actions/eth_getTransactionCount.js").then(
-      (m) => m.eth_getTransactionCount,
-    ),
-    import("./estimate-gas.js").then((m) => m.estimateGas),
+    import("./encode.js"),
+    import("../../rpc/actions/eth_getTransactionCount.js"),
+    import("./estimate-gas.js"),
+    import("../../gas/fee-data.js"),
   ]);
 
-  const [gasOverrides, data, nonce, gas, { overrides: dynamicOverrides }] =
-    await Promise.all([
-      getGasOverridesForTransaction(options.transaction),
-      encode(options.transaction),
-      // if the user has specified a nonce, use that
-      options.transaction.nonce ??
-        // otherwise get the next nonce
+  const [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
+    encode(options.transaction),
+    // if the user has specified a nonce, use that
+    options.transaction.nonce
+      ? resolvePromisedValue(options.transaction.nonce)
+      : // otherwise get the next nonce
         eth_getTransactionCount(rpcRequest, {
           address: options.account.address,
           blockTag: "pending",
         }),
-      // if user has specified a gas value, use that
-      options.transaction.gas ??
-        // otherwise estimate the gas
-        estimateGas({
-          transaction: options.transaction,
-          account: options.account,
-        }),
-      resolveParams(options.transaction),
-    ]);
+    // if user has specified a gas value, use that
+    estimateGas({
+      transaction: options.transaction,
+      account: options.account,
+    }),
+    getGasOverridesForTransaction(options.transaction),
+    resolvePromisedValue(options.transaction.to),
+    resolvePromisedValue(options.transaction.accessList),
+    resolvePromisedValue(options.transaction.value),
+  ]);
 
   const result = await options.account.sendTransaction({
-    to: options.transaction.contract.address,
-    chainId: Number(getChainIdFromChain(options.transaction.contract.chain)),
+    to,
+    chainId: Number(getChainIdFromChain(options.transaction.chain)),
     data,
     gas,
-    ...gasOverrides,
     nonce,
-    accessList: options.transaction.accessList,
-    value: options.transaction.value ?? dynamicOverrides.value,
+    accessList,
+    value,
+    ...feeData,
   } satisfies TransactionSerializable);
-  return { ...result, contract: options.transaction.contract };
+  return { ...result, transaction: options.transaction };
 }

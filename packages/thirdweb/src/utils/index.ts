@@ -27,3 +27,9 @@ export {
   getCreate2FactoryAddress,
   getCreate2FactoryDeploymentInfo,
 } from "./any-evm/create-2-factory.js";
+
+//signatures
+export {
+  resolveSignature,
+  resolveSignatures,
+} from "./signatures/resolve-signature.js";

@@ -51,16 +51,6 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
     signTransaction: viemAccount.signTransaction,
     signMessage: viemAccount.signMessage,
     signTypedData: viemAccount.signTypedData,
-    wallet: {
-      connect: async () => account,
-      autoConnect: async () => account,
-      disconnect: async () => {},
-      metadata: {
-        name: "Private Key",
-        iconUrl: "", // TODO
-        id: "private-key",
-      },
-    },
   };
   return account;
 }

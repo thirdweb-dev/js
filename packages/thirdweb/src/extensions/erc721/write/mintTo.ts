@@ -1,19 +1,22 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import {
-  prepareTransaction,
-  type TxOpts,
-} from "../../../transaction/transaction.js";
+  prepareContractCall,
+  type BaseTransactionOptions,
+} from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
-export type NFTInput = {
-  name?: string;
-  description?: string;
-  image?: FileOrBufferOrString;
-  animation_url?: FileOrBufferOrString;
-  external_url?: FileOrBufferOrString;
-  background_color?: string;
-  // TODO check if we truly need both of these?
-  properties?: Record<string, unknown> | Array<Record<string, unknown>>;
-} & Record<string, unknown>;
+export type NFTInput = Prettify<
+  {
+    name?: string;
+    description?: string;
+    image?: FileOrBufferOrString;
+    animation_url?: FileOrBufferOrString;
+    external_url?: FileOrBufferOrString;
+    background_color?: string;
+    // TODO check if we truly need both of these?
+    properties?: Record<string, unknown> | Array<Record<string, unknown>>;
+  } & Record<string, unknown>
+>;
 
 export type MintToParams = {
   to: string;
@@ -41,8 +44,8 @@ export type MintToParams = {
  * });
  * ```
  */
-export function mintTo(options: TxOpts<MintToParams>) {
-  return prepareTransaction({
+export function mintTo(options: BaseTransactionOptions<MintToParams>) {
+  return prepareContractCall({
     ...options,
     method: "function mintTo(address _to, string memory _tokenURI)",
     params: async () => {

@@ -1,4 +1,4 @@
-import type { AbiFunction, Address } from "abitype";
+import type { Address } from "abitype";
 import type {
   Hex,
   SignableMessage,
@@ -8,27 +8,22 @@ import type {
 } from "viem";
 import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
-import type { Transaction } from "../../transaction/transaction.js";
 import type { WalletMetadata } from "../types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-export type WalletConnectionOptions = { chainId?: number | bigint };
-
 export type Wallet = {
   // REQUIRED
   metadata: WalletMetadata;
-  connect: (options?: WalletConnectionOptions) => Promise<Account>;
-  autoConnect: () => Promise<Account>;
+  connect: (options?: any) => Promise<Account>;
+  autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
 
   // OPTIONAL
   chainId?: bigint;
-  estimateGas?: <abiFn extends AbiFunction>(
-    tx: Transaction<abiFn>,
-  ) => Promise<bigint>;
 
   events?: {
     addListener: WalletEventListener;
@@ -36,7 +31,13 @@ export type Wallet = {
   };
 
   switchChain?: (newChainId: bigint | number) => Promise<void>;
+  account?: Account;
 };
+
+export interface WalletWithPersonalWallet extends Wallet {
+  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
+  personalWallet?: Wallet;
+}
 
 export type Account = {
   // REQUIRED
@@ -45,21 +46,15 @@ export type Account = {
     // TODO: figure out how we get our "chain" here
     tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
-
-  // OPTIONAL
-  signMessage?: ({ message }: { message: SignableMessage }) => Promise<Hex>;
-  signTypedData?: <
+  signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
+  signTypedData: <
     const typedData extends TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(
     _typedData: TypedDataDefinition<typedData, primaryType>,
   ) => Promise<Hex>;
-  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
 
-  // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
-  /**
-   * The wallet that the account belongs to
-   * @internal
-   */
-  wallet: Wallet;
+  // OPTIONAL
+  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
 };
