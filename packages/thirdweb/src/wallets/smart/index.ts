@@ -16,6 +16,7 @@ import {
   saveConnectParamsToStorage,
   type WithPersonalWalletConnectionOptions,
 } from "../manager/storage.js";
+import { getChainIdFromChain } from "../../chain/index.js";
 
 /**
  * Creates a smart wallet.
@@ -32,7 +33,7 @@ import {
  * });
  * ```
  */
-export function smartWallet(options: SmartWalletOptions): Wallet {
+export function smartWallet(options: SmartWalletOptions): SmartWallet {
   return new SmartWallet(options);
 }
 
@@ -71,6 +72,7 @@ export class SmartWallet implements WalletWithPersonalAccount {
     this.options = options;
     this.metadata = options.metadata || smartWalletMetadata;
     this.isSmartWallet = true;
+    this.chainId = getChainIdFromChain(options.chain);
   }
 
   /**
@@ -87,11 +89,7 @@ export class SmartWallet implements WalletWithPersonalAccount {
   async connect(
     connectionOptions: SmartWalletConnectionOptions,
   ): Promise<Account> {
-    const chainId = BigInt(
-      typeof this.options.chain === "object"
-        ? this.options.chain.id
-        : this.options.chain,
-    );
+    const chainId = getChainIdFromChain(this.options.chain);
 
     const personalWallet = connectionOptions.personalAccount.wallet;
     if (personalWallet.chainId !== chainId) {
@@ -105,6 +103,8 @@ export class SmartWallet implements WalletWithPersonalAccount {
     };
 
     saveConnectParamsToStorage(this.metadata.id, paramsToSave);
+
+    this.personalAccount = connectionOptions.personalAccount;
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
 
@@ -167,13 +167,6 @@ async function smartAccount(
     address: accountAddress,
     chain: options.chain,
   });
-
-  wallet.chainId =
-    typeof options.chain === "object"
-      ? BigInt(options.chain.id)
-      : BigInt(options.chain);
-
-  wallet.personalAccount = options.personalAccount;
 
   return {
     wallet,
