@@ -19,8 +19,8 @@ export type SimulateOptions<abiFn extends AbiFunction> = {
  * @transaction
  * @example
  * ```ts
- * import { simulate } from "thirdweb";
- * const result = await simulate({
+ * import { simulateTransaction } from "thirdweb";
+ * const result = await simulateTransaction({
  *  transaction,
  * });
  * ```
