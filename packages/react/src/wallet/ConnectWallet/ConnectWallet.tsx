@@ -1,6 +1,7 @@
 import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails } from "./Details";
 import {
+  WalletInstance,
   useAddress,
   useConnectionStatus,
   useLogout,
@@ -313,12 +314,12 @@ export type ConnectWalletProps = {
   hideDisconnect?: boolean;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The connected wallet instance is passed as an argument to the callback
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -336,7 +337,7 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
 
   /**
    * Render custom UI at the bottom of the ConnectWallet Details Modal
