@@ -13,12 +13,6 @@ export default {
     "https://faucet.towolabs.com",
     "https://fauceth.komputing.org?chain=16&address=${ADDRESS}"
   ],
-  "icon": {
-    "url": "ipfs://QmW7Ljv2eLQ1poRrhJBaVWJBF1TyfZ8QYxDeELRo6sssrj",
-    "width": 382,
-    "height": 382,
-    "format": "png"
-  },
   "infoURL": "https://flare.xyz",
   "name": "Flare Testnet Coston",
   "nativeCurrency": {
