@@ -4,15 +4,18 @@ import {
   prepareContractCall,
   type BaseTransactionOptions,
 } from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
-export type TransferFromParams = { to: Address; from: Address } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountWei: bigint;
-    }
-);
+export type TransferFromParams = Prettify<
+  { to: Address; from: Address } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Transfers a specified amount of tokens from one address to another address on the ERC20 contract.

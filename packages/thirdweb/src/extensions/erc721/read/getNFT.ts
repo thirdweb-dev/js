@@ -1,17 +1,20 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import { tokenURI, type TokenUriParams } from "./tokenURI.js";
 
 /**
  * Parameters for getting an NFT.
  */
-export type GetNFTParams = TokenUriParams & {
-  /**
-   * Whether to include the owner of the NFT.
-   */
-  includeOwner?: boolean;
-};
+export type GetNFTParams = Prettify<
+  TokenUriParams & {
+    /**
+     * Whether to include the owner of the NFT.
+     */
+    includeOwner?: boolean;
+  }
+>;
 
 /**
  * Retrieves information about a specific ERC721 non-fungible token (NFT).

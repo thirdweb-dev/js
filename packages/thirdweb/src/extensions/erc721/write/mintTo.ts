@@ -3,17 +3,20 @@ import {
   prepareContractCall,
   type BaseTransactionOptions,
 } from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
-export type NFTInput = {
-  name?: string;
-  description?: string;
-  image?: FileOrBufferOrString;
-  animation_url?: FileOrBufferOrString;
-  external_url?: FileOrBufferOrString;
-  background_color?: string;
-  // TODO check if we truly need both of these?
-  properties?: Record<string, unknown> | Array<Record<string, unknown>>;
-} & Record<string, unknown>;
+export type NFTInput = Prettify<
+  {
+    name?: string;
+    description?: string;
+    image?: FileOrBufferOrString;
+    animation_url?: FileOrBufferOrString;
+    external_url?: FileOrBufferOrString;
+    background_color?: string;
+    // TODO check if we truly need both of these?
+    properties?: Record<string, unknown> | Array<Record<string, unknown>>;
+  } & Record<string, unknown>
+>;
 
 export type MintToParams = {
   to: string;

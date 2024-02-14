@@ -2,16 +2,19 @@ import {
   prepareContractCall,
   type BaseTransactionOptions,
 } from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import { parseUnits } from "../../../utils/units.js";
 
-export type TransferParams = { to: string } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountWei: bigint;
-    }
-);
+export type TransferParams = Prettify<
+  { to: string } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Transfers ERC20 tokens from the sender's address to the specified recipient address.

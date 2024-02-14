@@ -4,15 +4,18 @@ import {
   prepareContractCall,
   type BaseTransactionOptions,
 } from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
-export type ApproveParams = { spender: Address } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountWei: bigint;
-    }
-);
+export type ApproveParams = Prettify<
+  { spender: Address } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Approves the spending of tokens by a specific address.

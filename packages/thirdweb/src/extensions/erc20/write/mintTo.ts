@@ -2,16 +2,19 @@ import {
   prepareContractCall,
   type BaseTransactionOptions,
 } from "../../../transaction/index.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import { parseUnits } from "../../../utils/units.js";
 
-export type MintToParams = { to: string } & (
-  | {
-      amount: number | string;
-    }
-  | {
-      amountWei: bigint;
-    }
-);
+export type MintToParams = Prettify<
+  { to: string } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
+>;
 
 /**
  * Mints a specified amount of tokens to a given address.
