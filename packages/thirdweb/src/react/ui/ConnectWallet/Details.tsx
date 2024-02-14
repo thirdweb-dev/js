@@ -9,8 +9,8 @@ import { useState, useEffect } from "react";
 import {
   useActiveAccount,
   useActiveWalletChainId,
+  useConnect,
   useDisconnect,
-  useSetActiveAccount,
 } from "../../providers/wallet-provider.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import { Modal } from "../components/Modal.js";
@@ -51,6 +51,7 @@ import {
   type WalletWithPersonalAccount,
   personalAccountToSmartAccountMap,
 } from "../../../wallets/index.js";
+import { connectionManager } from "../../connectionManager.js";
 // import { walletIds } from "../../../wallets/walletIds.js";
 
 // TEMP
@@ -719,14 +720,21 @@ function AccountSwitcher({
   account: Account;
   name: string;
 }) {
-  const setActiveAccount = useSetActiveAccount();
+  const { connect } = useConnect();
   const locale = useTWLocale().connectWallet;
+  const currentActiveAccount = useActiveAccount();
+  const removeConnectedAccount = connectionManager.removeConnectedAccount;
 
   return (
     <MenuButton
       type="button"
       onClick={() => {
-        setActiveAccount(account);
+        // remove the current active account as "connected"
+        if (currentActiveAccount) {
+          removeConnectedAccount(currentActiveAccount);
+        }
+        // set as connected and active
+        connect(account);
       }}
       style={{
         fontSize: fontSize.sm,

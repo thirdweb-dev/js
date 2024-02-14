@@ -54,6 +54,13 @@ export function createConnectionManager(options?: ConnectionManagerOptions) {
     walletIdToConnectedAccountMap.setValue(newValue);
   };
 
+  const removeConnectedAccount = (account: Account) => {
+    const oldValue = walletIdToConnectedAccountMap.getValue();
+    const newValue = new Map(oldValue);
+    newValue.delete(account.wallet.metadata.id);
+    walletIdToConnectedAccountMap.setValue(newValue);
+  };
+
   const onAccountDisconnect = (account: Account) => {
     const currentMap = walletIdToConnectedAccountMap.getValue();
     const newMap = new Map(currentMap);
@@ -210,5 +217,6 @@ export function createConnectionManager(options?: ConnectionManagerOptions) {
     switchActiveWalletChain,
     activeWalletConnectionStatus: activeWalletConnectionStatus,
     isAutoConnecting,
+    removeConnectedAccount,
   };
 }
