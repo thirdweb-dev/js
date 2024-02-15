@@ -1,4 +1,4 @@
-import { toHex, type Hex } from "viem";
+import { toHex } from "viem";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { SmartWalletOptions } from "../types.js";
 import { readContract } from "../../../transaction/read-contract.js";
@@ -7,6 +7,7 @@ import {
   type PreparedTransaction,
 } from "../../../index.js";
 import type { Account } from "../../index.js";
+import type { SendTransactionOption } from "../../interfaces/wallet.js";
 
 /**
  * @internal
@@ -55,17 +56,43 @@ export function prepareCreateAccount(args: {
 export function prepareExecute(args: {
   accountContract: ThirdwebContract;
   options: SmartWalletOptions;
-  target: string;
-  value: bigint;
-  data: Hex;
+  transaction: SendTransactionOption;
 }): PreparedTransaction {
-  const { accountContract, options, target, value, data } = args;
+  const { accountContract, options, transaction } = args;
   if (options.overrides?.execute) {
-    return options.overrides.execute(accountContract, target, value, data);
+    return options.overrides.execute(accountContract, transaction);
   }
   return prepareContractCall({
     contract: accountContract,
     method: "function execute(address, uint256, bytes)",
-    params: [target, value, data],
+    params: [
+      transaction.to || "",
+      transaction.value || 0n,
+      transaction.data || "0x",
+    ],
+  });
+}
+
+/**
+ * @internal
+ */
+export function prepareBatchExecute(args: {
+  accountContract: ThirdwebContract;
+  options: SmartWalletOptions;
+  transactions: SendTransactionOption[];
+}): PreparedTransaction {
+  const { accountContract, options, transactions } = args;
+  if (options.overrides?.executeBatch) {
+    return options.overrides.executeBatch(accountContract, transactions);
+  }
+  return prepareContractCall({
+    contract: accountContract,
+    method:
+      "function executeBatch(address[] calldata _target,uint256[] calldata _value,bytes[] calldata _calldata)",
+    params: [
+      transactions.map((tx) => tx.to || ""),
+      transactions.map((tx) => tx.value || 0n),
+      transactions.map((tx) => tx.data || "0x"),
+    ],
   });
 }

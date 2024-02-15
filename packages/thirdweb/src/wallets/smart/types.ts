@@ -1,7 +1,7 @@
 import type { Chain } from "../../chain/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { PreparedTransaction, ThirdwebContract } from "../../index.js";
-import type { Wallet } from "../interfaces/wallet.js";
+import type { SendTransactionOption, Wallet } from "../interfaces/wallet.js";
 import type { Address, Hex } from "viem";
 import type { WalletMetadata } from "../types.js";
 
@@ -20,9 +20,11 @@ export type SmartWalletOptions = {
     createAccount?: (factoryContract: ThirdwebContract) => PreparedTransaction;
     execute?: (
       accountContract: ThirdwebContract,
-      target: string,
-      value: bigint,
-      data: string,
+      transaction: SendTransactionOption,
+    ) => PreparedTransaction;
+    executeBatch?: (
+      accountContract: ThirdwebContract,
+      transactions: SendTransactionOption[],
     ) => PreparedTransaction;
   };
   metadata?: WalletMetadata;

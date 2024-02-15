@@ -98,12 +98,9 @@ export function waitForReceipt(
 
             lastBlockNumber = blockNumber;
             if (event) {
-              console.log("event", event);
               const receipt = await eth_getTransactionReceipt(request, {
                 hash: event.transactionHash,
               });
-
-              // TODO check if the event has success = false and decode the revert reason
 
               // stop the polling
               unwatch();

@@ -1,17 +1,20 @@
 import { keccak256, concat, type Hex, encodeAbiParameters } from "viem";
 import type { SmartWalletOptions, UserOperation } from "../types.js";
-import type { SendTransactionOption } from "../../interfaces/wallet.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
-import { getChainIdFromChain } from "../../../index.js";
+import {
+  getChainIdFromChain,
+  type PreparedTransaction,
+} from "../../../index.js";
 import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
 import { randomNonce } from "./utils.js";
-import { prepareCreateAccount, prepareExecute } from "./calls.js";
+import { prepareCreateAccount } from "./calls.js";
 import type { Account } from "../../interfaces/wallet.js";
+import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 
 /**
  * Create an unsigned user operation
@@ -24,10 +27,10 @@ import type { Account } from "../../interfaces/wallet.js";
 export async function createUnsignedUserOp(args: {
   factoryContract: ThirdwebContract;
   accountContract: ThirdwebContract;
-  transaction: SendTransactionOption;
+  executeTx: PreparedTransaction;
   options: SmartWalletOptions & { personalAccount: Account };
 }): Promise<UserOperation> {
-  const { factoryContract, accountContract, transaction, options } = args;
+  const { factoryContract, accountContract, executeTx, options } = args;
   const isDeployed = await isContractDeployed(accountContract);
   const initCode = isDeployed
     ? "0x"
@@ -35,15 +38,8 @@ export async function createUnsignedUserOp(args: {
         factoryContract,
         options,
       });
-  const executeTx = prepareExecute({
-    accountContract,
-    options,
-    target: transaction.to || "",
-    value: transaction.value || 0n,
-    data: transaction.data || "0x",
-  });
   const callData = await encode(executeTx);
-  let { maxFeePerGas, maxPriorityFeePerGas } = transaction;
+  let { maxFeePerGas, maxPriorityFeePerGas } = executeTx;
   if (!maxFeePerGas || !maxPriorityFeePerGas) {
     const feeData = await getDefaultGasOverrides(
       factoryContract.client,
@@ -65,8 +61,9 @@ export async function createUnsignedUserOp(args: {
     nonce,
     initCode,
     callData,
-    maxFeePerGas: maxFeePerGas ?? 0n,
-    maxPriorityFeePerGas: maxPriorityFeePerGas ?? 0n,
+    maxFeePerGas: (await resolvePromisedValue(maxFeePerGas)) ?? 0n,
+    maxPriorityFeePerGas:
+      (await resolvePromisedValue(maxPriorityFeePerGas)) ?? 0n,
     callGasLimit: 0n,
     verificationGasLimit: 0n,
     preVerificationGas: 0n,

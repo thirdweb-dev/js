@@ -16,7 +16,6 @@ export async function getUserOpEventFromEntrypoint(args: {
   userOpHash: string;
 }) {
   const { blockNumber, blockRange, chain, userOpHash, client } = args;
-  console.log("getUserOpEventFromEntrypoint", blockNumber, blockRange);
   const fromBlock =
     blockNumber > blockRange ? blockNumber - blockRange : blockNumber;
   const entryPointContract = getContract({
@@ -44,7 +43,10 @@ export async function getUserOpEventFromEntrypoint(args: {
   if (event && event.args.success === false) {
     const revertOpEvent = prepareEvent({
       signature:
-        "event UserOperationRevertReasonEvent(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
+        "event UserOperationRevertReason(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
+      filters: {
+        userOpHash: userOpHash as Hex,
+      },
     });
     const revertEvent = await getContractEvents({
       contract: entryPointContract,
@@ -56,9 +58,16 @@ export async function getUserOpEventFromEntrypoint(args: {
       const message = decodeErrorResult({
         data: firstRevertEvent.args.revertReason,
       });
-      throw new Error(`UserOp failed with reason: ${message.args.join(",")}`);
+      throw new Error(
+        `UserOp failed with reason: '${message.args.join(",")}' at txHash: ${
+          event.transactionHash
+        }`,
+      );
     } else {
-      throw new Error("UserOp failed with unknown reason");
+      throw new Error(
+        "UserOp failed with unknown reason with txHash: " +
+          event.transactionHash,
+      );
     }
   }
   return event;

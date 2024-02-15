@@ -57,4 +57,7 @@ export type Account = {
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
+  sendBatchTransaction?: (
+    txs: SendTransactionOption[],
+  ) => Promise<TransactionOrUserOpHash>;
 };

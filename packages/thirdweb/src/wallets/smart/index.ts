@@ -10,13 +10,18 @@ import type {
 } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp } from "./lib/bundler.js";
-import { getContract } from "../../contract/contract.js";
-import { predictAddress } from "./lib/calls.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
+import {
+  predictAddress,
+  prepareBatchExecute,
+  prepareExecute,
+} from "./lib/calls.js";
 import {
   saveConnectParamsToStorage,
   type WithPersonalWalletConnectionOptions,
 } from "../manager/storage.js";
 import { getChainIdFromChain } from "../../chain/index.js";
+import type { PreparedTransaction } from "../../index.js";
 
 /**
  * Creates a smart wallet.
@@ -172,24 +177,31 @@ async function smartAccount(
 
   return {
     address: accountAddress,
-    async sendTransaction(tx: SendTransactionOption) {
-      const unsignedUserOp = await createUnsignedUserOp({
+    async sendTransaction(transaction: SendTransactionOption) {
+      const executeTx = prepareExecute({
+        accountContract,
+        options,
+        transaction,
+      });
+      return _sendUserOp({
         factoryContract,
         accountContract,
-        transaction: tx,
+        executeTx,
         options,
       });
-      const signedUserOp = await signUserOp({
+    },
+    async sendBatchTransaction(transactions: SendTransactionOption[]) {
+      const executeTx = prepareBatchExecute({
+        accountContract,
         options,
-        userOp: unsignedUserOp,
+        transactions,
       });
-      const userOpHash = await bundleUserOp({
+      return _sendUserOp({
+        factoryContract,
+        accountContract,
+        executeTx,
         options,
-        userOp: signedUserOp,
       });
-      return {
-        userOpHash,
-      };
     },
     async estimateGas() {
       // estimation is done in createUnsignedUserOp
@@ -203,5 +215,31 @@ async function smartAccount(
       // TODO optionally deploy on sign
       return options.personalAccount.signTypedData(typedData);
     },
+  };
+}
+
+async function _sendUserOp(args: {
+  factoryContract: ThirdwebContract;
+  accountContract: ThirdwebContract;
+  executeTx: PreparedTransaction;
+  options: SmartWalletOptions & { personalAccount: Account };
+}) {
+  const { factoryContract, accountContract, executeTx, options } = args;
+  const unsignedUserOp = await createUnsignedUserOp({
+    factoryContract,
+    accountContract,
+    executeTx,
+    options,
+  });
+  const signedUserOp = await signUserOp({
+    options,
+    userOp: unsignedUserOp,
+  });
+  const userOpHash = await bundleUserOp({
+    options,
+    userOp: signedUserOp,
+  });
+  return {
+    userOpHash,
   };
 }
