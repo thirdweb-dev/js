@@ -1,5 +1,101 @@
 # @thirdweb-dev/react
 
+## 4.4.8
+
+### Patch Changes
+
+- [#2289](https://github.com/thirdweb-dev/js/pull/2289) [`0155adce`](https://github.com/thirdweb-dev/js/commit/0155adcea4b5379be552962f219853c0a2b1c050) Thanks [@MananTank](https://github.com/MananTank)! - - Show EmbeddedWallet UI instead of the default welcomeScreen in the ConnectWallet wide modal. If a custom welcomeScreen is provided, it will be shown instead of the EmbeddedWallet UI. Same Is done for the deprecated PaperWallet as well
+
+  - Stop treating Magic Link as a Social Login and remove the custom Select UI for it
+  - highlight the wallet for which the Connect UI is shown in the ConnectWallet wide modal
+  -
+
+- [#2290](https://github.com/thirdweb-dev/js/pull/2290) [`f85806c0`](https://github.com/thirdweb-dev/js/commit/f85806c0674921adc7007eec9f061070eefe1d84) Thanks [@MananTank](https://github.com/MananTank)! - Update EmbeddedWallet name in ConnectWallet UI
+
+- [#2288](https://github.com/thirdweb-dev/js/pull/2288) [`74d76ff5`](https://github.com/thirdweb-dev/js/commit/74d76ff580d78a5b98a2d7180a58457231c1b95a) Thanks [@MananTank](https://github.com/MananTank)! - Add "Powered By Thirdweb" Branding at the bottom of `ConnectEmbed` and `ConnectWallet` Modal
+
+  A new prop `showThirdwebBranding` has been added to both `ConnectEmbed` and `ConnectWallet` components to hide this branding.
+
+- Updated dependencies [[`09de55f1`](https://github.com/thirdweb-dev/js/commit/09de55f13cbd29b4e0eb57808e0d30f9c1b3ba94), [`53786fc3`](https://github.com/thirdweb-dev/js/commit/53786fc3068568758f033a1c63975c94a8e407f5), [`a86478bf`](https://github.com/thirdweb-dev/js/commit/a86478bf248786423d03f4a20d9dc7c02270c371), [`23d0e553`](https://github.com/thirdweb-dev/js/commit/23d0e553088321edfe3971950c2e7f27209d9aaf)]:
+  - @thirdweb-dev/sdk@4.0.35
+  - @thirdweb-dev/chains@0.1.72
+  - @thirdweb-dev/react-core@4.4.8
+  - @thirdweb-dev/wallets@2.4.10
+
+## 4.4.7
+
+### Patch Changes
+
+- Updated dependencies [[`357886e3`](https://github.com/thirdweb-dev/js/commit/357886e31b37aad950731ce8f013a101190ebd07)]:
+  - @thirdweb-dev/chains@0.1.71
+  - @thirdweb-dev/react-core@4.4.7
+  - @thirdweb-dev/sdk@4.0.34
+  - @thirdweb-dev/wallets@2.4.9
+
+## 4.4.6
+
+### Patch Changes
+
+- [#2260](https://github.com/thirdweb-dev/js/pull/2260) [`6a3cacb6`](https://github.com/thirdweb-dev/js/commit/6a3cacb62257c1774b5bac739b89e17495f42655) Thanks [@MananTank](https://github.com/MananTank)! - Enforce compact modal size in ConnectWallet based on available space instead of just on mobile device
+
+- Updated dependencies [[`433d49e3`](https://github.com/thirdweb-dev/js/commit/433d49e3aba03df33678f429f19f426fd107b7eb)]:
+  - @thirdweb-dev/react-core@4.4.6
+
+## 4.4.5
+
+### Patch Changes
+
+- Updated dependencies [[`1decd52a`](https://github.com/thirdweb-dev/js/commit/1decd52a36c303e540679ac43d206942ea83fc83), [`1e50caee`](https://github.com/thirdweb-dev/js/commit/1e50caeed1b85f91a6d2efb2e5204f3acf300134)]:
+  - @thirdweb-dev/sdk@4.0.33
+  - @thirdweb-dev/chains@0.1.70
+  - @thirdweb-dev/react-core@4.4.5
+  - @thirdweb-dev/wallets@2.4.8
+
+## 4.4.4
+
+### Patch Changes
+
+- [#2252](https://github.com/thirdweb-dev/js/pull/2252) [`439a377a`](https://github.com/thirdweb-dev/js/commit/439a377aa77ce86631a78daa4a409e00e48f69be) Thanks [@MananTank](https://github.com/MananTank)! - Add `detailsModalFooter` prop on `<ConnectWallet />` component to allow rendering a custom UI at the bottom of the details modal.
+
+  ```tsx
+  <ConnectWallet
+    detailsModalFooter={(props) => {
+      const { close } = props;
+      return <div> .... </div>;
+    }}
+  />
+  ```
+
+- Updated dependencies [[`4f52c296`](https://github.com/thirdweb-dev/js/commit/4f52c2961131636eed323a66568a519246d9f91d), [`374671fd`](https://github.com/thirdweb-dev/js/commit/374671fd9ac97a93263b09c6c0a53cfd129881d7)]:
+  - @thirdweb-dev/sdk@4.0.32
+  - @thirdweb-dev/chains@0.1.69
+  - @thirdweb-dev/react-core@4.4.4
+  - @thirdweb-dev/wallets@2.4.7
+
+## 4.4.3
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds global sdk vars
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/wallets@2.4.6
+  - @thirdweb-dev/sdk@4.0.31
+  - @thirdweb-dev/chains@0.1.68
+  - @thirdweb-dev/react-core@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`39e79282`](https://github.com/thirdweb-dev/js/commit/39e79282acb70959ba8140c779fa521c41c80a5f), [`69c3eb91`](https://github.com/thirdweb-dev/js/commit/69c3eb910feb2265833a07b7472e32fac5a79d90)]:
+  - @thirdweb-dev/chains@0.1.67
+  - @thirdweb-dev/react-core@4.4.2
+  - @thirdweb-dev/sdk@4.0.30
+  - @thirdweb-dev/wallets@2.4.5
+
 ## 4.4.1
 
 ### Patch Changes

@@ -1,5 +1,55 @@
 # @thirdweb-dev/wallets
 
+## 2.4.10
+
+### Patch Changes
+
+- Updated dependencies [[`09de55f1`](https://github.com/thirdweb-dev/js/commit/09de55f13cbd29b4e0eb57808e0d30f9c1b3ba94), [`53786fc3`](https://github.com/thirdweb-dev/js/commit/53786fc3068568758f033a1c63975c94a8e407f5), [`a86478bf`](https://github.com/thirdweb-dev/js/commit/a86478bf248786423d03f4a20d9dc7c02270c371), [`23d0e553`](https://github.com/thirdweb-dev/js/commit/23d0e553088321edfe3971950c2e7f27209d9aaf)]:
+  - @thirdweb-dev/sdk@4.0.35
+  - @thirdweb-dev/chains@0.1.72
+
+## 2.4.9
+
+### Patch Changes
+
+- Updated dependencies [[`357886e3`](https://github.com/thirdweb-dev/js/commit/357886e31b37aad950731ce8f013a101190ebd07)]:
+  - @thirdweb-dev/chains@0.1.71
+  - @thirdweb-dev/sdk@4.0.34
+
+## 2.4.8
+
+### Patch Changes
+
+- Updated dependencies [[`1decd52a`](https://github.com/thirdweb-dev/js/commit/1decd52a36c303e540679ac43d206942ea83fc83), [`1e50caee`](https://github.com/thirdweb-dev/js/commit/1e50caeed1b85f91a6d2efb2e5204f3acf300134)]:
+  - @thirdweb-dev/sdk@4.0.33
+  - @thirdweb-dev/chains@0.1.70
+
+## 2.4.7
+
+### Patch Changes
+
+- Updated dependencies [[`4f52c296`](https://github.com/thirdweb-dev/js/commit/4f52c2961131636eed323a66568a519246d9f91d), [`374671fd`](https://github.com/thirdweb-dev/js/commit/374671fd9ac97a93263b09c6c0a53cfd129881d7)]:
+  - @thirdweb-dev/sdk@4.0.32
+  - @thirdweb-dev/chains@0.1.69
+
+## 2.4.6
+
+### Patch Changes
+
+- [#2224](https://github.com/thirdweb-dev/js/pull/2224) [`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds correct reporing headers
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a), [`771bd1e1`](https://github.com/thirdweb-dev/js/commit/771bd1e1b280681992195103c22aafa1fb98f7e0)]:
+  - @thirdweb-dev/sdk@4.0.31
+  - @thirdweb-dev/chains@0.1.68
+
+## 2.4.5
+
+### Patch Changes
+
+- Updated dependencies [[`39e79282`](https://github.com/thirdweb-dev/js/commit/39e79282acb70959ba8140c779fa521c41c80a5f), [`69c3eb91`](https://github.com/thirdweb-dev/js/commit/69c3eb910feb2265833a07b7472e32fac5a79d90)]:
+  - @thirdweb-dev/chains@0.1.67
+  - @thirdweb-dev/sdk@4.0.30
+
 ## 2.4.4
 
 ### Patch Changes

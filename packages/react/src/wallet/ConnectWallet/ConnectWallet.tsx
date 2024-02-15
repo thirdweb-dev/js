@@ -1,6 +1,7 @@
 import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails } from "./Details";
 import {
+  WalletInstance,
   useAddress,
   useConnectionStatus,
   useLogout,
@@ -12,7 +13,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -21,7 +22,6 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { isMobile } from "../../evm/utils/isMobile";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -34,6 +34,7 @@ import { LockIcon } from "./icons/LockIcon";
 import { SignatureScreen } from "./SignatureScreen";
 import { Modal } from "../../components/Modal";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { canFitWideModal } from "../../evm/utils/canFitWIdeModal";
 
 export type ConnectWalletProps = {
   /**
@@ -313,12 +314,12 @@ export type ConnectWalletProps = {
   hideDisconnect?: boolean;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The connected wallet instance is passed as an argument to the callback
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -336,7 +337,34 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
+
+  /**
+   * Render custom UI at the bottom of the ConnectWallet Details Modal
+   * @param props - props passed to the footer component which includes a function to close the modal
+   * @example
+   * ```tsx
+   * <ConnectWallet
+   *  detailsModalFooter={(props) => {
+   *    const { close } = props;
+   *    return <div> ... </div>
+   *  })
+   * />
+   * ```
+   */
+  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+
+  /**
+   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   *
+   * If you want to hide the branding, set this prop to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet showThirdwebBranding={false} />
+   *```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -559,6 +587,30 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```tsx
  * <ConnectWallet hideDisconnect={true} />
  * ```
+ *
+ * ### detailsModalFooter
+ * Render custom UI at the bottom of the ConnectWallet Details Modal.
+ *
+ * The given function is passed an object with a `close` function which can be used to close the modal.
+ *
+ * ```tsx
+ * <ConnectWallet
+ *  detailsModalFooter={(props) => {
+ *    const { close } = props;
+ *    return <div> ... </div>
+ *  })
+ * />
+ * ```
+ *
+ *
+ * ### showThirdwebBranding
+ * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+ *
+ * If you want to hide the branding, set this prop to `false`
+ *
+ * ```tsx
+ * <ConnectWallet showThirdwebBranding={false} />
+ *```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -662,7 +714,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               onClick={() => {
                 let modalSize = props.modalSize || "wide";
 
-                if (isMobile() || walletConfigs.length === 1) {
+                if (!canFitWideModal() || walletConfigs.length === 1) {
                   modalSize = "compact";
                 }
 
@@ -678,6 +730,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
                   onConnect: props.onConnect,
+                  showThirdwebBranding: props.showThirdwebBranding,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -754,6 +807,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
+            detailsModalFooter={props.detailsModalFooter}
           />
         );
       })()}

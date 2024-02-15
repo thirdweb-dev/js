@@ -1,5 +1,49 @@
 # @thirdweb-dev/auth
 
+## 4.1.32
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.10
+
+## 4.1.31
+
+### Patch Changes
+
+- [#2278](https://github.com/thirdweb-dev/js/pull/2278) [`0092e2a3`](https://github.com/thirdweb-dev/js/commit/0092e2a3177364ad26af15ecafb4381591dc9be1) Thanks [@hsynlms](https://github.com/hsynlms)! - fix(auth): Next.js App Router handler return type
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.9
+
+## 4.1.30
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.8
+
+## 4.1.29
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.7
+
+## 4.1.28
+
+### Patch Changes
+
+- Updated dependencies [[`3ba15366`](https://github.com/thirdweb-dev/js/commit/3ba15366be8b57e577b871c44e386978dc9d4a8a)]:
+  - @thirdweb-dev/wallets@2.4.6
+
+## 4.1.27
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.5
+
 ## 4.1.26
 
 ### Patch Changes

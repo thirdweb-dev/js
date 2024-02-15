@@ -3,6 +3,7 @@ import { hexlifyUserOp } from "./utils";
 import { isTwUrl } from "../../../utils/url";
 import { PaymasterAPI, PaymasterResult } from "../types";
 import { DEBUG } from "./http-rpc-client";
+import { setAnalyticsHeaders } from "../../../utils/headers";
 
 export const SIG_SIZE = 65;
 export const DUMMY_PAYMASTER_AND_DATA =
@@ -75,6 +76,8 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         }`;
         headers["x-authorize-wallet"] = "true";
       }
+
+      setAnalyticsHeaders(headers);
     }
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
