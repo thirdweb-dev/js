@@ -16,6 +16,7 @@ export default {
     "http://fauceth.komputing.org?chain=4&address=${ADDRESS}",
     "https://faucet.rinkeby.io"
   ],
+  "features": [],
   "infoURL": "https://www.rinkeby.io",
   "name": "Rinkeby",
   "nativeCurrency": {
@@ -24,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 4,
+  "redFlags": [],
   "rpc": [
     "https://rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -33,6 +35,7 @@ export default {
   "shortName": "rin",
   "slip44": 1,
   "slug": "rinkeby",
+  "status": "deprecated",
   "testnet": true,
   "title": "Ethereum Testnet Rinkeby"
 } as const satisfies Chain;
