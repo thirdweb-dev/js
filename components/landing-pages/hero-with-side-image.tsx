@@ -1,6 +1,6 @@
 import { LandingCTAButtons } from "./cta-buttons";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
@@ -20,6 +20,7 @@ interface LandingHeroWithSideImageProps {
   mobileImage?: StaticImageData;
   lottie?: {};
   miniImage?: StaticImageData;
+  mt?: BoxProps["mt"];
 }
 
 export const LandingHeroWithSideImage: React.FC<
@@ -39,12 +40,13 @@ export const LandingHeroWithSideImage: React.FC<
   mobileImage,
   lottie,
   miniImage,
+  mt,
 }) => {
   return (
     <SimpleGrid
       columns={{ base: 1, md: 2 }}
       gap={{ base: 12, md: 8 }}
-      mt={{ base: 4, md: 28 }}
+      mt={mt ?? { base: 4, md: 28 }}
     >
       <Flex flexDir="column" gap={{ base: 6, md: 8 }}>
         <Flex flexDir="column" gap={4}>

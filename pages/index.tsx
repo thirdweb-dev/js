@@ -45,7 +45,7 @@ const HomePage: ThirdwebNextPage = () => {
       >
         <HomepageTopNav />
         <Box mt="-80px" pt="100px" overflowX="hidden">
-          <HeroSection />
+          <HeroSection TRACKING_CATEGORY={TRACKING_CATEGORY} />
           <PartnerCarousel />
           <StatsSection />
           <HomePageCard
