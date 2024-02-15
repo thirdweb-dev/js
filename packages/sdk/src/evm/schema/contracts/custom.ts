@@ -172,7 +172,7 @@ export const RouterTypeInput = /* @__PURE__ */ (() =>
     z.literal("none"),
     z.literal("plugin"),
     z.literal("dynamic"),
-    z.literal("hook-installer"),
+    z.literal("extension-installer"),
   ]))();
 
 /**

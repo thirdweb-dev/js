@@ -116,28 +116,81 @@ export const getAllExtensionsAbi = [
   },
 ];
 
-export const hookInstallerAbi = [
+export const extensionInstallerAbi = [
   {
     type: "function",
-    name: "getHookImplementation",
-    inputs: [{ name: "flag", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "impl", type: "address", internalType: "address" }],
+    name: "getExtensionImplementation",
+    inputs: [{ name: "_flag", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "installHook",
-    inputs: [{ name: "hook", type: "address", internalType: "contract IHook" }],
+    name: "installExtension",
+    inputs: [
+      {
+        name: "_extension",
+        type: "address",
+        internalType: "contract IExtension",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "uninstallHook",
-    inputs: [{ name: "hook", type: "address", internalType: "contract IHook" }],
+    name: "uninstallExtension",
+    inputs: [
+      {
+        name: "_extension",
+        type: "address",
+        internalType: "contract IExtension",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
+  {
+    type: "event",
+    name: "ExtensionsInstalled",
+    inputs: [
+      {
+        name: "implementation",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "extensions",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "ExtensionsUninstalled",
+    inputs: [
+      {
+        name: "implementation",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "extensions",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  { type: "error", name: "ExtensionsAlreadyInstalled", inputs: [] },
+  { type: "error", name: "ExtensionsNotAuthorized", inputs: [] },
+  { type: "error", name: "ExtensionsNotInstalled", inputs: [] },
 ];
 
 export const FEATURE_ROYALTY = {
@@ -279,15 +332,15 @@ export const FEATURE_DYNAMIC_CONTRACT = {
   features: {},
 } as const;
 
-export const FEATURE_HOOK_INSTALLER = {
-  name: "HookInstaller",
-  namespace: "hook.installer",
+export const FEATURE_EXTENSION_INSTALLER = {
+  name: "ExtensionInstaller",
+  namespace: "extension.installer",
   docLinks: {
     sdk: "",
     //TODO
     contracts: "",
   },
-  abis: [hookInstallerAbi],
+  abis: [extensionInstallerAbi],
   features: {},
 } as const;
 
