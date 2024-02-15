@@ -62,5 +62,6 @@ export default {
   "shortName": "basegor",
   "slip44": 1,
   "slug": "base-goerli",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

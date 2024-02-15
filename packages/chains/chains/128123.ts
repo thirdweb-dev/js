@@ -4,9 +4,9 @@ export default {
   "chainId": 128123,
   "explorers": [
     {
-      "name": "Explorer",
-      "url": "https://testnet-explorer.etherlink.com/",
-      "standard": "EIP1559"
+      "name": "Etherlink Testnet Explorer",
+      "url": "https://testnet-explorer.etherlink.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
