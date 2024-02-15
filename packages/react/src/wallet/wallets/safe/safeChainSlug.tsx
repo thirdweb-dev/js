@@ -13,6 +13,8 @@ export const safeChainIdToSlug: Record<SafeSupportedChains, string> = {
   1313161554: "aurora",
   42161: "arb1",
   42220: "celo",
+  1101: "zkevm",
+  324: "zksync",
 };
 
 // maps safe chain slug to chain id

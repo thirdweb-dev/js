@@ -7,10 +7,6 @@ export interface SafeConnectionArgs {
   chain: Pick<Chain, "chainId" | "rpc">;
 }
 
-// Missing here but mentioned in https://docs.safe.global/api-supported-networks#safe-transaction-service
-// - Polygon zkEVM
-// - zkSync Era Mainnet
-
 // Base Sepolia ( 84532 ) Not added yet because we don't know the safe transaction service host ( it's missing in the above page )
 
 export type SafeSupportedChains =
@@ -35,4 +31,8 @@ export type SafeSupportedChains =
   // Sepolia
   | 11155111
   // base mainnet
-  | 8453;
+  | 8453
+  // Polygon zkEVM
+  | 1101
+  // zkSync Mainnet
+  | 324;

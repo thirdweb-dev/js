@@ -27,4 +27,8 @@ export const CHAIN_ID_TO_GNOSIS_SERVER_URL: Record<
   8453: "https://safe-transaction-base.safe.global",
   // aurora
   1313161554: "https://safe-transaction-aurora.safe.global",
+  //  Polygon zkEVM
+  1101: "https://safe-transaction-zkevm.safe.global",
+  //  ZkSync Mainnet
+  324: "https://safe-transaction-zksync.safe.global",
 };

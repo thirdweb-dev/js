@@ -41,6 +41,10 @@ const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS: Record<
   11155111: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
   // base mainnet - https://docs.safe.global/smart-account-supported-networks/v1.3.0#base
   8453: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // Polygon zkEVM - https://docs.safe.global/smart-account-supported-networks/v1.3.0#polygon-zkevm
+  1101: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // ZkSync Mainnet - https://docs.safe.global/smart-account-supported-networks/v1.3.0#zksync-mainnet
+  324: "0x357147caf9C0cCa67DfA0CF5369318d8193c8407",
 };
 
 const SIGN_MESSAGE_LIB_ABI = [
