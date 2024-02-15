@@ -2,6 +2,7 @@ import { formatTransactionRequest } from "viem/utils";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import { extractError as parseEstimationError } from "../extract-error.js";
 
 export type EstimateGasOptions = {
   transaction: PreparedTransaction;
@@ -41,7 +42,14 @@ export async function estimateGas(
 
     // if the account itself overrides the estimateGas function, use that
     if (options.account && options.account.estimateGas) {
-      return await options.account.estimateGas(options.transaction);
+      try {
+        return await options.account.estimateGas(options.transaction);
+      } catch (error) {
+        throw await parseEstimationError({
+          error,
+          contract: options.transaction.__contract,
+        });
+      }
     }
 
     // load up encode function if we need it
@@ -58,14 +66,21 @@ export async function estimateGas(
     ]);
 
     const rpcRequest = getRpcClient(options.transaction);
-    return await eth_estimateGas(
-      rpcRequest,
-      formatTransactionRequest({
-        to: toAddress,
-        data: encodedData,
-        from: options.account?.address ?? undefined,
-      }),
-    );
+    try {
+      return await eth_estimateGas(
+        rpcRequest,
+        formatTransactionRequest({
+          to: toAddress,
+          data: encodedData,
+          from: options.account?.address ?? undefined,
+        }),
+      );
+    } catch (error) {
+      throw await parseEstimationError({
+        error,
+        contract: options.transaction.__contract,
+      });
+    }
   })();
   cache.set(options.transaction, promise);
   return promise;

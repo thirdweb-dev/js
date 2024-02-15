@@ -184,6 +184,7 @@ export function prepareContractCall<
     },
     {
       abi: resolveAbiFunction_,
+      contract: contract,
     },
   );
 }

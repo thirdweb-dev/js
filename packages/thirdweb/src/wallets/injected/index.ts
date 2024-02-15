@@ -269,6 +269,7 @@ export class InjectedWallet implements Wallet {
           method: "eth_sendTransaction",
           params: [
             {
+              value: tx.value ? toHex(tx.value) : undefined,
               gas: tx.gas ? toHex(tx.gas) : undefined,
               value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
