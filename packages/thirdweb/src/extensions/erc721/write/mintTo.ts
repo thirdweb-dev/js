@@ -46,7 +46,7 @@ export type MintToParams = {
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
-    ...options,
+    contract: options.contract,
     method: "function mintTo(address _to, string memory _tokenURI)",
     params: async () => {
       let tokenUri: string;

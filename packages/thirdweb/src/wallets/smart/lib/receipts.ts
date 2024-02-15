@@ -1,4 +1,4 @@
-import { decodeAbiParameters, type Hex } from "viem";
+import { decodeErrorResult, type Hex } from "viem";
 import type { Chain } from "../../../chain/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
@@ -30,7 +30,6 @@ export async function getUserOpEventFromEntrypoint(args: {
     // actually only want *this* userOpHash, so we can filter here
     filters: {
       userOpHash: userOpHash as Hex,
-      // TODO: @joaquim can we filter by sender and paymaster, too?
     },
   });
   const events = await getContractEvents({
@@ -42,7 +41,7 @@ export async function getUserOpEventFromEntrypoint(args: {
   // no longe need to `find` here because we already filter in the getContractEvents() call above
   const event = events[0];
   // UserOp can revert, so we need to surface revert reason
-  if (event?.args.success === false) {
+  if (event && event.args.success === false) {
     const revertOpEvent = prepareEvent({
       signature:
         "event UserOperationRevertReasonEvent(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
@@ -50,19 +49,14 @@ export async function getUserOpEventFromEntrypoint(args: {
     const revertEvent = await getContractEvents({
       contract: entryPointContract,
       events: [revertOpEvent],
-      fromBlock: event?.blockNumber,
-      toBlock: event?.blockNumber,
+      blockHash: event.blockHash,
     });
     const firstRevertEvent = revertEvent[0];
     if (firstRevertEvent) {
-      let message: string = firstRevertEvent.args.revertReason;
-      if (message.startsWith("0x08c379a0")) {
-        message = decodeAbiParameters(
-          [{ type: "string" }],
-          `0x${message.substring(10)}`,
-        )[0];
-      }
-      throw new Error(`UserOp failed with reason: ${message}`);
+      const message = decodeErrorResult({
+        data: firstRevertEvent.args.revertReason,
+      });
+      throw new Error(`UserOp failed with reason: ${message.args.join(",")}`);
     } else {
       throw new Error("UserOp failed with unknown reason");
     }

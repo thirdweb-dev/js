@@ -1,5 +1,6 @@
 import type { Hex } from "viem";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import type { Abi, AbiFunction } from "abitype";
 
 /**
  * Encodes a transaction object into a hexadecimal string representation of the encoded data.
@@ -12,7 +13,9 @@ import type { PreparedTransaction } from "../prepare-transaction.js";
  * const encodedData = await encode(transaction);
  * ```
  */
-export async function encode(transaction: PreparedTransaction): Promise<Hex> {
+export async function encode<abi extends Abi, abiFn extends AbiFunction>(
+  transaction: PreparedTransaction<abi, abiFn>,
+): Promise<Hex> {
   if (transaction.data === undefined) {
     return "0x";
   }

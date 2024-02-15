@@ -1,8 +1,9 @@
 import type { AccessList, Hex } from "viem";
-import type { AbiFunction, Address } from "abitype";
+import type { Abi, AbiFunction, Address } from "abitype";
 import type { Chain } from "../chain/index.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { PromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { ThirdwebContract } from "../contract/contract.js";
 
 export type PrepareTransactionOptions = {
   accessList?: PromisedValue<AccessList | undefined>;
@@ -20,14 +21,21 @@ export type PrepareTransactionOptions = {
   client: ThirdwebClient;
 };
 
-type Additional<abiFn extends AbiFunction = AbiFunction> = {
+type Additional<
+  abi extends Abi = [],
+  abiFn extends AbiFunction = AbiFunction,
+> = {
   abi: () => Promise<abiFn>;
+  contract: ThirdwebContract<abi>;
 };
 
-export type PreparedTransaction<abiFn extends AbiFunction = AbiFunction> =
-  Readonly<PrepareTransactionOptions> & {
-    __abi?: () => Promise<abiFn>;
-  };
+export type PreparedTransaction<
+  abi extends Abi = [],
+  abiFn extends AbiFunction = AbiFunction,
+> = Readonly<PrepareTransactionOptions> & {
+  __abi?: () => Promise<abiFn>;
+  __contract?: ThirdwebContract<abi>;
+};
 
 /**
  * Prepares a transaction with the given options.
@@ -47,7 +55,13 @@ export type PreparedTransaction<abiFn extends AbiFunction = AbiFunction> =
  * ```
  */
 export function prepareTransaction<
+  const abi extends Abi = [],
   const abiFn extends AbiFunction = AbiFunction,
->(options: PrepareTransactionOptions, info?: Additional<abiFn>) {
-  return { ...options, __abi: info?.abi } as PreparedTransaction<abiFn>;
+>(options: PrepareTransactionOptions, info?: Additional<abi, abiFn>) {
+  console.log("prepareTransaction", options);
+  return {
+    ...options,
+    __abi: info?.abi,
+    __contract: info?.contract,
+  } as PreparedTransaction<abi, abiFn>;
 }
