@@ -6,6 +6,7 @@ import { eth_call } from "../../rpc/index.js";
 import type { Abi, AbiFunction } from "abitype";
 import type { ReadContractResult } from "../read-contract.js";
 import { decodeFunctionResult } from "../../abi/decode.js";
+import { extractError } from "../extract-error.js";
 
 export type SimulateOptions<abi extends Abi, abiFn extends AbiFunction> = {
   transaction: PreparedTransaction<abi, abiFn>;
@@ -51,19 +52,26 @@ export async function simulateTransaction<
     accessList,
   });
 
-  const result = await eth_call(rpcRequest, serializedTx);
+  try {
+    const result = await eth_call(rpcRequest, serializedTx);
 
-  if (!options.transaction.__abi) {
-    return result;
+    if (!options.transaction.__abi) {
+      return result;
+    }
+
+    const abiFnResolved = await options.transaction.__abi();
+
+    const decoded = decodeFunctionResult(abiFnResolved, result);
+
+    if (Array.isArray(decoded) && decoded.length === 1) {
+      return decoded[0];
+    }
+
+    return decoded as ReadContractResult<abiFn>;
+  } catch (error) {
+    throw await extractError({
+      error,
+      contract: options.transaction.__contract,
+    });
   }
-
-  const abiFnResolved = await options.transaction.__abi();
-
-  const decoded = decodeFunctionResult(abiFnResolved, result);
-
-  if (Array.isArray(decoded) && decoded.length === 1) {
-    return decoded[0];
-  }
-
-  return decoded as ReadContractResult<abiFn>;
 }

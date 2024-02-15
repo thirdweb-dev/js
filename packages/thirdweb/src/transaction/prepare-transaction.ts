@@ -58,7 +58,6 @@ export function prepareTransaction<
   const abi extends Abi = [],
   const abiFn extends AbiFunction = AbiFunction,
 >(options: PrepareTransactionOptions, info?: Additional<abi, abiFn>) {
-  console.log("prepareTransaction", options);
   return {
     ...options,
     __abi: info?.abi,

@@ -1,13 +1,14 @@
 import { decodeErrorResult, type Hex } from "viem";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../index.js";
+import type { Abi } from "abitype";
 
 /**
  * @internal
  */
-export async function extractError(args: {
+export async function extractError<abi extends Abi>(args: {
   error: unknown;
-  contract?: ThirdwebContract;
+  contract?: ThirdwebContract<abi>;
 }) {
   const { error, contract } = args;
   if (typeof error === "object") {
@@ -23,9 +24,7 @@ export async function extractError(args: {
         abi: contract ? await resolveContractAbi(contract) : undefined,
       });
       return new Error(
-        `Execution reverted: ${parsedError.errorName} - ${parsedError.args.join(
-          ",",
-        )}`,
+        `Execution reverted: ${parsedError.errorName} - ${parsedError.args}`,
       );
     }
   }
