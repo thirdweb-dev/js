@@ -17,6 +17,7 @@ export default {
   "faucets": [
     "http://fauceth.komputing.org?chain=421611&address=${ADDRESS}"
   ],
+  "features": [],
   "infoURL": "https://arbitrum.io",
   "name": "Arbitrum Rinkeby",
   "nativeCurrency": {
@@ -34,6 +35,7 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://arbitrum-rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -42,6 +44,7 @@ export default {
   "shortName": "arb-rinkeby",
   "slip44": 1,
   "slug": "arbitrum-rinkeby",
+  "status": "deprecated",
   "testnet": true,
   "title": "Arbitrum Testnet Rinkeby"
 } as const satisfies Chain;
