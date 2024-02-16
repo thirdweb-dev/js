@@ -1,4 +1,4 @@
-import { formatTransactionRequest } from "viem/utils";
+import { formatTransactionRequest } from "viem";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";

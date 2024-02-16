@@ -1,6 +1,6 @@
 import { keyframes } from "@emotion/react";
 import React, { type ReactElement, useMemo } from "react";
-import QRCodeUtil from "qrcode";
+import { encode } from "uqr";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
@@ -73,29 +73,8 @@ const QRCodeContainer = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-/**
- * @internal
- */
-const generateMatrix = (
-  value: string,
-  errorCorrectionLevel: QRCodeUtil.QRCodeErrorCorrectionLevel,
-) => {
-  const arr = Array.prototype.slice.call(
-    QRCodeUtil.create(value, { errorCorrectionLevel }).modules.data,
-    0,
-  );
-  const sqrt = Math.sqrt(arr.length);
-  return arr.reduce(
-    (rows, key, index) =>
-      (index % sqrt === 0
-        ? rows.push([key])
-        : rows[rows.length - 1].push(key)) && rows,
-    [],
-  );
-};
-
 type Props = {
-  ecl?: QRCodeUtil.QRCodeErrorCorrectionLevel;
+  ecl?: "L" | "M" | "Q" | "H";
   size?: number;
   uri: string;
   clearSize?: number;
@@ -195,7 +174,7 @@ export function QRCodeRenderer({
 
   const dots = useMemo(() => {
     const dotsArray: ReactElement[] = [];
-    const matrix = generateMatrix(uri, ecl);
+    const matrix = encode(uri, { ecc: ecl }).data;
     const cellSize = size / matrix.length;
     const qrList = [
       { x: 0, y: 0 },
@@ -258,9 +237,9 @@ export function QRCodeRenderer({
     const matrixMiddleStart = matrix.length / 2 - clearArenaSize / 2;
     const matrixMiddleEnd = matrix.length / 2 + clearArenaSize / 2 - 1;
 
-    matrix.forEach((row: QRCodeUtil.QRCode[], i: number) => {
+    matrix.forEach((row, i: number) => {
       row.forEach((_: any, j: number) => {
-        if (matrix[i][j]) {
+        if (matrix[i]?.[j]) {
           // Do not render dots under position squares
           if (
             !(

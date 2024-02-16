@@ -17,7 +17,7 @@ import type { ParseEventLogsResult } from "../../../event/index.js";
 export type UseContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onLogs"> & {
+> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onEvents"> & {
   limit?: number;
   enabled?: boolean;
   watch?: boolean;
