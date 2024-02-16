@@ -272,7 +272,6 @@ export class InjectedWallet implements Wallet {
               accessList: tx.accessList,
               value: tx.value ? toHex(tx.value) : undefined,
               gas: tx.gas ? toHex(tx.gas) : undefined,
-              value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
