@@ -35,7 +35,7 @@ export const getWalletUniqueId = (
  * @param arg.user - The authenticated user for which we want to get the wallet details of
  * @example
  * ```ts
- * import { getUserAccountDetail } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { getUserAccountDetail } from "thirdweb/wallets/embedded/core/wallet/utils";
  * const accounts = await getUserAccountDetail({
  *  user: {
  *    authToken
@@ -70,7 +70,7 @@ export const getUserAccountDetail = async (arg: {
  * @param arg.createAccountOverride - Optional. A function to override the default wallet creation function
  * @example
  * ```ts
- * import { createAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { createAccount } from "thirdweb/wallets/embedded/core/wallet/utils";
  *
  * const account = await createAccount({
  *    client,
@@ -150,7 +150,7 @@ export const createAccount = async ({
  * @param arg.storage - The storage option containing info to save the wallet
  * @example
  * ```ts
- * import { saveAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { saveAccount } from "thirdweb/wallets/embedded/core/wallet/utils";
  *
  * const account = await saveAccount({
  *   accountDetail,
@@ -239,7 +239,7 @@ export const saveAccount = async ({
  * @param arg.accountDetail - The wallet details to load
  * @example
  * ```ts
- * import { loadAccount } from "thirdweb/wallets/embedded-wallet/core/wallet/utils";
+ * import { loadAccount } from "thirdweb/wallets/embedded/core/wallet/utils";
  *
  * const account = await loadAccount({
  *  storage,

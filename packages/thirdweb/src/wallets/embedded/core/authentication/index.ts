@@ -17,7 +17,7 @@ import type {
  * @param arg.removeToken - The function to remove the auth token.
  * @example
  *  ```ts
- * import { createAuthStorage } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { createAuthStorage } from "thirdweb/wallets/embedded/core/authentication";
  * const storage = createAuthStorage({
  *    fetchToken: ({ key }) => localStorage.getItem(key),
  *    storeToken: ({ key, value }) => localStorage.setItem(key, value),
@@ -40,7 +40,7 @@ export const createAuthStorage = ({
  * @param arg.storage - The storage options for the user's auth token
  * @example
  * ```ts
- * import { getAuthenticatedUser } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { getAuthenticatedUser } from "thirdweb/wallets/embedded/core/authentication";
  * const storage = createAuthStorage({ ... });
  * const user = await getAuthenticatedUser({ storage });
  * ```
@@ -91,7 +91,7 @@ export const getAuthenticatedUser = async (arg: {
  * @param arg - The options for initiating the authentication process
  * @example
  * ```ts
- * import { preAuthenticate } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { preAuthenticate } from "thirdweb/wallets/embedded/core/authentication";
  *
  * await preAuthenticate({
  *    provider: "email",
@@ -146,7 +146,7 @@ export const preAuthenticate = async (
  * @param arg.handleOauth - The function to handle the oauth process. Does a postmessage with the result under "oauthSuccessResult" and "oauthFailureResult" for success and failure respectively.
  * @example
  * ```ts
- * import { authenticate } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { authenticate } from "thirdweb/wallets/embedded/core/authentication";
  *
  *  const user = await authenticate({
  *    provider: "google",
@@ -223,7 +223,7 @@ export const authenticate = async (
  * @param arg - The options for initiating the 2FA authentication process
  * @example
  *  ```ts
- * import { pre2FA } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { pre2FA } from "thirdweb/wallets/embedded/core/authentication";
  * await pre2FA({
  *    provider: "email",
  *    email: "you@example.com"
@@ -289,7 +289,7 @@ export const pre2FA = async (
  * @param arg - The options for completing the 2FA authentication process
  * @example
  * ```ts
- * import { confirm2FA } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { confirm2FA } from "thirdweb/wallets/embedded/core/authentication";
  * await confirm2FA({
  *    provider: "email",
  *    email: "you@example.com""
@@ -311,7 +311,7 @@ export const confirm2FA = async (
  * @param arg - The options for initiating the linking of the user account
  * @example
  * ```ts
- * import { preLinkAuthentication } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { preLinkAuthentication } from "thirdweb/wallets/embedded/core/authentication";
  *
  * await preLinkAuthentication({
  *    provider: "email",
@@ -335,7 +335,7 @@ export const preLinkAuthentication = async (
  * @param arg - The options for linking the user account
  * @example
  * ```ts
- * import { linkAuthentication } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { linkAuthentication } from "thirdweb/wallets/embedded/core/authentication";
  * await linkAuthentication({
  *     provider: "google",
  *     googleOauthPrompt: "select_account",

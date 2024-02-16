@@ -40,7 +40,7 @@ const getUserAuthToken = async (authUser?: AuthUserType) => {
  * @throws if developer is not on thirdweb managed storage
  * @example
  * ```ts
- * import { saveEncryptedInThirdweb } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { saveEncryptedInThirdweb } from "thirdweb/wallets/embedded/core/storage";
  *
  * const saveEncryptedInThirdweb = saveEncryptedInThirdweb({
  *  encryptValue: async ({ value }) => {
@@ -106,7 +106,7 @@ export const saveEncryptedInThirdweb = (arg: {
  * @throws if developer is not on thirdweb managed storage
  * @example
  * ```ts
- * import { saveInThirdweb } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { saveInThirdweb } from "thirdweb/wallets/embedded/core/storage";
  *
  * const saveInThirdweb = saveInThirdweb();
  * ```
@@ -167,7 +167,7 @@ export const saveInThirdweb = (): SaveKeyType => {
  * @param arg.saveItem - a function to be called to save the key, value pair.
  * @example
  * ```ts
- * import { saveInKeyValueStore } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { saveInKeyValueStore } from "thirdweb/wallets/embedded/core/storage";
  *
  * const saveToLocalStorage = saveInKeyValueStore({
  *    saveItem: async ({ key, value }) => {
@@ -200,7 +200,7 @@ export const saveInKeyValueStore = (arg: {
  * @throws if dev is not on managed storage
  * @example
  * ```ts
- * import { loadEncryptedFromThirdweb } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { loadEncryptedFromThirdweb } from "thirdweb/wallets/embedded/core/storage";
  *
  * const loadEncryptedFromThirdweb = loadEncryptedFromThirdweb({
  *   decryptValue: async ({ value }) => {
@@ -256,7 +256,7 @@ export const loadEncryptedFromThirdweb = (arg: {
  * @throws if dev is not on managed storage
  * @example
  * ```ts
- * import { loadFromThirdweb } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { loadFromThirdweb } from "thirdweb/wallets/embedded/core/storage";
  *
  * const loadFromThirdweb = loadFromThirdweb();
  * ```
@@ -312,7 +312,7 @@ export const loadFromThirdweb = (): LoadKeyType => {
  * @param arg.loadItem - a function to be called to load the key, value pair.
  * @example
  * ```ts
- * import { loadFromKeyValueStore } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { loadFromKeyValueStore } from "thirdweb/wallets/embedded/core/storage";
  *
  * const loadFromLocalStorage = loadFromKeyValueStore({
  *  loadItem: async ({ key }) => {
@@ -349,7 +349,7 @@ export const loadFromKeyValueStore = (arg: {
  * @param arg.loadKeyValue - a function to be called to load the key, value pair.
  * @example
  * ```ts
- * import { createManagedStorage } from "thirdweb/wallets/embedded-wallet/core/storage";
+ * import { createManagedStorage } from "thirdweb/wallets/embedded/core/storage";
  *
  * const storage = createManagedStorage({
  *    client,

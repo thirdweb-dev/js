@@ -25,7 +25,7 @@ const createAuthLocalStorage = () => {
  * @param arg.storage - The storage override options for the auth user token. Defaults to localStorage
  * @example
  * ```ts
- * import { getAuthenticatedUser } from "thirdweb/wallets/embedded-wallet/web/authentication";
+ * import { getAuthenticatedUser } from "thirdweb/wallets/embedded/web/authentication";
  *
  * const user = await getAuthenticatedUser();
  * console.log(user);
@@ -50,7 +50,7 @@ export const getAuthenticatedUser = async (arg?: {
  * @param arg - The options for completing the authentication process
  * @example
  * ```ts
- * import { authenticate } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { authenticate } from "thirdweb/wallets/embedded/core/authentication";
  *
  *  const user = await authenticate({
  *    provider: "google",
@@ -93,7 +93,7 @@ export const authenticate = async (
  * @param arg - The options for linking the user account
  * @example
  * ```ts
- * import { linkAuthentication } from "thirdweb/wallets/embedded-wallet/core/authentication";
+ * import { linkAuthentication } from "thirdweb/wallets/embedded/core/authentication";
  * await linkAuthentication({
  *     provider: "google",
  *     googleOauthPrompt: "select_account",
@@ -138,7 +138,7 @@ export const linkAuthentication = async (
  * @param arg.storage - The storage override options for the auth user token. Defaults to localStorage
  * @example
  * ```ts
- * import { logout } from "thirdweb/wallets/embedded-wallet/web/authentication";
+ * import { logout } from "thirdweb/wallets/embedded/web/authentication";
  *
  * await logout();
  * ```

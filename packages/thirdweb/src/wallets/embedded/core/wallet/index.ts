@@ -1,8 +1,4 @@
-import type {
-  Account,
-  Wallet,
-  WalletConnectionOptions,
-} from "../../../interfaces/wallet.js";
+import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 import type {
   AccountDetailType,
@@ -267,10 +263,7 @@ class EmbeddedWallet implements Wallet {
     return arg.account;
   }
 
-  public async connect(options: WalletConnectionOptions | undefined) {
-    // Hack to satisfy linter
-    void options;
-
+  public async connect() {
     return this.autoConnect();
   }
 
