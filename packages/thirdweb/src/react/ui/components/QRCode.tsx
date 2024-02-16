@@ -174,7 +174,7 @@ function QRCodeRenderer({
 
   const dots = useMemo(() => {
     const dotsArray: ReactElement[] = [];
-    const matrix = encode(uri, { ecc: ecl }).data;
+    const matrix = encode(uri, { ecc: ecl, border: 0 }).data;
     const cellSize = size / matrix.length;
     const qrList = [
       { x: 0, y: 0 },
