@@ -1,5 +1,3 @@
-import { green, mauve, mauveDark, tomato } from "@radix-ui/colors";
-
 type ThemeColors = {
   base1: string;
   base2: string;
@@ -15,35 +13,35 @@ type ThemeColors = {
   textOnAccent: string;
 };
 
-const darkColors: ThemeColors = {
+const darkColors = {
   base1: "hsl(230deg 11.63% 8.43%)",
   base2: "hsl(230deg 11.63% 12%)",
   base3: "hsl(230deg 11.63% 15%)",
   base4: "hsl(230deg 11.63% 17%)",
-  primaryText: mauveDark.mauve12,
-  secondaryText: mauveDark.mauve10,
-  danger: tomato.tomato9,
-  success: green.green8,
+  primaryText: "#eeeef0",
+  secondaryText: "#7c7a85",
+  danger: "#e54d2e",
+  success: "#5bb98b",
   overlay: "rgba(0, 0, 0, 0.7)",
   accentText: "#3385FF",
   accentBg: "hsl(216 100% 50%)",
-  textOnAccent: mauveDark.mauve12,
-};
+  textOnAccent: "#eeeef0",
+} as const satisfies ThemeColors;
 
-const lightColors: ThemeColors = {
-  base1: mauve.mauve1,
-  base2: mauve.mauve3,
-  base3: mauve.mauve5,
-  base4: mauve.mauve6,
-  primaryText: mauve.mauve12,
-  secondaryText: mauveDark.mauve9,
+const lightColors = {
+  base1: "#fdfcfd",
+  base2: "#f2eff3",
+  base3: "#e3dfe6",
+  base4: "#dbd8e0",
+  primaryText: "#211f26",
+  secondaryText: "#6f6d78",
   accentText: "hsl(216 100% 45%)",
-  success: green.green9,
-  danger: tomato.tomato9,
+  success: "#30a46c",
+  danger: "#e54d2e",
   overlay: "rgba(0, 0, 0, 0.7)",
   accentBg: "hsl(216 100% 50%)",
-  textOnAccent: mauve.mauve1,
-};
+  textOnAccent: "#fdfcfd",
+} as const satisfies ThemeColors;
 
 /**
  * @theme
