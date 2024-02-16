@@ -51,6 +51,7 @@ import {
 } from "tw-components";
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
+import { Chain } from "@thirdweb-dev/chains";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -585,9 +586,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             Deploy Now
           </TransactionButton>
         </Flex>
-        {networkInfo?.status === "deprecated" && networkInfo?.name && (
-          <DeprecatedAlert chainName={networkInfo?.name} />
-        )}
+        <DeprecatedAlert chain={networkInfo as Chain} />
       </Flex>
     </FormProvider>
   );

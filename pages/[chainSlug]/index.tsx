@@ -272,60 +272,57 @@ const ChainPage: ThirdwebNextPage = ({
         flexDirection="column"
         gap={10}
       >
-        {isDeprecated ? (
-          <DeprecatedAlert chainName={sanitizedChainName} />
-        ) : (
-          category && (
-            <>
-              <ChainSectionElement
-                colSpan={12}
-                label="Popular Contracts"
-                moreElem={
-                  <TrackedLink
-                    category={CHAIN_CATEGORY}
-                    href="/explore"
-                    color="blue.500"
-                    label="explore_more"
-                    display="flex"
-                    alignItems="center"
-                    gap={"0.5em"}
-                    _hover={{
-                      textDecoration: "none",
-                      color: "heading",
-                    }}
-                  >
-                    Explore more <BsArrowRight />
-                  </TrackedLink>
-                }
-              >
-                <Grid
-                  templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
-                  gap={6}
-                  mt={2}
+        <DeprecatedAlert chain={chain} />
+        {category && (
+          <>
+            <ChainSectionElement
+              colSpan={12}
+              label="Popular Contracts"
+              moreElem={
+                <TrackedLink
+                  category={CHAIN_CATEGORY}
+                  href="/explore"
+                  color="blue.500"
+                  label="explore_more"
+                  display="flex"
+                  alignItems="center"
+                  gap={"0.5em"}
+                  _hover={{
+                    textDecoration: "none",
+                    color: "heading",
+                  }}
                 >
-                  {(isLineaTestnet
-                    ? lineaTestnetPopularContracts
-                    : category.contracts
-                  ).map((publishedContractId, idx) => {
-                    const [publisher, contractId] =
-                      publishedContractId.split("/");
-                    return (
-                      <ContractCard
-                        key={publishedContractId}
-                        publisher={publisher}
-                        contractId={contractId}
-                        tracking={{
-                          source: `chain_${chain.slug}`,
-                          itemIndex: `${idx}`,
-                        }}
-                      />
-                    );
-                  })}
-                </Grid>
-              </ChainSectionElement>
-              <Divider />
-            </>
-          )
+                  Explore more <BsArrowRight />
+                </TrackedLink>
+              }
+            >
+              <Grid
+                templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
+                gap={6}
+                mt={2}
+              >
+                {(isLineaTestnet
+                  ? lineaTestnetPopularContracts
+                  : category.contracts
+                ).map((publishedContractId, idx) => {
+                  const [publisher, contractId] =
+                    publishedContractId.split("/");
+                  return (
+                    <ContractCard
+                      key={publishedContractId}
+                      publisher={publisher}
+                      contractId={contractId}
+                      tracking={{
+                        source: `chain_${chain.slug}`,
+                        itemIndex: `${idx}`,
+                      }}
+                    />
+                  );
+                })}
+              </Grid>
+            </ChainSectionElement>
+            <Divider />
+          </>
         )}
 
         <SimpleGrid as="section" columns={{ base: 6, md: 12 }} rowGap={12}>

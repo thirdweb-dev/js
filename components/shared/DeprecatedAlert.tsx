@@ -5,23 +5,29 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { getChainByChainId } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
 import { Text } from "tw-components";
 
 interface DeprecatedAlertProps {
-  chainName: string;
+  chain: Chain;
   description?: string;
   recommendedChainId?: number;
 }
 
 export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({
-  chainName,
+  chain,
   description = "thirdweb services are not available on this network.",
   recommendedChainId,
 }) => {
   const recommendedChainName = recommendedChainId
     ? getChainByChainId(recommendedChainId).name
     : undefined;
+
+  if (chain?.status !== "deprecated" || !chain?.name) {
+    return null;
+  }
+
+  const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
 
   return (
     <Alert
@@ -35,7 +41,7 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({
     >
       <AlertIcon />
       <Flex flexDir="column">
-        <AlertTitle>{chainName} is deprecated</AlertTitle>
+        <AlertTitle>{cleanedChainName} is deprecated</AlertTitle>
         <AlertDescription as={Text}>
           {description}{" "}
           {recommendedChainId && (
