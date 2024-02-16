@@ -1,7 +1,8 @@
-import { Icon, VStack } from "@chakra-ui/react";
+import { Flex, Icon, VStack } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { FiSearch } from "react-icons/fi";
 import { Heading, LinkButton } from "tw-components";
 
 interface HackathonFooterProps {
@@ -47,30 +48,62 @@ export const HackathonFooter = ({
         FEBRUARY 16 - 18
       </Heading>
 
-      <LinkButton
-        href="https://docs.google.com/forms/d/1CT8LPG1DrcpTKAW38ScVzTcyBNwS6ANOk6xpfjpXLAs/edit"
-        onClick={() =>
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "click",
-            label: "register-now",
-          })
-        }
-        h="68px"
-        w={{ base: "90%", md: 96 }}
-        fontSize="20px"
-        leftIcon={<Icon as={ImMagicWand} />}
-        color="black"
-        flexShrink={0}
-        background="rgba(255,255,255,1)"
-        _hover={{
-          background: "rgba(255,255,255,0.9)!important",
-        }}
-        isExternal
-        noIcon
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        gap="20px"
+        flexWrap="wrap"
       >
-        Register now
-      </LinkButton>
+        <LinkButton
+          href="https://docs.google.com/forms/d/1CT8LPG1DrcpTKAW38ScVzTcyBNwS6ANOk6xpfjpXLAs/edit"
+          onClick={() =>
+            trackEvent({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "register-now",
+            })
+          }
+          h="68px"
+          w={{ base: "90%", md: 80 }}
+          fontSize="20px"
+          leftIcon={<Icon as={ImMagicWand} />}
+          color="black"
+          flexShrink={0}
+          background="rgba(255,255,255,1)"
+          _hover={{
+            background: "rgba(255,255,255,0.9)!important",
+          }}
+          isExternal
+          noIcon
+        >
+          Register now
+        </LinkButton>
+
+        <LinkButton
+          href="https://forms.gle/9X2gz7H28zvcf47f6"
+          onClick={() =>
+            trackEvent({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "register-now",
+            })
+          }
+          h="68px"
+          w={{ base: "90%", md: 80 }}
+          fontSize="20px"
+          leftIcon={<Icon as={FiSearch} />}
+          color="black"
+          flexShrink={0}
+          background="rgba(255,255,255,1)"
+          _hover={{
+            background: "rgba(255,255,255,0.9)!important",
+          }}
+          isExternal
+          noIcon
+        >
+          Submission
+        </LinkButton>
+      </Flex>
     </VStack>
   );
 };
