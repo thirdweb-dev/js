@@ -16,6 +16,11 @@ import { InputSelectionUI } from "../InputSelectionUI";
 import { socialIcons } from "./socialIcons";
 import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
+import { useScreenContext } from "../../ConnectWallet/Modal/screen";
+import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { TOS } from "../../ConnectWallet/Modal/TOS";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -71,7 +76,7 @@ export const EmbeddedWalletFormUI = (props: {
       setConnectedWallet(embeddedWallet);
     } catch (e) {
       setConnectionStatus("disconnected");
-      console.error(e);
+      console.error(`Error sign in with ${strategy}`, e);
     }
   };
 
@@ -127,7 +132,7 @@ export const EmbeddedWalletFormUI = (props: {
           name="email"
           type="email"
           errorMessage={(_input) => {
-            const input = _input.replace(/\+/g, "");
+            const input = _input.replace(/\+/g, "").toLowerCase();
             const emailRegex =
               /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
             const isValidEmail = emailRegex.test(input);
@@ -155,6 +160,9 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
 }> = (props) => {
   const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const isCompact = props.modalSize === "compact";
+  const { initialScreen, screen } = useScreenContext();
+  const modalConfig = useContext(ModalConfigCtx);
+
   return (
     <Container
       fullHeight
@@ -165,7 +173,14 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title={locale.title} />
+      <ModalHeader
+        onBack={
+          screen === props.walletConfig && initialScreen === props.walletConfig
+            ? undefined
+            : props.onBack
+        }
+        title={locale.title}
+      />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
@@ -183,6 +198,20 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
           setConnectionStatus={props.setConnectionStatus}
           setConnectedWallet={props.setConnectedWallet}
         />
+      </Container>
+
+      {isCompact &&
+        (modalConfig.showThirdwebBranding !== false ||
+          modalConfig.termsOfServiceUrl ||
+          modalConfig.privacyPolicyUrl) && <Spacer y="xl" />}
+
+      <Container flex="column" gap="lg">
+        <TOS
+          termsOfServiceUrl={modalConfig.termsOfServiceUrl}
+          privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+        />
+
+        {modalConfig.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );

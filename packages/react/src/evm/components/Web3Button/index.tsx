@@ -185,7 +185,17 @@ export interface Web3ButtonProps<TActionFn extends ActionFn> {
      * Either provide a component to replace the default screen entirely or an object with title, subtitle and imgSrc to change the content of the default screen
      */
     welcomeScreen?: WelcomeScreen;
+
+    /**
+     * By default the ConnectWallet Modal shows "Powered by Thirdweb" at the bottom. If you want to hide it, set it to `false`
+     */
+    showThirdwebBranding?: boolean;
   };
+
+  /**
+   * Set a custom label for the "Switch Network" button
+   */
+  switchNetworkBtnTitle?: string;
 }
 
 /**
@@ -255,6 +265,8 @@ export const Web3Button = <TAction extends ActionFn>(
   const theme = props.theme || contextTheme || "dark";
 
   const locale = useTWLocale();
+  const switchNetworkLabel =
+    props.switchNetworkBtnTitle || locale.connectWallet.switchNetwork;
 
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
@@ -337,7 +349,7 @@ export const Web3Button = <TAction extends ActionFn>(
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
-          locale.connectWallet.switchNetwork
+          switchNetworkLabel
         )}
       </Button>
     );

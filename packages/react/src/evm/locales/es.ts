@@ -172,6 +172,7 @@ export function esDefault(): ThirdwebLocale {
       coreWallet: extensionAndQRScanScreens("Core"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
@@ -215,6 +216,7 @@ export function esDefault(): ThirdwebLocale {
         signIn: "Iniciar sesión",
         emailRequired: "Se requiere dirección de correo electrónico",
         invalidEmail: "Dirección de correo electrónico inválida",
+        maxAccountsExceeded: "Número máximo de cuentas alcanzado",
         socialLoginScreen: {
           title: "Iniciar sesión",
           instruction: "Inicie sesión en su cuenta en la ventana abierta",

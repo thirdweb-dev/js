@@ -13,6 +13,11 @@ import { PaperLoginType } from "./types";
 import { Img } from "../../../components/Img";
 import { googleIconUri } from "../../ConnectWallet/icons/socialLogins";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { TOS } from "../../ConnectWallet/Modal/TOS";
+import { useScreenContext } from "../../ConnectWallet/Modal/screen";
+import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -79,7 +84,7 @@ export const PaperFormUI = (props: {
         name="email"
         type="email"
         errorMessage={(_input) => {
-          const input = _input.replace(/\+/g, "");
+          const input = _input.replace(/\+/g, "").toLowerCase();
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
           const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
@@ -105,6 +110,8 @@ export const PaperFormUIScreen: React.FC<{
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   const locale = useTWLocale().wallets.paperWallet;
+  const { initialScreen, screen } = useScreenContext();
+  const modalConfig = useContext(ModalConfigCtx);
   return (
     <Container
       fullHeight
@@ -115,7 +122,14 @@ export const PaperFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title={locale.signIn} />
+      <ModalHeader
+        onBack={
+          screen === props.walletConfig && initialScreen === props.walletConfig
+            ? undefined
+            : props.onBack
+        }
+        title={locale.signIn}
+      />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
@@ -132,6 +146,20 @@ export const PaperFormUIScreen: React.FC<{
           setConnectedWallet={props.setConnectedWallet}
           createWalletInstance={props.createWalletInstance}
         />
+      </Container>
+
+      {isCompact &&
+        (modalConfig.showThirdwebBranding !== false ||
+          modalConfig.termsOfServiceUrl ||
+          modalConfig.privacyPolicyUrl) && <Spacer y="xl" />}
+
+      <Container flex="column" gap="lg">
+        <TOS
+          termsOfServiceUrl={modalConfig.termsOfServiceUrl}
+          privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+        />
+
+        {modalConfig.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );

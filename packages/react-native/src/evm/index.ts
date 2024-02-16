@@ -15,10 +15,6 @@ export { TrustWallet, trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
-export { magicWallet } from "./wallets/wallets/magic-link";
-export { MagicWallet } from "./wallets/wallets/MagicLink";
-export { MagicLink } from "./wallets/wallets/MagicLink";
-export { magicLink } from "./wallets/wallets/magic-link";
 export { EmbeddedWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
 export { embeddedWallet } from "./wallets/wallets/embedded/embedded-wallet";
 export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
@@ -38,6 +34,12 @@ export {
   ConnectWallet,
   type ConnectWalletProps,
 } from "./components/ConnectWallet";
+
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "./components/ConnectWalletFlow/ConnectEmbed";
+
 export {
   Web3Button,
   type Web3ButtonProps,

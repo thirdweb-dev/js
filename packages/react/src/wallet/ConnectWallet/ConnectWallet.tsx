@@ -1,6 +1,7 @@
 import { Theme, iconSize } from "../../design-system";
-import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
+import { ConnectedWalletDetails } from "./Details";
 import {
+  WalletInstance,
   useAddress,
   useConnectionStatus,
   useLogout,
@@ -12,7 +13,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -21,7 +22,6 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { isMobile } from "../../evm/utils/isMobile";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -34,6 +34,7 @@ import { LockIcon } from "./icons/LockIcon";
 import { SignatureScreen } from "./SignatureScreen";
 import { Modal } from "../../components/Modal";
 import { useTWLocale } from "../../evm/providers/locale-provider";
+import { canFitWideModal } from "../../evm/utils/canFitWIdeModal";
 
 export type ConnectWalletProps = {
   /**
@@ -80,6 +81,11 @@ export type ConnectWalletProps = {
   btnTitle?: string;
 
   /**
+   * Set a custom label for the "Switch Network" button
+   */
+  switchNetworkBtnTitle?: string;
+
+  /**
    * Change the title of ConnectWallet Modal
    *
    * The default is `"Connect"`
@@ -111,22 +117,6 @@ export type ConnectWalletProps = {
    * ```
    */
   detailsBtn?: () => JSX.Element;
-
-  /**
-   * When user connects the wallet using ConnectWallet Modal, a "Details Button" is rendered. Clicking on this button opens a dropdown which opens in a certain direction relative to the Details button.
-   *
-   * `dropdownPosition` prop allows you to customize the direction the dropdown should open relative to the Details button.
-   *
-   * ```tsx
-   * <ConnectWallet
-   *  dropdownPosition={{
-   *    side: "bottom", // or use:  "top" | "bottom" | "left" | "right"
-   *    align: "end", // or use:  "start" | "center" | "end";
-   *  }}
-   *  />
-   * ```
-   */
-  dropdownPosition?: DropDownPosition;
 
   /**
    * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/wallets/auth) after connecting their wallet.
@@ -164,9 +154,9 @@ export type ConnectWalletProps = {
   >;
 
   /**
-   * Hide the "Request Testnet funds" link in ConnectWallet dropdown which is shown when user is connected to a testnet.
+   * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
    *
-   * By default it is `false`
+   * By default it is `true`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
    *
    * @example
    * ```tsx
@@ -196,6 +186,8 @@ export type ConnectWalletProps = {
   modalSize?: "compact" | "wide";
 
   /**
+   * URL of the "terms of service" page
+   *
    * If provided, Modal will show a Terms of Service message at the bottom with below link
    *
    * @example
@@ -206,6 +198,8 @@ export type ConnectWalletProps = {
   termsOfServiceUrl?: string;
 
   /**
+   * URL of the "privacy policy" page
+   *
    * If provided, Modal will show a Privacy Policy message at the bottom with below link
    *
    * @example
@@ -308,7 +302,7 @@ export type ConnectWalletProps = {
   hideSwitchToPersonalWallet?: boolean;
 
   /**
-   * Hide the "Disconnect Wallet" button in the ConnectWallet Dropdown.
+   * Hide the "Disconnect Wallet" button in the ConnectWallet Details Modal.
    *
    * By default it is `false`
    *
@@ -320,12 +314,12 @@ export type ConnectWalletProps = {
   hideDisconnect?: boolean;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The connected wallet instance is passed as an argument to the callback
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -343,7 +337,34 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
+
+  /**
+   * Render custom UI at the bottom of the ConnectWallet Details Modal
+   * @param props - props passed to the footer component which includes a function to close the modal
+   * @example
+   * ```tsx
+   * <ConnectWallet
+   *  detailsModalFooter={(props) => {
+   *    const { close } = props;
+   *    return <div> ... </div>
+   *  })
+   * />
+   * ```
+   */
+  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+
+  /**
+   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   *
+   * If you want to hide the branding, set this prop to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet showThirdwebBranding={false} />
+   *```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -432,19 +453,6 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * />
  * ```
  *
- * ### dropdownPosition (optional)
- * When user connects the wallet using ConnectWallet Modal, a "Details Button" is rendered. Clicking on this button opens a dropdown which opens in a certain direction relative to the Details button.
- *
- * `dropdownPosition` prop allows you to customize the direction the dropdown should open relative to the Details button.
- *
- * ```tsx
- * <ConnectWallet
- *  dropdownPosition={{
- *    side: "bottom", // or use:  "top" | "bottom" | "left" | "right"
- *    align: "end", // or use:  "start" | "center" | "end";
- *  }}
- *  />
- * ```
  *
  * ### style (optional)
  * CSS styles to apply to the button element
@@ -453,9 +461,9 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * Customize the Network selector shown
  *
  * ### hideTestnetFaucet (optional)
- * Hide the "Request Testnet funds" link in ConnectWallet dropdown which is shown when user is connected to a testnet.
+ * Hide the "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet. By default it is `true`
  *
- * By default it is `false`
+ * If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `false`
  *
  * ```tsx
  * <ConnectWallet hideTestnetFaucet={false} />
@@ -572,13 +580,37 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```
  *
  * ### hideDisconnect
- * Hide the "Disconnect Wallet" button in the ConnectWallet dropdown
+ * Hide the "Disconnect Wallet" button in the ConnectWallet Details Modal
  *
  * By default it is `false`
  *
  * ```tsx
  * <ConnectWallet hideDisconnect={true} />
  * ```
+ *
+ * ### detailsModalFooter
+ * Render custom UI at the bottom of the ConnectWallet Details Modal.
+ *
+ * The given function is passed an object with a `close` function which can be used to close the modal.
+ *
+ * ```tsx
+ * <ConnectWallet
+ *  detailsModalFooter={(props) => {
+ *    const { close } = props;
+ *    return <div> ... </div>
+ *  })
+ * />
+ * ```
+ *
+ *
+ * ### showThirdwebBranding
+ * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+ *
+ * If you want to hide the branding, set this prop to `false`
+ *
+ * ```tsx
+ * <ConnectWallet showThirdwebBranding={false} />
+ *```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -682,7 +714,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               onClick={() => {
                 let modalSize = props.modalSize || "wide";
 
-                if (isMobile() || walletConfigs.length === 1) {
+                if (!canFitWideModal() || walletConfigs.length === 1) {
                   modalSize = "compact";
                 }
 
@@ -698,6 +730,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
                   onConnect: props.onConnect,
+                  showThirdwebBranding: props.showThirdwebBranding,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -722,6 +755,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             <SwitchNetworkButton
               style={props.style}
               className={props.className}
+              switchNetworkBtnTitle={props.switchNetworkBtnTitle}
             />
           );
         }
@@ -759,7 +793,6 @@ export function ConnectWallet(props: ConnectWalletProps) {
           <ConnectedWalletDetails
             theme={theme}
             networkSelector={props.networkSelector}
-            dropdownPosition={props.dropdownPosition}
             className={props.className}
             style={props.style}
             detailsBtn={props.detailsBtn}
@@ -774,6 +807,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
             }}
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
+            detailsModalFooter={props.detailsModalFooter}
           />
         );
       })()}
@@ -784,11 +818,15 @@ export function ConnectWallet(props: ConnectWalletProps) {
 function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
+  switchNetworkBtnTitle?: string;
 }) {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
   const locale = useTWLocale();
+
+  const switchNetworkBtnTitle =
+    props.switchNetworkBtnTitle ?? locale.connectWallet.switchNetwork;
 
   return (
     <AnimatedButton
@@ -818,7 +856,7 @@ function SwitchNetworkButton(props: {
       {switching ? (
         <Spinner size="sm" color="primaryButtonText" />
       ) : (
-        locale.connectWallet.switchNetwork
+        switchNetworkBtnTitle
       )}
     </AnimatedButton>
   );

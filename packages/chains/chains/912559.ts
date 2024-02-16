@@ -5,12 +5,12 @@ export default {
   "explorers": [
     {
       "name": "Astria EVM Dusknet Explorer",
-      "url": "https://explorer.evm.dusk-2.devnet.astria.org",
+      "url": "https://explorer.evm.dusk-3.devnet.astria.org",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://faucet.evm.dusk-2.devnet.astria.org/"
+    "https://faucet.evm.dusk-3.devnet.astria.org/"
   ],
   "icon": {
     "url": "ipfs://QmVbzZYXdVFY3uFaWQd7iSRtdM2UKWohj9fVqqEwxcw2RV",
@@ -29,7 +29,7 @@ export default {
   "rpc": [
     "https://astria-evm-dusknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://912559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.evm.dusk-2.devnet.astria.org"
+    "https://rpc.evm.dusk-3.devnet.astria.org"
   ],
   "shortName": "ria-dev",
   "slug": "astria-evm-dusknet",

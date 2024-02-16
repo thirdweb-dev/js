@@ -172,6 +172,7 @@ export function jaDefault(): ThirdwebLocale {
       coreWallet: extensionAndQRScanScreens("Core"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
@@ -214,6 +215,7 @@ export function jaDefault(): ThirdwebLocale {
         emailRequired: "メールアドレスが必要です",
         invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
+        maxAccountsExceeded: "アカウントの最大数を超えました",
         socialLoginScreen: {
           title: "サインイン",
           instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct

@@ -1,5 +1,18 @@
 import type { ServiceName } from "./services";
 
+export type UserOpData = {
+  sender: string;
+  targets: string[];
+  gasLimit: string;
+  gasPrice: string;
+};
+
+export type PolicyResult = {
+  policyId: string | null;
+  isAllowed: boolean;
+  reason: string;
+};
+
 export type CoreServiceConfig = {
   enforceAuth?: boolean;
   apiUrl: string;
@@ -7,6 +20,11 @@ export type CoreServiceConfig = {
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
+  checkPolicy?: boolean;
+  policyMetadata?: {
+    chainId: number;
+    userOp: UserOpData;
+  };
 };
 
 type Usage = {
@@ -23,7 +41,7 @@ export type ApiKeyMetadata = {
   key: string;
   accountId: string;
   accountStatus: "noCustomer" | "noPayment" | "validPayment" | "invalidPayment";
-  accountPlan: "free" | "enterprise";
+  accountPlan: "free" | "growth" | "pro" | "enterprise";
   creatorWalletAddress: string;
   secretHash: string;
   walletAddresses: string[];
@@ -38,6 +56,7 @@ export type ApiKeyMetadata = {
   usage?: Usage;
   limits: Partial<Record<ServiceName, number>>;
   rateLimits: Partial<Record<ServiceName, number>>;
+  policyResult?: PolicyResult;
 };
 
 export type AccountMetadata = {
@@ -71,8 +90,15 @@ export async function fetchKeyMetadataFromApi(
   clientId: string,
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
-  const { apiUrl, serviceScope, serviceApiKey } = config;
-  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=true`;
+  const { apiUrl, serviceScope, serviceApiKey, checkPolicy, policyMetadata } =
+    config;
+  const policyQuery =
+    checkPolicy && policyMetadata
+      ? `&checkPolicy=true&policyMetadata=${encodeURIComponent(
+          JSON.stringify(policyMetadata),
+        )}`
+      : "";
+  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=true${policyQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

@@ -4,8 +4,8 @@ export default {
   "chainId": 1501,
   "explorers": [
     {
-      "name": "bevm scan",
-      "url": "https://scan.bevm.io",
+      "name": "bevm canary scan",
+      "url": "https://scan-canary.bevm.io",
       "standard": "none"
     }
   ],
@@ -18,7 +18,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://chainx.org",
-  "name": "BEVM",
+  "name": "BEVM Canary",
   "nativeCurrency": {
     "name": "BTC",
     "symbol": "BTC",
@@ -27,12 +27,12 @@ export default {
   "networkId": 1501,
   "redFlags": [],
   "rpc": [
-    "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bevm-canary.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-1.bevm.io/",
-    "https://rpc-2.bevm.io/"
+    "https://rpc-canary-1.bevm.io/",
+    "https://rpc-canary-2.bevm.io/"
   ],
   "shortName": "chainx",
-  "slug": "bevm",
+  "slug": "bevm-canary",
   "testnet": false
 } as const satisfies Chain;

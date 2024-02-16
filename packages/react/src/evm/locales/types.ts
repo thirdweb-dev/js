@@ -164,6 +164,7 @@ export type ThirdwebLocale = {
         title: string;
       };
       submitEmail: string;
+      maxAccountsExceeded: string;
     };
     frameWallet: {
       connectionFailedScreen: {
@@ -264,6 +265,7 @@ export type ThirdwebLocale = {
       submitEmail: string;
     };
     phantomWallet: ExtensionAndQRScreensLocale;
+    xdefiWallet: ExtensionAndQRScreensLocale;
     rabbyWallet: ExtensionAndQRScreensLocale;
     rainbowWallet: ExtensionAndQRScreensLocale;
     safeWallet: {

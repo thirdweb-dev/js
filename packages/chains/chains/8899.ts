@@ -19,7 +19,7 @@ export default {
     }
   ],
   "icon": {
-    "url": "ipfs://QmfGHivFXtqs1CZvrBbLsRXAukWiLqgUF5erWaLNK55pDV",
+    "url": "ipfs://QmWvTUSCcQ17mDiKg3w1X5nW3q4wZGuVsZ9vwzJ8S9oCns",
     "width": 200,
     "height": 200,
     "format": "png"

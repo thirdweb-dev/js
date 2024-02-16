@@ -20,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function enDefault() {
+export function enDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "Sign in",
@@ -44,7 +44,7 @@ export function enDefault() {
       transactionHistory: "Transaction History",
       backupWallet: "Backup Wallet",
       guestWalletWarning:
-        "This is a temporary guest wallet. Backup if you don't want to lose access to it",
+        "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
       connectedToSmartWallet: "Connected To Smart Wallet",
       confirmInWallet: "Confirm in wallet",
@@ -167,6 +167,7 @@ export function enDefault() {
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
@@ -212,6 +213,8 @@ export function enDefault() {
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
+        maxAccountsExceeded:
+          "Maximum number of accounts exceeded. Please notify the app developer.",
         socialLoginScreen: {
           title: "Sign in",
           instruction: "Sign into your account in the pop-up",

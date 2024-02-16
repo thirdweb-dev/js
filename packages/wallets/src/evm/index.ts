@@ -43,6 +43,9 @@ export {
   type MetamaskWalletOptions,
 } from "./wallets/metamask";
 
+export * from "./wallets/xdefi";
+export { getInjectedXDEFIProvider } from "./connectors/xdefi/getInjectedXDEFIProvider";
+
 export * from "./wallets/phantom";
 export * from "./wallets/private-key";
 export * from "./wallets/rainbow-wallet";

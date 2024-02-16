@@ -1,6 +1,8 @@
 export {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
+  type ModalConfigOptions,
+  useSetWalletModalConfig,
 } from "./providers/wallet-ui-states-provider";
 
 export { useSafe } from "./connectors/gnosis";
@@ -27,8 +29,6 @@ export {
   type NetworkSelectorProps,
   type NetworkSelectorChainProps,
 } from "../wallet/ConnectWallet/NetworkSelector";
-
-export type { DropDownPosition } from "../wallet/ConnectWallet/Details";
 
 // UI components
 export * from "./components/MediaRenderer";

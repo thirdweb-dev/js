@@ -48,7 +48,7 @@ const TooltipContent = /* @__PURE__ */ (() =>
       background: theme.colors.tooltipBg,
       color: theme.colors.tooltipText,
       borderRadius: radius.sm,
-      padding: `${spacing.sm} ${spacing.md}`,
+      padding: `${spacing.xs} ${spacing.sm}`,
       fontSize: fontSize.sm,
       boxShadow: shadow.sm,
       userSelect: "none",

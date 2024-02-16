@@ -6,7 +6,7 @@ import {
   useConnect,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
@@ -23,7 +23,7 @@ export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   onChooseWallet: (wallet: WalletConfig<any>, data?: any) => void;
-  onClose: () => void;
+  onClose?: () => void;
   wallets: WalletConfig<any>[];
   excludeWalletIds?: string[];
   modalTitleIconUrl?: string;
@@ -49,15 +49,12 @@ export function ChooseWallet({
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) =>
-      w.id === walletIds.magicLink ||
-      (w.id === walletIds.embeddedWallet && w.selectUI),
+    (w) => w.id === walletIds.embeddedWallet && w.selectUI,
   );
 
   const walletsToDisplay = useMemo(() => {
     const filteredWallets = wallets.filter(
       (wallet) =>
-        wallet.id !== walletIds.magicLink &&
         wallet.id !== walletIds.embeddedWallet &&
         wallet.id !== walletIds.localWallet,
     );
@@ -112,6 +109,22 @@ export function ChooseWallet({
     }
   };
 
+  const getHeaderText = useCallback(() => {
+    if (typeof headerText === "string" && headerText.length === 0) {
+      return null;
+    }
+
+    if (!headerText || typeof headerText === "string") {
+      return (
+        <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
+          {headerText ? headerText : l.connect_wallet_details.connect}
+        </Text>
+      );
+    }
+
+    return headerText;
+  }, [headerText, l.connect_wallet_details.connect]);
+
   const connect = useConnect();
   const address = useAddress();
   const {
@@ -150,9 +163,7 @@ export function ChooseWallet({
                 color={theme.colors.backgroundInverted}
               />
             )}
-            <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
-              {headerText ? headerText : l.connect_wallet_details.connect}
-            </Text>
+            {getHeaderText()}
           </Box>
         }
         subHeaderText={subHeaderText}

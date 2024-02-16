@@ -13,11 +13,13 @@ import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
+import { createLruCache } from "./utils";
+import { getAnalyticsHeaders } from "../../core/utils/headers";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 // Internal static cache
-const metadataCache: Record<string, PublishedMetadata> = {};
+const metadataCache = /* @__PURE__ */ createLruCache<PublishedMetadata>(20);
 let multichainRegistry: Contract | undefined = undefined;
 
 function getCacheKey(address: string, chainId: number) {
@@ -29,7 +31,7 @@ function putInCache(
   chainId: number,
   metadata: PublishedMetadata,
 ) {
-  metadataCache[getCacheKey(address, chainId)] = metadata;
+  metadataCache.put(getCacheKey(address, chainId), metadata);
 }
 
 /**
@@ -39,7 +41,7 @@ export function getContractMetadataFromCache(
   address: string,
   chainId: number,
 ): PublishedMetadata | undefined {
-  return metadataCache[getCacheKey(address, chainId)];
+  return metadataCache.get(getCacheKey(address, chainId));
 }
 
 /**
@@ -67,6 +69,11 @@ export async function fetchContractMetadataFromAddress(
     try {
       const response = await fetch(
         `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+        {
+          headers: {
+            ...getAnalyticsHeaders(),
+          },
+        },
       );
       if (response.ok) {
         const resolvedData = await response.json();
@@ -95,6 +102,10 @@ export async function fetchContractMetadataFromAddress(
 
   if (!metadata.isPartialAbi) {
     putInCache(address, chainId, metadata);
+  } else {
+    console.warn(
+      `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
   }
   return metadata;
 }
@@ -141,9 +152,6 @@ export async function fetchContractMetadataFromBytecode(
   if (!metadata && bytecode) {
     const abi = constructAbiFromBytecode(bytecode);
     if (abi && abi.length > 0) {
-      console.warn(
-        `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
-      );
       // return partial ABI
       metadata = {
         name: "Unimported Contract",

@@ -4,7 +4,7 @@ import {
   ThirdwebProviderCoreProps,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
@@ -13,10 +13,10 @@ import { DappContextProvider } from "./context-provider";
 import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
 import { ThemeProvider, ThemeType } from "../styles/ThemeProvider";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import type { Locale } from "../i18n/types";
+import { getAnalyticsGlobals } from "../../core/storage/utils";
 
 export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -148,6 +148,8 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     ...restProps
   } = props;
 
+  getAnalyticsGlobals();
+
   const coinbaseWalletObj = supportedWallets.find(
     (w) => w.id === walletIds.coinbase,
   );
@@ -156,11 +158,6 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     coinbaseWalletObj?.config?.callbackURL,
-  );
-
-  const hasMagicConfig = useMemo(
-    () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),
-    [supportedWallets],
   );
 
   return (
@@ -188,19 +185,10 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     >
       <ThemeProvider theme={theme ? theme : "dark"}>
         <UIContextProvider locale={locale}>
-          {hasMagicConfig ? (
-            <SafeAreaProvider>
-              <DappContextProvider>
-                {children}
-                <MainModal />
-              </DappContextProvider>
-            </SafeAreaProvider>
-          ) : (
-            <DappContextProvider>
-              {children}
-              <MainModal />
-            </DappContextProvider>
-          )}
+          <DappContextProvider>
+            {children}
+            <MainModal />
+          </DappContextProvider>
         </UIContextProvider>
       </ThemeProvider>
     </ThirdwebProviderCore>

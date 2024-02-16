@@ -4,9 +4,14 @@ export default {
   "chainId": 11297108109,
   "explorers": [
     {
-      "name": "Palm Explorer",
-      "url": "https://explorer.palm.io",
+      "name": "Chainlens",
+      "url": "https://palm.chainlens.com",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Dora",
+      "url": "https://www.ondora.xyz/network/palm",
+      "standard": "none"
     }
   ],
   "faucets": [],
@@ -16,7 +21,7 @@ export default {
     "height": 72,
     "format": "svg"
   },
-  "infoURL": "https://palm.io",
+  "infoURL": "https://palm.network",
   "name": "Palm",
   "nativeCurrency": {
     "name": "PALM",
@@ -27,7 +32,8 @@ export default {
   "rpc": [
     "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11297108109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}"
+    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}",
+    "https://palm-mainnet.public.blastapi.io"
   ],
   "shortName": "palm",
   "slug": "palm",

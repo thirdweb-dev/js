@@ -1,6 +1,5 @@
 # On the Version Packages branch
-# Generate and Commit artifacts to the Version Packages branch
-# It commits the Typedoc JSON files and code snippets JSON files
+# Generate and Commit the Typedoc JSON files and the Snippets JSON files
 
 name: Commit Release Artifacts
 
@@ -11,14 +10,17 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
+  release-artifacts:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest-16
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
 
+      # bun setup is required, because pnpm typdoc will run pnpm build and some packages uses bun for build
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -30,32 +32,36 @@ jobs:
       - name: Build
         run: pnpm build
 
-  typedoc:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       - name: Typedoc
         run: pnpm typedoc
 
-  snippets:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: generate-docs
-        run: pnpm generate-docs
+      - name: Generate Docs
+        run: |
+          cd packages/sdk
+          pnpm generate-docs
+          cd ../react-core
+          pnpm generate-docs
+          cd ../react
+          pnpm generate-docs
+          cd ../..
 
-      - name: generate-snippets
+      - name: Generate Snippets
         run: pnpm generate-snippets
 
-  commit:
-    needs: [typedoc, snippets]
-    runs-on: ubuntu-latest
-    steps:
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
+          git status
+          git add packages/react/typedoc/documentation.json.gz
+          git add packages/react-core/typedoc/documentation.json.gz
+          git add packages/react-native/typedoc/documentation.json.gz
+          git add packages/sdk/typedoc/documentation.json.gz
+          git add packages/storage/typedoc/documentation.json.gz
+          git add packages/wallets/typedoc/documentation.json.gz
+          git add snippets/feature_snippets_react.json
+          git add snippets/feature_snippets_sdk.json
+          git add snippets/snippets.json
           git commit -m "Commit Release Artifacts [skip ci]"
           git push
         env:
