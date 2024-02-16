@@ -19,6 +19,7 @@ export type {
  * A hook to get a swap status
  * @param swapStatusParams - the swap status params to query a swap transaction
  * @returns a swap status object
+ * @example
  * ```jsx
  * import { useSwapStatus } from "thirdweb/react";
  * const { swapStatus, isFetching, error } = useSwapStatus(swapStatusParams);
@@ -37,6 +38,7 @@ export function useSwapStatus(swapStatusParams: SwapStatusParams | undefined) {
     isFetching,
     error,
   } = useQuery<SwapStatus, Error>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "swapStatus",
       swapStatusParams?.transactionId,
@@ -47,11 +49,11 @@ export function useSwapStatus(swapStatusParams: SwapStatusParams | undefined) {
         throw new Error("Missing swap status params");
       }
 
-      const swapStatus = await getSwapStatus(swapStatusParams);
-      if (swapStatus.status === "DONE") {
+      const swapStatus_ = await getSwapStatus(swapStatusParams);
+      if (swapStatus_.status === "DONE") {
         setRefetchInterval(0);
       }
-      return swapStatus;
+      return swapStatus_;
     },
     enabled: !!swapStatusParams,
     refetchInterval: refetchInterval,

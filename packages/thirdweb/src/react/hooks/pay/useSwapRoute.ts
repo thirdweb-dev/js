@@ -13,6 +13,7 @@ export type {
 /**
  * A hook to get a swap route
  * @returns a swap route object to perform a swap
+ * @example
  * ```jsx
  * import { useSwapRoute } from "thirdweb/react";
  * const { mutate: getSwapRoute, data: swapRoute } = useSwapRoute();

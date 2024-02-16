@@ -12,6 +12,7 @@ export type { SwapRoute } from "./useSwapRoute.js";
 /**
  * A hook to get a swap route
  * @returns a swap route object to perform a swap
+ * @example
  * ```jsx
  * import { useSendSwap } from "thirdweb/react";
  * const { sendSwap, swapStatus, sendStatus, isFetching,  error } = useSendSwap();
@@ -44,10 +45,10 @@ export function useSendSwap() {
       if (!account) {
         throw new Error("Account not found");
       }
-      const swapStatusParams = await sendSwap(account, swapRoute);
+      const swapStatusParams_ = await sendSwap(account, swapRoute);
 
-      setSwapStatusParams(swapStatusParams);
-      return swapStatusParams;
+      setSwapStatusParams(swapStatusParams_);
+      return swapStatusParams_;
     },
   });
 
