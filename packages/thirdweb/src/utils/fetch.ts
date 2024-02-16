@@ -1,3 +1,4 @@
+import { THIRDWEB_PAY_BASE_URL } from "../pay/swap/utils/definitions.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
 import {
@@ -30,7 +31,7 @@ export function getClientFetch(client: ThirdwebClient) {
 
     const headers = new Headers(restInit?.headers);
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
-    if (isThirdwebUrl(url)) {
+    if (isThirdwebUrl(url) || url.includes(THIRDWEB_PAY_BASE_URL)) {
       if (client.secretKey) {
         headers.set("x-secret-key", client.secretKey);
       } else if (client.clientId) {

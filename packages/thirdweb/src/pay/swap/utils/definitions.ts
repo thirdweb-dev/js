@@ -1,3 +1,5 @@
-export const THIRDWEB_PAY_SWAP_STATUS_ENDPOINT =
-  "http://localhost:3008/swap/status";
-export const THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT = "http://localhost:3008/swap";
+export const THIRDWEB_PAY_BASE_URL =
+  "https://pay-server-s25c.chainsaw-dev.zeet.app";
+
+export const THIRDWEB_PAY_SWAP_STATUS_ENDPOINT = `${THIRDWEB_PAY_BASE_URL}/swap/status`;
+export const THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT = `${THIRDWEB_PAY_BASE_URL}/swap`;
