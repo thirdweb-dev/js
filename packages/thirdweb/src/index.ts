@@ -93,3 +93,17 @@ export {
   parseGwei,
   parseUnits,
 } from "./utils/units.js";
+
+export {
+  getSwapRoute,
+  type SwapRoute,
+  type SwapRouteParams,
+} from "./pay/swap/actions/getSwap.js";
+
+export {
+  getSwapStatus,
+  type SwapStatus,
+  type SwapStatusParams,
+} from "./pay/swap/actions/getStatus.js";
+
+export { sendSwap } from "./pay/swap/actions/sendSwap.js";

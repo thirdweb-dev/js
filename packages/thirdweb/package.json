@@ -61,6 +61,11 @@
       "import": "./dist/esm/contract/index.js",
       "default": "./dist/cjs/contract/index.js"
     },
+    "./pay": {
+      "types": "./dist/types/pay/index.d.ts",
+      "import": "./dist/esm/pay/index.js",
+      "default": "./dist/cjs/pay/index.js"
+    },
     "./wallets/*": {
       "types": "./dist/types/wallets/*.d.ts",
       "import": "./dist/esm/wallets/*.js",
@@ -91,6 +96,9 @@
       ],
       "rpc": [
         "./dist/types/rpc/index.d.ts"
+      ],
+      "pay": [
+        "./dist/types/pay/index.d.ts"
       ],
       "storage": [
         "./dist/types/storage/index.d.ts"
