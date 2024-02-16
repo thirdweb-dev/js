@@ -295,8 +295,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0
       yaml:
-        specifier: ^2.3.1
-        version: 2.3.1
+        specifier: ^2.3.4
+        version: 2.3.4
     devDependencies:
       '@gmrchk/cli-testing-library':
         specifier: ^0.1.2
@@ -1136,8 +1136,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       yaml:
-        specifier: ^2.3.1
-        version: 2.3.1
+        specifier: ^2.3.4
+        version: 2.3.4
       zod:
         specifier: ^3.22.3
         version: 3.22.3
@@ -32329,8 +32329,8 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  /yaml@2.3.1:
-    resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
+  /yaml@2.3.4:
+    resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
     dev: false
 
