@@ -104,6 +104,7 @@ export interface TransactionOptions {
 
 export interface UserOpOptions extends TransactionOptions {
   batchData?: BatchData;
+  compressData?: boolean;
 }
 
 export type BatchData = {

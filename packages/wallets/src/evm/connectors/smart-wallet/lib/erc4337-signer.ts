@@ -1,4 +1,4 @@
-import { ethers, providers, utils } from "ethers";
+import { BytesLike, ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
@@ -6,6 +6,7 @@ import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -56,15 +57,43 @@ export class ERC4337EthersSigner extends Signer {
       options,
     );
     const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
-
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
         userOperation,
       );
-    try {
-      await this.httpRpcClient.sendUserOpToBundler(userOperation);
-    } catch (error: any) {
-      throw this.unwrapError(error);
+
+    if (options?.compressData) {
+      try {
+        const simpleInflatorAddress =
+          "0x564c7dC50f8293d070F490Fc31fEc3A0A091b9bB";
+        const simpleInflatorAbi =
+          // prettier-ignore
+          [{"inputs": [{"components": [{"internalType": "address","name": "sender","type": "address"},{"internalType": "uint256","name": "nonce","type": "uint256"},{"internalType": "bytes","name": "initCode","type": "bytes"},{"internalType": "bytes","name": "callData","type": "bytes"},{"internalType": "uint256","name": "callGasLimit","type": "uint256"},{"internalType": "uint256","name": "verificationGasLimit","type": "uint256"},{"internalType": "uint256","name": "preVerificationGas","type": "uint256"},{"internalType": "uint256","name": "maxFeePerGas","type": "uint256"},{"internalType": "uint256","name": "maxPriorityFeePerGas","type": "uint256"},{"internalType": "bytes","name": "paymasterAndData","type": "bytes"},{"internalType": "bytes","name": "signature","type": "bytes"}],"internalType": "struct UserOperation","name": "op","type": "tuple"}],"name": "compress","outputs": [{"internalType": "bytes","name": "compressed","type": "bytes"}],"stateMutability": "pure","type": "function"},{"inputs": [{"internalType": "bytes","name": "compressed","type": "bytes"}],"name": "inflate","outputs": [{"components": [{"internalType": "address","name": "sender","type": "address"},{"internalType": "uint256","name": "nonce","type": "uint256"},{"internalType": "bytes","name": "initCode","type": "bytes"},{"internalType": "bytes","name": "callData","type": "bytes"},{"internalType": "uint256","name": "callGasLimit","type": "uint256"},{"internalType": "uint256","name": "verificationGasLimit","type": "uint256"},{"internalType": "uint256","name": "preVerificationGas","type": "uint256"},{"internalType": "uint256","name": "maxFeePerGas","type": "uint256"},{"internalType": "uint256","name": "maxPriorityFeePerGas","type": "uint256"},{"internalType": "bytes","name": "paymasterAndData","type": "bytes"},{"internalType": "bytes","name": "signature","type": "bytes"}],"internalType": "struct UserOperation","name": "op","type": "tuple"}],"stateMutability": "pure","type": "function"}];
+        const sdk = new ThirdwebSDK(this.config.chain, {
+          clientId: this.config.clientId,
+          secretKey: this.config.secretKey,
+        });
+        const simpleInflator = await sdk.getContract(
+          simpleInflatorAddress,
+          simpleInflatorAbi,
+        );
+        const compressedUserOp: BytesLike = await simpleInflator.call(
+          "compress",
+          [userOperation],
+        );
+        await this.httpRpcClient.sendCompressedUserOpToBundler(
+          utils.hexlify(compressedUserOp),
+          simpleInflatorAddress,
+        );
+      } catch (error: any) {
+        throw this.unwrapError(error);
+      }
+    } else {
+      try {
+        await this.httpRpcClient.sendUserOpToBundler(userOperation);
+      } catch (error: any) {
+        throw this.unwrapError(error);
+      }
     }
     // TODO: handle errors - transaction that is "rejected" by bundler is _not likely_ to ever resolve its "wait()"
     return transactionResponse;
@@ -139,18 +168,18 @@ Code: ${errorCode}`;
   }
 
   async signMessage(message: Bytes | string): Promise<string> {
-      const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
-      if (isNotDeployed && this.config.deployOnSign) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
-        const tx = await this.sendTransaction({
-          to: await this.getAddress(),
-          data: "0x",
-        });
-        await tx.wait();
-      }
-    
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed && this.config.deployOnSign) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
+
     return await this.originalSigner.signMessage(message);
   }
 

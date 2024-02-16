@@ -112,6 +112,17 @@ export class HttpRpcClient {
     ]);
   }
 
+  async sendCompressedUserOpToBundler(
+    compressedUserOpHex: string,
+    inflatorAddress: string,
+  ): Promise<string> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send(
+      "pimlico_sendCompressedUserOperation",
+      [compressedUserOpHex, inflatorAddress, this.entryPointAddress],
+    );
+  }
+
   async estimateUserOpGas(userOp1: Partial<UserOperationStruct>): Promise<{
     preVerificationGas: string;
     verificationGas: string;
