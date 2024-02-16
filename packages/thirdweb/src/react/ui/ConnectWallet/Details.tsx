@@ -80,7 +80,7 @@ export const ConnectedWalletDetails: React.FC<{
   detailsModal?: ConnectWallet_DetailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
-  chains: bigint[];
+  chains: number[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const activeWallet = useActiveWallet();

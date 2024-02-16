@@ -119,12 +119,12 @@ export type ConnectUIProps = {
   /**
    * Chain Id to connect the wallet to
    */
-  chainId?: bigint;
+  chainId?: number;
 
   /**
    * List of all chains supported by the app
    */
-  chains?: bigint[];
+  chains?: number[];
 
   /**
    * Create a wallet instance

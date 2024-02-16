@@ -2,6 +2,7 @@ import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import { normalizeChainId } from "../utils/normalizeChainId.js";
 import { walletStorage } from "./storage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
@@ -28,7 +29,7 @@ export function createConnectionManager() {
   // active wallet/account
   const activeWallet = createStore<Wallet | undefined>(undefined);
   const activeAccount = createStore<Account | undefined>(undefined);
-  const activeWalletChainId = createStore<bigint | undefined>(undefined);
+  const activeWalletChainId = createStore<number | undefined>(undefined);
   const activeWalletConnectionStatus = createStore<ConnectionStatus>("unknown");
 
   // other connected accounts
@@ -115,7 +116,7 @@ export function createConnectionManager() {
       };
 
       const onChainChanged = (chainId: string) => {
-        activeWalletChainId.setValue(BigInt(chainId));
+        activeWalletChainId.setValue(normalizeChainId(chainId));
       };
 
       const handleDisconnect = () => {
@@ -165,7 +166,7 @@ export function createConnectionManager() {
     false,
   );
 
-  const switchActiveWalletChain = async (chainId: number | bigint) => {
+  const switchActiveWalletChain = async (chainId: number) => {
     const wallet = activeWallet.getValue();
     if (!wallet) {
       throw new Error("no wallet found");

@@ -1,3 +1,4 @@
+import { getChainIdFromChain } from "../../../chain/index.js";
 import {
   smartWallet,
   type SmartWalletOptions,
@@ -49,12 +50,7 @@ export const smartWalletConfig = (
     },
     connectUI(props) {
       const chain = options.chain;
-      const chainId =
-        typeof chain === "bigint"
-          ? chain
-          : typeof chain === "number"
-            ? BigInt(chain)
-            : BigInt(chain.id);
+      const chainId = getChainIdFromChain(chain);
 
       return (
         <SmartConnectUI

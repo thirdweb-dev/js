@@ -60,7 +60,7 @@ export function injectedWallet(options?: InjectedWalletOptions) {
  */
 export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
-  private chainId: bigint | undefined;
+  private chainId: number | undefined;
   private account?: Account | undefined;
   events: Wallet["events"];
 
@@ -106,7 +106,7 @@ export class InjectedWallet implements Wallet {
    * const chainId = wallet.getChainId();
    * ```
    */
-  getChainId(): bigint | undefined {
+  getChainId(): number | undefined {
     return this.chainId;
   }
 
@@ -171,7 +171,7 @@ export class InjectedWallet implements Wallet {
     return this.onConnect({
       provider,
       addresses,
-      targetChainId: options?.chainId ? BigInt(options.chainId) : undefined,
+      targetChainId: options?.chainId ? options.chainId : undefined,
     });
   }
 
@@ -194,7 +194,7 @@ export class InjectedWallet implements Wallet {
    * await wallet.switchChain(1)
    * ```
    */
-  async switchChain(chainId: bigint | number) {
+  async switchChain(chainId: number) {
     if (!this.provider) {
       throw new Error("no provider available");
     }
@@ -207,7 +207,7 @@ export class InjectedWallet implements Wallet {
     } catch (e: any) {
       // if chain does not exist, add the chain
       if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-        const chain = await getChainDataForChainId(BigInt(chainId));
+        const chain = await getChainDataForChainId(chainId);
         await this.provider.request({
           method: "wallet_addEthereumChain",
           params: [
@@ -233,7 +233,7 @@ export class InjectedWallet implements Wallet {
    * @internal
    */
   private async onConnect(data: {
-    targetChainId?: bigint;
+    targetChainId?: number;
     provider: Ethereum;
     addresses: string[];
   }): Promise<Account> {

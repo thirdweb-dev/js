@@ -4,7 +4,7 @@ import { getChainDataForChainId } from "../../../chain/index.js";
 /**
  * @internal
  */
-function getChainQuery(chainId?: bigint) {
+function getChainQuery(chainId?: number) {
   // TODO make this aware of local overrides (developer passed into provider or something)
   return queryOptions({
     queryKey: ["chain", `${chainId}`] as const,
@@ -22,14 +22,14 @@ function getChainQuery(chainId?: bigint) {
 /**
  * @internal
  */
-export function useChainQuery(chainId?: bigint) {
+export function useChainQuery(chainId?: number) {
   return useQuery(getChainQuery(chainId));
 }
 
 /**
  * @internal
  */
-export function useChainsQuery(chainIds: bigint[]) {
+export function useChainsQuery(chainIds: number[]) {
   // this way the underlying queries end up shared with the single query!
   return useQueries({
     queries: chainIds.map(getChainQuery),

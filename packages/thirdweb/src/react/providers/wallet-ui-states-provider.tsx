@@ -23,8 +23,8 @@ type ModalConfig = {
   };
   isEmbed?: boolean;
   onConnect?: (wallet: Wallet) => void;
-  chainId?: bigint;
-  chains?: bigint[];
+  chainId?: number;
+  chains?: number[];
   showThirdwebBranding?: boolean;
 };
 
@@ -63,8 +63,8 @@ export const WalletUIStatesProvider = (
       onLogout?: () => void;
     };
     onConnect?: (wallet: Wallet) => void;
-    chainId?: bigint;
-    chains?: bigint[];
+    chainId?: number;
+    chains?: number[];
     showThirdwebBranding?: boolean;
   }>,
 ) => {
@@ -243,8 +243,8 @@ type ModalConfigOptions = {
    */
   onConnect?: () => void;
 
-  chainId?: bigint;
-  chains?: bigint[];
+  chainId?: number;
+  chains?: number[];
 
   /**
    * By default the ConnectWallet Modal shows "powered by thirdweb" branding at the bottom of the modal.

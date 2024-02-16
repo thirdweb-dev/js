@@ -268,7 +268,7 @@ export type ConnectWalletProps = {
    * <ConnectWallet chainId={137} />
    * ```
    */
-  chainId?: bigint | number;
+  chainId?: number;
 
   /**
    * Array of chain ids that your app supports.
@@ -283,7 +283,7 @@ export type ConnectWalletProps = {
    * <ConnectWallet chains={[1, 137, 10]} />
    * ```
    */
-  chains?: (bigint | number)[];
+  chains?: number[];
 
   /**
    * Set the theme for the button and modal. By default it is set to `"dark"`

@@ -60,7 +60,7 @@ export const personalWalletToSmartAccountMap = new WeakMap<Wallet, Wallet>();
  */
 export class SmartWallet implements WalletWithPersonalWallet {
   private options: SmartWalletOptions;
-  private chainId?: bigint | undefined;
+  private chainId?: number | undefined;
   private account?: Account | undefined;
 
   personalWallet: Wallet | undefined;
@@ -90,7 +90,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
    * const chainId = wallet.getChainId();
    * ```
    */
-  getChainId(): bigint | undefined {
+  getChainId(): number | undefined {
     return this.chainId;
   }
 

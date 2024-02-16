@@ -11,6 +11,7 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
+import { normalizeChainId } from "../../../wallets/utils/normalizeChainId.js";
 
 /**
  * @internal
@@ -18,7 +19,7 @@ import { Text } from "../../ui/components/text.js";
 export const SmartConnectUI = (props: {
   connectUIProps: ConnectUIProps;
   personalWalletConfig: WalletConfig;
-  smartWalletChainId: bigint;
+  smartWalletChainId: number;
 }) => {
   const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null);
   const { personalWalletConfig } = props;
@@ -61,7 +62,7 @@ const SmartWalletConnecting = (props: {
   connectUIProps: ConnectUIProps;
   personalWallet: Wallet;
   personalWalletConfig: WalletConfig;
-  smartWalletChainId: bigint;
+  smartWalletChainId: number;
 }) => {
   const locale = useTWLocale().wallets.smartWallet;
   const createSmartWalletInstance = props.connectUIProps.createInstance;
@@ -70,12 +71,12 @@ const SmartWalletConnecting = (props: {
   const modalSize = props.connectUIProps.screenConfig.size;
 
   const [personalWalletChainId, setPersonalWalletChainId] = useState<
-    bigint | undefined
+    number | undefined
   >(personalWallet.getChainId());
 
   useEffect(() => {
     function handleChainChanged(chain: string) {
-      setPersonalWalletChainId(BigInt(chain));
+      setPersonalWalletChainId(normalizeChainId(chain));
     }
     personalWallet.events?.addListener("chainChanged", handleChainChanged);
 

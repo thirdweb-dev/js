@@ -96,16 +96,16 @@ export type NetworkSelectorProps = {
    */
   open: boolean;
 
-  chains?: (number | bigint)[];
+  chains?: number[];
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
-  popularChains?: (number | bigint)[];
+  popularChains?: number[];
   /**
    * Array of chains to be displayed under "Recent" section
    */
-  recentChains?: (number | bigint)[];
+  recentChains?: number[];
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -249,13 +249,11 @@ export function NetworkSelectorContent(
     onBack?: () => void;
   },
 ) {
-  const allChainIds = new Set(
-    [
-      ...(props.chains || []),
-      ...(props.popularChains || []),
-      ...(props.recentChains || []),
-    ].map((c) => BigInt(c)),
-  );
+  const allChainIds = new Set([
+    ...(props.chains || []),
+    ...(props.popularChains || []),
+    ...(props.recentChains || []),
+  ]);
 
   // TODO: @manan - instead of doing this here and then passing the chains down we can consider the following approach:
   // 1. use the useChainsQuery hook wherever we need the search index
@@ -680,10 +678,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
 ) {
   const switchChain = useSwitchActiveWalletChain();
   const activeChainId = useActiveWalletChainId();
-  const [switchingChainId, setSwitchingChainId] = useState(BigInt(-1));
-  const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(
-    BigInt(-1),
-  );
+  const [switchingChainId, setSwitchingChainId] = useState(-1);
+  const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
   const twLocale = useTWLocale();
   const locale = twLocale.connectWallet.networkSelector;
 
@@ -691,7 +687,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
 
   useEffect(() => {
     // if switching and switched successfully - close modal
-    if (switchingChainId !== BigInt(-1) && activeChainId === switchingChainId) {
+    if (switchingChainId !== -1 && activeChainId === switchingChainId) {
       if (close) {
         close();
       }
@@ -699,17 +695,17 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   }, [switchingChainId, close, activeChainId]);
 
   const handleSwitch = async (chain: ApiChain) => {
-    setErrorSwitchingChainId(BigInt(-1));
-    setSwitchingChainId(BigInt(chain.chainId));
+    setErrorSwitchingChainId(-1);
+    setSwitchingChainId(chain.chainId);
 
     try {
-      await switchChain(BigInt(chain.chainId));
+      await switchChain(chain.chainId);
       props.onSwitch(chain);
     } catch (e: any) {
-      setErrorSwitchingChainId(BigInt(chain.chainId));
+      setErrorSwitchingChainId(chain.chainId);
       console.error(e);
     } finally {
-      setSwitchingChainId(BigInt(-1));
+      setSwitchingChainId(-1);
     }
   };
   const RenderChain = props.renderChain;
@@ -741,8 +737,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   return (
     <NetworkListUl>
       {props.chains.map((chain) => {
-        const confirming = switchingChainId === BigInt(chain.chainId);
-        const switchingFailed = errorSwitchingChainId === BigInt(chain.chainId);
+        const confirming = switchingChainId === chain.chainId;
+        const switchingFailed = errorSwitchingChainId === chain.chainId;
 
         const chainName = <span>{chain.name} </span>;
 
@@ -754,8 +750,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
                   handleSwitch(chain);
                 }}
                 chain={chain}
-                switching={switchingChainId === BigInt(chain.chainId)}
-                switchFailed={errorSwitchingChainId === BigInt(chain.chainId)}
+                switching={switchingChainId === chain.chainId}
+                switchFailed={errorSwitchingChainId === chain.chainId}
                 close={props.close}
               />
             </li>
@@ -765,7 +761,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
         return (
           <li key={chain.chainId}>
             <NetworkButton
-              data-active={activeChainId === BigInt(chain.chainId)}
+              data-active={activeChainId === chain.chainId}
               onClick={() => {
                 handleSwitch(chain);
               }}
@@ -773,7 +769,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
               <ChainIcon
                 chain={chain}
                 size={iconSize.lg}
-                active={activeChainId === BigInt(chain.chainId)}
+                active={activeChainId === chain.chainId}
                 loading="lazy"
               />
 

@@ -22,7 +22,7 @@ export type Wallet = {
   autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
   getAccount(): Account | undefined;
-  getChainId(): bigint | undefined;
+  getChainId(): number | undefined;
 
   // OPTIONAL
   events?: {
@@ -30,7 +30,7 @@ export type Wallet = {
     removeListener: WalletEventListener;
   };
 
-  switchChain?: (newChainId: bigint | number) => Promise<void>;
+  switchChain?: (newChainId: number) => Promise<void>;
 };
 
 export interface WalletWithPersonalWallet extends Wallet {

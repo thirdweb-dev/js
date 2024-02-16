@@ -54,11 +54,11 @@ const storageKeys = {
 
 const isNewChainsStale = true;
 const defaultShowQrModal = true;
-const defaultChainId = /* @__PURE__ */ BigInt(1);
+const defaultChainId = 1;
 
 type SavedConnectParams = {
-  optionalChains?: string[];
-  chainId: string;
+  optionalChains?: number[];
+  chainId: number;
   pairingTopic?: string;
 };
 
@@ -89,7 +89,7 @@ export function walletConnect(options: WalletConnectCreationOptions) {
 export class WalletConnect implements Wallet {
   private options: WalletConnectCreationOptions;
   private provider: InstanceType<typeof EthereumProvider> | undefined;
-  private chainId: bigint | undefined;
+  private chainId: number | undefined;
   private account?: Account | undefined;
 
   events: Wallet["events"];
@@ -119,7 +119,7 @@ export class WalletConnect implements Wallet {
    * const chainId = wallet.getChainId();
    * ```
    */
-  getChainId(): bigint | undefined {
+  getChainId(): number | undefined {
     return this.chainId;
   }
 
@@ -151,9 +151,9 @@ export class WalletConnect implements Wallet {
       true,
       savedConnectParams
         ? {
-            chainId: BigInt(savedConnectParams.chainId),
+            chainId: savedConnectParams.chainId,
             pairingTopic: savedConnectParams.pairingTopic,
-            optionalChains: savedConnectParams.optionalChains?.map(BigInt),
+            optionalChains: savedConnectParams.optionalChains,
           }
         : undefined,
     );
@@ -254,11 +254,12 @@ export class WalletConnect implements Wallet {
   async connect(options?: WalletConnectConnectionOptions): Promise<Account> {
     const provider = await this.initProvider(false, options);
 
-    const isChainsState = await this.isChainsStale(
-      [provider.chainId, ...(options?.optionalChains || [])].map(BigInt),
-    );
+    const isChainsState = await this.isChainsStale([
+      provider.chainId,
+      ...(options?.optionalChains || []),
+    ]);
 
-    const targetChainId = BigInt(options?.chainId || defaultChainId);
+    const targetChainId = options?.chainId || defaultChainId;
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
@@ -307,8 +308,8 @@ export class WalletConnect implements Wallet {
 
     if (options) {
       const savedParams: SavedConnectParams = {
-        optionalChains: options.optionalChains?.map(String),
-        chainId: String(options.chainId),
+        optionalChains: options.optionalChains,
+        chainId: this.chainId,
         pairingTopic: options.pairingTopic,
       };
 
@@ -346,16 +347,16 @@ export class WalletConnect implements Wallet {
    * await wallet.switchChain(1);
    * ```
    */
-  async switchChain(chainId: number | bigint) {
+  async switchChain(chainId: number) {
     const provider = this.assertProvider();
-    const chainIdBigInt = BigInt(chainId);
+
     try {
-      const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
+      const namespaceChains = this.getNamespaceChainsIds();
       const namespaceMethods = this.getNamespaceMethods();
-      const isChainApproved = namespaceChains.includes(chainIdBigInt);
+      const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-        const chain = await getChainDataForChainId(BigInt(chainId));
+        const chain = await getChainDataForChainId(chainId);
         const firstExplorer = chain.explorers && chain.explorers[0];
         const blockExplorerUrls = firstExplorer
           ? { blockExplorerUrls: [firstExplorer.url] }
@@ -372,10 +373,8 @@ export class WalletConnect implements Wallet {
             },
           ],
         });
-        const requestedChains = (await this.getRequestedChainsIds()).map(
-          BigInt,
-        );
-        requestedChains.push(chainIdBigInt);
+        const requestedChains = await this.getRequestedChainsIds();
+        requestedChains.push(chainId);
         this.setRequestedChainsIds(requestedChains);
       }
       await provider.request({
@@ -408,7 +407,7 @@ export class WalletConnect implements Wallet {
     const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } =
       await import("@walletconnect/ethereum-provider");
 
-    const targetChainId = BigInt(connectionOptions?.chainId || defaultChainId);
+    const targetChainId = connectionOptions?.chainId || defaultChainId;
 
     const rpc = getRpcUrlForChain({
       chain: targetChainId,
@@ -448,7 +447,7 @@ export class WalletConnect implements Wallet {
       const chains = [
         targetChainId,
         ...(connectionOptions?.optionalChains || []),
-      ].map(BigInt);
+      ];
 
       const isStale = await this.isChainsStale(chains);
       if (isStale && provider.session) {
@@ -514,9 +513,9 @@ export class WalletConnect implements Wallet {
    * Get the last requested chains from the storage.
    * @internal
    */
-  private async getRequestedChainsIds(): Promise<bigint[]> {
+  private async getRequestedChainsIds(): Promise<number[]> {
     const data = await walletStorage.get(storageKeys.requestedChains);
-    return (data ? JSON.parse(data) : []).map(BigInt);
+    return data ? JSON.parse(data) : [];
   }
 
   /**
@@ -540,7 +539,7 @@ export class WalletConnect implements Wallet {
    * @param connectToChainId
    * @internal
    */
-  private async isChainsStale(chains: bigint[]) {
+  private async isChainsStale(chains: number[]) {
     const namespaceMethods = this.getNamespaceMethods();
 
     // if chain adding method is available, then chains are not stale
@@ -554,7 +553,7 @@ export class WalletConnect implements Wallet {
     }
 
     const requestedChains = await this.getRequestedChainsIds();
-    const namespaceChains = this.getNamespaceChainsIds().map(BigInt);
+    const namespaceChains = this.getNamespaceChainsIds();
 
     // if any of the requested chains are not in the namespace chains, then they are stale
     if (
@@ -572,11 +571,8 @@ export class WalletConnect implements Wallet {
    * Set the requested chains to the storage.
    * @internal
    */
-  private setRequestedChainsIds(chains: bigint[]) {
-    walletStorage.set(
-      storageKeys.requestedChains,
-      JSON.stringify(chains.map(Number)),
-    );
+  private setRequestedChainsIds(chains: number[]) {
+    walletStorage.set(storageKeys.requestedChains, JSON.stringify(chains));
   }
 
   /**
