@@ -3,7 +3,7 @@ import { withCache } from "../utils/promise/withCache.js";
 import type { ApiChain } from "./types.js";
 
 export type Chain =
-  | {
+  | Readonly<{
       id: number;
       rpc: string;
       nativeCurrency?: {
@@ -11,10 +11,8 @@ export type Chain =
         symbol?: string;
         decimals?: number;
       };
-    }
-  // TODO: add all possible chainIds somehow for autocompletion
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  | (number & {});
+    }>
+  | number;
 
 /**
  * Defines a chain based on the provided options.
@@ -29,7 +27,7 @@ export type Chain =
  * const chain = defineChain({ id: 1, rpc: "https:..." });
  * ```
  */
-export function defineChain(options: Chain): Readonly<Chain> {
+export function defineChain(options: Chain): Chain {
   // this does... nothing right now, but it may in the future?
   return options;
 }
