@@ -1,12 +1,15 @@
 import type { SwapRoute } from "./getSwap.js";
 import type { SwapStatusParams } from "./getStatus.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
-import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import {
+  prepareTransaction,
+  type PrepareTransactionOptions,
+} from "../../../transaction/prepare-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { defineChain } from "../../../chain/index.js";
 import { approve } from "../../../extensions/erc20/write/approve.js";
-import type { Hex } from "viem";
+import type { Hex, Address } from "viem";
 
 // TODO: Support User Op Hash
 /**
@@ -42,17 +45,19 @@ export async function sendSwap(
     await waitForReceipt(waitForReceiptOptions);
   }
   const txData = {
-    to: route.transactionRequest.to,
+    to: route.transactionRequest.to as Address,
     data: route.transactionRequest.data as Hex,
     value: BigInt(route.transactionRequest.value),
     gas: BigInt(route.transactionRequest.gasLimit),
     gasPrice: BigInt(route.transactionRequest.gasPrice),
-    chain: defineChain(route.transactionRequest.chainId),
+    chain: route.transactionRequest.chainId,
     client: route.client,
-  };
+  } as PrepareTransactionOptions;
+
   const transaction = prepareTransaction({
     ...txData,
   });
+
   const waitForReceiptOptions = await sendTransaction({
     transaction,
     account,
