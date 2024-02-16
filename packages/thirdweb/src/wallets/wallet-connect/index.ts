@@ -89,11 +89,11 @@ export function walletConnect(options: WalletConnectCreationOptions) {
 export class WalletConnect implements Wallet {
   private options: WalletConnectCreationOptions;
   private provider: InstanceType<typeof EthereumProvider> | undefined;
+  private chainId: bigint | undefined;
+  private account?: Account | undefined;
 
-  chainId: Wallet["chainId"];
   events: Wallet["events"];
   metadata: Wallet["metadata"];
-  account?: Account | undefined;
 
   /**
    * Create a new WalletConnect instance to connect to a wallet using WalletConnect protocol.
@@ -109,6 +109,30 @@ export class WalletConnect implements Wallet {
   constructor(options: WalletConnectCreationOptions) {
     this.options = options;
     this.metadata = options?.metadata || walletConnectMetadata;
+  }
+
+  /**
+   * Get the `chainId` that the wallet is connected to.
+   * @returns The chainId
+   * @example
+   * ```ts
+   * const chainId = wallet.getChainId();
+   * ```
+   */
+  getChainId(): bigint | undefined {
+    return this.chainId;
+  }
+
+  /**
+   * Get the connected `Account` from the wallet.
+   * @returns The connected account
+   * @example
+   * ```ts
+   * const account = wallet.getAccount();
+   * ```
+   */
+  getAccount(): Account | undefined {
+    return this.account;
   }
 
   /**

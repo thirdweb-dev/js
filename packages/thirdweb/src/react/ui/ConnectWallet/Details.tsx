@@ -750,6 +750,7 @@ const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
 });
 
 function ConnectedToSmartWallet() {
+  const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const chainId = useActiveWalletChainId();
   const locale = useTWLocale().connectWallet;
@@ -774,14 +775,14 @@ function ConnectedToSmartWallet() {
     </Container>
   );
 
-  if (chainId && activeWallet?.account && isSmartWallet) {
+  if (chainId && activeAccount && isSmartWallet) {
     return (
       <>
         {isSmartWalletDeployed ? (
           <Link
             color="secondaryText"
             hoverColor="primaryText"
-            href={`https://thirdweb.com/${chainId}/${activeWallet.account.address}/account`}
+            href={`https://thirdweb.com/${chainId}/${activeAccount.address}/account`}
             target="_blank"
             size="sm"
           >

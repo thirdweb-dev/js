@@ -60,11 +60,12 @@ export const personalWalletToSmartAccountMap = new WeakMap<Wallet, Wallet>();
  */
 export class SmartWallet implements WalletWithPersonalWallet {
   private options: SmartWalletOptions;
+  private chainId?: bigint | undefined;
+  private account?: Account | undefined;
+
   personalWallet: Wallet | undefined;
   metadata: Wallet["metadata"];
-  chainId?: bigint | undefined;
   isSmartWallet: true;
-  account?: Account | undefined;
 
   /**
    * Create an instance of the SmartWallet.
@@ -79,6 +80,30 @@ export class SmartWallet implements WalletWithPersonalWallet {
     this.metadata = options.metadata || smartWalletMetadata;
     this.isSmartWallet = true;
     this.chainId = getChainIdFromChain(options.chain);
+  }
+
+  /**
+   * Get the `chainId` that the wallet is connected to.
+   * @returns The chainId
+   * @example
+   * ```ts
+   * const chainId = wallet.getChainId();
+   * ```
+   */
+  getChainId(): bigint | undefined {
+    return this.chainId;
+  }
+
+  /**
+   * Get the connected `Account` from the wallet.
+   * @returns The connected account
+   * @example
+   * ```ts
+   * const account = wallet.getAccount();
+   * ```
+   */
+  getAccount(): Account | undefined {
+    return this.account;
   }
 
   /**
@@ -99,11 +124,13 @@ export class SmartWallet implements WalletWithPersonalWallet {
 
     const { personalWallet } = connectionOptions;
 
-    if (!personalWallet.account) {
+    const personalAccount = personalWallet.getAccount();
+
+    if (!personalAccount) {
       throw new Error("Personal wallet does not have an account");
     }
 
-    if (personalWallet.chainId !== chainId) {
+    if (personalWallet.getChainId() !== chainId) {
       throw new Error(
         "Personal account's wallet is on a different chain than the smart wallet.",
       );
@@ -119,7 +146,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
 
     const account = await smartAccount({
       ...this.options,
-      personalAccount: personalWallet.account,
+      personalAccount: personalAccount,
     });
 
     personalWalletToSmartAccountMap.set(connectionOptions.personalWallet, this);

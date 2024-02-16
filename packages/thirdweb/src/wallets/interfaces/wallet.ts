@@ -21,17 +21,16 @@ export type Wallet = {
   connect: (options?: any) => Promise<Account>;
   autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
+  getAccount(): Account | undefined;
+  getChainId(): bigint | undefined;
 
   // OPTIONAL
-  chainId?: bigint;
-
   events?: {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
 
   switchChain?: (newChainId: bigint | number) => Promise<void>;
-  account?: Account;
 };
 
 export interface WalletWithPersonalWallet extends Wallet {

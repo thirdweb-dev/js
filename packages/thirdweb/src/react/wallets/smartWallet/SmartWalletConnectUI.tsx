@@ -71,7 +71,7 @@ const SmartWalletConnecting = (props: {
 
   const [personalWalletChainId, setPersonalWalletChainId] = useState<
     bigint | undefined
-  >(personalWallet.chainId);
+  >(personalWallet.getChainId());
 
   useEffect(() => {
     function handleChainChanged(chain: string) {

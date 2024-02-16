@@ -78,7 +78,7 @@ export function createConnectionManager() {
   };
 
   const setActiveWallet = (wallet: Wallet) => {
-    const account = wallet.account;
+    const account = wallet.getAccount();
     if (!account) {
       throw new Error("Can not a wallet without an account as active");
     }
@@ -92,7 +92,7 @@ export function createConnectionManager() {
     // update active states
     activeWallet.setValue(wallet);
     activeAccount.setValue(account);
-    activeWalletChainId.setValue(wallet.chainId);
+    activeWalletChainId.setValue(wallet.getChainId());
     activeWalletConnectionStatus.setValue("connected");
 
     // setup listeners

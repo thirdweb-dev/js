@@ -60,9 +60,9 @@ export function injectedWallet(options?: InjectedWalletOptions) {
  */
 export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
-  chainId: Wallet["chainId"];
+  private chainId: bigint | undefined;
+  private account?: Account | undefined;
   events: Wallet["events"];
-  account?: Account | undefined;
 
   // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
   private options?: InjectedWalletOptions;
@@ -96,6 +96,30 @@ export class InjectedWallet implements Wallet {
       name: "injected",
       iconUrl: "TODO", // find a good default "injected wallet" icon
     };
+  }
+
+  /**
+   * Get the `chainId` that the wallet is connected to.
+   * @returns The chainId
+   * @example
+   * ```ts
+   * const chainId = wallet.getChainId();
+   * ```
+   */
+  getChainId(): bigint | undefined {
+    return this.chainId;
+  }
+
+  /**
+   * Get the connected `Account` from the wallet.
+   * @returns The connected account
+   * @example
+   * ```ts
+   * const account = wallet.getAccount();
+   * ```
+   */
+  getAccount(): Account | undefined {
+    return this.account;
   }
 
   /**
