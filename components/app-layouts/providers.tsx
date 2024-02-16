@@ -6,11 +6,17 @@ import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebProvider,
+  coin98Wallet,
   coinbaseWallet,
+  coreWallet,
+  cryptoDefiWallet,
   embeddedWallet,
   localWallet,
   metamaskWallet,
+  okxWallet,
+  oneKeyWallet,
   phantomWallet,
+  rabbyWallet,
   rainbowWallet,
   safeWallet,
   trustWallet,
@@ -58,6 +64,12 @@ const personalWallets = [
     },
   }),
   localWallet(),
+  rabbyWallet(),
+  okxWallet(),
+  coin98Wallet(),
+  coreWallet(),
+  cryptoDefiWallet(),
+  oneKeyWallet(),
 ];
 
 export const dashboardSupportedWallets = [
