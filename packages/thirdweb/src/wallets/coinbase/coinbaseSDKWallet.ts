@@ -141,6 +141,8 @@ export class CoinbaseSDKWallet implements Wallet {
     })) as string | number;
     // TODO check what's type of connectedChainId
 
+    this.chainId = normalizeChainId(connectedChainId);
+
     // Switch to chain if provided
     if (
       connectedChainId &&
@@ -148,9 +150,8 @@ export class CoinbaseSDKWallet implements Wallet {
       Number(connectedChainId) !== options?.chainId
     ) {
       await this.switchChain(options.chainId);
+      this.chainId = options.chainId;
     }
-
-    this.chainId = normalizeChainId(connectedChainId);
 
     if (options?.chainId) {
       const saveParams: SavedConnectParams = {
