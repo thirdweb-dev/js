@@ -5,9 +5,9 @@ import {
   type SwapRouteParams,
 } from "../../../pay/swap/actions/getSwap.js";
 
-export {
-  type SwapRoute,
-  type SwapRouteParams,
+export type {
+  SwapRoute,
+  SwapRouteParams,
 } from "../../../pay/swap/actions/getSwap.js";
 
 /**

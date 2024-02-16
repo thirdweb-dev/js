@@ -1,7 +1,7 @@
 import { getClientFetch } from "../../../utils/fetch.js";
-import { type ThirdwebClient } from "../../../client/client.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_STATUS_ENDPOINT } from "../utils/definitions.js";
-import { type SwapToken } from "./getSwap.js";
+import type { SwapToken } from "./getSwap.js";
 
 type TransactionDetails = {
   transactionHash: string;

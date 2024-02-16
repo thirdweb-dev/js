@@ -1,6 +1,9 @@
 import { getClientFetch } from "../../../utils/fetch.js";
-import { type ThirdwebClient } from "../../../client/client.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
+import { getContract } from "../../../contract/contract.js";
 
 export type SwapRouteParams = {
   client: ThirdwebClient;
@@ -73,7 +76,7 @@ type SwapRouteResponse = {
 export type SwapRoute = {
   transactionId: string;
   transactionRequest: TransactionRequest;
-  approval?: Approval;
+  approval?: BaseTransactionOptions<ApproveParams>;
 
   swapDetails: {
     fromAddress: string;
@@ -140,7 +143,17 @@ export async function getSwapRoute(
     const swapRoute: SwapRoute = {
       transactionId: data.transactionId,
       transactionRequest: data.transactionRequest,
-      approval: data.approval,
+      approval: data.approval
+        ? {
+            contract: getContract({
+              client: params.client,
+              address: data.approval.tokenAddress,
+              chain: data.approval.chainId,
+            }),
+            spender: data.approval?.spenderAddress,
+            amount: data.approval?.amountWei,
+          }
+        : undefined,
       swapDetails: {
         fromAddress: data.fromAddress,
         toAddress: data.toAddress,

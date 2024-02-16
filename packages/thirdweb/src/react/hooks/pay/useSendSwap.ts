@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useSwapStatus, type SwapStatusParams } from "./useSwapStatus.js";
 import { useMutation } from "@tanstack/react-query";
 import { useActiveAccount } from "../../providers/wallet-provider.js";
-import { type SwapRoute } from "../../../pay/swap/actions/getSwap.js";
+import type { SwapRoute } from "../../../pay/swap/actions/getSwap.js";
 import { sendSwap } from "../../../pay/swap/actions/sendSwap.js";
 
-export { type SwapStatusParams, type SwapStatus } from "./useSwapStatus.js";
+export type { SwapStatusParams, SwapStatus } from "./useSwapStatus.js";
 
-export { type SwapRoute } from "./useSwapRoute.js";
+export type { SwapRoute } from "./useSwapRoute.js";
 
 /**
  * A hook to get a swap route

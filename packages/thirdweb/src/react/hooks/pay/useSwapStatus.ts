@@ -10,9 +10,9 @@ import {
 const DEFAULT_POLL_INTERVAL = 5000;
 
 // reexport needed types
-export {
-  type SwapStatus,
-  type SwapStatusParams,
+export type {
+  SwapStatus,
+  SwapStatusParams,
 } from "../../../pay/swap/actions/getStatus.js";
 
 /**
