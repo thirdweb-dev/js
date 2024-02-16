@@ -2,7 +2,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import { type ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 
-export interface SwapRouteParams {
+export type SwapRouteParams = {
   client: ThirdwebClient;
   fromAddress: string;
   fromChainId: number;
@@ -13,30 +13,30 @@ export interface SwapRouteParams {
   toTokenAddress: string;
   toAmountWei?: string;
   maxSlippageBPS?: number;
-}
+};
 
-interface Approval {
+type Approval = {
   chainId: number;
   tokenAddress: string;
   spenderAddress: string;
   amountWei: string;
-}
+};
 
-export interface SwapToken {
+export type SwapToken = {
   chainId: number;
   tokenAddress: string;
   decimals: number;
   priceUSDCents: number;
   name?: string;
   symbol?: string;
-}
+};
 
-interface PaymentToken {
+type PaymentToken = {
   token: SwapToken;
   amountWei: string;
-}
+};
 
-interface TransactionRequest {
+type TransactionRequest = {
   data: string;
   to: string;
   value: string;
@@ -44,9 +44,9 @@ interface TransactionRequest {
   chainId: number;
   gasPrice: string;
   gasLimit: string;
-}
+};
 
-interface SwapRouteResponse {
+type SwapRouteResponse = {
   transactionId: string;
   transactionRequest: TransactionRequest;
   approval?: Approval;
@@ -68,9 +68,9 @@ interface SwapRouteResponse {
     gasCostUSDCents: number;
     durationSeconds?: number;
   };
-}
+};
 
-export interface SwapRoute {
+export type SwapRoute = {
   transactionId: string;
   transactionRequest: TransactionRequest;
   approval?: Approval;
@@ -96,7 +96,7 @@ export interface SwapRoute {
 
   paymentTokens: PaymentToken[];
   client: ThirdwebClient;
-}
+};
 
 /**
  * Retrieves contract events from the blockchain.

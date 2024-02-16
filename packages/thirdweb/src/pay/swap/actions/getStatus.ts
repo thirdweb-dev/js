@@ -3,14 +3,14 @@ import { type ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_STATUS_ENDPOINT } from "../utils/definitions.js";
 import { type SwapToken } from "./getSwap.js";
 
-interface TransactionDetails {
+type TransactionDetails = {
   transactionHash: string;
   token: SwapToken;
   amountWei: string;
   amountUSDCents: number;
   completedAt?: number;
   explorerLink?: string;
-}
+};
 
 /*
 export enum SwapType {
@@ -69,13 +69,13 @@ export type SwapSubStatus =
   (typeof SWAP_SUBSTATUS)[keyof typeof SWAP_SUBSTATUS];
 */
 
-export interface SwapStatusParams {
+export type SwapStatusParams = {
   client: ThirdwebClient;
   transactionId: string;
   transactionHash: string;
-}
+};
 
-export interface SwapStatus {
+export type SwapStatus = {
   transactionId: string;
   transactionType: string;
   source: TransactionDetails;
@@ -86,7 +86,7 @@ export interface SwapStatus {
   toAddress: string;
   failureMessage?: string;
   bridgeUsed?: string;
-}
+};
 
 /**
  * Retrieves contract events from the blockchain.
