@@ -2,7 +2,8 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import { type ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 
-export interface SwapRouteRequest {
+export interface SwapRouteParams {
+  client: ThirdwebClient;
   fromAddress: string;
   fromChainId: number;
   fromTokenAddress: string;
@@ -15,8 +16,9 @@ export interface SwapRouteRequest {
 }
 
 interface Approval {
-  spenderAddress: string;
+  chainId: number;
   tokenAddress: string;
+  spenderAddress: string;
   amountWei: string;
 }
 
@@ -44,7 +46,7 @@ interface TransactionRequest {
   gasLimit: string;
 }
 
-export interface SwapRouteResponse {
+interface SwapRouteResponse {
   transactionId: string;
   transactionRequest: TransactionRequest;
   approval?: Approval;
@@ -68,6 +70,34 @@ export interface SwapRouteResponse {
   };
 }
 
+export interface SwapRoute {
+  transactionId: string;
+  transactionRequest: TransactionRequest;
+  approval?: Approval;
+
+  swapDetails: {
+    fromAddress: string;
+    toAddress: string;
+    fromToken: SwapToken;
+    toToken: SwapToken;
+    fromAmountWei: string;
+    toAmountMinWei: string;
+    toAmountWei: string;
+
+    estimated: {
+      fromAmountUSDCents: number;
+      toAmountMinUSDCents: number;
+      toAmountUSDCents: number;
+      feesUSDCents: number;
+      gasCostUSDCents: number;
+      durationSeconds?: number;
+    };
+  };
+
+  paymentTokens: PaymentToken[];
+  client: ThirdwebClient;
+}
+
 /**
  * Retrieves contract events from the blockchain.
  * @param thirdwebClient asdfadf
@@ -77,15 +107,12 @@ export interface SwapRouteResponse {
  * ### Get Swap
  * ``````
  */
-export async function getRoute(
-  thirdwebClient: ThirdwebClient,
-  params: SwapRouteRequest,
-): Promise<SwapRouteResponse> {
+export async function getRoute(params: SwapRouteParams): Promise<SwapRoute> {
   try {
     const queryString = new URLSearchParams(params as any).toString();
     const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;
 
-    const response = await getClientFetch(thirdwebClient)(url);
+    const response = await getClientFetch(params.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
@@ -93,7 +120,28 @@ export async function getRoute(
     }
 
     const data: SwapRouteResponse = (await response.json())["result"];
-    return data;
+
+    const swapRoute: SwapRoute = {
+      transactionId: data.transactionId,
+      transactionRequest: data.transactionRequest,
+      approval: data.approval,
+      swapDetails: {
+        fromAddress: data.fromAddress,
+        toAddress: data.toAddress,
+        fromToken: data.fromToken,
+        toToken: data.toToken,
+        fromAmountWei: data.fromAmountWei,
+        toAmountMinWei: data.toAmountMinWei,
+        toAmountWei: data.toAmountWei,
+
+        estimated: data.estimated,
+      },
+
+      paymentTokens: data.requiredTokens,
+      client: params.client,
+    };
+
+    return swapRoute;
   } catch (error) {
     console.error("Fetch error:", error);
     throw new Error(`Fetch failed: ${error}`);
