@@ -92,6 +92,9 @@ export type ApiKeyCustomAuthEndpoint = {
 export type ApiKeyServicePolicy = {
   allowedChainIds?: number[] | null;
   allowedContractAddresses?: string[] | null;
+  allowedWallets?: string[] | null;
+  blockedWallets?: string[] | null;
+  bypassWallets?: string[] | null;
   serverVerifier?: {
     url: string;
     headers: { key: string; value: string }[] | null;
