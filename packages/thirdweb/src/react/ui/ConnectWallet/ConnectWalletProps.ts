@@ -1,4 +1,4 @@
-import type { Account } from "../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { type Theme } from "../design-system/index.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import { type SupportedTokens } from "./defaultTokens.js";
@@ -398,5 +398,5 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: (account: Account) => void;
+  onConnect?: (wallet: Wallet) => void;
 };

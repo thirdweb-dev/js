@@ -25,12 +25,13 @@ export {
 } from "./providers/thirdweb-provider.js";
 
 export {
-  useSetActiveAccount,
+  useSetActiveWallet,
   useActiveWalletChainId,
   useConnect,
   useDisconnect,
   useActiveAccount,
-  useConnectedAccounts,
+  useActiveWallet,
+  useConnectedWallets,
   useSwitchActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSetActiveWalletConnectionStatus,
@@ -58,11 +59,32 @@ export {
 export { createContractQuery } from "./utils/createQuery.js";
 
 // wallets
-export { metamaskConfig } from "./wallets/metamask/metamaskConfig.js";
+export {
+  metamaskConfig,
+  type MetamaskConfigOptions,
+} from "./wallets/metamask/metamaskConfig.js";
+
 export { coinbaseConfig } from "./wallets/coinbase/coinbaseConfig.js";
-export { rainbowConfig } from "./wallets/rainbow/rainbowConfig.js";
-export { walletConnectConfig } from "./wallets/walletConnect/walletConnectConfig.js";
-export { zerionConfig } from "./wallets/zerion/zerionConfig.js";
+
+export {
+  rainbowConfig,
+  type RainbowConfigOptions,
+} from "./wallets/rainbow/rainbowConfig.js";
+
+export {
+  walletConnectConfig,
+  type WalletConnectConfigOptions,
+} from "./wallets/walletConnect/walletConnectConfig.js";
+
+export {
+  zerionConfig,
+  type ZerionConfigOptions,
+} from "./wallets/zerion/zerionConfig.js";
+
+export {
+  smartWalletConfig,
+  type SmartWalletConfigOptions,
+} from "./wallets/smartWallet/smartWalletConfig.js";
 
 export type { SupportedTokens } from "./ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "./ui/ConnectWallet/defaultTokens.js";

@@ -1,5 +1,6 @@
 import { decimals } from "./decimals.js";
 import { symbol } from "../../common/read/symbol.js";
+import { name } from "../../common/read/name.js";
 import {
   readContract,
   type BaseTransactionOptions,
@@ -15,6 +16,7 @@ type BalanceOfResult = {
   decimals: number;
   displayValue: string;
   symbol: string;
+  name: string;
 };
 
 /**
@@ -32,7 +34,7 @@ type BalanceOfResult = {
 export async function balanceOf(
   options: BaseTransactionOptions<BalanceOfParams>,
 ): Promise<BalanceOfResult> {
-  const [balanceWei, decimals_, symbol_] = await Promise.all([
+  const [balanceWei, decimals_, symbol_, name_] = await Promise.all([
     readContract({
       ...options,
       method: METHOD,
@@ -40,11 +42,13 @@ export async function balanceOf(
     }),
     decimals(options),
     symbol(options),
+    name(options),
   ]);
   return {
     value: balanceWei,
     decimals: decimals_,
     displayValue: formatUnits(balanceWei, decimals_),
     symbol: symbol_,
+    name: name_,
   };
 }

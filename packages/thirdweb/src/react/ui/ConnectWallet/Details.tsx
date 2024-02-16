@@ -2,12 +2,15 @@ import {
   ExitIcon,
   ChevronRightIcon,
   TextAlignJustifyIcon,
+  EnterIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import {
   useActiveAccount,
+  useActiveWallet,
   useActiveWalletChainId,
+  useConnect,
   useDisconnect,
 } from "../../providers/wallet-provider.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
@@ -18,7 +21,7 @@ import { Container, Line } from "../components/basic.js";
 import { IconButton } from "../components/buttons.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { StyledButton } from "../design-system/elements.js";
+import { StyledButton, StyledDiv } from "../design-system/elements.js";
 import {
   type Theme,
   iconSize,
@@ -30,7 +33,7 @@ import {
 import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
-import { Text } from "../components/text.js";
+import { Link, Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../utils/addresses.js";
 import { Img } from "../components/Img.js";
@@ -43,6 +46,13 @@ import type {
   ConnectWallet_DetailsButtonOptions,
   ConnectWallet_DetailsModalOptions,
 } from "./ConnectWalletProps.js";
+import {
+  smartWalletMetadata,
+  type Wallet,
+  type WalletWithPersonalWallet,
+  personalWalletToSmartAccountMap,
+} from "../../../wallets/index.js";
+import { connectionManager } from "../../connectionManager.js";
 // import { walletIds } from "../../../wallets/walletIds.js";
 
 // TEMP
@@ -71,6 +81,7 @@ export const ConnectedWalletDetails: React.FC<{
   chains: bigint[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
+  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChainId = useActiveWalletChainId();
   const chainQuery = useChainQuery(walletChainId);
@@ -89,6 +100,9 @@ export const ConnectedWalletDetails: React.FC<{
     account: activeAccount,
   });
 
+  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
+  const [isOpen, setIsOpen] = useState(false);
+
   // const activeWalletConfig = undefined;
   // const activeWalletConfig = useWalletConfig();
   // const ensQuery = useENS();
@@ -103,21 +117,17 @@ export const ConnectedWalletDetails: React.FC<{
   //   string | undefined
   // >(undefined);
 
-  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
-  const [isOpen, setIsOpen] = useState(false);
-
   // const sdk = useSDK();
 
-  // const personalWallet = activeWallet?.getPersonalWallet() as
-  //   | WalletInstance
-  //   | undefined;
+  const personalWallet = (activeWallet as WalletWithPersonalWallet)
+    ?.personalWallet;
 
-  // const personalWalletConfig =
-  //   personalWallet && walletContext.getWalletConfig(personalWallet);
-  // const wrapperWalletConfig =
-  //   wrapperWallet && walletContext.getWalletConfig(wrapperWallet);
+  const smartWallet = activeWallet
+    ? personalWalletToSmartAccountMap.get(activeWallet)
+    : undefined;
 
-  const disableSwitchChain = false;
+  const disableSwitchChain = !activeWallet?.switchChain;
+
   // const disableSwitchChain = !!personalWallet;
 
   // const isActuallyMetaMask =
@@ -170,7 +180,11 @@ export const ConnectedWalletDetails: React.FC<{
   // const walletIconUrl =
   //   overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
   // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
-  const avatarOrWalletIconUrl = activeAccount?.wallet.metadata.iconUrl || "";
+  let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
+
+  if (activeWallet && "isSmartWallet" in activeWallet) {
+    avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
+  }
 
   const trigger = props.detailsButton?.render ? (
     <div>
@@ -197,7 +211,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeAccount?.wallet.metadata.id === LocalWalletId ? (
+        {activeWallet?.metadata.id === LocalWalletId ? (
           <Text
             color="danger"
             size="xs"
@@ -333,7 +347,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="sm" />
 
       {/* <Container px="lg"> */}
-      {/* <ConnectedToSmartWallet /> */}
+      <ConnectedToSmartWallet />
       {/* <EmbeddedWalletEmail /> */}
 
       {/* Send and Receive */}
@@ -386,7 +400,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container> */}
       {/* </Container> */}
 
-      <Spacer y="md" />
+      <Spacer y="sm" />
 
       <Container px="md">
         {/* Network Switcher */}
@@ -398,27 +412,19 @@ export const ConnectedWalletDetails: React.FC<{
         >
           {networkSwitcherButton}
 
-          {/* Switch to Personal Wallet for Safe */}
-          {/* {personalWallet &&
-            personalWalletConfig &&
-            !props.hideSwitchToPersonalWallet && (
-              <WalletSwitcher
+          {/* Switch to Personal Wallet  */}
+          {personalWallet &&
+            !props.detailsModal?.hideSwitchToPersonalWallet && (
+              <AccountSwitcher
                 wallet={personalWallet}
                 name={locale.personalWallet}
               />
-            )} */}
+            )}
 
-          {/* Switch to Wrapper Wallet */}
-          {/* {wrapperWalletConfig && wrapperWallet && (
-            <WalletSwitcher
-              name={
-                wrapperWallet.walletId === walletIds.smartWallet
-                  ? locale.smartWallet
-                  : wrapperWalletConfig.meta.name
-              }
-              wallet={wrapperWallet}
-            />
-          )} */}
+          {/* Switch to Smart Wallet */}
+          {smartWallet && (
+            <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
+          )}
 
           {/* Switch Account for Metamask */}
           {/* {isActuallyMetaMask &&
@@ -527,8 +533,8 @@ export const ConnectedWalletDetails: React.FC<{
               data-variant="danger"
               type="button"
               onClick={() => {
-                if (activeAccount) {
-                  disconnect(activeAccount);
+                if (activeWallet) {
+                  disconnect(activeWallet);
                   props.onDisconnect();
                 }
               }}
@@ -709,94 +715,93 @@ export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   };
 });
 
-// function WalletSwitcher({
-//   wallet,
-//   name,
-// }: {
-//   wallet: WalletInstance;
-//   name: string;
-// }) {
-//   const walletContext = useWalletContext();
-//   const locale = useTWLocale().connectWallet;
+function AccountSwitcher(props: { wallet: Wallet; name: string }) {
+  const { connect } = useConnect();
+  const locale = useTWLocale().connectWallet;
+  const activeWallet = useActiveWallet();
 
-//   return (
-//     <MenuButton
-//       type="button"
-//       onClick={() => {
-//         walletContext.setConnectedWallet(wallet);
-//       }}
-//       style={{
-//         fontSize: fontSize.sm,
-//       }}
-//     >
-//       <EnterIcon width={iconSize.md} height={iconSize.md} />
-//       <Text color="primaryText">
-//         {locale.switchTo} {name}
-//       </Text>
-//     </MenuButton>
-//   );
-// }
+  return (
+    <MenuButton
+      type="button"
+      onClick={() => {
+        // remove the current active account as "connected"
+        if (activeWallet) {
+          connectionManager.removeConnectedWallet(activeWallet);
+        }
+        // set as connected and active
+        connect(props.wallet);
+      }}
+      style={{
+        fontSize: fontSize.sm,
+      }}
+    >
+      <EnterIcon width={iconSize.md} height={iconSize.md} />
+      <Text color="primaryText">
+        {locale.switchTo} {props.name}
+      </Text>
+    </MenuButton>
+  );
+}
 
-// const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
-//   const theme = useCustomTheme();
-//   return {
-//     width: "8px",
-//     height: "8px",
-//     borderRadius: "50%",
-//     backgroundColor: theme.colors.success,
-//   };
-// });
+const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    backgroundColor: theme.colors.success,
+  };
+});
 
-// function ConnectedToSmartWallet() {
-//   const activeWallet = useWallet();
-//   const chain = useChain();
-//   const address = useAddress();
-//   const locale = useTWLocale().connectWallet;
+function ConnectedToSmartWallet() {
+  const activeWallet = useActiveWallet();
+  const chainId = useActiveWalletChainId();
+  const locale = useTWLocale().connectWallet;
+  const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
-//   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+  const [isSmartWalletDeployed] = useState(false);
 
-//   useEffect(() => {
-//     if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
-//       const smartWallet = activeWallet as SmartWallet;
-//       smartWallet.isDeployed().then((isDeployed) => {
-//         setIsSmartWalletDeployed(isDeployed);
-//       });
-//     } else {
-//       setIsSmartWalletDeployed(false);
-//     }
-//   }, [activeWallet]);
+  // useEffect(() => {
+  //   if (activeAccount && isSmartWallet) {
+  //     (activeAccount.wallet as SmartWallet).isDeployed().then((isDeployed) => {
+  //       setIsSmartWalletDeployed(isDeployed);
+  //     });
+  //   } else {
+  //     setIsSmartWalletDeployed(false);
+  //   }
+  // }, [activeWallet]);
 
-//   const content = (
-//     <Container flex="row" gap="xxs" center="both">
-//       <ActiveDot />
-//       {locale.connectedToSmartWallet}
-//     </Container>
-//   );
+  const content = (
+    <Container flex="row" gap="xxs" center="both">
+      <ActiveDot />
+      {locale.connectedToSmartWallet}
+    </Container>
+  );
 
-//   if (chain && address && activeWallet?.walletId === walletIds.smartWallet) {
-//     return (
-//       <>
-//         {isSmartWalletDeployed ? (
-//           <Link
-//             color="secondaryText"
-//             hoverColor="primaryText"
-//             href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-//             target="_blank"
-//             size="sm"
-//           >
-//             {content}
-//           </Link>
-//         ) : (
-//           <Text size="sm"> {content}</Text>
-//         )}
+  if (chainId && activeWallet?.account && isSmartWallet) {
+    return (
+      <>
+        {isSmartWalletDeployed ? (
+          <Link
+            color="secondaryText"
+            hoverColor="primaryText"
+            href={`https://thirdweb.com/${chainId}/${activeWallet.account.address}/account`}
+            target="_blank"
+            size="sm"
+          >
+            {content}
+          </Link>
+        ) : (
+          <Text size="sm"> {content}</Text>
+        )}
 
-//         <Spacer y="md" />
-//       </>
-//     );
-//   }
+        <Spacer y="md" />
+      </>
+    );
+  }
 
-//   return null;
-// }
+  return null;
+}
 
 // function EmbeddedWalletEmail() {
 //   const emailQuery = useEmbeddedWalletUserEmail();

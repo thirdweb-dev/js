@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../index.js";
-import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 
 /**
@@ -54,6 +54,15 @@ export type WalletConfig = {
    * By default is set to `false`
    */
   isHeadless?: boolean;
+
+  /**
+   * An array of `WalletConfig` that users can use as a personal wallet to connect to your wallet
+   *
+   * This is only required if your wallet requires a personal wallet to be connected such as a Safe Wallet or Smart Wallet
+   *
+   * providing the `personalWalletConfigs` ensures that auto connect will connect the last connected personal wallet first and then connect this wallet
+   */
+  personalWalletConfigs?: WalletConfig[];
 };
 
 export type ScreenConfig = {
@@ -105,7 +114,7 @@ export type ConnectUIProps = {
   /**
    * when wallet connection is complete, call the `complete` function with the `wallet` instance
    */
-  done: (account: Account) => void;
+  done: (wallet: Wallet) => void;
 
   /**
    * Chain Id to connect the wallet to

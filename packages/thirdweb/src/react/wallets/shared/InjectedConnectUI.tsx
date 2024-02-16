@@ -25,10 +25,10 @@ export const InjectedConnectUI = (
       setErrorConnecting(false);
       await wait(1000);
       const wallet = createInstance();
-      const account = await wallet.connect({
+      await wallet.connect({
         chainId: props.chainId,
       });
-      done(account);
+      done(wallet);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);

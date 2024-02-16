@@ -19,6 +19,7 @@ describe("erc20.balanceOf", () => {
       {
         "decimals": 6,
         "displayValue": "81.831338",
+        "name": "USD Coin",
         "symbol": "USDC",
         "value": 81831338n,
       }

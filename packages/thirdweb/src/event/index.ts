@@ -1,9 +1,20 @@
 export {
   prepareEvent,
-  type EventLog,
-  type ContractEvent,
-  type ContractEventOptions as ContractEventInput,
-} from "./event.js";
+  type PrepareEventOptions,
+  type PreparedEvent,
+} from "./prepare-event.js";
 
-export { watchEvents } from "./actions/watch-events.js";
-export { getEvents } from "./actions/get-events.js";
+// actions
+export {
+  parseEventLogs,
+  type ParseEventLogsOptions,
+  type ParseEventLogsResult,
+} from "./actions/parse-logs.js";
+export {
+  watchContractEvents,
+  type WatchContractEventsOptions,
+} from "./actions/watch-events.js";
+export {
+  getContractEvents,
+  type GetContractEventsOptions,
+} from "./actions/get-events.js";

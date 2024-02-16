@@ -122,8 +122,36 @@ export async function getChainDecimals(chain: Chain): Promise<number> {
         return 18;
       });
   }
-  // if we have a symbol, return it
+  // if we have decimals, return it
   return chain.nativeCurrency.decimals;
+}
+
+/**
+ * Retrieves the name of the native currency for a given chain.
+ * If the chain object does not have a native currency name, it attempts to fetch the chain data and retrieve the native currency name from there.
+ * If fetching the chain data fails, it falls back to returning "ETH".
+ * @param chain The chain object for which to retrieve the native currency name.
+ * @returns A promise that resolves to the native currency name.
+ * @internal
+ */
+export async function getChainNativeCurrencyName(
+  chain: Chain,
+): Promise<string> {
+  if (
+    typeof chain === "bigint" ||
+    typeof chain === "number" ||
+    !chain.nativeCurrency?.name
+  ) {
+    const chainId = getChainIdFromChain(chain);
+    return getChainDataForChainId(chainId)
+      .then((data) => data.nativeCurrency.name)
+      .catch(() => {
+        // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
+        return "ETH";
+      });
+  }
+  // if we have a name, return it
+  return chain.nativeCurrency.name;
 }
 
 type FetchChainResponse =

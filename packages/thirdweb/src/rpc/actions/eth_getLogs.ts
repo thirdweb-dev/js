@@ -1,19 +1,32 @@
-import type { AbiEvent } from "abitype";
+import type { Address } from "abitype";
 import {
-  encodeEventTopics,
   type BlockNumber,
   type BlockTag,
   type EIP1193RequestFn,
   type EIP1474Methods,
-  type GetLogsParameters,
   type LogTopic,
-  type EncodeEventTopicsParameters,
   type RpcLog,
+  type Hash,
   formatLog,
-  parseEventLogs,
   numberToHex,
 } from "viem";
-import type { EventLog } from "../../event/event.js";
+
+export type GetLogsBlockParams =
+  | {
+      fromBlock?: BlockNumber | BlockTag;
+      toBlock?: BlockNumber | BlockTag;
+      blockHash?: never;
+    }
+  | {
+      fromBlock?: never;
+      toBlock?: never;
+      blockHash?: Hash;
+    };
+
+export type GetLogsParams = {
+  topics?: LogTopic[];
+  address?: Address;
+} & GetLogsBlockParams;
 
 /**
  * Retrieves logs from the Ethereum blockchain based on the specified parameters.
@@ -32,45 +45,14 @@ import type { EventLog } from "../../event/event.js";
  * });
  * ```
  */
-export async function eth_getLogs<
-  const TAbiEvent extends AbiEvent,
-  const TAbiEvents extends
-    | readonly AbiEvent[]
-    | readonly unknown[]
-    | undefined = TAbiEvent extends AbiEvent ? [TAbiEvent] : undefined,
-  TStrict extends boolean | undefined = undefined,
-  TFromBlock extends BlockNumber | BlockTag | undefined = undefined,
-  TToBlock extends BlockNumber | BlockTag | undefined = undefined,
->(
+export async function eth_getLogs(
   request: EIP1193RequestFn<EIP1474Methods>,
-  params: GetLogsParameters<
-    TAbiEvent,
-    TAbiEvents,
-    TStrict,
-    TFromBlock,
-    TToBlock
-  > = {},
-): Promise<EventLog<TAbiEvent>[]> {
-  const strict = params.strict ?? false;
-  const events = params.events ?? (params.event ? [params.event] : undefined);
-
-  let topics: LogTopic[] = [];
-  if (events) {
-    topics = [
-      (events as AbiEvent[]).flatMap((event_) =>
-        encodeEventTopics({
-          abi: [event_],
-          eventName: (event_ as AbiEvent).name,
-          args: params.args,
-        } as EncodeEventTopicsParameters),
-      ),
-    ];
-    if (params.event) {
-      topics = topics[0] as LogTopic[];
-    }
-  }
+  params: GetLogsParams = {},
+) {
+  const topics = params.topics ?? [];
 
   let logs: RpcLog[];
+  // in the case we have a blockHash
   if (params.blockHash) {
     const param: {
       address?: string | string[];
@@ -87,7 +69,9 @@ export async function eth_getLogs<
       method: "eth_getLogs",
       params: [param],
     });
-  } else {
+  }
+  // otherwise
+  else {
     const param: {
       address?: string | string[];
       topics?: LogTopic[];
@@ -125,13 +109,5 @@ export async function eth_getLogs<
     });
   }
 
-  const formattedLogs = logs.map((log) => formatLog(log));
-  if (!events) {
-    return formattedLogs as EventLog<TAbiEvent>[];
-  }
-  return parseEventLogs({
-    abi: events,
-    logs: formattedLogs,
-    strict,
-  }) as unknown as EventLog<TAbiEvent>[];
+  return logs.map((log) => formatLog(log));
 }

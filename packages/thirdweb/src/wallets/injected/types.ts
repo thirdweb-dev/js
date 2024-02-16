@@ -29,3 +29,5 @@ export type SpecificInjectedWalletOptions = Omit<
   InjectedWalletOptions,
   "walletId"
 >;
+
+export type InjectedWalletConnectOptions = { chainId?: bigint | number };

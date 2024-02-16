@@ -105,35 +105,38 @@ export function prepareContractCall<
     if (abiFnPromise) {
       return abiFnPromise;
     }
-    if (isAbiFunction(method)) {
-      return method as ParseMethod<TAbi, TMethod>;
-    }
+    const prom = (async () => {
+      if (isAbiFunction(method)) {
+        return method as ParseMethod<TAbi, TMethod>;
+      }
 
-    if (typeof method === "function") {
-      // @ts-expect-error -- to complicated
-      return (await method(contract)) as ParseMethod<TAbi, TMethod>;
-    }
-    // if the method starts with the string `function ` we always will want to try to parse it
-    if (typeof method === "string" && method.startsWith("function ")) {
-      // @ts-expect-error - method *is* string in this case
-      const abiItem = parseAbiItem(method);
-      if (abiItem.type === "function") {
-        return abiItem as ParseMethod<TAbi, TMethod>;
+      if (typeof method === "function") {
+        // @ts-expect-error -- to complicated
+        return (await method(contract)) as ParseMethod<TAbi, TMethod>;
       }
-      throw new Error(`"method" passed is not of type "function"`);
-    }
-    // check if we have a "abi" on the contract
-    if (contract.abi && contract.abi?.length > 0) {
-      // extract the abiFunction from it
-      const abiFunction = contract.abi?.find(
-        (item) => item.type === "function" && item.name === method,
-      );
-      // if we were able to find it -> return it
-      if (abiFunction) {
-        return abiFunction as ParseMethod<TAbi, TMethod>;
+      // if the method starts with the string `function ` we always will want to try to parse it
+      if (typeof method === "string" && method.startsWith("function ")) {
+        // @ts-expect-error - method *is* string in this case
+        const abiItem = parseAbiItem(method);
+        if (abiItem.type === "function") {
+          return abiItem as ParseMethod<TAbi, TMethod>;
+        }
+        throw new Error(`"method" passed is not of type "function"`);
       }
-    }
-    throw new Error(`Could not resolve method "${method}".`);
+      // check if we have a "abi" on the contract
+      if (contract.abi && contract.abi?.length > 0) {
+        // extract the abiFunction from it
+        const abiFunction = contract.abi?.find(
+          (item) => item.type === "function" && item.name === method,
+        );
+        // if we were able to find it -> return it
+        if (abiFunction) {
+          return abiFunction as ParseMethod<TAbi, TMethod>;
+        }
+      }
+      throw new Error(`Could not resolve method "${method}".`);
+    })();
+    return (abiFnPromise = prom);
   }
 
   let resolvedParamsPromise: Promise<
@@ -160,19 +163,28 @@ export function prepareContractCall<
     if (encodedDataPromise) {
       return encodedDataPromise;
     }
-    const [rAbiFn, rParams] = await Promise.all([
-      resolveAbiFunction_(),
-      resolveParams_(),
-    ]);
-    // @ts-expect-error -- to complicated
-    return encodeAbiFunction(rAbiFn, rParams);
+    const prom = (async () => {
+      const [rAbiFn, rParams] = await Promise.all([
+        resolveAbiFunction_(),
+        resolveParams_(),
+      ]);
+      // @ts-expect-error -- to complicated
+      return encodeAbiFunction(rAbiFn, rParams);
+    })();
+    return (encodedDataPromise = prom);
   }
-  return prepareTransaction({
-    // these always inferred from the contract
-    to: contract.address,
-    chain: contract.chain,
-    client: contract.client,
-    data: encodeData_,
-    ...rest,
-  });
+  return prepareTransaction(
+    {
+      ...rest,
+      // these always inferred from the contract
+      to: contract.address,
+      chain: contract.chain,
+      client: contract.client,
+      data: encodeData_,
+    },
+    {
+      abi: resolveAbiFunction_,
+      contract: contract,
+    },
+  );
 }

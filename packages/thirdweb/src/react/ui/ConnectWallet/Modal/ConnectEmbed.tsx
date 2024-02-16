@@ -26,7 +26,7 @@ import {
 } from "../../../providers/wallet-provider.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -125,7 +125,7 @@ export type ConnectEmbedProps = {
    * ```
    *
    */
-  onConnect?: (account: Account) => void;
+  onConnect?: (wallet: Wallet) => void;
 
   /**
    * By default, A "Powered by Thirdweb" branding is shown at the bottom of the embed.

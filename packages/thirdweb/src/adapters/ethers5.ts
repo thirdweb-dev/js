@@ -193,7 +193,6 @@ async function fromEthersContract<abi extends Abi>(
  */
 async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
   const address = await signer.getAddress();
-  const chainId = await signer.provider?.getNetwork().then((n) => n.chainId);
   const account: Account = {
     address,
     signMessage: async ({ message }) => {
@@ -216,28 +215,6 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
         data.types as Record<string, ethers5.TypedDataField[]>,
         data.message as Record<string, any>,
       )) as Hex;
-    },
-    wallet: {
-      metadata: {
-        id: "ethers-5-wallet",
-        iconUrl: "", // TODO
-        name: "Ethers 5 Wallet",
-      },
-      autoConnect: async () => account,
-      connect: async () => account,
-      disconnect: async () => {},
-      chainId: chainId ? BigInt(chainId) : undefined,
-      switchChain: async () => {
-        // TODO
-      },
-      events: {
-        addListener(events, listener) {
-          signer.provider?.on(events, listener);
-        },
-        removeListener(events, listener) {
-          signer.provider?.off(events, listener);
-        },
-      },
     },
   };
   return account;

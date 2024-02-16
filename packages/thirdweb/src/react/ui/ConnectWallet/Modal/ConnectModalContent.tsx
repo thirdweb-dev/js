@@ -15,7 +15,7 @@ import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
 } from "./ConnectModalSkeleton.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * @internal
@@ -48,11 +48,11 @@ export const ConnectModalContent = (props: {
   // const authConfig = useThirdwebAuthContext();
 
   const handleConnected = useCallback(
-    (account: Account) => {
-      connect(account);
+    (wallet: Wallet) => {
+      connect(wallet);
 
       if (onConnect) {
-        onConnect(account);
+        onConnect(wallet);
       }
 
       const requiresSignIn = false;
@@ -131,11 +131,6 @@ export const ConnectModalContent = (props: {
       selectWallet={setScreen}
       selectUIProps={{
         screenConfig: screenConfig,
-        // activeWalletConnectionStatus,
-        // connected: handleConnected,
-        // setActiveWalletConnectionStatus,
-        // activeWallet,
-        // activeWalletAddress: address,
       }}
     />
   );
@@ -150,19 +145,6 @@ export const ConnectModalContent = (props: {
         walletConfig={walletConfig}
         screenConfig={screenConfig}
         done={handleConnected}
-        // selectionData={modalConfig.data}
-        // activeWallet={activeWallet}
-        // activeWalletAddress={address}
-        // setSelectionData={(data: any) => {
-        //   setModalConfig((config) => ({
-        //     ...config,
-        //     data,
-        //   }));
-        // }}
-        // activeWalletConnectionStatus={activeWalletConnectionStatus}
-        // setActiveWalletConnectionStatus={setActiveWalletConnectionStatus}
-        // connect={walletConfig.connect}
-
         createInstance={() => {
           return walletConfig.create({
             client,

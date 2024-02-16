@@ -97,6 +97,7 @@ export class WalletConnect implements Wallet {
   chainId: Wallet["chainId"];
   events: Wallet["events"];
   metadata: Wallet["metadata"];
+  account?: Account | undefined;
 
   /**
    * Create a new WalletConnect instance to connect to a wallet using WalletConnect protocol.
@@ -153,8 +154,7 @@ export class WalletConnect implements Wallet {
    */
   private onConnect(address: string): Account {
     const wallet = this;
-    return {
-      wallet,
+    const account: Account = {
       address,
       async sendTransaction(tx: SendTransactionOption) {
         const provider = wallet.assertProvider();
@@ -172,6 +172,7 @@ export class WalletConnect implements Wallet {
           params: [
             {
               gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -215,6 +216,10 @@ export class WalletConnect implements Wallet {
         });
       },
     };
+
+    this.account = account;
+
+    return account;
   }
 
   /**
@@ -566,6 +571,9 @@ export class WalletConnect implements Wallet {
       provider.removeListener("disconnect", this.onDisconnect);
       provider.removeListener("session_delete", this.onDisconnect);
     }
+
+    this.account = undefined;
+    this.chainId = undefined;
   };
 
   /**

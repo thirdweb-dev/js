@@ -1,6 +1,6 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
 import { connectionManager } from "../connectionManager.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 
 /**
  * A hook that returns the active account
@@ -14,6 +14,21 @@ import type { Account } from "../../wallets/interfaces/wallet.js";
  */
 export function useActiveAccount() {
   const store = connectionManager.activeAccount;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+}
+
+/**
+ * A hook that returns the active wallet
+ * @returns The active `Wallet` or `undefined` if no active wallet is set.
+ * @example
+ * ```jsx
+ * import { useActiveWallet } from "thirdweb/react";
+ *
+ * const wallet = useActiveWallet();
+ * ```
+ */
+export function useActiveWallet() {
+  const store = connectionManager.activeWallet;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
@@ -59,8 +74,8 @@ export function useActiveWalletChainId() {
  * const accounts = useConnectedAccounts();
  * ```
  */
-export function useConnectedAccounts() {
-  const store = connectionManager.connectedAccounts;
+export function useConnectedWallets() {
+  const store = connectionManager.connectedWallets;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
@@ -77,12 +92,12 @@ export function useConnectedAccounts() {
  * setActiveAccount(account);
  * ```
  */
-export function useSetActiveAccount() {
-  return connectionManager.setActiveAccount;
+export function useSetActiveWallet() {
+  return connectionManager.setActiveWallet;
 }
 
 /**
- * A hook that to set an account as the active account and add it to the list of connected accounts.
+ * A hook to set a wallet as active wallet
  * @returns A function that lets you connect a wallet.
  * @example
  * ```jsx
@@ -97,10 +112,10 @@ export function useSetActiveAccount() {
  *         connect(async () => {
  *           // instantiate wallet
  *           const wallet = metamaskWallet();
- *           // connect wallet and get account
- *           const account = await wallet.connect();
- *           // return account
- *           return account;
+ *           // connect wallet
+ *           await wallet.connect();
+ *           // return the wallet
+ *           return wallet;
  *         })
  *       }
  *     >
@@ -111,34 +126,25 @@ export function useSetActiveAccount() {
  * ```
  */
 export function useConnect() {
-  const { setConnectedAccount, setActiveAccount } = connectionManager;
+  const { setActiveWallet } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async function (
-      options: Account | (() => Promise<Account>),
-      setActive = true,
-    ) {
+    async function (options: Wallet | (() => Promise<Wallet>)) {
       // reset error state
       setError(null);
       if (typeof options !== "function") {
-        setConnectedAccount(options);
-        if (setActive !== false) {
-          setActiveAccount(options);
-        }
+        setActiveWallet(options);
         return options;
       }
 
       setIsConnecting(true);
       try {
-        const account = await options();
+        const wallet = await options();
         // add the uuid for this wallet
-        setConnectedAccount(account);
-        if (setActive !== false) {
-          setActiveAccount(account);
-        }
-        return account;
+        setActiveWallet(wallet);
+        return wallet;
       } catch (e) {
         console.error(e);
         setError(e as Error);
@@ -147,7 +153,7 @@ export function useConnect() {
       }
       return null;
     },
-    [setActiveAccount, setConnectedAccount],
+    [setActiveWallet],
   );
 
   return { connect, isConnecting, error } as const;

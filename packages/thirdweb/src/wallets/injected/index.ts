@@ -11,10 +11,12 @@ import {
 import type { Address } from "abitype";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { InjectedWalletOptions } from "./types.js";
+import type {
+  InjectedWalletConnectOptions,
+  InjectedWalletOptions,
+} from "./types.js";
 import { getMIPDStore, injectedProvider } from "./mipdStore.js";
 import type {
-  WalletConnectionOptions,
   SendTransactionOption,
   Wallet,
   Account,
@@ -60,6 +62,7 @@ export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
   chainId: Wallet["chainId"];
   events: Wallet["events"];
+  account?: Account | undefined;
 
   // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
   private options?: InjectedWalletOptions;
@@ -133,7 +136,7 @@ export class InjectedWallet implements Wallet {
    * ```
    * @returns A Promise that resolves to the connected address.
    */
-  async connect(options?: WalletConnectionOptions) {
+  async connect(options?: InjectedWalletConnectOptions) {
     const provider = this.getProvider();
     this.provider = provider;
 
@@ -266,7 +269,9 @@ export class InjectedWallet implements Wallet {
           method: "eth_sendTransaction",
           params: [
             {
+              value: tx.value ? toHex(tx.value) : undefined,
               gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? toHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -284,8 +289,12 @@ export class InjectedWallet implements Wallet {
         }
 
         const messageToSign = (() => {
-          if (typeof message === "string") return stringToHex(message);
-          if (message.raw instanceof Uint8Array) return toHex(message.raw);
+          if (typeof message === "string") {
+            return stringToHex(message);
+          }
+          if (message.raw instanceof Uint8Array) {
+            return toHex(message.raw);
+          }
           return message.raw;
         })();
 
@@ -294,35 +303,35 @@ export class InjectedWallet implements Wallet {
           params: [messageToSign, account.address],
         });
       },
-      async signTypedData(data) {
+      async signTypedData(typedData) {
         if (!wallet.provider || !account.address) {
           throw new Error("Provider not setup");
         }
         const { domain, message, primaryType } =
-          data as unknown as SignTypedDataParameters;
+          typedData as unknown as SignTypedDataParameters;
 
         const types = {
           EIP712Domain: getTypesForEIP712Domain({ domain }),
-          ...data.types,
+          ...typedData.types,
         };
 
         // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
         // as we can't statically check this with TypeScript.
         validateTypedData({ domain, message, primaryType, types });
 
-        const typedData = stringify(
+        const stringifiedData = stringify(
           { domain: domain ?? {}, message, primaryType, types },
           (_, value) => (isHex(value) ? value.toLowerCase() : value),
         );
 
         return await wallet.provider.request({
           method: "eth_signTypedData_v4",
-          params: [account.address, typedData],
+          params: [account.address, stringifiedData],
         });
       },
-
-      wallet,
     };
+
+    this.account = account;
 
     return account;
   }
@@ -346,6 +355,7 @@ export class InjectedWallet implements Wallet {
       this.provider.removeListener("chainChanged", this.onChainChanged);
     }
 
+    this.account = undefined;
     this.chainId = undefined;
   };
 

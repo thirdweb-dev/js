@@ -1,84 +1,101 @@
-import type { Abi, AbiEvent } from "abitype";
-import type { BlockTag } from "viem";
-import { resolveAbiEvent } from "./resolve-abi.js";
-import type { ContractEvent } from "../event.js";
+/**
+ * 1. blockTime + contract (with abi) + no events -> logs with types and parsing *if* contract has abi defined
+ * 2. blockTime + contract (no abi) + no events -> logs with NO types but *with* parsing
+ * 3. blockTime + no contract + events -> logs with types and parsing (across all "addresses") (no contract filter)
+ * 4. blockTime + contract + events -> logs with types and parsing (filtered by contract address +  event topics)
+ */
+
+import type { Abi, AbiEvent, ExtractAbiEvents } from "abitype";
+import type { ThirdwebContract } from "../../index.js";
+import { prepareEvent, type PreparedEvent } from "../prepare-event.js";
 import {
-  resolveContractAbi,
-  type ThirdwebContract,
-} from "../../contract/index.js";
-import { eth_getLogs, getRpcClient } from "../../rpc/index.js";
+  eth_getLogs,
+  type GetLogsBlockParams,
+  type GetLogsParams,
+} from "../../rpc/actions/eth_getLogs.js";
+import { resolveContractAbi } from "../../contract/index.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { parseEventLogs, type ParseEventLogsResult } from "./parse-logs.js";
+import { isAbiEvent } from "../utils.js";
+import type { Log } from "viem";
+import type { Prettify } from "../../utils/type-utils.js";
+
+export type GetContractEventsOptionsDirect<
+  abi extends Abi,
+  abiEvent extends AbiEvent,
+  TStrict extends boolean,
+> = {
+  contract: ThirdwebContract<abi>;
+  events?: PreparedEvent<abiEvent>[];
+  strict?: TStrict;
+};
 
 export type GetContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-  contractEvents extends ContractEvent<abiEvent>[],
-  fBlock extends bigint | BlockTag,
-  tBlock extends bigint | BlockTag,
-> = {
-  contract: ThirdwebContract<abi>;
-  events?: contractEvents;
-  fromBlock?: fBlock;
-  toBlock?: tBlock;
-};
+  TStrict extends boolean,
+> = Prettify<
+  GetContractEventsOptionsDirect<abi, abiEvent, TStrict> & GetLogsBlockParams
+>;
+
+export type GetContractEventsResult<
+  abiEvent extends AbiEvent,
+  TStrict extends boolean,
+> = ParseEventLogsResult<abiEvent, TStrict>;
 
 /**
- * Retrieves contract events from the blockchain.
- * @param options - The options for retrieving contract events.
- * @returns A promise that resolves to an array of contract events.
+ * Retrieves events from a contract based on the provided options.
+ * @param options - The options for retrieving events.
+ * @returns A promise that resolves to an array of parsed event logs.
  * @example
- * ### Get all events for a contract
  * ```ts
- * import { getEvents } from "thirdweb";
- * const events = await getEvents({
+ * import { getContractEvents } from "thirdweb";
+ * const events = await getContractEvents({
  *  contract: myContract,
- *  fromBlock: 4375893n,
- *  toBlock: "latest"
- * });
- * ```
- *
- * ### Get specific events for a contract
- * ```ts
- * import { contractEvent, getEvents } from "thirdweb";
- * const myEvent = contractEvent({
- *  contract: myContract,
- *  event: "MyEvent",
- * });
- * const events = await getEvents({
- *  contract: myContract,
- *  events: [myEvent],
- *  fromBlock: 4375893n,
- *  toBlock: "latest"
+ *  fromBlock: 123456n,
+ *  toBlock: 123456n,
+ *  events: [preparedEvent, preparedEvent2],
  * });
  * ```
  */
-export async function getEvents<
+export async function getContractEvents<
   const abi extends Abi,
-  const abiEvent extends AbiEvent,
-  const contractEvents extends ContractEvent<abiEvent>[],
-  const fBlock extends bigint | BlockTag,
-  const tBlock extends bigint | BlockTag,
+  const abiEvent extends AbiEvent = ExtractAbiEvents<abi>,
+  const TStrict extends boolean = true,
 >(
-  options: GetContractEventsOptions<
-    abi,
-    abiEvent,
-    contractEvents,
-    fBlock,
-    tBlock
-  >,
-) {
-  const rpcRequest = getRpcClient(options.contract);
-  const parsedEvents = await (options.events
-    ? Promise.all(options.events.map((e) => resolveAbiEvent(e)))
-    : // if we don't have events passed then resolve the abi for the contract -> all events!
-      // TODO: can we do this lazily when we receive events, and not all upfront?
-      (resolveContractAbi(options.contract).then((abi) =>
-        abi.filter((item) => item.type === "event"),
-      ) as Promise<abiEvent[]>));
+  options: GetContractEventsOptions<abi, abiEvent, TStrict>,
+): Promise<Array<Log<bigint, number, false, undefined, TStrict, abiEvent[]>>> {
+  const { contract, events, ...restParams } = options;
 
-  return await eth_getLogs(rpcRequest, {
-    fromBlock: options.fromBlock,
-    toBlock: options.toBlock,
-    address: options.contract.address,
-    events: parsedEvents,
+  let resolvedEvents = events ?? [];
+
+  // if we have an abi on the contract, we can encode the topics with it
+  if (!events?.length && !!contract) {
+    // if we have a contract *WITH* an abi we can use that
+    if (!!contract.abi?.length) {
+      // @ts-expect-error - we can't make typescript happy here, but we know this is an abi event
+      resolvedEvents = contract.abi
+        .filter(isAbiEvent)
+        .map((abiEvent) => prepareEvent({ signature: abiEvent }));
+    } else {
+      const runtimeAbi = await resolveContractAbi(contract);
+      // @ts-expect-error - we can't make typescript happy here, but we know this is an abi event
+      resolvedEvents = runtimeAbi
+        .filter(isAbiEvent)
+        .map((abiEvent) => prepareEvent({ signature: abiEvent }));
+    }
+  }
+
+  const eventsTopics = resolvedEvents.flatMap((e) => e.topics) ?? [];
+  const ethLogsParams: GetLogsParams = {
+    ...restParams,
+    address: contract?.address,
+    topics: eventsTopics,
+  };
+  const rpcRequest = getRpcClient(contract);
+  const logs = await eth_getLogs(rpcRequest, ethLogsParams);
+  return parseEventLogs({
+    logs,
+    events: resolvedEvents,
   });
 }

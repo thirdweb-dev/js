@@ -15,18 +15,15 @@ export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-export type WalletConnectionOptions = { chainId?: number | bigint };
-
 export type Wallet = {
   // REQUIRED
   metadata: WalletMetadata;
-  connect: (options?: WalletConnectionOptions) => Promise<Account>;
-  autoConnect: () => Promise<Account>;
+  connect: (options?: any) => Promise<Account>;
+  autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
 
   // OPTIONAL
   chainId?: bigint;
-  estimateGas?: (transaction: PreparedTransaction) => Promise<bigint>;
 
   events?: {
     addListener: WalletEventListener;
@@ -34,7 +31,13 @@ export type Wallet = {
   };
 
   switchChain?: (newChainId: bigint | number) => Promise<void>;
+  account?: Account;
 };
+
+export interface WalletWithPersonalWallet extends Wallet {
+  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
+  personalWallet?: Wallet;
+}
 
 export type Account = {
   // REQUIRED
@@ -53,10 +56,8 @@ export type Account = {
 
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-
-  // TODO: figure out a path to remove this (or reduce it to the minimum possible interface)
-  /**
-   * The wallet that the account belongs to
-   */
-  wallet: Wallet;
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
+  sendBatchTransaction?: (
+    txs: SendTransactionOption[],
+  ) => Promise<TransactionOrUserOpHash>;
 };
