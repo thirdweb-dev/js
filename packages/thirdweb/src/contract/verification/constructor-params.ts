@@ -5,7 +5,7 @@ import { fetchDeployBytecodeFromPublishedContractMetadata } from "./publisher.js
 import { getCreate2FactoryAddress } from "../../utils/any-evm/create-2-factory.js";
 import { decodeAbiParameters } from "viem";
 
-export type FetchConstructorParamsOptions = {
+type FetchConstructorParamsOptions = {
   contract: ThirdwebContract;
   explorerApiUrl: string;
   explorerApiKey: string;

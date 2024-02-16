@@ -5,7 +5,7 @@ import {
   type Hex,
 } from "viem";
 
-export type GetStorageAtParams = {
+type GetStorageAtParams = {
   address: string;
   position: Hex;
   blockTag?: BlockTag;

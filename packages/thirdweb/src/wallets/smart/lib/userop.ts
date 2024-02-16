@@ -176,7 +176,7 @@ async function getAccountInitCode(args: {
 /**
  * @internal
  */
-export function getUserOpHash(args: {
+function getUserOpHash(args: {
   userOp: UserOperation;
   entryPoint: string;
   chainId: bigint;

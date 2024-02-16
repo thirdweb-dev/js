@@ -42,7 +42,7 @@ import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ApiChain } from "../../../chain/types.js";
 
-export type NetworkSelectorChainProps = {
+type NetworkSelectorChainProps = {
   /**
    * `Chain` object for the chain to be displayed
    */
@@ -331,7 +331,7 @@ export function NetworkSelectorContent(
  *
  * @internal
  */
-export function NetworkSelectorContentInner(
+function NetworkSelectorContentInner(
   props: NetworkSelectorInnerProps & {
     onBack?: () => void;
   },

@@ -4,7 +4,7 @@ import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { extractError as parseEstimationError } from "../extract-error.js";
 
-export type EstimateGasOptions = {
+type EstimateGasOptions = {
   transaction: PreparedTransaction;
   account?: Partial<Account> | undefined;
 };

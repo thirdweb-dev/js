@@ -8,7 +8,7 @@ import type { ReadContractResult } from "../read-contract.js";
 import { decodeFunctionResult } from "../../abi/decode.js";
 import { extractError } from "../extract-error.js";
 
-export type SimulateOptions<abi extends Abi, abiFn extends AbiFunction> = {
+type SimulateOptions<abi extends Abi, abiFn extends AbiFunction> = {
   transaction: PreparedTransaction<abi, abiFn>;
   account?: Partial<Account> | undefined;
 };

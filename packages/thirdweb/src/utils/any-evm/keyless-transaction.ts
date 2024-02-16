@@ -7,7 +7,7 @@ import {
   type TransactionSerializable,
 } from "viem";
 
-export type GetKeylessTransactionOptions = {
+type GetKeylessTransactionOptions = {
   transaction: TransactionSerializable;
   signature: Signature;
 };

@@ -7,7 +7,7 @@ import type { Wallet } from "../../wallets/interfaces/wallet.js";
 
 type BoolSetter = (value: boolean) => void;
 
-export type ModalConfig = {
+type ModalConfig = {
   title: string;
   theme: "light" | "dark" | Theme;
   data: any;
@@ -149,7 +149,7 @@ export const useSetIsWalletModalOpen = () => {
   return context;
 };
 
-export type ModalConfigOptions = {
+type ModalConfigOptions = {
   /**
    * Title of the Modal
    */

@@ -39,14 +39,14 @@ type Subscription<TResult, TError> = {
   );
 };
 
-export type RpcRequest = {
+type RpcRequest = {
   jsonrpc?: "2.0";
   method: string;
   params?: any;
   id?: number;
 };
 
-export type RpcResponse<TResult = any, TError = any> = {
+type RpcResponse<TResult = any, TError = any> = {
   jsonrpc: `${number}`;
   id: number;
 } & (

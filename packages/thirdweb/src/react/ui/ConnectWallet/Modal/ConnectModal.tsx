@@ -14,7 +14,7 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 /**
  * @internal
  */
-export const ConnectModal = () => {
+const ConnectModal = () => {
   const { theme, modalSize } = useContext(ModalConfigCtx);
 
   const screenSetup = useSetupScreen();

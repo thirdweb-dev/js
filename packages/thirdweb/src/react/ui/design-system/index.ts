@@ -152,8 +152,6 @@ function createThemeObj(colors: ThemeColors): Theme {
 export const darkThemeObj = /* @__PURE__ */ createThemeObj(darkColors);
 export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
-export type ThemeObjectOrType = "light" | "dark" | Theme;
-
 /**
  * @theme
  */
@@ -267,7 +265,7 @@ export function darkTheme(overrides?: ThemeOverrides): Theme {
 /**
  * @internal
  */
-export function applyThemeOverrides(
+function applyThemeOverrides(
   baseTheme: Theme,
   themeOverrides: ThemeOverrides,
 ): Theme {

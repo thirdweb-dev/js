@@ -14,7 +14,7 @@ type FeeData = {
   maxPriorityFeePerGas: null | bigint;
 };
 
-export type FeeDataParams =
+type FeeDataParams =
   | {
       gasPrice?: never;
       maxFeePerGas?: bigint;
@@ -164,7 +164,7 @@ function getPreferredPriorityFee(
  * @returns A promise that resolves to the gas price as a bigint.
  * @internal
  */
-export async function getGasPrice(
+async function getGasPrice(
   client: ThirdwebClient,
   chain: Chain,
 ): Promise<bigint> {
@@ -214,7 +214,7 @@ function getDefaultGasFee(chainId: 137n | 80001n): bigint {
  * @returns The gas price
  * @internal
  */
-export async function getPolygonGasPriorityFee(
+async function getPolygonGasPriorityFee(
   chainId: 137n | 80001n,
 ): Promise<bigint> {
   const gasStationUrl = getGasStationUrl(chainId);

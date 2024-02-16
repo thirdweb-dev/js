@@ -6,7 +6,7 @@ import type { ThirdwebContract } from "../../contract/contract.js";
 import { readContract } from "../../transaction/read-contract.js";
 
 // TODO: move to const exports
-export const AddressZero = "0x0000000000000000000000000000000000000000";
+const AddressZero = "0x0000000000000000000000000000000000000000";
 
 /**
  * Resolves the implementation address and bytecode for a given contract.

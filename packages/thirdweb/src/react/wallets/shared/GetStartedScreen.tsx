@@ -212,7 +212,7 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-export const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+const ButtonLink = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
   return {
     all: "unset",

@@ -7,11 +7,14 @@ import {
 } from "abitype";
 import type { Hex, TransactionRequest } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
-import type { ParseMethod } from "../abi/types.js";
 import { isAbiFunction } from "./utils.js";
 import { eth_call, getRpcClient } from "../rpc/index.js";
 import { decodeFunctionResult } from "../abi/decode.js";
-import type { BaseTransactionOptions, ParamsOption } from "./types.js";
+import type {
+  BaseTransactionOptions,
+  ParamsOption,
+  ParseMethod,
+} from "./types.js";
 import type { PrepareTransactionOptions } from "./prepare-transaction.js";
 import { encodeAbiFunction } from "../abi/encode.js";
 

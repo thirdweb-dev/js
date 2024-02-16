@@ -1,4 +1,4 @@
-export type TokenInfo = {
+type TokenInfo = {
   name: string;
   symbol: string;
   address: string;

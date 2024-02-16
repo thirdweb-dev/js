@@ -160,7 +160,7 @@ const GET_PUBLISHED_CONTRACT_VERSIONS_ABI = {
   type: "function",
 } as const;
 
-export type FetchPublishedContractOptions = {
+type FetchPublishedContractOptions = {
   publisherAddress: string;
   contractName: string;
   version?: string;

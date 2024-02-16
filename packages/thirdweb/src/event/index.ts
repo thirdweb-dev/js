@@ -17,4 +17,5 @@ export {
 export {
   getContractEvents,
   type GetContractEventsOptions,
+  type GetContractEventsResult,
 } from "./actions/get-events.js";

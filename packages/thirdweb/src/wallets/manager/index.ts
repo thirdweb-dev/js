@@ -4,7 +4,7 @@ import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { walletStorage } from "./storage.js";
 
-export type WalletIdToConnectedWalletMap = Map<string, Wallet>;
+type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus =
   | "connected"
   | "disconnected"

@@ -22,7 +22,7 @@ const SIGNATURE = {
   s: "0x2222222222222222222222222222222222222222222222222222222222222222",
 } as const;
 
-export type GetCreate2FactoryAddressOptions = {
+type GetCreate2FactoryAddressOptions = {
   chain: Chain;
   client: ThirdwebClient;
 };

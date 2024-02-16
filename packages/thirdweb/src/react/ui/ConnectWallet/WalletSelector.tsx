@@ -440,7 +440,7 @@ export const WalletSelector: React.FC<{
 /**
  * @internal
  */
-export const WalletSelection: React.FC<{
+const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   maxHeight?: string;
@@ -487,7 +487,7 @@ export const WalletSelection: React.FC<{
 /**
  * @internal
  */
-export function WalletEntryButton(props: {
+function WalletEntryButton(props: {
   walletConfig: WalletConfig;
   selectWallet: () => void;
 }) {

@@ -7,14 +7,17 @@ import {
 } from "abitype";
 import type { TransactionRequest, Hex } from "viem";
 import type { ThirdwebContract } from "../index.js";
-import type { ParseMethod } from "../abi/types.js";
 import { encodeAbiFunction } from "../abi/encode.js";
 import { isAbiFunction } from "./utils.js";
 import {
   prepareTransaction,
   type PrepareTransactionOptions,
 } from "./prepare-transaction.js";
-import type { BaseTransactionOptions, ParamsOption } from "./types.js";
+import type {
+  BaseTransactionOptions,
+  ParamsOption,
+  ParseMethod,
+} from "./types.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 
 export type PrepareContractCallOptions<

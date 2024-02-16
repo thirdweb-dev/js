@@ -5,15 +5,13 @@ import type { ThirdwebContract } from "../contract.js";
 import { formatCompilerMetadata } from "../actions/compiler-metadata.js";
 import { fetchConstructorParams } from "./constructor-params.js";
 import { fetchSourceFilesFromMetadata } from "./source-files.js";
-import type { Chain } from "../../chain/index.js";
-import type { ThirdwebClient } from "../../client/client.js";
 
 const RequestStatus = {
   OK: "1",
   NOTOK: "0",
 };
 
-export type VerifyContractOptions = {
+type VerifyContractOptions = {
   contract: ThirdwebContract;
   explorerApiUrl: string;
   explorerApiKey: string;
@@ -196,23 +194,3 @@ export async function checkVerificationStatus(
     }, 3000);
   });
 }
-
-export type VerifyThirdwebContractOptions = {
-  client: ThirdwebClient;
-  chain: Chain;
-  explorerApiUrl: string;
-  explorerApiKey: string;
-  contractName: string;
-  contractVersion?: string;
-  encodedConstructorArgs?: string;
-};
-
-// /**
-//  *
-//  * @internal
-//  */
-// export async function verifyThirdwebContract(
-//   options: VerifyThirdwebContractOptions,
-// ): Promise<string | string[]> {
-//   const contractAddress =
-// }
