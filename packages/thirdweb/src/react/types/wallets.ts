@@ -16,7 +16,7 @@ export type WalletConfig = {
 
   create: (options: {
     client: ThirdwebClient;
-    dappMetadata?: DAppMetaData;
+    dappMetadata: DAppMetaData;
   }) => Wallet;
 
   /**

@@ -6,5 +6,5 @@ import type { DAppMetaData } from "../../wallets/types.js";
 export const ThirdwebProviderContext = /* @__PURE__ */ createContext<{
   wallets: WalletConfig[];
   client: ThirdwebClient;
-  dappMetadata?: DAppMetaData;
+  dappMetadata: DAppMetaData;
 } | null>(null);
