@@ -8,7 +8,7 @@ import type { BaseTransactionOptions } from "../../transaction/index.js";
 const CONTRACT_QUERY_CACHE = new WeakMap();
 
 /**
- * Creates a `useQuery` hook fot a contract call.
+ * Creates a `useQuery` hook for a contract call.
  * @param readCall - A function that performs the contract function call and returns the result.
  * @returns An object containing the created `useRead` hook.
  * @example
