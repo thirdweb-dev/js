@@ -107,7 +107,7 @@ export type SwapRoute = {
  * ```ts
  * import { getRoute, type SwapRoute } from "thirdweb/pay";
  *
- * const getRoute: SwapRoute = await getRoute({
+ * const getRoute: SwapRoute = await getSwapRoute({
  *  client,
  *  fromAddress: "0x...", // address of account
  *  fromChainId: 137,
@@ -121,7 +121,9 @@ export type SwapRoute = {
  *
  * ```
  */
-export async function getRoute(params: SwapRouteParams): Promise<SwapRoute> {
+export async function getSwapRoute(
+  params: SwapRouteParams,
+): Promise<SwapRoute> {
   try {
     const queryString = new URLSearchParams(params as any).toString();
     const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;

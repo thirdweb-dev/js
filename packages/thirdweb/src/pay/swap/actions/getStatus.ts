@@ -108,7 +108,10 @@ export async function getSwapStatus(
   params: SwapStatusParams,
 ): Promise<SwapStatus> {
   try {
-    const queryString = new URLSearchParams(params as any).toString();
+    const queryString = new URLSearchParams({
+      transactionId: params.transactionId,
+      transactionHash: params.transactionHash,
+    }).toString();
     const url = `${THIRDWEB_PAY_SWAP_STATUS_ENDPOINT}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);

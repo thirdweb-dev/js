@@ -1,5 +1,5 @@
 export {
-  getRoute,
+  getSwapRoute,
   type SwapRoute,
   type SwapRouteParams,
 } from "./swap/actions/getSwap.js";

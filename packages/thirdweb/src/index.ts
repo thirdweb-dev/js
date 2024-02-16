@@ -96,7 +96,7 @@ export {
 
 // pay
 export {
-  getRoute,
+  getSwapRoute,
   getSwapStatus,
   sendSwap,
   type SwapRoute,

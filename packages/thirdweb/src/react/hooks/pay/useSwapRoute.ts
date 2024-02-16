@@ -1,21 +1,34 @@
-/*
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import {
-  type SwapRouteRequest,
-  type SwapRouteResponse,
-  getRoute,
-} from "../../../pay/index.js";
-import { useActiveAccount } from "src/react/index.js";
+  getSwapRoute,
+  type SwapRoute,
+  type SwapRouteParams,
+} from "../../../pay/swap/actions/getSwap.js";
 
-interface {}
+export {
+  type SwapRoute,
+  type SwapRouteParams,
+} from "../../../pay/swap/actions/getSwap.js";
 
-
-export function useSwapRoute(): UseMutationResult<SwapRouteRequest,
-Error,
-SwapRouteResponse>
-{
-
-  const account = useActiveAccount();
-
+/**
+ * A hook to get a swap route
+ * @returns a swap route object to perform a swap
+ * ```jsx
+ * import { useSwapRoute } from "thirdweb/react";
+ * const { mutate: getSwapRoute, data: swapRoute } = useSwapRoute();
+ *
+ * // later
+ * const swapRoute = await getSwapRoute(swapParams);
+ * ```
+ */
+export function useSwapRoute(): UseMutationResult<
+  SwapRoute,
+  Error,
+  SwapRouteParams
+> {
+  return useMutation({
+    mutationFn: async (routeParams) => {
+      return await getSwapRoute(routeParams);
+    },
+  });
 }
-*/
