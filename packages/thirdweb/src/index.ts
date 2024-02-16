@@ -98,8 +98,9 @@ export {
 export {
   getRoute,
   getSwapStatus,
-  type SwapRouteRequest,
-  type SwapRouteResponse,
-  type SwapStatusRequest,
-  type SwapStatusResponse,
+  sendSwap,
+  type SwapRoute,
+  type SwapRouteParams,
+  type SwapStatus,
+  type SwapStatusParams,
 } from "./pay/index.js";
