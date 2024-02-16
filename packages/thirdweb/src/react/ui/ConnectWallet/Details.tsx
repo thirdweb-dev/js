@@ -3,6 +3,8 @@ import {
   ChevronRightIcon,
   TextAlignJustifyIcon,
   EnterIcon,
+  PaperPlaneIcon,
+  PinBottomIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
@@ -18,7 +20,7 @@ import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Container, Line } from "../components/basic.js";
-import { IconButton } from "../components/buttons.js";
+import { Button, IconButton } from "../components/buttons.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton, StyledDiv } from "../design-system/elements.js";
@@ -40,7 +42,6 @@ import { Img } from "../components/Img.js";
 import { useChainQuery } from "../../hooks/others/useChainQuery.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
-import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
   ConnectWallet_DetailsButtonOptions,
@@ -53,7 +54,8 @@ import {
   personalWalletToSmartAccountMap,
 } from "../../../wallets/index.js";
 import { connectionManager } from "../../connectionManager.js";
-// import { walletIds } from "../../../wallets/walletIds.js";
+import { SendFunds } from "./screens/SendFunds.js";
+import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 
 // TEMP
 const LocalWalletId = "localWallet";
@@ -86,7 +88,6 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChainId = useActiveWalletChainId();
   const chainQuery = useChainQuery(walletChainId);
   const { disconnect } = useDisconnect();
-  const { client } = useThirdwebProviderProps();
 
   const tokenAddress =
     walletChainId && props.detailsButton?.displayBalanceToken
@@ -95,7 +96,6 @@ export const ConnectedWalletDetails: React.FC<{
 
   const balanceQuery = useWalletBalance({
     chain: walletChainId,
-    client,
     tokenAddress,
     account: activeAccount,
   });
@@ -344,14 +344,14 @@ export const ConnectedWalletDetails: React.FC<{
         </Text>
       </Container>
 
-      <Spacer y="sm" />
+      <Spacer y="lg" />
 
-      {/* <Container px="lg"> */}
-      <ConnectedToSmartWallet />
-      {/* <EmbeddedWalletEmail /> */}
+      <Container px="lg">
+        <ConnectedToSmartWallet />
+        {/* <EmbeddedWalletEmail /> */}
 
-      {/* Send and Receive */}
-      {/* <Container
+        {/* Send and Receive */}
+        <Container
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -397,10 +397,10 @@ export const ConnectedWalletDetails: React.FC<{
             <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
             {locale.receive}{" "}
           </Button>
-        </Container> */}
-      {/* </Container> */}
+        </Container>
+      </Container>
 
-      <Spacer y="sm" />
+      <Spacer y="md" />
 
       <Container px="md">
         {/* Network Switcher */}
@@ -546,7 +546,6 @@ export const ConnectedWalletDetails: React.FC<{
           <Spacer y="sm" />
         </Container>
       )}
-
       {/* {activeWallet?.walletId === walletIds.localWallet && (
         <>
           <Line />
@@ -596,28 +595,25 @@ export const ConnectedWalletDetails: React.FC<{
   //     />
   //   );
   // }
-
-  // else if (screen === "send") {
-  //   content = (
-  //     <SendFunds
-  //       supportedTokens={props.supportedTokens}
-  //       onBack={() => {
-  //         setScreen("main");
-  //       }}
-  //     />
-  //   );
-  // }
-
-  // else if (screen === "receive") {
-  //   content = (
-  //     <ReceiveFunds
-  //       iconUrl={walletIconUrl}
-  //       onBack={() => {
-  //         setScreen("main");
-  //       }}
-  //     />
-  //   );
-  // }
+  else if (screen === "send") {
+    content = (
+      <SendFunds
+        supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  } else if (screen === "receive") {
+    content = (
+      <ReceiveFunds
+        iconUrl={avatarOrWalletIconUrl}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  }
 
   return (
     <Modal size={"compact"} trigger={trigger} open={isOpen} setOpen={setIsOpen}>
