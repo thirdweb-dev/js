@@ -11,12 +11,20 @@ import { type Hex } from "viem";
 // TODO: Support User Op Hash
 /**
  * Retrieves contract events from the blockchain.
- * @param thirdwebClient asdfadf
- * @param params asdfads
- * @returns asdfasd
+ * @param account - the account performing the swap
+ * @param route - swap route returned from getRoute
+ * @returns SwapStatusParams to be used in getSwapStatus
  * @example
- * ### Get Swap
- * ``````
+ *
+ * ```ts
+ * import { sendSwap } from "thirdweb/pay";
+ *
+ * const swapStatusParams = await sendSwap({
+ *  account,
+ *  route
+ * });
+ *
+ * ```
  */
 export async function sendSwap(
   account: Account,

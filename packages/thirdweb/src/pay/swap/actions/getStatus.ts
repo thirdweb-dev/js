@@ -89,12 +89,20 @@ export type SwapStatus = {
 };
 
 /**
- * Retrieves contract events from the blockchain.
- * @param params asdfads
- * @returns asdfasd
+ * Gets the status of a swap transaction
+ * @param params - The SwapStatus params
+ * @returns a status object of the swap transaction
  * @example
- * ### Get Swap
- * ``````
+ *
+ * ```ts
+ * import { getSwapStatus, type SwapStatus } from "thirdweb/pay";
+ *
+ * const swapStatus: SwapStatus = await getSwapStatus({
+ *   client,
+ *   transactionId: "1234", // transactionId returned from getRoute
+ *   transactionHash: "0x...", // transactionHash returned from sendSwap or sendTransaction
+ * });
+ * ```
  */
 export async function getSwapStatus(
   params: SwapStatusParams,

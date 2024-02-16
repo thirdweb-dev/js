@@ -99,13 +99,27 @@ export type SwapRoute = {
 };
 
 /**
- * Retrieves contract events from the blockchain.
- * @param thirdwebClient asdfadf
- * @param params asdfads
- * @returns asdfasd
+ * Retrieves a crypto to crypto swap or bridge route
+ * @param params - the swap route params
+ * @returns a route object with the swap TransactioRequest and swap details
  * @example
- * ### Get Swap
- * ``````
+ *
+ * ```ts
+ * import { getRoute, type SwapRoute } from "thirdweb/pay";
+ *
+ * const getRoute: SwapRoute = await getRoute({
+ *  client,
+ *  fromAddress: "0x...", // address of account
+ *  fromChainId: 137,
+ *  fromTokenAddress: "0x...", // zero address for native currency
+ *  fromAmountWei: "1000000", // use toAmountWei to specify destination amount
+ *  toAddress: "0x...", // optional destination address other than sender
+ *  toChainId: 10,
+ *  toTokenAddress: "0x...", // zero address for native currency
+ *  maxSlippageBPS: 50, // max 0.5% slippage
+ * });
+ *
+ * ```
  */
 export async function getRoute(params: SwapRouteParams): Promise<SwapRoute> {
   try {
