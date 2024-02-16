@@ -66,7 +66,6 @@ const THIRDWEB_DOMAINS = [
   // dev domains
   ".thirdweb.dev",
   ".thirdweb-dev.com",
-  "pay-server-s25c.chainsaw-dev.zeet.app", // TODO: remove when dev domain is certified
 ] as const;
 
 /**
