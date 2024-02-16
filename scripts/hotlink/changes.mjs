@@ -69,6 +69,7 @@ export const changes = [
       "./rpc": "./src/rpc/index.ts",
       "./storage": "./src/storage/index.ts",
       "./wallets": "./src/wallets/index.ts",
+      "./react": "./src/react/index.ts",
     },
   },
 ];
