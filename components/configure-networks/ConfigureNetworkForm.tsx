@@ -21,7 +21,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
 import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 
@@ -33,6 +33,7 @@ export type NetworkConfigFormData = {
   type: "testnet" | "mainnet";
   icon: string;
   slug: string;
+  status: string;
 };
 
 // lowercase it, replace all spaces with hyphens, and then strip all non-alphanumeric characters
@@ -64,7 +65,10 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   const form = useForm<NetworkConfigFormData>({
     values: {
       name: editingChain?.name || "",
-      rpcUrl: editingChain ? getDashboardChainRpc(editingChain) : "" || "",
+      rpcUrl:
+        editingChain && editingChain?.status !== "deprecated"
+          ? getDashboardChainRpc(editingChain)
+          : "" || "",
       chainId: editingChain?.chainId
         ? `${editingChain?.chainId}`
         : "" || prefillChainId || "",
@@ -72,6 +76,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       type: editingChain?.testnet ? "testnet" : "mainnet",
       icon: editingChain?.icon?.url || "",
       slug: editingChain?.slug || "",
+      status: editingChain?.status === "deprecated" ? "deprecated" : "active",
     },
     mode: "onChange",
   });
@@ -148,6 +153,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               format: "",
             },
         testnet: data.type === "testnet",
+        status: data.status,
       };
     } else {
       configuredNetwork = {
@@ -172,6 +178,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               format: "",
             }
           : undefined,
+        status: data.status,
       };
     }
 
@@ -346,6 +353,29 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             </Flex>
           </FormControl>
         </SimpleGrid>
+
+        {editingChain?.status === "deprecated" && (
+          <SimpleGrid columns={{ md: 2, base: 1 }} gap={4}>
+            {/* Active / Deprecated */}
+            <FormControl>
+              <FormLabel display="flex">Network status</FormLabel>
+              <RadioGroup
+                onChange={(value: "active" | "deprecated") => {
+                  form.setValue("status", value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                value={form.watch("status")}
+              >
+                <Stack direction="row" gap={4} mt={3}>
+                  <Radio value="active">Live</Radio>
+                  <Radio value="deprecated">Deprecated</Radio>
+                </Stack>
+              </RadioGroup>
+            </FormControl>
+          </SimpleGrid>
+        )}
 
         {/* RPC URL */}
         <RpcInput form={form} />

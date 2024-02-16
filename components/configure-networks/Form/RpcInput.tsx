@@ -22,7 +22,11 @@ export const RpcInput: React.FC<{
   });
 
   return (
-    <FormControl isRequired isInvalid={!!form.formState.errors.rpcUrl}>
+    <FormControl
+      isRequired
+      isInvalid={!!form.formState.errors.rpcUrl}
+      isDisabled={form.watch("status") !== "active"}
+    >
       <FormLabel>RPC URL</FormLabel>
       <Input
         autoComplete="off"

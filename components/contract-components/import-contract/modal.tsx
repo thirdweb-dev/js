@@ -51,7 +51,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         as="form"
         onSubmit={form.handleSubmit(async (data) => {
           if (!chainId) {
-            throw new Error("No chain id");
+            throw new Error("No chain ID");
           }
 
           try {

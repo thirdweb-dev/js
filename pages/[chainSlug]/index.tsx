@@ -21,6 +21,7 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
 import { ChainIcon } from "components/icons/ChainIcon";
+import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { ExploreCategory, prefetchCategory } from "data/explore";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -135,6 +136,8 @@ const ChainPage: ThirdwebNextPage = ({
 
   const isLineaTestnet = chain?.chainId === 59140;
 
+  const isDeprecated = chain?.status === "deprecated";
+
   return (
     <>
       <NextSeo
@@ -239,22 +242,24 @@ const ChainPage: ThirdwebNextPage = ({
                   </Heading>
                 </Flex>
               </Flex>
-              <ClientOnly ssr={null}>
-                <LinkButton
-                  as={TrackedLink}
-                  {...{
-                    category: CHAIN_CATEGORY,
-                  }}
-                  background="bgBlack"
-                  color="bgWhite"
-                  _hover={{
-                    opacity: 0.8,
-                  }}
-                  href="/explore"
-                >
-                  Deploy to {chain.name}
-                </LinkButton>
-              </ClientOnly>
+              {!isDeprecated && (
+                <ClientOnly ssr={null}>
+                  <LinkButton
+                    as={TrackedLink}
+                    {...{
+                      category: CHAIN_CATEGORY,
+                    }}
+                    background="bgBlack"
+                    color="bgWhite"
+                    _hover={{
+                      opacity: 0.8,
+                    }}
+                    href="/explore"
+                  >
+                    Deploy to {sanitizedChainName}
+                  </LinkButton>
+                </ClientOnly>
+              )}
             </Flex>
           </Container>
         </DarkMode>
@@ -267,57 +272,62 @@ const ChainPage: ThirdwebNextPage = ({
         flexDirection="column"
         gap={10}
       >
-        {category && (
-          <>
-            <ChainSectionElement
-              colSpan={12}
-              label="Popular Contracts"
-              moreElem={
-                <TrackedLink
-                  category={CHAIN_CATEGORY}
-                  href="/explore"
-                  color="blue.500"
-                  label="explore_more"
-                  display="flex"
-                  alignItems="center"
-                  gap={"0.5em"}
-                  _hover={{
-                    textDecoration: "none",
-                    color: "heading",
-                  }}
-                >
-                  Explore more <BsArrowRight />
-                </TrackedLink>
-              }
-            >
-              <Grid
-                templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
-                gap={6}
-                mt={2}
+        {isDeprecated ? (
+          <DeprecatedAlert chainName={sanitizedChainName} />
+        ) : (
+          category && (
+            <>
+              <ChainSectionElement
+                colSpan={12}
+                label="Popular Contracts"
+                moreElem={
+                  <TrackedLink
+                    category={CHAIN_CATEGORY}
+                    href="/explore"
+                    color="blue.500"
+                    label="explore_more"
+                    display="flex"
+                    alignItems="center"
+                    gap={"0.5em"}
+                    _hover={{
+                      textDecoration: "none",
+                      color: "heading",
+                    }}
+                  >
+                    Explore more <BsArrowRight />
+                  </TrackedLink>
+                }
               >
-                {(isLineaTestnet
-                  ? lineaTestnetPopularContracts
-                  : category.contracts
-                ).map((publishedContractId, idx) => {
-                  const [publisher, contractId] =
-                    publishedContractId.split("/");
-                  return (
-                    <ContractCard
-                      key={publishedContractId}
-                      publisher={publisher}
-                      contractId={contractId}
-                      tracking={{
-                        source: `chain_${chain.slug}`,
-                        itemIndex: `${idx}`,
-                      }}
-                    />
-                  );
-                })}
-              </Grid>
-            </ChainSectionElement>
-            <Divider />
-          </>
+                <Grid
+                  templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
+                  gap={6}
+                  mt={2}
+                >
+                  {(isLineaTestnet
+                    ? lineaTestnetPopularContracts
+                    : category.contracts
+                  ).map((publishedContractId, idx) => {
+                    const [publisher, contractId] =
+                      publishedContractId.split("/");
+                    return (
+                      <ContractCard
+                        key={publishedContractId}
+                        publisher={publisher}
+                        contractId={contractId}
+                        tracking={{
+                          source: `chain_${chain.slug}`,
+                          itemIndex: `${idx}`,
+                        }}
+                      />
+                    );
+                  })}
+                </Grid>
+              </ChainSectionElement>
+              <Divider />
+            </>
+          )
         )}
+
         <SimpleGrid as="section" columns={{ base: 6, md: 12 }} rowGap={12}>
           {chain.infoURL && (
             <ChainSectionElement colSpan={6} label="Info">
@@ -346,7 +356,7 @@ const ChainPage: ThirdwebNextPage = ({
           </ChainSectionElement>
         </SimpleGrid>
         {/* only render rpc section if we have an rpc for this chain */}
-        {chain.rpc?.[0] ? (
+        {chain.rpc?.[0] && !isDeprecated ? (
           <SimpleGrid columns={{ base: 6, md: 12 }} rowGap={12}>
             <ChainSectionElement
               colSpan={6}
@@ -495,8 +505,13 @@ const ChainPage: ThirdwebNextPage = ({
             </SimpleGrid>
           </ChainSectionElement>
         ) : null}
-        <Divider />
-        <CodeOverview onlyInstall chain={chain} noSidebar />
+
+        {!isDeprecated && (
+          <>
+            <Divider />
+            <CodeOverview onlyInstall chain={chain} noSidebar />
+          </>
+        )}
       </Container>
     </>
   );

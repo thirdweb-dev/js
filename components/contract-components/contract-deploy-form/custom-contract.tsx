@@ -50,6 +50,7 @@ import {
   TrackedLink,
 } from "tw-components";
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
+import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -69,7 +70,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   walletAddress,
 }) => {
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
-
   const networkInfo = useSupportedChain(selectedChain || -1);
   const ensQuery = useEns(walletAddress);
   const connectedWallet = ensQuery.data?.address || walletAddress;
@@ -585,6 +585,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             Deploy Now
           </TransactionButton>
         </Flex>
+        {networkInfo?.status === "deprecated" && networkInfo?.name && (
+          <DeprecatedAlert chainName={networkInfo?.name} />
+        )}
       </Flex>
     </FormProvider>
   );
