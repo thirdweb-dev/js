@@ -7,7 +7,6 @@ import {
 } from "../../../transaction/prepare-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { defineChain } from "../../../chain/index.js";
 import { approve } from "../../../extensions/erc20/write/approve.js";
 import type { Hex, Address } from "viem";
 
