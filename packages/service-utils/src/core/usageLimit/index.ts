@@ -29,11 +29,9 @@ export async function usageLimit(
     };
   }
 
-  const limit = limits.storage as number;
-
   if (
     serviceScope === "storage" &&
-    (usage.storage?.sumFileSizeBytes || 0) > limit
+    (usage.storage?.sumFileSizeBytes ?? 0) > (limits.storage ?? 0)
   ) {
     return {
       usageLimited: true,
@@ -45,7 +43,8 @@ export async function usageLimit(
 
   if (
     serviceScope === "embeddedWallets" &&
-    (usage.embeddedWallets?.countWalletAddresses || 0) > limit
+    (usage.embeddedWallets?.countWalletAddresses ?? 0) >
+      (limits.embeddedWallets ?? 0)
   ) {
     return {
       usageLimited: true,
