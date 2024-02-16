@@ -19,11 +19,6 @@ import {
   walletStorage,
 } from "../manager/storage.js";
 import {
-  EthereumProvider,
-  OPTIONAL_EVENTS,
-  OPTIONAL_METHODS,
-} from "@walletconnect/ethereum-provider";
-import {
   getChainDataForChainId,
   getRpcUrlForChain,
 } from "../../chain/index.js";
@@ -38,6 +33,7 @@ import type {
 } from "./types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
+import type { EthereumProvider } from "@walletconnect/ethereum-provider";
 
 export const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
 export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
@@ -385,6 +381,9 @@ export class WalletConnect implements Wallet {
     isAutoConnect: boolean,
     connectionOptions?: WalletConnectConnectionOptions,
   ) {
+    const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } =
+      await import("@walletconnect/ethereum-provider");
+
     const targetChainId = BigInt(connectionOptions?.chainId || defaultChainId);
 
     const rpc = getRpcUrlForChain({
