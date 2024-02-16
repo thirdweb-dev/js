@@ -191,7 +191,6 @@
     }
   },
   "scripts": {
-    "test:getSwap": "vitest getSwap",
     "bench": "vitest bench",
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
