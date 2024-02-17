@@ -68,9 +68,24 @@ export async function sendTransaction(
     resolvePromisedValue(options.transaction.value),
   ]);
 
+  const walletChainId = options.wallet.getChainId();
+  const chainId = getChainIdFromChain(options.transaction.chain);
+  // only if:
+  // 1. the wallet has a chainId
+  // 2. the wallet has a switchChain method
+  // 3. the wallet's chainId is not the same as the transaction's chainId
+  // => switch tot he wanted chain
+  if (
+    options.wallet.switchChain &&
+    walletChainId &&
+    walletChainId !== chainId
+  ) {
+    await options.wallet.switchChain(chainId);
+  }
+
   const result = await account.sendTransaction({
     to,
-    chainId: Number(getChainIdFromChain(options.transaction.chain)),
+    chainId,
     data,
     gas,
     nonce,

@@ -225,6 +225,8 @@ export class InjectedWallet implements Wallet {
       }
     }
 
+    // TODO: we probably need to block until the chain is switched (we should get an event?)
+
     this.chainId = normalizeChainId(chainId);
   }
 
