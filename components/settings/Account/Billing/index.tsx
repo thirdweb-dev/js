@@ -19,14 +19,13 @@ import { BillingPricing } from "./Pricing";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { FiExternalLink } from "react-icons/fi";
-import { useLocalStorage } from "hooks/useLocalStorage";
 
 interface BillingProps {
   account: Account;
 }
 
 export const Billing: React.FC<BillingProps> = ({ account }) => {
-  const [claimGrowth] = useLocalStorage("claim-growth-trial", false, true);
+  const claimGrowth = false;
   const updatePlanMutation = useUpdateAccountPlan();
   const {
     isOpen: isPaymentMethodOpen,

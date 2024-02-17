@@ -17,7 +17,6 @@ import { GLOBAL_EWS_AUTH_TOKEN_KEY } from "constants/app";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { OnboardingChoosePlan } from "./ChoosePlan";
 import { OnboardingLinkWallet } from "./LinkWallet";
-import { useLocalStorage } from "hooks/useLocalStorage";
 
 const skipBilling = (account: Account) => {
   return (
@@ -44,7 +43,7 @@ export const Onboarding: React.FC = () => {
   const trackEvent = useTrack();
   const wallet = useWallet();
   const ewsConfirmMutation = useConfirmEmbeddedWallet();
-  const [claimGrowth] = useLocalStorage("claim-growth-trial", false, true);
+  const claimGrowth = false;
 
   const [state, setState] = useState<OnboardingState>();
   const [account, setAccount] = useState<Account>();

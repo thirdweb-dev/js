@@ -19,32 +19,12 @@ import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
 import { IoIosInformationCircleOutline } from "react-icons/io";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { FiExternalLink } from "react-icons/fi";
 
 const TRACKING_CATEGORY = "pricing-page";
 
 const Pricing: ThirdwebNextPage = () => {
-  const router = useRouter();
-  const [claimGrowth, setClaimedGrowth] = useLocalStorage(
-    "claim-growth-trial",
-    false,
-    true,
-  );
-
   const isMobile = useBreakpointValue({ base: true, lg: false }) as boolean;
-
-  useEffect(() => {
-    const { claimGrowth: claimGrowthQuery } = router.query;
-
-    if (claimGrowthQuery !== undefined) {
-      setClaimedGrowth(true);
-      router.replace("/pricing");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
 
   return (
     <LandingLayout
@@ -72,7 +52,7 @@ const Pricing: ThirdwebNextPage = () => {
       >
         <PricingSection
           trackingCategory={TRACKING_CATEGORY}
-          canTrialGrowth={claimGrowth}
+          canTrialGrowth={false}
         />
 
         <Flex flexDir="column" gap={20}>

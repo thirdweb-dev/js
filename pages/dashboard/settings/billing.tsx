@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Billing } from "components/settings/Account/Billing";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { BillingConnectWalletPrompt } from "components/settings/Account/Billing/ConnectWallet";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
@@ -16,11 +15,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const meQuery = useAccount();
   const router = useRouter();
   const { data: account } = meQuery;
-  const [claimGrowth, setClaimGrowth] = useLocalStorage(
-    "claim-growth-trial",
-    false,
-    true,
-  );
+  const claimGrowth = false;
 
   useEffect(() => {
     let refetchInterval: ReturnType<typeof setInterval> | undefined;
@@ -46,18 +41,9 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [account]);
 
   useEffect(() => {
-    const {
-      payment_intent,
-      source_redirect_slug,
-      claimGrowth: claimGrowthQuery,
-    } = router.query;
-    const hasClaimGrowth = claimGrowthQuery !== undefined;
+    const { payment_intent, source_redirect_slug } = router.query;
 
-    if (hasClaimGrowth) {
-      setClaimGrowth(true);
-    }
-
-    if (payment_intent || source_redirect_slug || hasClaimGrowth) {
+    if (payment_intent || source_redirect_slug) {
       router.replace("/dashboard/settings/billing");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
