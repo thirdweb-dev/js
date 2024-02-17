@@ -26,8 +26,8 @@ export type WalletConnectCreationOptions = {
 };
 
 export type WalletConnectConnectionOptions = {
-  chainId?: number | bigint;
-  optionalChains?: (number | bigint)[];
+  chainId?: number;
+  optionalChains?: number[];
   showQrModal?: boolean;
   pairingTopic?: string;
   qrModalOptions?: WalletConnectQRCodeModalOptions;

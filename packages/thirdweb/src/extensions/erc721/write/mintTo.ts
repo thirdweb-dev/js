@@ -5,7 +5,7 @@ import {
 } from "../../../transaction/index.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 
-export type NFTInput = Prettify<
+type NFTInput = Prettify<
   {
     name?: string;
     description?: string;

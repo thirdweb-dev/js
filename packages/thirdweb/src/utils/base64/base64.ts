@@ -1,7 +1,7 @@
 import { base64ToString } from "../uint8-array.js";
 
-export type Base64Prefix = "data:application/json;base64";
-export type Base64String = `${Base64Prefix},${string}`;
+type Base64Prefix = "data:application/json;base64";
+type Base64String = `${Base64Prefix},${string}`;
 
 /**
  * Checks if a given string is a base64 encoded JSON string.

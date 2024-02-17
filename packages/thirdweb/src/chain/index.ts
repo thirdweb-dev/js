@@ -3,18 +3,16 @@ import { withCache } from "../utils/promise/withCache.js";
 import type { ApiChain } from "./types.js";
 
 export type Chain =
-  | {
-      id: bigint | number;
+  | Readonly<{
+      id: number;
       rpc: string;
       nativeCurrency?: {
         name?: string;
         symbol?: string;
         decimals?: number;
       };
-    }
-  // TODO: add all possible chainIds somehow for autocompletion
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  | ((number | bigint) & {});
+    }>
+  | number;
 
 /**
  * Defines a chain based on the provided options.
@@ -29,7 +27,7 @@ export type Chain =
  * const chain = defineChain({ id: 1, rpc: "https:..." });
  * ```
  */
-export function defineChain(options: Chain): Readonly<Chain> {
+export function defineChain(options: Chain): Chain {
   // this does... nothing right now, but it may in the future?
   return options;
 }
@@ -49,7 +47,7 @@ type GetRpcUrlForChainOptions = {
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
   // if the chain is just the chainId use the thirdweb rpc
-  if (typeof options.chain === "bigint" || typeof options.chain === "number") {
+  if (typeof options.chain === "number") {
     return `https://${options.chain.toString()}.rpc.thirdweb.com/${
       options.client.clientId
     }`;
@@ -70,11 +68,11 @@ export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
  * @returns The chain ID.
  * @internal
  */
-export function getChainIdFromChain(chain: Chain): bigint {
-  if (typeof chain === "bigint" || typeof chain === "number") {
-    return BigInt(chain);
+export function getChainIdFromChain(chain: Chain): number {
+  if (typeof chain === "number") {
+    return chain;
   }
-  return BigInt(chain.id);
+  return chain.id;
 }
 
 /**
@@ -84,11 +82,7 @@ export function getChainIdFromChain(chain: Chain): bigint {
  * @internal
  */
 export async function getChainSymbol(chain: Chain): Promise<string> {
-  if (
-    typeof chain === "bigint" ||
-    typeof chain === "number" ||
-    !chain.nativeCurrency?.symbol
-  ) {
+  if (typeof chain === "number" || !chain.nativeCurrency?.symbol) {
     const chainId = getChainIdFromChain(chain);
     return getChainDataForChainId(chainId)
       .then((data) => data.nativeCurrency.symbol)
@@ -109,11 +103,7 @@ export async function getChainSymbol(chain: Chain): Promise<string> {
  * @internal
  */
 export async function getChainDecimals(chain: Chain): Promise<number> {
-  if (
-    typeof chain === "bigint" ||
-    typeof chain === "number" ||
-    !chain.nativeCurrency?.decimals
-  ) {
+  if (typeof chain === "number" || !chain.nativeCurrency?.decimals) {
     const chainId = getChainIdFromChain(chain);
     return getChainDataForChainId(chainId)
       .then((data) => data.nativeCurrency.decimals)
@@ -137,11 +127,7 @@ export async function getChainDecimals(chain: Chain): Promise<number> {
 export async function getChainNativeCurrencyName(
   chain: Chain,
 ): Promise<string> {
-  if (
-    typeof chain === "bigint" ||
-    typeof chain === "number" ||
-    !chain.nativeCurrency?.name
-  ) {
+  if (typeof chain === "number" || !chain.nativeCurrency?.name) {
     const chainId = getChainIdFromChain(chain);
     return getChainDataForChainId(chainId)
       .then((data) => data.nativeCurrency.name)
@@ -167,7 +153,7 @@ type FetchChainResponse =
 /**
  * @internal
  */
-export function getChainDataForChainId(chainId: bigint): Promise<ApiChain> {
+export function getChainDataForChainId(chainId: number): Promise<ApiChain> {
   return withCache(
     async () => {
       const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);

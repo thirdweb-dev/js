@@ -14,10 +14,10 @@ import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
 import { getContractEvents } from "../../../event/actions/get-events.js";
 import type { ParseEventLogsResult } from "../../../event/index.js";
 
-export type UseContractEventsOptions<
+type UseContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
-> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onLogs"> & {
+> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onEvents"> & {
   limit?: number;
   enabled?: boolean;
   watch?: boolean;

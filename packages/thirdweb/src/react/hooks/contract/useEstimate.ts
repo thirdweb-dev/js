@@ -1,5 +1,5 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { useActiveAccount } from "../../providers/wallet-provider.js";
+import { useActiveWallet } from "../../providers/wallet-provider.js";
 import {
   estimateGas,
   type EstimateGasResult,
@@ -23,9 +23,9 @@ export function useEstimateGas(): UseMutationResult<
   Error,
   PreparedTransaction
 > {
-  const account = useActiveAccount();
+  const wallet = useActiveWallet();
 
   return useMutation({
-    mutationFn: (transaction) => estimateGas({ transaction, account }),
+    mutationFn: (transaction) => estimateGas({ transaction, wallet }),
   });
 }

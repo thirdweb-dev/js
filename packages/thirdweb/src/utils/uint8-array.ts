@@ -19,7 +19,7 @@ const uint8ArrayStringified = "[object Uint8Array]";
  * }
  * ```
  */
-export function assertUint8Array(value: unknown): asserts value is Uint8Array {
+function assertUint8Array(value: unknown): asserts value is Uint8Array {
   if (!isUint8Array(value)) {
     throw new TypeError(`Expected \`Uint8Array\`, got \`${typeof value}\``);
   }
@@ -148,7 +148,7 @@ export function uint8ArrayToHex(array: Uint8Array): string {
  * //=> 'Hello'
  * ```
  */
-export function uint8ArrayToString(array: Uint8Array): string {
+function uint8ArrayToString(array: Uint8Array): string {
   assertUint8Array(array);
   return cachedTextDecoder().decode(array);
 }
@@ -175,7 +175,7 @@ function base64UrlToBase64(base64url: string) {
  * //=> Uint8Array [72, 101, 108, 108, 111]
  * ```
  */
-export function base64ToUint8Array(base64String: string): Uint8Array {
+function base64ToUint8Array(base64String: string): Uint8Array {
   assertString(base64String);
   return Uint8Array.from(
     globalThis.atob(base64UrlToBase64(base64String)),

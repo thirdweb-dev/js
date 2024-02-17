@@ -7,7 +7,7 @@ import { totalSupply } from "./totalSupply.js";
 /**
  * Parameters for getting an NFT.
  */
-export type GetNFTParams = TokenUriParams;
+type GetNFTParams = TokenUriParams;
 
 /**
  * Retrieves information about a specific ERC1155 non-fungible token (NFT).

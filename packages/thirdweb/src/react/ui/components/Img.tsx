@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import type { ThirdwebClient } from "../../../client/client.js";
 import { resolveScheme } from "../../../utils/ipfs.js";
+import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 
 /**
  * @internal
@@ -13,23 +13,18 @@ export const Img: React.FC<{
   loading?: "eager" | "lazy";
   className?: string;
   style?: React.CSSProperties;
-  client?: ThirdwebClient;
 }> = (props) => {
-  // const storage = useStorage();
+  const { client } = useThirdwebProviderProps();
 
   const getSrc = () => {
-    if (props.client) {
-      try {
-        return resolveScheme({
-          uri: props.src,
-          client: props.client,
-        });
-      } catch {
-        return props.src;
-      }
+    try {
+      return resolveScheme({
+        uri: props.src,
+        client: client,
+      });
+    } catch {
+      return props.src;
     }
-
-    return props.src;
   };
 
   return (

@@ -6,7 +6,7 @@ import {
   type Hash,
 } from "viem";
 
-export type GetTransactionByHashParameters = {
+type GetTransactionByHashParameters = {
   hash: Hash;
 };
 

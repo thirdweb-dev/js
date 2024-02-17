@@ -6,7 +6,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 // it's OK to cache this forever because:
 // 1. the results can't change
 // 2. the total size can be max <number of chains> * boolean
-const EIP_ENFORCED_CACHE = new Map<bigint, boolean>();
+const EIP_ENFORCED_CACHE = new Map<number, boolean>();
 
 type IsEIP155EnforcedOptions = {
   chain: Chain;

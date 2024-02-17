@@ -17,7 +17,6 @@ import { resolveContractAbi } from "../../contract/index.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { parseEventLogs, type ParseEventLogsResult } from "./parse-logs.js";
 import { isAbiEvent } from "../utils.js";
-import type { Log } from "viem";
 import type { Prettify } from "../../utils/type-utils.js";
 
 export type GetContractEventsOptionsDirect<
@@ -64,7 +63,7 @@ export async function getContractEvents<
   const TStrict extends boolean = true,
 >(
   options: GetContractEventsOptions<abi, abiEvent, TStrict>,
-): Promise<Array<Log<bigint, number, false, undefined, TStrict, abiEvent[]>>> {
+): Promise<GetContractEventsResult<abiEvent, TStrict>> {
   const { contract, events, ...restParams } = options;
 
   let resolvedEvents = events ?? [];

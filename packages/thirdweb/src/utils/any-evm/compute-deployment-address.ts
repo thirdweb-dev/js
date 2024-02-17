@@ -3,7 +3,7 @@ import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { getSaltHash } from "./get-salt-hash.js";
 import { keccackId } from "./keccack-id.js";
 
-export type ComputeDeploymentAddressOptions = {
+type ComputeDeploymentAddressOptions = {
   bytecode: string;
   encodedArgs: Hex | Uint8Array;
   create2FactoryAddress: string;

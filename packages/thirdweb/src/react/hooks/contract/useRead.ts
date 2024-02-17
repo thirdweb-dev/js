@@ -6,7 +6,6 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
-import type { ParseMethod } from "../../../abi/types.js";
 import { getChainIdFromChain } from "../../../chain/index.js";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { stringify } from "../../../utils/json.js";
@@ -17,6 +16,7 @@ import {
   type ReadContractResult,
 } from "../../../transaction/index.js";
 import type { ThirdwebContract } from "../../../contract/index.js";
+import type { ParseMethod } from "../../../transaction/types.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
@@ -136,8 +136,3 @@ export function useReadContract<
     `Invalid "useReadContract" options. Expected either a read extension or a transaction object.`,
   ) as never;
 }
-
-/**
- * @deprecated Use {@link useReadContract} instead.
- */
-export const useContractRead = useReadContract;

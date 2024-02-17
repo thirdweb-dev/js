@@ -4,6 +4,7 @@ import {
   type GetTokenBalanceOptions,
 } from "../../../wallets/utils/getTokenBalance.js";
 import { getChainIdFromChain } from "../../../chain/index.js";
+import { useThirdwebProviderProps } from "./useThirdwebProviderProps.js";
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.
@@ -11,8 +12,11 @@ import { getChainIdFromChain } from "../../../chain/index.js";
  * @returns The result of the query.
  * @internal
  */
-export function useWalletBalance(options: Partial<GetTokenBalanceOptions>) {
-  const { chain, client, account, tokenAddress } = options;
+export function useWalletBalance(
+  options: Omit<Partial<GetTokenBalanceOptions>, "client">,
+) {
+  const { chain, account, tokenAddress } = options;
+  const { client } = useThirdwebProviderProps();
   const query = queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [

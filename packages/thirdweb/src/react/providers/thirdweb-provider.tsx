@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   AutoConnect,
@@ -23,6 +21,7 @@ import {
 import { getChainIdFromChain } from "../../chain/index.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 import { isBaseTransactionOptions } from "../../transaction/index.js";
+import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client and Wallet Connection Manager.
@@ -110,7 +109,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
             value={{
               wallets: props.wallets || defaultWallets,
               client: props.client,
-              dappMetadata: props.dappMetadata,
+              dappMetadata: props.dappMetadata || defaultDappMetadata,
             }}
           >
             {props.autoConnect === false ? <NoAutoConnect /> : <AutoConnect />}

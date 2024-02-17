@@ -1,0 +1,31 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/index.ts",
+    "src/react/index.ts",
+    "src/rpc/index.ts",
+    "src/transaction/index.ts",
+    "src/event/index.ts",
+    "src/storage/index.ts",
+    "src/wallets/index.ts",
+    "src/utils/index.ts",
+    "src/contract/index.ts",
+    "src/pay/index.ts",
+    "src/wallets/{smart,injected,wallet-connect}/index.ts",
+    "src/extensions/*.ts",
+    "src/adapters/*.ts",
+    "package.json"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+  "ignoreBinaries": ["eslint", "prettier", "printf", "yalc"],
+  "ignoreDependencies": ["ethers", "react", "tslib"],
+  // plugins
+  "eslint": {
+    "config": ".eslintrc.cjs"
+  },
+  "vitest": {
+    "config": "test/vitest.config.ts",
+    "entry": ["src/**/*.{test,bench}.ts", "test/globalSetup.ts"],
+    "project": ["src/**/*.{ts,tsx}", "test/**/*.ts"]
+  }
+}

@@ -14,7 +14,7 @@ type FeeData = {
   maxPriorityFeePerGas: null | bigint;
 };
 
-export type FeeDataParams =
+type FeeDataParams =
   | {
       gasPrice?: never;
       maxFeePerGas?: bigint;
@@ -105,12 +105,12 @@ async function getDynamicFeeData(
 
   const chainId = getChainIdFromChain(chain);
   // flag chain testnet & flag chain
-  if (chainId === 220n || chainId === 1220n) {
+  if (chainId === 220 || chainId === 1220) {
     // these does not support eip-1559, for some reason even though `eth_maxPriorityFeePerGas` is available?!?
     // return null because otherwise TX break
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
     // mumbai & polygon
-  } else if (chainId === 80001n || chainId === 137n) {
+  } else if (chainId === 80001 || chainId === 137) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
   } else if (maxPriorityFeePerGas) {
@@ -130,7 +130,7 @@ async function getDynamicFeeData(
   maxFeePerGas = baseBlockFee * 2n + maxPriorityFeePerGas_;
 
   // special cased for Celo gas fees
-  if (chainId === 42220n || chainId === 44787n || chainId === 62320n) {
+  if (chainId === 42220 || chainId === 44787 || chainId === 62320) {
     maxPriorityFeePerGas_ = maxFeePerGas;
   }
 
@@ -164,7 +164,7 @@ function getPreferredPriorityFee(
  * @returns A promise that resolves to the gas price as a bigint.
  * @internal
  */
-export async function getGasPrice(
+async function getGasPrice(
   client: ThirdwebClient,
   chain: Chain,
 ): Promise<bigint> {
@@ -184,11 +184,11 @@ export async function getGasPrice(
 /**
  * @internal
  */
-function getGasStationUrl(chainId: 137n | 80001n): string {
+function getGasStationUrl(chainId: 137 | 80001): string {
   switch (chainId) {
-    case 137n:
+    case 137:
       return "https://gasstation.polygon.technology/v2";
-    case 80001n:
+    case 80001:
       return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
@@ -200,11 +200,11 @@ const MIN_MUMBAI_GAS_PRICE = 1n; // 1 gwei
 /**
  * @internal
  */
-function getDefaultGasFee(chainId: 137n | 80001n): bigint {
+function getDefaultGasFee(chainId: 137 | 80001): bigint {
   switch (chainId) {
-    case 137n:
+    case 137:
       return MIN_POLYGON_GAS_PRICE;
-    case 80001n:
+    case 80001:
       return MIN_MUMBAI_GAS_PRICE;
   }
 }
@@ -214,9 +214,7 @@ function getDefaultGasFee(chainId: 137n | 80001n): bigint {
  * @returns The gas price
  * @internal
  */
-export async function getPolygonGasPriorityFee(
-  chainId: 137n | 80001n,
-): Promise<bigint> {
+async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
   const gasStationUrl = getGasStationUrl(chainId);
   try {
     const data = await (await fetch(gasStationUrl)).json();

@@ -21,17 +21,16 @@ export type Wallet = {
   connect: (options?: any) => Promise<Account>;
   autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
+  getAccount(): Account | undefined;
+  getChainId(): number | undefined;
 
   // OPTIONAL
-  chainId?: bigint;
-
   events?: {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
-
-  switchChain?: (newChainId: bigint | number) => Promise<void>;
-  account?: Account;
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
+  switchChain?: (newChainId: number) => Promise<void>;
 };
 
 export interface WalletWithPersonalWallet extends Wallet {
@@ -43,7 +42,6 @@ export type Account = {
   // REQUIRED
   address: Address;
   sendTransaction: (
-    // TODO: figure out how we get our "chain" here
     tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
   signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
@@ -56,7 +54,6 @@ export type Account = {
 
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<TransactionOrUserOpHash>;

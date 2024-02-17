@@ -22,7 +22,7 @@ const SIGNATURE = {
   s: "0x2222222222222222222222222222222222222222222222222222222222222222",
 } as const;
 
-export type GetCreate2FactoryAddressOptions = {
+type GetCreate2FactoryAddressOptions = {
   chain: Chain;
   client: ThirdwebClient;
 };
@@ -52,7 +52,7 @@ export async function getCreate2FactoryAddress(
   const enforceEip155 = await isEIP155Enforced(options);
   const chainId = getChainIdFromChain(options.chain);
   const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
-  const eipChain = enforceEip155 ? chainId : 0n;
+  const eipChain = enforceEip155 ? chainId : 0;
 
   const deploymentInfo = custom
     ? getCreate2FactoryDeploymentInfo(eipChain, {
@@ -72,7 +72,7 @@ export async function getCreate2FactoryAddress(
  * @internal
  */
 export async function getCreate2FactoryDeploymentInfo(
-  chainId: bigint,
+  chainId: number,
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ) {
   const deploymentTransaction = await getKeylessTransaction({

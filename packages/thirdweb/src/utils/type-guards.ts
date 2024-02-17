@@ -4,7 +4,7 @@
  * @returns True if the value is an object, false otherwise.
  * @internal
  */
-export function isObject(value: unknown): value is object {
+function isObject(value: unknown): value is object {
   return typeof value === "object" && value !== null;
 }
 

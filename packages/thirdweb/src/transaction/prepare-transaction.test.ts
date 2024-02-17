@@ -27,7 +27,7 @@ describe("prepareTransaction", () => {
     });
     const estimate = await estimateGas({
       transaction: preparedTx,
-      account: { address: TEST_WALLET_A },
+      from: TEST_WALLET_A,
     });
     // TODO: figure out why this is not `21000n`?
     // - a raw transfer SHOULD be 21000gwei always?

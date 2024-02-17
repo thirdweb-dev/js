@@ -4,7 +4,7 @@ import { getFunctionSelector } from "../../abi/lib/getFunctionSelector.js";
 import { type ThirdwebContract } from "../../contract/contract.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
-export type DetectExtensionOptions = {
+type DetectExtensionOptions = {
   contract: ThirdwebContract;
   method: string | AbiFunction;
 };
@@ -39,7 +39,7 @@ type DetectExtensionInBytecodeOptions = {
  * @returns A boolean indicating whether the method is present in the bytecode.
  * @internal
  */
-export function detectMethodInBytecode(
+function detectMethodInBytecode(
   options: DetectExtensionInBytecodeOptions,
 ) {
   // if we can't get the bytecode we know the contract is not deployed

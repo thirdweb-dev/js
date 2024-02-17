@@ -9,7 +9,7 @@ import {
   type RpcStateMapping,
 } from "viem";
 
-export type StateOverride = Record<
+type StateOverride = Record<
   string,
   {
     /**

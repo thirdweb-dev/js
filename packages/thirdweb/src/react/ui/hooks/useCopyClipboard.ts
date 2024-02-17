@@ -1,16 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-export interface UseClipboardOptions {
-  /**
-   * timeout delay (in ms) to switch back to initial state once copied.
-   */
-  timeout?: number;
-  /**
-   * Set the desired MIME type
-   */
-  format?: string;
-}
-
 /**
  * @internal
  */

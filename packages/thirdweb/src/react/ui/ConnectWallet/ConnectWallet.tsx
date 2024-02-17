@@ -69,7 +69,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
   const isNetworkMismatch =
     activeWalletChainId !== undefined &&
     props.chainId &&
-    activeWalletChainId !== BigInt(props.chainId);
+    activeWalletChainId !== props.chainId;
 
   // const [showSignatureModal, setShowSignatureModal] = useState(false);
   // const address = useActiveWalletAddress();
@@ -170,8 +170,8 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.connectModal?.titleIcon,
                   // auth: props.auth,
                   onConnect: props.onConnect,
-                  chainId: props.chainId ? BigInt(props.chainId) : undefined,
-                  chains: props.chains?.map(BigInt),
+                  chainId: props.chainId ? props.chainId : undefined,
+                  chains: props.chains,
                   showThirdwebBranding:
                     props.connectModal?.showThirdwebBranding,
                 });
@@ -195,7 +195,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               style={props.switchButton?.style}
               className={props.switchButton?.className}
               switchNetworkBtnTitle={props.switchButton?.label}
-              targetChainId={BigInt(props.chainId)}
+              targetChainId={props.chainId}
             />
           );
         }
@@ -241,7 +241,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
               //   props?.auth?.onLogout?.();
               // }
             }}
-            chains={props?.chains?.map(BigInt) || []}
+            chains={props?.chains || []}
           />
         );
       })()}
@@ -256,7 +256,7 @@ function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
   switchNetworkBtnTitle?: string;
-  targetChainId: bigint;
+  targetChainId: number;
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);

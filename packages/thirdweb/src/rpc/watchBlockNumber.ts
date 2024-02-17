@@ -125,7 +125,7 @@ function sleep(ms: number) {
 }
 
 const existingPollers = new Map<
-  bigint,
+  number,
   ReturnType<typeof createBlockNumberPoller>
 >();
 

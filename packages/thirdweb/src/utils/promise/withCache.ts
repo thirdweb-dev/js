@@ -4,8 +4,8 @@
 // alternatively viem could maybe export this helpful util
 // TODO: explore using a LRU cache instead of a Map
 
-export const promiseCache = /*#__PURE__*/ new Map();
-export const responseCache = /*#__PURE__*/ new Map();
+const promiseCache = /*#__PURE__*/ new Map();
+const responseCache = /*#__PURE__*/ new Map();
 
 /**
  *@internal
@@ -34,7 +34,7 @@ export function getCache<TData>(cacheKey: string) {
   };
 }
 
-export type WithCacheParameters = {
+type WithCacheParameters = {
   /** The key to cache the data against. */
   cacheKey: string;
   /** The time that cached data will remain in memory. Default: Infinity (no expiry) */

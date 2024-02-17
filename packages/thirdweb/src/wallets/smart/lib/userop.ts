@@ -176,10 +176,10 @@ async function getAccountInitCode(args: {
 /**
  * @internal
  */
-export function getUserOpHash(args: {
+function getUserOpHash(args: {
   userOp: UserOperation;
   entryPoint: string;
-  chainId: bigint;
+  chainId: number;
 }): Hex {
   const { userOp, entryPoint, chainId } = args;
   const hashedInitCode = keccak256(userOp.initCode);
@@ -214,7 +214,7 @@ export function getUserOpHash(args: {
   );
   const encoded = encodeAbiParameters(
     [{ type: "bytes32" }, { type: "address" }, { type: "uint256" }],
-    [keccak256(packedUserOp), entryPoint, chainId],
+    [keccak256(packedUserOp), entryPoint, BigInt(chainId)],
   );
   return keccak256(encoded);
 }

@@ -2,12 +2,12 @@ import type { ThirdwebClient } from "../../index.js";
 import { download } from "../../storage/index.js";
 import type { PublishedMetadata } from "../actions/compiler-metadata.js";
 
-export type FetchSourceFilesFromMetadataOptions = {
+type FetchSourceFilesFromMetadataOptions = {
   client: ThirdwebClient;
   publishedMetadata: PublishedMetadata;
 };
 
-export type ContractSource = {
+type ContractSource = {
   filename: string;
   source: string;
 };

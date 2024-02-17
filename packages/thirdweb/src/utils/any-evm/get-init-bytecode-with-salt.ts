@@ -3,7 +3,7 @@ import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { keccackId } from "./keccack-id.js";
 import { getSaltHash } from "./get-salt-hash.js";
 
-export type GetInitiBytecodeWithSaltOptions = {
+type GetInitiBytecodeWithSaltOptions = {
   bytecode: string;
   encodedArgs: Hex | Uint8Array;
   salt?: string;

@@ -1,4 +1,4 @@
-import { hexToBigInt } from "viem/utils";
+import { hexToBigInt } from "viem";
 import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   PaymasterResult,

@@ -42,8 +42,6 @@
     "skipLibCheck": true,
 
     // jsx for "/react" portion
-    "jsx": "react-jsx",
-
-    "stripInternal": true
+    "jsx": "react-jsx"
   }
 }

@@ -21,7 +21,7 @@ export const TextDivider = (props: {
   );
 };
 
-export const TextDividerEl = /* @__PURE__ */ StyledDiv(() => {
+const TextDividerEl = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     display: "flex",

@@ -40,7 +40,6 @@ export {
 
 export {
   injectedCoinbaseProvider,
-  coinbaseMetadata,
   coinbaseWallet,
 } from "./injected/wallets/coinbase.js";
 
@@ -85,3 +84,10 @@ export {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "./manager/index.js";
+
+export {
+  coinbaseSDKWallet,
+  CoinbaseSDKWallet,
+  type CoinbaseSDKWalletConnectionOptions,
+} from "./coinbase/coinbaseSDKWallet.js";
+export { coinbaseMetadata } from "./coinbase/coinbaseMetadata.js";

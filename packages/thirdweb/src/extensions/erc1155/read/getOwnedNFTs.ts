@@ -3,7 +3,6 @@ import { getNFT } from "./getNFT.js";
 import { balanceOfBatch } from "./balanceOfBatch.js";
 import type { Address } from "abitype";
 import type { NFT } from "../../../utils/nft/parseNft.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
@@ -23,7 +22,7 @@ export type GetOwnedNFTsParams = {
   /**
    * The address of the wallet to get the NFTs of.
    */
-  account: Pick<Account, "address">;
+  address: string;
 };
 
 /**
@@ -38,7 +37,7 @@ export type GetOwnedNFTsParams = {
  *  contract,
  *  start: 0,
  *  count: 10,
- *  account: { address: "0x123..." },
+ *  address: "0x123...",
  * });
  * ```
  */
@@ -51,7 +50,7 @@ export async function getOwnedNFTs(
   const owners: Address[] = [];
   const tokenIds: bigint[] = [];
   for (let i = 0n; i < maxId; i++) {
-    owners.push(options.account.address);
+    owners.push(options.address);
     tokenIds.push(i);
   }
 
@@ -84,7 +83,7 @@ export async function getOwnedNFTs(
 
   return nfts.map((nft, index) => ({
     ...nft,
-    owner: options.account.address,
+    owner: options.address,
     quantityOwned: ownedBalances[index]?.balance || 0n,
   }));
 }

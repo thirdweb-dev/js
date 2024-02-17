@@ -60,9 +60,9 @@ export function injectedWallet(options?: InjectedWalletOptions) {
  */
 export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
-  chainId: Wallet["chainId"];
+  private chainId: number | undefined;
+  private account?: Account | undefined;
   events: Wallet["events"];
-  account?: Account | undefined;
 
   // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
   private options?: InjectedWalletOptions;
@@ -96,6 +96,30 @@ export class InjectedWallet implements Wallet {
       name: "injected",
       iconUrl: "TODO", // find a good default "injected wallet" icon
     };
+  }
+
+  /**
+   * Get the `chainId` that the wallet is connected to.
+   * @returns The chainId
+   * @example
+   * ```ts
+   * const chainId = wallet.getChainId();
+   * ```
+   */
+  getChainId(): number | undefined {
+    return this.chainId;
+  }
+
+  /**
+   * Get the connected `Account` from the wallet.
+   * @returns The connected account
+   * @example
+   * ```ts
+   * const account = wallet.getAccount();
+   * ```
+   */
+  getAccount(): Account | undefined {
+    return this.account;
   }
 
   /**
@@ -147,7 +171,7 @@ export class InjectedWallet implements Wallet {
     return this.onConnect({
       provider,
       addresses,
-      targetChainId: options?.chainId ? BigInt(options.chainId) : undefined,
+      targetChainId: options?.chainId ? options.chainId : undefined,
     });
   }
 
@@ -170,7 +194,7 @@ export class InjectedWallet implements Wallet {
    * await wallet.switchChain(1)
    * ```
    */
-  async switchChain(chainId: bigint | number) {
+  async switchChain(chainId: number) {
     if (!this.provider) {
       throw new Error("no provider available");
     }
@@ -183,7 +207,7 @@ export class InjectedWallet implements Wallet {
     } catch (e: any) {
       // if chain does not exist, add the chain
       if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-        const chain = await getChainDataForChainId(BigInt(chainId));
+        const chain = await getChainDataForChainId(chainId);
         await this.provider.request({
           method: "wallet_addEthereumChain",
           params: [
@@ -201,6 +225,8 @@ export class InjectedWallet implements Wallet {
       }
     }
 
+    // TODO: we probably need to block until the chain is switched (we should get an event?)
+
     this.chainId = normalizeChainId(chainId);
   }
 
@@ -209,7 +235,7 @@ export class InjectedWallet implements Wallet {
    * @internal
    */
   private async onConnect(data: {
-    targetChainId?: bigint;
+    targetChainId?: number;
     provider: Ethereum;
     addresses: string[];
   }): Promise<Account> {
@@ -269,6 +295,7 @@ export class InjectedWallet implements Wallet {
           method: "eth_sendTransaction",
           params: [
             {
+              accessList: tx.accessList,
               value: tx.value ? toHex(tx.value) : undefined,
               gas: tx.gas ? toHex(tx.gas) : undefined,
               from: this.address,

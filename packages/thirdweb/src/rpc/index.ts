@@ -1,7 +1,10 @@
 export { getRpcClient } from "./rpc.js";
 
 // blockNumber watcher
-export { watchBlockNumber } from "./watchBlockNumber.js";
+export {
+  watchBlockNumber,
+  type WatchBlockNumberOptions,
+} from "./watchBlockNumber.js";
 
 // all the actions
 export { eth_gasPrice } from "./actions/eth_gasPrice.js";

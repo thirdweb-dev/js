@@ -1,6 +1,7 @@
 import { hexToBytes } from "@noble/hashes/utils";
-import bs58 from "bs58";
+
 import { decode } from "./cbor-decode.js";
+import { base58Encode } from "../base58/encode.js";
 
 /**
  * Extracts the IPFS URI from the given bytecode.
@@ -33,7 +34,7 @@ export function extractIPFSUri(bytecode: string): string | undefined {
 
   const cborData = decode(bytecodeBuffer);
   if ("ipfs" in cborData) {
-    return `ipfs://${bs58.encode(cborData["ipfs"])}`;
+    return `ipfs://${base58Encode(cborData["ipfs"])}`;
   }
 
   return undefined;
