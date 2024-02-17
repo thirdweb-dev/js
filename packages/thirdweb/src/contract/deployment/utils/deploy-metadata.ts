@@ -4,12 +4,12 @@ import type { Hex } from "viem";
 import { download } from "../../../storage/download.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 
-export type FetchDeployMetadataOptions = {
+type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
 };
 
-export type FetchDeployMetadataResult = {
+type FetchDeployMetadataResult = {
   compilerMetadata: PreDeployMetadata;
   extendedMetadata: FullPublishMetadata | undefined;
 };
@@ -20,7 +20,9 @@ export type FetchDeployMetadataResult = {
  * @returns An object containing the compiler metadata and extended metadata.
  * @internal
  */
-export async function fetchDeployMetadata(options: FetchDeployMetadataOptions) {
+export async function fetchDeployMetadata(
+  options: FetchDeployMetadataOptions,
+): Promise<FetchDeployMetadataResult> {
   const [compilerMetadata, extendedMetadata] = await Promise.all([
     fetchPreDeployMetadata(options),
     fetchExtendedReleaseMetadata(options).catch(() => undefined),

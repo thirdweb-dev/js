@@ -1,7 +1,7 @@
 import React, { type ReactElement, useMemo } from "react";
 import { encode } from "uqr";
 
-export type QRCodeRendererProps = {
+type QRCodeRendererProps = {
   ecl?: "L" | "M" | "Q" | "H";
   size?: number;
   uri: string;

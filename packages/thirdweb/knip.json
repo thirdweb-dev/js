@@ -10,6 +10,7 @@
     "src/wallets/index.ts",
     "src/utils/index.ts",
     "src/contract/index.ts",
+    "src/pay/index.ts",
     "src/wallets/{smart,injected,wallet-connect}/index.ts",
     "src/extensions/*.ts",
     "src/adapters/*.ts",

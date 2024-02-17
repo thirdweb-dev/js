@@ -7,7 +7,7 @@ import {
 import { StyledButton } from "../design-system/elements.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
-export type ButtonProps = {
+type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
   fullWidth?: boolean;
