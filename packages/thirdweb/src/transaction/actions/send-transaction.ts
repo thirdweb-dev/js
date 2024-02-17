@@ -1,7 +1,6 @@
 import type { TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
-import { getChainIdFromChain } from "../../chain/index.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 
@@ -68,8 +67,8 @@ export async function sendTransaction(
     resolvePromisedValue(options.transaction.value),
   ]);
 
-  const walletChainId = options.wallet.getChainId();
-  const chainId = getChainIdFromChain(options.transaction.chain);
+  const walletChainId = options.wallet.getChain()?.id;
+  const chainId = options.transaction.chain.id;
   // only if:
   // 1. the wallet has a chainId
   // 2. the wallet has a switchChain method
@@ -80,7 +79,7 @@ export async function sendTransaction(
     walletChainId &&
     walletChainId !== chainId
   ) {
-    await options.wallet.switchChain(chainId);
+    await options.wallet.switchChain(options.transaction.chain);
   }
 
   const result = await account.sendTransaction({

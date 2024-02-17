@@ -152,7 +152,7 @@ export const ConnectModalContent = (props: {
           });
         }}
         chains={modalConfig.chains}
-        chainId={modalConfig.chainId}
+        chain={modalConfig.chain}
       />
     );
   };

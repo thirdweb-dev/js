@@ -21,9 +21,10 @@ import type {
   Wallet,
   Account,
 } from "../interfaces/wallet.js";
-import { getChainDataForChainId } from "../../chain/index.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
+import { defineChain, getChainDataForChainId } from "../../chains/utils.js";
+import type { Chain } from "../../chains/index.js";
 
 /**
  * Connect to Injected Wallet Provider
@@ -60,7 +61,7 @@ export function injectedWallet(options?: InjectedWalletOptions) {
  */
 export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
-  private chainId: number | undefined;
+  private chain: Chain | undefined;
   private account?: Account | undefined;
   events: Wallet["events"];
 
@@ -99,15 +100,15 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Get the `chainId` that the wallet is connected to.
-   * @returns The chainId
+   * Get the `chain` that the wallet is connected to.
+   * @returns The chain
    * @example
    * ```ts
-   * const chainId = wallet.getChainId();
+   * const chain = wallet.getChain();
    * ```
    */
-  getChainId(): number | undefined {
-    return this.chainId;
+  getChain(): Chain | undefined {
+    return this.chain;
   }
 
   /**
@@ -143,7 +144,7 @@ export class InjectedWallet implements Wallet {
       provider,
       addresses,
       // do not force switch chain on autoConnect
-      targetChainId: undefined,
+      chain: undefined,
     });
   }
 
@@ -171,7 +172,7 @@ export class InjectedWallet implements Wallet {
     return this.onConnect({
       provider,
       addresses,
-      targetChainId: options?.chainId ? options.chainId : undefined,
+      chain: options?.chain ? options.chain : undefined,
     });
   }
 
@@ -188,13 +189,13 @@ export class InjectedWallet implements Wallet {
 
   /**
    * Switch the wallet provider to a different blockchain with the given chainId
-   * @param chainId - The chainId of the blockchain to switch to.
+   * @param chain - The chainId of the blockchain to switch to.
    * @example
    * ```ts
    * await wallet.switchChain(1)
    * ```
    */
-  async switchChain(chainId: number) {
+  async switchChain(chain: Chain) {
     if (!this.provider) {
       throw new Error("no provider available");
     }
@@ -202,21 +203,21 @@ export class InjectedWallet implements Wallet {
     try {
       await this.provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: toHex(chainId) }],
+        params: [{ chainId: toHex(chain.id) }],
       });
     } catch (e: any) {
       // if chain does not exist, add the chain
       if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-        const chain = await getChainDataForChainId(chainId);
+        const apiChain = await getChainDataForChainId(chain.id);
         await this.provider.request({
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: toHex(chainId),
-              chainName: chain.name,
-              nativeCurrency: chain.nativeCurrency,
-              rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
-              blockExplorerUrls: chain.explorers?.map((x) => x.url),
+              chainId: toHex(chain.id),
+              chainName: apiChain.name,
+              nativeCurrency: apiChain.nativeCurrency,
+              rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
+              blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
             },
           ],
         });
@@ -227,7 +228,7 @@ export class InjectedWallet implements Wallet {
 
     // TODO: we probably need to block until the chain is switched (we should get an event?)
 
-    this.chainId = normalizeChainId(chainId);
+    this.chain = chain;
   }
 
   /**
@@ -235,11 +236,11 @@ export class InjectedWallet implements Wallet {
    * @internal
    */
   private async onConnect(data: {
-    targetChainId?: number;
+    chain?: Chain;
     provider: Ethereum;
     addresses: string[];
   }): Promise<Account> {
-    const { addresses, provider, targetChainId } = data;
+    const { addresses, provider, chain } = data;
     const addr = addresses[0];
     if (!addr) {
       throw new Error("no accounts available");
@@ -249,15 +250,17 @@ export class InjectedWallet implements Wallet {
     const address = getAddress(addr);
 
     // get the chainId the provider is on
-    this.chainId = await provider
+    const chainId = await provider
       .request({ method: "eth_chainId" })
       .then(normalizeChainId);
+
+    this.chain = defineChain(chainId);
 
     this.updateMetadata();
 
     // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-    if (targetChainId && targetChainId !== this.chainId) {
-      await this.switchChain(targetChainId);
+    if (chain && chain.id !== chainId) {
+      await this.switchChain(chain);
     }
 
     if (provider.on) {
@@ -283,12 +286,8 @@ export class InjectedWallet implements Wallet {
     const account: Account = {
       address,
       async sendTransaction(tx: SendTransactionOption) {
-        if (!wallet.chainId || !wallet.provider || !account.address) {
+        if (!wallet.chain || !wallet.provider || !account.address) {
           throw new Error("Provider not setup");
-        }
-
-        if (normalizeChainId(tx.chainId) !== wallet.chainId) {
-          await wallet.switchChain(tx.chainId);
         }
 
         const transactionHash = (await wallet.provider.request({
@@ -367,8 +366,9 @@ export class InjectedWallet implements Wallet {
    * Note: must use arrow function
    * @internal
    */
-  private onChainChanged = (chainId: string) => {
-    this.chainId = normalizeChainId(chainId);
+  private onChainChanged = (newChainId: string) => {
+    const chainId = normalizeChainId(newChainId);
+    this.chain = defineChain(chainId);
   };
 
   /**
@@ -382,7 +382,7 @@ export class InjectedWallet implements Wallet {
     }
 
     this.account = undefined;
-    this.chainId = undefined;
+    this.chain = undefined;
   };
 
   /**

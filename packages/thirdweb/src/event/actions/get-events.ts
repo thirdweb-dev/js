@@ -6,14 +6,16 @@
  */
 
 import type { Abi, AbiEvent, ExtractAbiEvents } from "abitype";
-import type { ThirdwebContract } from "../../index.js";
 import { prepareEvent, type PreparedEvent } from "../prepare-event.js";
 import {
   eth_getLogs,
   type GetLogsBlockParams,
   type GetLogsParams,
 } from "../../rpc/actions/eth_getLogs.js";
-import { resolveContractAbi } from "../../contract/index.js";
+import {
+  resolveContractAbi,
+  type ThirdwebContract,
+} from "../../contract/index.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { parseEventLogs, type ParseEventLogsResult } from "./parse-logs.js";
 import { isAbiEvent } from "../utils.js";

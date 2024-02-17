@@ -26,14 +26,14 @@ export const InjectedConnectUI = (
       await wait(1000);
       const wallet = createInstance();
       await wallet.connect({
-        chainId: props.chainId,
+        chain: props.chain,
       });
       done(wallet);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [createInstance, done, props.chainId]);
+  }, [createInstance, done, props.chain]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {

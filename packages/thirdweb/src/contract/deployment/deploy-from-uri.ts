@@ -1,5 +1,4 @@
 import { isHex } from "viem";
-import { getChainIdFromChain } from "../../chain/index.js";
 import { ensureBytecodePrefix } from "../../utils/index.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { SharedDeployOptions } from "./types.js";
@@ -20,11 +19,13 @@ export type PrepareDeployTransactionFromUriOptions = Prettify<
  * @throws An error if deployments are disabled on the network or if the contract bytecode is invalid.
  * @example
  * ```ts
+ * import { prepareDeployTransactionFromUri } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const tx = await prepareDeployTransactionFromUri({
  *  client,
  *  uri: "ipfs://Qm...",
  *  constuctorParams: [123, "hello"],
- *  chain: 1,
+ *  chain: ethereum,
  * });
  * ```
  */
@@ -37,7 +38,7 @@ export async function prepareDeployTransactionFromUri(
   });
 
   const forceDirectDeploy = options.forceDirectDeploy ?? false;
-  const chainId = getChainIdFromChain(options.chain);
+  const chainId = options.chain.id;
   const isNetworkEnabled = !!(
     extendedMetadata?.networksForDeployment?.networksEnabled?.includes(
       // TODO: align with chainId being bigint

@@ -26,7 +26,7 @@ export const WalletConnectConnection: React.FC<{
 }> = (props) => {
   const { onBack, onGetStarted, connectUIProps, projectId, platformUris } =
     props;
-  const { walletConfig, chainId, done } = connectUIProps;
+  const { walletConfig, chain, done } = connectUIProps;
   const locale = useTWLocale().wallets.injectedWallet(
     walletConfig.metadata.name,
   );
@@ -51,7 +51,7 @@ export const WalletConnectConnection: React.FC<{
 
     wallet
       .connect({
-        chainId,
+        chain,
         showQrModal: false,
         onDisplayUri(uri) {
           setQrCodeUri(uri);
@@ -82,7 +82,7 @@ export const WalletConnectConnection: React.FC<{
         console.error(e);
       });
   }, [
-    chainId,
+    chain,
     client,
     dappMetadata,
     done,

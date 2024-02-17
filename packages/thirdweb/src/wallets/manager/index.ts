@@ -1,3 +1,4 @@
+import { defineChain, type Chain } from "../../chains/index.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
@@ -29,7 +30,7 @@ export function createConnectionManager() {
   // active wallet/account
   const activeWallet = createStore<Wallet | undefined>(undefined);
   const activeAccount = createStore<Account | undefined>(undefined);
-  const activeWalletChainId = createStore<number | undefined>(undefined);
+  const activeWalletChain = createStore<Chain | undefined>(undefined);
   const activeWalletConnectionStatus = createStore<ConnectionStatus>("unknown");
 
   // other connected accounts
@@ -68,7 +69,7 @@ export function createConnectionManager() {
     if (activeWallet.getValue() === wallet) {
       activeWallet.setValue(undefined);
       activeAccount.setValue(undefined);
-      activeWalletChainId.setValue(undefined);
+      activeWalletChain.setValue(undefined);
       activeWalletConnectionStatus.setValue("disconnected");
     }
   };
@@ -93,7 +94,7 @@ export function createConnectionManager() {
     // update active states
     activeWallet.setValue(wallet);
     activeAccount.setValue(account);
-    activeWalletChainId.setValue(wallet.getChainId());
+    activeWalletChain.setValue(wallet.getChain());
     activeWalletConnectionStatus.setValue("connected");
 
     // setup listeners
@@ -115,8 +116,9 @@ export function createConnectionManager() {
         }
       };
 
-      const onChainChanged = (chainId: string) => {
-        activeWalletChainId.setValue(normalizeChainId(chainId));
+      const onChainChanged = (newChainId: string) => {
+        const chainId = normalizeChainId(newChainId);
+        activeWalletChain.setValue(defineChain(chainId));
       };
 
       const handleDisconnect = () => {
@@ -166,7 +168,7 @@ export function createConnectionManager() {
     false,
   );
 
-  const switchActiveWalletChain = async (chainId: number) => {
+  const switchActiveWalletChain = async (chain: Chain) => {
     const wallet = activeWallet.getValue();
     if (!wallet) {
       throw new Error("no wallet found");
@@ -176,7 +178,7 @@ export function createConnectionManager() {
       throw new Error("wallet does not support switching chains");
     }
 
-    await wallet.switchChain(chainId);
+    await wallet.switchChain(chain);
   };
 
   return {
@@ -187,7 +189,7 @@ export function createConnectionManager() {
     addConnectedWallet,
     disconnectWallet,
     setActiveWallet,
-    activeWalletChainId,
+    activeWalletChain,
     switchActiveWalletChain,
     activeWalletConnectionStatus,
     isAutoConnecting,

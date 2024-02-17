@@ -3,6 +3,7 @@ import type { Account } from "./interfaces/wallet.js";
 import { privateKeyToAccount } from "viem/accounts";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction, getRpcClient } from "../rpc/index.js";
+import { defineChain } from "../chains/utils.js";
 
 export type PrivateKeyAccountOptions = {
   client: ThirdwebClient;
@@ -37,7 +38,7 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
     ) => {
       const rpcRequest = getRpcClient({
         client: options.client,
-        chain: tx.chainId,
+        chain: defineChain(tx.chainId),
       });
       const signedTx = await viemAccount.signTransaction(tx);
       const transactionHash = await eth_sendRawTransaction(

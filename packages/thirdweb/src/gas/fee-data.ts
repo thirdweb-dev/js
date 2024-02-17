@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../client/client.js";
-import { getChainIdFromChain, type Chain } from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 import {
   eth_gasPrice,
   eth_getBlockByNumber,
@@ -103,7 +103,7 @@ async function getDynamicFeeData(
   const baseBlockFee =
     block && block.baseFeePerGas ? block.baseFeePerGas : 100n;
 
-  const chainId = getChainIdFromChain(chain);
+  const chainId = chain.id;
   // flag chain testnet & flag chain
   if (chainId === 220 || chainId === 1220) {
     // these does not support eip-1559, for some reason even though `eth_maxPriorityFeePerGas` is available?!?

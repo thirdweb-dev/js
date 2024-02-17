@@ -1,6 +1,5 @@
 import type { Hex, TransactionReceipt } from "viem";
 import type { TransactionOrUserOpHash } from "../types.js";
-import { getChainIdFromChain } from "../../chain/index.js";
 import {
   eth_getTransactionReceipt,
   getRpcClient,
@@ -36,7 +35,7 @@ export function waitForReceipt(
 ): Promise<TransactionReceipt> {
   const { transactionHash, userOpHash, transaction } = options;
   const prefix = transactionHash ? "tx_" : "userOp_";
-  const chainId = getChainIdFromChain(transaction.chain);
+  const chainId = transaction.chain.id;
   const key = `${chainId}:${prefix}${transactionHash || userOpHash}`;
 
   if (map.has(key)) {

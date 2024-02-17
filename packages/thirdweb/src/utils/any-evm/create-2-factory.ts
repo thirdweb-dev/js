@@ -1,5 +1,5 @@
 import { getContractAddress } from "viem";
-import { getChainIdFromChain, type Chain } from "../../chain/index.js";
+import type { Chain } from "../../chains/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { isContractDeployed } from "../bytecode/is-contract-deployed.js";
@@ -50,7 +50,7 @@ export async function getCreate2FactoryAddress(
   }
 
   const enforceEip155 = await isEIP155Enforced(options);
-  const chainId = getChainIdFromChain(options.chain);
+  const chainId = options.chain.id;
   const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
   const eipChain = enforceEip155 ? chainId : 0;
 

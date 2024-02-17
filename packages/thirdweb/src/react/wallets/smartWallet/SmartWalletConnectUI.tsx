@@ -12,6 +12,7 @@ import { Button } from "../../ui/components/buttons.js";
 import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
 import { normalizeChainId } from "../../../wallets/utils/normalizeChainId.js";
+import type { Chain } from "../../../chains/index.js";
 
 /**
  * @internal
@@ -19,7 +20,7 @@ import { normalizeChainId } from "../../../wallets/utils/normalizeChainId.js";
 export const SmartConnectUI = (props: {
   connectUIProps: ConnectUIProps;
   personalWalletConfig: WalletConfig;
-  smartWalletChainId: number;
+  smartWalletChain: Chain;
 }) => {
   const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null);
   const { personalWalletConfig } = props;
@@ -38,7 +39,7 @@ export const SmartConnectUI = (props: {
       done(wallet) {
         setPersonalWallet(wallet);
       },
-      chainId: props.smartWalletChainId,
+      chain: props.smartWalletChain,
     };
 
     if (personalWalletConfig.connectUI) {
@@ -53,7 +54,7 @@ export const SmartConnectUI = (props: {
       connectUIProps={props.connectUIProps}
       personalWalletConfig={personalWalletConfig}
       personalWallet={personalWallet}
-      smartWalletChainId={props.smartWalletChainId}
+      smartWalletChain={props.smartWalletChain}
     />
   );
 };
@@ -62,7 +63,7 @@ const SmartWalletConnecting = (props: {
   connectUIProps: ConnectUIProps;
   personalWallet: Wallet;
   personalWalletConfig: WalletConfig;
-  smartWalletChainId: number;
+  smartWalletChain: Chain;
 }) => {
   const locale = useTWLocale().wallets.smartWallet;
   const createSmartWalletInstance = props.connectUIProps.createInstance;
@@ -72,7 +73,7 @@ const SmartWalletConnecting = (props: {
 
   const [personalWalletChainId, setPersonalWalletChainId] = useState<
     number | undefined
-  >(personalWallet.getChainId());
+  >(personalWallet.getChain()?.id);
 
   useEffect(() => {
     function handleChainChanged(chain: string) {
@@ -85,7 +86,7 @@ const SmartWalletConnecting = (props: {
     };
   }, [personalWallet.events]);
 
-  const wrongNetwork = personalWalletChainId !== props.smartWalletChainId;
+  const wrongNetwork = personalWalletChainId !== props.smartWalletChain.id;
 
   const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
     useState<"connecting" | "connect-error" | "idle">("idle");
@@ -207,7 +208,7 @@ const SmartWalletConnecting = (props: {
 
                 try {
                   setPersonalWalletChainSwitchStatus("switching");
-                  await personalWallet.switchChain(props.smartWalletChainId);
+                  await personalWallet.switchChain(props.smartWalletChain);
                   setPersonalWalletChainSwitchStatus("idle");
                 } catch (e) {
                   console.error(e);

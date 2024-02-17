@@ -1,6 +1,5 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import type { Abi } from "abitype";
-import { getChainIdFromChain } from "../../chain/index.js";
 import { getFunctionId } from "../../utils/function-id.js";
 import { stringify } from "../../utils/json.js";
 import type { BaseTransactionOptions } from "../../transaction/index.js";
@@ -41,12 +40,11 @@ export function createContractQuery<
     },
   ) {
     const { contract, queryOptions, ...params } = options;
-    const chainId = getChainIdFromChain(contract.chain).toString();
 
     return useQuery({
       queryKey: [
         "readContract",
-        chainId,
+        contract.chain.id,
         contract.address,
         getFunctionId(readCall),
         stringify(params),

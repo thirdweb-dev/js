@@ -46,6 +46,11 @@
       "import": "./dist/esm/storage/index.js",
       "default": "./dist/cjs/storage/index.js"
     },
+    "./chains": {
+      "types": "./dist/types/chains/index.d.ts",
+      "import": "./dist/esm/chains/index.js",
+      "default": "./dist/cjs/chains/index.js"
+    },
     "./wallets": {
       "types": "./dist/types/wallets/index.d.ts",
       "import": "./dist/esm/wallets/index.js",
@@ -102,6 +107,9 @@
       ],
       "storage": [
         "./dist/types/storage/index.d.ts"
+      ],
+      "chains": [
+        "./dist/types/chains/index.d.ts"
       ],
       "wallets": [
         "./dist/types/wallets/index.d.ts"

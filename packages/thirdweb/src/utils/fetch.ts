@@ -71,7 +71,7 @@ const THIRDWEB_DOMAINS = [
 /**
  * @internal
  */
-function isThirdwebUrl(url: string) {
+export function isThirdwebUrl(url: string) {
   try {
     const { hostname } = new URL(url);
     return THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));

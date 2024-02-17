@@ -10,6 +10,7 @@ import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
 import type { WalletMetadata } from "../types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import type { Chain } from "../../chains/index.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
@@ -22,7 +23,7 @@ export type Wallet = {
   autoConnect: (options?: any) => Promise<Account>;
   disconnect: () => Promise<void>;
   getAccount(): Account | undefined;
-  getChainId(): number | undefined;
+  getChain(): Chain | undefined;
 
   // OPTIONAL
   events?: {
@@ -30,7 +31,7 @@ export type Wallet = {
     removeListener: WalletEventListener;
   };
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
-  switchChain?: (newChainId: number) => Promise<void>;
+  switchChain?: (newChainId: Chain) => Promise<void>;
 };
 
 export interface WalletWithPersonalWallet extends Wallet {

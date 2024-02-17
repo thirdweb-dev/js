@@ -1,20 +1,21 @@
-import { getChainIdFromChain } from "../../../chain/index.js";
-
 import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { Button } from "../components/buttons.js";
 import { Spinner } from "../components/Spinner.js";
 import {
   useActiveAccount,
   useActiveWallet,
-  useActiveWalletChainId,
+  useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
-import { type PreparedTransaction } from "../../../transaction/index.js";
-import { estimateGas, formatEther } from "../../../index.js";
+import {
+  estimateGas,
+  type PreparedTransaction,
+} from "../../../transaction/index.js";
 import { spacing } from "../design-system/index.js";
 import { useChainQuery } from "../../hooks/others/useChainQuery.js";
 import { useEffect, useState } from "react";
+import { formatEther } from "../../../utils/units.js";
 
 export type TransactionButtonProps = React.PropsWithChildren<{
   transaction: PreparedTransaction;
@@ -54,11 +55,11 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   const wallet = useActiveWallet();
   const account = useActiveAccount();
 
-  const connectedWalletChainId = useActiveWalletChainId();
+  const connectedWalletChain = useActiveWalletChain();
   const switchChain = useSwitchActiveWalletChain();
-  const txChainId = getChainIdFromChain(transaction.chain);
+  const txChain = transaction.chain;
   const sendTransaction = useSendTransaction();
-  const chainQuery = useChainQuery(txChainId);
+  const chainQuery = useChainQuery(txChain.id);
 
   const [gasCost, setGasCost] = useState<string | undefined>();
   useEffect(() => {
@@ -73,13 +74,13 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   }, [transaction, wallet]);
 
   // if the connected wallet is on a different chain than the transaction, show a switch chain button
-  if (connectedWalletChainId && connectedWalletChainId !== txChainId) {
+  if (connectedWalletChain && connectedWalletChain.id !== txChain.id) {
     return (
       <Button
         {...buttonProps}
         variant="primary"
         onClick={() => {
-          switchChain(txChainId);
+          switchChain(txChain);
         }}
       >
         Switch Chain

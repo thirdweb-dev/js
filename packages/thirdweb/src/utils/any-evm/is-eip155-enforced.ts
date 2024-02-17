@@ -1,4 +1,4 @@
-import { getChainIdFromChain, type Chain } from "../../chain/index.js";
+import type { Chain } from "../../chains/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { eth_sendRawTransaction } from "../../rpc/index.js";
 import { getRpcClient } from "../../rpc/rpc.js";
@@ -27,7 +27,7 @@ type IsEIP155EnforcedOptions = {
 export async function isEIP155Enforced(
   options: IsEIP155EnforcedOptions,
 ): Promise<boolean> {
-  const chainId = getChainIdFromChain(options.chain);
+  const chainId = options.chain.id;
   // cache because the result cannot change
   if (EIP_ENFORCED_CACHE.has(chainId)) {
     return EIP_ENFORCED_CACHE.get(chainId) as boolean;

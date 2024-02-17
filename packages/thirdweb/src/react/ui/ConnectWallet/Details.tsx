@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import {
   useActiveAccount,
   useActiveWallet,
-  useActiveWalletChainId,
+  useActiveWalletChain,
   useConnect,
   useDisconnect,
 } from "../../providers/wallet-provider.js";
@@ -56,6 +56,7 @@ import {
 import { connectionManager } from "../../connectionManager.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
+import type { Chain } from "../../../chains/index.js";
 
 // TEMP
 const LocalWalletId = "localWallet";
@@ -80,22 +81,22 @@ export const ConnectedWalletDetails: React.FC<{
   detailsModal?: ConnectWallet_DetailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
-  chains: number[];
+  chains: Chain[];
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const walletChainId = useActiveWalletChainId();
-  const chainQuery = useChainQuery(walletChainId);
+  const walletChain = useActiveWalletChain();
+  const chainQuery = useChainQuery(walletChain?.id);
   const { disconnect } = useDisconnect();
 
   const tokenAddress =
-    walletChainId && props.detailsButton?.displayBalanceToken
-      ? props.detailsButton.displayBalanceToken[Number(walletChainId)]
+    walletChain && props.detailsButton?.displayBalanceToken
+      ? props.detailsButton.displayBalanceToken[Number(walletChain.id)]
       : undefined;
 
   const balanceQuery = useWalletBalance({
-    chain: walletChainId,
+    chain: walletChain ? walletChain : undefined,
     tokenAddress,
     account: activeAccount,
   });
@@ -274,7 +275,7 @@ export const ConnectedWalletDetails: React.FC<{
         )}
       </div>
       <Text color="primaryText" multiline>
-        {chainQuery.data?.name || `Unknown chain #${walletChainId}`}
+        {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
       </Text>
       <StyledChevronRightIcon
         width={iconSize.sm}
@@ -563,8 +564,8 @@ export const ConnectedWalletDetails: React.FC<{
     content = (
       <NetworkSelectorContent
         chains={
-          walletChainId
-            ? [...new Set([walletChainId, ...props.chains])]
+          walletChain
+            ? [...new Set([walletChain, ...props.chains])]
             : props.chains
         }
         open={true}
@@ -752,7 +753,7 @@ const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
 function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
-  const chainId = useActiveWalletChainId();
+  const chain = useActiveWalletChain();
   const locale = useTWLocale().connectWallet;
   const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
@@ -775,14 +776,14 @@ function ConnectedToSmartWallet() {
     </Container>
   );
 
-  if (chainId && activeAccount && isSmartWallet) {
+  if (chain && activeAccount && isSmartWallet) {
     return (
       <>
         {isSmartWalletDeployed ? (
           <Link
             color="secondaryText"
             hoverColor="primaryText"
-            href={`https://thirdweb.com/${chainId}/${activeAccount.address}/account`}
+            href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
             target="_blank"
             size="sm"
           >

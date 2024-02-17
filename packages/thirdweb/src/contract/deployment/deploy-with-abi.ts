@@ -28,9 +28,11 @@ export type PrepareDirectDeployTransactionOptions<
  * @returns - The prepared transaction.
  * @example
  * ```ts
+ * import { prepareDirectDeployTransaction } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const tx = prepareDirectDeployTransaction({
  *  client,
- *  chain: 1,
+ *  chain: ethereum,
  *  bytecode: "0x...",
  *  constructorAbi: {
  *    inputs: [{ type: "uint256", name: "value" }],

@@ -3,13 +3,10 @@ import {
   getRequestTimeoutConfig,
   type ThirdwebClient,
 } from "../client/client.js";
-import {
-  getChainIdFromChain,
-  type Chain,
-  getRpcUrlForChain,
-} from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 
 type SuccessResult<T> = {
   method?: never;
@@ -99,8 +96,9 @@ type RPCOptions = Readonly<{
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
  * import { getRpcClient } from "thirdweb/rpc";
+ * import { ethereum } from "thirdweb/chains";
  * const client = createThirdwebClient({ clientId: "..." });
- * const rpcRequest = getRpcClient({ client, chain: 1 });
+ * const rpcRequest = getRpcClient({ client, chain: ethereum, });
  * const blockNumber = await rpcRequest({
  *  method: "eth_blockNumber",
  * });
@@ -110,7 +108,7 @@ export function getRpcClient(
   options: RPCOptions,
 ): EIP1193RequestFn<EIP1474Methods> {
   const rpcClientMap = getRpcClientMap(options.client);
-  const chainId = getChainIdFromChain(options.chain);
+  const chainId = options.chain.id;
   if (rpcClientMap.has(chainId)) {
     return rpcClientMap.get(chainId) as EIP1193RequestFn<EIP1474Methods>;
   }

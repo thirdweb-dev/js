@@ -18,7 +18,6 @@ import {
   waitForReceipt,
   type WaitForReceiptOptions,
 } from "../../transaction/actions/wait-for-tx-receipt.js";
-import { getChainIdFromChain } from "../../chain/index.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 import { isBaseTransactionOptions } from "../../transaction/index.js";
 import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
@@ -71,20 +70,20 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
                       console.error("[Transaction Error]", e);
                     })
                     .then(() => {
-                      const chainId = getChainIdFromChain(
-                        getChainIdFromChain(variables.contract.chain),
-                      ).toString();
                       return queryClient.invalidateQueries({
                         queryKey: [
                           // invalidate any readContract queries for this chainId:contractAddress
                           [
                             "readContract",
-                            chainId,
+                            variables.contract.chain.id,
                             variables.contract.address,
                           ] as const,
                           // invalidate any walletBalance queries for this chainId
                           // TODO: add wallet address in here if we can get it somehow
-                          ["walletBalance", chainId] as const,
+                          [
+                            "walletBalance",
+                            variables.contract.chain.id,
+                          ] as const,
                         ],
                       });
                     });

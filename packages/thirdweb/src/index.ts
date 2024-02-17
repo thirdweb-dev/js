@@ -17,7 +17,7 @@ export {
 /**
  * CHAIN
  */
-export { type Chain, defineChain, getChainIdFromChain } from "./chain/index.js";
+export { type Chain, defineChain } from "./chains/index.js";
 
 /**
  * CONTRACT

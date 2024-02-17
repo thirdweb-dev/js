@@ -1,7 +1,7 @@
 import { getRpcClient } from "./rpc.js";
 import { eth_blockNumber } from "./actions/eth_blockNumber.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { getChainIdFromChain, type Chain } from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 
 const MAX_POLL_DELAY = 5000; // 5 seconds
 const DEFAULT_POLL_DELAY = 1000; // 1 second
@@ -158,12 +158,12 @@ export type WatchBlockNumberOptions = {
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
   const { client, chain, onNewBlockNumber, overPollRatio } = opts;
-  const chainId = getChainIdFromChain(chain);
+  const chainId = chain.id;
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
-    poller = createBlockNumberPoller(client, chainId, overPollRatio);
+    poller = createBlockNumberPoller(client, chain, overPollRatio);
     // and store it for later use
     existingPollers.set(chainId, poller);
   }

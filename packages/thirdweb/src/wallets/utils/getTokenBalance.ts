@@ -1,9 +1,9 @@
+import type { Chain } from "../../chains/index.js";
 import {
-  getChainSymbol,
-  type Chain,
   getChainDecimals,
   getChainNativeCurrencyName,
-} from "../../chain/index.js";
+  getChainSymbol,
+} from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/index.js";
 import { eth_getBalance, getRpcClient } from "../../rpc/index.js";
