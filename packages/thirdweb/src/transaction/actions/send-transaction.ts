@@ -1,13 +1,13 @@
 import type { TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { getChainIdFromChain } from "../../chain/index.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 
 type SendTransactionOptions = {
   transaction: PreparedTransaction;
-  account: Account;
+  wallet: Wallet;
 };
 
 /**
@@ -28,7 +28,8 @@ type SendTransactionOptions = {
 export async function sendTransaction(
   options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  if (!options.account.address) {
+  const account = options.wallet.getAccount();
+  if (!account) {
     throw new Error("not connected");
   }
   const { getRpcClient } = await import("../../rpc/index.js");
@@ -53,13 +54,13 @@ export async function sendTransaction(
       ? resolvePromisedValue(options.transaction.nonce)
       : // otherwise get the next nonce
         eth_getTransactionCount(rpcRequest, {
-          address: options.account.address,
+          address: account.address,
           blockTag: "pending",
         }),
     // if user has specified a gas value, use that
     estimateGas({
       transaction: options.transaction,
-      account: options.account,
+      wallet: options.wallet,
     }),
     getGasOverridesForTransaction(options.transaction),
     resolvePromisedValue(options.transaction.to),
@@ -67,7 +68,7 @@ export async function sendTransaction(
     resolvePromisedValue(options.transaction.value),
   ]);
 
-  const result = await options.account.sendTransaction({
+  const result = await account.sendTransaction({
     to,
     chainId: Number(getChainIdFromChain(options.transaction.chain)),
     data,

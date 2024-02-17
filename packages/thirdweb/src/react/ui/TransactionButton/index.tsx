@@ -5,6 +5,7 @@ import { Button } from "../components/buttons.js";
 import { Spinner } from "../components/Spinner.js";
 import {
   useActiveAccount,
+  useActiveWallet,
   useActiveWalletChainId,
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
@@ -50,8 +51,9 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
     onSubmit,
     ...buttonProps
   } = props;
+  const wallet = useActiveWallet();
   const account = useActiveAccount();
-  const address = account?.address;
+
   const connectedWalletChainId = useActiveWalletChainId();
   const switchChain = useSwitchActiveWalletChain();
   const txChainId = getChainIdFromChain(transaction.chain);
@@ -60,7 +62,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
 
   const [gasCost, setGasCost] = useState<string | undefined>();
   useEffect(() => {
-    estimateGas({ transaction, account }).then(async (value) => {
+    estimateGas({ transaction, wallet }).then(async (value) => {
       const txValueWei =
         (typeof transaction.value === "function"
           ? await transaction.value()
@@ -68,7 +70,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
       const gasCostWei = value * BigInt(10 ** 9);
       setGasCost(formatEther(gasCostWei + txValueWei, "wei"));
     });
-  }, [transaction, account]);
+  }, [transaction, wallet]);
 
   // if the connected wallet is on a different chain than the transaction, show a switch chain button
   if (connectedWalletChainId && connectedWalletChainId !== txChainId) {
@@ -90,7 +92,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
       <Button
         gap="xs"
         {...buttonProps}
-        disabled={!address}
+        disabled={!account}
         variant={"primary"}
         data-is-loading={sendTransaction.isPending}
         onClick={() => {
@@ -104,7 +106,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
         }}
         style={{
           ...buttonProps.style,
-          opacity: !address ? 0.5 : 1,
+          opacity: !account ? 0.5 : 1,
         }}
       >
         {children}{" "}

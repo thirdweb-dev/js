@@ -29,7 +29,7 @@ export type Wallet = {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
-
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
   switchChain?: (newChainId: number) => Promise<void>;
 };
 
@@ -42,7 +42,6 @@ export type Account = {
   // REQUIRED
   address: Address;
   sendTransaction: (
-    // TODO: figure out how we get our "chain" here
     tx: SendTransactionOption,
   ) => Promise<TransactionOrUserOpHash>;
   signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
@@ -55,7 +54,6 @@ export type Account = {
 
   // OPTIONAL
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
-  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<TransactionOrUserOpHash>;

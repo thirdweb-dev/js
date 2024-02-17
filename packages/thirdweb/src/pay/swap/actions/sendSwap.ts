@@ -6,14 +6,14 @@ import {
   type PrepareTransactionOptions,
 } from "../../../transaction/prepare-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { approve } from "../../../extensions/erc20/write/approve.js";
 import type { Hex, Address } from "viem";
 
 // TODO: Support User Op Hash
 /**
  * Retrieves contract events from the blockchain.
- * @param account - the account performing the swap
+ * @param wallet - the wallet performing the swap
  * @param route - swap route returned from getRoute
  * @returns SwapStatusParams to be used in getSwapStatus
  * @example
@@ -29,7 +29,7 @@ import type { Hex, Address } from "viem";
  * ```
  */
 export async function sendSwap(
-  account: Account,
+  wallet: Wallet,
   route: SwapRoute,
 ): Promise<SwapStatusParams> {
   if (route.approval) {
@@ -38,7 +38,7 @@ export async function sendSwap(
 
     const waitForReceiptOptions = await sendTransaction({
       transaction: approvalTransaction,
-      account,
+      wallet,
     });
 
     await waitForReceipt(waitForReceiptOptions);
@@ -59,7 +59,7 @@ export async function sendSwap(
 
   const waitForReceiptOptions = await sendTransaction({
     transaction,
-    account,
+    wallet,
   });
 
   return {

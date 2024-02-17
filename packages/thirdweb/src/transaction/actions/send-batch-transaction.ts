@@ -1,7 +1,7 @@
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import type {
-  Account,
   SendTransactionOption,
+  Wallet,
 } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
@@ -10,7 +10,7 @@ import { getChainIdFromChain } from "../../chain/index.js";
 
 type SendBatchTransactionOptions = {
   transactions: PreparedTransaction[];
-  account: Account;
+  wallet: Wallet;
 };
 
 /**
@@ -31,7 +31,8 @@ type SendBatchTransactionOptions = {
 export async function sendBatchTransaction(
   options: SendBatchTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  if (!options.account.address) {
+  const account = options.wallet.getAccount();
+  if (!account) {
     throw new Error("not connected");
   }
   if (options.transactions.length === 0) {
@@ -41,7 +42,7 @@ export async function sendBatchTransaction(
   if (!firstTx) {
     throw new Error("No transactions to send");
   }
-  if (options.account.sendBatchTransaction) {
+  if (account.sendBatchTransaction) {
     const serializedTxs: SendTransactionOption[] = await Promise.all(
       options.transactions.map(async (tx) => {
         // no need to estimate gas for these, gas will be estimated on the entire batch
@@ -61,7 +62,7 @@ export async function sendBatchTransaction(
         return serializedTx;
       }),
     );
-    const result = await options.account.sendBatchTransaction(serializedTxs);
+    const result = await account.sendBatchTransaction(serializedTxs);
     return {
       ...result,
       transaction: firstTx,

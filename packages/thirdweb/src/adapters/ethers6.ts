@@ -10,7 +10,7 @@ import {
   getChainIdFromChain,
 } from "../chain/index.js";
 import { getContract, type ThirdwebContract } from "../contract/index.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { uint8ArrayToHex } from "../utils/uint8-array.js";
@@ -111,9 +111,8 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
 
       /**
        * Converts a Thirdweb account to an ethers.js signer.
-       * @param client - The Thirdweb client.
-       * @param chain - The blockchain chain.
-       * @param account - The Thirdweb account.
+       * @param client - The thirdweb client.
+       * @param wallet - The thirdweb wallet.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
@@ -121,8 +120,8 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain, account: Account) =>
-        toEthersSigner(ethers, client, chain, account),
+      toEthers: (client: ThirdwebClient, wallet: Wallet) =>
+        toEthersSigner(ethers, client, wallet),
     },
   };
 })();
@@ -260,9 +259,17 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
 async function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
-  chain: Chain,
-  account: Account,
+  wallet: Wallet,
 ): Promise<ethers6.Signer> {
+  const account = wallet.getAccount();
+  const chainId = wallet.getChainId();
+  if (!chainId) {
+    throw new Error("Chain ID not found");
+  }
+  if (!account) {
+    throw new Error("Account not found");
+  }
+
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     address: string;
     override provider: ethers6.ethers.JsonRpcProvider;
@@ -286,6 +293,9 @@ async function toEthersSigner(
       tx: ethers6.ethers.TransactionRequest & { chainId: number },
     ): Promise<ethers6.ethers.TransactionResponse> {
       const alignedTx = await alignTxFromEthers(tx);
+      if (!account) {
+        throw new Error("Account not found");
+      }
       const result = await account.sendTransaction({
         ...alignedTx,
         chainId: tx.chainId,
@@ -308,6 +318,9 @@ async function toEthersSigner(
     override async signTransaction(
       tx: ethers6.ethers.TransactionRequest,
     ): Promise<string> {
+      if (!account) {
+        throw new Error("Account not found");
+      }
       if (!account.signTransaction) {
         throw new Error("Account does not support signing transactions");
       }
@@ -316,6 +329,9 @@ async function toEthersSigner(
       return account.signTransaction(viemTx);
     }
     override signMessage(message: string | Uint8Array): Promise<string> {
+      if (!account) {
+        throw new Error("Account not found");
+      }
       return account.signMessage({
         message:
           typeof message === "string" ? message : uint8ArrayToHex(message),
@@ -326,6 +342,9 @@ async function toEthersSigner(
       types: Record<string, ethers6.ethers.TypedDataField[]>,
       value: Record<string, any>,
     ): Promise<string> {
+      if (!account) {
+        throw new Error("Account not found");
+      }
       return account.signTypedData({
         // @ts-expect-error - types don't fully align here but works fine?
         domain: domain ?? undefined,
@@ -335,7 +354,7 @@ async function toEthersSigner(
     }
   }
   return new ThirdwebAdapterSigner(
-    toEthersProvider(ethers, client, chain),
+    toEthersProvider(ethers, client, chainId),
     account.address,
   );
 }

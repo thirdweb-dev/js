@@ -1,13 +1,21 @@
 import { formatTransactionRequest } from "viem";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { extractError as parseEstimationError } from "../extract-error.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
-type EstimateGasOptions = {
-  transaction: PreparedTransaction;
-  account?: Partial<Account> | undefined;
-};
+type EstimateGasOptions = Prettify<
+  {
+    transaction: PreparedTransaction;
+  } & (
+    | {
+        from?: string;
+        wallet?: never;
+      }
+    | { from?: never; wallet?: Wallet }
+  )
+>;
 
 export type EstimateGasResult = bigint;
 
@@ -40,10 +48,10 @@ export async function estimateGas(
       return predefinedGas;
     }
 
-    // if the account itself overrides the estimateGas function, use that
-    if (options.account && options.account.estimateGas) {
+    // if the wallet itself overrides the estimateGas function, use that
+    if (options.wallet && options.wallet.estimateGas) {
       try {
-        return await options.account.estimateGas(options.transaction);
+        return await options.wallet.estimateGas(options.transaction);
       } catch (error) {
         throw await parseEstimationError({
           error,
@@ -72,7 +80,11 @@ export async function estimateGas(
         formatTransactionRequest({
           to: toAddress,
           data: encodedData,
-          from: options.account?.address ?? undefined,
+          from:
+            // if the user has specified a from address, use that
+            // otherwise use the wallet's account address
+            // if the wallet is not provided, use undefined
+            options.from ?? options.wallet?.getAccount()?.address ?? undefined,
         }),
       );
     } catch (error) {
