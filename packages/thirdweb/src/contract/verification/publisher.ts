@@ -1,3 +1,4 @@
+import { polygon } from "../../chains/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/download.js";
 import { readContract } from "../../transaction/read-contract.js";
@@ -24,7 +25,7 @@ export async function fetchDeployBytecodeFromPublishedContractMetadata(
   }
   const contractPublisher = getContract({
     client: contract.client,
-    chain: 137,
+    chain: polygon,
     address: CONTRACT_PUBLISHER_ADDRESS,
   });
   const publishedMetadataUri = await readContract({
@@ -187,7 +188,7 @@ export async function fetchPublishedContract(
 ) {
   const contractPublisher = getContract({
     client: options.client,
-    chain: 137,
+    chain: polygon,
     address: options.publisherAddress,
   });
   if (!options.version || options.version === "latest") {

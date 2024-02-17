@@ -5,11 +5,12 @@ import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
 import { parseEther } from "../utils/index.js";
 import { estimateGas } from "./actions/estimate-gas.js";
 import { prepareTransaction } from "./prepare-transaction.js";
+import { ethereum } from "../chains/index.js";
 
 describe("prepareTransaction", () => {
   test("should prepare a transaction", () => {
     const preparedTx = prepareTransaction({
-      chain: 1,
+      chain: ethereum,
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
       value: parseEther("0.1"),
@@ -20,7 +21,7 @@ describe("prepareTransaction", () => {
 
   test("should estimate the gas correctly", async () => {
     const preparedTx = prepareTransaction({
-      chain: 1,
+      chain: ethereum,
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
       value: parseEther("0.1"),

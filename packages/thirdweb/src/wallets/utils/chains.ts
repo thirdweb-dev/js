@@ -1,4 +1,4 @@
-import type { ApiChain } from "../../chain/types.js";
+import type { ApiChain } from "../../chains/types.js";
 
 // TODO - move this to chains subfolder
 

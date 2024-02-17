@@ -4,6 +4,7 @@ import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
 import { getContract } from "../../../contract/contract.js";
+import { defineChain } from "../../../chains/index.js";
 
 export type SwapRouteParams = {
   client: ThirdwebClient;
@@ -148,7 +149,7 @@ export async function getSwapRoute(
             contract: getContract({
               client: params.client,
               address: data.approval.tokenAddress,
-              chain: data.approval.chainId,
+              chain: defineChain(data.approval.chainId),
             }),
             spender: data.approval?.spenderAddress,
             amount: data.approval?.amountWei,

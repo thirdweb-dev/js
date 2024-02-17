@@ -9,6 +9,7 @@ import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { approve } from "../../../extensions/erc20/write/approve.js";
 import type { Hex, Address } from "viem";
+import { defineChain } from "../../../chains/index.js";
 
 // TODO: Support User Op Hash
 /**
@@ -49,7 +50,7 @@ export async function sendSwap(
     value: BigInt(route.transactionRequest.value),
     gas: BigInt(route.transactionRequest.gasLimit),
     gasPrice: BigInt(route.transactionRequest.gasPrice),
-    chain: route.transactionRequest.chainId,
+    chain: defineChain(route.transactionRequest.chainId),
     client: route.client,
   } as PrepareTransactionOptions;
 

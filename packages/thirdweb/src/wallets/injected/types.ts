@@ -1,3 +1,4 @@
+import type { Chain } from "../../chains/index.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletMetadata } from "../types.js";
 
@@ -30,4 +31,4 @@ export type SpecificInjectedWalletOptions = Omit<
   "walletId"
 >;
 
-export type InjectedWalletConnectOptions = { chainId?: number };
+export type InjectedWalletConnectOptions = { chain?: Chain };

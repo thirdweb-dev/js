@@ -1,6 +1,7 @@
 import type { DAppMetaData, WalletMetadata } from "../types.js";
 import { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { Chain } from "../../chains/index.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 
@@ -26,8 +27,8 @@ export type WalletConnectCreationOptions = {
 };
 
 export type WalletConnectConnectionOptions = {
-  chainId?: number;
-  optionalChains?: number[];
+  chain?: Chain;
+  optionalChains?: Chain[];
   showQrModal?: boolean;
   pairingTopic?: string;
   qrModalOptions?: WalletConnectQRCodeModalOptions;

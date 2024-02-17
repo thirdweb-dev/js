@@ -1,4 +1,4 @@
-import { type Store } from "./store.js";
+import type { Store } from "./store.js";
 
 export type ReadonlyStore<T> = {
   getValue(): T;

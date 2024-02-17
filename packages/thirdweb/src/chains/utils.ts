@@ -1,40 +1,68 @@
 import type { ThirdwebClient } from "../client/client.js";
+import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
-import type { ApiChain } from "./types.js";
-
-export type Chain =
-  | Readonly<{
-      id: number;
-      rpc: string;
-      nativeCurrency?: {
-        name?: string;
-        symbol?: string;
-        decimals?: number;
-      };
-    }>
-  | number;
+import type { ApiChain, Chain, ChainOptions } from "./types.js";
+import type { Chain as ViemChain } from "viem";
 
 /**
- * Defines a chain based on the provided options.
- * @param options - The options for defining the chain.
+ * Defines a chain with the given options.
+ * @param options The options for the chain.
  * @returns The defined chain.
  * @example
  * ```ts
- * import { defineChain } from "thirdweb";
- *
- * const chain = defineChain(1);
- * // or with custom RPC
- * const chain = defineChain({ id: 1, rpc: "https:..." });
+ * const chain = defineChain({
+ *  id: 1,
+ *  nativeCurrency: {
+ *    name: "Ether",
+ *    symbol: "ETH",
+ *    decimals: 18,
+ *  },
+ * });
  * ```
  */
-export function defineChain(options: Chain): Chain {
-  // this does... nothing right now, but it may in the future?
-  return options;
+export function defineChain(options: number | ChainOptions | ViemChain): Chain {
+  if (typeof options === "number") {
+    return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
+  }
+  if (isViemChain(options)) {
+    return convertViemChain(options);
+  }
+  // otherwise if it's not a viem chain, continue
+  let rpc = options.rpc;
+  if (!rpc) {
+    rpc = `https://${options.id}.rpc.thirdweb.com`;
+  }
+  return { ...options, rpc } as const;
+}
+
+function isViemChain(chain: ChainOptions | ViemChain): chain is ViemChain {
+  return "rpcUrls" in chain && !("rpc" in chain);
+}
+
+function convertViemChain(viemChain: ViemChain): Chain {
+  return defineChain({
+    id: viemChain.id,
+    name: viemChain.name,
+    nativeCurrency: {
+      name: viemChain.nativeCurrency.name,
+      symbol: viemChain.nativeCurrency.symbol,
+      decimals: viemChain.nativeCurrency.decimals,
+    },
+    blockExplorers: viemChain?.blockExplorers
+      ? Object.values(viemChain?.blockExplorers).map((explorer) => {
+          return {
+            name: explorer.name,
+            url: explorer.url,
+            apiUrl: explorer.apiUrl,
+          };
+        })
+      : [],
+  });
 }
 
 type GetRpcUrlForChainOptions = {
   client: ThirdwebClient;
-  chain: Chain;
+  chain: Chain | number;
 };
 
 /**
@@ -46,33 +74,19 @@ type GetRpcUrlForChainOptions = {
  * @internal
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
-  // if the chain is just the chainId use the thirdweb rpc
+  // if the chain is just a number, construct the RPC URL using the chain ID and client ID
   if (typeof options.chain === "number") {
-    return `https://${options.chain.toString()}.rpc.thirdweb.com/${
-      options.client.clientId
-    }`;
+    return `https://${options.chain}.rpc.thirdweb.com/${options.client.clientId}`;
   }
-  // otherwise if custom rpc is defined use that.
-  if (!!options.chain.rpc.length) {
-    return options.chain.rpc;
-  }
-  // otherwise construct thirdweb RPC url from the chain object
-  return `https://${options.chain.id.toString()}.rpc.thirdweb.com/${
-    options.client.clientId
-  }`;
-}
+  const { rpc } = options.chain;
 
-/**
- * Retrieves the chain ID from the provided chain.
- * @param chain - The chain.
- * @returns The chain ID.
- * @internal
- */
-export function getChainIdFromChain(chain: Chain): number {
-  if (typeof chain === "number") {
-    return chain;
+  // add on the client ID to the RPC URL if it's a thirdweb URL
+  if (isThirdwebUrl(rpc)) {
+    const rpcUrl = new URL(options.chain.rpc);
+    rpcUrl.pathname = `/${options.client.clientId}`;
+    return rpcUrl.toString();
   }
-  return chain.id;
+  return rpc;
 }
 
 /**
@@ -82,9 +96,8 @@ export function getChainIdFromChain(chain: Chain): number {
  * @internal
  */
 export async function getChainSymbol(chain: Chain): Promise<string> {
-  if (typeof chain === "number" || !chain.nativeCurrency?.symbol) {
-    const chainId = getChainIdFromChain(chain);
-    return getChainDataForChainId(chainId)
+  if (!chain.nativeCurrency?.symbol) {
+    return getChainDataForChainId(chain.id)
       .then((data) => data.nativeCurrency.symbol)
       .catch(() => {
         // if we fail to fetch the chain data, return "ETH" as a fallback
@@ -103,9 +116,8 @@ export async function getChainSymbol(chain: Chain): Promise<string> {
  * @internal
  */
 export async function getChainDecimals(chain: Chain): Promise<number> {
-  if (typeof chain === "number" || !chain.nativeCurrency?.decimals) {
-    const chainId = getChainIdFromChain(chain);
-    return getChainDataForChainId(chainId)
+  if (!chain.nativeCurrency?.decimals) {
+    return getChainDataForChainId(chain.id)
       .then((data) => data.nativeCurrency.decimals)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
@@ -127,9 +139,8 @@ export async function getChainDecimals(chain: Chain): Promise<number> {
 export async function getChainNativeCurrencyName(
   chain: Chain,
 ): Promise<string> {
-  if (typeof chain === "number" || !chain.nativeCurrency?.name) {
-    const chainId = getChainIdFromChain(chain);
-    return getChainDataForChainId(chainId)
+  if (!chain.nativeCurrency?.name) {
+    return getChainDataForChainId(chain.id)
       .then((data) => data.nativeCurrency.name)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)

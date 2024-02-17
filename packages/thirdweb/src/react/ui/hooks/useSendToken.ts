@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { transfer } from "../../../extensions/erc20.js";
-import { prepareTransaction, waitForReceipt } from "../../../index.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
-import { parseEther, getContract } from "../../../index.js";
-import { useActiveWalletChainId } from "../../providers/wallet-provider.js";
+import { useActiveWalletChain } from "../../providers/wallet-provider.js";
+import {
+  prepareTransaction,
+  waitForReceipt,
+} from "../../../transaction/index.js";
+import { parseEther } from "../../../utils/units.js";
+import { getContract } from "../../../contract/index.js";
 
 // Q: Should we expose this hook?
 
@@ -14,7 +18,7 @@ import { useActiveWalletChainId } from "../../providers/wallet-provider.js";
  */
 export function useSendToken() {
   const sendTransaction = useSendTransaction();
-  const chainId = useActiveWalletChainId();
+  const activeChain = useActiveWalletChain();
   const { client } = useThirdwebProviderProps();
 
   return useMutation({
@@ -24,14 +28,14 @@ export function useSendToken() {
       amount: string;
     }) {
       const { tokenAddress, receiverAddress, amount } = option;
-      if (!chainId) {
-        throw new Error("No active wallet");
+      if (!activeChain) {
+        throw new Error("No active chain");
       }
 
       // native token transfer
       if (!tokenAddress) {
         const sendNativeTokenTx = prepareTransaction({
-          chain: chainId,
+          chain: activeChain,
           client,
           to: receiverAddress,
           value: parseEther(amount),
@@ -46,7 +50,7 @@ export function useSendToken() {
         const contract = getContract({
           address: tokenAddress,
           client,
-          chain: chainId,
+          chain: activeChain,
         });
 
         const tx = transfer({

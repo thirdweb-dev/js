@@ -1,4 +1,4 @@
-import { getChainIdFromChain, type Chain } from "../../../chain/index.js";
+import type { Chain } from "../../../chains/index.js";
 
 // dev only
 export const DEBUG = true;
@@ -12,14 +12,12 @@ export const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"; 
  * @internal
  */
 export const getDefaultBundlerUrl = (chain: Chain) => {
-  const chainId = getChainIdFromChain(chain);
-  return `https://${chainId}.bundler.thirdweb.com/`;
+  return `https://${chain.id}.bundler.thirdweb.com/`;
 };
 
 /**
  * @internal
  */
 export const getDefaultPaymasterUrl = (chain: Chain) => {
-  const chainId = getChainIdFromChain(chain);
-  return `https://${chainId}.bundler.thirdweb.com/v2`;
+  return `https://${chain.id}.bundler.thirdweb.com/v2`;
 };

@@ -6,7 +6,6 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
-import { getChainIdFromChain } from "../../../chain/index.js";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { stringify } from "../../../utils/json.js";
 import {
@@ -93,12 +92,11 @@ export function useReadContract<
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
-    const chainId = getChainIdFromChain(contract.chain).toString();
 
     const query = defineQuery({
       queryKey: [
         "readContract",
-        chainId,
+        contract.chain.id,
         contract.address,
         getFunctionId(extensionOrOptions),
         stringify(params),
@@ -114,13 +112,12 @@ export function useReadContract<
   // raw tx case
   if ("method" in extensionOrOptions) {
     const { queryOptions, ...tx } = extensionOrOptions;
-    const chainId = getChainIdFromChain(tx.contract.chain).toString();
 
     const query = defineQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
         "readContract",
-        chainId,
+        tx.contract.chain.id,
         tx.contract.address,
         tx.method,
         stringify(tx.params),
