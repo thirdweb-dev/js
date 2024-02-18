@@ -117,6 +117,8 @@ import {
   VoteContractDeployMetadata,
 } from "../types/deploy/deploy-metadata";
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
+import { getModularDeploymentInfo } from "../common/any-evm-utils/getModularDeploymentInfo";
+import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress copy";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1916,6 +1918,124 @@ export class ContractDeployer extends RPCConnectionHandler {
   );
 
   /**
+   * @internal
+   */
+  deployModular = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      publishMetadataUri: string,
+      constructorParamValues: any[],
+      deployMetadata: DeployMetadata,
+      initializerFunction: string,
+      paramValues: any[],
+      signer: Signer,
+      chainId: number,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      // any evm deployment flow
+
+      // 1. Deploy CREATE2 factory (if not already exists)
+      const create2Factory = await deployCreate2Factory(signer, options);
+
+      // 2. get deployment info for any evm
+      const deploymentInfo = await getModularDeploymentInfo(
+        publishMetadataUri,
+        constructorParamValues,
+        this.storage,
+        this.getProvider(),
+        create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
+      );
+
+      const implementationAddress = deploymentInfo.find(
+        (i) => i.type === "implementation",
+      )?.transaction.predictedAddress as string;
+
+      // 3. deploy infra + plugins + implementation using a throwaway Deployer contract
+
+      // filter out already deployed contracts (data is empty)
+      const transactionsToSend = deploymentInfo.filter(
+        (i) => i.transaction.data && i.transaction.data.length > 0,
+      );
+      const transactionsforDirectDeploy = transactionsToSend
+        .filter((i) => {
+          return i.type !== "infra";
+        })
+        .map((i) => i.transaction);
+      const transactionsForThrowawayDeployer = transactionsToSend
+        .filter((i) => {
+          return i.type === "infra";
+        })
+        .map((i) => i.transaction);
+
+      const transactionsForHookProxyDeploy = transactionsToSend
+        .filter((i) => {
+          return i.type === "hookProxy";
+        })
+        .map((i) => i.transaction);
+
+      // deploy via throwaway deployer, multiple infra contracts in one transaction
+      await deployWithThrowawayDeployer(
+        signer,
+        transactionsForThrowawayDeployer,
+        options,
+      );
+
+      // send each transaction directly to Create2 factory
+      // process txns one at a time
+      for (const tx of transactionsforDirectDeploy) {
+        try {
+          await deployContractDeterministic(signer, tx, options);
+        } catch (e) {
+          console.debug(
+            `Error deploying contract at ${tx.predictedAddress}`,
+            (e as any)?.message,
+          );
+          throw e;
+        }
+      }
+
+      const resolvedImplementationAddress = await resolveAddress(
+        implementationAddress,
+      );
+
+      // 4. deploy proxy with ModularFactory and return address
+      const cloneFactory = await computeModularFactoryAddress(
+        this.getProvider(),
+        this.storage,
+        create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
+      );
+
+      // deploy hook proxies
+      for (const tx of transactionsForHookProxyDeploy) {
+        try {
+          // deploy deterministic ERC1967 proxies for hooks
+        } catch (e) {
+          console.debug(
+            `Error deploying contract at ${tx.predictedAddress}`,
+            (e as any)?.message,
+          );
+          throw e;
+        }
+      }
+
+      options?.notifier?.("deploying", "proxy");
+      const proxyDeployTransaction = (await this.deployViaFactory.prepare(
+        cloneFactory,
+        resolvedImplementationAddress,
+        deployMetadata.compilerMetadata.abi,
+        initializerFunction,
+        paramValues,
+        options?.saltForProxyDeploy,
+      )) as unknown as DeployTransaction;
+      options?.notifier?.("deployed", "proxy");
+      return proxyDeployTransaction;
+    },
+  );
+
+  /**
    * Deploy a proxy contract of a given implementation via a custom factory
    * @param constructorParamValues - the constructor param values
    * @param deployMetadata - the deploy metadata
@@ -2128,6 +2248,17 @@ export class ContractDeployer extends RPCConnectionHandler {
             { compilerMetadata, extendedMetadata },
             signer,
             chainId,
+          );
+        } else if (extendedMetadata.deployType === "modular") {
+          return await this.deployModular.prepare(
+            publishMetadataUri,
+            constructorParamValues,
+            { compilerMetadata, extendedMetadata },
+            extendedMetadata.factoryDeploymentData
+              .implementationInitializerFunction,
+            signer,
+            chainId,
+            options,
           );
         } else {
           invariant(

@@ -33,7 +33,9 @@ export type DeployedContractType =
   | "create2Factory"
   | "plugin"
   | "extension"
-  | "custom";
+  | "custom"
+  | "hookImpl"
+  | "hookProxy";
 
 export type DeploymentTransaction = {
   contractType: DeployedContractType | string;
