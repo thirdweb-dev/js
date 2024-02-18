@@ -80,7 +80,7 @@ export const HackathonFooter = ({
         </LinkButton>
 
         <LinkButton
-          href="https://forms.gle/9X2gz7H28zvcf47f6"
+          href="https://thirdweb.deform.cc/consumer-crypto-hackathon/"
           onClick={() =>
             trackEvent({
               category: TRACKING_CATEGORY,
