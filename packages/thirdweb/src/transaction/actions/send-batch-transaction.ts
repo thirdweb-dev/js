@@ -6,7 +6,6 @@ import type {
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { encode } from "./encode.js";
-import { getChainIdFromChain } from "../../chain/index.js";
 
 type SendBatchTransactionOptions = {
   transactions: PreparedTransaction[];
@@ -54,7 +53,7 @@ export async function sendBatchTransaction(
         ]);
         const serializedTx: SendTransactionOption = {
           data,
-          chainId: Number(getChainIdFromChain(tx.chain)),
+          chainId: tx.chain.id,
           to,
           value,
           accessList,

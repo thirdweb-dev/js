@@ -11,7 +11,7 @@ import { ConnectedWalletDetails } from "./Details.js";
 import { defaultTokens } from "./defaultTokens.js";
 import {
   useActiveAccount,
-  useActiveWalletChainId,
+  useActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
@@ -23,6 +23,7 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectWalletProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
+import type { Chain } from "../../../chains/index.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -41,7 +42,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeAccount = useActiveAccount();
-  const activeWalletChainId = useActiveWalletChainId();
+  const activeWalletChain = useActiveWalletChain();
   const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -67,9 +68,9 @@ export function ConnectWallet(props: ConnectWalletProps) {
   // const { logout } = useLogout();
   // const isNetworkMismatch = useNetworkMismatch();
   const isNetworkMismatch =
-    activeWalletChainId !== undefined &&
-    props.chainId &&
-    activeWalletChainId !== props.chainId;
+    activeWalletChain?.id !== undefined &&
+    props.chain?.id &&
+    activeWalletChain.id !== props.chain.id;
 
   // const [showSignatureModal, setShowSignatureModal] = useState(false);
   // const address = useActiveWalletAddress();
@@ -170,7 +171,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.connectModal?.titleIcon,
                   // auth: props.auth,
                   onConnect: props.onConnect,
-                  chainId: props.chainId ? props.chainId : undefined,
+                  chain: props.chain ? props.chain : undefined,
                   chains: props.chains,
                   showThirdwebBranding:
                     props.connectModal?.showThirdwebBranding,
@@ -189,13 +190,13 @@ export function ConnectWallet(props: ConnectWalletProps) {
         }
 
         // switch network button
-        if (props.chainId && isNetworkMismatch) {
+        if (props.chain && isNetworkMismatch) {
           return (
             <SwitchNetworkButton
               style={props.switchButton?.style}
               className={props.switchButton?.className}
               switchNetworkBtnTitle={props.switchButton?.label}
-              targetChainId={props.chainId}
+              targetChain={props.chain}
             />
           );
         }
@@ -256,7 +257,7 @@ function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
   switchNetworkBtnTitle?: string;
-  targetChainId: number;
+  targetChain: Chain;
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);
@@ -278,7 +279,7 @@ function SwitchNetworkButton(props: {
       onClick={async () => {
         setSwitching(true);
         try {
-          await switchChain(props.targetChainId);
+          await switchChain(props.targetChain);
         } catch (e) {
           console.error(e);
         }

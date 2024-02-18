@@ -1,3 +1,24 @@
+import type { Prettify } from "../utils/type-utils.js";
+
+export type Chain = Prettify<Readonly<ChainOptions & { rpc: string }>>;
+
+export type ChainOptions = {
+  id: number;
+  name?: string;
+  rpc?: string;
+  nativeCurrency?: {
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+  };
+  blockExplorers?: Array<{
+    name: string;
+    url: string;
+    apiUrl?: string;
+  }>;
+  testnet?: true;
+};
+
 type Icon = {
   url: string;
   width: number;

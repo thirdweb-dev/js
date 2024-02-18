@@ -80,7 +80,7 @@ const ConnectUI = (
 ) => {
   const locale = useTWLocale().wallets.walletConnect;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { chainId, done, createInstance, walletConfig } = props;
+  const { chain, done, createInstance, walletConfig } = props;
   const [isWCModalOpen, setIsWCModalOpen] = useState(false);
   const { setModalVisibility } = props.screenConfig;
 
@@ -96,7 +96,7 @@ const ConnectUI = (
       const wallet = createInstance() as WalletConnect;
 
       await wallet.connect({
-        chainId: chainId,
+        chain: chain,
         showQrModal: true,
         qrModalOptions: props.wcConfig.qrModalOptions,
         optionalChains: props.chains,
@@ -172,7 +172,7 @@ function WalletConnectQRScanConnect(
     walletConfig,
     createInstance,
     done,
-    chainId,
+    chain,
     setQrCodeUri,
     chains,
   } = props;
@@ -188,7 +188,7 @@ function WalletConnectQRScanConnect(
 
     wallet
       .connect({
-        chainId: chainId,
+        chain,
         onDisplayUri(uri) {
           setQrCodeUri(uri);
         },
@@ -198,7 +198,7 @@ function WalletConnectQRScanConnect(
       .then(() => {
         done(wallet);
       });
-  }, [chainId, chains, createInstance, done, setQrCodeUri]);
+  }, [chain, chains, createInstance, done, setQrCodeUri]);
 
   return (
     <QRCode

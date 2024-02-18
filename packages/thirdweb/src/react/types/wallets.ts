@@ -1,4 +1,5 @@
-import type { ThirdwebClient } from "../../index.js";
+import type { Chain } from "../../chains/index.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 
@@ -119,12 +120,12 @@ export type ConnectUIProps = {
   /**
    * Chain Id to connect the wallet to
    */
-  chainId?: number;
+  chain?: Chain;
 
   /**
    * List of all chains supported by the app
    */
-  chains?: number[];
+  chains?: Chain[];
 
   /**
    * Create a wallet instance

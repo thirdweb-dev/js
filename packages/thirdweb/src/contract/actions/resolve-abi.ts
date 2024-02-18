@@ -1,10 +1,9 @@
 import { type Abi, parseAbi, formatAbi } from "abitype";
-import type { ThirdwebContract } from "../index.js";
-import { getChainIdFromChain } from "../../chain/index.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getBytecode } from "./get-bytecode.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
+import type { ThirdwebContract } from "../contract.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -19,12 +18,13 @@ const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
  * @example
  * ```ts
  * import { createThirdwebClient, getContract } from "thirdweb";
- * import { resolveContractAbi } from "thirdweb/contract"
+ * import { resolveContractAbi } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
- *  chain: 1,
+ *  chain: ethereum,
  * });
  * const abi = await resolveContractAbi(myContract);
  */
@@ -62,11 +62,12 @@ export function resolveContractAbi<abi extends Abi>(
  * ```ts
  * import { createThirdwebClient, getContract } from "thirdweb";
  * import { resolveAbiFromContractApi } from "thirdweb/contract"
+ * import { ethereum } from "thirdweb/chains";
  * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
- *  chain: 1,
+ *  chain: ethereum,
  * });
  * const abi = await resolveAbiFromContractApi(myContract);
  * ```
@@ -75,9 +76,8 @@ export async function resolveAbiFromContractApi(
   contract: ThirdwebContract<any>,
   contractApiBaseUrl = "https://contract.thirdweb.com/abi",
 ): Promise<Abi> {
-  const chainId = getChainIdFromChain(contract.chain);
   const response = await getClientFetch(contract.client)(
-    `${contractApiBaseUrl}/${chainId}/${contract.address}`,
+    `${contractApiBaseUrl}/${contract.chain.id}/${contract.address}`,
   );
   const json = await response.json();
   return json;
@@ -91,12 +91,13 @@ export async function resolveAbiFromContractApi(
  * @example
  * ```ts
  * import { createThirdwebClient, getContract } from "thirdweb";
- * import { resolveAbiFromBytecode } from "thirdweb/contract"
+ * import { resolveAbiFromBytecode } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
- *  chain: 1,
+ *  chain: ethereum,
  * });
  * const abi = await resolveAbiFromBytecode(myContract);
  * ```
@@ -243,12 +244,13 @@ const DIAMOND_ABI = {
  * @example
  * ```ts
  * import { createThirdwebClient, getContract } from "thirdweb";
- * import { resolveCompositeAbiFromBytecode } from "thirdweb/contract"
+ * import { resolveCompositeAbiFromBytecode } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const client = createThirdwebClient({ clientId: "..." });
  * const myContract = getContract({
  *  client,
  *  address: "...",
- *  chain: 1,
+ *  chain: ethereum,
  * });
  * const abi = await resolveCompositeAbiFromBytecode(myContract);
  * ```

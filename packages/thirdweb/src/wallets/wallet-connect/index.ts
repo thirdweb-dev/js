@@ -18,10 +18,7 @@ import {
   saveConnectParamsToStorage,
   walletStorage,
 } from "../manager/storage.js";
-import {
-  getChainDataForChainId,
-  getRpcUrlForChain,
-} from "../../chain/index.js";
+
 import type {
   Account,
   SendTransactionOption,
@@ -34,6 +31,13 @@ import type {
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
 import type { EthereumProvider } from "@walletconnect/ethereum-provider";
+import {
+  defineChain,
+  getChainDataForChainId,
+  getRpcUrlForChain,
+} from "../../chains/utils.js";
+import { ethereum, type Chain } from "../../chains/index.js";
+import type { PreparedTransaction } from "../../transaction/index.js";
 
 export const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
 export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
@@ -54,11 +58,10 @@ const storageKeys = {
 
 const isNewChainsStale = true;
 const defaultShowQrModal = true;
-const defaultChainId = 1;
 
 type SavedConnectParams = {
-  optionalChains?: number[];
-  chainId: number;
+  optionalChains?: Chain[];
+  chain: Chain;
   pairingTopic?: string;
 };
 
@@ -89,7 +92,7 @@ export function walletConnect(options: WalletConnectCreationOptions) {
 export class WalletConnect implements Wallet {
   private options: WalletConnectCreationOptions;
   private provider: InstanceType<typeof EthereumProvider> | undefined;
-  private chainId: number | undefined;
+  private chain: Chain | undefined;
   private account?: Account | undefined;
 
   events: Wallet["events"];
@@ -111,16 +114,18 @@ export class WalletConnect implements Wallet {
     this.metadata = options?.metadata || walletConnectMetadata;
   }
 
+  estimateGas?: ((tx: PreparedTransaction) => Promise<bigint>) | undefined;
+
   /**
-   * Get the `chainId` that the wallet is connected to.
-   * @returns The chainId
+   * Get the `chain` that the wallet is connected to.
+   * @returns The chain
    * @example
    * ```ts
-   * const chainId = wallet.getChainId();
+   * const chain = wallet.getChain();
    * ```
    */
-  getChainId(): number | undefined {
-    return this.chainId;
+  getChain(): Chain | undefined {
+    return this.chain;
   }
 
   /**
@@ -151,7 +156,7 @@ export class WalletConnect implements Wallet {
       true,
       savedConnectParams
         ? {
-            chainId: savedConnectParams.chainId,
+            chain: savedConnectParams.chain,
             pairingTopic: savedConnectParams.pairingTopic,
             optionalChains: savedConnectParams.optionalChains,
           }
@@ -164,7 +169,7 @@ export class WalletConnect implements Wallet {
       throw new Error("No accounts found on provider.");
     }
 
-    this.chainId = normalizeChainId(provider.chainId);
+    this.chain = defineChain(normalizeChainId(provider.chainId));
 
     return this.onConnect(address);
   }
@@ -179,12 +184,8 @@ export class WalletConnect implements Wallet {
       async sendTransaction(tx: SendTransactionOption) {
         const provider = wallet.assertProvider();
 
-        if (!wallet.chainId || !this.address) {
-          throw new Error("Invalid chainId or address");
-        }
-
-        if (normalizeChainId(tx.chainId) !== wallet.chainId) {
-          await wallet.switchChain(tx.chainId);
+        if (!wallet.chain || !this.address) {
+          throw new Error("Invalid chain or address");
         }
 
         const transactionHash = (await provider.request({
@@ -256,13 +257,14 @@ export class WalletConnect implements Wallet {
 
     const isChainsState = await this.isChainsStale([
       provider.chainId,
-      ...(options?.optionalChains || []),
+      ...(options?.optionalChains || []).map((c) => c.id),
     ]);
 
-    const targetChainId = options?.chainId || defaultChainId;
+    const targetChain = options?.chain || ethereum;
+    const targetChainId = targetChain.id;
 
     const rpc = getRpcUrlForChain({
-      chain: targetChainId,
+      chain: targetChain,
       client: this.options.client,
     });
 
@@ -304,12 +306,12 @@ export class WalletConnect implements Wallet {
       throw new Error("No accounts found on provider.");
     }
 
-    this.chainId = normalizeChainId(provider.chainId);
+    this.chain = defineChain(normalizeChainId(provider.chainId));
 
     if (options) {
       const savedParams: SavedConnectParams = {
         optionalChains: options.optionalChains,
-        chainId: this.chainId,
+        chain: this.chain,
         pairingTopic: options.pairingTopic,
       };
 
@@ -340,24 +342,25 @@ export class WalletConnect implements Wallet {
   }
 
   /**
-   * Switch the wallet to a blockchain with given chainId.
-   * @param chainId - The chainId to switch the wallet to.
+   * Switch the wallet to a blockchain with given chain.
+   * @param chain - The chain to switch the wallet to.
    * @example
    * ```ts
    * await wallet.switchChain(1);
    * ```
    */
-  async switchChain(chainId: number) {
+  async switchChain(chain: Chain) {
     const provider = this.assertProvider();
 
+    const chainId = chain.id;
     try {
       const namespaceChains = this.getNamespaceChainsIds();
       const namespaceMethods = this.getNamespaceMethods();
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-        const chain = await getChainDataForChainId(chainId);
-        const firstExplorer = chain.explorers && chain.explorers[0];
+        const apiChain = await getChainDataForChainId(chainId);
+        const firstExplorer = apiChain.explorers && apiChain.explorers[0];
         const blockExplorerUrls = firstExplorer
           ? { blockExplorerUrls: [firstExplorer.url] }
           : {};
@@ -365,10 +368,10 @@ export class WalletConnect implements Wallet {
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
-              chainId: toHex(chain.chainId),
-              chainName: chain.name,
-              nativeCurrency: chain.nativeCurrency,
-              rpcUrls: getValidPublicRPCUrl(chain), // no clientId on purpose
+              chainId: toHex(apiChain.chainId),
+              chainName: apiChain.name,
+              nativeCurrency: apiChain.nativeCurrency,
+              rpcUrls: getValidPublicRPCUrl(apiChain), // no clientId on purpose
               ...blockExplorerUrls,
             },
           ],
@@ -407,10 +410,10 @@ export class WalletConnect implements Wallet {
     const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } =
       await import("@walletconnect/ethereum-provider");
 
-    const targetChainId = connectionOptions?.chainId || defaultChainId;
+    const targetChain = connectionOptions?.chain || ethereum;
 
     const rpc = getRpcUrlForChain({
-      chain: targetChainId,
+      chain: targetChain,
       client: this.options.client,
     });
 
@@ -422,7 +425,7 @@ export class WalletConnect implements Wallet {
       projectId: this.options?.projectId || defaultWCProjectId,
       optionalMethods: OPTIONAL_METHODS,
       optionalEvents: OPTIONAL_EVENTS,
-      optionalChains: [Number(targetChainId)],
+      optionalChains: [targetChain.id],
       metadata: {
         name: this.options.dappMetadata?.name || defaultDappMetadata.name,
         description:
@@ -434,7 +437,7 @@ export class WalletConnect implements Wallet {
         ],
       },
       rpcMap: {
-        [targetChainId.toString()]: rpc,
+        [targetChain.id]: rpc,
       },
       qrModalOptions: connectionOptions?.qrModalOptions,
       disableProviderPing: true,
@@ -445,11 +448,11 @@ export class WalletConnect implements Wallet {
 
     if (!isAutoConnect) {
       const chains = [
-        targetChainId,
+        targetChain,
         ...(connectionOptions?.optionalChains || []),
       ];
 
-      const isStale = await this.isChainsStale(chains);
+      const isStale = await this.isChainsStale(chains.map((c) => c.id));
       if (isStale && provider.session) {
         await provider.disconnect();
       }
@@ -462,11 +465,11 @@ export class WalletConnect implements Wallet {
 
     // try switching to correct chain
     if (
-      connectionOptions?.chainId &&
-      BigInt(provider.chainId) !== BigInt(connectionOptions?.chainId)
+      connectionOptions?.chain &&
+      provider.chainId !== connectionOptions?.chain.id
     ) {
       try {
-        await this.switchChain(connectionOptions.chainId);
+        await this.switchChain(connectionOptions.chain);
       } catch (e) {
         console.error("Failed to Switch chain to target chain");
         console.error(e);
@@ -592,7 +595,7 @@ export class WalletConnect implements Wallet {
     }
 
     this.account = undefined;
-    this.chainId = undefined;
+    this.chain = undefined;
   };
 
   /**
@@ -600,8 +603,9 @@ export class WalletConnect implements Wallet {
    * Note: must use arrow function to preserve `this` when it's passed down as a callback to the provider.
    * @internal
    */
-  private onChainChanged = (chainId: number | string) => {
-    this.chainId = normalizeChainId(chainId);
+  private onChainChanged = (newChainId: number | string) => {
+    const chainId = normalizeChainId(newChainId);
+    this.chain = defineChain(chainId);
     walletStorage.set(storageKeys.lastUsedChainId, String(chainId));
   };
 }

@@ -1,8 +1,8 @@
 import type { Abi } from "abitype";
-import type { ThirdwebClient } from "../../../index.js";
 import type { Hex } from "viem";
 import { download } from "../../../storage/download.js";
 import type { Prettify } from "../../../utils/type-utils.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 
 type FetchDeployMetadataOptions = {
   uri: string;

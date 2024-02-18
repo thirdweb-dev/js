@@ -4,9 +4,10 @@ import * as universalethers from "ethers";
 import type { Abi } from "abitype";
 import type { Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import { getRpcUrlForChain, type Chain } from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 import { getContract, type ThirdwebContract } from "../contract/index.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 
 type Ethers5 = typeof ethers5;
 

@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "../../index.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/index.js";
 import type { PublishedMetadata } from "../actions/compiler-metadata.js";
 

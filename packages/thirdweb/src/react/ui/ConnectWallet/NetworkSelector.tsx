@@ -33,14 +33,15 @@ import type { Theme } from "../design-system/index.js";
 import Fuse from "fuse.js";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
-  useActiveWalletChainId,
+  useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
 import { Text } from "../components/text.js";
 import { useChainsQuery } from "../../hooks/others/useChainQuery.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
-import type { ApiChain } from "../../../chain/types.js";
+import type { ApiChain, Chain } from "../../../chains/types.js";
+import { defineChain } from "../../../chains/index.js";
 
 type NetworkSelectorChainProps = {
   /**
@@ -96,16 +97,16 @@ export type NetworkSelectorProps = {
    */
   open: boolean;
 
-  chains?: number[];
+  chains?: Chain[];
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
-  popularChains?: number[];
+  popularChains?: Chain[];
   /**
    * Array of chains to be displayed under "Recent" section
    */
-  recentChains?: number[];
+  recentChains?: Chain[];
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -250,9 +251,9 @@ export function NetworkSelectorContent(
   },
 ) {
   const allChainIds = new Set([
-    ...(props.chains || []),
-    ...(props.popularChains || []),
-    ...(props.recentChains || []),
+    ...(props.chains || []).map((c) => c.id),
+    ...(props.popularChains || []).map((c) => c.id),
+    ...(props.recentChains || []).map((c) => c.id),
   ]);
 
   // TODO: @manan - instead of doing this here and then passing the chains down we can consider the following approach:
@@ -276,13 +277,13 @@ export function NetworkSelectorContent(
   }, [chainsQueries]);
 
   const chainMap = useMemo(() => {
-    const map = new Map<bigint, ApiChain>();
+    const map = new Map<number, ApiChain>();
     if (!allChains) {
       return map;
     }
 
     for (const chain of allChains) {
-      map.set(BigInt(chain.chainId), chain);
+      map.set(chain.chainId, chain);
     }
     return map;
   }, [allChains]);
@@ -307,12 +308,12 @@ export function NetworkSelectorContent(
       {...props}
       chains={allChains}
       recentChains={
-        props.recentChains?.map((chainId) => chainMap.get(BigInt(chainId))) as
+        props.recentChains?.map((chain) => chainMap.get(chain.id)) as
           | ApiChain[]
           | undefined
       }
       popularChains={
-        props.popularChains?.map((chainId) => chainMap.get(BigInt(chainId))) as
+        props.popularChains?.map((chain) => chainMap.get(chain.id)) as
           | ApiChain[]
           | undefined
       }
@@ -677,7 +678,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   props: NetworkListProps,
 ) {
   const switchChain = useSwitchActiveWalletChain();
-  const activeChainId = useActiveWalletChainId();
+  const activeChain = useActiveWalletChain();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
   const twLocale = useTWLocale();
@@ -687,19 +688,24 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
 
   useEffect(() => {
     // if switching and switched successfully - close modal
-    if (switchingChainId !== -1 && activeChainId === switchingChainId) {
+    if (switchingChainId !== -1 && activeChain?.id === switchingChainId) {
       if (close) {
         close();
       }
     }
-  }, [switchingChainId, close, activeChainId]);
+  }, [switchingChainId, close, activeChain?.id]);
 
   const handleSwitch = async (chain: ApiChain) => {
     setErrorSwitchingChainId(-1);
     setSwitchingChainId(chain.chainId);
 
     try {
-      await switchChain(chain.chainId);
+      await switchChain(
+        defineChain({
+          id: chain.chainId,
+          name: chain.name,
+        }),
+      );
       props.onSwitch(chain);
     } catch (e: any) {
       setErrorSwitchingChainId(chain.chainId);
@@ -761,7 +767,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
         return (
           <li key={chain.chainId}>
             <NetworkButton
-              data-active={activeChainId === chain.chainId}
+              data-active={activeChain?.id === chain.chainId}
               onClick={() => {
                 handleSwitch(chain);
               }}
@@ -769,7 +775,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
               <ChainIcon
                 chain={chain}
                 size={iconSize.lg}
-                active={activeChainId === chain.chainId}
+                active={activeChain?.id === chain.chainId}
                 loading="lazy"
               />
 

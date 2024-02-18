@@ -2,12 +2,14 @@ import { toHex } from "viem";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { SmartWalletOptions } from "../types.js";
 import { readContract } from "../../../transaction/read-contract.js";
+import type {
+  Account,
+  SendTransactionOption,
+} from "../../interfaces/wallet.js";
 import {
   prepareContractCall,
   type PreparedTransaction,
-} from "../../../index.js";
-import type { Account } from "../../index.js";
-import type { SendTransactionOption } from "../../interfaces/wallet.js";
+} from "../../../transaction/index.js";
 
 /**
  * @internal

@@ -4,16 +4,13 @@ import * as universalethers from "ethers";
 import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import {
-  getRpcUrlForChain,
-  type Chain,
-  getChainIdFromChain,
-} from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 import { getContract, type ThirdwebContract } from "../contract/index.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { uint8ArrayToHex } from "../utils/uint8-array.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 
 type Ethers6 = typeof ethers6;
 
@@ -147,7 +144,7 @@ function toEthersProvider(
     fetchRequest.setHeader("Content-Type", "application/json");
   }
 
-  return new ethers.JsonRpcProvider(fetchRequest, getChainIdFromChain(chain), {
+  return new ethers.JsonRpcProvider(fetchRequest, chain.id, {
     staticNetwork: true,
   });
 }
@@ -262,9 +259,9 @@ async function toEthersSigner(
   wallet: Wallet,
 ): Promise<ethers6.Signer> {
   const account = wallet.getAccount();
-  const chainId = wallet.getChainId();
-  if (!chainId) {
-    throw new Error("Chain ID not found");
+  const chain = wallet.getChain();
+  if (!chain) {
+    throw new Error("Chain not found");
   }
   if (!account) {
     throw new Error("Account not found");
@@ -354,7 +351,7 @@ async function toEthersSigner(
     }
   }
   return new ThirdwebAdapterSigner(
-    toEthersProvider(ethers, client, chainId),
+    toEthersProvider(ethers, client, chain),
     account.address,
   );
 }

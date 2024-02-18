@@ -20,8 +20,8 @@ import {
   saveConnectParamsToStorage,
   type WithPersonalWalletConnectionOptions,
 } from "../manager/storage.js";
-import { getChainIdFromChain } from "../../chain/index.js";
-import type { PreparedTransaction } from "../../index.js";
+import type { Chain } from "../../chains/index.js";
+import type { PreparedTransaction } from "../../transaction/index.js";
 
 /**
  * Creates a smart wallet.
@@ -60,7 +60,7 @@ export const personalWalletToSmartAccountMap = new WeakMap<Wallet, Wallet>();
  */
 export class SmartWallet implements WalletWithPersonalWallet {
   private options: SmartWalletOptions;
-  private chainId?: number | undefined;
+  private chain?: Chain | undefined;
   private account?: Account | undefined;
 
   personalWallet: Wallet | undefined;
@@ -79,19 +79,19 @@ export class SmartWallet implements WalletWithPersonalWallet {
     this.options = options;
     this.metadata = options.metadata || smartWalletMetadata;
     this.isSmartWallet = true;
-    this.chainId = getChainIdFromChain(options.chain);
+    this.chain = options.chain;
   }
 
   /**
-   * Get the `chainId` that the wallet is connected to.
-   * @returns The chainId
+   * Get the `chain` that the wallet is connected to.
+   * @returns The chain
    * @example
    * ```ts
-   * const chainId = wallet.getChainId();
+   * const chain = wallet.getChain();
    * ```
    */
-  getChainId(): number | undefined {
-    return this.chainId;
+  getChain(): Chain | undefined {
+    return this.chain;
   }
 
   /**
@@ -120,7 +120,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
   async connect(
     connectionOptions: SmartWalletConnectionOptions,
   ): Promise<Account> {
-    const chainId = getChainIdFromChain(this.options.chain);
+    const chainId = this.options.chain.id;
 
     const { personalWallet } = connectionOptions;
 
@@ -130,7 +130,8 @@ export class SmartWallet implements WalletWithPersonalWallet {
       throw new Error("Personal wallet does not have an account");
     }
 
-    if (personalWallet.getChainId() !== chainId) {
+    // this does not matter if the personal wallet does not implement `getChain()` (private key wallet)
+    if (personalWallet.getChain && personalWallet.getChain()?.id !== chainId) {
       throw new Error(
         "Personal account's wallet is on a different chain than the smart wallet.",
       );
@@ -183,7 +184,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
     this.personalWallet?.disconnect();
     this.personalWallet = undefined;
     this.account = undefined;
-    this.chainId = undefined;
+    this.chain = undefined;
   }
 
   /**

@@ -19,7 +19,7 @@ import {
 } from "../defaultTokens.js";
 import {
   useActiveAccount,
-  useActiveWalletChainId,
+  useActiveWalletChain,
 } from "../../../providers/wallet-provider.js";
 import { useWalletBalance } from "../../../hooks/others/useWalletBalance.js";
 import { isAddress } from "viem";
@@ -27,6 +27,7 @@ import { Text } from "../../components/text.js";
 import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import styled from "@emotion/styled";
 import { useSendToken } from "../../hooks/useSendToken.js";
+import { defineChain } from "../../../../chains/index.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -38,8 +39,8 @@ export function SendFunds(props: {
   onBack: () => void;
 }) {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
-  const chainIdBigNum = useActiveWalletChainId();
-  const chainId = chainIdBigNum ? Number(chainIdBigNum) : undefined;
+  const activeChain = useActiveWalletChain();
+  const chainId = activeChain?.id;
 
   let defaultToken: TokenInfo | undefined = undefined;
   if (
@@ -106,11 +107,11 @@ export function SendFundsForm(props: {
 }) {
   const locale = useTWLocale().connectWallet.sendFundsScreen;
   const tokenAddress = props.token?.address;
-  const chainId = useActiveWalletChainId();
+  const chainId = useActiveWalletChain()?.id;
   const activeAccount = useActiveAccount();
 
   const balanceQuery = useWalletBalance({
-    chain: chainId,
+    chain: chainId ? defineChain(chainId) : undefined,
     tokenAddress,
     account: activeAccount,
   });
@@ -361,15 +362,14 @@ export function TokenSelector(props: {
   supportedTokens: SupportedTokens;
 }) {
   const [input, setInput] = useState("");
-  const chainIdBigNum = useActiveWalletChainId();
-  const chainId = chainIdBigNum ? Number(chainIdBigNum) : undefined;
+  const chainId = useActiveWalletChain()?.id;
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
   const tokenQuery = useActiveWalletBalance(input);
 
   const locale = useTWLocale().connectWallet.sendFundsScreen;
-  const chainQuery = useChainQuery(chainIdBigNum);
+  const chainQuery = useChainQuery(chainId);
 
   let tokenList = (chainId ? props.supportedTokens[chainId] : undefined) || [];
 
@@ -478,7 +478,7 @@ export function TokenSelector(props: {
 
 function SelectTokenButton(props: { token?: TokenInfo; onClick: () => void }) {
   const balanceQuery = useActiveWalletBalance(props.token?.address);
-  const chainId = useActiveWalletChainId();
+  const chainId = useActiveWalletChain()?.id;
   const chainQuery = useChainQuery(chainId);
   const tokenName = props.token?.name || balanceQuery.data?.name;
 
@@ -544,10 +544,10 @@ const CurrencyBadge = /* @__PURE__ */ StyledDiv({
 });
 
 function useActiveWalletBalance(tokenAddress?: string) {
-  const chainId = useActiveWalletChainId();
+  const chainId = useActiveWalletChain()?.id;
   const activeAccount = useActiveAccount();
   return useWalletBalance({
-    chain: chainId,
+    chain: chainId ? defineChain(chainId) : undefined,
     tokenAddress,
     account: activeAccount,
   });

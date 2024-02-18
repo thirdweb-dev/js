@@ -25,11 +25,10 @@ import { useState, useRef, useEffect } from "react";
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
 export const coinbaseConfig = (): WalletConfig => {
-  const isInjected = !!injectedCoinbaseProvider();
-
   return {
     metadata: coinbaseMetadata,
     create(createOptions) {
+      const isInjected = !!injectedCoinbaseProvider();
       if (isInjected) {
         return coinbaseWallet();
       } else {
@@ -107,7 +106,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   const locale = useTWLocale().wallets.injectedWallet(
     connectUIProps.walletConfig.metadata.name,
   );
-  const { createInstance, done, chainId } = connectUIProps;
+  const { createInstance, done, chain } = connectUIProps;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
 
   const scanStarted = useRef(false);
@@ -125,7 +124,7 @@ function CoinbaseSDKWalletConnectUI(props: {
       try {
         await wallet.connect({
           reloadOnDisconnect: false,
-          chainId,
+          chain: chain ? chain : undefined,
           onUri(uri) {
             if (uri) {
               setQrCodeUri(uri);
@@ -141,7 +140,7 @@ function CoinbaseSDKWalletConnectUI(props: {
         // show error
       }
     })();
-  }, [chainId, createInstance, done]);
+  }, [chain, createInstance, done]);
 
   return (
     <ScanScreen

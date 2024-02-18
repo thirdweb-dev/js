@@ -1,6 +1,6 @@
 import type { AccessList, Hex } from "viem";
 import type { Abi, AbiFunction, Address } from "abitype";
-import type { Chain } from "../chain/index.js";
+import type { Chain } from "../chains/index.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { PromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { ThirdwebContract } from "../contract/contract.js";
@@ -46,9 +46,10 @@ export type PreparedTransaction<
  * @example
  * ```ts
  * import { prepareTransaction, parseEther } from "thirdweb";
+ * import { ethereum } from "thirdweb/chains";
  * const transaction = prepareTransaction({
  *  to: "0x1234567890123456789012345678901234567890",
- *  chain: 1,
+ *  chain: ethereum,
  *  client: thirdwebClient,
  *  value: parseEther("1.0"),
  * });

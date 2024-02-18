@@ -50,17 +50,17 @@ export function useSwitchActiveWalletChain() {
 }
 
 /**
- * A hook that returns the chain id of the blockchain the active wallet is connected to
- * @returns The chain id of the blockchain the active wallet is connected to or null if no active wallet.
+ * A hook that returns the chain the active wallet is connected to
+ * @returns The chain the active wallet is connected to or null if no active wallet.
  * @example
  * ```jsx
- * import { useActiveWalletChainId } from "thirdweb/react";
+ * import { useActiveWalletChain } from "thirdweb/react";
  *
- * const chainId = useActiveWalletChainId();
+ * const chainId = useActiveWalletChain();
  * ```
  */
-export function useActiveWalletChainId() {
-  const store = connectionManager.activeWalletChainId;
+export function useActiveWalletChain() {
+  const store = connectionManager.activeWalletChain;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 

@@ -9,7 +9,6 @@ import {
   watchContractEvents,
   type WatchContractEventsOptions,
 } from "../../../event/actions/watch-events.js";
-import { getChainIdFromChain } from "../../../chain/index.js";
 import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
 import { getContractEvents } from "../../../event/actions/get-events.js";
 import type { ParseEventLogsResult } from "../../../event/index.js";
@@ -59,13 +58,7 @@ export function useContractEvents<
   );
 
   const queryKey = useMemo(
-    () =>
-      [
-        getChainIdFromChain(contract.chain).toString(),
-        contract.address,
-        "logs",
-        eventsKey,
-      ] as const,
+    () => [contract.chain.id, contract.address, "logs", eventsKey] as const,
     [contract.address, contract.chain, eventsKey],
   );
 

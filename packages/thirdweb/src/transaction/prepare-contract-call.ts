@@ -6,7 +6,6 @@ import {
   type ExtractAbiFunctionNames,
 } from "abitype";
 import type { TransactionRequest, Hex } from "viem";
-import type { ThirdwebContract } from "../index.js";
 import { encodeAbiFunction } from "../abi/encode.js";
 import { isAbiFunction } from "./utils.js";
 import {
@@ -19,6 +18,7 @@ import type {
   ParseMethod,
 } from "./types.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { ThirdwebContract } from "../contract/index.js";
 
 export type PrepareContractCallOptions<
   abi extends Abi = [],

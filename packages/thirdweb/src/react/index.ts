@@ -26,7 +26,7 @@ export {
 
 export {
   useSetActiveWallet,
-  useActiveWalletChainId,
+  useActiveWalletChain,
   useConnect,
   useDisconnect,
   useActiveAccount,

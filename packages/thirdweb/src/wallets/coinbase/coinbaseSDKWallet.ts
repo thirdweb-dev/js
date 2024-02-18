@@ -2,7 +2,6 @@ import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { WalletMetadata } from "../types.js";
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDK as CoinbaseWalletSDKConstructor } from "@coinbase/wallet-sdk";
-import { getChainDataForChainId } from "../../chain/index.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import {
   getAddress,
@@ -24,9 +23,11 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../manager/storage.js";
+import { defineChain, getChainDataForChainId } from "../../chains/utils.js";
+import { ethereum, type Chain } from "../../chains/index.js";
 
 type SavedConnectParams = {
-  chainId?: number;
+  chain?: Chain;
 };
 
 type CoinbaseWalletSDKOptions = Readonly<
@@ -37,7 +38,7 @@ export type CoinbaseSDKWalletConnectionOptions = Omit<
   CoinbaseWalletSDKOptions,
   "appName"
 > & {
-  chainId?: number;
+  chain?: Chain;
   onUri?: (uri: string | null) => void;
 };
 
@@ -64,7 +65,7 @@ export function coinbaseSDKWallet(options: CoinbaseWalletSDKOptions) {
 export class CoinbaseSDKWallet implements Wallet {
   private options: CoinbaseSDKWalletOptions;
   private provider: CoinbaseWalletProvider | undefined;
-  private chainId: number | undefined;
+  private chain: Chain | undefined;
   private account?: Account | undefined;
   metadata: WalletMetadata;
 
@@ -85,15 +86,15 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Get the `chainId` that the wallet is connected to.
-   * @returns The chainId
+   * Get the `chain` that the wallet is connected to.
+   * @returns The chain
    * @example
    * ```ts
-   * const chainId = wallet.getChainId();
+   * const chain = wallet.getChain();
    * ```
    */
-  getChainId(): number | undefined {
-    return this.chainId;
+  getChain(): Chain | undefined {
+    return this.chain;
   }
 
   /**
@@ -141,21 +142,22 @@ export class CoinbaseSDKWallet implements Wallet {
     })) as string | number;
     // TODO check what's type of connectedChainId
 
-    this.chainId = normalizeChainId(connectedChainId);
+    const chainId = normalizeChainId(connectedChainId);
+    this.chain = defineChain(chainId);
 
     // Switch to chain if provided
     if (
       connectedChainId &&
-      options?.chainId &&
-      Number(connectedChainId) !== options?.chainId
+      options?.chain &&
+      connectedChainId !== options?.chain.id
     ) {
-      await this.switchChain(options.chainId);
-      this.chainId = options.chainId;
+      await this.switchChain(options.chain);
+      this.chain = options.chain;
     }
 
-    if (options?.chainId) {
+    if (options?.chain) {
       const saveParams: SavedConnectParams = {
-        chainId: options?.chainId,
+        chain: options?.chain,
       };
 
       saveConnectParamsToStorage(this.metadata.id, saveParams);
@@ -170,12 +172,8 @@ export class CoinbaseSDKWallet implements Wallet {
     const account: Account = {
       address,
       async sendTransaction(tx: SendTransactionOption) {
-        if (!wallet.chainId || !wallet.provider || !account.address) {
+        if (!wallet.chain || !wallet.provider || !account.address) {
           throw new Error("Provider not setup");
-        }
-
-        if (normalizeChainId(tx.chainId) !== wallet.chainId) {
-          await wallet.switchChain(tx.chainId);
         }
 
         const transactionHash = (await wallet.provider.request({
@@ -261,7 +259,7 @@ export class CoinbaseSDKWallet implements Wallet {
       await getSavedConnectParamsFromStorage(this.metadata.id);
 
     const provider = await this.initProvider({
-      chainId: savedParams?.chainId,
+      chain: savedParams?.chain,
     });
 
     // connected accounts
@@ -278,27 +276,28 @@ export class CoinbaseSDKWallet implements Wallet {
     const connectedChainId = (await provider.request({
       method: "eth_chainId",
     })) as string | number;
-    this.chainId = normalizeChainId(connectedChainId);
+    const chainId = normalizeChainId(connectedChainId);
+    this.chain = defineChain(chainId);
 
     return this.onConnect(address);
   }
 
   /**
    * Switch chain in connected wallet
-   * @param chainId - The chainId to switch to
+   * @param chain - The chain to switch to
    * @example
    * ```ts
-   * await wallet.switchChain(1)
+   * await wallet.switchChain(ethereum)
    * ```
    */
-  async switchChain(chainId: number) {
+  async switchChain(chain: Chain) {
     const provider = this.provider;
 
     if (!provider) {
       throw new Error("Provider not initialized");
     }
 
-    const chainIdHex = toHex(chainId);
+    const chainIdHex = toHex(chain.id);
 
     try {
       await provider.request({
@@ -306,7 +305,7 @@ export class CoinbaseSDKWallet implements Wallet {
         params: [{ chainId: chainIdHex }],
       });
     } catch (error) {
-      const chain = await getChainDataForChainId(chainId);
+      const apiChain = await getChainDataForChainId(chain.id);
 
       // Indicates chain is not added to provider
       if ((error as any).code === 4902) {
@@ -316,10 +315,10 @@ export class CoinbaseSDKWallet implements Wallet {
           params: [
             {
               chainId: chainIdHex,
-              chainName: chain.name,
-              nativeCurrency: chain.nativeCurrency,
-              rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
-              blockExplorerUrls: chain.explorers?.map((x) => x.url) || [],
+              chainName: apiChain.name,
+              nativeCurrency: apiChain.nativeCurrency,
+              rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
+              blockExplorerUrls: apiChain.explorers?.map((x) => x.url) || [],
             },
           ],
         });
@@ -338,16 +337,15 @@ export class CoinbaseSDKWallet implements Wallet {
       options.onUri(client.getQrUrl());
     }
 
-    const chainId = options?.chainId || 1;
+    const chain = options?.chain || ethereum;
 
-    const chain = await getChainDataForChainId(chainId);
-    const jsonRpcUrl = chain?.rpc[0];
-    this.provider = client.makeWeb3Provider(jsonRpcUrl, chainId);
+    this.provider = client.makeWeb3Provider(chain.rpc, chain.id);
     return this.provider;
   }
 
-  private onChainChanged = (chainId: number | string) => {
-    this.chainId = normalizeChainId(chainId);
+  private onChainChanged = (newChain: number | string) => {
+    const chainId = normalizeChainId(newChain);
+    this.chain = defineChain(chainId);
   };
 
   private onAccountsChanged = (accounts: string[]) => {
@@ -367,7 +365,7 @@ export class CoinbaseSDKWallet implements Wallet {
     }
 
     this.account = undefined;
-    this.chainId = undefined;
+    this.chain = undefined;
   };
 
   /**

@@ -4,10 +4,6 @@ import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
-import {
-  getChainIdFromChain,
-  type PreparedTransaction,
-} from "../../../index.js";
 import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { estimateUserOpGas } from "./bundler.js";
@@ -15,6 +11,7 @@ import { randomNonce } from "./utils.js";
 import { prepareCreateAccount } from "./calls.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
+import type { PreparedTransaction } from "../../../transaction/index.js";
 
 /**
  * Create an unsigned user operation
@@ -144,7 +141,7 @@ export async function signUserOp(args: {
   const userOpHash = getUserOpHash({
     userOp,
     entryPoint: options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS,
-    chainId: getChainIdFromChain(options.chain),
+    chainId: options.chain.id,
   });
   if (options.personalAccount.signMessage) {
     const signature = await options.personalAccount.signMessage({

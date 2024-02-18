@@ -1,7 +1,8 @@
+import type { Chain } from "../../../chains/index.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import { type Theme } from "../design-system/index.js";
+import type { Theme } from "../design-system/index.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
-import { type SupportedTokens } from "./defaultTokens.js";
+import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
 /**
@@ -260,30 +261,30 @@ export type ConnectWallet_ConnectModalOptions = {
  */
 export type ConnectWalletProps = {
   /**
-   * chain Id of the blockchain that your app operates on.
+   * chain of the blockchain that your app operates on.
    *
-   * If a chain Id is specified, Wallet will be prompted to switch to given chain id after connecting if it is not already connected to it. This ensures that the wallet is connected to the correct network before interacting with your app.
+   * If a chain is specified, Wallet will be prompted to switch to given chain after connecting if it is not already connected to it. This ensures that the wallet is connected to the correct network before interacting with your app.
    * @example
    * ```tsx
-   * <ConnectWallet chainId={137} />
+   * <ConnectWallet chainId={polygon} />
    * ```
    */
-  chainId?: number;
+  chain?: Chain;
 
   /**
-   * Array of chain ids that your app supports.
+   * Array of chains that your app supports.
    *
    * This is only relevant if your app is a multi-chain app and works across multiple blockchains. If your app only works on a single blockchain, you should only specify the `chainId` prop.
    *
-   * Given list of chain ids will used in various ways:
+   * Given list of chains will used in various ways:
    * - They will be displayed in the network selector in the ConnectWallet modal
    * - They will be sent to wallet at the time of connection if the wallet supports it so that users can switch between the chains post connection
    *
    * ```tsx
-   * <ConnectWallet chains={[1, 137, 10]} />
+   * <ConnectWallet chains={[ethereum, polygon, optimism]} />
    * ```
    */
-  chains?: number[];
+  chains?: Chain[];
 
   /**
    * Set the theme for the button and modal. By default it is set to `"dark"`

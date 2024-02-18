@@ -1,5 +1,5 @@
 import type { ReadonlyStore } from "./computedStore.js";
-import { type Store } from "./store.js";
+import type { Store } from "./store.js";
 
 /**
  * Run a function whenever dependencies change

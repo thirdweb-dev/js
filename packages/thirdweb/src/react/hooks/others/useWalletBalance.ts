@@ -3,7 +3,6 @@ import {
   getTokenBalance,
   type GetTokenBalanceOptions,
 } from "../../../wallets/utils/getTokenBalance.js";
-import { getChainIdFromChain } from "../../../chain/index.js";
 import { useThirdwebProviderProps } from "./useThirdwebProviderProps.js";
 
 /**
@@ -21,7 +20,7 @@ export function useWalletBalance(
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "walletBalance",
-      `${getChainIdFromChain(chain ?? -1)}`,
+      chain?.id || -1,
       account?.address || "0x0",
       { tokenAddress },
     ] as const,
@@ -37,6 +36,7 @@ export function useWalletBalance(
       }
       return getTokenBalance({ chain, client, account, tokenAddress });
     },
+    enabled: !!chain && !!client && !!account,
   });
   return useQuery(query);
 }

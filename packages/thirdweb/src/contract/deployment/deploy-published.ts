@@ -18,13 +18,15 @@ export type PrepareDeployTransactionForPublishedContractOptions = Prettify<
  * @returns A promise that resolves to the prepared deploy transaction.
  * @example
  * ```ts
+ * import { prepareDeployTransactionForPublishedContract } from "thirdweb/contract";
+ * import { ethereum } from "thirdweb/chains";
  * const tx = await prepareDeployTransactionForPublishedContract({
  *  client,
  *  publisher: "0x1234",
  *  contractName: "MyContract",
  *  version: "1.0.0",
  *  constructorParams: [123, "hello"],
- *  chain: 1,
+ *  chain: ethereum,
  * });
  */
 export async function prepareDeployTransactionForPublishedContract(

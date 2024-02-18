@@ -1,5 +1,5 @@
 import { decodeErrorResult, type Hex } from "viem";
-import type { Chain } from "../../../chain/index.js";
+import type { Chain } from "../../../chains/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
 import { getContractEvents, prepareEvent } from "../../../event/index.js";
