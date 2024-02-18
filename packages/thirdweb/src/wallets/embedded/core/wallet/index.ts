@@ -1,3 +1,4 @@
+import { privateKeyAccount } from "../../../index.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
 import type {
@@ -34,6 +35,7 @@ class EmbeddedWallet implements Wallet {
   private storage: StorageType;
   private activeWalletAccountDetail: SensitiveAccountDetailType | null = null;
   private walletAccounts: Record<string, SensitiveAccountDetailType> = {};
+  private chainId: number;
 
   public metadata = {
     id: "embedded-wallet",
@@ -46,6 +48,7 @@ class EmbeddedWallet implements Wallet {
   constructor(arg: { storage: StorageType }) {
     this.storage = arg.storage;
     this.address = "";
+    this.chainId = 1; // chainId doesn't matter for embedded wallets
   }
 
   async initializeWallet() {
@@ -113,7 +116,6 @@ class EmbeddedWallet implements Wallet {
     formatOverride?: WalletStorageFormatType;
   }): Promise<Account> {
     const { createAccount } = await import("./utils.js");
-    const { privateKeyAccount } = await import("../../../private-key.js");
 
     const wallet = await createAccount({
       createAccountOverride: arg?.createWalletOverride,
@@ -186,7 +188,6 @@ class EmbeddedWallet implements Wallet {
     storageOverride?: StorageType;
   }): Promise<Account> {
     const { loadAccount } = await import("./utils.js");
-    const { privateKeyAccount } = await import("../../../private-key.js");
 
     const storage = storageOverride ?? this.storage;
 
@@ -217,9 +218,7 @@ class EmbeddedWallet implements Wallet {
     });
   }
 
-  async getActiveAccount() {
-    const { privateKeyAccount } = await import("../../../private-key.js");
-
+  getAccount() {
     if (this.activeWalletAccountDetail) {
       return privateKeyAccount({
         client: this.storage.client,
@@ -268,8 +267,6 @@ class EmbeddedWallet implements Wallet {
   }
 
   public async autoConnect() {
-    const { privateKeyAccount } = await import("../../../private-key.js");
-
     if (!this.activeWalletAccountDetail) {
       throw new Error("No active wallet");
     }
@@ -282,5 +279,13 @@ class EmbeddedWallet implements Wallet {
 
   public async disconnect() {
     this.activeWalletAccountDetail = null;
+  }
+
+  getChainId(): number | undefined {
+    return this.chainId;
+  }
+
+  async switchChain(newChainId: number) {
+    this.chainId = newChainId;
   }
 }
