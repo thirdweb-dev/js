@@ -63,14 +63,20 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
 
   const [gasCost, setGasCost] = useState<string | undefined>();
   useEffect(() => {
-    estimateGas({ transaction, wallet }).then(async (value) => {
-      const txValueWei =
-        (typeof transaction.value === "function"
-          ? await transaction.value()
-          : transaction.value) || BigInt(0);
-      const gasCostWei = value * BigInt(10 ** 9);
-      setGasCost(formatEther(gasCostWei + txValueWei, "wei"));
-    });
+    // TODO this should be a new core action: estimateGasCost
+    estimateGas({ transaction, wallet })
+      .then(async (value) => {
+        const txValueWei =
+          (typeof transaction.value === "function"
+            ? await transaction.value()
+            : transaction.value) || BigInt(0);
+        // TODO fix this - should fetch price from eth_getGasPrice
+        const gasCostWei = value * BigInt(10 ** 9);
+        setGasCost(formatEther(gasCostWei + txValueWei, "wei"));
+      })
+      .catch((error) => {
+        console.error("Error estimating gas", error);
+      });
   }, [transaction, wallet]);
 
   // if the connected wallet is on a different chain than the transaction, show a switch chain button

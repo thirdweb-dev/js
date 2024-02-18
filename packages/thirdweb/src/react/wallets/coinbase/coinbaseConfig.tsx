@@ -25,11 +25,10 @@ import { useState, useRef, useEffect } from "react";
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
 export const coinbaseConfig = (): WalletConfig => {
-  const isInjected = !!injectedCoinbaseProvider();
-
   return {
     metadata: coinbaseMetadata,
     create(createOptions) {
+      const isInjected = !!injectedCoinbaseProvider();
       if (isInjected) {
         return coinbaseWallet();
       } else {
