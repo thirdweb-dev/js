@@ -3,6 +3,7 @@ import { providers } from "ethers";
 import {
   ConstructorParamMap,
   DeploymentPreset,
+  HookOptions,
 } from "../../types/any-evm/deploy-data";
 import { Plugin } from "../../types/plugins";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
@@ -18,6 +19,7 @@ import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromP
 import invariant from "tiny-invariant";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { isAddress } from "ethers/lib/utils";
+import { computeHookProxyAddress } from "./computeHookProxyAddress";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -32,12 +34,12 @@ import { isAddress } from "ethers/lib/utils";
  */
 export async function getModularDeploymentInfo(
   metadataUri: string,
-  constructorParamValues: any[],
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
   clientId?: string,
   secretKey?: string,
+  hooks?: HookOptions[],
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
   const [create2FactoryAddress, { compilerMetadata, extendedMetadata }] =
@@ -60,34 +62,79 @@ export async function getModularDeploymentInfo(
   );
   finalDeploymentInfo.push(factoryInfo);
 
-  const constructorParams = extractConstructorParamsFromAbi(
-    compilerMetadata.abi,
-  );
-
   const hooksParamName =
     extendedMetadata?.factoryDeploymentData?.modularFactoryInput
       ?.hooksParamName;
 
-  if (hooksParamName) {
-    const hooksParamIndex = constructorParams.findIndex(
-      (p) => p.name === hooksParamName,
+  if (hooksParamName && hooks) {
+    const hookAddresses = hooks.filter((h) => isAddress(h.addressOrName));
+    const publishedHooks = hooks.filter((h) => !isAddress(h.addressOrName));
+    const publishedHooksFetched = await Promise.all(
+      publishedHooks.map((h) => {
+        invariant(h.publisherAddress, "Require publisher address");
+        return fetchPublishedContractFromPolygon(
+          h.publisherAddress,
+          h.addressOrName,
+          "latest", // get oldest version
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+    const publishedHooksMetadata = await Promise.all(
+      publishedHooksFetched.map((h) =>
+        fetchAndCacheDeployMetadata(h.metadataUri, storage),
+      ),
     );
 
-    let hookParams = hooksParamIndex
-      ? constructorParamValues[hooksParamIndex]
-      : [];
+    // computeDeploymentInfo for hook impl -> push into finalDeploymentInfo
+    const hookImplDeployInfo = await Promise.all(
+      publishedHooksMetadata.map((m) =>
+        computeDeploymentInfo(
+          "hookImpl",
+          provider,
+          storage,
+          create2FactoryAddress,
+          { metadata: m.compilerMetadata },
+          clientId,
+          secretKey,
+        ),
+      ),
+    );
+    finalDeploymentInfo.push(...hookImplDeployInfo);
 
-    customParams[hooksParamName] = {
-      value: hookParams.map(async (p: string) => {
-        if (!isAddress(p)) {
-          // computeDeploymentInfo for hook impl -> push into finalDeploymentInfo
-          // with address of impl and factory above -> computeDeploymentInfo for hook proxy -> push into finalDeploymentInfo
-          // return predicted address of hook proxy
-        }
+    // with address of impl and factory above -> computeDeploymentInfo for hook proxy -> push into finalDeploymentInfo
+    const hookAddressesComputed = hookImplDeployInfo.map((h, i) => {
+      const proxy = computeHookProxyAddress(
+        h.transaction.predictedAddress,
+        factoryInfo.transaction.predictedAddress,
+      );
 
-        return p;
-      }),
-    };
+      finalDeploymentInfo.push({
+        type: "hookProxy",
+        transaction: { predictedAddress: "", to: "", data: "" }, // empty transaction because we'll deploy ERC1967 proxy through a factory
+        hooks: {
+          impl: h.transaction.predictedAddress,
+          proxy: proxy,
+          admin: publishedHooks[i].publisherAddress as string,
+        },
+      });
+
+      return proxy;
+    });
+
+    hookAddresses.forEach((h) => {
+      finalDeploymentInfo.push({
+        type: "hookProxy",
+        transaction: { predictedAddress: "", to: "", data: "" }, // empty transaction because we'll deploy ERC1967 proxy through a factory
+        hooks: {
+          impl: "",
+          proxy: h.addressOrName,
+          admin: "",
+        },
+      });
+    });
   }
 
   const implementationDeployInfo = await computeDeploymentInfo(

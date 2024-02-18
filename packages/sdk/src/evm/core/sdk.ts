@@ -119,6 +119,11 @@ import {
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 import { getModularDeploymentInfo } from "../common/any-evm-utils/getModularDeploymentInfo";
 import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress copy";
+import {
+  HOOK_PROXY_DEPLOYMENT_SALT,
+  hookInitializerAbi,
+  modularFactoryAbi,
+} from "../common/any-evm-utils/computeHookProxyAddress";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1785,6 +1790,44 @@ export class ContractDeployer extends RPCConnectionHandler {
     },
   );
 
+  deployERC1967ViaModularFactory =
+    /* @__PURE__ */ buildDeployTransactionFunction(
+      async (
+        factoryAddress: AddressOrEns,
+        implementationAddress: AddressOrEns,
+        implementationAbi: ContractInterface,
+        initializerFunction: string,
+        initializerArgs: any[],
+        saltForProxyDeploy?: string,
+      ): Promise<DeployTransaction> => {
+        const encodedInitializer = Contract.getInterface(
+          implementationAbi,
+        ).encodeFunctionData(initializerFunction, initializerArgs);
+
+        // eslint-disable-next-line prefer-const
+        let deployedProxyAddress: string;
+        const deployTransaction = await Transaction.fromContractInfo({
+          contractAddress: factoryAddress,
+          contractAbi: modularFactoryAbi,
+          provider: this.getProvider(),
+          signer: this.getSigner() as Signer,
+          method: "deployDeterministicERC1967",
+          args: [
+            implementationAddress,
+            encodedInitializer,
+            utils.id(HOOK_PROXY_DEPLOYMENT_SALT),
+          ],
+          parse: () => {
+            return deployedProxyAddress;
+          },
+          storage: this.storage,
+        });
+        deployedProxyAddress = await deployTransaction.simulate();
+
+        return deployTransaction as unknown as DeployTransaction;
+      },
+    );
+
   /**
    * Deploy a proxy contract of a given implementation directly
    * @param implementationAddress - the address of the implementation
@@ -1926,9 +1969,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       constructorParamValues: any[],
       deployMetadata: DeployMetadata,
       initializerFunction: string,
-      paramValues: any[],
       signer: Signer,
-      chainId: number,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       // any evm deployment flow
@@ -1939,12 +1980,12 @@ export class ContractDeployer extends RPCConnectionHandler {
       // 2. get deployment info for any evm
       const deploymentInfo = await getModularDeploymentInfo(
         publishMetadataUri,
-        constructorParamValues,
         this.storage,
         this.getProvider(),
         create2Factory,
         this.options.clientId,
         this.options.secretKey,
+        options?.hooks,
       );
 
       const implementationAddress = deploymentInfo.find(
@@ -1955,7 +1996,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       // filter out already deployed contracts (data is empty)
       const transactionsToSend = deploymentInfo.filter(
-        (i) => i.transaction.data && i.transaction.data.length > 0,
+        (i) =>
+          (i.transaction.data && i.transaction.data.length > 0) ||
+          i.type === "hookProxy",
       );
       const transactionsforDirectDeploy = transactionsToSend
         .filter((i) => {
@@ -1968,11 +2011,9 @@ export class ContractDeployer extends RPCConnectionHandler {
         })
         .map((i) => i.transaction);
 
-      const transactionsForHookProxyDeploy = transactionsToSend
-        .filter((i) => {
-          return i.type === "hookProxy";
-        })
-        .map((i) => i.transaction);
+      const transactionsForHookProxyDeploy = transactionsToSend.filter((i) => {
+        return i.type === "hookProxy";
+      });
 
       // deploy via throwaway deployer, multiple infra contracts in one transaction
       await deployWithThrowawayDeployer(
@@ -2000,7 +2041,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // 4. deploy proxy with ModularFactory and return address
-      const cloneFactory = await computeModularFactoryAddress(
+      const modularFactory = await computeModularFactoryAddress(
         this.getProvider(),
         this.storage,
         create2Factory,
@@ -2009,21 +2050,76 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // deploy hook proxies
+      const hooksParam: string[] = [];
       for (const tx of transactionsForHookProxyDeploy) {
-        try {
-          // deploy deterministic ERC1967 proxies for hooks
-        } catch (e) {
-          console.debug(
-            `Error deploying contract at ${tx.predictedAddress}`,
-            (e as any)?.message,
+        if (tx.hooks) {
+          hooksParam.push(tx.hooks.proxy);
+          const isDeployed = await isContractDeployed(
+            tx.hooks.proxy,
+            this.getProvider(),
           );
-          throw e;
+          if (tx.hooks.impl && !isDeployed) {
+            try {
+              await this.deployERC1967ViaModularFactory(
+                modularFactory,
+                tx.hooks.impl,
+                hookInitializerAbi,
+                "initialize",
+                [tx.hooks.admin],
+              );
+            } catch (e) {
+              console.debug(
+                `Error deploying contract at ${tx.hooks.proxy}`,
+                (e as any)?.message,
+              );
+              throw e;
+            }
+          }
         }
       }
 
+      const hooksParamName =
+        deployMetadata.extendedMetadata?.factoryDeploymentData
+          ?.modularFactoryInput?.hooksParamName;
+
+      invariant(
+        deployMetadata.extendedMetadata?.factoryDeploymentData
+          ?.implementationInitializerFunction,
+        `implementationInitializerFunction not set'`,
+      );
+
+      const initializerParams = extractFunctionParamsFromAbi(
+        deployMetadata.compilerMetadata.abi,
+        deployMetadata.extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
+      );
+
+      invariant(
+        initializerParams.length === constructorParamValues.length,
+        "Wrong number of constructor arguments",
+      );
+
+      const hookParamIndex = initializerParams.findIndex(
+        (p) => p.name === hooksParamName,
+      );
+
+      if (constructorParamValues[hookParamIndex].length === 0) {
+        constructorParamValues[hookParamIndex] = hooksParam;
+      }
+
+      const initializerParamTypes = extractFunctionParamsFromAbi(
+        deployMetadata.compilerMetadata.abi,
+        deployMetadata.extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
+      ).map((p) => p.type);
+      const paramValues = convertParamValues(
+        initializerParamTypes,
+        constructorParamValues,
+      );
+
       options?.notifier?.("deploying", "proxy");
       const proxyDeployTransaction = (await this.deployViaFactory.prepare(
-        cloneFactory,
+        modularFactory,
         resolvedImplementationAddress,
         deployMetadata.compilerMetadata.abi,
         initializerFunction,
@@ -2257,7 +2353,6 @@ export class ContractDeployer extends RPCConnectionHandler {
             extendedMetadata.factoryDeploymentData
               .implementationInitializerFunction,
             signer,
-            chainId,
             options,
           );
         } else {
