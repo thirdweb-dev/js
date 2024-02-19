@@ -32,3 +32,5 @@ export {
   type BaseTransactionOptions,
   isBaseTransactionOptions,
 } from "./types.js";
+
+export type { WaitForReceiptOptions } from "./actions/wait-for-tx-receipt.js";
