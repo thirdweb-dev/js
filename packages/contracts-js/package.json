@@ -432,7 +432,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@preconstruct/cli": "^2.8.1",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@typechain/ethers-v5": "10.0.0",
+    "@typechain/ethers-v5": "11.1.2",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "typechain": "^8.3.1",
