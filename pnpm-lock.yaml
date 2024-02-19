@@ -905,8 +905,8 @@ importers:
         specifier: '>=47'
         version: 47.0.14(@babel/core@7.23.7)
       expo-application:
-        specifier: ^5.3.0
-        version: 5.3.0(expo@47.0.14)
+        specifier: ^5.8.3
+        version: 5.8.3(expo@47.0.14)
       expo-clipboard:
         specifier: ^4.5.0
         version: 4.8.0(expo@47.0.14)
@@ -19131,8 +19131,8 @@ packages:
       expo: 47.0.14(@babel/core@7.23.7)
     dev: false
 
-  /expo-application@5.3.0(expo@47.0.14):
-    resolution: {integrity: sha512-XLkaELwmiXW6JjFVkwuiFQaGZoNKAxNAcSJkFdz8s4rCljEwehylbzoPk37QHw3cxqb4v0/2EICtg4C4kpEVCA==}
+  /expo-application@5.8.3(expo@47.0.14):
+    resolution: {integrity: sha512-IISxzpPX+Xe4ynnwX8yY52T6dm1g9sME1GCj4lvUlrdc5xeTPM6U35x7Wj82V7lLWBaVGe+/Tg9EeKqfylCEwA==}
     peerDependencies:
       expo: '*'
     dependencies:
