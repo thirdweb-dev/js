@@ -35,7 +35,14 @@ const jsdocRuleOverrides = {
         "connectWallet",
         "theme",
         "locale",
+        "component",
       ],
+    },
+  ],
+  "jsdoc/require-returns": [
+    "error",
+    {
+      exemptedBy: ["component"],
     },
   ],
 };

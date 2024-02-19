@@ -215,7 +215,7 @@ const fuseConfig = {
  *  )
  * }
  * ```
- * @returns A React component that renders a modal
+ * @component
  */
 export function NetworkSelector(props: NetworkSelectorProps) {
   const themeFromContext = useCustomTheme();

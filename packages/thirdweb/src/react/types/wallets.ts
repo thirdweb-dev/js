@@ -36,14 +36,13 @@ export type WalletConfig = {
    *
    * This is only required if your wallet requires a personal wallet to be connected such as a Safe Wallet or Smart Wallet
    *
-   * providing the `personalWallets` ensures that auto connect and ConnectWallet modal works properly for your wallet.
+   * providing the `personalWallets` ensures that auto connect works properly for your wallet.
    * auto-connect will connect the last connected personal wallet first and then connect your wallet
-   * ConnectWallet modal will reopen once the personal wallet is connected so that you can render UI for connecting your wallet as the next step
    */
   // personalWallets?: WalletConfig[];
 
   /**
-   * If true, this wallet will be tagged as "recommended" in ConnectWallet Modal and will be shown at the top of the list
+   * If true, this wallet will be tagged as "recommended" in `ConnectButton`'s Modal and will be shown at the top of the list
    *
    * By default is set to `false`
    */

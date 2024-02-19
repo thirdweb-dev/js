@@ -204,7 +204,7 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
 /**
  * A component that allows the user to connect their wallet.
  *
- * it renders the same UI as the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component's modal - but directly on the page instead of being in a modal.
+ * it renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) component's modal - but directly on the page instead of being in a modal.
  *
  * It only renders UI if either one of the following conditions are met:
  * - wallet is not connected
@@ -297,7 +297,7 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  *  }}
  * />
  * ```
- * @returns ConnectEmbed component
+ * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = props.auth?.loginOptional;

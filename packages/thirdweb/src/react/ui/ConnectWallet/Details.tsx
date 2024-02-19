@@ -44,8 +44,8 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
-  ConnectWallet_DetailsButtonOptions,
-  ConnectWallet_DetailsModalOptions,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
 import {
   smartWalletMetadata,
@@ -77,8 +77,8 @@ type WalletDetailsModalScreen =
  */
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
-  detailsButton?: ConnectWallet_DetailsButtonOptions;
-  detailsModal?: ConnectWallet_DetailsModalOptions;
+  detailsButton?: ConnectButton_detailsButtonOptions;
+  detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   chains: Chain[];

@@ -6,14 +6,14 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
 /**
- * Options for configuring the ConnectWallet's Connect Button
+ * Options for configuring the `ConnectButton`'s Connect Button
  */
-export type ConnectWallet_ConnectButtonOptions = {
+export type ConnectButton_connectButtonOptions = {
   /**
    * Set a custom label for the button. The default is `"Connect"`
    * @example
    * ```tsx
-   * <ConnectWallet button={{
+   * <ConnectButton button={{
    *    label: "Sign in"
    * }} />
    * ```
@@ -26,7 +26,7 @@ export type ConnectWallet_ConnectButtonOptions = {
    * For some CSS properties, you may need to use the `!important` to override the default styles
    *
    * ```tsx
-   * <ConnectWallet button={{
+   * <ConnectButton button={{
    *  className="my-custom-class"
    * }} />
    * ```
@@ -40,22 +40,22 @@ export type ConnectWallet_ConnectButtonOptions = {
 };
 
 /**
- * Options for configuring the ConnectWallet's Details Modal
+ * Options for configuring the `ConnectButton`'s Details Modal
  */
-export type ConnectWallet_DetailsModalOptions = {
+export type ConnectButton_detailsModalOptions = {
   /**
-   * Show a "Request Testnet funds" link in ConnectWallet Details Modal when user is connected to a testnet.
+   * Show a "Request Testnet funds" link in `ConnectButton` Details Modal when user is connected to a testnet.
    *
    * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`
    * @example
    * ```tsx
-   * <ConnectWallet showTestnetFaucet={true} />
+   * <ConnectButton showTestnetFaucet={true} />
    * ```
    */
   showTestnetFaucet?: boolean;
 
   /**
-   * customize the Network selector shown in the ConnectWallet Details Modal
+   * customize the Network selector shown in the `ConnectButton` Details Modal
    */
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "open">;
 
@@ -65,7 +65,7 @@ export type ConnectWallet_DetailsModalOptions = {
    * By default it is `false`
    * @example
    * ```tsx
-   * <ConnectWallet detailsModal={{
+   * <ConnectButton detailsModal={{
    *    hideSwitchToPersonalWallet: true
    *  }}
    * />
@@ -74,12 +74,12 @@ export type ConnectWallet_DetailsModalOptions = {
   hideSwitchToPersonalWallet?: boolean;
 
   /**
-   * Hide the "Disconnect Wallet" button in the ConnectWallet Details Modal.
+   * Hide the "Disconnect Wallet" button in the `ConnectButton` Details Modal.
    *
    * By default it is `false`
    * @example
    * ```tsx
-   * <ConnectWallet detailsModal={{
+   * <ConnectButton detailsModal={{
    *  hideDisconnect: true
    * }} />
    * ```
@@ -87,11 +87,11 @@ export type ConnectWallet_DetailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
-   * Render custom UI at the bottom of the ConnectWallet Details Modal
+   * Render custom UI at the bottom of the `ConnectButton` Details Modal
    * @param props - props passed to the footer component which includes a function to close the modal
    * @example
    * ```tsx
-   * <ConnectWallet
+   * <ConnectButton
    *  detailsModal={{
    *    footer(props) {
    *      const { close } = props;
@@ -105,9 +105,9 @@ export type ConnectWallet_DetailsModalOptions = {
 };
 
 /**
- * Options for configuring the ConnectWallet's Details Button
+ * Options for configuring the `ConnectButton`'s Details Button
  */
-export type ConnectWallet_DetailsButtonOptions = {
+export type ConnectButton_detailsButtonOptions = {
   /**
    * CSS class to apply to the details button element
    */
@@ -122,7 +122,7 @@ export type ConnectWallet_DetailsButtonOptions = {
    * Render a custom button to display connected wallet details instead of the default one
    *
    * ```tsx
-   * <ConnectWallet
+   * <ConnectButton
    *  detailsButton={{
    *    render() {
    *      return <button> .... </button>
@@ -134,10 +134,10 @@ export type ConnectWallet_DetailsButtonOptions = {
   render?: () => JSX.Element;
 
   /**
-   * Display the balance of a token instead of the native token in ConnectWallet details button.
+   * Display the balance of a token instead of the native token in `ConnectButton` details button.
    * @example
    * ```tsx
-   * <ConnectWallet detailsButton={{
+   * <ConnectButton detailsButton={{
    *    balanceToken:{
    *      // show USDC balance when connected to Ethereum mainnet
    *      1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -150,11 +150,11 @@ export type ConnectWallet_DetailsButtonOptions = {
 };
 
 /**
- * Options for configuring the ConnectWallet's Connect Modal
+ * Options for configuring the `ConnectButton`'s Connect Modal
  */
-export type ConnectWallet_ConnectModalOptions = {
+export type ConnectButton_connectModalOptions = {
   /**
-   * Title of ConnectWallet Modal
+   * Title to show in `ConnectButton`'s Modal
    *
    * The default is `"Connect"`
    */
@@ -166,7 +166,7 @@ export type ConnectWallet_ConnectModalOptions = {
    * Set to empty string (`""`) to hide the icon
    * @example
    * ```tsx
-   * <ConnectWallet modal={{
+   * <ConnectButton modal={{
    *  titleIconUrl: "https://your-icon-url.png"
    * }} />
    * ```
@@ -188,7 +188,7 @@ export type ConnectWallet_ConnectModalOptions = {
    * If provided, Modal will show a Terms of Service message at the bottom with below link
    * @example
    * ```tsx
-   * <ConnectWallet connectModal={{
+   * <ConnectButton connectModal={{
    *   termsOfServiceUrl: "https://your-terms-of-service-url.com"
    * }} />
    * ```
@@ -201,7 +201,7 @@ export type ConnectWallet_ConnectModalOptions = {
    * If provided, Modal will show a Privacy Policy message at the bottom with below link
    * @example
    * ```tsx
-   * <ConnectWallet connectModal={{
+   * <ConnectButton connectModal={{
    *  privacyPolicyUrl="https://your-privacy-policy-url.com"
    * }} />
    * ```
@@ -225,7 +225,7 @@ export type ConnectWallet_ConnectModalOptions = {
    *  },
    * }
    *
-   * <ConnectWallet connectModal={{
+   * <ConnectButton connectModal={{
    *  welcomeScreen: welcomeScreen,
    * }} />
    * ```
@@ -233,7 +233,7 @@ export type ConnectWallet_ConnectModalOptions = {
    * #### 2. Render Custom Component
    *
    * ```tsx
-   * <ConnectWallet
+   * <ConnectButton
    *  connectModal={{
    *    welcomeScreen: () => <YourCustomComponent />
    *  }}
@@ -243,12 +243,12 @@ export type ConnectWallet_ConnectModalOptions = {
   welcomeScreen?: WelcomeScreen;
 
   /**
-   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   * By default `ConnectButton`'s Modal shows "Powered by Thirdweb" branding at the bottom of the Modal.
    *
    * If you want to hide the branding, set this prop to `false`
    * @example
    * ```tsx
-   * <ConnectWallet connectModal={{
+   * <ConnectButton connectModal={{
    *  showThirdwebBranding: false
    * }} />
    *```
@@ -257,16 +257,16 @@ export type ConnectWallet_ConnectModalOptions = {
 };
 
 /**
- * Props for the `ConnectWallet` component
+ * Props for the `ConnectButton` component
  */
-export type ConnectWalletProps = {
+export type ConnectButtonProps = {
   /**
    * chain of the blockchain that your app operates on.
    *
    * If a chain is specified, Wallet will be prompted to switch to given chain after connecting if it is not already connected to it. This ensures that the wallet is connected to the correct network before interacting with your app.
    * @example
    * ```tsx
-   * <ConnectWallet chainId={polygon} />
+   * <ConnectButton chainId={polygon} />
    * ```
    */
   chain?: Chain;
@@ -277,11 +277,11 @@ export type ConnectWalletProps = {
    * This is only relevant if your app is a multi-chain app and works across multiple blockchains. If your app only works on a single blockchain, you should only specify the `chainId` prop.
    *
    * Given list of chains will used in various ways:
-   * - They will be displayed in the network selector in the ConnectWallet modal
+   * - They will be displayed in the network selector in the `ConnectButton`'s modal
    * - They will be sent to wallet at the time of connection if the wallet supports it so that users can switch between the chains post connection
    *
    * ```tsx
-   * <ConnectWallet chains={[ethereum, polygon, optimism]} />
+   * <ConnectButton chains={[ethereum, polygon, optimism]} />
    * ```
    */
   chains?: Chain[];
@@ -306,10 +306,10 @@ export type ConnectWalletProps = {
   /**
    * Configurations for the button element that is shown when wallet is not connected
    */
-  connectButton?: ConnectWallet_ConnectButtonOptions;
+  connectButton?: ConnectButton_connectButtonOptions;
 
   /**
-   * Configuration for the "Switch Network" button. This button is rendered when the wallet is connected, but it is not connected to the `chainId` prop provided in `ConnectWallet` component
+   * Configuration for the "Switch Network" button. This button is rendered when the wallet is connected, but it is not connected to the `chainId` prop provided in `ConnectButton` component
    */
   switchButton?: {
     /**
@@ -329,19 +329,19 @@ export type ConnectWalletProps = {
   };
 
   /**
-   * Configurations for the ConnectWallet Modal that is shown for connecting a wallet
+   * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
    */
-  connectModal?: ConnectWallet_ConnectModalOptions;
+  connectModal?: ConnectButton_connectModalOptions;
 
   /**
    * Configurations for the Details Button that is shown when wallet is connected
    */
-  detailsButton?: ConnectWallet_DetailsButtonOptions;
+  detailsButton?: ConnectButton_detailsButtonOptions;
 
   /**
    * Configurations for the Details Modal that is shown when wallet is connected and user clicks on the details button to see the connected wallet details
    */
-  detailsModal?: ConnectWallet_DetailsModalOptions;
+  detailsModal?: ConnectButton_detailsModalOptions;
 
   /**
    * Customize the tokens shown in the "Send Funds" screen for various networks.
@@ -352,11 +352,11 @@ export type ConnectWalletProps = {
    * supportedTokens prop allows you to customize this list as shown below which shows  "Dai Stablecoin" when users wallet is connected to the "Base" mainnet.
    *
    * ```tsx
-   * import { ConnectWallet } from 'thirdweb/react';
+   * import { ConnectButton } from 'thirdweb/react';
    *
    * function Example() {
    *   return (
-   * 		<ConnectWallet
+   * 		<ConnectButton
    * 			supportedTokens={{
    *        // when connected to "Base" mainnet - show balance of DAI stablecoin
    * 				84532: [
@@ -379,7 +379,7 @@ export type ConnectWalletProps = {
    * Callback to be called on successful connection of wallet. The callback is called with the connected account
    *
    * ```tsx
-   * <ConnectWallet
+   * <ConnectButton
    *  onConnect={(account) => {
    *    console.log("connected to", account)
    *  }}
@@ -389,7 +389,7 @@ export type ConnectWalletProps = {
    * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
    *
    * ```tsx
-   * <ConnectWallet
+   * <ConnectButton
    *  auth={{
    *   onLogin: () => {
    *     console.log("wallet connected and signed in")

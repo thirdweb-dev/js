@@ -29,7 +29,6 @@ import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
  * `ThirdwebProvider` requires a `client` prop which you can create using the `createClient` function.  You must provide a `clientId` or `secretKey` in order to initialize a `client`.
  * You can create an Api key for free at from the [Thirdweb Dashboard](https://thirdweb.com/create-api-key).
  * @param props - The props for the ThirdwebProvider
- * @returns Your app wrapped in the ThirdwebProvider
  * @example
  * ```jsx
  * import { createClient } from "thirdweb";
@@ -47,6 +46,7 @@ import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
  *   )
  * }
  * ```
+ * @component
  */
 export function ThirdwebProvider(props: ThirdwebProviderProps) {
   const [queryClient] = useState(
@@ -150,7 +150,7 @@ export type ThirdwebProviderProps = {
   /**
    * Array of supported wallets. If not provided, default wallets will be used.
    *
-   * Wallets provided here appear in the `ConnectWallet` Modal or in `ConnectEmbed` component's UI
+   * Wallets provided here appear in the `ConnectButton`'s Modal or in `ConnectEmbed` component's UI
    * @example
    * ```tsx
    * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";

@@ -32,7 +32,7 @@ const fantomIcon =
 export type SupportedTokens = Record<number, TokenInfo[]>;
 
 /**
- * Default tokens shown in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet)'s SendFunds screen for each network.
+ * Default tokens shown in [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton)'s SendFunds screen for each network.
  *
  * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
  * @example
@@ -41,7 +41,7 @@ export type SupportedTokens = Record<number, TokenInfo[]>;
  * ```tsx
  * const ethereumChainId = 1;
  *
- * <ConnectWallet supportedTokens={{
+ * <ConnectButton supportedTokens={{
  *  ...defaultTokens,
  *  [ethereumChainId]: [
  *    {

@@ -21,7 +21,7 @@ import {
   useSetIsWalletModalOpen,
   SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectWalletProps } from "./ConnectWalletProps.js";
+import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { Chain } from "../../../chains/index.js";
 
@@ -32,15 +32,15 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
  * @example
  * ```tsx
- * <ConnectWallet />
+ * <ConnectButton />
  * ```
  * @param props
- * Props for the `ConnectWallet` component
+ * Props for the `ConnectButton` component
  *
- * Refer to [ConnectWalletProps](https://portal.thirdweb.com/references/typescript/v5/ConnectWalletProps) to see the available props.
- * @returns `JSX.Element`
+ * Refer to [ConnectButtonProps](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available props.
+ * @component
  */
-export function ConnectWallet(props: ConnectWalletProps) {
+export function ConnectButton(props: ConnectButtonProps) {
   const activeAccount = useActiveAccount();
   const activeWalletChain = useActiveWalletChain();
   const contextTheme = useCustomTheme();

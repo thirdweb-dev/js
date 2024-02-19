@@ -104,12 +104,12 @@ export const WalletUIStatesProvider = (
 };
 
 /**
- * Check if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal is open or not
+ * Check if the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton)'s Modal is open or not
  * @example
  * ```tsx
  * const isOpen = useIsWalletModalOpen();
  * ```
- * @returns `true` if the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) modal is open, `false` otherwise
+ * @returns `true` if the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) modal is open, `false` otherwise
  * @connectWallet
  */
 export const useIsWalletModalOpen = () => {
@@ -117,7 +117,7 @@ export const useIsWalletModalOpen = () => {
 };
 
 /**
- * Open or close the [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal
+ * Open or close the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) Modal
  * @example
  * ```tsx
  * const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -248,7 +248,7 @@ type ModalConfigOptions = {
   chains?: Chain[];
 
   /**
-   * By default the ConnectWallet Modal shows "powered by thirdweb" branding at the bottom of the modal.
+   * By default the `ConnectButton`'s Modal shows "powered by thirdweb" branding at the bottom of the modal.
    *
    * If you want to hide the branding, set this to `false`
    */
