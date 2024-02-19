@@ -56,17 +56,13 @@ export async function getModularDeploymentInfo(
     provider,
     storage,
     create2FactoryAddress,
-    { contractName: "ModularFactory" },
+    { contractName: "CloneFactory" },
     clientId,
     secretKey,
   );
   finalDeploymentInfo.push(factoryInfo);
 
-  const hooksParamName =
-    extendedMetadata?.factoryDeploymentData?.modularFactoryInput
-      ?.hooksParamName;
-
-  if (hooksParamName && hooks) {
+  if (hooks) {
     const hookAddresses = hooks.filter((h) => isAddress(h.addressOrName));
     const publishedHooks = hooks.filter((h) => !isAddress(h.addressOrName));
     const publishedHooksFetched = await Promise.all(

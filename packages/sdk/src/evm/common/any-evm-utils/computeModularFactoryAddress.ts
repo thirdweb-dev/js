@@ -27,7 +27,7 @@ export async function computeModularFactoryAddress(
       storage,
       create2Factory,
       {
-        contractName: "ModularFactory",
+        contractName: "CloneFactory",
       },
       clientId,
       secretKey,

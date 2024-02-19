@@ -118,7 +118,7 @@ import {
 } from "../types/deploy/deploy-metadata";
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 import { getModularDeploymentInfo } from "../common/any-evm-utils/getModularDeploymentInfo";
-import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress copy";
+import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress";
 import {
   HOOK_PROXY_DEPLOYMENT_SALT,
   hookInitializerAbi,
@@ -2002,7 +2002,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
       const transactionsforDirectDeploy = transactionsToSend
         .filter((i) => {
-          return i.type !== "infra";
+          return i.type !== "infra" && i.type !== "hookProxy";
         })
         .map((i) => i.transaction);
       const transactionsForThrowawayDeployer = transactionsToSend
