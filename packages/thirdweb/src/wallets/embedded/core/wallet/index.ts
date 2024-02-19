@@ -1,3 +1,4 @@
+import { defineChain, type Chain } from "../../../../index.js";
 import { privateKeyAccount } from "../../../index.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { StorageType, WalletStorageFormatType } from "../storage/type.js";
@@ -35,7 +36,7 @@ class EmbeddedWallet implements Wallet {
   private storage: StorageType;
   private activeWalletAccountDetail: SensitiveAccountDetailType | null = null;
   private walletAccounts: Record<string, SensitiveAccountDetailType> = {};
-  private chainId: number;
+  private chain: Chain;
 
   public metadata = {
     id: "embedded-wallet",
@@ -48,7 +49,7 @@ class EmbeddedWallet implements Wallet {
   constructor(arg: { storage: StorageType }) {
     this.storage = arg.storage;
     this.address = "";
-    this.chainId = 1; // chainId doesn't matter for embedded wallets
+    this.chain = defineChain(1); // chainId doesn't matter for embedded wallets
   }
 
   async initializeWallet() {
@@ -281,11 +282,11 @@ class EmbeddedWallet implements Wallet {
     this.activeWalletAccountDetail = null;
   }
 
-  getChainId(): number | undefined {
-    return this.chainId;
+  getChain(): Chain {
+    return this.chain;
   }
 
-  async switchChain(newChainId: number) {
-    this.chainId = newChainId;
+  async switchChain(newChain: Chain) {
+    this.chain = newChain;
   }
 }
