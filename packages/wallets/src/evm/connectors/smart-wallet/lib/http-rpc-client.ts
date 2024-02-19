@@ -1,13 +1,10 @@
 import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { isTwUrl } from "../../../utils/url";
-import pkg from "../../../../../package.json";
 import { hexlifyUserOp } from "./utils";
+import { setAnalyticsHeaders } from "../../../utils/headers";
 
 export const DEBUG = false; // TODO set as public flag
-function isBrowser() {
-  return typeof window !== "undefined";
-}
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: providers.JsonRpcProvider;
@@ -69,15 +66,7 @@ export class HttpRpcClient {
         headers["x-authorize-wallet"] = "true";
       }
 
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
-      headers["x-sdk-platform"] = bundleId
-        ? "react-native"
-        : isBrowser()
-        ? (window as any).bridge !== undefined
-          ? "webGL"
-          : "browser"
-        : "node";
+      setAnalyticsHeaders(headers);
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(

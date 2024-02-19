@@ -476,6 +476,17 @@
       "reference": {
         "javascript": "https://docs.thirdweb.com/typescript/sdk.bignumberish"
       }
+    },
+    {
+      "name": "transferBatch",
+      "summary": "Transfer multiple NFTs\n\n",
+      "remarks": "\n\nTransfer multiple NFTs from the connected wallet to another wallet.\n\n",
+      "examples": {
+        "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n// The token IDs of the NFTs you want to send\nconst tokenIds = [0, 1, 2];\n// How many copies of the NFTs to transfer\nconst amounts = [1, 2, 3];\nawait contract.erc1155.transferBatch(toAddress, tokenIds, amounts);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.bignumberish"
+      }
     }
   ],
   "ERC1155Burnable": [

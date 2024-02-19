@@ -16,6 +16,7 @@ import { en } from "../locales/en";
 import { ThirdwebLocaleContext } from "./locale-provider";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebLocale } from "../locales/types";
+import { getAnalyticsGlobals } from "../utils/headers";
 
 export interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -478,6 +479,8 @@ export const ThirdwebProvider = <TChains extends Chain[] = DefaultChains>(
     theme: _theme,
     ...restProps
   } = props;
+
+  getAnalyticsGlobals();
 
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";

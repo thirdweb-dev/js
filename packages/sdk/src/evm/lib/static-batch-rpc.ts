@@ -1,7 +1,7 @@
 import { providers, utils } from "ethers";
 
-const DEFAULT_BATCH_TIME_LIMIT_MS = 50;
-const DEFAULT_BATCH_SIZE_LIMIT = 250;
+const DEFAULT_BATCH_TIME_LIMIT_MS = 10;
+const DEFAULT_BATCH_SIZE_LIMIT = 200;
 
 const DEFAULT_BATCH_OPTIONS = {
   timeLimitMs: DEFAULT_BATCH_TIME_LIMIT_MS,
@@ -30,8 +30,8 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
     batchOptions: BatchOptions = DEFAULT_BATCH_OPTIONS,
   ) {
     super(url, network);
-    this._timeLimitMs = batchOptions.timeLimitMs || DEFAULT_BATCH_SIZE_LIMIT;
-    this._sizeLimit = batchOptions.sizeLimit || DEFAULT_BATCH_TIME_LIMIT_MS;
+    this._timeLimitMs = batchOptions.timeLimitMs || DEFAULT_BATCH_TIME_LIMIT_MS;
+    this._sizeLimit = batchOptions.sizeLimit || DEFAULT_BATCH_SIZE_LIMIT;
     this._pendingBatchAggregator = null;
     this._pendingBatch = null;
   }
@@ -55,7 +55,6 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
       request: utils.deepCopy(request),
       provider: this,
     });
-
     return utils.fetchJson(this.connection, JSON.stringify(request_)).then(
       (result) => {
         this.emit("debug", {

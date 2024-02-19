@@ -181,11 +181,13 @@ export async function logHttpRequest({
   res,
   isAuthed,
   statusMessage,
+  latencyMs,
 }: AuthInput & {
   source: string;
   res: Response;
   isAuthed?: boolean;
   statusMessage?: Error | string;
+  latencyMs?: number;
 }) {
   try {
     const authorizationData = await extractAuthorizationData({ req, clientId });
@@ -204,6 +206,8 @@ export async function logHttpRequest({
         sdkName: headers.get("x-sdk-name") ?? "unknown",
         sdkVersion: headers.get("x-sdk-version") ?? "unknown",
         platform: headers.get("x-sdk-platform") ?? "unknown",
+        os: headers.get("x-sdk-os") ?? "unknown",
+        latencyMs: latencyMs ?? null,
       }),
     );
     console.log(`statusMessage=${statusMessage ?? res.statusText}`);

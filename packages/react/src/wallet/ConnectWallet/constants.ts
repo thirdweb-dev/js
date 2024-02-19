@@ -5,7 +5,10 @@ export const reservedScreens = {
 };
 
 export const modalMaxWidthCompact = "360px";
-export const modalMaxWidthWide = "730px";
+
+const wideModalWidth = 730;
+export const modalMaxWidthWide = wideModalWidth + "px";
+export const wideModalScreenThreshold = wideModalWidth + 40;
 
 export const wideModalMaxHeight = "570px";
 export const compactModalMaxHeight = "600px";

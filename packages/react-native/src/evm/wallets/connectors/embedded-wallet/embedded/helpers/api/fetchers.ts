@@ -1,6 +1,6 @@
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
-  ROUTE_GET_EMBEDDED_WALLET_DETAILS,
+  ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
@@ -20,20 +20,17 @@ import {
   VerifiedTokenResponse,
 } from "../../../types";
 import { createErrorMessage } from "../errors";
-import {
-  appBundleId,
-  reactNativePackageVersion,
-} from "../../../../../../utils/version";
-import { BUNDLE_ID_HEADER } from "../../../../../../constants/headers";
 import { ANALYTICS } from "../analytics";
+import { getAnalyticsHeaders } from "../../../../../../../core/storage/utils";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
+
 const HEADERS = {
   "Content-Type": "application/json",
-  [BUNDLE_ID_HEADER]: appBundleId,
-  [EWS_VERSION_HEADER]: reactNativePackageVersion,
+  [EWS_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
   [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+  ...getAnalyticsHeaders(),
 };
 
 export const verifyClientId = async (clientId: string) => {
@@ -68,19 +65,15 @@ export const authFetchEmbeddedWalletUser = async (
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
-        [EWS_VERSION_HEADER]: reactNativePackageVersion,
-        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+        ...HEADERS,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: appBundleId,
         [PAPER_CLIENT_ID_HEADER]: clientId,
-        [EWS_VERSION_HEADER]: reactNativePackageVersion,
-        [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+        ...HEADERS,
       };
   return fetch(url, params);
 };
@@ -89,7 +82,7 @@ export async function getEmbeddedWalletUserDetail(args: {
   email?: string;
   clientId: string;
 }) {
-  const url = new URL(ROUTE_GET_EMBEDDED_WALLET_DETAILS);
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
       url.searchParams.append("email", args.email);
@@ -295,4 +288,23 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
       createErrorMessage("Malformed response from the ews user wallet API", e),
     );
   }
+}
+
+export async function deleteAccount(args: { clientId: string }) {
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
+  const resp = await authFetchEmbeddedWalletUser(
+    { clientId: args.clientId },
+    url.href,
+    {
+      method: "DELETE",
+    },
+  );
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong deleting the active account: ${error.message}`,
+    );
+  }
+
+  return await resp.json();
 }

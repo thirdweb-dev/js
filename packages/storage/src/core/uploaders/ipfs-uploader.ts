@@ -12,7 +12,10 @@ import {
   IStorageUploader,
 } from "../../types";
 import FormData from "form-data";
-import pkg from "../../../package.json";
+import {
+  setAnalyticsHeaders,
+  setAnalyticsHeadersForXhr,
+} from "../../utils/headers";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -274,26 +277,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader("x-client-id", this.clientId);
       }
 
-      const bundleId =
-        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-          ? ((globalThis as any).APP_BUNDLE_ID as string)
-          : undefined;
-      if (bundleId) {
-        xhr.setRequestHeader("x-bundle-id", bundleId);
-      }
-
-      xhr.setRequestHeader("x-sdk-version", pkg.version);
-      xhr.setRequestHeader("x-sdk-name", pkg.name);
-      xhr.setRequestHeader(
-        "x-sdk-platform",
-        bundleId
-          ? "react-native"
-          : isBrowser()
-          ? (window as any).bridge !== undefined
-            ? "webGL"
-            : "browser"
-          : "node",
-      );
+      setAnalyticsHeadersForXhr(xhr);
 
       // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
       if (
@@ -341,11 +325,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-client-id"] = this.clientId;
     }
 
-    // if we have a bundle id on global context then add that to the headers
-    if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
-      headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
-    }
-
     // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
     if (
       typeof globalThis !== "undefined" &&
@@ -368,6 +347,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }`;
       headers["x-authorize-wallet"] = "true";
     }
+
+    setAnalyticsHeaders(headers);
 
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
