@@ -61,15 +61,10 @@ export type AuthTokenStorageType = {
 
 // 2 Step Auth Flow Type
 export type InitiateAuthType = "auth" | "2fa" | "link";
-export type MultiStepAuthProviderType =
-  | {
-      provider: "email";
-      email: string;
-    }
-  | {
-      provider: "phone";
-      phone: string;
-    };
+export type MultiStepAuthProviderType = {
+  provider: "email";
+  email: string;
+};
 export type InitiateAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
 };
@@ -86,7 +81,12 @@ export type SingleStepAuthArgsType =
       provider: "google";
       googleOauthPrompt?: "select_account" | "none" | "consent";
     }
-  | { provider: "discord" };
+  | { provider: "apple" }
+  | { provider: "facebook" }
+  | { provider: "jwt"; jwt: string; encryptionKey: string }
+  | { provider: "auth_endpoint"; payload: string; encryptionKey: string }
+  | { provider: "iframe_email_verification"; email: string }
+  | { provider: "iframe" };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   storage: AuthTokenStorageType;
@@ -97,7 +97,12 @@ export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
 };
 
 // Authentication Results type
-export type AuthMethodType = "discord" | "google" | "email" | "phone";
+export type AuthMethodType =
+  | "google"
+  | "email"
+  | "apple"
+  | "facebook"
+  | "other";
 export type AuthStageType = "READY_TO_LOAD" | "NEEDS_2FA";
 export type AuthLevelType = "BASIC" | "2FA";
 

@@ -51,11 +51,12 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
-    const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION;
-    if (!sdkVersion) {
-      throw new Error("Missing THIRDWEB_EWS_SDK_VERSION env var");
-    }
-    hrefLink.searchParams.set("sdkVersion", sdkVersion);
+    // TODO (ew) - bring back version tracking
+    // const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION;
+    // if (!sdkVersion) {
+    //   throw new Error("Missing THIRDWEB_EWS_SDK_VERSION env var");
+    // }
+    // hrefLink.searchParams.set("sdkVersion", sdkVersion);
     if (!iframe || iframe.src !== hrefLink.href) {
       // ! Do not update the hrefLink here or it'll cause multiple re-renders
       if (!iframe) {
@@ -69,7 +70,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
         container.appendChild(iframe);
       }
       iframe.src = hrefLink.href;
-      iframe.setAttribute("data-version", sdkVersion);
+      // iframe.setAttribute("data-version", sdkVersion);
 
       const onIframeLoaded = (event: MessageEvent<any>) => {
         if (event.data.eventType === "ewsIframeLoaded") {

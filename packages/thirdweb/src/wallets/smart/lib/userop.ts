@@ -1,4 +1,10 @@
-import { keccak256, concat, type Hex, encodeAbiParameters } from "viem";
+import {
+  keccak256,
+  concat,
+  type Hex,
+  encodeAbiParameters,
+  toBytes,
+} from "viem";
 import type { SmartWalletOptions, UserOperation } from "../types.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -146,7 +152,7 @@ export async function signUserOp(args: {
   if (options.personalAccount.signMessage) {
     const signature = await options.personalAccount.signMessage({
       message: {
-        raw: userOpHash,
+        raw: toBytes(userOpHash),
       },
     });
     return {

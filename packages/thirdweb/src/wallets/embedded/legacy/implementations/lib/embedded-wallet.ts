@@ -34,7 +34,7 @@ export class EmbeddedWalletSdk {
    * `const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({ clientId: "", chain: "Goerli" });`
    * @internal
    */
-  constructor({ client, chain, onAuthSuccess }: EmbeddedWalletConstructorType) {
+  constructor({ client, onAuthSuccess }: EmbeddedWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
@@ -46,7 +46,6 @@ export class EmbeddedWalletSdk {
     });
     this.wallet = new EmbeddedWallet({
       client,
-      chain,
       querier: this.querier,
     });
 

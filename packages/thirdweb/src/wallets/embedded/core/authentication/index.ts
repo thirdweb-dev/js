@@ -120,20 +120,21 @@ export const preAuthenticate = async (
       const result = await resp.json();
       return result as InitiateAuthResultType;
     }
-    case "phone": {
-      const { phone } = arg;
-      const resp = await fetch(
-        ROUTE_INITIATE_AUTH(arg.provider, arg.client.clientId),
-        {
-          method: "POST",
-          body: JSON.stringify({
-            phone,
-          }),
-        },
-      );
-      const result = await resp.json();
-      return result as InitiateAuthResultType;
-    }
+    // TODO (ew): re-enable once v2 is deployed
+    // case "phone": {
+    //   const { phone } = arg;
+    //   const resp = await fetch(
+    //     ROUTE_INITIATE_AUTH(arg.provider, arg.client.clientId),
+    //     {
+    //       method: "POST",
+    //       body: JSON.stringify({
+    //         phone,
+    //       }),
+    //     },
+    //   );
+    // const result = await resp.json();
+    // return result as InitiateAuthResultType;
+    // }
     default: {
       throw new Error(`Invalid authentication provider`);
     }
@@ -164,15 +165,16 @@ export const authenticate = async (
   );
 
   switch (arg.provider) {
-    case "discord": {
-      return arg.handleOauth({
-        url: ROUTE_INITIATE_AUTH(
-          arg.provider,
-          arg.client.clientId,
-          arg.config?.autoLinkAccount,
-        ),
-      });
-    }
+    // TODO re-enable once v2 is deployed
+    // case "discord": {
+    //   return arg.handleOauth({
+    //     url: ROUTE_INITIATE_AUTH(
+    //       arg.provider,
+    //       arg.client.clientId,
+    //       arg.config?.autoLinkAccount,
+    //     ),
+    //   });
+    // }
     case "google": {
       const baseUrl = new URL(
         ROUTE_INITIATE_AUTH(
@@ -200,18 +202,19 @@ export const authenticate = async (
       const result = await resp.json();
       return result as AuthUserType;
     }
-    case "phone": {
-      const { phone, code } = arg;
-      const resp = await fetch(ROUTE_COMPLETE_AUTH(arg.provider), {
-        method: "POST",
-        body: JSON.stringify({
-          phone,
-          code,
-        }),
-      });
-      const result = await resp.json();
-      return result as AuthUserType;
-    }
+    // TODO (ew) re-enable once v2 is deployed
+    // case "phone": {
+    //   const { phone, code } = arg;
+    //   const resp = await fetch(ROUTE_COMPLETE_AUTH(arg.provider), {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       phone,
+    //       code,
+    //     }),
+    //   });
+    //   const result = await resp.json();
+    //   return result as AuthUserType;
+    // }
     default: {
       throw new Error(`Invalid authentication provider`);
     }
@@ -264,20 +267,21 @@ export const pre2FA = async (
       const result = await resp.json();
       return result as InitiateAuthResultType;
     }
-    case "phone": {
-      const { phone } = arg;
-      const resp = await fetch(ROUTE_INITIATE_2FA_AUTH(arg.provider), {
-        method: "POST",
-        body: JSON.stringify({
-          phone,
-        }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const result = await resp.json();
-      return result as InitiateAuthResultType;
-    }
+    // TODO (ew): re-enable once v2 is deployed
+    // case "phone": {
+    //   const { phone } = arg;
+    //   const resp = await fetch(ROUTE_INITIATE_2FA_AUTH(arg.provider), {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       phone,
+    //     }),
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   });
+    //   const result = await resp.json();
+    //   return result as InitiateAuthResultType;
+    // }
     default: {
       throw new Error(`Invalid authentication provider`);
     }
@@ -366,19 +370,20 @@ export const linkAuthentication = async (
         url: baseUrl.href,
       });
     }
-    case "discord": {
-      const baseUrl = new URL(
-        ROUTE_INITIATE_LINK(
-          arg.provider,
-          arg.client.clientId,
-          arg.authUser.authToken,
-        ),
-      );
-      return arg.handleOauth({
-        url: baseUrl.href,
-      });
-    }
-    case "phone":
+    // TODO (ew): re-enable once v2 is deployed
+    // case "discord": {
+    //   const baseUrl = new URL(
+    //     ROUTE_INITIATE_LINK(
+    //       arg.provider,
+    //       arg.client.clientId,
+    //       arg.authUser.authToken,
+    //     ),
+    //   );
+    //   return arg.handleOauth({
+    //     url: baseUrl.href,
+    //   });
+    // }
+    // case "phone":
     case "email":
     default: {
       throw new Error(`Invalid authentication provider`);

@@ -1,4 +1,3 @@
-import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../index.js";
 import type { EmbeddedWallet } from "../../lib/core/embedded-wallet.js";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator.js";
@@ -18,10 +17,6 @@ export type ClientIdConstructorType = {
 };
 export type EmbeddedWalletConstructorType = ClientIdConstructorType & {
   /**
-   * sets the default chain that the EmbeddedWallet will live on.
-   */
-  chain: Chain;
-  /**
    * @param authResult - The authResult returned from the EmbeddedWalletSdk auth method
    * @returns
    */
@@ -30,9 +25,6 @@ export type EmbeddedWalletConstructorType = ClientIdConstructorType & {
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
   querier: EmbeddedWalletIframeCommunicator<any>;
-};
-export type ClientIdWithQuerierAndChainType = ClientIdWithQuerierType & {
-  chain: Chain;
 };
 
 // Auth Types

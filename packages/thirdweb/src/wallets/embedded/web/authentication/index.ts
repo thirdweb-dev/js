@@ -2,6 +2,7 @@ import { createAuthStorage } from "../../core/authentication/index.js";
 import type {
   AuthArgsType,
   AuthTokenStorageType,
+  AuthUserType,
   LinkAuthArgsType,
 } from "../../core/authentication/type.js";
 
@@ -33,16 +34,14 @@ const createAuthLocalStorage = () => {
  * @returns A Promise that resolves to the authenticated user
  */
 export const getAuthenticatedUser = async (arg?: {
-  storage: AuthTokenStorageType;
-}) => {
+  storage?: AuthTokenStorageType;
+}): Promise<AuthUserType | undefined> => {
   const { getAuthenticatedUser: getAuthenticatedUserCore } = await import(
     "../../core/authentication/index.js"
   );
-  if (arg) {
-    return getAuthenticatedUserCore(arg);
-  }
-  const storage = createAuthLocalStorage();
-  return getAuthenticatedUserCore({ storage });
+  return getAuthenticatedUserCore({
+    storage: arg?.storage ?? createAuthLocalStorage(),
+  });
 };
 
 /**
@@ -74,13 +73,14 @@ export const authenticate = async (
     storage,
     handleOauth: ({ url }) => {
       let popUpSize: string | undefined;
-      switch (arg.provider) {
-        case "discord":
-          popUpSize = "width=450,height=600";
-          break;
-        default:
-          break;
-      }
+      // TODO (ew) - re-enable
+      // switch (arg.provider) {
+      //   case "discord":
+      //     popUpSize = "width=450,height=600";
+      //     break;
+      //   default:
+      //     break;
+      // }
 
       const popup = openPopUp(url, popUpSize);
       return oauthListener(storage)(popup);
@@ -100,6 +100,7 @@ export const authenticate = async (
  * });
  * ```
  * @returns A Promise that resolves to the authenticated user.
+ * @internal
  */
 export const linkAuthentication = async (
   arg: Omit<LinkAuthArgsType, "storage" | "handleOauth"> &
@@ -118,13 +119,14 @@ export const linkAuthentication = async (
     storage,
     handleOauth: ({ url }) => {
       let popUpSize: string | undefined;
-      switch (arg.provider) {
-        case "discord":
-          popUpSize = "width=450,height=600";
-          break;
-        default:
-          break;
-      }
+      // TODO (ew) - re-enable
+      // switch (arg.provider) {
+      //   case "discord":
+      //     popUpSize = "width=450,height=600";
+      //     break;
+      //   default:
+      //     break;
+      // }
 
       const popup = openPopUp(url, popUpSize);
       return oauthListener(storage)(popup);

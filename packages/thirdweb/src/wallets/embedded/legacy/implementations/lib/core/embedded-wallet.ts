@@ -1,5 +1,5 @@
 import type {
-  ClientIdWithQuerierAndChainType,
+  ClientIdWithQuerierType,
   GetUser,
   GetUserWalletStatusRpcReturnType,
   SetUpWalletRpcReturnType,
@@ -9,7 +9,6 @@ import { UserWalletStatus } from "../../interfaces/embedded-wallets/embedded-wal
 
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator.js";
-import type { Chain } from "../../../../../../chains/types.js";
 import type { Account } from "../../../../../index.js";
 import type {
   GetAddressReturnType,
@@ -67,7 +66,6 @@ type PostWalletSetup = SetUpWalletRpcReturnType & {
  */
 export class EmbeddedWallet {
   protected client: ThirdwebClient;
-  protected chain: Chain;
   protected walletManagerQuerier: EmbeddedWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
   >;
@@ -77,9 +75,8 @@ export class EmbeddedWallet {
    * Not meant to be initialized directly. Call {@link initializeUser} to get an instance
    * @internal
    */
-  constructor({ client, chain, querier }: ClientIdWithQuerierAndChainType) {
+  constructor({ client, querier }: ClientIdWithQuerierType) {
     this.client = client;
-    this.chain = chain;
     this.walletManagerQuerier = querier;
 
     this.localStorage = new LocalStorage({ clientId: client.clientId });
@@ -169,24 +166,6 @@ export class EmbeddedWallet {
   }
 
   /**
-   * Switches the chain that the user wallet is currently on.
-   * @example
-   * @param param0.chain
-   * ```typescript
-   * // user wallet will be set to Polygon
-   * const Paper = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
-   * const user = await Paper.initializeUser();
-   * // Switch the user wallet to Mumbai
-   * await user.wallet.setChain({ chain: "Mumbai" });
-   * ```
-   * @param param0 - The chain that we are changing the user wallet too
-   * @internal
-   */
-  async setChain({ chain }: { chain: Chain }): Promise<void> {
-    this.chain = chain;
-  }
-
-  /**
    * Returns an Ethers.Js compatible signer that you can use in conjunction with the rest of dApp
    * @param network.rpcEndpoint
    * @example
@@ -242,11 +221,12 @@ export class EmbeddedWallet {
         };
       },
       async signMessage({ message }) {
+        const messageDecoded =
+          typeof message === "string" ? message : message.raw;
         const { signedMessage } = await querier.call<SignMessageReturnType>({
           procedureName: "signMessage",
           params: {
-            message:
-              typeof message === "string" ? message : message.raw.toString(),
+            message: messageDecoded as any, // wants Bytes or string
             chainId: 1, // TODO check if we need this
           },
         });
