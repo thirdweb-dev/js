@@ -306,7 +306,7 @@ export function useContract(
     neverPersist([
       "contract-instance",
       contractAddress,
-      { wallet, walletChainId, sdkTimestamp },
+      { wallet, walletChainId, sdkTimestamp, contractTypeOrABI },
     ]),
     async () => {
       requiredParamInvariant(contractAddress, "contract address is required");
@@ -699,10 +699,12 @@ export function useContractRead<
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
     : TContractAddress extends GeneratedContractAddress
-    ?
-        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
-        | undefined
-    : RequiredParam<SmartContract> | undefined,
+      ?
+          | RequiredParam<
+              SmartContract<BaseContractForAddress<TContractAddress>>
+            >
+          | undefined
+      : RequiredParam<SmartContract> | undefined,
   functionName: RequiredParam<TFunctionName & string>,
   args?: TArgs,
   overrides?: CallOverrides,
@@ -795,10 +797,12 @@ export function useContractWrite<
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
     : TContractAddress extends GeneratedContractAddress
-    ?
-        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
-        | undefined
-    : RequiredParam<SmartContract> | undefined,
+      ?
+          | RequiredParam<
+              SmartContract<BaseContractForAddress<TContractAddress>>
+            >
+          | undefined
+      : RequiredParam<SmartContract> | undefined,
   functionName: RequiredParam<TFunctionName & string>,
 ) {
   const activeChainId = useSDKChainId();
