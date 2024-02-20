@@ -50,6 +50,8 @@ export const ChainIcon: React.FC<{
         <Skeleton width={props.size + "px"} height={props.size + "px"} />
       )}
       <img
+        // For some weird reason - We must set the loading attribute before the src attribute to make lazy loading work
+        loading={props.loading}
         src={getSrc()}
         onLoad={() => {
           setIsLoaded(true);
@@ -63,7 +65,6 @@ export const ChainIcon: React.FC<{
         width={props.size}
         height={props.size}
         className={props.className}
-        loading={props.loading}
         style={{
           objectFit: "contain",
           width: isLoaded ? props.size + "px" : "0",
