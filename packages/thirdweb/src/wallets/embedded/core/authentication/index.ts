@@ -191,7 +191,7 @@ export const authenticate = async (
       });
     }
     case "email": {
-      const { email, code } = arg;
+      const { email, verificationCode: code } = arg;
       const resp = await fetch(ROUTE_COMPLETE_AUTH(arg.provider), {
         method: "POST",
         body: JSON.stringify({

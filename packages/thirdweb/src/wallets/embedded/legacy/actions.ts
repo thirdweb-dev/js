@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../../index.js";
 import type {
   MultiStepAuthArgsType,
+  MultiStepAuthProviderType,
   SingleStepAuthArgsType,
 } from "../core/authentication/type.js";
 import { AuthProvider } from "./implementations/interfaces/auth.js";
@@ -38,6 +39,27 @@ export async function getAuthenticatedUser(args: { client: ThirdwebClient }) {
 /**
  * @internal
  */
+export async function preAuthenticate(
+  args: MultiStepAuthProviderType & {
+    client: ThirdwebClient;
+  },
+) {
+  const ewSDK = await getEmbeddedWalletSDK(args.client);
+  const strategy = args.provider;
+  switch (strategy) {
+    case "email": {
+      return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
+    }
+    default:
+      throw new Error(
+        `Provider: ${strategy} doesnt require pre-authentication`,
+      );
+  }
+}
+
+/**
+ * @internal
+ */
 export async function authenticate(
   args: (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
     client: ThirdwebClient;
@@ -49,7 +71,7 @@ export async function authenticate(
     case "email": {
       return await ewSDK.auth.verifyEmailLoginOtp({
         email: args.email,
-        otp: args.code,
+        otp: args.verificationCode,
       });
     }
     case "apple":

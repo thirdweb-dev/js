@@ -19,8 +19,9 @@ import type {
 import { getRpcClient } from "../../../../../../rpc/rpc.js";
 import { defineChain } from "../../../../../../chains/utils.js";
 import type { SendTransactionOption } from "../../../../../interfaces/wallet.js";
-import type { Hex, TransactionSerializable, TypedDataDefinition } from "viem";
+import type { Hex, TypedDataDefinition } from "viem";
 import type { ThirdwebClient } from "../../../../../../index.js";
+import type * as ethers5 from "ethers5";
 import { eth_sendRawTransaction } from "../../../../../../rpc/actions/eth_sendRawTransaction.js";
 
 export type WalletManagementTypes = {
@@ -43,7 +44,7 @@ export type SignerProcedureTypes = {
     rpcEndpoint?: string;
   };
   signTransaction: {
-    transaction: TransactionSerializable;
+    transaction: ethers5.ethers.providers.TransactionRequest;
     chainId: number;
     rpcEndpoint?: string;
   };
@@ -197,8 +198,20 @@ export class EmbeddedWallet {
         await querier.call<SignTransactionReturnType>({
           procedureName: "signTransaction",
           params: {
-            transaction: tx,
+            transaction: {
+              to: tx.to ?? undefined,
+              data: tx.data,
+              value: tx.value,
+              gasLimit: tx.gas,
+              gasPrice: tx.gasPrice,
+              nonce: tx.nonce,
+              chainId: tx.chainId,
+              accessList: tx.accessList,
+              maxFeePerGas: tx.maxFeePerGas,
+              maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+            },
             chainId: tx.chainId,
+            rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
           },
         });
       return signedTransaction as Hex;

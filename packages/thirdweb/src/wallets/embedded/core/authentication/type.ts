@@ -74,7 +74,7 @@ export type InitiateAuthResultType = {
 
 // General Auth Flow Type
 export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
-  code: string;
+  verificationCode: string;
 };
 export type SingleStepAuthArgsType =
   | {

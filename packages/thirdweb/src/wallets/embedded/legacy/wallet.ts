@@ -38,7 +38,7 @@ class EmbeddedWallet implements Wallet {
   };
   client: ThirdwebClient;
   account?: Account;
-  chain: Chain; // chain doesn't matter for embedded wallets
+  chain: Chain;
 
   constructor(args: { client: ThirdwebClient }) {
     this.client = args.client;
@@ -70,12 +70,15 @@ class EmbeddedWallet implements Wallet {
   async disconnect(): Promise<void> {
     this.account = undefined;
   }
+
   getAccount(): Account | undefined {
     return this.account;
   }
+
   getChain() {
     return this.chain;
   }
+
   async switchChain(newChain: Chain) {
     this.chain = newChain;
   }
