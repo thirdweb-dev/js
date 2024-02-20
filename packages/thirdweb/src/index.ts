@@ -53,10 +53,19 @@ export { resolveMethod } from "./transaction/resolve-method.js";
 
 // transaction actions
 export { encode } from "./transaction/actions/encode.js";
-export { estimateGas } from "./transaction/actions/estimate-gas.js";
+export {
+  estimateGas,
+  type EstimateGasOptions,
+} from "./transaction/actions/estimate-gas.js";
 export { waitForReceipt } from "./transaction/actions/wait-for-tx-receipt.js";
-export { sendTransaction } from "./transaction/actions/send-transaction.js";
-export { simulateTransaction } from "./transaction/actions/simulate.js";
+export {
+  sendTransaction,
+  type SendTransactionOptions,
+} from "./transaction/actions/send-transaction.js";
+export {
+  simulateTransaction,
+  type SimulateOptions,
+} from "./transaction/actions/simulate.js";
 
 /**
  * EVENTS
