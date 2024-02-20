@@ -9,7 +9,6 @@ import {
   useEffect,
 } from "react";
 import { ChainIcon } from "../components/ChainIcon.js";
-import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
@@ -17,10 +16,7 @@ import { Container, ModalHeader, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Input } from "../components/formElements.js";
 import { ModalTitle } from "../components/modalElements.js";
-import {
-  useCustomTheme,
-  CustomThemeProvider,
-} from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledP, StyledUl, StyledButton } from "../design-system/elements.js";
 import {
   spacing,
@@ -29,15 +25,16 @@ import {
   radius,
   media,
 } from "../design-system/index.js";
-import type { Theme } from "../design-system/index.js";
-import Fuse from "fuse.js";
-import * as Tabs from "@radix-ui/react-tabs";
+import type Fuse from "fuse.js";
 import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
 import { Text } from "../components/text.js";
-import { useChainsQuery } from "../../hooks/others/useChainQuery.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../hooks/others/useChainQuery.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ApiChain, Chain } from "../../../chains/types.js";
@@ -45,9 +42,9 @@ import { defineChain } from "../../../chains/index.js";
 
 type NetworkSelectorChainProps = {
   /**
-   * `Chain` object for the chain to be displayed
+   * Chain Id of the chain to be displayed
    */
-  chain: ApiChain;
+  chainId: number;
   /**
    * function to be called for switching to the given chain
    */
@@ -68,45 +65,20 @@ type NetworkSelectorChainProps = {
 
 export type NetworkSelectorProps = {
   /**
-   * Theme to use in Modal
-   *
-   * Either specify string "dark" or "light" to use the default themes, or provide a custom theme object.
-   *
-   * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
-   * @example
-   * ```tsx
-   * import { darkTheme } from "thirdweb/react";
-   *
-   * <NetworkSelector
-   *  open={true}
-   *  theme={darkTheme({
-   *    colors: {
-   *      modalBg: "#000000",
-   *    }
-   *  })}
-   * />
-   * ```
+   * function to call to close the modal
    */
-  theme?: "dark" | "light" | Theme;
-  /**
-   * Callback to be called when modal is closed by the user
-   */
-  onClose?: () => void;
-  /**
-   * Specify whether the Modal should be open or closed
-   */
-  open: boolean;
-
-  chains?: Chain[];
+  closeModal?: () => void;
 
   /**
    * Array of chains to be displayed under "Popular" section
    */
   popularChains?: Chain[];
+
   /**
    * Array of chains to be displayed under "Recent" section
    */
   recentChains?: Chain[];
+
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -114,9 +86,10 @@ export type NetworkSelectorProps = {
 
   /**
    * Callback to be called when a chain is successfully switched
-   * @param chain - The new chain that is switched to
+   * @param chainId - The chainId of the chain that was switched to
    */
-  onSwitch?: (chain: bigint) => void;
+  onSwitch?: (chainId: number) => void;
+
   /**
    * Callback to be called when the "Add Custom Network" button is clicked
    *
@@ -125,282 +98,213 @@ export type NetworkSelectorProps = {
   onCustomClick?: () => void;
 };
 
-type NetworkSelectorInnerProps = {
-  /**
-   * Theme to use in Modal
-   *
-   * Either specify string "dark" or "light" to use the default themes, or provide a custom theme object.
-   *
-   * You can also use `darkTheme` or `lightTheme` functions to use the default themes as base and override it.
-   * @example
-   * ```tsx
-   * import { darkTheme } from "thirdweb/react";
-   *
-   * <NetworkSelector
-   *  open={true}
-   *  theme={darkTheme({
-   *    colors: {
-   *      modalBg: "#000000",
-   *    }
-   *  })}
-   * />
-   * ```
-   */
-  theme?: "dark" | "light" | Theme;
-  /**
-   * Callback to be called when modal is closed by the user
-   */
-  onClose?: () => void;
-  /**
-   * Specify whether the Modal should be open or closed
-   */
-  open: boolean;
+let fuseInstances:
+  | {
+      all: Fuse<ApiChain>;
+      popular: Fuse<ApiChain>;
+      recent: Fuse<ApiChain>;
+    }
+  | undefined = undefined;
 
-  chains: ApiChain[];
+let fuseInitializationStarted = false;
 
-  /**
-   * Array of chains to be displayed under "Popular" section
-   */
-  popularChains?: ApiChain[];
-  /**
-   * Array of chains to be displayed under "Recent" section
-   */
-  recentChains?: ApiChain[];
-  /**
-   * Override how the chain button is rendered in the Modal
-   */
-  renderChain?: React.FC<NetworkSelectorChainProps>;
+// initialize fuse instances if not already initialized
+function initializeFuseInstances() {
+  if (fuseInitializationStarted) {
+    return;
+  }
 
-  /**
-   * Callback to be called when a chain is successfully switched
-   * @param chain - The new chain that is switched to
-   */
-  onSwitch?: (chain: ApiChain) => void;
-  /**
-   * Callback to be called when the "Add Custom Network" button is clicked
-   *
-   * The "Add Custom Network" button is displayed at the bottom of the modal - only if this prop is provided
-   */
-  onCustomClick?: () => void;
-};
+  fuseInitializationStarted = true;
 
-const fuseConfig = {
-  threshold: 0.4,
-  keys: [
-    {
-      name: "name",
-      weight: 1,
-    },
-    {
-      name: "chainId",
-      weight: 1,
-    },
-  ],
-};
+  const fuseConfig = {
+    threshold: 0.4,
+    keys: [
+      {
+        name: "name",
+        weight: 1,
+      },
+      {
+        name: "chainId",
+        weight: 1,
+      },
+    ],
+  };
 
-/**
- * Renders a Network Switcher Modal that allows users to switch their wallet to a different network.
- * @param props - NetworkSelectorProps
- * @example
- * ```tsx
- * import { NetworkSelector } from "thirdweb/react";
- *
- * function Example() {
- *  const [open, setOpen] = useState(false);
- *  return (
- *    <div>
- *      <button onClick={() => setOpen(true)}>Open Modal</button>
- *      <NetworkSelector open={open} onClose={() => setOpen(false)} />
- *    </div>
- *  )
- * }
- * ```
- * @component
- */
-export function NetworkSelector(props: NetworkSelectorProps) {
-  const themeFromContext = useCustomTheme();
-  const theme = props.theme || themeFromContext || "dark";
-  const { onClose } = props;
+  import("fuse.js").then((module) => {
+    const Fuse = module.default;
+    fuseInstances = {
+      all: new Fuse([], fuseConfig),
+      popular: new Fuse([], fuseConfig),
+      recent: new Fuse([], fuseConfig),
+    };
+  });
+}
 
-  return (
-    <CustomThemeProvider theme={theme}>
-      <Modal
-        size={"compact"}
-        open={props.open}
-        setOpen={(value) => {
-          if (!value && onClose) {
-            onClose();
-          }
-        }}
-        style={{
-          paddingBottom: props.onCustomClick ? spacing.md : "0px",
-        }}
-      >
-        <NetworkSelectorContent {...props} />
-      </Modal>
-    </CustomThemeProvider>
-  );
+function useLoadChains(
+  allChainsInput: Chain[],
+  popularChainsInput: Chain[],
+  recentChainsInput: Chain[],
+) {
+  const allChainIds = new Set([
+    ...allChainsInput.map((c) => c.id),
+    ...popularChainsInput.map((c) => c.id),
+    ...recentChainsInput.map((c) => c.id),
+  ]);
+
+  // load all chains with react query
+  const chainsQueries = useChainsQuery([...allChainIds]);
+
+  const { allChains, chainsMap, isLoading } = useMemo(() => {
+    const _chains: ApiChain[] = [];
+    const _chainsMap = new Map<number, ApiChain>();
+
+    for (const chainQuery of chainsQueries) {
+      // if not all chains are loaded, return empty array + loading: true
+      if (chainQuery.isLoading) {
+        return { allChains: [], chainsMap: _chainsMap, isLoading: true };
+      } else {
+        _chains.push(chainQuery.data as ApiChain);
+      }
+    }
+
+    for (const chain of _chains) {
+      _chainsMap.set(chain.chainId, chain);
+    }
+
+    return { allChains: _chains, chainsMap: _chainsMap, isLoading: false };
+  }, [chainsQueries]);
+
+  const popularChains = useMemo(() => {
+    if (!popularChainsInput) {
+      return [];
+    }
+    const _popularChains: ApiChain[] = [];
+    for (const chain of popularChainsInput) {
+      const _chain = chainsMap.get(chain.id);
+      if (_chain) {
+        _popularChains.push(_chain);
+      }
+    }
+    return _popularChains;
+  }, [popularChainsInput, chainsMap]);
+
+  const recentChains = useMemo(() => {
+    if (!recentChainsInput) {
+      return [];
+    }
+    const _recentChains: ApiChain[] = [];
+    for (const chain of recentChainsInput) {
+      const _chain = chainsMap.get(chain.id);
+      if (_chain) {
+        _recentChains.push(_chain);
+      }
+    }
+    return _recentChains;
+  }, [recentChainsInput, chainsMap]);
+
+  return {
+    allChains,
+    popularChains,
+    recentChains,
+    isLoading,
+  };
 }
 
 /**
+ *
  * @internal
  */
 export function NetworkSelectorContent(
   props: NetworkSelectorProps & {
     onBack?: () => void;
+    chains: Chain[];
   },
 ) {
-  const allChainIds = new Set([
-    ...(props.chains || []).map((c) => c.id),
-    ...(props.popularChains || []).map((c) => c.id),
-    ...(props.recentChains || []).map((c) => c.id),
-  ]);
-
-  // TODO: @manan - instead of doing this here and then passing the chains down we can consider the following approach:
-  // 1. use the useChainsQuery hook wherever we need the search index
-  // 2. pass only the chainIds through (for all, recent, popular)
-  // 3. then in each Chain component, use the useChainQuery hook to get the chain data where we need it (can have local placeholder state while isLoading)
-  // => things will render faster, all queries get re-used, and we don't have to pass the chains down everywhere
-  const chainsQueries = useChainsQuery([...allChainIds]);
-
-  const [allChains, isLoading] = useMemo(() => {
-    let atLeastOneChainIsLoading = false;
-    const chains = chainsQueries
-      .map((chainQuery) => {
-        if (chainQuery.isLoading) {
-          atLeastOneChainIsLoading = true;
-        }
-        return chainQuery.data;
-      })
-      .filter((d) => !!d) as ApiChain[];
-    return [chains, atLeastOneChainIsLoading];
-  }, [chainsQueries]);
-
-  const chainMap = useMemo(() => {
-    const map = new Map<number, ApiChain>();
-    if (!allChains) {
-      return map;
-    }
-
-    for (const chain of allChains) {
-      map.set(chain.chainId, chain);
-    }
-    return map;
-  }, [allChains]);
-
-  if (isLoading || !allChains) {
-    return (
-      <Container
-        flex="row"
-        center="both"
-        p="lg"
-        style={{
-          height: "330px",
-        }}
-      >
-        <Spinner size="lg" color="accentText" />
-      </Container>
-    );
-  }
-
-  return (
-    <NetworkSelectorContentInner
-      {...props}
-      chains={allChains}
-      recentChains={
-        props.recentChains?.map((chain) => chainMap.get(chain.id)) as
-          | ApiChain[]
-          | undefined
-      }
-      popularChains={
-        props.popularChains?.map((chain) => chainMap.get(chain.id)) as
-          | ApiChain[]
-          | undefined
-      }
-      onSwitch={(chain) => {
-        if (props.onSwitch) {
-          props.onSwitch(BigInt(chain.chainId));
-        }
-      }}
-    />
+  const chainsData = useLoadChains(
+    props.chains || [],
+    props.popularChains || [],
+    props.recentChains || [],
   );
-}
 
-/**
- *
- * @internal
- */
-function NetworkSelectorContentInner(
-  props: NetworkSelectorInnerProps & {
-    onBack?: () => void;
-  },
-) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const deferredSearchTerm = useDeferredValue(searchTerm);
-
-  const supportedChains = props.chains;
-  const chains = props.chains || supportedChains;
   const locale = useTWLocale().connectWallet.networkSelector;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
+    "all",
+  );
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const { closeModal, onSwitch, onCustomClick } = props;
 
-  const _recentChains = props.recentChains;
+  initializeFuseInstances();
 
-  // remove recent chains from popular chains
-  const cleanedPopularChains = !_recentChains
-    ? props.popularChains
-    : props.popularChains?.filter((chain) => {
-        return !_recentChains.some(
-          (recentChain) => recentChain.chainId === chain.chainId,
-        );
-      });
-
-  // fuse instances
-  const fuseAllChains = useMemo(() => {
-    return new Fuse(chains, fuseConfig);
-  }, [chains]);
-
-  const fusePopularChains = useMemo(() => {
-    return new Fuse(cleanedPopularChains || [], fuseConfig);
-  }, [cleanedPopularChains]);
-
-  const fuseRecentChains = useMemo(() => {
-    return new Fuse(props.recentChains || [], fuseConfig);
-  }, [props.recentChains]);
-
-  // chains filtered by search term
-  const allChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return chains;
+  // chains filtered by search term + type
+  const allChainsFiltered = useMemo(() => {
+    const _chains = filterChainByType(chainsData.allChains, selectedTab);
+    if (!fuseInstances) {
+      return _chains;
     }
-    return fuseAllChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseAllChains, deferredSearchTerm, chains]);
-
-  const popularChains = useMemo(() => {
+    fuseInstances.all.setCollection(_chains);
     if (deferredSearchTerm === "") {
-      return cleanedPopularChains || [];
+      return _chains;
     }
-    return fusePopularChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains]);
+    return fuseInstances.all.search(deferredSearchTerm).map((r) => r.item);
+  }, [chainsData.allChains, selectedTab, deferredSearchTerm]);
 
-  const recentChains = useMemo(() => {
+  const popularChainsFiltered = useMemo(() => {
+    const _chains = filterChainByType(chainsData.popularChains, selectedTab);
+    if (!fuseInstances) {
+      return _chains;
+    }
+    fuseInstances.popular.setCollection(_chains);
     if (deferredSearchTerm === "") {
-      return props.recentChains || [];
+      return _chains;
     }
-    return fuseRecentChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseRecentChains, deferredSearchTerm, props.recentChains]);
+    return fuseInstances.popular.search(deferredSearchTerm).map((r) => r.item);
+  }, [chainsData.popularChains, selectedTab, deferredSearchTerm]);
 
-  const { onClose, onSwitch, onCustomClick } = props;
+  const recentChainsFiltered = useMemo(() => {
+    const _chains = filterChainByType(chainsData.recentChains, selectedTab);
+    if (!fuseInstances) {
+      return _chains;
+    }
+    fuseInstances.recent.setCollection(_chains);
+    if (deferredSearchTerm === "") {
+      return _chains;
+    }
+    return fuseInstances.recent.search(deferredSearchTerm).map((r) => r.item);
+  }, [chainsData.recentChains, deferredSearchTerm, selectedTab]);
 
   const handleSwitch = useCallback(
-    (chain: ApiChain) => {
+    (chainId: number) => {
       if (onSwitch) {
-        onSwitch(chain);
+        onSwitch(chainId);
       }
-      if (onClose) {
-        onClose();
+      if (closeModal) {
+        closeModal();
       }
     },
-    [onSwitch, onClose],
+    [onSwitch, closeModal],
   );
+
+  const allChainsToShow = useMemo(() => {
+    if (chainsData.isLoading) {
+      return props.chains.map((x) => x.id);
+    }
+    return allChainsFiltered.map((x) => x.chainId);
+  }, [allChainsFiltered, chainsData.isLoading, props.chains]);
+
+  const popularChainsToShow = useMemo(() => {
+    if (chainsData.isLoading) {
+      return (props.popularChains || []).map((x) => x.id);
+    }
+    return popularChainsFiltered.map((x) => x.chainId);
+  }, [chainsData.isLoading, popularChainsFiltered, props.popularChains]);
+
+  const recentChainsToShow = useMemo(() => {
+    if (chainsData.isLoading) {
+      return (props.recentChains || []).map((x) => x.id);
+    }
+    return recentChainsFiltered.map((x) => x.chainId);
+  }, [chainsData.isLoading, props.recentChains, recentChainsFiltered]);
 
   return (
     <Container>
@@ -412,156 +316,104 @@ function NetworkSelectorContentInner(
         )}
       </Container>
 
-      <Tabs.Root className="TabsRoot" defaultValue="all">
-        <Container px="lg">
-          <Tabs.List
-            className="TabsList"
-            aria-label="Manage your account"
-            style={{
-              display: "flex",
-              gap: spacing.xxs,
-            }}
+      <Container px="lg">
+        <Container flex="row" gap="xxs">
+          <TabButton
+            onClick={() => setSelectedTab("all")}
+            data-active={selectedTab === "all"}
           >
-            <TabButton className="TabsTrigger" value="all">
-              {locale.allNetworks}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="mainnet">
-              {locale.mainnets}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="testnet">
-              {locale.testnets}
-            </TabButton>
-          </Tabs.List>
+            {locale.allNetworks}
+          </TabButton>
+          <TabButton
+            onClick={() => setSelectedTab("mainnet")}
+            data-active={selectedTab === "mainnet"}
+          >
+            {locale.mainnets}
+          </TabButton>
+          <TabButton
+            onClick={() => setSelectedTab("testnet")}
+            data-active={selectedTab === "testnet"}
+          >
+            {locale.testnets}
+          </TabButton>
         </Container>
+      </Container>
 
-        <Spacer y="lg" />
+      <Spacer y="lg" />
 
-        {chains.length > 10 && (
-          <>
-            <Container px="lg">
-              {/* Search */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  position: "relative",
-                }}
-              >
-                <StyledMagnifyingGlassIcon
-                  width={iconSize.md}
-                  height={iconSize.md}
-                />
+      <Container px="lg">
+        {/* Search */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
 
-                <Input
-                  style={{
-                    padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
-                  }}
-                  tabIndex={-1}
-                  variant="outline"
-                  placeholder={locale.inputPlaceholder}
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                  }}
-                />
-                {/* Searching Spinner */}
-                {deferredSearchTerm !== searchTerm && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      right: spacing.md,
-                    }}
-                  >
-                    <Spinner size="md" color="accentText" />
-                  </div>
-                )}
-              </div>
-            </Container>
-            <Spacer y="lg" />
-          </>
-        )}
-
-        <Container px="md">
-          <Tabs.Content
-            className="TabsContent"
-            value="all"
+          <Input
             style={{
-              outline: "none",
+              padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
             }}
-          >
-            <NetworkTab
-              allChains={allChains}
-              type="all"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content
-            className="TabsContent"
-            value="mainnet"
-            style={{
-              outline: "none",
+            tabIndex={-1}
+            variant="outline"
+            placeholder={locale.inputPlaceholder}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
             }}
-          >
-            <NetworkTab
-              allChains={allChains}
-              type="mainnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
+          />
+          {/* Searching Spinner */}
+          {deferredSearchTerm !== searchTerm && (
+            <div
+              style={{
+                position: "absolute",
+                right: spacing.md,
+              }}
+            >
+              <Spinner size="md" color="accentText" />
+            </div>
+          )}
+        </div>
+      </Container>
+      <Spacer y="lg" />
 
-          <Tabs.Content
-            className="TabsContent"
-            value="testnet"
-            style={{
-              outline: "none",
-            }}
-          >
-            <NetworkTab
-              allChains={allChains}
-              type="testnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-        </Container>
+      <Container px="md">
+        <NetworkTabContent
+          allChainIds={allChainsToShow}
+          popularChainIds={popularChainsToShow}
+          recentChainIds={recentChainsToShow}
+          onSwitch={handleSwitch}
+          renderChain={props.renderChain}
+          close={props.closeModal}
+        />
+      </Container>
 
-        {onCustomClick && (
-          <>
-            <Line />
-            <Container p="lg">
-              <Button
-                fullWidth
-                variant="link"
-                onClick={() => {
-                  onCustomClick();
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                style={{
-                  display: "flex",
-                  fontSize: fontSize.sm,
-                  boxShadow: "none",
-                }}
-              >
-                {locale.addCustomNetwork}
-              </Button>
-            </Container>
-          </>
-        )}
-      </Tabs.Root>
+      {onCustomClick && (
+        <>
+          <Line />
+          <Container p="lg">
+            <Button
+              fullWidth
+              variant="link"
+              onClick={() => {
+                onCustomClick();
+                if (closeModal) {
+                  closeModal();
+                }
+              }}
+              style={{
+                display: "flex",
+                fontSize: fontSize.sm,
+                boxShadow: "none",
+              }}
+            >
+              {locale.addCustomNetwork}
+            </Button>
+          </Container>
+        </>
+      )}
     </Container>
   );
 }
@@ -589,29 +441,17 @@ const filterChainByType = (
  *
  * @internal
  */
-const NetworkTab = (props: {
-  allChains: ApiChain[];
-  recentChains?: ApiChain[];
-  popularChains?: ApiChain[];
-  type: "testnet" | "mainnet" | "all";
-  onSwitch: (chain: ApiChain) => void;
+const NetworkTabContent = (props: {
+  allChainIds: number[];
+  recentChainIds?: number[];
+  popularChainIds?: number[];
+  onSwitch: (chainId: number) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const allChains = useMemo(
-    () => filterChainByType(props.allChains, props.type),
-    [props.type, props.allChains],
-  );
-  const recentChains = useMemo(
-    () => filterChainByType(props.recentChains || [], props.type),
-    [props.type, props.recentChains],
-  );
-  const popularChains = useMemo(
-    () => filterChainByType(props.popularChains || [], props.type),
-    [props.type, props.popularChains],
-  );
   const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
 
+  const { recentChainIds, popularChainIds, allChainIds } = props;
   return (
     <Container
       scrollY
@@ -621,12 +461,12 @@ const NetworkTab = (props: {
         paddingBottom: spacing.lg,
       }}
     >
-      {recentChains.length > 0 && (
+      {recentChainIds && recentChainIds.length > 0 && (
         <div>
           <SectionLabel>{locale.recentlyUsed}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
-            chains={recentChains}
+            chainIds={recentChainIds}
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
@@ -635,12 +475,12 @@ const NetworkTab = (props: {
         </div>
       )}
 
-      {popularChains.length > 0 && (
+      {popularChainIds && popularChainIds.length > 0 && (
         <div>
           <SectionLabel>{locale.popular}</SectionLabel>
           <Spacer y="sm" />
           <NetworkList
-            chains={popularChains}
+            chainIds={popularChainIds}
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
@@ -650,7 +490,8 @@ const NetworkTab = (props: {
       )}
 
       {/* separator  */}
-      {(popularChains.length > 0 || recentChains.length > 0) && (
+      {((popularChainIds && popularChainIds.length > 0) ||
+        (recentChainIds && recentChainIds.length > 0)) && (
         <>
           <SectionLabel>{locale.others}</SectionLabel>
           <Spacer y="sm" />
@@ -658,7 +499,7 @@ const NetworkTab = (props: {
       )}
 
       <NetworkList
-        chains={allChains}
+        chainIds={allChainIds}
         onSwitch={props.onSwitch}
         renderChain={props.renderChain}
         close={props.close}
@@ -668,8 +509,8 @@ const NetworkTab = (props: {
 };
 
 type NetworkListProps = {
-  chains: ApiChain[];
-  onSwitch: (chain: ApiChain) => void;
+  chainIds: number[];
+  onSwitch: (chainId: number) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 };
@@ -681,8 +522,6 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   const activeChain = useActiveWalletChain();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
-  const twLocale = useTWLocale();
-  const locale = twLocale.connectWallet.networkSelector;
 
   const close = props.close;
 
@@ -695,20 +534,15 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
     }
   }, [switchingChainId, close, activeChain?.id]);
 
-  const handleSwitch = async (chain: ApiChain) => {
+  const handleSwitch = async (chainId: number) => {
     setErrorSwitchingChainId(-1);
-    setSwitchingChainId(chain.chainId);
+    setSwitchingChainId(chainId);
 
     try {
-      await switchChain(
-        defineChain({
-          id: chain.chainId,
-          name: chain.name,
-        }),
-      );
-      props.onSwitch(chain);
+      await switchChain(defineChain(chainId));
+      props.onSwitch(chainId);
     } catch (e: any) {
-      setErrorSwitchingChainId(chain.chainId);
+      setErrorSwitchingChainId(chainId);
       console.error(e);
     } finally {
       setSwitchingChainId(-1);
@@ -716,7 +550,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   };
   const RenderChain = props.renderChain;
 
-  const [isLoading, setIsLoading] = useState(props.chains.length > 100);
+  const [isLoading, setIsLoading] = useState(props.chainIds.length > 100);
 
   useEffect(() => {
     if (isLoading) {
@@ -742,22 +576,20 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
 
   return (
     <NetworkListUl>
-      {props.chains.map((chain) => {
-        const confirming = switchingChainId === chain.chainId;
-        const switchingFailed = errorSwitchingChainId === chain.chainId;
-
-        const chainName = <span>{chain.name} </span>;
+      {props.chainIds.map((chainId) => {
+        const confirming = switchingChainId === chainId;
+        const switchingFailed = errorSwitchingChainId === chainId;
 
         if (RenderChain) {
           return (
-            <li key={chain.chainId}>
+            <li key={chainId}>
               <RenderChain
                 switchChain={() => {
-                  handleSwitch(chain);
+                  handleSwitch(chainId);
                 }}
-                chain={chain}
-                switching={switchingChainId === chain.chainId}
-                switchFailed={errorSwitchingChainId === chain.chainId}
+                chainId={chainId}
+                switching={switchingChainId === chainId}
+                switchFailed={errorSwitchingChainId === chainId}
                 close={props.close}
               />
             </li>
@@ -765,52 +597,13 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
         }
 
         return (
-          <li key={chain.chainId}>
-            <NetworkButton
-              data-active={activeChain?.id === chain.chainId}
-              onClick={() => {
-                handleSwitch(chain);
-              }}
-            >
-              <ChainIcon
-                chain={chain}
-                size={iconSize.lg}
-                active={activeChain?.id === chain.chainId}
-                loading="lazy"
-              />
-
-              {confirming || switchingFailed ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: spacing.xs,
-                  }}
-                >
-                  {chainName}
-                  <Container animate="fadein" flex="row" gap="xs">
-                    {confirming && (
-                      <>
-                        <Text size="xs" color="accentText">
-                          {twLocale.connectWallet.confirmInWallet}
-                        </Text>
-                        <Spinner size="xs" color="accentText" />
-                      </>
-                    )}
-
-                    {switchingFailed && (
-                      <Container animate="fadein">
-                        <Text size="xs" color="danger">
-                          {locale.failedToSwitch}
-                        </Text>
-                      </Container>
-                    )}
-                  </Container>
-                </div>
-              ) : (
-                chainName
-              )}
-            </NetworkButton>
+          <li key={chainId}>
+            <ChainButton
+              chainId={chainId}
+              confirming={confirming}
+              handleSwitch={handleSwitch}
+              switchingFailed={switchingFailed}
+            />
           </li>
         );
       })}
@@ -818,8 +611,78 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   );
 } as React.FC<NetworkListProps>);
 
+function ChainButton(props: {
+  chainId: number;
+  handleSwitch: (chain: number) => void;
+  confirming: boolean;
+  switchingFailed: boolean;
+}) {
+  const twLocale = useTWLocale();
+  const locale = twLocale.connectWallet.networkSelector;
+  const { chainId, handleSwitch, confirming, switchingFailed } = props;
+  const activeChain = useActiveWalletChain();
+  const apiChainQuery = useChainQuery(chainId);
+
+  const chainName = apiChainQuery.data ? (
+    <span>{apiChainQuery.data.name} </span>
+  ) : (
+    <Skeleton width="150px" height="20px" />
+  );
+  return (
+    <NetworkButton
+      data-active={activeChain?.id === chainId}
+      onClick={() => {
+        handleSwitch(chainId);
+      }}
+    >
+      {apiChainQuery.data ? (
+        <ChainIcon
+          chain={apiChainQuery.data}
+          size={iconSize.lg}
+          active={activeChain?.id === chainId}
+          loading="lazy"
+        />
+      ) : (
+        <Skeleton width={iconSize.lg + "px"} height={iconSize.lg + "px"} />
+      )}
+
+      {confirming || switchingFailed ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: spacing.xs,
+          }}
+        >
+          {chainName}
+          <Container animate="fadein" flex="row" gap="xs">
+            {confirming && (
+              <>
+                <Text size="xs" color="accentText">
+                  {twLocale.connectWallet.confirmInWallet}
+                </Text>
+                <Spinner size="xs" color="accentText" />
+              </>
+            )}
+
+            {switchingFailed && (
+              <Container animate="fadein">
+                <Text size="xs" color="danger">
+                  {locale.failedToSwitch}
+                </Text>
+              </Container>
+            )}
+          </Container>
+        </div>
+      ) : (
+        chainName
+      )}
+    </NetworkButton>
+  );
+}
+
 const TabButton = /* @__PURE__ */ (() =>
-  styled(Tabs.Trigger)(() => {
+  styled.button(() => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -832,7 +695,7 @@ const TabButton = /* @__PURE__ */ (() =>
       borderRadius: radius.lg,
       transition: "background 0.2s ease, color 0.2s ease",
 
-      "&[data-state='active']": {
+      "&[data-active='true']": {
         background: theme.colors.secondaryButtonBg,
         color: theme.colors.primaryText,
       },

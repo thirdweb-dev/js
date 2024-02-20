@@ -568,10 +568,8 @@ export const ConnectedWalletDetails: React.FC<{
             ? [...new Set([walletChain, ...props.chains])]
             : props.chains
         }
-        open={true}
-        theme={props.theme}
         {...props.detailsModal?.networkSelector}
-        onClose={() => {
+        closeModal={() => {
           setIsOpen(false);
         }}
         onBack={() => {
