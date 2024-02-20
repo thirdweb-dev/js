@@ -87,7 +87,7 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(walletChain?.id);
+  const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
 
   const tokenAddress =
@@ -274,9 +274,15 @@ export const ConnectedWalletDetails: React.FC<{
           <Skeleton height={iconSize.md} width={iconSize.md} />
         )}
       </div>
-      <Text color="primaryText" multiline>
-        {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
-      </Text>
+
+      {chainQuery.isLoading ? (
+        <Skeleton height={"16px"} width={"200px"} />
+      ) : (
+        <Text color="primaryText" multiline>
+          {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
+        </Text>
+      )}
+
       <StyledChevronRightIcon
         width={iconSize.sm}
         height={iconSize.sm}
@@ -563,15 +569,17 @@ export const ConnectedWalletDetails: React.FC<{
   if (screen === "network-switcher") {
     content = (
       <NetworkSelectorContent
+        // add currently connected chain to the list of chains if it's not already in the list
         chains={
-          walletChain
-            ? [...new Set([walletChain, ...props.chains])]
+          walletChain &&
+          props.chains.find((c) => c.id === walletChain.id) === undefined
+            ? [walletChain, ...props.chains]
             : props.chains
         }
-        {...props.detailsModal?.networkSelector}
         closeModal={() => {
           setIsOpen(false);
         }}
+        networkSelector={props.detailsModal?.networkSelector}
         onBack={() => {
           setScreen("main");
         }}

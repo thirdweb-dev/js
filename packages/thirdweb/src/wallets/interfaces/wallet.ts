@@ -31,7 +31,7 @@ export type Wallet = {
     removeListener: WalletEventListener;
   };
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
-  switchChain?: (newChainId: Chain) => Promise<void>;
+  switchChain?: (newChain: Chain) => Promise<void>;
 };
 
 export interface WalletWithPersonalWallet extends Wallet {

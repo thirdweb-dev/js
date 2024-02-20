@@ -57,7 +57,7 @@ export type ConnectButton_detailsModalOptions = {
   /**
    * customize the Network selector shown in the `ConnectButton` Details Modal
    */
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "open">;
+  networkSelector?: NetworkSelectorProps;
 
   /**
    * Hide the "Switch to Personal wallet" option in the Connect Wallet details modal which is shown when wallet is connected to either Smart Wallet or Safe.

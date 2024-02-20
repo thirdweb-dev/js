@@ -80,7 +80,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   const switchChain = useSwitchActiveWalletChain();
   const txChain = transaction.chain;
   const sendTransaction = useSendTransaction();
-  const chainQuery = useChainQuery(txChain.id);
+  const chainQuery = useChainQuery(txChain);
 
   const [totalCost, setTotalCost] = useState<string | undefined>();
   useEffect(() => {
