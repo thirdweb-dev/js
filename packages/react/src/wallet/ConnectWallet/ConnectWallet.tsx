@@ -166,6 +166,30 @@ export type ConnectWalletProps = {
   hideTestnetFaucet?: boolean;
 
   /**
+   * Hide the "Send" button in the ConnectWallet Details Modal
+   *
+   * By default it is `false` - Send button is shown
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideSendButton={true} />
+   * ```
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Hide the "Receive" button in the ConnectWallet Details Modal
+   *
+   * By default it is `false` - Receive button is shown
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideReceiveButton={true} />
+   * ```
+   */
+  hideReceiveButton?: boolean;
+
+  /**
    * Whether to show "Switch Network" button if the wallet is connected,
    * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
    *
@@ -610,7 +634,21 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * ```tsx
  * <ConnectWallet showThirdwebBranding={false} />
- *```
+ * ```
+ *
+ * ### hideSendButton
+ * Hide the "Send" button in the ConnectWallet Details Modal. By default it is `false` - Send button is shown
+ *
+ * ```tsx
+ * <ConnectWallet hideSendButton={true} />
+ * ```
+ *
+ * ### hideReceiveButton
+ * Hide the "Receive" button in the ConnectWallet Details Modal. By default it is `false` - Receive button is shown
+ *
+ * ```tsx
+ * <ConnectWallet hideReceiveButton={true} />
+ * ```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -808,6 +846,8 @@ export function ConnectWallet(props: ConnectWalletProps) {
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
             detailsModalFooter={props.detailsModalFooter}
+            hideSendButton={props.hideSendButton}
+            hideReceiveButton={props.hideReceiveButton}
           />
         );
       })()}
