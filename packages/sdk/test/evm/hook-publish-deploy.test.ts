@@ -99,7 +99,7 @@ describe("Modular contract deployment", async () => {
       erc721CoreDeployedBytecode,
       {
         ...extendedMetadataMock,
-        deployType: "modular",
+        deployType: "autoFactory",
         routerType: "modular",
         defaultExtensions: [
           {

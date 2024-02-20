@@ -171,7 +171,6 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
     z.literal("standard"),
     z.literal("autoFactory"),
     z.literal("customFactory"),
-    z.literal("modular"),
   ]))();
 
 /**

@@ -2345,7 +2345,10 @@ export class ContractDeployer extends RPCConnectionHandler {
             signer,
             chainId,
           );
-        } else if (extendedMetadata.deployType === "modular") {
+        } else if (
+          extendedMetadata.deployType === "autoFactory" &&
+          extendedMetadata.routerType === "modular"
+        ) {
           return await this.deployModular.prepare(
             publishMetadataUri,
             constructorParamValues,
