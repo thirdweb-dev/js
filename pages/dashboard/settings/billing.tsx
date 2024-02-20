@@ -9,13 +9,14 @@ import { useRouter } from "next/router";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Billing } from "components/settings/Account/Billing";
 import { BillingConnectWalletPrompt } from "components/settings/Account/Billing/ConnectWallet";
+import { useLocalStorage } from "hooks/useLocalStorage";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const { isLoggedIn, isLoading } = useLoggedInUser();
   const meQuery = useAccount();
   const router = useRouter();
   const { data: account } = meQuery;
-  const claimGrowth = false;
+  const [claimGrowth] = useLocalStorage("startup-program", false, true);
 
   useEffect(() => {
     let refetchInterval: ReturnType<typeof setInterval> | undefined;
