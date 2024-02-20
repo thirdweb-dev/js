@@ -9,7 +9,10 @@ import { decodeFunctionResult } from "../../abi/decode.js";
 import { extractError } from "../extract-error.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
-type SimulateOptions<abi extends Abi, abiFn extends AbiFunction> = Prettify<
+export type SimulateOptions<
+  abi extends Abi,
+  abiFn extends AbiFunction,
+> = Prettify<
   {
     transaction: PreparedTransaction<abi, abiFn>;
   } & (
