@@ -1,13 +1,24 @@
 import type { TransactionSerializable } from "viem";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
-type SendTransactionOptions = {
-  transaction: PreparedTransaction;
-  wallet: Wallet;
-};
+export type SendTransactionOptions = Prettify<
+  {
+    transaction: PreparedTransaction;
+  } & (
+    | {
+        account?: never;
+        wallet: Wallet;
+      }
+    | {
+        account: Account;
+        wallet?: never;
+      }
+  )
+>;
 
 /**
  * Sends a transaction using the provided wallet.
@@ -27,7 +38,7 @@ type SendTransactionOptions = {
 export async function sendTransaction(
   options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  const account = options.wallet.getAccount();
+  const account = options.account ?? options.wallet.getAccount();
   if (!account) {
     throw new Error("not connected");
   }
@@ -56,18 +67,15 @@ export async function sendTransaction(
           address: account.address,
           blockTag: "pending",
         }),
-    // if user has specified a gas value, use that
-    estimateGas({
-      transaction: options.transaction,
-      wallet: options.wallet,
-    }),
+    // takes the same options as the sendTransaction function thankfully!
+    estimateGas(options),
     getGasOverridesForTransaction(options.transaction),
     resolvePromisedValue(options.transaction.to),
     resolvePromisedValue(options.transaction.accessList),
     resolvePromisedValue(options.transaction.value),
   ]);
 
-  const walletChainId = options.wallet.getChain()?.id;
+  const walletChainId = options.wallet?.getChain()?.id;
   const chainId = options.transaction.chain.id;
   // only if:
   // 1. the wallet has a chainId
@@ -75,7 +83,7 @@ export async function sendTransaction(
   // 3. the wallet's chainId is not the same as the transaction's chainId
   // => switch tot he wanted chain
   if (
-    options.wallet.switchChain &&
+    options.wallet?.switchChain &&
     walletChainId &&
     walletChainId !== chainId
   ) {

@@ -18,7 +18,7 @@ describe("transaction: simulate", () => {
     });
     const result = await simulateTransaction({
       transaction: tx,
-      account: { address: TEST_WALLET_A },
+      from: TEST_WALLET_A,
     });
     expect(result).toMatchInlineSnapshot(`true`);
 
