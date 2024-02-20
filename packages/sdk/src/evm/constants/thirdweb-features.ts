@@ -116,43 +116,56 @@ export const getAllExtensionsAbi = [
   },
 ];
 
-export const extensionInstallerAbi = [
+export const hookInstallerAbi = [
   {
     type: "function",
-    name: "getExtensionImplementation",
+    name: "getHookImplementation",
     inputs: [{ name: "_flag", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "installExtension",
+    name: "hookFunctionRead",
     inputs: [
-      {
-        name: "_extension",
-        type: "address",
-        internalType: "contract IExtension",
-      },
+      { name: "_hookFlag", type: "uint256", internalType: "uint256" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "hookFunctionWrite",
+    inputs: [
+      { name: "_hookFlag", type: "uint256", internalType: "uint256" },
+      { name: "_value", type: "uint256", internalType: "uint256" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "installHook",
+    inputs: [
+      { name: "_hook", type: "address", internalType: "contract IHook" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "uninstallExtension",
+    name: "uninstallHook",
     inputs: [
-      {
-        name: "_extension",
-        type: "address",
-        internalType: "contract IExtension",
-      },
+      { name: "_hook", type: "address", internalType: "contract IHook" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "event",
-    name: "ExtensionsInstalled",
+    name: "HooksInstalled",
     inputs: [
       {
         name: "implementation",
@@ -161,7 +174,7 @@ export const extensionInstallerAbi = [
         internalType: "address",
       },
       {
-        name: "extensions",
+        name: "hooks",
         type: "uint256",
         indexed: false,
         internalType: "uint256",
@@ -171,7 +184,7 @@ export const extensionInstallerAbi = [
   },
   {
     type: "event",
-    name: "ExtensionsUninstalled",
+    name: "HooksUninstalled",
     inputs: [
       {
         name: "implementation",
@@ -180,7 +193,7 @@ export const extensionInstallerAbi = [
         internalType: "address",
       },
       {
-        name: "extensions",
+        name: "hooks",
         type: "uint256",
         indexed: false,
         internalType: "uint256",
@@ -188,9 +201,14 @@ export const extensionInstallerAbi = [
     ],
     anonymous: false,
   },
-  { type: "error", name: "ExtensionsAlreadyInstalled", inputs: [] },
-  { type: "error", name: "ExtensionsNotAuthorized", inputs: [] },
-  { type: "error", name: "ExtensionsNotInstalled", inputs: [] },
+  { type: "error", name: "HookAlreadyInstalled", inputs: [] },
+  { type: "error", name: "HookInstallerCallFailed", inputs: [] },
+  { type: "error", name: "HookInstallerHookNotInstalled", inputs: [] },
+  { type: "error", name: "HookInstallerInvalidHook", inputs: [] },
+  { type: "error", name: "HookInstallerInvalidValue", inputs: [] },
+  { type: "error", name: "HookInstallerUnauthorizedWrite", inputs: [] },
+  { type: "error", name: "HookNotAuthorized", inputs: [] },
+  { type: "error", name: "HookNotInstalled", inputs: [] },
 ];
 
 export const FEATURE_ROYALTY = {
@@ -332,15 +350,15 @@ export const FEATURE_DYNAMIC_CONTRACT = {
   features: {},
 } as const;
 
-export const FEATURE_EXTENSION_INSTALLER = {
-  name: "ExtensionInstaller",
-  namespace: "extension.installer",
+export const FEATURE_HOOK_INSTALLER = {
+  name: "HookInstaller",
+  namespace: "hook.installer",
   docLinks: {
     sdk: "",
     //TODO
     contracts: "",
   },
-  abis: [extensionInstallerAbi],
+  abis: [hookInstallerAbi],
   features: {},
 } as const;
 

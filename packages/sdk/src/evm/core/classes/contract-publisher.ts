@@ -226,9 +226,8 @@ export class ContractPublisher extends RPCConnectionHandler {
     address: AddressOrEns,
   ): Promise<ContractSource[]> {
     const resolvedAddress = await resolveAddress(address);
-    const metadata = await this.fetchCompilerMetadataFromAddress(
-      resolvedAddress,
-    );
+    const metadata =
+      await this.fetchCompilerMetadataFromAddress(resolvedAddress);
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
   }
 
@@ -409,16 +408,16 @@ export class ContractPublisher extends RPCConnectionHandler {
       );
       const isModular = isFeatureEnabled(
         compilerMetadata.abi,
-        "ExtensionInstaller",
+        "HookInstaller",
         features,
       );
       extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
-        ? "dynamic"
-        : isModular
-        ? "modular"
-        : "none";
+          ? "dynamic"
+          : isModular
+            ? "modular"
+            : "none";
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
@@ -466,9 +465,8 @@ export class ContractPublisher extends RPCConnectionHandler {
         predeployMetadata.name,
       );
       if (latestContract && latestContract.metadataUri) {
-        const latestMetadata = await this.fetchPublishedContractInfo(
-          latestContract,
-        );
+        const latestMetadata =
+          await this.fetchPublishedContractInfo(latestContract);
 
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (
