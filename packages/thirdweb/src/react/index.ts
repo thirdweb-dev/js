@@ -1,15 +1,15 @@
 export { darkTheme, lightTheme } from "./ui/design-system/index.js";
 export type { Theme, ThemeOverrides } from "./ui/design-system/index.js";
 
-export { ConnectWallet } from "./ui/ConnectWallet/ConnectWallet.js";
+export { ConnectButton } from "./ui/ConnectWallet/ConnectWallet.js";
 export { ConnectEmbed } from "./ui/ConnectWallet/Modal/ConnectEmbed.js";
 
 export type {
-  ConnectWalletProps,
-  ConnectWallet_ConnectButtonOptions,
-  ConnectWallet_ConnectModalOptions,
-  ConnectWallet_DetailsButtonOptions,
-  ConnectWallet_DetailsModalOptions,
+  ConnectButtonProps,
+  ConnectButton_connectButtonOptions,
+  ConnectButton_connectModalOptions,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
 } from "./ui/ConnectWallet/ConnectWalletProps.js";
 export type { WelcomeScreen } from "./ui/ConnectWallet/screens/types.js";
 export type { NetworkSelectorProps } from "./ui/ConnectWallet/NetworkSelector.js";

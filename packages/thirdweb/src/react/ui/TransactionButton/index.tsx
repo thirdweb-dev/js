@@ -18,11 +18,31 @@ import { useEffect, useState } from "react";
 import { formatEther } from "../../../utils/units.js";
 
 export type TransactionButtonProps = React.PropsWithChildren<{
+  /**
+   * The transaction to be sent when the button is clicked
+   */
   transaction: PreparedTransaction;
+  /**
+   * Callback to be called when the transaction is successful
+   * @param transactionHash - The object of type [`WaitForReceiptOptions`](https://portal.thirdweb.com/references/typescript/v5/WaitForReceiptOptions)
+   */
   onSuccess?: (transactionHash: WaitForReceiptOptions) => void;
+  /**
+   * The Error thrown when trying to send the transaction
+   * @param error - The `Error` object thrown
+   */
   onError?: (error: Error) => void;
+  /**
+   * Callback to be called when the button is clicked
+   */
   onSubmit?: () => void;
+  /**
+   * The className to apply to the button element for custom styling
+   */
   className?: string;
+  /**
+   * The style to apply to the button element for custom styling
+   */
   style?: React.CSSProperties;
 }>;
 
@@ -31,7 +51,7 @@ export type TransactionButtonProps = React.PropsWithChildren<{
  * It handles switching chains if the connected wallet is on a different chain than the transaction.
  * It also estimates gas and displays a loading spinner while the transaction is pending.
  * @param props - The props for this component.
- * @returns The rendered component.
+ * Refer to [TransactionButtonProps](https://portal.thirdweb.com/references/typescript/v5/TransactionButtonProps) for details.
  * @example
  * ```tsx
  * <TransactionButton
@@ -42,6 +62,7 @@ export type TransactionButtonProps = React.PropsWithChildren<{
  *   Confirm Transaction
  * </TransactionButton>
  * ```
+ * @component
  */
 export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   const {
@@ -59,9 +80,9 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
   const switchChain = useSwitchActiveWalletChain();
   const txChain = transaction.chain;
   const sendTransaction = useSendTransaction();
-  const chainQuery = useChainQuery(txChain.id);
+  const chainQuery = useChainQuery(txChain);
 
-  const [gasCost, setGasCost] = useState<string | undefined>();
+  const [totalCost, setTotalCost] = useState<string | undefined>();
   useEffect(() => {
     // TODO this should be a new core action: estimateGasCost
     estimateGas({ transaction, wallet })
@@ -72,7 +93,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
             : transaction.value) || BigInt(0);
         // TODO fix this - should fetch price from eth_getGasPrice
         const gasCostWei = value * BigInt(10 ** 9);
-        setGasCost(formatEther(gasCostWei + txValueWei, "wei"));
+        setTotalCost(formatEther(gasCostWei + txValueWei, "wei"));
       })
       .catch((error) => {
         console.error("Error estimating gas", error);
@@ -94,7 +115,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
     );
   }
 
-  if (gasCost && chainQuery.data && !sendTransaction.isPending) {
+  if (totalCost && chainQuery.data && !sendTransaction.isPending) {
     return (
       <Button
         gap="xs"
@@ -123,7 +144,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
             paddingLeft: spacing.xs,
           }}
         >
-          {gasCost} {chainQuery.data.nativeCurrency.symbol}
+          {totalCost} {chainQuery.data.nativeCurrency.symbol}
         </span>
       </Button>
     );

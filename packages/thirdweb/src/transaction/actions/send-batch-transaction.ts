@@ -1,16 +1,22 @@
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import type {
+  Account,
   SendTransactionOption,
   Wallet,
 } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { encode } from "./encode.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
-type SendBatchTransactionOptions = {
-  transactions: PreparedTransaction[];
-  wallet: Wallet;
-};
+export type SendBatchTransactionOptions = Prettify<
+  {
+    transactions: PreparedTransaction[];
+  } & (
+    | { account?: never; wallet: Wallet }
+    | { account: Account; wallet?: never }
+  )
+>;
 
 /**
  * Sends a transaction using the provided wallet.
@@ -30,7 +36,7 @@ type SendBatchTransactionOptions = {
 export async function sendBatchTransaction(
   options: SendBatchTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  const account = options.wallet.getAccount();
+  const account = options.account ?? options.wallet.getAccount();
   if (!account) {
     throw new Error("not connected");
   }

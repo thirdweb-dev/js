@@ -1,37 +1,39 @@
 import { useQueries, useQuery, queryOptions } from "@tanstack/react-query";
-import { getChainDataForChainId } from "../../../chains/utils.js";
+import { getChainDataForChain } from "../../../chains/utils.js";
+import type { Chain } from "../../../index.js";
 
 /**
  * @internal
  */
-function getChainQuery(chainId?: number) {
-  // TODO make this aware of local overrides (developer passed into provider or something)
-  return queryOptions({
-    queryKey: ["chain", `${chainId}`] as const,
+function getChainQuery(chain?: Chain) {
+  const result = queryOptions({
+    queryKey: ["chain", chain] as const,
     queryFn: async () => {
-      if (!chainId) {
+      if (!chain) {
         throw new Error("chainId is required");
       }
-      return getChainDataForChainId(chainId);
+      return getChainDataForChain(chain);
     },
-    enabled: !!chainId,
+    enabled: !!chain,
     staleTime: 1000 * 60 * 60, // 1 hour
   });
+
+  return result;
 }
 
 /**
  * @internal
  */
-export function useChainQuery(chainId?: number) {
-  return useQuery(getChainQuery(chainId));
+export function useChainQuery(chain?: Chain) {
+  return useQuery(getChainQuery(chain));
 }
 
 /**
  * @internal
  */
-export function useChainsQuery(chainIds: number[]) {
+export function useChainsQuery(chains: Chain[]) {
   // this way the underlying queries end up shared with the single query!
   return useQueries({
-    queries: chainIds.map(getChainQuery),
+    queries: chains.map(getChainQuery),
   });
 }

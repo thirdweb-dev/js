@@ -17,6 +17,9 @@ export type ChainOptions = {
     apiUrl?: string;
   }>;
   testnet?: true;
+  experimental?: {
+    increaseZeroByteCount?: boolean;
+  };
 };
 
 type Icon = {

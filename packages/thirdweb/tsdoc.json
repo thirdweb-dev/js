@@ -32,6 +32,10 @@
     {
       "tagName": "@locale",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@component",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -42,6 +46,7 @@
     "@transaction": true,
     "@connectWallet": true,
     "@theme": true,
-    "@locale": true
+    "@locale": true,
+    "@component": true
   }
 }

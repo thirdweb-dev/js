@@ -1,10 +1,10 @@
 /**
- * Render custom Welcome Screen in "wide" ConnectWallet Modal either by passing a custom React component or by passing an object with custom title, subtitle and image
+ * Render custom Welcome Screen in "wide" `ConnectButton`'s Modal either by passing a custom React component or by passing an object with custom title, subtitle and image
  * @example
  *
  * ### Custom React component
  * ```tsx
- * <ConnectWallet
+ * <ConnectButton
  *  welcomeScreen={() => <div style={{
  *    height: '100%',
  *  }}>
@@ -15,7 +15,7 @@
  *
  * ### Custom title, subtitle and image
  * ```tsx
- * <ConnectWallet
+ * <ConnectButton
  *  welcomeScreen={{
  *    title: 'Custom Title',
  *    subtitle: 'Custom Subtitle',

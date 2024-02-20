@@ -23,7 +23,7 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../manager/storage.js";
-import { defineChain, getChainDataForChainId } from "../../chains/utils.js";
+import { defineChain, getChainDataForChain } from "../../chains/utils.js";
 import { ethereum, type Chain } from "../../chains/index.js";
 
 type SavedConnectParams = {
@@ -305,7 +305,7 @@ export class CoinbaseSDKWallet implements Wallet {
         params: [{ chainId: chainIdHex }],
       });
     } catch (error) {
-      const apiChain = await getChainDataForChainId(chain.id);
+      const apiChain = await getChainDataForChain(chain);
 
       // Indicates chain is not added to provider
       if ((error as any).code === 4902) {

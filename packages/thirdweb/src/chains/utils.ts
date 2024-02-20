@@ -97,7 +97,7 @@ export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
  */
 export async function getChainSymbol(chain: Chain): Promise<string> {
   if (!chain.nativeCurrency?.symbol) {
-    return getChainDataForChainId(chain.id)
+    return getChainDataForChain(chain)
       .then((data) => data.nativeCurrency.symbol)
       .catch(() => {
         // if we fail to fetch the chain data, return "ETH" as a fallback
@@ -117,7 +117,7 @@ export async function getChainSymbol(chain: Chain): Promise<string> {
  */
 export async function getChainDecimals(chain: Chain): Promise<number> {
   if (!chain.nativeCurrency?.decimals) {
-    return getChainDataForChainId(chain.id)
+    return getChainDataForChain(chain)
       .then((data) => data.nativeCurrency.decimals)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
@@ -140,7 +140,7 @@ export async function getChainNativeCurrencyName(
   chain: Chain,
 ): Promise<string> {
   if (!chain.nativeCurrency?.name) {
-    return getChainDataForChainId(chain.id)
+    return getChainDataForChain(chain)
       .then((data) => data.nativeCurrency.name)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
@@ -164,7 +164,8 @@ type FetchChainResponse =
 /**
  * @internal
  */
-export function getChainDataForChainId(chainId: number): Promise<ApiChain> {
+export function getChainDataForChain(chain: Chain): Promise<ApiChain> {
+  const chainId = chain.id;
   return withCache(
     async () => {
       const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
@@ -179,11 +180,57 @@ export function getChainDataForChainId(chainId: number): Promise<ApiChain> {
       if (!response.data) {
         throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
       }
-      return response.data;
+
+      const data = response.data;
+
+      return {
+        ...data,
+        name: chain?.name || data.name,
+        chainId: chain?.id || data.chainId,
+        rpc: chain?.rpc ? [chain.rpc] : data.rpc,
+        testnet: chain?.testnet || data.testnet,
+        nativeCurrency: chain?.nativeCurrency
+          ? {
+              ...data.nativeCurrency,
+              ...chain.nativeCurrency,
+            }
+          : data.nativeCurrency,
+        // TODO: handle explorers - don't know what should be the standard
+        // explorers: chain?.blockExplorers
+        //   ? chain.blockExplorers.map((x) => {
+        //       return {
+        //         name: x.name,
+        //         url: x.url,
+        //         standard: '' /// ???
+        //       };
+        //     })
+        //   : result.data.explorers,
+      };
     },
     {
       cacheKey: `chain:${chainId}`,
       cacheTime: 5 * 60 * 1000, // 5 minutes
     },
   );
+}
+
+/**
+ * Convert `ApiChain` to `Chain` object
+ * @internal
+ */
+export function convertApiChainToChain(apiChain: ApiChain): Chain {
+  return {
+    id: apiChain.chainId,
+    name: apiChain.name,
+    rpc: apiChain.rpc[0] || "",
+    testnet: apiChain.testnet === true ? true : undefined,
+    nativeCurrency: apiChain.nativeCurrency,
+    blockExplorers: apiChain.explorers?.map((explorer) => {
+      return {
+        name: explorer.name,
+        url: explorer.url,
+        apiUrl: explorer.url,
+      };
+    }),
+  };
 }

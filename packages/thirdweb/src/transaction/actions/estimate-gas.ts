@@ -1,19 +1,30 @@
 import { formatTransactionRequest } from "viem";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { extractError as parseEstimationError } from "../extract-error.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
 
-type EstimateGasOptions = Prettify<
+export type EstimateGasOptions = Prettify<
   {
     transaction: PreparedTransaction;
   } & (
     | {
+        account: Account;
+        from?: never;
+        wallet?: never;
+      }
+    | {
+        account?: never;
         from?: string;
         wallet?: never;
       }
-    | { from?: never; wallet?: Wallet }
+    | {
+        account?: never;
+        from?: never;
+        wallet?: Wallet;
+      }
   )
 >;
 
@@ -51,7 +62,11 @@ export async function estimateGas(
     // if the wallet itself overrides the estimateGas function, use that
     if (options.wallet && options.wallet.estimateGas) {
       try {
-        return await options.wallet.estimateGas(options.transaction);
+        let gas = await options.wallet.estimateGas(options.transaction);
+        if (options.transaction.chain.experimental?.increaseZeroByteCount) {
+          gas = roundUpGas(gas);
+        }
+        return gas;
       } catch (error) {
         throw await parseEstimationError({
           error,
@@ -74,19 +89,28 @@ export async function estimateGas(
     ]);
 
     const rpcRequest = getRpcClient(options.transaction);
+    // from is:
+    // 1. the user specified from address
+    // 2. the passed in account address
+    // 3. the passed in wallet's account address
+    const from =
+      options.from ??
+      options.account?.address ??
+      options.wallet?.getAccount()?.address ??
+      undefined;
     try {
-      return await eth_estimateGas(
+      let gas = await eth_estimateGas(
         rpcRequest,
         formatTransactionRequest({
           to: toAddress,
           data: encodedData,
-          from:
-            // if the user has specified a from address, use that
-            // otherwise use the wallet's account address
-            // if the wallet is not provided, use undefined
-            options.from ?? options.wallet?.getAccount()?.address ?? undefined,
+          from,
         }),
       );
+      if (options.transaction.chain.experimental?.increaseZeroByteCount) {
+        gas = roundUpGas(gas);
+      }
+      return gas;
     } catch (error) {
       throw await parseEstimationError({
         error,

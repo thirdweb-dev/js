@@ -1,5 +1,5 @@
 import { formatTransactionRequest } from "viem";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { eth_call } from "../../rpc/index.js";
@@ -7,11 +7,32 @@ import type { Abi, AbiFunction } from "abitype";
 import type { ReadContractResult } from "../read-contract.js";
 import { decodeFunctionResult } from "../../abi/decode.js";
 import { extractError } from "../extract-error.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
-type SimulateOptions<abi extends Abi, abiFn extends AbiFunction> = {
-  transaction: PreparedTransaction<abi, abiFn>;
-  account?: Partial<Account> | undefined;
-};
+export type SimulateOptions<
+  abi extends Abi,
+  abiFn extends AbiFunction,
+> = Prettify<
+  {
+    transaction: PreparedTransaction<abi, abiFn>;
+  } & (
+    | {
+        account: Account;
+        from?: never;
+        wallet?: never;
+      }
+    | {
+        account?: never;
+        from?: string;
+        wallet?: never;
+      }
+    | {
+        account?: never;
+        from?: never;
+        wallet?: Wallet;
+      }
+  )
+>;
 
 /**
  * Simulates the execution of a transaction.
@@ -44,9 +65,19 @@ export async function simulateTransaction<
     resolvePromisedValue(options.transaction.value),
   ]);
 
+  // from is:
+  // 1. the user specified from address
+  // 2. the passed in account address
+  // 3. the passed in wallet's account address
+  const from =
+    options.from ??
+    options.account?.address ??
+    options.wallet?.getAccount()?.address ??
+    undefined;
+
   const serializedTx = formatTransactionRequest({
     data,
-    from: options.account?.address,
+    from,
     to,
     value,
     accessList,

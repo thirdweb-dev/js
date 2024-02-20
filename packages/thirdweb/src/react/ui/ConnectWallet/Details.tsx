@@ -44,8 +44,8 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
-  ConnectWallet_DetailsButtonOptions,
-  ConnectWallet_DetailsModalOptions,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
 import {
   smartWalletMetadata,
@@ -77,8 +77,8 @@ type WalletDetailsModalScreen =
  */
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
-  detailsButton?: ConnectWallet_DetailsButtonOptions;
-  detailsModal?: ConnectWallet_DetailsModalOptions;
+  detailsButton?: ConnectButton_detailsButtonOptions;
+  detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   chains: Chain[];
@@ -87,7 +87,7 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(walletChain?.id);
+  const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
 
   const tokenAddress =
@@ -274,9 +274,15 @@ export const ConnectedWalletDetails: React.FC<{
           <Skeleton height={iconSize.md} width={iconSize.md} />
         )}
       </div>
-      <Text color="primaryText" multiline>
-        {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
-      </Text>
+
+      {chainQuery.isLoading ? (
+        <Skeleton height={"16px"} width={"200px"} />
+      ) : (
+        <Text color="primaryText" multiline>
+          {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
+        </Text>
+      )}
+
       <StyledChevronRightIcon
         width={iconSize.sm}
         height={iconSize.sm}
@@ -563,17 +569,17 @@ export const ConnectedWalletDetails: React.FC<{
   if (screen === "network-switcher") {
     content = (
       <NetworkSelectorContent
+        // add currently connected chain to the list of chains if it's not already in the list
         chains={
-          walletChain
-            ? [...new Set([walletChain, ...props.chains])]
+          walletChain &&
+          props.chains.find((c) => c.id === walletChain.id) === undefined
+            ? [walletChain, ...props.chains]
             : props.chains
         }
-        open={true}
-        theme={props.theme}
-        {...props.detailsModal?.networkSelector}
-        onClose={() => {
+        closeModal={() => {
           setIsOpen(false);
         }}
+        networkSelector={props.detailsModal?.networkSelector}
         onBack={() => {
           setScreen("main");
         }}

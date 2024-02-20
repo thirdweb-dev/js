@@ -107,16 +107,16 @@ export function SendFundsForm(props: {
 }) {
   const locale = useTWLocale().connectWallet.sendFundsScreen;
   const tokenAddress = props.token?.address;
-  const chainId = useActiveWalletChain()?.id;
+  const chain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
 
   const balanceQuery = useWalletBalance({
-    chain: chainId ? defineChain(chainId) : undefined,
+    chain,
     tokenAddress,
     account: activeAccount,
   });
 
-  const chainQuery = useChainQuery(chainId);
+  const chainQuery = useChainQuery(chain);
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
 
@@ -362,16 +362,17 @@ export function TokenSelector(props: {
   supportedTokens: SupportedTokens;
 }) {
   const [input, setInput] = useState("");
-  const chainId = useActiveWalletChain()?.id;
+  const chain = useActiveWalletChain();
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
   const tokenQuery = useActiveWalletBalance(input);
 
   const locale = useTWLocale().connectWallet.sendFundsScreen;
-  const chainQuery = useChainQuery(chainId);
+  const chainQuery = useChainQuery(chain);
 
-  let tokenList = (chainId ? props.supportedTokens[chainId] : undefined) || [];
+  let tokenList =
+    (chain?.id ? props.supportedTokens[chain.id] : undefined) || [];
 
   if (tokenQuery.data) {
     tokenList = [
@@ -478,8 +479,8 @@ export function TokenSelector(props: {
 
 function SelectTokenButton(props: { token?: TokenInfo; onClick: () => void }) {
   const balanceQuery = useActiveWalletBalance(props.token?.address);
-  const chainId = useActiveWalletChain()?.id;
-  const chainQuery = useChainQuery(chainId);
+  const chain = useActiveWalletChain();
+  const chainQuery = useChainQuery(chain);
   const tokenName = props.token?.name || balanceQuery.data?.name;
 
   return (

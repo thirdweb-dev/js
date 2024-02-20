@@ -33,7 +33,7 @@ import { stringify } from "../../utils/json.js";
 import type { EthereumProvider } from "@walletconnect/ethereum-provider";
 import {
   defineChain,
-  getChainDataForChainId,
+  getChainDataForChain,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
 import { ethereum, type Chain } from "../../chains/index.js";
@@ -359,7 +359,7 @@ export class WalletConnect implements Wallet {
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-        const apiChain = await getChainDataForChainId(chainId);
+        const apiChain = await getChainDataForChain(chain);
         const firstExplorer = apiChain.explorers && apiChain.explorers[0];
         const blockExplorerUrls = firstExplorer
           ? { blockExplorerUrls: [firstExplorer.url] }
