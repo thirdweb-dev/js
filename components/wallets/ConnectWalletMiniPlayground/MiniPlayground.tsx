@@ -237,7 +237,7 @@ export const MiniPlayground: React.FC<{
 
             <Flex alignItems="center" gap={1}>
               <TrackedLink
-                href="/dashboard/wallets/connect"
+                href="/dashboard/connect/playground"
                 color="blue.500"
                 category={trackingCategory}
                 label="see-all-wallets"
@@ -420,7 +420,7 @@ export const MiniPlayground: React.FC<{
 
                 <Button
                   as={Link}
-                  href="/dashboard/wallets/connect"
+                  href="/dashboard/connect/playground"
                   fontSize={20}
                   leftIcon={<Icon as={MdOutlineElectricBolt} />}
                   color="black"
@@ -476,7 +476,7 @@ export const MiniPlayground: React.FC<{
                     as={TrackedLink}
                     category={trackingCategory}
                     label="build-your-own"
-                    href="/dashboard/wallets/connect"
+                    href="/dashboard/connect/playground"
                     fontSize={20}
                     leftIcon={<Icon as={MdOutlineElectricBolt} />}
                     color="black"

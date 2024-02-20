@@ -60,7 +60,7 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                 {service.name === "bundler" && (
                   <LinkButton
                     colorScheme="primary"
-                    href={`/dashboard/wallets/smart-wallet?tab=1&clientId=${key}`}
+                    href={`/dashboard/connect/account-abstraction?tab=1&clientId=${key}`}
                   >
                     Go to configuration
                   </LinkButton>
@@ -68,7 +68,7 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                 {service.name === "embeddedWallets" && (
                   <LinkButton
                     colorScheme="primary"
-                    href={`/dashboard/wallets/embedded?tab=1&clientId=${key}`}
+                    href={`/dashboard/connect/embedded-wallets?tab=1&clientId=${key}`}
                   >
                     Go to configuration
                   </LinkButton>

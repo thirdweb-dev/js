@@ -70,13 +70,13 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
   );
 
   const lowercaseAddress = authorAddress.toLowerCase();
-  const checksummedAdress = lowercaseAddress.endsWith("eth")
-    ? lowercaseAddress
-    : getAddress(lowercaseAddress);
+  const checksummedAddress = lowercaseAddress.startsWith("0x")
+    ? getAddress(lowercaseAddress)
+    : lowercaseAddress;
 
   const queryClient = new QueryClient();
   const { address, ensName } = await queryClient.fetchQuery(
-    ensQuery(checksummedAdress),
+    ensQuery(checksummedAddress),
   );
 
   if (!address) {
@@ -105,7 +105,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
   const publishedContract =
     allVersions.find((v) => v.version === version) || allVersions[0];
 
-  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAdress))];
+  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAddress))];
   if (ensName) {
     ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
   }
@@ -127,7 +127,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
 
   const props: PublishPageProps = {
     dehydratedState: dehydrate(queryClient),
-    author: checksummedAdress,
+    author: checksummedAddress,
     contractName,
     version,
   };

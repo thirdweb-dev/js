@@ -137,7 +137,7 @@ function redirects() {
     },
     {
       source: "/dashboard/wallet",
-      destination: "/dashboard/wallets",
+      destination: "/dashboard/connect",
       permanent: false,
     },
     {
@@ -162,12 +162,42 @@ function redirects() {
     },
     {
       source: "/dashboard/wallets",
-      destination: "/dashboard/wallets/connect",
+      destination: "/dashboard/connect/playground",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/wallets/analytics",
+      destination: "/dashboard/connect/analytics",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/wallets/embedded",
+      destination: "/dashboard/connect/embedded-wallets",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/wallets/smart-wallet",
+      destination: "/dashboard/connect/account-abstraction",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/connect",
+      destination: "/dashboard/connect/playground",
       permanent: false,
     },
     {
       source: "/dashboard/infrastructure",
-      destination: "/dashboard/infrastructure/storage",
+      destination: "/dashboard/settings/storage",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/infrastructure/storage",
+      destination: "/dashboard/settings/storage",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/infrastructure/rpc-edge",
+      destination: "/chainlist",
       permanent: false,
     },
     {

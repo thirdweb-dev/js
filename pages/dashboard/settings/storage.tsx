@@ -5,7 +5,7 @@ import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
 import { YourFilesSection } from "components/storage/your-files";
-import { InfrastructureSidebar } from "core-ui/sidebar/infrastructure";
+import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
@@ -36,7 +36,7 @@ const videos = [
   },
 ];
 
-const DashboardStorage: ThirdwebNextPage = () => {
+const DashboardSettingsStorage: ThirdwebNextPage = () => {
   const [codeEnvironment, setCodeEnvironment] =
     useState<CodeEnvironment>("javascript");
 
@@ -307,12 +307,12 @@ string metaJson = Newtonsoft.Json.JsonConvert.SerializeObject(meta);
 var response = await ThirdwebManager.Instance.SDK.storage.UploadText(metaJson);`,
 };
 
-DashboardStorage.getLayout = (page, props) => (
+DashboardSettingsStorage.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <InfrastructureSidebar activePage="storage" />
+    <SettingsSidebar activePage="storage" />
     {page}
   </AppLayout>
 );
-DashboardStorage.pageId = PageId.DashboardStorage;
+DashboardSettingsStorage.pageId = PageId.DashboardSettingsStorage;
 
-export default DashboardStorage;
+export default DashboardSettingsStorage;

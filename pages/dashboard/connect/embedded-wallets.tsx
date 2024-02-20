@@ -3,7 +3,7 @@ import { useEmbeddedWallets } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { Flex, Grid, HStack, Icon, Spacer } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { EmbeddedWallets } from "components/embedded-wallets";
-import { WalletsSidebar } from "core-ui/sidebar/wallets";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { useEffect, useMemo, useState } from "react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
-const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
+const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
@@ -299,13 +299,13 @@ function Templates() {
   );
 }
 
-DashboardWalletsEmbedded.getLayout = (page, props) => (
+DashboardConnectEmbeddedWallets.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <WalletsSidebar activePage="embedded" />
+    <ConnectSidebar activePage="embedded-wallets" />
     {page}
   </AppLayout>
 );
 
-DashboardWalletsEmbedded.pageId = PageId.DashboardWalletsEmbedded;
+DashboardConnectEmbeddedWallets.pageId = PageId.DashboardConnectEmbeddedWallets;
 
-export default DashboardWalletsEmbedded;
+export default DashboardConnectEmbeddedWallets;

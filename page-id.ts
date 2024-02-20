@@ -97,21 +97,13 @@ export enum PageId {
   // thirdweb.com/build-base
   BuildBaseLanding = "build-base-landing",
 
-  // thirdweb.com/gas
-  GasEstimator = "gas-estimator",
-
-  // thirdweb.com/chainlist
-  ChainsLanding = "chains-landing",
-
+  // thirdweb.com/bear-market-airdrop
+  BearMarketAirdrop = "bear-market-airdrop",
+  // drops
+  DropsOptimism = "drops-optimism",
   // thirdweb.com/hackathon
   HackathonLanding = "base-thirdweb-hacakthon",
   ReadyPlayer3Landing = "readyplayer3",
-
-  // thirdweb.com/404
-  PageNotFound = "page-not-found",
-
-  // thirdweb.com/wallet-sdk
-  WalletSDKLanding = "wallet-sdk-landing",
 
   // ---------------------------------------------------------------------------
   //  general product pages
@@ -122,34 +114,26 @@ export enum PageId {
   // thirdweb.com/dashboard/infrastructure
   DashboardInfrastructure = "dashboard-infrastructure",
   // thirdweb.com/dashboard/infrastructure/storage
-  DashboardStorage = "dashboard-storage",
+  DashboardSettingsStorage = "dashboard-storage",
   // thirdweb.com/dashboard/infastucture/rpc-edge
   DashboardRPC = "dashboard-rpc",
 
-  // thirdweb.com/dashboard/wallets
+  // thirdweb.com/dashboard/connect
   DashboardWallets = "dashboard-wallets",
-  // thirdweb.com/dashboard/wallets/wallet-sdk
-  DashboardWalletsWalletSDK = "dashboard-wallets-wallet-sdk",
-  // thirdweb.com/dashboard/wallets/connect
-  DashboardWalletsConnect = "dashboard-wallets-connect",
-  // thirdweb.com/dashboard/wallets/smart-wallet
-  DashboardWalletsSmartWallet = "dashboard-wallets-smart-wallet",
-  // thirdweb.com/dashboard/wallets/embedded
-  DashboardWalletsEmbedded = "dashboard-wallets-embedded",
-  // thirdweb.com/dashboard/wallets/local
-  DashboardWalletsLocal = "dashboard-wallets-local",
-  // thirdweb.com/dashboard/wallets/auth
-  DashboardWalletsAuth = "dashboard-wallets-auth",
-  // thirdweb.com/dashboard/wallets/analytics
-  DashboardWalletsAnalytics = "dashboard-wallets-analytics",
+  // thirdweb.com/dashboard/connect/playground
+  DashboardConnectPlayground = "dashboard-wallets-connect",
+  // thirdweb.com/dashboard/connect/smart-wallet
+  DashboardConnectAccountAbstraction = "dashboard-wallets-smart-wallet",
+  // thirdweb.com/dashboard/connect/embedded
+  DashboardConnectEmbeddedWallets = "dashboard-wallets-embedded",
+  // thirdweb.com/dashboard/connect/analytics
+  DashboardConnectAnalytics = "dashboard-wallets-analytics",
 
   // thirdweb.com/dashboard/contracts/build
   DashboardContractsBuild = "dashboard-contracts-build",
 
   // thirdweb.com/dashboard/contracts
   Contracts = "contracts",
-  // thirdweb.com/dashboard/programs
-  Programs = "programs",
 
   // thirdweb.com/explore
   Explore = "explore",
@@ -162,6 +146,15 @@ export enum PageId {
 
   // thirdweb.com/explore/[category]
   ExploreCategory = "explore-category",
+
+  // thirdweb.com/gas
+  GasEstimator = "gas-estimator",
+
+  // thirdweb.com/chainlist
+  ChainsLanding = "chains-landing",
+
+  // thirdweb.com/404
+  PageNotFound = "page-not-found",
 
   // ---------------------------------------------------------------------------
   //  engine pages
@@ -207,16 +200,6 @@ export enum PageId {
   SolutionsWeb2Onboarding = "solutions-web2-onboarding",
 
   // ---------------------------------------------------------------------------
-  //  network pages
-  // ---------------------------------------------------------------------------
-  // NetworkSolana = "network-solana",
-
-  // ---------------------------------------------------------------------------
-  //  faucets pages
-  // ---------------------------------------------------------------------------
-  // FaucetSolana = "faucet-solana",
-
-  // ---------------------------------------------------------------------------
   //  "publish" product pages
   // ---------------------------------------------------------------------------
   // thirdweb.com/contracts/publish
@@ -242,40 +225,13 @@ export enum PageId {
   // thirdweb.com/contracts/deploy/:id
   DeploySingle = "deploy-single-contract",
 
-  // thirdweb.com/contracts/new
-  NewContract = "new-contract",
-
-  // thirdweb.com/contracts/custom
-  NewCustomContract = "new-custom-contract",
-
-  // thirdweb.com/contracts/new/pre-built
-  PreBuiltContract = "new-pre-built-contract",
-
-  // thirdweb.com/contracts/new/pre-built/:contractCategory
-  // example: thirdweb.com/contracts/new/pre-built/drop/
-  PreBuiltContractCategory = "new-pre-built-contract-category",
-
-  // thirdweb.com/contracts/new/pre-built/:contractCategory/:contractType
-  // example: thirdweb.com/contracts/new/pre-built/drop/nft-drop
-  PreBuiltContractType = "new-pre-built-contract-type",
-
   // thirdweb.com/:network/:contractAddress (evm)
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846
   DeployedContract = "deployed-contract",
 
-  // thirdweb.com/:network/:contractAddress (solana)
-  // example: thirdweb.com/solana/5GYspMpsfw3Vrf7FQ37Jbhpg4PeVZHEPrfPcXY9sGQzy
-  // DeployedProgram = "deployed-program",
-
   // thirdweb.com/:network
   // example: thirdweb.com/ethereum
   ChainLanding = "chain-landing",
-
-  // thirdweb.com/bear-market-airdrop
-  BearMarketAirdrop = "bear-market-airdrop",
-
-  // drops
-  DropsOptimism = "drops-optimism",
 
   // ---------------------------------------------------------------------------
   // "payments" product pages

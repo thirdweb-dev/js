@@ -58,7 +58,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ trackingCategory }) => {
 
           <TrackedLink
             color="blue.500"
-            href="/dashboard/wallets/analytics"
+            href="/dashboard/connect/analytics"
             category={trackingCategory}
             label="view-analytics"
           >

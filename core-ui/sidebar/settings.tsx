@@ -7,6 +7,7 @@ type SettingsSidebarProps = {
     | "apiKey"
     | "devices"
     | "usage"
+    | "storage"
     | "billing"
     | "notifications";
 };
@@ -25,6 +26,11 @@ const links: Route[] = [
     name: "billing",
   },
   { path: "/dashboard/settings/usage", title: "Usage", name: "usage" },
+  {
+    path: "/dashboard/settings/storage",
+    title: "Storage",
+    name: "storage",
+  },
   {
     path: "/dashboard/settings/notifications",
     title: "Notifications",

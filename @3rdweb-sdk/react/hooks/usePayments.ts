@@ -21,7 +21,6 @@ import {
   Sepolia,
   Xai,
   XaiSepolia,
-  ZksyncSepoliaTestnet,
   Zora,
   ZoraTestnet,
 } from "@thirdweb-dev/chains";
@@ -67,7 +66,6 @@ import {
 import { getEVMThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
 import { OtherAddressZero } from "utils/zeroAddress";
-import { boolean, string } from "zod";
 import { paymentsKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useApiAuthToken } from "./useApi";

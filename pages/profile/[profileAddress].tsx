@@ -232,13 +232,13 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   }
 
   const lowercaseAddress = profileAddress.toLowerCase();
-  const checksummedAdress = lowercaseAddress.endsWith("eth")
-    ? lowercaseAddress
-    : getAddress(lowercaseAddress);
+  const checksummedAddress = lowercaseAddress.startsWith("0x")
+    ? getAddress(lowercaseAddress)
+    : lowercaseAddress;
 
   let address: string | null, ensName: string | null;
   try {
-    const info = await queryClient.fetchQuery(ensQuery(checksummedAdress));
+    const info = await queryClient.fetchQuery(ensQuery(checksummedAddress));
     address = info.address;
     ensName = info.ensName;
   } catch (e) {
@@ -259,7 +259,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     };
   }
 
-  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAdress))];
+  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAddress))];
   if (ensName) {
     ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
   }
@@ -275,7 +275,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      profileAddress: checksummedAdress,
+      profileAddress: checksummedAddress,
     },
   };
 };

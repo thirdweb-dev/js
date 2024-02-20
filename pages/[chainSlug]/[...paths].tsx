@@ -363,13 +363,13 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
   const lowercaseAddress = contractAddress.toLowerCase();
-  const checksummedAdress = lowercaseAddress.endsWith("eth")
-    ? lowercaseAddress
-    : getAddress(lowercaseAddress);
+  const checksummedAddress = lowercaseAddress.startsWith("0x")
+    ? getAddress(lowercaseAddress)
+    : lowercaseAddress;
 
   try {
     const queryResult = await queryClient.fetchQuery(
-      ensQuery(checksummedAdress),
+      ensQuery(checksummedAddress),
     );
     address = queryResult?.address;
   } catch {
@@ -428,7 +428,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       dehydratedState: dehydrate(queryClient),
       contractInfo: {
         chainSlug,
-        contractAddress: checksummedAdress,
+        contractAddress: checksummedAddress,
         chain,
       },
       detectedExtension,

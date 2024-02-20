@@ -23,7 +23,7 @@ import { ConnectWallet } from "@thirdweb-dev/react";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const productOptions = [
-  "Wallets",
+  "Connect",
   "Contracts",
   "Payments",
   "Infrastructure",

@@ -3,7 +3,6 @@ import { SlideStateProps } from "../shared";
 import { Center, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { motion } from "framer-motion";
-import React from "react";
 import { Heading } from "tw-components";
 
 export const Titles: React.FC<SlideStateProps> = ({
@@ -19,31 +18,29 @@ export const Titles: React.FC<SlideStateProps> = ({
         textAlign="center"
         h="100%"
       >
-        {["Wallets", "Contracts", "Payments", "Infrastructure"].map(
-          (heading, i) => (
-            <Heading
-              key={heading}
-              cursor="pointer"
-              onClick={() => setStep(i + 1)}
-              size="title.2xl"
-              transition="all 0.2s"
-              color="white"
-              {...(step === i + 1
-                ? {
-                    opacity: 1,
-                    fontWeight: 700,
-                    letterSpacing: "0em",
-                  }
-                : {
-                    opacity: 0.5,
-                    fontWeight: 400,
-                    letterSpacing: "0.02em",
-                  })}
-            >
-              {heading}
-            </Heading>
-          ),
-        )}
+        {["Connect", "Contracts", "Engine"].map((heading, i) => (
+          <Heading
+            key={heading}
+            cursor="pointer"
+            onClick={() => setStep(i + 1)}
+            size="title.2xl"
+            transition="all 0.2s"
+            color="white"
+            {...(step === i + 1
+              ? {
+                  opacity: 1,
+                  fontWeight: 700,
+                  letterSpacing: "0em",
+                }
+              : {
+                  opacity: 0.5,
+                  fontWeight: 400,
+                  letterSpacing: "0.02em",
+                })}
+          >
+            {heading}
+          </Heading>
+        ))}
       </Flex>
     </motion.div>
   );

@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractsList } from "components/payments/contracts/overview/contracts-list";
-import { PaymentsSidebar } from "core-ui/sidebar/payments";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -15,7 +15,7 @@ const PaymentsContracts: ThirdwebNextPage = () => {
 
 PaymentsContracts.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <PaymentsSidebar activePage="contracts" />
+    <ConnectSidebar activePage="payments-contracts" />
     {page}
   </AppLayout>
 );

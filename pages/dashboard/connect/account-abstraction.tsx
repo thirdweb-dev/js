@@ -6,7 +6,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { WalletsSidebar } from "core-ui/sidebar/wallets";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import {
@@ -40,7 +40,7 @@ export type SmartWalletFormData = {
   clientId: string;
 };
 
-const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
+const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
@@ -324,13 +324,14 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   );
 };
 
-DashboardWalletsSmartWallet.getLayout = (page, props) => (
+DashboardConnectAccountAbstraction.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <WalletsSidebar activePage="smart-wallet" />
+    <ConnectSidebar activePage="account-abstraction" />
     {page}
   </AppLayout>
 );
 
-DashboardWalletsSmartWallet.pageId = PageId.DashboardWalletsSmartWallet;
+DashboardConnectAccountAbstraction.pageId =
+  PageId.DashboardConnectAccountAbstraction;
 
-export default DashboardWalletsSmartWallet;
+export default DashboardConnectAccountAbstraction;

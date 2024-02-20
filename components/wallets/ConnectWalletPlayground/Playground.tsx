@@ -1,4 +1,3 @@
-/* eslint-disable inclusive-language/use-inclusive-words */
 import {
   Box,
   Flex,

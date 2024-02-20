@@ -183,15 +183,18 @@ const AppHeader: React.FC = () => {
             Home
           </LinkButton>
           <LinkButton
-            href="/dashboard/wallets/connect"
-            isActive={pathname.startsWith("/dashboard/wallets")}
+            href="/dashboard/connect"
+            isActive={
+              pathname.startsWith("/dashboard/connect") ||
+              pathname.startsWith("/dashboard/payments")
+            }
             _active={{
               bg: "bgBlack",
               color: "bgWhite",
             }}
             rounded="lg"
           >
-            Wallets
+            Connect
           </LinkButton>
           <LinkButton
             href="/dashboard/contracts/deploy"
@@ -206,28 +209,6 @@ const AppHeader: React.FC = () => {
             rounded="lg"
           >
             Contracts
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/payments/contracts"
-            rounded="lg"
-            isActive={pathname.startsWith("/dashboard/payments")}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-          >
-            Payments
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/infrastructure/storage"
-            isActive={pathname.startsWith("/dashboard/infrastructure")}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Infrastructure
           </LinkButton>
           <LinkButton
             href="/dashboard/engine"

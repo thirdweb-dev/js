@@ -8,7 +8,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { WalletsSidebar } from "core-ui/sidebar/wallets";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
@@ -41,7 +41,7 @@ import { CONTACT_US_URL } from "utils/pricing";
 const RADIAN = Math.PI / 180;
 const TRACKING_CATEGORY = "wallet-analytics";
 
-const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
+const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isLoggedIn } = useLoggedInUser();
@@ -413,13 +413,13 @@ const WalletStatCard: React.FC<{ label: string; value?: number }> = ({
   );
 };
 
-DashboardWalletsAnalytics.getLayout = (page, props) => (
+DashboardConnectAnalytics.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <WalletsSidebar activePage="analytics" />
+    <ConnectSidebar activePage="analytics" />
     {page}
   </AppLayout>
 );
 
-DashboardWalletsAnalytics.pageId = PageId.DashboardWalletsAnalytics;
+DashboardConnectAnalytics.pageId = PageId.DashboardConnectAnalytics;
 
-export default DashboardWalletsAnalytics;
+export default DashboardConnectAnalytics;

@@ -36,48 +36,59 @@ export const slides: Slide[] = [
 
   // slide 2
   {
-    title: "Onboard, authenticate, and manage users.",
+    title: "A complete toolkit to build the frontend of your web3 app.",
     background: "linear-gradient(147.15deg, #410AB6 30.17%, #D45CFF 100.01%)",
     graphic: Titles,
     content: (
       <Text size="body.lg">
         <UnorderedList>
           <ListItem>
-            {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="/dashboard/wallets/connect"
-              label="connect-wallet"
-              color="blue.500"
-            >
-              Connect any wallets
-            </TrackedLink>{" "}
-            to your apps and games.
-          </ListItem>
-          <ListItem>
-            <TrackedLink
-              category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/references/wallets/latest/EmbeddedWallet"
+              href="https://portal.thirdweb.com/react"
               isExternal
               label="auth"
               color="blue.500"
             >
-              Create wallets
+              Hooks
+            </TrackedLink>{" "}
+            and{" "}
+            <TrackedLink
+              category={TRACK_CATEGORY}
+              href="https://portal.thirdweb.com/typescript"
+              isExternal
+              label="auth"
+              color="blue.500"
+            >
+              functions
+            </TrackedLink>{" "}
+            that let you easily interact with contracts, wallets, and
+            transactions.
+          </ListItem>
+          <ListItem>
+            <TrackedLink
+              category={TRACK_CATEGORY}
+              href="/dashboard/connect/embedded-wallets"
+              isExternal
+              label="auth"
+              color="blue.500"
+            >
+              App wallets
             </TrackedLink>{" "}
             with different key management structures.
           </ListItem>
           <ListItem>
-            {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="https://portal.thirdweb.com/wallets/auth"
+              href="/dashboard/connect/playground"
               isExternal
               label="auth"
               color="blue.500"
             >
-              Prove wallet ownership
+              Plug and play UI components
             </TrackedLink>{" "}
-            to off-chain system.
+            that you can drop into your app to easily integrate web3
+            functionality
           </ListItem>
         </UnorderedList>
       </Text>
@@ -162,70 +173,21 @@ export const slides: Slide[] = [
 
   // slide 4
   {
-    title: "Facilitate financial transactions on the blockchain.",
+    title: "The open-source server for scalable web3 apps.",
     background: "linear-gradient(147.15deg, #B4F1FF -10.17%, #410AB6 100.01%)",
     graphic: Titles,
     content: (
       <Text size="body.lg">
         <UnorderedList>
-          <ListItem>
-            <TrackedLink
-              category={TRACK_CATEGORY}
-              href="https://withpaper.com/product/checkouts"
-              isExternal
-              label="checkout"
-              color="blue.500"
-            >
-              Credit card and cross-chain checkouts for NFTs
-            </TrackedLink>
-            .
-          </ListItem>
+          <ListItem>Reliably send blockchain transactions.</ListItem>
+          <ListItem>Manage smart wallets.</ListItem>
           <ListItem>Enable gasless transactions.</ListItem>
-          <ListItem>Fiat on-ramp.</ListItem>
         </UnorderedList>
       </Text>
     ),
   },
 
   // slide 5
-  {
-    title: "Connect your application to decentralized networks.",
-    background: "linear-gradient(147.15deg, #5CFFE1 -10.17%, #410AB6 100.01%)",
-    graphic: Titles,
-    content: (
-      <Text size="body.lg">
-        <UnorderedList>
-          <ListItem>
-            Upload files to{" "}
-            <TrackedLink
-              category={TRACK_CATEGORY}
-              href="/dashboard/storage"
-              label="storage"
-              color="blue.500"
-            >
-              Storage
-            </TrackedLink>
-            .
-          </ListItem>
-          <ListItem>Download files from Gateway.</ListItem>
-          <ListItem>
-            Access to on-chain data with{" "}
-            <TrackedLink
-              category={TRACK_CATEGORY}
-              href="/dashboard/rpc-edge"
-              label="rpc-edge"
-              color="blue.500"
-            >
-              RPC Edge
-            </TrackedLink>
-            .
-          </ListItem>
-        </UnorderedList>
-      </Text>
-    ),
-  },
-
-  // slide 6
   {
     title: "Connect a wallet to get started.",
     background: "linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)",

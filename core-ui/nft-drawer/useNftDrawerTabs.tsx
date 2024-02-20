@@ -14,23 +14,23 @@ import { useMemo } from "react";
 
 type UseNFTDrawerTabsParams = [contract: NFTContract, token: NFT | null];
 
-const EVMTransferTab = dynamic(
+const TransferTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/transfer-tab"),
 );
-const EVMAirdropTab = dynamic(
+const AirdropTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/airdrop-tab"),
 );
-const EVMBurnTab = dynamic(
+const BurnTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/burn-tab"),
 );
 
-const EVMMintSupplyTab = dynamic(
+const MintSupplyTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/mint-supply-tab"),
 );
-const EVMClaimConditionTab = dynamic(
+const ClaimConditionTab = dynamic(
   () => import("contract-ui/tabs/claim-conditions/components/claim-conditions"),
 );
-const EVMClaimTab = dynamic(
+const ClaimTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/claim-tab"),
 );
 
@@ -38,18 +38,10 @@ export function useNFTDrawerTabs(
   ...args: UseNFTDrawerTabsParams
 ): NFTDrawerTab[] {
   const [contract, token] = args;
-
   const tokenId = token?.metadata.id || "";
-
-  // this is ok because ecosystem can never change!
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const address = useAddress();
-  // this is ok because ecosystem can never change!
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const balanceOf = useNFTBalance(contract, address, token?.metadata.id);
 
-  // this is ok because ecosystem can never change!
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   return useMemo(() => {
     const isERC1155 = detectFeatures(contract, ["ERC1155"]);
     const isERC721 = detectFeatures(contract, ["ERC721"]);
@@ -85,11 +77,7 @@ export function useNFTDrawerTabs(
           title: "Claim Conditions",
           isDisabled: false,
           children: (
-            <EVMClaimConditionTab
-              contract={contract}
-              tokenId={tokenId}
-              isColumn
-            />
+            <ClaimConditionTab contract={contract} tokenId={tokenId} isColumn />
           ),
         },
       ]);
@@ -101,7 +89,7 @@ export function useNFTDrawerTabs(
         disabledText: erc1155
           ? "You don't own any copy of this NFT"
           : "You don't own this NFT",
-        children: <EVMTransferTab contract={contract} tokenId={tokenId} />,
+        children: <TransferTab contract={contract} tokenId={tokenId} />,
       },
     ]);
     if (erc1155) {
@@ -110,7 +98,7 @@ export function useNFTDrawerTabs(
           title: "Airdrop",
           isDisabled: !isOwner,
           disabledText: "You don't own any copy of this NFT",
-          children: <EVMAirdropTab contract={erc1155} tokenId={tokenId} />,
+          children: <AirdropTab contract={erc1155} tokenId={tokenId} />,
         },
       ]);
     }
@@ -120,7 +108,7 @@ export function useNFTDrawerTabs(
           title: "Burn",
           isDisabled: !isOwner,
           disabledText: "You don't own this NFT",
-          children: <EVMBurnTab contract={contract} tokenId={tokenId} />,
+          children: <BurnTab contract={contract} tokenId={tokenId} />,
         },
       ]);
     }
@@ -130,7 +118,7 @@ export function useNFTDrawerTabs(
           title: "Mint",
           isDisabled: false,
           disabledText: "You don't have minter permissions",
-          children: <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />,
+          children: <MintSupplyTab contract={erc1155} tokenId={tokenId} />,
         },
       ]);
     }
@@ -139,7 +127,7 @@ export function useNFTDrawerTabs(
         {
           title: "Claim",
           isDisabled: false,
-          children: <EVMClaimTab contract={contract} tokenId={tokenId} />,
+          children: <ClaimTab contract={contract} tokenId={tokenId} />,
         },
       ]);
     }

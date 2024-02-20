@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Icon, SlideFade, Spacer } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ConnectWalletPlayground } from "components/wallets/ConnectWalletPlayground/Playground";
-import { WalletsSidebar } from "core-ui/sidebar/wallets";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
@@ -19,7 +19,7 @@ const seo = {
   desc: "Onboard your users to web3 with a beautiful Connect Wallet modal, customizable auth flows, and sign-in for web2 & web3 — in a few lines of code.",
 };
 
-const DashboardWalletsConnect: ThirdwebNextPage = () => {
+const DashboardConnectPlayground: ThirdwebNextPage = () => {
   return (
     <Box>
       <NextSeo
@@ -40,7 +40,7 @@ const DashboardWalletsConnect: ThirdwebNextPage = () => {
       />
 
       <Heading size="title.xl" as="h1">
-        Connect
+        Playground
       </Heading>
       <Spacer height={4} />
       <Text fontWeight={500}>
@@ -359,13 +359,13 @@ function BuildCustomBanner() {
   );
 }
 
-DashboardWalletsConnect.getLayout = (page, props) => (
+DashboardConnectPlayground.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true} noOverflowX={true}>
-    <WalletsSidebar activePage="connect" />
+    <ConnectSidebar activePage="playground" />
     {page}
   </AppLayout>
 );
 
-DashboardWalletsConnect.pageId = PageId.DashboardWalletsConnect;
+DashboardConnectPlayground.pageId = PageId.DashboardConnectPlayground;
 
-export default DashboardWalletsConnect;
+export default DashboardConnectPlayground;

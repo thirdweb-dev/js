@@ -37,7 +37,7 @@ const Dashboard: ThirdwebNextPage = (
                 <VStack gap={10} w="full">
                   <OnboardingSteps />
                   <Flex flexDir="column" gap={10} w="full">
-                    {["wallets", "contracts", "infrastructure", "payments"].map(
+                    {["connect", "contracts", "infrastructure"].map(
                       (section) => {
                         const products = PRODUCTS.filter(
                           (p) => p.section === section && !!p.dashboardLink,
@@ -50,7 +50,9 @@ const Dashboard: ThirdwebNextPage = (
                               textTransform="capitalize"
                               color="faded"
                             >
-                              {section}
+                              {section === "infrastructure"
+                                ? "Engine"
+                                : section}
                             </Heading>
                             <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
                               {products.map((product) => (

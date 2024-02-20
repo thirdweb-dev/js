@@ -18,7 +18,7 @@ import { ThirdwebNextPage } from "utils/types";
 
 const helpProducts = [
   {
-    title: "Wallets",
+    title: "Connect",
     icon: require("public/assets/support/wallets.svg"),
     viewAllUrl: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui",
     helpArticles: [

@@ -69,7 +69,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           titleWithGradient="for everyone"
           subtitle="Onboard all of your users with a beautiful Connect Wallet modal, flexible sign-in options for web2 & web3, and powerful hooks for full customizability."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/wallets/connect"
+          ctaLink="/dashboard/connect/playground"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4490FF, #4490FF)"
           lottie={connectLottie}
@@ -139,7 +139,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-onboarding-everyone.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-onboarding-everyone.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="/dashboard/wallets/connect"
+              href="/dashboard/connect/playground"
             />
             <LandingCardWithImage
               title="Infinite customizability"
@@ -147,7 +147,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-customizability.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-customizability.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="/dashboard/wallets/connect"
+              href="/dashboard/connect/playground"
             />
           </LandingGridSection>
           <LandingGridSection desktopColumns={4}>
@@ -237,7 +237,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-analytics.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-analytics.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="/dashboard/wallets/connect"
+              href="/dashboard/connect/playground"
               colSpan={1}
             />
           </LandingGridSection>
@@ -271,7 +271,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           title="Integrate in"
           titleWithGradient="a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/wallets/connect"
+          ctaLink="/dashboard/connect/playground"
           gradient="linear(to-r, #3385FF, #7BB0FF)"
         />
       </Container>
