@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "../../../../../index.js";
+import type { ThirdwebClient } from "../../../../index.js";
 import {
   UserWalletStatus,
   type EmbeddedWalletConstructorType,

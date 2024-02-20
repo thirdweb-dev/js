@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "../../../../../../index.js";
+import type { ThirdwebClient } from "../../../../../index.js";
 import type { EmbeddedWallet } from "../../lib/core/embedded-wallet.js";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator.js";
 import type {

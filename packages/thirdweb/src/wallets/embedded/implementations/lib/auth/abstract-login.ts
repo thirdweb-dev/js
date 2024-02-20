@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "../../../../../../client/client.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,

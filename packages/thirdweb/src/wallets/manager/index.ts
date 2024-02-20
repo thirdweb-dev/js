@@ -179,6 +179,8 @@ export function createConnectionManager() {
     }
 
     await wallet.switchChain(chain);
+    // for wallets that dont implement events, just set it manually
+    activeWalletChain.setValue(wallet.getChain());
   };
 
   return {
