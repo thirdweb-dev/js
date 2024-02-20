@@ -97,6 +97,8 @@ export const ConnectedWalletDetails: React.FC<{
   hideSwitchToPersonalWallet?: boolean;
   hideDisconnect?: boolean;
   detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+  hideSendButton?: boolean;
+  hideReceiveButton?: boolean;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
@@ -287,6 +289,9 @@ export const ConnectedWalletDetails: React.FC<{
   const showFaucet =
     props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
 
+  const showBothButtons =
+    props.hideSendButton !== true && props.hideReceiveButton !== true;
+
   let content = (
     <div>
       <Spacer y="xl" />
@@ -353,55 +358,67 @@ export const ConnectedWalletDetails: React.FC<{
 
         {/* Send and Receive */}
         <Container
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: spacing.sm,
-          }}
+          style={
+            showBothButtons
+              ? {
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: spacing.sm,
+                }
+              : {
+                  display: "grid",
+                }
+          }
         >
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              display: "flex",
-              gap: spacing.xs,
-              alignItems: "center",
-              padding: spacing.sm,
-            }}
-            onClick={() => {
-              setScreen("send");
-            }}
-          >
-            <PaperPlaneIcon
-              width={iconSize.sm}
-              height={iconSize.sm}
+          {props.hideSendButton !== true && (
+            <Button
+              variant="outline"
               style={{
-                transform: "translateY(-10%) rotate(-45deg) ",
+                fontSize: fontSize.sm,
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.sm,
               }}
-            />
-            {locale.send}
-          </Button>
+              onClick={() => {
+                setScreen("send");
+              }}
+            >
+              <PaperPlaneIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  transform: "translateY(-10%) rotate(-45deg) ",
+                }}
+              />
+              {locale.send}
+            </Button>
+          )}
 
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              display: "flex",
-              gap: spacing.xs,
-              alignItems: "center",
-              padding: spacing.sm,
-            }}
-            onClick={() => {
-              setScreen("receive");
-            }}
-          >
-            <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
-            {locale.receive}{" "}
-          </Button>
+          {props.hideReceiveButton !== true && (
+            <Button
+              variant="outline"
+              style={{
+                fontSize: fontSize.sm,
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.sm,
+              }}
+              onClick={() => {
+                setScreen("receive");
+              }}
+            >
+              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+              {locale.receive}{" "}
+            </Button>
+          )}
         </Container>
       </Container>
 
-      <Spacer y="md" />
+      {props.hideSendButton && props.hideReceiveButton ? null : (
+        <Spacer y="md" />
+      )}
 
       <Container px="md">
         {/* Network Switcher */}

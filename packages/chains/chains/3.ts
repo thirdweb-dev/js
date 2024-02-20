@@ -16,6 +16,7 @@ export default {
     "http://fauceth.komputing.org?chain=3&address=${ADDRESS}",
     "https://faucet.ropsten.be?${ADDRESS}"
   ],
+  "features": [],
   "infoURL": "https://github.com/ethereum/ropsten",
   "name": "Ropsten",
   "nativeCurrency": {
@@ -24,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 3,
+  "redFlags": [],
   "rpc": [
     "https://ropsten.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -33,6 +35,7 @@ export default {
   "shortName": "rop",
   "slip44": 1,
   "slug": "ropsten",
-  "testnet": true,
+  "status": "deprecated",
+  "testnet": false,
   "title": "Ethereum Testnet Ropsten"
 } as const satisfies Chain;

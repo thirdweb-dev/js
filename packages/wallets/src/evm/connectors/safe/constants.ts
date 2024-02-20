@@ -1,9 +1,14 @@
-// excerpt from https://docs.gnosis-safe.io/backend/available-services
-export const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
+import { SafeSupportedChains } from "./types";
+
+// excerpt from https://docs.safe.global/api-supported-networks#safe-transaction-service
+export const CHAIN_ID_TO_GNOSIS_SERVER_URL: Record<
+  SafeSupportedChains,
+  string
+> = {
   // mainnet
   1: "https://safe-transaction-mainnet.safe.global",
-  // goerli
-  5: "https://safe-transaction-goerli.safe.global",
+  // Sepolia
+  11155111: "https://safe-transaction-sepolia.safe.global",
   // optimism
   10: "https://safe-transaction-optimism.safe.global",
   // bsc
@@ -18,14 +23,12 @@ export const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   42161: "https://safe-transaction-arbitrum.safe.global",
   // celo
   42220: "https://safe-transaction-celo.safe.global",
-  // base goerli
-  84531: "https://safe-transaction-base-testnet.safe.global",
+  // Base mainnet
+  8453: "https://safe-transaction-base.safe.global",
   // aurora
   1313161554: "https://safe-transaction-aurora.safe.global",
-} as const;
-
-/**
- * @internal
- */
-export const SafeSupportedChainsSet = /* @__PURE__ */ (() =>
-  new Set(Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number)))();
+  //  Polygon zkEVM
+  1101: "https://safe-transaction-zkevm.safe.global",
+  //  ZkSync Mainnet
+  324: "https://safe-transaction-zksync.safe.global",
+};

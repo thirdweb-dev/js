@@ -18,6 +18,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmRUzDpn3xqPYnjLuZvFs2Attio9VxGRUprXEjcNQDcpe5",
+    "width": 375,
+    "height": 456,
+    "format": "png"
+  },
   "infoURL": "https://bitcoincode.technology",
   "name": "BTC20 Smart Chain",
   "nativeCurrency": {

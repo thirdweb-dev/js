@@ -53,6 +53,14 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     name: "Cronos Testnet",
     gasPrice: 2000 * 10 ** 9,
   },
+  [47]: {
+    name: "Xpla Testnet",
+    gasPrice: 850 * 10 ** 9,
+  },
+  [37]: {
+    name: "Xpla Mainnet",
+    gasPrice: 5100 * 10 ** 9,
+  },
   [199]: {
     name: "BitTorrent Chain",
     gasPrice: 300000 * 10 ** 9,
