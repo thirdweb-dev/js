@@ -1,7 +1,7 @@
 import { defineChain } from "../utils.js";
 
 export const arbitrumSepolia = /* @__PURE__ */ defineChain({
-  id: 421_614,
+  id: 421614,
   name: "Arbitrum Sepolia",
   nativeCurrency: {
     name: "Arbitrum Sepolia Ether",
