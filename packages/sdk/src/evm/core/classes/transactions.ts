@@ -1043,7 +1043,7 @@ async function enginePrepareRequest(
 
       const domain = {
         name,
-        version: gaslessOptions.engine.domainVersion,
+        version: "1",
         salt: "0x" + chainId.toString(16).padStart(64, "0"), // Use 64 length hex chain id as salt
         verifyingContract: transaction.to,
       };
