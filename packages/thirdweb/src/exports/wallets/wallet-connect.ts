@@ -1,4 +1,1 @@
-export {
-  walletConnect,
-  walletConnectMetadata,
-} from "../../wallets/wallet-connect/index.js";
+export { walletConnect } from "../../wallets/wallet-connect/index.js";

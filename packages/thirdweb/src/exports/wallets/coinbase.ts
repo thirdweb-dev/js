@@ -5,7 +5,6 @@ export {
 
 export {
   coinbaseSDKWallet,
-  CoinbaseSDKWallet,
   type CoinbaseSDKWalletOptions,
   type CoinbaseSDKWalletConnectionOptions,
 } from "../../wallets/coinbase/coinbaseSDKWallet.js";

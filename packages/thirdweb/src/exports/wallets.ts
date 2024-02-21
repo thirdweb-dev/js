@@ -35,7 +35,6 @@ export { injectedProvider } from "../wallets/injected/mipdStore.js";
 export {
   injectedMetamaskProvider,
   metamaskWallet,
-  metamaskMetadata,
 } from "../wallets/injected/wallets/metamask.js";
 
 export {
@@ -45,26 +44,21 @@ export {
 
 export {
   rainbowWallet,
-  rainbowWalletMetadata,
   injectedRainbowProvider,
 } from "../wallets/injected/wallets/rainbow.js";
 
 export {
   zerionWallet,
-  zerionWalletMetadata,
   injectedZerionProvider,
 } from "../wallets/injected/wallets/zerion.js";
 
 // wallet-connect
-export {
-  walletConnect,
-  walletConnectMetadata,
-} from "../wallets/wallet-connect/index.js";
+export { walletConnect } from "../wallets/wallet-connect/index.js";
 
 export type { WalletConnectConnectionOptions } from "../wallets/wallet-connect/types.js";
 
 // smart
-export { smartWallet, smartWalletMetadata } from "../wallets/smart/index.js";
+export { smartWallet } from "../wallets/smart/index.js";
 export type { SmartWalletOptions } from "../wallets/smart/types.js";
 
 // storage
@@ -82,14 +76,11 @@ export {
 
 export {
   coinbaseSDKWallet,
-  CoinbaseSDKWallet,
   type CoinbaseSDKWalletOptions,
   type CoinbaseSDKWalletConnectionOptions,
 } from "../wallets/coinbase/coinbaseSDKWallet.js";
-export { coinbaseMetadata } from "../wallets/coinbase/coinbaseMetadata.js";
 
 export { embeddedWallet } from "../wallets/embedded/core/wallet/index.js";
-export { embeddedWalletMetadata } from "../wallets/embedded/core/wallet/index.js";
 export {
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,

@@ -7,7 +7,6 @@ export type { WalletEventListener } from "../../wallets/interfaces/listeners.js"
 export type { WalletMetadata } from "../../wallets/types.js";
 
 export type { ConnectionStatus } from "../../wallets/manager/index.js";
-export { createConnectionManager } from "../../wallets/manager/index.js";
 
 export {
   getTokenBalance,
@@ -22,7 +21,6 @@ export {
 
 // injected
 export { injectedWallet } from "../../wallets/injected/index.js";
-export { getMIPDStore } from "../../wallets/injected/mipdStore.js";
 
 export type {
   WalletRDNS,
@@ -35,7 +33,6 @@ export { injectedProvider } from "../../wallets/injected/mipdStore.js";
 export {
   injectedMetamaskProvider,
   metamaskWallet,
-  metamaskMetadata,
 } from "../../wallets/injected/wallets/metamask.js";
 
 export {
@@ -45,49 +42,26 @@ export {
 
 export {
   rainbowWallet,
-  rainbowWalletMetadata,
   injectedRainbowProvider,
 } from "../../wallets/injected/wallets/rainbow.js";
 
 export {
   zerionWallet,
-  zerionWalletMetadata,
   injectedZerionProvider,
 } from "../../wallets/injected/wallets/zerion.js";
 
 // wallet-connect
-export {
-  walletConnect,
-  walletConnectMetadata,
-} from "../../wallets/wallet-connect/index.js";
+export { walletConnect } from "../../wallets/wallet-connect/index.js";
 
 export type { WalletConnectConnectionOptions } from "../../wallets/wallet-connect/types.js";
 
 // smart
-export {
-  smartWallet,
-  SmartWallet,
-  smartWalletMetadata,
-  personalWalletToSmartAccountMap,
-} from "../../wallets/smart/index.js";
+export { smartWallet } from "../../wallets/smart/index.js";
 export type { SmartWalletOptions } from "../../wallets/smart/types.js";
 
-// storage
-export {
-  getSavedConnectParamsFromStorage,
-  saveConnectParamsToStorage,
-  deleteConnectParamsFromStorage,
-} from "../../wallets/manager/storage.js";
 export type { WithPersonalWalletConnectionOptions } from "../../wallets/manager/storage.js";
 
 export {
-  getStoredActiveWalletId,
-  getStoredConnectedWalletIds,
-} from "../../wallets/manager/index.js";
-
-export {
   coinbaseSDKWallet,
-  CoinbaseSDKWallet,
   type CoinbaseSDKWalletConnectionOptions,
 } from "../../wallets/coinbase/coinbaseSDKWallet.js";
-export { coinbaseMetadata } from "../../wallets/coinbase/coinbaseMetadata.js";
