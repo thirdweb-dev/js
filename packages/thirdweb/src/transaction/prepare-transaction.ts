@@ -45,13 +45,13 @@ export type PreparedTransaction<
  * @transaction
  * @example
  * ```ts
- * import { prepareTransaction, parseEther } from "thirdweb";
+ * import { prepareTransaction, toWei } from "thirdweb";
  * import { ethereum } from "thirdweb/chains";
  * const transaction = prepareTransaction({
  *  to: "0x1234567890123456789012345678901234567890",
  *  chain: ethereum,
  *  client: thirdwebClient,
- *  value: parseEther("1.0"),
+ *  value: toWei("1.0"),
  * });
  * ```
  */

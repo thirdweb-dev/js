@@ -6,7 +6,7 @@ import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
 import { estimateGas } from "./actions/estimate-gas.js";
 import { prepareTransaction } from "./prepare-transaction.js";
 import { ethereum } from "../chains/chain-definitions/ethereum.js";
-import { parseEther } from "../utils/units.js";
+import { toWei } from "../utils/units.js";
 
 describe("prepareTransaction", () => {
   test("should prepare a transaction", () => {
@@ -14,7 +14,7 @@ describe("prepareTransaction", () => {
       chain: ethereum,
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
-      value: parseEther("0.1"),
+      value: toWei("0.1"),
     });
     expect(preparedTx.to).toBe(TEST_WALLET_B);
     expect(preparedTx.value).toMatchInlineSnapshot(`100000000000000000n`);
@@ -25,7 +25,7 @@ describe("prepareTransaction", () => {
       chain: ethereum,
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
-      value: parseEther("0.1"),
+      value: toWei("0.1"),
     });
     const estimate = await estimateGas({
       transaction: preparedTx,
