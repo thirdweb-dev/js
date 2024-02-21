@@ -22,12 +22,12 @@ import {
   useActiveWalletChain,
 } from "../../../providers/wallet-provider.js";
 import { useWalletBalance } from "../../../hooks/others/useWalletBalance.js";
-import { isAddress } from "viem";
 import { Text } from "../../components/text.js";
 import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import styled from "@emotion/styled";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { defineChain } from "../../../../chains/utils.js";
+import { isAddress } from "../../../../utils/address.js";
 
 type TXError = Error & { data?: { message?: string } };
 

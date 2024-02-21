@@ -193,3 +193,13 @@ export { keccak256 } from "../utils/hashing/keccak256.js";
 
 // sha256
 export { sha256 } from "../utils/hashing/sha256.js";
+
+// ------------------------------------------------
+// address
+// ------------------------------------------------
+export {
+  getAddress,
+  isAddress,
+  type Address,
+  type AddressInput,
+} from "../utils/address.js";

@@ -4,7 +4,6 @@ import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDK as CoinbaseWalletSDKConstructor } from "@coinbase/wallet-sdk";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import {
-  getAddress,
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
@@ -29,6 +28,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { getAddress } from "../../utils/address.js";
 
 type SavedConnectParams = {
   chain?: Chain;

@@ -1,8 +1,6 @@
 import {
-  getAddress,
   getTypesForEIP712Domain,
   validateTypedData,
-  type Hex,
   type SignTypedDataParameters,
 } from "viem";
 import type { Address } from "abitype";
@@ -27,7 +25,9 @@ import {
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
+  type Hex,
 } from "../../utils/encoding/hex.js";
+import { getAddress } from "../../utils/address.js";
 
 /**
  * Connect to Injected Wallet Provider
