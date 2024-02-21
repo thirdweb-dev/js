@@ -1,8 +1,9 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef, useEffect, useCallback } from "react";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import {
   ModalConfigCtx,
+  SetModalConfigCtx,
   // SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { WalletConfig, SelectUIProps } from "../../types/wallets.js";
@@ -27,14 +28,11 @@ import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { useScreenContext } from "./Modal/screen.js";
+import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
-  // activeWalletConnectionStatus: SelectUIProps["activeWalletConnectionStatus"];
-  // connected: SelectUIProps["connected"];
-  // setActiveWalletConnectionStatus: SelectUIProps["setActiveWalletConnectionStatus"];
-  // activeWallet?: SelectUIProps["activeWallet"];
-  // activeWalletAddress?: SelectUIProps["activeWalletAddress"];
+  connection: Omit<SelectUIProps["connection"], "createInstance">;
 };
 
 // temp
@@ -446,9 +444,19 @@ const WalletSelection: React.FC<{
   maxHeight?: string;
   selectUIProps: WalletSelectUIProps;
 }> = (props) => {
-  // const modalConfig = useContext(ModalConfigCtx);
-  // const setModalConfig = useContext(SetModalConfigCtx);
+  const { client, dappMetadata } = useThirdwebProviderProps();
+  const modalConfig = useContext(ModalConfigCtx);
+  const setModalConfig = useContext(SetModalConfigCtx);
   const walletConfigs = sortWalletConfigs(props.walletConfigs);
+  const saveData = useCallback(
+    (data: any) => {
+      setModalConfig({
+        ...modalConfig,
+        data,
+      });
+    },
+    [modalConfig, setModalConfig],
+  );
 
   return (
     <WalletList>
@@ -461,13 +469,24 @@ const WalletSelection: React.FC<{
             {walletConfig.selectUI ? (
               <walletConfig.selectUI
                 screenConfig={props.selectUIProps.screenConfig}
-                select={() => {
-                  props.selectWallet(walletConfig);
-                  // setModalConfig((config) => ({ ...config, data }));
+                selection={{
+                  select: () => {
+                    props.selectWallet(walletConfig);
+                  },
+                  isSingularOption: walletConfigs.length === 1,
+                  data: modalConfig.data,
+                  saveData: saveData,
                 }}
-                isSingularOption={walletConfigs.length === 1}
-                // {...props.selectUIProps}
-                // connect={walletConfig.connect}
+                connection={{
+                  ...props.selectUIProps.connection,
+                  createInstance: () => {
+                    return walletConfig.create({
+                      client,
+                      dappMetadata,
+                    });
+                  },
+                }}
+                walletConfig={walletConfig}
               />
             ) : (
               <WalletEntryButton
@@ -487,7 +506,7 @@ const WalletSelection: React.FC<{
 /**
  * @internal
  */
-function WalletEntryButton(props: {
+export function WalletEntryButton(props: {
   walletConfig: WalletConfig;
   selectWallet: () => void;
 }) {

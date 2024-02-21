@@ -12,7 +12,8 @@ import { Text } from "../ui/components/text.js";
  * @internal
  */
 export const HeadlessConnectUI = (props: ConnectUIProps) => {
-  const { walletConfig, screenConfig, done, createInstance } = props;
+  const { walletConfig, screenConfig } = props;
+  const { done, createInstance } = props.connection;
 
   const prompted = useRef(false);
   const [connectionFailed, setConnectionFailed] = useState(false);

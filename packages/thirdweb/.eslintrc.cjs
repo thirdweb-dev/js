@@ -31,7 +31,7 @@ const jsdocRuleOverrides = {
         "extension",
         "rpc",
         "transaction",
-        "wallet",
+        "walletConfig",
         "connectWallet",
         "theme",
         "locale",

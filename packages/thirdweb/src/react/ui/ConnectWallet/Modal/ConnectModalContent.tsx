@@ -1,5 +1,6 @@
 import {
   ModalConfigCtx,
+  SetModalConfigCtx,
   // SetModalConfigCtx,
 } from "../../../providers/wallet-ui-states-provider.js";
 import { useCallback, useContext } from "react";
@@ -32,7 +33,7 @@ export const ConnectModalContent = (props: {
   const { wallets, client, dappMetadata } = useThirdwebProviderProps();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
-  // const setModalConfig = useContext(SetModalConfigCtx);
+  const setModalConfig = useContext(SetModalConfigCtx);
   // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
   // const setActiveWalletConnectionStatus = useSetActiveWalletConnectionStatus();
   // const activeWallet = useActiveWallet();
@@ -43,6 +44,16 @@ export const ConnectModalContent = (props: {
   const modalSize = modalConfig.modalSize;
   const onConnect = modalConfig.onConnect;
   const isWideModal = modalSize === "wide";
+
+  const saveData = useCallback(
+    (data: any) => {
+      setModalConfig((prev) => ({
+        ...prev,
+        data: data,
+      }));
+    },
+    [setModalConfig],
+  );
 
   // const { user } = useUser();
   // const authConfig = useThirdwebAuthContext();
@@ -121,6 +132,12 @@ export const ConnectModalContent = (props: {
     size: modalConfig.modalSize,
   };
 
+  const connection = {
+    done: handleConnected,
+    chain: modalConfig.chain,
+    chains: modalConfig.chains,
+  };
+
   const walletList = (
     <WalletSelector
       title={title}
@@ -131,6 +148,7 @@ export const ConnectModalContent = (props: {
       selectWallet={setScreen}
       selectUIProps={{
         screenConfig: screenConfig,
+        connection: connection,
       }}
     />
   );
@@ -144,15 +162,19 @@ export const ConnectModalContent = (props: {
       <ConnectUI
         walletConfig={walletConfig}
         screenConfig={screenConfig}
-        done={handleConnected}
-        createInstance={() => {
-          return walletConfig.create({
-            client,
-            dappMetadata,
-          });
+        connection={{
+          ...connection,
+          createInstance: () => {
+            return walletConfig.create({
+              client,
+              dappMetadata,
+            });
+          },
         }}
-        chains={modalConfig.chains}
-        chain={modalConfig.chain}
+        selection={{
+          data: modalConfig.data,
+          saveData,
+        }}
       />
     );
   };

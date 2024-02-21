@@ -4,7 +4,7 @@ import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { DAppMetaData } from "../../wallets/types.js";
 
 /**
- * @wallet
+ * @walletConfig
  */
 export type WalletConfig = {
   category?: "socialLogin" | "walletLogin";
@@ -65,6 +65,9 @@ export type WalletConfig = {
   personalWalletConfigs?: WalletConfig[];
 };
 
+/**
+ * @walletConfig
+ */
 export type ScreenConfig = {
   /**
    * Hide or show the Modal that the screen is rendered in. This is useful if you want to open up another Modal as part of the wallet connection process and want to hide the current Modal to avoid showing multiple Modals at the same time
@@ -97,20 +100,9 @@ export type ScreenConfig = {
 };
 
 /**
- * @wallet
+ * @walletConfig
  */
-export type ConnectUIProps = {
-  /**
-   * The wallet config object of the wallet
-   * You can use this to use the wallet's properties / methods like `metadata`, `create`, `isInstalled` etc in your UI
-   */
-  walletConfig: WalletConfig;
-
-  /**
-   * Information about the screen that the wallet's UI and functions to control certain aspects of the screen
-   */
-  screenConfig: ScreenConfig;
-
+export type WalletConfigConnection = {
   /**
    * when wallet connection is complete, call the `complete` function with the `wallet` instance
    */
@@ -134,13 +126,40 @@ export type ConnectUIProps = {
 };
 
 /**
- * @wallet
+ * @walletConfig
  */
-export type SelectUIProps = {
+export type WalletConfigSelection = {
   /**
    * Call this function to "select" your wallet and move to next step of showing the "connectUI"
    */
   select: () => void;
+
+  /**
+   * This is true if there are no other wallets to select from and this wallet is the only option
+   */
+  isSingularOption: boolean;
+
+  /**
+   * Arbitrary data saved in Context by `selection.saveData`
+   */
+  data: any;
+
+  /**
+   * Save Arbitrary data in Context which later can be accessed via `selection.data`
+   */
+  saveData: (data: any) => void;
+};
+
+/**
+ * Props provided to the `WalletConfig.connectUI` component
+ * @walletConfig
+ */
+export type ConnectUIProps = {
+  /**
+   * The wallet config object of the wallet
+   * You can use this to use the wallet's properties / methods like `metadata`, `create`, `isInstalled` etc in your UI
+   */
+  walletConfig: WalletConfig;
 
   /**
    * Information about the screen that the wallet's UI and functions to control certain aspects of the screen
@@ -148,7 +167,30 @@ export type SelectUIProps = {
   screenConfig: ScreenConfig;
 
   /**
-   * This is true if there are no other wallets to select from and this wallet is the only option
+   * Methods and properties for wallet connection
    */
-  isSingularOption: boolean;
+  connection: WalletConfigConnection;
+
+  selection: {
+    /**
+     * Arbitrary data saved in Context by `selection.saveData`
+     */
+    data: any;
+
+    /**
+     * Save Arbitrary data in Context which can be accessed via `selection.data` in connect UI
+     */
+    saveData: (data: any) => void;
+  };
+};
+
+/**
+ * Props provided to the `WalletConfig.selectUI` component
+ * @walletConfig
+ */
+export type SelectUIProps = ConnectUIProps & {
+  /**
+   * Methods and properties for wallet selection
+   */
+  selection: WalletConfigSelection;
 };

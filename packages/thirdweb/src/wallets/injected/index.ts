@@ -132,7 +132,7 @@ export class InjectedWallet implements Wallet {
    * ```ts
    * await wallet.autoConnect();
    * ```
-   * @returns A Promise that resolves to the connected address.
+   * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect() {
     const provider = this.getProvider();

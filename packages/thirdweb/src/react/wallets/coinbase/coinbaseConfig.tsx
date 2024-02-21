@@ -108,7 +108,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   const locale = useTWLocale().wallets.injectedWallet(
     connectUIProps.walletConfig.metadata.name,
   );
-  const { createInstance, done, chain } = connectUIProps;
+  const { createInstance, done, chain } = connectUIProps.connection;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
 
   const scanStarted = useRef(false);

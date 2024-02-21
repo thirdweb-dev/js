@@ -31,16 +31,19 @@ export const SmartConnectUI = (props: {
     const _props: ConnectUIProps = {
       walletConfig: personalWalletConfig,
       screenConfig: props.connectUIProps.screenConfig,
-      createInstance() {
-        return props.personalWalletConfig.create({
-          client: client,
-          dappMetadata: dappMetadata,
-        });
+      connection: {
+        createInstance() {
+          return props.personalWalletConfig.create({
+            client: client,
+            dappMetadata: dappMetadata,
+          });
+        },
+        done(wallet) {
+          setPersonalWallet(wallet);
+        },
+        chain: props.smartWalletChain,
       },
-      done(wallet) {
-        setPersonalWallet(wallet);
-      },
-      chain: props.smartWalletChain,
+      selection: props.connectUIProps.selection,
     };
 
     if (personalWalletConfig.connectUI) {
@@ -67,9 +70,10 @@ const SmartWalletConnecting = (props: {
   smartWalletChain: Chain;
 }) => {
   const locale = useTWLocale().wallets.smartWallet;
-  const createSmartWalletInstance = props.connectUIProps.createInstance;
+  const createSmartWalletInstance =
+    props.connectUIProps.connection.createInstance;
   const { personalWallet } = props;
-  const { done } = props.connectUIProps;
+  const { done } = props.connectUIProps.connection;
   const modalSize = props.connectUIProps.screenConfig.size;
 
   const [personalWalletChainId, setPersonalWalletChainId] = useState<

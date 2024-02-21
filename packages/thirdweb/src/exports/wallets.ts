@@ -94,6 +94,7 @@ export {
 export { coinbaseMetadata } from "../wallets/coinbase/coinbaseMetadata.js";
 
 export { embeddedWallet } from "../wallets/embedded/core/wallet/index.js";
+export { embeddedWalletMetadata } from "../wallets/embedded/core/wallet/index.js";
 export {
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,

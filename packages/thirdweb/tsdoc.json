@@ -36,6 +36,10 @@
     {
       "tagName": "@component",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletConfig",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -47,6 +51,7 @@
     "@connectWallet": true,
     "@theme": true,
     "@locale": true,
-    "@component": true
+    "@component": true,
+    "@walletConfig": true
   }
 }
