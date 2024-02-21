@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://tomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6969.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tombchain.com/"
   ],

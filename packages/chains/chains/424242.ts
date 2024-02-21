@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 424242,
   "rpc": [
-    "https://fastex-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://424242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.fastexchain.com"
   ],

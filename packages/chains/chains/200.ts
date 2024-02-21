@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-100"
   },
   "rpc": [
-    "https://arbitrum-on-xdai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://arbitrum.xdaichain.com/"
   ],

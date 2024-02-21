@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4202,
   "rpc": [
-    "https://lisk-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia-api.lisk.com"
   ],

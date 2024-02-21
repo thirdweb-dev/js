@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 6119,
   "rpc": [
-    "https://uptn.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6119.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-api.uptn.io/v1/ext/rpc"
   ],

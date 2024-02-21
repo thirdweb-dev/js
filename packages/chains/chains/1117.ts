@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1117,
   "rpc": [
-    "https://dogcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1117.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.dogcoin.me"
   ],

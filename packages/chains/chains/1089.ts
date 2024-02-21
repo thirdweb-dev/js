@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 1089,
   "rpc": [
-    "https://humans-ai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1089.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.humans.nodestake.top",
     "https://humans-mainnet-evm.itrocket.net",

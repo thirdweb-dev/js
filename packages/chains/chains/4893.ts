@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4893,
   "rpc": [
-    "https://globel-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4893.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gcscan.io"
   ],

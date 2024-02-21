@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 111000,
   "rpc": [
-    "https://siberium-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://111000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.siberium.net"
   ],

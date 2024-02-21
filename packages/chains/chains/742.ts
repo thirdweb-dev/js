@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 742,
   "rpc": [
-    "https://script-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://742.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testeth-rpc-api.script.tv/rpc"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1230,
   "rpc": [
-    "https://ultron-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ultron-dev.io"
   ],

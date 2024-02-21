@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 5002,
   "rpc": [
-    "https://treasurenet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node0.treasurenet.io",
     "https://node1.treasurenet.io",

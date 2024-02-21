@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 3966,
   "rpc": [
-    "https://dyno.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3966.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.dynoprotocol.com"
   ],

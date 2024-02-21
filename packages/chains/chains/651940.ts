@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 651940,
   "rpc": [
-    "https://all.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://651940.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.alltra.global"
   ],

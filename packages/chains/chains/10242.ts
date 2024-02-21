@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 10242,
   "rpc": [
-    "https://arthera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.arthera.net"
   ],

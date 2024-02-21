@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 61800,
   "rpc": [
-    "https://axelchain-dev-net.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://61800.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://aium-rpc-dev.viacube.com"
   ],

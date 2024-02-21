@@ -33,7 +33,6 @@ export default {
   "networkId": 192837465,
   "redFlags": [],
   "rpc": [
-    "https://gather-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://192837465.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.gather.network"
   ],

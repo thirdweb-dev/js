@@ -43,7 +43,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://zksync-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://300.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.era.zksync.dev"
   ],

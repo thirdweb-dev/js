@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 188,
   "rpc": [
-    "https://bmc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://188.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bmcchain.com/"
   ],

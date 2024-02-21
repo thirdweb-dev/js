@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 74,
   "rpc": [
-    "https://idchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://74.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://idchain.one/rpc/",
     "wss://idchain.one/ws/"

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 71402,
   "rpc": [
-    "https://godwoken.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://71402.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://v1.mainnet.godwoken.io/rpc"
   ],

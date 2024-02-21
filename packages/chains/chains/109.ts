@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 109,
   "rpc": [
-    "https://shibarium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.shibrpc.com"
   ],

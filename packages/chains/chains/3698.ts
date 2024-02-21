@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3698,
   "rpc": [
-    "https://senjepowers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3698.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.senjepowersscan.com"
   ],

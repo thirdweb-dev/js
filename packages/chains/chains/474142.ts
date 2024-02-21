@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 474142,
   "rpc": [
-    "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://474142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
   ],

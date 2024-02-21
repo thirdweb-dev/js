@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1080,
   "rpc": [
-    "https://mintara.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1080.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/mintara/mainnet/rpc"
   ],

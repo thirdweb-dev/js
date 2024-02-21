@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 279,
   "rpc": [
-    "https://bpx-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://279.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.bpxchain.cc",
     "https://bpx-dataseed.infinex.cc"

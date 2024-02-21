@@ -30,7 +30,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://rari.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1380012617.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.rpc.rarichain.org/http"
   ],

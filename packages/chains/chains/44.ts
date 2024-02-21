@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 44,
   "rpc": [
-    "https://crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://44.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://crab-rpc.darwinia.network",
     "https://crab-rpc.darwiniacommunitydao.xyz",

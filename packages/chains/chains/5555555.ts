@@ -42,7 +42,6 @@ export default {
   },
   "networkId": 5555555,
   "rpc": [
-    "https://imversed.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5555555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.imversed.network",
     "https://ws-jsonrpc.imversed.network"

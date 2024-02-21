@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 269,
   "rpc": [
-    "https://high-performance-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://269.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hpbnode.com",
     "wss://ws.hpbnode.com"

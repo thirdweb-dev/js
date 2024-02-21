@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 28122024,
   "rpc": [
-    "https://ancient8-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://28122024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcv2-testnet.ancient8.gg"
   ],

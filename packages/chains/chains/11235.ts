@@ -19,11 +19,10 @@ export default {
   },
   "networkId": 11235,
   "rpc": [
-    "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11235.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.haqq.network",
-    "https://haqq-evm.publicnode.com",
-    "wss://haqq-evm.publicnode.com"
+    "https://haqq-evm-rpc.publicnode.com",
+    "wss://haqq-evm-rpc.publicnode.com"
   ],
   "shortName": "ISLM",
   "slug": "haqq-network",

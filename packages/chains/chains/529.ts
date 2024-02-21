@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 529,
   "rpc": [
-    "https://firechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://529.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.rpc1.thefirechain.com"
   ],

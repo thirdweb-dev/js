@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 167004,
   "rpc": [
-    "https://taiko-alpha-2-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://167004.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.a2.taiko.xyz"
   ],

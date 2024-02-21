@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2018,
   "rpc": [
-    "https://publicmint-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.publicmint.io:8545"
   ],

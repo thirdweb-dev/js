@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 142857,
   "rpc": [
-    "https://icplaza.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://142857.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcmainnet.ic-plaza.org/"
   ],

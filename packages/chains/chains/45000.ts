@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 45000,
   "rpc": [
-    "https://autobahn-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://45000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.autobahn.network"
   ],

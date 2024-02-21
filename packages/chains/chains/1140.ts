@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 1140,
   "rpc": [
-    "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galois-hk.maiziqianbao.net/rpc"
   ],

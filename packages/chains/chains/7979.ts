@@ -44,7 +44,6 @@ export default {
   "networkId": 7979,
   "redFlags": [],
   "rpc": [
-    "https://dos-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7979.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://main.doschain.com"
   ],

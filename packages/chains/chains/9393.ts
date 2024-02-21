@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9393,
   "rpc": [
-    "https://dela-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9393.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-dela.deperp.com"
   ],

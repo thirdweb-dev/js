@@ -40,7 +40,6 @@ export default {
   },
   "networkId": 7700,
   "rpc": [
-    "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://canto.slingshot.finance",
     "https://canto.neobase.one",

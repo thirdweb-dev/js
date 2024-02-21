@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 917,
   "rpc": [
-    "https://rinia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://917.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinia.rpc1.thefirechain.com"
   ],

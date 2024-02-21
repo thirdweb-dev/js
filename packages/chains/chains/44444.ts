@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 44444,
   "rpc": [
-    "https://frenchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://44444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-02.frenscan.io"
   ],

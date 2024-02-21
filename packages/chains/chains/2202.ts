@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 2202,
   "rpc": [
-    "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.antofy.io"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 3334,
   "rpc": [
-    "https://web3q-galileo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3334.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galileo.web3q.io:8545"
   ],

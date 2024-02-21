@@ -38,7 +38,6 @@ export default {
   },
   "networkId": 1891,
   "rpc": [
-    "https://lightlink-pegasus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://replicator.pegasus.lightlink.io/rpc/v1"
   ],

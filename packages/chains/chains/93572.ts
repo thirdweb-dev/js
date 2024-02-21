@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 93572,
   "rpc": [
-    "https://liquidlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://93572.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.liquidlayer.network"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 5101,
   "rpc": [
-    "https://syndicate-frame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-frame.syndicate.io"
   ],

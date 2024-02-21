@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://morph-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.morphl2.io"
   ],

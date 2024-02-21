@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 920000,
   "rpc": [
-    "https://posichain-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://920000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.d.posichain.org"
   ],

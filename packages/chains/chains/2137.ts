@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2137,
   "rpc": [
-    "https://bigshortbets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2137.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://market.bigsb.io",
     "wss://market.bigsb.io"

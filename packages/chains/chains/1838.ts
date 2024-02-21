@@ -21,7 +21,6 @@ export default {
   "networkId": 1838,
   "redFlags": [],
   "rpc": [
-    "https://traderlands-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1838.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/traderland/testnet/rpc"
   ],

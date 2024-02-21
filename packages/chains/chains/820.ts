@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://callisto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://820.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.callisto.network/"
   ],

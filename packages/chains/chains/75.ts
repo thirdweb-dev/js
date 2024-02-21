@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 75,
   "rpc": [
-    "https://decimal-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://75.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.decimalchain.com/web3/",
     "https://node1-mainnet.decimalchain.com/web3/",

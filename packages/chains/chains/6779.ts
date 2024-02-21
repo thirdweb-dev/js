@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 6779,
   "rpc": [
-    "https://compverse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6779.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.compverse.io/",
     "https://rpc-useast1.compverse.io/"

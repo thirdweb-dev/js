@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1003,
   "rpc": [
-    "https://tectum-emission-token.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.softnote.com/"
   ],

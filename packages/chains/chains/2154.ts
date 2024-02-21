@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2154,
   "rpc": [
-    "https://findora-forge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2154.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-forge.prod.findora.org:8545/"
   ],

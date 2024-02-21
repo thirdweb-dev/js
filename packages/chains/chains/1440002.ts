@@ -26,7 +26,6 @@ export default {
   "networkId": 1440002,
   "redFlags": [],
   "rpc": [
-    "https://xrp-ledger-evm-devnet-sidechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1440002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-sidechain.xrpl.org"
   ],

@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://zksync-era-goerli-testnet-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.era.zksync.dev"
   ],

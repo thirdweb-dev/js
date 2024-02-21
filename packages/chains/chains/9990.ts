@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 9990,
   "rpc": [
-    "https://agung-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9990.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcpc1-qa.agung.peaq.network"
   ],

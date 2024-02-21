@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 42355,
   "rpc": [
-    "https://goldxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42355.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.goldxchain.io"
   ],

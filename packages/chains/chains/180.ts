@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 180,
   "rpc": [
-    "https://ame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://180.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.amechain.io/"
   ],

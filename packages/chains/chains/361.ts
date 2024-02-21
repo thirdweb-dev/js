@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 361,
   "rpc": [
-    "https://theta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://361.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api.thetatoken.org/rpc"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4242,
   "rpc": [
-    "https://nexi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chain.nexi.technology/",
     "https://chain.nexilix.com",

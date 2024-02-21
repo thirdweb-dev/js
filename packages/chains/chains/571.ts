@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 571,
   "rpc": [
-    "https://metachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://571.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metatime.com"
   ],

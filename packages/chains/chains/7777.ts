@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 7777,
   "rpc": [
-    "https://rise-of-the-warbots-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet1.riseofthewarbots.com",
     "https://testnet2.riseofthewarbots.com",

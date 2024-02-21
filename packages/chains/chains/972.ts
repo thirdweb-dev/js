@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 972,
   "rpc": [
-    "https://oort-ascraeus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://972.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ascraeus-rpc.oortech.com"
   ],

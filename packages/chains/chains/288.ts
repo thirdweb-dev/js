@@ -33,7 +33,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.boba.network",
     "https://replica.boba.network",

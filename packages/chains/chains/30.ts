@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 30,
   "rpc": [
-    "https://rootstock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://30.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.rsk.co",
     "https://mycrypto.rsk.co"

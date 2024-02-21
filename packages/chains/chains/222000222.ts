@@ -43,7 +43,6 @@ export default {
   },
   "networkId": 222000222,
   "rpc": [
-    "https://kanazawa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://222000222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.meld.com"
   ],

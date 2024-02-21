@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 22776,
   "rpc": [
-    "https://map-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22776.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.maplabs.io"
   ],

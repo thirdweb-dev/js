@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 72,
   "rpc": [
-    "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://72.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-http.dxchain.com"
   ],

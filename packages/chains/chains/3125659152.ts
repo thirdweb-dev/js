@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 3125659152,
   "rpc": [
-    "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3125659152.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wallrpc.pirl.io"
   ],

@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 13308,
   "rpc": [
-    "https://credit-smart-chain-credit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.creditsmartchain.com"
   ],

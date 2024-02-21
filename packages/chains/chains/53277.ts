@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 53277,
   "rpc": [
-    "https://doid.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://53277.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.doid.tech"
   ],

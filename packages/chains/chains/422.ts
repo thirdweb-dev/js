@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 422,
   "rpc": [
-    "https://viridis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://422.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.vrd.network"
   ],

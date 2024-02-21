@@ -27,7 +27,6 @@ export default {
   "networkId": 1501,
   "redFlags": [],
   "rpc": [
-    "https://bevm-canary.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-canary-1.bevm.io/",
     "https://rpc-canary-2.bevm.io/"

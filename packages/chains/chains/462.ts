@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 462,
   "rpc": [
-    "https://areon-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://462.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.areon.network",
     "https://testnet-rpc2.areon.network",

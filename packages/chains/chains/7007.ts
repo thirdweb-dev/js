@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7007,
   "rpc": [
-    "https://bst-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7007.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bstchain.io/"
   ],

@@ -38,7 +38,6 @@ export default {
   },
   "networkId": 7,
   "rpc": [
-    "https://mordor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://63.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mordor.etccooperative.org",
     "https://geth-mordor.etc-network.info"

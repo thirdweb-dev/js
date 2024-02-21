@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 997,
   "rpc": [
-    "https://5irechain-thunder.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.5ire.network"
   ],

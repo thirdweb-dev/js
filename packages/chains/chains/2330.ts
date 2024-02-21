@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2330,
   "rpc": [
-    "https://altcoinchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2330.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc0.altcoinchain.org/rpc"
   ],
