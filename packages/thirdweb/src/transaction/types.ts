@@ -8,6 +8,7 @@ import type {
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isObjectWithKeys } from "../utils/type-guards.js";
 import type { Hex } from "../utils/encoding/hex.js";
+import type { TransactionReceipt as ViemTransactionReceipt } from "viem";
 
 export type TransactionOrUserOpHash =
   | {
@@ -18,6 +19,8 @@ export type TransactionOrUserOpHash =
       readonly transactionHash?: never;
       readonly userOpHash: Hex;
     };
+
+export type TransactionReceipt = ViemTransactionReceipt;
 
 export type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
   length: 0;

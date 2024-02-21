@@ -213,12 +213,12 @@ export class EmbeddedWallet implements Wallet {
   }
 
   /**
-   * Get the Embedded Wallet user information. It returns the `InitializedUser` object if wallet is connected. Otherwise, it returns `undefined`.
+   * Get the Embedded Wallet user information. It returns the `AuthenticatedUser` object if wallet is connected. Otherwise, it returns `undefined`.
    * @example
    * ```ts
    * const user = wallet.getUser();
    * ```
-   * @returns The `InitializedUser` object associated with the wallet
+   * @returns The `AuthenticatedUser` object associated with the wallet
    */
   getUser(): AuthenticatedUser | undefined {
     if (!this.user) {

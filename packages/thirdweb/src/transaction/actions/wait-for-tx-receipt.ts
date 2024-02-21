@@ -1,5 +1,5 @@
-import type { Hex, TransactionReceipt } from "viem";
-import type { TransactionOrUserOpHash } from "../types.js";
+import type { Hex } from "viem";
+import type { TransactionOrUserOpHash, TransactionReceipt } from "../types.js";
 
 import { getUserOpEventFromEntrypoint } from "../../wallets/smart/lib/receipts.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
