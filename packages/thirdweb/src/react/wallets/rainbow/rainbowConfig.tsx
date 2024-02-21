@@ -2,8 +2,8 @@ import {
   injectedRainbowProvider,
   rainbowWallet,
   rainbowWalletMetadata,
-  walletConnect,
-} from "../../../wallets/index.js";
+} from "../../../wallets/injected/wallets/rainbow.js";
+import { walletConnect } from "../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 

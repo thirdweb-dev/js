@@ -1,4 +1,4 @@
-import type { Chain } from "../../../chains/index.js";
+import type { Chain } from "../../../chains/types.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../design-system/index.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";

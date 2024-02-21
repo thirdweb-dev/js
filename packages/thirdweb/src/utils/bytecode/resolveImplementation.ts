@@ -1,9 +1,10 @@
 import { isAddress } from "viem";
-import { eth_getStorageAt, getRpcClient } from "../../rpc/index.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { readContract } from "../../transaction/read-contract.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { eth_getStorageAt } from "../../rpc/actions/eth_getStorageAt.js";
 
 // TODO: move to const exports
 const AddressZero = "0x0000000000000000000000000000000000000000";

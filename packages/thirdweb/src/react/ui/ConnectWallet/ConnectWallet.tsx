@@ -23,7 +23,7 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
-import type { Chain } from "../../../chains/index.js";
+import type { Chain } from "../../../chains/types.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 

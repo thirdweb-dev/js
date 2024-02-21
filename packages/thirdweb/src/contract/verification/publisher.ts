@@ -1,8 +1,10 @@
-import { polygon } from "../../chains/index.js";
+import { polygon } from "../../chains/chain-definitions/polygon.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/download.js";
 import { readContract } from "../../transaction/read-contract.js";
-import { extractIPFSUri, resolveImplementation } from "../../utils/index.js";
+import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
+import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
+
 import { getContract, type ThirdwebContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only

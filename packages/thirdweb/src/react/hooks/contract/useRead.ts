@@ -1,4 +1,3 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import {
   useQuery,
   queryOptions as defineQuery,
@@ -8,14 +7,16 @@ import {
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { stringify } from "../../../utils/json.js";
+import type {
+  BaseTransactionOptions,
+  ParseMethod,
+} from "../../../transaction/types.js";
+import type { PrepareContractCallOptions } from "../../../transaction/prepare-contract-call.js";
 import {
   readContract,
-  type BaseTransactionOptions,
-  type PrepareContractCallOptions,
   type ReadContractResult,
-} from "../../../transaction/index.js";
-import type { ThirdwebContract } from "../../../contract/index.js";
-import type { ParseMethod } from "../../../transaction/types.js";
+} from "../../../transaction/read-contract.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 

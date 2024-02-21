@@ -47,16 +47,18 @@ import type {
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
-import {
-  smartWalletMetadata,
-  type Wallet,
-  type WalletWithPersonalWallet,
-  personalWalletToSmartAccountMap,
-} from "../../../wallets/index.js";
 import { connectionManager } from "../../connectionManager.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
-import type { Chain } from "../../../chains/index.js";
+import type { Chain } from "../../../chains/types.js";
+import type {
+  Wallet,
+  WalletWithPersonalWallet,
+} from "../../../wallets/interfaces/wallet.js";
+import {
+  personalWalletToSmartAccountMap,
+  smartWalletMetadata,
+} from "../../../wallets/smart/index.js";
 
 // TEMP
 const LocalWalletId = "localWallet";

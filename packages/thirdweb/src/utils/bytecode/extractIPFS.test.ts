@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { getBytecode } from "../../contract/index.js";
 import {
   DOODLES_CONTRACT,
   USDC_CONTRACT,
 } from "../../../test/src/test-contracts.js";
 import { extractIPFSUri } from "./extractIPFS.js";
+import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
 describe("extractIPFSUri", () => {
   it("works if ipfs is there", async () => {

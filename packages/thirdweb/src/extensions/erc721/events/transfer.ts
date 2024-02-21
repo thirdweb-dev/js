@@ -1,5 +1,5 @@
 import type { Address } from "abitype";
-import { prepareEvent } from "../../../event/index.js";
+import { prepareEvent } from "../../../event/prepare-event.js";
 
 export type TransferEventFilters = {
   from?: Address;

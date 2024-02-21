@@ -27,7 +27,7 @@ import { Text } from "../../components/text.js";
 import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import styled from "@emotion/styled";
 import { useSendToken } from "../../hooks/useSendToken.js";
-import { defineChain } from "../../../../chains/index.js";
+import { defineChain } from "../../../../chains/utils.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -96,7 +96,7 @@ export function SendFunds(props: {
 /**
  * @internal
  */
-export function SendFundsForm(props: {
+function SendFundsForm(props: {
   onTokenSelect: () => void;
   token?: TokenInfo;
   receiverAddress: string;
@@ -356,7 +356,7 @@ export function SendFundsForm(props: {
  *
  * @internal
  */
-export function TokenSelector(props: {
+function TokenSelector(props: {
   onTokenSelect: (token?: TokenInfo) => void;
   onBack: () => void;
   supportedTokens: SupportedTokens;

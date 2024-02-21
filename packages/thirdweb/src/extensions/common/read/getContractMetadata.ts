@@ -2,7 +2,7 @@ import { fetchContractMetadata } from "../../../utils/contract/fetchContractMeta
 import { contractURI } from "./contractURI.js";
 import { name } from "./name.js";
 import { symbol } from "./symbol.js";
-import type { BaseTransactionOptions } from "../../../transaction/index.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 /**
  * Retrieves the contract metadata including name and symbol.

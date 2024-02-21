@@ -1,9 +1,10 @@
 import type { Abi } from "abitype";
 import type { ThirdwebContract } from "../contract.js";
-import { eth_getTransactionByHash, getRpcClient } from "../../rpc/index.js";
 import { fetchDeployBytecodeFromPublishedContractMetadata } from "./publisher.js";
 import { getCreate2FactoryAddress } from "../../utils/any-evm/create-2-factory.js";
 import { decodeAbiParameters } from "viem";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
 
 type FetchConstructorParamsOptions = {
   contract: ThirdwebContract;

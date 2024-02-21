@@ -1,10 +1,8 @@
 import type { Address } from "abitype";
 import { parseUnits } from "../../../utils/units.js";
-import {
-  prepareContractCall,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
 import type { Prettify } from "../../../utils/type-utils.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 
 export type ApproveParams = Prettify<
   { spender: Address } & (

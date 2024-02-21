@@ -1,7 +1,7 @@
 import { decodeErrorResult, type Hex } from "viem";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { Abi } from "abitype";
-import type { ThirdwebContract } from "../contract/index.js";
+import type { ThirdwebContract } from "../contract/contract.js";
 
 /**
  * @internal

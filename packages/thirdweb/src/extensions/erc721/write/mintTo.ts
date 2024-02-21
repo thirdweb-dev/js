@@ -1,8 +1,6 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
-import {
-  prepareContractCall,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 
 type NFTInput = Prettify<

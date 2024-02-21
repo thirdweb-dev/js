@@ -1,0 +1,25 @@
+[
+  {
+    "name": "thirdweb (esm)",
+    "path": "./dist/esm/exports/thirdweb.js",
+    "limit": "30 kB",
+    "import": "*"
+  },
+  {
+    "name": "thirdweb (cjs)",
+    "path": "./dist/cjs/exports/thirdweb.js",
+    "limit": "100 kB"
+  },
+  {
+    "name": "thirdweb (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/thirdweb.js",
+    "limit": "5 kB",
+    "import": "{ createThirdwebClient, getContract, prepareTransaction }"
+  },
+  {
+    "name": "thirdweb/chains (tree-shaking)",
+    "path": "./dist/esm/exports/chains.js",
+    "limit": "500 B",
+    "import": "{ ethereum }"
+  }
+]

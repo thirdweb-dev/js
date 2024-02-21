@@ -1,7 +1,5 @@
-import {
-  prepareContractCall,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 export type SetContractURIParams = {
   uri: string;

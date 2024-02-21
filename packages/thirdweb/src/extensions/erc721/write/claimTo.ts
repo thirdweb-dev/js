@@ -1,8 +1,6 @@
 import type { Address } from "abitype";
-import {
-  prepareContractCall,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 
 const CLAIM_ABI = {
   inputs: [

@@ -1,6 +1,6 @@
 import type { Abi, AbiFunction } from "abitype";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
-import type { ThirdwebContract } from "../contract/index.js";
+import type { ThirdwebContract } from "../contract/contract.js";
 
 /**
  * Resolves and returns the ABI function with the specified method name.

@@ -7,12 +7,14 @@ import {
   useSetActiveWalletConnectionStatus,
 } from "../../providers/wallet-provider.js";
 import {
-  getSavedConnectParamsFromStorage,
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
-  type WalletWithPersonalWallet,
+} from "../../../wallets/manager/index.js";
+import {
+  getSavedConnectParamsFromStorage,
   type WithPersonalWalletConnectionOptions,
-} from "../../../wallets/index.js";
+} from "../../../wallets/manager/storage.js";
+import type { WalletWithPersonalWallet } from "../../../wallets/interfaces/wallet.js";
 
 let autoConnectAttempted = false;
 

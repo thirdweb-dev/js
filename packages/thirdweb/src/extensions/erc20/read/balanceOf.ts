@@ -1,10 +1,8 @@
 import { decimals } from "./decimals.js";
 import { symbol } from "../../common/read/symbol.js";
 import { name } from "../../common/read/name.js";
-import {
-  readContract,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import { readContract } from "../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { formatUnits } from "../../../utils/units.js";
 
 const METHOD = "function balanceOf(address) view returns (uint256)" as const;

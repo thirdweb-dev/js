@@ -2,7 +2,7 @@ import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
 import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
-import type { PreparedTransaction } from "../../../transaction/index.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 
 /**
  * A hook to send a transaction.

@@ -1,9 +1,10 @@
 import { decodeErrorResult, type Hex } from "viem";
-import type { Chain } from "../../../chains/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
-import { getContractEvents, prepareEvent } from "../../../event/index.js";
 import { ENTRYPOINT_ADDRESS } from "./constants.js";
+import type { Chain } from "../../../chains/types.js";
+import { prepareEvent } from "../../../event/prepare-event.js";
+import { getContractEvents } from "../../../event/actions/get-events.js";
 
 /**
  * @internal

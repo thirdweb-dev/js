@@ -73,14 +73,30 @@ module.exports = {
     "no-restricted-imports": [
       "error",
       {
-        name: "buffer",
-        message: "Use Uint8Array instead.",
-      },
-      {
-        name: "node:buffer",
-        message: "Use Uint8Array instead.",
+        paths: [
+          {
+            name: "buffer/",
+            message: "Use Uint8Array instead.",
+          },
+          {
+            name: "buffer",
+            message: "Use Uint8Array instead.",
+          },
+          {
+            name: "node:buffer",
+            message: "Use Uint8Array instead.",
+          },
+        ],
+        patterns: [
+          {
+            group: ["**/exports/*"],
+            message:
+              "Importing from the 'exports' folder is disallowed, instead import directly from the src folder.",
+          },
+        ],
       },
     ],
+
     ...jsdocRuleOverrides,
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-import-type-side-effects": "error",

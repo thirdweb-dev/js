@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { sendTransaction } from "./send-transaction.js";
-import type { Account, Wallet } from "../../wallets/index.js";
-import { transfer } from "../../extensions/erc20.js";
 import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../../test/src/addresses.js";
+import { transfer } from "../../extensions/erc20/write/transfer.js";
+import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 
 const MOCK_TX_HASH =
   "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";

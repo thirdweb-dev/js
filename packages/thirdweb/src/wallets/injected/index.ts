@@ -24,7 +24,7 @@ import type {
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
 import { defineChain, getChainDataForChain } from "../../chains/utils.js";
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 
 /**
  * Connect to Injected Wallet Provider

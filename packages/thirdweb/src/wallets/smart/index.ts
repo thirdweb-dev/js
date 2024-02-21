@@ -20,8 +20,8 @@ import {
   saveConnectParamsToStorage,
   type WithPersonalWalletConnectionOptions,
 } from "../manager/storage.js";
-import type { Chain } from "../../chains/index.js";
-import type { PreparedTransaction } from "../../transaction/index.js";
+import type { Chain } from "../../chains/types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 /**
  * Creates a smart wallet.

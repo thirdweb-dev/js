@@ -11,7 +11,7 @@ import { randomNonce } from "./utils.js";
 import { prepareCreateAccount } from "./calls.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
-import type { PreparedTransaction } from "../../../transaction/index.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 
 /**
  * Create an unsigned user operation

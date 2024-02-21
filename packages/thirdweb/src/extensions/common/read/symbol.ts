@@ -1,8 +1,6 @@
-import type { ThirdwebContract } from "../../../contract/index.js";
-import {
-  readContract,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
+import { readContract } from "../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
 

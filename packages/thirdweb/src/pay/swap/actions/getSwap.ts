@@ -4,7 +4,7 @@ import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
 import { getContract } from "../../../contract/contract.js";
-import { defineChain } from "../../../chains/index.js";
+import { defineChain } from "../../../chains/utils.js";
 
 export type SwapRouteParams = {
   client: ThirdwebClient;

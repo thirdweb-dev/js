@@ -1,12 +1,11 @@
 import type { Hex, TransactionReceipt } from "viem";
 import type { TransactionOrUserOpHash } from "../types.js";
-import {
-  eth_getTransactionReceipt,
-  getRpcClient,
-  watchBlockNumber,
-} from "../../rpc/index.js";
+
 import { getUserOpEventFromEntrypoint } from "../../wallets/smart/lib/receipts.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 

@@ -1,6 +1,6 @@
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { eth_sendRawTransaction } from "../../rpc/index.js";
+import { eth_sendRawTransaction } from "../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 
 // it's OK to cache this forever because:
