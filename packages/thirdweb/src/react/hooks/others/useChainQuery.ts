@@ -1,8 +1,8 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { getChainDataForChain } from "../../../chains/utils.js";
 import type { Chain } from "../../../chains/types.js";
-import pLimit from "p-limit";
 import { useMemo } from "react";
+import { pLimit } from "../../../utils/promise/p-limit.js";
 
 function getQueryOptions(chain?: Chain) {
   return {
