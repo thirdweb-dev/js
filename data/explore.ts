@@ -169,7 +169,6 @@ const SMART_WALLET = {
     "https://portal.thirdweb.com/wallets/smart-wallet/get-started#1-deploy-a-smart-wallet-factory-contract",
   contracts: [
     "thirdweb.eth/AccountFactory",
-    "thirdweb.eth/DynamicAccountFactory",
     "thirdweb.eth/ManagedAccountFactory",
   ],
   showInExplore: true,
