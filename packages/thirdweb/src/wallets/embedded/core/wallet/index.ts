@@ -5,7 +5,7 @@ import type {
   PreAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/type.js";
-import type { EmbeddedWalletConfig } from "./types.js";
+import type { AuthenticatedUser, EmbeddedWalletConfig } from "./types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
@@ -66,9 +66,12 @@ export class EmbeddedWallet implements Wallet {
    * @param options  - The options to configure the embedded wallet initialization
    * @example
    * ```ts
-   * const wallet = new EmbeddedWallet({
+   * const wallet = embeddedWallet({
    *  client,
-   * })
+   * });
+   * await wallet.connect({
+   *   strategy: "google",
+   * });
    * ```
    */
   constructor(options: EmbeddedWalletConfig) {
@@ -77,15 +80,14 @@ export class EmbeddedWallet implements Wallet {
     this.isEmbeddedWallet = true;
   }
 
-  // is this used?
   /**
-   * TODO
+   * Pre step for 2 step authentication like sending an OTP verification email
    * @param options - The options for pre-authentication
    * @example
    * ```ts
-   * wallet.preAuthenticate(options);
+   * await wallet.preAuthenticate(options);
    * ```
-   * @returns TODO
+   * @returns information about the un-authenticated user.
    */
   async preAuthenticate(options: Omit<PreAuthArgsType, "client">) {
     const { preAuthenticate } = await import("../authentication/index.js");
@@ -218,7 +220,13 @@ export class EmbeddedWallet implements Wallet {
    * ```
    * @returns The `InitializedUser` object associated with the wallet
    */
-  getUser() {
-    return this.user;
+  getUser(): AuthenticatedUser | undefined {
+    if (!this.user) {
+      return undefined;
+    }
+    return {
+      email: this.user.authDetails.email,
+      walletAddress: this.user.walletAddress,
+    };
   }
 }
