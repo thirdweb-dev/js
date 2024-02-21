@@ -1,10 +1,13 @@
 import { getRequestTimeoutConfig } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
+import type { Prettify } from "../utils/type-utils.js";
 
-export type DownloadOptions = ResolveSchemeOptions & {
-  requestTimeoutMs?: number;
-};
+export type DownloadOptions = Prettify<
+  ResolveSchemeOptions & {
+    requestTimeoutMs?: number;
+  }
+>;
 
 /**
  * Downloads a file from the specified URI.
