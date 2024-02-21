@@ -35,6 +35,7 @@ import { Transaction } from "./transactions";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * @erc1155
  * @public
  */
 export class Erc1155SignatureMintable implements DetectableFeature {

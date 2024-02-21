@@ -2,7 +2,7 @@ import { providers } from "ethers";
 
 /**
  * Check if a contract exists at the given address
- *
+ * @deploy
  * @public
  * @param address - The address to check
  * @param provider - The provider to use

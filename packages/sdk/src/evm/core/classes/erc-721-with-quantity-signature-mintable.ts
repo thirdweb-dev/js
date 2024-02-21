@@ -33,6 +33,7 @@ import { Transaction } from "./transactions";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * @erc721
  * @public
  */
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
@@ -93,9 +94,8 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       };
 
       if (await this.isLegacyNFTContract()) {
-        const message = await this.mapLegacyPayloadToContractStruct(
-          mintRequest,
-        );
+        const message =
+          await this.mapLegacyPayloadToContractStruct(mintRequest);
         const price = message.price;
 
         // TODO: Transaction Sequence Pattern

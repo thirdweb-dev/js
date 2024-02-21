@@ -22,6 +22,7 @@ import { AbiInput } from "../../schema/contracts/custom";
  * Direct deploy a contract at a deterministic address, using Create2 method
  * Address depends on the Create2 factory address and salt (if provided).
  *
+ * @deploy
  * @public
  *
  * @param bytecode - The bytecode to deploy

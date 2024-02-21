@@ -74,6 +74,7 @@ import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc1155.transfer(walletAddress, tokenId, quantity);
  * ```
+ * @erc1155
  * @public
  */
 export class Erc1155<
@@ -274,9 +275,9 @@ export class Erc1155<
 
   /**
    * Transfer multiple NFTs
-   * 
+   *
    * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
-   * 
+   *
    * @example
    * ```javascript
    * // Address of the wallet you want to send the NFT to
@@ -287,7 +288,7 @@ export class Erc1155<
    * const amounts = [1, 2, 3];
    * await contract.erc1155.transferBatch(toAddress, tokenIds, amounts);
    * ```
-   * 
+   *
    * @twfeature ERC1155BatchTransferable
    */
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
@@ -298,7 +299,9 @@ export class Erc1155<
       fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = fromAddress ? await resolveAddress(fromAddress) : await this.contractWrapper.getSignerAddress();
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "safeBatchTransferFrom",
