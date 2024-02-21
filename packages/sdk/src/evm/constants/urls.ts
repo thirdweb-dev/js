@@ -300,9 +300,7 @@ export function getProviderFromRpcUrl(
                   ? {
                       name: Base.name,
                       chainId: Base.chainId,
-                      // TODO: Read bns address from Base chain data
-                      // ensAddress: Base.ens.registry,
-                      ensAddress: "0xeCBaE6E54bAA669005b93342E5650d5886D54fc7",
+                      ensAddress: Base.ens.registry,
                     }
                   : chainId,
                 sdkOptions?.rpcBatchSettings,
