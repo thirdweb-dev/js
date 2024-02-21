@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 4460,
   "rpc": [
-    "https://orderly-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4460.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2-orderly-l2-4460-sepolia-8tc3sd7dvy.t.conduit.xyz"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 259,
   "rpc": [
-    "https://neonlink.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://259.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.neonlink.io"
   ],

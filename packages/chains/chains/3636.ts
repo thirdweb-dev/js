@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3636,
   "rpc": [
-    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3636.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.botanixlabs.dev"
   ],

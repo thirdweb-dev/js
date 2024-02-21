@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 7070,
   "rpc": [
-    "https://planq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7070.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.planq.network"
   ],

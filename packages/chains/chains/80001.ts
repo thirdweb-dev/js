@@ -29,11 +29,10 @@ export default {
   "networkId": 80001,
   "redFlags": [],
   "rpc": [
-    "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://80001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mumbai.maticvigil.com",
-    "https://polygon-mumbai-bor.publicnode.com",
-    "wss://polygon-mumbai-bor.publicnode.com",
+    "https://polygon-mumbai-bor-rpc.publicnode.com",
+    "wss://polygon-mumbai-bor-rpc.publicnode.com",
     "https://polygon-mumbai.gateway.tenderly.co",
     "wss://polygon-mumbai.gateway.tenderly.co"
   ],

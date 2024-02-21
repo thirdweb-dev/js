@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 124,
   "rpc": [
-    "https://decentralized-web.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://124.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://decentralized-web.tech/dw_rpc.php"
   ],

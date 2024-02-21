@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 888,
   "rpc": [
-    "https://wanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwan-ssl.wandevs.org:56891/"
   ],

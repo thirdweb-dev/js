@@ -28,7 +28,6 @@ export default {
   },
   "networkId": 10508,
   "rpc": [
-    "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10508.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnetrpc.num.network"
   ],

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 12052,
   "rpc": [
-    "https://singularity-zero.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12052.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zerorpc.singularity.gold"
   ],

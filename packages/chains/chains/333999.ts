@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 333999,
   "rpc": [
-    "https://polis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.polis.tech"
   ],

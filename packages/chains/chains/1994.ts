@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1994,
   "rpc": [
-    "https://ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1994.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://main.ekta.io"
   ],

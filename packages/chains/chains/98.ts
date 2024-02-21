@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 98,
   "rpc": [
-    "https://six-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://98.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sixnet-rpc-evm.sixprotocol.net"
   ],

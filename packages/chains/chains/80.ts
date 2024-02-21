@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 80,
   "rpc": [
-    "https://genechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://80.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genechain.io"
   ],

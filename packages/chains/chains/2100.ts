@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2100,
   "rpc": [
-    "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ecoball.org/ecoball/"
   ],

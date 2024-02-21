@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 6701,
   "rpc": [
-    "https://paxb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.paxb.io"
   ],

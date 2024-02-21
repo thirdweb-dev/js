@@ -21,7 +21,6 @@ export default {
   "networkId": 56400,
   "redFlags": [],
   "rpc": [
-    "https://testnet-zeroone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://56400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/testnetzer/testnet/rpc"
   ],

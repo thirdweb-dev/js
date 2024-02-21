@@ -21,7 +21,6 @@ export default {
   "networkId": 12001,
   "redFlags": [],
   "rpc": [
-    "https://mikias-s-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-test.io/c3c8cc74-5101-4380-937f-4f534cad0128"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 161,
   "rpc": [
-    "https://armonia-eva-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://161.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.evascan.io/api/eth-rpc/"
   ],

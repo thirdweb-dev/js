@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://syndr-l3-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://444444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.syndr.com/http",
     "wss://sepolia.syndr.com/ws"

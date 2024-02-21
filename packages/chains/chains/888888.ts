@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 888888,
   "rpc": [
-    "https://vision.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://infragrid.v.network/ethereum/compatible"
   ],

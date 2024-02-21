@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 9888,
   "rpc": [
-    "https://dogelayer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dl-rpc.dogelayer.org"
   ],

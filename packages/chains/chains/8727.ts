@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 8727,
   "rpc": [
-    "https://storagechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8727.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-validator.storagechain.io"
   ],

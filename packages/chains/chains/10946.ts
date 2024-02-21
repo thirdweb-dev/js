@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 10946,
   "rpc": [
-    "https://quadrans-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10946.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.quadrans.io",
     "https://rpcna.quadrans.io",

@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 957,
   "rpc": [
-    "https://lyra-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://957.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lyra.finance"
   ],

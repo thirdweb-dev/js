@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 188710,
   "rpc": [
-    "https://bitica-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://188710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.biticablockchain.com/"
   ],

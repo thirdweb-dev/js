@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 14,
   "rpc": [
-    "https://flare.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://14.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://flare-api.flare.network/ext/C/rpc",
     "https://flare.public-rpc.com",

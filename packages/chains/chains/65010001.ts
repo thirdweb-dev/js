@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 65010001,
   "rpc": [
-    "https://autonity-bakerloo-barada-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://65010001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bakerloo.autonity.org/",
     "wss://rpc1.bakerloo.autonity.org/ws/"

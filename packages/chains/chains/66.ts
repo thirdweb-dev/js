@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 66,
   "rpc": [
-    "https://okxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://66.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchainrpc.okex.org",
     "https://okc-mainnet.gateway.pokt.network/v1/lb/6275309bea1b320039c893ff"

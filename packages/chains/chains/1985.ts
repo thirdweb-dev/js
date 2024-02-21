@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1985,
   "rpc": [
-    "https://satoshie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1985.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.satosh.ie"
   ],

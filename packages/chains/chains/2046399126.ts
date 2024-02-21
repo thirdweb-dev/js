@@ -37,7 +37,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://skale-europa-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2046399126.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/elated-tan-skat",
     "wss://mainnet.skalenodes.com/v1/elated-tan-skat"

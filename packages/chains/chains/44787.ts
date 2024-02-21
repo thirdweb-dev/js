@@ -24,7 +24,6 @@ export default {
   "networkId": 44787,
   "redFlags": [],
   "rpc": [
-    "https://celo-alfajores-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://44787.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alfajores-forno.celo-testnet.org",
     "wss://alfajores-forno.celo-testnet.org/ws"

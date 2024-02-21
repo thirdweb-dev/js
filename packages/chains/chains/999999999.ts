@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 999999999,
   "rpc": [
-    "https://zora-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://999999999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.rpc.zora.energy"
   ],

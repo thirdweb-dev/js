@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 49088,
   "rpc": [
-    "https://bifrost-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://49088.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-01.testnet.thebifrost.io/rpc",
     "https://public-02.testnet.thebifrost.io/rpc"

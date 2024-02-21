@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-1"
   },
   "rpc": [
-    "https://karak.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2410.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.karak.network"
   ],

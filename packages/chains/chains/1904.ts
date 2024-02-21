@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1904,
   "rpc": [
-    "https://sports-chain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1904.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sportschainnetwork.xyz/"
   ],

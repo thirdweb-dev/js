@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 311,
   "rpc": [
-    "https://omax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://311.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainapi.omaxray.com"
   ],

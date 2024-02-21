@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 18289463,
   "rpc": [
-    "https://iolite.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18289463.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://net.iolite.io"
   ],

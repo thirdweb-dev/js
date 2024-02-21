@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 197710212031,
   "rpc": [
-    "https://haradev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://197710212031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://blockchain.haradev.com"
   ],

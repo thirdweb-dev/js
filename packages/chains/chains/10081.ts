@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 10081,
   "rpc": [
-    "https://japan-open-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10081.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.testnet.japanopenchain.org:8545",
     "https://rpc-2.testnet.japanopenchain.org:8545"

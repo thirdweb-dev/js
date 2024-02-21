@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://ten-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.ten.xyz"
   ],

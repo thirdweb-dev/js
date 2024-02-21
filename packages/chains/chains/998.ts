@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 998,
   "rpc": [
-    "https://lucky-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://998.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.luckynetwork.org",
     "wss://ws.lnscan.org",

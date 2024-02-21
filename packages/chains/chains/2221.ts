@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2221,
   "rpc": [
-    "https://kava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2221.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.testnet.kava.io",
     "wss://wevm.testnet.kava.io"

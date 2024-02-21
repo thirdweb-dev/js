@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 42801,
   "rpc": [
-    "https://gesoten-verse-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42801.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.verse.gesoten.com/"
   ],

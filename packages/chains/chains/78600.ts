@@ -38,7 +38,6 @@ export default {
   },
   "networkId": 78600,
   "rpc": [
-    "https://vanguard.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78600.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-vanguard.vanarchain.com",
     "wss://ws-vanguard.vanarchain.com"

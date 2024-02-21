@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 43,
   "rpc": [
-    "https://darwinia-pangolin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangolin-rpc.darwinia.network"
   ],

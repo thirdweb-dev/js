@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1911,
   "rpc": [
-    "https://scalind.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1911.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scalind.com"
   ],

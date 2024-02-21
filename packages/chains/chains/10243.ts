@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 10243,
   "rpc": [
-    "https://arthera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10243.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.arthera.net"
   ],

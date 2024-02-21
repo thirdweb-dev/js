@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4000,
   "rpc": [
-    "https://ozone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.ozonechain.io"
   ],

@@ -21,7 +21,6 @@ export default {
   "networkId": 37375,
   "redFlags": [],
   "rpc": [
-    "https://qi-m-2402057.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://37375.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/c908add6-74c5-4407-8091-18762786a0b9"
   ],

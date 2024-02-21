@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://firechain-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://814.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zkevm.thefirechain.com"
   ],

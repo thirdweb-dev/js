@@ -18,7 +18,6 @@ export default {
   },
   "networkId": 363636,
   "rpc": [
-    "https://digit-soul-smart-chain-2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://363636.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dgs-rpc.digitsoul.co.th"
   ],

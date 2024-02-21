@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1138,
   "rpc": [
-    "https://amstar-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1138.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.amstarscan.com"
   ],

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 88880,
   "rpc": [
-    "https://chiliz-scoville-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://88880.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://scoville-rpc.chiliz.com"
   ],

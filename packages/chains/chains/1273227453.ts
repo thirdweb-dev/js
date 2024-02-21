@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1273227453,
   "rpc": [
-    "https://human-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1273227453.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/wan-red-ain"
   ],

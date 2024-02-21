@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 7701,
   "rpc": [
-    "https://canto-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-archive.plexnode.wtf"
   ],

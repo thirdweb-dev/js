@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 786,
   "rpc": [
-    "https://maal-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://786.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1-mainnet.maalscan.io/",
     "https://node2-mainnet.maalscan.io/",

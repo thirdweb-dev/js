@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 941,
   "rpc": [
-    "https://pulsechain-testnet-v2b.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://941.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v2b.testnet.pulsechain.com/",
     "wss://rpc.v2b.testnet.pulsechain.com/"

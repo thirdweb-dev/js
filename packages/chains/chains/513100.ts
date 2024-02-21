@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 513100,
   "rpc": [
-    "https://ethereum-fair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://513100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherfair.org"
   ],

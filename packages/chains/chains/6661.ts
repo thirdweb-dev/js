@@ -48,7 +48,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://cybria.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6661.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.cybria.io"
   ],

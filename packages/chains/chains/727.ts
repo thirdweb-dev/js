@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 727,
   "rpc": [
-    "https://blucrates.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://727.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data.bluchain.pro"
   ],

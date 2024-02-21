@@ -25,15 +25,14 @@ export default {
   },
   "networkId": 204,
   "rpc": [
-    "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://204.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-mainnet-rpc.bnbchain.org",
     "https://opbnb-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
     "wss://opbnb-mainnet.nodereal.io/ws/v1/64a9df0874fb4a93b9d0a3849de012d3",
     "https://opbnb-mainnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     "wss://opbnb-mainnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
-    "https://opbnb.publicnode.com",
-    "wss://opbnb.publicnode.com"
+    "https://opbnb-rpc.publicnode.com",
+    "wss://opbnb-rpc.publicnode.com"
   ],
   "shortName": "obnb",
   "slip44": 714,

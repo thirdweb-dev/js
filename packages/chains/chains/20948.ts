@@ -21,7 +21,6 @@ export default {
   "networkId": 20948,
   "redFlags": [],
   "rpc": [
-    "https://goldfever.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20948.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/goldfever/testnet/rpc"
   ],

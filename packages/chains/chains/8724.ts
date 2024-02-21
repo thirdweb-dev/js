@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 8724,
   "rpc": [
-    "https://tool-global-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8724.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-web3.wolot.io"
   ],

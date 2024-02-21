@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 301,
   "rpc": [
-    "https://bobaopera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://301.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobaopera.boba.network",
     "wss://wss.bobaopera.boba.network",

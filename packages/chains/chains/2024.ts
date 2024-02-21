@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2024,
   "rpc": [
-    "https://swan-saturn-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://saturn-rpc.swanchain.io"
   ],

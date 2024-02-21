@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 163,
   "rpc": [
-    "https://lightstreams.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://163.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.mainnet.lightstreams.io"
   ],

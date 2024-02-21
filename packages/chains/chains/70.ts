@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 70,
   "rpc": [
-    "https://hoo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://70.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.hoosmartchain.com",
     "https://http-mainnet2.hoosmartchain.com",

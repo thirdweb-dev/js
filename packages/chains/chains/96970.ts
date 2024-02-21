@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 96970,
   "rpc": [
-    "https://mantis-testnet-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://96970.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mantis-rpc.switch.ch",
     "https://mantis-rpc.kore-technologies.ch",

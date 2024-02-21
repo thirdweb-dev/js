@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 456,
   "rpc": [
-    "https://arzio-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.arzio.co"
   ],

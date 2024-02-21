@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 4141,
   "rpc": [
-    "https://tipboxcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4141.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.tipboxcoin.net"
   ],

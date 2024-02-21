@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 208,
   "rpc": [
-    "https://structx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://208.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.structx.io"
   ],

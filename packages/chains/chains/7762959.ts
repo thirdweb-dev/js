@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 7762959,
   "rpc": [
-    "https://musicoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7762959.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mewapi.musicoin.tw"
   ],

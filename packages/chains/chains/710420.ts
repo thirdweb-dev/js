@@ -21,7 +21,6 @@ export default {
   "networkId": 710420,
   "redFlags": [],
   "rpc": [
-    "https://tiltyard.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://710420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/tiltyard/mainnet/rpc"
   ],

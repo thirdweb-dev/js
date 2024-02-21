@@ -29,7 +29,6 @@ export default {
   "networkId": 68840142,
   "redFlags": [],
   "rpc": [
-    "https://frame-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://68840142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.frame.xyz/http"
   ],

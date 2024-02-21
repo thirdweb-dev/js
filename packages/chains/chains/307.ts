@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 307,
   "rpc": [
-    "https://lovely-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://307.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://trpc.lovely.network"
   ],

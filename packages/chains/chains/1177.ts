@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 1177,
   "rpc": [
-    "https://smart-host-teknoloji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1177.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s2.tl.web.tr:4041"
   ],

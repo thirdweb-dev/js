@@ -29,7 +29,6 @@ export default {
   },
   "networkId": 20765,
   "rpc": [
-    "https://jono11-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20765.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/jono11/testnet/rpc"
   ],

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 230315,
   "rpc": [
-    "https://hashkey-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://230315.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.hashkeychain/rpc"
   ],

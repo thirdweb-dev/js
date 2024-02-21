@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 841,
   "rpc": [
-    "https://taraxa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://841.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.taraxa.io/"
   ],

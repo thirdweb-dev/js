@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 256256,
   "rpc": [
-    "https://cmp.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://256256.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.block.caduceus.foundation",
     "wss://mainnet.block.caduceus.foundation"

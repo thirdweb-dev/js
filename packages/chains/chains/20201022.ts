@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 20201022,
   "rpc": [
-    "https://pego-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20201022.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pegorpc.com",
     "https://node1.pegorpc.com",

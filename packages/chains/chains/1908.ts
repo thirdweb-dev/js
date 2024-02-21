@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1908,
   "rpc": [
-    "https://bitcichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1908.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitcichain.com"
   ],

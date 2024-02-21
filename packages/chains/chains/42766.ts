@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://zkfair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42766.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zkfair.io"
   ],

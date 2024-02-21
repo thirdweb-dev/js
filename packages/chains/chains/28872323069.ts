@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 28872323069,
   "rpc": [
-    "https://gitswarm-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://28872323069.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gitswarm.com:2096"
   ],

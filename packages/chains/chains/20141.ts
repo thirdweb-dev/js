@@ -21,7 +21,6 @@ export default {
   "networkId": 20141,
   "redFlags": [],
   "rpc": [
-    "https://shelby-s-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20141.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/c6fcfa18-e711-4f91-b8d4-ad59cfd30316"
   ],

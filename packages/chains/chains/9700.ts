@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9700,
   "rpc": [
-    "https://oort-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-rpc.oortech.com"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 81720,
   "rpc": [
-    "https://quantum-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://81720.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.quantumscan.org"
   ],

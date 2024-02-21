@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1666900001,
   "rpc": [
-    "https://harmony-devnet-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1666900001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.ps.hmny.io"
   ],

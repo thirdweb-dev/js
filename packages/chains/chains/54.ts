@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 54,
   "rpc": [
-    "https://openpiece.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://54.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.openpiece.io"
   ],

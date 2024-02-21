@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 27082017,
   "rpc": [
-    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://27082017.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.exlscan.com"
   ],

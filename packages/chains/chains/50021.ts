@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-3"
   },
   "rpc": [
-    "https://gton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50021.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gton.network/"
   ],

@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 131,
   "rpc": [
-    "https://engram-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://131.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tokioswift.engram.tech",
     "https://tokio-archive.engram.tech"

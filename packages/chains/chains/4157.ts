@@ -20,7 +20,6 @@ export default {
   "networkId": 4157,
   "redFlags": [],
   "rpc": [
-    "https://crossfi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4157.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.ms/"
   ],
