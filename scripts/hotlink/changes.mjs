@@ -58,18 +58,25 @@ export const changes = [
       "./evm/wallets/smart-wallet": "./src/evm/wallets/smart-wallet.ts",
     },
   },
-  // thirdweb
+  // thirdweb v5 sdk
   {
     path: "./packages/thirdweb/package.json",
     entry: "./src/index.ts",
     exports: {
-      ".": "./src/index.ts",
-      "./transaction": "./src/transaction/index.ts",
-      "./event": "./src/event/index.ts",
-      "./rpc": "./src/rpc/index.ts",
-      "./storage": "./src/storage/index.ts",
-      "./wallets": "./src/wallets/index.ts",
-      "./react": "./src/react/index.ts",
+      ".": "./src/exports/thirdweb.ts",
+      "./adapters": "./src/exports/adapters.ts",
+      "./chains": "./src/exports/chains.ts",
+      "./contract": "./src/exports/contract.ts",
+      "./event": "./src/exports/event.ts",
+      "./pay": "./src/exports/pay.ts",
+      "./react": "./src/exports/react.ts",
+      "./storage": "./src/exports/storage.ts",
+      "./utils": "./src/exports/utils.ts",
+      "./rpc": "./src/exports/rpc.ts",
+      "./transaction": "./src/exports/transaction.ts",
+      "./wallets": "./src/exports/wallets.ts",
+      // "./wallets/*": - TODO figure out
+      // "extensions/*" - TODO figure out
     },
   },
 ];

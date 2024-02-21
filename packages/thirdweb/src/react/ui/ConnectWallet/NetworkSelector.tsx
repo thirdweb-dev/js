@@ -25,7 +25,7 @@ import {
   radius,
   media,
 } from "../design-system/index.js";
-import type Fuse from "fuse.js";
+import Fuse from "fuse.js";
 import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
@@ -125,37 +125,41 @@ function initializeFuseInstances() {
     ],
   };
 
-  import("fuse.js").then((module) => {
-    const Fuse = module.default;
-    fuseInstances = {
-      all: new Fuse([], fuseConfig),
-      popular: new Fuse([], fuseConfig),
-      recent: new Fuse([], fuseConfig),
-    };
-  });
+  fuseInstances = {
+    all: new Fuse([], fuseConfig),
+    popular: new Fuse([], fuseConfig),
+    recent: new Fuse([], fuseConfig),
+  };
 }
+
+type ChainData = {
+  allChains: ApiChain[];
+  popularChains: ApiChain[];
+  recentChains: ApiChain[];
+  isLoading: boolean;
+};
 
 function useLoadChains(
   allChainsInput: Chain[],
   popularChainIds: number[],
   recentChainIds: number[],
-) {
+): ChainData {
   // load all chains with react query
-  const chainsQueries = useChainsQuery(allChainsInput);
+  const chainsQueries = useChainsQuery(allChainsInput, 50);
+  const isLoading = chainsQueries.some((q) => q.isLoading);
 
-  const { allChains, chainsMap, isLoading } = useMemo(() => {
+  const { allChains, chainsMap } = useMemo(() => {
     const _chains: ApiChain[] = [];
     const _chainsMap = new Map<number, ApiChain>();
 
+    if (isLoading) {
+      return { allChains: [], chainsMap: _chainsMap };
+    }
+
     for (const chainQuery of chainsQueries) {
-      // if not all chains are loaded, return empty array + loading: true
-      if (chainQuery.isLoading) {
-        return { allChains: [], chainsMap: _chainsMap, isLoading: true };
-      } else {
-        _chains.push({
-          ...chainQuery.data,
-        } as ApiChain);
-      }
+      _chains.push({
+        ...chainQuery.data,
+      } as ApiChain);
     }
 
     for (const chain of _chains) {
@@ -163,7 +167,7 @@ function useLoadChains(
     }
 
     return { allChains: _chains, chainsMap: _chainsMap, isLoading: false };
-  }, [chainsQueries]);
+  }, [chainsQueries, isLoading]);
 
   const recentChains = useMemo(() => {
     if (!recentChainIds) {
@@ -201,21 +205,34 @@ function useLoadChains(
   };
 }
 
-/**
- *
- * @internal
- */
-export function NetworkSelectorContent(props: {
+type NetworkSelectorContentProps = {
   onBack?: () => void;
   closeModal: () => void;
   chains: Chain[];
   networkSelector?: NetworkSelectorProps;
-}) {
+};
+
+/**
+ * @internal
+ */
+export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
   const chainsData = useLoadChains(
     props.chains,
     props.networkSelector?.popularChainIds || [],
     props.networkSelector?.recentChainIds || [],
   );
+
+  initializeFuseInstances();
+
+  return <NetworkSelectorContentInner {...props} chainsData={chainsData} />;
+}
+
+function NetworkSelectorContentInner(
+  props: NetworkSelectorContentProps & {
+    chainsData: ChainData;
+  },
+) {
+  const { chainsData } = props;
 
   const chainMap = useMemo(() => {
     const _chainMap = new Map<number, Chain>();
@@ -233,44 +250,57 @@ export function NetworkSelectorContent(props: {
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const { onSwitch, onCustomClick } = props.networkSelector || {};
 
-  initializeFuseInstances();
+  const allChainsTab = useMemo(() => {
+    return filterChainByType(chainsData.allChains, selectedTab);
+  }, [chainsData.allChains, selectedTab]);
+
+  const popularChainsTab = useMemo(() => {
+    return filterChainByType(chainsData.popularChains, selectedTab);
+  }, [chainsData.popularChains, selectedTab]);
+
+  const recentChainsTab = useMemo(() => {
+    return filterChainByType(chainsData.recentChains, selectedTab);
+  }, [chainsData.recentChains, selectedTab]);
 
   // chains filtered by search term + type
   const allChainsFiltered = useMemo(() => {
-    const _chains = filterChainByType(chainsData.allChains, selectedTab);
     if (!fuseInstances) {
-      return _chains;
+      return allChainsTab;
     }
-    fuseInstances.all.setCollection(_chains);
+
     if (deferredSearchTerm === "") {
-      return _chains;
+      return allChainsTab;
     }
+
+    fuseInstances.all.setCollection(allChainsTab);
     return fuseInstances.all.search(deferredSearchTerm).map((r) => r.item);
-  }, [chainsData.allChains, selectedTab, deferredSearchTerm]);
+  }, [allChainsTab, deferredSearchTerm]);
 
   const popularChainsFiltered = useMemo(() => {
-    const _chains = filterChainByType(chainsData.popularChains, selectedTab);
     if (!fuseInstances) {
-      return _chains;
+      return popularChainsTab;
     }
-    fuseInstances.popular.setCollection(_chains);
+
     if (deferredSearchTerm === "") {
-      return _chains;
+      return popularChainsTab;
     }
+
+    fuseInstances.popular.setCollection(popularChainsTab);
     return fuseInstances.popular.search(deferredSearchTerm).map((r) => r.item);
-  }, [chainsData.popularChains, selectedTab, deferredSearchTerm]);
+  }, [deferredSearchTerm, popularChainsTab]);
 
   const recentChainsFiltered = useMemo(() => {
-    const _chains = filterChainByType(chainsData.recentChains, selectedTab);
     if (!fuseInstances) {
-      return _chains;
+      return recentChainsTab;
     }
-    fuseInstances.recent.setCollection(_chains);
+
     if (deferredSearchTerm === "") {
-      return _chains;
+      return recentChainsTab;
     }
+
+    fuseInstances.recent.setCollection(recentChainsTab);
     return fuseInstances.recent.search(deferredSearchTerm).map((r) => r.item);
-  }, [chainsData.recentChains, deferredSearchTerm, selectedTab]);
+  }, [deferredSearchTerm, recentChainsTab]);
 
   const handleSwitch = useCallback(
     (chain: Chain) => {
@@ -330,7 +360,6 @@ export function NetworkSelectorContent(props: {
           <ModalTitle>{locale.title}</ModalTitle>
         )}
       </Container>
-
       <Container px="lg">
         <Container flex="row" gap="xxs">
           <TabButton
@@ -353,9 +382,7 @@ export function NetworkSelectorContent(props: {
           </TabButton>
         </Container>
       </Container>
-
       <Spacer y="lg" />
-
       <Container px="lg">
         {/* Search */}
         <div
@@ -373,14 +400,19 @@ export function NetworkSelectorContent(props: {
             }}
             tabIndex={-1}
             variant="outline"
-            placeholder={locale.inputPlaceholder}
+            disabled={chainsData.isLoading}
+            placeholder={
+              chainsData.isLoading
+                ? "Loading chains..."
+                : locale.inputPlaceholder
+            }
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
             }}
           />
           {/* Searching Spinner */}
-          {deferredSearchTerm !== searchTerm && (
+          {(deferredSearchTerm !== searchTerm || chainsData.isLoading) && (
             <div
               style={{
                 position: "absolute",
@@ -393,7 +425,6 @@ export function NetworkSelectorContent(props: {
         </div>
       </Container>
       <Spacer y="lg" />
-
       <Container px="md">
         <NetworkTabContent
           allChainIds={allChainsToShow}
@@ -403,7 +434,6 @@ export function NetworkSelectorContent(props: {
           renderChain={props.networkSelector?.renderChain}
         />
       </Container>
-
       {onCustomClick && (
         <>
           <Line />
@@ -529,6 +559,8 @@ type NetworkListProps = {
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   props: NetworkListProps,
 ) {
+  // show 10 items first, when reaching the last item, show 10 more
+  const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
   const switchChain = useSwitchActiveWalletChain();
   const activeChain = useActiveWalletChain();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
@@ -561,40 +593,21 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   };
 
   const RenderChain = props.renderChain;
-
-  const [isLoading, setIsLoading] = useState(props.chains.length > 100);
-
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          setIsLoading(false);
-        });
-      }, 150);
-    }
-  }, [isLoading]);
-
-  if (isLoading) {
-    return (
-      <Container px="xxs">
-        <NetworkListUl>
-          {new Array(10).fill(0).map((_, i) => (
-            <Skeleton height="48px" key={i} />
-          ))}
-        </NetworkListUl>
-      </Container>
-    );
-  }
+  const chainsToShow = props.chains.slice(0, itemsToShow);
 
   return (
     <NetworkListUl>
-      {props.chains.map((chain) => {
+      {chainsToShow.map((chain, i) => {
+        if (!chain) {
+          return null;
+        }
         const confirming = switchingChainId === chain.id;
         const switchingFailed = errorSwitchingChainId === chain.id;
+        const isLast = i === chainsToShow.length - 1;
 
-        if (RenderChain) {
-          return (
-            <li key={chain.id}>
+        return (
+          <li key={chain.id} ref={isLast ? lastItemRef : undefined}>
+            {RenderChain ? (
               <RenderChain
                 switchChain={() => {
                   handleSwitch(chain);
@@ -604,18 +617,14 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
                 switchFailed={errorSwitchingChainId === chain.id}
                 close={props.close}
               />
-            </li>
-          );
-        }
-
-        return (
-          <li key={chain.id}>
-            <ChainButton
-              chain={chain}
-              confirming={confirming}
-              handleSwitch={handleSwitch}
-              switchingFailed={switchingFailed}
-            />
+            ) : (
+              <ChainButton
+                chain={chain}
+                confirming={confirming}
+                handleSwitch={handleSwitch}
+                switchingFailed={switchingFailed}
+              />
+            )}
           </li>
         );
       })}
@@ -623,7 +632,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   );
 } as React.FC<NetworkListProps>);
 
-function ChainButton(props: {
+const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   chain: Chain;
   handleSwitch: (chain: Chain) => void;
   confirming: boolean;
@@ -691,7 +700,7 @@ function ChainButton(props: {
       )}
     </NetworkButton>
   );
-}
+});
 
 const TabButton = /* @__PURE__ */ (() =>
   styled.button(() => {
@@ -771,3 +780,33 @@ const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
     };
   },
 );
+
+function useShowMore<T extends HTMLElement>(
+  initialItemsToShow: number,
+  itemsToAdd: number,
+) {
+  // start with showing first 10 items, when the last item is in view, show 10 more
+  const [itemsToShow, setItemsToShow] = useState(initialItemsToShow);
+  const lastItemRef = useCallback(
+    (node: T) => {
+      if (!node) {
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0] && entries[0].isIntersecting) {
+            setItemsToShow((prev) => prev + itemsToAdd); // show 10 more items
+          }
+        },
+        { threshold: 1 },
+      );
+
+      observer.observe(node);
+      // when the node is removed from the DOM, observer will be disconnected automatically by the browser
+    },
+    [itemsToAdd],
+  );
+
+  return { itemsToShow, lastItemRef };
+}
