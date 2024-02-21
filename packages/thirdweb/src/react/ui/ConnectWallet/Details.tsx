@@ -59,6 +59,7 @@ import {
   personalWalletToSmartAccountMap,
   smartWalletMetadata,
 } from "../../../wallets/smart/index.js";
+import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index.js";
 
 // TEMP
 const LocalWalletId = "localWallet";
@@ -357,7 +358,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        {/* <EmbeddedWalletEmail /> */}
+        <EmbeddedWalletEmail />
 
         {/* Send and Receive */}
         <Container
@@ -809,22 +810,33 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-// function EmbeddedWalletEmail() {
-//   const emailQuery = useEmbeddedWalletUserEmail();
+function EmbeddedWalletEmail() {
+  const user = useEmbeddedWalletUser();
+  if (user?.email) {
+    return (
+      <Container
+        flex="row"
+        center="x"
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text size="sm">{user.email}</Text>
+      </Container>
+    );
+  }
 
-//   if (emailQuery.data) {
-//     return (
-//       <Container
-//         flex="row"
-//         center="x"
-//         style={{
-//           paddingBottom: spacing.md,
-//         }}
-//       >
-//         <Text size="sm">{emailQuery.data}</Text>
-//       </Container>
-//     );
-//   }
+  return undefined;
+}
 
-//   return undefined;
-// }
+function useEmbeddedWalletUser() {
+  const activeWallet = useActiveWallet();
+  const user =
+    activeWallet &&
+    "isEmbeddedWallet" in activeWallet &&
+    "getUser" in activeWallet
+      ? (activeWallet as EmbeddedWallet).getUser()
+      : undefined;
+
+  return user;
+}

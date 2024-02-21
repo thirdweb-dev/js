@@ -103,3 +103,5 @@ export {
   type SwapStatus,
   type SwapStatusParams,
 } from "../react/hooks/pay/useSwapStatus.js";
+
+export { defaultWallets } from "../react/wallets/defaultWallets.js";

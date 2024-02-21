@@ -23,7 +23,7 @@ import type {
 
 export type EmbeddedWalletConfigOptions = {
   recommended?: boolean;
-  auth: {
+  auth?: {
     options: EmbeddedWalletAuth[];
   };
 };
@@ -50,7 +50,7 @@ export const embeddedWalletConfig = (
     "apple",
     "facebook",
   ];
-  const authOptions = options?.auth.options || defaultAuthOptions;
+  const authOptions = options?.auth?.options || defaultAuthOptions;
   const hasEmail = authOptions.includes("email");
   const hasSocial =
     (hasEmail && authOptions.length > 1) ||
