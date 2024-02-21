@@ -31,7 +31,6 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
   const viemAccount = privateKeyToAccount(options.privateKey as Hex);
   const account: Account = {
     address: viemAccount.address,
-    [Symbol("privateKey")]: options.privateKey,
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
       // maybe we *do* actually have to take in a tx object instead of the raw tx?
