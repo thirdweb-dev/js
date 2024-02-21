@@ -246,10 +246,10 @@ export class SmartWallet extends AbstractClientWallet<
    * The entrypoint contract address. Uses v0.6 by default.
    *
    * Must be a `string`.
-   * 
+   *
    * #### deployOnSign
    * Whether to deploy the smart wallet when the user signs a message. Defaults to true.
-   * 
+   *
    * Must be a `boolean`.
    *
    * #### chains
@@ -328,54 +328,37 @@ export class SmartWallet extends AbstractClientWallet<
     const chainId = await erc4337Signer.getChainId();
     const address = await connector.getAddress();
 
-    /**
-     * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
-     * If this fails, we fallback to the legacy signing method.
-     */
-    try {
-      const result = await signTypedDataInternal(
-        erc4337Signer,
-        {
-          name: "Account",
-          version: "1",
-          chainId,
-          verifyingContract: address,
-        },
-        { AccountMessage: [{ name: "message", type: "bytes" }] },
-        {
-          message: utils.defaultAbiCoder.encode(
-            ["bytes32"],
-            [utils.hashMessage(message)],
-          ),
-        },
-      );
-
-      const isValid = await checkContractWalletSignature(
-        message as string,
-        result.signature,
-        address,
+    const result = await signTypedDataInternal(
+      erc4337Signer,
+      {
+        name: "Account",
+        version: "1",
         chainId,
+        verifyingContract: address,
+      },
+      { AccountMessage: [{ name: "message", type: "bytes" }] },
+      {
+        message: utils.defaultAbiCoder.encode(
+          ["bytes32"],
+          [utils.hashMessage(message)],
+        ),
+      },
+    );
+
+    const isValid = await checkContractWalletSignature(
+      message as string,
+      result.signature,
+      address,
+      chainId,
+    );
+
+    if (!isValid) {
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
       );
-
-      if (!isValid) {
-        throw new Error("Invalid signature");
-      }
-
-      return result.signature;
-    } catch {
-      return await this.signMessageLegacy(erc4337Signer, message);
     }
-  }
 
-  /**
-   * This is only for for legacy EIP-1271 signature verification
-   * Sign a message and return the signature
-   */
-  private async signMessageLegacy(
-    signer: Signer,
-    message: Bytes | string,
-  ): Promise<string> {
-    return await signer.signMessage(message);
+    return result.signature;
   }
 
   /**
