@@ -801,7 +801,7 @@
   },
   "ContractDeployer": {
     "name": "ContractDeployer",
-    "summary": "Handles deploying new contracts\n\n\n",
+    "summary": "Handles deploying new contracts\n\n@deploy\n\n\n",
     "examples": {},
     "methods": [],
     "properties": [
@@ -1076,7 +1076,7 @@
   },
   "ContractEvents": {
     "name": "ContractEvents",
-    "summary": "Listen to Contract events in real time\n\n\n",
+    "summary": "Listen to Contract events in real time\n\n@contract\n\n\n",
     "examples": {
       "go": "\n// First get an instance of your contract\ncontract, _ := sdk.GetContract(\"0x...\");\n\n// Now, get all Transfer events from a specific block range\ncontract.Events.GetEvents(\"Transfer\", thirdweb.EventQueryOptions{\n  FromBlock: 100000000,\n  ToBlock:   100000001,\n})\n\n// And setup a listener to listen for future Transfer events\ncontract.Events.AddEventListener(\"Transfer\", func (event thirdweb.ContractEvent) {\n  fmt.Printf(\"%#v\\n\", event)\n})\n"
     },

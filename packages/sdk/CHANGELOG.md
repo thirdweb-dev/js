@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 4.0.36
+
+### Patch Changes
+
+- [#2294](https://github.com/thirdweb-dev/js/pull/2294) [`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose rpcBatchSettings in SDKOptions
+
+- [#2292](https://github.com/thirdweb-dev/js/pull/2292) [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Reduce batch RPC size for performance
+
+- [#1529](https://github.com/thirdweb-dev/js/pull/1529) [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas-price for Xpla create2 factory deployment
+
+- [#2300](https://github.com/thirdweb-dev/js/pull/2300) [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Minimal proxy pattern update
+
+- Updated dependencies [[`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/chains@0.1.73
+
 ## 4.0.35
 
 ### Patch Changes
