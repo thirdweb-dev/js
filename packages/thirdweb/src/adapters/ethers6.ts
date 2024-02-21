@@ -10,7 +10,7 @@ import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { uint8ArrayToHex } from "../utils/hex.js";
+import { uint8ArrayToHex } from "../utils/encoding/hex.js";
 
 type Ethers6 = typeof ethers6;
 

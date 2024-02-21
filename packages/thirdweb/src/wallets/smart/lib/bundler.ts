@@ -1,5 +1,5 @@
 import { getClientFetch } from "../../../utils/fetch.js";
-import { hexToBigInt, type Hex } from "../../../utils/hex.js";
+import { hexToBigInt, type Hex } from "../../../utils/encoding/hex.js";
 import type {
   EstimationResult,
   SmartWalletOptions,

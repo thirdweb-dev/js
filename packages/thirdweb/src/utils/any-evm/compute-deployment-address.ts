@@ -1,8 +1,9 @@
-import { keccak256, encodePacked, type Hex } from "viem";
+import { encodePacked, type Hex } from "viem";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { getSaltHash } from "./get-salt-hash.js";
-import { keccackId } from "./keccack-id.js";
-import { uint8ArrayToHex } from "../hex.js";
+import { keccakId } from "./keccak-id.js";
+import { uint8ArrayToHex } from "../encoding/hex.js";
+import { keccak256 } from "../hashing/keccak256.js";
 
 type ComputeDeploymentAddressOptions = {
   bytecode: string;
@@ -31,7 +32,7 @@ export function computeDeploymentAddress(
 ) {
   const bytecode = ensureBytecodePrefix(options.bytecode);
   const saltHash = options.salt
-    ? keccackId(options.salt)
+    ? keccakId(options.salt)
     : getSaltHash(options.bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args

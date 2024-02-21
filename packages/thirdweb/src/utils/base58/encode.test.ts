@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { base58Encode } from "./encode.js";
-import { hexToUint8Array } from "../hex.js";
+import { hexToUint8Array } from "../encoding/hex.js";
 
 const TEST_CASES = [
   ["", ""],

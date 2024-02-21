@@ -1,11 +1,11 @@
 import { describe, bench } from "vitest";
-import { keccackId } from "./keccack-id.js";
+import { keccakId } from "./keccak-id.js";
 import { id } from "ethers6";
 
 const input = "Hello, World!";
 describe("keccackId", () => {
   bench("thirdweb", () => {
-    keccackId(input);
+    keccakId(input);
   });
   bench("ethers", () => {
     id(input);

@@ -5,7 +5,7 @@ import {
   type EIP1474Methods,
   type GetBlockReturnType,
 } from "viem";
-import { numberToHex } from "../../utils/hex.js";
+import { numberToHex } from "../../utils/encoding/hex.js";
 
 type GetBlockParameters<
   TIncludeTransactions extends boolean = false,

@@ -9,7 +9,7 @@ import {
   type Hash,
   formatLog,
 } from "viem";
-import { numberToHex } from "../../utils/hex.js";
+import { numberToHex } from "../../utils/encoding/hex.js";
 
 export type GetLogsBlockParams =
   | {

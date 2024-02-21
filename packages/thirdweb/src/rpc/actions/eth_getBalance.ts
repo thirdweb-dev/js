@@ -5,7 +5,7 @@ import type {
   Hex,
   BlockTag,
 } from "viem";
-import { hexToBigInt } from "../../utils/hex.js";
+import { hexToBigInt } from "../../utils/encoding/hex.js";
 
 type GetBalanceParams = {
   address: Address;

@@ -1,49 +1,83 @@
 // slightly tweaked re-exports from viem for the moment
+import { assertSize } from "./helpers/assert-size.js";
+import { cachedTextDecoder } from "../text-decoder.js";
+import { cachedTextEncoder } from "../text-encoder.js";
+import type { Hex } from "./helpers/is-hex.js";
+import { charCodeToBase16 } from "./helpers/charcode-to-base-16.js";
 
-import { size as byteSize, trim, pad } from "viem/utils";
-import { cachedTextDecoder } from "./text-decoder.js";
-import { cachedTextEncoder } from "./text-encoder.js";
+export { type Hex, isHex, type IsHexOptions } from "./helpers/is-hex.js";
 
-export type Hex = `0x${string}`;
+type TrimOptions = {
+  dir?: "left" | "right";
+};
+type TrimReturnType<TValue extends Uint8Array | Hex> = TValue extends Hex
+  ? Hex
+  : Uint8Array;
 
-function assertSize(
-  hexOrBytes: Hex | Uint8Array,
-  { size }: { size: number },
-): void {
-  const givenSize = byteSize(hexOrBytes);
-  if (givenSize > size) {
-    throw new Error(`Size overflow: ${givenSize} > ${size}`);
+function trim<TValue extends Uint8Array | Hex>(
+  hexOrBytes: TValue,
+  { dir = "left" }: TrimOptions = {},
+): TrimReturnType<TValue> {
+  let data: any =
+    typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
+
+  let sliceLength = 0;
+  for (let i = 0; i < data.length - 1; i++) {
+    if (data[dir === "left" ? i : data.length - i - 1].toString() === "0") {
+      sliceLength++;
+    } else {
+      break;
+    }
   }
+  data =
+    dir === "left"
+      ? data.slice(sliceLength)
+      : data.slice(0, data.length - sliceLength);
+
+  if (typeof hexOrBytes === "string") {
+    if (data.length === 1 && dir === "right") {
+      data = `${data}0`;
+    }
+    return `0x${
+      data.length % 2 === 1 ? `0${data}` : data
+    }` as TrimReturnType<TValue>;
+  }
+  return data as TrimReturnType<TValue>;
 }
-export type IsHexOptions = {
-  /** If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value can start with "0x" or not. Default is true. */
-  strict?: boolean;
+
+type PadOptions = {
+  dir?: "left" | "right";
+  size?: number | null;
 };
 
 /**
- * Checks if a value is a valid hexadecimal string.
- * @param value - The value to be checked.
- * @param options - Optional configuration for the validation.
- * @param options.strict - If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value must only start with "0x".
- * @returns True if the value is a valid hexadecimal string, false otherwise.
+ * Pads a hexadecimal string with zeros to a specified size.
+ * @param hex_ The hexadecimal string to pad.
+ * @param options The padding options.
+ * @param options.dir - The direction to pad the hexadecimal string. Default is "left".
+ * @param options.size - The size to pad the hexadecimal string to. Default is 32.
+ * @returns The padded hexadecimal string.
+ * @throws Error if the resulting padded string exceeds the specified size.
  * @example
  * ```ts
- * import { isHex } from "thirdweb/utils";
- * const result = isHex("0x1a4");
- * console.log(result); // true
+ * import { padHex } from "thirdweb/utils";
+ * const paddedHex = padHex("0x1a4", { size: 32 });
+ * console.log(paddedHex); // "0x000000000000000000000000000001a4"
  * ```
  */
-export function isHex(
-  value: unknown,
-  { strict = true }: IsHexOptions = {},
-): value is Hex {
-  if (!value) {
-    return false;
+export function padHex(hex_: Hex, { dir, size = 32 }: PadOptions = {}) {
+  if (size === null) {
+    return hex_;
   }
-  if (typeof value !== "string") {
-    return false;
+  const hex = hex_.replace("0x", "");
+  if (hex.length > size * 2) {
+    throw new Error(`Size overflow: ${Math.ceil(hex.length / 2)} > ${size}`);
   }
-  return strict ? /^0x[0-9a-fA-F]*$/.test(value) : value.startsWith("0x");
+
+  return `0x${hex[dir === "right" ? "padEnd" : "padStart"](
+    size * 2,
+    "0",
+  )}` as Hex;
 }
 
 //--------------------------------------------------------------------------
@@ -165,28 +199,6 @@ export function hexToBool(hex: Hex, opts: HexToBoolOpts = {}): boolean {
   throw new Error(`Invalid hex boolean: ${hex}`);
 }
 
-const charCodeMap = {
-  zero: 48,
-  nine: 57,
-  A: 65,
-  F: 70,
-  a: 97,
-  f: 102,
-} as const;
-
-function charCodeToBase16(char: number) {
-  if (char >= charCodeMap.zero && char <= charCodeMap.nine) {
-    return char - charCodeMap.zero;
-  }
-  if (char >= charCodeMap.A && char <= charCodeMap.F) {
-    return char - (charCodeMap.A - 10);
-  }
-  if (char >= charCodeMap.a && char <= charCodeMap.f) {
-    return char - (charCodeMap.a - 10);
-  }
-  return undefined;
-}
-
 export type HexToUint8ArrayOpts = {
   /** Size of the output bytes. */
   size?: number;
@@ -210,7 +222,7 @@ export function hexToUint8Array(
 ): Uint8Array {
   if (opts.size) {
     assertSize(hex, { size: opts.size });
-    hex = pad(hex, { dir: "right", size: opts.size });
+    hex = padHex(hex, { dir: "right", size: opts.size });
   }
 
   let hexString = hex.slice(2) as string;
@@ -313,7 +325,7 @@ export function boolToHex(value: boolean, opts: BoolToHexOpts = {}): Hex {
   const hex = `0x${Number(value)}` as const;
   if (typeof opts.size === "number") {
     assertSize(hex, { size: opts.size });
-    return pad(hex, { size: opts.size });
+    return padHex(hex, { size: opts.size });
   }
   return hex;
 }
@@ -348,7 +360,7 @@ export function uint8ArrayToHex(
 
   if (typeof opts.size === "number") {
     assertSize(hex, { size: opts.size });
-    return pad(hex, { dir: "right", size: opts.size });
+    return padHex(hex, { dir: "right", size: opts.size });
   }
   return hex;
 }
@@ -416,7 +428,7 @@ export function numberToHex(
     : value
   ).toString(16)}` as Hex;
   if (size) {
-    return pad(hex, { size }) as Hex;
+    return padHex(hex, { size }) as Hex;
   }
   return hex;
 }

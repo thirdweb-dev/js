@@ -1,5 +1,5 @@
-import { sha256 } from "@noble/hashes/sha256";
-import { uint8ArrayToHex } from "./hex.js";
+import { stringToBytes } from "./encoding/to-bytes.js";
+import { sha256 } from "./hashing/sha256.js";
 
 /**
  * @param secretKey - the secret key to compute the client id from
@@ -8,5 +8,5 @@ import { uint8ArrayToHex } from "./hex.js";
  */
 export function computeClientIdFromSecretKey(secretKey: string) {
   // we slice off the leading `0x` and then take the first 32 chars
-  return uint8ArrayToHex(sha256(secretKey)).slice(2, 34);
+  return sha256(stringToBytes(secretKey)).slice(2, 34);
 }

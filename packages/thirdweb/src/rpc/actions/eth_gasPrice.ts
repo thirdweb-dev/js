@@ -1,5 +1,5 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
-import { hexToBigInt } from "../../utils/hex.js";
+import { hexToBigInt } from "../../utils/encoding/hex.js";
 
 /**
  * Retrieves the current gas price from the Ethereum network.

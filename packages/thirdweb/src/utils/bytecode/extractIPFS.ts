@@ -1,7 +1,7 @@
-import { hexToBytes } from "@noble/hashes/utils";
-
 import { decode } from "./cbor-decode.js";
 import { base58Encode } from "../base58/encode.js";
+import { hexToBytes } from "../encoding/to-bytes.js";
+import { ensureBytecodePrefix } from "./prefix.js";
 
 /**
  * Extracts the IPFS URI from the given bytecode.
@@ -16,9 +16,7 @@ import { base58Encode } from "../base58/encode.js";
  * ```
  */
 export function extractIPFSUri(bytecode: string): string | undefined {
-  const numericBytecode = hexToBytes(
-    bytecode.startsWith("0x") ? bytecode.slice(2) : bytecode,
-  );
+  const numericBytecode = hexToBytes(ensureBytecodePrefix(bytecode));
 
   const cborLength =
     // @ts-expect-error - TS doesn't like this, but it's fine

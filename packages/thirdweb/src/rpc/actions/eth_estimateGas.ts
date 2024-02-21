@@ -3,7 +3,7 @@ import type {
   EIP1474Methods,
   RpcTransactionRequest,
 } from "viem";
-import { hexToBigInt } from "../../utils/hex.js";
+import { hexToBigInt } from "../../utils/encoding/hex.js";
 
 /**
  * Estimates the gas required to execute a transaction on the Ethereum network.

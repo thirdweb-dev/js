@@ -1,5 +1,5 @@
 import { sha256 } from "@noble/hashes/sha256";
-import { uint8ArrayToHex } from "./hex.js";
+import { uint8ArrayToHex } from "./encoding/hex.js";
 
 type AnyFunction = (...args: any[]) => any;
 

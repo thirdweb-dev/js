@@ -7,7 +7,7 @@ import type {
   RpcStateOverride,
   RpcStateMapping,
 } from "viem";
-import { numberToHex } from "../../utils/hex.js";
+import { numberToHex } from "../../utils/encoding/hex.js";
 
 type StateOverride = Record<
   string,

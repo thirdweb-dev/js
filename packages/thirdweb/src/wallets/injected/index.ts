@@ -27,7 +27,7 @@ import {
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
-} from "../../utils/hex.js";
+} from "../../utils/encoding/hex.js";
 
 /**
  * Connect to Injected Wallet Provider

@@ -126,9 +126,11 @@ export {
 
 export { sendSwap } from "../pay/swap/actions/sendSwap.js";
 
-/**
- * HEX
- */
+// ------------------------------------------------
+// encoding
+// ------------------------------------------------
+
+// hex
 export {
   // from
   fromHex,
@@ -158,4 +160,43 @@ export {
   // util
   isHex,
   type IsHexOptions,
-} from "../utils/hex.js";
+  padHex,
+} from "../utils/encoding/hex.js";
+
+// bytes
+// to
+export {
+  toBytes,
+  type ToBytesParameters,
+  boolToBytes,
+  type BoolToBytesOpts,
+  hexToBytes,
+  type HexToBytesOpts,
+  numberToBytes,
+  stringToBytes,
+  type StringToBytesOpts,
+} from "../utils/encoding/to-bytes.js";
+// from
+export {
+  fromBytes,
+  type FromBytesParameters,
+  type FromBytesReturnType,
+  bytesToBigInt,
+  type BytesToBigIntOpts,
+  bytesToNumber,
+  type BytesToNumberOpts,
+  bytesToString,
+  type BytesToStringOpts,
+  bytesToBool,
+  type BytesToBoolOpts,
+} from "../utils/encoding/from-bytes.js";
+
+// ------------------------------------------------
+// hashing
+// ------------------------------------------------
+
+// keccak256
+export { keccak256 } from "../utils/hashing/keccak256.js";
+
+// sha256
+export { sha256 } from "../utils/hashing/sha256.js";

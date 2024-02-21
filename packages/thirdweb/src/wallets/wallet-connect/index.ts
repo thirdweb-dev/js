@@ -36,7 +36,7 @@ import {
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
-import { isHex, numberToHex, type Hex } from "../../utils/hex.js";
+import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
 
 const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
 // unused

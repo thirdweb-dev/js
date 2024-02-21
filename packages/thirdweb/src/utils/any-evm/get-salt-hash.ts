@@ -1,7 +1,7 @@
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
-import type { Hex } from "../hex.js";
+import type { Hex } from "../encoding/hex.js";
 
-import { keccackId } from "./keccack-id.js";
+import { keccakId } from "./keccak-id.js";
 
 /**
  * Calculates the salt hash for a given bytecode.
@@ -15,7 +15,7 @@ import { keccackId } from "./keccack-id.js";
  */
 export function getSaltHash(bytecode: string): Hex {
   bytecode = ensureBytecodePrefix(bytecode);
-  const bytecodeHash = keccackId(bytecode);
+  const bytecodeHash = keccakId(bytecode);
   const salt = `tw.${bytecodeHash}`;
-  return keccackId(salt);
+  return keccakId(salt);
 }

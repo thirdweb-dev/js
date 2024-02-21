@@ -1,4 +1,4 @@
-import { hexToNumber, isHex } from "../../utils/hex.js";
+import { hexToNumber, isHex } from "../../utils/encoding/hex.js";
 
 /**
  * @internal

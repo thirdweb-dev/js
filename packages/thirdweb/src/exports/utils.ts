@@ -20,7 +20,7 @@ export {
 export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
 export { getSaltHash } from "../utils/any-evm/get-salt-hash.js";
 export { computeDeploymentAddress } from "../utils/any-evm/compute-deployment-address.js";
-export { keccackId } from "../utils/any-evm/keccack-id.js";
+export { keccakId } from "../utils/any-evm/keccak-id.js";
 export { isEIP155Enforced } from "../utils/any-evm/is-eip155-enforced.js";
 export { getKeylessTransaction } from "../utils/any-evm/keyless-transaction.js";
 export {
@@ -34,8 +34,11 @@ export {
   resolveSignatures,
 } from "../utils/signatures/resolve-signature.js";
 
-// hex
+// ------------------------------------------------
+// encoding
+// ------------------------------------------------
 
+// hex
 export {
   // from
   fromHex,
@@ -65,4 +68,43 @@ export {
   // util
   isHex,
   type IsHexOptions,
-} from "../utils/hex.js";
+  padHex,
+} from "../utils/encoding/hex.js";
+
+// bytes
+// to
+export {
+  toBytes,
+  type ToBytesParameters,
+  boolToBytes,
+  type BoolToBytesOpts,
+  hexToBytes,
+  type HexToBytesOpts,
+  numberToBytes,
+  stringToBytes,
+  type StringToBytesOpts,
+} from "../utils/encoding/to-bytes.js";
+// from
+export {
+  fromBytes,
+  type FromBytesParameters,
+  type FromBytesReturnType,
+  bytesToBigInt,
+  type BytesToBigIntOpts,
+  bytesToNumber,
+  type BytesToNumberOpts,
+  bytesToString,
+  type BytesToStringOpts,
+  bytesToBool,
+  type BytesToBoolOpts,
+} from "../utils/encoding/from-bytes.js";
+
+// ------------------------------------------------
+// hashing
+// ------------------------------------------------
+
+// keccak256
+export { keccak256 } from "../utils/hashing/keccak256.js";
+
+// sha256
+export { sha256 } from "../utils/hashing/sha256.js";

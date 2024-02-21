@@ -7,7 +7,7 @@ import type {
 } from "../../interfaces/wallet.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
-import { stringToHex } from "../../../utils/hex.js";
+import { stringToHex } from "../../../utils/encoding/hex.js";
 
 /**
  * @internal

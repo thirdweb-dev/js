@@ -1,6 +1,6 @@
 import { concat } from "viem";
 import type { UserOperation, UserOperationHexed } from "../types.js";
-import { isHex, numberToHex, toHex } from "../../../utils/hex.js";
+import { isHex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
 
 const generateRandomUint192 = (): bigint => {
   const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));

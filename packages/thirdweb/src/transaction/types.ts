@@ -7,7 +7,7 @@ import type {
 } from "abitype";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isObjectWithKeys } from "../utils/type-guards.js";
-import type { Hex } from "../utils/hex.js";
+import type { Hex } from "../utils/encoding/hex.js";
 
 export type TransactionOrUserOpHash =
   | {

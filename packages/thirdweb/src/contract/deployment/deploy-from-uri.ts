@@ -4,7 +4,7 @@ import { fetchDeployMetadata } from "./utils/deploy-metadata.js";
 import type { AbiConstructor } from "abitype";
 import { prepareDirectDeployTransaction } from "./deploy-with-abi.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
-import { isHex } from "../../utils/hex.js";
+import { isHex } from "../../utils/encoding/hex.js";
 
 export type PrepareDeployTransactionFromUriOptions = Prettify<
   {

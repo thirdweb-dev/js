@@ -3,7 +3,7 @@ import type {
   EIP1474Methods,
   GetTransactionCountParameters,
 } from "viem";
-import { hexToNumber, numberToHex } from "../../utils/hex.js";
+import { hexToNumber, numberToHex } from "../../utils/encoding/hex.js";
 
 /**
  * Retrieves the transaction count (nonce) for a given Ethereum address.

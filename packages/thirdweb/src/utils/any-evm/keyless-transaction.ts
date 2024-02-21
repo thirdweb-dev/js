@@ -1,11 +1,11 @@
 import {
-  keccak256,
   recoverAddress,
   serializeTransaction,
   signatureToHex,
   type Signature,
   type TransactionSerializable,
 } from "viem";
+import { keccak256 } from "../hashing/keccak256.js";
 
 type GetKeylessTransactionOptions = {
   transaction: TransactionSerializable;

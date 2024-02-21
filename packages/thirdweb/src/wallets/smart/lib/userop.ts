@@ -1,10 +1,4 @@
-import {
-  keccak256,
-  concat,
-  type Hex,
-  encodeAbiParameters,
-  toBytes,
-} from "viem";
+import { concat, type Hex, encodeAbiParameters } from "viem";
 import type { SmartWalletOptions, UserOperation } from "../types.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -18,6 +12,8 @@ import { prepareCreateAccount } from "./calls.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import { keccak256 } from "../../../utils/hashing/keccak256.js";
+import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 
 /**
  * Create an unsigned user operation
@@ -152,7 +148,7 @@ export async function signUserOp(args: {
   if (options.personalAccount.signMessage) {
     const signature = await options.personalAccount.signMessage({
       message: {
-        raw: toBytes(userOpHash),
+        raw: hexToBytes(userOpHash),
       },
     });
     return {

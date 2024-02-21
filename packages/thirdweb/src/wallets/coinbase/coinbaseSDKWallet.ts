@@ -28,7 +28,7 @@ import {
   type Hex,
   stringToHex,
   uint8ArrayToHex,
-} from "../../utils/hex.js";
+} from "../../utils/encoding/hex.js";
 
 type SavedConnectParams = {
   chain?: Chain;

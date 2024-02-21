@@ -1,6 +1,6 @@
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { numberToHex } from "../hex.js";
+import { numberToHex } from "../encoding/hex.js";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
