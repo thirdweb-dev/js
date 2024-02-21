@@ -58,6 +58,7 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
               relayerForwarderAddress: z.string().optional(),
               domainName: z.string().default("GSNv2 Forwarder"),
               domainVersion: z.string().default("0.0.1"),
+              domainSeparatorVersion: z.string().default("1"),
             }),
             experimentalChainlessSupport: z.boolean().default(false),
           }),

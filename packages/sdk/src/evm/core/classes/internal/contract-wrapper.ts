@@ -781,6 +781,7 @@ export class ContractWrapper<
         transaction.from,
         spender,
         amount,
+        this.options.gasless.engine.domainVersion,
       );
 
       const message = {
