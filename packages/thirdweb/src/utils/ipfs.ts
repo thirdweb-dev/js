@@ -5,6 +5,8 @@ export type ResolveSchemeOptions = {
   uri: string;
 };
 
+const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
+
 /**
  * Resolves the scheme of a given URI and returns the corresponding URL.
  * If the URI starts with "ipfs://", it constructs a URL using the IPFS client ID and the IPFS gateway.
@@ -25,9 +27,15 @@ export type ResolveSchemeOptions = {
 export function resolveScheme(options: ResolveSchemeOptions) {
   let url: string;
   if (options.uri.startsWith("ipfs://")) {
-    url = `https://${
-      options.client.clientId
-    }.ipfscdn.io/ipfs/${options.uri.slice(7)}`;
+    const gateway = options.client.config?.storage?.gateway ?? DEFAULT_GATEWAY;
+    const clientId = options.client.clientId;
+    const cid = options.uri.slice(7);
+    url =
+      // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+      // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
+      gateway.replace("{clientId}", clientId).split("/ipfs")[0] +
+      "/ipfs/" +
+      cid;
   } else if (options.uri.startsWith("http")) {
     url = options.uri;
   } else {

@@ -1,25 +1,37 @@
 import { computeClientIdFromSecretKey } from "../utils/client-id.js";
+import type { Prettify } from "../utils/type-utils.js";
 
-type ClientOptions = {
-  fetchTimeout?:
-    | number
-    | {
-        storage?: number;
-        rpc?: number;
-      };
+type FetchConfig = {
+  requestTimeoutMs?: number;
+  keepalive?: boolean;
+  headers?: HeadersInit;
 };
 
-export type CreateThirdwebClientOptions = (
-  | {
-      clientId: string;
-      secretKey?: never;
-    }
-  | {
-      clientId?: never;
-      secretKey: string;
-    }
-) &
-  ClientOptions;
+type ClientOptions = Prettify<{
+  config?: {
+    rpc?: {
+      fetch?: FetchConfig;
+    };
+    storage?: {
+      fetch?: FetchConfig;
+      gateway?: string;
+    };
+  };
+}>;
+
+export type CreateThirdwebClientOptions = Prettify<
+  (
+    | {
+        clientId: string;
+        secretKey?: never;
+      }
+    | {
+        clientId?: never;
+        secretKey: string;
+      }
+  ) &
+    ClientOptions
+>;
 
 export type ThirdwebClient = {
   readonly clientId: string;
@@ -60,37 +72,4 @@ export function createThirdwebClient(
 
   // otherwise throw an error
   throw new Error("clientId or secretKey must be provided");
-}
-
-// TODO: can this be lower?
-const DEFAULT_FETCH_TIMEOUT = 60000;
-
-/**
- * Retrieves the request timeout configuration for the specified client and type.
- * If the client does not have a specific timeout configuration for the given type,
- * the fallback timeout value is returned.
- *
- * @param client - The ThirdwebClient instance.
- * @param type - The type of request (storage or rpc).
- * @param fallback - The fallback timeout value (default: DEFAULT_FETCH_TIMEOUT).
- * @returns The request timeout configuration.
- * @internal
- */
-export function getRequestTimeoutConfig(
-  client: ThirdwebClient,
-  type: "storage" | "rpc",
-  fallback = DEFAULT_FETCH_TIMEOUT,
-): number {
-  const timeout = client.fetchTimeout;
-  if (!timeout) {
-    return fallback;
-  }
-  if (typeof timeout === "number") {
-    return timeout;
-  }
-  const specificTimeout = timeout[type];
-  if (specificTimeout) {
-    return specificTimeout;
-  }
-  return fallback;
 }

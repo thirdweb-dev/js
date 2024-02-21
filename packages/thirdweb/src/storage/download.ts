@@ -1,4 +1,3 @@
-import { getRequestTimeoutConfig } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 import type { Prettify } from "../utils/type-utils.js";
@@ -24,14 +23,10 @@ export type DownloadOptions = Prettify<
  * ```
  */
 export async function download(options: DownloadOptions) {
-  const requestTimeoutMs = getRequestTimeoutConfig(
-    options.client,
-    "storage",
-    options.requestTimeoutMs,
-  );
-
   const res = await getClientFetch(options.client)(resolveScheme(options), {
-    requestTimeoutMs,
+    keepalive: options.client.config?.storage?.fetch?.keepalive,
+    headers: options.client.config?.storage?.fetch?.headers,
+    requestTimeoutMs: options.client.config?.storage?.fetch?.requestTimeoutMs,
   });
   if (!res.ok) {
     throw new Error(`Failed to download file: ${res.statusText}`);

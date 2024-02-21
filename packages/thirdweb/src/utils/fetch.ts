@@ -6,6 +6,8 @@ import {
   type OperatingSystem,
 } from "./detect-browser.js";
 
+const DEFAULT_REQUEST_TIMEOUT = 60000;
+
 const FETCH_CACHE = new WeakMap<
   ThirdwebClient,
   (url: string, init?: RequestInit) => Promise<Response>
@@ -26,7 +28,8 @@ export function getClientFetch(client: ThirdwebClient) {
     url: string,
     init?: Omit<RequestInit, "signal"> & { requestTimeoutMs?: number },
   ): Promise<Response> {
-    const { requestTimeoutMs, ...restInit } = init || {};
+    const { requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT, ...restInit } =
+      init || {};
 
     const headers = new Headers(restInit?.headers);
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)

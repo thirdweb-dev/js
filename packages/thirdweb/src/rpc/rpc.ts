@@ -1,8 +1,5 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
-import {
-  getRequestTimeoutConfig,
-  type ThirdwebClient,
-} from "../client/client.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
@@ -238,17 +235,17 @@ async function fetchRpc(
   options: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
   const rpcUrl = getRpcUrlForChain({ client, chain: options.chain });
-  const requestTimeoutMs = getRequestTimeoutConfig(
-    client,
-    "storage",
-    options.requestTimeoutMs,
-  );
 
   const response = await getClientFetch(client)(rpcUrl, {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(client.config?.rpc?.fetch?.headers || {}),
+    },
     body: stringify(options.requests),
     method: "POST",
-    requestTimeoutMs,
+    requestTimeoutMs:
+      options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
+    keepalive: client.config?.rpc?.fetch?.keepalive,
   });
 
   if (!response.ok) {
