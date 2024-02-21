@@ -40,7 +40,6 @@ export const ClaimPriceInput = () => {
             w="full"
             value={field.price?.toString() || ""}
             onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
-            placeholder="0"
           />
         </Box>
         <Box w={{ base: "100%", md: isColumn ? "50%" : "100%" }}>

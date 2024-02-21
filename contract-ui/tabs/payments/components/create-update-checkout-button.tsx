@@ -782,7 +782,6 @@ export const CreateUpdateCheckoutButton: React.FC<
                                         val,
                                       )
                                     }
-                                    placeholder="0"
                                   />
                                 </Box>
                                 <CurrencySelector
