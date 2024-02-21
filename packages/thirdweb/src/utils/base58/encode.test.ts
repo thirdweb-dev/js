@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { base58Encode } from "./encode.js";
-import { hexToBytes } from "viem";
+import { hexToUint8Array } from "../hex.js";
 
 const TEST_CASES = [
   ["", ""],
@@ -113,7 +113,7 @@ const TEST_CASES = [
 
 describe("base58Encode", () => {
   test.each(TEST_CASES)("encodes %s to %s", (input, expected) => {
-    const encoded = base58Encode(hexToBytes(`0x${input}`));
+    const encoded = base58Encode(hexToUint8Array(`0x${input}`));
     expect(encoded).toBe(expected);
   });
 });

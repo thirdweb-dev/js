@@ -1,6 +1,6 @@
 // slightly tweaked re-exports from viem for the moment
 
-import { size as byteSize, trim, hexToBytes, pad } from "viem/utils";
+import { size as byteSize, trim, pad } from "viem/utils";
 import { cachedTextDecoder } from "./text-decoder.js";
 import { cachedTextEncoder } from "./text-encoder.js";
 
@@ -68,7 +68,7 @@ export type HexToStringOpts = {
  * ```
  */
 export function hexToString(hex: Hex, opts: HexToStringOpts = {}): string {
-  let bytes = hexToBytes(hex);
+  let bytes = hexToUint8Array(hex);
   if (opts.size) {
     assertSize(bytes, { size: opts.size });
     bytes = trim(bytes, { dir: "right" });
@@ -165,6 +165,72 @@ export function hexToBool(hex: Hex, opts: HexToBoolOpts = {}): boolean {
   throw new Error(`Invalid hex boolean: ${hex}`);
 }
 
+const charCodeMap = {
+  zero: 48,
+  nine: 57,
+  A: 65,
+  F: 70,
+  a: 97,
+  f: 102,
+} as const;
+
+function charCodeToBase16(char: number) {
+  if (char >= charCodeMap.zero && char <= charCodeMap.nine) {
+    return char - charCodeMap.zero;
+  }
+  if (char >= charCodeMap.A && char <= charCodeMap.F) {
+    return char - (charCodeMap.A - 10);
+  }
+  if (char >= charCodeMap.a && char <= charCodeMap.f) {
+    return char - (charCodeMap.a - 10);
+  }
+  return undefined;
+}
+
+export type HexToUint8ArrayOpts = {
+  /** Size of the output bytes. */
+  size?: number;
+};
+
+/**
+ * Converts a hexadecimal string to a Uint8Array.
+ * @param hex The hexadecimal string to convert.
+ * @param opts Options for the conversion.
+ * @returns The Uint8Array representation of the hexadecimal string.
+ * @example
+ * ```ts
+ * import { hexToUint8Array } from "thirdweb/utils";
+ * const bytes = hexToUint8Array("0x48656c6c6f2c20776f726c6421");
+ * console.log(bytes); // Uint8Array([72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33])
+ * ```
+ */
+export function hexToUint8Array(
+  hex: Hex,
+  opts: HexToUint8ArrayOpts = {},
+): Uint8Array {
+  if (opts.size) {
+    assertSize(hex, { size: opts.size });
+    hex = pad(hex, { dir: "right", size: opts.size });
+  }
+
+  let hexString = hex.slice(2) as string;
+  if (hexString.length % 2) {
+    hexString = `0${hexString}`;
+  }
+
+  const length = hexString.length / 2;
+  const bytes = new Uint8Array(length);
+  for (let index = 0, j = 0; index < length; index++) {
+    const nibbleLeft = charCodeToBase16(hexString.charCodeAt(j++));
+    const nibbleRight = charCodeToBase16(hexString.charCodeAt(j++));
+    if (nibbleLeft === undefined || nibbleRight === undefined) {
+      throw new Error(`Invalid hex character: ${hexString}`);
+    }
+    bytes[index] = nibbleLeft * 16 + nibbleRight;
+  }
+  return bytes;
+}
+
 export type FromHexParameters<
   TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
 > =
@@ -215,7 +281,7 @@ export function fromHex<
     case "boolean":
       return hexToBool(hex, opts) as FromHexReturnType<TTo>;
     default:
-      return hexToBytes(hex, opts) as FromHexReturnType<TTo>;
+      return hexToUint8Array(hex, opts) as FromHexReturnType<TTo>;
   }
 }
 

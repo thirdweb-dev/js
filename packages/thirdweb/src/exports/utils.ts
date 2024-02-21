@@ -49,6 +49,8 @@ export {
   type HexToBigIntOpts,
   hexToString,
   type HexToStringOpts,
+  hexToUint8Array,
+  type HexToUint8ArrayOpts,
   // to
   toHex,
   type ToHexParameters,

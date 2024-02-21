@@ -7,5 +7,6 @@ import { uint8ArrayToHex } from "./hex.js";
  * @internal
  */
 export function computeClientIdFromSecretKey(secretKey: string) {
-  return uint8ArrayToHex(sha256(secretKey)).slice(0, 32);
+  // we slice off the leading `0x` and then take the first 32 chars
+  return uint8ArrayToHex(sha256(secretKey)).slice(2, 34);
 }
