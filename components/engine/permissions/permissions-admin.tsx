@@ -20,7 +20,7 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
         <Text>
           Admins are allowed to manage your Engine instance from the dashboard.{" "}
           <Link
-            href="https://portal.thirdweb.com/infrastructure/engine/features/authentication"
+            href="https://portal.thirdweb.com/engine/features/permissions"
             color="primary.500"
             isExternal
           >
