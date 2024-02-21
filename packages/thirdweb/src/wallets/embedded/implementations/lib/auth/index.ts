@@ -96,7 +96,7 @@ export class Auth {
    *   console.error(e)
    * }
    * ```
-   * @returns `{{user: InitializedUser}}` An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
+   * @returns `{{user: InitializedUser}}` An InitializedUser object.
    */
   async loginWithModal(): Promise<AuthLoginReturnType> {
     return this.BaseLogin.loginWithModal();

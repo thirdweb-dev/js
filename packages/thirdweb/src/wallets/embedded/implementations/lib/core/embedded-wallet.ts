@@ -209,6 +209,7 @@ export class EmbeddedWallet {
               accessList: tx.accessList,
               maxFeePerGas: tx.maxFeePerGas,
               maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+              type: tx.maxFeePerGas ? 2 : 0,
             },
             chainId: tx.chainId,
             rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed

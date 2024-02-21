@@ -2,11 +2,17 @@ import type { ThirdwebClient } from "../../../../index.js";
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 import { AuthProvider } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/embedded-wallets/embedded-wallets.js";
+import type { EmbeddedWalletSdk } from "../../implementations/lib/embedded-wallet.js";
+
+const ewsSDKCache = new Map<ThirdwebClient, EmbeddedWalletSdk>();
 
 /**
  * @internal
  */
 async function getEmbeddedWalletSDK(client: ThirdwebClient) {
+  if (ewsSDKCache.has(client)) {
+    return ewsSDKCache.get(client) as EmbeddedWalletSdk;
+  }
   const { EmbeddedWalletSdk } = await import(
     "../../implementations/lib/embedded-wallet.js"
   );
@@ -14,6 +20,7 @@ async function getEmbeddedWalletSDK(client: ThirdwebClient) {
   const ewSDK = new EmbeddedWalletSdk({
     client: client,
   });
+  ewsSDKCache.set(client, ewSDK);
   return ewSDK;
 }
 
@@ -37,7 +44,7 @@ export async function getAuthenticatedUser(args: { client: ThirdwebClient }) {
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
   const ewSDK = await getEmbeddedWalletSDK(args.client);
-  const strategy = args.provider;
+  const strategy = args.strategy;
   switch (strategy) {
     case "email": {
       return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
@@ -54,7 +61,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  */
 export async function authenticate(args: AuthArgsType) {
   const ewSDK = await getEmbeddedWalletSDK(args.client);
-  const strategy = args.provider;
+  const strategy = args.strategy;
   switch (strategy) {
     case "email": {
       return await ewSDK.auth.verifyEmailLoginOtp({
@@ -68,9 +75,8 @@ export async function authenticate(args: AuthArgsType) {
       const oauthProvider = oauthStrategyToAuthProvider[strategy];
       return ewSDK.auth.loginWithOauth({
         oauthProvider,
-        // TODO (ew) bring this back
-        // closeOpenedWindow: params.closeOpenedWindow,
-        // openedWindow: params.openedWindow,
+        closeOpenedWindow: args.closeOpenedWindow,
+        openedWindow: args.openedWindow,
       });
     }
     case "jwt": {

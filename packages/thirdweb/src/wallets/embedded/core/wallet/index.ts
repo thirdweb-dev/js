@@ -24,11 +24,13 @@ import type { EmbeddedWalletConfig } from "./types.js";
  * @returns The embedded wallet
  * @example
  * ```ts
- * import { embeddedWallet } from "thirdweb/wallets/embedded/legacy/wallet";
- * import { ThirdwebClient } from "thirdweb";
- * const client = new ThirdwebClient();
+ * import { embeddedWallet } from "thirdweb/wallets";
+ *
  * const wallet = embeddedWallet({
- * client,
+ *   client,
+ * });
+ * await wallet.connect({
+ *   strategy: "google",
  * });
  * ```
  */
