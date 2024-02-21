@@ -20,7 +20,7 @@ import { PublishedContracts } from "components/contract-components/tables/publis
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAllExplorePublishers } from "data/explore";
-import { getAddress } from "ethers/lib/utils";
+import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -232,7 +232,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   }
 
   const lowercaseAddress = profileAddress.toLowerCase();
-  const checksummedAddress = lowercaseAddress.startsWith("0x")
+  const checksummedAddress = isAddress(lowercaseAddress)
     ? getAddress(lowercaseAddress)
     : lowercaseAddress;
 
