@@ -2,10 +2,11 @@ import { describe, test, expect } from "vitest";
 
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
-import { parseEther } from "../utils/index.js";
+
 import { estimateGas } from "./actions/estimate-gas.js";
 import { prepareTransaction } from "./prepare-transaction.js";
-import { ethereum } from "../chains/index.js";
+import { ethereum } from "../chains/chain-definitions/ethereum.js";
+import { parseEther } from "../utils/units.js";
 
 describe("prepareTransaction", () => {
   test("should prepare a transaction", () => {

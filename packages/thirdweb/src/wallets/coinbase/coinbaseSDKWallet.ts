@@ -24,7 +24,8 @@ import {
   saveConnectParamsToStorage,
 } from "../manager/storage.js";
 import { defineChain, getChainDataForChain } from "../../chains/utils.js";
-import { ethereum, type Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
+import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 
 type SavedConnectParams = {
   chain?: Chain;

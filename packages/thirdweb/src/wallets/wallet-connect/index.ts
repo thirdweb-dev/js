@@ -36,11 +36,13 @@ import {
   getChainDataForChain,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
-import { ethereum, type Chain } from "../../chains/index.js";
-import type { PreparedTransaction } from "../../transaction/index.js";
+import type { Chain } from "../../chains/types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 
-export const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
-export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
+const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
+// unused
+// export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
 export const defaultDappMetadata: Required<DAppMetaData> = {
   name: "thirdweb powered dApp",
   url: "https://thirdweb.com",

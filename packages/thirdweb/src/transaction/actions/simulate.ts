@@ -2,12 +2,14 @@ import { formatTransactionRequest } from "viem";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
-import { eth_call } from "../../rpc/index.js";
 import type { Abi, AbiFunction } from "abitype";
 import type { ReadContractResult } from "../read-contract.js";
 import { decodeFunctionResult } from "../../abi/decode.js";
 import { extractError } from "../extract-error.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { eth_call } from "../../rpc/actions/eth_call.js";
+import { encode } from "./encode.js";
 
 export type SimulateOptions<
   abi extends Abi,
@@ -51,13 +53,6 @@ export async function simulateTransaction<
   const abi extends Abi,
   const abiFn extends AbiFunction,
 >(options: SimulateOptions<abi, abiFn>) {
-  const { getRpcClient } = await import("../../rpc/index.js");
-  const rpcRequest = getRpcClient(options.transaction);
-
-  const [encode] = await Promise.all([
-    import("./encode.js").then((m) => m.encode),
-  ]);
-
   const [data, to, accessList, value] = await Promise.all([
     encode(options.transaction),
     resolvePromisedValue(options.transaction.to),
@@ -83,6 +78,7 @@ export async function simulateTransaction<
     accessList,
   });
 
+  const rpcRequest = getRpcClient(options.transaction);
   try {
     const result = await eth_call(rpcRequest, serializedTx);
 

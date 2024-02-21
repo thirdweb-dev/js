@@ -1,7 +1,7 @@
 import type { DAppMetaData, WalletMetadata } from "../types.js";
 import { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 

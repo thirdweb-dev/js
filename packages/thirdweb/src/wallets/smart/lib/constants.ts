@@ -1,4 +1,4 @@
-import type { Chain } from "../../../chains/index.js";
+import type { Chain } from "../../../chains/types.js";
 
 // dev only
 export const DEBUG = true;

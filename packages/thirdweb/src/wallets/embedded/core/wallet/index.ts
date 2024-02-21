@@ -1,8 +1,3 @@
-import {
-  defineChain,
-  type Chain,
-  type ThirdwebClient,
-} from "../../../../index.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { WalletMetadata } from "../../../types.js";
 import type {
@@ -16,6 +11,9 @@ import {
   preAuthenticate,
 } from "../authentication/index.js";
 import type { EmbeddedWalletConfig } from "./types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { Chain } from "../../../../chains/types.js";
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 
 /**
  * Embedded Wallet
@@ -50,7 +48,7 @@ class EmbeddedWallet implements Wallet {
 
   constructor(args: EmbeddedWalletConfig) {
     this.client = args.client;
-    this.chain = args.defaultChain ?? defineChain(1);
+    this.chain = args.defaultChain ?? ethereum;
   }
 
   async preAuthenticate(options: Omit<PreAuthArgsType, "client">) {

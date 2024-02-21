@@ -1,9 +1,8 @@
 import {
   walletConnectMetadata,
+  type WalletConnect,
   walletConnect,
-  type WalletConnectConnectionOptions,
-} from "../../../wallets/index.js";
-import type { WalletConnect } from "../../../wallets/wallet-connect/index.js";
+} from "../../../wallets/wallet-connect/index.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps, WalletConfig } from "../../types/wallets.js";
 import { Img } from "../../ui/components/Img.js";
@@ -18,6 +17,7 @@ import { useState, useRef, useEffect } from "react";
 import { Text } from "../../ui/components/text.js";
 import { isMobile } from "../../utils/isMobile.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
+import type { WalletConnectConnectionOptions } from "../../../wallets/wallet-connect/types.js";
 
 export type WalletConnectConfigOptions = {
   projectId?: string;

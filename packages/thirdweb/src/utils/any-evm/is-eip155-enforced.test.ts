@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { isEIP155Enforced } from "./is-eip155-enforced.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { ethereum, optimism } from "../../chains/index.js";
+import { optimism } from "../../chains/chain-definitions/optimism.js";
+import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 
 describe("isEIP155Enforced", () => {
   it("should return true if EIP-155 is enforced", async () => {

@@ -1,10 +1,10 @@
 import { isHex } from "viem";
-import { ensureBytecodePrefix } from "../../utils/index.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { SharedDeployOptions } from "./types.js";
 import { fetchDeployMetadata } from "./utils/deploy-metadata.js";
 import type { AbiConstructor } from "abitype";
 import { prepareDirectDeployTransaction } from "./deploy-with-abi.js";
+import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 
 export type PrepareDeployTransactionFromUriOptions = Prettify<
   {

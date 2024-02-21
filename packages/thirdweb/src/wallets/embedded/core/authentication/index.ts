@@ -1,8 +1,8 @@
-import type { ThirdwebClient } from "../../../../index.js";
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 import { AuthProvider } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/embedded-wallets/embedded-wallets.js";
 import type { EmbeddedWalletSdk } from "../../implementations/lib/embedded-wallet.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 
 const ewsSDKCache = new Map<ThirdwebClient, EmbeddedWalletSdk>();
 

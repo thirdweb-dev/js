@@ -10,7 +10,7 @@ import type { WalletEventListener } from "./listeners.js";
 import type { TransactionOrUserOpHash } from "../../transaction/types.js";
 import type { WalletMetadata } from "../types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;

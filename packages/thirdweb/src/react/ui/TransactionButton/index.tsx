@@ -8,14 +8,12 @@ import {
   useSwitchActiveWalletChain,
 } from "../../providers/wallet-provider.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
-import {
-  estimateGas,
-  type PreparedTransaction,
-} from "../../../transaction/index.js";
 import { spacing } from "../design-system/index.js";
 import { useChainQuery } from "../../hooks/others/useChainQuery.js";
 import { useEffect, useState } from "react";
 import { formatEther } from "../../../utils/units.js";
+import { estimateGas } from "../../../transaction/actions/estimate-gas.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 
 export type TransactionButtonProps = React.PropsWithChildren<{
   /**

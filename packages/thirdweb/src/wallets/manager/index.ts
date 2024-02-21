@@ -1,4 +1,5 @@
-import { defineChain, type Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
+import { defineChain } from "../../chains/utils.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";

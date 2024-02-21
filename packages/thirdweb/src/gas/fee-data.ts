@@ -1,15 +1,13 @@
 import type { ThirdwebClient } from "../client/client.js";
-import type { Chain } from "../chains/index.js";
-import {
-  eth_gasPrice,
-  eth_getBlockByNumber,
-  eth_maxPriorityFeePerGas,
-  getRpcClient,
-} from "../rpc/index.js";
 import { parseUnits } from "../utils/units.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { roundUpGas } from "./op-gas-fee-reducer.js";
+import type { Chain } from "../chains/types.js";
+import { getRpcClient } from "../rpc/rpc.js";
+import { eth_getBlockByNumber } from "../rpc/actions/eth_getBlockByNumber.js";
+import { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
+import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;

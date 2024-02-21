@@ -1,4 +1,4 @@
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletMetadata } from "../types.js";
 

@@ -6,10 +6,8 @@ import type {
   WalletAddressObjectType,
 } from "../../interfaces/embedded-wallets/embedded-wallets.js";
 import { UserWalletStatus } from "../../interfaces/embedded-wallets/embedded-wallets.js";
-
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator.js";
-import type { Account } from "../../../../index.js";
 import type {
   GetAddressReturnType,
   SignMessageReturnType,
@@ -18,11 +16,14 @@ import type {
 } from "../../interfaces/embedded-wallets/signer.js";
 import { getRpcClient } from "../../../../../rpc/rpc.js";
 import { defineChain } from "../../../../../chains/utils.js";
-import type { SendTransactionOption } from "../../../../interfaces/wallet.js";
+import type {
+  Account,
+  SendTransactionOption,
+} from "../../../../interfaces/wallet.js";
 import type { Hex, TypedDataDefinition } from "viem";
-import type { ThirdwebClient } from "../../../../../index.js";
 import type * as ethers5 from "ethers5";
 import { eth_sendRawTransaction } from "../../../../../rpc/actions/eth_sendRawTransaction.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 
 export type WalletManagementTypes = {
   createWallet: void;

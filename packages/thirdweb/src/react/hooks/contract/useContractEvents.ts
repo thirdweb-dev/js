@@ -9,9 +9,10 @@ import {
   watchContractEvents,
   type WatchContractEventsOptions,
 } from "../../../event/actions/watch-events.js";
-import { eth_blockNumber, getRpcClient } from "../../../rpc/index.js";
 import { getContractEvents } from "../../../event/actions/get-events.js";
-import type { ParseEventLogsResult } from "../../../event/index.js";
+import type { ParseEventLogsResult } from "../../../event/actions/parse-logs.js";
+import { getRpcClient } from "../../../rpc/rpc.js";
+import { eth_blockNumber } from "../../../rpc/actions/eth_blockNumber.js";
 
 type UseContractEventsOptions<
   abi extends Abi,

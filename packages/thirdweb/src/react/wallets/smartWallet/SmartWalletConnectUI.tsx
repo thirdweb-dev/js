@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ConnectUIProps, WalletConfig } from "../../types/wallets.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
-import { SmartWallet, type Wallet } from "../../../wallets/index.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useTWLocale } from "../../providers/locale-provider.js";
@@ -12,7 +11,9 @@ import { Button } from "../../ui/components/buttons.js";
 import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
 import { normalizeChainId } from "../../../wallets/utils/normalizeChainId.js";
-import type { Chain } from "../../../chains/index.js";
+import type { Chain } from "../../../chains/types.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { SmartWallet } from "../../../wallets/smart/index.js";
 
 /**
  * @internal

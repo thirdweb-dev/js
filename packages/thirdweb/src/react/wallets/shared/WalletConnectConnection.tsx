@@ -1,4 +1,3 @@
-import { walletConnect } from "../../../wallets/index.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../types/wallets.js";
@@ -11,6 +10,7 @@ import {
 } from "../../utils/handleWCSessionRequest.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 import { openWindow } from "../../utils/openWindow.js";
+import { walletConnect } from "../../../wallets/wallet-connect/index.js";
 
 /**
  * QR Scan UI for connecting a specific wallet on desktop.

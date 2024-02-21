@@ -1,10 +1,12 @@
+import { coinbaseMetadata } from "../../../wallets/coinbase/coinbaseMetadata.js";
 import {
-  injectedCoinbaseProvider,
-  coinbaseMetadata,
-  coinbaseWallet,
-  coinbaseSDKWallet,
   CoinbaseSDKWallet,
-} from "../../../wallets/index.js";
+  coinbaseSDKWallet,
+} from "../../../wallets/coinbase/coinbaseSDKWallet.js";
+import {
+  coinbaseWallet,
+  injectedCoinbaseProvider,
+} from "../../../wallets/injected/wallets/coinbase.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps, WalletConfig } from "../../types/wallets.js";
 import { GetStartedScreen } from "../shared/GetStartedScreen.js";

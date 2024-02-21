@@ -12,14 +12,12 @@ import {
   type GetLogsBlockParams,
   type GetLogsParams,
 } from "../../rpc/actions/eth_getLogs.js";
-import {
-  resolveContractAbi,
-  type ThirdwebContract,
-} from "../../contract/index.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { parseEventLogs, type ParseEventLogsResult } from "./parse-logs.js";
 import { isAbiEvent } from "../utils.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 
 export type GetContractEventsOptionsDirect<
   abi extends Abi,

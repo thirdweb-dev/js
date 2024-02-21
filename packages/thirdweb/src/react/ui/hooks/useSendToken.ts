@@ -1,14 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { transfer } from "../../../extensions/erc20.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
 import { useActiveWalletChain } from "../../providers/wallet-provider.js";
-import {
-  prepareTransaction,
-  waitForReceipt,
-} from "../../../transaction/index.js";
 import { parseEther } from "../../../utils/units.js";
-import { getContract } from "../../../contract/index.js";
+import { getContract } from "../../../contract/contract.js";
+import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import { transfer } from "../../../extensions/erc20/write/transfer.js";
 
 // Q: Should we expose this hook?
 

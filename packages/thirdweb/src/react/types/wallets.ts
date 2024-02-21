@@ -1,4 +1,4 @@
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { DAppMetaData } from "../../wallets/types.js";

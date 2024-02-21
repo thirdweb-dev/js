@@ -1,7 +1,5 @@
-import {
-  smartWallet,
-  type SmartWalletOptions,
-} from "../../../wallets/index.js";
+import { smartWallet } from "../../../wallets/smart/index.js";
+import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
 

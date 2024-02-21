@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../client/client.js";
-import { download } from "../../storage/index.js";
+import { download } from "../../storage/download.js";
 import type { PublishedMetadata } from "../actions/compiler-metadata.js";
 
 type FetchSourceFilesFromMetadataOptions = {

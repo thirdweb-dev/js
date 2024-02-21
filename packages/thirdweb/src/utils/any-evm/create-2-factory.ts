@@ -1,10 +1,10 @@
 import { getContractAddress } from "viem";
-import type { Chain } from "../../chains/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { isContractDeployed } from "../bytecode/is-contract-deployed.js";
 import { isEIP155Enforced } from "./is-eip155-enforced.js";
 import { getKeylessTransaction } from "./keyless-transaction.js";
+import type { Chain } from "../../chains/types.js";
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 

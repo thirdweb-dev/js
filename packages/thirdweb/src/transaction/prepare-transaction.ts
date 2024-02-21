@@ -1,9 +1,9 @@
 import type { AccessList, Hex } from "viem";
 import type { Abi, AbiFunction, Address } from "abitype";
-import type { Chain } from "../chains/index.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { PromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { ThirdwebContract } from "../contract/contract.js";
+import type { Chain } from "../chains/types.js";
 
 export type PrepareTransactionOptions = {
   accessList?: PromisedValue<AccessList | undefined>;

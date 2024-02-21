@@ -1,7 +1,5 @@
-import {
-  readContract,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import { readContract } from "../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 /**
  * Retrieves the next token ID to be minted in an ERC1155 contract.

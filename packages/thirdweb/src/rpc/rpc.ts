@@ -3,10 +3,10 @@ import {
   getRequestTimeoutConfig,
   type ThirdwebClient,
 } from "../client/client.js";
-import type { Chain } from "../chains/index.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
+import type { Chain } from "../chains/types.js";
 
 type SuccessResult<T> = {
   method?: never;

@@ -4,7 +4,7 @@ import {
   estimateGas,
   type EstimateGasResult,
 } from "../../../transaction/actions/estimate-gas.js";
-import type { PreparedTransaction } from "../../../transaction/index.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 
 /**
  * A hook to estimate the gas for a given transaction.

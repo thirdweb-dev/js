@@ -1,5 +1,4 @@
 import type { Abi, AbiEvent } from "abitype";
-import { watchBlockNumber } from "../../rpc/index.js";
 import {
   getContractEvents,
   type GetContractEventsOptionsDirect,
@@ -7,6 +6,7 @@ import {
 
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ParseEventLogsResult } from "./parse-logs.js";
+import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 
 export type WatchContractEventsOptions<
   abi extends Abi,

@@ -1,9 +1,7 @@
-import {
-  readContract,
-  type BaseTransactionOptions,
-} from "../../../transaction/index.js";
+import { readContract } from "../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
-export type BalanceOfParams = { address: string; };
+export type BalanceOfParams = { address: string };
 
 /**
  * Retrieves the balance of tokens owned by a specific address.

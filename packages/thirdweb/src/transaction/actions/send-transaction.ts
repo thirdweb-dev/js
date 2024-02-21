@@ -4,6 +4,10 @@ import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { encode } from "./encode.js";
+import { estimateGas } from "./estimate-gas.js";
+import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 
 export type SendTransactionOptions = Prettify<
   {
@@ -42,31 +46,21 @@ export async function sendTransaction(
   if (!account) {
     throw new Error("not connected");
   }
-  const { getRpcClient } = await import("../../rpc/index.js");
+
   const rpcRequest = getRpcClient(options.transaction);
-
-  const [
-    { encode },
-    { eth_getTransactionCount },
-    { estimateGas },
-    { getGasOverridesForTransaction },
-  ] = await Promise.all([
-    import("./encode.js"),
-    import("../../rpc/actions/eth_getTransactionCount.js"),
-    import("./estimate-gas.js"),
-    import("../../gas/fee-data.js"),
-  ]);
-
   const [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
     encode(options.transaction),
     // if the user has specified a nonce, use that
     options.transaction.nonce
       ? resolvePromisedValue(options.transaction.nonce)
-      : // otherwise get the next nonce
-        eth_getTransactionCount(rpcRequest, {
-          address: account.address,
-          blockTag: "pending",
-        }),
+      : // otherwise get the next nonce (import the method to do so)
+        await import("../../rpc/actions/eth_getTransactionCount.js").then(
+          ({ eth_getTransactionCount }) =>
+            eth_getTransactionCount(rpcRequest, {
+              address: account.address,
+              blockTag: "pending",
+            }),
+        ),
     // takes the same options as the sendTransaction function thankfully!
     estimateGas(options),
     getGasOverridesForTransaction(options.transaction),

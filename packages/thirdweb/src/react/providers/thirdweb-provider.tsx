@@ -19,8 +19,8 @@ import {
   type WaitForReceiptOptions,
 } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { DAppMetaData } from "../../wallets/types.js";
-import { isBaseTransactionOptions } from "../../transaction/index.js";
 import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
+import { isBaseTransactionOptions } from "../../transaction/types.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client and Wallet Connection Manager.

@@ -1,4 +1,4 @@
-import type { BaseTransactionOptions } from "../../../transaction/index.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getClaimConditionById } from "./claimConditioById.js";
 import { claimCondition } from "./claimCondition.js";
 import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";

@@ -1,6 +1,6 @@
 import { useQueries, useQuery, queryOptions } from "@tanstack/react-query";
 import { getChainDataForChain } from "../../../chains/utils.js";
-import type { Chain } from "../../../index.js";
+import type { Chain } from "../../../chains/types.js";
 
 /**
  * @internal

@@ -6,10 +6,8 @@ import type {
   Account,
   SendTransactionOption,
 } from "../../interfaces/wallet.js";
-import {
-  prepareContractCall,
-  type PreparedTransaction,
-} from "../../../transaction/index.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 
 /**
  * @internal

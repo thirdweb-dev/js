@@ -1,12 +1,13 @@
-import type { Chain } from "../../chains/index.js";
+import type { Chain } from "../../chains/types.js";
 import {
   getChainDecimals,
   getChainNativeCurrencyName,
   getChainSymbol,
 } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/index.js";
-import { eth_getBalance, getRpcClient } from "../../rpc/index.js";
+import { getContract } from "../../contract/contract.js";
+import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
+import { getRpcClient } from "../../rpc/rpc.js";
 import { formatUnits } from "../../utils/units.js";
 import type { Account } from "../interfaces/wallet.js";
 
