@@ -1,10 +1,10 @@
 import type { Hex, TransactionSerializable } from "viem";
-import type { Account } from "./interfaces/wallet.js";
 import { privateKeyToAccount } from "viem/accounts";
 import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
+import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyAccountOptions = {
   client: ThirdwebClient;

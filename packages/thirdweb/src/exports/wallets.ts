@@ -92,3 +92,9 @@ export {
   type CoinbaseSDKWalletConnectionOptions,
 } from "../wallets/coinbase/coinbaseSDKWallet.js";
 export { coinbaseMetadata } from "../wallets/coinbase/coinbaseMetadata.js";
+
+export { embeddedWallet } from "../wallets/embedded/core/wallet/index.js";
+export {
+  type MultiStepAuthArgsType,
+  type SingleStepAuthArgsType,
+} from "../wallets/embedded/core/authentication/type.js";

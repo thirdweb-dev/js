@@ -20,6 +20,10 @@ export {
   type TokenUriParams,
 } from "../../extensions/erc721/read/tokenURI.js";
 export { totalSupply } from "../../extensions/erc721/read/totalSupply.js";
+export {
+  balanceOf,
+  type BalanceOfParams,
+} from "../../extensions/erc721/read/balanceOf.js";
 
 /**
  * WRITE extension for ERC721
