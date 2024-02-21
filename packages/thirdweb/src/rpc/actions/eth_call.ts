@@ -1,13 +1,13 @@
-import {
-  type BlockTag,
-  numberToHex,
-  type EIP1193RequestFn,
-  type EIP1474Methods,
-  type RpcTransactionRequest,
-  type Hex,
-  type RpcStateOverride,
-  type RpcStateMapping,
+import type {
+  BlockTag,
+  EIP1193RequestFn,
+  EIP1474Methods,
+  RpcTransactionRequest,
+  Hex,
+  RpcStateOverride,
+  RpcStateMapping,
 } from "viem";
+import { numberToHex } from "../../utils/hex.js";
 
 type StateOverride = Record<
   string,

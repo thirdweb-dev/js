@@ -1,6 +1,6 @@
-import { toHex } from "viem";
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { numberToHex } from "../hex.js";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
@@ -55,7 +55,10 @@ export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
       return await (
         await download({
           client,
-          uri: tokenUri.replace("{id}", toHex(tokenId, { size: 32 }).slice(2)),
+          uri: tokenUri.replace(
+            "{id}",
+            numberToHex(tokenId, { size: 32 }).slice(2),
+          ),
         })
       ).json();
     } catch (err) {

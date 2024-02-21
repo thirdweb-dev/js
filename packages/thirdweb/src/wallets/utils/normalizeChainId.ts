@@ -1,4 +1,4 @@
-import { hexToNumber, isHex } from "viem";
+import { hexToNumber, isHex } from "../../utils/hex.js";
 
 /**
  * @internal

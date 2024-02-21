@@ -1,4 +1,4 @@
-import type { Hex } from "viem";
+import type { Hex } from "../../utils/hex.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { Abi, AbiFunction } from "abitype";
 

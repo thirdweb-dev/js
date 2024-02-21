@@ -8,8 +8,9 @@ import {
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { approve } from "../../../extensions/erc20/write/approve.js";
-import type { Hex, Address } from "viem";
+import type { Address } from "viem";
 import { defineChain } from "../../../chains/utils.js";
+import type { Hex } from "../../../utils/hex.js";
 
 // TODO: Support User Op Hash
 /**

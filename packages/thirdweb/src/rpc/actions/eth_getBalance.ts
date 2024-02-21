@@ -1,11 +1,11 @@
-import {
-  type EIP1193RequestFn,
-  type EIP1474Methods,
-  type Address,
-  type Hex,
-  type BlockTag,
-  hexToBigInt,
+import type {
+  EIP1193RequestFn,
+  EIP1474Methods,
+  Address,
+  Hex,
+  BlockTag,
 } from "viem";
+import { hexToBigInt } from "../../utils/hex.js";
 
 type GetBalanceParams = {
   address: Address;

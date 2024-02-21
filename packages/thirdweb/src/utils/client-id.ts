@@ -1,5 +1,5 @@
 import { sha256 } from "@noble/hashes/sha256";
-import { uint8ArrayToHex } from "./uint8-array.js";
+import { uint8ArrayToHex } from "./hex.js";
 
 /**
  * @param secretKey - the secret key to compute the client id from

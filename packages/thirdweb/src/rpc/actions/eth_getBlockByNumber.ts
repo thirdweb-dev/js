@@ -3,9 +3,9 @@ import {
   type BlockTag,
   type EIP1193RequestFn,
   type EIP1474Methods,
-  numberToHex,
   type GetBlockReturnType,
 } from "viem";
+import { numberToHex } from "../../utils/hex.js";
 
 type GetBlockParameters<
   TIncludeTransactions extends boolean = false,

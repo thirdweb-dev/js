@@ -1,7 +1,8 @@
-import { keccak256, encodePacked, toHex, type Hex } from "viem";
+import { keccak256, encodePacked, type Hex } from "viem";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { getSaltHash } from "./get-salt-hash.js";
 import { keccackId } from "./keccack-id.js";
+import { uint8ArrayToHex } from "../hex.js";
 
 type ComputeDeploymentAddressOptions = {
   bytecode: string;
@@ -40,7 +41,7 @@ export function computeDeploymentAddress(
       bytecode,
       typeof options.encodedArgs === "string"
         ? options.encodedArgs
-        : toHex(options.encodedArgs),
+        : uint8ArrayToHex(options.encodedArgs),
     ],
   );
 

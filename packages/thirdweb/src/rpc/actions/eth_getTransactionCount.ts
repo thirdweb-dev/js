@@ -1,10 +1,9 @@
-import {
-  type EIP1193RequestFn,
-  type EIP1474Methods,
-  numberToHex,
-  hexToNumber,
-  type GetTransactionCountParameters,
+import type {
+  EIP1193RequestFn,
+  EIP1474Methods,
+  GetTransactionCountParameters,
 } from "viem";
+import { hexToNumber, numberToHex } from "../../utils/hex.js";
 
 /**
  * Retrieves the transaction count (nonce) for a given Ethereum address.

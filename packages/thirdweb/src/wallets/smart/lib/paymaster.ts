@@ -1,5 +1,5 @@
-import { hexToBigInt } from "viem";
 import { getClientFetch } from "../../../utils/fetch.js";
+import { hexToBigInt } from "../../../utils/hex.js";
 import type {
   PaymasterResult,
   SmartWalletOptions,

@@ -33,3 +33,34 @@ export {
   resolveSignature,
   resolveSignatures,
 } from "../utils/signatures/resolve-signature.js";
+
+// hex
+
+export {
+  // from
+  fromHex,
+  type FromHexParameters,
+  type FromHexReturnType,
+  hexToBool,
+  type HexToBoolOpts,
+  hexToNumber,
+  type HexToNumberOpts,
+  hexToBigInt,
+  type HexToBigIntOpts,
+  hexToString,
+  type HexToStringOpts,
+  // to
+  toHex,
+  type ToHexParameters,
+  numberToHex,
+  type NumberToHexOpts,
+  stringToHex,
+  type StringToHexOpts,
+  uint8ArrayToHex,
+  type Uint8ArrayToHexOpts,
+  boolToHex,
+  type BoolToHexOpts,
+  // util
+  isHex,
+  type IsHexOptions,
+} from "../utils/hex.js";

@@ -1,8 +1,5 @@
 import {
   getAddress,
-  toHex,
-  isHex,
-  stringToHex,
   getTypesForEIP712Domain,
   validateTypedData,
   type Hex,
@@ -25,6 +22,12 @@ import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
 import { defineChain, getChainDataForChain } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
+import {
+  isHex,
+  numberToHex,
+  stringToHex,
+  uint8ArrayToHex,
+} from "../../utils/hex.js";
 
 /**
  * Connect to Injected Wallet Provider
@@ -199,11 +202,11 @@ export class InjectedWallet implements Wallet {
     if (!this.provider) {
       throw new Error("no provider available");
     }
-
+    const hexChainId = numberToHex(chain.id);
     try {
       await this.provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: toHex(chain.id) }],
+        params: [{ chainId: hexChainId }],
       });
     } catch (e: any) {
       // if chain does not exist, add the chain
@@ -213,7 +216,7 @@ export class InjectedWallet implements Wallet {
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: toHex(chain.id),
+              chainId: hexChainId,
               chainName: apiChain.name,
               nativeCurrency: apiChain.nativeCurrency,
               rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
@@ -295,8 +298,8 @@ export class InjectedWallet implements Wallet {
           params: [
             {
               accessList: tx.accessList,
-              value: tx.value ? toHex(tx.value) : undefined,
-              gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? numberToHex(tx.value) : undefined,
+              gas: tx.gas ? numberToHex(tx.gas) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -318,7 +321,7 @@ export class InjectedWallet implements Wallet {
             return stringToHex(message);
           }
           if (message.raw instanceof Uint8Array) {
-            return toHex(message.raw);
+            return uint8ArrayToHex(message.raw);
           }
           return message.raw;
         })();

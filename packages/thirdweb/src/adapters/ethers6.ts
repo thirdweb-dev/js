@@ -7,10 +7,10 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
-import { uint8ArrayToHex } from "../utils/uint8-array.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
+import { uint8ArrayToHex } from "../utils/hex.js";
 
 type Ethers6 = typeof ethers6;
 

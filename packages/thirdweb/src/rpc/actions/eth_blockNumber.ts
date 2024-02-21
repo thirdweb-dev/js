@@ -1,4 +1,5 @@
-import { type EIP1193RequestFn, type EIP1474Methods, hexToBigInt } from "viem";
+import type { EIP1193RequestFn, EIP1474Methods } from "viem";
+import { hexToBigInt } from "../../utils/hex.js";
 
 /**
  * Retrieves the current block number from the Ethereum blockchain.

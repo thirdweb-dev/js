@@ -1,5 +1,6 @@
-import type { Hex } from "viem";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
+import type { Hex } from "../hex.js";
+
 import { keccackId } from "./keccack-id.js";
 
 /**

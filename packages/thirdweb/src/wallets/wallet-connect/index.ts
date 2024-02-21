@@ -1,13 +1,10 @@
 import {
-  toHex,
-  type Hex,
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
-  isHex,
 } from "viem";
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
@@ -39,6 +36,7 @@ import {
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import { isHex, numberToHex, type Hex } from "../../utils/hex.js";
 
 const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
 // unused
@@ -194,8 +192,8 @@ export class WalletConnect implements Wallet {
           method: "eth_sendTransaction",
           params: [
             {
-              gas: tx.gas ? toHex(tx.gas) : undefined,
-              value: tx.value ? toHex(tx.value) : undefined,
+              gas: tx.gas ? numberToHex(tx.gas) : undefined,
+              value: tx.value ? numberToHex(tx.value) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -370,7 +368,7 @@ export class WalletConnect implements Wallet {
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
-              chainId: toHex(apiChain.chainId),
+              chainId: numberToHex(apiChain.chainId),
               chainName: apiChain.name,
               nativeCurrency: apiChain.nativeCurrency,
               rpcUrls: getValidPublicRPCUrl(apiChain), // no clientId on purpose
@@ -384,7 +382,7 @@ export class WalletConnect implements Wallet {
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: toHex(chainId) }],
+        params: [{ chainId: numberToHex(chainId) }],
       });
     } catch (error: any) {
       const message =

@@ -1,4 +1,4 @@
-import type { Hex } from "viem";
+import { isHex, type Hex } from "../hex.js";
 
 /**
  * Ensures that the given bytecode has the correct prefix.
@@ -15,8 +15,8 @@ import type { Hex } from "viem";
  * ```
  */
 export function ensureBytecodePrefix(bytecode: string): Hex {
-  if (bytecode.startsWith("0x")) {
-    return bytecode as Hex;
+  if (isHex(bytecode, { strict: false })) {
+    return bytecode;
   }
   return `0x${bytecode}`;
 }

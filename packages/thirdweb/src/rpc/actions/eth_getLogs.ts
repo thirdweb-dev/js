@@ -8,8 +8,8 @@ import {
   type RpcLog,
   type Hash,
   formatLog,
-  numberToHex,
 } from "viem";
+import { numberToHex } from "../../utils/hex.js";
 
 export type GetLogsBlockParams =
   | {

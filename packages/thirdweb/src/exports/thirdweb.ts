@@ -125,3 +125,35 @@ export {
 } from "../pay/swap/actions/getStatus.js";
 
 export { sendSwap } from "../pay/swap/actions/sendSwap.js";
+
+/**
+ * HEX
+ */
+export {
+  // from
+  fromHex,
+  type FromHexParameters,
+  type FromHexReturnType,
+  hexToBool,
+  type HexToBoolOpts,
+  hexToNumber,
+  type HexToNumberOpts,
+  hexToBigInt,
+  type HexToBigIntOpts,
+  hexToString,
+  type HexToStringOpts,
+  // to
+  toHex,
+  type ToHexParameters,
+  numberToHex,
+  type NumberToHexOpts,
+  stringToHex,
+  type StringToHexOpts,
+  uint8ArrayToHex,
+  type Uint8ArrayToHexOpts,
+  boolToHex,
+  type BoolToHexOpts,
+  // util
+  isHex,
+  type IsHexOptions,
+} from "../utils/hex.js";

@@ -1,4 +1,5 @@
-import { hexToBigInt, type EIP1193RequestFn, type EIP1474Methods } from "viem";
+import type { EIP1193RequestFn, EIP1474Methods } from "viem";
+import { hexToBigInt } from "../../utils/hex.js";
 
 /**
  * Retrieves the maximum priority fee per gas from the Ethereum network.

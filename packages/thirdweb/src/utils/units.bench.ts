@@ -1,6 +1,8 @@
 import { bench, describe } from "vitest";
 import {
+  // eslint-disable-next-line no-restricted-imports
   formatUnits as viemFormatUnits,
+  // eslint-disable-next-line no-restricted-imports
   parseUnits as viemParseUnits,
 } from "viem";
 import { formatUnits, parseUnits } from "./units.js";

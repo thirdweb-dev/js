@@ -5,13 +5,9 @@ import type { CoinbaseWalletSDK as CoinbaseWalletSDKConstructor } from "@coinbas
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import {
   getAddress,
-  toHex,
-  type Hex,
-  stringToHex,
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
-  isHex,
 } from "viem";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
@@ -26,6 +22,13 @@ import {
 import { defineChain, getChainDataForChain } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import {
+  isHex,
+  numberToHex,
+  type Hex,
+  stringToHex,
+  uint8ArrayToHex,
+} from "../../utils/hex.js";
 
 type SavedConnectParams = {
   chain?: Chain;
@@ -182,8 +185,8 @@ export class CoinbaseSDKWallet implements Wallet {
           params: [
             {
               accessList: tx.accessList,
-              value: tx.value ? toHex(tx.value) : undefined,
-              gas: tx.gas ? toHex(tx.gas) : undefined,
+              value: tx.value ? numberToHex(tx.value) : undefined,
+              gas: tx.gas ? numberToHex(tx.gas) : undefined,
               from: this.address,
               to: tx.to as Address,
               data: tx.data,
@@ -205,7 +208,7 @@ export class CoinbaseSDKWallet implements Wallet {
             return stringToHex(message);
           }
           if (message.raw instanceof Uint8Array) {
-            return toHex(message.raw);
+            return uint8ArrayToHex(message.raw);
           }
           return message.raw;
         })();
@@ -298,7 +301,7 @@ export class CoinbaseSDKWallet implements Wallet {
       throw new Error("Provider not initialized");
     }
 
-    const chainIdHex = toHex(chain.id);
+    const chainIdHex = numberToHex(chain.id);
 
     try {
       await provider.request({

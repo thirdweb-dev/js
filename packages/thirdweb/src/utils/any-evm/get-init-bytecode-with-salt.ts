@@ -1,7 +1,8 @@
-import { encodePacked, toHex, type Hex } from "viem";
+import { encodePacked, type Hex } from "viem";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { keccackId } from "./keccack-id.js";
 import { getSaltHash } from "./get-salt-hash.js";
+import { uint8ArrayToHex } from "../hex.js";
 
 type GetInitiBytecodeWithSaltOptions = {
   bytecode: string;
@@ -33,7 +34,7 @@ export function getInitBytecodeWithSalt(
   const encodedArgs =
     typeof options.encodedArgs === "string"
       ? options.encodedArgs
-      : toHex(options.encodedArgs);
+      : uint8ArrayToHex(options.encodedArgs);
 
   return encodePacked(
     ["bytes32", "bytes", "bytes"],

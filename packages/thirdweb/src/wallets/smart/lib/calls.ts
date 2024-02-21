@@ -1,4 +1,3 @@
-import { toHex } from "viem";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { SmartWalletOptions } from "../types.js";
 import { readContract } from "../../../transaction/read-contract.js";
@@ -8,6 +7,7 @@ import type {
 } from "../../interfaces/wallet.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import { stringToHex } from "../../../utils/hex.js";
 
 /**
  * @internal
@@ -21,7 +21,7 @@ export async function predictAddress(
   }
   const accountAddress =
     options.overrides?.accountAddress || options.personalAccount.address;
-  const extraData = toHex(options.overrides?.accountSalt ?? "");
+  const extraData = stringToHex(options.overrides?.accountSalt ?? "");
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
@@ -45,7 +45,7 @@ export function prepareCreateAccount(args: {
     method: "function createAccount(address, bytes) public returns (address)",
     params: [
       options.overrides?.accountAddress || options.personalAccount.address,
-      toHex(options.overrides?.accountSalt ?? ""),
+      stringToHex(options.overrides?.accountSalt ?? ""),
     ],
   });
 }

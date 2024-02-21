@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { roundUpGas } from "./op-gas-fee-reducer.js";
-import { hexToBigInt, numberToHex } from "viem";
+import { hexToBigInt, numberToHex } from "../utils/hex.js";
 
 describe("opGasFeeReducer", () => {
   test("should turn '0x3F1234' into '0x400000'", () => {
