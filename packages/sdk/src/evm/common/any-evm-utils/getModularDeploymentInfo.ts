@@ -63,15 +63,15 @@ export async function getModularDeploymentInfo(
   finalDeploymentInfo.push(factoryInfo);
 
   if (hooks) {
-    const hookAddresses = hooks.filter((h) => isAddress(h.addressOrName));
-    const publishedHooks = hooks.filter((h) => !isAddress(h.addressOrName));
+    const hookAddresses = hooks.filter((h) => isAddress(h.extensionName));
+    const publishedHooks = hooks.filter((h) => !isAddress(h.extensionName));
     const publishedHooksFetched = await Promise.all(
       publishedHooks.map((h) => {
         invariant(h.publisherAddress, "Require publisher address");
         return fetchPublishedContractFromPolygon(
           h.publisherAddress,
-          h.addressOrName,
-          "latest", // get oldest version
+          h.extensionName,
+          h.extensionVersion, // TODO: get oldest version
           storage,
           clientId,
           secretKey,
@@ -126,7 +126,7 @@ export async function getModularDeploymentInfo(
         transaction: { predictedAddress: "", to: "", data: "" }, // empty transaction because we'll deploy ERC1967 proxy through a factory
         hooks: {
           impl: "",
-          proxy: h.addressOrName,
+          proxy: h.extensionName,
           admin: "",
         },
       });

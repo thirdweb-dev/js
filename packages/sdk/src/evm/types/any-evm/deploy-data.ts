@@ -39,8 +39,9 @@ export type DeployedContractType =
   | "hookProxy";
 
 export type HookOptions = {
-  addressOrName: string;
-  publisherAddress?: AddressOrEns;
+  extensionName: string;
+  extensionVersion: string;
+  publisherAddress: AddressOrEns;
 };
 
 export type DeploymentTransaction = {
