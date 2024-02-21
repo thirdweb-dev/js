@@ -1043,7 +1043,7 @@ async function enginePrepareRequest(
 
       const domain = {
         name,
-        version: gaslessOptions.engine.domainSeparatorVersion,
+        version: gaslessOptions.engine.domainVersion,
         salt: "0x" + chainId.toString(16).padStart(64, "0"), // Use 64 length hex chain id as salt
         verifyingContract: transaction.to,
       };
@@ -1290,6 +1290,7 @@ async function defenderPrepareRequest(
       transaction.from,
       spender,
       amount,
+      gaslessOptions.openzeppelin.domainSeparatorVersion,
     );
 
     const { r, s, v } = utils.splitSignature(sig);

@@ -36,6 +36,7 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
               useEOAForwarder: z.boolean().default(false),
               domainName: z.string().default("GSNv2 Forwarder"),
               domainVersion: z.string().default("0.0.1"),
+              domainSeparatorVersion: z.string().default("1"),
             }),
             experimentalChainlessSupport: z.boolean().default(false),
           }),
