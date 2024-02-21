@@ -8,6 +8,7 @@ export { ownerOf, type OwnerOfParams } from "./erc721/read/ownerOf.js";
 export { startTokenId } from "./erc721/read/startTokenId.js";
 export { tokenURI, type TokenUriParams } from "./erc721/read/tokenURI.js";
 export { totalSupply } from "./erc721/read/totalSupply.js";
+export { balanceOf } from "./erc721/read/balanceOf.js";
 
 /**
  * WRITE extension for ERC721
