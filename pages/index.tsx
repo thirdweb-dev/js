@@ -54,7 +54,7 @@ const HomePage: ThirdwebNextPage = () => {
             introductionTitle="WALLET PRODUCTS"
             image={require("public/assets/bear-market-airdrop/desktop-wallets.png")}
             mobileImage={require("public/assets/bear-market-airdrop/mobile-wallets.png")}
-            products={filterProducts("wallets")}
+            products={filterProducts("connect")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
