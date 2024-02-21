@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 186,
   "rpc": [
-    "https://seele.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://186.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.seelen.pro/"
   ],

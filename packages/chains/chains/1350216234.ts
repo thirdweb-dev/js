@@ -26,7 +26,6 @@ export default {
   },
   "networkId": 1350216234,
   "rpc": [
-    "https://skale-titan-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1350216234.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/parallel-stormy-spica",
     "wss://mainnet.skalenodes.com/v1/ws/parallel-stormy-spica"

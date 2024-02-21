@@ -29,7 +29,6 @@ export default {
   "networkId": 97,
   "redFlags": [],
   "rpc": [
-    "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://97.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-seed-prebsc-1-s1.bnbchain.org:8545",
     "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
@@ -37,8 +36,8 @@ export default {
     "https://data-seed-prebsc-2-s2.bnbchain.org:8545",
     "https://data-seed-prebsc-1-s3.bnbchain.org:8545",
     "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
-    "https://bsc-testnet.publicnode.com",
-    "wss://bsc-testnet.publicnode.com"
+    "https://bsc-testnet-rpc.publicnode.com",
+    "wss://bsc-testnet-rpc.publicnode.com"
   ],
   "shortName": "bnbt",
   "slip44": 1,

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1688,
   "rpc": [
-    "https://ludan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ludan.org/"
   ],

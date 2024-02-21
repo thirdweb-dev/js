@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1133,
   "rpc": [
-    "https://defimetachain-changi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1133.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dmc.mydefichain.com/changi",
     "https://testnet-dmc.mydefichain.com:20551"

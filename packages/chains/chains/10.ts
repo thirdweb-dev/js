@@ -49,14 +49,15 @@ export default {
   "networkId": 10,
   "redFlags": [],
   "rpc": [
-    "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://mainnet.optimism.io",
     "https://optimism.publicnode.com",
     "wss://optimism.publicnode.com",
     "https://optimism.gateway.tenderly.co",
-    "wss://optimism.gateway.tenderly.co"
+    "wss://optimism.gateway.tenderly.co",
+    "https://optimism-rpc.publicnode.com",
+    "wss://optimism-rpc.publicnode.com"
   ],
   "shortName": "oeth",
   "slug": "optimism",

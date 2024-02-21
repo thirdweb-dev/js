@@ -1,5 +1,61 @@
 # @thirdweb-dev/react
 
+## 4.4.9
+
+### Patch Changes
+
+- [#2303](https://github.com/thirdweb-dev/js/pull/2303) [`9e6b3e5`](https://github.com/thirdweb-dev/js/commit/9e6b3e576427fb74519a111080220d1a351531be) Thanks [@MananTank](https://github.com/MananTank)! - - Fix the closing of ConnectWallet after the wallet connection instead of showing the "Sign In" screen when Auth is enabled
+
+  - Call the `onConnect` prop on `ConnectWallet` and `ConnectEmbed` component with the connected wallet instance
+
+  ```tsx
+  <ConnectWallet
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  - Improved Sign in Screen UI for Embedded Wallet and Local Wallet with Retry and Disconnect buttons after failed sign in
+
+- [#2309](https://github.com/thirdweb-dev/js/pull/2309) [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba) Thanks [@MananTank](https://github.com/MananTank)! - Update Supported Networks for Safe wallet
+
+  - Remove Goerli, Base Goerli
+  - Add Sepolia, Base Mainnet, Polygon zkEVM, ZkSync Mainnet
+
+- [#2299](https://github.com/thirdweb-dev/js/pull/2299) [`ecd82b4`](https://github.com/thirdweb-dev/js/commit/ecd82b46192d278be26f58d9ca287e97b4ba25f8) Thanks [@MananTank](https://github.com/MananTank)! - Fix usage of dashed props instead of camel case on SVG
+
+- [#2331](https://github.com/thirdweb-dev/js/pull/2331) [`b5337bc`](https://github.com/thirdweb-dev/js/commit/b5337bcfc34664c3b87521a38d85372fc6ab9fdd) Thanks [@MananTank](https://github.com/MananTank)! - Add `hideSendButton` and `hideReceiveButton` props to `ConnectWallet` component to hide the send and receive buttons in ConnectWallet's Details Modal
+
+  ```tsx
+  // hide both buttons
+  <ConnectWallet hideSendButton={true} hideReceiveButton={true} />
+  ```
+
+  ```tsx
+  // hide only send button
+  <ConnectWallet hideSendButton={true} />
+  ```
+
+  ```tsx
+  // hide only receive button
+  <ConnectWallet hideReceiveButton={true} />
+  ```
+
+- Updated dependencies [[`e6a2407`](https://github.com/thirdweb-dev/js/commit/e6a2407ee56f13f93d7efe025ba027d3c9b03616), [`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1), [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668), [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073), [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba), [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74), [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45), [`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/react-core@4.4.9
+  - @thirdweb-dev/sdk@4.0.36
+  - @thirdweb-dev/wallets@2.4.11
+  - @thirdweb-dev/chains@0.1.73
+
 ## 4.4.8
 
 ### Patch Changes

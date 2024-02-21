@@ -32,7 +32,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://xai-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://37714555429.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-v2.xai-chain.net/rpc"
   ],

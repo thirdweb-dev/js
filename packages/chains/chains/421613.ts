@@ -36,7 +36,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli-rollup.arbitrum.io/rpc",
     "https://arbitrum-goerli.publicnode.com",

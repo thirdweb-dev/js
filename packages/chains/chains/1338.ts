@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1338,
   "rpc": [
-    "https://elysium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1338.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://elysium-test-rpc.vulcanforged.com"
   ],

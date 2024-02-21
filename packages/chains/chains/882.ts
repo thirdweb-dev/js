@@ -26,7 +26,6 @@ export default {
   "networkId": 882,
   "redFlags": [],
   "rpc": [
-    "https://hypr-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://882.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.hypr.network"
   ],

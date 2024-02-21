@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 666888,
   "rpc": [
-    "https://hela-official-runtime-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://666888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.helachain.com"
   ],

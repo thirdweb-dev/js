@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 2047,
   "rpc": [
-    "https://stratos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2047.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://web3-rpc-mesos.thestratos.org"
   ],

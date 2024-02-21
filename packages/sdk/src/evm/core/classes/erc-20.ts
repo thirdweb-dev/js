@@ -51,6 +51,7 @@ import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc20.transfer(walletAddress, amount);
  * ```
+ * @erc20
  * @public
  */
 export class Erc20<

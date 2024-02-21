@@ -21,7 +21,6 @@ export default {
   "networkId": 85023,
   "redFlags": [],
   "rpc": [
-    "https://nishiogikubo-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://85023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/nishiogiku/testnet/rpc"
   ],

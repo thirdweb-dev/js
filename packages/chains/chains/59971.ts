@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 59971,
   "rpc": [
-    "https://genesys-code.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://59971.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.genesyscode.io/"
   ],

@@ -25,9 +25,10 @@ export default {
   },
   "networkId": 1100,
   "rpc": [
-    "https://dymension.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dymension-evm.blockpi.network/v1/rpc/public"
+    "https://dymension-evm.blockpi.network/v1/rpc/public",
+    "https://dymension-evm-rpc.publicnode.com",
+    "wss://dymension-evm-rpc.publicnode.com"
   ],
   "shortName": "dymension",
   "slug": "dymension",

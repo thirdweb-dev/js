@@ -27,7 +27,6 @@ export default {
   "networkId": 4,
   "redFlags": [],
   "rpc": [
-    "https://rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.infura.io/v3/${INFURA_API_KEY}",
     "wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}"

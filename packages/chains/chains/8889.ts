@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 8889,
   "rpc": [
-    "https://vyvo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8889.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vsc-dataseed.vyvo.org:8889"
   ],

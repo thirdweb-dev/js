@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2399,
   "rpc": [
-    "https://bomb-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2399.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
   ],

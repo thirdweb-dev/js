@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1024,
   "rpc": [
-    "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://datarpc1.xsc.pub",
     "https://datarpc2.xsc.pub",

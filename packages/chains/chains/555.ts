@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 555,
   "rpc": [
-    "https://vela1-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.velaverse.io"
   ],

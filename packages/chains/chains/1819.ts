@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1819,
   "rpc": [
-    "https://cube-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1819.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.cube.network",
     "wss://ws-testnet.cube.network",

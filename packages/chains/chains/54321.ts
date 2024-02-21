@@ -28,7 +28,6 @@ export default {
   },
   "networkId": 54321,
   "rpc": [
-    "https://toronet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://54321.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.toronet.org/rpc"
   ],

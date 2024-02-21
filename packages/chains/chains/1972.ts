@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1972,
   "rpc": [
-    "https://redecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1972.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.redecoin.eu"
   ],

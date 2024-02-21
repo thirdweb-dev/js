@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 18159,
   "rpc": [
-    "https://proof-of-memes.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18159.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.memescan.io",
     "https://mainnet-rpc2.memescan.io",

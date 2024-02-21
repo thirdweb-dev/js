@@ -23,7 +23,6 @@ export default {
   "networkId": 123,
   "redFlags": [],
   "rpc": [
-    "https://fuse-sparknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fusespark.io"
   ],

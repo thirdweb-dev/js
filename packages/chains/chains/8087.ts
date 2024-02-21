@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 8087,
   "rpc": [
-    "https://e-dollar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8087.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.e-dollar.org"
   ],

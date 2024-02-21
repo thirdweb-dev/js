@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 510,
   "rpc": [
-    "https://syndicate-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://510.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.syndicate.io"
   ],

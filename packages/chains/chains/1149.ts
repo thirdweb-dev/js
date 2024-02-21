@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1149,
   "rpc": [
-    "https://symplexia-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1149.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://plex-rpc.plexfinance.us"
   ],

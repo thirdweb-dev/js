@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1388,
   "rpc": [
-    "https://amstar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1388.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.amstarscan.com"
   ],

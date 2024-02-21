@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-1"
   },
   "rpc": [
-    "https://polygon-supernet-arianee.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.polygonsupernet.public.arianee.net"
   ],

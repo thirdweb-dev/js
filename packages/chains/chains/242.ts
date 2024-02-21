@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 242,
   "rpc": [
-    "https://plinga.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcurl.mainnet.plgchain.com",
     "https://rpcurl.plgchain.blockchain.evmnode.online",

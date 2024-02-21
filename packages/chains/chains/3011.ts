@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 3011,
   "rpc": [
-    "https://playa3ull-games.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.mainnet.playa3ull.games"
   ],

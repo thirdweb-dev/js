@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 985,
   "rpc": [
-    "https://memo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://985.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.metamemo.one:8501",
     "wss://chain.metamemo.one:16801"

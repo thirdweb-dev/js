@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1294,
   "rpc": [
-    "https://bobabeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1294.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabeam.boba.network",
     "wss://wss.bobabeam.boba.network",

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 32001,
   "rpc": [
-    "https://w3gamez-holesky-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://32001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-holesky.w3gamez.network"
   ],

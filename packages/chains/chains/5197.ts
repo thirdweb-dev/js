@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 5197,
   "rpc": [
-    "https://eraswap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5197.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eraswap.network",
     "https://rpc-mumbai.mainnet.eraswap.network"

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 597,
   "rpc": [
-    "https://acala-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://597.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-acala-testnet.aca-staging.network",
     "wss://eth-rpc-acala-testnet.aca-staging.network"

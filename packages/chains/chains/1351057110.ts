@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1351057110,
   "rpc": [
-    "https://chaos-skale-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1351057110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix"
   ],

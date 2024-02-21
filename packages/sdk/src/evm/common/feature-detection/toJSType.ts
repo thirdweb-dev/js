@@ -1,6 +1,9 @@
 import { AbiTypeSchema } from "../../schema/contracts/custom";
 import { z } from "zod";
 
+/**
+ * @internal
+ */
 export function toJSType(
   contractType: z.input<typeof AbiTypeSchema>,
   isReturnType = false,

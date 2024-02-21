@@ -37,6 +37,7 @@ export interface IGenericSchemaType {
  *   description: "My contract description"
  * })
  * ```
+ * @contract
  * @public
  */
 export class ContractMetadata<

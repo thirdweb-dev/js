@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 1115,
   "rpc": [
-    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1115.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.btcs.network/"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 486217935,
   "rpc": [
-    "https://gather-devnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://486217935.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.gather.network"
   ],

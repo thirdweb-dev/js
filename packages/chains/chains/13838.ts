@@ -21,7 +21,6 @@ export default {
   "networkId": 13838,
   "redFlags": [],
   "rpc": [
-    "https://xtraderlands-subnet-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13838.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/xtraderlan/testnet/rpc"
   ],

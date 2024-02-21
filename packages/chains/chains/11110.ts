@@ -42,7 +42,6 @@ export default {
   },
   "networkId": 11110,
   "rpc": [
-    "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.io",
     "https://rpc1.astranaut.io"

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 5851,
   "rpc": [
-    "https://ontology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5851.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://polaris1.ont.io:20339",
     "http://polaris2.ont.io:20339",

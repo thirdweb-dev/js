@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 18000,
   "rpc": [
-    "https://frontier-of-dreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fod.games/"
   ],

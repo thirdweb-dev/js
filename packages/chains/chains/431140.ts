@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 431140,
   "rpc": [
-    "https://markr-go.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://431140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.markr.io/ext/"
   ],

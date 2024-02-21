@@ -18,7 +18,7 @@ export default {
     "height": 500,
     "format": "png"
   },
-  "name": "SKALE Titan Hub Testnet",
+  "name": "Deprecated SKALE Titan Hub Testnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -26,13 +26,13 @@ export default {
   },
   "networkId": 1517929550,
   "rpc": [
-    "https://skale-titan-hub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1517929550.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-aware-chief-gianfar",
     "wss://staging-v3.skalenodes.com/v1/ws/staging-aware-chief-gianfar"
   ],
-  "shortName": "titan-testnet",
+  "shortName": "deprecated-titan-testnet",
   "slip44": 1,
-  "slug": "skale-titan-hub-testnet",
+  "slug": "deprecated-skale-titan-hub-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 45510,
   "rpc": [
-    "https://deelance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://45510.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.deelance.com"
   ],

@@ -29,7 +29,6 @@ export default {
   },
   "networkId": 955081,
   "rpc": [
-    "https://jono12-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://955081.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/jono12/testnet/rpc"
   ],

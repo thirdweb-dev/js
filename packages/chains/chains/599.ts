@@ -38,7 +38,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://599.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.gateway.metisdevops.link"
   ],

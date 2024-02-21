@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 622277,
   "rpc": [
-    "https://hypra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://622277.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.hypra.network",
     "https://rpc.rethereum.org",

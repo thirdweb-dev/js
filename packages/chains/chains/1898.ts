@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://bon-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.boyanet.org:8545",
     "ws://rpc.boyanet.org:8546"

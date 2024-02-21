@@ -12,7 +12,6 @@ export default {
   },
   "networkId": 1731313,
   "rpc": [
-    "https://turkey-demo-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1731313.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devchain-poa.huabeizhenxuan.com"
   ],

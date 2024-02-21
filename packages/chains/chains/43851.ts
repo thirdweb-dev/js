@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 43851,
   "rpc": [
-    "https://zkfair-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43851.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.zkfair.io"
   ],

@@ -50,7 +50,6 @@ export default {
   },
   "networkId": 314,
   "rpc": [
-    "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://314.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
     "https://rpc.ankr.com/filecoin",

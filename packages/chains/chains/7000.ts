@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7000,
   "rpc": [
-    "https://zetachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zetachain-evm.blockpi.network/v1/rpc/public",
     "https://zetachain-mainnet-archive.allthatnode.com:8545"

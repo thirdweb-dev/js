@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 912559,
   "rpc": [
-    "https://astria-evm-dusknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://912559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.evm.dusk-3.devnet.astria.org"
   ],

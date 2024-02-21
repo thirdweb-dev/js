@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 313,
   "rpc": [
-    "https://neurochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://313.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nc-rpc-prd1.neurochain.io",
     "https://nc-rpc-prd2.neurochain.io"

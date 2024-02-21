@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 8272,
   "rpc": [
-    "https://blockton-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8272.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blocktonscan.com/"
   ],

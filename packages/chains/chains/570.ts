@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 570,
   "rpc": [
-    "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://570.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
     "wss://rpc.rollux.com/wss"

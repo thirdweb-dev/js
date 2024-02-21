@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 72992,
   "rpc": [
-    "https://grok-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://72992.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.grokchain.dev"
   ],

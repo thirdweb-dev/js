@@ -21,7 +21,6 @@ export default {
   "networkId": 53383,
   "redFlags": [],
   "rpc": [
-    "https://jambon-s-testnet-jambon's testnet-53383.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://53383.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/c37c3f83-6d95-4473-b5c7-626fad519f50"
   ],

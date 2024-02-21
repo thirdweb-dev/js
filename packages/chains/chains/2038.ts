@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 2038,
   "rpc": [
-    "https://shrapnel-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2038.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/shrapnel/testnet/rpc"
   ],

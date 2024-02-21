@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://zkamoeba.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://381.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.zkamoeba.com/rpc"
   ],

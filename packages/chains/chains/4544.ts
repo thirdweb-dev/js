@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 4544,
   "rpc": [
-    "https://emoney-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4544.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.emoney.network/"
   ],

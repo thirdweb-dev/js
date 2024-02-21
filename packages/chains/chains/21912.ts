@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 21912,
   "rpc": [
-    "https://bsl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21912.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc-mainnet.nftruth.io:8545",
     "ws://rpc-mainnet.nftruth.io:8645"

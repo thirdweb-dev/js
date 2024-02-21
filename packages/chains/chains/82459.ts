@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 82459,
   "rpc": [
-    "https://smart-layer-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://82459.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.smartlayer.network"
   ],

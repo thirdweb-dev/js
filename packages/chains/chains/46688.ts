@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 46688,
   "rpc": [
-    "https://fusion-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://46688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.fusionnetwork.io",
     "wss://testnet.fusionnetwork.io"

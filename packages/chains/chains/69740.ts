@@ -21,11 +21,10 @@ export default {
   "networkId": 69740,
   "redFlags": [],
   "rpc": [
-    "https://will-s-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://69740.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
   "shortName": "Will's Testnet",
-  "slug": "will-s-testnet",
+  "slug": "will-s-testnet-will's testnet",
   "testnet": true
 } as const satisfies Chain;

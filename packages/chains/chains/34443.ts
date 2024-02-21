@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 34443,
   "rpc": [
-    "https://mode.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://34443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.mode.network"
   ],

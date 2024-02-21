@@ -19,7 +19,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://europahub.network/",
-  "name": "SKALE Europa Hub Testnet",
+  "name": "Deprecated SKALE Europa Hub Testnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -27,13 +27,13 @@ export default {
   },
   "networkId": 476158412,
   "rpc": [
-    "https://skale-europa-hub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://476158412.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-legal-crazy-castor"
   ],
-  "shortName": "europa-testnet",
+  "shortName": "deprecated-europa-testnet",
   "slip44": 1,
-  "slug": "skale-europa-hub-testnet",
+  "slug": "deprecated-skale-europa-hub-testnet",
+  "status": "deprecated",
   "testnet": true,
-  "title": "Europa Hub Testnet"
+  "title": "Deprecated Europa Hub Testnet"
 } as const satisfies Chain;

@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://kroma-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2358.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.sepolia.kroma.network"
   ],

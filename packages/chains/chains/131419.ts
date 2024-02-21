@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 131419,
   "rpc": [
-    "https://etnd-chain-s.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://131419.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.node1.etnd.pro/"
   ],

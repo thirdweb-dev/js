@@ -21,7 +21,6 @@ export default {
   "networkId": 660279,
   "redFlags": [],
   "rpc": [
-    "https://xai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://660279.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xai-chain.net/rpc/xai79df8614da076af58f199126a07db"
   ],

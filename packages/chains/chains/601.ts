@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 601,
   "rpc": [
-    "https://vine-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://601.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.vne.network"
   ],

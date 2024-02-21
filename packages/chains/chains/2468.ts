@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2468,
   "rpc": [
-    "https://hybrid-chain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2468.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coredata-mainnet.hybridchain.ai/",
     "https://rpc-mainnet.hybridchain.ai"

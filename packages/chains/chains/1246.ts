@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1246,
   "rpc": [
-    "https://om-platform.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1246.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-cnx.omplatform.com/"
   ],

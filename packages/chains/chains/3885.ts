@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 3885,
   "rpc": [
-    "https://firechain-zkevm-ghostrider.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3885.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zkevm.ghostrider.thefirechain.com"
   ],

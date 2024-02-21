@@ -29,7 +29,6 @@ export default {
     "bridges": []
   },
   "rpc": [
-    "https://muster.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4078.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://muster.alt.technology"
   ],

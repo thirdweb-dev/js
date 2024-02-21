@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 416,
   "rpc": [
-    "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://416.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sx.technology"
   ],

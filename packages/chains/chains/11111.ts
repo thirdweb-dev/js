@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 11111,
   "rpc": [
-    "https://wagmi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/wagmi/wagmi-chain-testnet/rpc"
   ],

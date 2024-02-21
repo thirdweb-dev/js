@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 65,
   "rpc": [
-    "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://65.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchaintestrpc.okex.org"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 111222333444,
   "rpc": [
-    "https://alphabet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://111222333444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://londonpublic.alphabetnetwork.org",
     "wss://londonpublic.alphabetnetwork.org/ws/",

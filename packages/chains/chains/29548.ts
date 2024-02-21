@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://mch-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://29548.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oasys.mycryptoheroes.net"
   ],

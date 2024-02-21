@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1248,
   "rpc": [
-    "https://dogether.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1248.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogether.dog/"
   ],

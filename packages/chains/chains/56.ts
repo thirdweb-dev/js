@@ -38,7 +38,6 @@ export default {
   "networkId": 56,
   "redFlags": [],
   "rpc": [
-    "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://56.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bsc-dataseed1.bnbchain.org",
     "https://bsc-dataseed2.bnbchain.org",
@@ -52,8 +51,8 @@ export default {
     "https://bsc-dataseed2.ninicoin.io",
     "https://bsc-dataseed3.ninicoin.io",
     "https://bsc-dataseed4.ninicoin.io",
-    "https://bsc.publicnode.com",
-    "wss://bsc.publicnode.com",
+    "https://bsc-rpc.publicnode.com",
+    "wss://bsc-rpc.publicnode.com",
     "wss://bsc-ws-node.nariox.org"
   ],
   "shortName": "bnb",

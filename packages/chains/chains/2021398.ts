@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2021398,
   "rpc": [
-    "https://debank-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2021398.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.testnet.debank.com"
   ],

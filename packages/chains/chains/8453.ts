@@ -49,14 +49,13 @@ export default {
   "networkId": 8453,
   "redFlags": [],
   "rpc": [
-    "https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8453.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.base.org/",
     "https://developer-access-mainnet.base.org/",
     "https://base.gateway.tenderly.co",
     "wss://base.gateway.tenderly.co",
-    "https://base.publicnode.com",
-    "wss://base.publicnode.com"
+    "https://base-rpc.publicnode.com",
+    "wss://base-rpc.publicnode.com"
   ],
   "shortName": "base",
   "slug": "base",

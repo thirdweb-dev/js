@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 788,
   "rpc": [
-    "https://aerochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://788.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.aerochain.id/"
   ],

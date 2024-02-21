@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 281121,
   "rpc": [
-    "https://social-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://281121.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://socialsmartchain.digitalnext.business"
   ],

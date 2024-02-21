@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 14288640,
   "rpc": [
-    "https://anduschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://14288640.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.anduschain.io/rpc",
     "wss://rpc.anduschain.io/ws"
