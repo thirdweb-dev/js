@@ -5,11 +5,6 @@ import type {
   PreAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/type.js";
-import {
-  authenticate,
-  getAuthenticatedUser,
-  preAuthenticate,
-} from "../authentication/index.js";
 import type { EmbeddedWalletConfig } from "./types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
@@ -18,6 +13,7 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../../../manager/storage.js";
+import type { InitializedUser } from "../../implementations/index.js";
 
 type SavedConnectParams = {
   chain: Chain;
@@ -57,8 +53,12 @@ export const embeddedWalletMetadata: WalletMetadata = {
 export class EmbeddedWallet implements Wallet {
   metadata: WalletMetadata;
   client: ThirdwebClient;
-  account?: Account;
-  chain: Chain | undefined;
+  isEmbeddedWallet: true;
+
+  private account?: Account;
+  private chain: Chain | undefined;
+  private user: InitializedUser | undefined;
+
   events: Wallet["events"];
 
   /**
@@ -74,6 +74,7 @@ export class EmbeddedWallet implements Wallet {
   constructor(options: EmbeddedWalletConfig) {
     this.client = options.client;
     this.metadata = embeddedWalletMetadata;
+    this.isEmbeddedWallet = true;
   }
 
   // is this used?
@@ -87,6 +88,7 @@ export class EmbeddedWallet implements Wallet {
    * @returns TODO
    */
   async preAuthenticate(options: Omit<PreAuthArgsType, "client">) {
+    const { preAuthenticate } = await import("../authentication/index.js");
     return preAuthenticate({
       client: this.client,
       ...options,
@@ -107,13 +109,17 @@ export class EmbeddedWallet implements Wallet {
       chain?: Chain;
     },
   ): Promise<Account> {
-    this.chain = options.chain || ethereum;
+    const { authenticate } = await import("../authentication/index.js");
+
     const authResult = await authenticate({
       client: this.client,
       ...options,
     });
     const authAccount = await authResult.user.wallet.getAccount();
+
     this.account = authAccount;
+    this.user = authResult.user;
+    this.chain = options.chain || ethereum;
 
     const params: SavedConnectParams = {
       chain: this.chain,
@@ -132,6 +138,7 @@ export class EmbeddedWallet implements Wallet {
    * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect(): Promise<Account> {
+    const { getAuthenticatedUser } = await import("../authentication/index.js");
     const user = await getAuthenticatedUser({ client: this.client });
     if (!user) {
       throw new Error("not authenticated");
@@ -140,14 +147,16 @@ export class EmbeddedWallet implements Wallet {
     const savedParams: SavedConnectParams | null =
       await getSavedConnectParamsFromStorage(this.metadata.id);
 
+    const authAccount = await user.wallet.getAccount();
+
+    this.account = authAccount;
+    this.user = user;
     if (savedParams) {
       this.chain = savedParams.chain;
     } else {
       this.chain = ethereum;
     }
 
-    const authAccount = await user.wallet.getAccount();
-    this.account = authAccount;
     return authAccount;
   }
 
@@ -161,6 +170,7 @@ export class EmbeddedWallet implements Wallet {
   async disconnect(): Promise<void> {
     this.account = undefined;
     this.chain = undefined;
+    this.user = undefined;
   }
 
   /**
@@ -198,5 +208,17 @@ export class EmbeddedWallet implements Wallet {
   async switchChain(chain: Chain) {
     saveConnectParamsToStorage(this.metadata.id, { chain });
     this.chain = chain;
+  }
+
+  /**
+   * Get the Embedded Wallet user information. It returns the `InitializedUser` object if wallet is connected. Otherwise, it returns `undefined`.
+   * @example
+   * ```ts
+   * const user = wallet.getUser();
+   * ```
+   * @returns The `InitializedUser` object associated with the wallet
+   */
+  getUser() {
+    return this.user;
   }
 }

@@ -62,7 +62,7 @@ export const embeddedWalletConfig = (
       ...embeddedWalletMetadata,
       name:
         hasEmail && hasSocial
-          ? "Email & Social Login"
+          ? "Email & Socials"
           : hasEmail
             ? "Email"
             : hasSocial
