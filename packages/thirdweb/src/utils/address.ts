@@ -8,19 +8,9 @@ export type Address = `0x${string}`;
 const ADRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const IS_ADDRESS_CACHE = new LruMap<boolean>(4096);
 
-type IsAddressOptions = {
-  /**
-   * Enables strict mode. (compares the address against its checksum)
-   * @default true
-   */
-  strict?: boolean;
-};
-
 /**
  * Checks if a given string is a valid address.
  * @param address The address to check.
- * @param options Additional options for the address validation.
- * @param options.strict Whether or not to compare the address against its checksum.
  * @returns True if the address is valid, false otherwise.
  * @example
  * ```ts
@@ -30,10 +20,7 @@ type IsAddressOptions = {
  * //=> true
  * ```
  */
-export function isAddress(
-  address: string,
-  { strict = true }: IsAddressOptions = {},
-): address is Address {
+export function isAddress(address: string): address is Address {
   if (IS_ADDRESS_CACHE.has(address)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return IS_ADDRESS_CACHE.get(address)!;
@@ -45,10 +32,8 @@ export function isAddress(
     if (address.toLowerCase() === address) {
       return true;
     }
-    if (strict) {
-      return checksumAddress(address) === address;
-    }
-    return true;
+
+    return checksumAddress(address) === address;
   })();
   IS_ADDRESS_CACHE.set(address, result);
   return result;
