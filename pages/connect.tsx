@@ -189,7 +189,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               image={require("public/assets/product-pages/connect/desktop-guest.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-guest.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="/wallet/local-wallet"
+              href="https://portal.thirdweb.com/references/wallets/v2/LocalWallet"
               colSpan={1}
             />
           </LandingGridSection>
