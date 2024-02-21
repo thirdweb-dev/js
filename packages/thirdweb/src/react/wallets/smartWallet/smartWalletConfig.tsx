@@ -1,6 +1,8 @@
 import { smartWallet } from "../../../wallets/smart/index.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
-import type { WalletConfig } from "../../types/wallets.js";
+import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
+import type { SelectUIProps, WalletConfig } from "../../types/wallets.js";
+import { WalletEntryButton } from "../../ui/ConnectWallet/WalletSelector.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
 
 export type SmartWalletConfigOptions = Omit<
@@ -37,6 +39,7 @@ export const smartWalletConfig = (
   };
 
   const config: WalletConfig = {
+    category: walletConfig.category,
     metadata: metadata,
     create(createOptions) {
       return smartWallet({
@@ -45,6 +48,14 @@ export const smartWalletConfig = (
         metadata,
       });
     },
+    selectUI: walletConfig.selectUI
+      ? (props) => (
+          <SmartSelectUI
+            selectUIProps={props}
+            personalWalletConfig={walletConfig}
+          />
+        )
+      : undefined,
     connectUI(props) {
       return (
         <SmartConnectUI
@@ -59,3 +70,42 @@ export const smartWalletConfig = (
 
   return config;
 };
+
+function SmartSelectUI(props: {
+  selectUIProps: SelectUIProps;
+  personalWalletConfig: WalletConfig;
+}) {
+  const { client, dappMetadata } = useThirdwebProviderProps();
+  const { personalWalletConfig } = props;
+  const PersonalWalletSelectUI = props.personalWalletConfig.selectUI;
+
+  if (!PersonalWalletSelectUI) {
+    return (
+      <WalletEntryButton
+        walletConfig={props.personalWalletConfig}
+        selectWallet={() => {
+          props.selectUIProps.selection.select();
+        }}
+      />
+    );
+  }
+
+  return (
+    <PersonalWalletSelectUI
+      walletConfig={personalWalletConfig}
+      screenConfig={props.selectUIProps.screenConfig}
+      connection={{
+        createInstance: () => {
+          return personalWalletConfig.create({
+            client,
+            dappMetadata,
+          });
+        },
+        done: () => {}, // ignore connection done in select UI
+        chain: props.selectUIProps.connection.chain,
+        chains: props.selectUIProps.connection.chains,
+      }}
+      selection={props.selectUIProps.selection}
+    />
+  );
+}
