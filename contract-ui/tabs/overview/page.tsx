@@ -71,7 +71,8 @@ export const CustomContractOverviewPage: React.FC<
             detectedFeatureNames.includes(type),
           ) && (
             <NFTDetails
-              contract={contract}
+              contractAddress={contract.getAddress()}
+              chainId={contract.chainId}
               trackingCategory={TRACKING_CATEGORY}
               features={detectedFeatureNames}
             />

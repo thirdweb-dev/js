@@ -8,7 +8,7 @@ import {
   Flex,
   SkeletonText,
 } from "@chakra-ui/react";
-import { NFT } from "@thirdweb-dev/sdk";
+import { NFT } from "thirdweb";
 import { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import {
@@ -21,19 +21,21 @@ import {
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 const dummyMetadata: (idx: number) => NFT = (idx) => ({
+  id: BigInt(idx),
+  tokenURI: `1-0x123-${idx}`,
   metadata: {
     name: "Loading...",
     description: "lorem ipsum loading sit amet",
-    id: `${idx}`,
+    id: BigInt(idx),
     uri: `1-0x123-${idx}`,
   },
   owner: `0x_fake_${idx}`,
   type: "ERC721",
-  supply: "1",
+  supply: 1n,
 });
 
 interface NFTCardsProps {
-  nfts: NFT[] | WalletNFT[];
+  nfts: NFT<"ERC721">[] | WalletNFT[];
   trackingCategory: TrackedLinkProps["category"];
   isLoading: boolean;
   contractAddress?: string;
@@ -77,6 +79,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
             <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
               <Skeleton isLoaded={!isLoading}>
                 <NFTMediaWithEmptyState
+                  // @ts-expect-error types are not up to date
                   metadata={token.metadata}
                   requireInteraction
                   width="100%"

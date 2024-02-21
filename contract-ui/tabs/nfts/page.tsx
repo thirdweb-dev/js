@@ -13,6 +13,9 @@ import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
 import { TokenIdPage } from "./components/token-id";
+import { defineChain, getContract } from "thirdweb";
+import { thirdwebClient } from "../../../lib/thirdweb-client";
+import { useMemo } from "react";
 
 interface NftOverviewPageProps {
   contractAddress?: string;
@@ -47,6 +50,19 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721ClaimConditionsV2",
     "ERC721ClaimCustom",
   ]);
+
+  const chainId = contractQuery.contract?.chainId;
+
+  const newContract = useMemo(() => {
+    if (!contractAddress || !chainId) {
+      return null;
+    }
+    return getContract({
+      address: contractAddress,
+      client: thirdwebClient,
+      chain: defineChain(chainId),
+    });
+  }, [contractAddress, chainId]);
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -100,8 +116,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         </Card>
       ) : (
         <>
-          {isErc721Claimable && (
-            <SupplyCards contract={contractQuery.contract} />
+          {isErc721Claimable && newContract && (
+            <SupplyCards contract={newContract} />
           )}
           <NFTGetAllTable contract={contractQuery.contract} />
         </>
