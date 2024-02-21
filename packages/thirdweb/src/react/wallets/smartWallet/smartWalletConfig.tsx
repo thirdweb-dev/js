@@ -39,6 +39,7 @@ export const smartWalletConfig = (
   };
 
   const config: WalletConfig = {
+    recommended: walletConfig.recommended,
     category: walletConfig.category,
     metadata: metadata,
     create(createOptions) {

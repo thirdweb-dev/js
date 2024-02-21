@@ -9,6 +9,7 @@ import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type ZerionConfigOptions = {
   projectId?: string;
+  recommended?: boolean;
 };
 
 /**
@@ -26,6 +27,7 @@ export type ZerionConfigOptions = {
  */
 export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
   const config: WalletConfig = {
+    recommended: options?.recommended,
     create(createOptions) {
       if (config.isInstalled && config.isInstalled()) {
         return zerionWallet();

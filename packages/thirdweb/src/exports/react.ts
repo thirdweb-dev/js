@@ -60,7 +60,10 @@ export {
   type MetamaskConfigOptions,
 } from "../react/wallets/metamask/metamaskConfig.js";
 
-export { coinbaseConfig } from "../react/wallets/coinbase/coinbaseConfig.js";
+export {
+  coinbaseConfig,
+  type CoinbaseConfigOptions,
+} from "../react/wallets/coinbase/coinbaseConfig.js";
 
 export {
   rainbowConfig,

@@ -9,6 +9,7 @@ import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type MetamaskConfigOptions = {
   projectId?: string;
+  recommended?: boolean;
 };
 
 /**
@@ -28,6 +29,7 @@ export const metamaskConfig = (
   options?: MetamaskConfigOptions,
 ): WalletConfig => {
   const config: WalletConfig = {
+    recommended: options?.recommended,
     metadata: metamaskMetadata,
     create(createOptions) {
       if (config.isInstalled && config.isInstalled()) {

@@ -14,20 +14,28 @@ import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 import { ScanScreen } from "../shared/ScanScreen.js";
 import { useState, useRef, useEffect } from "react";
 
+export type CoinbaseConfigOptions = {
+  recommended?: boolean;
+};
+
 /**
  * Integrate Coinbase wallet connection into your app.
+ * @param options - Options for configuring the Coinbase wallet.
  * @example
  * ```tsx
  * <ThirdwebProvider
  *  client={client}>
- *  wallets={[  coinbaseConfig() ]}
+ *  wallets={[ coinbaseConfig() ]}
  *  <App />
  * </ThirdwebProvider>
  * ```
  * @returns WalletConfig object to be passed into `ThirdwebProvider`
  */
-export const coinbaseConfig = (): WalletConfig => {
+export const coinbaseConfig = (
+  options?: CoinbaseConfigOptions,
+): WalletConfig => {
   return {
+    recommended: options?.recommended,
     metadata: coinbaseMetadata,
     create(createOptions) {
       const isInjected = !!injectedCoinbaseProvider();

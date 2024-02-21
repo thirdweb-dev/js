@@ -9,6 +9,7 @@ import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type RainbowConfigOptions = {
   projectId?: string;
+  recommended?: boolean;
 };
 
 /**
@@ -26,6 +27,7 @@ export type RainbowConfigOptions = {
  */
 export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
   const config: WalletConfig = {
+    recommended: options?.recommended,
     create(createOptions) {
       if (config.isInstalled && config.isInstalled()) {
         return rainbowWallet();
