@@ -15,10 +15,14 @@ export function useENS() {
   const chainId = useChainId();
   const supportedChains = useSupportedChains();
   const { clientId } = useWalletContext();
-  const ethereum = supportedChains.find((chain) => chain.chainId === 1);
+  let chain = supportedChains.find((chain) => chain.chainId === 1);
+
+  if (chainId === Base.chainId) {
+    chain = Base;
+  }
 
   return useQuery({
-    queryKey: ["ens", address, ethereum?.rpc],
+    queryKey: ["ens", address, chain?.rpc],
     cacheTime: 60 * 60 * 24 * 1000, // 24h
     staleTime: 60 * 60 * 1000, // 1h
     retry: false,
@@ -28,29 +32,19 @@ export function useENS() {
         return null;
       }
 
-      let provider = null;
-      if (chainId == 8453) {
-        // if the active chain is Base, then establish a provider using Base Name Service to resolve addresses and avatars
-        provider = new providers.JsonRpcProvider("https://mainnet.base.org/", {
-          name: "base",
-          chainId: chainId,
-          ensAddress: "0xeCBaE6E54bAA669005b93342E5650d5886D54fc7",
-        });
-      } else {
-        provider = getChainProvider(1, {
-          clientId,
-          supportedChains: ethereum
-            ? [
-                {
-                  chainId: 1,
-                  rpc: [...ethereum.rpc],
-                  nativeCurrency: ethereum.nativeCurrency,
-                  slug: ethereum.slug,
-                },
-              ]
-            : undefined,
-        });
-      }
+      const provider = getChainProvider(chain?.chainId || 1, {
+        clientId,
+        supportedChains: chain
+          ? [
+              {
+                chainId: chain.chainId,
+                rpc: [...chain.rpc],
+                nativeCurrency: chain.nativeCurrency,
+                slug: chain.slug,
+              },
+            ]
+          : undefined,
+      });
 
       if (provider instanceof providers.JsonRpcProvider) {
         const [ens, avatarUrl] = await Promise.all([

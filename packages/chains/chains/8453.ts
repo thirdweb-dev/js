@@ -2,6 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 8453,
+  "ens": {
+    "registry": "0xeCBaE6E54bAA669005b93342E5650d5886D54fc7"
+  },
   "explorers": [
     {
       "name": "basescan",

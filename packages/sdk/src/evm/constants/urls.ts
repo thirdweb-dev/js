@@ -4,7 +4,7 @@ import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
 import { SDKOptionsSchema } from "../schema/sdk-options";
 import type { ChainInfo } from "../schema/shared/ChainInfo";
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import { getValidChainRPCs, Base } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
@@ -296,7 +296,15 @@ export function getProviderFromRpcUrl(
                   headers,
                   skipFetchSetup: _skipFetchSetup,
                 },
-                chainId,
+                chainId === Base.chainId
+                  ? {
+                      name: Base.name,
+                      chainId: Base.chainId,
+                      // TODO: Read bns address from Base chain data
+                      // ensAddress: Base.ens.registry,
+                      ensAddress: "0xeCBaE6E54bAA669005b93342E5650d5886D54fc7",
+                    }
+                  : chainId,
                 sdkOptions?.rpcBatchSettings,
               )
             : // Otherwise fall back to the built in json rpc batch provider
