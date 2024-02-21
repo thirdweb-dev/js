@@ -3,7 +3,7 @@ import { symbol } from "../../common/read/symbol.js";
 import { name } from "../../common/read/name.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { formatUnits } from "../../../utils/units.js";
+import { toTokens } from "../../../utils/units.js";
 
 const METHOD = "function balanceOf(address) view returns (uint256)" as const;
 
@@ -45,7 +45,7 @@ export async function balanceOf(
   return {
     value: balanceWei,
     decimals: decimals_,
-    displayValue: formatUnits(balanceWei, decimals_),
+    displayValue: toTokens(balanceWei, decimals_),
     symbol: symbol_,
     name: name_,
   };

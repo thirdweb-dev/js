@@ -5,7 +5,7 @@ import {
   // eslint-disable-next-line no-restricted-imports
   parseUnits as viemParseUnits,
 } from "viem";
-import { formatUnits, parseUnits } from "./units.js";
+import { toTokens, toUnits } from "./units.js";
 import {
   formatUnits as ethersFormatUnits,
   parseUnits as ethersParseUnits,
@@ -13,8 +13,8 @@ import {
 
 describe("formatUnits", () => {
   describe("12345678901234567890n", () => {
-    bench("thirdweb: `formatUnits`", () => {
-      formatUnits(12345678901234567890n, 18);
+    bench("thirdweb: `toTokens`", () => {
+      toTokens(12345678901234567890n, 18);
     });
 
     bench("viem: `formatUnits`", () => {
@@ -26,8 +26,8 @@ describe("formatUnits", () => {
     });
   });
   describe("40000000000000000000n", () => {
-    bench("thirdweb: `formatUnits`", () => {
-      formatUnits(40000000000000000000n, 18);
+    bench("thirdweb: `toTokens`", () => {
+      toTokens(40000000000000000000n, 18);
     });
 
     bench("viem: `formatUnits`", () => {
@@ -42,7 +42,7 @@ describe("formatUnits", () => {
 
 describe("parseUnits", () => {
   bench("thirdweb", () => {
-    parseUnits("40", 18);
+    toUnits("40", 18);
   });
 
   bench("viem", () => {

@@ -1,5 +1,5 @@
 import type { Address } from "abitype";
-import { parseUnits } from "../../../utils/units.js";
+import { toUnits } from "../../../utils/units.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
@@ -42,7 +42,7 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
         // if this fails we fall back to `18` decimals
         const d = await decimals(options).catch(() => 18);
         // turn ether into gwei
-        amount = parseUnits(options.amount.toString(), d);
+        amount = toUnits(options.amount.toString(), d);
       } else {
         amount = options.amountWei;
       }

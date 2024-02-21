@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
 import { useActiveWalletChain } from "../../providers/wallet-provider.js";
-import { parseEther } from "../../../utils/units.js";
+import { toWei } from "../../../utils/units.js";
 import { getContract } from "../../../contract/contract.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
@@ -36,7 +36,7 @@ export function useSendToken() {
           chain: activeChain,
           client,
           to: receiverAddress,
-          value: parseEther(amount),
+          value: toWei(amount),
         });
 
         const txHash = await sendTransaction.mutateAsync(sendNativeTokenTx);

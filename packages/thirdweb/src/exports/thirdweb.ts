@@ -103,14 +103,7 @@ export type { NFT } from "../utils/nft/parseNft.js";
 /**
  * UNITS
  */
-export {
-  formatEther,
-  formatGwei,
-  formatUnits,
-  parseEther,
-  parseGwei,
-  parseUnits,
-} from "../utils/units.js";
+export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 
 export {
   getSwapRoute,

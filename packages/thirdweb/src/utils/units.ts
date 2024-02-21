@@ -1,26 +1,18 @@
-const etherUnits = {
-  gwei: 9,
-  wei: 18,
-} as const;
-const gweiUnits = {
-  ether: -9,
-  wei: 9,
-} as const;
-
 /**
- * Formats a bigint value into a string representation with the specified number of decimal places.
- * @param value - The bigint value to format.
- * @param decimals - The number of decimal places to include in the formatted string.
- * @returns The formatted string representation of the value.
+ * Converts a given number of units to a string representation with a specified number of decimal places.
+ * @param units - The number of units to convert.
+ * @param decimals - The number of decimal places to include in the string representation.
+ * @returns The string representation of the converted units.
  * @example
  * ```ts
- * formatUnits(420000000000n, 9)
- * // '420'
+ * import { toTokens } from "thirdweb/utils";
+ * toTokens(1000000000000000000n, 18)
+ * // '1'
  * ```
  */
-export function formatUnits(value: bigint, decimals: number): string {
+export function toTokens(units: bigint, decimals: number): string {
   // Convert to string once and handle negativity.
-  const stringValue = value.toString();
+  const stringValue = units.toString();
   const prefix = stringValue[0] === "-" ? "-" : "";
   // Abusing that string "-" is truthy
   const absStringValue = prefix ? stringValue.slice(1) : stringValue;
@@ -51,48 +43,34 @@ export function formatUnits(value: bigint, decimals: number): string {
 }
 
 /**
- * Formats the given wei value into ether units.
- * @param wei The wei value to format.
- * @param unit The unit to format the wei value into. Defaults to 'wei'.
- * @returns The formatted value in the specified unit.
+ * Converts a value from wei to ether.
+ * @param wei The value in wei to be converted.
+ * @returns The converted value in ether.
  * @example
  * ```ts
- * formatEther(1000000000000000000n)
+ * import { toEther } from "thirdweb/utils";
+ * toEther(1000000000000000000n)
  * // '1'
  * ```
  */
-export function formatEther(wei: bigint, unit: "wei" | "gwei" = "wei") {
-  return formatUnits(wei, etherUnits[unit]);
+export function toEther(wei: bigint) {
+  return toTokens(wei, 18);
 }
 
 /**
- * Formats the given wei value into the specified unit.
- * @param wei The wei value to format.
- * @param unit The unit to format the wei value into. Defaults to 'wei'.
- * @returns The formatted value.
+ * Converts a string representation of a number with decimal places to a BigInt representation.
+ * @param tokens - The string representation of the number, including the integer and fraction parts.
+ * @param decimals - The number of decimal places to include in the BigInt representation.
+ * @returns The BigInt representation of the number.
  * @example
  * ```ts
- * formatGwei(1000000000n)
- * // '1'
+ * import { toUnits } from "thirdweb/utils";
+ * toUnits('1', 18)
+ * // 1000000000000000000n
  * ```
  */
-export function formatGwei(wei: bigint, unit: "wei" = "wei") {
-  return formatUnits(wei, gweiUnits[unit]);
-}
-
-/**
- * Parses a string value into a BigInt representation with a specified number of decimal places.
- * @param value - The string value to parse.
- * @param decimals - The number of decimal places to include in the result.
- * @returns The parsed value as a BigInt.
- * @example
- * ```ts
- * parseUnits('420', 9)
- * // 420000000000n
- * ```
- */
-export function parseUnits(value: string, decimals: number): bigint {
-  let [integerPart, fractionPart = ""] = value.split(".") as [string, string];
+export function toUnits(tokens: string, decimals: number): bigint {
+  let [integerPart, fractionPart = ""] = tokens.split(".") as [string, string];
   const prefix = integerPart.startsWith("-") ? "-" : "";
   if (prefix) {
     integerPart = integerPart.slice(1);
@@ -135,31 +113,16 @@ export function parseUnits(value: string, decimals: number): bigint {
 }
 
 /**
- * Parses a string representation of ether into its corresponding value in wei or gwei.
- * @param ether - The string representation of ether to parse.
- * @param unit - The unit to convert the ether value to. Defaults to 'wei'.
- * @returns The parsed value in the specified unit.
+ * Converts the specified number of tokens to Wei.
+ * @param tokens The number of tokens to convert.
+ * @returns The converted value in Wei.
  * @example
  * ```ts
- * parseEther('420')
- * // 420000000000000000000n
+ * import { toWei } from "thirdweb/utils";
+ * toWei('1')
+ * // 1000000000000000000n
  * ```
  */
-export function parseEther(ether: string, unit: "wei" | "gwei" = "wei") {
-  return parseUnits(ether, etherUnits[unit]);
-}
-
-/**
- * Parses the given ether value into the specified unit.
- * @param ether The ether value to parse.
- * @param unit The unit to parse the ether value into. Defaults to 'wei'.
- * @returns The parsed value in the specified unit.
- * @example
- * ```ts
- * parseGwei('420')
- * // 420000000000n
- * ```
- */
-export function parseGwei(ether: string, unit: "wei" = "wei") {
-  return parseUnits(ether, gweiUnits[unit]);
+export function toWei(tokens: string) {
+  return toUnits(tokens, 18);
 }
