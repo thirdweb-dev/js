@@ -16,8 +16,9 @@ type TrimReturnType<TValue extends Uint8Array | Hex> = TValue extends Hex
 
 function trim<TValue extends Uint8Array | Hex>(
   hexOrBytes: TValue,
-  { dir = "left" }: TrimOptions = {},
+  options: TrimOptions = {},
 ): TrimReturnType<TValue> {
+  const dir = options.dir || "left";
   let data: any =
     typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
 
@@ -54,8 +55,6 @@ type PadOptions = {
  * Pads a hexadecimal string with zeros to a specified size.
  * @param hex_ The hexadecimal string to pad.
  * @param options The padding options.
- * @param options.dir - The direction to pad the hexadecimal string. Default is "left".
- * @param options.size - The size to pad the hexadecimal string to. Default is 32.
  * @returns The padded hexadecimal string.
  * @throws Error if the resulting padded string exceeds the specified size.
  * @example
@@ -65,7 +64,8 @@ type PadOptions = {
  * console.log(paddedHex); // "0x000000000000000000000000000001a4"
  * ```
  */
-export function padHex(hex_: Hex, { dir, size = 32 }: PadOptions = {}) {
+export function padHex(hex_: Hex, options: PadOptions = {}) {
+  const { dir, size = 32 } = options;
   if (size === null) {
     return hex_;
   }

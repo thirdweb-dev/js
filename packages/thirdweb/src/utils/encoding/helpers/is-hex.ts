@@ -9,7 +9,6 @@ export type IsHexOptions = {
  * Checks if a value is a valid hexadecimal string.
  * @param value - The value to be checked.
  * @param options - Optional configuration for the validation.
- * @param options.strict - If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value must only start with "0x".
  * @returns True if the value is a valid hexadecimal string, false otherwise.
  * @example
  * ```ts
@@ -20,7 +19,7 @@ export type IsHexOptions = {
  */
 export function isHex(
   value: unknown,
-  { strict = true }: IsHexOptions = {},
+  options: IsHexOptions = {},
 ): value is Hex {
   if (!value) {
     return false;
@@ -28,5 +27,7 @@ export function isHex(
   if (typeof value !== "string") {
     return false;
   }
-  return strict ? /^0x[0-9a-fA-F]*$/.test(value) : value.startsWith("0x");
+  return options.strict
+    ? /^0x[0-9a-fA-F]*$/.test(value)
+    : value.startsWith("0x");
 }

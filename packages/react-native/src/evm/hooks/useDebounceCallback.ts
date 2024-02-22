@@ -6,7 +6,7 @@ interface Props {
 }
 
 export function useDebounceCallback({ callback, delay = 250 }: Props) {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const callbackRef = useRef(callback);
 
   useEffect(() => {
