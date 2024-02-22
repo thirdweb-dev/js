@@ -1457,9 +1457,6 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: 5.20.1
         version: 5.20.1(eslint@8.56.0)(typescript@5.3.3)
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@types/bun':
         specifier: 1.0.6
         version: 1.0.6
@@ -18953,6 +18950,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
