@@ -14,7 +14,12 @@ import {
   type BytesLike,
 } from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import {
+  NFT,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   ExtensionNotImplementedError,
@@ -956,6 +961,38 @@ export class Erc1155<
         this.lazyMintable,
         FEATURE_EDITION_LAZY_MINTABLE_V2,
       ).lazyMint.prepare(metadatas, options);
+    },
+  );
+
+  ////// ERC1155 Update Metadata Extension //////
+
+  /**
+   * Update the metadata of an NFT
+   *
+   * @remarks Update the metadata of an NFT in the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to update
+   * const tokenId = 0;
+   * // The updated metadata of the NFT
+   * const metadata = {
+   *   name: "Updated NFT",
+   *   description: "This is an updated NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * const result = await contract.erc1155.updateMetadata(tokenId, metadata);
+   * ```
+   * @twfeature ERC1155UpdateMetadata
+   */
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish, metadata: NFTMetadataInput) => {
+      // TODO handle updating regular TokenERC1155 metadata
+      return assertEnabled(
+        this.lazyMintable,
+        FEATURE_EDITION_LAZY_MINTABLE_V2,
+      ).updateMetadata.prepare(tokenId, metadata);
     },
   );
 
