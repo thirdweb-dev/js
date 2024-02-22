@@ -32,10 +32,8 @@ import { getAddress } from "../../utils/address.js";
 /**
  * Connect to Injected Wallet Provider
  * @param options - The options for connecting to the Injected Wallet Provider.
- * @returns The Wallet instance.
- * @wallet
- * @throws Error if no injected provider is available or no accounts are available.
  * @example
+ * Connecting the wallet by using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) by passing the wallet's `rdns` as `walletId`.
  * ```ts
  * import { injectedWallet } from "thirdweb/wallets";
  *
@@ -43,17 +41,24 @@ import { getAddress } from "../../utils/address.js";
  * const wallet = await injectedWallet({
  *  walletId: "io.metamask",
  * });
+ * ```
  *
- * // Using custom logic to get the provider
+ * Using custom logic to get the provider
+ * ```ts
  * const wallet = await injectedWallet({
  *  getProvider() {
  *   return window.xfi?.ethereum; // Example of XDEFI Wallet
  *  }
  * });
+ * ```
  *
+ * Connecting to `window.ethereum` provider - whichever wallet it may be
+ * ```ts
  * // Using the default `window.ethereum` provider
  * const wallet = await injectedWallet();
  * ```
+ * @wallet
+ * @returns The Wallet instance.
  */
 export function injectedWallet(options?: InjectedWalletOptions) {
   return new InjectedWallet(options);

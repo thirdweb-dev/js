@@ -8,7 +8,7 @@ import {
 } from "viem";
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { DAppMetaData, WalletMetadata } from "../types.js";
+import type { WalletMetadata } from "../types.js";
 import {
   deleteConnectParamsFromStorage,
   getSavedConnectParamsFromStorage,
@@ -37,16 +37,9 @@ import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
+import { defaultDappMetadata } from "../utils/defaultDappMetadata.js";
 
 const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0";
-// unused
-// export const defaultWCRelayUrl = "wss://relay.walletconnect.com";
-export const defaultDappMetadata: Required<DAppMetaData> = {
-  name: "thirdweb powered dApp",
-  url: "https://thirdweb.com",
-  description: "thirdweb powered dApp",
-  logoUrl: "https://thirdweb.com/favicon.ico",
-};
 
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";

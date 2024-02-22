@@ -340,7 +340,7 @@ export function tlDefault(): ThirdwebLocale {
  * })
  * ```
  *
- * Pass it to `ThirdwebProvider`'s `locale` prop to localize the thirdweb components.
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
  *
  * ```tsx
  * function Example() {
