@@ -186,6 +186,11 @@ function redirects() {
       permanent: false,
     },
     {
+      source: "/dashboard/wallets/connect",
+      destination: "/dashboard/connect/playground",
+      permanent: false,
+    },
+    {
       source: "/dashboard/infrastructure",
       destination: "/dashboard/settings/storage",
       permanent: false,
