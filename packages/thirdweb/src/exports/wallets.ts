@@ -55,13 +55,22 @@ export {
 } from "../wallets/injected/wallets/zerion.js";
 
 // wallet-connect
-export { walletConnect } from "../wallets/wallet-connect/index.js";
+export {
+  walletConnect,
+  type WalletConnect,
+} from "../wallets/wallet-connect/index.js";
 
-export type { WalletConnectConnectionOptions } from "../wallets/wallet-connect/types.js";
+export type {
+  WalletConnectConnectionOptions,
+  WalletConnectCreationOptions,
+} from "../wallets/wallet-connect/types.js";
 
 // smart
-export { smartWallet } from "../wallets/smart/index.js";
-export type { SmartWalletOptions } from "../wallets/smart/types.js";
+export { smartWallet, type SmartWallet } from "../wallets/smart/index.js";
+export type {
+  SmartWalletOptions,
+  SmartWalletConnectionOptions,
+} from "../wallets/smart/types.js";
 
 // storage
 export {
@@ -80,6 +89,7 @@ export {
   coinbaseSDKWallet,
   type CoinbaseSDKWalletOptions,
   type CoinbaseSDKWalletConnectionOptions,
+  type CoinbaseSDKWallet,
 } from "../wallets/coinbase/coinbaseSDKWallet.js";
 
 export { embeddedWallet } from "../wallets/embedded/core/wallet/index.js";
