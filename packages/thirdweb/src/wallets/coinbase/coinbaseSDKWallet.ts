@@ -1,7 +1,6 @@
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { WalletMetadata } from "../types.js";
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
-import type { CoinbaseWalletSDK as CoinbaseWalletSDKConstructor } from "@coinbase/wallet-sdk";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import {
   type SignTypedDataParameters,
@@ -34,32 +33,100 @@ type SavedConnectParams = {
   chain?: Chain;
 };
 
-type CoinbaseWalletSDKOptions = Readonly<
-  ConstructorParameters<typeof CoinbaseWalletSDKConstructor>[0]
->;
+/**
+ * Options for connecting to the CoinbaseSDK Wallet
+ */
+export type CoinbaseSDKWalletConnectionOptions = {
+  /**
+   * Whether to use Dark theme in the Coinbase Wallet "Onboarding Overlay" popup.
+   *
+   * This popup is opened when `headlessMode` is set to `true`.
+   */
+  darkMode?: boolean;
 
-export type CoinbaseSDKWalletConnectionOptions = Omit<
-  CoinbaseWalletSDKOptions,
-  "appName"
-> & {
+  /**
+   * Whether to open Coinbase "Onboarding Overlay" popup or not when connecting to the wallet.
+   * By default it is enabled if Coinbase Wallet extension is NOT installed and prompts the users to connect to the Coinbase Wallet mobile app by scanning a QR code
+   *
+   * If you want to render the QR code yourself, you should set this to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
+   * ```ts
+   * const account = await wallet.connect({
+   *  headlessMode: false,
+   *  onUri: (uri) => {
+   *    // render the QR code with `uri`
+   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
+   *  }
+   * })
+   * ```
+   */
+  headlessMode?: boolean;
+
+  /**
+   * Whether or not to reload dapp automatically after disconnect, defaults to `true`
+   */
+  reloadOnDisconnect?: boolean;
+
+  /**
+   * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+   * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain.
+   *
+   * ```ts
+   * import { defineChain } from "thirdweb";
+   * const mumbai = defineChain({
+   *  id: 80001,
+   * });
+   *
+   * const address = await wallet.connect({ chain: mumbai })
+   */
   chain?: Chain;
+
+  /**
+   * This is only relevant when the Coinbase Extension is not installed and you do not want to use the default Coinbase Wallet "Onboarding Overlay" popup.
+   *
+   * If you want to render the QR code yourself, you need to set `headlessMode` to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
+   * ```ts
+   * const account = await wallet.connect({
+   *  headlessMode: false,
+   *  onUri: (uri) => {
+   *    // render the QR code with `uri`
+   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
+   *  }
+   * })
+   * ```
+   * Callback to be called with QR code URI
+   * @param uri - The URI for rendering QR code
+   */
   onUri?: (uri: string | null) => void;
 };
 
 export type CoinbaseSDKWalletOptions = {
+  /**
+   * Name of your application. This will be displayed in the Coinbase Wallet app/extension when connecting to your app.
+   */
   appName: string;
+
+  /**
+   * URL to your application's logo. This will be displayed in the Coinbase Wallet app/extension when connecting to your app.
+   */
+  appLogoUrl?: string | null;
 };
 
 /**
- * Connect to Coinbase wallet using the Coinbase SDK which allows connecting to Coinbase Wallet extension or mobile app.
- * @param options - The options for connecting to the Coinbase Wallet SDK.
+ * Connect to Coinbase wallet using the Coinbase SDK which allows connecting to Coinbase Wallet extension and Coinbase Wallet Mobile app by scanning a QR code.
+ * @param options - Options for connecting to the Coinbase Wallet SDK.
+ * Refer to [CoinbaseSDKWalletOptions](https://portal.thirdweb.com/references/typescript/v5/CoinbaseSDKWalletOptions)
  * @example
  * ```ts
- * const wallet = coinbaseSDKWallet()
+ * const wallet = coinbaseSDKWallet({
+ *  appName: "My awesome app"
+ * })
  * ```
  * @returns A `CoinbaseSDKWallet` instance.
  */
-export function coinbaseSDKWallet(options: CoinbaseWalletSDKOptions) {
+export function coinbaseSDKWallet(options: CoinbaseSDKWalletOptions) {
   return new CoinbaseSDKWallet(options);
 }
 
@@ -74,12 +141,14 @@ export class CoinbaseSDKWallet implements Wallet {
   metadata: WalletMetadata;
 
   /**
-   * Create a new CoinbaseSDKWallet instance
-   * @param options - Options for connecting to the Coinbase Wallet SDK.
+   * Create instance of `CoinbaseSDKWallet`
+   * @param options - Options for creating the `CoinbaseSDKWallet` instance.
+   * Refer to [CoinbaseSDKWalletOptions](https://portal.thirdweb.com/references/typescript/v5/CoinbaseSDKWalletOptions) for details.
    * @example
    * ```ts
    * const wallet = new CoinbaseSDKWallet({
-   *  appName: "My App"
+   *  appName: "My App",
+   *  appLogoUrl: "https://path/to/app/logo.png"
    * })
    * ```
    * @returns A `CoinbaseSDKWallet` instance.
@@ -90,8 +159,8 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Get the `chain` that the wallet is connected to.
-   * @returns The chain
+   * Get the `Chain` object of the blockchain that the wallet is connected to.
+   * @returns The `Chain` object
    * @example
    * ```ts
    * const chain = wallet.getChain();
@@ -102,8 +171,8 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Get the connected `Account` from the wallet.
-   * @returns The connected account
+   * Get the connected `Account`
+   * @returns The connected `Account` object
    * @example
    * ```ts
    * const account = wallet.getAccount();
@@ -114,11 +183,41 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Connect to the Coinbase Wallet
-   * @param options - The options for connecting to the Injected Wallet Provider.
+   * Connect to the Coinbase Wallet extension or mobile app
+   * @param options - The options for connecting the wallet.
+   * Refer to [CoinbaseSDKWalletConnectionOptions](https://portal.thirdweb.com/references/typescript/v5/CoinbaseSDKWalletConnectionOptions) for details.
    * @example
+   * Connect to the Coinbase Wallet Provider with no options.
    * ```ts
-   * const account = await wallet.connect()
+   * // no options
+   * const address = await wallet.connect()
+   * ```
+   *
+   * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+   * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain.
+   *
+   * ```ts
+   * import { defineChain } from "thirdweb";
+   * const mumbai = defineChain({
+   *  id: 80001,
+   * });
+   *
+   * const address = await wallet.connect({ chain: mumbai })
+   * ```
+   *
+   * If the Coinbase Extension is not installed - By default, the Coinbase Wallet SDK will open the Coinbase Wallet "Onboarding Overlay" popup to prompt the user to connect to the Coinbase Wallet mobile app by scanning a QR code.
+   * If you want to render the QR code yourself, you need to set `headlessMode` to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
+   * ```ts
+   * const account = await wallet.connect({
+   *  headlessMode: false,
+   *  onUri: (uri) => {
+   *    // render the QR code with `uri`
+   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
+   *  }
+   * })
    * ```
    * @returns A Promise that resolves to connected `Account` object
    */
@@ -144,7 +243,6 @@ export class CoinbaseSDKWallet implements Wallet {
     const connectedChainId = (await provider.request({
       method: "eth_chainId",
     })) as string | number;
-    // TODO check what's type of connectedChainId
 
     const chainId = normalizeChainId(connectedChainId);
     this.chain = defineChain(chainId);
@@ -170,6 +268,9 @@ export class CoinbaseSDKWallet implements Wallet {
     return this.onConnect(address);
   }
 
+  /**
+   * @internal
+   */
   private onConnect(address: string) {
     const wallet = this;
 
@@ -251,12 +352,14 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Auto connect to saved Coinbase Wallet session
+   * Auto connect to the Coinbase wallet. This only succeeds if the Coinbase wallet provider is still connected.
+   *
+   * Auto connect is useful to avoid asking the user to connect to the wallet provider again on page refresh or revisit.
    * @example
    * ```ts
-   * await wallet.autoConnect();
+   * const account = await wallet.autoConnect();
    * ```
-   * @returns A Promise that resolves to the connected `Account` object
+   * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect() {
     const savedParams: SavedConnectParams | null =
@@ -287,11 +390,23 @@ export class CoinbaseSDKWallet implements Wallet {
   }
 
   /**
-   * Switch chain in connected wallet
-   * @param chain - The chain to switch to
+   * Switch the wallet to a different blockchain by passing the `Chain` object of it.
+   * If the wallet already has the capability to connect to the blockchain, it will switch to it. If not, Wallet will prompt the user to confirm adding a new blockchain to the wallet.
+   * This action may require the user to confirm the switch chain request or add a new blockchain request.
+   *
+   * This method throws an error if the wallet fails to do the above or user denies the switch chain request or denies adding a new blockchain request.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain.
+   * @param chain - The `Chain` object of the blockchain
    * @example
    * ```ts
-   * await wallet.switchChain(ethereum)
+   * import { defineChain } from "thirdweb";
+   * const mumbai = defineChain({
+   *  id: 80001,
+   * });
+   *
+   * await wallet.switchChain(mumbai)
    * ```
    */
   async switchChain(chain: Chain) {
@@ -330,6 +445,9 @@ export class CoinbaseSDKWallet implements Wallet {
     }
   }
 
+  /**
+   * @internal
+   */
   private async initProvider(options: CoinbaseSDKWalletConnectionOptions) {
     const { CoinbaseWalletSDK } = await import("@coinbase/wallet-sdk");
     const client = new CoinbaseWalletSDK({
@@ -347,11 +465,19 @@ export class CoinbaseSDKWallet implements Wallet {
     return this.provider;
   }
 
+  /**
+   * NOTE: must be a arrow function
+   * @internal
+   */
   private onChainChanged = (newChain: number | string) => {
     const chainId = normalizeChainId(newChain);
     this.chain = defineChain(chainId);
   };
 
+  /**
+   * NOTE: must be a arrow function
+   * @internal
+   */
   private onAccountsChanged = (accounts: string[]) => {
     if (accounts.length === 0) {
       this.onDisconnect();
@@ -360,6 +486,10 @@ export class CoinbaseSDKWallet implements Wallet {
     }
   };
 
+  /**
+   * NOTE: must be a arrow function
+   * @internal
+   */
   private onDisconnect = () => {
     const provider = this.provider;
     if (provider) {
@@ -373,7 +503,7 @@ export class CoinbaseSDKWallet implements Wallet {
   };
 
   /**
-   * Disconnect from the Coinbase Wallet and clear the session
+   * Disconnect from the Coinbase Wallet
    * @example
    * ```ts
    * await wallet.disconnect()

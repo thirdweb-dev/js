@@ -2,7 +2,10 @@ export { darkTheme, lightTheme } from "../react/ui/design-system/index.js";
 export type { Theme, ThemeOverrides } from "../react/ui/design-system/index.js";
 
 export { ConnectButton } from "../react/ui/ConnectWallet/ConnectWallet.js";
-export { ConnectEmbed } from "../react/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "../react/ui/ConnectWallet/Modal/ConnectEmbed.js";
 
 export type {
   ConnectButtonProps,
@@ -108,3 +111,9 @@ export {
 } from "../react/hooks/pay/useSwapStatus.js";
 
 export { defaultWallets } from "../react/wallets/defaultWallets.js";
+
+export { en } from "../react/ui/locales/en.js";
+export { es } from "../react/ui/locales/es.js";
+export { ja } from "../react/ui/locales/ja.js";
+export { tl } from "../react/ui/locales/tl.js";
+export type { ThirdwebLocale } from "../react/ui/locales/types.js";

@@ -7,6 +7,7 @@ import type { WelcomeScreen } from "./screens/types.js";
 
 /**
  * Options for configuring the `ConnectButton`'s Connect Button
+ * @connectWallet
  */
 export type ConnectButton_connectButtonOptions = {
   /**
@@ -41,6 +42,7 @@ export type ConnectButton_connectButtonOptions = {
 
 /**
  * Options for configuring the `ConnectButton`'s Details Modal
+ * @connectWallet
  */
 export type ConnectButton_detailsModalOptions = {
   /**
@@ -106,6 +108,7 @@ export type ConnectButton_detailsModalOptions = {
 
 /**
  * Options for configuring the `ConnectButton`'s Details Button
+ * @connectWallet
  */
 export type ConnectButton_detailsButtonOptions = {
   /**
@@ -151,6 +154,7 @@ export type ConnectButton_detailsButtonOptions = {
 
 /**
  * Options for configuring the `ConnectButton`'s Connect Modal
+ * @connectWallet
  */
 export type ConnectButton_connectModalOptions = {
   /**
@@ -257,16 +261,33 @@ export type ConnectButton_connectModalOptions = {
 };
 
 /**
- * Props for the `ConnectButton` component
+ * Props for the [`ConnectButton`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton) component
+ * @connectWallet
  */
 export type ConnectButtonProps = {
   /**
-   * chain of the blockchain that your app operates on.
+   * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to
    *
-   * If a chain is specified, Wallet will be prompted to switch to given chain after connecting if it is not already connected to it. This ensures that the wallet is connected to the correct network before interacting with your app.
+   * If a `chain` is not specified, Wallet will be connected to whatever is the default set in the wallet.
+   *
+   * If a `chain` is specified, Wallet will be prompted to switch to given chain after connection if it is not already connected to it.
+   * This ensures that the wallet is connected to the correct blockchain before interacting with your app.
+   *
+   * The `ConnectButton` also shows a "Switch Network" button until the wallet is connected to the specified chain. Clicking on the "Switch Network" button triggers the wallet to switch to the specified chain.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
    * @example
    * ```tsx
-   * <ConnectButton chainId={polygon} />
+   * import { defineChain } from "thirdweb/react";
+   *
+   * const polygon = defineChain({
+   *  id: 137,
+   * });
+   *
+   * function Example() {
+   *  return <div> <ConnectButton chain={polygon} /> </div>
+   * }
    * ```
    */
   chain?: Chain;
@@ -274,22 +295,37 @@ export type ConnectButtonProps = {
   /**
    * Array of chains that your app supports.
    *
-   * This is only relevant if your app is a multi-chain app and works across multiple blockchains. If your app only works on a single blockchain, you should only specify the `chainId` prop.
+   * This is only relevant if your app is a multi-chain app and works across multiple blockchains.
+   * If your app only works on a single blockchain, you should only specify the `chain` prop.
    *
    * Given list of chains will used in various ways:
-   * - They will be displayed in the network selector in the `ConnectButton`'s modal
-   * - They will be sent to wallet at the time of connection if the wallet supports it so that users can switch between the chains post connection
+   * - They will be displayed in the network selector in the `ConnectButton`'s details modal post connection
+   * - They will be sent to wallet at the time of connection if the wallet supports requesting multiple chains ( example: WalletConnect ) so that users can switch between the chains post connection easily
    *
    * ```tsx
    * <ConnectButton chains={[ethereum, polygon, optimism]} />
+   * ```
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
+   *
+   * ```tsx
+   * import { defineChain } from "thirdweb/react";
+   *
+   * const polygon = defineChain({
+   *   id: 137,
+   * });
    * ```
    */
   chains?: Chain[];
 
   /**
-   * Set the theme for the button and modal. By default it is set to `"dark"`
+   * Set the theme for the `ConnectButton` component. By default it is set to `"dark"`
    *
-   * theme can be set to either `"dark"`, `"light"` or a custom theme object. You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
    * @example
    * ```ts
    * import { lightTheme } from "thirdweb/react";
@@ -299,17 +335,48 @@ export type ConnectButtonProps = {
    *    modalBg: 'red'
    *  }
    * })
+   *
+   * function Example() {
+   *  return <ConnectButton theme={customTheme} />
+   * }
    * ```
    */
   theme?: "dark" | "light" | Theme;
 
   /**
    * Configurations for the button element that is shown when wallet is not connected
+   * @example
+   * ```tsx
+   * <ConnectButton
+   *   connectButton={{
+   *     connectButton: {
+   *       label: "Connect",
+   *       className: "my-custom-class",
+   *       style: {
+   *         borderRadius: "10px",
+   *       },
+   *     },
+   *   }}
+   * />;
+   * ```
    */
   connectButton?: ConnectButton_connectButtonOptions;
 
   /**
-   * Configuration for the "Switch Network" button. This button is rendered when the wallet is connected, but it is not connected to the `chainId` prop provided in `ConnectButton` component
+   * Configuration for the "Switch Network" button.
+   * This button is rendered when the wallet is connected, but it is not connected to the `chain` prop provided in `ConnectButton` component
+   * @example
+   * ```tsx
+   * <ConnectButton
+   *   switchButton={{
+   *     label: "Wrong Network",
+   *     className: "my-custom-class",
+   *     style: {
+   *       backgroundColor: "red",
+   *     },
+   *   }}
+   * />;
+   * ```
    */
   switchButton?: {
     /**
@@ -330,21 +397,36 @@ export type ConnectButtonProps = {
 
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
+   * Refer to the [`ConnectButton_connectModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_connectModalOptions) type for more details
+   * @example
+   * ```tsx
+   * <ConnectButton connectModal={{ size: "compact" }} />
    */
   connectModal?: ConnectButton_connectModalOptions;
 
   /**
    * Configurations for the Details Button that is shown when wallet is connected
+   * Refer to the [`ConnectButton_detailsButtonOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_detailsButtonOptions) type for more details
+   * @example
+   * ```tsx
+   * <ConnectButton
+   *   detailsButton={{
+   *     className: "my-custom-class",
+   *     style: { borderRadius: "10px" },
+   *   }}
+   * />;
+   * ```
    */
   detailsButton?: ConnectButton_detailsButtonOptions;
 
   /**
    * Configurations for the Details Modal that is shown when wallet is connected and user clicks on the details button to see the connected wallet details
+   * Refer to the [`ConnectButton_detailsModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_detailsModalOptions) type for more details
    */
   detailsModal?: ConnectButton_detailsModalOptions;
 
   /**
-   * Customize the tokens shown in the "Send Funds" screen for various networks.
+   * Customize the tokens shown in the "Send Funds" screen in Details Modal for various networks.
    *
    * By default, The "Send Funds" screen shows a few popular tokens for default chains and the native token. For other chains it only shows the native token.
    * @example

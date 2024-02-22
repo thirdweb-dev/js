@@ -17,12 +17,13 @@ export type SmartWalletConfigOptions = Omit<
  * @example
  * ```tsx
  * <ThirdwebProvider
- *  client={client}>
- *    wallets={[
- *      smartWalletConfig(metamaskConfig(), smartWalletOptions),
- *      smartWalletConfig(coinbaseConfig(), smartWalletOptions)
- *    ]}
- *  <App />
+ *   client={client}
+ *   wallets={[
+ *     smartWalletConfig(metamaskConfig(), smartWalletOptions),
+ *     smartWalletConfig(coinbaseConfig(), smartWalletOptions),
+ *   ]}
+ * >
+ *   <App />
  * </ThirdwebProvider>
  * ```
  * @returns WalletConfig object to be passed into `ThirdwebProvider`

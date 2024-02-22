@@ -5,28 +5,29 @@
  * ### Custom React component
  * ```tsx
  * <ConnectButton
- *  welcomeScreen={() => <div style={{
- *    height: '100%',
- *  }}>
- *    ...
- *  </div>}
- * />
+ *   connectModal={{
+ *     welcomeScreen: () => <CustomComponent />,
+ *   }}
+ * />;
  * ```
  *
  * ### Custom title, subtitle and image
  * ```tsx
  * <ConnectButton
- *  welcomeScreen={{
- *    title: 'Custom Title',
- *    subtitle: 'Custom Subtitle',
- *    img: {
- *      src: 'https://example.com/image.png',
- *      width: 100,
- *      height: 100,
- *    }
- *  })
- * />
+ *   connectModal={{
+ *     welcomeScreen: {
+ *       title: "Custom Title",
+ *       subtitle: "Custom Subtitle",
+ *       img: {
+ *         src: "https://example.com/image.png",
+ *         width: 100,
+ *         height: 100,
+ *       },
+ *     },
+ *   }}
+ * />;
  * ```
+ * @connectWallet
  */
 export type WelcomeScreen =
   | {

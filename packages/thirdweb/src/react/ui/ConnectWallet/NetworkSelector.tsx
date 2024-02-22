@@ -63,6 +63,9 @@ type NetworkSelectorChainProps = {
   close?: () => void;
 };
 
+/**
+ * @connectWallet
+ */
 export type NetworkSelectorProps = {
   /**
    * Chains to be displayed as "Popular"

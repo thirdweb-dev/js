@@ -27,17 +27,60 @@ import {
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { Chain } from "viem";
 
-type ConnectEmbedProps = {
+export type ConnectEmbedProps = {
   /**
-   * Chain Id to connect to
+   * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to
+   *
+   * If a `chain` is not specified, Wallet will be connected to whatever is the default set in the wallet.
+   *
+   * If a `chain` is specified, Wallet will be prompted to switch to given chain after connection if it is not already connected to it.
+   * This ensures that the wallet is connected to the correct blockchain before interacting with your app.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
+   * @example
+   * ```tsx
+   * import { defineChain } from "thirdweb/react";
+   *
+   * const polygon = defineChain({
+   *  id: 137,
+   * });
+   *
+   * function Example() {
+   *  return <div> <ConnectEmbed chain={polygon} /> </div>
+   * }
+   * ```
    */
-  chainId?: number | bigint;
+  chain?: Chain;
 
   /**
-   * List of all chains that the app supports
+   * Array of chains that your app supports.
+   *
+   * This is only relevant if your app is a multi-chain app and works across multiple blockchains.
+   * If your app only works on a single blockchain, you should only specify the `chain` prop.
+   *
+   * Given list of chains will used in various ways:
+   * - They will be displayed in the network selector in the `ConnectEmbed`'s details modal post connection
+   * - They will be sent to wallet at the time of connection if the wallet supports requesting multiple chains ( example: WalletConnect ) so that users can switch between the chains post connection easily
+   *
+   * ```tsx
+   * <ConnectEmbed chains={[ethereum, polygon, optimism]} />
+   * ```
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
+   *
+   * ```tsx
+   * import { defineChain } from "thirdweb/react";
+   *
+   * const polygon = defineChain({
+   *   id: 137,
+   * });
+   * ```
    */
-  chains?: bigint[];
+  chains?: Chain[];
 
   /**
    * Class name to be added to the root element of ConnectEmbed
@@ -45,21 +88,25 @@ type ConnectEmbedProps = {
   className?: string;
 
   /**
-   * theme for the ConnectEmbed
+   * Set the theme for the `ConnectEmbed` component. By default it is set to `"dark"`
    *
-   * If a theme is set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
-   *
-   * theme can be set to either "dark" or "light" or a custom theme object.
-   *
-   * You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
    * @example
    * ```ts
    * import { lightTheme } from "thirdweb/react";
+   *
    * const customTheme = lightTheme({
    *  colors: {
    *    modalBg: 'red'
    *  }
    * })
+   *
+   * function Example() {
+   *  return <ConnectEmbed theme={customTheme} />
+   * }
    * ```
    */
   theme?: "dark" | "light" | Theme;
@@ -123,7 +170,6 @@ type ConnectEmbedProps = {
    *  }}
    * />
    * ```
-   *
    */
   onConnect?: (wallet: Wallet) => void;
 
@@ -233,70 +279,9 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  * }
  * ```
  * @param props -
- * The props for the component.
+ * The props for the `ConnectEmbed` component.
  *
- * ### className
- * Class name to be added to the root element of ConnectEmbed
- *
- * ### theme
- * theme for the ConnectEmbed
- *
- * If a theme is set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component, it will be used as the default theme for all thirdweb components, else the default will be "dark"
- *
- * theme can be set to either "dark" or "light" or a custom theme object.
- *
- * You can also import `lightTheme` or `darkTheme` functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
- *
- * ```ts
- * import { lightTheme } from "thirdweb/react";
- * const customTheme = lightTheme({
- *  colors: {
- *    modalBg: 'red'
- *  }
- * })
- * ```
- *
- * ### style
- * CSS styles to be applied to the root element of ConnectEmbed
- *
- * ### termsOfServiceUrl
- * If provided, Embed will show a Terms of Service message at the bottom with below link
- *
- * ### privacyPolicyUrl
- * If provided, Embed will show a Privacy Policy message at the bottom with below link
- *
- * ### auth
- * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/auth) after connecting their wallet.
- *
- * This requires the `authConfig` prop to be set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
- *
- * The `auth` prop accepts an object with the following properties:
- * - `loginOptional` - specify whether signing in is optional or not. By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
- * - `onLogin` - Callback to be called after user signs in with their wallet
- * - `onLogout` - Callback to be called after user signs out
- *
- * ### onConnect
- * Callback to be called on successful connection of wallet
- *
- * ```tsx
- * <ConnectEmbed
- *  onConnect={() => {
- *    console.log("wallet connected")
- *  }}
- * />
- * ```
- *
- * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
- *
- * ```tsx
- * <ConnectEmbed
- *  auth={{
- *   onLogin: () => {
- *     console.log("wallet connected and signed in")
- *   }
- *  }}
- * />
- * ```
+ * Refer to the [`ConnectEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps) type for more details
  * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {

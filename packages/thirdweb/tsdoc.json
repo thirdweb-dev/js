@@ -40,6 +40,14 @@
     {
       "tagName": "@walletConfig",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletConnection",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletUtils",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -52,6 +60,8 @@
     "@theme": true,
     "@locale": true,
     "@component": true,
-    "@walletConfig": true
+    "@walletConfig": true,
+    "@walletConnection": true,
+    "@walletUtils": true
   }
 }

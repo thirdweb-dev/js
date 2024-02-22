@@ -14,9 +14,12 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { useState } from "react";
 
-export type TransactionButtonProps = React.PropsWithChildren<{
+/**
+ * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
+ */
+export type TransactionButtonProps = {
   /**
-   * The transaction to be sent when the button is clicked
+   * The transaction object of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
   transaction: PreparedTransaction;
   /**
@@ -26,6 +29,7 @@ export type TransactionButtonProps = React.PropsWithChildren<{
   /**
    * Callback to be called when the transaction is successful
    * @param transactionHash - The object of type [`WaitForReceiptOptions`](https://portal.thirdweb.com/references/typescript/v5/WaitForReceiptOptions)
+   * @param receipt - The transaction receipt object of type [`TransactionReceipt`](https://portal.thirdweb.com/references/typescript/v5/TransactionReceipt)
    */
   onSuccess?: (
     transactionHash: WaitForReceiptOptions,
@@ -48,12 +52,15 @@ export type TransactionButtonProps = React.PropsWithChildren<{
    * The style to apply to the button element for custom styling
    */
   style?: React.CSSProperties;
-}>;
+  /**
+   * The `React.ReactNode` to be rendered inside the button
+   */
+  children: React.ReactNode;
+};
 
 /**
  * TransactionButton component is used to render a button that triggers a transaction.
- * It handles switching chains if the connected wallet is on a different chain than the transaction.
- * It also estimates gas and displays a loading spinner while the transaction is pending.
+ * - It shows a "Switch Network" button if the connected wallet is on a different chain than the transaction.
  * @param props - The props for this component.
  * Refer to [TransactionButtonProps](https://portal.thirdweb.com/references/typescript/v5/TransactionButtonProps) for details.
  * @example
@@ -68,7 +75,7 @@ export type TransactionButtonProps = React.PropsWithChildren<{
  * ```
  * @component
  */
-export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
+export function TransactionButton(props: TransactionButtonProps) {
   const {
     children,
     transaction,
@@ -152,4 +159,4 @@ export const TransactionButton: React.FC<TransactionButtonProps> = (props) => {
       <Spinner size="md" color="primaryButtonText" />
     </Button>
   );
-};
+}

@@ -35,7 +35,6 @@ export const ConnectModalContent = (props: {
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
   // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
-  // const setActiveWalletConnectionStatus = useSetActiveWalletConnectionStatus();
   // const activeWallet = useActiveWallet();
   const { connect } = useConnect();
 

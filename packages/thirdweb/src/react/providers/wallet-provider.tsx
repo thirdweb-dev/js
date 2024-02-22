@@ -11,6 +11,7 @@ import type { Wallet } from "../../wallets/interfaces/wallet.js";
  *
  * const activeAccount = useActiveAccount();
  * ```
+ * @walletConnection
  */
 export function useActiveAccount() {
   const store = connectionManager.activeAccount;
@@ -26,6 +27,7 @@ export function useActiveAccount() {
  *
  * const wallet = useActiveWallet();
  * ```
+ * @walletConnection
  */
 export function useActiveWallet() {
   const store = connectionManager.activeWallet;
@@ -44,6 +46,7 @@ export function useActiveWallet() {
  * // later in your code
  * <button onClick={() => switchChain(chainId)}>Switch Chain</button>
  * ```
+ * @walletConnection
  */
 export function useSwitchActiveWalletChain() {
   return connectionManager.switchActiveWalletChain;
@@ -58,6 +61,7 @@ export function useSwitchActiveWalletChain() {
  *
  * const chainId = useActiveWalletChain();
  * ```
+ * @walletConnection
  */
 export function useActiveWalletChain() {
   const store = connectionManager.activeWalletChain;
@@ -73,6 +77,7 @@ export function useActiveWalletChain() {
  *
  * const accounts = useConnectedAccounts();
  * ```
+ * @walletConnection
  */
 export function useConnectedWallets() {
   const store = connectionManager.connectedWallets;
@@ -91,6 +96,7 @@ export function useConnectedWallets() {
  * // later in your code
  * setActiveAccount(account);
  * ```
+ * @walletConnection
  */
 export function useSetActiveWallet() {
   return connectionManager.setActiveWallet;
@@ -124,6 +130,7 @@ export function useSetActiveWallet() {
  *   );
  * }
  * ```
+ * @walletConnection
  */
 export function useConnect() {
   const { setActiveWallet } = connectionManager;
@@ -175,6 +182,7 @@ export function useConnect() {
  *   );
  * }
  * ```
+ * @walletConnection
  * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
@@ -195,6 +203,7 @@ export function useDisconnect() {
  * }
  * ```
  * @returns The active wallet's connection status.
+ * @walletConnection
  */
 export function useActiveWalletConnectionStatus() {
   const store = connectionManager.activeWalletConnectionStatus;
@@ -213,6 +222,7 @@ export function useActiveWalletConnectionStatus() {
  * }
  * ```
  * @returns The active wallet's connection status.
+ * @internal
  */
 export function useSetActiveWalletConnectionStatus() {
   return connectionManager.activeWalletConnectionStatus.setValue;
@@ -229,6 +239,7 @@ export function useSetActiveWalletConnectionStatus() {
  * }
  * ```
  * @returns A boolean indicating if the auto connect is in progress.
+ * @walletConnection
  */
 export function useIsAutoConnecting() {
   const store = connectionManager.isAutoConnecting;

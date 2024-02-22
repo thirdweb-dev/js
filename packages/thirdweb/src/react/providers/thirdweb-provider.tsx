@@ -19,22 +19,22 @@ import {
   type WaitForReceiptOptions,
 } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { DAppMetaData } from "../../wallets/types.js";
-import { defaultDappMetadata } from "../../wallets/wallet-connect/index.js";
 import { isBaseTransactionOptions } from "../../transaction/types.js";
+import { defaultDappMetadata } from "../../wallets/utils/defaultDappMetadata.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client and Wallet Connection Manager.
  * To you thirdweb React SDK's hooks and components, you have to wrap your App component in a ThirdwebProvider.
  *
- * `ThirdwebProvider` requires a `client` prop which you can create using the `createClient` function.  You must provide a `clientId` or `secretKey` in order to initialize a `client`.
+ * `ThirdwebProvider` requires a `client` prop which you can create using the `createThirdwebClient` function.  You must provide a `clientId` or `secretKey` in order to initialize a `client`.
  * You can create an Api key for free at from the [Thirdweb Dashboard](https://thirdweb.com/create-api-key).
  * @param props - The props for the ThirdwebProvider
  * @example
  * ```jsx
- * import { createClient } from "thirdweb";
+ * import { createThirdwebClient } from "thirdweb";
  * import { ThirdwebProvider } from "thirdweb/react";
  *
- * const client = createClient({
+ * const client = createThirdwebClient({
  *  clientId: "<your_client_id>",
  * })
  *
@@ -123,14 +123,16 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
 
 export type ThirdwebProviderProps = {
   /**
-   * A client is the entry point to the thirdweb SDK. It is required for all other actions. You can create a client using the `createClient` function
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
    *
    * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
    *
    * ```tsx
-   * import { createClient } from "thirdweb";
+   * import { createThirdwebClient } from "thirdweb";
    *
-   * const client = createClient({
+   * const client = createThirdwebClient({
    *  clientId: "<your_client_id>",
    * })
    * ```
@@ -168,22 +170,34 @@ export type ThirdwebProviderProps = {
    *  )
    * }
    * ```
+   *
+   * If no wallets are specified. Below wallets will be used by default:
+   *
+   * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
+   * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
+   * - [Coinbase Wallet](https://portal.thirdweb.com/references/typescript/v5/coinbaseConfig)
+   * - [WalletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnectConfig)
+   * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
+   * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
    */
   wallets?: WalletConfig[];
 
   /**
    * When the user has connected their wallet to your site, this flag determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
    *
-   * Defaults to `true`
+   * By default it is set to `true`
    */
   autoConnect?: boolean;
 
   /**
-   * locale object contains text used for all thirdweb components
+   * `locale` prop allows you to change the language used in UI components or override the texts used in various thirdweb UI components.
    *
-   * It allows you to change the language used in UI components or override the texts used in the UI
+   * Below locale functions are available out of the box, but you can add support for any language you want by passing an object of type [`ThirdwebLocale`](https://portal.thirdweb.com/references/typescript/v5/ThirdwebLocale)
    *
-   * React SDK comes out of the box with English (`en`), Spanish (`es`), Japanese (`js`) and Tagalog (`tl`) locale functions, but you can add support for any language you want just by passing an object with the required strings
+   * - English - [`en`](https://portal.thirdweb.com/references/typescript/v5/en)
+   * - Spanish - [`es`](https://portal.thirdweb.com/references/typescript/v5/es)
+   * - Japanese - [`ja`](https://portal.thirdweb.com/references/typescript/v5/ja)
+   * - Tagalog - [`tl`](https://portal.thirdweb.com/references/typescript/v5/tl)
    *
    * #### Using Built-in Locales
    *
