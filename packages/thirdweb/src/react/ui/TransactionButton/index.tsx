@@ -14,6 +14,9 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { useState } from "react";
 
+/**
+ * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
+ */
 export type TransactionButtonProps = {
   /**
    * The transaction object of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
@@ -58,7 +61,6 @@ export type TransactionButtonProps = {
 /**
  * TransactionButton component is used to render a button that triggers a transaction.
  * - It shows a "Switch Network" button if the connected wallet is on a different chain than the transaction.
- * - It also estimates gas and displays a loading spinner while the transaction is pending.
  * @param props - The props for this component.
  * Refer to [TransactionButtonProps](https://portal.thirdweb.com/references/typescript/v5/TransactionButtonProps) for details.
  * @example
