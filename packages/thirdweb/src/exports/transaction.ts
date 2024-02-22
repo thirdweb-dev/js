@@ -46,3 +46,5 @@ export {
 } from "../transaction/types.js";
 
 export type { WaitForReceiptOptions } from "../transaction/actions/wait-for-tx-receipt.js";
+
+export type { TransactionReceipt } from "viem";
