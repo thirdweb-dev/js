@@ -933,6 +933,19 @@
       }
     }
   ],
+  "ERC1155UpdateMetadata": [
+    {
+      "name": "updateMetadata",
+      "summary": "Update the metadata of an NFT\n\n",
+      "remarks": "\n\nUpdate the metadata of an NFT in the connected wallet\n\n",
+      "examples": {
+        "javascript": "// The token ID of the NFT you want to update\nconst tokenId = 0;\n// The updated metadata of the NFT\nconst metadata = {\n  name: \"Updated NFT\",\n  description: \"This is an updated NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst result = await contract.erc1155.updateMetadata(tokenId, metadata);"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/typescript/sdk.bignumberish"
+      }
+    }
+  ],
   "ERC1155Enumerable": [
     {
       "name": "getAll",
