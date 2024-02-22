@@ -20,23 +20,45 @@ import { HeadlessConnectUI } from "../headlessConnectUI.js";
 import type { WalletConnectConnectionOptions } from "../../../wallets/wallet-connect/types.js";
 
 export type WalletConnectConfigOptions = {
+  /**
+   * WalletConnect requires a `projectId` that can be obtained at https://cloud.walletconnect.com/
+   *
+   * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
+   *
+   * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
+   */
   projectId?: string;
+  /**
+   * Options for Configuring the QR Code Modal appearance and behavior.
+   * This is only relevant if you are opening the official WalletConnect QR Code Modal by setting `showQrModal` to `true`.
+   */
   qrModalOptions?: WalletConnectConnectionOptions["qrModalOptions"];
+  /**
+   * If `true`, WalletConnect will be shown as "recommended" to the user in [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+   * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) 's UI
+   */
   recommended?: boolean;
 };
 
 /**
- * Integrate MetaMask wallet connection into your app.
- * @param options - Options for configuring the MetaMask wallet.
+ * Integrate WalletConnect connection in
+ * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
+ * @param options - Options for configuring the WalletConnect
+ * Refer to [`WalletConnectConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/WalletConnectConfigOptions) for more details.
  * @example
  * ```tsx
- * <ThirdwebProvider
- *  client={client}>
- *  wallets={[  metamaskConfig() ]}
- *  <App />
- * </ThirdwebProvider>
+ * import { ThirdwebProvider, walletConnect } from "thirdweb/react";
+ *
+ * function Example() {
+ *   return (
+ *     <ThirdwebProvider client={client} wallets={[walletConnect()]}>
+ *       <App />
+ *     </ThirdwebProvider>
+ *   );
+ * }
  * ```
- * @returns WalletConfig object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const walletConnectConfig = (
   options?: WalletConnectConfigOptions,

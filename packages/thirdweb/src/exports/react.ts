@@ -92,6 +92,7 @@ export {
   embeddedWalletConfig,
   type EmbeddedWalletConfigOptions,
 } from "../react/wallets/embedded/embeddedWalletConfig.js";
+export type { EmbeddedWalletAuth } from "../react/wallets/embedded/types.js";
 
 export type { SupportedTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
