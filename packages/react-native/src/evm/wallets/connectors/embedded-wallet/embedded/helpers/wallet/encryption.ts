@@ -9,12 +9,12 @@ const KEY_LENGTH = 256;
 
 export async function getEncryptionKey(
   pwd: string,
-  salt: ArrayBuffer,
+  salt: Uint8Array,
   iterationCounts: number,
 ): Promise<string> {
   const key = QuickCrypto.pbkdf2Sync(
     pwd,
-    salt,
+    salt.buffer as ArrayBuffer,
     iterationCounts,
     KEY_LENGTH,
     "sha256",
@@ -29,11 +29,11 @@ export async function getEncryptionKey(
   return base64key;
 }
 
-function bufferToBase64(arrayBuffer: ArrayBuffer): string {
+function bufferToBase64(arrayBuffer: Uint8Array): string {
   return Buffer.from(arrayBuffer).toString("base64");
 }
 
-function base64ToBuffer(base64String: string): ArrayBuffer {
+function base64ToBuffer(base64String: string): Uint8Array {
   return Buffer.from(base64String, "base64");
 }
 
@@ -61,7 +61,7 @@ export async function encryptShareWeb(
   const cipherTextWithTag = Buffer.concat([
     cipherTextBase64Buffer,
     tagHexBuffer,
-  ]);
+  ]) as Uint8Array;
   // iv is a hex string
   const ivBase64 = Buffer.from(encryptedValue.iv, "hex").toString("base64");
 
