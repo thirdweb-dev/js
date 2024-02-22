@@ -14,7 +14,7 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { useState } from "react";
 
-export type TransactionButtonProps = React.PropsWithChildren<{
+export type TransactionButtonProps = {
   /**
    * The transaction object of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
@@ -49,7 +49,11 @@ export type TransactionButtonProps = React.PropsWithChildren<{
    * The style to apply to the button element for custom styling
    */
   style?: React.CSSProperties;
-}>;
+  /**
+   * The `React.ReactNode` to be rendered inside the button
+   */
+  children: React.ReactNode;
+};
 
 /**
  * TransactionButton component is used to render a button that triggers a transaction.
