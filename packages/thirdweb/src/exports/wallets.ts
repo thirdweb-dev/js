@@ -92,7 +92,14 @@ export {
   type CoinbaseSDKWallet,
 } from "../wallets/coinbase/coinbaseSDKWallet.js";
 
-export { embeddedWallet } from "../wallets/embedded/core/wallet/index.js";
+export {
+  embeddedWallet,
+  type EmbeddedWallet,
+  type EmbeddedWalletConnectionOptions,
+} from "../wallets/embedded/core/wallet/index.js";
+export type { EmbeddedWalletCreationOptions } from "../wallets/embedded/core/wallet/types.js";
+export type { AuthenticatedUser } from "../wallets/embedded/core/wallet/types.js";
+
 export {
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,
