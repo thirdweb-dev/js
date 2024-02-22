@@ -33,11 +33,10 @@ export {
 export type { UserOperationStruct } from "@account-abstraction/contracts";
 
 /**
- * Let your users connect to a [Smart Wallet](/glossary/smart-wallet).
+ * Let your users connect to a [Smart Wallet](https://portal.thirdweb.com/glossary/smart-wallet).
  *
  * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
  *
- * This page is a full reference, explaining how to use Smart Wallet with the Wallet SDK to connect a smart wallet to your app.
  * _For a complete overview of Smart Wallets, visit the [Smart Wallet SDK documentation](https://portal.thirdweb.com/wallets/smart-wallet)_
  *
  * #### References
@@ -246,10 +245,10 @@ export class SmartWallet extends AbstractClientWallet<
    * The entrypoint contract address. Uses v0.6 by default.
    *
    * Must be a `string`.
-   * 
+   *
    * #### deployOnSign
    * Whether to deploy the smart wallet when the user signs a message. Defaults to true.
-   * 
+   *
    * Must be a `boolean`.
    *
    * #### chains

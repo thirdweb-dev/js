@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 
-export type EmbeddedWalletConfig = {
+export type EmbeddedWalletCreationOptions = {
   client: ThirdwebClient;
 };
 

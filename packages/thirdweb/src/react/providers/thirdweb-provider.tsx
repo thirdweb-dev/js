@@ -260,7 +260,20 @@ export type ThirdwebProviderProps = {
    */
   locale?: ThirdwebLocale;
   /**
-   * Metadata of the dApp that will be passed to connected wallet. Some wallets may display this information to the user.
+   * Metadata of the dApp that will be passed to connected wallet.
+   *
+   * Some wallets may display this information to the user.
+   *
+   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
    */
   dappMetadata?: DAppMetaData;
 };

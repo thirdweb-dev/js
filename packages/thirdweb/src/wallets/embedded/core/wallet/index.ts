@@ -5,7 +5,10 @@ import type {
   PreAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/type.js";
-import type { AuthenticatedUser, EmbeddedWalletConfig } from "./types.js";
+import type {
+  AuthenticatedUser,
+  EmbeddedWalletCreationOptions,
+} from "./types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
@@ -19,10 +22,19 @@ type SavedConnectParams = {
   chain: Chain;
 };
 
+export type EmbeddedWalletConnectionOptions = (
+  | MultiStepAuthArgsType
+  | SingleStepAuthArgsType
+) & {
+  chain?: Chain;
+};
+
 /**
- * Embedded Wallet
- * @param args - The args to use for the wallet
- * @returns The embedded wallet
+ * `embeddedWallet` allows users to connect using an Email or Social logins like Google, Apple, and Facebook sign-ins.
+ * This allows developers to implement seamless onboarding and login flows for their users.
+ * @param options - The options to configure the embedded wallet initialization
+ * Refer to [`EmbeddedWalletCreationOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletCreationOptions) for more details
+ * @returns The [`EmbeddedWallet`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWallet) instance
  * @example
  * ```ts
  * import { embeddedWallet } from "thirdweb/wallets";
@@ -30,13 +42,16 @@ type SavedConnectParams = {
  * const wallet = embeddedWallet({
  *   client,
  * });
+ *
  * await wallet.connect({
  *   strategy: "google",
  * });
  * ```
+ *
+ * Refer to [`EmbeddedWalletConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletConnectionOptions) to see all the available options for connecting the wallet.
  */
-export function embeddedWallet(args: EmbeddedWalletConfig) {
-  return new EmbeddedWallet(args);
+export function embeddedWallet(options: EmbeddedWalletCreationOptions) {
+  return new EmbeddedWallet(options);
 }
 
 export const embeddedWalletMetadata: WalletMetadata = {
@@ -63,17 +78,15 @@ export class EmbeddedWallet implements Wallet {
   /**
    * Create a new Embedded Wallet
    * @param options  - The options to configure the embedded wallet initialization
+   * Refer to [`EmbeddedWalletCreationOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletConfig) for more details
    * @example
    * ```ts
    * const wallet = embeddedWallet({
    *  client,
    * });
-   * await wallet.connect({
-   *   strategy: "google",
-   * });
    * ```
    */
-  constructor(options: EmbeddedWalletConfig) {
+  constructor(options: EmbeddedWalletCreationOptions) {
     this.client = options.client;
     this.metadata = embeddedWalletMetadata;
     this.isEmbeddedWallet = true;
@@ -97,19 +110,16 @@ export class EmbeddedWallet implements Wallet {
   }
 
   /**
-   * Connect Embedded Wallet
+   * Connect the Embedded Wallet
    * @param options - The options for configuring the connection
+   * Refer to [`EmbeddedWalletConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletConnectionOptions) for more details
    * @example
    * ```ts
    * const account = await wallet.connect(options);
    * ```
    * @returns A Promise that resolves to the connected `Account`
    */
-  async connect(
-    options: (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
-      chain?: Chain;
-    },
-  ): Promise<Account> {
+  async connect(options: EmbeddedWalletConnectionOptions): Promise<Account> {
     const { authenticate } = await import("../authentication/index.js");
 
     const authResult = await authenticate({
@@ -162,7 +172,7 @@ export class EmbeddedWallet implements Wallet {
   }
 
   /**
-   * Disconnect the wallet
+   * Disconnect the Embedded wallet
    * @example
    * ```ts
    * await wallet.disconnect();
@@ -212,7 +222,7 @@ export class EmbeddedWallet implements Wallet {
   }
 
   /**
-   * Get the Embedded Wallet user information. It returns the `AuthenticatedUser` object if wallet is connected. Otherwise, it returns `undefined`.
+   * Get the Embedded Wallet user information. It returns an `AuthenticatedUser` object if wallet is connected. Otherwise, it returns `undefined`.
    * @example
    * ```ts
    * const user = wallet.getUser();

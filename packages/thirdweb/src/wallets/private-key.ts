@@ -7,23 +7,50 @@ import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js
 import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyAccountOptions = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
   client: ThirdwebClient;
+
+  /**
+   * The private key to use for the account.
+   *
+   * Do not commit private key in your code and use environment variables or other secure methods to store the private key.
+   * @example
+   * ```ts
+   * const privateKey = process.env.PRIVATE_KEY;
+   * ```
+   */
   privateKey: string;
 };
 
 /**
- * Creates a private key wallet.
- * @param options - The options for creating the wallet.
- * @returns An object representing the private key wallet.
- * @wallet
+ * Get an `Account` object from a private key.
+ * @param options - The options for `privateKeyAccount`
+ * Refer to the type [`PrivateKeyAccountOptions`](https://portal.thirdweb.com/references/typescript/v5/PrivateKeyAccountOptions)
+ * @returns The `Account` object that represents the private key
  * @example
  * ```ts
- * import { privateKeyWallet } from "thirdweb/wallets"
- * const wallet = privateKeyWallet({
+ * import { privateKeyAccount } from "thirdweb/wallets"
+ *
+ * const wallet = privateKeyAccount({
  *  client,
  *  privateKey: "...",
  * });
  * ```
+ * @wallet
  */
 export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
   if (!options.privateKey.startsWith("0x")) {

@@ -22,24 +22,49 @@ import type {
 } from "./types.js";
 
 export type EmbeddedWalletConfigOptions = {
+  /**
+   * If `true`, EmbeddedWallet will be shown as "recommended" to the user in [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+   * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) 's UI
+   */
   recommended?: boolean;
+  /**
+   * Configure which authentication options to show in the Embedded Wallet UI
+   * By default all options are enabled. This includes "email", "google", "apple", "facebook"
+   *
+   * You can customize it by passing an array of type [`EmbeddedWalletAuth`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletAuth) options.
+   * @example
+   * ```tsx
+   * embeddedWalletConfig({
+   *  auth: {
+   *    options: ["email", "google"]
+   *  }
+   * })
+   * ```
+   */
   auth?: {
     options: EmbeddedWalletAuth[];
   };
 };
 
 /**
- * Integrate Embedded wallet into your app.
+ * Integrate Embedded wallet connection in
+ * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
  * @param options - Options for configuring the Embedded wallet.
+ * Refer to [`EmbeddedWalletConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletConfigOptions) for more details.
  * @example
  * ```tsx
- * <ThirdwebProvider
- *  client={client}>
- *  wallets={[ embeddedWalletConfig() ]}
- *  <App />
- * </ThirdwebProvider>
+ * import { ThirdwebProvider, embeddedWalletConfig } from "thirdweb/react";
+ *
+ * function Example() {
+ *   return (
+ *     <ThirdwebProvider client={client} wallets={[embeddedWalletConfig()]}>
+ *       <App />
+ *     </ThirdwebProvider>
+ *   );
+ * }
  * ```
- * @returns WalletConfig object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const embeddedWalletConfig = (
   options?: EmbeddedWalletConfigOptions,
@@ -58,6 +83,7 @@ export const embeddedWalletConfig = (
 
   const config: WalletConfig = {
     category: "socialLogin",
+    recommended: options?.recommended,
     metadata: {
       ...embeddedWalletMetadata,
       name:

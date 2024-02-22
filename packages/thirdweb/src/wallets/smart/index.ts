@@ -24,19 +24,36 @@ import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
 /**
- * Creates a smart wallet.
- * @param options - The options for the smart wallet.
- * @returns The created wallet.
+ * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
+ *
+ * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
+ * @param options - The options for the creating [`SmartWallet`](https://portal.thirdweb.com/references/typescript/v5/SmartWallet) instance
+ * Refer to the [`SmartWalletOptions`](https://portal.thirdweb.com/references/typescript/v5/SmartWalletOptions) type for more details
  * @example
+ * To connect to a smart wallet, a personal wallet (acting as the key to the smart wallet) must first be connected.
+ *
+ * Refer to [`SmartWalletConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/SmartWalletConnectionOptions) to see all the options `connect` method accepts.
+ *
  * ```ts
- * import { smartWallet } from "thirdweb";
- * const wallet = await smartWallet({
+ * import { smartWallet } from "thirdweb/wallets";
+ * import { metamaskWallet } from "thirdweb/wallets";
+ *
+ * // connect a personal wallet first - e.g. metamask, coinbase, etc.
+ * const metamask = metamaskWallet();
+ * await metamask.connect();
+ *
+ * const wallet = smartWallet({
  *  client,
  *  chain,
- *  personalAccount: myAccount,
  *  gasless: true,
  * });
+ *
+ * await wallet.connect({
+ *  personalWallet: metamask,
+ * });
  * ```
+ * @returns The [`SmartWallet`](https://portal.thirdweb.com/references/typescript/v5/SmartWallet) instance
+ * @wallet
  */
 export function smartWallet(options: SmartWalletOptions): SmartWallet {
   return new SmartWallet(options);

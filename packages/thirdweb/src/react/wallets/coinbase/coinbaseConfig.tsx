@@ -15,21 +15,32 @@ import { ScanScreen } from "../shared/ScanScreen.js";
 import { useState, useRef, useEffect } from "react";
 
 export type CoinbaseConfigOptions = {
+  /**
+   * If `true`, Coinbase Wallet will be shown as "recommended" to the user in [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+   * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) 's UI
+   */
   recommended?: boolean;
 };
 
 /**
- * Integrate Coinbase wallet connection into your app.
+ * Integrate Coinbase wallet connection in
+ * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
  * @param options - Options for configuring the Coinbase wallet.
+ * Refer to [`CoinbaseConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/MetamaskConfigOptions) for more details.
  * @example
  * ```tsx
- * <ThirdwebProvider
- *  client={client}>
- *  wallets={[ coinbaseConfig() ]}
- *  <App />
- * </ThirdwebProvider>
+ * import { ThirdwebProvider, coinbaseConfig } from "thirdweb/react";
+ *
+ * function Example() {
+ *   return (
+ *     <ThirdwebProvider client={client} wallets={[coinbaseConfig()]}>
+ *       <App />
+ *     </ThirdwebProvider>
+ *   );
+ * }
  * ```
- * @returns WalletConfig object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const coinbaseConfig = (
   options?: CoinbaseConfigOptions,

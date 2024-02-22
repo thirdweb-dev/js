@@ -8,22 +8,42 @@ import type { WalletConfig } from "../../types/wallets.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type ZerionConfigOptions = {
+  /**
+   * This is only relevant when connecting to Zerion wallet mobile app using QR code scanning. This uses WalletConnect protocol to connect to Zerion wallet.
+   *
+   * WalletConnect requires a `projectId` that can be obtained at https://cloud.walletconnect.com/
+   *
+   * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
+   *
+   * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
+   */
   projectId?: string;
+  /**
+   * If `true`, Zerion will be shown as "recommended" to the user in [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+   * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) 's UI
+   */
   recommended?: boolean;
 };
 
 /**
- * Integrate Zerion wallet connection into your app.
+ * Integrate Zerion wallet connection in
+ * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
  * @param options - Options for configuring the Zerion wallet.
+ * Refer to [`ZerionConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/ZerionConfigOptions) for more details.
  * @example
  * ```tsx
- * <ThirdwebProvider
- *  client={client}>
- *  wallets={[  zerionConfig() ]}
- *  <App />
- * </ThirdwebProvider>
+ * import { ThirdwebProvider, zerionConfig } from "thirdweb/react";
+ *
+ * function Example() {
+ *   return (
+ *     <ThirdwebProvider client={client} wallets={[zerionConfig()]}>
+ *       <App />
+ *     </ThirdwebProvider>
+ *   );
+ * }
  * ```
- * @returns WalletConfig object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
   const config: WalletConfig = {

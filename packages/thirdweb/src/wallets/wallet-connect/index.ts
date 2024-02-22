@@ -66,14 +66,72 @@ export const walletConnectMetadata: WalletMetadata = {
 };
 
 /**
- * Connect to a wallet using WalletConnect protocol.
- * @param options - The options for connecting wallet
- * @returns A Promise that resolves to a Wallet instance.
- * @throws Error if failed to connect to the wallet.
+ * `walletConnect` allows you to connect to the a wallet Using [WalletConnect protocol](https://docs.walletconnect.com/getting-started)
+ * @param options - Options for creating a `WalletConnect` instance.
+ * Refer to [`WalletConnectCreationOptions`](https://portal.thirdweb.com/references/typescript/v5/WalletConnectCreationOptions)
  * @example
  * ```ts
- * TODO
+ * import { walletConnect } from "thirdweb/wallets";
+ * import { client } from "./client";
+ *
+ * const wallet = walletConnect({
+ *   client,
+ *   dappMetadata: {
+ *     name: "My Dapp",
+ *     url: "https://my-dapp.com",
+ *     logoUrl: "https://my-dapp.com/logo.png",
+ *     description: "Some description of my dapp",
+ *   },
+ * });
+ *
+ * async function connectUsingWCModal() {
+ *   try {
+ *     // connect using WalletConnect's official QR code modal
+ *     const account = await wallet.connect({
+ *       showQrModal: true,
+ *     });
+ *     console.log("connected to", account);
+ *   } catch (e) {
+ *     console.error("error connecting to metamask", e);
+ *   }
+ * }
+ *
+ * async function connectUsingCustomQRScan() {
+ *   try {
+ *     // connect using WalletConnect's official QR code modal
+ *     const account = await wallet.connect({
+ *       showQrModal: false,
+ *       onDisplayUri: (uri) => {
+ *         // display the uri to the user
+ *         // once the user scans the uri, the wallet will bed connected
+ *         // and the promise returned by `wallet.connect` will be resolved
+ *       },
+ *     });
+ *     console.log("connected to", account);
+ *   } catch (e) {
+ *     console.error("error connecting to metamask", e);
+ *   }
+ * }
  * ```
+ *
+ * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+ * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+ *
+ * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+ * At minimum, you need to pass the `id` of the blockchain.
+ *
+ * ```ts
+ * import { defineChain } from "thirdweb";
+ * const mumbai = defineChain({
+ *  id: 80001,
+ * });
+ *
+ * const address = await wallet.connect({ chain: mumbai })
+ * ```
+ *
+ * Refer to [`WalletConnectConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/WalletConnectConnectionOptions) to see the options that `wallet.connect` method accepts.
+ * @wallet
+ * @returns The [`WalletConnect`](https://portal.thirdweb.com/references/typescript/v5/WalletConnect) instance
  */
 export function walletConnect(options: WalletConnectCreationOptions) {
   return new WalletConnect(options);
