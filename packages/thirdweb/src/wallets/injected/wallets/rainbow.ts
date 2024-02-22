@@ -9,13 +9,51 @@ export const rainbowWalletMetadata = {
 };
 
 /**
- * Connect to Injected Rainbow Wallet Provider
+ * `rainbowWallet` allows you to connect to the Rainbow Wallet extension.
+ *
+ * If you want to connect to Rainbow wallet mobile app, use [`walletConnect`](https://portal.thirdweb.com/references/typescript/v5/walletConnect) instead.
  * @wallet
  * @example
  * ```ts
- * const wallet = rainbowWallet();
+ * import { rainbowWallet, injectedRainbowProvider } from "thirdweb/wallets";
+ *
+ * async function connectToRainbow() {
+ *   const isInstalled = !!injectedRainbowProvider();
+ *
+ *   // if rainbow extension is installed, connect to Rainbow extension
+ *   if (isInstalled) {
+ *     // create an instance
+ *     const wallet = rainbowWallet();
+ *     try {
+ *       const account = await wallet.connect(); // connect to it
+ *       console.log("connected to", account);
+ *     } catch (e) {
+ *       console.error("error connecting to rainbow extension", e);
+ *     }
+ *   }
+ *
+ *   // else prompt user to connect to Rainbow wallet app by scanning a QR code
+ *   else {
+ *     // refer to `walletConnect` documentation
+ *   }
+ * }
  * ```
- * @returns The Wallet instance.
+ *
+ * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+ * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+ *
+ * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+ * At minimum, you need to pass the `id` of the blockchain.
+ *
+ * ```ts
+ * import { defineChain } from "thirdweb";
+ * const mumbai = defineChain({
+ *  id: 80001,
+ * });
+ *
+ * const address = await wallet.connect({ chain: mumbai })
+ * ```
+ * @returns The `InjectedWallet` instance
  */
 export function rainbowWallet() {
   return new InjectedWallet({
@@ -25,12 +63,13 @@ export function rainbowWallet() {
 }
 
 /**
- * Get the injected Rainbow provider
+ * Get the injected Rainbow provider. If Rainbow wallet extension is not installed, it returns `undefined`
  * @example
  * ```ts
  * const provider = injectedRainbowProvider();
  * ```
- * @returns The injected Metamask provider
+ * @returns The injected Rainbow wallet provider of type `Ethereum`
+ * @walletUtils
  */
 export function injectedRainbowProvider() {
   return injectedProvider(rainbowWalletMetadata.id);

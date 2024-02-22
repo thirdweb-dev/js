@@ -60,27 +60,28 @@ export function injectedWallet(options?: InjectedWalletOptions) {
 }
 
 /**
- * Connect to an Injected Wallet Provider
+ * Wallet interface for connecting to Injected Wallet Provider.
+ *
+ * It supports connecting to the Injected Wallet Provider using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) or connecting to any arbitrary injected `Ethereum` provider.
  */
 export class InjectedWallet implements Wallet {
   metadata: Wallet["metadata"];
-  private chain: Chain | undefined;
-  private account?: Account | undefined;
   events: Wallet["events"];
 
-  // NOTE: can't use `#` notation unless we want to use `tslib` (which we don't because it adds overhead)
+  private chain: Chain | undefined;
+  private account?: Account | undefined;
   private options?: InjectedWalletOptions;
   private provider?: Ethereum;
 
   /**
-   * Create a new Injected Wallet
+   * Create Injected Wallet instance
    * @param options - The options for connecting to the Injected Wallet Provider.
    * @example
    * ```ts
    * // connect to `window.ethereum` provider
    * const wallet = new InjectedWallet();
    *
-   * // connect to a specific wallet provider using EIP-6963 wallet id
+   * // connect to a specific wallet provider using EIP-6963 - Pass the wallet rnds as `walletId`
    * const wallet = new InjectedWallet({
    *  walletId: "io.metamask",
    * })
@@ -88,7 +89,7 @@ export class InjectedWallet implements Wallet {
    * // connect to a specific wallet provider using custom logic
    * const wallet = new InjectedWallet({
    *  getProvider() {
-   *    return window.xfi?.ethereum; // Example of XDEFI Wallet
+   *    return window.xfi?.ethereum;
    *  }
    * })
    * ```
@@ -103,8 +104,8 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Get the `chain` that the wallet is connected to.
-   * @returns The chain
+   * Get the `Chain` object of the blockchain that the wallet is connected to.
+   * @returns The `Chain` object
    * @example
    * ```ts
    * const chain = wallet.getChain();
@@ -115,8 +116,8 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Get the connected `Account` from the wallet.
-   * @returns The connected account
+   * Get the connected `Account`
+   * @returns The connected `Account` object
    * @example
    * ```ts
    * const account = wallet.getAccount();
@@ -127,10 +128,12 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Auto connect to already connected wallet provider
+   * Auto connect to the wallet provider. This only succeeds if the wallet provider is still connected.
+   *
+   * Auto connect is useful to avoid asking the user to connect to the wallet provider again on page refresh or revisit.
    * @example
    * ```ts
-   * await wallet.autoConnect();
+   * const account = await wallet.autoConnect();
    * ```
    * @returns A Promise that resolves to the connected `Account`
    */
@@ -155,12 +158,25 @@ export class InjectedWallet implements Wallet {
    * Connect to the Injected Wallet Provider
    * @param options - The options for connecting to the Injected Wallet Provider.
    * @example
+   * Connect to the Injected Wallet Provider with no options.
    * ```ts
    * // no options
    * const address = await wallet.connect()
+   * ```
    *
-   * // connect and switch wallet to be on a specific blockchain with given chainId
-   * const address = await wallet.connect({ chainId: 1 })
+   * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+   * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain.
+   *
+   * ```ts
+   * import { defineChain } from "thirdweb";
+   * const mumbai = defineChain({
+   *  id: 80001,
+   * });
+   *
+   * const address = await wallet.connect({ chain: mumbai })
    * ```
    * @returns A Promise that resolves to the connected address.
    */
@@ -180,7 +196,7 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Disconnect from the Injected Wallet Provider
+   * Disconnect from the Injected Wallet Provider.
    * @example
    * ```ts
    * await wallet.disconnect()
@@ -191,11 +207,22 @@ export class InjectedWallet implements Wallet {
   }
 
   /**
-   * Switch the wallet provider to a different blockchain with the given chainId
-   * @param chain - The chainId of the blockchain to switch to.
+   * Switch the wallet to a different blockchain by passing the `Chain` object of it.
+   * If the wallet already has the capability to connect to the blockchain, it will switch to it. If not, Wallet will prompt the user to confirm adding a new blockchain to the wallet.
+   * Depending on the wallet - this action may require the user to confirm the switch chain request or add a new blockchain request.
+   *
+   * This method throws an error if the wallet fails to do the above or user denies the switch chain request or denies adding a new blockchain request.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain.
+   * @param chain - The `Chain` object of the blockchain
    * @example
    * ```ts
-   * await wallet.switchChain(1)
+   * import { defineChain } from "thirdweb";
+   * const mumbai = defineChain({
+   *  id: 80001,
+   * });
+   * await wallet.switchChain(mumbai)
    * ```
    */
   async switchChain(chain: Chain) {
@@ -228,8 +255,6 @@ export class InjectedWallet implements Wallet {
         throw e;
       }
     }
-
-    // TODO: we probably need to block until the chain is switched (we should get an event?)
 
     this.chain = chain;
   }

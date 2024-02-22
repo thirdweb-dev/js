@@ -44,6 +44,7 @@ export const coinbaseConfig = (
       } else {
         return coinbaseSDKWallet({
           appName: createOptions.dappMetadata.name,
+          appLogoUrl: createOptions.dappMetadata.logoUrl,
         });
       }
     },

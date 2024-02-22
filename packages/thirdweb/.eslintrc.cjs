@@ -36,6 +36,7 @@ const jsdocRuleOverrides = {
         "theme",
         "locale",
         "component",
+        "walletUtils",
       ],
     },
   ],

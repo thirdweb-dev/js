@@ -21,7 +21,10 @@ export {
 } from "../wallets/private-key.js";
 
 // injected
-export { injectedWallet } from "../wallets/injected/index.js";
+export {
+  injectedWallet,
+  type InjectedWallet,
+} from "../wallets/injected/index.js";
 export { getMIPDStore } from "../wallets/injected/mipdStore.js";
 
 export type {

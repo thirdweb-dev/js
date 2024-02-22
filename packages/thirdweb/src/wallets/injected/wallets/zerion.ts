@@ -9,13 +9,51 @@ export const zerionWalletMetadata = {
 };
 
 /**
- * Connect to Injected Zerion Wallet Provider
+ * `zerionWallet` allows you to connect to the Zerion Wallet extension.
+ *
+ * If you want to connect to Zerion wallet mobile app, use [`walletConnect`](https://portal.thirdweb.com/references/typescript/v5/walletConnect) instead.
  * @wallet
  * @example
  * ```ts
- * const wallet = zerionWallet();
+ * import { zerionWallet, injectedZerionProvider } from "thirdweb/wallets";
+ *
+ * async function connectToZerion() {
+ *   const isInstalled = !!injectedZerionProvider();
+ *
+ *   // if Zerion Wallet extension is installed, connect to it
+ *   if (isInstalled) {
+ *     // create an instance
+ *     const wallet = zerionWallet();
+ *     try {
+ *       const account = await wallet.connect(); // connect to it
+ *       console.log("connected to", account);
+ *     } catch (e) {
+ *       console.error("error connecting to zerion wallet extension", e);
+ *     }
+ *   }
+ *
+ *   // else prompt user to connect to Zerion wallet app by scanning a QR code
+ *   else {
+ *     // refer to `walletConnect` documentation
+ *   }
+ * }
  * ```
- * @returns The Wallet instance.
+ *
+ * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
+ * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
+ *
+ * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+ * At minimum, you need to pass the `id` of the blockchain.
+ *
+ * ```ts
+ * import { defineChain } from "thirdweb";
+ * const mumbai = defineChain({
+ *  id: 80001,
+ * });
+ *
+ * const address = await wallet.connect({ chain: mumbai })
+ * ```
+ * @returns The `InjectedWallet` instance
  */
 export function zerionWallet() {
   return new InjectedWallet({
@@ -25,12 +63,13 @@ export function zerionWallet() {
 }
 
 /**
- * Get the injected Zerion provider
+ * Get the injected Zerion provider. If Zerion Wallet is not installed, it returns `undefined`
  * @example
  * ```ts
  * const provider = injectedZerionProvider();
  * ```
- * @returns The injected Metamask provider
+ * @returns The injected Zerion Wallet provider of type `Ethereum` or `undefined` if Zerion Wallet is not installed
+ * @walletUtils
  */
 export function injectedZerionProvider() {
   return injectedProvider(zerionWalletMetadata.id);
