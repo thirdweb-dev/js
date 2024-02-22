@@ -37,6 +37,7 @@ const jsdocRuleOverrides = {
         "locale",
         "component",
         "walletUtils",
+        "walletConnection",
       ],
     },
   ],

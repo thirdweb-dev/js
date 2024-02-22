@@ -2,7 +2,10 @@ export { darkTheme, lightTheme } from "../react/ui/design-system/index.js";
 export type { Theme, ThemeOverrides } from "../react/ui/design-system/index.js";
 
 export { ConnectButton } from "../react/ui/ConnectWallet/ConnectWallet.js";
-export { ConnectEmbed } from "../react/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export {
+  ConnectEmbed,
+  type ConnectEmbedProps,
+} from "../react/ui/ConnectWallet/Modal/ConnectEmbed.js";
 
 export type {
   ConnectButtonProps,
