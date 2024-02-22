@@ -22,7 +22,6 @@ type SavedConnectParams = {
 /**
  * Embedded Wallet
  * @param args - The args to use for the wallet
- * @param args.client - The ThirdwebClient to use for the wallet
  * @returns The embedded wallet
  * @example
  * ```ts
