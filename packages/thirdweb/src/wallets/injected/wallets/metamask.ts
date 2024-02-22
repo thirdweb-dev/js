@@ -1,7 +1,6 @@
 import type { WalletMetadata } from "../../types.js";
 import { InjectedWallet } from "../index.js";
 import { injectedProvider } from "../mipdStore.js";
-import type { SpecificInjectedWalletOptions } from "../types.js";
 
 export const metamaskMetadata: WalletMetadata = {
   id: "io.metamask",
@@ -12,7 +11,6 @@ export const metamaskMetadata: WalletMetadata = {
 
 /**
  * Connect to Injected Metamask Wallet Provider
- * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @wallet
  * @example
  * ```ts
@@ -20,9 +18,8 @@ export const metamaskMetadata: WalletMetadata = {
  * ```
  * @returns The Wallet instance.
  */
-export function metamaskWallet(options?: SpecificInjectedWalletOptions) {
+export function metamaskWallet() {
   return new InjectedWallet({
-    ...options,
     walletId: metamaskMetadata.id,
     metadata: metamaskMetadata,
   });

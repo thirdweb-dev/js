@@ -1,6 +1,5 @@
 import { InjectedWallet } from "../index.js";
 import { injectedProvider } from "../mipdStore.js";
-import type { SpecificInjectedWalletOptions } from "../types.js";
 
 export const zerionWalletMetadata = {
   id: "io.zerion.wallet",
@@ -11,7 +10,6 @@ export const zerionWalletMetadata = {
 
 /**
  * Connect to Injected Zerion Wallet Provider
- * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @wallet
  * @example
  * ```ts
@@ -19,9 +17,8 @@ export const zerionWalletMetadata = {
  * ```
  * @returns The Wallet instance.
  */
-export function zerionWallet(options?: SpecificInjectedWalletOptions) {
+export function zerionWallet() {
   return new InjectedWallet({
-    ...options,
     walletId: zerionWalletMetadata.id,
     metadata: zerionWalletMetadata,
   });

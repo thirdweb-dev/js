@@ -25,7 +25,6 @@ export { injectedWallet } from "../../wallets/injected/index.js";
 export type {
   WalletRDNS,
   InjectedWalletOptions,
-  SpecificInjectedWalletOptions,
   InjectedWalletConnectOptions,
 } from "../../wallets/injected/types.js";
 export { injectedProvider } from "../../wallets/injected/mipdStore.js";

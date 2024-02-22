@@ -1,6 +1,5 @@
 import { InjectedWallet } from "../index.js";
 import { injectedProvider } from "../mipdStore.js";
-import type { SpecificInjectedWalletOptions } from "../types.js";
 
 export const rainbowWalletMetadata = {
   id: "me.rainbow",
@@ -11,7 +10,6 @@ export const rainbowWalletMetadata = {
 
 /**
  * Connect to Injected Rainbow Wallet Provider
- * @param options - The options for connecting to the Injected MetaMask Wallet Provider.
  * @wallet
  * @example
  * ```ts
@@ -19,9 +17,8 @@ export const rainbowWalletMetadata = {
  * ```
  * @returns The Wallet instance.
  */
-export function rainbowWallet(options?: SpecificInjectedWalletOptions) {
+export function rainbowWallet() {
   return new InjectedWallet({
-    ...options,
     walletId: rainbowWalletMetadata.id,
     metadata: rainbowWalletMetadata,
   });
