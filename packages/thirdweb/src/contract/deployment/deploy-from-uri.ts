@@ -41,8 +41,7 @@ export async function prepareDeployTransactionFromUri(
   const chainId = options.chain.id;
   const isNetworkEnabled = !!(
     extendedMetadata?.networksForDeployment?.networksEnabled?.includes(
-      // TODO: align with chainId being bigint
-      Number(chainId),
+      chainId,
     ) || extendedMetadata?.networksForDeployment?.allNetworks
   );
 
@@ -76,12 +75,10 @@ export async function prepareDeployTransactionFromUri(
     throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
   }
 
-  const constructorAbi = compilerMetadata.abi.find(
-    (abi) => abi.type === "constructor",
-  ) as AbiConstructor;
-  if (!constructorAbi) {
-    throw new Error("No constructor found in the contract ABI");
-  }
+  const constructorAbi =
+    (compilerMetadata.abi.find(
+      (abi) => abi.type === "constructor",
+    ) as AbiConstructor) || [];
 
   return prepareDirectDeployTransaction({
     bytecode,
