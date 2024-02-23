@@ -20,29 +20,11 @@ import { PricingSection } from "components/homepage/sections/PricingSection";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FiExternalLink } from "react-icons/fi";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useLocalStorage } from "hooks/useLocalStorage";
 
 const TRACKING_CATEGORY = "pricing-page";
 
 const Pricing: ThirdwebNextPage = () => {
-  const router = useRouter();
-  const [claimedGrowth, setClaimedGrowth] = useLocalStorage(
-    "claim-growth-trial",
-    false,
-    true,
-  );
-  const { claimGrowth: claimGrowthQuery } = router.query;
-
   const isMobile = useBreakpointValue({ base: true, lg: false }) as boolean;
-
-  useEffect(() => {
-    if (claimGrowthQuery !== undefined) {
-      setClaimedGrowth(true);
-      router.replace("/pricing");
-    }
-  }, [claimGrowthQuery, router, setClaimedGrowth]);
 
   return (
     <LandingLayout
@@ -70,7 +52,7 @@ const Pricing: ThirdwebNextPage = () => {
       >
         <PricingSection
           trackingCategory={TRACKING_CATEGORY}
-          canTrialGrowth={claimedGrowth}
+          canTrialGrowth={true}
         />
 
         <Flex flexDir="column" gap={20}>

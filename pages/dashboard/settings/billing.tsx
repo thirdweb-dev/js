@@ -47,10 +47,12 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [account]);
 
   useEffect(() => {
-    if (claimGrowthQuery !== undefined) {
+    if (claimGrowthQuery !== undefined && !account?.trialPeriodEndedAt) {
       setClaimedGrowth(true);
+    } else {
+      setClaimedGrowth(false);
     }
-  }, [claimGrowthQuery, router, setClaimedGrowth]);
+  }, [account?.trialPeriodEndedAt, claimGrowthQuery, router, setClaimedGrowth]);
 
   useEffect(() => {
     const { payment_intent, source_redirect_slug } = router.query;

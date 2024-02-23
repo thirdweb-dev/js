@@ -71,7 +71,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             ctaProps={{
               category: trackingCategory,
               label: canTrialGrowth ? "claimGrowthTrial" : undefined,
-              href: "/dashboard/settings/billing",
+              href: `/dashboard/settings/billing${canTrialGrowth && "?claimGrowth"}`,
               bgColor: "white",
               color: "black",
               _hover: {
