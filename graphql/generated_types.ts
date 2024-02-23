@@ -9723,7 +9723,7 @@ export type Seller = {
   is_trusted?: Maybe<Scalars['Boolean']['output']>;
   native_mint_payout_wallet_address?: Maybe<Scalars['String']['output']>;
   paper_private_notes?: Maybe<Scalars['String']['output']>;
-  production_checkout_purchase_limit_usd_cents?: Maybe<Scalars['Int']['output']>;
+  production_checkout_purchase_limit_usd_cents: Scalars['Int']['output'];
   referrer?: Maybe<Scalars['String']['output']>;
   risk_level: Scalars['String']['output'];
   role_in_company?: Maybe<Scalars['String']['output']>;

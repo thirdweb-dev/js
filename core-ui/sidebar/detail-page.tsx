@@ -151,15 +151,18 @@ const DetailNavLink: ComponentWithChildren<DetailNavLinkProps> = ({
   onClick,
 }) => {
   const { query } = useRouter();
+
   const [computedBasePath, tabHref] = useMemo(() => {
+    const combinedPaths = Array.isArray(query.paths)
+      ? query.paths
+      : typeof query.paths === "string"
+        ? [query.paths]
+        : [];
     const [network, address, tab = ""] = [
       ...new Set(
-        ([query.chainSlug, ...(query.paths as string[])] || []).filter(
-          (c) => c !== "evm",
-        ),
+        ([query.chainSlug, ...combinedPaths] || []).filter((c) => c !== "evm"),
       ),
     ];
-
     return [`/${network}/${address}`, tab] as const;
   }, [query.chainSlug, query.paths]);
 
