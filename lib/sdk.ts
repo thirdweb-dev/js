@@ -103,7 +103,19 @@ export function getEVMThirdwebSDK(
   signer?: Signer,
 ): EVMThirdwebSDK {
   // PERF ISSUE - if the sdkOptions is a huge object, stringify will be slow
-  const sdkKey = chainId + (sdkOptions ? JSON.stringify(sdkOptions) : "");
+
+  const readonlySettings =
+    chainId + rpcUrl
+      ? {
+          chainId,
+          rpcUrl,
+        }
+      : undefined;
+  const sdkKey =
+    chainId +
+    rpcUrl +
+    (readonlySettings ? JSON.stringify(readonlySettings) : "") +
+    (sdkOptions ? JSON.stringify(sdkOptions) : "");
 
   let sdk: EVMThirdwebSDK | null = null;
 
@@ -113,11 +125,8 @@ export function getEVMThirdwebSDK(
     sdk = new EVMThirdwebSDK(
       rpcUrl,
       {
-        readonlySettings: {
-          rpcUrl,
-          chainId,
-        },
         ...sdkOptions,
+        readonlySettings,
         clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
         secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
       },

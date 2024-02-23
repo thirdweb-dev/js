@@ -38,6 +38,7 @@ const useAccountCount = (address: string, chainId: number) => {
       const accounts = await contract.accountFactory.getAllAccounts();
       return accounts.length;
     },
+    enabled: !!address && !!chainId,
   });
 };
 
