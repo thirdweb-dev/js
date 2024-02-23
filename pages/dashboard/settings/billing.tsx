@@ -16,7 +16,12 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const meQuery = useAccount();
   const router = useRouter();
   const { data: account } = meQuery;
-  const [claimGrowth] = useLocalStorage("startup-program", false, true);
+  const { claimGrowth: claimGrowthQuery } = router.query;
+  const [claimedGrowth, setClaimedGrowth] = useLocalStorage(
+    "claim-growth-trial",
+    false,
+    true,
+  );
 
   useEffect(() => {
     let refetchInterval: ReturnType<typeof setInterval> | undefined;
@@ -42,6 +47,12 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [account]);
 
   useEffect(() => {
+    if (claimGrowthQuery !== undefined) {
+      setClaimedGrowth(true);
+    }
+  }, [claimGrowthQuery, router, setClaimedGrowth]);
+
+  useEffect(() => {
     const { payment_intent, source_redirect_slug } = router.query;
 
     if (payment_intent || source_redirect_slug) {
@@ -51,7 +62,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [router]);
 
   if (!isLoading && !isLoggedIn) {
-    return claimGrowth ? (
+    return claimedGrowth ? (
       <BillingConnectWalletPrompt />
     ) : (
       <ConnectWalletPrompt />

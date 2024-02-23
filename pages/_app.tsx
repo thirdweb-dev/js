@@ -15,6 +15,7 @@ import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
 import "../css/swagger-ui.css";
+import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 
 // eslint-disable-next-line new-cap
 const inter = Inter({
@@ -241,7 +242,7 @@ const ConsoleApp = memo(function ConsoleApp({
       />
 
       <ChakraProvider theme={chakraThemeWithFonts}>
-        {/* <AnnouncementBanner /> */}
+        <AnnouncementBanner />
         {isFallback && Component.fallback
           ? Component.fallback
           : getLayout(<Component {...pageProps} />, pageProps)}

@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-smart-w-allet", false, true);
+    useLocalStorage("dismissed-free-trial", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -46,8 +46,7 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing Growth: 1-month free trial. Offer expires Feb 16,
-                2024
+                1-month free trial on our Growth plan
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

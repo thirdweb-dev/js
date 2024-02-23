@@ -28,12 +28,12 @@ const TRACKING_CATEGORY = "pricing-page";
 
 const Pricing: ThirdwebNextPage = () => {
   const router = useRouter();
-  const [claimGrowth, setClaimedGrowth] = useLocalStorage(
-    "startup-program",
+  const [claimedGrowth, setClaimedGrowth] = useLocalStorage(
+    "claim-growth-trial",
     false,
     true,
   );
-  const { startupProgram: claimGrowthQuery } = router.query;
+  const { claimGrowth: claimGrowthQuery } = router.query;
 
   const isMobile = useBreakpointValue({ base: true, lg: false }) as boolean;
 
@@ -70,7 +70,7 @@ const Pricing: ThirdwebNextPage = () => {
       >
         <PricingSection
           trackingCategory={TRACKING_CATEGORY}
-          canTrialGrowth={claimGrowth}
+          canTrialGrowth={claimedGrowth}
         />
 
         <Flex flexDir="column" gap={20}>

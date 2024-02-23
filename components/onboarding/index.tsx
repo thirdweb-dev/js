@@ -44,7 +44,7 @@ export const Onboarding: React.FC = () => {
   const trackEvent = useTrack();
   const wallet = useWallet();
   const ewsConfirmMutation = useConfirmEmbeddedWallet();
-  const [claimGrowth] = useLocalStorage("startup-program", false, true);
+  const [claimedGrowth] = useLocalStorage("claim-growth-trial", false, true);
 
   const [state, setState] = useState<OnboardingState>();
   const [account, setAccount] = useState<Account>();
@@ -68,7 +68,7 @@ export const Onboarding: React.FC = () => {
         nextStep = "confirmLinking";
         break;
       case "confirming":
-        nextStep = skipBilling(account) || claimGrowth ? "skipped" : "plan";
+        nextStep = skipBilling(account) || claimedGrowth ? "skipped" : "plan";
         break;
       case "confirmLinking":
         nextStep = "skipped";
@@ -126,7 +126,7 @@ export const Onboarding: React.FC = () => {
         {
           onSuccess: (data) => {
             if (!skipBilling(data as Account)) {
-              setState(claimGrowth ? "skipped" : "plan");
+              setState(claimedGrowth ? "skipped" : "plan");
             }
             (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY] = undefined;
           },
@@ -174,7 +174,7 @@ export const Onboarding: React.FC = () => {
       );
     }
     // skip when going thru claiming trial growth
-    else if (claimGrowth) {
+    else if (claimedGrowth) {
       setState("skipped");
     }
     // user hasn't skipped onboarding, has valid email and no valid payment yet
