@@ -22,8 +22,7 @@ export function balanceOf(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method:
-      "function balanceOf(owner address, tokenId uint256) view returns (uint256)",
+    method: "function balanceOf(address, uint256) view returns (uint256)",
     params: [options.address, options.tokenId],
   });
 }

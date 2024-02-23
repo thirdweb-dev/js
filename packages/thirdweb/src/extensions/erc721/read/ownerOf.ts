@@ -19,8 +19,7 @@ export function ownerOf(
 ): Promise<string> {
   return readContract({
     ...options,
-    method:
-      "function ownerOf(uint256 tokenId) external view returns (address owner)",
+    method: "function ownerOf(uint256) returns (address)",
     params: [BigInt(options.tokenId)],
   });
 }

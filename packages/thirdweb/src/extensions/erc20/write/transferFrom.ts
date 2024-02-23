@@ -37,7 +37,7 @@ export function transferFrom(
 ) {
   return prepareContractCall({
     ...options,
-    method: "function transferFrom(address from, address to, uint256 value)",
+    method: "function transferFrom(address, address, uint256)",
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

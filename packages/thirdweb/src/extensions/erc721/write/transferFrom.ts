@@ -32,7 +32,7 @@ export function transferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: "function transferFrom(address from, address to, uint256 tokenId)",
+    method: "function transferFrom(address, address, uint256)",
     params: [options.from, options.to, options.tokenId],
   });
 }

@@ -22,8 +22,7 @@ export function balanceOfBatch(
 ): Promise<readonly bigint[]> {
   return readContract({
     ...options,
-    method:
-      "function balanceOfBatch(owners address[], tokenIds uint256[]) view returns (uint256[])",
+    method: "function balanceOfBatch(address[], uint256[]) returns (uint256[])",
     params: [options.owners, options.tokenIds],
   });
 }

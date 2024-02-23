@@ -42,7 +42,7 @@ export function prepareCreateAccount(args: {
   }
   return prepareContractCall({
     contract: factoryContract,
-    method: "function createAccount(address, bytes) public returns (address)",
+    method: "function createAccount(address, bytes) returns (address)",
     params: [
       options.overrides?.accountAddress || options.personalAccount.address,
       stringToHex(options.overrides?.accountSalt ?? ""),
@@ -87,8 +87,7 @@ export function prepareBatchExecute(args: {
   }
   return prepareContractCall({
     contract: accountContract,
-    method:
-      "function executeBatch(address[] calldata _target,uint256[] calldata _value,bytes[] calldata _calldata)",
+    method: "function executeBatch(address[], uint256[], bytes[])",
     params: [
       transactions.map((tx) => tx.to || ""),
       transactions.map((tx) => tx.value || 0n),

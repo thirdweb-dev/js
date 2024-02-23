@@ -5,7 +5,7 @@ import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toTokens } from "../../../utils/units.js";
 
-const METHOD = "function balanceOf(address) view returns (uint256)" as const;
+const METHOD = "function balanceOf(address) returns (uint256)" as const;
 
 type BalanceOfParams = { address: string };
 

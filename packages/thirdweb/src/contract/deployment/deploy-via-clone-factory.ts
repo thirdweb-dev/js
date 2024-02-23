@@ -56,7 +56,7 @@ export async function prepareDeployTransactionViaCloneFactory(
   return prepareContractCall({
     contract: factory,
     method:
-      "function deployProxyByImplementation(address _implementation, bytes memory _data, bytes32 _salt) returns (address deployedProxy)",
+      "function deployProxyByImplementation(address, bytes, bytes32) returns (address)",
     params: async () => {
       const implementation = getContract({
         client,

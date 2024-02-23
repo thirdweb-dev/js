@@ -19,8 +19,7 @@ export function balanceOf(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method:
-      "function balanceOf(address owner) external view returns (uint256 balance)",
+    method: "function balanceOf(address) returns (uint256)",
     params: [options.address],
   });
 }

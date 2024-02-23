@@ -17,6 +17,6 @@ export function nextTokenIdToMint(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function nextTokenIdToMint() view returns (uint256)",
+    method: "function nextTokenIdToMint() returns (uint256)",
   });
 }

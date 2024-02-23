@@ -10,7 +10,7 @@ describe("transaction: read", () => {
   it("should read from the contract correctly", async () => {
     const result = await readContract({
       contract: USDC_CONTRACT,
-      method: "function balanceOf(address owner) returns (uint256)",
+      method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
     });
 

@@ -19,7 +19,7 @@ export function tokenURI(
 ): Promise<string> {
   return readContract({
     ...options,
-    method: "function tokenURI(uint256 tokenId) returns (string memory)",
+    method: "function tokenURI(uint256) returns (string)",
     params: [options.tokenId],
   });
 }

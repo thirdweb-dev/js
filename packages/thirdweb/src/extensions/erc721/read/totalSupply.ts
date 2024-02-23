@@ -15,6 +15,6 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 export function totalSupply(options: BaseTransactionOptions): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function totalSupply() view returns (uint256)",
+    method: "function totalSupply() returns (uint256)",
   });
 }

@@ -33,7 +33,7 @@ export type ApproveParams = Prettify<
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
   return prepareContractCall({
     ...options,
-    method: "function approve(address spender, uint256 value) returns (bool)",
+    method: "function approve(address, uint256) returns (bool)",
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

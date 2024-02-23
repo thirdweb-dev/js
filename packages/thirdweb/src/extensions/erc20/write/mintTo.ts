@@ -32,7 +32,7 @@ export type MintToParams = Prettify<
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     ...options,
-    method: "function mintTo(address to, uint256 amount)",
+    method: "function mintTo(address, uint256)",
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

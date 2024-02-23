@@ -19,7 +19,7 @@ export function totalSupply(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function totalSupply(tokenId uint256) view returns (uint256)",
+    method: "function totalSupply(uint256) returns (uint256)",
     params: [options.tokenId],
   });
 }

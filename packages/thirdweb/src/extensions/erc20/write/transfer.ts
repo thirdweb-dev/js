@@ -32,7 +32,7 @@ export type TransferParams = Prettify<
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: "function transfer(address to, uint256 value)",
+    method: "function transfer(address, uint256)",
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

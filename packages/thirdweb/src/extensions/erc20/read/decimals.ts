@@ -5,7 +5,7 @@ import { detectMethod } from "../../../utils/bytecode/detectExtension.js";
 
 const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();
 
-const METHOD = "function decimals() view returns (uint8)" as const;
+const METHOD = "function decimals() returns (uint8)" as const;
 
 /**
  * Detects if the contract has a function to retrieve the number of decimals.

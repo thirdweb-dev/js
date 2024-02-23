@@ -13,7 +13,7 @@ describe("transaction: simulate", () => {
   it("should simulate correctly (human-readable)", async () => {
     const tx = prepareContractCall({
       contract: USDC_CONTRACT,
-      method: "function transfer(address to, uint256 value) returns (bool)",
+      method: "function transfer(address, uint256) returns (bool)",
       params: [TEST_WALLET_A, 100n],
     });
     const result = await simulateTransaction({
