@@ -4,6 +4,10 @@ export {
   type BalanceOfBatchParams,
 } from "../../extensions/erc1155/read/balanceOfBatch.js";
 export {
+  getNFT,
+  type GetNFTParams,
+} from "../../extensions/erc1155/read/getNFT.js";
+export {
   getNFTs,
   type GetNFTsParams,
 } from "../../extensions/erc1155/read/getNFTs.js";
