@@ -29,3 +29,13 @@ export const DOODLES_CONTRACT = getContract({
   address: DOODLES_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
 });
+
+// ERC1155
+
+const AURA_ADDRESS = "0x42d3641255C946CC451474295d29D3505173F22A";
+
+export const DROP1155_CONTRACT = getContract({
+  client: TEST_CLIENT,
+  address: AURA_ADDRESS,
+  chain: FORKED_ETHEREUM_CHAIN,
+});

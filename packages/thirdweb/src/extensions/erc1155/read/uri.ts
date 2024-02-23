@@ -10,16 +10,16 @@ export type TokenUriParams = { tokenId: bigint };
  * @extension ERC1155
  * @example
  * ```ts
- * import { tokenURI } from "thirdweb/extensions/erc155";
- * const uri = await tokenURI({ contract, tokenId: 1n });
+ * import { uri } from "thirdweb/extensions/erc155";
+ * const tokenUri = await uri({ contract, tokenId: 1n });
  * ```
  */
-export function tokenURI(
+export function uri(
   options: BaseTransactionOptions<TokenUriParams>,
 ): Promise<string> {
   return readContract({
     ...options,
-    method: "function tokenURI(uint256) returns (string)",
+    method: "function uri(uint256) returns (string)",
     params: [options.tokenId],
   });
 }

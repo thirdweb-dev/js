@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
-import { tokenURI, type TokenUriParams } from "./tokenURI.js";
+import { uri, type TokenUriParams } from "./uri.js";
 import { totalSupply } from "./totalSupply.js";
 
 /**
@@ -26,19 +26,19 @@ export type GetNFTParams = TokenUriParams;
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT<"ERC1155">> {
-  const [uri, supply] = await Promise.all([
-    tokenURI(options),
+  const [tokenUri, supply] = await Promise.all([
+    uri(options),
     totalSupply(options),
   ]);
   return parseNFT(
     await fetchTokenMetadata({
       client: options.contract.client,
       tokenId: options.tokenId,
-      tokenUri: uri,
+      tokenUri,
     }),
     {
       tokenId: options.tokenId,
-      tokenUri: uri,
+      tokenUri,
       type: "ERC1155",
       owner: null,
       supply,

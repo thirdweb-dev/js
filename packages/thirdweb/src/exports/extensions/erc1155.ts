@@ -17,9 +17,9 @@ export {
 } from "../../extensions/erc1155/read/getOwnedNFTs.js";
 export { nextTokenIdToMint } from "../../extensions/erc1155/read/nextTokenIdToMint.js";
 export {
-  tokenURI,
+  uri as tokenURI,
   type TokenUriParams,
-} from "../../extensions/erc1155/read/tokenURI.js";
+} from "../../extensions/erc1155/read/uri.js";
 export {
   totalSupply,
   type TotalSupplyParams,
