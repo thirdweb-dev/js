@@ -13,6 +13,9 @@ export default {
   "features": [
     {
       "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
     }
   ],
   "icon": {
