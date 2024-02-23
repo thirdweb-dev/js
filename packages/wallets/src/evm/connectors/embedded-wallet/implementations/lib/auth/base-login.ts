@@ -107,8 +107,9 @@ export class BaseLogin extends AbstractLogin<
     const result = await new Promise<AuthAndWalletRpcReturnType>(
       (resolve, reject) => {
         // detect when the user closes the login window
+        let pollTimer: number = 0;
         if (!args.skipCloseWindowCheck) {
-          const pollTimer = window.setInterval(async () => {
+          pollTimer = window.setInterval(async () => {
             if (!win) {
               return;
             }
