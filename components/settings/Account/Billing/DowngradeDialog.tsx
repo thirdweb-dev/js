@@ -11,6 +11,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Textarea,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FiChevronDown, FiX } from "react-icons/fi";
@@ -47,6 +48,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
 }) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [feedback, setFeedback] = useState("");
+  const [otherFeedback, setOtherFeedback] = useState("");
 
   return (
     <AlertDialog isOpen leastDestructiveRef={cancelRef} onClose={onClose}>
@@ -87,7 +89,9 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                         rightIcon={<FiChevronDown />}
                       >
                         {feedback
-                          ? (DOWNGRADE_OPTIONS as any)[feedback]
+                          ? DOWNGRADE_OPTIONS[
+                              feedback as keyof typeof DOWNGRADE_OPTIONS
+                            ]
                           : "Choose reason"}
                       </MenuButton>
                       <MenuList>
@@ -97,13 +101,24 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                             value={reason}
                             onClick={() => setFeedback(reason)}
                           >
-                            {(DOWNGRADE_OPTIONS as any)[reason]}
+                            {
+                              DOWNGRADE_OPTIONS[
+                                reason as keyof typeof DOWNGRADE_OPTIONS
+                              ]
+                            }
                           </MenuItem>
                         ))}
                       </MenuList>
                     </>
                   )}
                 </Menu>
+                {feedback === "other" && (
+                  <Textarea
+                    value={otherFeedback}
+                    onChange={(e) => setOtherFeedback(e.target.value)}
+                    placeholder="Please specify the reason."
+                  />
+                )}
               </Flex>
             </Flex>
           </AlertDialogBody>
@@ -111,9 +126,13 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
           <AlertDialogFooter>
             <HStack alignItems="center" gap={3}>
               <Button
-                onClick={() => onConfirm(feedback)}
+                onClick={() =>
+                  onConfirm(feedback === "other" ? otherFeedback : feedback)
+                }
                 isLoading={loading}
-                isDisabled={!feedback.length}
+                isDisabled={
+                  !feedback.length || (feedback === "other" && !otherFeedback)
+                }
                 size="sm"
                 variant="outline"
               >
