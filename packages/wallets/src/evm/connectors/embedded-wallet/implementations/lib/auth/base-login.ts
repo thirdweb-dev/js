@@ -81,6 +81,7 @@ export class BaseLogin extends AbstractLogin<
     oauthProvider: AuthProvider;
     openedWindow?: Window | null | undefined;
     closeOpenedWindow?: ((openedWindow: Window) => void) | undefined;
+    skipCloseWIndowCheck?: boolean;
   }): Promise<AuthLoginReturnType> {
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
@@ -106,16 +107,18 @@ export class BaseLogin extends AbstractLogin<
     const result = await new Promise<AuthAndWalletRpcReturnType>(
       (resolve, reject) => {
         // detect when the user closes the login window
-        const pollTimer = window.setInterval(async () => {
-          if (!win) {
-            return;
-          }
-          if (win.closed) {
-            clearInterval(pollTimer);
-            window.removeEventListener("message", messageListener);
-            reject(new Error("User closed login window"));
-          }
-        }, 1000);
+        if (!args.skipCloseWIndowCheck) {
+          const pollTimer = window.setInterval(async () => {
+            if (!win) {
+              return;
+            }
+            if (win.closed) {
+              clearInterval(pollTimer);
+              window.removeEventListener("message", messageListener);
+              reject(new Error("User closed login window"));
+            }
+          }, 1000);
+        }
 
         const messageListener = async (
           event: MessageEvent<{
