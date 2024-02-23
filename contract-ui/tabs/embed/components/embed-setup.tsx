@@ -10,7 +10,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import { Chain, configureChain, minimizeChain } from "@thirdweb-dev/chains";
+import { configureChain, minimizeChain } from "@thirdweb-dev/chains";
 import { DropContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
@@ -28,6 +28,7 @@ import {
 } from "tw-components";
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { StoredChain } from "../../../../contexts/configured-chains";
 
 interface EmbedSetupProps {
   contract: DropContract;
@@ -185,7 +186,22 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const chainId = useDashboardEVMChainId();
   const configuredChains = useSupportedChainsRecord();
 
-  const chain = configuredChains[chainId as number];
+  const chain = (configuredChains[chainId as number] as
+    | StoredChain
+    | undefined) || {
+    name: "Unknown Chain",
+    chainId: chainId || -1,
+    rpc: [],
+    chain: "unknown",
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    shortName: "unknown",
+    slug: "unknown",
+    testnet: false,
+  };
 
   const { register, watch } = useForm<{
     rpcUrl: string;
@@ -217,7 +233,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
 
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const configuredChainWithNewRpc = configureChain(chain as Chain, {
+  const configuredChainWithNewRpc = configureChain(chain, {
     rpc: watch("rpcUrl"),
   });
   const minimizedChain = minimizeChain(configuredChainWithNewRpc);
