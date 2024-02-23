@@ -55,7 +55,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns The ethers.js provider.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
+       * import { ethers6Adapter } from "@thirdweb/adapters";
        * const provider = ethers6Adapter.provider.toEthers(client, chainId);
        * ```
        */
@@ -69,7 +69,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
+       * import { ethers6Adapter } from "@thirdweb/adapters";
        * const ethersContract = await ethers6Adapter.contract.toEthers(twContract);
        * ```
        */
@@ -81,7 +81,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns A promise that resolves to a ThirdwebContract instance.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
+       * import { ethers6Adapter } from "@thirdweb/adapters";
        *
        * const twContract = await ethers6Adapter.contract.fromEthersContract({
        *  client,
@@ -100,20 +100,20 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns - A Promise that resolves to an Wallet object.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
+       * import { ethers6Adapter } from "@thirdweb/adapters";
        * const wallet = await ethers6Adapter.signer.fromEthersSigner(signer);
        * ```
        */
       fromEthers: (signer: ethers6.Signer) => fromEthersSigner(signer),
 
       /**
-       * Converts a Thirdweb account to an ethers.js signer.
+       * Converts a Thirdweb wallet to an ethers.js signer.
        * @param client - The thirdweb client.
        * @param wallet - The thirdweb wallet.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters/erthers6";
+       * import { ethers6Adapter } from "@thirdweb/adapters";
        * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
        * ```
        */
@@ -268,7 +268,7 @@ async function toEthersSigner(
   }
 
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
-    address: string;
+    private address: string;
     override provider: ethers6.ethers.JsonRpcProvider;
     constructor(provider: ethers6.JsonRpcProvider, address: string) {
       super(provider);
@@ -280,10 +280,7 @@ async function toEthersSigner(
       // needs to be a promise because ethers6 returns a promise
       return this.address;
     }
-    override connect(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      _provider: ethers6.ethers.Provider | null,
-    ): ethers6.ethers.Signer {
+    override connect(): ethers6.ethers.Signer {
       return this;
     }
     override async sendTransaction(
