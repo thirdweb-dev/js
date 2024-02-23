@@ -75,3 +75,5 @@ future_app/
 
 # generated files
 graphql/**/__generated__/
+# Sentry Config File
+.sentryclirc
