@@ -3,13 +3,9 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { FiArrowRight, FiX } from "react-icons/fi";
 import { Heading, TrackedLink } from "tw-components";
 
-export const AnnouncementBanner = (props: {
-  label: string;
-  href: string;
-  id: string;
-}) => {
+export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage(`dismissed-banner-${props.id}`, false, true);
+    useLocalStorage("dismissed-free-trial", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -20,7 +16,7 @@ export const AnnouncementBanner = (props: {
       position="sticky"
       zIndex="10"
       py={3}
-      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #0385f4 100%)"
+      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #7bdefe 100%)"
     >
       <Flex
         w="full"
@@ -30,7 +26,11 @@ export const AnnouncementBanner = (props: {
         px={4}
       >
         <Box display={{ base: "none", md: "block" }} />
-        <TrackedLink href={props.href} category="announcement" label={props.id}>
+        <TrackedLink
+          href="/dashboard/settings/billing?claimGrowth"
+          category="announcement"
+          label="growthTrialBanner"
+        >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
               cursor="pointer"
@@ -46,7 +46,7 @@ export const AnnouncementBanner = (props: {
                 color="white"
                 fontWeight={500}
               >
-                {props.label}
+                1-month free trial on our Growth plan
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
@@ -58,7 +58,7 @@ export const AnnouncementBanner = (props: {
           aria-label="Close announcement"
           icon={<FiX />}
           colorScheme="blackAlpha"
-          color="white"
+          color={{ base: "white", md: "black" }}
           variant="ghost"
           onClick={() => setHasDismissedAnnouncement(true)}
         />

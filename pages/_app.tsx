@@ -242,11 +242,7 @@ const ConsoleApp = memo(function ConsoleApp({
       />
 
       <ChakraProvider theme={chakraThemeWithFonts}>
-        <AnnouncementBanner
-          id="hooks-smart-contract-google-form"
-          label={`thirdweb is improving the way that we help you build smart contracts. We'd love to get your feedback. Take our survey`}
-          href="https://docs.google.com/forms/d/e/1FAIpQLSf9V3BLNKiJrYgBy3vlgsImuFYzHhZY1Fv18jtdtG3R1tuwog/viewform"
-        />
+        <AnnouncementBanner />
         {isFallback && Component.fallback
           ? Component.fallback
           : getLayout(<Component {...pageProps} />, pageProps)}
