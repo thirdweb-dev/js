@@ -20,7 +20,7 @@ export function tokenURI(
   return readContract({
     ...options,
     method:
-      "function tokenURI(uint256 tokenId) external view returns (string memory)",
+      "function tokenURI(tokenId uint256) external view returns (string memory)",
     params: [options.tokenId],
   });
 }

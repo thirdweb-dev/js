@@ -26,9 +26,9 @@
       "default": "./dist/cjs/exports/thirdweb.js"
     },
     "./adapters": {
-      "types": "./dist/types/exports/adapters.d.ts",
-      "import": "./dist/esm/exports/adapters.js",
-      "default": "./dist/cjs/exports/adapters.js"
+      "types": "./dist/types/exports/adapters/*.d.ts",
+      "import": "./dist/esm/exports/adapters/*.js",
+      "default": "./dist/cjs/exports/adapters/*.js"
     },
     "./chains": {
       "types": "./dist/types/exports/chains.d.ts",
@@ -95,7 +95,7 @@
   "typesVersions": {
     "*": {
       "adapters": [
-        "./dist/types/exports/adapters.d.ts"
+        "./dist/types/exports/adapters/*.d.ts"
       ],
       "chains": [
         "./dist/types/exports/chains.d.ts"
