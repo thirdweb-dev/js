@@ -242,6 +242,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           oauthProvider,
           closeOpenedWindow: params.closeOpenedWindow,
           openedWindow: params.openedWindow,
+          skipCloseWindowCheck: params.skipCloseWindowCheck,
         });
       }
       case "jwt": {

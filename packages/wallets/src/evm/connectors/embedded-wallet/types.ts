@@ -32,6 +32,7 @@ type OauthAuthParams = {
   strategy: EmbeddedWalletOauthStrategy;
   openedWindow?: Window;
   closeOpenedWindow?: (window: Window) => void;
+  skipCloseWindowCheck?: boolean;
 };
 
 type JwtAuthParams = {
