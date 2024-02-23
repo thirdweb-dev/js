@@ -32,12 +32,13 @@ export const CustomSDKContext: ComponentWithChildren<{
         gasSettings: {
           maxPriceInGwei: 650,
         },
-        readonlySettings: networkInfo
-          ? {
-              chainId: desiredChainId,
-              rpcUrl: getDashboardChainRpc(networkInfo),
-            }
-          : undefined,
+        readonlySettings:
+          networkInfo && desiredChainId
+            ? {
+                chainId: desiredChainId,
+                rpcUrl: getDashboardChainRpc(networkInfo),
+              }
+            : undefined,
         ...options,
       }}
       clientId={DASHBOARD_THIRDWEB_CLIENT_ID}

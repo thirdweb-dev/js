@@ -3,7 +3,11 @@ import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
 
 export function getDashboardChainRpc(chain: Chain) {
   try {
-    const rpcUrl = getValidChainRPCs(chain, DASHBOARD_THIRDWEB_CLIENT_ID)[0];
+    const rpcUrl = getValidChainRPCs(
+      chain,
+      DASHBOARD_THIRDWEB_CLIENT_ID,
+      "http",
+    )[0];
     // based on the environment hit dev or production
     if (rpcUrl.includes("rpc.thirdweb.com")) {
       if (!isProd) {

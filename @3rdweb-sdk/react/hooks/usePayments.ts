@@ -338,6 +338,7 @@ export function usePaymentsRegisterContract() {
     async (input: RegisterContractInput) => {
       invariant(token, "No token found");
       invariant(address, "No wallet address found");
+      invariant(input.chain, "No chain found");
       const sdk = getEVMThirdwebSDK(
         parseInt(input.chain),
         `https://${input.chain}.rpc.${PROD_OR_DEV_URL}`,

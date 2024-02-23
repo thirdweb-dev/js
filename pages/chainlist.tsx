@@ -276,11 +276,11 @@ const SearchResult: React.FC<{
           >
             RPC URL
           </Text>
-          {chain.hasRpc && !isDeprecated ? (
+          {chain.hasRpc && chain.chainId && !isDeprecated ? (
             <InputGroup>
               <Input
                 readOnly
-                value={`${chain.slug}.rpc.thirdweb.com`}
+                value={`${chain.chainId}.rpc.thirdweb.com`}
                 isDisabled={isDeprecated}
               />
               <InputRightElement>
@@ -290,7 +290,7 @@ const SearchResult: React.FC<{
                   aria-label="Copy RPC url"
                   size="sm"
                   colorScheme={undefined}
-                  value={`${chain.slug}.rpc.thirdweb.com`}
+                  value={`${chain.chainId}.rpc.thirdweb.com`}
                 />
               </InputRightElement>
             </InputGroup>
