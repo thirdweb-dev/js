@@ -44,6 +44,7 @@ import {
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { prettyPrintCurrency } from "../utils";
+import { utils } from "ethers";
 
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
@@ -64,7 +65,11 @@ const setColumns = (instanceUrl: string) => [
     cell: (cell) => {
       const address = cell.getValue();
       return (
-        <AddressCopyButton address={address} shortenAddress={false} size="xs" />
+        <AddressCopyButton
+          address={utils.getAddress(address)}
+          shortenAddress={false}
+          size="xs"
+        />
       );
     },
   }),

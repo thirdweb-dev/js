@@ -464,7 +464,6 @@ const TransactionDetailsDrawer = ({
     return null;
   }
 
-  // this can possibly be undfined!!
   const chain: Chain | undefined =
     chainIdToChainRecord[parseInt(transaction.chainId)];
   const explorer = chain?.explorers?.[0];
