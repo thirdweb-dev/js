@@ -26,6 +26,7 @@ import {
   Collapse,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
+import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -463,8 +464,10 @@ const TransactionDetailsDrawer = ({
     return null;
   }
 
-  const chain = chainIdToChainRecord[parseInt(transaction.chainId)];
-  const explorer = chain.explorers?.[0];
+  // this can possibly be undfined!!
+  const chain: Chain | undefined =
+    chainIdToChainRecord[parseInt(transaction.chainId)];
+  const explorer = chain?.explorers?.[0];
 
   const status = statusDetails[transaction.status as EngineStatus];
   const functionCalled =
@@ -521,8 +524,8 @@ const TransactionDetailsDrawer = ({
   if (transaction.gasLimit && transaction.gasPrice) {
     const txFee =
       (parseFloat(transaction.gasLimit) * parseFloat(transaction.gasPrice)) /
-      10 ** chain.nativeCurrency.decimals;
-    txFeeDisplay = `${txFee} ${chain.nativeCurrency.symbol}`;
+      10 ** (chain?.nativeCurrency.decimals || 18);
+    txFeeDisplay = `${txFee} ${chain?.nativeCurrency.symbol || "ETH"}`;
   }
 
   return (
