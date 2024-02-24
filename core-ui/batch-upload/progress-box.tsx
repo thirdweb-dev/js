@@ -1,5 +1,5 @@
 import { Flex, Progress } from "@chakra-ui/react";
-import { UploadProgressEvent } from "@thirdweb-dev/storage";
+import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { useEffect, useState } from "react";
 import { Text } from "tw-components";
 

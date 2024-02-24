@@ -1,4 +1,4 @@
-import type { QueryClient } from "@tanstack/query-core";
+import type { QueryClient } from "@tanstack/react-query";
 import { publishedContractQuery } from "components/explore/contract-card";
 
 export type PublishedContractID = `${string}/${string}`;

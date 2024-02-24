@@ -7,8 +7,11 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { QueryClient } from "@tanstack/query-core";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";

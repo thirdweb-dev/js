@@ -153,13 +153,7 @@ module.exports = {
     ],
   },
   parser: "@typescript-eslint/parser",
-  plugins: [
-    "@typescript-eslint",
-    "import",
-    "inclusive-language",
-    "react",
-    "react-hooks",
-  ],
+  plugins: ["@typescript-eslint", "import", "inclusive-language", "react"],
   parserOptions: {
     ecmaVersion: 2019,
     ecmaFeatures: {

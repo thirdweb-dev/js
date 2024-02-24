@@ -1,13 +1,12 @@
 import { getEVMThirdwebSDK } from "./sdk";
-import { Provider } from "@ethersproject/abstract-provider";
 import { Ethereum } from "@thirdweb-dev/chains";
-import { utils } from "ethers";
+import { utils, type providers } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import invariant from "tiny-invariant";
 
-let THIRDWEB_PROVIDER: Provider | null = null;
+let THIRDWEB_PROVIDER: providers.Provider | null = null;
 
-function getMainnetProvider(): Provider {
+function getMainnetProvider(): providers.Provider {
   if (THIRDWEB_PROVIDER) {
     return THIRDWEB_PROVIDER;
   }

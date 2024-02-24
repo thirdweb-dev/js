@@ -1,6 +1,5 @@
+import { Image, type ImgProps, Skeleton } from "@chakra-ui/react";
 import hexagon from "./hexagon.png";
-import { Image, ImgProps } from "@chakra-ui/image";
-import { Skeleton } from "@chakra-ui/skeleton";
 
 export interface MaskedAvatarProps
   extends Omit<ImgProps, "as" | "viewBox" | "boxSize"> {

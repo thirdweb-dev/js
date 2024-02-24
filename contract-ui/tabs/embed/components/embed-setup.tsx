@@ -1,5 +1,4 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { useBreakpointValue } from "@chakra-ui/media-query";
 import {
   Flex,
   FormControl,
@@ -7,6 +6,7 @@ import {
   Link,
   Select,
   Stack,
+  useBreakpointValue,
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";

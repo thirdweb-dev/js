@@ -23,25 +23,24 @@ jobs:
         node_version: [18]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up NodeJS ${{ matrix.node_version }}
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
-          cache: "yarn"
-
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
       # for testing we're also gonna setup bun
       - name: Install bun
         uses: oven-sh/setup-bun@v1
 
       - name: Run CI
         run: |
-          yarn global add node-gyp
-          yarn install
-          yarn lint
-          yarn test
+          pnpm install
+          pnpm lint
+          pnpm test
         env:
           PAYMENTS_ADMIN_SECRET: ${{ secrets.PAYMENTS_ADMIN_SECRET }}
           NEXT_PUBLIC_PAYMENTS_API: ${{ vars.NEXT_PUBLIC_PAYMENTS_API }}

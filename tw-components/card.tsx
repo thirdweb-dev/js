@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/layout";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { createContext, useContext } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 

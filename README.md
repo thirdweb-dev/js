@@ -6,28 +6,28 @@ This repo contains the full source for all of thirdweb.com and the thirdweb dash
 
 ### Install dependencies
 
-We use `yarn`.
+We use `pnpm`.
 
 ```sh
-yarn install
+pnpm install
 ```
 
 ### Generate graphql types
 
 ```sh
-yarn apollo-codegen
+pnpm apollo-codegen
 ```
 
 ### Starting local dev server.
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 ### Building for production
 
 ```sh
-yarn build
+pnpm build
 ```
 
 ### Environment Variables

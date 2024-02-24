@@ -19,7 +19,7 @@ import {
   useAddress,
   useStorageUpload,
 } from "@thirdweb-dev/react";
-import { UploadProgressEvent } from "@thirdweb-dev/storage";
+import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
