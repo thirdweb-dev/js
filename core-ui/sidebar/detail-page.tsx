@@ -1,7 +1,7 @@
 import { SidebarNav } from "./nav";
 import { NavLink } from "./nav-link";
 import { Box, Flex, Image, Skeleton, useDisclosure } from "@chakra-ui/react";
-import type { useContractMetadata } from "@thirdweb-dev/react/evm";
+import { useContract, useContractMetadata } from "@thirdweb-dev/react/evm";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { EnhancedRoute } from "contract-ui/types/types";
 import { useRouter } from "next/router";
@@ -11,18 +11,18 @@ import { ComponentWithChildren } from "types/component-with-children";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 type ContractSidebarProps = {
-  address: string;
-  metadataQuery: ReturnType<typeof useContractMetadata>;
+  contractAddress: string;
   routes: EnhancedRoute[];
   activeRoute?: EnhancedRoute;
 };
 
 export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
-  address,
-  metadataQuery,
+  contractAddress,
   routes,
   activeRoute,
 }) => {
+  const contractQuery = useContract(contractAddress);
+  const contractMetadataQuery = useContractMetadata(contractQuery.contract);
   const openState = useDisclosure();
   return (
     <SidebarNav
@@ -46,9 +46,13 @@ export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
             title={
               <Skeleton
                 as="span"
-                isLoaded={metadataQuery.isSuccess || metadataQuery.isError}
+                isLoaded={
+                  contractMetadataQuery.isSuccess ||
+                  contractMetadataQuery.isError
+                }
               >
-                {metadataQuery.data?.name || shortenIfAddress(address)}
+                {contractMetadataQuery.data?.name ||
+                  shortenIfAddress(contractAddress)}
               </Skeleton>
             }
             links={routes

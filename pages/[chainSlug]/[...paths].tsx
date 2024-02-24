@@ -12,7 +12,6 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
-import { useContract, useContractMetadata } from "@thirdweb-dev/react";
 import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
@@ -153,8 +152,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const router = useRouter();
 
   const activeTab = router.query?.paths?.[1] || "overview";
-  const contractQuery = useContract(contractAddress);
-  const contractMetadataQuery = useContractMetadata(contractQuery.contract);
+
   const routes = useContractRouteConfig(contractAddress);
 
   const activeRoute = useMemo(
@@ -228,7 +226,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
             >
               <ContractMetadata
                 contractAddress={contractAddress}
-                metadataQuery={contractMetadataQuery}
                 chain={chain}
               />
               <PrimaryDashboardButton contractAddress={contractAddress} />
@@ -241,8 +238,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
         </Container>
       </Box>
       <ContractProgramSidebar
-        address={contractAddress}
-        metadataQuery={contractMetadataQuery}
+        contractAddress={contractAddress}
         routes={routes}
         activeRoute={activeRoute}
       />
