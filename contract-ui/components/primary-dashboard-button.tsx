@@ -31,7 +31,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   const router = useRouter();
 
   const oldRegistryContractList = useContractList(
-    chain?.chainId || -1,
+    chain?.chainId || 0,
     chain ? getDashboardChainRpc(chain) : "",
     walletAddress,
   );
