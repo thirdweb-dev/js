@@ -169,6 +169,7 @@ export function tlDefault(): ThirdwebLocale {
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
+      magicEdenWallet: extensionAndQRScanScreens("Magic Eden"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
