@@ -390,7 +390,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
 
   let detectedExtension: EVMContractProps["detectedExtension"] = "unknown";
 
-  if (chain) {
+  if (chain && chain.chainId) {
     try {
       // create the SDK on the chain
       const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));

@@ -105,12 +105,13 @@ export function getEVMThirdwebSDK(
   // PERF ISSUE - if the sdkOptions is a huge object, stringify will be slow
 
   const readonlySettings =
-    chainId + rpcUrl
+    chainId && rpcUrl
       ? {
           chainId,
           rpcUrl,
         }
       : undefined;
+
   const sdkKey =
     chainId +
     rpcUrl +

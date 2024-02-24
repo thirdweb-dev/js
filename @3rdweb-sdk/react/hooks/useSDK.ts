@@ -33,8 +33,8 @@ export function useContractList(
   return useQuery(
     ["dashboard-registry", walletAddress, "contract-list", { chainId }],
     async () => {
-      if (!walletAddress) {
-        return;
+      if (!walletAddress || !chainId) {
+        return [];
       }
       const sdk = getEVMThirdwebSDK(chainId, rpcUrl);
       const contractList = await sdk.getContractList(walletAddress);

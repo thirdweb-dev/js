@@ -30,6 +30,7 @@ export function useRemoveContractMutation() {
       );
       invariant(chainIdToChainRecord, "chains not initialzed yet");
       invariant(signer, "no wallet connected");
+      invariant(data.chainId, "chainId not provided");
 
       const { contractAddress, chainId, registry } = data;
 
