@@ -37,7 +37,7 @@ export type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
 
 export type BaseTransactionOptions<
   T extends object = object,
-  abi extends Abi = [],
+  abi extends Abi = any,
 > = {
   contract: ThirdwebContract<abi>;
 } & T;
