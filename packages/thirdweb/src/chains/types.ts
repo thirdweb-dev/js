@@ -68,3 +68,37 @@ export type ApiChain = {
     bridges?: Readonly<Array<{ url: string }>>;
   };
 };
+
+// legacy chain type
+export type LegacyChain = {
+  name: string;
+  title?: string;
+  chain: string;
+  icon?: Icon;
+  rpc: readonly string[];
+  features?: Readonly<Array<{ name: string }>>;
+  faucets?: readonly string[];
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  infoURL?: string;
+  shortName: string;
+  chainId: number;
+  networkId?: number;
+  ens?: {
+    registry: string;
+  };
+  explorers?: Readonly<Array<ChainExplorer>>;
+  testnet: boolean;
+  slug: string;
+  slip44?: number;
+  status?: string;
+  redFlags?: readonly string[];
+  parent?: {
+    chain: string;
+    type: string;
+    bridges?: Readonly<Array<{ url: string }>>;
+  };
+};

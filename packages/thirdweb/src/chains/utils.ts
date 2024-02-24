@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
-import type { ApiChain, Chain, ChainOptions } from "./types.js";
+import type { ApiChain, Chain, ChainOptions, LegacyChain } from "./types.js";
 import type { Chain as ViemChain } from "viem";
 
 /**
@@ -20,12 +20,16 @@ import type { Chain as ViemChain } from "viem";
  * });
  * ```
  */
-export function defineChain(options: number | ChainOptions | ViemChain): Chain {
+export function defineChain(
+  options: number | ChainOptions | ViemChain | LegacyChain,
+): Chain {
   if (typeof options === "number") {
     return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
   }
   if (isViemChain(options)) {
     return convertViemChain(options);
+  } else if (isLegacyChain(options)) {
+    return convertLegacyChain(options);
   }
   // otherwise if it's not a viem chain, continue
   let rpc = options.rpc;
@@ -35,7 +39,38 @@ export function defineChain(options: number | ChainOptions | ViemChain): Chain {
   return { ...options, rpc } as const;
 }
 
-function isViemChain(chain: ChainOptions | ViemChain): chain is ViemChain {
+function isLegacyChain(
+  chain: ChainOptions | ViemChain | LegacyChain,
+): chain is LegacyChain {
+  return "rpc" in chain && Array.isArray(chain.rpc) && "slug" in chain;
+}
+
+function convertLegacyChain(legacyChain: LegacyChain): Chain {
+  const c: Chain = {
+    id: legacyChain.chainId,
+    name: legacyChain.name,
+    rpc:
+      legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.rpc.thirdweb.com`,
+    blockExplorers: legacyChain?.explorers?.map((explorer) => ({
+      name: explorer.name,
+      url: explorer.url,
+      apiUrl: explorer.url,
+    })),
+    nativeCurrency: {
+      name: legacyChain.nativeCurrency.name,
+      symbol: legacyChain.nativeCurrency.symbol,
+      decimals: legacyChain.nativeCurrency.decimals,
+    },
+  };
+  if (legacyChain.testnet) {
+    return { ...c, testnet: true };
+  }
+  return c;
+}
+
+function isViemChain(
+  chain: ChainOptions | ViemChain | LegacyChain,
+): chain is ViemChain {
   return "rpcUrls" in chain && !("rpc" in chain);
 }
 
