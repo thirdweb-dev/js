@@ -90,5 +90,8 @@ Sentry.init({
     /127\.0\.0\.1:4001\/isrunning/i,
     /webappstoolbarba\.texthelp\.com\//i,
     /metrics\.itunes\.apple\.com\.edgesuite\.net\//i,
+    // injected (extensions)
+    /inject/i,
   ],
+  allowUrls: [/thirdweb-dev\.com/i, /thirdweb\.com/, /thirdweb-preview\.com/],
 });
