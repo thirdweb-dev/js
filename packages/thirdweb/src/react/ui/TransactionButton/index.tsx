@@ -1,14 +1,10 @@
 import {
-  waitForReceipt,
+  waitForReceipt as doWaitForReceipt,
   type WaitForReceiptOptions,
 } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { Button } from "../components/buttons.js";
 import { Spinner } from "../components/Spinner.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "../../providers/wallet-provider.js";
+import { useActiveAccount } from "../../providers/wallet-provider.js";
 import { useSendTransaction } from "../../hooks/contract/useSend.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
@@ -17,24 +13,29 @@ import { useState } from "react";
 /**
  * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
  */
-export type TransactionButtonProps = {
+export type TransactionButtonProps<TWaitForReceipt extends boolean> = {
   /**
-   * The transaction object of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
+   * The a function returning a prepared transaction of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
-  transaction: PreparedTransaction;
+  transaction: () => PreparedTransaction | Promise<PreparedTransaction>;
   /**
    * Whether to wait for the transaction receipt after sending the transaction
    */
-  waitForReceipt?: boolean;
+  waitForReceipt?: TWaitForReceipt;
+
   /**
-   * Callback to be called when the transaction is successful
-   * @param transactionHash - The object of type [`WaitForReceiptOptions`](https://portal.thirdweb.com/references/typescript/v5/WaitForReceiptOptions)
+   * Callback that will be called when the transaction is submitted onchain
+   * @param transactionResult - The object of type [`WaitForReceiptOptions`](https://portal.thirdweb.com/references/typescript/v5/WaitForReceiptOptions)
+   */
+  onSubmitted?: (transactionResult: WaitForReceiptOptions) => void;
+  /**
+   *
+   *Callback that will be called when the transaction is confirmed onchain
+   *
+   ***NOTE**: This callback will only be called if `waitForReceipt` is also set to true!
    * @param receipt - The transaction receipt object of type [`TransactionReceipt`](https://portal.thirdweb.com/references/typescript/v5/TransactionReceipt)
    */
-  onSuccess?: (
-    transactionHash: WaitForReceiptOptions,
-    receipt?: TransactionReceipt,
-  ) => void;
+  onReceipt?: (receipt: TransactionReceipt) => void;
   /**
    * The Error thrown when trying to send the transaction
    * @param error - The `Error` object thrown
@@ -43,7 +44,7 @@ export type TransactionButtonProps = {
   /**
    * Callback to be called when the button is clicked
    */
-  onSubmit?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   /**
    * The className to apply to the button element for custom styling
    */
@@ -66,7 +67,7 @@ export type TransactionButtonProps = {
  * @example
  * ```tsx
  * <TransactionButton
- *   transaction={transaction}
+ *   transaction={() => {}}
  *   onSuccess={handleSuccess}
  *   onError={handleError}
  * >
@@ -75,37 +76,23 @@ export type TransactionButtonProps = {
  * ```
  * @component
  */
-export function TransactionButton(props: TransactionButtonProps) {
+export function TransactionButton<
+  const TWaitForReceipt extends boolean = false,
+>(props: TransactionButtonProps<TWaitForReceipt>) {
   const {
     children,
     transaction,
-    onSuccess,
+    onSubmitted,
+    onReceipt,
     onError,
-    onSubmit,
+    onClick,
+    waitForReceipt,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
   const [isPending, setIsPending] = useState(false);
 
-  const connectedWalletChain = useActiveWalletChain();
-  const switchChain = useSwitchActiveWalletChain();
-  const txChain = transaction.chain;
   const sendTransaction = useSendTransaction();
-
-  // if the connected wallet is on a different chain than the transaction, show a switch chain button
-  if (connectedWalletChain && connectedWalletChain.id !== txChain.id) {
-    return (
-      <Button
-        {...buttonProps}
-        variant="primary"
-        onClick={() => {
-          switchChain(txChain);
-        }}
-      >
-        Switch Chain
-      </Button>
-    );
-  }
 
   if (!isPending) {
     return (
@@ -115,25 +102,32 @@ export function TransactionButton(props: TransactionButtonProps) {
         disabled={!account}
         variant={"primary"}
         data-is-loading={isPending}
-        onClick={async () => {
+        onClick={async (e) => {
+          if (onClick) {
+            onClick(e);
+          }
           try {
             setIsPending(true);
-            const result = await sendTransaction.mutateAsync(transaction);
-            let receipt;
-            if (props.waitForReceipt) {
-              receipt = await waitForReceipt(result);
+            const resolvedTx = await transaction();
+
+            const result = await sendTransaction.mutateAsync(resolvedTx);
+
+            if (onSubmitted) {
+              onSubmitted(result);
             }
-            if (onSuccess) {
-              onSuccess(result, receipt);
+
+            if (waitForReceipt) {
+              const receipt = await doWaitForReceipt(result);
+              if (onReceipt) {
+                onReceipt(receipt);
+              }
             }
           } catch (error) {
             if (onError) {
               onError(error as Error);
             }
-          }
-          setIsPending(false);
-          if (onSubmit) {
-            onSubmit();
+          } finally {
+            setIsPending(false);
           }
         }}
         style={{
