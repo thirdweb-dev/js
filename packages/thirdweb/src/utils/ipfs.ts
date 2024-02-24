@@ -27,7 +27,8 @@ const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
 export function resolveScheme(options: ResolveSchemeOptions) {
   let url: string;
   if (options.uri.startsWith("ipfs://")) {
-    const gateway = options.client.config?.storage?.gateway ?? DEFAULT_GATEWAY;
+    const gateway =
+      options.client.config?.storage?.gatewayUrl ?? DEFAULT_GATEWAY;
     const clientId = options.client.clientId;
     const cid = options.uri.slice(7);
     url =

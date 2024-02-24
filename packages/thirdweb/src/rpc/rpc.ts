@@ -111,9 +111,19 @@ export function getRpcClient(
   }
 
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
-    const batchSize = options.config?.maxBatchSize ?? DEFAULT_MAX_BATCH_SIZE;
+    const batchSize =
+      // look at the direct options passed
+      options.config?.maxBatchSize ??
+      // look at the client options
+      options.client.config?.rpc?.maxBatchSize ??
+      // use defaults
+      DEFAULT_MAX_BATCH_SIZE;
     const batchTimeoutMs =
-      options.config?.batchTimeoutMs ?? DEFAULT_BATCH_TIMEOUT_MS;
+      // look at the direct options passed
+      options.config?.batchTimeoutMs ??
+      // look at the client options
+      options.client.config?.rpc?.batchTimeoutMs ??
+      DEFAULT_BATCH_TIMEOUT_MS;
     // inflight requests
     const inflightRequests = new Map<string, Promise<any>>();
     let pendingBatch: Array<{

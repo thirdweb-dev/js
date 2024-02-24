@@ -8,13 +8,44 @@ type FetchConfig = {
 };
 
 type ClientOptions = Prettify<{
+  /**
+   * The configuration options for the client.
+   */
   config?: {
+    /**
+     * The configuration options for the RPC client.
+     */
     rpc?: {
+      /**
+       * The configuration options for the fetch function.
+       * @default {}
+       */
       fetch?: FetchConfig;
+      /**
+       * The maximum number of requests to batch together.
+       * @default 100
+       */
+      maxBatchSize?: number;
+      /**
+       * The maximum time to wait before sending a batch of requests.
+       * @default 0 (no timeout)
+       */
+      batchTimeoutMs?: number;
     };
+    /**
+     * The configuration options for the storage client.
+     */
     storage?: {
+      /**
+       * The configuration options for the fetch function.
+       * @default {}
+       */
       fetch?: FetchConfig;
-      gateway?: string;
+      /**
+       * The IPFS gateway URL.
+       * @default "https://<your_client_id>.ipfscdn.io/ipfs/<cid>"
+       */
+      gatewayUrl?: string;
     };
   };
 }>;
