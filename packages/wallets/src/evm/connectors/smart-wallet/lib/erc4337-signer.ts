@@ -1,4 +1,4 @@
-import { ethers, providers, utils } from "ethers";
+import { Contract, ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
@@ -6,6 +6,11 @@ import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import {
+  checkContractWalletSignature,
+  chainIdToThirdwebRpc,
+} from "../../../wallets/abstract";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -138,7 +143,11 @@ Code: ${errorCode}`;
     return this.address as string;
   }
 
-  async signMessage(message: Bytes | string): Promise<string> {
+  /**
+   * Sign a message and return the signature
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Deploy smart wallet if needed
     const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
     if (isNotDeployed) {
       console.log(
@@ -151,7 +160,72 @@ Code: ${errorCode}`;
       await tx.wait();
     }
 
-    return await this.originalSigner.signMessage(message);
+    const chainId = await this.getChainId();
+    const address = await this.getAddress();
+
+    /**
+     * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
+     * If this fails, we fallback to the legacy signing method.
+     */
+    try {
+      const provider = new providers.JsonRpcProvider({
+        url: chainIdToThirdwebRpc(chainId),
+        skipFetchSetup: false,
+      });
+      const walletContract = new Contract(
+        address,
+        "function getMessageHash(bytes memory message) public view returns (bytes32)",
+        provider,
+      );
+
+      // if this doesn't fail, it's a post 1271 + typehash account
+      await walletContract.getMessageHash(message);
+
+      console.log(
+        "Signing with EIP-712 typed data and verifying with EIP-1271...",
+      );
+
+      const hash = utils.hashMessage(message);
+      const result = await signTypedDataInternal(
+        this,
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage: [{ name: "message", type: "bytes32" }] },
+        {
+          message: utils.defaultAbiCoder.encode(["bytes32"], [hash]),
+        },
+      );
+
+      const isValid = await checkContractWalletSignature(
+        hash,
+        result.signature,
+        address,
+        chainId,
+      );
+
+      if (!isValid) {
+        throw new Error("Invalid signature");
+      }
+
+      return result.signature;
+    } catch {
+      return await this.signMessageLegacy(this, message);
+    }
+  }
+
+  /**
+   * This is only for for legacy EIP-1271 signature verification
+   * Sign a message and return the signature
+   */
+  private async signMessageLegacy(
+    signer: Signer,
+    message: Bytes | string,
+  ): Promise<string> {
+    return await signer.signMessage(message);
   }
 
   async signTransaction(

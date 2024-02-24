@@ -15,7 +15,7 @@ import {
 import { createErc20 } from "../utils/currency";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+export function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
   return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
       ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
