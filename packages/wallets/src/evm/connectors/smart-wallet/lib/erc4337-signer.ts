@@ -160,8 +160,10 @@ Code: ${errorCode}`;
       await tx.wait();
     }
 
-    const chainId = await this.getChainId();
-    const address = await this.getAddress();
+    const [chainId, address] = await Promise.all([
+      this.getChainId(),
+      this.getAddress(),
+    ]);
     const originalMsgHash = utils.hashMessage(message);
 
     let factorySupports712: boolean;
