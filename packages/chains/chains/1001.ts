@@ -30,5 +30,5 @@ export default {
   "shortName": "Baobab",
   "slip44": 1,
   "slug": "klaytn-testnet-baobab",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;
