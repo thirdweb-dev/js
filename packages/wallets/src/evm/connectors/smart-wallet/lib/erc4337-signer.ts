@@ -194,7 +194,7 @@ Code: ${errorCode}`;
           chainId,
           verifyingContract: address,
         },
-        { AccountMessage: [{ name: "message", type: "bytes32" }] },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
         {
           message: utils.defaultAbiCoder.encode(["bytes32"], [hash]),
         },
