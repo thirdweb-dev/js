@@ -51,7 +51,7 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
               href={isFromLandingPage ? product.link : product.dashboardLink}
             >
               <Text size="label.md" m={0} color="bgBlack">
-                {product.name}
+                {product?.dashboardName || product.name}
               </Text>
             </LinkOverlay>
           </Flex>
