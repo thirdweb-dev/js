@@ -162,17 +162,16 @@ Code: ${errorCode}`;
 
     const chainId = await this.getChainId();
     const address = await this.getAddress();
+    const originalMsgHash = utils.hashMessage(message);
 
-    /**
-     * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
-     * If this fails, we fallback to the legacy signing method.
-     */
+    let factorySupports712: boolean;
+    let signature: string;
+
     try {
       const provider = new providers.JsonRpcProvider(
         chainIdToThirdwebRpc(chainId, this.config.clientId),
         chainId,
       );
-
       const walletContract = new Contract(
         address,
         [
@@ -180,12 +179,14 @@ Code: ${errorCode}`;
         ],
         provider,
       );
+      // if this fails it's a pre 712 factory
+      await walletContract.getMessageHash(originalMsgHash);
+      factorySupports712 = true;
+    } catch {
+      factorySupports712 = false;
+    }
 
-      const hash = utils.hashMessage(message);
-
-      // if this doesn't fail, it's a post 1271 + typehash account
-      await walletContract.getMessageHash(hash);
-
+    if (factorySupports712) {
       const result = await signTypedDataInternal(
         this,
         {
@@ -196,27 +197,27 @@ Code: ${errorCode}`;
         },
         { AccountMessage: [{ name: "message", type: "bytes" }] },
         {
-          message: utils.defaultAbiCoder.encode(["bytes32"], [hash]),
+          message: utils.defaultAbiCoder.encode(["bytes32"], [originalMsgHash]),
         },
       );
+      signature = result.signature;
+    } else {
+      signature = await this.originalSigner.signMessage(message);
+    }
 
-      const isValid = await checkContractWalletSignature(
-        message as string,
-        result.signature,
-        address,
-        chainId,
+    const isValid = await checkContractWalletSignature(
+      message as string,
+      signature,
+      address,
+      chainId,
+    );
+
+    if (isValid) {
+      return signature;
+    } else {
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
       );
-
-      if (!isValid) {
-        throw new Error("Invalid signature");
-      }
-
-      return result.signature;
-    } catch {
-      console.log(
-        "EIP-712 typed data and EIP-1271 verification failed, falling back to legacy signing method...",
-      );
-      return await this.originalSigner.signMessage(message);
     }
   }
 
