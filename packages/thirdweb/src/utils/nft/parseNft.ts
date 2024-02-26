@@ -1,4 +1,4 @@
-type NFTMetadata = {
+export type NFTMetadata = {
   id: bigint;
   uri: string;
   name?: string;

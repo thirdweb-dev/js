@@ -61,7 +61,11 @@ export async function getNFT(
       client: options.contract.client,
       tokenId: options.tokenId,
       tokenUri: uri,
-    }).catch(() => {}),
+    }).catch(() => ({
+      id: options.tokenId,
+      type: "ERC721",
+      uri,
+    })),
     {
       tokenId: options.tokenId,
       tokenUri: uri,

@@ -1,10 +1,7 @@
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { numberToHex } from "../encoding/hex.js";
-
-const FALLBACK_METADATA = {
-  name: "Failed to load NFT metadata",
-};
+import type { NFTMetadata } from "./parseNft.js";
 
 type FetchTokenMetadataOptions = {
   client: ThirdwebClient;
@@ -19,7 +16,9 @@ type FetchTokenMetadataOptions = {
  * @returns The token metadata.
  * @internal
  */
-export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
+export async function fetchTokenMetadata(
+  options: FetchTokenMetadataOptions,
+): Promise<NFTMetadata> {
   const { client, tokenId, tokenUri } = options;
   // handle case where the URI is a base64 encoded JSON (onchain nft)
   if (isBase64JSON(tokenUri)) {
@@ -31,7 +30,7 @@ export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
         { tokenId, tokenUri },
         e,
       );
-      return FALLBACK_METADATA;
+      throw e;
     }
   }
 
@@ -45,7 +44,7 @@ export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
     }
   } catch (e) {
     console.error("Failed to fetch non-dynamic NFT", { tokenId, tokenUri }, e);
-    return FALLBACK_METADATA;
+    throw e;
   }
 
   // DYNAMIC NFT FORMATS (2 options, sadly has to be waterfall)
@@ -72,6 +71,6 @@ export async function fetchTokenMetadata(options: FetchTokenMetadataOptions) {
     }
   } catch (e) {
     console.error("Failed to fetch dynamic NFT", { tokenId, tokenUri }, e);
-    return FALLBACK_METADATA;
+    throw e;
   }
 }
