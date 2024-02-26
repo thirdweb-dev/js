@@ -1,6 +1,6 @@
 ---
 "@thirdweb-dev/unity-js-bridge": minor
-"@thirdweb-dev/wallets": minor
+"@thirdweb-dev/wallets": patch
 ---
 
-[Smart Wallet] Always force deploy on sign/auth, remove legacy signing, always use 1271
+[Smart Wallet] Always force deploy on sign/auth, use 712 with 1271 where possible

@@ -144,7 +144,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.6.4";
+      (globalThis as any).X_SDK_VERSION = "4.7.0";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -812,18 +812,19 @@ class ThirdwebBridge implements TWBridge {
     if (!this.activeWallet) {
       throw new Error("No wallet connected");
     }
-    try{
+    try {
       const smartWallet = this.activeWallet as SmartWallet;
       const signer = await smartWallet.getPersonalWallet()?.getSigner();
       const res = await signer?.getAddress();
       return JSON.stringify({ result: res }, bigNumberReplacer);
     } catch {
-      console.debug("Could not find a smart wallet, defaulting to normal signer");
+      console.debug(
+        "Could not find a smart wallet, defaulting to normal signer",
+      );
       const signer = await this.activeWallet.getSigner();
       const res = await signer.getAddress();
       return JSON.stringify({ result: res }, bigNumberReplacer);
     }
-    
   }
 
   public openPopupWindow() {
