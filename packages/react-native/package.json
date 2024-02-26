@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
-    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-env": "^7.23.9",
     "@react-native-async-storage/async-storage": "^1.18.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",

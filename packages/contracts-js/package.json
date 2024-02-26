@@ -426,7 +426,7 @@
     "@thirdweb-dev/contracts": "3.10.3"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-env": "^7.23.9",
     "@babel/preset-typescript": "^7.23.3",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
