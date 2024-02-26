@@ -201,7 +201,7 @@ Code: ${errorCode}`;
       );
 
       const isValid = await checkContractWalletSignature(
-        hash,
+        message as string,
         result.signature,
         address,
         chainId,

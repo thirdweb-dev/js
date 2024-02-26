@@ -45,7 +45,7 @@ const EIP1271_ABI = [
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 
 export async function checkContractWalletSignature(
-  hash: string,
+  message: string,
   signature: string,
   address: string,
   chainId: number,
@@ -67,7 +67,10 @@ export async function checkContractWalletSignature(
   });
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   try {
-    const res = await walletContract.isValidSignature(hash, signature);
+    const res = await walletContract.isValidSignature(
+      utils.hashMessage(message),
+      signature,
+    );
     return res === EIP1271_MAGICVALUE;
   } catch {
     return false;
