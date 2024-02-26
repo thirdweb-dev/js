@@ -169,23 +169,24 @@ Code: ${errorCode}`;
      */
     try {
       const provider = new providers.JsonRpcProvider({
-        url: chainIdToThirdwebRpc(chainId),
+        url: chainIdToThirdwebRpc(chainId, this.config.clientId),
         skipFetchSetup: false,
       });
       const walletContract = new Contract(
         address,
-        "function getMessageHash(bytes memory message) public view returns (bytes32)",
+        "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
         provider,
       );
 
+      const hash = utils.hashMessage(message);
+
       // if this doesn't fail, it's a post 1271 + typehash account
-      await walletContract.getMessageHash(message);
+      await walletContract.getMessageHash(hash);
 
       console.log(
         "Signing with EIP-712 typed data and verifying with EIP-1271...",
       );
 
-      const hash = utils.hashMessage(message);
       const result = await signTypedDataInternal(
         this,
         {
