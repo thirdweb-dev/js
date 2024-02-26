@@ -61,6 +61,7 @@ export async function uploadBatchNode(
   });
 
   if (!res.ok) {
+    res.body?.cancel();
     if (res.status === 401) {
       throw new Error(
         "Unauthorized - You don't have permission to use this service.",

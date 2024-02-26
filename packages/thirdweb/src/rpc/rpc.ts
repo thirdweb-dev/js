@@ -259,6 +259,7 @@ async function fetchRpc(
   });
 
   if (!response.ok) {
+    response.body?.cancel();
     throw new Error(`RPC request failed with status ${response.status}`);
   }
 

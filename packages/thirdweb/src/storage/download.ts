@@ -29,6 +29,7 @@ export async function download(options: DownloadOptions) {
     requestTimeoutMs: options.client.config?.storage?.fetch?.requestTimeoutMs,
   });
   if (!res.ok) {
+    res.body?.cancel();
     throw new Error(`Failed to download file: ${res.statusText}`);
   }
   return res;

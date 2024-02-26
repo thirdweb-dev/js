@@ -61,6 +61,7 @@ export async function getSwapStatus(
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
+      response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
