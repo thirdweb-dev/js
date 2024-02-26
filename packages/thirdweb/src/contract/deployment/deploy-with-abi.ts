@@ -3,10 +3,12 @@ import type {
   AbiParameter,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
-import { concatHex, encodeAbiParameters, type Hex } from "viem";
+import { concatHex } from "viem";
 import type { SharedDeployOptions } from "./types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 
 export type PrepareDirectDeployTransactionOptions<
   TConstructor extends AbiConstructor,

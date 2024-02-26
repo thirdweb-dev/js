@@ -112,3 +112,8 @@ export {
   type Address,
   type AddressInput,
 } from "../utils/address.js";
+
+// ------------------------------------------------
+// abi
+// ------------------------------------------------
+export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";

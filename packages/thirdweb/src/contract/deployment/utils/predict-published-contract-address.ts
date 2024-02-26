@@ -3,10 +3,10 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getInitBytecodeWithSalt } from "../../../utils/any-evm/get-init-bytecode-with-salt.js";
 import { fetchDeployMetadata } from "./deploy-metadata.js";
 import { fetchPublishedContract } from "./fetch-published-contract.js";
-import { encodeAbiParameters } from "viem";
 import { computeDeploymentAddress } from "../../../utils/any-evm/compute-deployment-address.js";
 import { getCreate2FactoryAddress } from "../../../utils/any-evm/create-2-factory.js";
 import type { Chain } from "../../../chains/types.js";
+import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Predicts the implementation address of any published contract

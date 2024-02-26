@@ -126,6 +126,7 @@ module.exports = {
               "isAddress",
               "getAddress",
               "checksumAddress",
+              "encodeAbiParameters",
             ],
             message: "Use thirdweb/utils instead.",
           },

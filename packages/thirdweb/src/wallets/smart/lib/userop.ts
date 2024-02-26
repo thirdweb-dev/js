@@ -1,4 +1,4 @@
-import { concat, type Hex, encodeAbiParameters } from "viem";
+import { concat } from "viem";
 import type { SmartWalletOptions, UserOperation } from "../types.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -14,6 +14,8 @@ import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-va
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
+import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Create an unsigned user operation

@@ -1,4 +1,4 @@
-import { concatHex, encodeAbiParameters } from "viem";
+import { concatHex } from "viem";
 import { getFunctionSelector } from "./lib/getFunctionSelector.js";
 
 import type {
@@ -6,6 +6,7 @@ import type {
   AbiParameter,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
+import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 
 /**
  * Encodes an ABI function with its arguments into a hexadecimal string.
