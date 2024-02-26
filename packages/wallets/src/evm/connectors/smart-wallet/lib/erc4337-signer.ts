@@ -175,7 +175,9 @@ Code: ${errorCode}`;
 
       const walletContract = new Contract(
         address,
-        "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+        [
+          "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+        ],
         provider,
       );
 
