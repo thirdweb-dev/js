@@ -15,8 +15,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { providers, utils, Bytes, Signer } from "ethers";
-import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import { providers, utils } from "ethers";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
