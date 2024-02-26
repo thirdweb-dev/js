@@ -168,10 +168,11 @@ Code: ${errorCode}`;
      * If this fails, we fallback to the legacy signing method.
      */
     try {
-      const provider = new providers.JsonRpcProvider({
-        url: chainIdToThirdwebRpc(chainId, this.config.clientId),
-        skipFetchSetup: false,
-      });
+      const provider = new providers.JsonRpcProvider(
+        chainIdToThirdwebRpc(chainId, this.config.clientId),
+        chainId,
+      );
+
       const walletContract = new Contract(
         address,
         "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
@@ -182,10 +183,6 @@ Code: ${errorCode}`;
 
       // if this doesn't fail, it's a post 1271 + typehash account
       await walletContract.getMessageHash(hash);
-
-      console.log(
-        "Signing with EIP-712 typed data and verifying with EIP-1271...",
-      );
 
       const result = await signTypedDataInternal(
         this,
@@ -214,19 +211,11 @@ Code: ${errorCode}`;
 
       return result.signature;
     } catch {
-      return await this.signMessageLegacy(this, message);
+      console.log(
+        "EIP-712 typed data and EIP-1271 verification failed, falling back to legacy signing method...",
+      );
+      return await this.originalSigner.signMessage(message);
     }
-  }
-
-  /**
-   * This is only for for legacy EIP-1271 signature verification
-   * Sign a message and return the signature
-   */
-  private async signMessageLegacy(
-    signer: Signer,
-    message: Bytes | string,
-  ): Promise<string> {
-    return await signer.signMessage(message);
   }
 
   async signTransaction(
