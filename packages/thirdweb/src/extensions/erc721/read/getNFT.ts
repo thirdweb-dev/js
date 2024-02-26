@@ -34,18 +34,34 @@ export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT<"ERC721">> {
   const [uri, owner] = await Promise.all([
-    tokenURI(options),
+    tokenURI(options).catch(() => null),
     options.includeOwner
-      ? import("./ownerOf.js").then((m) => m.ownerOf(options))
+      ? import("./ownerOf.js").then((m) => m.ownerOf(options)).catch(() => null)
       : null,
   ]);
+
+  if (!uri) {
+    return parseNFT(
+      {
+        id: options.tokenId,
+        type: "ERC721",
+        uri: "",
+      },
+      {
+        tokenId: options.tokenId,
+        tokenUri: "",
+        type: "ERC721",
+        owner,
+      },
+    );
+  }
 
   return parseNFT(
     await fetchTokenMetadata({
       client: options.contract.client,
       tokenId: options.tokenId,
       tokenUri: uri,
-    }),
+    }).catch(() => {}),
     {
       tokenId: options.tokenId,
       tokenUri: uri,
