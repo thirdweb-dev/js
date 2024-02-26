@@ -17,7 +17,7 @@ describe("resolveScheme", () => {
       clientId: "test",
       config: {
         storage: {
-          gateway: "https://gateway.io/ipfs/{cid}",
+          gatewayUrl: "https://gateway.io/ipfs/{cid}",
         },
       },
     });
