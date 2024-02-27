@@ -23,13 +23,13 @@ export default {
     "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://zkevm.bridge.rpc.thefirechain.com"
+        "url": "https://zkevm-bridge-rpc.thefirechain.com"
       }
     ]
   },
   "rpc": [
     "https://814.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.zkevm.thefirechain.com"
+    "https://rpc-zkevm.thefirechain.com"
   ],
   "shortName": "firechan-zkEVM",
   "slug": "firechain-zkevm",
