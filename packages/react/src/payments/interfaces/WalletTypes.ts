@@ -15,8 +15,8 @@ export interface ConnectWalletProps {
 }
 
 export type onWalletConnectFailType = (props: {
-  walletType: typeof WalletTypeObj;
-  currentUserWalletType: typeof WalletTypeObj;
+  walletType: WalletType;
+  currentUserWalletType: WalletType;
   error: Error;
 }) => void;
 export type onWalletConnectedType = (props: {
