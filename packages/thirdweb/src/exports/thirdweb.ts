@@ -42,6 +42,11 @@ export {
 } from "../transaction/prepare-transaction.js";
 
 export {
+  type BaseTransactionOptions,
+  isBaseTransactionOptions,
+} from "../transaction/types.js";
+
+export {
   prepareContractCall,
   type PrepareContractCallOptions,
 } from "../transaction/prepare-contract-call.js";
