@@ -376,7 +376,7 @@ async function toEthersSigner(
 function alignTxToEthers(
   tx: TransactionSerializable,
 ): ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest> {
-  const { to: viemTo, type: viemType, ...rest } = tx;
+  const { to: viemTo, type: viemType, gas, ...rest } = tx;
   // massage "to" to fit ethers
   const to = !viemTo ? Promise.resolve(undefined) : viemTo;
   // massage "type" to fit ethers
@@ -404,7 +404,7 @@ function alignTxToEthers(
     }
   }
 
-  return { ...rest, to, type };
+  return { ...rest, gasLimit: gas, to, type };
 }
 
 async function alignTxFromEthers(
