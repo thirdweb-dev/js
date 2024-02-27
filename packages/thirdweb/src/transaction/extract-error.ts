@@ -29,7 +29,9 @@ export async function extractError<abi extends Abi>(args: {
               : undefined,
         });
         return new TransactionError(
-          `${parsedError.errorName} - ${parsedError.args}`,
+          `${parsedError.errorName}${
+            parsedError.args ? " - " + parsedError.args : ""
+          }`,
           contract,
         );
       } else {

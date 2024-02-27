@@ -11,7 +11,7 @@ import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 
 export type SendTransactionOptions = Prettify<
   {
-    transaction: PreparedTransaction;
+    transaction: PreparedTransaction<any>;
   } & (
     | {
         account?: never;
