@@ -182,7 +182,7 @@
     }
   },
   "scripts": {
-    "bench": "vitest bench",
+    "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "knip": "knip",
