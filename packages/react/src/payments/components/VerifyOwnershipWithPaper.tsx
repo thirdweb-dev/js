@@ -27,11 +27,11 @@ interface VerifyOwnershipWithPaperProps {
   clientId?: string;
 }
 
-const enum VERIFY_OWNERSHIP_WITH_PAPER_EVENT_TYPE {
-  USER_LOGIN_SUCCESS = "userLoginSuccess",
-  USER_LOGIN_FAILED = "userLoginFailed",
-  USER_CLOSE_LOGIN_PAGE = "userCloseLoginPage",
-}
+const VERIFY_OWNERSHIP_WITH_PAPER_EVENT_TYPE = {
+  USER_LOGIN_SUCCESS: "userLoginSuccess",
+  USER_LOGIN_FAILED: "userLoginFailed",
+  USER_CLOSE_LOGIN_PAGE: "userCloseLoginPage",
+} as const;
 
 export const VerifyOwnershipWithPaper: React.FC<
   VerifyOwnershipWithPaperProps

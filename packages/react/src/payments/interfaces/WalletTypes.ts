@@ -1,11 +1,13 @@
 // UNCHANGED
-export const enum WalletType {
-  Preset = "Preset",
-  MetaMask = "metaMask",
-  CoinbaseWallet = "coinbaseWallet",
-  WalletConnect = "walletConnect",
-  Phantom = "Phantom",
-}
+const WalletTypeObj = {
+  Preset: "Preset",
+  MetaMask: "metaMask",
+  CoinbaseWallet: "coinbaseWallet",
+  WalletConnect: "walletConnect",
+  Phantom: "Phantom",
+} as const;
+
+export type WalletType = (typeof WalletTypeObj)[keyof typeof WalletTypeObj];
 
 export interface ConnectWalletProps {
   onWalletConnected: onWalletConnectedType;
@@ -13,8 +15,8 @@ export interface ConnectWalletProps {
 }
 
 export type onWalletConnectFailType = (props: {
-  walletType: WalletType;
-  currentUserWalletType: WalletType;
+  walletType: typeof WalletTypeObj;
+  currentUserWalletType: typeof WalletTypeObj;
   error: Error;
 }) => void;
 export type onWalletConnectedType = (props: {
