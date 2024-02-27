@@ -20,7 +20,6 @@ export default {
   "networkId": 408,
   "redFlags": [],
   "rpc": [
-    "https://omega.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://408.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.omtch.com"
   ],

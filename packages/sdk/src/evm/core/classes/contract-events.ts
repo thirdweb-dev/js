@@ -2,10 +2,11 @@ import type { BaseContract, Event, providers, utils } from "ethers";
 import type EventEmitter from "eventemitter3";
 import { EventType } from "../../constants/events";
 import type { ContractEvent, EventQueryOptions } from "../../types/events";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 /**
  * Listen to Contract events in real time
+ * @contract
  * @public
  */
 export class ContractEvents<TContract extends BaseContract> {
@@ -61,7 +62,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @public
    * @param eventName - the event name as defined in the contract
    * @param listener - the callback function that will be called on every new event
-   * @returns a function to un-subscribe from the event
+   * @returns A function to un-subscribe from the event
    */
   public addEventListener<TEvent extends Record<string, any>>(
     // eslint-disable-next-line @typescript-eslint/ban-types

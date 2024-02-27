@@ -14,7 +14,12 @@ import {
   type BytesLike,
 } from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import {
+  NFT,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   ExtensionNotImplementedError,
@@ -54,17 +59,17 @@ import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { ERC1155Claimable } from "./erc-1155-claimable";
-import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { ERC1155Claimable } from "./internal/erc1155/erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./internal/erc1155/erc-1155-claimable-with-conditions";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 
 import { ContractEncoder } from "./contract-encoder";
-import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155LazyMintable } from "./erc-1155-lazy-mintable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
+import { Erc1155Burnable } from "./internal/erc1155/erc-1155-burnable";
+import { Erc1155Enumerable } from "./internal/erc1155/erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./internal/erc1155/erc-1155-lazy-mintable";
+import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
 
 /**
  * Standard ERC1155 NFT functions
@@ -74,6 +79,7 @@ import { Erc1155Mintable } from "./erc-1155-mintable";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc1155.transfer(walletAddress, tokenId, quantity);
  * ```
+ * @erc1155
  * @public
  */
 export class Erc1155<
@@ -173,7 +179,7 @@ export class Erc1155<
    * const nft = await contract.erc1155.totalSupply(tokenId);
    * ```
    * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
+   * @returns The total supply
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
@@ -268,6 +274,43 @@ export class Erc1155<
         contractWrapper: this.contractWrapper,
         method: "safeTransferFrom",
         args: [from, await resolveAddress(to), tokenId, amount, data],
+      });
+    },
+  );
+
+  /**
+   * Transfer multiple NFTs
+   *
+   * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   * // The token IDs of the NFTs you want to send
+   * const tokenIds = [0, 1, 2];
+   * // How many copies of the NFTs to transfer
+   * const amounts = [1, 2, 3];
+   * await contract.erc1155.transferBatch(toAddress, tokenIds, amounts);
+   * ```
+   *
+   * @twfeature ERC1155BatchTransferable
+   */
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+      fromAddress?: AddressOrEns,
+      data: BytesLike = [0],
+    ) => {
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeBatchTransferFrom",
+        args: [from, await resolveAddress(to), tokenIds, amounts, data],
       });
     },
   );
@@ -454,7 +497,7 @@ export class Erc1155<
    * const count = await contract.erc1155.totalCount();
    * console.log(count);
    * ```
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -466,7 +509,7 @@ export class Erc1155<
    * Get the total supply of a specific NFT
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    * @twfeature ERC1155Enumerable
    */
@@ -921,6 +964,38 @@ export class Erc1155<
     },
   );
 
+  ////// ERC1155 Update Metadata Extension //////
+
+  /**
+   * Update the metadata of an NFT
+   *
+   * @remarks Update the metadata of an NFT in the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to update
+   * const tokenId = 0;
+   * // The updated metadata of the NFT
+   * const metadata = {
+   *   name: "Updated NFT",
+   *   description: "This is an updated NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * const result = await contract.erc1155.updateMetadata(tokenId, metadata);
+   * ```
+   * @twfeature ERC1155UpdateMetadata
+   */
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish, metadata: NFTMetadataInput) => {
+      // TODO handle updating regular TokenERC1155 metadata
+      return assertEnabled(
+        this.lazyMintable,
+        FEATURE_EDITION_LAZY_MINTABLE_V2,
+      ).updateMetadata.prepare(tokenId, metadata);
+    },
+  );
+
   ////// ERC1155 Claimable Extension //////
 
   /**
@@ -978,7 +1053,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -1016,7 +1091,7 @@ export class Erc1155<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
-   * @returns - Receipt for the transaction
+   * @returns  Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(

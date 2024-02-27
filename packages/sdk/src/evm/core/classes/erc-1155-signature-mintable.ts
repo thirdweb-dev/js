@@ -30,11 +30,12 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * @erc1155
  * @public
  */
 export class Erc1155SignatureMintable implements DetectableFeature {
@@ -265,7 +266,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generate(
@@ -310,7 +311,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC1155SignatureMintable
    */
   public async generateFromTokenId(
@@ -326,7 +327,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc1155SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatch(
@@ -345,7 +346,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc1155SignatureMintable.generateFromTokenId}
    *
    * @param payloadsToSign - the payloads to sign with tokenIds specified
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC1155SignatureMintable
    */
   public async generateBatchFromTokenIds(
@@ -420,7 +421,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @internal
    *
    * @param mintRequest - The payload to map.
-   * @returns - The mapped payload.
+   * @returns  The mapped payload.
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,

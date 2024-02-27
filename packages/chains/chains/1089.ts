@@ -39,14 +39,14 @@ export default {
   },
   "networkId": 1089,
   "rpc": [
-    "https://humans-ai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1089.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.humans.nodestake.top",
-    "https://humans-mainnet-evm.itrocket.net:443",
+    "https://humans-mainnet-evm.itrocket.net",
     "https://humans-evm-rpc.staketab.org:443",
     "https://evm.humans.stakepool.dev.br",
     "https://mainnet-humans-evm.konsortech.xyz",
-    "https://evm-rpc.mainnet.humans.zone"
+    "https://evm-rpc.mainnet.humans.zone",
+    "https://json-rpc.humans.bh.rocks"
   ],
   "shortName": "humans",
   "slug": "humans-ai",

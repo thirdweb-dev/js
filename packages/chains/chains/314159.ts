@@ -47,7 +47,6 @@ export default {
   },
   "networkId": 314159,
   "rpc": [
-    "https://filecoin-calibration-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://314159.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.calibration.node.glif.io/rpc/v1",
     "https://rpc.ankr.com/filecoin_testnet",

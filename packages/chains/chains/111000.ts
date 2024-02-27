@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 111000,
   "rpc": [
-    "https://siberium-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://111000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.siberium.net"
   ],
   "shortName": "testsbr",
+  "slip44": 1,
   "slug": "siberium-test-network",
   "testnet": true
 } as const satisfies Chain;

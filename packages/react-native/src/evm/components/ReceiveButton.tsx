@@ -33,7 +33,6 @@ export const ReceiveButton = () => {
     <>
       <IconTextButton
         flex={1}
-        ml="xs"
         text={l.common.receive}
         justifyContent="center"
         icon={

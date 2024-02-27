@@ -9,6 +9,9 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { providers } from "ethers";
 
+/**
+ * @internal
+ */
 export async function fetchSnapshotEntryForAddress(
   address: string,
   merkleRoot: string,

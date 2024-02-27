@@ -24,11 +24,11 @@ export default {
   },
   "networkId": 78431,
   "rpc": [
-    "https://bulletin-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78431.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/bulletin/testnet/rpc"
   ],
   "shortName": "bulletin",
+  "slip44": 1,
   "slug": "bulletin-subnet",
   "testnet": true
 } as const satisfies Chain;

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 73927,
   "rpc": [
-    "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://73927.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.mvm.dev"
   ],

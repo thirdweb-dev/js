@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 4216137055,
   "rpc": [
-    "https://oneledger-testnet-frankenstein.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4216137055.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://frankenstein-rpc.oneledger.network"
   ],
   "shortName": "frankenstein",
+  "slip44": 1,
   "slug": "oneledger-testnet-frankenstein",
   "testnet": true
 } as const satisfies Chain;

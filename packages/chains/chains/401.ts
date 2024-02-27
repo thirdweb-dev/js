@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 401,
   "rpc": [
-    "https://ozone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.ozonechain.io"
   ],
   "shortName": "ozo_tst",
+  "slip44": 1,
   "slug": "ozone-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

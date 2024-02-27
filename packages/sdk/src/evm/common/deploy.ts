@@ -23,6 +23,7 @@ import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../contracts";
+import { overrideRecipientAddress } from "./override-recipient-address";
 
 /**
  *
@@ -32,6 +33,8 @@ import type {
  * @returns
  * @internal
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: Update function interface: Remove unused param
 export async function getDeployArguments<
   TContractType extends PrebuiltContractType,
 >(
@@ -41,44 +44,35 @@ export async function getDeployArguments<
   signer: Signer,
   storage: ThirdwebStorage,
 ): Promise<any[]> {
-  const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
-  let trustedForwarders: string[] = [];
-  if (!chainEnum) {
-    const forwarder = await computeForwarderAddress(
-      signer.provider as providers.Provider,
-      storage,
-    );
-    trustedForwarders = [forwarder];
-  } else {
-    trustedForwarders =
-      contractType === PackInitializer.contractType
-        ? []
-        : getDefaultTrustedForwarders(chainId);
-  }
+  const trustedForwarders: string[] = [];
 
-  // add default forwarders to any custom forwarders passed in
+  // add any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
     trustedForwarders.push(...metadata.trusted_forwarders);
   }
   switch (contractType) {
     case NFTDropInitializer.contractType:
     case NFTCollectionInitializer.contractType:
-      const erc721metadata = await NFTDropInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const erc721metadata =
+        await NFTDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc721metadata.name,
         erc721metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc721metadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc721metadata.primary_sale_recipient,
+        ),
         erc721metadata.fee_recipient,
         erc721metadata.seller_fee_basis_points,
         erc721metadata.platform_fee_basis_points,
-        erc721metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc721metadata.platform_fee_recipient,
+        ),
       ];
     case SignatureDropInitializer.contractType:
       const signatureDropmetadata =
@@ -89,11 +83,17 @@ export async function getDeployArguments<
         signatureDropmetadata.symbol,
         contractURI,
         trustedForwarders,
-        signatureDropmetadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          signatureDropmetadata.primary_sale_recipient,
+        ),
         signatureDropmetadata.fee_recipient,
         signatureDropmetadata.seller_fee_basis_points,
         signatureDropmetadata.platform_fee_basis_points,
-        signatureDropmetadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          signatureDropmetadata.platform_fee_recipient,
+        ),
       ];
     case MultiwrapInitializer.contractType:
       const multiwrapMetadata =
@@ -117,31 +117,41 @@ export async function getDeployArguments<
         erc1155metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc1155metadata.primary_sale_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc1155metadata.primary_sale_recipient,
+        ),
         erc1155metadata.fee_recipient,
         erc1155metadata.seller_fee_basis_points,
         erc1155metadata.platform_fee_basis_points,
-        erc1155metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc1155metadata.platform_fee_recipient,
+        ),
       ];
     case TokenDropInitializer.contractType:
     case TokenInitializer.contractType:
-      const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const erc20metadata =
+        await TokenInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc20metadata.name,
         erc20metadata.symbol,
         contractURI,
         trustedForwarders,
-        erc20metadata.primary_sale_recipient,
-        erc20metadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          erc20metadata.primary_sale_recipient,
+        ),
+        overrideRecipientAddress(
+          signerAddress,
+          erc20metadata.platform_fee_recipient,
+        ),
         erc20metadata.platform_fee_basis_points,
       ];
     case VoteInitializer.contractType:
-      const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const voteMetadata =
+        await VoteInitializer.schema.deploy.parseAsync(metadata);
       return [
         voteMetadata.name,
         contractURI,
@@ -153,9 +163,8 @@ export async function getDeployArguments<
         voteMetadata.voting_quorum_fraction,
       ];
     case SplitInitializer.contractType:
-      const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const splitsMetadata =
+        await SplitInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         contractURI,
@@ -171,13 +180,15 @@ export async function getDeployArguments<
         signerAddress,
         contractURI,
         trustedForwarders,
-        marketplaceMetadata.platform_fee_recipient,
+        overrideRecipientAddress(
+          signerAddress,
+          marketplaceMetadata.platform_fee_recipient,
+        ),
         marketplaceMetadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:
-      const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
-        metadata,
-      );
+      const packsMetadata =
+        await PackInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         packsMetadata.name,
@@ -192,6 +203,11 @@ export async function getDeployArguments<
   }
 }
 
+/**
+ * Get the default trusted forwarders for gasless relaying
+ * @deploy
+ * @public
+ */
 export async function getTrustedForwarders(
   provider: providers.Provider,
   storage: ThirdwebStorage,
@@ -203,8 +219,8 @@ export async function getTrustedForwarders(
     contractName && contractName === PackInitializer.name
       ? []
       : chainEnum
-      ? getDefaultTrustedForwarders(chainId)
-      : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
+        ? getDefaultTrustedForwarders(chainId)
+        : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
 
   return trustedForwarders;
 }

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2332,
   "rpc": [
-    "https://soma-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2332.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-mainnet-v1.somanetwork.io/",
     "https://id-mainnet.somanetwork.io",

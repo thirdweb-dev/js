@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 189,
   "rpc": [
-    "https://bmc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://189.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bmcchain.com"
   ],
   "shortName": "BMCT",
+  "slip44": 1,
   "slug": "bmc-testnet",
   "testnet": true
 } as const satisfies Chain;

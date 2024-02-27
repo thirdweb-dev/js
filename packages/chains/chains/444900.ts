@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 444900,
   "rpc": [
-    "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://444900.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://weelinknode1c.gw002.oneitfarm.com"
   ],
   "shortName": "wlkt",
+  "slip44": 1,
   "slug": "weelink-testnet",
   "testnet": true
 } as const satisfies Chain;

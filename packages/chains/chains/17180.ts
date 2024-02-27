@@ -32,11 +32,11 @@ export default {
   },
   "networkId": 17180,
   "rpc": [
-    "https://palette-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17180.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palette-opennet.com:22000"
   ],
   "shortName": "PCT",
+  "slip44": 1,
   "slug": "palette-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 53,
   "rpc": [
-    "https://coinex-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://53.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.coinex.net/"
   ],
   "shortName": "tcet",
+  "slip44": 1,
   "slug": "coinex-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

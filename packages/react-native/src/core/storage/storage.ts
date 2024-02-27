@@ -118,7 +118,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    *
    * @param data - Arbitrary file or JSON data to upload
    * @param options - Options to pass through to the storage uploader class
-   * @returns - The URI of the uploaded data
+   * @returns  The URI of the uploaded data
    *
    * @example
    * ```jsx
@@ -150,7 +150,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    *
    * @param data - Array of arbitrary file or JSON data to upload
    * @param options - Options to pass through to the storage uploader class
-   * @returns - The URIs of the uploaded data
+   * @returns  The URIs of the uploaded data
    *
    * @example
    * ```jsx

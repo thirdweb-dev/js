@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 108,
   "rpc": [
-    "https://thundercore.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://108.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.thundercore.com",
     "https://mainnet-rpc.thundertoken.net",

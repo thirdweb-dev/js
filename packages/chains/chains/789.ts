@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 789,
   "rpc": [
-    "https://patex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.patex.io/"
   ],

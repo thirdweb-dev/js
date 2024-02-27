@@ -1,4 +1,4 @@
-import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
@@ -17,7 +17,12 @@ import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
-type VerificationStatus = "verifying" | "invalid" | "valid" | "idle";
+type VerificationStatus =
+  | "verifying"
+  | "invalid"
+  | "valid"
+  | "idle"
+  | "payment_required";
 type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
 type ScreenToShow =
   | "base"
@@ -33,13 +38,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
-    useWalletContext();
+    props;
 
   const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
-  const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
+  const [screen, setScreen] = useState<ScreenToShow>("base");
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
@@ -47,7 +52,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     setEmailStatus("sending");
 
     try {
-      const _wallet = createWalletInstance(props.walletConfig);
+      const _wallet = createWalletInstance();
       setWallet(_wallet);
       const status = await _wallet.sendVerificationEmail({ email });
       setEmailStatus(status);
@@ -56,7 +61,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setVerifyStatus("idle");
       setEmailStatus("error");
     }
-  }, [createWalletInstance, email, props.walletConfig]);
+  }, [createWalletInstance, email]);
 
   const verify = async (otp: string) => {
     if (typeof emailStatus !== "object" || otp.length !== 6) {
@@ -135,9 +140,13 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       }
 
       setVerifyStatus("valid");
-    } catch (e) {
-      setVerifyStatus("invalid");
-      console.error(e);
+    } catch (e: any) {
+      if (e?.message?.includes("PAYMENT_METHOD_REQUIRED")) {
+        setVerifyStatus("payment_required");
+      } else {
+        setVerifyStatus("invalid");
+      }
+      console.error("Authentication Error", e);
     }
   };
 
@@ -249,6 +258,15 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                 <Spacer y="md" />
                 <Text size="sm" color="danger" center>
                   {locale.emailLoginScreen.invalidCode}
+                </Text>
+              </FadeIn>
+            )}
+
+            {verifyStatus === "payment_required" && (
+              <FadeIn>
+                <Spacer y="md" />
+                <Text size="sm" color="danger" center>
+                  {locale.maxAccountsExceeded}
                 </Text>
               </FadeIn>
             )}

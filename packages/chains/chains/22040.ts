@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 22040,
   "rpc": [
-    "https://airdao-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22040.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.ambrosus-test.io"
   ],
   "shortName": "airdao-test",
+  "slip44": 1,
   "slug": "airdao-testnet",
   "testnet": true
 } as const satisfies Chain;

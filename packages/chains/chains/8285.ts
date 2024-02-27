@@ -13,11 +13,11 @@ export default {
   },
   "networkId": 8285,
   "rpc": [
-    "https://korthotest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8285.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.krotho-test.net"
   ],
   "shortName": "Kortho",
+  "slip44": 1,
   "slug": "korthotest",
   "testnet": true
 } as const satisfies Chain;

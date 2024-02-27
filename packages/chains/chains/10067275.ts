@@ -23,11 +23,11 @@ export default {
     "chain": "eip155-16658437"
   },
   "rpc": [
-    "https://plian-testnet-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10067275.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/child_test"
   ],
   "shortName": "plian-testnet-l2",
+  "slip44": 1,
   "slug": "plian-testnet-subchain-1",
   "testnet": true
 } as const satisfies Chain;

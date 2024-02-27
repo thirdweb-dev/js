@@ -15,11 +15,11 @@ export default {
   },
   "networkId": 16001,
   "rpc": [
-    "https://metadot-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.metadot.network"
   ],
   "shortName": "mtttest",
+  "slip44": 1,
   "slug": "metadot-testnet",
   "testnet": true
 } as const satisfies Chain;

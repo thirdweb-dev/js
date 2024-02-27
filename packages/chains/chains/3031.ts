@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 3031,
   "rpc": [
-    "https://orlando-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.orlchain.com"
   ],

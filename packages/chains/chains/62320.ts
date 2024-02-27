@@ -16,11 +16,11 @@ export default {
   },
   "networkId": 62320,
   "rpc": [
-    "https://celo-baklava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://62320.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://baklava-forno.celo-testnet.org"
   ],
   "shortName": "BKLV",
+  "slip44": 1,
   "slug": "celo-baklava-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -34,7 +34,6 @@ export default {
   },
   "networkId": 1337803,
   "rpc": [
-    "https://zhejiang.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1337803.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zhejiang.ethpandaops.io"
   ],

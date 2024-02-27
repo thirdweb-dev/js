@@ -13,12 +13,12 @@ export default {
   },
   "networkId": 13,
   "rpc": [
-    "https://diode-testnet-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging.diode.io:8443/",
     "wss://staging.diode.io:8443/ws"
   ],
   "shortName": "dstg",
+  "slip44": 1,
   "slug": "diode-testnet-staging",
   "testnet": true
 } as const satisfies Chain;

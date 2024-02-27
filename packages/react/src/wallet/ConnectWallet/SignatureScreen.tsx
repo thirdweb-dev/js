@@ -2,6 +2,7 @@ import {
   WalletInstance,
   useAddress,
   useChainId,
+  useDisconnect,
   useLogin,
   useWallet,
   useWalletConfig,
@@ -16,11 +17,7 @@ import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 import { wait } from "../../utils/wait";
 import { Button } from "../../components/buttons";
 import { iconSize, radius, spacing } from "../../design-system";
-import {
-  CrossCircledIcon,
-  ExternalLinkIcon,
-  ReloadIcon,
-} from "@radix-ui/react-icons";
+import { ExternalLinkIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Img } from "../../components/Img";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
@@ -45,7 +42,7 @@ export const SignatureScreen: React.FC<{
   const { auth } = useContext(ModalConfigCtx);
   const [status, setStatus] = useState<Status>("idle");
   const { login } = useLogin();
-  const [tryId, setTryId] = useState(0);
+  const disconnect = useDisconnect();
 
   const isSafeWallet = wallet?.walletId === walletIds.safe;
 
@@ -79,6 +76,7 @@ export const SignatureScreen: React.FC<{
         style={{
           minHeight: "300px",
         }}
+        fullHeight
       >
         <Spinner size="xl" color="accentText" />
       </Container>
@@ -91,7 +89,6 @@ export const SignatureScreen: React.FC<{
 
   const handleRetry = () => {
     signIn();
-    setTryId(tryId + 1);
   };
 
   return (
@@ -132,18 +129,31 @@ export const SignatureScreen: React.FC<{
             <Text center multiline balance>
               {locale.instructionScreen.instruction}
             </Text>
-            <Spacer y="md" />
+            <Spacer y="lg" />
             <Button
               fullWidth
               variant="accent"
               onClick={signIn}
               style={{
-                gap: spacing.xs,
                 alignItems: "center",
                 padding: spacing.md,
               }}
             >
               {locale.instructionScreen.signInButton}
+            </Button>
+            <Spacer y="sm" />
+            <Button
+              fullWidth
+              variant="secondary"
+              onClick={() => {
+                disconnect();
+              }}
+              style={{
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              {locale.instructionScreen.disconnectWallet}
             </Button>
           </>
         ) : (
@@ -151,7 +161,6 @@ export const SignatureScreen: React.FC<{
             {walletConfig && (
               <Container py="3xl">
                 <WalletLogoSpinner
-                  key={String(tryId)}
                   error={status === "failed"}
                   iconUrl={walletConfig.meta.iconURL}
                 />
@@ -218,6 +227,20 @@ export const SignatureScreen: React.FC<{
                     <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
                     {locale.signingScreen.tryAgain}
                   </Button>
+                  <Spacer y="sm" />
+                  <Button
+                    fullWidth
+                    variant="secondary"
+                    onClick={() => {
+                      disconnect();
+                    }}
+                    style={{
+                      alignItems: "center",
+                      padding: spacing.md,
+                    }}
+                  >
+                    {locale.instructionScreen.disconnectWallet}
+                  </Button>
                 </Container>
               )}
             </Container>
@@ -265,8 +288,9 @@ function HeadlessSignIn({
   signIn: () => void;
   status: Status;
 }) {
-  const locale = useTWLocale().connectWallet.signatureScreen.signingScreen;
+  const locale = useTWLocale().connectWallet.signatureScreen;
   const mounted = useRef(false);
+  const disconnect = useDisconnect();
   useEffect(() => {
     if (mounted.current) {
       return;
@@ -277,7 +301,7 @@ function HeadlessSignIn({
 
   return (
     <Container p="lg" fullHeight flex="column" animate="fadein">
-      <ModalHeader title={locale.title} />
+      <ModalHeader title={locale.signingScreen.title} />
       <Container
         expand
         flex="row"
@@ -286,19 +310,48 @@ function HeadlessSignIn({
           minHeight: "250px",
         }}
       >
-        {status === "failed" ? (
-          <Container
-            flex="column"
-            gap="lg"
-            color="danger"
-            center="both"
-            animate="fadein"
-          >
-            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-            <Text color="danger"> {locale.failedToSignIn} </Text>
-          </Container>
-        ) : (
-          <Spinner size="xl" color="accentText" />
+        {status === "signing" && <Spinner size="xl" color="accentText" />}
+
+        {status === "failed" && (
+          <>
+            <Container>
+              <Spacer y="lg" />
+              <Text size="lg" center color="danger">
+                {locale.signingScreen.failedToSignIn}
+              </Text>
+
+              <Spacer y="lg" />
+              <Button
+                fullWidth
+                variant="accent"
+                onClick={() => {
+                  signIn();
+                }}
+                style={{
+                  gap: spacing.xs,
+                  alignItems: "center",
+                  padding: spacing.md,
+                }}
+              >
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+                {locale.signingScreen.tryAgain}
+              </Button>
+              <Spacer y="sm" />
+              <Button
+                fullWidth
+                variant="secondary"
+                onClick={() => {
+                  disconnect();
+                }}
+                style={{
+                  alignItems: "center",
+                  padding: spacing.md,
+                }}
+              >
+                {locale.instructionScreen.disconnectWallet}
+              </Button>
+            </Container>
+          </>
         )}
       </Container>
     </Container>

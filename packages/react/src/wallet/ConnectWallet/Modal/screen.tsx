@@ -1,22 +1,45 @@
-import { WalletConfig, useWallets } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWallet, useWallets } from "@thirdweb-dev/react-core";
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { reservedScreens } from "../constants";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 type Screen = string | WalletConfig;
 
-export const ScreenContext = /* @__PURE__ */ createContext<Screen | undefined>(
-  undefined,
-);
+export type ScreenSetup = {
+  screen: Screen;
+  setScreen: (newSreen: Screen) => void;
+  initialScreen: Screen;
+};
 
-export function useScreen() {
+export const ScreenSetupContext = /* @__PURE__ */ createContext<
+  ScreenSetup | undefined
+>(undefined);
+
+export function useSetupScreen(): ScreenSetup {
   const walletConfigs = useWallets();
-  const initialScreen =
-    (walletConfigs.length === 1 && !walletConfigs[0]?.selectUI
-      ? walletConfigs[0]
-      : reservedScreens.main) || reservedScreens.main;
+  const modalConfig = useContext(ModalConfigCtx);
+
+  let initialScreen: Screen = reservedScreens.main;
+
+  const socialLogin = walletConfigs.find((w) => w.category === "socialLogin");
+
+  if (
+    walletConfigs.length === 1 &&
+    walletConfigs[0] &&
+    !walletConfigs[0]?.selectUI
+  ) {
+    initialScreen = walletConfigs[0];
+  } else if (
+    modalConfig.modalSize === "wide" &&
+    !modalConfig.welcomeScreen &&
+    socialLogin
+  ) {
+    initialScreen = socialLogin;
+  }
 
   const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const prevInitialScreen = useRef(initialScreen);
+  const wallet = useWallet();
 
   // when the initial screen changes, reset the screen to the initial screen ( if the modal is closed )
   useEffect(() => {
@@ -26,6 +49,13 @@ export function useScreen() {
     }
   }, [initialScreen]);
 
+  // if on signature screen and suddenly the wallet is disconnected, go back to the main screen
+  useEffect(() => {
+    if (!wallet && screen === reservedScreens.signIn) {
+      setScreen(reservedScreens.main);
+    }
+  }, [wallet, screen]);
+
   return {
     screen,
     setScreen,
@@ -34,11 +64,11 @@ export function useScreen() {
 }
 
 export function useScreenContext() {
-  const screen = useContext(ScreenContext);
-  if (!screen) {
+  const ctx = useContext(ScreenSetupContext);
+  if (!ctx) {
     throw new Error(
       "useScreenContext must be used within a <ScreenProvider />",
     );
   }
-  return screen;
+  return ctx;
 }

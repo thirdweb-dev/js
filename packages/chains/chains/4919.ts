@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4919,
   "rpc": [
-    "https://venidium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4919.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.venidium.io"
   ],

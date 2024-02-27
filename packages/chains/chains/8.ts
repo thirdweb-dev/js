@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 8,
   "rpc": [
-    "https://ubiq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octano.dev",
     "https://pyrus2.ubiqscan.io"

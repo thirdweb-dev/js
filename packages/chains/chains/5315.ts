@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 5315,
   "rpc": [
-    "https://uzmi-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5315.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.uzmigames.com.br/"
   ],

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 69420,
   "rpc": [
-    "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://69420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.condrieu.ethdevops.io:8545"
   ],
   "shortName": "cndr",
+  "slip44": 1,
   "slug": "condrieu",
   "testnet": true,
   "title": "Ethereum Verkle Testnet Condrieu"

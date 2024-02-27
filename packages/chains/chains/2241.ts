@@ -30,9 +30,9 @@ export default {
   },
   "networkId": 2241,
   "rpc": [
-    "https://krest-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2241.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://erpc-krest.peaq.network"
+    "https://erpc-krest.peaq.network",
+    "https://krest.unitedbloc.com"
   ],
   "shortName": "KRST",
   "slug": "krest-network",

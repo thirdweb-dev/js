@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 39,
   "rpc": [
-    "https://u2u-solaris.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://39.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.uniultra.xyz"
   ],

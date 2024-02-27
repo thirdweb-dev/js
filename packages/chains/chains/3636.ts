@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 3636,
   "rpc": [
-    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3636.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.botanixlabs.dev"
   ],
   "shortName": "BTNX",
+  "slip44": 1,
   "slug": "botanix-testnet",
   "testnet": true
 } as const satisfies Chain;

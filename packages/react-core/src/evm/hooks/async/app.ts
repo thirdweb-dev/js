@@ -18,17 +18,17 @@ import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
- * Get App URI
+ * Get App URI of the contract
  *
  * @example
  * ```javascript
  * const { data: contractMetadata, isLoading, error } = useAppURI(contract);
  * ```
  *
- * @param contract - the {@link SmartContract} instance of the contract to get the appURI of
- * @returns a response object that includes the appURI of the contract
+ * @param contract - The `SmartContract` instance of the contract to get the appURI of
+ * @returns Query result object that includes the appURI of the contract
  * @twfeature AppURI
- * @beta
+ * @appURI
  */
 export function useAppURI<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
@@ -47,7 +47,7 @@ export function useAppURI<TContract extends ValidContractInstance>(
 }
 
 /**
- * Set App URI
+ * Set App URI of the contract
  *
  * @example
  * ```jsx
@@ -72,10 +72,11 @@ export function useAppURI<TContract extends ValidContractInstance>(
  *   );
  * };
  * ```
- * @param contract - an instance of a {@link SmartContract}
- * @returns a mutation object that can be used to update the appURI of a contract
- * @twfeature AppUR
- * @beta
+ * @param contract - Instance of a `SmartContract`
+ * @returns A mutation object to update the appURI of a contract
+ *
+ * @twfeature AppURI
+ * @appURI
  */
 export function useSetAppURI(
   contract: RequiredParam<ValidContractInstance>,

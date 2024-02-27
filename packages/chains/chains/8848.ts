@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 8848,
   "rpc": [
-    "https://maro-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8848.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.ma.ro"
   ],

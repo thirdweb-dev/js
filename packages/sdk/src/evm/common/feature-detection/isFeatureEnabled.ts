@@ -3,19 +3,19 @@ import {
   FeatureWithEnabled,
 } from "../../constants/contract-features";
 import { AbiInput } from "../../schema/contracts/custom";
-import { detectFeatures } from "./detectFeatures";
 
 /**
  * Checks whether the given ABI supports a given feature
  * @deprecated use isExtensionEnabled instead
  * @param abi - The abi to check
  * @param featureName - The feature name to check
+ * @internal
  */
 export function isFeatureEnabled(
   abi: AbiInput,
   featureName: FeatureName,
+  features: Record<string, FeatureWithEnabled>,
 ): boolean {
-  const features = detectFeatures(abi);
   return _featureEnabled(features, featureName);
 }
 
@@ -25,8 +25,12 @@ export function isFeatureEnabled(
  * @param abi - The abi to check
  * @param featureName - The feature name to check
  */
-export function isExtensionEnabled(abi: AbiInput, featureName: FeatureName) {
-  return isFeatureEnabled(abi, featureName);
+export function isExtensionEnabled(
+  abi: AbiInput,
+  featureName: FeatureName,
+  features: Record<string, FeatureWithEnabled>,
+) {
+  return isFeatureEnabled(abi, featureName, features);
 }
 
 /**

@@ -18,11 +18,12 @@ import {
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
-import type { ContractWrapper } from "./contract-wrapper";
+import type { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
+ * @erc20
  * @public
  */
 // TODO consolidate into a single class
@@ -181,7 +182,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * // now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
-   * @returns the signed payload and the corresponding signature
+   * @returns The signed payload and the corresponding signature
    * @twfeature ERC20SignatureMintable
    */
   public async generate(
@@ -196,7 +197,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @remarks See {@link Erc20SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
-   * @returns an array of payloads and signatures
+   * @returns An array of payloads and signatures
    * @twfeature ERC20SignatureMintable
    */
   public async generateBatch(
@@ -213,7 +214,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       FilledSignaturePayload20[],
     ] = await Promise.all([
       this.contractWrapper.getChainID(),
-      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155. 
+      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
       Promise.all(
         payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
       ),
@@ -262,7 +263,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @internal
    *
    * @param mintRequest - The payload to map.
-   * @returns - The mapped payload.
+   * @returns  The mapped payload.
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,

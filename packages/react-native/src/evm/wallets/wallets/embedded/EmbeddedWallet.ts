@@ -13,6 +13,8 @@ import {
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 import { WalletMeta } from "@thirdweb-dev/wallets/dist/declarations/src/evm/wallets/base";
 import { AUTH_OPTIONS_ICONS } from "../../types/embedded-wallet";
+import { getRandomString } from "../../connectors/embedded-wallet/embedded/helpers/getRandomValues";
+import { ANALYTICS } from "../../connectors/embedded-wallet/embedded/helpers/analytics";
 
 export type EmbeddedWalletOptions = WalletOptions<
   EmbeddedWalletAdditionalOptions & WalletConnectReceiverConfig
@@ -81,6 +83,10 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return connector.authenticate(params);
   }
 
+  async deleteActiveAccount() {
+    return this.connector?.deleteActiveAccount();
+  }
+
   getMeta(): WalletMeta {
     const strategy = this.connector?.getConnectedAuthStrategy();
     const meta = (this.constructor as typeof AbstractClientWallet).meta;
@@ -103,6 +109,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   onDisconnect = () => {
     this.removeListeners();
+    ANALYTICS.nonce = getRandomString(16);
   };
 
   onChange = async (payload: any) => {

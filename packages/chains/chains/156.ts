@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 156,
   "rpc": [
-    "https://oeblock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://156.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.oeblock.com"
   ],
   "shortName": "obe",
+  "slip44": 1,
   "slug": "oeblock-testnet",
   "testnet": true
 } as const satisfies Chain;

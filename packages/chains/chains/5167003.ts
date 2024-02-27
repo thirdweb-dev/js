@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 5167003,
   "rpc": [
-    "https://mxc-wannsee-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5167003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wannsee-rpc.mxc.com"
   ],
   "shortName": "MXC",
+  "slip44": 1,
   "slug": "mxc-wannsee-zkevm-testnet",
   "testnet": true
 } as const satisfies Chain;

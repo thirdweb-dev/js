@@ -23,11 +23,11 @@ export default {
     "chain": "eip155-3"
   },
   "rpc": [
-    "https://gton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50021.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gton.network/"
   ],
   "shortName": "tgton",
+  "slip44": 1,
   "slug": "gton-testnet",
   "testnet": true
 } as const satisfies Chain;

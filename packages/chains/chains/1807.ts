@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 1807,
   "rpc": [
-    "https://rabbit-analog-testnet-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1807.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rabbit.analog-rpc.com"
   ],
   "shortName": "rAna",
+  "slip44": 1,
   "slug": "rabbit-analog-testnet-chain",
   "testnet": true
 } as const satisfies Chain;

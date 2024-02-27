@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 112,
   "rpc": [
-    "https://coinbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://112.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coinbit-rpc-mainnet.chain.sbcrypto.app"
   ],

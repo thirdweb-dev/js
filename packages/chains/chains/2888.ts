@@ -28,12 +28,12 @@ export default {
     ]
   },
   "rpc": [
-    "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.boba.network/",
     "wss://wss.goerli.boba.network/"
   ],
   "shortName": "BobaGoerli",
+  "slip44": 1,
   "slug": "boba-network-goerli-testnet",
   "testnet": true
 } as const satisfies Chain;

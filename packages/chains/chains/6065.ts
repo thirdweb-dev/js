@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 6065,
   "rpc": [
-    "https://tres-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6065.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.tresleches.finance/"
   ],
   "shortName": "TRESTEST",
+  "slip44": 1,
   "slug": "tres-testnet",
   "testnet": true
 } as const satisfies Chain;

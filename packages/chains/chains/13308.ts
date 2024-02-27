@@ -39,11 +39,10 @@ export default {
   },
   "networkId": 13308,
   "rpc": [
-    "https://credit-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.creditsmartchain.com"
   ],
   "shortName": "Credit",
-  "slug": "credit-smart-chain",
+  "slug": "credit-smart-chain-credit",
   "testnet": false
 } as const satisfies Chain;

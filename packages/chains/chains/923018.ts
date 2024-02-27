@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 923018,
   "rpc": [
-    "https://fncy-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://923018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fncy-testnet-seed.fncy.world"
   ],
   "shortName": "tFNCY",
+  "slip44": 1,
   "slug": "fncy-testnet",
   "testnet": true
 } as const satisfies Chain;

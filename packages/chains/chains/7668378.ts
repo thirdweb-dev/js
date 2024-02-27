@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 7668378,
   "rpc": [
-    "https://ql1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7668378.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.qom.one"
   ],
   "shortName": "tqom",
+  "slip44": 1,
   "slug": "ql1-testnet",
   "status": "incubating",
   "testnet": true

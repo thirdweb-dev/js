@@ -29,12 +29,12 @@ export default {
   "networkId": 4096,
   "redFlags": [],
   "rpc": [
-    "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4096.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bitindi.org",
     "https://testnet-rpc.bitindi.org"
   ],
   "shortName": "BNIt",
+  "slip44": 1,
   "slug": "bitindi-testnet",
   "testnet": true
 } as const satisfies Chain;

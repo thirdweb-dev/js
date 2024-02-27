@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 373737,
   "rpc": [
-    "https://hapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://373737.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc-test.hap.land"
   ],
   "shortName": "hap-testnet",
+  "slip44": 1,
   "slug": "hapchain-testnet",
   "testnet": true
 } as const satisfies Chain;

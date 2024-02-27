@@ -11,22 +11,18 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
-  useChain,
-  useChainId,
-  useConnect,
-  useConnectionStatus,
+  ConnectUIProps,
+  WalletConfig,
   useSupportedChains,
-  useSwitchChain,
-  useWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
+import { SafeWallet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useContext, useState } from "react";
-import { SafeWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
-import { safeSlugToChainId } from "./safeChainSlug";
+import { safeChainIdToSlug, safeSlugToChainId } from "./safeChainSlug";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledSelect } from "../../../design-system/elements";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
@@ -34,14 +30,15 @@ import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  safeWalletConfig: SafeWalletConfig;
   renderBackButton?: boolean;
+  connect: ConnectUIProps<SafeWallet>["connect"];
+  connectionStatus: ConnectUIProps<SafeWallet>["connectionStatus"];
+  meta: WalletConfig["meta"];
 }> = (props) => {
   const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
-  const activeWallet = useWallet();
-  const connect = useConnect();
-  const activeChain = useChain();
-  const connectedChainId = useChainId();
+  const { personalWalletConnection } = useWalletContext();
+  const { activeWallet, chainId, switchChain } = personalWalletConnection;
+  const { connect, connectionStatus } = props;
 
   const [safeAddress, setSafeAddress] = useState("");
   const [safeChainId, setSafeChainId] = useState(-1);
@@ -50,13 +47,10 @@ export const SelectAccount: React.FC<{
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  const connectionStatus = useConnectionStatus();
   const chains = useSupportedChains();
 
   // put supported chains first
-  const supportedChains = chains.filter((c) =>
-    SafeSupportedChainsSet.has(c.chainId),
-  );
+  const supportedChains = chains.filter((c) => c.chainId in safeChainIdToSlug);
 
   const selectedSafeChain = supportedChains.find(
     (c) => c.chainId === safeChainId,
@@ -69,13 +63,13 @@ export const SelectAccount: React.FC<{
   const useOptGroup = mainnets.length > 0 && testnets.length > 0;
 
   const handleSubmit = async () => {
-    if (!selectedSafeChain || !activeWallet || !activeChain) {
+    if (!selectedSafeChain || !activeWallet) {
       return;
     }
     setSafeConnectError(false);
 
     try {
-      await connect(props.safeWalletConfig, {
+      await connect({
         chain: selectedSafeChain,
         personalWallet: activeWallet,
         safeAddress,
@@ -87,12 +81,11 @@ export const SelectAccount: React.FC<{
     }
   };
 
-  const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
+  const mismatch = safeChainId !== -1 && chainId !== safeChainId;
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
 
-  const switchChain = useSwitchChain();
   const modalConfig = useContext(ModalConfigCtx);
 
   return (
@@ -110,9 +103,9 @@ export const SelectAccount: React.FC<{
       >
         <Container p="lg">
           <ModalHeader
-            title={props.safeWalletConfig.meta.name}
+            title={props.meta.name}
             onBack={props.renderBackButton ? props.onBack : undefined}
-            imgSrc={props.safeWalletConfig.meta.iconURL}
+            imgSrc={props.meta.iconURL}
           />
         </Container>
 
@@ -165,11 +158,13 @@ export const SelectAccount: React.FC<{
               setSafeConnectError(false);
               if (value.length > 4) {
                 const prefix = value.split(":")[0];
+                const _chainId =
+                  prefix && prefix in safeSlugToChainId
+                    ? safeSlugToChainId[prefix]
+                    : undefined;
 
-                if (prefix && prefix in safeSlugToChainId) {
-                  setSafeChainId(
-                    safeSlugToChainId[prefix as keyof typeof safeSlugToChainId],
-                  );
+                if (_chainId && prefix) {
+                  setSafeChainId(_chainId);
                   setSafeAddress(value.slice(prefix.length + 1));
                 } else {
                   setSafeAddress(value);

@@ -34,11 +34,11 @@ export default {
     ]
   },
   "rpc": [
-    "https://eos-evm-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://15557.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.testnet.evm.eosnetwork.com"
   ],
   "shortName": "eos-testnet",
+  "slip44": 1,
   "slug": "eos-evm-network-testnet",
   "testnet": true
 } as const satisfies Chain;

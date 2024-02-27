@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2221,
   "rpc": [
-    "https://permission.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://blockchain-api-mainnet.permission.io/rpc"
   ],

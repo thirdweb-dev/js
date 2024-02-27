@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 371,
   "rpc": [
-    "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://371.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.theconsta.com"
   ],
   "shortName": "tCNT",
+  "slip44": 1,
   "slug": "consta-testnet",
   "testnet": true
 } as const satisfies Chain;

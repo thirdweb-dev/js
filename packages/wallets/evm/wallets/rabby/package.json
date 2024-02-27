@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-rabby.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-rabby.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-rabby.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-rabby.browser.esm.js"
+  }
+}

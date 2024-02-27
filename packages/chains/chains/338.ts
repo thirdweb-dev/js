@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 338,
   "rpc": [
-    "https://cronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://338.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-t3.cronos.org"
   ],
   "shortName": "tcro",
+  "slip44": 1,
   "slug": "cronos-testnet",
   "testnet": true
 } as const satisfies Chain;

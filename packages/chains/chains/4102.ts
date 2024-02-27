@@ -25,12 +25,11 @@ export default {
   },
   "networkId": 4102,
   "rpc": [
-    "https://aioz-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-ds.testnet.aioz.network"
   ],
   "shortName": "aioz-testnet",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "aioz-network-testnet",
   "testnet": true
 } as const satisfies Chain;

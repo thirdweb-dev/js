@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 3939,
   "rpc": [
-    "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3939.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.doschain.com"
   ],
   "shortName": "dost",
+  "slip44": 1,
   "slug": "dos-tesnet",
   "testnet": true
 } as const satisfies Chain;

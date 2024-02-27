@@ -1,5 +1,5 @@
-import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
+import { GatewayUrls } from "../types";
 import { getProcessEnv } from "./process";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
 
@@ -80,6 +80,7 @@ export function getGatewayUrlForCid(
   clientId?: string,
 ): string {
   const parts = cid.split("/");
+
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
 
@@ -158,7 +159,7 @@ export function prepareGatewayUrls(
  * @internal
  */
 export function convertCidToV1(cid: string) {
-  let normalized: string;
+  let normalized: string = '';
   try {
     const hash = cid.split("/")[0];
     normalized = CIDTool.base32(hash);

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 45,
   "rpc": [
-    "https://darwinia-pangoro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://45.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangoro-rpc.darwinia.network"
   ],
   "shortName": "pangoro",
+  "slip44": 1,
   "slug": "darwinia-pangoro-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7576,
   "rpc": [
-    "https://adil-chain-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7576.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://adilchain-rpc.io"
   ],

@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 161,
   "rpc": [
-    "https://armonia-eva-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://161.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.evascan.io/api/eth-rpc/"
   ],
   "shortName": "wall-e",
+  "slip44": 1,
   "slug": "armonia-eva-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

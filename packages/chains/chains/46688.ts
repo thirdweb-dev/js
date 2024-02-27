@@ -39,13 +39,12 @@ export default {
   },
   "networkId": 46688,
   "rpc": [
-    "https://fusion-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://46688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.fusionnetwork.io",
     "wss://testnet.fusionnetwork.io"
   ],
   "shortName": "tfsn",
-  "slip44": 288,
+  "slip44": 1,
   "slug": "fusion-testnet",
   "testnet": true
 } as const satisfies Chain;

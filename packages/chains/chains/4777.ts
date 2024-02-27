@@ -39,11 +39,11 @@ export default {
   },
   "networkId": 4777,
   "rpc": [
-    "https://blackfort-exchange-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.blackfort.network/rpc"
   ],
   "shortName": "TBXN",
+  "slip44": 1,
   "slug": "blackfort-exchange-network-testnet",
   "testnet": true
 } as const satisfies Chain;

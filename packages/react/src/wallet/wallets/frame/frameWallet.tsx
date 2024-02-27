@@ -2,15 +2,38 @@ import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { FrameWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { FrameConnectUI } from "./FrameConnectUI";
 
-type FrameConfig = {
+/**
+ * @wallet
+ */
+export type FrameWalletConfigOptions = {
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Frame Wallet](https://frame.sh/) which allows integrating the wallet with React.
+ *
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * frameWallet({
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param config -
+ * Optional object containing the following properties to configure the wallet
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
+ *
+ * @wallet
+ */
 export const frameWallet = (
-  config?: FrameConfig,
+  config?: FrameWalletConfigOptions,
 ): WalletConfig<FrameWallet> => ({
   id: FrameWallet.id,
   recommended: config?.recommended,

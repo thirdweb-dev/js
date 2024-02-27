@@ -184,9 +184,22 @@ export class BaseLogin extends AbstractLogin<
     encryptionKey,
     jwt,
   }: LoginQuerierTypes["loginWithCustomJwt"]): Promise<AuthLoginReturnType> {
+    await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "loginWithCustomJwt",
       params: { encryptionKey, jwt },
+    });
+    return this.postLogin(result);
+  }
+
+  override async loginWithCustomAuthEndpoint({
+    encryptionKey,
+    payload,
+  }: LoginQuerierTypes["loginWithCustomAuthEndpoint"]): Promise<AuthLoginReturnType> {
+    await this.preLogin();
+    const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithCustomAuthEndpoint",
+      params: { encryptionKey, payload },
     });
     return this.postLogin(result);
   }

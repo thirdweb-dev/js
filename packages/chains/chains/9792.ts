@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 9792,
   "rpc": [
-    "https://carbon-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9792.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-evm-api.carbon.network/"
   ],
   "shortName": "carbon-testnet",
+  "slip44": 1,
   "slug": "carbon-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

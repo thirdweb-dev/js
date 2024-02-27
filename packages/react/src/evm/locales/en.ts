@@ -1,3 +1,4 @@
+import { ThirdwebLocale } from "./types";
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
 
 // wallets that connect via extension and QR scan
@@ -19,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function enDefault() {
+export function enDefault(): ThirdwebLocale {
   return {
     connectWallet: {
       signIn: "Sign in",
@@ -43,7 +44,7 @@ export function enDefault() {
       transactionHistory: "Transaction History",
       backupWallet: "Backup Wallet",
       guestWalletWarning:
-        "This is a temporary guest wallet. Backup if you don't want to lose access to it",
+        "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
       connectedToSmartWallet: "Connected To Smart Wallet",
       confirmInWallet: "Confirm in wallet",
@@ -52,6 +53,7 @@ export function enDefault() {
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
       or: "OR",
+      goBackButton: "Back",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -108,6 +110,7 @@ export function enDefault() {
           instruction:
             "Please sign the message request in your wallet to continue",
           signInButton: "Sign in",
+          disconnectWallet: "Disconnect Wallet",
         },
         signingScreen: {
           title: "Signing In",
@@ -164,10 +167,15 @@ export function enDefault() {
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       coreWallet: extensionAndQRScanScreens("Core"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
+      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       paperWallet: {
         signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",
@@ -205,6 +213,8 @@ export function enDefault() {
         signIn: "Sign in",
         emailRequired: "Email address is required",
         invalidEmail: "Invalid email address",
+        maxAccountsExceeded:
+          "Maximum number of accounts exceeded. Please notify the app developer.",
         socialLoginScreen: {
           title: "Sign in",
           instruction: "Sign into your account in the pop-up",
@@ -314,8 +324,40 @@ export function enDefault() {
   };
 }
 
-export type ThirdwebLocale = ReturnType<typeof enDefault>;
-
+/**
+ * Calling this function will return the default English locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ * ### Use default Locale
+ * ```tsx
+ * const english = en();
+ * ```
+ *
+ * ### Override Locale
+ * ```ts
+ * const english = en({
+ *  connectWallet: {
+ *    signIn: "Sign in!"
+ *  }
+ * })
+ * ```
+ *
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={english}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
+ */
 export function en(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = enDefault();
   if (!overrides) {

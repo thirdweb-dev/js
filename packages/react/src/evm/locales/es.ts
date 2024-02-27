@@ -1,5 +1,5 @@
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
-import { ThirdwebLocale } from "./en";
+import { ThirdwebLocale } from "./types";
 
 // ...
 
@@ -54,6 +54,7 @@ export function esDefault(): ThirdwebLocale {
       personalWallet: "Cartera personal",
       smartWallet: "Cartera inteligente",
       or: "O",
+      goBackButton: "Atras",
       download: {
         chrome: "Descargar extensión para Chrome",
         android: "Descargar en Google Play",
@@ -111,6 +112,7 @@ export function esDefault(): ThirdwebLocale {
           instruction:
             "Por favor, firma la solicitud de mensaje en tu cartera para continuar",
           signInButton: "Iniciar sesión",
+          disconnectWallet: "Desconectar cartera",
         },
         signingScreen: {
           title: "Iniciando sesión",
@@ -168,10 +170,15 @@ export function esDefault(): ThirdwebLocale {
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       coreWallet: extensionAndQRScanScreens("Core"),
+      coin98Wallet: extensionAndQRScanScreens("Coin98"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),
+      xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
+      oneKeyWallet: extensionAndQRScanScreens("OneKey"),
+      cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
+      rabbyWallet: extensionAndQRScanScreens("Rabby"),
       paperWallet: {
         signIn: "Iniciar sesión",
         signInWithGoogle: "Iniciar sesión con Google",
@@ -209,6 +216,7 @@ export function esDefault(): ThirdwebLocale {
         signIn: "Iniciar sesión",
         emailRequired: "Se requiere dirección de correo electrónico",
         invalidEmail: "Dirección de correo electrónico inválida",
+        maxAccountsExceeded: "Número máximo de cuentas alcanzado",
         socialLoginScreen: {
           title: "Iniciar sesión",
           instruction: "Inicie sesión en su cuenta en la ventana abierta",
@@ -323,6 +331,40 @@ export function esDefault(): ThirdwebLocale {
   };
 }
 
+/**
+ * Calling this function will return the default Spanish locale object to be set on [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) to localize the thirdweb components.
+ *
+ * You can also overrides parts of the default locale object by passing an object with the same structure as the default locale object and only those parts will be overridden.
+ *
+ * @example
+ * ### Use default Locale
+ * ```tsx
+ * const spanish = es();
+ * ```
+ *
+ * ### Override Locale
+ * ```ts
+ * const spanish = es({
+ *  connectWallet: {
+ *    signIn: "Iniciar sesión"
+ *  }
+ * })
+ * ```
+ *
+ * Pass it to [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)'s `locale` prop to localize the thirdweb components.
+ *
+ * ```tsx
+ * function Example() {
+ *   return (
+ *      <ThirdwebProvider locale={spanish}>
+ *        <App />
+ *      </ThirdwebProvider>
+ *    )
+ * }
+ * ```
+ *
+ * @locale
+ */
 export function es(overrides?: DeepPartial<ThirdwebLocale>) {
   const defaultObj = esDefault();
   if (!overrides) {

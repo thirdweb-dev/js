@@ -4,6 +4,9 @@ import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { DEPLOYER_ABI, DEPLOYER_BYTECODE } from "./constants";
 import { createTransactionBatches } from "./createTransactionBatches";
 
+/**
+ * @internal
+ */
 export async function deployWithThrowawayDeployer(
   signer: Signer,
   transactions: PrecomputedDeploymentTransaction[],

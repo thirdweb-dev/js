@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1970,
   "rpc": [
-    "https://super-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1970.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scschain.com"
   ],

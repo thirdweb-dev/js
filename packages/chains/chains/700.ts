@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 700,
   "rpc": [
-    "https://star-social-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avastar.cc/ext/bc/C/rpc"
   ],
   "shortName": "SNS",
+  "slip44": 1,
   "slug": "star-social-testnet",
   "testnet": true
 } as const satisfies Chain;

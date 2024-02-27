@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1243,
   "rpc": [
-    "https://arc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1243.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-main-1.archiechain.io"
   ],

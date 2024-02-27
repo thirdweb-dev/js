@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 69,
   "rpc": [
-    "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://69.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://kovan.optimism.io/"
   ],
   "shortName": "okov",
+  "slip44": 1,
   "slug": "optimism-kovan",
   "testnet": true,
   "title": "Optimism Testnet Kovan"

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 54211,
   "rpc": [
-    "https://haqq-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://54211.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.testedge2.haqq.network"
   ],
   "shortName": "ISLMT",
+  "slip44": 1,
   "slug": "haqq-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

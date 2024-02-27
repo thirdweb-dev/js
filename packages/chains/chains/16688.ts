@@ -39,11 +39,11 @@ export default {
   },
   "networkId": 16688,
   "rpc": [
-    "https://irishub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmrpc.nyancat.irisnet.org"
   ],
   "shortName": "nyancat",
+  "slip44": 1,
   "slug": "irishub-testnet",
   "testnet": true
 } as const satisfies Chain;

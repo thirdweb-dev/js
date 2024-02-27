@@ -1,6 +1,21 @@
 import { green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
-const darkColors = {
+type ThemeColors = {
+  base1: string;
+  base2: string;
+  base3: string;
+  base4: string;
+  primaryText: string;
+  secondaryText: string;
+  danger: string;
+  success: string;
+  overlay: string;
+  accentText: string;
+  accentBg: string;
+  textOnAccent: string;
+};
+
+const darkColors: ThemeColors = {
   base1: "hsl(230deg 11.63% 8.43%)",
   base2: "hsl(230deg 11.63% 12%)",
   base3: "hsl(230deg 11.63% 15%)",
@@ -15,7 +30,7 @@ const darkColors = {
   textOnAccent: mauveDark.mauve12,
 };
 
-const lightColors: typeof darkColors = {
+const lightColors: ThemeColors = {
   base1: mauve.mauve1,
   base2: mauve.mauve3,
   base3: mauve.mauve5,
@@ -30,7 +45,59 @@ const lightColors: typeof darkColors = {
   textOnAccent: mauve.mauve1,
 };
 
-function createThemeObj(colors: typeof darkColors) {
+/**
+ * @theme
+ */
+export type Theme = {
+  type: "light" | "dark";
+  colors: {
+    primaryText: string;
+    secondaryText: string;
+    accentText: string;
+
+    danger: string;
+    success: string;
+
+    modalOverlayBg: string;
+
+    accentButtonBg: string;
+    accentButtonText: string;
+
+    primaryButtonBg: string;
+    primaryButtonText: string;
+
+    secondaryButtonBg: string;
+    secondaryButtonText: string;
+    secondaryButtonHoverBg: string;
+
+    modalBg: string;
+
+    tooltipBg: string;
+    tooltipText: string;
+
+    inputAutofillBg: string;
+    scrollbarBg: string;
+    walletSelectorButtonHoverBg: string;
+
+    separatorLine: string;
+
+    secondaryIconColor: string;
+    secondaryIconHoverBg: string;
+    secondaryIconHoverColor: string;
+
+    borderColor: string;
+    skeletonBg: string;
+
+    selectedTextColor: string;
+    selectedTextBg: string;
+
+    connectedButtonBg: string;
+    connectedButtonBgHover: string;
+  };
+  fontFamily: string;
+};
+
+function createThemeObj(colors: ThemeColors): Theme {
   return {
     type: "dark" as "light" | "dark",
     colors: {
@@ -54,7 +121,6 @@ function createThemeObj(colors: typeof darkColors) {
       secondaryButtonHoverBg: colors.base4,
 
       modalBg: colors.base1,
-      dropdownBg: colors.base1,
 
       tooltipBg: colors.primaryText,
       tooltipText: colors.base1,
@@ -85,10 +151,11 @@ function createThemeObj(colors: typeof darkColors) {
 export const darkThemeObj = /* @__PURE__ */ createThemeObj(darkColors);
 export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
-export type Theme = typeof darkThemeObj;
-
 export type ThemeObjectOrType = "light" | "dark" | Theme;
 
+/**
+ * @theme
+ */
 export type ThemeOverrides = {
   [key in Exclude<keyof Theme, "type">]?: Partial<Theme[key]>;
 };
@@ -142,6 +209,27 @@ export const shadow = {
   xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
 };
 
+/**
+ * Create a custom light theme object by using the default dark theme as a base and applying overrides.
+ *
+ * @example
+ * ### Get the default light theme
+ * ```ts
+ * const defaultLightTheme = lightTheme()
+ * ```
+ *
+ * ### Create a custom light theme
+ * ```ts
+ * const customTheme = lightTheme({
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
+ * ```
+ *
+ * @param overrides - The overrides to apply to the default light theme.
+ * @theme
+ */
 export function lightTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {
     return lightThemeObj;
@@ -149,6 +237,27 @@ export function lightTheme(overrides?: ThemeOverrides): Theme {
   return applyThemeOverrides(lightThemeObj, overrides);
 }
 
+/**
+ * Create a custom dark theme object by using the default dark theme as a base and applying overrides.
+ *
+ * @example
+ * ### Get the default dark theme
+ * ```ts
+ * const defaultDarkTheme = darkTheme()
+ * ```
+ *
+ * ### Create a custom dark theme
+ * ```ts
+ * const customTheme = darkTheme({
+ *   colors: {
+ *     modalBg: "red",
+ *   },
+ * });
+ * ```
+ *
+ * @param overrides - The overrides to apply to the default dark theme.
+ * @theme
+ */
 export function darkTheme(overrides?: ThemeOverrides): Theme {
   if (!overrides) {
     return darkThemeObj;

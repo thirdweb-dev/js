@@ -16,6 +16,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
     "width": 320,
@@ -39,10 +40,11 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
-    "https://kroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://255.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.kroma.network"
+    "https://api.kroma.network",
+    "https://1rpc.io/kroma"
   ],
   "shortName": "kroma",
   "slug": "kroma",

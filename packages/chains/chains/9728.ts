@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://boba-bnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9728.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bnb.boba.network",
     "wss://wss.testnet.bnb.boba.network",
@@ -38,6 +37,7 @@ export default {
     "wss://boba-bnb-testnet.gateway.tenderly.co"
   ],
   "shortName": "BobaBnbTestnet",
+  "slip44": 1,
   "slug": "boba-bnb-testnet",
   "testnet": true
 } as const satisfies Chain;

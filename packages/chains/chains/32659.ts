@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 32659,
   "rpc": [
-    "https://fusion.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://32659.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.fusionnetwork.io",
     "wss://mainnet.fusionnetwork.io"

@@ -9,9 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.securechain.ai"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
     "width": 150,
@@ -30,7 +28,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://securechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://34.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.scai.network"
   ],

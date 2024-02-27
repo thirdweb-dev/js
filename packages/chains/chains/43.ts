@@ -6,7 +6,7 @@ export default {
     {
       "name": "subscan",
       "url": "https://pangolin.subscan.io",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 43,
   "rpc": [
-    "https://darwinia-pangolin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangolin-rpc.darwinia.network"
   ],
   "shortName": "pangolin",
+  "slip44": 1,
   "slug": "darwinia-pangolin-testnet",
   "testnet": true
 } as const satisfies Chain;

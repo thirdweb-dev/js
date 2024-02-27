@@ -4,16 +4,25 @@ export default {
   "chainId": 62,
   "explorers": [],
   "faucets": [],
-  "infoURL": "https://ethereumclassic.org",
-  "name": "Ethereum Classic Testnet Morden",
+  "icon": {
+    "url": "ipfs://QmawMDPsaj3kBTZErCYQ3tshv5RrMAN3smWNs72m943Fyj",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
+  "infoURL": "https://ethereumclassic.org/development/testnets",
+  "name": "Morden Testnet",
   "nativeCurrency": {
-    "name": "Ethereum Classic Testnet Ether",
+    "name": "Morden Ether",
     "symbol": "TETC",
     "decimals": 18
   },
   "networkId": 2,
   "rpc": [],
   "shortName": "tetc",
-  "slug": "ethereum-classic-testnet-morden",
-  "testnet": true
+  "slip44": 1,
+  "slug": "morden-testnet",
+  "status": "deprecated",
+  "testnet": true,
+  "title": "Ethereum Classic Morden Testnet"
 } as const satisfies Chain;

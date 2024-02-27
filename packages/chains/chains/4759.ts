@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 4759,
   "rpc": [
-    "https://meverse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4759.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meversetestnet.io"
   ],
   "shortName": "TESTMEV",
+  "slip44": 1,
   "slug": "meverse-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 6789,
   "rpc": [
-    "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.goldsmartchain.com"
   ],

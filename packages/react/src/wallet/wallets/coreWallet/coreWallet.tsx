@@ -1,11 +1,26 @@
-import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  WalletConfig,
+  ConnectUIProps,
+} from "@thirdweb-dev/react-core";
 import {
   CoreWallet,
   getInjectedCoreWalletProvider,
 } from "@thirdweb-dev/wallets";
-import { CoreWalletConnectUI } from "./CoreWalletConnectUI";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
 
-type CoreWalletOptions = {
+const coreWalletUris = {
+  ios: "core://",
+  android: "core://",
+  other: "core://",
+};
+
+/**
+ * @wallet
+ */
+export type CoreWalletConfigOptions = {
   /**
    * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
@@ -15,13 +30,38 @@ type CoreWalletOptions = {
   projectId?: string;
 
   /**
-   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
 };
 
+/**
+ * A wallet configurator for [Core Wallet](https://core.app/) which allows integrating the wallet with React.
+ *
+ * It returns a [`WalletConfig`](https://portal.thirdweb.com/references/react/v4/WalletConfig) object which can be used to connect the wallet to via [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) component or [`useConnect`](https://portal.thirdweb.com/references/react/v4/useConnect) hook as mentioned in [Connecting Wallets](https://portal.thirdweb.com/react/v4/connecting-wallets) guide
+ *
+ * @example
+ * ```ts
+ * coreWallet({
+ *  projectId: "my-project-id",
+ *  recommended: true,
+ * })
+ * ```
+ *
+ * @param options -
+ * Optional object containing the following properties to configure the wallet
+ *
+ * ### projectId (optional)
+ * When connecting Core using the QR Code - Wallet Connect connector is used which requires a project id.
+ * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+ *
+ * ### recommended (optional)
+ * If true, the wallet will be tagged as "recommended" in [`ConnectWallet`](https://portal.thirdweb.com/react/v4/components/ConnectWallet) Modal UI
+ *
+ * @wallet
+ */
 export const coreWallet = (
-  options?: CoreWalletOptions,
+  options?: CoreWalletConfigOptions,
 ): WalletConfig<CoreWallet> => {
   return {
     id: CoreWallet.id,
@@ -44,11 +84,34 @@ export const coreWallet = (
         qrcode: false,
       });
 
+      handelWCSessionRequest(wallet, coreWalletUris);
+
       return wallet;
     },
-    connectUI: CoreWalletConnectUI,
-    isInstalled() {
-      return !!getInjectedCoreWalletProvider();
-    },
+    connectUI: ConnectUI,
+    isInstalled: isCoreWalletInstalled,
   };
 };
+
+function isCoreWalletInstalled() {
+  return !!getInjectedCoreWalletProvider();
+}
+
+function ConnectUI(props: ConnectUIProps<CoreWallet>) {
+  const locale = useTWLocale();
+  return (
+    <ExtensionOrWCConnectionUI
+      connect={props.connect}
+      connected={props.connected}
+      createWalletInstance={props.createWalletInstance}
+      goBack={props.goBack}
+      meta={props.walletConfig["meta"]}
+      setConnectedWallet={(w) => props.setConnectedWallet(w as CoreWallet)}
+      setConnectionStatus={props.setConnectionStatus}
+      supportedWallets={props.supportedWallets}
+      walletConnectUris={coreWalletUris}
+      walletLocale={locale.wallets.coreWallet}
+      isInstalled={isCoreWalletInstalled}
+    />
+  );
+}

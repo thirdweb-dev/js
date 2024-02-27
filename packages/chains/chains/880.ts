@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 880,
   "rpc": [
-    "https://ambros-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://880.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ambros.network"
   ],

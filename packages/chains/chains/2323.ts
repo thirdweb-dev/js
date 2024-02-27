@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2323,
   "rpc": [
-    "https://soma-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2323.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-testnet-v1.somanetwork.io/",
     "https://testnet-au-server-2.somanetwork.io",
@@ -42,6 +41,7 @@ export default {
     "https://testnet-sg-server-2.somanetwork.io"
   ],
   "shortName": "sma",
+  "slip44": 1,
   "slug": "soma-network-testnet",
   "testnet": true
 } as const satisfies Chain;

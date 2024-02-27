@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 1031,
   "rpc": [
-    "https://proxy-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://128.199.94.183:8041"
   ],
   "shortName": "prx",
+  "slip44": 1,
   "slug": "proxy-network-testnet",
   "testnet": true
 } as const satisfies Chain;

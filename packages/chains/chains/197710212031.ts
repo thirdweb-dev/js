@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 197710212031,
   "rpc": [
-    "https://haradev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://197710212031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://blockchain.haradev.com"
   ],
   "shortName": "ntt-haradev",
+  "slip44": 1,
   "slug": "haradev-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -17,10 +17,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  type QueryAllParams,
-} from "../../../core/schema/QueryParams";
+import { type QueryAllParams } from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
@@ -64,18 +61,18 @@ import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput, TransactionResultWithId } from "../types";
-import type { ContractWrapper } from "./contract-wrapper";
-import { Erc721Burnable } from "./erc-721-burnable";
-import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
-import { Erc721ClaimableZora } from "./erc-721-claim-zora";
-import { Erc721Claimable } from "./erc-721-claimable";
-import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
-import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
-import { Erc721UpdatableMetadata } from "./erc-721-metadata";
-import { Erc721Mintable } from "./erc-721-mintable";
-import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
-import { Erc721Supply } from "./erc-721-supply";
-import { Erc721TieredDrop } from "./erc-721-tiered-drop";
+import type { ContractWrapper } from "./internal/contract-wrapper";
+import { Erc721Burnable } from "./internal/erc721/erc-721-burnable";
+import { Erc721ClaimableWithConditions } from "./internal/erc721/erc-721-claim-conditions";
+import { Erc721ClaimableZora } from "./internal/erc721/erc-721-claim-zora";
+import { Erc721Claimable } from "./internal/erc721/erc-721-claimable";
+import { Erc721LazyMintable } from "./internal/erc721/erc-721-lazy-mintable";
+import { Erc721LoyaltyCard } from "./internal/erc721/erc-721-loyalty-card";
+import { Erc721UpdatableMetadata } from "./internal/erc721/erc-721-metadata";
+import { Erc721Mintable } from "./internal/erc721/erc-721-mintable";
+import { Erc721SharedMetadata } from "./internal/erc721/erc-721-shared-metadata";
+import { Erc721Supply } from "./internal/erc721/erc-721-supply";
+import { Erc721TieredDrop } from "./internal/erc721/erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import { Transaction } from "./transactions";
 
@@ -87,6 +84,7 @@ import { Transaction } from "./transactions";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc721.transfer(walletAddress, tokenId);
  * ```
+ * @erc721
  * @public
  */
 export class Erc721<
@@ -183,7 +181,7 @@ export class Erc721<
    * Get the current owner of an NFT
    *
    * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
+   * @returns The address of the owner
    * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
@@ -369,11 +367,11 @@ export class Erc721<
    * const owners = await contract.erc721.getAllOwners();
    * console.log(owners);
    * ```
-   * @returns an array of token ids and owners
+   * @returns An array of token ids and owners
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getAllOwners() {
-    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
+  public async getAllOwners(queryParams?: QueryAllParams) {
+    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners(queryParams);
   }
 
   /**
@@ -385,7 +383,7 @@ export class Erc721<
    * console.log(count);
    * ```
    *
-   * @returns the total number of NFTs minted in this contract
+   * @returns The total number of NFTs minted in this contract
    * @public
    */
   public async totalCount() {
@@ -435,16 +433,11 @@ export class Erc721<
     } else {
       const [address, allOwners] = await Promise.all([
         walletAddress || this.contractWrapper.getSignerAddress(),
-        this.getAllOwners(),
+        this.getAllOwners(queryParams),
       ]);
-      let ownedTokens = (allOwners || []).filter(
+      const ownedTokens = (allOwners || []).filter(
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
       );
-      if (queryParams) {
-        const start = queryParams?.start || 0;
-        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        ownedTokens = ownedTokens.slice(start, start + count);
-      }
       return await Promise.all(
         ownedTokens.map(async (i) => this.get(i.tokenId)),
       );
@@ -750,7 +743,7 @@ export class Erc721<
    * // The token ID of the NFT whose metadata you want to update
    * const tokenId = 0;
    * // The new metadata
-   * const metadata = { name: "My NFT", description: "My NFT description""}
+   * const metadata = { name: "My NFT", description: "My NFT description" }
    *
    * await contract.erc721.update(tokenId, metadata);
    * ```
@@ -784,7 +777,7 @@ export class Erc721<
    *
    * @param quantity - Quantity of the tokens you want to claim
    *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
@@ -816,7 +809,7 @@ export class Erc721<
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - optional claim options
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @returns  an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
@@ -885,7 +878,7 @@ export class Erc721<
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
@@ -917,7 +910,7 @@ export class Erc721<
    * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
    * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns The unclaimed supply
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {

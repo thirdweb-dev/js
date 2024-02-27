@@ -13,11 +13,11 @@ export default {
   },
   "networkId": 1007,
   "rpc": [
-    "https://newton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1007.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.newchain.newtonproject.org"
   ],
   "shortName": "tnew",
+  "slip44": 1,
   "slug": "newton-testnet",
   "testnet": true
 } as const satisfies Chain;

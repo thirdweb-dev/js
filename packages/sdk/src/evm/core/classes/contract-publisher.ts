@@ -42,12 +42,13 @@ import {
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { ContractWrapper } from "./internal/contract-wrapper";
+import { RPCConnectionHandler } from "./internal/rpc-connection-handler";
 import { Transaction } from "./transactions";
 import { fetchAndCacheDeployMetadata } from "../../common/any-evm-utils/fetchAndCacheDeployMetadata";
 import { fetchPublishedContractFromPolygon } from "../../common/any-evm-utils/fetchPublishedContractFromPolygon";
 import { isFeatureEnabled } from "../../common/feature-detection/isFeatureEnabled";
+import { detectFeatures } from "../../common/feature-detection/detectFeatures";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -225,9 +226,8 @@ export class ContractPublisher extends RPCConnectionHandler {
     address: AddressOrEns,
   ): Promise<ContractSource[]> {
     const resolvedAddress = await resolveAddress(address);
-    const metadata = await this.fetchCompilerMetadataFromAddress(
-      resolvedAddress,
-    );
+    const metadata =
+      await this.fetchCompilerMetadataFromAddress(resolvedAddress);
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
   }
 
@@ -395,19 +395,22 @@ export class ContractPublisher extends RPCConnectionHandler {
         predeployMetadata.metadataUri,
         this.storage,
       );
+      const features = detectFeatures(compilerMetadata.abi);
       const isPlugin = isFeatureEnabled(
-        AbiSchema.parse(compilerMetadata.abi),
+        compilerMetadata.abi,
         "PluginRouter",
+        features,
       );
       const isDynamic = isFeatureEnabled(
-        AbiSchema.parse(compilerMetadata.abi),
+        compilerMetadata.abi,
         "DynamicContract",
+        features,
       );
       extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
-        ? "dynamic"
-        : "none";
+          ? "dynamic"
+          : "none";
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
@@ -455,9 +458,8 @@ export class ContractPublisher extends RPCConnectionHandler {
         predeployMetadata.name,
       );
       if (latestContract && latestContract.metadataUri) {
-        const latestMetadata = await this.fetchPublishedContractInfo(
-          latestContract,
-        );
+        const latestMetadata =
+          await this.fetchPublishedContractInfo(latestContract);
 
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 333888,
   "rpc": [
-    "https://polis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sparta-rpc.polis.tech"
   ],
   "shortName": "sparta",
+  "slip44": 1,
   "slug": "polis-testnet",
   "testnet": true
 } as const satisfies Chain;

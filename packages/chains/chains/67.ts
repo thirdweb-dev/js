@@ -13,11 +13,11 @@ export default {
   },
   "networkId": 67,
   "rpc": [
-    "https://dbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://67.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://test-rpc.dbmbp.com"
   ],
   "shortName": "dbm",
+  "slip44": 1,
   "slug": "dbchain-testnet",
   "testnet": true
 } as const satisfies Chain;

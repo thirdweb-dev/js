@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 26863,
   "rpc": [
-    "https://oasischain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://26863.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasischain.io",
     "https://rpc2.oasischain.io",

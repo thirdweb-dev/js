@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 30103,
   "rpc": [
-    "https://cerium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://30103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cerium-rpc.canxium.net"
   ],
   "shortName": "ceri",
+  "slip44": 1,
   "slug": "cerium-testnet",
   "testnet": true
 } as const satisfies Chain;

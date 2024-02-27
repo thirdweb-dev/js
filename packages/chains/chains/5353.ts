@@ -33,12 +33,12 @@ export default {
   },
   "networkId": 5353,
   "rpc": [
-    "https://tritanium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodetestnet-station-one.tritanium.network/",
     "https://nodetestnet-station-two.tritanium.network/"
   ],
   "shortName": "ttrn",
+  "slip44": 1,
   "slug": "tritanium-testnet",
   "testnet": true
 } as const satisfies Chain;

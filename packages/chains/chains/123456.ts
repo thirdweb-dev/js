@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 123456,
   "rpc": [
-    "https://adil-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://123456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.adilchain-rpc.io"
   ],

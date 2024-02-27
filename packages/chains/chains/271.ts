@@ -9,9 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.egonscan.com"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
     "width": 512,
@@ -27,7 +25,6 @@ export default {
   },
   "networkId": 271,
   "rpc": [
-    "https://egoncoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://271.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.egonscan.com"
   ],

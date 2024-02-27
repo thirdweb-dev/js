@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Scroll Sepolia Etherscan",
-      "url": "https://sepolia.scrollscan.dev",
+      "url": "https://sepolia.scrollscan.com",
       "standard": "EIP3091"
     },
     {
@@ -28,12 +28,11 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://scroll.io/bridge"
+        "url": "https://sepolia.scroll.io/bridge"
       }
     ]
   },
   "rpc": [
-    "https://scroll-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://534351.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rpc.scroll.io",
     "https://rpc.ankr.com/scroll_sepolia_testnet",
@@ -41,6 +40,7 @@ export default {
     "https://scroll-testnet-public.unifra.io"
   ],
   "shortName": "scr-sepolia",
+  "slip44": 1,
   "slug": "scroll-sepolia-testnet",
   "status": "active",
   "testnet": true

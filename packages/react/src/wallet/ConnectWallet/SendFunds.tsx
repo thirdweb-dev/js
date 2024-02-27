@@ -16,7 +16,6 @@ import { Skeleton } from "../../components/Skeleton";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "../../components/Spinner";
 import { TransactionResult } from "@thirdweb-dev/sdk";
-import { ModalTitle } from "../../components/modalElements";
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { utils } from "ethers";
 import { SupportedTokens, TokenInfo, defaultTokens } from "./defaultTokens";
@@ -31,7 +30,10 @@ import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 
 type TXError = Error & { data?: { message?: string } };
 
-export function SendFunds(props: { supportedTokens: SupportedTokens }) {
+export function SendFunds(props: {
+  supportedTokens: SupportedTokens;
+  onBack: () => void;
+}) {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
 
   const chainId = useChainId();
@@ -81,6 +83,7 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
       setReceiverAddress={setReceiverAddress}
       amount={amount}
       setAmount={setAmount}
+      onBack={props.onBack}
     />
   );
 }
@@ -92,6 +95,7 @@ export function SendFundsForm(props: {
   setReceiverAddress: (value: string) => void;
   amount: string;
   setAmount: (value: string) => void;
+  onBack: () => void;
 }) {
   const locale = useTWLocale().connectWallet.sendFundsScreen;
   const tokenAddress = props.token?.address;
@@ -204,7 +208,7 @@ export function SendFundsForm(props: {
 
   return (
     <Container p="lg" animate="fadein">
-      <ModalTitle>{locale.title}</ModalTitle>
+      <ModalHeader title={locale.title} onBack={props.onBack} />
       <Spacer y="xl" />
 
       <form

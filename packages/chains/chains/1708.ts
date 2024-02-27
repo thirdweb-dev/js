@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 1708,
   "rpc": [
-    "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1708.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.blockchain.or.th"
   ],
   "shortName": "tTBSI",
+  "slip44": 1,
   "slug": "tbsi-testnet",
   "testnet": true,
   "title": "Thai Blockchain Service Infrastructure Testnet"

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 10201,
   "rpc": [
-    "https://maxxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.maxxchain.org",
     "https://rpc1.maxxchain.org",

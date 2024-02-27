@@ -42,7 +42,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://zkatana.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1261120.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zkatana.gelato.digital",
     "https://rpc.startale.com/zkatana"

@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 2154,
   "rpc": [
-    "https://findora-forge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2154.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-forge.prod.findora.org:8545/"
   ],
   "shortName": "findora-forge",
+  "slip44": 1,
   "slug": "findora-forge",
   "testnet": true
 } as const satisfies Chain;

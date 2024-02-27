@@ -39,11 +39,11 @@ export default {
   },
   "networkId": 5201420,
   "rpc": [
-    "https://electroneum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5201420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.electroneum.com"
   ],
   "shortName": "etn-testnet",
+  "slip44": 1,
   "slug": "electroneum-testnet",
   "testnet": true
 } as const satisfies Chain;

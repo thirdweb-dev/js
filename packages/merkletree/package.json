@@ -38,8 +38,14 @@
     "@types/benchmark": "^2.1.4",
     "@types/treeify": "^1.0.2",
     "benchmark": "^2.1.4",
+    "circomlibjs": "^0.1.7",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "^5.1.6"
+    "ethereum-cryptography": "^1.0.3",
+    "ethereumjs-util": "^7.0.9",
+    "keccak256": "^1.0.6",
+    "sha1": "^1.1.1",
+    "tape": "^4.9.2",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
@@ -48,7 +54,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "bun test",
+    "test": "bun test && node test/MerkleTree.js",
     "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
     "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
     "benchmark:sha256": "bun benchmark/sha256.ts",

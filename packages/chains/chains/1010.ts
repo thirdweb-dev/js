@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1010,
   "rpc": [
-    "https://evrice-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://meta.evrice.com"
   ],

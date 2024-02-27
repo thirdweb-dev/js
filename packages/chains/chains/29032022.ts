@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 29032022,
   "rpc": [
-    "https://flachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://29032022.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://flachain.flaexchange.top/"
   ],

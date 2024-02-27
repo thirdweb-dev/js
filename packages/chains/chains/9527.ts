@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 9527,
   "rpc": [
-    "https://rangers-protocol-testnet-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9527.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://robin.rangersprotocol.com/api/jsonrpc"
   ],
   "shortName": "trpg",
+  "slip44": 1,
   "slug": "rangers-protocol-testnet-robin",
   "testnet": true
 } as const satisfies Chain;

@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 27082022,
   "rpc": [
-    "https://excoincial-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://27082022.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.exlscan.com"
   ],

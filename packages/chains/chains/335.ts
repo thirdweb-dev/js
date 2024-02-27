@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 335,
   "rpc": [
-    "https://dfk-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://335.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain-testnet/rpc"
   ],
   "shortName": "DFKTEST",
+  "slip44": 1,
   "slug": "dfk-chain-test",
   "testnet": true
 } as const satisfies Chain;

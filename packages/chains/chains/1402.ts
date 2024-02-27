@@ -20,6 +20,7 @@ export default {
   "networkId": 1402,
   "rpc": [],
   "shortName": "zkevmtest",
+  "slip44": 1,
   "slug": "polygon-zkevm-testnet-old",
   "status": "deprecated",
   "testnet": true,

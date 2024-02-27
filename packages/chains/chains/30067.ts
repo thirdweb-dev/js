@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 30067,
   "rpc": [
-    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://30067.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc0.piecenetwork.com"
   ],
   "shortName": "Piece",
+  "slip44": 1,
   "slug": "piece-testnet",
   "testnet": true
 } as const satisfies Chain;

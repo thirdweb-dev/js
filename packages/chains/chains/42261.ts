@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 42261,
   "rpc": [
-    "https://oasis-emerald-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42261.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.emerald.oasis.dev/",
     "wss://testnet.emerald.oasis.dev/ws"
   ],
   "shortName": "emerald-testnet",
+  "slip44": 1,
   "slug": "oasis-emerald-testnet",
   "testnet": true
 } as const satisfies Chain;

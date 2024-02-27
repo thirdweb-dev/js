@@ -31,11 +31,13 @@ export default {
   },
   "networkId": 84532,
   "rpc": [
-    "https://base-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://84532.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.base.org"
+    "https://https://sepolia.base.org",
+    "https://base-sepolia-rpc.publicnode.com",
+    "wss://base-sepolia-rpc.publicnode.com"
   ],
   "shortName": "basesep",
+  "slip44": 1,
   "slug": "base-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;

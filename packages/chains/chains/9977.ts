@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 9977,
   "rpc": [
-    "https://mind-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9977.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-msc.mindchain.info/",
     "wss://testnet-msc.mindchain.info/ws"
   ],
   "shortName": "tMIND",
+  "slip44": 1,
   "slug": "mind-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

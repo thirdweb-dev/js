@@ -330,6 +330,23 @@ describe("NFT Contract", async () => {
     expect(nftPage2[2].metadata.id).to.eq("4");
   });
 
+  it("should respect pagination for getAllOwners", async () => {
+    const _tokenIds: number[] = Array.from({ length: 31 }, (_, index) => index);
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const [page1, page2] = await Promise.all([
+      nftContract.erc721.getAllOwners({ start: 0, count: 10 }),
+      nftContract.erc721.getAllOwners({ start: 5, count: 8 }),
+    ]);
+    expect(page1).to.be.an("array").length(10);
+    expect(page1[0].tokenId).to.eq(0);
+    expect(page1[9].tokenId).to.eq(9);
+
+    expect(page2).to.be.an("array").length(8);
+    expect(page2[0].tokenId).to.eq(5);
+    expect(page2[7].tokenId).to.eq(12);
+  });
+
   it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));

@@ -1,4 +1,9 @@
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import {
+  useAddress,
+  useConnect,
+  useWalletContext,
+  type WalletConfig,
+} from "@thirdweb-dev/react-core";
 import { Dimensions, ScrollView, View } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
 import Box from "../../base/Box";
@@ -16,6 +21,15 @@ export const ChooseWalletContent = ({
   onChooseWallet,
 }: ChooseWalletContentProps) => {
   const theme = useTheme();
+  const connect = useConnect();
+  const address = useAddress();
+  const {
+    setConnectedWallet,
+    setConnectionStatus,
+    connectionStatus,
+    createWalletInstance,
+    activeWallet,
+  } = useWalletContext();
 
   return (
     <View style={{ flexDirection: "column", maxHeight: MAX_HEIGHT }}>
@@ -46,6 +60,13 @@ export const ChooseWalletContent = ({
                       onChooseWallet(item, data);
                     }}
                     walletConfig={item}
+                    connect={(options: any) => connect(item, options)}
+                    connectedWallet={activeWallet}
+                    connectedWalletAddress={address}
+                    connectionStatus={connectionStatus}
+                    createWalletInstance={() => createWalletInstance(item)}
+                    setConnectedWallet={setConnectedWallet}
+                    setConnectionStatus={setConnectionStatus}
                   />
                 </Box>
               ) : (

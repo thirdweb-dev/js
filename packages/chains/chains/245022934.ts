@@ -22,14 +22,17 @@ export default {
     "format": "png"
   },
   "infoURL": "https://neonevm.org",
-  "name": "Neon EVM MainNet",
+  "name": "Neon EVM Mainnet",
   "nativeCurrency": {
     "name": "Neon",
     "symbol": "NEON",
     "decimals": 18
   },
   "networkId": 245022934,
-  "rpc": [],
+  "rpc": [
+    "https://245022934.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://neon-proxy-mainnet.solana.p2p.org"
+  ],
   "shortName": "neonevm-mainnet",
   "slug": "neon-evm",
   "testnet": false

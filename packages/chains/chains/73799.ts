@@ -15,12 +15,12 @@ export default {
   },
   "networkId": 73799,
   "rpc": [
-    "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://73799.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://volta-rpc.energyweb.org",
     "wss://volta-rpc.energyweb.org/ws"
   ],
   "shortName": "vt",
+  "slip44": 1,
   "slug": "energy-web-volta-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -3,8 +3,9 @@ import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
 /**
+ *
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
- * @param contractAddress - the address of the Edition contract, found in your thirdweb dashboard
+ * @param contractAddress - The address of the Edition contract, found in your thirdweb dashboard
  *
  * @example
  * ```javascript
@@ -31,6 +32,7 @@ import { useContract } from "../async/contracts";
  * - const edition = useEdition("0x1234...");
  * + const edition = useContract("0x1234...", "edition").contract;
  * ```
+ * @internal
  */
 export function useEdition(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(

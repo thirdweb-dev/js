@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 16888,
   "rpc": [
-    "https://ivar-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.ivarex.com"
   ],
   "shortName": "tivar",
+  "slip44": 1,
   "slug": "ivar-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

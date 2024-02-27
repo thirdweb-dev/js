@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 79879,
   "rpc": [
-    "https://gold-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://79879.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.goldsmartchain.com"
   ],
   "shortName": "STANDt",
+  "slip44": 1,
   "slug": "gold-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

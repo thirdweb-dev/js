@@ -15,11 +15,11 @@ export default {
   },
   "networkId": 3270,
   "rpc": [
-    "https://dubxcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3270.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctestnet.arabianchain.org"
   ],
   "shortName": "testdubx",
+  "slip44": 1,
   "slug": "dubxcoin-testnet",
   "testnet": true
 } as const satisfies Chain;

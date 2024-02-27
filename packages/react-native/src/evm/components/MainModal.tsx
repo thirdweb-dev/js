@@ -2,7 +2,7 @@ import {
   useGlobalTheme,
   useModalState,
 } from "../providers/ui-context-provider";
-import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
+import { ConnectEmbedUI } from "./ConnectWalletFlow/ConnectEmbed";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
 import { ThemeProvider } from "../styles/ThemeProvider";
@@ -10,6 +10,7 @@ import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal"
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 import { TWModal } from "./base/modal/TWModal";
 import Box from "./base/Box";
+import { ConnectWalletFlowModal } from "../utils/modalTypes";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -23,7 +24,12 @@ export const MainModal = () => {
   const view = useMemo(() => {
     switch (modalState?.view) {
       case "ConnectWalletFlow":
-        return <ConnectWalletFlow />;
+        return (
+          <ConnectEmbedUI
+            {...(modalState as ConnectWalletFlowModal).data}
+            isModal={true}
+          />
+        );
       case "WalletConnectSessionRequestModal":
         return <SessionRequestModal />;
       case "WalletConnectSessionProposalModal":
@@ -31,7 +37,7 @@ export const MainModal = () => {
       default:
         return null;
     }
-  }, [modalState.view]);
+  }, [modalState]);
 
   return (
     <ThemeProvider theme={theme}>

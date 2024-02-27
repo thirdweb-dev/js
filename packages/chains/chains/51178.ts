@@ -39,12 +39,12 @@ export default {
   },
   "networkId": 51178,
   "rpc": [
-    "https://lumoz-testnet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://51178.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-us-http-geth.lumoz.org",
     "https://alpha-hk-http-geth.lumoz.org"
   ],
   "shortName": "Lumoz-Testnet",
+  "slip44": 1,
   "slug": "lumoz-testnet-alpha",
   "testnet": true
 } as const satisfies Chain;

@@ -351,6 +351,40 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq(initialBalance.add(1).toString());
   });
 
+  it("should batch transfer erc1155", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = await sdk.deployer.deployEdition({
+      name: "Edition",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const c = await sdk.getContract(address);
+
+    await c.erc1155.mintBatchTo(adminWallet.address, [
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+    ]);
+
+    const initialBalance = await c.erc1155.balanceOf(samWallet.address, 0);
+    const tx = await c.erc1155.transferBatch.prepare(
+      samWallet.address,
+      [0, 1],
+      [1, 1],
+    );
+    await tx.execute();
+    const balance = await c.erc1155.balanceOf(samWallet.address, 0);
+    expect(balance.toString()).to.eq(initialBalance.add(1).toString());
+  });
+
   it("should detect feature: erc721 burnable", async () => {
     const c = await sdk.getContract(nftContractAddress);
     await c.erc721.mintTo(adminWallet.address, {

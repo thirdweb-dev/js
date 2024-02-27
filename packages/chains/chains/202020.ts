@@ -39,11 +39,11 @@ export default {
   },
   "networkId": 202020,
   "rpc": [
-    "https://decimal-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://202020.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-val.decimalchain.com/web3/"
   ],
   "shortName": "tDSC",
+  "slip44": 1,
   "slug": "decimal-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

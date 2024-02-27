@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 5005,
   "rpc": [
-    "https://treasurenet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node0.testnet.treasurenet.io",
     "https://node1.testnet.treasurenet.io",
@@ -44,6 +43,7 @@ export default {
     "https://node3.testnet.treasurenet.io"
   ],
   "shortName": "tntest",
+  "slip44": 1,
   "slug": "treasurenet-testnet",
   "testnet": true
 } as const satisfies Chain;

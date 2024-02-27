@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 41500,
   "rpc": [
-    "https://opulent-x-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://41500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.opulent-x.com"
   ],

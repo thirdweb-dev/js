@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 5869,
   "rpc": [
-    "https://wegochain-rubidium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5869.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy.wegochain.io",
     "http://wallet.wegochain.io:7764"

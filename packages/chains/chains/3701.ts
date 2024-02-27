@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 3701,
   "rpc": [
-    "https://xpla-testnet-xplatest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dimension-rpc.xpla.dev"
   ],
   "shortName": "xplatest",
+  "slip44": 1,
   "slug": "xpla-testnet-xplatest",
   "status": "deprecated",
   "testnet": true

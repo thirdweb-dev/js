@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://alaya-dev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://201030.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnetopenapi.alaya.network/rpc",
     "wss://devnetopenapi.alaya.network/ws"
   ],
   "shortName": "alayadev",
+  "slip44": 1,
   "slug": "alaya-dev-testnet",
   "testnet": true
 } as const satisfies Chain;

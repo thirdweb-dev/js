@@ -38,12 +38,12 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://synapse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.synapseprotocol.com"
   ],
   "shortName": "synapse-sepolia",
+  "slip44": 1,
   "slug": "synapse-chain-testnet",
   "status": "active",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

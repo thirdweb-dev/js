@@ -1,14 +1,19 @@
-import { ethers, providers, utils } from "ethers";
+import { Contract, ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { ClientConfig } from "@account-abstraction/sdk";
-import { BaseAccountAPI, BatchData } from "./base-api";
+import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
-import { randomNonce } from "./utils";
+import { hexlifyUserOp, randomNonce } from "./utils";
+import { ProviderConfig, UserOpOptions } from "../types";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import {
+  checkContractWalletSignature,
+  chainIdToThirdwebRpc,
+} from "../../../wallets/abstract";
 
 export class ERC4337EthersSigner extends Signer {
-  config: ClientConfig;
+  config: ProviderConfig;
   originalSigner: Signer;
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
@@ -16,7 +21,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
-    config: ClientConfig,
+    config: ProviderConfig,
     originalSigner: Signer,
     erc4337provider: ERC4337EthersProvider,
     httpRpcClient: HttpRpcClient,
@@ -36,22 +41,26 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: utils.Deferrable<providers.TransactionRequest>,
-    batchData?: BatchData,
+    options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
     const multidimensionalNonce = randomNonce();
-    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
         value: tx.value,
         gasLimit: tx.gasLimit,
         nonce: multidimensionalNonce,
+        maxFeePerGas: tx.maxFeePerGas,
+        maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
       },
-      batchData,
+      options,
     );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
@@ -134,7 +143,11 @@ Code: ${errorCode}`;
     return this.address as string;
   }
 
-  async signMessage(message: Bytes | string): Promise<string> {
+  /**
+   * Sign a message and return the signature
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Deploy smart wallet if needed
     const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
     if (isNotDeployed) {
       console.log(
@@ -146,13 +159,92 @@ Code: ${errorCode}`;
       });
       await tx.wait();
     }
-    return await this.originalSigner.signMessage(message);
+
+    const [chainId, address] = await Promise.all([
+      this.getChainId(),
+      this.getAddress(),
+    ]);
+    const originalMsgHash = utils.hashMessage(message);
+
+    let factorySupports712: boolean;
+    let signature: string;
+
+    try {
+      const provider = new providers.JsonRpcProvider(
+        chainIdToThirdwebRpc(chainId, this.config.clientId),
+        chainId,
+      );
+      const walletContract = new Contract(
+        address,
+        [
+          "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+        ],
+        provider,
+      );
+      // if this fails it's a pre 712 factory
+      await walletContract.getMessageHash(originalMsgHash);
+      factorySupports712 = true;
+    } catch {
+      factorySupports712 = false;
+    }
+
+    if (factorySupports712) {
+      const result = await signTypedDataInternal(
+        this,
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
+        {
+          message: utils.defaultAbiCoder.encode(["bytes32"], [originalMsgHash]),
+        },
+      );
+      signature = result.signature;
+    } else {
+      signature = await this.originalSigner.signMessage(message);
+    }
+
+    const isValid = await checkContractWalletSignature(
+      message as string,
+      signature,
+      address,
+      chainId,
+    );
+
+    if (isValid) {
+      return signature;
+    } else {
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+      );
+    }
   }
 
   async signTransaction(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     transaction: utils.Deferrable<providers.TransactionRequest>,
+    options?: UserOpOptions,
   ): Promise<string> {
-    throw new Error("not implemented");
+    const tx = await ethers.utils.resolveProperties(transaction);
+    await this.verifyAllNecessaryFields(tx);
+
+    const multidimensionalNonce = randomNonce();
+    const unsigned = await this.smartAccountAPI.createUnsignedUserOp(
+      this.httpRpcClient,
+      {
+        target: tx.to || "",
+        data: tx.data?.toString() || "0x",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
+      },
+      options,
+    );
+    const userOperation = await this.smartAccountAPI.signUserOp(unsigned);
+
+    const userOpString = JSON.stringify(await hexlifyUserOp(userOperation));
+    return userOpString;
   }
 }

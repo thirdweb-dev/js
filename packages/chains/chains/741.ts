@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 741,
   "rpc": [
-    "https://vention-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://741.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-testnet.vention.network"
   ],
   "shortName": "vsct",
+  "slip44": 1,
   "slug": "vention-smart-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

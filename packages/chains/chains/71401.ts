@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 71401,
   "rpc": [
-    "https://godwoken-testnet-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://71401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-v1.ckbapp.dev",
     "https://v1.testnet.godwoken.io/rpc"
   ],
   "shortName": "gw-testnet-v1",
+  "slip44": 1,
   "slug": "godwoken-testnet-v1",
   "testnet": true
 } as const satisfies Chain;

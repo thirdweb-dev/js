@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 1995,
   "rpc": [
-    "https://edexa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.edexa.com/rpc",
     "https://io-dataseed1.testnet.edexa.io-market.com/rpc"
   ],
   "shortName": "edx",
+  "slip44": 1,
   "slug": "edexa-testnet",
   "testnet": true
 } as const satisfies Chain;

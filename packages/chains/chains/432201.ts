@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 432201,
   "rpc": [
-    "https://dexalot-subnet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://432201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/dexalot/testnet/rpc"
   ],
   "shortName": "dexalot-testnet",
+  "slip44": 1,
   "slug": "dexalot-subnet-testnet",
   "testnet": true
 } as const satisfies Chain;

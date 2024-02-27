@@ -28,7 +28,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://xanachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xana.net/rpc"
   ],

@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 1945,
   "rpc": [
-    "https://onus-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1945.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.onuschain.io"
   ],
   "shortName": "onus-testnet",
+  "slip44": 1,
   "slug": "onus-chain-testnet",
   "testnet": true,
   "title": "ONUS Chain Testnet"

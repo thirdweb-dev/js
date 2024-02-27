@@ -1,8 +1,10 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
 import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import {
+  fetchContractMetadataFromAddress,
+  getContractMetadataFromCache,
+} from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
@@ -14,7 +16,7 @@ import type {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
   BaseContract,
   CallOverrides,
@@ -44,6 +46,8 @@ import { signTypedDataInternal } from "../../common/sign";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
+import { getCompositeABI } from "../../common/plugin/getCompositePluginABI";
+import { ContractWrapper } from "./internal/contract-wrapper";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -217,21 +221,18 @@ abstract class TransactionContext {
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
+    // If we're running in the browser, let users configure gas price in their wallet UI
+    // TODO - should prob only check if its a json rpc signer (browser extension)
+    if (isBrowser()) {
+      return {};
+    }
     return getDefaultGasOverrides(this.provider);
-  }
-
-  /**
-   * Calculates the priority fee per gas according (adding a 10% buffer)
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
-    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    return txGasPrice;
   }
 }
 
+/**
+ * @contract
+ */
 export class Transaction<
   TResult = TransactionResult,
 > extends TransactionContext {
@@ -449,17 +450,6 @@ export class Transaction<
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
-      try {
-        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
-        const abi = JSON.parse(
-          this.contract.interface.format("json") as string,
-        );
-        if (isRouterContract(abi)) {
-          overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
-        }
-      } catch (err) {
-        console.warn("Error raising gas limit", err);
-      }
     }
 
     // Now there should be no gas estimate errors
@@ -673,17 +663,17 @@ export class Transaction<
     let sources: ContractSource[] | undefined = undefined;
     let contractName: string | undefined = undefined;
     try {
-      const metadata = await fetchContractMetadataFromAddress(
+      const chainId = (await provider.getNetwork()).chainId;
+      const metadata = getContractMetadataFromCache(
         this.contract.address,
-        this.provider,
-        this.storage,
+        chainId,
       );
 
-      if (metadata.name) {
+      if (metadata?.name) {
         contractName = metadata.name;
       }
 
-      if (metadata.metadata.sources) {
+      if (metadata?.metadata.sources) {
         sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
@@ -709,6 +699,9 @@ export class Transaction<
   }
 }
 
+/**
+ * @contract
+ */
 export class DeployTransaction extends TransactionContext {
   factory: ContractFactory;
   events: EventEmitter<DeployEvents> | undefined;
@@ -870,7 +863,7 @@ export class DeployTransaction extends TransactionContext {
   }
 }
 
-export async function defaultGaslessSendFunction(
+async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -898,6 +891,9 @@ export async function defaultGaslessSendFunction(
   );
 }
 
+/**
+ * @internal
+ */
 export async function engineSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
@@ -915,6 +911,7 @@ export async function engineSendFunction(
     signer,
     provider,
     storage,
+    gaslessOptions,
   );
 
   const res = await fetch(gaslessOptions.engine.relayerUrl, {
@@ -950,7 +947,7 @@ export async function engineSendFunction(
   }
 }
 
-export async function biconomySendFunction(
+async function biconomySendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -979,7 +976,7 @@ export async function biconomySendFunction(
   );
 }
 
-export async function defenderSendFunction(
+async function defenderSendFunction(
   transaction: GaslessTransaction,
   signer: Signer,
   provider: providers.Provider,
@@ -1018,30 +1015,83 @@ async function enginePrepareRequest(
   signer: Signer,
   provider: providers.Provider,
   storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
 ) {
-  const forwarderAddress =
-    CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
-      .openzeppelinForwarder ||
-    (await computeForwarderAddress(provider, storage));
-  const ForwarderABI = (
-    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
-  ).default;
+  invariant(
+    gaslessOptions && "engine" in gaslessOptions,
+    "calling engine gasless transaction without openzeppelin config in the SDK options",
+  );
 
-  const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
-  const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
-    transaction.from,
-  ]);
+  try {
+    const metadata = await fetchContractMetadataFromAddress(
+      transaction.to,
+      provider,
+      storage,
+    );
 
-  const domain = {
-    name: "GSNv2 Forwarder",
-    version: "0.0.1",
-    chainId: transaction.chainId,
-    verifyingContract: forwarderAddress,
-  };
-  const types = {
-    ForwardRequest,
-  };
-  let message: ForwardRequestMessage | PermitRequestMessage;
+    const chainId = (await provider.getNetwork()).chainId;
+    const abi = await getCompositeABI(
+      transaction.to,
+      metadata.abi,
+      provider,
+      {},
+      storage,
+    );
+    const contract = new ContractWrapper(
+      signer,
+      transaction.to,
+      abi,
+      {},
+      storage,
+    );
+    if (abi.find((item) => item.name === "executeMetaTransaction")) {
+      const name: string = await contract.call("name", []);
+
+      const domain = {
+        name,
+        version: "1",
+        salt: "0x" + chainId.toString(16).padStart(64, "0"), // Use 64 length hex chain id as salt
+        verifyingContract: transaction.to,
+      };
+
+      const types = {
+        MetaTransaction: [
+          { name: "nonce", type: "uint256" },
+          { name: "from", type: "address" },
+          { name: "functionSignature", type: "bytes" },
+        ],
+      };
+
+      const nonce = await contract.call("getNonce", [transaction.from]);
+      const message = {
+        nonce: nonce,
+        from: transaction.from,
+        functionSignature: transaction.data,
+      };
+
+      const { signature } = await signTypedDataInternal(
+        signer,
+        domain,
+        types,
+        message,
+      );
+
+      return {
+        method: "POST",
+        body: JSON.stringify({
+          type: "execute-meta-transaction",
+          request: {
+            from: transaction.from,
+            to: transaction.to,
+            data: transaction.data,
+          },
+          signature,
+        }),
+      };
+    }
+  } catch {
+    // no-op
+  }
 
   if (
     transaction.functionName === "approve" &&
@@ -1058,18 +1108,13 @@ async function enginePrepareRequest(
       amount,
     );
 
-    const { r, s, v } = utils.splitSignature(sig);
-
-    message = {
+    const message = {
       to: transaction.to,
       owner: permit.owner,
       spender: permit.spender,
       value: BigNumber.from(permit.value).toString(),
       nonce: BigNumber.from(permit.nonce).toString(),
       deadline: BigNumber.from(permit.deadline).toString(),
-      r,
-      s,
-      v,
     };
 
     return {
@@ -1077,17 +1122,69 @@ async function enginePrepareRequest(
       body: JSON.stringify({
         type: "permit",
         request: message,
+        signature: sig,
       }),
     };
   } else {
-    message = {
-      from: transaction.from,
-      to: transaction.to,
-      value: BigNumber.from(0).toString(),
-      gas: BigNumber.from(transaction.gasLimit).toString(),
-      nonce: BigNumber.from(nonce).toString(),
-      data: transaction.data,
-    };
+    const forwarderAddress =
+      gaslessOptions.engine.relayerForwarderAddress ||
+      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+        ?.openzeppelinForwarder ||
+      (await computeForwarderAddress(provider, storage));
+    const ForwarderABI = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+    ).default;
+
+    const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
+    const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+      transaction.from,
+    ]);
+
+    let domain;
+    let types;
+    let message: ForwardRequestMessage;
+
+    if (gaslessOptions.experimentalChainlessSupport) {
+      domain = {
+        name: "GSNv2 Forwarder",
+        version: "0.0.1",
+        verifyingContract: forwarderAddress,
+      };
+
+      types = {
+        ForwardRequest: ChainAwareForwardRequest,
+      };
+
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+        chainid: BigNumber.from(transaction.chainId).toString(),
+      };
+    } else {
+      domain = {
+        name: gaslessOptions.engine.domainName,
+        version: gaslessOptions.engine.domainVersion,
+        chainId: transaction.chainId,
+        verifyingContract: forwarderAddress,
+      };
+
+      types = {
+        ForwardRequest,
+      };
+
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+      };
+    }
 
     const { signature: sig } = await signTypedDataInternal(
       signer,
@@ -1127,11 +1224,11 @@ async function defenderPrepareRequest(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA ||
+        ]?.openzeppelinForwarderEOA ||
         (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder ||
+        ]?.openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
   const ForwarderABI = (
     await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")

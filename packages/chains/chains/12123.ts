@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 12123,
   "rpc": [
-    "https://brc-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.brcchain.io"
   ],

@@ -3,10 +3,24 @@ import { fetchExtendedReleaseMetadata } from "../feature-detection/fetchExtended
 import { fetchPreDeployMetadata } from "../feature-detection/fetchPreDeployMetadata";
 import type { DeployMetadata } from "../../types/deploy/deploy-options";
 import { CompilerOptions } from "../../types/compiler/compiler-options";
-import { CompilerType } from "../../schema/contracts/custom";
 
-const deployMetadataCache: Record<string, Record<string, any>> = {};
+import { createLruCache } from "../utils";
+import {
+  FullPublishMetadata,
+  PreDeployMetadataFetched,
+} from "../../schema/contracts/custom";
 
+type DeployAndPublishMetadata = {
+  compilerMetadata: PreDeployMetadataFetched;
+  extendedMetadata: FullPublishMetadata | undefined;
+};
+
+const deployMetadataCache =
+  /* @__PURE__ */ createLruCache<DeployAndPublishMetadata>(20);
+
+/**
+ * @internal
+ */
 export async function fetchAndCacheDeployMetadata(
   publishMetadataUri: string,
   storage: ThirdwebStorage,
@@ -19,8 +33,11 @@ export async function fetchAndCacheDeployMetadata(
       `
     : "default";
 
-  if (deployMetadataCache[compiler][publishMetadataUri]) {
-    return deployMetadataCache[compiler][publishMetadataUri];
+  const cacheKey = `${compiler} - ${publishMetadataUri}`;
+
+  const cached = deployMetadataCache.get(cacheKey);
+  if (cached) {
+    return cached;
   }
 
   const compilerMetadata = await fetchPreDeployMetadata(
@@ -41,6 +58,7 @@ export async function fetchAndCacheDeployMetadata(
     compilerMetadata,
     extendedMetadata,
   };
-  deployMetadataCache[compiler][publishMetadataUri] = data;
+
+  deployMetadataCache.put(cacheKey, data);
   return data;
 }

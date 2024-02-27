@@ -35,13 +35,13 @@ export default {
   "networkId": 4002,
   "redFlags": [],
   "rpc": [
-    "https://fantom-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.fantom.network",
-    "https://fantom-testnet.publicnode.com",
-    "wss://fantom-testnet.publicnode.com"
+    "https://fantom-testnet-rpc.publicnode.com",
+    "wss://fantom-testnet-rpc.publicnode.com"
   ],
   "shortName": "tftm",
+  "slip44": 1,
   "slug": "fantom-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

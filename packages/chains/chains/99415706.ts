@@ -15,11 +15,11 @@ export default {
   },
   "networkId": 99415706,
   "rpc": [
-    "https://joys-digital-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://99415706.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://toys.joys.cash/"
   ],
   "shortName": "TOYS",
+  "slip44": 1,
   "slug": "joys-digital-testnet",
   "testnet": true
 } as const satisfies Chain;

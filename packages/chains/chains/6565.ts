@@ -33,13 +33,13 @@ export default {
   },
   "networkId": 6565,
   "rpc": [
-    "https://fox-testnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6565.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet-v1.foxchain.app/",
     "https://rpc2-testnet-v1.foxchain.app/",
     "https://rpc3-testnet-v1.foxchain.app"
   ],
   "shortName": "fox",
+  "slip44": 1,
   "slug": "fox-testnet-network",
   "testnet": true
 } as const satisfies Chain;

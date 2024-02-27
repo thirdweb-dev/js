@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 200202,
   "rpc": [
-    "https://milkomeda-a1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://200202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-devnet-algorand-rollup.a1.milkomeda.com"
   ],
   "shortName": "milkTAlgo",
+  "slip44": 1,
   "slug": "milkomeda-a1-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -20,6 +20,7 @@ export default {
   "networkId": 81341,
   "rpc": [],
   "shortName": "amanatest",
+  "slip44": 1,
   "slug": "amana-testnet",
   "status": "incubating",
   "testnet": true

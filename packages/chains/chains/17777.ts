@@ -37,7 +37,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://eos-evm-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.evm.eosnetwork.com"
   ],

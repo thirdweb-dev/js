@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 19845,
   "rpc": [
-    "https://btcix-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://19845.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.btcix.org/rpc"
   ],

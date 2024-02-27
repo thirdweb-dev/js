@@ -13,12 +13,13 @@ import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
-import { getProcessEnv } from "../../core/utils/process";
+import { createLruCache } from "./utils";
+import { getAnalyticsHeaders } from "../../core/utils/headers";
 
 const CONTRACT_RESOLVER_BASE_URL = "https://contract.thirdweb.com/metadata";
 
 // Internal static cache
-const metadataCache: Record<string, PublishedMetadata> = {};
+const metadataCache = /* @__PURE__ */ createLruCache<PublishedMetadata>(20);
 let multichainRegistry: Contract | undefined = undefined;
 
 function getCacheKey(address: string, chainId: number) {
@@ -30,11 +31,17 @@ function putInCache(
   chainId: number,
   metadata: PublishedMetadata,
 ) {
-  metadataCache[getCacheKey(address, chainId)] = metadata;
+  metadataCache.put(getCacheKey(address, chainId), metadata);
 }
 
-function getFromCache(address: string, chainId: number) {
-  return metadataCache[getCacheKey(address, chainId)];
+/**
+ * @internal
+ */
+export function getContractMetadataFromCache(
+  address: string,
+  chainId: number,
+): PublishedMetadata | undefined {
+  return metadataCache.get(getCacheKey(address, chainId));
 }
 
 /**
@@ -50,17 +57,23 @@ export async function fetchContractMetadataFromAddress(
   sdkOptions: SDKOptions = {},
 ): Promise<PublishedMetadata> {
   const chainId = (await provider.getNetwork()).chainId; // TODO resolve from sdk network
-  const cached = getFromCache(address, chainId);
+  const cached = getContractMetadataFromCache(address, chainId);
   if (cached) {
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
 
   // try to resolve from DNS first
-  if (!isRunningInTests()) {
+  const isLocalChain = chainId === 31337 || chainId === 1337;
+  if (!isLocalChain) {
     try {
       const response = await fetch(
         `${CONTRACT_RESOLVER_BASE_URL}/${chainId}/${address}`,
+        {
+          headers: {
+            ...getAnalyticsHeaders(),
+          },
+        },
       );
       if (response.ok) {
         const resolvedData = await response.json();
@@ -89,10 +102,17 @@ export async function fetchContractMetadataFromAddress(
 
   if (!metadata.isPartialAbi) {
     putInCache(address, chainId, metadata);
+  } else {
+    console.warn(
+      `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
   }
   return metadata;
 }
 
+/**
+ * @internal
+ */
 export async function fetchContractMetadataFromBytecode(
   address: Address,
   chainId: number,
@@ -132,9 +152,6 @@ export async function fetchContractMetadataFromBytecode(
   if (!metadata && bytecode) {
     const abi = constructAbiFromBytecode(bytecode);
     if (abi && abi.length > 0) {
-      console.warn(
-        `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
-      );
       // return partial ABI
       metadata = {
         name: "Unimported Contract",
@@ -203,8 +220,4 @@ export async function fetchAbiFromAddress(
     // will fallback to embedded ABIs for prebuilts
   }
   return undefined;
-}
-
-function isRunningInTests() {
-  return !!getProcessEnv("factoryAddress");
 }

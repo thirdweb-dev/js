@@ -252,7 +252,7 @@ export class AuctionHasNotEndedError extends Error {
 export class ExtensionNotImplementedError extends Error {
   constructor(feature: Feature) {
     super(
-      `This functionality is not available because the contract does not implement the '${feature.name}' Extension. Learn how to unlock this functionality at https://portal.thirdweb.com/extensions `,
+      `This functionality is not available because the contract does not implement the '${feature.name}' Extension. Learn how to unlock this functionality at https://portal.thirdweb.com/contracts/build/extensions `,
     );
   }
 }
@@ -358,7 +358,7 @@ export class TransactionError extends Error {
     }
 
     errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
-    errorMessage += `Need helping debugging? Join our Discord: https://discord.gg/thirdweb`;
+    errorMessage += `Need helping debugging? Visit our support site: https://thirdweb.com/support`;
     errorMessage += `\n\n`;
 
     super(errorMessage);

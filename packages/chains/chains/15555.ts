@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 15555,
   "rpc": [
-    "https://trust-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://15555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.testnet-dev.trust.one"
   ],
   "shortName": "TrustTestnet",
+  "slip44": 1,
   "slug": "trust-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

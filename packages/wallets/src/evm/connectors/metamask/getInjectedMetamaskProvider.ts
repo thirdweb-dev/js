@@ -1,6 +1,9 @@
 import { Ethereum } from "../injected/types";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
+/**
+ * @internal
+ */
 export function getInjectedMetamaskProvider(): Ethereum | undefined {
   if (typeof window === "undefined") {
     return;
@@ -55,6 +58,10 @@ export function getInjectedMetamaskProvider(): Ethereum | undefined {
     }
 
     if (ethereum.isTokenary) {
+      return;
+    }
+
+    if (ethereum.isRabbyWallet) {
       return;
     }
 

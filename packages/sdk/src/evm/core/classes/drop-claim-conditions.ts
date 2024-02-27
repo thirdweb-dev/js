@@ -53,12 +53,13 @@ import {
 } from "../../types/eips";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts
+ * @erc721
  * @public
  */
 export class DropClaimConditions<
@@ -94,7 +95,7 @@ export class DropClaimConditions<
   /**
    * Get the currently active claim condition
    *
-   * @returns the claim condition metadata
+   * @returns The claim condition metadata
    */
   public async getActive(
     options?: ClaimConditionFetchOptions,
@@ -153,7 +154,7 @@ export class DropClaimConditions<
   /**
    * Get all the claim conditions
    *
-   * @returns the claim conditions metadata
+   * @returns The claim conditions metadata
    */
   public async getAll(
     options?: ClaimConditionFetchOptions,
@@ -555,7 +556,7 @@ export class DropClaimConditions<
   /**
    * Get the total supply claimed by a specific wallet
    * @param walletAddress - the wallet address to check
-   * @returns the total supply claimed
+   * @returns The total supply claimed
    */
   public async getSupplyClaimedByWallet(
     walletAddress: AddressOrEns,
@@ -717,9 +718,8 @@ export class DropClaimConditions<
           merkle: merkleInfo,
         });
         // using internal method to just upload, avoids one contract call
-        const contractURI = await this.metadata._parseAndUploadMetadata(
-          mergedMetadata,
-        );
+        const contractURI =
+          await this.metadata._parseAndUploadMetadata(mergedMetadata);
 
         // TODO (cc) we could write the merkle tree info on the claim condition metadata instead
         // TODO (cc) but we still need to maintain the behavior here for older contracts
@@ -820,7 +820,7 @@ export class DropClaimConditions<
   /**
    * Returns proofs and the overrides required for the transaction.
    *
-   * @returns - `overrides` and `proofs` as an object.
+   * @returns  `overrides` and `proofs` as an object.
    * @internal
    */
   public async prepareClaim(
@@ -931,7 +931,7 @@ export class DropClaimConditions<
     });
   }
 
-  isNewSinglePhaseDrop(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
@@ -946,7 +946,7 @@ export class DropClaimConditions<
     );
   }
 
-  isNewMultiphaseDrop(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (
@@ -955,7 +955,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacySinglePhaseDrop(
+  private isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
     return (
@@ -970,7 +970,7 @@ export class DropClaimConditions<
     );
   }
 
-  isLegacyMultiPhaseDrop(
+  private isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
     return (

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 648,
   "rpc": [
-    "https://endurance-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://648.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-endurance.fusionist.io/"
   ],

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 78,
   "rpc": [
-    "https://primuschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethnode.primusmoney.com/mainnet"
   ],

@@ -7,7 +7,7 @@ import Text from "../../base/Text";
 import { FlexAlignType, StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {
-  onClose: () => void;
+  onClose?: () => void;
   onBackPress?: () => void;
   middleContent?: React.ReactNode;
   headerText?: string;
@@ -46,13 +46,17 @@ export const ConnectWalletHeader = ({
           <View />
         )}
         {middleContent ? middleContent : null}
-        <Icon
-          type="close"
-          width={14}
-          height={14}
-          onPress={onClose}
-          color={theme.colors.iconPrimary}
-        />
+        {onClose ? (
+          <Icon
+            type="close"
+            width={14}
+            height={14}
+            onPress={onClose}
+            color={theme.colors.iconPrimary}
+          />
+        ) : (
+          <View />
+        )}
       </View>
       <View style={{ ...styles.headerContainer, alignItems: alignHeader }}>
         {headerText ? (

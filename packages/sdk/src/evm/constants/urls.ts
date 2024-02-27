@@ -8,9 +8,8 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
-import pkg from "../../../package.json";
-import { isBrowser } from "@thirdweb-dev/storage";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
+import { setAnalyticsHeaders } from "../../core/utils/headers";
 
 /**
  * @internal
@@ -79,6 +78,9 @@ export function getChainProvider(
   return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
+/**
+ * @internal
+ */
 export function getChainIdFromNetwork(
   network: ChainOrRpcUrl,
   options: SDKOptionsOutput,
@@ -109,6 +111,9 @@ export function getChainIdFromNetwork(
   );
 }
 
+/**
+ * @internal
+ */
 export async function getChainIdOrName(
   network: NetworkInput,
 ): Promise<number | string> {
@@ -134,6 +139,7 @@ export async function getChainIdOrName(
 
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
+ * @internal
  */
 export function isChainConfig(
   network: NetworkInput,
@@ -245,6 +251,8 @@ export function getProviderFromRpcUrl(
         headers["x-authorize-wallet"] = "true";
       }
 
+      setAnalyticsHeaders(headers);
+
       const bundleId =
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
@@ -252,16 +260,6 @@ export function getProviderFromRpcUrl(
       if (!rpcUrl.includes("bundleId")) {
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
-
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
-      headers["x-sdk-platform"] = bundleId
-        ? "react-native"
-        : isBrowser()
-        ? (window as any).bridge !== undefined
-          ? "webGL"
-          : "browser"
-        : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
@@ -278,6 +276,17 @@ export function getProviderFromRpcUrl(
             return existingProvider;
           }
 
+          // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
+          let _skipFetchSetup = false;
+          if (
+            typeof globalThis !== "undefined" &&
+            "TW_SKIP_FETCH_SETUP" in globalThis &&
+            typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
+          ) {
+            _skipFetchSetup = (globalThis as any)
+              .TW_SKIP_FETCH_SETUP as boolean;
+          }
+
           // Otherwise, create a new provider on the specific network
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
@@ -285,13 +294,16 @@ export function getProviderFromRpcUrl(
                 {
                   url: rpcUrl,
                   headers,
+                  skipFetchSetup: _skipFetchSetup,
                 },
                 chainId,
+                sdkOptions?.rpcBatchSettings,
               )
             : // Otherwise fall back to the built in json rpc batch provider
               new providers.JsonRpcBatchProvider({
                 url: rpcUrl,
                 headers,
+                skipFetchSetup: _skipFetchSetup,
               });
 
           // Save the provider in our cache

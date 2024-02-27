@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 13371337,
   "rpc": [
-    "https://pepchain-churchill.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13371337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://churchill-rpc.pepchain.io"
   ],

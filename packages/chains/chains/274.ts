@@ -13,6 +13,9 @@ export default {
   "features": [
     {
       "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
     }
   ],
   "icon": {
@@ -29,7 +32,6 @@ export default {
   },
   "networkId": 274,
   "rpc": [
-    "https://lachain-lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://274.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.mainnet.lachain.network",
     "https://rpc2.mainnet.lachain.network",

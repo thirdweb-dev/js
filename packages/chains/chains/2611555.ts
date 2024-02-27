@@ -6,13 +6,12 @@ export default {
   "faucets": [],
   "name": "DPU Chain",
   "nativeCurrency": {
-    "name": "DGS",
-    "symbol": "DGS",
+    "name": "DGC",
+    "symbol": "DGC",
     "decimals": 18
   },
   "networkId": 2611555,
   "rpc": [
-    "https://dpu-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2611555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sc-rpc.dpu.ac.th"
   ],

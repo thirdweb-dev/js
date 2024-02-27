@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.5",
+  "version": "2.0.9",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -18,14 +18,13 @@
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
-    "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "test:all": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "pnpm test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "files": [
     "dist/"
@@ -34,34 +33,34 @@
     "exports": true
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.9",
-    "@babel/preset-typescript": "^7.22.5",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-typescript": "^7.23.3",
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.6.6",
+    "@swc-node/register": "^1.6.8",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.0",
     "@types/uuid": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.2.0",
+    "@typescript-eslint/parser": "^6.19.1",
     "chai": "^4.3.6",
-    "eslint": "^8.45.0",
+    "eslint": "^8.56.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.2.16",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.25.2",
-    "typescript": "^5.1.6"
+    "typedoc-gen": "workspace:*",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@thirdweb-dev/crypto": "workspace:*",
     "cid-tool": "^3.0.0",
     "form-data": "^4.0.0",
-    "uuid": "^9.0.1",
-    "@thirdweb-dev/crypto": "workspace:*"
+    "uuid": "^9.0.1"
   },
   "engines": {
     "node": ">=18"

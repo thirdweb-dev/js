@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 647,
   "rpc": [
-    "https://sx-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://647.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.toronto.sx.technology"
   ],
   "shortName": "SX-Testnet",
+  "slip44": 1,
   "slug": "sx-network-testnet",
   "testnet": true
 } as const satisfies Chain;

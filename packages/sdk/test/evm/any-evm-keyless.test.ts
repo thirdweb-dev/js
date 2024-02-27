@@ -39,7 +39,7 @@ describe("Any EVM Keyless Deploy", async () => {
   async function deployTieredDrop() {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const walletAddress = await sdk.wallet.getAddress();
 
     // This needs to match the published contract for the currently used ABI
@@ -94,11 +94,11 @@ describe("Any EVM Keyless Deploy", async () => {
   async function deployMarketplaceV3() {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
     const walletAddress = await sdk.wallet.getAddress();
 
     // IPFS URIs here and below This needs to match the published contract URIs for the contract and extensions
-    // the URI can be found by querying the ContractPublisher for those contracts: https://thirdweb.com/polygon/0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7/explorer
+    // the URI can be found by querying the ContractPublisher for those contracts: https://thirdweb.com/polygon/0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808/explorer
     const publishUri = await mockUploadMetadataWithBytecode(
       "MarketplaceV3",
       marketplaceV3CompilerMetadata.output.abi,
@@ -131,7 +131,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: await adminWallet.getAddress(),
       },
-      "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0",
+      "ipfs://QmVmyyBWwTJMvKaqhoNvYvScBCnmMZ6EYc2BnL3L2wByHC/0",
     );
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
@@ -140,7 +140,7 @@ describe("Any EVM Keyless Deploy", async () => {
       publishUri,
       [
         walletAddress, // defaultAdmin
-        "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0", // contractUri
+        "ipfs://QmVmyyBWwTJMvKaqhoNvYvScBCnmMZ6EYc2BnL3L2wByHC/0", // contractUri
         [], // trustedForwarders
         walletAddress, // platform fee recipient
         0, // platform fee bps
@@ -176,7 +176,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmRqErmPh5jpQUEbvKfHx9Wq8FnmjMrokF9x9b8Pw8iGJo/0",
+      "ipfs://QmWpqj5SegQVAfTxnWYwFZyM2tzcMrFP46cuhydWgivLA4/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -193,7 +193,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmSmtyccp5pamJB4GzG8ph3p68aheqSyu88tEPx2qD11gY/0",
+      "ipfs://QmerKQLemhTXjv1wysTw8utFXgHTcC6wAXg7hLWxjPZA15/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -210,7 +210,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmaHC2woTYRbL2tfZujHLt7mDZ5pDJNCCepSGkM5neWYK4/0",
+      "ipfs://Qmc8UzdjPUTPisfAS7Taq3i5vuA3nCxQL72mPmTyVSPd7z/0",
     );
   });
 
@@ -234,7 +234,7 @@ describe("Any EVM Keyless Deploy", async () => {
   });
 
   // can only work if secret key is set, skip otherwise
-  it("deploy marketplacev3", async () => {
+  itIf(!!process.env.TW_SECRET_KEY)("deploy marketplacev3", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     const marketplace = await deployMarketplaceV3();

@@ -33,12 +33,12 @@ export default {
   },
   "networkId": 9000,
   "rpc": [
-    "https://evmos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmos-testnet.lava.build",
     "https://eth.bd.evmos.dev:8545"
   ],
   "shortName": "evmos-testnet",
+  "slip44": 1,
   "slug": "evmos-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -20,6 +20,7 @@ export default {
   "networkId": 2008,
   "rpc": [],
   "shortName": "cloudwalk_testnet",
+  "slip44": 1,
   "slug": "cloudwalk-testnet",
   "testnet": true
 } as const satisfies Chain;

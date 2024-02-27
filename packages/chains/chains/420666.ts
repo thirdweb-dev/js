@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://kekchain-kektest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://420666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.kekchain.com"
   ],
   "shortName": "tKEK",
+  "slip44": 1,
   "slug": "kekchain-kektest",
   "testnet": true
 } as const satisfies Chain;

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 8654,
   "rpc": [
-    "https://toki-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8654.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.buildwithtoki.com/v0/rpc"
   ],

@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 206,
   "rpc": [
-    "https://vinuchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://206.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vinufoundation-rpc.com"
   ],
   "shortName": "VCTEST",
+  "slip44": 1,
   "slug": "vinuchain-testnet",
   "testnet": true
 } as const satisfies Chain;

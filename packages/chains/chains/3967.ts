@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 3967,
   "rpc": [
-    "https://dyno-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3967.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.dynoprotocol.com"
   ],
   "shortName": "tdyno",
+  "slip44": 1,
   "slug": "dyno-testnet",
   "testnet": true
 } as const satisfies Chain;

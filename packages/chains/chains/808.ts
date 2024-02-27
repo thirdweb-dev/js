@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 808,
   "rpc": [
-    "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://808.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/portal-fantasy/testnet/rpc"
   ],
   "shortName": "PFTEST",
+  "slip44": 1,
   "slug": "portal-fantasy-chain-test",
   "testnet": true
 } as const satisfies Chain;

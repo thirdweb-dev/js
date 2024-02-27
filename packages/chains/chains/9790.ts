@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 9790,
   "rpc": [
-    "https://carbon-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9790.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-api.carbon.network/"
   ],

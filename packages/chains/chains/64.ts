@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 64,
   "rpc": [
-    "https://ellaism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://64.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.ellaism.org"
   ],

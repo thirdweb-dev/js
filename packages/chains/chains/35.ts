@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 35,
   "rpc": [
-    "https://tbwg-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://35.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tbwg.io"
   ],

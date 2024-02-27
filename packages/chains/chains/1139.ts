@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1139,
   "rpc": [
-    "https://mathchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1139.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mathchain-asia.maiziqianbao.net/rpc",
     "https://mathchain-us.maiziqianbao.net/rpc"

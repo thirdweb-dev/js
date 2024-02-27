@@ -29,11 +29,11 @@ export default {
   },
   "networkId": 26026,
   "rpc": [
-    "https://ferrum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://26026.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.dev.svcs.ferrumnetwork.io:9933"
   ],
   "shortName": "frm",
+  "slip44": 1,
   "slug": "ferrum-testnet",
   "testnet": true
 } as const satisfies Chain;

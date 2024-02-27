@@ -34,11 +34,11 @@ export default {
     ]
   },
   "rpc": [
-    "https://alterium-l2-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://420692.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2-testnet-rpc.altscan.org"
   ],
   "shortName": "alterium",
+  "slip44": 1,
   "slug": "alterium-l2-testnet",
   "testnet": true
 } as const satisfies Chain;

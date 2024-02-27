@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 60001,
   "rpc": [
-    "https://thinkium-testnet-chain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://60001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test1.thinkiumrpc.net/"
   ],
   "shortName": "TKM-test1",
+  "slip44": 1,
   "slug": "thinkium-testnet-chain-1",
   "testnet": true
 } as const satisfies Chain;

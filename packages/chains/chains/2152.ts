@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2152,
   "rpc": [
-    "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2152.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.findora.org"
   ],

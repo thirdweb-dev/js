@@ -51,15 +51,16 @@ export default {
   "networkId": 84531,
   "redFlags": [],
   "rpc": [
-    "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://84531.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.base.org",
     "https://base-goerli.gateway.tenderly.co",
     "wss://base-goerli.gateway.tenderly.co",
-    "https://base-goerli.publicnode.com",
-    "wss://base-goerli.publicnode.com"
+    "https://base-goerli-rpc.publicnode.com",
+    "wss://base-goerli-rpc.publicnode.com"
   ],
   "shortName": "basegor",
+  "slip44": 1,
   "slug": "base-goerli",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

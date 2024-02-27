@@ -1,9 +1,4 @@
-import {
-  ConnectUIProps,
-  useAddress,
-  useSetConnectedWallet,
-  useSetConnectionStatus,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useAddress } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "./EmbeddedWallet";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import {
@@ -37,7 +32,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   connected,
   goBack,
   selectionData,
-  onLocallyConnected,
+  setConnectedWallet,
+  setConnectionStatus,
   ...props
 }) => {
   const l = useLocale();
@@ -49,8 +45,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   const [checkingOtp, setCheckingOtp] = useState(false);
   const [requestingNewOtp, setRequestingNewOtp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const setConnectedWallet = useSetConnectedWallet();
-  const setConnectionStatus = useSetConnectionStatus();
   const [password, setPassword] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | undefined>();
   const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
@@ -68,12 +62,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   const postConnect = useCallback(
     async (response: string) => {
       if (response) {
-        if (onLocallyConnected) {
-          onLocallyConnected(selectionData.emailWallet);
-        } else {
-          await setConnectedWallet(selectionData.emailWallet);
-          setConnectionStatus("connected");
-        }
+        setConnectedWallet(selectionData.emailWallet);
+        setConnectionStatus("connected");
       } else {
         clearCode();
         setErrorMessage(response || "Error validating the code");
@@ -81,12 +71,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         setFocusedIndex(undefined);
       }
     },
-    [
-      onLocallyConnected,
-      selectionData.emailWallet,
-      setConnectedWallet,
-      setConnectionStatus,
-    ],
+    [selectionData.emailWallet, setConnectedWallet, setConnectionStatus],
   );
 
   const connect = useCallback(
@@ -206,7 +191,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     connect,
     onContinuePress,
     onError,
-    onLocallyConnected,
     password,
     postConnect,
     screen,
@@ -316,7 +300,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       <EmbeddedSocialConnection
         connected={() => {}}
         goBack={goBack}
-        onLocallyConnected={onLocallyConnected}
+        setConnectedWallet={setConnectedWallet}
+        setConnectionStatus={setConnectionStatus}
         selectionData={selectionData}
         {...props}
       />

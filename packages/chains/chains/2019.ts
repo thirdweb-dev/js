@@ -19,12 +19,11 @@ export default {
   },
   "networkId": 2019,
   "rpc": [
-    "https://publicmint-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2019.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tst.publicmint.io:8545"
   ],
   "shortName": "pmint_test",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "publicmint-testnet",
   "testnet": true,
   "title": "Public Mint Testnet"

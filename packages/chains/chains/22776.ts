@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "MAP",
+  "chain": "MAPO",
   "chainId": 22776,
   "explorers": [
     {
-      "name": "mapscan",
-      "url": "https://mapscan.io",
+      "name": "maposcan",
+      "url": "https://maposcan.io",
       "standard": "EIP3091"
     }
   ],
@@ -16,8 +16,8 @@ export default {
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://maplabs.io",
-  "name": "MAP Mainnet",
+  "infoURL": "https://mapprotocol.io/",
+  "name": "MAP Protocol",
   "nativeCurrency": {
     "name": "MAPO",
     "symbol": "MAPO",
@@ -25,12 +25,11 @@ export default {
   },
   "networkId": 22776,
   "rpc": [
-    "https://map.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22776.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.maplabs.io"
   ],
-  "shortName": "map",
+  "shortName": "mapo",
   "slip44": 60,
-  "slug": "map",
+  "slug": "map-protocol",
   "testnet": false
 } as const satisfies Chain;

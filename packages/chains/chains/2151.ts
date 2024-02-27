@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2151,
   "rpc": [
-    "https://bosagora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2151.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bosagora.org",
     "https://rpc.bosagora.org"

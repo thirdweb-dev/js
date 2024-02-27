@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://polyjuice-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://71393.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-web3-rpc.ckbapp.dev",
     "ws://godwoken-testnet-web3-rpc.ckbapp.dev/ws"
   ],
   "shortName": "ckb",
+  "slip44": 1,
   "slug": "polyjuice-testnet",
   "testnet": true
 } as const satisfies Chain;
