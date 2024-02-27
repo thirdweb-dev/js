@@ -10,6 +10,10 @@ import {
 } from "..";
 import { ThirdwebSDK } from "../../sdk";
 import { LocalWallet } from "../../wallets";
+import { ethers as ethers5 } from "ethers5";
+import { ethers as ethers6 } from "ethers6";
+// eslint-disable-next-line no-restricted-imports
+import * as viem from "viem";
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
@@ -42,6 +46,45 @@ const sdk = await ThirdwebSDK.fromWallet(wallet, LOCAL_RPC, {
   },
 });
 
+const ABI = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "transfer",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
+
+const ethers5Contract = new ethers5.Contract(
+  USDC_CONTRACT_ADDRESS,
+  ABI,
+  ethers5.getDefaultProvider(LOCAL_RPC),
+);
+
+const ethers6Contract = new ethers6.Contract(
+  USDC_CONTRACT_ADDRESS,
+  ABI,
+  ethers6.getDefaultProvider(LOCAL_RPC),
+);
+
 const OLD_CONTRACT = await sdk.getContract(USDC_CONTRACT_ADDRESS);
 
 function randomBigint() {
@@ -60,6 +103,28 @@ describe.runIf(SECRET_KEY)("encode transfer (warm cache)", () => {
 
   bench("@thirdweb-dev/sdk", async () => {
     OLD_CONTRACT.prepare("transfer", [VITALIK_WALLET, randomBigint()]).encode();
+  });
+
+  bench("ethers@5", async () => {
+    ethers5Contract.interface.encodeFunctionData("transfer", [
+      VITALIK_WALLET,
+      randomBigint(),
+    ]);
+  });
+
+  bench("ethers@6", async () => {
+    ethers6Contract.interface.encodeFunctionData("transfer", [
+      VITALIK_WALLET,
+      randomBigint(),
+    ]);
+  });
+
+  bench("viem", async () => {
+    viem.encodeFunctionData({
+      abi: ABI,
+      functionName: "transfer",
+      args: [VITALIK_WALLET, randomBigint()],
+    });
   });
 });
 
@@ -95,29 +160,37 @@ describe.runIf(SECRET_KEY)("encode transfer (cold cache)", () => {
     // actually read from the contract
     contract.prepare("transfer", [VITALIK_WALLET, randomBigint()]).encode();
   });
-});
 
-const ABI = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-] as const;
+  bench("ethers@5", async () => {
+    new ethers5.Contract(
+      USDC_CONTRACT_ADDRESS,
+      ABI,
+      ethers5.getDefaultProvider(LOCAL_RPC),
+    ).interface.encodeFunctionData("transfer", [
+      VITALIK_WALLET,
+      randomBigint(),
+    ]);
+  });
+
+  bench("ethers@6", async () => {
+    new ethers6.Contract(
+      USDC_CONTRACT_ADDRESS,
+      ABI,
+      ethers6.getDefaultProvider(LOCAL_RPC),
+    ).interface.encodeFunctionData("transfer", [
+      VITALIK_WALLET,
+      randomBigint(),
+    ]);
+  });
+
+  bench("viem", async () => {
+    viem.encodeFunctionData({
+      abi: ABI,
+      functionName: "transfer",
+      args: [VITALIK_WALLET, randomBigint()],
+    });
+  });
+});
 
 describe.runIf(SECRET_KEY)("read contract (pre-defined abi)", () => {
   bench("thirdweb", async () => {
