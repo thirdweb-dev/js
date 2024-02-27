@@ -205,6 +205,7 @@ export function getChainDataForChain(chain: Chain): Promise<ApiChain> {
     async () => {
       const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
       if (!res.ok) {
+        res.body?.cancel();
         throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
       }
 

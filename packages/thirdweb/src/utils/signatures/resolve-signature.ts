@@ -17,6 +17,7 @@ async function resolveFunctionSignature(
     `${SIGNATURE_API}/signatures/?format=json&hex_signature=${hexSig}`,
   );
   if (!res.ok) {
+    res.body?.cancel();
     console.log(res.statusText);
     return null;
   }
@@ -39,6 +40,7 @@ async function resolveEventSignature(
     `${SIGNATURE_API}/event-signatures/?format=json&hex_signature=${hexSig}`,
   );
   if (!res.ok) {
+    res.body?.cancel();
     console.log(res.statusText);
     return null;
   }
