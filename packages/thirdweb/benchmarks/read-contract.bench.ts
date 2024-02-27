@@ -8,6 +8,10 @@ import {
   defineChain,
 } from "..";
 import { ThirdwebSDK } from "../../sdk";
+import { ethers as ethers5 } from "ethers5";
+import { ethers as ethers6 } from "ethers6";
+// eslint-disable-next-line no-restricted-imports
+import * as viem from "viem";
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
@@ -28,13 +32,27 @@ const NEW_CONTRACT = getContract({
   address: USDC_CONTRACT_ADDRESS,
 });
 
-const OLD_CONTRACT = await new ThirdwebSDK(LOCAL_RPC, {
-  secretKey: SECRET_KEY,
-  readonlySettings: {
-    chainId: 1,
-    rpcUrl: LOCAL_RPC,
+const ABI = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
-}).getContract(USDC_CONTRACT_ADDRESS);
+] as const;
 
 const sdk = new ThirdwebSDK(LOCAL_RPC, {
   secretKey: SECRET_KEY,
@@ -42,6 +60,28 @@ const sdk = new ThirdwebSDK(LOCAL_RPC, {
     chainId: 1,
     rpcUrl: LOCAL_RPC,
   },
+});
+
+const OLD_CONTRACT = await sdk.getContract(USDC_CONTRACT_ADDRESS);
+
+const ethers5Contract = new ethers5.Contract(
+  USDC_CONTRACT_ADDRESS,
+  ABI,
+  ethers5.getDefaultProvider(LOCAL_RPC),
+);
+
+const ethers6Contract = new ethers6.Contract(
+  USDC_CONTRACT_ADDRESS,
+  ABI,
+  ethers6.getDefaultProvider(LOCAL_RPC),
+);
+
+const viemClient = viem.createPublicClient({ transport: viem.http(LOCAL_RPC) });
+
+const viemContract = viem.getContract({
+  abi: ABI,
+  address: USDC_CONTRACT_ADDRESS,
+  client: viemClient,
 });
 
 describe.runIf(SECRET_KEY)("read contract (warm cache)", () => {
@@ -55,6 +95,18 @@ describe.runIf(SECRET_KEY)("read contract (warm cache)", () => {
 
   bench("@thirdweb-dev/sdk", async () => {
     await OLD_CONTRACT.call("balanceOf", [VITALIK_WALLET]);
+  });
+
+  bench("ethers@5", async () => {
+    await ethers5Contract.callStatic.balanceOf(VITALIK_WALLET);
+  });
+
+  bench("ethers@6", async () => {
+    await ethers6Contract.balanceOf(VITALIK_WALLET);
+  });
+
+  bench("viem", async () => {
+    await viemContract.read.balanceOf([VITALIK_WALLET]);
   });
 });
 
@@ -89,29 +141,33 @@ describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
     // actually read from the contract
     await contract.call("balanceOf", [VITALIK_WALLET]);
   });
-});
 
-const ABI = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-] as const;
+  bench("ethers@5", async () => {
+    await new ethers5.Contract(
+      USDC_CONTRACT_ADDRESS,
+      ABI,
+      ethers5.getDefaultProvider(LOCAL_RPC),
+    ).callStatic.balanceOf(VITALIK_WALLET);
+  });
+
+  bench("ethers@6", async () => {
+    await new ethers6.Contract(
+      USDC_CONTRACT_ADDRESS,
+      ABI,
+      ethers6.getDefaultProvider(LOCAL_RPC),
+    ).balanceOf(VITALIK_WALLET);
+  });
+
+  bench("viem", async () => {
+    await viem
+      .getContract({
+        abi: ABI,
+        address: USDC_CONTRACT_ADDRESS,
+        client: viem.createPublicClient({ transport: viem.http(LOCAL_RPC) }),
+      })
+      .read.balanceOf([VITALIK_WALLET]);
+  });
+});
 
 describe.runIf(SECRET_KEY)("read contract (pre-defined abi)", () => {
   bench("thirdweb", async () => {
