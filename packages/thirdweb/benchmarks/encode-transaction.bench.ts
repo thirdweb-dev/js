@@ -2,12 +2,14 @@ import { describe, bench } from "vitest";
 
 // local imports
 import {
-  readContract,
   createThirdwebClient,
   getContract,
   defineChain,
+  encode,
+  prepareContractCall,
 } from "..";
 import { ThirdwebSDK } from "../../sdk";
+import { LocalWallet } from "../../wallets";
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
@@ -28,15 +30,11 @@ const NEW_CONTRACT = getContract({
   address: USDC_CONTRACT_ADDRESS,
 });
 
-const OLD_CONTRACT = await new ThirdwebSDK(LOCAL_RPC, {
-  secretKey: SECRET_KEY,
-  readonlySettings: {
-    chainId: 1,
-    rpcUrl: LOCAL_RPC,
-  },
-}).getContract(USDC_CONTRACT_ADDRESS);
+const wallet = new LocalWallet();
 
-const sdk = new ThirdwebSDK(LOCAL_RPC, {
+await wallet.generate();
+
+const sdk = await ThirdwebSDK.fromWallet(wallet, LOCAL_RPC, {
   secretKey: SECRET_KEY,
   readonlySettings: {
     chainId: 1,
@@ -44,21 +42,28 @@ const sdk = new ThirdwebSDK(LOCAL_RPC, {
   },
 });
 
-describe.runIf(SECRET_KEY)("read contract (warm cache)", () => {
+const OLD_CONTRACT = await sdk.getContract(USDC_CONTRACT_ADDRESS);
+
+function randomBigint() {
+  return BigInt(Math.floor(Math.random() * 1000));
+}
+
+describe.runIf(SECRET_KEY)("encode transfer (warm cache)", () => {
   bench("thirdweb", async () => {
-    await readContract({
+    const tx = prepareContractCall({
       contract: NEW_CONTRACT,
-      method: "function balanceOf(address) returns (uint256)",
-      params: [VITALIK_WALLET],
+      method: "function transfer(address,uint256)",
+      params: [VITALIK_WALLET, randomBigint()],
     });
+    await encode(tx);
   });
 
   bench("@thirdweb-dev/sdk", async () => {
-    await OLD_CONTRACT.call("balanceOf", [VITALIK_WALLET]);
+    OLD_CONTRACT.prepare("transfer", [VITALIK_WALLET, randomBigint()]).encode();
   });
 });
 
-describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
+describe.runIf(SECRET_KEY)("encode transfer (cold cache)", () => {
   bench("thirdweb", async () => {
     // init the client
     const newClient = createThirdwebClient({
@@ -75,19 +80,20 @@ describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
       client: newClient,
       address: USDC_CONTRACT_ADDRESS,
     });
-    // actually read from the contract
-    await readContract({
-      contract,
-      method: "function balanceOf(address) returns (uint256)",
-      params: [VITALIK_WALLET],
+
+    const tx = prepareContractCall({
+      contract: contract,
+      method: "function transfer(address,uint256)",
+      params: [VITALIK_WALLET, randomBigint()],
     });
+    await encode(tx);
   });
 
   bench("@thirdweb-dev/sdk", async () => {
     //get the contract
     const contract = await sdk.getContract(USDC_CONTRACT_ADDRESS);
     // actually read from the contract
-    await contract.call("balanceOf", [VITALIK_WALLET]);
+    contract.prepare("transfer", [VITALIK_WALLET, randomBigint()]).encode();
   });
 });
 
@@ -129,22 +135,20 @@ describe.runIf(SECRET_KEY)("read contract (pre-defined abi)", () => {
       chain,
       client: newClient,
       address: USDC_CONTRACT_ADDRESS,
-      abi: ABI,
     });
-    // actually read from the contract
-    await readContract({
-      contract,
-      method: "balanceOf",
-      params: [VITALIK_WALLET],
+
+    const tx = prepareContractCall({
+      contract: contract,
+      method: "function transfer(address,uint256)",
+      params: [VITALIK_WALLET, randomBigint()],
     });
+    await encode(tx);
   });
 
   bench("@thirdweb-dev/sdk", async () => {
-    // init the sdk
-
     //get the contract
     const contract = await sdk.getContractFromAbi(USDC_CONTRACT_ADDRESS, ABI);
     // actually read from the contract
-    await contract.call("balanceOf", [VITALIK_WALLET]);
+    contract.prepare("transfer", [VITALIK_WALLET, randomBigint()]).encode();
   });
 });
