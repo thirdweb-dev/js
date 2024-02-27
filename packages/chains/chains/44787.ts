@@ -4,8 +4,8 @@ export default {
   "chainId": 44787,
   "explorers": [
     {
-      "name": "Celoscan",
-      "url": "https://alfajores.celoscan.io/",
+      "name": "Alfajoresscan",
+      "url": "https://alfajores.celoscan.io",
       "standard": "EIP3091"
     }
   ],
@@ -24,12 +24,12 @@ export default {
   "networkId": 44787,
   "redFlags": [],
   "rpc": [
-    "https://celo-alfajores-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://44787.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alfajores-forno.celo-testnet.org",
     "wss://alfajores-forno.celo-testnet.org/ws"
   ],
   "shortName": "ALFA",
+  "slip44": 1,
   "slug": "celo-alfajores-testnet",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

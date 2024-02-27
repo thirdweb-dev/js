@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 708,
   "rpc": [
-    "https://blockchain-station-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://708.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bcsdev.io",
     "wss://rpc-ws-testnet.bcsdev.io"
   ],
   "shortName": "tbcs",
+  "slip44": 1,
   "slug": "blockchain-station-testnet",
   "testnet": true
 } as const satisfies Chain;

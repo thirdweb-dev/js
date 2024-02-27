@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 303,
   "rpc": [
-    "https://neurochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://303.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nc-rpc-test1.neurochain.io"
   ],
   "shortName": "ncnt",
+  "slip44": 1,
   "slug": "neurochain-testnet",
   "testnet": true
 } as const satisfies Chain;

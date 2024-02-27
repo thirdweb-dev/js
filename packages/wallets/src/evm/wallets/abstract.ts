@@ -8,13 +8,14 @@ import {
   Price,
   TransactionResult,
   fetchCurrencyValue,
+  getDefaultGasOverrides,
   isNativeToken,
   normalizePriceValue,
 } from "@thirdweb-dev/sdk";
 import { createErc20 } from "../utils/currency";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+export function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
   return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
       ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
@@ -39,7 +40,7 @@ export interface WalletEvents {
 }
 
 const EIP1271_ABI = [
-  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)",
+  "function isValidSignature(bytes32 _hash, bytes _signature) public view returns (bytes4)",
 ];
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 
@@ -49,28 +50,55 @@ export async function checkContractWalletSignature(
   address: string,
   chainId: number,
 ): Promise<boolean> {
-  //TODO:  A provider should be passed in instead of creating a new one here.
-  const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
+  // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
+  let _skipFetchSetup = false;
+  if (
+    typeof globalThis !== "undefined" &&
+    "TW_SKIP_FETCH_SETUP" in globalThis &&
+    typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
+  ) {
+    _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
+  }
+
+  //TODO: A provider should be passed in instead of creating a new one here.
+  const provider = new providers.JsonRpcProvider({
+    url: chainIdToThirdwebRpc(chainId),
+    skipFetchSetup: _skipFetchSetup,
+  });
   const walletContract = new Contract(address, EIP1271_ABI, provider);
-  const _hashMessage = utils.hashMessage(message);
   try {
-    const res = await walletContract.isValidSignature(_hashMessage, signature);
+    const res = await walletContract.isValidSignature(
+      utils.hashMessage(message),
+      signature,
+    );
     return res === EIP1271_MAGICVALUE;
   } catch {
     return false;
   }
 }
-
+/**
+ * The base class for any wallet in the Wallet SDK, including backend wallets. It contains the functionality common to all wallets.
+ *
+ * This wallet is not meant to be used directly, but instead be extended to [build your own wallet](https://portal.thirdweb.com/wallet-sdk/v2/build)
+ *
+ * @abstractWallet
+ */
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
   implements GenericAuthWallet, EVMWallet
 {
+  /**
+   * @internal
+   */
   public type: Ecosystem = "evm";
 
+  /**
+   * Returns an [ethers Signer](https://docs.ethers.org/v5/api/signer/) object of the connected wallet
+   */
   public abstract getSigner(): Promise<Signer>;
 
   /**
-   * @returns the account address from connected wallet
+   * Returns the account address of the connected wallet
    */
   public async getAddress(): Promise<string> {
     const signer = await this.getSigner();
@@ -78,9 +106,11 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns the native token balance of the connected wallet
+   * Returns the balance of the connected wallet for the specified token address. If no token address is specified, it returns the balance of the native token
+   *
+   * @param tokenAddress - The contract address of the token
    */
-  public async getBalance(currencyAddress: string = NATIVE_TOKEN_ADDRESS) {
+  public async getBalance(tokenAddress: string = NATIVE_TOKEN_ADDRESS) {
     const signer = await this.getSigner();
     const address = await this.getAddress();
 
@@ -89,25 +119,32 @@ export abstract class AbstractWallet
     }
 
     let balance: BigNumber;
-    if (isNativeToken(currencyAddress)) {
+    if (isNativeToken(tokenAddress)) {
       balance = await signer.provider.getBalance(address);
     } else {
-      const erc20 = createErc20(signer, currencyAddress);
+      const erc20 = createErc20(signer, tokenAddress);
       balance = await erc20.balanceOf(address);
     }
 
     // Note: assumes that the native currency decimals is 18, which isn't always correct
-    return await fetchCurrencyValue(signer.provider, currencyAddress, balance);
+    return await fetchCurrencyValue(signer.provider, tokenAddress, balance);
   }
 
   /**
-   * @returns the chain id from connected wallet
+   * Returns the chain id of the network that the wallet is connected to
    */
   public async getChainId(): Promise<number> {
     const signer = await this.getSigner();
     return signer.getChainId();
   }
 
+  /**
+   * Transfers some amount of tokens to the specified address
+   * @param to - The address to transfer the amount to
+   * @param amount - The amount to transfer
+   * @param currencyAddress - The contract address of the token to transfer. If not specified, it defaults to the native token
+   * @returns The transaction result
+   */
   public async transfer(
     to: string,
     amount: Price,
@@ -127,10 +164,12 @@ export abstract class AbstractWallet
     );
 
     if (isNativeToken(currencyAddress)) {
+      const gas = getDefaultGasOverrides(signer.provider);
       const tx = await signer.sendTransaction({
         from,
         to,
         value,
+        ...gas,
       });
       return { receipt: await tx.wait() };
     } else {
@@ -141,7 +180,9 @@ export abstract class AbstractWallet
   }
 
   /**
-   * @returns the signature of the message
+   * Sign a message with the connected wallet and return the signature
+   * @param message - The message to sign
+   * @returns - The signature
    */
   public async signMessage(message: Bytes | string): Promise<string> {
     const signer = await this.getSigner();
@@ -149,8 +190,11 @@ export abstract class AbstractWallet
   }
 
   /**
-   * verify the signature of a message
-   * @returns `true` if the signature is valid, `false` otherwise
+   * Verify the signature of a message. It returns `true` if the signature is valid, `false` otherwise
+   * @param message - The message to verify
+   * @param signature - The signature to verify
+   * @param address - The address to verify the signature against
+   * @param chainId - The chain id of the network to verify the signature against, If not specified, it defaults to 1 ( Ethereum mainnet )
    */
   public async verifySignature(
     message: string,

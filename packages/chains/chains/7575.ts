@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 7575,
   "rpc": [
-    "https://adil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7575.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.adilchain-rpc.io"
   ],
   "shortName": "tadil",
+  "slip44": 1,
   "slug": "adil-testnet",
   "testnet": true
 } as const satisfies Chain;

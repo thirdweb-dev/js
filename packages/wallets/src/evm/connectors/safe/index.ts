@@ -1,17 +1,24 @@
 import { ConnectParams, Connector } from "../../interfaces/connector";
-import type { SafeConnectionArgs } from "./types";
+import type {
+  SafeConnectionArgs,
+  SafeSupportedChains as _SafeSupportedChains,
+} from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
 import {
   SafeService,
   SafeEthersSigner,
 } from "@safe-global/safe-ethers-adapters";
-import safeCoreSdk from "@safe-global/safe-core-sdk";
-import safeEthersLib from "@safe-global/safe-ethers-lib";
+import safeCoreSdk, { EthersAdapter } from "@safe-global/protocol-kit";
 import { EVMWallet } from "../../interfaces";
 import { CHAIN_ID_TO_GNOSIS_SERVER_URL } from "./constants";
 
-const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS = {
+export type SafeSupportedChains = _SafeSupportedChains;
+
+const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS: Record<
+  SafeSupportedChains,
+  string
+> = {
   // mainnet
   1: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
   // polygon
@@ -26,15 +33,19 @@ const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS = {
   43114: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
   // optimism
   10: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
-  // base goerli
-  84531: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
   // celo
   42220: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
-  // goerli
-  5: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
-  // gnosis chain
-  100: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
-} as const;
+  // gnosis chain - https://docs.safe.global/smart-account-supported-networks/v1.3.0#gnosis
+  100: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // Sepolia - https://docs.safe.global/smart-account-supported-networks/v1.3.0#sepolia
+  11155111: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // base mainnet - https://docs.safe.global/smart-account-supported-networks/v1.3.0#base
+  8453: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // Polygon zkEVM - https://docs.safe.global/smart-account-supported-networks/v1.3.0#polygon-zkevm
+  1101: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // ZkSync Mainnet - https://docs.safe.global/smart-account-supported-networks/v1.3.0#zksync-mainnet
+  324: "0x357147caf9C0cCa67DfA0CF5369318d8193c8407",
+};
 
 const SIGN_MESSAGE_LIB_ABI = [
   {
@@ -103,8 +114,8 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     this.personalWallet = params.personalWallet;
     const signer = await params.personalWallet.getSigner();
     const safeAddress = params.safeAddress;
-    const safeChainId = params.chain
-      .chainId as keyof typeof CHAIN_ID_TO_GNOSIS_SERVER_URL;
+    const safeChainId = params.chain.chainId as SafeSupportedChains;
+
     if (!signer) {
       throw new Error(
         "cannot create Gnosis Safe signer without a personal signer",
@@ -132,7 +143,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       throw new Error("Chain not supported");
     }
 
-    const ethAdapter = new safeEthersLib({
+    const ethAdapter = new EthersAdapter({
       ethers,
       signerOrProvider: signer,
     });
@@ -186,7 +197,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       const safeTxHash = await safe.getTransactionHash(safeTx);
       const safeSignature = await safe.signTransactionHash(safeTxHash);
       await service.proposeTx(
-        safe.getAddress(),
+        await safe.getAddress(),
         safeTxHash,
         safeTx,
         safeSignature,

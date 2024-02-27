@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 271271,
   "rpc": [
-    "https://egoncoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://271271.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctest.egonscan.com"
   ],
   "shortName": "EGONt",
+  "slip44": 1,
   "slug": "egoncoin-testnet",
   "testnet": true
 } as const satisfies Chain;

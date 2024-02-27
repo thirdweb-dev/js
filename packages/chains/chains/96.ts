@@ -34,7 +34,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://bitkub-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://96.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitkubchain.io",
     "wss://wss.bitkubchain.io"

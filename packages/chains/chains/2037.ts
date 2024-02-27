@@ -23,11 +23,11 @@ export default {
   },
   "networkId": 2037,
   "rpc": [
-    "https://kiwi-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2037.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/kiwi/testnet/rpc"
   ],
   "shortName": "kiwi",
+  "slip44": 1,
   "slug": "kiwi-subnet",
   "testnet": true
 } as const satisfies Chain;

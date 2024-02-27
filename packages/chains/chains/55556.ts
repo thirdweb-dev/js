@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 55556,
   "rpc": [
-    "https://rei-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://55556.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rei-testnet-rpc.moonrhythm.io"
   ],
   "shortName": "trei",
+  "slip44": 1,
   "slug": "rei-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

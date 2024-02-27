@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 18181,
   "rpc": [
-    "https://g8chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.oneg8.network"
   ],
   "shortName": "G8Ct",
+  "slip44": 1,
   "slug": "g8chain-testnet",
   "testnet": true
 } as const satisfies Chain;

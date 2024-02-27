@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 31,
   "rpc": [
-    "https://rootstock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://31.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.testnet.rsk.co",
     "https://mycrypto.testnet.rsk.co"
   ],
   "shortName": "trsk",
+  "slip44": 1,
   "slug": "rootstock-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -47,12 +47,12 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
-    "https://sepolia-pgn-public-goods-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://58008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.publicgoods.network"
   ],
   "shortName": "sepPGN",
   "slug": "sepolia-pgn-public-goods-network",
-  "testnet": false
+  "testnet": true
 } as const satisfies Chain;

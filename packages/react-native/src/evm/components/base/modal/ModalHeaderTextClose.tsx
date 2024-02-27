@@ -12,6 +12,9 @@ interface ModalHeaderTextCloseProps {
   onBackPress?: () => void;
 }
 
+/**
+ * @internal
+ */
 export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,
@@ -54,13 +57,13 @@ export const ModalHeaderTextClose = ({
           <View />
         )}
       </Box>
-      <Box flexDirection="row" justifyContent="space-between" mt="md">
-        {typeof subHeaderText === "string" ? (
+      {!subHeaderText ? null : typeof subHeaderText === "string" ? (
+        <Box mt="md">
           <Text variant="subHeader">{subHeaderText}</Text>
-        ) : (
-          subHeaderText
-        )}
-      </Box>
+        </Box>
+      ) : (
+        <Box mt="md">{subHeaderText}</Box>
+      )}
     </>
   );
 };

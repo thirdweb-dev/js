@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1297,
   "rpc": [
-    "https://bobabase-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1297.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabase.boba.network",
     "wss://wss.bobabase.boba.network",
@@ -27,6 +26,7 @@ export default {
     "wss://replica-wss.bobabase.boba.network"
   ],
   "shortName": "Bobabase",
+  "slip44": 1,
   "slug": "bobabase-testnet",
   "testnet": true
 } as const satisfies Chain;

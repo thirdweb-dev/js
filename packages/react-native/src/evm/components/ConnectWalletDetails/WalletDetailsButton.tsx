@@ -1,7 +1,7 @@
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { useENS, useWallet } from "@thirdweb-dev/react-core";
+import { useChain, useENS, useWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
 import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
@@ -36,6 +36,28 @@ export type ConnectWalletDetailsProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+  /**
+   * Hide the "switch to Personal wallet" option in the dropdown which is shown when wallet is connected to a Smart Wallet
+   *
+   * The default is `false`
+   */
+  hideSwitchToPersonalWallet?: boolean;
+
+  /**
+   * Option to hide the Send button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Option to hide the Receive button in the wallet details modal.
+   *
+   * The default is `false`
+   */
+  hideReceiveButton?: boolean;
+
+  hideDisconnect?: boolean;
 };
 
 export const WalletDetailsButton = ({
@@ -43,13 +65,18 @@ export const WalletDetailsButton = ({
   detailsButton,
   extraRows,
   hideTestnetFaucet,
+  hideReceiveButton,
+  hideSendButton,
   supportedTokens,
   displayBalanceToken,
+  hideSwitchToPersonalWallet,
+  hideDisconnect,
 }: ConnectWalletDetailsProps) => {
   const l = useLocale();
   const activeWallet = useWallet();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const ensQuery = useENS();
+  const chain = useChain();
 
   const onPress = () => {
     setIsModalVisible(!isModalVisible);
@@ -66,6 +93,11 @@ export const WalletDetailsButton = ({
       ? SMART_WALLET_ICON
       : activeWallet?.getMeta().iconURL || "";
 
+  const tokenAddress =
+    chain?.chainId && displayBalanceToken
+      ? displayBalanceToken[chain?.chainId]
+      : undefined;
+
   return (
     <>
       <ConnectWalletDetailsModal
@@ -75,7 +107,11 @@ export const WalletDetailsButton = ({
         address={address}
         hideTestnetFaucet={hideTestnetFaucet}
         supportedTokens={supportedTokens}
-        displayBalanceToken={displayBalanceToken}
+        hideDisconnect={hideDisconnect}
+        tokenAddress={tokenAddress}
+        hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
+        hideReceiveButton={hideReceiveButton}
+        hideSendButton={hideSendButton}
       />
       {detailsButton ? (
         detailsButton({ onPress })
@@ -107,7 +143,10 @@ export const WalletDetailsButton = ({
                   address={address}
                 />
               )}
-              <TextBalance textVariant="bodySmallSecondary" />
+              <TextBalance
+                textVariant="bodySmallSecondary"
+                tokenAddress={tokenAddress}
+              />
             </Box>
           </Box>
         </BaseButton>

@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "@playwright/test": "1.31.2",
-    "eslint": "^8.45.0",
+    "eslint": "^8.56.0",
     "eslint-config-next": "^13.4.12",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/next-12"
 }

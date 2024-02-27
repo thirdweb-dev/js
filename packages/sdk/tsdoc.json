@@ -5,6 +5,34 @@
     {
       "tagName": "@twfeature",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@deploy",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@contract",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@erc20",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@erc721",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@erc1155",
+      "syntaxKind": "block"
     }
-  ]
+  ],
+  "supportForTags": {
+    "@twfeature": true,
+    "@deploy": true,
+    "@contract": true,
+    "@erc20": true,
+    "@erc721": true,
+    "@erc1155": true
+  }
 }

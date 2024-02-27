@@ -19,12 +19,11 @@ export default {
   },
   "networkId": 31337,
   "rpc": [
-    "https://gochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://31337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.gochain.io"
   ],
   "shortName": "got",
-  "slip44": 6060,
+  "slip44": 1,
   "slug": "gochain-testnet",
   "testnet": true
 } as const satisfies Chain;

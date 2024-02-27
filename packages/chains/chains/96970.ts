@@ -36,13 +36,13 @@ export default {
   },
   "networkId": 96970,
   "rpc": [
-    "https://mantis-testnet-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://96970.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mantis-rpc.switch.ch",
     "https://mantis-rpc.kore-technologies.ch",
     "https://mantis-rpc.phoenix-systems.io"
   ],
   "shortName": "mantis",
+  "slip44": 1,
   "slug": "mantis-testnet-hexapod",
   "testnet": true
 } as const satisfies Chain;

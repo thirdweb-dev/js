@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 82,
   "rpc": [
-    "https://meter.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://82.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meter.io"
   ],

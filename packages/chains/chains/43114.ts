@@ -31,12 +31,11 @@ export default {
   "networkId": 43114,
   "redFlags": [],
   "rpc": [
-    "https://avalanche.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://api.avax.network/ext/bc/C/rpc",
-    "https://avalanche-c-chain.publicnode.com",
-    "wss://avalanche-c-chain.publicnode.com"
+    "https://avalanche-c-chain-rpc.publicnode.com",
+    "wss://avalanche-c-chain-rpc.publicnode.com"
   ],
   "shortName": "avax",
   "slip44": 9005,

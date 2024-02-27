@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 56789,
   "rpc": [
-    "https://velo-labs.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://56789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nova.velo.org"
   ],

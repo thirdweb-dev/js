@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 8882,
   "rpc": [
-    "https://opal-testnet-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8882.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-opal.unique.network",
     "https://us-rpc-opal.unique.network",
@@ -35,6 +34,7 @@ export default {
     "https://asia-rpc-opal.unique.network"
   ],
   "shortName": "opl",
+  "slip44": 1,
   "slug": "opal-testnet-by-unique",
   "testnet": true
 } as const satisfies Chain;

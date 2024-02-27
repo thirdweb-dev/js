@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 955305,
   "rpc": [
-    "https://eluvio-content-fabric.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://955305.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://host-76-74-28-226.contentfabric.io/eth/",
     "https://host-76-74-28-232.contentfabric.io/eth/",

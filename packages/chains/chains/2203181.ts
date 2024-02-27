@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://platon-dev-testnet-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2203181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnetopenapi2.platon.network/rpc",
     "wss://devnetopenapi2.platon.network/ws"
   ],
   "shortName": "platondev",
+  "slip44": 1,
   "slug": "platon-dev-testnet-deprecated",
   "status": "deprecated",
   "testnet": true

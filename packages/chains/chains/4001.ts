@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 4001,
   "rpc": [
-    "https://peperium-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.peperium.io"
   ],
   "shortName": "PERIUM",
+  "slip44": 1,
   "slug": "peperium-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

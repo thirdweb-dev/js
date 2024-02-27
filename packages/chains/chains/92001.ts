@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 92001,
   "rpc": [
-    "https://lambda-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://92001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.lambda.top/"
   ],
   "shortName": "lambda-testnet",
+  "slip44": 1,
   "slug": "lambda-testnet",
   "testnet": true
 } as const satisfies Chain;

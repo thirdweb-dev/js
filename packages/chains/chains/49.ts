@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 49,
   "rpc": [
-    "https://ennothem-testnet-pioneer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://49.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.pioneer.etm.network"
   ],
   "shortName": "etmpTest",
+  "slip44": 1,
   "slug": "ennothem-testnet-pioneer",
   "testnet": true
 } as const satisfies Chain;

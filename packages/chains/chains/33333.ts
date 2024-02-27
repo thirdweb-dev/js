@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 33333,
   "rpc": [
-    "https://aves.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://33333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.avescoin.io"
   ],

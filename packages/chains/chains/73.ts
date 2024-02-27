@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 73,
   "rpc": [
-    "https://fncy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://73.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fncy-seed1.fncy.world"
   ],

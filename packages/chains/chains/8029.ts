@@ -13,11 +13,11 @@ export default {
   },
   "networkId": 8029,
   "rpc": [
-    "https://mdgl-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8029.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.mdgl.io"
   ],
   "shortName": "mdgl",
+  "slip44": 1,
   "slug": "mdgl-testnet",
   "testnet": true
 } as const satisfies Chain;

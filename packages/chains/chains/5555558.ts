@@ -42,12 +42,12 @@ export default {
   },
   "networkId": 5555558,
   "rpc": [
-    "https://imversed-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5555558.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc-test.imversed.network",
     "https://ws-jsonrpc-test.imversed.network"
   ],
   "shortName": "imversed-testnet",
+  "slip44": 1,
   "slug": "imversed-testnet",
   "testnet": true
 } as const satisfies Chain;

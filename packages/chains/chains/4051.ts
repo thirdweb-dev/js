@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 4051,
   "rpc": [
-    "https://bobaopera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4051.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bobaopera.boba.network",
     "wss://wss.testnet.bobaopera.boba.network",
@@ -27,6 +26,7 @@ export default {
     "wss://replica-wss.testnet.bobaopera.boba.network"
   ],
   "shortName": "BobaoperaTestnet",
+  "slip44": 1,
   "slug": "bobaopera-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 383414847825,
   "rpc": [
-    "https://zeniq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://383414847825.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smart.zeniq.network:9545"
   ],

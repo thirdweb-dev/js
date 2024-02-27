@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 669,
   "rpc": [
-    "https://juncachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://669.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.juncachain.com",
     "wss://ws-testnet.juncachain.com"
   ],
   "shortName": "juncat",
+  "slip44": 1,
   "slug": "juncachain-testnet",
   "testnet": true
 } as const satisfies Chain;

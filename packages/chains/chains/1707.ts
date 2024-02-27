@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1707,
   "rpc": [
-    "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1707.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blockchain.or.th"
   ],

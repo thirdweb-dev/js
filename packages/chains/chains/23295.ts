@@ -25,12 +25,12 @@ export default {
   },
   "networkId": 23295,
   "rpc": [
-    "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.sapphire.oasis.dev",
     "wss://testnet.sapphire.oasis.dev/ws"
   ],
   "shortName": "sapphire-testnet",
+  "slip44": 1,
   "slug": "oasis-sapphire-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -44,7 +44,6 @@ export default {
   },
   "networkId": 2021,
   "rpc": [
-    "https://edgeware-edgeevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2021.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgeware-evm.jelliedowl.net",
     "https://mainnet2.edgewa.re/evm",

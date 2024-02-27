@@ -4,7 +4,6 @@ import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
-import { ToolTip } from "../../components/Tooltip";
 import { Button, IconButton } from "../../components/buttons";
 import {
   fontSize,
@@ -14,20 +13,20 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
-import { ExitIcon } from "./icons/ExitIcon";
-import { keyframes } from "@emotion/react";
+import {
+  NetworkSelectorContent,
+  type NetworkSelectorProps,
+} from "./NetworkSelector";
 import styled from "@emotion/styled";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronRightIcon,
   EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
-  TextAlignLeftIcon,
+  TextAlignJustifyIcon,
+  ExitIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -47,8 +46,9 @@ import {
   MetaMaskWallet,
   type SmartWallet,
   walletIds,
+  type EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
-import { Container } from "../../components/basic";
+import { Container, Line } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { useWalletContext } from "@thirdweb-dev/react-core";
@@ -60,16 +60,28 @@ import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
-
-export type DropDownPosition = {
-  side: "top" | "bottom" | "left" | "right";
-  align: "start" | "center" | "end";
-};
+import { useTWLocale } from "../../evm/providers/locale-provider";
+import { shortenString } from "@thirdweb-dev/react-core";
+import { StyledButton, StyledDiv } from "../../design-system/elements";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import {
+  appleIconUri,
+  facebookIconUri,
+  googleIconUri,
+} from "./icons/socialLogins";
+import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
+import { onModalUnmount } from "./constants";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
+type WalletDetailsModalScreen =
+  | "main"
+  | "export"
+  | "send"
+  | "receive"
+  | "network-switcher";
+
 export const ConnectedWalletDetails: React.FC<{
-  dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   style?: React.CSSProperties;
   networkSelector?: Omit<
@@ -82,7 +94,13 @@ export const ConnectedWalletDetails: React.FC<{
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
+  hideSwitchToPersonalWallet?: boolean;
+  hideDisconnect?: boolean;
+  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+  hideSendButton?: boolean;
+  hideReceiveButton?: boolean;
 }> = (props) => {
+  const locale = useTWLocale().connectWallet;
   const chain = useChain();
   const walletChainId = useChainId();
 
@@ -100,21 +118,18 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWalletConfig = useWalletConfig();
   const ensQuery = useENS();
 
-  const [wrapperWallet, setWrapperWallet] = useState<
-    WalletInstance | undefined
-  >();
   const walletContext = useWalletContext();
 
-  let activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
+  const wrapperWallet = activeWallet
+    ? walletContext.getWrapperWallet(activeWallet)
+    : undefined;
 
-  // modals
-  const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
-  const [showSendModal, setShowSendModal] = useState(false);
-  const [showReceiveModal, setShowReceiveModal] = useState(false);
+  const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
+    string | undefined
+  >(undefined);
 
-  // dropdown
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
+  const [isOpen, setIsOpen] = useState(false);
 
   const sdk = useSDK();
 
@@ -132,16 +147,48 @@ export const ConnectedWalletDetails: React.FC<{
   const isActuallyMetaMask =
     activeWallet && activeWallet instanceof MetaMaskWallet;
 
-  const shortAddress = address ? shortenString(address) : "";
-
-  const isSmartWallet = activeWallet?.walletId === walletIds.smartWallet;
-
-  if (isSmartWallet) {
-    activeWalletIconURL = smartWalletIcon;
-  }
+  const shortAddress = address ? shortenString(address, false) : "";
 
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
+
+  useEffect(() => {
+    if (activeWallet) {
+      if (activeWallet.walletId === walletIds.embeddedWallet) {
+        (activeWallet as EmbeddedWallet)
+          .getLastUsedAuthStrategy()
+          .then((auth) => {
+            if (auth === "apple") {
+              setOverrideWalletIconUrl(appleIconUri);
+            } else if (auth === "google") {
+              setOverrideWalletIconUrl(googleIconUri);
+            } else if (auth === "facebook") {
+              setOverrideWalletIconUrl(facebookIconUri);
+            } else {
+              setOverrideWalletIconUrl(undefined);
+            }
+          });
+      } else if (activeWallet.walletId === walletIds.smartWallet) {
+        setOverrideWalletIconUrl(smartWalletIcon);
+      } else {
+        setOverrideWalletIconUrl(undefined);
+      }
+    } else {
+      setOverrideWalletIconUrl(undefined);
+    }
+  }, [activeWallet]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      onModalUnmount(() => {
+        setScreen("main");
+      });
+    }
+  }, [isOpen]);
+
+  const walletIconUrl =
+    overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
+  const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -157,14 +204,14 @@ export const ConnectedWalletDetails: React.FC<{
       <Img
         width={iconSize.lg}
         height={iconSize.lg}
-        src={avatarUrl || activeWalletIconURL}
+        src={avatarOrWalletIconUrl}
         className={`${TW_CONNECTED_WALLET}__wallet-icon`}
         style={{
           borderRadius: radius.sm,
         }}
       />
 
-      <Container flex="column" gap="xs">
+      <Container flex="column" gap="xxs">
         {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
           <Text
@@ -174,7 +221,7 @@ export const ConnectedWalletDetails: React.FC<{
               minWidth: "70px",
             }}
           >
-            Guest
+            {locale.guest}
           </Text>
         ) : addressOrENS ? (
           <Text
@@ -207,557 +254,519 @@ export const ConnectedWalletDetails: React.FC<{
   );
 
   const networkSwitcherButton = (
-    <ToolTip
-      tip={
-        disableSwitchChain ? "Network Switching is disabled" : "Switch Network"
-      }
+    <MenuButton
+      type="button"
+      disabled={disableSwitchChain}
+      onClick={() => {
+        setScreen("network-switcher");
+      }}
+      data-variant="primary"
     >
-      <MenuButton
-        type="button"
-        disabled={disableSwitchChain}
-        onClick={() => {
-          setIsDropdownOpen(false);
-          setShowNetworkSelector(true);
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <ChainIcon chain={chain} size={iconSize.md} active />
-        </div>
-        <Text size="sm" color="primaryText" multiline>
-          {chain?.name || `Unknown chain #${walletChainId}`}
-        </Text>
-        <StyledChevronRightIcon
-          width={iconSize.sm}
-          height={iconSize.sm}
-          style={{
-            flexShrink: 0,
-            marginLeft: "auto",
-          }}
-        />
-      </MenuButton>
-    </ToolTip>
+        <ChainIcon chain={chain} size={iconSize.md} active />
+      </div>
+      <Text color="primaryText" multiline>
+        {chain?.name || `Unknown chain #${walletChainId}`}
+      </Text>
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+        }}
+      />
+    </MenuButton>
   );
 
-  const content = (
+  // by default we hide faucet link
+  const showFaucet =
+    props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
+
+  const showBothButtons =
+    props.hideSendButton !== true && props.hideReceiveButton !== true;
+
+  let content = (
     <div>
-      {/* Balance and Account Address */}
-      <Container flex="row" gap="sm">
+      <Spacer y="xl" />
+      <Container px="lg" flex="column" center="x">
         <Img
-          width={iconSize.xl}
-          height={iconSize.xl}
-          src={avatarUrl || activeWalletIconURL}
+          width={iconSize.xxl}
+          height={iconSize.xxl}
+          src={avatarOrWalletIconUrl}
           alt=""
           style={{
             borderRadius: radius.sm,
           }}
         />
 
+        <Spacer y="md" />
+
+        {/* Address */}
         <div
           style={{
-            flexGrow: 1,
+            display: "flex",
+            gap: spacing.xxs,
+            alignItems: "center",
+            transform: "translateX(10px)",
           }}
+          data-test="connected-wallet-address"
+          data-address={address}
         >
-          {/* row 1 */}
-          <Container gap="xs" flex="row" center="y">
-            <div
+          <Text color="primaryText" weight={500} size="md">
+            {addressOrENS}
+          </Text>
+          <IconButton
+            style={{
+              padding: "3px",
+            }}
+            data-test="copy-address"
+          >
+            <CopyIcon
+              text={address || ""}
+              tip={locale.copyAddress}
+              side="top"
+            />
+          </IconButton>
+        </div>
+
+        <Spacer y="xxs" />
+
+        {/* Balance */}
+        <Text weight={500} size="sm">
+          {" "}
+          {balanceQuery.data ? (
+            Number(balanceQuery.data.displayValue).toFixed(3)
+          ) : (
+            <Skeleton height="1em" width="100px" />
+          )}{" "}
+          {balanceQuery.data?.symbol}{" "}
+        </Text>
+      </Container>
+
+      <Spacer y="lg" />
+
+      <Container px="lg">
+        <ConnectedToSmartWallet />
+        <EmbeddedWalletEmail />
+
+        {/* Send and Receive */}
+        <Container
+          style={
+            showBothButtons
+              ? {
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: spacing.sm,
+                }
+              : {
+                  display: "grid",
+                }
+          }
+        >
+          {props.hideSendButton !== true && (
+            <Button
+              variant="outline"
               style={{
+                fontSize: fontSize.sm,
                 display: "flex",
                 gap: spacing.xs,
                 alignItems: "center",
+                padding: spacing.sm,
               }}
-              data-test="connected-wallet-address"
-              data-address={address}
-            >
-              <Text color="primaryText" weight={500}>
-                {addressOrENS}
-              </Text>
-              <IconButton
-                style={{
-                  padding: "3px",
-                }}
-                data-test="copy-address"
-              >
-                <CopyIcon
-                  text={address || ""}
-                  tip="Copy Address"
-                  side="bottom"
-                />
-              </IconButton>
-            </div>
-
-            <ToolTip
-              tip="Disconnect Wallet"
-              side="bottom"
-              align={"end"}
-              sideOffset={10}
-            >
-              <DisconnectIconButton
-                type="button"
-                onClick={() => {
-                  disconnect();
-                  props.onDisconnect();
-                }}
-              >
-                <ExitIcon size={iconSize.md} />
-              </DisconnectIconButton>
-            </ToolTip>
-          </Container>
-
-          {/* row 2 */}
-          <Text weight={500} size="sm">
-            {" "}
-            {balanceQuery.data ? (
-              Number(balanceQuery.data.displayValue).toFixed(3)
-            ) : (
-              <Skeleton height="1em" width="100px" />
-            )}{" "}
-            {balanceQuery.data?.symbol}{" "}
-          </Text>
-        </div>
-      </Container>
-
-      <Spacer y="lg" />
-
-      <ConnectedToSmartWallet />
-
-      {/* Send and Recive */}
-      <Container
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: spacing.sm,
-        }}
-      >
-        <Button
-          variant="outline"
-          style={{
-            fontSize: fontSize.sm,
-            display: "flex",
-            gap: spacing.xs,
-            alignItems: "center",
-            padding: spacing.sm,
-          }}
-          onClick={() => {
-            setShowSendModal(true);
-            setIsDropdownOpen(false);
-          }}
-        >
-          <PaperPlaneIcon
-            width={iconSize.sm}
-            height={iconSize.sm}
-            style={{
-              transform: "translateY(-10%) rotate(-45deg) ",
-            }}
-          />
-          Send
-        </Button>
-
-        <Button
-          variant="outline"
-          style={{
-            fontSize: fontSize.sm,
-            display: "flex",
-            gap: spacing.xs,
-            alignItems: "center",
-            padding: spacing.sm,
-          }}
-          onClick={() => {
-            setShowReceiveModal(true);
-            setIsDropdownOpen(false);
-          }}
-        >
-          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
-        </Button>
-      </Container>
-
-      <Spacer y="lg" />
-
-      {/* Network Switcher */}
-      <div>
-        <DropdownLabel>Current Network</DropdownLabel>
-        <Spacer y="xs" />
-        {networkSwitcherButton}
-      </div>
-
-      <Spacer y="md" />
-
-      <Container flex="column" gap="sm">
-        {/* Switch to Personal Wallet for Safe */}
-        {personalWallet && personalWalletConfig && (
-          <WalletSwitcher
-            wallet={personalWallet}
-            name="Personal Wallet"
-            onSwitch={() => {
-              setWrapperWallet(activeWallet);
-            }}
-          />
-        )}
-
-        {/* Switch to Wrapper Wallet */}
-        {wrapperWalletConfig && wrapperWallet && (
-          <WalletSwitcher
-            name={
-              wrapperWallet.walletId === walletIds.smartWallet
-                ? "Smart Wallet"
-                : wrapperWalletConfig.meta.name
-            }
-            wallet={wrapperWallet}
-            onSwitch={() => {
-              setWrapperWallet(undefined);
-            }}
-          />
-        )}
-
-        {/* Switch Account for Metamask */}
-        {isActuallyMetaMask &&
-          activeWalletConfig &&
-          activeWalletConfig.isInstalled &&
-          activeWalletConfig.isInstalled() &&
-          !isMobile() && (
-            <MenuButton
-              type="button"
               onClick={() => {
-                (activeWallet as MetaMaskWallet).switchAccount();
-                setIsDropdownOpen(false);
-              }}
-              style={{
-                fontSize: fontSize.sm,
+                setScreen("send");
               }}
             >
-              <Container color="secondaryText">
-                <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
-              </Container>
-              Switch Account
-            </MenuButton>
+              <PaperPlaneIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  transform: "translateY(-10%) rotate(-45deg) ",
+                }}
+              />
+              {locale.send}
+            </Button>
           )}
 
-        {/* Request Testnet funds */}
-        {!props.hideTestnetFaucet &&
-          ((chain?.faucets && chain.faucets.length > 0) ||
-            chain?.chainId === Localhost.chainId) && (
+          {props.hideReceiveButton !== true && (
+            <Button
+              variant="outline"
+              style={{
+                fontSize: fontSize.sm,
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.sm,
+              }}
+              onClick={() => {
+                setScreen("receive");
+              }}
+            >
+              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+              {locale.receive}{" "}
+            </Button>
+          )}
+        </Container>
+      </Container>
+
+      {props.hideSendButton && props.hideReceiveButton ? null : (
+        <Spacer y="md" />
+      )}
+
+      <Container px="md">
+        {/* Network Switcher */}
+        <Container
+          flex="column"
+          style={{
+            gap: "1px",
+          }}
+        >
+          {networkSwitcherButton}
+
+          {/* Switch to Personal Wallet for Safe */}
+          {personalWallet &&
+            personalWalletConfig &&
+            !props.hideSwitchToPersonalWallet && (
+              <WalletSwitcher
+                wallet={personalWallet}
+                name={locale.personalWallet}
+              />
+            )}
+
+          {/* Switch to Wrapper Wallet */}
+          {wrapperWalletConfig && wrapperWallet && (
+            <WalletSwitcher
+              name={
+                wrapperWallet.walletId === walletIds.smartWallet
+                  ? locale.smartWallet
+                  : wrapperWalletConfig.meta.name
+              }
+              wallet={wrapperWallet}
+            />
+          )}
+
+          {/* Switch Account for Metamask */}
+          {isActuallyMetaMask &&
+            activeWalletConfig &&
+            activeWalletConfig.isInstalled &&
+            activeWalletConfig.isInstalled() &&
+            !isMobile() && (
+              <MenuButton
+                type="button"
+                onClick={() => {
+                  (activeWallet as MetaMaskWallet).switchAccount();
+                  setIsOpen(false);
+                }}
+              >
+                <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+                <Text color="primaryText">{locale.switchAccount}</Text>
+              </MenuButton>
+            )}
+
+          {/* Request Testnet funds */}
+          {showFaucet &&
+            ((chain?.faucets && chain.faucets.length > 0) ||
+              chain?.chainId === Localhost.chainId) && (
+              <MenuLink
+                href={chain?.faucets ? chain.faucets[0] : "#"}
+                target="_blank"
+                as="a"
+                onClick={async (e) => {
+                  if (chain.chainId === Localhost.chainId) {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    await sdk?.wallet.requestFunds(10);
+                    await balanceQuery.refetch();
+                  }
+                }}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                }}
+              >
+                <Container flex="row" center="both" color="secondaryText">
+                  <FundsIcon size={iconSize.md} />
+                </Container>
+                {locale.requestTestnetFunds}
+              </MenuLink>
+            )}
+
+          {/* Explorer link */}
+          {chain?.explorers && chain.explorers[0]?.url && (
             <MenuLink
-              href={chain?.faucets ? chain.faucets[0] : "#"}
+              href={chain.explorers[0].url + "/address/" + address}
               target="_blank"
               as="a"
-              onClick={async (e) => {
-                if (chain.chainId === Localhost.chainId) {
-                  e.preventDefault();
-                  setIsDropdownOpen(false);
-                  await sdk?.wallet.requestFunds(10);
-                  await balanceQuery.refetch();
-                }
-              }}
               style={{
                 textDecoration: "none",
                 color: "inherit",
-                fontSize: fontSize.sm,
               }}
             >
-              <Container flex="row" center="both" color="secondaryText">
-                <FundsIcon size={iconSize.sm} />
+              <Container flex="row" center="y" color="secondaryText">
+                <TextAlignJustifyIcon
+                  width={iconSize.md}
+                  height={iconSize.md}
+                />
               </Container>
-              Request Testnet Funds
+              {locale.transactionHistory}
             </MenuLink>
           )}
 
-        {/* Explorer link */}
-        {chain?.explorers && chain.explorers[0]?.url && (
-          <MenuLink
-            href={chain.explorers[0].url + "/address/" + address}
-            target="_blank"
-            as="a"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <Container flex="row" center="both" color="secondaryText">
-              <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-            Transaction History
-          </MenuLink>
-        )}
+          {/* Export  Wallet */}
+          {activeWallet?.walletId === walletIds.localWallet && (
+            <div>
+              <MenuButton
+                onClick={() => {
+                  setScreen("export");
+                }}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                <PinBottomIcon width={iconSize.md} height={iconSize.md} />
+                <Text color="primaryText">{locale.backupWallet}</Text>
+              </MenuButton>
+            </div>
+          )}
 
-        {/* Export  Wallet */}
-        {activeWallet?.walletId === walletIds.localWallet && (
-          <div>
+          {props.detailsModalFooter && (
+            <props.detailsModalFooter close={() => setIsOpen(false)} />
+          )}
+        </Container>
+
+        <Spacer y="md" />
+      </Container>
+
+      {props.hideDisconnect !== true && (
+        <Container>
+          <Line />
+          <Spacer y="sm" />
+          <Container px="md">
             <MenuButton
+              data-variant="danger"
+              type="button"
               onClick={() => {
-                setShowExportModal(true);
-                setIsDropdownOpen(false);
-              }}
-              style={{
-                fontSize: fontSize.sm,
+                disconnect();
+                props.onDisconnect();
               }}
             >
-              <Container flex="row" center="both" color="secondaryText">
-                <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-              </Container>
-              Backup wallet{" "}
+              <ExitIcon width={iconSize.md} height={iconSize.md} />
+              <Text color="primaryText">{locale.disconnectWallet}</Text>
             </MenuButton>
-            <Spacer y="sm" />
-            <Text size="xs" center multiline color="danger">
-              This is a temporary guest wallet <br />
-              Backup if you {`don't `}
-              want to lose access to it
+          </Container>
+          <Spacer y="sm" />
+        </Container>
+      )}
+
+      {activeWallet?.walletId === walletIds.localWallet && (
+        <>
+          <Line />
+          <Container py="md">
+            <Text size="xs" center multiline color="danger" balance>
+              {locale.guestWalletWarning}
             </Text>
-          </div>
-        )}
-      </Container>
+          </Container>
+        </>
+      )}
     </div>
   );
 
-  return (
-    <>
-      {isMobile() ? (
-        <Modal
-          size={"compact"}
-          trigger={trigger}
-          open={isDropdownOpen}
-          setOpen={setIsDropdownOpen}
-          hideCloseIcon={true}
-        >
-          <Container p="lg">{content}</Container>
-        </Modal>
-      ) : (
-        <DropdownMenu.Root
-          open={isDropdownOpen}
-          onOpenChange={setIsDropdownOpen}
-        >
-          <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropDownContent
-              asChild
-              side={props.dropdownPosition?.side || "bottom"}
-              align={props.dropdownPosition?.align || "end"}
-              sideOffset={10}
-            >
-              {content}
-            </DropDownContent>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-      )}
-
-      <NetworkSelector
-        open={showNetworkSelector}
+  if (screen === "network-switcher") {
+    content = (
+      <NetworkSelectorContent
+        open={true}
         theme={props.theme}
         chains={chains}
         {...props.networkSelector}
-        onClose={() => setShowNetworkSelector(false)}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+        onBack={() => {
+          setScreen("main");
+        }}
       />
+    );
+  } else if (screen === "export") {
+    content = (
+      <ExportLocalWallet
+        modalSize="compact"
+        localWalletConfig={activeWalletConfig as LocalWalletConfig}
+        onExport={() => {
+          setIsOpen(false);
+        }}
+        walletAddress={address}
+        walletInstance={activeWallet}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  } else if (screen === "send") {
+    content = (
+      <SendFunds
+        supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  } else if (screen === "receive") {
+    content = (
+      <ReceiveFunds
+        iconUrl={walletIconUrl}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  }
 
-      <Modal
-        size={"compact"}
-        open={showExportModal}
-        setOpen={setShowExportModal}
-      >
-        <ExportLocalWallet
-          modalSize="compact"
-          localWalletConfig={activeWalletConfig as LocalWalletConfig}
-          onExport={() => {
-            setShowExportModal(false);
-          }}
-        />
-      </Modal>
-
-      <Modal size={"compact"} open={showSendModal} setOpen={setShowSendModal}>
-        <SendFunds supportedTokens={props.supportedTokens} />
-      </Modal>
-
-      <Modal
-        size={"compact"}
-        open={showReceiveModal}
-        setOpen={setShowReceiveModal}
-      >
-        <ReceiveFunds iconUrl={activeWalletIconURL} />
-      </Modal>
-    </>
+  return (
+    <Modal size={"compact"} trigger={trigger} open={isOpen} setOpen={setIsOpen}>
+      {content}
+    </Modal>
   );
 };
 
-const dropdownContentFade = keyframes`
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-`;
+const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    background: theme.colors.connectedButtonBg,
+    border: `1px solid ${theme.colors.borderColor}`,
+    padding: `${spacing.sm} ${spacing.sm}`,
+    borderRadius: radius.lg,
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    minWidth: "180px",
+    gap: spacing.sm,
+    boxSizing: "border-box",
+    WebkitTapHighlightColor: "transparent",
+    lineHeight: "normal",
+    animation: `${fadeInAnimation} 300ms ease`,
+    [media.mobile]: {
+      gap: spacing.sm,
+      padding: `${spacing.xs} ${spacing.sm}`,
+      img: {
+        width: `${iconSize.md}px`,
+        height: `${iconSize.md}px`,
+      },
+    },
+    "&:hover": {
+      transition: "background 250ms ease",
+      background: theme.colors.connectedButtonBgHover,
+    },
+  };
+});
 
-const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
-  theme?: Theme;
-}>`
-  width: 320px;
-  box-sizing: border-box;
-  max-width: 100%;
-  border-radius: ${radius.lg};
-  padding: ${spacing.lg};
-  animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  background-color: ${(props) => props.theme.colors.dropdownBg};
-  --bg: ${(props) => props.theme.colors.dropdownBg};
-  z-index: 1000000;
-  line-height: 1;
-`)();
-
-const WalletInfoButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  background: ${(props) => props.theme.colors.connectedButtonBg};
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  padding: ${spacing.sm} ${spacing.sm};
-  border-radius: ${radius.lg};
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  min-width: 180px;
-  gap: ${spacing.sm};
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1;
-  animation: ${fadeInAnimation} 300ms ease;
-
-  ${media.mobile} {
-    gap: ${spacing.sm};
-    padding: ${spacing.xs} ${spacing.sm};
-    img {
-      width: ${iconSize.md}px;
-      height: ${iconSize.md}px;
-    }
-  }
-
-  &:hover {
-    transition: background 250ms ease;
-    background: ${(props) => props.theme.colors.connectedButtonBgHover};
-  }
-`;
-
-const DropdownLabel = styled.label<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.colors.secondaryText};
-  font-weight: 500;
-`;
-
-const MenuButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  padding: ${spacing.sm} ${spacing.sm};
-  border-radius: ${radius.md};
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  cursor: pointer;
-  font-size: ${fontSize.md};
-  font-weight: 500;
-  color: ${(props) => props.theme.colors.primaryText} !important;
-  gap: ${spacing.sm};
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1.3;
-
-  &:not([disabled]):hover {
-    transition:
-      box-shadow 250ms ease,
-      border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.colors.accentText};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.accentText};
-  }
-
-  &[disabled] {
-    cursor: not-allowed;
-    svg {
-      display: none;
-    }
-  }
-
-  &[disabled]:hover {
-    transition:
-      box-shadow 250ms ease,
-      border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.colors.danger};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.danger};
-  }
-`;
+const MenuButton = /* @__PURE__ */ StyledButton(() => {
+  const theme = useCustomTheme();
+  return {
+    all: "unset",
+    padding: `${spacing.sm} ${spacing.sm}`,
+    borderRadius: radius.md,
+    backgroundColor: "transparent",
+    // border: `1px solid ${theme.colors.borderColor}`,
+    boxSizing: "border-box",
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    cursor: "pointer",
+    fontSize: fontSize.md,
+    fontWeight: 500,
+    color: theme.colors.secondaryText,
+    gap: spacing.sm,
+    WebkitTapHighlightColor: "transparent",
+    lineHeight: 1.3,
+    transition: "background-color 200ms ease, transform 200ms ease",
+    "&:hover": {
+      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      transform: "scale(1.01)",
+      svg: {
+        color: theme.colors.accentText,
+      },
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
+      svg: {
+        display: "none",
+      },
+    },
+    svg: {
+      color: theme.colors.secondaryText,
+      transition: "color 200ms ease",
+    },
+    "&[data-variant='danger']:hover svg": {
+      color: theme.colors.danger + "!important",
+    },
+    "&[data-variant='primary']:hover svg": {
+      color: theme.colors.primaryText + "!important",
+    },
+  };
+});
 
 const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const DropdownMenuItem = /* @__PURE__ */ (() => styled(
-  DropdownMenu.Item,
-)<{ theme?: Theme }>`
-  outline: none;
-`)();
-
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
-)<{
-  theme?: Theme;
-}>`
-  color: ${(props) => props.theme.colors.secondaryText};
-`;
-
-const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
-  theme?: Theme;
-}>`
-  margin-right: -${spacing.xxs};
-  margin-left: auto;
-  color: ${(props) => props.theme.colors.secondaryText};
-  &:hover {
-    color: ${(props) => props.theme.colors.danger};
-    background: none;
-  }
-`;
+)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+  };
+});
 
 function WalletSwitcher({
   wallet,
-  onSwitch,
   name,
 }: {
   wallet: WalletInstance;
-  onSwitch: () => void;
   name: string;
 }) {
   const walletContext = useWalletContext();
+  const locale = useTWLocale().connectWallet;
 
   return (
     <MenuButton
       type="button"
       onClick={() => {
         walletContext.setConnectedWallet(wallet);
-        onSwitch();
       }}
       style={{
         fontSize: fontSize.sm,
       }}
     >
-      <Container color="secondaryText">
-        <EnterIcon width={iconSize.sm} height={iconSize.sm} />
-      </Container>
-      Switch to {name}
+      <EnterIcon width={iconSize.md} height={iconSize.md} />
+      <Text color="primaryText">
+        {locale.switchTo} {name}
+      </Text>
     </MenuButton>
   );
 }
 
-const ActiveDot = styled.div<{ theme?: Theme }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.colors.success};
-`;
+const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    backgroundColor: theme.colors.success,
+  };
+});
 
 function ConnectedToSmartWallet() {
   const activeWallet = useWallet();
   const chain = useChain();
   const address = useAddress();
+  const locale = useTWLocale().connectWallet;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -773,22 +782,9 @@ function ConnectedToSmartWallet() {
   }, [activeWallet]);
 
   const content = (
-    <Container
-      flex="row"
-      gap="xs"
-      center="y"
-      style={{
-        width: "100%",
-        justifyContent: "space-between",
-      }}
-    >
-      <Container flex="row" gap="xs" center="y">
-        <ActiveDot />
-        Connected to Smart Wallet
-      </Container>
-      {isSmartWalletDeployed && (
-        <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-      )}
+    <Container flex="row" gap="xxs" center="both">
+      <ActiveDot />
+      {locale.connectedToSmartWallet}
     </Container>
   );
 
@@ -815,4 +811,24 @@ function ConnectedToSmartWallet() {
   }
 
   return null;
+}
+
+function EmbeddedWalletEmail() {
+  const emailQuery = useEmbeddedWalletUserEmail();
+
+  if (emailQuery.data) {
+    return (
+      <Container
+        flex="row"
+        center="x"
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text size="sm">{emailQuery.data}</Text>
+      </Container>
+    );
+  }
+
+  return undefined;
 }

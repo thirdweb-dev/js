@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1455,
   "rpc": [
-    "https://ctex-scan-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1455.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ctexscan.com/"
   ],

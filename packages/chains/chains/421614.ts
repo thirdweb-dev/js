@@ -28,11 +28,12 @@ export default {
     ]
   },
   "rpc": [
-    "https://arbitrum-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia-rollup.arbitrum.io/rpc"
+    "https://sepolia-rollup.arbitrum.io/rpc",
+    "https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}"
   ],
   "shortName": "arb-sep",
+  "slip44": 1,
   "slug": "arbitrum-sepolia",
   "testnet": true,
   "title": "Arbitrum Sepolia Rollup Testnet"

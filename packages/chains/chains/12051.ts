@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 12051,
   "rpc": [
-    "https://singularity-zero-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12051.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://betaenv.singularity.gold:18545"
   ],
   "shortName": "tZERO",
+  "slip44": 1,
   "slug": "singularity-zero-testnet",
   "testnet": true
 } as const satisfies Chain;

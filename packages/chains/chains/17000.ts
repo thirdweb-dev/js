@@ -41,6 +41,7 @@ export default {
     "https://faucet.holesky.ethpandaops.io",
     "https://holesky-faucet.pk910.de"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
     "width": 1000,
@@ -55,15 +56,17 @@ export default {
     "decimals": 18
   },
   "networkId": 17000,
+  "redFlags": [],
   "rpc": [
-    "https://holesky.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.holesky.ethpandaops.io",
-    "https://ethereum-holesky.publicnode.com",
-    "wss://ethereum-holesky.publicnode.com"
+    "https://ethereum-holesky-rpc.publicnode.com",
+    "wss://ethereum-holesky-rpc.publicnode.com"
   ],
   "shortName": "holesky",
+  "slip44": 1,
   "slug": "holesky",
   "status": "incubating",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Testnet Holesky"
 } as const satisfies Chain;

@@ -37,11 +37,11 @@ export default {
     "chain": "eip155-900"
   },
   "rpc": [
-    "https://garizon-testnet-stage3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://903.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s3-testnet.garizon.net/rpc"
   ],
   "shortName": "gar-test-s3",
+  "slip44": 1,
   "slug": "garizon-testnet-stage3",
   "testnet": true
 } as const satisfies Chain;

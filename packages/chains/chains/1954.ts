@@ -34,11 +34,11 @@ export default {
     ]
   },
   "rpc": [
-    "https://dexilla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1954.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dexilla.com"
   ],
   "shortName": "Dexilla",
+  "slip44": 1,
   "slug": "dexilla-testnet",
   "testnet": true
 } as const satisfies Chain;

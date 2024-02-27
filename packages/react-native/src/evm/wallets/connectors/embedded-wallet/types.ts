@@ -44,6 +44,11 @@ export interface AuthOptions {
   password: string;
 }
 
+export interface AuthEndpointOptions {
+  payload: string;
+  encryptionKey: string;
+}
+
 export type SendEmailOtpReturnType = {
   isNewUser: boolean;
   isNewDevice: boolean;
@@ -62,22 +67,29 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
-type GoogleAuthParams = {
-  strategy: "google";
+type SocialAuthParams = {
+  strategy: "google" | "facebook" | "apple";
   redirectUrl: string;
 };
 
 type JwtAuthParams = {
   strategy: "jwt";
   jwt: string;
-  encryptionKey?: string;
+  encryptionKey: string;
+};
+
+type AuthEndpointParams = {
+  strategy: "auth_endpoint";
+  payload: string;
+  encryptionKey: string;
 };
 
 // this is the input to 'authenticate'
 export type AuthParams =
   | EmailVerificationAuthParams
-  | GoogleAuthParams
-  | JwtAuthParams;
+  | SocialAuthParams
+  | JwtAuthParams
+  | AuthEndpointParams;
 
 // TODO typed based off AuthParams["strategy"]
 export type AuthResult = {

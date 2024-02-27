@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "HashScan",
-      "url": "https://hashscan.io/mainnet/dashboard",
-      "standard": "none"
+      "url": "https://hashscan.io/mainnet",
+      "standard": "EIP3091"
     },
     {
       "name": "Arkhia Explorer",
@@ -53,7 +53,6 @@ export default {
   },
   "networkId": 295,
   "rpc": [
-    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.hashio.io/api"
   ],

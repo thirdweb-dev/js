@@ -22,13 +22,14 @@ import { AbiInput } from "../../schema/contracts/custom";
  * Direct deploy a contract at a deterministic address, using Create2 method
  * Address depends on the Create2 factory address and salt (if provided).
  *
+ * @deploy
  * @public
  *
- * @param bytecode
- * @param abi
- * @param signer
- * @param constructorArgs
- * @param saltForCreate2
+ * @param bytecode - The bytecode to deploy
+ * @param abi - The abi to use
+ * @param signer - The signer to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministic(
   bytecode: string,
@@ -115,11 +116,11 @@ export async function directDeployDeterministic(
  *
  * @public
  *
- * @param publishMetadataUri
- * @param signer
- * @param storage
- * @param constructorArgs
- * @param saltForCreate2
+ * @param publishMetadataUri - The metadata uri to use
+ * @param signer - The signer to use
+ * @param storage - The storage to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministicWithUri(
   publishMetadataUri: string,
@@ -153,16 +154,16 @@ export async function directDeployDeterministicWithUri(
  *
  * @public
  *
- * @param contractName
- * @param publisherAddress
- * @param contractVersion
- * @param constructorArgs
- * @param signer
- * @param storage
- * @param clientId
- * @param secretKey
- * @param constructorArgs
- * @param saltForCreate2
+ * @param contractName - The name of the contract to deploy
+ * @param publisherAddress - The publisher address to use
+ * @param contractVersion - The contract version to use
+ * @param constructorArgs - The constructor args to use
+ * @param signer - The signer to use
+ * @param storage - The storage to use
+ * @param clientId - The client id to use
+ * @param secretKey - The secret key to use
+ * @param constructorArgs - The constructor args to use
+ * @param saltForCreate2 - The salt to use
  */
 export async function directDeployDeterministicPublished(
   contractName: string,

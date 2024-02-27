@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 23006,
   "rpc": [
-    "https://antofy-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23006.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.antofy.io"
   ],
   "shortName": "ABNt",
+  "slip44": 1,
   "slug": "antofy-testnet",
   "testnet": true
 } as const satisfies Chain;

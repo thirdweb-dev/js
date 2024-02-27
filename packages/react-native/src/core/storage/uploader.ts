@@ -5,10 +5,8 @@ import {
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
-import * as Application from "expo-application";
-import { Platform } from "react-native";
+import { getAnalyticsHeaders, setAnalyticsHeaders } from "./utils";
 
-const APP_BUNDLE_ID = Application.applicationId;
 const METADATA_NAME = "Storage React Native SDK";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
@@ -38,11 +36,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       name: METADATA_NAME,
       keyvalues: { ...options?.metadata },
     };
-
-    // this is on purpose because we can't import package.json as a module as it is outside rootDir
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { version, name: packageName } = require("../../../package.json");
-    const platform = `react-native-${Platform.OS}`;
 
     if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
       // then it's an array of files
@@ -143,14 +136,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
 
-        xhr.setRequestHeader("x-sdk-version", version);
-        xhr.setRequestHeader("x-sdk-name", packageName);
-        xhr.setRequestHeader("x-sdk-platform", platform);
+        setAnalyticsHeaders(xhr);
 
         xhr.send(form);
       });
@@ -168,12 +158,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             {
               method: "POST",
               headers: {
-                "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
                 ...(this.clientId ? { "x-client-id": this.clientId } : {}),
                 "Content-Type": "application/json",
-                "x-sdk-version": version,
-                "x-sdk-name": packageName,
-                "x-sdk-platform": platform,
+                ...getAnalyticsHeaders(),
               },
               body: fetchBody,
             },

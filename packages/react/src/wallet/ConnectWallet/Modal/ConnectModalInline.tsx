@@ -1,58 +1,97 @@
-import { Theme } from "../../../design-system";
-import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "../../../components/Modal";
 import { IconButton } from "../../../components/buttons";
-import { iconSize, radius, shadow } from "../../../design-system";
+import { Theme, iconSize, radius, shadow } from "../../../design-system";
+import { WalletUIStatesProvider } from "../../../evm/providers/wallet-ui-states-provider";
 import {
-  SetModalConfigCtx,
-  WalletUIStatesProvider,
-} from "../../../evm/providers/wallet-ui-states-provider";
-import {
-  widemodalMaxHeight,
+  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  defaultModalTitle,
-  defaultTheme,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
-import { useScreen } from "./screen";
-import { isMobile } from "../../../evm/utils/isMobile";
+import { useSetupScreen } from "./screen";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
-import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { ComponentProps, useContext, useEffect } from "react";
-import { ConnectWalletProps } from "../ConnectWallet";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../design-system/CustomThemeProvider";
+import { StyledDiv } from "../../../design-system/elements";
+import { SyncedWalletUIStates } from "./ConnectEmbed";
+import { WelcomeScreen } from "../screens/types";
+import { canFitWideModal } from "../../../evm/utils/canFitWIdeModal";
 
-export const ConnectModalInline = (
-  props: Omit<
-    ConnectWalletProps,
-    | "detailsBtn"
-    | "dropdownPosition"
-    | "auth"
-    | "networkSelector"
-    | "hideTestnetFaucet"
-    | "switchToActiveChain"
-    | "supportedTokens"
-  > & {
-    onModalHide?: () => void;
-  },
-) => {
-  const { screen, setScreen, initialScreen } = useScreen();
+/**
+ * @internal
+ */
+export type ConnectModalInlineProps = {
+  className?: string;
+  theme?: "dark" | "light" | Theme;
+  modalTitle?: string;
+  modalTitleIconUrl?: string;
+  style?: React.CSSProperties;
+  modalSize?: "compact" | "wide";
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
+  welcomeScreen?: WelcomeScreen;
+  showThirdwebBranding?: boolean;
+};
+
+/**
+ * @internal
+ */
+export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const walletConfigs = useWallets();
   const modalSize =
-    isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+    !canFitWideModal() || walletConfigs.length === 1
+      ? "compact"
+      : props.modalSize;
+  const ctxTheme = useCustomTheme();
+
+  const walletUIStatesProps = {
+    theme: props.theme || ctxTheme,
+    modalSize: modalSize,
+    title: props.modalTitle,
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
+    welcomeScreen: props.welcomeScreen,
+    titleIconUrl: props.modalTitleIconUrl,
+    showThirdwebBranding: props.showThirdwebBranding,
+  };
+
+  return (
+    <WalletUIStatesProvider {...walletUIStatesProps}>
+      <CustomThemeProvider theme={walletUIStatesProps.theme}>
+        <ConnectModalInlineContent
+          className={props.className}
+          modalSize={modalSize}
+        />
+        <SyncedWalletUIStates {...walletUIStatesProps} />
+      </CustomThemeProvider>
+    </WalletUIStatesProvider>
+  );
+};
+
+function ConnectModalInlineContent(props: {
+  className?: string;
+  modalSize?: "compact" | "wide";
+  style?: React.CSSProperties;
+}) {
+  const screenSetup = useSetupScreen();
 
   const content = (
     <>
       <ConnectModalContent
-        initialScreen={initialScreen}
-        screen={screen}
-        setScreen={setScreen}
-        setHideModal={() => {
-          if (props.onModalHide) {
-            props.onModalHide();
-          }
+        screenSetup={screenSetup}
+        onHide={() => {
+          // no op
+        }}
+        isOpen={true}
+        onClose={() => {
+          // no op
+        }}
+        onShow={() => {
+          // no op
         }}
       />
 
@@ -60,9 +99,9 @@ export const ConnectModalInline = (
       <CrossContainer>
         <IconButton type="button" aria-label="Close">
           <Cross2Icon
+            width={iconSize.md}
+            height={iconSize.md}
             style={{
-              width: iconSize.md,
-              height: iconSize.md,
               color: "inherit",
             }}
           />
@@ -71,87 +110,45 @@ export const ConnectModalInline = (
     </>
   );
 
-  const walletUIStatesProps = {
-    theme: props.theme || defaultTheme,
-    modalSize: modalSize,
-    title: props.modalTitle,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    welcomeScreen: props.welcomeScreen,
-    titleIconUrl: props.modalTitleIconUrl,
-  };
-
   return (
-    <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <ConnectModalInlineContainer
-          className={props.className}
-          style={{
-            height: modalSize === "compact" ? "auto" : widemodalMaxHeight,
-            maxWidth:
-              modalSize === "compact"
-                ? modalMaxWidthCompact
-                : modalMaxWidthWide,
-          }}
-        >
-          {props.modalSize === "compact" ? (
-            <DynamicHeight> {content} </DynamicHeight>
-          ) : (
-            content
-          )}
-          <SyncedWalletUIStates {...walletUIStatesProps} />
-        </ConnectModalInlineContainer>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <ConnectModalInlineContainer
+      className={props.className}
+      style={{
+        height: props.modalSize === "compact" ? "auto" : wideModalMaxHeight,
+        maxWidth:
+          props.modalSize === "compact"
+            ? modalMaxWidthCompact
+            : modalMaxWidthWide,
+        ...props.style,
+      }}
+    >
+      {props.modalSize === "compact" ? (
+        <DynamicHeight> {content} </DynamicHeight>
+      ) : (
+        content
+      )}
+    </ConnectModalInlineContainer>
   );
-};
-
-function SyncedWalletUIStates(
-  props: ComponentProps<typeof WalletUIStatesProvider>,
-) {
-  const setModalConfig = useContext(SetModalConfigCtx);
-
-  // update modalConfig on props change
-  useEffect(() => {
-    setModalConfig((c) => ({
-      ...c,
-      title: props.title || defaultModalTitle,
-      theme: props.theme || "dark",
-      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
-      termsOfServiceUrl: props.termsOfServiceUrl,
-      privacyPolicyUrl: props.privacyPolicyUrl,
-      welcomeScreen: props.welcomeScreen,
-      titleIconUrl: props.titleIconUrl,
-    }));
-  }, [
-    props.title,
-    props.theme,
-    props.modalSize,
-    props.termsOfServiceUrl,
-    props.privacyPolicyUrl,
-    props.welcomeScreen,
-    props.titleIconUrl,
-    setModalConfig,
-  ]);
-
-  return <WalletUIStatesProvider {...props} />;
 }
 
-const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.colors.modalBg};
-  color: ${(p) => p.theme.colors.primaryText};
-  transition: background 0.2s ease;
-  border-radius: ${radius.xl};
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: ${shadow.lg};
-  position: relative;
-  border: 1px solid ${(p) => p.theme.colors.borderColor};
-  line-height: 1;
-  overflow: hidden;
-  font-family: ${(p) => p.theme.fontFamily};
-  & *::selection {
-    background-color: ${(p) => p.theme.colors.primaryText};
-    color: ${(p) => p.theme.colors.modalBg};
-  }
-`;
+const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.modalBg,
+    color: theme.colors.primaryText,
+    transition: "background 0.2s ease",
+    borderRadius: radius.xl,
+    width: "100%",
+    boxSizing: "border-box",
+    boxShadow: shadow.lg,
+    position: "relative",
+    border: `1px solid ${theme.colors.borderColor}`,
+    lineHeight: "normal",
+    overflow: "hidden",
+    fontFamily: theme.fontFamily,
+    "& *::selection": {
+      backgroundColor: theme.colors.primaryText,
+      color: theme.colors.modalBg,
+    },
+  };
+});

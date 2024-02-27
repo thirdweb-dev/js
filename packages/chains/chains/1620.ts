@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 11235813,
   "rpc": [
-    "https://atheios.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1620.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.atheios.org/"
   ],

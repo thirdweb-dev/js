@@ -33,12 +33,12 @@ export default {
   },
   "networkId": 1804,
   "rpc": [
-    "https://kerleano.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1804.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cacib-saturn-test.francecentral.cloudapp.azure.com",
     "wss://cacib-saturn-test.francecentral.cloudapp.azure.com:9443"
   ],
   "shortName": "kerleano",
+  "slip44": 1,
   "slug": "kerleano",
   "status": "active",
   "testnet": true,

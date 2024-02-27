@@ -19,7 +19,7 @@ import type {
 } from "../../types/registry";
 import type { NetworkInput, TransactionResult } from "../types";
 import { ContractEncoder } from "./contract-encoder";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -105,7 +105,18 @@ export class MultichainRegistry {
     async (
       contract: AddContractInput,
     ): Promise<Transaction<TransactionResult>> => {
-      return await this.addContracts.prepare([contract]);
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryLogic,
+        method: "add",
+        args: [
+          deployerAddress,
+          contract.address,
+          contract.chainId,
+          contract.metadataURI || "",
+        ],
+      });
     },
   );
 
@@ -139,7 +150,17 @@ export class MultichainRegistry {
     async (
       contract: ContractInput,
     ): Promise<Transaction<TransactionResult>> => {
-      return await this.removeContracts.prepare([contract]);
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryLogic,
+        method: "remove",
+        args: [
+          deployerAddress,
+          await resolveAddress(contract.address),
+          contract.chainId,
+        ],
+      });
     },
   );
 

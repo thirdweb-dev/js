@@ -19,12 +19,12 @@ export default {
   },
   "networkId": 1666600003,
   "rpc": [
-    "https://harmony-shard-3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1666600003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s3.t.hmny.io"
   ],
   "shortName": "hmy-s3",
   "slip44": 1023,
   "slug": "harmony-shard-3",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

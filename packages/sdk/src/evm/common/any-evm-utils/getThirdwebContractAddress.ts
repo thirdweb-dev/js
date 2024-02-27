@@ -5,12 +5,12 @@ import { isContractDeployed } from "./isContractDeployed";
 import { predictThirdwebContractAddress } from "./predictThirdwebContractAddress";
 
 /**
- *
+ * @deploy
  * @public
- * @param contractName
- * @param chainId
- * @param storage
- * @param clientId
+ * @param contractName - The name of the contract to predict the address for
+ * @param chainId - The chain id to use
+ * @param storage - The storage to use
+ * @param clientId - The client id to use
  */
 export async function getThirdwebContractAddress(
   contractName: string,

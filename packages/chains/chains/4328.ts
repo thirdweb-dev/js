@@ -28,13 +28,13 @@ export default {
     ]
   },
   "rpc": [
-    "https://bobafuji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4328.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.avax.boba.network",
     "wss://wss.testnet.avax.boba.network",
     "https://replica.testnet.avax.boba.network"
   ],
   "shortName": "BobaFujiTestnet",
+  "slip44": 1,
   "slug": "bobafuji-testnet",
   "testnet": true
 } as const satisfies Chain;

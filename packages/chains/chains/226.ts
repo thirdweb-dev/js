@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 226,
   "rpc": [
-    "https://lachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://226.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.lachain.io"
   ],
   "shortName": "TLA",
+  "slip44": 1,
   "slug": "lachain-testnet",
   "testnet": true
 } as const satisfies Chain;

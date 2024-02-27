@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "infoURL": "https://boba.network",
   "name": "Boba Network Rinkeby Testnet",
   "nativeCurrency": {
@@ -27,12 +28,14 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
-    "https://boba-network-rinkeby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://28.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.boba.network/"
   ],
   "shortName": "BobaRinkeby",
+  "slip44": 1,
   "slug": "boba-network-rinkeby-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -5,12 +5,13 @@ export const reservedScreens = {
 };
 
 export const modalMaxWidthCompact = "360px";
-export const modalMaxWidthWide = "730px";
 
-export const defaultModalTitle = "Connect";
+const wideModalWidth = 730;
+export const modalMaxWidthWide = wideModalWidth + "px";
+export const wideModalScreenThreshold = wideModalWidth + 40;
 
-export const widemodalMaxHeight = "570px";
-export const compactmodalMaxHeight = "600px";
+export const wideModalMaxHeight = "570px";
+export const compactModalMaxHeight = "600px";
 
 export const defaultTheme = "dark";
 

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2025,
   "rpc": [
-    "https://rangers-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2025.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.rangersprotocol.com/api/jsonrpc"
   ],

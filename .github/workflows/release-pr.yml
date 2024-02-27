@@ -67,6 +67,11 @@ jobs:
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.21
+
       - name: Install
         uses: ./.github/composite-actions/install
 

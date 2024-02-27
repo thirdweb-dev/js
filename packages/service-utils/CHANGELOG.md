@@ -1,5 +1,81 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.18
+
+### Patch Changes
+
+- [#2318](https://github.com/thirdweb-dev/js/pull/2318) [`42d7510`](https://github.com/thirdweb-dev/js/commit/42d7510daf4c04017490de4b55ef43937979b859) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - fix: respect usage limits
+
+## 0.4.17
+
+### Patch Changes
+
+- [#2281](https://github.com/thirdweb-dev/js/pull/2281) [`77400fcf`](https://github.com/thirdweb-dev/js/commit/77400fcf212b7dba138e3422c05136d6043fe361) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new properties to usage
+
+- [#2287](https://github.com/thirdweb-dev/js/pull/2287) [`537e5e06`](https://github.com/thirdweb-dev/js/commit/537e5e063db282e8777e01bdd1e9afcdec7c9ef5) Thanks [@farhanW3](https://github.com/farhanW3)! - Added new field to capture response time
+
+## 0.4.16
+
+### Patch Changes
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to logHttpRequest
+
+- [#2273](https://github.com/thirdweb-dev/js/pull/2273) [`9096bdc0`](https://github.com/thirdweb-dev/js/commit/9096bdc0f1c182a5dc47db7a613978917d1fa006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to CF worker logs
+
+## 0.4.15
+
+### Patch Changes
+
+- [#2266](https://github.com/thirdweb-dev/js/pull/2266) [`5a3f7fa1`](https://github.com/thirdweb-dev/js/commit/5a3f7fa12361f5c0c90acccdd129aed37825e9ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add latency prop to logHttpRequest
+
+## 0.4.14
+
+### Patch Changes
+
+- [#2235](https://github.com/thirdweb-dev/js/pull/2235) [`173b3b2a`](https://github.com/thirdweb-dev/js/commit/173b3b2ad97bbe1935432f3ffd51b1bd959e5a08) Thanks [@farhanW3](https://github.com/farhanW3)! - added 'engine' as a source to usage event schema & updated schema to accomodate new values
+
+- [#2238](https://github.com/thirdweb-dev/js/pull/2238) [`c9f1fd8f`](https://github.com/thirdweb-dev/js/commit/c9f1fd8fc225eea0342ce2111751212169791e09) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update types
+
+## 0.4.13
+
+### Patch Changes
+
+- [#2210](https://github.com/thirdweb-dev/js/pull/2210) [`a5541a1c`](https://github.com/thirdweb-dev/js/commit/a5541a1c5571079e4b73d0c4c24d935977944c3e) Thanks [@assimovt](https://github.com/assimovt)! - update api key metadata
+
+- [#2230](https://github.com/thirdweb-dev/js/pull/2230) [`6fdade6c`](https://github.com/thirdweb-dev/js/commit/6fdade6c45f5d93fb3571d33720ab8103a7d002c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Options to check service policies
+
+- [#2200](https://github.com/thirdweb-dev/js/pull/2200) [`13e389a6`](https://github.com/thirdweb-dev/js/commit/13e389a63e66190556d34b8c443264f31b34cee6) Thanks [@assimovt](https://github.com/assimovt)! - polish usage hit error code
+
+## 0.4.12
+
+### Patch Changes
+
+- [#2157](https://github.com/thirdweb-dev/js/pull/2157) [`749a12f9`](https://github.com/thirdweb-dev/js/commit/749a12f92f687774330e154d7412aeba79f8fff5) Thanks [@assimovt](https://github.com/assimovt)! - fix checkout service name
+
+## 0.4.11
+
+### Patch Changes
+
+- [#2107](https://github.com/thirdweb-dev/js/pull/2107) [`1a5627f7`](https://github.com/thirdweb-dev/js/commit/1a5627f72d5a38386228517ef99fb800ca0f5a57) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - added checkout as service
+
+## 0.4.10
+
+### Patch Changes
+
+- [#1988](https://github.com/thirdweb-dev/js/pull/1988) [`17fe41d4`](https://github.com/thirdweb-dev/js/commit/17fe41d42bf99ccc83669557dc48d6fd22a5a04e) Thanks [@assimovt](https://github.com/assimovt)! - fix api key caching ttl
+
+## 0.4.9
+
+### Patch Changes
+
+- [#1976](https://github.com/thirdweb-dev/js/pull/1976) [`8ff87be6`](https://github.com/thirdweb-dev/js/commit/8ff87be631f1754b15e7ec4556d51e8eec5cbd18) Thanks [@arcoraven](https://github.com/arcoraven)! - Handle if error parsing JSON response in authorization helper
+
+## 0.4.8
+
+### Patch Changes
+
+- [#1907](https://github.com/thirdweb-dev/js/pull/1907) [`8d1b8a47`](https://github.com/thirdweb-dev/js/commit/8d1b8a47e6d2262ef7e326ff561a30f401cb9834) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: add "checkout" as a usage type
+
 ## 0.4.7
 
 ### Patch Changes

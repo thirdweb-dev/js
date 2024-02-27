@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 220315,
   "rpc": [
-    "https://mas.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://220315.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://node.masnet.ai:8545"
   ],

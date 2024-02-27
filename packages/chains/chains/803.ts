@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 803,
   "rpc": [
-    "https://haic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://803.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://orig.haichain.io/"
   ],

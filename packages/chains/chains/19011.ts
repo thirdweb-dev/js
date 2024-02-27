@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://home-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://19011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oasys.homeverse.games/"
   ],

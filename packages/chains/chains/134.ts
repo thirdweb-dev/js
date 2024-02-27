@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 134,
   "rpc": [
-    "https://iexec-sidechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://134.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bellecour.iex.ec"
   ],

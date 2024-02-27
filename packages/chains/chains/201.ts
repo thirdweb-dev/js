@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 201,
   "rpc": [
-    "https://moac-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gateway.moac.io/testnet"
   ],
   "shortName": "moactest",
+  "slip44": 1,
   "slug": "moac-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -25,12 +25,12 @@ export default {
   },
   "networkId": 7000,
   "rpc": [
-    "https://zetachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.mainnet.zetachain.com/evm"
+    "https://zetachain-evm.blockpi.network/v1/rpc/public",
+    "https://zetachain-mainnet-archive.allthatnode.com:8545"
   ],
   "shortName": "zetachain-mainnet",
   "slug": "zetachain",
-  "status": "incubating",
+  "status": "active",
   "testnet": false
 } as const satisfies Chain;

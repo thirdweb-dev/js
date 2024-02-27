@@ -23,7 +23,7 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://zksync.io/",
-  "name": "zkSync Era Mainnet",
+  "name": "zkSync Mainnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -40,11 +40,10 @@ export default {
     ]
   },
   "rpc": [
-    "https://zksync-era.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://324.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.era.zksync.io"
   ],
   "shortName": "zksync",
-  "slug": "zksync-era",
+  "slug": "zksync",
   "testnet": false
 } as const satisfies Chain;

@@ -18,7 +18,6 @@ export default {
   },
   "networkId": 859,
   "rpc": [
-    "https://zeeth-chain-dev.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://859.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.zeeth.io"
   ],

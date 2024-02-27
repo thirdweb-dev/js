@@ -13,6 +13,9 @@ export type ToastProps = {
   translateY?: number;
 };
 
+/**
+ * @internal
+ */
 export function Toast({
   text,
   icon,

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 20001,
   "rpc": [
-    "https://camelark.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-http-rpc.camelark.com"
   ],

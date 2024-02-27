@@ -29,28 +29,27 @@ export async function usageLimit(
     };
   }
 
-  const limit = limits.storage as number;
-
   if (
     serviceScope === "storage" &&
-    (usage.storage?.sumFileSizeBytes || 0) > limit
+    (usage.storage?.sumFileSizeBytes ?? 0) > (limits.storage ?? 0)
   ) {
     return {
       usageLimited: true,
       status: 403,
-      errorMessage: `You've used all of your total usage limit for Storage Pinning. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
+      errorMessage: `You've used all of your total usage credits for Storage Pinning. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };
   }
 
   if (
     serviceScope === "embeddedWallets" &&
-    (usage.embeddedWallets?.countWalletAddresses || 0) > limit
+    (usage.embeddedWallets?.countWalletAddresses ?? 0) >
+      (limits.embeddedWallets ?? 0)
   ) {
     return {
       usageLimited: true,
       status: 403,
-      errorMessage: `You've used all of your total usage limit for Embedded Wallets. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
+      errorMessage: `You've used all of your total usage credits for Embedded Wallets. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };
   }

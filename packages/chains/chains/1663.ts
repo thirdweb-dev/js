@@ -41,13 +41,12 @@ export default {
   },
   "networkId": 1663,
   "rpc": [
-    "https://horizen-gobi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1663.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gobi-rpc.horizenlabs.io/ethv1",
     "https://rpc.ankr.com/horizen_gobi_testnet"
   ],
   "shortName": "Gobi",
-  "slip44": 121,
+  "slip44": 1,
   "slug": "horizen-gobi-testnet",
   "testnet": true
 } as const satisfies Chain;

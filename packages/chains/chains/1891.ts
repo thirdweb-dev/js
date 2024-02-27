@@ -16,7 +16,7 @@ export default {
     }
   ],
   "faucets": [
-    "https://pegasus-faucet-react.vercel.app"
+    "https://faucet.pegasus.lightlink.io/"
   ],
   "features": [
     {
@@ -38,12 +38,11 @@ export default {
   },
   "networkId": 1891,
   "rpc": [
-    "https://lightlink-pegasus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://replicator-01.pegasus.lightlink.io/rpc/v1",
-    "https://replicator-02.pegasus.lightlink.io/rpc/v1"
+    "https://replicator.pegasus.lightlink.io/rpc/v1"
   ],
   "shortName": "lightlink_pegasus",
+  "slip44": 1,
   "slug": "lightlink-pegasus-testnet",
   "testnet": true
 } as const satisfies Chain;

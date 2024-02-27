@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 94,
   "rpc": [
-    "https://swissdlt.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://94.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.swissdlt.ch"
   ],

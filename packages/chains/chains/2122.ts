@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2122,
   "rpc": [
-    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metaplayer.one/"
   ],

@@ -4,18 +4,21 @@ import { unique } from "../utils";
 /**
  * @internal
  */
-export function joinABIs(abis: Abi[]): Abi {
+export function joinABIs(abis: Abi[], abiWithConstructor?: Abi): Abi {
   const parsedABIs = abis.map((abi) => AbiSchema.parse(abi)).flat();
+  const filteredABIs = parsedABIs.filter((item) => item.type !== "constructor");
 
-  const filteredABIs = unique(parsedABIs, (a, b): boolean => {
+  if (abiWithConstructor) {
+    filteredABIs.push(...AbiSchema.parse(abiWithConstructor));
+  }
+
+  const finalABIs = unique(filteredABIs, (a, b): boolean => {
     return (
       a.name === b.name &&
       a.type === b.type &&
       a.inputs.length === b.inputs.length
     );
   });
-
-  const finalABIs = filteredABIs.filter((item) => item.type !== "constructor");
 
   return AbiSchema.parse(finalABIs);
 }

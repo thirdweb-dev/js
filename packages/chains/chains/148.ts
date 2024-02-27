@@ -23,7 +23,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://shimmer.network",
-  "name": "ShimmerEVM Mainnet",
+  "name": "ShimmerEVM",
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
@@ -31,12 +31,11 @@ export default {
   },
   "networkId": 148,
   "rpc": [
-    "https://shimmerevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://148.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.evm.shimmer.network"
   ],
-  "shortName": "shimmerevm-mainnet",
+  "shortName": "shimmerevm",
   "slug": "shimmerevm",
   "testnet": false,
-  "title": "ShimmerEVM Mainnet"
+  "title": "ShimmerEVM"
 } as const satisfies Chain;

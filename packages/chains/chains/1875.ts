@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1875,
   "rpc": [
-    "https://whitebit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1875.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.whitebit.network"
   ],

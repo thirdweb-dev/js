@@ -1,6 +1,9 @@
 import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
 
+/**
+ * @internal
+ */
 export const WalletIcon = ({
   iconUri,
   size,

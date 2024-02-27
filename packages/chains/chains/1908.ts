@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 1908,
   "rpc": [
-    "https://bitcichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1908.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitcichain.com"
   ],
   "shortName": "tbitci",
+  "slip44": 1,
   "slug": "bitcichain-testnet",
   "testnet": true
 } as const satisfies Chain;

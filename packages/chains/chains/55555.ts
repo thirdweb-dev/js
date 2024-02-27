@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 55555,
   "rpc": [
-    "https://rei-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://55555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rei-rpc.moonrhythm.io"
   ],

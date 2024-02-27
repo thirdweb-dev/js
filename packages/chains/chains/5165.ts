@@ -33,12 +33,13 @@ export default {
   },
   "networkId": 5165,
   "rpc": [
-    "https://bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bahamut.io",
     "https://rpc2.bahamut.io",
     "wss://ws1.sahara.bahamutchain.com",
-    "wss://ws2.sahara.bahamutchain.com"
+    "wss://ws2.sahara.bahamutchain.com",
+    "https://bahamut-rpc.publicnode.com",
+    "wss://bahamut-rpc.publicnode.com"
   ],
   "shortName": "ftn",
   "slug": "bahamut",

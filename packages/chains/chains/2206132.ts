@@ -27,12 +27,12 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://platon-dev-testnet2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2206132.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet2openapi.platon.network/rpc",
     "wss://devnet2openapi.platon.network/ws"
   ],
   "shortName": "platondev2",
+  "slip44": 1,
   "slug": "platon-dev-testnet2",
   "testnet": true
 } as const satisfies Chain;

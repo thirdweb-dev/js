@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 9559,
   "rpc": [
-    "https://neonlink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.neonlink.io"
   ],
   "shortName": "testneon",
+  "slip44": 1,
   "slug": "neonlink-testnet",
   "testnet": true
 } as const satisfies Chain;

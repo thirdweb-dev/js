@@ -27,12 +27,12 @@ export default {
   "networkId": 1442,
   "redFlags": [],
   "rpc": [
-    "https://polygon-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1442.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.public.zkevm-test.net"
   ],
   "shortName": "testnet-zkEVM-mango",
+  "slip44": 1,
   "slug": "polygon-zkevm-testnet",
-  "testnet": false,
+  "testnet": true,
   "title": "Polygon zkEVM Testnet"
 } as const satisfies Chain;

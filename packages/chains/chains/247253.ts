@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 247253,
   "rpc": [
-    "https://saakuru-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://247253.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.saakuru.network"
   ],
   "shortName": "saakuru-testnet",
+  "slip44": 1,
   "slug": "saakuru-testnet",
   "testnet": true
 } as const satisfies Chain;

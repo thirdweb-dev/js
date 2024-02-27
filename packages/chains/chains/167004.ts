@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 167004,
   "rpc": [
-    "https://taiko-alpha-2-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://167004.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.a2.taiko.xyz"
   ],
   "shortName": "taiko-a2",
+  "slip44": 1,
   "slug": "taiko-alpha-2-testnet",
   "status": "deprecated",
   "testnet": true

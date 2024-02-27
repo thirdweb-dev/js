@@ -51,7 +51,6 @@ export default {
   },
   "networkId": 100,
   "rpc": [
-    "https://gnosis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gnosischain.com",
     "https://rpc.gnosis.gateway.fm",
@@ -63,8 +62,8 @@ export default {
     "https://web3endpoints.com/gnosischain-mainnet",
     "https://gnosis.oat.farm",
     "wss://rpc.gnosischain.com/wss",
-    "https://gnosis.publicnode.com",
-    "wss://gnosis.publicnode.com"
+    "https://gnosis-rpc.publicnode.com",
+    "wss://gnosis-rpc.publicnode.com"
   ],
   "shortName": "gno",
   "slip44": 700,

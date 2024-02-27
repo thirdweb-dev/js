@@ -29,11 +29,11 @@ export default {
   "networkId": 41,
   "redFlags": [],
   "rpc": [
-    "https://telos-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://41.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.telos.net/evm"
   ],
   "shortName": "TelosEVMTestnet",
+  "slip44": 1,
   "slug": "telos-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

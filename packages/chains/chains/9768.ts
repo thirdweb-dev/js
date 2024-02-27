@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 9768,
   "rpc": [
-    "https://z-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9768.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.mainnetz.io"
   ],
   "shortName": "NetZt",
+  "slip44": 1,
   "slug": "z-testnet",
   "testnet": true
 } as const satisfies Chain;

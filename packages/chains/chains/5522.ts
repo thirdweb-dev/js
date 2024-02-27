@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 5522,
   "rpc": [
-    "https://vex-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5522.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.vexascan.com/evmapi"
   ],
   "shortName": "VEX",
+  "slip44": 1,
   "slug": "vex-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

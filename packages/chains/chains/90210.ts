@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 90210,
   "rpc": [
-    "https://beverly-hills.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://90210.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.beverlyhills.ethdevops.io:8545"
   ],

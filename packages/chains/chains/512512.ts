@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 512512,
   "rpc": [
-    "https://cmp-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://512512.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galaxy.block.caduceus.foundation",
     "wss://galaxy.block.caduceus.foundation"
   ],
   "shortName": "cmp",
+  "slip44": 1,
   "slug": "cmp-testnet",
   "testnet": true
 } as const satisfies Chain;

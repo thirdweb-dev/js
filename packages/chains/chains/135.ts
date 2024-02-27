@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 135,
   "rpc": [
-    "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://135.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.alyxchain.com"
   ],
   "shortName": "AlyxTestnet",
+  "slip44": 1,
   "slug": "alyx-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 3333,
   "rpc": [
-    "https://web3q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.web3q.io:8545"
   ],
   "shortName": "w3q-t",
+  "slip44": 1,
   "slug": "web3q-testnet",
   "testnet": true
 } as const satisfies Chain;

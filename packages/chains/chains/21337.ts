@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 21337,
   "rpc": [
-    "https://cennznet-azalea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cennznet.unfrastructure.io/public"
   ],

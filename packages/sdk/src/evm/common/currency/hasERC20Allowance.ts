@@ -1,7 +1,10 @@
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
 
+/**
+ * @internal
+ */
 export async function hasERC20Allowance(
   contractToApprove: ContractWrapper<any>,
   currencyAddress: string,

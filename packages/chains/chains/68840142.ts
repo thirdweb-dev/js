@@ -13,6 +13,12 @@ export default {
     "https://faucet.triangleplatform.com/frame"
   ],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmRxeKFwBwrXyDksoN4NzNRp3R35s8pVnTBfBj4AJSCq5g",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://frame.xyz",
   "name": "Frame Testnet",
   "nativeCurrency": {
@@ -23,11 +29,11 @@ export default {
   "networkId": 68840142,
   "redFlags": [],
   "rpc": [
-    "https://frame-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://68840142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.frame.xyz/http"
   ],
   "shortName": "frame-test",
+  "slip44": 1,
   "slug": "frame-testnet",
   "testnet": true
 } as const satisfies Chain;

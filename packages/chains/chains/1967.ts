@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 1967,
   "rpc": [
-    "https://eleanor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1967.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metatime.com/eleanor",
     "wss://ws.metatime.com/eleanor"
   ],
   "shortName": "mtc",
+  "slip44": 1,
   "slug": "eleanor",
   "testnet": true,
   "title": "Metatime Testnet Eleanor"

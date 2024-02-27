@@ -31,11 +31,11 @@ export default {
   },
   "networkId": 1170,
   "rpc": [
-    "https://origin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1170.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.origin.uptick.network"
   ],
   "shortName": "auoc",
+  "slip44": 1,
   "slug": "origin-testnet",
   "testnet": true
 } as const satisfies Chain;

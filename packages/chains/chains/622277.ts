@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "RTH",
+  "chain": "HYP",
   "chainId": 622277,
   "explorers": [
     {
-      "name": "rethereum",
-      "url": "https://explorer.rethereum.org",
+      "name": "hypra",
+      "url": "https://explorer.hypra.network",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
@@ -30,22 +30,22 @@ export default {
     "height": 830,
     "format": "png"
   },
-  "infoURL": "https://www.rethereum.org",
-  "name": "Rethereum Mainnet",
+  "infoURL": "https://www.hypra.network",
+  "name": "Hypra Mainnet",
   "nativeCurrency": {
-    "name": "Rethereum",
-    "symbol": "RTH",
+    "name": "Hypra",
+    "symbol": "HYP",
     "decimals": 18
   },
   "networkId": 622277,
   "rpc": [
-    "https://rethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://622277.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.hypra.network",
     "https://rpc.rethereum.org",
     "https://rethereum.rpc.restratagem.com",
     "https://rpc.rthcentral.org"
   ],
-  "shortName": "rth",
-  "slug": "rethereum",
+  "shortName": "hyp",
+  "slug": "hypra",
   "testnet": false
 } as const satisfies Chain;

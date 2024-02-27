@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 13000,
   "rpc": [
-    "https://sps.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ssquad.games"
   ],

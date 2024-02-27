@@ -5,6 +5,7 @@ import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   DAppMetaData,
+  EmbeddedWalletOauthStrategy,
   SmartWalletConfig,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -17,13 +18,14 @@ import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Ethereum,
   defaultChains,
   getChainByChainId,
 } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
+import { detect } from "detect-browser";
 
 declare global {
   interface Window {
@@ -74,6 +76,7 @@ interface TWBridge {
     email?: string,
     personalWallet?: PossibleWallet,
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -87,6 +90,17 @@ interface TWBridge {
   ) => void;
   fundWallet: (options: string) => Promise<void>;
   exportWallet: (password: string) => Promise<string>;
+  smartWalletAddAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletRemoveAdmin: (admin: string) => Promise<string | undefined>;
+  smartWalletCreateSessionKey: (options: string) => Promise<string | undefined>;
+  smartWalletRevokeSessionKey: (signer: string) => Promise<string | undefined>;
+  smartWalletGetAllActiveSigners: () => Promise<string | undefined>;
+  waitForTransactionResult: (txHash: string) => Promise<string>;
+  getLatestBlockNumber: () => Promise<string>;
+  getBlock: (blockNumber: string) => Promise<string>;
+  getBlockWithTransactions: (blockNumber: string) => Promise<string>;
+  getEmail: () => Promise<string>;
+  getSignerAddress: () => Promise<string>;
 }
 
 const w = window;
@@ -120,6 +134,19 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public initialize(chain: ChainIdOrName, options: string) {
+    if (typeof globalThis !== "undefined") {
+      let browser;
+      try {
+        browser = detect();
+      } catch {
+        console.warn("Failed to detect browser");
+        browser = undefined;
+      }
+      (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
+      (globalThis as any).X_SDK_PLATFORM = "unity";
+      (globalThis as any).X_SDK_VERSION = "4.7.0";
+      (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
+    }
     this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
@@ -252,6 +279,7 @@ class ThirdwebBridge implements TWBridge {
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
     authOptions?: string,
+    smartWalletAccountOverride?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -281,15 +309,31 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-        } else if (authOptionsParsed.authProvider === 1) {
-          // GoogleManaged
-          const googleWindow = this.openGoogleSignInWindow();
-          if (!googleWindow) {
-            throw new Error("Failed to open google login window");
+        } else if (authOptionsParsed.authProvider < 4) {
+          // OAuth
+          let authProvider: EmbeddedWalletOauthStrategy;
+          switch (authOptionsParsed.authProvider) {
+            case 1:
+              authProvider = "google";
+              break;
+            case 2:
+              authProvider = "apple";
+              break;
+            case 3:
+              authProvider = "facebook";
+              break;
+            default:
+              throw new Error(
+                "Invalid auth provider: " + authOptionsParsed.authProvider,
+              );
+          }
+          const popupWindow = this.openPopupWindow();
+          if (!popupWindow) {
+            throw new Error("Failed to open login window");
           }
           const authResult = await embeddedWallet.authenticate({
-            strategy: "google",
-            openedWindow: googleWindow,
+            strategy: authProvider,
+            openedWindow: popupWindow,
             closeOpenedWindow: (openedWindow) => {
               openedWindow.close();
             },
@@ -298,11 +342,23 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-        } else if (authOptionsParsed.authProvider === 2) {
-          // CustomAuth
+        } else if (authOptionsParsed.authProvider === 4) {
+          // JWT
           const authResult = await embeddedWallet.authenticate({
             strategy: "jwt",
-            jwt: authOptionsParsed.authToken,
+            jwt: authOptionsParsed.jwtOrPayload,
+            encryptionKey: authOptionsParsed.encryptionKey,
+          });
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            authResult,
+          });
+        } else if (authOptionsParsed.authProvider === 5) {
+          // AuthEndpoint
+          const authResult = await embeddedWallet.authenticate({
+            strategy: "auth_endpoint",
+            payload: authOptionsParsed.jwtOrPayload,
+            encryptionKey: authOptionsParsed.encryptionKey,
           });
           await embeddedWallet.connect({
             chainId: chainIdNumber,
@@ -323,10 +379,15 @@ class ThirdwebBridge implements TWBridge {
           password,
           email,
           personalWallet,
+          authOptions,
         );
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
-          await this.initializeSmartWallet(smartWallet, this.activeWallet);
+          await this.initializeSmartWallet(
+            smartWallet,
+            this.activeWallet,
+            smartWalletAccountOverride,
+          );
         } else {
           // If EOA wallet is not connected, throw error
           throw new Error(
@@ -603,11 +664,19 @@ class ThirdwebBridge implements TWBridge {
   public async initializeSmartWallet(
     sw: SmartWallet,
     personalWallet: AbstractClientWallet,
+    accountAddress?: string,
   ) {
+    if (accountAddress) {
+      console.debug(
+        "Initializing smart wallet with account address override:",
+        accountAddress,
+      );
+    }
     const personalWalletAddress = await personalWallet.getAddress();
     console.debug("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
+      accountAddress: accountAddress,
     });
     if (sw.listenerCount("disconnect") === 1) {
       sw.on("disconnect", () => {
@@ -620,17 +689,148 @@ class ThirdwebBridge implements TWBridge {
     const localWallet = this.walletMap.get(
       walletIds.localWallet,
     ) as LocalWallet;
-    await localWallet.loadOrCreate({
-      strategy: "encryptedJson",
-      password,
-    });
+    try {
+      await localWallet.loadOrCreate({
+        strategy: "encryptedJson",
+        password,
+      });
+    } catch (e) {
+      console.warn(e);
+      return localWallet;
+    }
+
     return localWallet;
   }
 
-  public openGoogleSignInWindow() {
+  public async smartWalletAddAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.addAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletRemoveAdmin(admin: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.removeAdmin(admin);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletCreateSessionKey(options: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const optionsParsed = JSON.parse(options);
+    const approvedCallTargets = optionsParsed.approvedCallTargets;
+    const nativeTokenLimitPerTransaction = ethers.utils.formatEther(
+      optionsParsed.nativeTokenLimitPerTransactionInWei,
+    );
+    const startDate = BigNumber.from(optionsParsed.startDate).toNumber();
+    const expirationDate = BigNumber.from(
+      optionsParsed.expirationDate,
+    ).toNumber();
+    const result = await smartWallet.createSessionKey(
+      optionsParsed.signerAddress,
+      {
+        approvedCallTargets: approvedCallTargets,
+        nativeTokenLimitPerTransaction: nativeTokenLimitPerTransaction,
+        startDate: startDate,
+        expirationDate: expirationDate,
+      },
+    );
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletRevokeSessionKey(signer: string) {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const result = await smartWallet.revokeSessionKey(signer);
+    return JSON.stringify({ result: result }, bigNumberReplacer);
+  }
+
+  public async smartWalletGetAllActiveSigners() {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const res = await smartWallet.getAllActiveSigners();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async waitForTransactionResult(txHash: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().waitForTransaction(txHash);
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getLatestBlockNumber() {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK.getProvider().getBlockNumber();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlock(blockNumber: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK
+      .getProvider()
+      .getBlock(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getBlockWithTransactions(blockNumber: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK
+      .getProvider()
+      .getBlockWithTransactions(Number(blockNumber));
+    return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async getEmail() {
+    const embeddedWallet = this.walletMap.get(
+      walletIds.embeddedWallet,
+    ) as EmbeddedWallet;
+    const email = await embeddedWallet.getEmail();
+    return JSON.stringify({ result: email });
+  }
+
+  public async getSignerAddress() {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    try {
+      const smartWallet = this.activeWallet as SmartWallet;
+      const signer = await smartWallet.getPersonalWallet()?.getSigner();
+      const res = await signer?.getAddress();
+      return JSON.stringify({ result: res }, bigNumberReplacer);
+    } catch {
+      console.debug(
+        "Could not find a smart wallet, defaulting to normal signer",
+      );
+      const signer = await this.activeWallet.getSigner();
+      const res = await signer.getAddress();
+      return JSON.stringify({ result: res }, bigNumberReplacer);
+    }
+  }
+
+  public openPopupWindow() {
     const win = window.open("", undefined, "width=350, height=500");
     if (win) {
-      win.document.title = "Sign In - Google Accounts";
+      win.document.title = "Sign In - OAuth";
       win.document.body.innerHTML = `
       <svg class="loader" viewBox="0 0 50 50">
         <circle

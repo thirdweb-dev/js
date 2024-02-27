@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 355113,
   "rpc": [
-    "https://bitfinity-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://355113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitfinity.network"
   ],
   "shortName": "Bitfinity",
+  "slip44": 1,
   "slug": "bitfinity-network-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 221230,
   "rpc": [
-    "https://reapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://221230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth.reapchain.org"
   ],

@@ -20,16 +20,16 @@ export default {
   "name": "Worldland Testnet",
   "nativeCurrency": {
     "name": "Worldland",
-    "symbol": "WL",
+    "symbol": "WLC",
     "decimals": 18
   },
   "networkId": 10395,
   "rpc": [
-    "https://worldland-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwangju.worldland.foundation"
   ],
   "shortName": "TWLC",
+  "slip44": 1,
   "slug": "worldland-testnet",
   "testnet": true
 } as const satisfies Chain;

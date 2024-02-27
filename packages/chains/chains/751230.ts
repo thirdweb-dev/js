@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 751230,
   "rpc": [
-    "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://751230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://brnkc-test.bearnetwork.net"
   ],
   "shortName": "BRNKCTEST",
+  "slip44": 1,
   "slug": "bear-network-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

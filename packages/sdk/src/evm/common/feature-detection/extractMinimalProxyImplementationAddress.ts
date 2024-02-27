@@ -1,6 +1,6 @@
 /**
  * @internal
- * @param bytecode
+ * @param bytecode - The bytecode to check
  */
 export function extractMinimalProxyImplementationAddress(
   bytecode: string,
@@ -28,6 +28,11 @@ export function extractMinimalProxyImplementationAddress(
   // vyper's minimal proxy (uniswap v1) - https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#code
   if (bytecode.startsWith("0x366000600037611000600036600073")) {
     const implementationAddress = bytecode.slice(32, 32 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  if (bytecode.startsWith("0x36600080376020600036600073")) {
+    const implementationAddress = bytecode.slice(28, 28 + 40);
     return `0x${implementationAddress}`;
   }
 

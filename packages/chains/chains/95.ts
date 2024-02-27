@@ -35,7 +35,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://95.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.camdl.gov.kh/"
   ],

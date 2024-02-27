@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 201804,
   "rpc": [
-    "https://mythical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://201804.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.mythicalgames.com"
   ],

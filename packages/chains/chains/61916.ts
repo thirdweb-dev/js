@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 61916,
   "rpc": [
-    "https://doken-super-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://61916.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sgrpc.doken.dev",
     "https://nyrpc.doken.dev",

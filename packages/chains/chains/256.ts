@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 256,
   "rpc": [
-    "https://huobi-eco-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://256.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.hecochain.com",
     "wss://ws-testnet.hecochain.com"

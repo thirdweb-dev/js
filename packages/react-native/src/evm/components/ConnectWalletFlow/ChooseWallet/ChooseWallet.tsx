@@ -1,7 +1,12 @@
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { WalletConfig } from "@thirdweb-dev/react-core";
-import { ReactNode, useState } from "react";
+import {
+  WalletConfig,
+  useAddress,
+  useConnect,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
@@ -18,7 +23,7 @@ export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   onChooseWallet: (wallet: WalletConfig<any>, data?: any) => void;
-  onClose: () => void;
+  onClose?: () => void;
   wallets: WalletConfig<any>[];
   excludeWalletIds?: string[];
   modalTitleIconUrl?: string;
@@ -33,7 +38,6 @@ export function ChooseWallet({
   onChooseWallet,
   modalTitleIconUrl,
   onClose,
-  excludeWalletIds = [],
   termsOfServiceUrl,
   privacyPolicyUrl,
 }: ChooseWalletProps) {
@@ -45,18 +49,26 @@ export function ChooseWallet({
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) =>
-      w.id === walletIds.magicLink ||
-      (w.id === walletIds.embeddedWallet && w.selectUI),
+    (w) => w.id === walletIds.embeddedWallet && w.selectUI,
   );
-  const connectionWallets = wallets
-    .filter(
+
+  const walletsToDisplay = useMemo(() => {
+    const filteredWallets = wallets.filter(
       (wallet) =>
-        wallet.id !== walletIds.magicLink &&
         wallet.id !== walletIds.embeddedWallet &&
         wallet.id !== walletIds.localWallet,
-    )
-    .slice(0, 2);
+    );
+
+    const trueItems = filteredWallets.filter(
+      (item) => item.recommended === true,
+    );
+    const falseItems = filteredWallets.filter(
+      (item) => item.recommended !== true,
+    );
+    const sortedWallets = [...trueItems, ...falseItems];
+
+    return sortedWallets;
+  }, [wallets]);
 
   const showToSPrivacyPolicy = termsOfServiceUrl || privacyPolicyUrl;
 
@@ -74,7 +86,7 @@ export function ChooseWallet({
   };
 
   const onSingleWalletPress = () => {
-    onChooseWallet(connectionWallets[0]);
+    onChooseWallet(walletsToDisplay[0]);
   };
 
   const onBackPress = () => {
@@ -97,6 +109,32 @@ export function ChooseWallet({
     }
   };
 
+  const getHeaderText = useCallback(() => {
+    if (typeof headerText === "string" && headerText.length === 0) {
+      return null;
+    }
+
+    if (!headerText || typeof headerText === "string") {
+      return (
+        <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
+          {headerText ? headerText : l.connect_wallet_details.connect}
+        </Text>
+      );
+    }
+
+    return headerText;
+  }, [headerText, l.connect_wallet_details.connect]);
+
+  const connect = useConnect();
+  const address = useAddress();
+  const {
+    setConnectedWallet,
+    setConnectionStatus,
+    connectionStatus,
+    createWalletInstance,
+    activeWallet,
+  } = useWalletContext();
+
   return (
     <Box flexDirection="column">
       <ModalHeaderTextClose
@@ -104,48 +142,36 @@ export function ChooseWallet({
         onBackPress={isConnectAWalletEnabled ? onBackPress : undefined}
         onClose={onClose}
         headerText={
-          headerText ? (
-            headerText
-          ) : (
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              alignContent="center"
-              justifyContent="center"
-            >
-              {modalTitleIconUrl !== undefined ? (
-                modalTitleIconUrl.length === 0 ? null : (
-                  <ImageSvgUri
-                    width={26}
-                    height={15}
-                    imageUrl={modalTitleIconUrl}
-                  />
-                )
-              ) : (
-                <ThirdwebLogo
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            alignContent="center"
+            justifyContent="center"
+          >
+            {modalTitleIconUrl !== undefined ? (
+              modalTitleIconUrl.length === 0 ? null : (
+                <ImageSvgUri
                   width={26}
                   height={15}
-                  color={theme.colors.backgroundInverted}
+                  imageUrl={modalTitleIconUrl}
                 />
-              )}
-              <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
-                {l.connect_wallet_details.connect}
-              </Text>
-            </Box>
-          )
+              )
+            ) : (
+              <ThirdwebLogo
+                width={26}
+                height={15}
+                color={theme.colors.backgroundInverted}
+              />
+            )}
+            {getHeaderText()}
+          </Box>
         }
         subHeaderText={subHeaderText}
       />
       {!emailWallet || isConnectAWalletEnabled ? (
         <>
           <ChooseWalletContent
-            wallets={wallets}
-            excludeWalletIds={[
-              ...excludeWalletIds,
-              walletIds.localWallet,
-              walletIds.magicLink,
-              walletIds.embeddedWallet,
-            ]}
+            wallets={walletsToDisplay}
             onChooseWallet={onChooseWallet}
           />
 
@@ -176,11 +202,18 @@ export function ChooseWallet({
             onChooseWallet(emailWallet, data);
           }}
           walletConfig={emailWallet}
+          connect={(options: any) => connect(emailWallet, options)}
+          connectedWallet={activeWallet}
+          connectedWalletAddress={address}
+          connectionStatus={connectionStatus}
+          createWalletInstance={() => createWalletInstance(emailWallet)}
+          setConnectedWallet={setConnectedWallet}
+          setConnectionStatus={setConnectionStatus}
         />
       ) : null}
       {emailWallet &&
       !isConnectAWalletEnabled &&
-      (guestWallet || connectionWallets.length > 0) ? (
+      (guestWallet || walletsToDisplay.length > 0) ? (
         <Box
           mt="md"
           marginHorizontal="xl"
@@ -197,15 +230,15 @@ export function ChooseWallet({
       ) : null}
       {emailWallet &&
       !isConnectAWalletEnabled &&
-      connectionWallets.length > 0 ? (
-        connectionWallets.length === 1 ? (
+      walletsToDisplay.length > 0 ? (
+        walletsToDisplay.length === 1 ? (
           <WalletButton
             marginHorizontal="xl"
             paddingHorizontal="none"
             paddingVertical="none"
             mt="md"
-            walletIconUrl={connectionWallets[0].meta.iconURL}
-            name={connectionWallets[0].meta.name}
+            walletIconUrl={walletsToDisplay[0].meta.iconURL}
+            name={walletsToDisplay[0].meta.name}
             onPress={onSingleWalletPress}
           />
         ) : (
@@ -221,7 +254,10 @@ export function ChooseWallet({
             borderWidth={1}
             onPress={onConnectAWalletPress}
           >
-            {connectionWallets.map((wallet) => {
+            {walletsToDisplay.map((wallet, index) => {
+              if (index > 1) {
+                return null;
+              }
               return (
                 <Box key={wallet.meta.name} mr="xxs">
                   <ImageSvgUri

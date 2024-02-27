@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2001,
   "rpc": [
-    "https://milkomeda-c1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet-cardano-evm.c1.milkomeda.com",
     "wss://rpc-mainnet-cardano-evm.c1.milkomeda.com"

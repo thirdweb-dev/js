@@ -12,7 +12,6 @@ export default {
   },
   "networkId": 50001,
   "rpc": [
-    "https://liveplex-oracleevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oracle.liveplex.io"
   ],

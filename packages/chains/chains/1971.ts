@@ -19,12 +19,12 @@ export default {
   },
   "networkId": 1971,
   "rpc": [
-    "https://atelier.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1971.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1971.network/atlr",
     "wss://1971.network/atlr"
   ],
   "shortName": "atlr",
+  "slip44": 1,
   "slug": "atelier",
   "testnet": true,
   "title": "Atelier Test Network"

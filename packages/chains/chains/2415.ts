@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 10,
   "rpc": [
-    "https://xodex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2415.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xo-dex.com/rpc",
     "https://xo-dex.io"

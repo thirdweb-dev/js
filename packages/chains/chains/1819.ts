@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1819,
   "rpc": [
-    "https://cube-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1819.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.cube.network",
     "wss://ws-testnet.cube.network",
@@ -39,7 +38,7 @@ export default {
     "wss://ws-testnet-us.cube.network"
   ],
   "shortName": "cubet",
-  "slip44": 1819,
+  "slip44": 1,
   "slug": "cube-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

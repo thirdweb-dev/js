@@ -21,12 +21,12 @@ export default {
   },
   "networkId": 1112,
   "rpc": [
-    "https://wemix3-0-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1112.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.test.wemix.com",
     "wss://ws.test.wemix.com"
   ],
   "shortName": "twemix",
+  "slip44": 1,
   "slug": "wemix3-0-testnet",
   "testnet": true
 } as const satisfies Chain;

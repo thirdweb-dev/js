@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2000,
   "rpc": [
-    "https://dogechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogechain.dog",
     "https://rpc01-sg.dogechain.dog",

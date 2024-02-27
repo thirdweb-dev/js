@@ -1,7 +1,8 @@
-import { fontSize, radius, shadow, spacing, Theme } from "../design-system";
+import { fontSize, radius, shadow, spacing } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 export const ToolTip: React.FC<{
   children: React.ReactNode;
@@ -40,26 +41,29 @@ to {
 }
 `;
 
-const TooltipContent = /* @__PURE__ */ (() => styled(RadixTooltip.Content)<{
-  theme?: Theme;
-}>`
-  background: ${(p) => p.theme.colors.tooltipBg};
-  color: ${(p) => p.theme.colors.tooltipText};
-  border-radius: ${radius.sm};
-  line-height: 1;
-  padding: ${spacing.sm} ${spacing.md};
-  font-size: ${fontSize.sm};
-  box-shadow: ${shadow.sm};
-  user-select: none;
-  will-change: transform, opacity;
-  animation: ${slideUpAndFade} 200ms cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 999999999999999;
-  max-width: 300px;
-  line-height: 1.5;
-`)();
+const TooltipContent = /* @__PURE__ */ (() =>
+  styled(RadixTooltip.Content)(() => {
+    const theme = useCustomTheme();
+    return {
+      background: theme.colors.tooltipBg,
+      color: theme.colors.tooltipText,
+      borderRadius: radius.sm,
+      padding: `${spacing.xs} ${spacing.sm}`,
+      fontSize: fontSize.sm,
+      boxShadow: shadow.sm,
+      userSelect: "none",
+      willChange: "transform, opacity",
+      animation: `${slideUpAndFade} 200ms cubic-bezier(0.16, 1, 0.3, 1)`,
+      zIndex: 999999999999999,
+      maxWidth: "300px",
+      lineHeight: 1.5,
+    };
+  }))();
 
-const TooltipArrow = /* @__PURE__ */ (() => styled(RadixTooltip.Arrow)<{
-  theme?: Theme;
-}>`
-  fill: ${(p) => p.theme.colors.tooltipBg};
-`)();
+const TooltipArrow = /* @__PURE__ */ (() =>
+  styled(RadixTooltip.Arrow)(() => {
+    const theme = useCustomTheme();
+    return {
+      fill: theme.colors.tooltipBg,
+    };
+  }))();

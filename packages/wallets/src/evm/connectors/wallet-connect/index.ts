@@ -4,14 +4,14 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  WagmiConnector,
-} from "../../../lib/wagmi-core";
+} from "../../../lib/wagmi-core/errors";
 import { type Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { QRModalOptions } from "./qrModalOptions";
 import { getValidPublicRPCUrl } from "../../utils/url";
+import { WagmiConnector } from "../../../lib/wagmi-connectors/WagmiConnector";
 
 const chainsToRequest = new Set([1, 137, 10, 42161, 56]);
 
@@ -82,6 +82,7 @@ export class WalletConnectConnector extends WagmiConnector<
   #initProviderPromise?: Promise<void>;
   #storage: AsyncStorage;
   filteredChains: Chain[];
+  showWalletConnectModal: boolean;
 
   constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
     super({
@@ -97,6 +98,8 @@ export class WalletConnectConnector extends WagmiConnector<
             return chainsToRequest.has(c.chainId);
           })
         : this.chains;
+
+    this.showWalletConnectModal = this.options.qrcode !== false;
   }
 
   async connect({ chainId: chainIdP, pairingTopic }: ConnectConfig = {}) {
@@ -323,12 +326,12 @@ export class WalletConnectConnector extends WagmiConnector<
 
   async #createProvider() {
     if (!this.#initProviderPromise && typeof window !== "undefined") {
-      this.#initProviderPromise = this.#initProvider();
+      this.#initProviderPromise = this.initProvider();
     }
     return this.#initProviderPromise;
   }
 
-  async #initProvider() {
+  async initProvider() {
     const {
       default: EthereumProvider,
       OPTIONAL_EVENTS,
@@ -341,7 +344,7 @@ export class WalletConnectConnector extends WagmiConnector<
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
-        showQrModal: this.options.qrcode !== false,
+        showQrModal: this.showWalletConnectModal,
         projectId: this.options.projectId,
         optionalMethods: OPTIONAL_METHODS,
         optionalEvents: OPTIONAL_EVENTS,

@@ -44,11 +44,11 @@ export default {
   },
   "networkId": 2023,
   "rpc": [
-    "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-taycan.hupayx.io"
   ],
   "shortName": "taycan-testnet",
+  "slip44": 1,
   "slug": "taycan-testnet",
   "testnet": true
 } as const satisfies Chain;

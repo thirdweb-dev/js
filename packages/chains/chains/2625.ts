@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 2625,
   "rpc": [
-    "https://whitebit-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2625.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.whitebit.network"
   ],
   "shortName": "twbt",
+  "slip44": 1,
   "slug": "whitebit-network-testnet",
   "testnet": true
 } as const satisfies Chain;

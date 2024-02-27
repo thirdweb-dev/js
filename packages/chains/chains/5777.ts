@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 5777,
   "rpc": [
-    "https://ganache.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://127.0.0.1:7545"
   ],
   "shortName": "ggui",
+  "slip44": 1,
   "slug": "ganache",
   "testnet": true,
   "title": "Ganache GUI Ethereum Testnet"

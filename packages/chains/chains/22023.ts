@@ -42,7 +42,6 @@ export default {
   },
   "networkId": 22023,
   "rpc": [
-    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://taycan-rpc.hupayx.io:8545"
   ],

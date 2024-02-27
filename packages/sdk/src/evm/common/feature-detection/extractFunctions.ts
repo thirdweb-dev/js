@@ -5,8 +5,8 @@ import { fetchPreDeployMetadata } from "./fetchPreDeployMetadata";
 
 /**
  * @internal
- * @param predeployMetadataUri
- * @param storage
+ * @param predeployMetadataUri - The predeploy metadata URI to fetch
+ * @param storage - The storage to use
  */
 export async function extractFunctions(
   predeployMetadataUri: string,

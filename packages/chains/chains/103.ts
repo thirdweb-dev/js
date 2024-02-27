@@ -20,12 +20,11 @@ export default {
   "name": "Worldland Mainnet",
   "nativeCurrency": {
     "name": "Worldland",
-    "symbol": "WL",
+    "symbol": "WLC",
     "decimals": 18
   },
   "networkId": 103,
   "rpc": [
-    "https://worldland.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seoul.worldland.foundation"
   ],

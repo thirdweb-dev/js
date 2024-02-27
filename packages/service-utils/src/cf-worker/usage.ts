@@ -22,6 +22,8 @@ const usageEventSchema = z.object({
     "paymaster",
     "relayer",
     "connectWallet",
+    "checkout",
+    "engine",
   ]),
   action: z.string(),
 
@@ -45,11 +47,24 @@ const usageEventSchema = z.object({
   userOpHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
+  transactionFeeUsd: z.number().optional(),
   transactionHash: z.string().optional(),
   sdkName: z.string().optional(),
   sdkVersion: z.string().optional(),
   sdkPlatform: z.string().optional(),
   productName: z.string().optional(),
+  transactionValue: z.string().optional(),
+  pathname: z.string().optional(),
+  contractAddress: z.string().optional(),
+  errorCode: z.string().optional(),
+  httpStatusCode: z.number().int().nonnegative().optional(),
+  functionName: z.string().optional(),
+  extension: z.string().optional(),
+  retryCount: z.number().int().nonnegative().optional(),
+  policyId: z.string().optional(),
+  msSinceQueue: z.number().nonnegative().optional(),
+  msSinceSend: z.number().nonnegative().optional(),
+  msTotalDuration: z.number().nonnegative().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 

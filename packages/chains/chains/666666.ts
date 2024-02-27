@@ -15,12 +15,11 @@ export default {
   },
   "networkId": 666666,
   "rpc": [
-    "https://vision-vpioneer-test-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://666666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vpioneer.infragrid.v.network/ethereum/compatible"
   ],
   "shortName": "vpioneer",
-  "slip44": 60,
+  "slip44": 1,
   "slug": "vision-vpioneer-test-chain",
   "testnet": true
 } as const satisfies Chain;

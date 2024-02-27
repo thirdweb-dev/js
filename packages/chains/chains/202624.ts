@@ -31,12 +31,12 @@ export default {
   },
   "networkId": 202624,
   "rpc": [
-    "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://202624.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jellie-rpc.twala.io/",
     "wss://jellie-rpc-wss.twala.io/"
   ],
   "shortName": "twl-jellie",
+  "slip44": 1,
   "slug": "jellie",
   "testnet": true,
   "title": "Twala Testnet Jellie"

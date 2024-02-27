@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 365,
   "rpc": [
-    "https://theta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://365.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-testnet.thetatoken.org/rpc"
   ],
   "shortName": "theta-testnet",
+  "slip44": 1,
   "slug": "theta-testnet",
   "testnet": true
 } as const satisfies Chain;

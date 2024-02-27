@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1012,
   "rpc": [
-    "https://newton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1012.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://global.rpc.mainnet.newtonproject.org"
   ],

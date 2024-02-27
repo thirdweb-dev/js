@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 400,
   "rpc": [
-    "https://hyperonchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.hyperonchain.com"
   ],
   "shortName": "hpn",
+  "slip44": 1,
   "slug": "hyperonchain-testnet",
   "testnet": true
 } as const satisfies Chain;

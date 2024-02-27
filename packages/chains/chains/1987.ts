@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1987,
   "rpc": [
-    "https://ethergem.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1987.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.egem.io/custom"
   ],

@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 740,
   "rpc": [
-    "https://canto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://740.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth.plexnode.wtf/"
   ],
   "shortName": "tcanto",
+  "slip44": 1,
   "slug": "canto-testnet",
   "status": "deprecated",
   "testnet": true

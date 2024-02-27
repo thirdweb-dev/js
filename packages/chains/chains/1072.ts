@@ -20,20 +20,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://shimmer.network",
-  "name": "ShimmerEVM Testnet",
+  "name": "ShimmerEVM Testnet Deprecated 1072",
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
     "decimals": 6
   },
   "networkId": 1072,
-  "rpc": [
-    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://1072.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.evm.testnet.shimmer.network"
-  ],
-  "shortName": "shimmerevm-testnet",
-  "slug": "shimmerevm-testnet",
+  "rpc": [],
+  "shortName": "shimmerevm-testnet-deprecated-1072",
+  "slip44": 1,
+  "slug": "shimmerevm-testnet-deprecated-1072",
+  "status": "deprecated",
   "testnet": true,
-  "title": "ShimmerEVM Testnet"
+  "title": "ShimmerEVM Testnet Deprecated 1072"
 } as const satisfies Chain;

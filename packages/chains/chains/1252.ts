@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 1252,
   "rpc": [
-    "https://cic-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1252.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testapi.cicscan.com"
   ],
   "shortName": "CICT",
+  "slip44": 1,
   "slug": "cic-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -6,18 +6,59 @@ import {
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
+import { useSDK } from "./useSDK";
+import {
+  ThirdwebWalletContext,
+  useWalletContext,
+} from "../../core/providers/thirdweb-wallet-provider";
+import { BigNumber } from "ethers";
 
 /**
- * A hook to get the native or (optional) ERC20 token balance of the connected wallet.
+ * Hook for getting a wallet's current balance of native or (optional) ERC20 token balance
  *
- * @param tokenAddress - the address of the token contract, if empty will use the chain's native token
- * @returns the balance of the connected wallet (native or ERC20)
- * @beta
+ * @example
+ *
+ * ### get the balance of the native token
+ *
+ * ```jsx
+ * import { useBalance } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { data, isLoading } = useBalance();
+ * }
+ * ```
+ *
+ * ### get the balance of any other token
+ *
+ * ```jsx
+ * import { useBalance } from "@thirdweb-dev/react";
+ *
+ * function App() {
+ *   const { data, isLoading } = useBalance(tokenAddress);
+ * }
+ * ```
+ *
+ * @param tokenAddress - The address of the token contract, if not provided, it defaults to the native token
+ *
+ * @returns
+ * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.
+ *
+ * @token
  */
-export function useBalance(tokenAddress?: ContractAddress) {
+export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
+  | {
+      symbol: string;
+      value: BigNumber;
+      name: string;
+      decimals: number;
+      displayValue: string;
+    }
+  | undefined,
+  unknown
+> {
   const walletAddress = useAddress();
 
   const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
@@ -41,6 +82,47 @@ export function useBalance(tokenAddress?: ContractAddress) {
 }
 
 /**
+ * This hook is similar to the `useBalance` hook, but it for fetching the native token balance of any given wallet address.
+ *
+ * This hook only fetches the native token balance of the given wallet address. If you want to get the ERC20 balance from a given wallet, use `useTokenBalance`
+ *
+ * @example
+ * ```ts
+ * const { data, isLoading } = useBalanceForAddress(walletAddress)
+ * ```
+ *
+ * @param walletAddress - The address of the wallet that you want to get the native balance
+ *
+ * @returns
+ * The hook's `data` property contains the native token's balance in the `value` property as a `BigNumber` object.
+ *
+ * @token
+ */
+export function useBalanceForAddress(walletAddress: string): UseQueryResult<
+  {
+    symbol: string;
+    value: BigNumber;
+    name: string;
+    decimals: number;
+    displayValue: string;
+  },
+  unknown
+> {
+  invariant(walletAddress, "wallet address is not provided");
+  const { activeChain } = useWalletContext();
+  const chainId = activeChain.chainId;
+  const sdk = useSDK();
+  const cacheKey = useMemo(() => {
+    return cacheKeys.wallet.balance(chainId, walletAddress);
+  }, [chainId, walletAddress]);
+
+  return useQuery(cacheKey, async () => {
+    invariant(sdk, "SDK is not initialized");
+    return await sdk.getBalance(walletAddress);
+  });
+}
+
+/**
  * @internal
  */
 export function useConnectedWallet() {
@@ -53,34 +135,33 @@ export function useConnectedWallet() {
 }
 
 /**
- * Hook for accessing the address of the connected wallet
+ * Get the address of the connected wallet.
  *
- * ```javascript
- * import { useAddress } from "@thirdweb-dev/react"
- * ```
- *
+ * Returns `undefined` if no wallet is connected.
  *
  * @example
- * To get the address of the connected wallet, you can use the hook as follows:
- *
- * ```javascript
+ * ```tsx
  * import { useAddress } from "@thirdweb-dev/react"
  *
- * const App = () => {
+ * function Example() {
  *   const address = useAddress()
  *
  *   return <div>{address}</div>
  * }
  * ```
  *
- * The `address` variable will hold the address of the connected wallet if a user has connected using one of the supported wallet connection hooks.
- *
- * @see {@link https://portal.thirdweb.com/react/react.useaddress?utm_source=sdk | Documentation}
- *
- * @public
+ * @walletConnection
  */
 export function useAddress(): string | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
+  const walletCtx = useContext(ThirdwebWalletContext);
+
+  // if ThirdwebWalletContext is present, use the address from there because address from ThirdwebConnectedWalletContext also uses that address but it lags behind
+  // walletCtx is undefined if only ThirdwebSDKProvider is used
+  if (walletCtx) {
+    return walletCtx.address;
+  }
+
   invariant(
     context,
     "useAddress() hook must be used within a <ThirdwebProvider/>",
@@ -96,7 +177,6 @@ export function useAddress(): string | undefined {
  * ```
  *
  * @example
- * You can get the chain ID of the connected wallet by using the hook as follows:
  * ```javascript
  * import { useChainId } from "@thirdweb-dev/react"
  *
@@ -106,38 +186,70 @@ export function useAddress(): string | undefined {
  *   return <div>{chainId}</div>
  * }
  * ```
- * @see {@link https://portal.thirdweb.com/react/react.usechainid?utm_source=sdk | Documentation}
- * @public
+ *
+ * @returns
+ * A `number` representing the current chain id, or `undefined` if the user is not connected to a wallet.
+ *
+ * For Example, if the user is connected to the Ethereum Mainnet, the return value will be `1`.
+ *
+ * @networkConnection
  */
 export function useChainId(): number | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
+  const walletCtx = useContext(ThirdwebWalletContext);
+
+  // if ThirdwebWalletContext is present, use the chainId from there because chainId from ThirdwebConnectedWalletContext also uses that chainId but it lags behind
+  // walletCtx is undefined if only ThirdwebSDKProvider is used
+  if (walletCtx) {
+    return walletCtx.chainId;
+  }
+
   invariant(
     context,
-    "useChainId() hook must be used within a <ThirdwebProvider/>",
+    "useChainId() hook must be used within a <ThirdwebProvider/> or <ThirdwebSDKProvider/> component",
   );
   return context.chainId;
 }
 
 /**
- * Hook for accessing the active Chain the current wallet is connected to
+ * Hook for getting the `Chain` object of the network that the user is connected - but only if
+ * it's a supported network (added in the `ThirdwebProvider`'s `supportedChains` or one of default chains
  *
- * ```javascript
- * import { useChain } from "@thirdweb-dev/react-core"
+ * Returns `undefined` if the network is not supported or the user is not connected to a wallet. You can use the `useConnectionStatus` hook to check if the user is connected to a wallet or not to differentiate between the two cases.
+ *
+ * If you only want to get the chain id of the network the user is connected to regardless of whether it's supported or not, use `useChainId` instead.
+ *
+ * ```jsx
+ * import { useChain } from "@thirdweb-dev/react";
+ *
+ * const chain = useChain();
  * ```
  *
  * @example
- * You can get the chain of the connected wallet by using the hook as follows:
- * ```javascript
- * import { useChain } from "@thirdweb-dev/react-core"
  *
- * const App = () => {
- *   const chain = useChain()
+ * ```jsx
+ * import { useChain, useConnectionStatus } from "@thirdweb-dev/react";
  *
- *   return <div>{chain.chainId}</div>
+ * function App() {
+ *   const chain = useChain();
+ *   const status = useConnectionStatus();
+ *
+ *   if (status === "unknown") return <div> Loading... </div>;
+ *   if (status === "disconnected") return <div> disconnected </div>;
+ *   if (status === "connecting") return <div> connecting... </div>;
+ *
+ *   if (chain) {
+ *     return <p> Connected to {chain.name} </p>;
+ *   }
+ *
+ *   return <p> Connected to an unsupported network </p>;
  * }
  * ```
- * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
- * @public
+ *
+ * @returns
+ * An object of type `Chain` from [`@thirdweb-dev/chains`](https://www.npmjs.com/package/\@thirdweb-dev/chains) package containing various information about the network, or `undefined` if the network is not supported or user is not connected to a wallet.
+ *
+ * @networkConnection
  */
 export function useChain(): Chain | undefined {
   const chainId = useChainId();
@@ -158,6 +270,7 @@ export function useChain(): Chain | undefined {
 }
 
 /**
+ * @internal
  * @deprecated
  *
  * This hook is renamed to `useChain`

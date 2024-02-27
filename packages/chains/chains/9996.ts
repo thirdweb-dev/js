@@ -25,10 +25,11 @@ export default {
   },
   "networkId": 9996,
   "rpc": [
-    "https://mind-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9996.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-msc.mindchain.info/",
     "https://seednode.mindchain.info",
+    "https://archive.mindchain.info/",
+    "wss://archive.mindchain.info/ws",
     "wss://seednode.mindchain.info/ws"
   ],
   "shortName": "MIND",

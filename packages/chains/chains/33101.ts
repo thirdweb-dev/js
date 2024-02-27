@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 33101,
   "rpc": [
-    "https://zilliqa-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://33101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-api.zilliqa.com"
   ],
   "shortName": "zil-testnet",
+  "slip44": 1,
   "slug": "zilliqa-evm-testnet",
   "testnet": true
 } as const satisfies Chain;

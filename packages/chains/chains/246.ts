@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 246,
   "rpc": [
-    "https://energy-web-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://246.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.energyweb.org",
     "wss://rpc.energyweb.org/ws"

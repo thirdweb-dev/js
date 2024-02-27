@@ -15,12 +15,12 @@ export default {
   },
   "networkId": 942,
   "rpc": [
-    "https://pulsechain-testnet-v3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://942.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v3.testnet.pulsechain.com/",
     "wss://rpc.v3.testnet.pulsechain.com/"
   ],
   "shortName": "t3pls",
+  "slip44": 1,
   "slug": "pulsechain-testnet-v3",
   "status": "deprecated",
   "testnet": true

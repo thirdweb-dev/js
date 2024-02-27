@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 17171,
   "rpc": [
-    "https://g8chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17171.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.oneg8.network"
   ],

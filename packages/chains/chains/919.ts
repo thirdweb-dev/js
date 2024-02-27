@@ -36,11 +36,11 @@ export default {
     ]
   },
   "rpc": [
-    "https://mode-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://919.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.mode.network"
   ],
   "shortName": "modesep",
+  "slip44": 1,
   "slug": "mode-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 9339,
   "rpc": [
-    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.dogcoin.me"
   ],
   "shortName": "DOGSt",
+  "slip44": 1,
   "slug": "dogcoin-testnet",
   "testnet": true
 } as const satisfies Chain;

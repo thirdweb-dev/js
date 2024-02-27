@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2223,
   "rpc": [
-    "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bc.vcex.xyz"
   ],

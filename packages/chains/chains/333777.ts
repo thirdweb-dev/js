@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 333777,
   "rpc": [
-    "https://oone-chain-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.oonechain.com"
   ],

@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 1881,
   "rpc": [
-    "https://gitshock-cartenz-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.cartenz.works"
   ],
   "shortName": "gitshockchain",
+  "slip44": 1,
   "slug": "gitshock-cartenz-testnet",
   "testnet": true
 } as const satisfies Chain;

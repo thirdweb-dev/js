@@ -15,11 +15,11 @@ export default {
   },
   "networkId": 72,
   "rpc": [
-    "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://72.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-http.dxchain.com"
   ],
   "shortName": "dxc",
+  "slip44": 1,
   "slug": "dxchain-testnet",
   "testnet": true
 } as const satisfies Chain;

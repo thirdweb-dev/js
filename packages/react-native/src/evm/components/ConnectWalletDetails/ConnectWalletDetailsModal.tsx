@@ -30,6 +30,8 @@ import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
 import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 import { useLocale } from "../../providers/ui-context-provider";
+import { isWalletConnectReceiverEnabled } from "../../wallets/utils";
+import ConnectAppField from "./ConnectAppField";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -41,7 +43,11 @@ export const ConnectWalletDetailsModal = ({
   address,
   hideTestnetFaucet,
   supportedTokens,
-  displayBalanceToken,
+  tokenAddress,
+  hideSwitchToPersonalWallet,
+  hideReceiveButton,
+  hideSendButton,
+  hideDisconnect,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
@@ -49,7 +55,11 @@ export const ConnectWalletDetailsModal = ({
   address?: string;
   hideTestnetFaucet?: boolean;
   supportedTokens: SupportedTokens;
-  displayBalanceToken?: Record<number, string>;
+  tokenAddress?: string;
+  hideSwitchToPersonalWallet?: boolean;
+  hideReceiveButton?: boolean;
+  hideSendButton?: boolean;
+  hideDisconnect?: boolean;
 }) => {
   const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -60,11 +70,6 @@ export const ConnectWalletDetailsModal = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const setConnectedWallet = useSetConnectedWallet();
-
-  const tokenAddress =
-    chain?.chainId && displayBalanceToken
-      ? displayBalanceToken[chain?.chainId]
-      : undefined;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -131,6 +136,7 @@ export const ConnectWalletDetailsModal = ({
       return (
         <SmartWalletAdditionalActions
           onExportPress={onExportLocalWalletPress}
+          hideSwitchToPersonalWallet={hideSwitchToPersonalWallet}
         />
       );
     }
@@ -138,7 +144,7 @@ export const ConnectWalletDetailsModal = ({
     if (activeWallet?.walletId === walletIds.localWallet) {
       return (
         <>
-          <View style={styles.currentNetwork}>
+          <View style={styles.additionalActions}>
             <Text variant="bodySmallSecondary">
               {l.connect_wallet_details.additional_actions}
             </Text>
@@ -203,12 +209,20 @@ export const ConnectWalletDetailsModal = ({
     return null;
   }, [
     activeWallet?.walletId,
-    isImportModalVisible,
-    onExportLocalWalletPress,
-    onWalletImported,
     smartWallet,
-    l,
+    onExportLocalWalletPress,
+    l.connect_wallet_details.additional_actions,
+    l.connect_wallet_details.backup_wallet,
+    l.connect_wallet_details.import_wallet,
+    l.local_wallet.this_is_a_temporary_wallet,
+    isImportModalVisible,
+    onWalletImported,
+    hideSwitchToPersonalWallet,
   ]);
+
+  // by default we hide faucet link
+  const showFaucet =
+    hideTestnetFaucet === undefined ? false : !hideTestnetFaucet;
 
   return (
     <ThemeProvider>
@@ -222,6 +236,7 @@ export const ConnectWalletDetailsModal = ({
             <WalletDetailsModalHeader
               tokenAddress={tokenAddress}
               address={address}
+              hideDisconnect={hideDisconnect}
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
@@ -258,21 +273,26 @@ export const ConnectWalletDetailsModal = ({
                 </Text>
               </Box>
             ) : null}
-            <Box
-              flexDirection="row"
-              justifyContent="space-evenly"
-              marginVertical="md"
-            >
-              <SendButton supportedTokens={supportedTokens} />
-              <ReceiveButton />
-            </Box>
+            {hideReceiveButton && hideSendButton ? null : (
+              <Box
+                flexDirection="row"
+                justifyContent="space-evenly"
+                gap="xs"
+                marginTop="md"
+              >
+                {hideSendButton ? null : (
+                  <SendButton supportedTokens={supportedTokens} />
+                )}
+                {hideReceiveButton ? null : <ReceiveButton />}
+              </Box>
+            )}
             <View style={styles.currentNetwork}>
               <Text variant="bodySmallSecondary">
                 {l.connect_wallet_details.current_network}
               </Text>
             </View>
             <NetworkButton chain={chain} enableSwitchModal={true} />
-            {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
+            {showFaucet && chain?.testnet && chain?.faucets?.length ? (
               <IconTextButton
                 mt="xs"
                 text={l.connect_wallet_details.request_testnet_funds}
@@ -296,6 +316,9 @@ export const ConnectWalletDetailsModal = ({
                 }}
               />
             )}
+            {isWalletConnectReceiverEnabled(activeWallet) ? (
+              <ConnectAppField onConnectAppTriggered={onClosePress} />
+            ) : null}
             {getAdditionalActions()}
             {extraRows ? extraRows({}) : null}
             {addressCopied === true ? (
@@ -341,6 +364,15 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   currentNetwork: {
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    marginBottom: 8,
+    marginTop: 28,
+  },
+  additionalActions: {
     display: "flex",
     flexDirection: "column",
     alignContent: "flex-start",

@@ -33,13 +33,13 @@ export default {
   },
   "networkId": 8131,
   "rpc": [
-    "https://qitmeer-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8131.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-qng.rpc.qitmeer.io",
     "https://testnet.meerlabs.com",
     "https://meer.testnet.meerfans.club"
   ],
   "shortName": "meertest",
+  "slip44": 1,
   "slug": "qitmeer-network-testnet",
   "testnet": true
 } as const satisfies Chain;

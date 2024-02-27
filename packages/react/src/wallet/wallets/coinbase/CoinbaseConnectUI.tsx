@@ -1,4 +1,4 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import type { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -6,18 +6,22 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { CoinbaseScan } from "./CoinbaseScan";
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CoinbaseConnectUI = ({
   walletConfig,
   connected,
   goBack,
   supportedWallets,
+  setConnectedWallet,
+  setConnectionStatus,
+  connect,
 }: ConnectUIProps<CoinbaseWallet>) => {
-  const connect = useConnect();
   const { meta } = walletConfig;
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
+  const locale = useTWLocale().wallets.coinbaseWallet;
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const hideBackButton = supportedWallets.length === 1;
@@ -28,13 +32,13 @@ export const CoinbaseConnectUI = ({
       connectPrompted.current = true;
       await wait(1000);
       setScreen("connecting");
-      await connect(walletConfig);
+      await connect();
       connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [connected, connect, walletConfig]);
+  }, [connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -60,7 +64,7 @@ export const CoinbaseConnectUI = ({
       else {
         if (isMobile()) {
           // coinbase will redirect to download page for coinbase wallet apps
-          connect(walletConfig);
+          connect();
         } else {
           setScreen("scanning");
         }
@@ -71,6 +75,13 @@ export const CoinbaseConnectUI = ({
   if (screen === "connecting" || screen === "loading") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
+        }}
         errorConnecting={errorConnecting}
         onGetStarted={() => setScreen("get-started")}
         onRetry={connectToExtension}
@@ -85,6 +96,9 @@ export const CoinbaseConnectUI = ({
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          scanToDownload: locale.getStartedScreen.instruction,
+        }}
         walletIconURL={meta.iconURL}
         walletName={meta.name}
         chromeExtensionLink={meta.urls?.chrome}
@@ -105,6 +119,8 @@ export const CoinbaseConnectUI = ({
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
         hideBackButton={hideBackButton}
+        setConnectedWallet={setConnectedWallet}
+        setConnectionStatus={setConnectionStatus}
       />
     );
   }

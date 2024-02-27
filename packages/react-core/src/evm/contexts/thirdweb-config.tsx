@@ -11,6 +11,9 @@ export const ThirdwebConfigContext = /* @__PURE__ */ createContext<
   ThirdwebConfigContext | undefined
 >(undefined);
 
+/**
+ * @internal
+ */
 export const ThirdwebConfigProvider: React.FC<
   PropsWithChildren<{
     value: ThirdwebConfigContext;
@@ -21,6 +24,9 @@ export const ThirdwebConfigProvider: React.FC<
   </ThirdwebConfigContext.Provider>
 );
 
+/**
+ * @internal
+ */
 export function useThirdwebConfigContext() {
   const context = useContext(ThirdwebConfigContext);
   invariant(

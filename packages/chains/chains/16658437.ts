@@ -19,11 +19,11 @@ export default {
   },
   "networkId": 16658437,
   "rpc": [
-    "https://plian-testnet-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16658437.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/testnet"
   ],
   "shortName": "plian-testnet",
+  "slip44": 1,
   "slug": "plian-testnet-main",
   "testnet": true
 } as const satisfies Chain;

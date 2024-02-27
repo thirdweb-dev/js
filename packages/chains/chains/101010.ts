@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 101010,
   "rpc": [
-    "https://soverun-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://101010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.soverun.com"
   ],
   "shortName": "SVRNt",
+  "slip44": 1,
   "slug": "soverun-testnet",
   "testnet": true
 } as const satisfies Chain;

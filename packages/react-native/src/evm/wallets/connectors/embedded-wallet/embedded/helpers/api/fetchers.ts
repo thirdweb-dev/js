@@ -1,15 +1,16 @@
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
-  ROUTE_GET_EMBEDDED_WALLET_DETAILS,
+  ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
   ROUTE_USER_MANAGED_OTP,
   ROUTE_VALIDATE_USER_MANAGED_OTP,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
+  EWS_VERSION_HEADER,
+  THIRDWEB_SESSION_NONCE_HEADER,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
-import * as Application from "expo-application";
 import {
   RecoveryShareManagement,
   UserWalletStatus,
@@ -18,18 +19,25 @@ import {
   IsValidUserManagedEmailOTPResponse,
   VerifiedTokenResponse,
 } from "../../../types";
+import { createErrorMessage } from "../errors";
+import { ANALYTICS } from "../analytics";
+import { getAnalyticsHeaders } from "../../../../../../../core/storage/utils";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
-const BUNDLE_ID_HEADER = "x-bundle-id";
-const APP_BUNDLE_ID = Application.applicationId || "";
+
+const HEADERS = {
+  "Content-Type": "application/json",
+  [EWS_VERSION_HEADER]: (globalThis as any).X_SDK_VERSION,
+  [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
+  ...getAnalyticsHeaders(),
+};
 
 export const verifyClientId = async (clientId: string) => {
   const resp = await fetch(ROUTE_VERIFY_THIRDWEB_CLIENT_ID, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({ clientId, parentDomain: "" }),
   });
@@ -57,15 +65,15 @@ export const authFetchEmbeddedWalletUser = async (
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
         [PAPER_CLIENT_ID_HEADER]: clientId,
+        ...HEADERS,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
-        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
         [PAPER_CLIENT_ID_HEADER]: clientId,
+        ...HEADERS,
       };
   return fetch(url, params);
 };
@@ -74,7 +82,7 @@ export async function getEmbeddedWalletUserDetail(args: {
   email?: string;
   clientId: string;
 }) {
-  const url = new URL(ROUTE_GET_EMBEDDED_WALLET_DETAILS);
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
       url.searchParams.append("email", args.email);
@@ -117,8 +125,7 @@ export async function generateAuthTokenFromCognitoEmailOtp(
   const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       access_token: session.getAccessToken().getJwtToken(),
@@ -142,8 +149,7 @@ export async function sendUserManagedEmailOtp(email: string, clientId: string) {
   const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email,
@@ -168,8 +174,7 @@ export async function validateUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email: options.email,
@@ -194,8 +199,7 @@ export async function isValidUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_IS_VALID_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+      ...HEADERS,
     },
     body: JSON.stringify({
       email: options.email,
@@ -281,7 +285,26 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
     };
   } catch (e) {
     throw new Error(
-      `Malformed response from the ews user wallet API: ${JSON.stringify(e)}`,
+      createErrorMessage("Malformed response from the ews user wallet API", e),
     );
   }
+}
+
+export async function deleteAccount(args: { clientId: string }) {
+  const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
+  const resp = await authFetchEmbeddedWalletUser(
+    { clientId: args.clientId },
+    url.href,
+    {
+      method: "DELETE",
+    },
+  );
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong deleting the active account: ${error.message}`,
+    );
+  }
+
+  return await resp.json();
 }

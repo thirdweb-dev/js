@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 168,
   "rpc": [
-    "https://aioz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://168.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-dataseed.aioz.network"
   ],

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 9528,
   "rpc": [
-    "https://qeasyweb3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9528.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://qeasyweb3.com"
   ],
   "shortName": "QETTest",
+  "slip44": 1,
   "slug": "qeasyweb3-testnet",
   "testnet": true
 } as const satisfies Chain;

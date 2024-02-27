@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 86,
   "rpc": [
-    "https://gatechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://86.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.gatenode.cc"
   ],

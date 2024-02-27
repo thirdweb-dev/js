@@ -4,7 +4,7 @@ export default {
   "chainId": 499,
   "explorers": [],
   "faucets": [],
-  "infoURL": "https://www.rupx.io",
+  "infoURL": "https://www.rupaya.io",
   "name": "Rupaya",
   "nativeCurrency": {
     "name": "Rupaya",

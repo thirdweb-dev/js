@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 144,
   "rpc": [
-    "https://phi-network-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://144.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.phi.network"
   ],

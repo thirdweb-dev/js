@@ -29,7 +29,6 @@ export default {
   "networkId": 1582,
   "redFlags": [],
   "rpc": [
-    "https://bubs-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1582.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bubs.calderachain.xyz/http"
   ],

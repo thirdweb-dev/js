@@ -13,11 +13,11 @@ export default {
   },
   "networkId": 110,
   "rpc": [
-    "https://proton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://protontestnet.greymass.com/"
   ],
   "shortName": "xpr",
+  "slip44": 1,
   "slug": "proton-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -21,11 +21,11 @@ export default {
   },
   "networkId": 65,
   "rpc": [
-    "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://65.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchaintestrpc.okex.org"
   ],
   "shortName": "tokt",
+  "slip44": 1,
   "slug": "okexchain-testnet",
   "testnet": true
 } as const satisfies Chain;

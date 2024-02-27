@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 6552,
   "rpc": [
-    "https://scolcoin-weichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6552.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.scolcoin.com"
   ],
   "shortName": "SRC-test",
+  "slip44": 1,
   "slug": "scolcoin-weichain-testnet",
   "testnet": true
 } as const satisfies Chain;

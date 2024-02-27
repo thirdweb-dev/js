@@ -27,11 +27,11 @@ export default {
   },
   "networkId": 1244,
   "rpc": [
-    "https://arc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1244.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test-1.archiechain.io"
   ],
   "shortName": "TARC",
+  "slip44": 1,
   "slug": "arc-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 28528,
   "rpc": [
-    "https://optimism-bedrock-goerli-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://28528.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-1-replica-0.bedrock-goerli.optimism.io",
     "https://alpha-1-replica-1.bedrock-goerli.optimism.io",
@@ -27,6 +26,7 @@ export default {
     "https://alpha-1-replica-2.bedrock-goerli.optimism.io"
   ],
   "shortName": "obgor",
+  "slip44": 1,
   "slug": "optimism-bedrock-goerli-alpha-testnet",
   "testnet": true
 } as const satisfies Chain;

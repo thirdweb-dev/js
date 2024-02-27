@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 113,
   "rpc": [
-    "https://dehvo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.dehvo.com",
     "https://rpc.dehvo.com",

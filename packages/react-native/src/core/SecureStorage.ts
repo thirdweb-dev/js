@@ -29,9 +29,10 @@ export class SecureStorage implements ISecureStorage {
 }
 
 /**
+ * @internal
  * Returns a new instance of SecureStorage implemented by Expo SecureStore
  *
- * @param name Name to namespace the storage with
+ * @param name - Name to namespace the storage with
  * @returns A new instance of SecureStorage
  */
 export function createSecureStorage(name: string) {

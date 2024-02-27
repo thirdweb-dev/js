@@ -44,7 +44,6 @@ export default {
   },
   "networkId": 6102,
   "rpc": [
-    "https://cascadia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.cascadia.foundation"
   ],

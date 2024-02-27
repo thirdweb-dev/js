@@ -25,11 +25,11 @@ export default {
   },
   "networkId": 12890,
   "rpc": [
-    "https://quantum-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.quantumscan.org"
   ],
   "shortName": "tqnet",
+  "slip44": 1,
   "slug": "quantum-chain-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -48,7 +48,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://pgn-public-goods-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://424.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.publicgoods.network"
   ],

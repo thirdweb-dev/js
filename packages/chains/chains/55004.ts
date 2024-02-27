@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 55004,
   "rpc": [
-    "https://titan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://55004.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.titan.tokamak.network",
     "wss://rpc.titan.tokamak.network"

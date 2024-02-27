@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3001,
   "rpc": [
-    "https://cennznet-nikau.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nikau.centrality.me/public"
   ],

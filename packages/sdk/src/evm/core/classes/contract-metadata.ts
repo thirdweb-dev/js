@@ -13,7 +13,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
+import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 
 /**
@@ -37,6 +37,7 @@ export interface IGenericSchemaType {
  *   description: "My contract description"
  * })
  * ```
+ * @contract
  * @public
  */
 export class ContractMetadata<
@@ -82,7 +83,7 @@ export class ContractMetadata<
    * console.log(metadata);
    * ```
    * @public
-   * @returns the metadata of the given contract
+   * @returns The metadata of the given contract
    * @twfeature ContractMetadata
    */
   public async get() {

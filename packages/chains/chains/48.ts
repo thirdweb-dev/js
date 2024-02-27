@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 48,
   "rpc": [
-    "https://ennothem-proterozoic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://48.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etm.network"
   ],

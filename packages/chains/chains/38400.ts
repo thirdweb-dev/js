@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 38400,
   "rpc": [
-    "https://connectormanager.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://38400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cm.rangersprotocol.com/api/jsonrpc"
   ],

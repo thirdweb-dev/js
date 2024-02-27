@@ -21,14 +21,14 @@ export default {
   },
   "networkId": 5700,
   "rpc": [
-    "https://syscoin-tanenbaum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tanenbaum.io",
     "wss://rpc.tanenbaum.io/wss",
-    "https://syscoin-tanenbaum-evm.publicnode.com",
-    "wss://syscoin-tanenbaum-evm.publicnode.com"
+    "https://syscoin-tanenbaum-evm-rpc.publicnode.com",
+    "wss://syscoin-tanenbaum-evm-rpc.publicnode.com"
   ],
   "shortName": "tsys",
+  "slip44": 1,
   "slug": "syscoin-tanenbaum-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -17,9 +17,9 @@ export default {
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://bafkreidtie4srt52ry67wd3dpxhklmug2ozrawvf3jdlljveinp3frutra",
-    "width": 2000,
-    "height": 392,
+    "url": "ipfs://bafybeiderli6uaaxk7eboyf7g4abnybgrkbglmqbkmf25z57ode7zdzmvy",
+    "width": 613,
+    "height": 613,
     "format": "png"
   },
   "infoURL": "https://vitainu.org",
@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 207,
   "rpc": [
-    "https://vinuchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://207.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vinuchain-rpc.com"
   ],

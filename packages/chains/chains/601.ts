@@ -1,43 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "PEER",
+  "chain": "VINE",
   "chainId": 601,
   "explorers": [
     {
-      "name": "PEER Explorer",
-      "url": "https://testnet.peer.inc",
+      "name": "Vine Explorer",
+      "url": "https://vne.network/rose",
       "standard": "none",
       "icon": {
-        "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-        "width": 1363,
-        "height": 760,
+        "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
+        "width": 512,
+        "height": 512,
         "format": "png"
       }
     }
   ],
   "faucets": [
-    "https://testnet.peer.inc"
+    "https://vne.network/rose"
   ],
   "icon": {
-    "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-    "width": 1363,
-    "height": 760,
+    "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
-  "infoURL": "https://peer.inc",
-  "name": "PEER Testnet",
+  "infoURL": "https://www.peer.inc",
+  "name": "Vine Testnet",
   "nativeCurrency": {
-    "name": "PEER Token",
-    "symbol": "PEER",
+    "name": "VINE",
+    "symbol": "VNE",
     "decimals": 18
   },
   "networkId": 601,
   "rpc": [
-    "https://peer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://601.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://testnet-polka-host-232813573.us-west-1.elb.amazonaws.com"
+    "https://rpc-testnet.vne.network"
   ],
-  "shortName": "PEER",
-  "slug": "peer-testnet",
+  "shortName": "VINE",
+  "slug": "vine-testnet",
   "testnet": true
 } as const satisfies Chain;

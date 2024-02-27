@@ -33,11 +33,11 @@ export default {
   },
   "networkId": 3441005,
   "rpc": [
-    "https://manta-pacific-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3441005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://manta-testnet.calderachain.xyz/http"
   ],
   "shortName": "mantaTestnet",
+  "slip44": 1,
   "slug": "manta-pacific-testnet",
   "testnet": true
 } as const satisfies Chain;

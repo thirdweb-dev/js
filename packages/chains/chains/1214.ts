@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1214,
   "rpc": [
-    "https://enterchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1214.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.entercoin.net/"
   ],

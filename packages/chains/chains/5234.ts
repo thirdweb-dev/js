@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafybeihuskzfwqogwvutaxil6sztmvpiavzbrzwjwpn6w2i4j3jysbybra",
+    "width": 1043,
+    "height": 1043,
+    "format": "png"
+  },
   "infoURL": "https://humanode.io",
   "name": "Humanode Mainnet",
   "nativeCurrency": {
@@ -25,7 +31,6 @@ export default {
   },
   "networkId": 5234,
   "rpc": [
-    "https://humanode.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5234.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://explorer-rpc-http.mainnet.stages.humanode.io"
   ],

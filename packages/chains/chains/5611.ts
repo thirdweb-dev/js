@@ -32,15 +32,17 @@ export default {
   },
   "networkId": 5611,
   "rpc": [
-    "https://opbnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-testnet-rpc.bnbchain.org",
     "https://opbnb-testnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
     "wss://opbnb-testnet.nodereal.io/ws/v1/64a9df0874fb4a93b9d0a3849de012d3",
     "https://opbnb-testnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
-    "wss://opbnb-testnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5"
+    "wss://opbnb-testnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
+    "https://opbnb-testnet-rpc.publicnode.com",
+    "wss://opbnb-testnet-rpc.publicnode.com"
   ],
   "shortName": "obnbt",
+  "slip44": 1,
   "slug": "opbnb-testnet",
   "testnet": true
 } as const satisfies Chain;
