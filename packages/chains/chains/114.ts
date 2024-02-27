@@ -7,18 +7,31 @@ export default {
       "name": "blockscout",
       "url": "https://coston2-explorer.flare.network",
       "standard": "EIP3091"
+    },
+    {
+      "name": "flarescan",
+      "url": "https://coston2.testnet.flarescan.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://coston2-faucet.towolabs.com"
+    "https://faucet.flare.network"
+  ],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
   ],
   "icon": {
-    "url": "ipfs://QmZhAYyazEBZSHWNQb9uCkNPq2MNTLoW3mjwiD3955hUjw",
-    "width": 382,
-    "height": 382,
+    "url": "ipfs://QmSmXY36oXCLmTp1u3Z2MSrBstBFVFyQv3aGKLKf1hxB6u",
+    "width": 500,
+    "height": 500,
     "format": "png"
   },
-  "infoURL": "https://flare.xyz",
+  "infoURL": "https://flare.network",
   "name": "Flare Testnet Coston2",
   "nativeCurrency": {
     "name": "Coston2 Flare",
@@ -28,7 +41,9 @@ export default {
   "networkId": 114,
   "rpc": [
     "https://114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://coston2-api.flare.network/ext/bc/C/rpc"
+    "https://coston2-api.flare.network/ext/C/rpc",
+    "https://flaretestnet-bundler.etherspot.io",
+    "https://coston2.enosys.global/ext/C/rpc"
   ],
   "shortName": "c2flr",
   "slip44": 1,

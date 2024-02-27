@@ -19,8 +19,8 @@ export default {
   "infoURL": "https://karak.network",
   "name": "Karak Mainnet",
   "nativeCurrency": {
-    "name": "Karak",
-    "symbol": "KRK",
+    "name": "Ether",
+    "symbol": "ETH",
     "decimals": 18
   },
   "networkId": 2410,

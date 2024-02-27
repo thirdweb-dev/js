@@ -7,16 +7,29 @@ export default {
       "name": "blockscout",
       "url": "https://songbird-explorer.flare.network",
       "standard": "EIP3091"
+    },
+    {
+      "name": "flarescan",
+      "url": "https://songbird.flarescan.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
   "icon": {
-    "url": "ipfs://QmXyvnrZY8FUxSULfnKKA99sAEkjAHtvhRx5WeHixgaEdu",
-    "width": 382,
-    "height": 382,
+    "url": "ipfs://QmdpaH9pEFDXB4tUPxcqAHfB3Sfx3BQufz6EAzBWhHH6Ka",
+    "width": 500,
+    "height": 500,
     "format": "png"
   },
-  "infoURL": "https://flare.xyz",
+  "infoURL": "https://flare.network",
   "name": "Songbird Canary-Network",
   "nativeCurrency": {
     "name": "Songbird",
@@ -27,10 +40,9 @@ export default {
   "rpc": [
     "https://19.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://songbird-api.flare.network/ext/C/rpc",
-    "https://sgb.ftso.com.au/ext/bc/C/rpc",
-    "https://sgb.lightft.so/rpc",
-    "https://sgb-rpc.ftso.eu",
-    "https://rpc.ftso.au/songbird"
+    "https://rpc.ftso.au/songbird",
+    "https://songbird.enosys.global/ext/C/rpc",
+    "https://songbird.solidifi.app/ext/C/rpc"
   ],
   "shortName": "sgb",
   "slug": "songbird-canary-network",
