@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 
-import { USDC_CONTRACT } from "../../test/src/test-contracts.js";
+import {
+  DOODLES_CONTRACT,
+  USDC_CONTRACT,
+} from "../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
 
@@ -37,5 +40,19 @@ describe("transaction: read", () => {
         ]),
       }),
     );
+  });
+
+  it("should parse errors correctly", async () => {
+    try {
+      await readContract({
+        contract: DOODLES_CONTRACT,
+        method: "function tokenURI(uint256) returns (string)",
+        params: [99999990n],
+      });
+    } catch (e: any) {
+      expect(e.message).eq(
+        "execution reverted: revert: ERC721Metadata: URI query for nonexistent token",
+      );
+    }
   });
 });
