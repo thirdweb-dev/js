@@ -4,20 +4,20 @@ export default {
   "chainId": 1875,
   "explorers": [
     {
-      "name": "wb-explorer",
-      "url": "https://explorer.whitebit.network",
+      "name": "whitechain-explorer",
+      "url": "https://explorer.whitechain.io",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://Qmbi6cqsQyDjkQSoxbNTTUy8WGyVEFqCtATX2aF4KLmCcZ",
+    "url": "ipfs://QmNeELax6vjkR9WZVmtggk8cam9xHVABZ4WvQyqkGCJ5qf",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://whitebit.network",
-  "name": "WhiteBIT Network",
+  "infoURL": "https://whitechain.io",
+  "name": "Whitechain",
   "nativeCurrency": {
     "name": "WhiteBIT Coin",
     "symbol": "WBT",
@@ -26,9 +26,9 @@ export default {
   "networkId": 1875,
   "rpc": [
     "https://1875.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.whitebit.network"
+    "https://rpc.whitechain.io"
   ],
   "shortName": "wbt",
-  "slug": "whitebit-network",
+  "slug": "whitechain",
   "testnet": false
 } as const satisfies Chain;

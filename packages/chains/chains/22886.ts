@@ -25,6 +25,6 @@ export default {
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
   "shortName": "Will's Testnet",
-  "slug": "will-s-testnet",
+  "slug": "will-s-testnet-will's testnet",
   "testnet": true
 } as const satisfies Chain;
