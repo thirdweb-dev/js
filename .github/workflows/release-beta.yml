@@ -6,7 +6,7 @@ on:
       - ".changeset/**"
       - "packages/**"
     branches:
-      - alpha
+      - beta
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
