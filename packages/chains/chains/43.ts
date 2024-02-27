@@ -6,7 +6,7 @@ export default {
     {
       "name": "subscan",
       "url": "https://pangolin.subscan.io",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
