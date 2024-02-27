@@ -411,10 +411,12 @@ export async function processProject(
         return {
           ...c,
           compilers: {
-            zksolc: {
-              metadataUri: zkMetadataURIs[i],
-              bytecodeUri: zkBytecodeURIs[i],
-            },
+            zksolc: [
+              {
+                metadataUri: zkMetadataURIs[i],
+                bytecodeUri: zkBytecodeURIs[i],
+              },
+            ],
           },
         };
       });
