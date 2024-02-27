@@ -62,7 +62,7 @@ export class MagicEdenWallet extends AbstractClientWallet {
    * Must be an object containing `name`, `url`, and optionally `description` and `logoUrl` properties.
    *
    * ```javascript
-   * import { PhantomWallet } from "@thirdweb-dev/wallets";
+   * import { MagicEdenWallet } from "@thirdweb-dev/wallets";
    *
    * const wallet = new MagicEdenWallet({
    *   dappMetadata: {
