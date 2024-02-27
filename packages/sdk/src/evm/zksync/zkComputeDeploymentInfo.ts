@@ -87,7 +87,9 @@ export async function zkComputeDeploymentInfo(
     const bytecodePrefixed = metadata.bytecode.startsWith("0x")
       ? metadata.bytecode
       : `0x${metadata.bytecode}`;
-    bytecodeHash = Buffer.from(hashBytecode(bytecodePrefixed)).toString("hex");
+    bytecodeHash = `0x${Buffer.from(hashBytecode(bytecodePrefixed)).toString(
+      "hex",
+    )}`;
     constructorCalldata = utils.arrayify(encodedArgs);
   }
 

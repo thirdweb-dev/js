@@ -21,9 +21,9 @@ export function zkComputeDeploymentAddress(
     : `0x${bytecode}`;
   const saltHash = salt ? utils.id(salt) : utils.id("thirdweb");
 
-  const bytecodeHash = Buffer.from(hashBytecode(bytecodePrefixed)).toString(
-    "hex",
-  );
+  const bytecodeHash = `0x${Buffer.from(
+    hashBytecode(bytecodePrefixed),
+  ).toString("hex")}`;
 
   const addr = create2Address(
     create2FactoryAddress,
