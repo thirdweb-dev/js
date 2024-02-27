@@ -25,7 +25,7 @@
       "import": "./dist/esm/exports/thirdweb.js",
       "default": "./dist/cjs/exports/thirdweb.js"
     },
-    "./adapters": {
+    "./adapters/*": {
       "types": "./dist/types/exports/adapters/*.d.ts",
       "import": "./dist/esm/exports/adapters/*.js",
       "default": "./dist/cjs/exports/adapters/*.js"
@@ -94,7 +94,7 @@
   },
   "typesVersions": {
     "*": {
-      "adapters": [
+      "adapters/*": [
         "./dist/types/exports/adapters/*.d.ts"
       ],
       "chains": [
