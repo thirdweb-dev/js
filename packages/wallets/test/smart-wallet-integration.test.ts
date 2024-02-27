@@ -3,6 +3,10 @@ import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
 import { Mumbai } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
+import { checkContractWalletSignature } from "../src/evm/wallets/abstract";
+
+require("dotenv-mono").load();
+jest.setTimeout(240_000);
 
 let smartWallet: SmartWallet;
 let smartWalletAddress: string;
@@ -92,5 +96,24 @@ describeIf(!!process.env.TW_SECRET_KEY)("SmartWallet core tests", () => {
     expect(tx.receipt.transactionHash).toHaveLength(66);
     const balance = await contract.erc1155.balance(0);
     expect(balance.toNumber()).toEqual(7);
+  });
+
+  it("can sign and verify 1271", async () => {
+    const message = "0x1234";
+    const sig = await smartWallet.signMessage(message);
+    const isValidV1 = await smartWallet.verifySignature(
+      message,
+      sig,
+      smartWalletAddress,
+      chain.chainId,
+    );
+    expect(isValidV1).toEqual(true);
+    const isValidV2 = await checkContractWalletSignature(
+      message,
+      sig,
+      smartWalletAddress,
+      chain.chainId,
+    );
+    expect(isValidV2).toEqual(true);
   });
 });

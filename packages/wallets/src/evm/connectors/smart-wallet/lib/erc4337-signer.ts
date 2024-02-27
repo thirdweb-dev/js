@@ -1,4 +1,4 @@
-import { ethers, providers, utils } from "ethers";
+import { Contract, ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
@@ -6,6 +6,11 @@ import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import {
+  checkContractWalletSignature,
+  chainIdToThirdwebRpc,
+} from "../../../wallets/abstract";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -138,20 +143,84 @@ Code: ${errorCode}`;
     return this.address as string;
   }
 
-  async signMessage(message: Bytes | string): Promise<string> {
-      const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
-      if (isNotDeployed && this.config.deployOnSign) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
-        const tx = await this.sendTransaction({
-          to: await this.getAddress(),
-          data: "0x",
-        });
-        await tx.wait();
-      }
-    
-    return await this.originalSigner.signMessage(message);
+  /**
+   * Sign a message and return the signature
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Deploy smart wallet if needed
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
+
+    const [chainId, address] = await Promise.all([
+      this.getChainId(),
+      this.getAddress(),
+    ]);
+    const originalMsgHash = utils.hashMessage(message);
+
+    let factorySupports712: boolean;
+    let signature: string;
+
+    try {
+      const provider = new providers.JsonRpcProvider(
+        chainIdToThirdwebRpc(chainId, this.config.clientId),
+        chainId,
+      );
+      const walletContract = new Contract(
+        address,
+        [
+          "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+        ],
+        provider,
+      );
+      // if this fails it's a pre 712 factory
+      await walletContract.getMessageHash(originalMsgHash);
+      factorySupports712 = true;
+    } catch {
+      factorySupports712 = false;
+    }
+
+    if (factorySupports712) {
+      const result = await signTypedDataInternal(
+        this,
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
+        {
+          message: utils.defaultAbiCoder.encode(["bytes32"], [originalMsgHash]),
+        },
+      );
+      signature = result.signature;
+    } else {
+      signature = await this.originalSigner.signMessage(message);
+    }
+
+    const isValid = await checkContractWalletSignature(
+      message as string,
+      signature,
+      address,
+      chainId,
+    );
+
+    if (isValid) {
+      return signature;
+    } else {
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+      );
+    }
   }
 
   async signTransaction(
