@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - changeset-release/main
-      - alpha
+      - beta
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
