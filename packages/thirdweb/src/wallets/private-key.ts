@@ -1,4 +1,9 @@
-import type { Hex, TransactionSerializable } from "viem";
+import type {
+  HDAccount,
+  PrivateKeyAccount,
+  Hex,
+  TransactionSerializable,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
@@ -57,6 +62,40 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
     options.privateKey = "0x" + options.privateKey;
   }
   const viemAccount = privateKeyToAccount(options.privateKey as Hex);
+  return viemToThirdwebAccount(viemAccount, options.client);
+}
+
+export type MnemonicAccountOptions = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+
+  /**
+   * The mnemonic to use for the account.
+   */
+  mnemonic: string;
+};
+
+/**
+ * @internal
+ */
+export function viemToThirdwebAccount(
+  viemAccount: HDAccount | PrivateKeyAccount,
+  client: ThirdwebClient,
+) {
   const account: Account = {
     address: viemAccount.address,
     sendTransaction: async (
@@ -65,7 +104,7 @@ export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
       tx: TransactionSerializable & { chainId: number },
     ) => {
       const rpcRequest = getRpcClient({
-        client: options.client,
+        client: client,
         chain: defineChain(tx.chainId),
       });
       const signedTx = await viemAccount.signTransaction(tx);

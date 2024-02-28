@@ -19,7 +19,7 @@ import {
 import {
   saveConnectParamsToStorage,
   type WithPersonalWalletConnectionOptions,
-} from "../manager/storage.js";
+} from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 

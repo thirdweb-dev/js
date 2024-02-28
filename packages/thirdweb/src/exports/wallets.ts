@@ -77,8 +77,8 @@ export {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
   deleteConnectParamsFromStorage,
-} from "../wallets/manager/storage.js";
-export type { WithPersonalWalletConnectionOptions } from "../wallets/manager/storage.js";
+} from "../wallets/storage/walletStorage.js";
+export type { WithPersonalWalletConnectionOptions } from "../wallets/storage/walletStorage.js";
 
 export {
   getStoredActiveWalletId,
@@ -104,3 +104,21 @@ export {
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,
 } from "../wallets/embedded/core/authentication/type.js";
+
+// local wallet
+export {
+  localWallet,
+  type LocalWallet,
+  type LocalWalletConnectionOptions,
+  type LocalWalletCreationOptions,
+} from "../wallets/local/index.js";
+export type {
+  LocalWalletDecryptOptions,
+  LocalWalletEncryptOptions,
+  LocalWalletExportOptions,
+  LocalWalletImportOptions,
+  LocalWalletLoadOptions,
+  LocalWalletLoadOrCreateOptions,
+  LocalWalletSaveOptions,
+  LocalWalletStorageData,
+} from "../wallets/local/types.js";

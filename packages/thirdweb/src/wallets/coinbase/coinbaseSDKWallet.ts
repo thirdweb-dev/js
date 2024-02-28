@@ -16,7 +16,7 @@ import { coinbaseMetadata } from "./coinbaseMetadata.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
-} from "../manager/storage.js";
+} from "../storage/walletStorage.js";
 import { defineChain, getChainDataForChain } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";

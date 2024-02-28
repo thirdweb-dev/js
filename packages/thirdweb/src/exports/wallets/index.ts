@@ -58,7 +58,7 @@ export type { WalletConnectConnectionOptions } from "../../wallets/wallet-connec
 export { smartWallet } from "../../wallets/smart/index.js";
 export type { SmartWalletOptions } from "../../wallets/smart/types.js";
 
-export type { WithPersonalWalletConnectionOptions } from "../../wallets/manager/storage.js";
+export type { WithPersonalWalletConnectionOptions } from "../../wallets/storage/walletStorage.js";
 
 export {
   coinbaseSDKWallet,
