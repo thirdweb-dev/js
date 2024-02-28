@@ -109,7 +109,7 @@
     "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
-    "fastify": "^4.25.2",
+    "fastify": "^4.26.1",
     "mocha": "^10.2.0",
     "next": "^13.4",
     "next-auth": "^4.22.3",
@@ -120,7 +120,7 @@
     "cookie-parser": "^1.4.6",
     "ethers": "^5",
     "express": "^4",
-    "fastify": "^4.25.2",
+    "fastify": "^4.26.1",
     "next": "^12 || ^13 || ^14",
     "next-auth": "^4"
   },

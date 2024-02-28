@@ -82,7 +82,7 @@ importers:
         version: 0.5.0
       fastify-type-provider-zod:
         specifier: ^1.1.9
-        version: 1.1.9(fastify@4.25.2)(zod@3.22.3)
+        version: 1.1.9(fastify@4.26.1)(zod@3.22.3)
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -178,8 +178,8 @@ importers:
         specifier: ^4.18.1
         version: 4.18.2
       fastify:
-        specifier: ^4.25.2
-        version: 4.25.2
+        specifier: ^4.26.1
+        version: 4.26.1
       mocha:
         specifier: ^10.2.0
         version: 10.2.0
@@ -9352,7 +9352,7 @@ packages:
     engines: {node: '>= 8'}
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.15.0
+      fastq: 1.17.1
 
   /@nomicfoundation/ethereumjs-block@5.0.1:
     resolution: {integrity: sha512-u1Yioemi6Ckj3xspygu/SfFvm8vZEO8/Yx5a1QLzi6nVU0jz3Pg2OmHKJ5w+D9Ogk1vhwRiqEBAqcb0GVhCyHw==}
@@ -14552,12 +14552,13 @@ packages:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
 
-  /avvio@8.2.1:
-    resolution: {integrity: sha512-TAlMYvOuwGyLK3PfBb5WKBXZmXz2fVCgv23d6zZFdle/q3gPjmxBaeuC0pY0Dzs5PWMSgfqqEZkrye19GlDTgw==}
+  /avvio@8.3.0:
+    resolution: {integrity: sha512-VBVH0jubFr9LdFASy/vNtm5giTrnbVquWBhT0fyizuNK2rQ7e7ONU2plZQWUNqtE1EmxFEb+kbSkFRkstiaS9Q==}
     dependencies:
+      '@fastify/error': 3.4.0
       archy: 1.0.0
       debug: 4.3.4(supports-color@8.1.1)
-      fastq: 1.15.0
+      fastq: 1.17.1
     transitivePeerDependencies:
       - supports-color
 
@@ -19305,28 +19306,28 @@ packages:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
     dev: false
 
-  /fastify-type-provider-zod@1.1.9(fastify@4.25.2)(zod@3.22.3):
+  /fastify-type-provider-zod@1.1.9(fastify@4.26.1)(zod@3.22.3):
     resolution: {integrity: sha512-Ztnu1ZWJEKJouZvdTyfgjuVqS+A4JLoCbWBvFqFhfnrg6YQvEvW+5cJvP98kNbuV5gjfpWmHSOTi3BpkidJPQg==}
     peerDependencies:
       fastify: ^4.0.0
       zod: ^3.14.2
     dependencies:
-      fastify: 4.25.2
+      fastify: 4.26.1
       zod: 3.22.3
       zod-to-json-schema: 3.21.4(zod@3.22.3)
     dev: false
 
-  /fastify@4.25.2:
-    resolution: {integrity: sha512-SywRouGleDHvRh054onj+lEZnbC1sBCLkR0UY3oyJwjD4BdZJUrxBqfkfCaqn74pVCwBaRHGuL3nEWeHbHzAfw==}
+  /fastify@4.26.1:
+    resolution: {integrity: sha512-tznA/G55dsxzM5XChBfcvVSloG2ejeeotfPPJSFaWmHyCDVGMpvf3nRNbsCb/JTBF9RmQFBfuujWt3Nphjesng==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.4.0
       '@fastify/fast-json-stringify-compiler': 4.3.0
       abstract-logging: 2.0.1
-      avvio: 8.2.1
+      avvio: 8.3.0
       fast-content-type-parse: 1.1.0
       fast-json-stringify: 5.8.0
-      find-my-way: 7.7.0
+      find-my-way: 8.1.0
       light-my-request: 5.11.0
       pino: 8.17.2
       process-warning: 3.0.0
@@ -19338,8 +19339,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /fastq@1.15.0:
-    resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
+  /fastq@1.17.1:
+    resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
     dependencies:
       reusify: 1.0.4
 
@@ -19537,8 +19538,8 @@ packages:
       make-dir: 3.1.0
       pkg-dir: 4.2.0
 
-  /find-my-way@7.7.0:
-    resolution: {integrity: sha512-+SrHpvQ52Q6W9f3wJoJBbAQULJuNEEQwBvlvYwACDhBTLOTMiQ0HYWh4+vC3OivGP2ENcTI1oKlFA2OepJNjhQ==}
+  /find-my-way@8.1.0:
+    resolution: {integrity: sha512-41QwjCGcVTODUmLLqTMeoHeiozbMXYMAE1CKFiDyi9zVZ2Vjh0yz3MF0WQZoIb+cmzP/XlbFjlF2NtJmvZHznA==}
     engines: {node: '>=14'}
     dependencies:
       fast-deep-equal: 3.1.3
