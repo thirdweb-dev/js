@@ -55,7 +55,7 @@ export const PartnerCarousel: React.FC = () => {
       sx={{
         maskImage: `linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 10%, hsl(0 0% 0% / 1) 90%, hsl(0 0% 0% / 0));`,
       }}
-      pt={10}
+      pt={20}
       mb={{ base: 20, md: 24 }}
     >
       {/* desktop - 1 row with all logos */}

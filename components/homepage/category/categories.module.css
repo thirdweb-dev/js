@@ -1,0 +1,122 @@
+.connect {
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  transition: 250ms ease;
+}
+
+.backend {
+  position: absolute;
+  top: 130px;
+  right: 40px;
+  transition: 250ms ease;
+}
+
+.onchain {
+  position: absolute;
+  top: 400px;
+  left: 160px;
+  transition: 250ms ease;
+}
+
+.connect:hover,
+.backend:hover,
+.onchain:hover {
+  transform: scale(1.15);
+}
+
+.heroContainer {
+}
+
+.heroImageV1 {
+}
+
+.heroImageV2 {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  .connect {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+  }
+
+  .backend {
+    position: absolute;
+    top: 110px;
+    right: 30px;
+  }
+
+  .onchain {
+    position: absolute;
+    top: 320px;
+    left: 125px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .connect {
+    position: absolute;
+    top: 35px;
+    left: 35px;
+  }
+
+  .backend {
+    position: absolute;
+    top: 75px;
+    right: 20px;
+  }
+
+  .onchain {
+    position: absolute;
+    top: 230px;
+    left: 80px;
+  }
+}
+
+@media screen and (max-width: 309px) {
+  .connect {
+    position: absolute;
+    top: 20px;
+    left: 25px;
+  }
+
+  .backend {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+  }
+
+  .onchain {
+    position: absolute;
+    top: 190px;
+    left: 70px;
+  }
+
+  .heroContainer {
+    max-width: 240px !important;
+  }
+}
+
+@media screen and (max-width: 263px) {
+  .connect {
+    display: none;
+  }
+
+  .backend {
+    display: none;
+  }
+
+  .onchain {
+    display: none;
+  }
+
+  .heroImageV2 {
+    display: block;
+  }
+
+  .heroImageV1 {
+    display: none;
+  }
+}
