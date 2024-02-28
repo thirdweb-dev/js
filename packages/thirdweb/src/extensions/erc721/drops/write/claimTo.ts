@@ -1,6 +1,8 @@
 import type { Address } from "abitype";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
+import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
+import { padHex } from "../../../../utils/encoding/hex.js";
 
 const CLAIM_ABI = {
   inputs: [
@@ -66,33 +68,47 @@ const CLAIM_ABI = {
 export type ClaimToParams = {
   to: Address;
   quantity: bigint;
-  // TODO: needed for non-claim conditon claims?
-  // pricePerToken?: bigint;
-  currencyAddress?: Address;
-  checkERC20Allowance?: boolean;
 };
 
 /**
- * @internal
+ * Claim ERC721 NFTs to a specified address
+ * @param options - The options for the transaction
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { claimTo } from "thirdweb/extensions/erc721";
+ * const tx = await claimTo({
+ *   contract,
+ *   to: "0x...",
+ *   quantity: 1n,
+ * });
+ * ```
+ * @throws If no claim condition is set
+ * @returns A promise that resolves with the submitted transaction hash.
  */
-// TODO: finish implementing this
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return prepareContractCall({
     contract: options.contract,
     method: CLAIM_ABI,
     params: async () => {
-      // TODO: fill this in
+      const cc = await getActiveClaimCondition({
+        contract: options.contract,
+      });
+      // TODO implement fetching merkle data
+      if (cc.merkleRoot !== padHex("0x", { size: 32 })) {
+        throw new Error("Allowlisted claims not implemented yet");
+      }
       return [
-        "", //receiver
-        0n, //quantity
-        "", //currency
-        0n, //pricePerToken
+        options.to, //receiver
+        options.quantity, //quantity
+        cc.currency, //currency
+        cc.pricePerToken, //pricePerToken
         // proof
         {
-          currency: "",
+          currency: cc.currency,
           proof: [],
-          quantityLimitPerWallet: 0n,
-          pricePerToken: 0n,
+          quantityLimitPerWallet: cc.quantityLimitPerWallet,
+          pricePerToken: cc.pricePerToken,
         },
         // end proof
         "0x", //data

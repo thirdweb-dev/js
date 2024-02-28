@@ -1,5 +1,5 @@
-import { readContract } from "../../../transaction/read-contract.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { readContract } from "../../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 const ABI = {
   inputs: [
@@ -72,7 +72,7 @@ type GetClaimConditionByIdParams = { conditionId: bigint };
  * @extension
  * @example
  * ```ts
- * import { getClaimConditionById } from "thirdweb/extensions/drops";
+ * import { getClaimConditionById } from "thirdweb/extensions/erc721";
  * const claimCondition = await getClaimConditionById({
  *  contract,
  *  conditionId: 1n,

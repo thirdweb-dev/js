@@ -1,5 +1,5 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { getClaimConditionById } from "./claimConditioById.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { getClaimConditionById } from "./claimConditionById.js";
 import { claimCondition } from "./claimCondition.js";
 import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
 
@@ -11,7 +11,7 @@ import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
  * @extension
  * @example
  * ```ts
- * import { getActiveClaimCondition } from "thirdweb/extensions/drops";
+ * import { getActiveClaimCondition } from "thirdweb/extensions/erc721";
  * const activeClaimCondition = await getActiveClaimCondition({ contract });
  * ```
  */

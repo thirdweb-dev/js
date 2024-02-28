@@ -1,5 +1,5 @@
-import { readContract } from "../../../transaction/read-contract.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { readContract } from "../../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 /**
  * Retrieves the active claim condition ID.
@@ -8,7 +8,7 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
  * @extension
  * @example
  * ```ts
- * import { getActiveClaimConditionId } from "thirdweb/extensions/drops";
+ * import { getActiveClaimConditionId } from "thirdweb/extensions/erc721";
  * const activeClaimConditionId = await getActiveClaimConditionId({ contract });
  * ```
  */

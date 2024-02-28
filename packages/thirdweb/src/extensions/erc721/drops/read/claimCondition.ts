@@ -1,5 +1,5 @@
-import { readContract } from "../../../transaction/read-contract.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { readContract } from "../../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 const ABI = {
   inputs: [],
@@ -64,7 +64,7 @@ const ABI = {
  * @extension
  * @example
  * ```ts
- * import { claimCondition } from "thirdweb/extensions/drops";
+ * import { claimCondition } from "thirdweb/extensions/erc721";
  * const claimCondition = await claimCondition({ contract });
  * ```
  */

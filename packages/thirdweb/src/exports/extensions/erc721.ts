@@ -44,3 +44,12 @@ export {
   transferEvent,
   type TransferEventFilters,
 } from "../../extensions/erc721/events/transfer.js";
+
+/**
+ * DROPS extension for ERC721
+ */
+export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
+export {
+  claimTo,
+  type ClaimToParams,
+} from "../../extensions/erc721/drops/write/claimTo.js";
