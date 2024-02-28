@@ -258,7 +258,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
 
       // Sign and propose the safe transaction
       const safeTxHash = await safe.getTransactionHash(safeTx);
-      const safeSignature = await safe.signTypedData(safeTx);
+      const safeSignature = await safe.signTransactionHash(safeTxHash);
       await service.proposeTx(
         safe.getAddress(),
         safeTxHash,
