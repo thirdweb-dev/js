@@ -28,3 +28,12 @@ export {
   balanceOf,
   type BalanceOfParams,
 } from "../../extensions/erc1155/read/balanceOf.js";
+
+/**
+ * DROPS extension for ERC1155
+ */
+export { getActiveClaimCondition } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
+export {
+  claimTo,
+  type ClaimToParams,
+} from "../../extensions/erc1155/drops/write/claimTo.js";
