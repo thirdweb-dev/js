@@ -221,7 +221,6 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       return "0x";
     };
 
-    // Need to add this because ethers-aws-kms-signer doesn't support
     safeSigner._signTypedData = async function (
       domain: TypedDataDomain,
       types: Record<string, Array<TypedDataField>>,
