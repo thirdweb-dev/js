@@ -274,14 +274,17 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
             await signer.provider?.waitForTransaction(
               txDetails.transactionHash,
             );
+
             break;
           }
         } catch (e) {}
         await new Promise((resolve) => setTimeout(resolve, 5000));
       }
 
+      console.log({ safeSignature });
+
       // For on-chain signatures, safe expects just "0x" as the signature
-      return "0x";
+      return safeSignature.data;
     };
 
     // set the personal signer as "previous connector" so that we can re-connect to it later when disconnecting
