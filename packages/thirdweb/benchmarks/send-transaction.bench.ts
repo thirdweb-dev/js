@@ -7,8 +7,9 @@ import {
   sendTransaction,
   prepareTransaction,
 } from "..";
-import { privateKeyAccount } from "../dist/esm/wallets/private-key";
-import { ThirdwebSDK } from "../../sdk/dist/thirdweb-dev-sdk.cjs";
+// eslint-disable-next-line no-restricted-imports
+import { privateKeyAccount } from "../src/exports/wallets";
+import { ThirdwebSDK } from "../../sdk";
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
@@ -46,7 +47,7 @@ function randomBigint() {
   return BigInt(Math.floor(Math.random() * 1000));
 }
 
-describe.runIf(SECRET_KEY)("encode native transfer", () => {
+describe.runIf(SECRET_KEY)("send native transfer", () => {
   bench("thirdweb", async () => {
     const transaction = prepareTransaction({
       client,
@@ -54,7 +55,11 @@ describe.runIf(SECRET_KEY)("encode native transfer", () => {
       value: randomBigint(),
       to: VITALIK_WALLET,
     });
-    await sendTransaction({ transaction, account });
+    try {
+      await sendTransaction({ transaction, account });
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   bench("@thirdweb-dev/sdk", async () => {

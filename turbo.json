@@ -5,6 +5,11 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "bench": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY", "CI"]
+    },
     "typedoc": {
       "outputs": ["typedoc/**"],
       "dependsOn": ["^build"]
