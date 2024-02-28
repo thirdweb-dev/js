@@ -872,8 +872,8 @@ importers:
         specifier: 1.0.13
         version: 1.0.13(expo@47.0.14)(react-native@0.71.11)(react@18.2.0)
       '@paperxyz/embedded-wallet-service-sdk':
-        specifier: ^1.2.4
-        version: 1.2.4
+        specifier: ^1.2.5
+        version: 1.2.5
       '@shopify/restyle':
         specifier: ^2.4.2
         version: 2.4.2(react-native@0.71.11)(react@18.2.0)
@@ -9659,19 +9659,6 @@ packages:
   /@panva/hkdf@1.0.4:
     resolution: {integrity: sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==}
     dev: true
-
-  /@paperxyz/embedded-wallet-service-sdk@1.2.4:
-    resolution: {integrity: sha512-yCOvGB6aEQB06UWowBgu0+thXOwxcHLF3j+e0YgiWtvEpZ8EgbfqbuL9NHN0zJJsTNjF05T39haDQMOBgrMpYA==}
-    dependencies:
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/providers': 5.7.2
-      '@paperxyz/sdk-common-utilities': 0.1.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
 
   /@paperxyz/embedded-wallet-service-sdk@1.2.5:
     resolution: {integrity: sha512-FuAMdMmpB55K5jNS2Em6TtqJdXNLPdFxReITd2uS2lMgCtmlUP4aLLFsx+fDEVsAP3hg4FVueqGQWilII/7i0A==}

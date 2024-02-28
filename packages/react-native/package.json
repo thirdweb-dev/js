@@ -28,7 +28,7 @@
     "@aws-sdk/client-lambda": "3.350.0",
     "@aws-sdk/credential-providers": "3.350.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
-    "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
