@@ -23,6 +23,7 @@ export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
     for (let j = i + 1; j < a.length; j++) {
       if (fn(a[i], a[j])) {
         a.splice(j, 1);
+        j--;
       }
     }
   }
