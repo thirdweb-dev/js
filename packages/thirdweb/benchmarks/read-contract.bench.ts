@@ -112,10 +112,6 @@ describe.runIf(SECRET_KEY)("read contract (warm cache)", () => {
 
 describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
   bench("thirdweb", async () => {
-    // init the client
-    const newClient = createThirdwebClient({
-      secretKey: SECRET_KEY,
-    });
     // define chain
     const chain = defineChain({
       id: 1,
@@ -124,7 +120,7 @@ describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
     // get contract
     const contract = getContract({
       chain,
-      client: newClient,
+      client,
       address: USDC_CONTRACT_ADDRESS,
     });
     // actually read from the contract
@@ -166,41 +162,5 @@ describe.runIf(SECRET_KEY)("read contract (cold cache)", () => {
         client: viem.createPublicClient({ transport: viem.http(LOCAL_RPC) }),
       })
       .read.balanceOf([VITALIK_WALLET]);
-  });
-});
-
-describe.runIf(SECRET_KEY)("read contract (pre-defined abi)", () => {
-  bench("thirdweb", async () => {
-    // init the client
-    const newClient = createThirdwebClient({
-      secretKey: SECRET_KEY,
-    });
-    // define chain
-    const chain = defineChain({
-      id: 1,
-      rpc: LOCAL_RPC,
-    });
-    // get contract
-    const contract = getContract({
-      chain,
-      client: newClient,
-      address: USDC_CONTRACT_ADDRESS,
-      abi: ABI,
-    });
-    // actually read from the contract
-    await readContract({
-      contract,
-      method: "balanceOf",
-      params: [VITALIK_WALLET],
-    });
-  });
-
-  bench("@thirdweb-dev/sdk", async () => {
-    // init the sdk
-
-    //get the contract
-    const contract = await sdk.getContractFromAbi(USDC_CONTRACT_ADDRESS, ABI);
-    // actually read from the contract
-    await contract.call("balanceOf", [VITALIK_WALLET]);
   });
 });

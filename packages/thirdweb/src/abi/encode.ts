@@ -1,6 +1,4 @@
-import { concatHex } from "viem";
-import { getFunctionSelector } from "./lib/getFunctionSelector.js";
-
+import { concatHex, toFunctionSelector } from "viem";
 import type {
   AbiFunction,
   AbiParameter,
@@ -23,7 +21,7 @@ export function encodeAbiFunction<
   abiFn: TAbiFunction,
   args: TParams extends readonly AbiParameter[] ? TParams : never,
 ) {
-  const signature = getFunctionSelector(abiFn);
+  const signature = toFunctionSelector(abiFn);
   // if there are no inputs, we can return the signature as is
   if (abiFn.inputs.length === 0) {
     return signature;

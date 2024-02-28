@@ -1,8 +1,7 @@
 import type { AbiFunction } from "abitype";
-
-import { getFunctionSelector } from "../../abi/lib/getFunctionSelector.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
+import { toFunctionSelector } from "viem";
 
 type DetectExtensionOptions = {
   contract: ThirdwebContract;
@@ -39,15 +38,13 @@ type DetectExtensionInBytecodeOptions = {
  * @returns A boolean indicating whether the method is present in the bytecode.
  * @internal
  */
-function detectMethodInBytecode(
-  options: DetectExtensionInBytecodeOptions,
-) {
+function detectMethodInBytecode(options: DetectExtensionInBytecodeOptions) {
   // if we can't get the bytecode we know the contract is not deployed
   if (options.bytecode === "0x") {
     return false;
   }
   // we strip the leading `0x` from the function selector
-  const fnSelector = getFunctionSelector(options.method).slice(2);
+  const fnSelector = toFunctionSelector(options.method).slice(2);
   // indexOf is slightly faster than includes
   return options.bytecode.indexOf(fnSelector) > -1;
 }

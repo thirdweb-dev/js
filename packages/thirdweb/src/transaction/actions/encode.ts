@@ -24,7 +24,6 @@ export async function encode<abi extends Abi, abiFn extends AbiFunction>(
     if (!data) {
       return "0x";
     }
-
     return data;
   }
   return transaction.data;
