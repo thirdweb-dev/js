@@ -13,7 +13,7 @@ import {
 import {
   getSavedConnectParamsFromStorage,
   type WithPersonalWalletConnectionOptions,
-} from "../../../wallets/manager/storage.js";
+} from "../../../wallets/storage/walletStorage.js";
 import type { WalletWithPersonalWallet } from "../../../wallets/interfaces/wallet.js";
 
 let autoConnectAttempted = false;

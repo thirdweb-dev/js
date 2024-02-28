@@ -14,7 +14,7 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
   walletStorage,
-} from "../manager/storage.js";
+} from "../storage/walletStorage.js";
 
 import type {
   Account,
@@ -568,7 +568,7 @@ export class WalletConnect implements Wallet {
    * @internal
    */
   private async getRequestedChainsIds(): Promise<number[]> {
-    const data = await walletStorage.get(storageKeys.requestedChains);
+    const data = await walletStorage.getItem(storageKeys.requestedChains);
     return data ? JSON.parse(data) : [];
   }
 
@@ -626,7 +626,7 @@ export class WalletConnect implements Wallet {
    * @internal
    */
   private setRequestedChainsIds(chains: number[]) {
-    walletStorage.set(storageKeys.requestedChains, JSON.stringify(chains));
+    walletStorage.setItem(storageKeys.requestedChains, JSON.stringify(chains));
   }
 
   /**
@@ -636,7 +636,7 @@ export class WalletConnect implements Wallet {
    */
   private onDisconnect = () => {
     this.setRequestedChainsIds([]);
-    walletStorage.remove(storageKeys.lastUsedChainId);
+    walletStorage.removeItem(storageKeys.lastUsedChainId);
 
     const provider = this.provider;
     if (provider) {
@@ -657,6 +657,6 @@ export class WalletConnect implements Wallet {
   private onChainChanged = (newChainId: number | string) => {
     const chainId = normalizeChainId(newChainId);
     this.chain = defineChain(chainId);
-    walletStorage.set(storageKeys.lastUsedChainId, String(chainId));
+    walletStorage.setItem(storageKeys.lastUsedChainId, String(chainId));
   };
 }

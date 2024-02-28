@@ -15,7 +15,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
-} from "../../../manager/storage.js";
+} from "../../../storage/walletStorage.js";
 import type { InitializedUser } from "../../implementations/index.js";
 
 type SavedConnectParams = {

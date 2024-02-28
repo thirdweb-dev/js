@@ -5,7 +5,7 @@ import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import { walletStorage } from "./storage.js";
+import { walletStorage } from "../storage/walletStorage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus =
@@ -149,7 +149,7 @@ export function createConnectionManager() {
         .map((acc) => acc?.metadata.id)
         .filter((c) => !!c) as string[];
 
-      walletStorage.set(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+      walletStorage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
     false,
@@ -160,9 +160,9 @@ export function createConnectionManager() {
     () => {
       const value = activeWallet.getValue()?.metadata.id;
       if (value) {
-        walletStorage.set(ACTIVE_WALLET_ID, value);
+        walletStorage.setItem(ACTIVE_WALLET_ID, value);
       } else {
-        walletStorage.remove(ACTIVE_WALLET_ID);
+        walletStorage.removeItem(ACTIVE_WALLET_ID);
       }
     },
     [activeWallet],
@@ -206,7 +206,7 @@ export function createConnectionManager() {
  */
 export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
   try {
-    const value = await walletStorage.get(CONNECTED_WALLET_IDS);
+    const value = await walletStorage.getItem(CONNECTED_WALLET_IDS);
     if (value) {
       return JSON.parse(value) as string[];
     }
@@ -221,7 +221,7 @@ export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
  */
 export async function getStoredActiveWalletId(): Promise<string | null> {
   try {
-    const value = await walletStorage.get(ACTIVE_WALLET_ID);
+    const value = await walletStorage.getItem(ACTIVE_WALLET_ID);
     if (value) {
       return value;
     }
