@@ -3,8 +3,6 @@ import type {
   SafeConnectionArgs,
   SafeSupportedChains as _SafeSupportedChains,
 } from "./types";
-import { ethers } from "ethers";
-import type { Signer } from "ethers";
 import {
   SafeService,
   SafeEthersSigner,
@@ -13,6 +11,7 @@ import safeCoreSdk from "@safe-global/safe-core-sdk";
 import safeEthersLib from "@safe-global/safe-ethers-lib";
 import { EVMWallet } from "../../interfaces";
 import { CHAIN_ID_TO_GNOSIS_SERVER_URL } from "./constants";
+import { ethers, TypedDataDomain, type Signer, TypedDataField } from "ethers";
 
 export type SafeSupportedChains = _SafeSupportedChains;
 
@@ -197,6 +196,70 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       // Sign and propose the safe transaction
       const safeTxHash = await safe.getTransactionHash(safeTx);
       const safeSignature = await safe.signTransactionHash(safeTxHash);
+      await service.proposeTx(
+        safe.getAddress(),
+        safeTxHash,
+        safeTx,
+        safeSignature,
+      );
+
+      // Poll while we wait for the safe transaction to reach minimum confirmations
+      while (true) {
+        try {
+          const txDetails = await service.getSafeTxDetails(safeTxHash);
+          if (txDetails.transactionHash) {
+            await signer.provider?.waitForTransaction(
+              txDetails.transactionHash,
+            );
+            break;
+          }
+        } catch (e) {}
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+
+      // For on-chain signatures, safe expects just "0x" as the signature
+      return "0x";
+    };
+
+    // Need to add this because ethers-aws-kms-signer doesn't support
+    safeSigner._signTypedData = async function (
+      domain: TypedDataDomain,
+      types: Record<string, Array<TypedDataField>>,
+      _value: Record<string, any>,
+    ) {
+      const valueHash = ethers.utils._TypedDataEncoder.hash(
+        domain,
+        types,
+        _value,
+      );
+
+      const to = signMessageLibAddress;
+      const value = "0";
+      const operation = 1; // 1 indicates a delegatecall
+      const safeTxGas = 50000;
+      const baseGas = 50000;
+      const gasPrice = 0;
+      const gasToken = ethers.constants.AddressZero;
+      const refundReceiver = ethers.constants.AddressZero;
+
+      // Create the safe transaction to approve the signature
+      const safeTx = await safe.createTransaction({
+        safeTransactionData: {
+          to,
+          value,
+          operation,
+          data: valueHash,
+          baseGas,
+          safeTxGas,
+          gasPrice,
+          gasToken,
+          refundReceiver,
+        },
+      });
+
+      // Sign and propose the safe transaction
+      const safeTxHash = await safe.getTransactionHash(safeTx);
+      const safeSignature = await safe.signTypedData(safeTx);
       await service.proposeTx(
         safe.getAddress(),
         safeTxHash,
