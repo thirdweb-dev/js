@@ -1,18 +1,17 @@
-import { getCachedTextDecoder, getCachedTextEncoder } from "../utils/cache";
 import {
   decryptCryptoJSCipherBase64,
   parseCryptoJSCipherBase64,
-} from "./utils/crypto-js-compat";
-import { base64ToUint8Array } from "../utils/uint8array-extras";
-import { universalCrypto } from "../utils/universal-crypto";
+} from "./utils/crypto-js-compat.js";
+import { cachedTextEncoder } from "../../utils/text-encoder.js";
+import { cachedTextDecoder } from "../../utils/text-decoder.js";
+import { base64ToUint8Array } from "../../utils/uint8-array.js";
+import { universalCrypto } from "./lib/universal-crypto.js";
 
 /**
  * Decrypts ciphertext encrypted with aesEncrypt() using supplied password.
- *
  * @param    ciphertext - Ciphertext to be decrypted.
  * @param    password - Password to use to decrypt ciphertext.
  * @returns  Decrypted plaintext.
- *
  * @example
  *   const plaintext = await aesDecrypt(ciphertext, 'pw');
  */
@@ -22,7 +21,7 @@ export async function aesDecrypt(
 ): Promise<string> {
   const crypto = await universalCrypto();
   // encode password as UTF-8
-  const pwUtf8 = getCachedTextEncoder().encode(password);
+  const pwUtf8 = cachedTextEncoder().encode(password);
   // hash the password
   const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
 
@@ -46,7 +45,7 @@ export async function aesDecrypt(
     // decrypt ciphertext using key
     const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
     // return the plaintext from ArrayBuffer
-    return getCachedTextDecoder().decode(plainBuffer);
+    return cachedTextDecoder().decode(plainBuffer);
   } catch (e) {
     throw new Error("Decrypt failed");
   }
@@ -54,11 +53,9 @@ export async function aesDecrypt(
 
 /**
  * Decrypts ciphertext encrypted with aesEncrypt() OR "crypto-js".AES using supplied password.
- *
  * @param    ciphertext - Ciphertext to be decrypted.
  * @param    password - Password to use to decrypt ciphertext.
  * @returns  Decrypted plaintext.
- *
  * @example
  *   const plaintext = await aesDecryptCompat(ciphertext, 'pw');
  */

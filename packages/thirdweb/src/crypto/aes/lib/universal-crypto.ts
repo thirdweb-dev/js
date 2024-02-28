@@ -1,3 +1,10 @@
+/**
+ * Returns the universal Crypto object that can be used for cryptographic operations.
+ * If the environment supports the global `crypto` object, it is returned directly.
+ * Otherwise, in Node.js 18, the `webcrypto` object from the "node:crypto" package is returned.
+ * @returns A Promise that resolves to the universal Crypto object.
+ * @internal
+ */
 export async function universalCrypto(): Promise<Crypto> {
   if ("crypto" in globalThis) {
     return globalThis.crypto;

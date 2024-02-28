@@ -137,7 +137,7 @@ function base64UrlToBase64(base64url: string) {
  * //=> Uint8Array [72, 101, 108, 108, 111]
  * ```
  */
-function base64ToUint8Array(base64String: string): Uint8Array {
+export function base64ToUint8Array(base64String: string): Uint8Array {
   assertString(base64String);
   return Uint8Array.from(
     globalThis.atob(base64UrlToBase64(base64String)),
@@ -161,4 +161,59 @@ function base64ToUint8Array(base64String: string): Uint8Array {
 export function base64ToString(base64String: string): string {
   assertString(base64String);
   return uint8ArrayToString(base64ToUint8Array(base64String));
+}
+
+function base64ToBase64Url(base64: string): string {
+  return base64.replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+}
+// Reference: https://phuoc.ng/collection/this-vs-that/concat-vs-push/
+const MAX_BLOCK_SIZE = 65_535;
+
+export function uint8ArrayToBase64(
+  array: Uint8Array,
+  { urlSafe = false } = {},
+): string {
+  assertUint8Array(array);
+
+  let base64;
+
+  if (array.length < MAX_BLOCK_SIZE) {
+    // Required as `btoa` and `atob` don't properly support Unicode: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
+    // @ts-expect-error - TS doesn't know about `String#fromCodePoint`
+    base64 = globalThis.btoa(String.fromCodePoint.apply(this, array));
+  } else {
+    base64 = "";
+    for (const value of array) {
+      base64 += String.fromCodePoint(value);
+    }
+
+    base64 = globalThis.btoa(base64);
+  }
+
+  return urlSafe ? base64ToBase64Url(base64) : base64;
+}
+
+export function concatUint8Arrays(
+  arrays: Uint8Array[],
+  totalLength?: number,
+): Uint8Array {
+  if (arrays.length === 0) {
+    return new Uint8Array(0);
+  }
+
+  totalLength ??= arrays.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.length,
+    0,
+  );
+
+  const returnValue = new Uint8Array(totalLength);
+
+  let offset = 0;
+  for (const array of arrays) {
+    assertUint8Array(array);
+    returnValue.set(array, offset);
+    offset += array.length;
+  }
+
+  return returnValue;
 }

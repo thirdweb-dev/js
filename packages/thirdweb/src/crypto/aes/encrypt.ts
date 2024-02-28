@@ -1,17 +1,15 @@
+import { cachedTextEncoder } from "../../utils/text-encoder.js";
 import {
   concatUint8Arrays,
   uint8ArrayToBase64,
-} from "../utils/uint8array-extras";
-import { getCachedTextEncoder } from "../utils/cache";
-import { universalCrypto } from "../utils/universal-crypto";
+} from "../../utils/uint8-array.js";
+import { universalCrypto } from "./lib/universal-crypto.js";
 
 /**
  * Encrypts plaintext using AES-GCM with supplied password, for decryption with aesDecrypt().
- *
  * @param plaintext - Plaintext to be encrypted.
  * @param password - Password to use to encrypt plaintext.
  * @returns Encrypted ciphertext.
- *
  * @example
  *   const ciphertext = await aesEncrypt('my secret text', 'pw');
  */
@@ -20,7 +18,7 @@ export async function aesEncrypt(
   password: string,
 ): Promise<string> {
   const crypto = await universalCrypto();
-  const textEncoder = getCachedTextEncoder();
+  const textEncoder = cachedTextEncoder();
   // encode password as UTF-8
   const pwUtf8 = textEncoder.encode(password);
   // hash the password
