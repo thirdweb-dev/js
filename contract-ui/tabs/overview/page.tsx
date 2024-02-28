@@ -15,15 +15,15 @@ import { PublishedBy } from "components/contract-components/shared/published-by"
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { useMemo } from "react";
 
-interface CustomContractOverviewPageProps {
+interface ContractOverviewPageProps {
   contractAddress?: string;
 }
 
 const TRACKING_CATEGORY = "contract_overview";
 
-export const CustomContractOverviewPage: React.FC<
-  CustomContractOverviewPageProps
-> = ({ contractAddress }) => {
+export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
+  contractAddress,
+}) => {
   const { contract } = useContract(contractAddress);
   const contractTypeQuery = contractType.useQuery(contractAddress);
   const contractTypeData = contractTypeQuery?.data || "custom";

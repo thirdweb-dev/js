@@ -11,12 +11,12 @@ import { extensionDetectedState } from "components/buttons/ExtensionDetectButton
 // import { isPaperSupportedContract } from "contract-ui/utils";
 // import { useSingleQueryParam } from "hooks/useQueryParam";
 
-interface CustomContractSettingsPageProps {
+interface ContractSettingsPageProps {
   contractAddress?: string;
 }
 
-export const CustomContractSettingsPage: React.FC<
-  CustomContractSettingsPageProps
+export const ContractSettingsPage: React.FC<
+  ContractSettingsPageProps
 > = ({ contractAddress }) => {
   // TODO remove this
   // const paperEnabled = useSingleQueryParam("paper-enabled");

@@ -6,7 +6,7 @@ export const thirdwebClient = createThirdwebClient({
   clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
   config: {
     storage: {
-      gateway: IPFS_GATEWAY_URL,
+      gatewayUrl: IPFS_GATEWAY_URL,
     },
   },
 });

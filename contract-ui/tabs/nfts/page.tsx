@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useContract } from "@thirdweb-dev/react";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -8,32 +9,24 @@ import { NFTSharedMetadataButton } from "./components/shared-metadata-button";
 import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
 import { Box, Flex } from "@chakra-ui/react";
-import { NFTContract, useContract, useNFT } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
-import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
+import type { ThirdwebContract } from "thirdweb";
 import { TokenIdPage } from "./components/token-id";
-import { defineChain, getContract } from "thirdweb";
-import { thirdwebClient } from "../../../lib/thirdweb-client";
-import { useMemo } from "react";
 
 interface NftOverviewPageProps {
-  contractAddress?: string;
+  contractAddress: string;
+  contract: ThirdwebContract;
 }
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contractAddress,
+  contract,
 }) => {
   const contractQuery = useContract(contractAddress);
+
   const router = useRouter();
-
   const tokenId = router.query?.paths?.[2];
-
-  const { data: nft } = useNFT(contractQuery.contract, tokenId);
-  const tabs = useNFTDrawerTabs(
-    contractQuery.contract as NFTContract,
-    nft || null,
-  );
 
   const detectedState = detectFeatures(contractQuery?.contract, [
     "ERC721Enumerable",
@@ -51,32 +44,20 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721ClaimCustom",
   ]);
 
-  const chainId = contractQuery.contract?.chainId;
-
-  const newContract = useMemo(() => {
-    if (!contractAddress || !chainId) {
-      return null;
-    }
-    return getContract({
-      address: contractAddress,
-      client: thirdwebClient,
-      chain: defineChain(chainId),
-    });
-  }, [contractAddress, chainId]);
+  if (tokenId && tokenId !== "-1") {
+    return (
+      <TokenIdPage
+        oldContract={contractQuery.contract}
+        contract={contract}
+        tokenId={tokenId}
+        isErc721={isErc721}
+      />
+    );
+  }
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
-  }
-
-  if (!contractQuery?.contract) {
-    return null;
-  }
-
-  if (tokenId) {
-    return (
-      <TokenIdPage nft={nft} tabs={tabs} contractAddress={contractAddress} />
-    );
   }
 
   return (
@@ -116,10 +97,13 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         </Card>
       ) : (
         <>
-          {isErc721Claimable && newContract && (
-            <SupplyCards contract={newContract} />
+          {isErc721Claimable && contract && <SupplyCards contract={contract} />}
+          {contract && contractQuery.contract && (
+            <NFTGetAllTable
+              contract={contract}
+              oldContract={contractQuery.contract}
+            />
           )}
-          <NFTGetAllTable contract={contractQuery.contract} />
         </>
       )}
     </Flex>

@@ -38,6 +38,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
   const nftQuery = useReadContract(getNFTs, {
     contract,
     count: 5,
+    includeOwners: true,
   });
 
   const displayableNFTs =
@@ -55,7 +56,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
 
   return displayableNFTs.length === 0 &&
     !showSupplyCards &&
-    !nftQuery.isInitialLoading ? null : (
+    !nftQuery.isLoading ? null : (
     <Flex direction="column" gap={{ base: 3, md: 6 }}>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="title.sm">NFT Details</Heading>

@@ -3,12 +3,12 @@ import { Flex } from "@chakra-ui/react";
 import { getErcs, useContract, useContractType } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 
-interface CustomContractEmbedPageProps {
+interface ContractEmbedPageProps {
   contractAddress?: string;
 }
 
-export const CustomContractEmbedPage: React.FC<
-  CustomContractEmbedPageProps
+export const ContractEmbedPage: React.FC<
+  ContractEmbedPageProps
 > = ({ contractAddress }) => {
   const contractQuery = useContract(contractAddress);
   const { data: contractType } = useContractType(contractAddress);

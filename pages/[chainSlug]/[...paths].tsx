@@ -21,7 +21,7 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
-import { ContractProgramSidebar } from "core-ui/sidebar/detail-page";
+import { ContractSidebar } from "core-ui/sidebar/detail-page";
 import {
   useSupportedChainsRecord,
   useSupportedChainsSlugRecord,
@@ -42,6 +42,8 @@ import { THIRDWEB_DOMAIN } from "constants/urls";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { Chain } from "@thirdweb-dev/chains";
+import { defineChain, getContract } from "thirdweb";
+import { thirdwebClient } from "lib/thirdweb-client";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -55,7 +57,7 @@ type EVMContractProps = {
   detectedExtension: "erc20" | "erc721" | "erc1155" | "unknown";
 };
 
-const EVMContractPage: ThirdwebNextPage = () => {
+const ContractPage: ThirdwebNextPage = () => {
   // show optimistic UI first - assume chain is configured until proven otherwise
   const [chainNotFound, setChainNotFound] = useState(false);
   const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
@@ -153,7 +155,18 @@ const EVMContractPage: ThirdwebNextPage = () => {
 
   const activeTab = router.query?.paths?.[1] || "overview";
 
-  const routes = useContractRouteConfig(contractAddress);
+  const contract = useMemo(() => {
+    if (!contractAddress || !chain?.chainId) {
+      return null;
+    }
+    return getContract({
+      address: contractAddress,
+      client: thirdwebClient,
+      chain: defineChain(chain?.chainId),
+    });
+  }, [contractAddress, chain?.chainId]);
+
+  const routes = useContractRouteConfig(contractAddress, contract);
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.path === activeTab),
@@ -237,23 +250,26 @@ const EVMContractPage: ThirdwebNextPage = () => {
           </Flex>
         </Container>
       </Box>
-      <ContractProgramSidebar
+      <ContractSidebar
         contractAddress={contractAddress}
         routes={routes}
         activeRoute={activeRoute}
       />
       <Container pt={8} maxW="container.page">
-        {activeRoute?.component && (
-          <activeRoute.component contractAddress={contractAddress} />
+        {activeRoute?.component && contractAddress && contract && (
+          <activeRoute.component
+            contractAddress={contractAddress}
+            contract={contract}
+          />
         )}
       </Container>
     </Flex>
   );
 };
 
-export default EVMContractPage;
-EVMContractPage.pageId = PageId.DeployedContract;
-EVMContractPage.getLayout = (page, props: EVMContractProps) => {
+export default ContractPage;
+ContractPage.pageId = PageId.DeployedContract;
+ContractPage.getLayout = (page, props: EVMContractProps) => {
   const displayName = `${
     props.contractMetadata?.name ||
     shortenIfAddress(props.contractInfo?.contractAddress) ||
@@ -343,7 +359,7 @@ function PageSkeleton() {
 }
 
 // app layout has to come first in both getLayout and fallback
-EVMContractPage.fallback = (
+ContractPage.fallback = (
   <AppLayout layout={"custom-contract"} noSEOOverride hasSidebar={true}>
     <PageSkeleton />
   </AppLayout>

@@ -16,7 +16,7 @@ type ContractSidebarProps = {
   activeRoute?: EnhancedRoute;
 };
 
-export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
+export const ContractSidebar: React.FC<ContractSidebarProps> = ({
   contractAddress,
   routes,
   activeRoute,
