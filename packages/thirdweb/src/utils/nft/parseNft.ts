@@ -47,6 +47,6 @@ export function parseNFT<const type extends NFTType>(
     id: options.tokenId,
     tokenURI: options.tokenUri,
     type: options.type,
-    supply: options.supply || 1n,
+    supply: options.supply || 0n,
   };
 }
