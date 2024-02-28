@@ -71,7 +71,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   });
 
   const { data: nft } = useReadContract(
-    // @ts-expect-error hack for now until types align
     isErc721 ? getErc721NFT : getErc1155NFT,
     {
       contract,
@@ -200,7 +199,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   />
                 </GridItem>
 
-                {nft.owner && nft.supply < 2 && (
+                {nft.owner && (
                   <>
                     <GridItem colSpan={4}>
                       <Heading size="label.md">Owner</Heading>

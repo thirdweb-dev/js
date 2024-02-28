@@ -80,7 +80,7 @@
     "remark-gfm": "^4.0.0",
     "spdx-correct": "^3.2.0",
     "swagger-ui-react": "^5.11.8",
-    "thirdweb": "beta",
+    "thirdweb": "1.0.0-beta-84149309fd66bc526b3e3227457c270bc8c41ea3-20240228182010",
     "tiny-invariant": "^1.3.3",
     "zksync-web3": "^0.14.4",
     "zod": "^3.22.4"

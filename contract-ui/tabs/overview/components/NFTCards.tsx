@@ -35,7 +35,7 @@ const dummyMetadata: (idx: number) => NFT = (idx) => ({
 });
 
 interface NFTCardsProps {
-  nfts: NFT<"ERC721">[] | WalletNFT[];
+  nfts: NFT[] | WalletNFT[];
   trackingCategory: TrackedLinkProps["category"];
   isLoading: boolean;
   contractAddress?: string;
