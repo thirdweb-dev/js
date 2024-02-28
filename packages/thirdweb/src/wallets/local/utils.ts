@@ -18,7 +18,7 @@ export function isValidPrivateKey(value: string) {
  * @internal
  */
 export function getDecryptionFunction(
-  encryption: LocalWalletDecryptOptions | undefined,
+  encryption: LocalWalletDecryptOptions | false | undefined,
 ) {
   return async (msg: string) => {
     if (!encryption) {
@@ -40,7 +40,7 @@ export function getDecryptionFunction(
  * @internal
  */
 export function getEncryptionFunction(
-  encryption: LocalWalletEncryptOptions | undefined,
+  encryption: LocalWalletEncryptOptions | undefined | false,
 ) {
   return async (msg: string) => {
     if (!encryption) {
