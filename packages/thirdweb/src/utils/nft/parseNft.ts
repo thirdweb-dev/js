@@ -13,19 +13,19 @@ export type NFTMetadata = {
 
 type NFTType = "ERC1155" | "ERC721";
 
-type ERC1155Options = {
+type BaseOptions = {
   tokenId: bigint;
   tokenUri: string;
-  type: "ERC1155";
   owner?: string | null;
+};
+
+type ERC1155Options = BaseOptions & {
+  type: "ERC1155";
   supply: bigint;
 };
 
-type ERC721Options = {
-  tokenId: bigint;
-  tokenUri: string;
+type ERC721Options = BaseOptions & {
   type: "ERC721";
-  owner?: string | null;
 };
 
 type ParseNFTOptions<type extends NFTType> = type extends "ERC1155" ? ERC1155Options : ERC721Options;
