@@ -1,8 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
-  "chainId": 12611,
-  "explorers": [],
+  "chainId": 3776,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://astar-zkevm.explorer.startale.com/",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -12,23 +18,26 @@ export default {
     "format": "png"
   },
   "infoURL": "https://astar.network",
-  "name": "Astar zkEVM (deprecated)",
+  "name": "Astar zkEVM",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "networkId": 12611,
+  "networkId": 3776,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
-    "bridges": []
+    "bridges": [
+      {
+        "url": "https://bridge.gelato.network/bridge/astar-zkevm"
+      }
+    ]
   },
   "redFlags": [],
   "rpc": [],
-  "shortName": "astrzk",
-  "slug": "astar-zkevm-deprecated",
-  "status": "incubating",
+  "shortName": "astarzk",
+  "slug": "astar-zkevm",
   "testnet": false,
   "title": "Astar zkEVM Mainnet"
 } as const satisfies Chain;
