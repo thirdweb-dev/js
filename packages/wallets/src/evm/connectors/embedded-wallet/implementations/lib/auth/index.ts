@@ -180,6 +180,16 @@ export class Auth {
     });
   }
 
+  async sendSmsLoginOtp({
+    phoneNumber,
+  }: Parameters<
+    BaseLogin["sendSmsLoginOtp"]
+  >[0]): Promise<SendEmailOtpReturnType> {
+    return this.BaseLogin.sendSmsLoginOtp({
+      phoneNumber,
+    });
+  }
+
   /**
    * Used to verify the otp that the user receives from thirdweb
    *
