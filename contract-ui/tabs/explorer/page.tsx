@@ -15,7 +15,6 @@ export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
   const { contract } = useContract(contractAddress);
 
   const functions = useContractFunctions(contract?.abi as Abi);
-
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }

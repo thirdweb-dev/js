@@ -187,7 +187,6 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
     });
     return results;
   }, [fnsOrEvents, extensions]);
-
   const writeFunctions: ExtensionFunctions[] = useMemo(() => {
     return functionsWithExtension
       .map((e) => {
@@ -224,6 +223,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       })
       .filter((e) => e !== undefined) as ExtensionFunctions[];
   }, [functionsWithExtension]);
+
   const events = useMemo(() => {
     return fnsOrEvents.filter((fn) => !("stateMutability" in fn)) as AbiEvent[];
   }, [fnsOrEvents]);
@@ -249,7 +249,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           </Flex>
           <Divider my={2} />
         </>
-      ) : null}
+      ) : (
+        <>
+          <Flex alignItems="center" alignContent={"center"} gap={2}>
+            <Heading as="label" size="label.md">
+              Other Functions
+            </Heading>
+          </Flex>
+          <Divider my={2} />
+        </>
+      )}
       {e.functions.map((fn) => (
         <FunctionsOrEventsListItem
           key={fn.signature}
@@ -299,12 +308,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                 )}
               </TabList>
               <TabPanels h="auto" overflow="auto">
-                <TabPanel>
-                  {writeFunctions.map((e) => functionSection(e))}
-                </TabPanel>
-                <TabPanel>
-                  {viewFunctions.map((e) => functionSection(e))}
-                </TabPanel>
+                {writeFunctions.length > 0 && (
+                  <TabPanel>
+                    {writeFunctions.map((e) => functionSection(e))}
+                  </TabPanel>
+                )}
+                {viewFunctions.length > 0 && (
+                  <TabPanel>
+                    {viewFunctions.map((e) => functionSection(e))}
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           )}
