@@ -46,7 +46,6 @@ describe("erc721.getNFT", () => {
           "name": "Doodle #1",
         },
         "owner": null,
-        "supply": 1n,
         "tokenURI": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         "type": "ERC721",
       }
@@ -92,7 +91,6 @@ describe("erc721.getNFT", () => {
           "name": "Doodle #1",
         },
         "owner": "0xbE9936FCFC50666f5425FDE4A9decC59cEF73b24",
-        "supply": 1n,
         "tokenURI": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         "type": "ERC721",
       }

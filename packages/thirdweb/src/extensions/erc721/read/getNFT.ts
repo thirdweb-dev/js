@@ -32,7 +32,7 @@ export type GetNFTParams = Prettify<
  */
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
-): Promise<NFT<"ERC721">> {
+): Promise<NFT> {
   const [uri, owner] = await Promise.all([
     tokenURI(options).catch(() => null),
     options.includeOwner

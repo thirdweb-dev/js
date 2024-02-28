@@ -44,7 +44,7 @@ export type GetNFTsParams = {
  */
 export async function getNFTs(
   options: BaseTransactionOptions<GetNFTsParams>,
-): Promise<NFT<"ERC721">[]> {
+): Promise<NFT[]> {
   const [startTokenId_, maxSupply] = await Promise.allSettled([
     startTokenId(options),
     nextTokenIdToMint(options),

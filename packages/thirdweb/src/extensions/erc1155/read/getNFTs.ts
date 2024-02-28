@@ -37,7 +37,7 @@ export type GetNFTsParams = {
  */
 export async function getNFTs(
   options: BaseTransactionOptions<GetNFTsParams>,
-): Promise<NFT<"ERC1155">[]> {
+): Promise<NFT[]> {
   const start = BigInt(options.start || 0);
   const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
   const totalCount = await nextTokenIdToMint(options);

@@ -25,7 +25,7 @@ export type GetNFTParams = TokenUriParams;
  */
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
-): Promise<NFT<"ERC1155">> {
+): Promise<NFT> {
   const [tokenUri, supply] = await Promise.all([
     uri(options),
     totalSupply(options),

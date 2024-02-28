@@ -43,7 +43,7 @@ export type GetOwnedNFTsParams = {
  */
 export async function getOwnedNFTs(
   options: BaseTransactionOptions<GetOwnedNFTsParams>,
-): Promise<(NFT<"ERC1155"> & { quantityOwned: bigint })[]> {
+): Promise<(NFT & { quantityOwned: bigint })[]> {
   const maxId = await nextTokenIdToMint(options);
 
   // approach is naieve, likely can be improved
