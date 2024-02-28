@@ -24,7 +24,7 @@ export interface SolidityInputWithTypeProps extends SolidityInputProps {
     | undefined;
   functionName?: string;
 }
-export interface SolidityInputPropsOptionalFormProps extends InputProps {
+interface SolidityInputPropsOptionalFormProps extends InputProps {
   solidityType: string;
   solidityName?: string;
   solidityComponents?:
@@ -54,15 +54,6 @@ export const SolidityInput = React.forwardRef<
     );
   }
 
-  /* if (solidityType === "address[]") {
-    return (
-      <SolidityArrayInput
-        formContext={form}
-        solidityType={solidityType}
-        {...inputProps}
-      />
-    );
-  } else */
   if (solidityType?.endsWith("[]")) {
     return (
       <SolidityRawInput

@@ -60,7 +60,7 @@ export type Account = {
   };
 };
 
-export interface UpdateAccountInput {
+interface UpdateAccountInput {
   name?: string;
   email?: string;
   plan?: AccountPlan;
@@ -69,21 +69,21 @@ export interface UpdateAccountInput {
   onboardSkipped?: boolean;
 }
 
-export interface UpdateAccountNotificationsInput {
+interface UpdateAccountNotificationsInput {
   billing: "email" | "none";
   updates: "email" | "none";
 }
 
-export interface ConfirmEmailInput {
+interface ConfirmEmailInput {
   confirmationToken: string;
 }
 
-export type ApiKeyRecoverShareManagement = "AWS_MANAGED" | "USER_MANAGED";
-export type ApiKeyCustomAuthentication = {
+type ApiKeyRecoverShareManagement = "AWS_MANAGED" | "USER_MANAGED";
+type ApiKeyCustomAuthentication = {
   jwksUri: string;
   aud: string;
 };
-export type ApiKeyCustomAuthEndpoint = {
+type ApiKeyCustomAuthEndpoint = {
   authEndpoint: string;
   customHeaders: { key: string; value: string }[];
 };
@@ -154,13 +154,13 @@ export type ApiKey = {
   services?: ApiKeyService[];
 };
 
-export interface UpdateKeyServiceInput {
+interface UpdateKeyServiceInput {
   name: string;
   targetAddresses: string[];
   actions?: string[];
 }
 
-export interface CreateKeyInput {
+interface CreateKeyInput {
   name?: string;
   domains?: string[];
   bundleIds?: string[];
@@ -168,7 +168,7 @@ export interface CreateKeyInput {
   services?: UpdateKeyServiceInput[];
 }
 
-export interface UpdateKeyInput {
+interface UpdateKeyInput {
   id: string;
   name: string;
   domains: string[];
@@ -177,20 +177,20 @@ export interface UpdateKeyInput {
   services?: UpdateKeyServiceInput[];
 }
 
-export interface UsageBundler {
+interface UsageBundler {
   chainId: number;
   sumTransactionFee: string;
 }
 
-export interface UsageStorage {
+interface UsageStorage {
   sumFileSizeBytes: number;
 }
 
-export interface UsageEmbeddedWallets {
+interface UsageEmbeddedWallets {
   countWalletAddresses: number;
 }
 
-export interface UsageCheckout {
+interface UsageCheckout {
   sumTransactionFeeUsd: number;
 }
 
@@ -222,7 +222,7 @@ export interface UsageBillableByService {
   };
 }
 
-export interface WalletStats {
+interface WalletStats {
   timeSeries: {
     dayTime: string;
     clientId: string;
@@ -752,7 +752,7 @@ export function useRevokeApiKey() {
   );
 }
 
-export function useGenerateApiKey() {
+function useGenerateApiKey() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
@@ -1036,7 +1036,7 @@ export function useApiAuthToken() {
 /**
  * @deprecated
  */
-export async function fetchApiKeyAvailability(name: string) {
+async function fetchApiKeyAvailability(name: string) {
   const res = await fetch(
     `${THIRDWEB_API_HOST}/v1/keys/availability?name=${name}`,
     {

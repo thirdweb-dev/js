@@ -1,7 +1,7 @@
 import { useEns, usePublisherProfile } from "../hooks";
 import { MaskedAvatar, MaskedAvatarProps } from "tw-components/masked-avatar";
 
-export interface PublisherAvatarProps extends Omit<MaskedAvatarProps, "src"> {
+interface PublisherAvatarProps extends Omit<MaskedAvatarProps, "src"> {
   address: string;
 }
 

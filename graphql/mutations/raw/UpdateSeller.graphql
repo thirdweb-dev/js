@@ -1,5 +1,0 @@
-mutation UpdateSeller($id: String!, $sellerValue: seller_set_input!) {
-  update_seller_by_pk(pk_columns: { id: $id }, _set: $sellerValue) {
-    ...Seller
-  }
-}

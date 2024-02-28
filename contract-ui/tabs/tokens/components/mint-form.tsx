@@ -40,7 +40,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
   );
 };
 
-export const TokenMintFormLayout: React.FC<{
+const TokenMintFormLayout: React.FC<{
   mintQuery: UseMutationResult<unknown, unknown, TokenParams>;
   decimals: number | undefined;
   address: string | undefined;

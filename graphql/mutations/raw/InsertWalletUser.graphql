@@ -1,5 +1,0 @@
-mutation InsertWalletUser($object: wallet_user_insert_input!) {
-  insert_wallet_user_one(object: $object) {
-    ...WalletUser
-  }
-}

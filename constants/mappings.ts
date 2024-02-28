@@ -240,7 +240,7 @@ export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
 };
 
 // gnosis mappings
-export const GNOSIS_TO_CHAIN_ID = {
+const GNOSIS_TO_CHAIN_ID = {
   // supported mainnets
   eth: 1,
   matic: 137,

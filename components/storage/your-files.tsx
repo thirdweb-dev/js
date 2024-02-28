@@ -10,16 +10,16 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { toSize } from "utils/number";
 import { TWQueryTable } from "components/shared/TWQueryTable";
 
-export interface PinnedFilesResponse {
+interface PinnedFilesResponse {
   result: PinnedFilesResult;
 }
 
-export interface PinnedFilesResult {
+interface PinnedFilesResult {
   pinnedFiles: PinnedFile[];
   count: number;
 }
 
-export interface PinnedFile {
+interface PinnedFile {
   ipfsHash: string;
   fileSizeBytes: string;
   pinnedAt: string;

@@ -1,5 +1,0 @@
-query WalletUserById($id: uuid !) {
-  wallet_user_by_pk(id: $id) {
-    ...WalletUser
-  }
-}

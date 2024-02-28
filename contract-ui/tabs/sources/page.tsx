@@ -33,7 +33,7 @@ type VerifyContractParams = {
   chainId: number;
 };
 
-export async function verifyContract({
+async function verifyContract({
   contractAddress,
   chainId,
 }: VerifyContractParams) {

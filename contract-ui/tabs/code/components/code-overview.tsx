@@ -357,7 +357,7 @@ interface SnippetOptions {
   clientId?: string;
 }
 
-export function formatSnippet(
+function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
   {
     contractAddress,

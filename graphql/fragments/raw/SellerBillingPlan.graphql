@@ -1,9 +1,0 @@
-fragment SellerBillingPlan on seller_billing_plan {
-  seller_id
-  type
-  plan_price_usd_cents
-  created_at
-  last_billed_at
-  expires_at
-  cancelled_at
-}

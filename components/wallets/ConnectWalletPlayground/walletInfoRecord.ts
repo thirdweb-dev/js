@@ -40,7 +40,7 @@ export const hideUIForWalletIdsMobile = new Set([
   trustWalletConfig.id,
 ]);
 
-export type WalletInfo = {
+type WalletInfo = {
   code: (isReccomended?: boolean) => string;
   component: WalletConfig<any>;
   import: string;

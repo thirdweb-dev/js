@@ -116,7 +116,7 @@ interface EventsFeedItemProps {
   transaction: ContractTransaction;
 }
 
-export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
+const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   transaction,
 }) => {
   const toast = useToast();

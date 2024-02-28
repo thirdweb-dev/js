@@ -2,7 +2,7 @@ import { usePaymentsKycStatus } from "@3rdweb-sdk/react/hooks/usePayments";
 import { Alert, AlertIcon, AlertDescription } from "@chakra-ui/react";
 import { Text } from "tw-components";
 
-export const SellerVerificationStatusRecord: Record<
+const SellerVerificationStatusRecord: Record<
   string,
   { message: string; type: "error" | "info" | "success" }
 > = {

@@ -43,7 +43,7 @@ import { Column, usePagination, useTable } from "react-table";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
-export interface SnapshotAddressInput {
+interface SnapshotAddressInput {
   address: string;
   maxClaimable?: string;
   price?: string;

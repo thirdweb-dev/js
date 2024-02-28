@@ -26,7 +26,7 @@ export function isEnsName(name: string): boolean {
   return name?.endsWith(".eth");
 }
 
-export async function resolveAddressToEnsName(
+async function resolveAddressToEnsName(
   address: string,
 ): Promise<ENSResolveResult> {
   invariant(utils.isAddress(address), "address must be a valid address");
@@ -37,7 +37,7 @@ export async function resolveAddressToEnsName(
   };
 }
 
-export async function resolveEnsNameToAddress(
+async function resolveEnsNameToAddress(
   ensName: string,
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");

@@ -1,5 +1,0 @@
-mutation UpdateTransactionEmail($id: uuid!, $email: String!) {
-  update_transaction_by_pk(pk_columns: { id: $id }, _set: { email: $email }) {
-    id
-  }
-}

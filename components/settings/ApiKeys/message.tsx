@@ -1,4 +1,4 @@
-export const Message = {
+const Message = {
   NoDomainsTitle: "No Domains Configured",
   NoDomainsDescription:
     "This will deny requests from all origins, rendering the key unusable in frontend applications. Proceed only if you intend to use this key in server or native apps environments.",

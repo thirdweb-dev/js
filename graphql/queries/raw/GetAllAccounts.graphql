@@ -1,5 +1,0 @@
-query GetAllAccounts {
-  account {
-    ...Account
-  }
-}

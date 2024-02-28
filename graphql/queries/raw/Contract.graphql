@@ -1,5 +1,0 @@
-query Contract($id: uuid!) {
-  contract_by_pk(id: $id) {
-    ...Contract
-  }
-}

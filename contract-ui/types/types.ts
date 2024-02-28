@@ -3,7 +3,7 @@ import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectB
 import type { ComponentType } from "react";
 
 // We're using it everywhere.
-export type PotentialContractInstance =
+type PotentialContractInstance =
   | ValidContractInstance
   | null
   | undefined;

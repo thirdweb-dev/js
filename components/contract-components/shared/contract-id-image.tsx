@@ -9,7 +9,7 @@ import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
 import { replaceIpfsUrl } from "lib/sdk";
 import { StaticImageData } from "next/image";
 
-export interface ContractIdImageProps
+interface ContractIdImageProps
   extends Omit<ChakraNextImageProps, "src" | "alt" | "boxSize"> {
   contractId: ContractId;
   boxSize?: number;

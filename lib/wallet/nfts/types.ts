@@ -63,7 +63,7 @@ export const alchemySupportedChainIdsMap: Record<number, string> = {
 };
 
 // List: https://docs.moralis.io/supported-chains
-export const moralisSupportedChainIdsMap: Record<number, string> = {
+const moralisSupportedChainIdsMap: Record<number, string> = {
   [Ethereum.chainId]: "",
   [Goerli.chainId]: "",
   [Sepolia.chainId]: "",

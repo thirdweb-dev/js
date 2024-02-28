@@ -1,6 +1,0 @@
-
-query EwsAuthedUserByEmail($email: String!) {
-  ews_authed_user(where: {email: {_eq: $email}}) {
-    ...EwsAuthedUser
-  }
-}

@@ -103,9 +103,7 @@ const persister: Persister = createAsyncStoragePersister({
   key: `tw-query-cache`,
 });
 
-export interface AppLayoutProps
-  extends AppShellProps,
-    DashboardThirdwebProviderProps {
+interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {
   dehydratedState?: DehydratedState;
 }
 

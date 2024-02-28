@@ -1,5 +1,0 @@
-query CheckoutActiveErrors {
-  checkout_active_error {
-    ...CheckoutActiveError
-  }
-}

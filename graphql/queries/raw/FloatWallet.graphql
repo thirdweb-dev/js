@@ -1,5 +1,0 @@
-query FloatWallet($address: String!) {
-  float_wallet_by_pk(address: $address) {
-    ...FloatWallet
-  }
-}

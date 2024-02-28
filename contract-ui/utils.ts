@@ -8,7 +8,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
-export function isPrebuiltContract(
+function isPrebuiltContract(
   contract: ValidContractInstance | null | undefined,
   contractType: RequiredParam<ContractType> | null,
 ): contract is ValidContractInstance {
@@ -21,7 +21,7 @@ export function isPrebuiltContract(
   return true;
 }
 
-export function isPaperSupportedContract(
+function isPaperSupportedContract(
   contract: ValidContractInstance | null | undefined,
   contractType: RequiredParam<ContractType> | null,
 ): contract is EditionDrop | NFTDrop {

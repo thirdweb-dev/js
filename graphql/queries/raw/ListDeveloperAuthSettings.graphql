@@ -1,9 +1,0 @@
-query ListDeveloperAuthSettings($developerClientId: uuid!) {
-  developer_auth_setting(
-    where: { 
-      developer_client_id: { _eq: $developerClientId }
-    }
-  ) {
-    ...DeveloperAuthSetting
-  }
-}

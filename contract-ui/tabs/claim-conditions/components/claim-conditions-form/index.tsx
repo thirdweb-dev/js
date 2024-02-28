@@ -54,7 +54,7 @@ import { Button, Heading, MenuItem, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
 
-export type ClaimConditionDashboardInput = ClaimConditionInput & {
+type ClaimConditionDashboardInput = ClaimConditionInput & {
   isEditing: boolean;
   fromSdk: boolean;
 };
@@ -145,12 +145,12 @@ const getClaimConditionTypeFromPhase = (
   return "custom";
 };
 
-export type FormData = z.input<typeof ClaimConditionsSchema>;
+type FormData = z.input<typeof ClaimConditionsSchema>;
 
-export type ControlledField = UseFieldArrayReturn<FormData>["fields"][number] &
+type ControlledField = UseFieldArrayReturn<FormData>["fields"][number] &
   FormData["phases"][number];
 
-export interface ClaimsConditionFormContextData {
+interface ClaimsConditionFormContextData {
   form: UseFormReturn<FormData>;
   field: ControlledField;
   phaseIndex: number;
@@ -167,7 +167,7 @@ export interface ClaimsConditionFormContextData {
   claimConditionType: ClaimConditionType;
 }
 
-export const ClaimsConditionFormContext = React.createContext<
+const ClaimsConditionFormContext = React.createContext<
   ClaimsConditionFormContextData | undefined
 >(undefined);
 
@@ -180,7 +180,7 @@ export function useClaimConditionsFormContext() {
   return data;
 }
 
-export interface ClaimConditionsFormProps {
+interface ClaimConditionsFormProps {
   contract: DropContract;
   tokenId?: string;
   isColumn?: true;

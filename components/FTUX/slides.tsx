@@ -8,7 +8,7 @@ import { SlideStateProps, TRACK_CATEGORY } from "./shared";
 import React from "react";
 import { Text, TrackedLink } from "tw-components";
 
-export interface Slide {
+interface Slide {
   title: React.ReactNode;
   background: string;
   graphic: React.FC<SlideStateProps>;

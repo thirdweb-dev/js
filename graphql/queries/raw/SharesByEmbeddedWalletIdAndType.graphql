@@ -1,5 +1,0 @@
-query SharesByEmbeddedWalletIdAndType($embeddedWalletId: uuid!, $types: [String!]!) {
-  share(where: {embedded_wallet_id: {_eq: $embeddedWalletId}, type: {_in: $types}}) {
-    ...Share
-  }
-}

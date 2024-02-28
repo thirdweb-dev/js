@@ -1,5 +1,0 @@
-query AirdropByTransactionId($transactionId: uuid!) {
-  airdrop(where: { transaction_id: { _eq: $transactionId } }) {
-    ...Airdrop
-  }
-}

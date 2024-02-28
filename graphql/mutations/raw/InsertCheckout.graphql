@@ -1,5 +1,0 @@
-mutation InsertCheckout($checkout: checkout_insert_input!) {
-  insert_checkout_one(object: $checkout) {
-    ...Checkout
-  }
-}

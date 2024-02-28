@@ -9,7 +9,7 @@ import {
 import { StoredChain } from "contexts/configured-chains";
 import { useSetEditChain } from "hooks/networkConfigModal";
 
-export interface AddNetworkModalProps {
+interface AddNetworkModalProps {
   onClose: () => void;
   onNetworkAdded?: (chain: StoredChain) => void;
 }

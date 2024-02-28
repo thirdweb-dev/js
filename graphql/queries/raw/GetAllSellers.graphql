@@ -1,5 +1,0 @@
-query GetAllSellers {
-  seller(order_by: { created_at: asc }) {
-    ...Seller
-  }
-}

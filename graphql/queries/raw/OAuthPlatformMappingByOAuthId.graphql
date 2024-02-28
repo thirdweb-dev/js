@@ -1,5 +1,0 @@
-query OAuthPlatformMappingByOAuthId($oauthId: uuid!) {
-  oauth_platform_mapping(where: {oauth_id: {_eq: $oauthId}, revoked_at: {_gt: "now()"}}) {
-    ...OAuthPlatformMapping
-  }
-}

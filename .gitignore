@@ -74,6 +74,6 @@ public/sitemap*.xml
 future_app/
 
 # generated files
-graphql/**/__generated__/
+graphql/generated.ts
 # Sentry Config File
 .sentryclirc

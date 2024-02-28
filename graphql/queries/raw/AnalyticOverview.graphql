@@ -1,8 +1,0 @@
-query AnalyticOverview($ownerId: String!) {
-  analytics_overview_2(
-    where: { owner_id: { _eq: $ownerId } }
-    order_by: { checkout_created_at: desc }
-  ) {
-    ...AnalyticOverview
-  }
-}

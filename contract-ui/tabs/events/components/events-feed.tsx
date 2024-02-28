@@ -189,7 +189,7 @@ interface EventsFeedItemProps {
   chainSlug?: string;
 }
 
-export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
+const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   transaction,
   setSelectedEvent,
   contractAddress,

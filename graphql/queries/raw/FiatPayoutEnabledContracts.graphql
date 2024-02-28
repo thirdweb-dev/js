@@ -1,5 +1,0 @@
-query FiatPayoutEnabledContracts {
-  contract(where: {is_fiat_payout_enabled: {_eq: true}, _and: {deleted_at: {_eq: "infinity"}}}) {
-    ...Contract
-  }
-}

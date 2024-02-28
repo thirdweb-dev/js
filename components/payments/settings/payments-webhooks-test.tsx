@@ -38,7 +38,7 @@ import { AiOutlineExperiment } from "@react-icons/all-files/ai/AiOutlineExperime
 import { MdBlock } from "@react-icons/all-files/md/MdBlock";
 import { MdCheck } from "@react-icons/all-files/md/MdCheck";
 
-export interface PaymentsWebhooksTestButtonProps {
+interface PaymentsWebhooksTestButtonProps {
   paymentsSellerId: string;
   isMainnets: boolean;
   webhooks: PaymentsWebhooksType[];
@@ -57,7 +57,7 @@ const beautifyString = (responseBody: string) => {
   }
 };
 
-export const StatusTag = ({ status }: { status: number }) => {
+const StatusTag = ({ status }: { status: number }) => {
   const isSuccess = status >= 200 && status < 300;
   return (
     <Tag

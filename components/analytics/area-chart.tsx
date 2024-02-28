@@ -1,14 +1,5 @@
-import type { ChartErrorStateProps } from "./chart-container";
 import { CustomToolTip } from "./custom-tooltip";
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  BoxProps,
-  Center,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, BoxProps, Center } from "@chakra-ui/react";
 import { useEffect, useId, useState } from "react";
 import {
   Area,
@@ -18,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Button, Heading, Text } from "tw-components";
+import { Text } from "tw-components";
 
 export type GenericDataType = Record<string, string | number>;
 
@@ -47,7 +38,7 @@ export interface AreaChartProps<
   startEndOnly?: boolean;
 }
 
-export const AreaChart = <
+const AreaChart = <
   TData extends GenericDataType,
   TIndexKey extends keyof TData,
 >({
@@ -243,50 +234,6 @@ export const AreaChartLoadingState: React.FC = () => {
         data={loadingData}
         index={{ id: "key" }}
         categories={[{ id: "value", color: "var(--chakra-colors-faded)" }]}
-      />
-    </Box>
-  );
-};
-
-export const AreaChartErrorState: React.FC<
-  Pick<ChartErrorStateProps, "resetError">
-> = ({ resetError }) => {
-  const [fakeData] = useState(generateFakeData());
-
-  return (
-    <Box position="relative">
-      <Center
-        backdropFilter="blur(4px)"
-        zIndex={1}
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-      >
-        <Alert
-          w="auto"
-          status="error"
-          borderRadius="xl"
-          maxW="md"
-          alignItems="flex-start"
-        >
-          <AlertIcon />
-          <Flex direction="column" gap={2}>
-            <Heading as={AlertTitle} size="title.xs">
-              Chart Error
-            </Heading>
-            <Button onClick={resetError} colorScheme="red" size="xs">
-              Reload
-            </Button>
-          </Flex>
-        </Alert>
-      </Center>
-      <AreaChart
-        pointerEvents="none"
-        data={fakeData}
-        index={{ id: "key" }}
-        categories={[{ id: "value", color: "var(--chakra-colors-red-500)" }]}
       />
     </Box>
   );

@@ -38,7 +38,7 @@ interface ContractFunctionProps {
   contract?: SmartContract;
 }
 
-export const ContractFunction: React.FC<ContractFunctionProps> = ({
+const ContractFunction: React.FC<ContractFunctionProps> = ({
   fn,
   contract,
 }) => {

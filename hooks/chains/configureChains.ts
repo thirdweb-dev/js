@@ -20,7 +20,7 @@ export function useSupportedChains() {
 }
 
 // maps chainId to Chain
-export type ConfiguredChainRecord = Record<number, StoredChain>;
+type ConfiguredChainRecord = Record<number, StoredChain>;
 
 /**
  * @returns a list of record that maps configured chainId to `Chain` object

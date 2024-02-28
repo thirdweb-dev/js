@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { FiTrash } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
 
-export interface PaymentsWebhooksTableProps {
+interface PaymentsWebhooksTableProps {
   paymentsSellerId: string;
   webhooks: PaymentsWebhooksType[];
   isLoading: boolean;

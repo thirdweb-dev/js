@@ -123,7 +123,7 @@ interface PermissionsItemProps {
   data: { member: string; roles: string[] };
 }
 
-export const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
+const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
   const toast = useToast();
   const { onCopy, setValue } = useClipboard(data.member);
 

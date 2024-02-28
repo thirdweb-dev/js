@@ -8,4 +8,4 @@ export const RE_DOMAIN = new RegExp(
 
 export const RE_BUNDLE_ID = new RegExp(/^[a-z0-9.-]{3,64}$/);
 
-export const RE_INTERNAL_TEST_EMAIL = new RegExp(/^\w+\+test.+@thirdweb\.com$/);
+const RE_INTERNAL_TEST_EMAIL = new RegExp(/^\w+\+test.+@thirdweb\.com$/);

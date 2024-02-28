@@ -6,7 +6,7 @@ interface ReplacementProps {
   chainId?: SUPPORTED_CHAIN_ID;
 }
 
-export interface TemplateValue {
+interface TemplateValue {
   value: string;
   helperText: string;
   replacerFunction: (

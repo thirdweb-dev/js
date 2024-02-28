@@ -84,7 +84,7 @@ export const IconLogo: React.FC<Omit<AspectRatioProps, "ratio">> = ({
   );
 };
 
-export const Wordmark: React.FC<Omit<AspectRatioProps, "ratio">> = ({
+const Wordmark: React.FC<Omit<AspectRatioProps, "ratio">> = ({
   color = "var(--chakra-colors-wordmark)",
   ...props
 }) => {

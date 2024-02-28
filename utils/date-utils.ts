@@ -17,7 +17,7 @@ export function toDateTimeLocal(date?: Date | number | string) {
     : undefined;
 }
 
-export function toDateString(date: Date | string | number) {
+function toDateString(date: Date | string | number) {
   return new Date(date).toISOString().split("T")[0];
 }
 

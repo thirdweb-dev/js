@@ -1,5 +1,0 @@
-query WalletUserByClientId($clientId: uuid!, $lastAccessedAt: timestamptz!) {
-  wallet_user(where: { client_id: { _eq: $clientId }, last_accessed_at: { _gte: $lastAccessedAt } }, order_by: { last_accessed_at: desc } ) {
-    ...WalletUser
-  }
-}

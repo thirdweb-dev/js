@@ -201,7 +201,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 };
 
 // data fetching
-export type PublishedContractId =
+type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
@@ -274,11 +274,9 @@ export function publishedContractQuery(
   };
 }
 
-export type PublishedContract = Awaited<
-  ReturnType<typeof publishedContractQueryFn>
->;
+type PublishedContract = Awaited<ReturnType<typeof publishedContractQueryFn>>;
 
-export function usePublishedContract(publishedContractId: PublishedContractId) {
+function usePublishedContract(publishedContractId: PublishedContractId) {
   const queryClient = useQueryClient();
   return useQuery(publishedContractQuery(publishedContractId, queryClient));
 }

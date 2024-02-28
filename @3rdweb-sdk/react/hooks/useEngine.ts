@@ -135,7 +135,7 @@ export type Transaction = {
   functionArgs?: string | null;
 };
 
-export type TransactionResponse = {
+type TransactionResponse = {
   transactions: Transaction[];
   totalCount: number;
 };
@@ -172,7 +172,7 @@ export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   );
 }
 
-export type WalletConfig =
+type WalletConfig =
   | {
       type: "local";
     }
@@ -213,7 +213,7 @@ export function useEngineWalletConfig(instance: string) {
   );
 }
 
-export type CurrencyValue = {
+type CurrencyValue = {
   name: string;
   symbol: string;
   decimals: number;
@@ -389,7 +389,7 @@ export function useEngineCreateRelayer(instance: string) {
   );
 }
 
-export type RevokeRelayerInput = {
+type RevokeRelayerInput = {
   id: string;
 };
 
@@ -771,7 +771,7 @@ export function useEngineRevokePermissions(instance: string) {
   );
 }
 
-export type CreateAccessTokenResponse = AccessToken & {
+type CreateAccessTokenResponse = AccessToken & {
   accessToken: string;
 };
 

@@ -24,20 +24,19 @@ const config: CodegenConfig = {
       },
     },
   ],
+  // emitLegacyCommonJSImports: false,
   // this is annoying, would be better if all of our code was in src/
   documents: ["./graphql/**/*.graphql"],
   generates: {
-    "./graphql/generated_types.ts": {
-      plugins: ["typescript"],
-    },
-    "./graphql/__generated__/": {
-      preset: "near-operation-file",
-      plugins: ["typescript-operations", "typescript-react-apollo"],
-      presetConfig: {
-        gqlTagName: "gql",
-        baseTypesPath: "../generated_types.ts",
-        extension: ".generated.ts",
-        folder: "../__generated__",
+    "./graphql/generated.ts": {
+      plugins: [
+        "typescript",
+        "typescript-operations",
+        "typescript-react-apollo",
+      ],
+      config: {
+        useTypeImports: true,
+        withComponent: false,
       },
     },
   },

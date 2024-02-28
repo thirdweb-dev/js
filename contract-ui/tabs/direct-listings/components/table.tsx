@@ -7,7 +7,7 @@ import { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
 
-export interface DirectListingsTableProps {
+interface DirectListingsTableProps {
   contract: MarketplaceV3;
 }
 

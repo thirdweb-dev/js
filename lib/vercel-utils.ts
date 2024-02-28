@@ -1,6 +1,6 @@
 import { isBrowser } from "utils/isBrowser";
 
-export function getVercelEnv() {
+function getVercelEnv() {
   const onVercel = process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV;
   if (!onVercel) {
     return "development";

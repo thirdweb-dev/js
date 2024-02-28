@@ -1,5 +1,0 @@
-query ListPaperWalletBuyers {
-  buyer(where: { is_paper_wallet: { _eq: true } }) {
-    ...Buyer
-  }
-}

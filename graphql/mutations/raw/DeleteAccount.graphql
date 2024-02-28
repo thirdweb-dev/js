@@ -1,5 +1,0 @@
-mutation DeleteAccount($id: uuid!) {
-  delete_account_by_pk(id: $id) {
-    ...Account
-  }
-}

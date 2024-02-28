@@ -355,7 +355,7 @@ async function getValueAnalytics(
   }));
 }
 
-export function useValueAnalytics(params: AnalyticsQueryParams) {
+function useValueAnalytics(params: AnalyticsQueryParams) {
   return useQuery({
     queryKey: [
       "analytics",
@@ -434,7 +434,7 @@ async function getCumulativeWalletsAnalytics(
   }));
 }
 
-export function useCumulativeWalletsAnalytics(params: AnalyticsQueryParams) {
+function useCumulativeWalletsAnalytics(params: AnalyticsQueryParams) {
   return useQuery({
     queryKey: [
       "analytics",

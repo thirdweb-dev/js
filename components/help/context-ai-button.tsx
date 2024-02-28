@@ -38,7 +38,7 @@ export function ContextAIBotButton() {
   );
 }
 
-export function ContextAIBotScript() {
+function ContextAIBotScript() {
   return (
     <Script
       // defer

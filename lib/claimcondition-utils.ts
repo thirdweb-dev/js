@@ -18,22 +18,6 @@ export function hasMultiphaseClaimConditions(
   ]);
 }
 
-export function hasSinglePhaseClaimConditions(
-  contract?: DropContract,
-): boolean {
-  return detectFeatures(contract, [
-    // erc721
-    "ERC721ClaimConditionsV1",
-    "ERC721ClaimConditionsV2",
-    // erc1155
-    "ERC1155ClaimConditionsV1",
-    "ERC1155ClaimConditionsV2",
-    // erc20
-    "ERC20ClaimConditionsV1",
-    "ERC20ClaimConditionsV2",
-  ]);
-}
-
 export function hasLegacyClaimConditions(contract?: DropContract): boolean {
   return detectFeatures(contract, [
     // erc721

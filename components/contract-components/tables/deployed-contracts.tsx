@@ -322,7 +322,7 @@ interface ContractTableProps {
   chainIdsWithDeployments: number[];
 }
 
-export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
+const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   combinedList,
   children,
   isFetching,

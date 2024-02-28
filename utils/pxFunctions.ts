@@ -1,4 +1,4 @@
-export function numberToPx(number: number): string {
+function numberToPx(number: number): string {
   return `${number}px`;
 }
 

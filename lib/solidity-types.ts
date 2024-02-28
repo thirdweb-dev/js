@@ -1,8 +1,8 @@
 // boolean
-export type SolidityBool = "bool";
+type SolidityBool = "bool";
 
 // int
-export type SolidityInt =
+type SolidityInt =
   | "int"
   | "int8"
   | "int16"
@@ -38,7 +38,7 @@ export type SolidityInt =
   | "int256";
 
 // uint
-export type SolidityUint =
+type SolidityUint =
   | "uint"
   | "uint8"
   | "uint16"
@@ -77,12 +77,12 @@ export type SolidityUint =
 // ufixed TODO
 
 // address
-export type SolidityAddress = "address" | "address payable";
+type SolidityAddress = "address" | "address payable";
 // address array
-export type SolidityAddressArray = "address[]";
+type SolidityAddressArray = "address[]";
 
 // bytes
-export type SolidityBytes =
+type SolidityBytes =
   | "bytes"
   | "bytes1"
   | "bytes2"
@@ -118,7 +118,7 @@ export type SolidityBytes =
   | "bytes32";
 
 // string
-export type SolidityString = "string";
+type SolidityString = "string";
 
 // export all
 export type SolidityType =

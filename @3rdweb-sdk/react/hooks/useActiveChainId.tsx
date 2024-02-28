@@ -17,11 +17,11 @@ export type EVMContractInfo = {
 
 type SetEVMContractInfo = (info: EVMContractInfo) => void;
 
-export const EVMContractInfoContext = createContext<
+const EVMContractInfoContext = createContext<
   EVMContractInfo | undefined
 >(undefined);
 
-export const SetEVMContractInfoContext = createContext<
+const SetEVMContractInfoContext = createContext<
   SetEVMContractInfo | undefined
 >(undefined);
 

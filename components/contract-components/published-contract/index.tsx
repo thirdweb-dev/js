@@ -55,7 +55,7 @@ import {
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-export interface ExtendedPublishedContract extends PublishedContractType {
+interface ExtendedPublishedContract extends PublishedContractType {
   name: string;
   displayName?: string;
   description: string;

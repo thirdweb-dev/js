@@ -1,5 +1,0 @@
-query ListSellersByStripeCustomerId($stripeCustomerId: String!) {
-  seller(where: { stripe_customer_id: { _eq: $stripeCustomerId } }) {
-    ...Seller
-  }
-}

@@ -15,7 +15,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export interface HeroProps {
+interface HeroProps {
   name: string;
   title: string;
   description: ReactNode;

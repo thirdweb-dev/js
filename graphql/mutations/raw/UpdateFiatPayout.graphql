@@ -1,8 +1,0 @@
-mutation UpdateFiatPayout(
-  $id: uuid!
-  $fiatPayoutValue: fiat_payout_set_input!
-) {
-  update_fiat_payout_by_pk(pk_columns: { id: $id }, _set: $fiatPayoutValue) {
-    ...FiatPayout
-  }
-}

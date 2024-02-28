@@ -1,5 +1,0 @@
-query Buyer($id: String!) {
-  buyer_by_pk(id: $id) {
-    ...Buyer
-  }
-}

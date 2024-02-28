@@ -1,7 +1,0 @@
-mutation UpdateSellersByEmail($email: String!, $sellerValue: seller_set_input!) {
-  update_seller(where: { email: { _eq: $email } }, _set: $sellerValue) {
-    returning {
-      ...Seller
-    }
-  }
-}

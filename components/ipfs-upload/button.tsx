@@ -6,7 +6,7 @@ import { FiUpload } from "react-icons/fi";
 import { Button, ButtonProps } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export interface IpfsUploadButtonProps extends ButtonProps {
+interface IpfsUploadButtonProps extends ButtonProps {
   storageUpload: UseMutationResult<string[], unknown, any, unknown>;
   onUpload: (uri: string) => void;
 }

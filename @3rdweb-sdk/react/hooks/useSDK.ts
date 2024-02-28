@@ -171,7 +171,7 @@ export function useMainnetsContractList(walletAddress: string | undefined) {
   };
 }
 
-export function useTestnetsContractList(walletAddress: string | undefined) {
+function useTestnetsContractList(walletAddress: string | undefined) {
   const goerliQuery = useContractList(
     Goerli.chainId,
     getDashboardChainRpc(Goerli),

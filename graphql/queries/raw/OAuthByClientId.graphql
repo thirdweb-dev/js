@@ -1,7 +1,0 @@
-query OAuthByClientId($clientId: uuid!) {
-  oauth(
-    where: { client_id: { _eq: $clientId }, revoked_at: { _gt: "now()" } }
-  ) {
-    ...OAuth
-  }
-}

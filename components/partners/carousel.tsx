@@ -5,7 +5,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 const gap = { base: "40px", lg: "60px" };
 
-export const MarqueeGroup: ComponentWithChildren<{
+const MarqueeGroup: ComponentWithChildren<{
   ariaHidden: boolean;
   animationDirection?: "normal" | "reverse";
 }> = ({ ariaHidden, children, animationDirection = "normal" }) => {

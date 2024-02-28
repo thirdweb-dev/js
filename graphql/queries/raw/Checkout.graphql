@@ -1,5 +1,0 @@
-query Checkout($id: uuid!) {
-  checkout_by_pk(id: $id) {
-    ...Checkout
-  }
-}

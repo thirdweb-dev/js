@@ -12,7 +12,7 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { NoWalletConnectedPayments } from "./components/no-wallet-connected-payments";
 import { NoPaymentsEnabled } from "./components/no-payments-enabled";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { useAccount, useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 
 interface ContractPaymentsPageProps {
   contractAddress?: string;

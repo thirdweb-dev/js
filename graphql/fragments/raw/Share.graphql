@@ -1,8 +1,0 @@
-fragment Share on share{ 
-    type
-    id
-    encryption_password
-    encrypted_value
-    wallet_user_id
-    embedded_wallet_id
-}

@@ -1,5 +1,0 @@
-mutation InsertNewSeller($seller: seller_insert_input!) {
-  insert_seller_one(object: $seller) {
-    ...Seller
-  }
-}

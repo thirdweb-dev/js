@@ -2,7 +2,7 @@ import { removeEmptyValues } from "./parseAttributes";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import Papa from "papaparse";
 
-export interface CSVData extends Record<string, string | undefined> {
+interface CSVData extends Record<string, string | undefined> {
   name: string;
   description?: string;
   external_url?: string;
@@ -22,7 +22,7 @@ export const csvMimeTypes = [
   "text/tab-separated-values",
 ];
 
-export const jsonMimeTypes = [
+const jsonMimeTypes = [
   "application/json",
   "application/x-json",
   "application/ld+json",
@@ -30,7 +30,7 @@ export const jsonMimeTypes = [
   "application/x-json-ld",
 ];
 
-export const transformHeader = (h: string) => {
+const transformHeader = (h: string) => {
   const headersToTransform = [
     "name",
     "description",
@@ -102,7 +102,7 @@ const getAcceptedFiles = async (acceptedFiles: File[]) => {
   return { csv, json, images, videos };
 };
 
-export const removeEmptyKeysFromObject = (obj: any) => {
+const removeEmptyKeysFromObject = (obj: any) => {
   Object.keys(obj).forEach((key) => {
     if (obj[key] === "" || obj[key] === null || obj[key] === undefined) {
       delete obj[key];
@@ -111,7 +111,7 @@ export const removeEmptyKeysFromObject = (obj: any) => {
   return obj;
 };
 
-export const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
+const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
   const attributes = Object.entries(obj || {}).map(([trait_type, value]) => ({
     trait_type,
     value,

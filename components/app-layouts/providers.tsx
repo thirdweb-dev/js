@@ -74,7 +74,7 @@ const personalWallets = [
   oneKeyWallet(),
 ];
 
-export const dashboardSupportedWallets = [
+const dashboardSupportedWallets = [
   ...personalWallets,
   safeWallet({
     personalWallets,

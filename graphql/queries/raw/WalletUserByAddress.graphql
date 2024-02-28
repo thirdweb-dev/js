@@ -1,5 +1,0 @@
-query WalletUserByAddress($address: String!) {
-  wallet_user(where: { embedded_wallet: { address: { _ilike: $address } } }) {
-    ...WalletUser
-  }
-}

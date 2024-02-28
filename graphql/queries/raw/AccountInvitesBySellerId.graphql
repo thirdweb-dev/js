@@ -1,5 +1,0 @@
-query AccountInvitesBySellerId($sellerId: String!) {
-  account_invite(where: { seller_id: { _eq: $sellerId } }) {
-    ...AccountInvite
-  }
-}

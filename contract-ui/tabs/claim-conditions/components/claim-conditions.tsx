@@ -7,7 +7,7 @@ import { hasNewClaimConditions } from "lib/claimcondition-utils";
 import React, { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 
-export interface ClaimConditionsProps {
+interface ClaimConditionsProps {
   contract?: DropContract;
   tokenId?: string;
   isColumn?: true;

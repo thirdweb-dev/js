@@ -140,10 +140,10 @@ export function useErrorHandler() {
   return useContext(ErrorContext);
 }
 
-export function isError(value: unknown): value is Error {
+function isError(value: unknown): value is Error {
   return value instanceof Error;
 }
 
-export function isTransactionError(error: unknown): error is TransactionError {
+function isTransactionError(error: unknown): error is TransactionError {
   return error instanceof Object && "reason" in error && "info" in error;
 }

@@ -1,5 +1,0 @@
-query Account($id: uuid!) {
-  account_by_pk(id: $id) {
-    ...Account
-  }
-}

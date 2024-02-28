@@ -40,7 +40,7 @@ import {
 
 const TRACKING_CATEGORY = "ipfs_uploader";
 
-export interface IpfsUploadDropzoneProps {}
+interface IpfsUploadDropzoneProps {}
 
 export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
   const address = useAddress();

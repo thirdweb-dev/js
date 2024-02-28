@@ -3,9 +3,9 @@ import { AspectRatio, AspectRatioProps, Flex } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export type SupportedChartType = "area";
+type SupportedChartType = "area";
 
-export interface ChartContainerProps extends AspectRatioProps {
+interface ChartContainerProps extends AspectRatioProps {
   chartTitle?: JSX.Element;
   chartType?: SupportedChartType;
 }
@@ -37,18 +37,3 @@ const ChartLoadingState: React.FC<Pick<ChartContainerProps, "chartType">> = ({
   }
   return null;
 };
-
-export interface ChartErrorStateProps
-  extends Pick<ChartContainerProps, "chartType"> {
-  resetError: () => void;
-}
-
-// const ChartErrorState: React.FC<ChartErrorStateProps> = ({
-//   chartType,
-//   resetError,
-// }) => {
-//   if (chartType === "area") {
-//     return <AreaChartErrorState resetError={resetError} />;
-//   }
-//   return null;
-// };

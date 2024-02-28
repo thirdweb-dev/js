@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { publishedContractQuery } from "components/explore/contract-card";
 
-export type PublishedContractID = `${string}/${string}`;
+type PublishedContractID = `${string}/${string}`;
 
 export interface ExploreCategory {
   id: string;
@@ -195,9 +195,9 @@ export function getCategory(id: string): ExploreCategory | null {
   return null;
 }
 
-export type ExploreCategoryName = keyof typeof CATEGORIES;
+type ExploreCategoryName = keyof typeof CATEGORIES;
 
-export function isExploreCategory(
+function isExploreCategory(
   category: string,
 ): category is ExploreCategoryName {
   return category in CATEGORIES;

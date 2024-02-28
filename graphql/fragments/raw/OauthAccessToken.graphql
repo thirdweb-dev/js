@@ -1,8 +1,0 @@
-fragment OauthAccessToken on oauth_access_token {
-    id
-    email
-    created_at
-    client_id
-    access_token
-    revoked_at
-}

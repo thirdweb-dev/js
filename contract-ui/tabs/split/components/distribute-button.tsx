@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import { Button } from "tw-components";
 import { Balance } from "../page";
 
-export interface DistributeButtonProps {
+interface DistributeButtonProps {
   contractQuery?: UseContractResult<Split>;
   balances: Balance[];
   balancesIsLoading: boolean;

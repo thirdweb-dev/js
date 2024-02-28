@@ -1,7 +1,0 @@
-query TransactionByQueueId($queueId: String!) {
-  transaction(where: {
-    queueId: {_eq: $queueId}, 
-  }) {
-    ...Transaction
-  }
-}

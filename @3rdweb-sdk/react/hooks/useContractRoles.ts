@@ -9,7 +9,7 @@ import {
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 
-export function isContractWithRoles(
+function isContractWithRoles(
   contract: RequiredParam<ValidContractInstance>,
 ): contract is ContractWithRoles {
   if (contract && "roles" in contract) {
@@ -18,7 +18,7 @@ export function isContractWithRoles(
   return false;
 }
 
-export function useIsAccountRole<TContract extends ContractWithRoles>(
+function useIsAccountRole<TContract extends ContractWithRoles>(
   role: RolesForContract<TContract>[number],
   contract: RequiredParam<TContract>,
   account: RequiredParam<string>,

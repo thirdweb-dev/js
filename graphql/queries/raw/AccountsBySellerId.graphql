@@ -1,8 +1,0 @@
-query AccountsBySellerId($sellerId: String!) {
-  account(
-    order_by: { created_at: asc }
-    where: { seller_id: { _eq: $sellerId } }
-  ) {
-    ...Account
-  }
-}

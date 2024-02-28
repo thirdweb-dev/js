@@ -22,7 +22,7 @@ const lightThemeDefault = themes.vsLight;
 
 type PrismTheme = typeof darkThemeDefault;
 
-export interface CodeBlockProps extends Omit<CodeProps, "size"> {
+interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
   language: string;
   canCopy?: boolean;

@@ -1,7 +1,0 @@
-query TransactionsByCheckoutId($checkoutId: uuid!) {
-  transaction(where: {
-    checkout_id: {_eq: $checkoutId}, 
-  }) {
-    ...Transaction
-  }
-}

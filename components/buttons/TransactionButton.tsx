@@ -27,8 +27,7 @@ import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
 import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 
-export interface TransactionButtonProps
-  extends Omit<ConnectWalletProps, "leftIcon"> {
+interface TransactionButtonProps extends Omit<ConnectWalletProps, "leftIcon"> {
   transactionCount: number;
   isLoading: boolean;
   isGasless?: boolean;
@@ -37,7 +36,7 @@ export interface TransactionButtonProps
 }
 
 // this is in react-package as well
-export function useWalletRequiresConfirmation() {
+function useWalletRequiresConfirmation() {
   const activeWallet = useWallet();
   const installedWallets = useInstalledWallets();
 
@@ -213,7 +212,7 @@ interface ExternalApprovalNoticeProps {
   initialFocusRef: React.RefObject<HTMLButtonElement>;
 }
 
-export const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
+const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   walletId,
   initialFocusRef,
 }) => {

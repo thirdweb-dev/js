@@ -1,5 +1,0 @@
-mutation UpdateCustomer($id: uuid!, $customerValue: customer_set_input!) {
-  update_customer_by_pk(pk_columns: { id: $id }, _set: $customerValue) {
-    ...Customer
-  }
-}

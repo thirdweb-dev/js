@@ -1,5 +1,0 @@
-mutation UpdateWalletUser($value: wallet_user_set_input!, $id: uuid!) {
-  update_wallet_user_by_pk(_set: $value, pk_columns: {id: $id}) {
-    ...WalletUser
-  }
-}

@@ -1,4 +1,0 @@
-fragment NFTCheckoutsOverview on nft_checkouts_overview {
-  quantity
-  locked_price_usd_cents
-}

@@ -14,7 +14,7 @@ type GenericDataType = Record<string, string | number>;
 
 type IndexType = "date";
 
-export interface BarChartProps<
+interface BarChartProps<
   TData extends GenericDataType,
   TIndexKey extends keyof TData,
 > extends BoxProps {

@@ -1,7 +1,0 @@
-mutation UpdateOauthAccessTokensByEmail($email: String!, $oauthAccessToken: oauth_access_token_set_input!) {
-  update_oauth_access_token(where: { email: { _eq: $email } }, _set: $oauthAccessToken) {
-    returning {
-        ...OauthAccessToken
-    }
-  }
-}

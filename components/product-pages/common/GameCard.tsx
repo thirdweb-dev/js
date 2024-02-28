@@ -12,7 +12,7 @@ import {
   TrackedIconButton,
 } from "tw-components";
 
-export type Game = {
+type Game = {
   id: string;
   name: string;
   description: string;

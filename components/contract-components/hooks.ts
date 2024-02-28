@@ -71,7 +71,7 @@ const HEADLESS_WALLET_IDS: string[] = [
   walletIds.paper,
 ] as string[];
 
-export interface ContractPublishMetadata {
+interface ContractPublishMetadata {
   image: string | StaticImageData;
   name: string;
   description?: string;
@@ -430,7 +430,7 @@ export function useFunctionParamsFromABI(abi?: any, functionName?: string) {
   }, [abi, functionName]);
 }
 
-export function toContractIdIpfsHash(contractId: ContractId) {
+function toContractIdIpfsHash(contractId: ContractId) {
   if (contractId?.startsWith("ipfs://")) {
     return contractId;
   }
@@ -800,7 +800,7 @@ export function usePublishedContractsQuery(address?: string) {
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
-export function extractExtensions(
+function extractExtensions(
   input: ReturnType<typeof detectFeatures>,
   enabledExtensions: FeatureWithEnabled[] = [],
   suggestedExtensions: FeatureWithEnabled[] = [],
@@ -840,7 +840,7 @@ export function extractExtensions(
   };
 }
 
-export function useContractDetectedExtensions(abi?: any) {
+function useContractDetectedExtensions(abi?: any) {
   const features = useMemo(() => {
     if (abi) {
       return extractExtensions(detectFeatures(abi));
@@ -903,10 +903,6 @@ export function ensQuery(addressOrEnsName?: string) {
 
 export function useEns(addressOrEnsName?: string) {
   return useQuery(ensQuery(addressOrEnsName));
-}
-
-export function fetchEns(queryClient: QueryClient, addressOrEnsName: string) {
-  return queryClient.fetchQuery(ensQuery(addressOrEnsName));
 }
 
 export function useContractFunctions(abi: Abi) {

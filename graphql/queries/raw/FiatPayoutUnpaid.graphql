@@ -1,8 +1,0 @@
-query FiatPayoutUnpaid {
-  fiat_payout(where: { paid_out_at: { _is_null: true } }) {
-    ...FiatPayout
-    seller {
-      ...Seller
-    }
-  }
-}

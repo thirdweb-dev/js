@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "next": true,
+  "ignore": ["graphql/"],
+  "project": [
+    "@3rdweb-sdk/**/*.{ts,tsx}",
+    "classes/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
+    "constants/**/*.{ts,tsx}",
+    "contexts/**/*.{ts,tsx}",
+    "contract-ui/**/*.{ts,tsx}",
+    "core-ui/**/*.{ts,tsx}",
+    "data/**/*.{ts,tsx}",
+    "hooks/**/*.{ts,tsx}",
+    "lib/**/*.{ts,tsx}",
+    "og-lib/**/*.{ts,tsx}",
+    "pages/**/*.{ts,tsx}",
+    "theme/**/*.{ts,tsx}",
+    "types/**/*.d.ts",
+    "utils/**/*.{ts,tsx}"
+  ],
+  "ignoreBinaries": ["only-allow"],
+  "ignoreDependencies": ["prismjs"]
+}

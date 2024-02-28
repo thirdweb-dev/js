@@ -1,5 +1,0 @@
-query FiatPayoutByTransactionHash($transactionHash: String!) {
-  fiat_payout(where: {transaction_hash: {_eq: $transactionHash}}) {
-    ...FiatPayout
-  }
-}

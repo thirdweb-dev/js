@@ -1,9 +1,0 @@
-query WebhookEventsByWebhookId($webhookId: uuid!, $limit: Int = 20) {
-  webhook_event(
-    where: { webhook_id: { _eq: $webhookId } }
-    order_by: { created_at: desc }
-    limit: $limit
-  ) {
-    ...WebhookEvent
-  }
-}

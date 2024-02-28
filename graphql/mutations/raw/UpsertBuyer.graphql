@@ -1,8 +1,0 @@
-mutation UpsertBuyer($buyer: buyer_insert_input!) {
-  insert_buyer_one(
-    object: $buyer
-    on_conflict: { constraint: buyer_pkey }
-  ) {
-    ...Buyer
-  }
-}

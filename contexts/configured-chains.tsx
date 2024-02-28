@@ -25,7 +25,7 @@ export const SupportedChainsContext = createContext<StoredChain[] | undefined>(
 /**
  * holds the "modified chains" array
  */
-export const ModifiedChainsContext = createContext<StoredChain[] | undefined>(
+const ModifiedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 

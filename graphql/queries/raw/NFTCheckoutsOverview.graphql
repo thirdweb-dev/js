@@ -1,7 +1,0 @@
-query NFTCheckoutsOverview($ownerId: String!) {
-  nft_checkouts_overview(
-    where: { owner_id: { _eq: $ownerId } }
-  ) {
-    ...NFTCheckoutsOverview
-  }
-}

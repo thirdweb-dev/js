@@ -1,5 +1,0 @@
-mutation InsertFiatPayout($fiat_payout: fiat_payout_insert_input!) {
-  insert_fiat_payout_one(object: $fiat_payout) {
-    ...FiatPayout
-  }
-}

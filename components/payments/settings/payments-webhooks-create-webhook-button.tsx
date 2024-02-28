@@ -25,7 +25,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo } from "react";
 
-export interface PaymentsWebhooksCreateButtonProps {
+interface PaymentsWebhooksCreateButtonProps {
   paymentsSellerId: string;
   existingWebhooks: PaymentsWebhooksType[];
   isMainnets: boolean;

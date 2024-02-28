@@ -1,6 +1,0 @@
-
-mutation InsertEwsAuthedUser($object: ews_authed_user_insert_input!) {
-  insert_ews_authed_user_one(object: $object) {
-   ... EwsAuthedUser
-  }
-}

@@ -1,5 +1,0 @@
-query FloatWalletByEnvVar($envVarKey: String!) {
-  float_wallet(where: { env_var_key: { _eq: $envVarKey } }) {
-    ...FloatWallet
-  }
-}

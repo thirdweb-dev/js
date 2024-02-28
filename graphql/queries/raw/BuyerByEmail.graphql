@@ -1,5 +1,0 @@
-query BuyerByEmail($email: String!) {
-  buyer(where: {email: {_eq: $email}}) {
-    ...Buyer
-  }
-}

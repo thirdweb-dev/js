@@ -16,7 +16,7 @@ import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "tw-components";
 
-export type PermissionFormContext<TContract extends ContractWithRoles> = {
+type PermissionFormContext<TContract extends ContractWithRoles> = {
   [role in RolesForContract<TContract>]: string[];
 };
 

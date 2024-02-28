@@ -31,7 +31,7 @@ import {
   TrackedLink,
 } from "tw-components";
 
-export function formatResponseData(data: unknown): string {
+function formatResponseData(data: unknown): string {
   if (BigNumber.isBigNumber(data)) {
     data = data.toString();
   }
@@ -51,7 +51,7 @@ export function formatResponseData(data: unknown): string {
   return JSON.stringify(data, null, 2);
 }
 
-export function formatError(error: Error): string {
+function formatError(error: Error): string {
   if ((error as any).reason) {
     return (error as any).reason;
   }

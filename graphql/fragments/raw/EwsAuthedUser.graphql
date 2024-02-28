@@ -1,5 +1,0 @@
-fragment EwsAuthedUser on ews_authed_user {
-    authed_user_id
-    email
-    id
-}

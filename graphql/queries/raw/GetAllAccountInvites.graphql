@@ -1,5 +1,0 @@
-query GetAllAccountInvites {
-  account_invite {
-    ...AccountInvite
-  }
-}
