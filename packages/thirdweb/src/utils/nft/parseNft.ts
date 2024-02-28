@@ -55,7 +55,7 @@ export type NFT<type extends NFTType = NFTType> = type extends "ERC1155" ? ERC11
  * @returns The parsed NFT object.
  * @internal
  */
-export function parseNFT<type extends NFTType>(
+export function parseNFT<const type extends NFTType>(
   base: NFTMetadata,
   options: ParseNFTOptions<type>,
 ): NFT<type> {
