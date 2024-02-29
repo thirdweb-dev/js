@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://expanse-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.expanse.tech"
   ],

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 5003,
   "rpc": [
-    "https://mantle-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.mantle.xyz"
   ],

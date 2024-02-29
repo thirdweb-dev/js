@@ -230,6 +230,9 @@ abstract class TransactionContext {
   }
 }
 
+/**
+ * @contract
+ */
 export class Transaction<
   TResult = TransactionResult,
 > extends TransactionContext {
@@ -696,6 +699,9 @@ export class Transaction<
   }
 }
 
+/**
+ * @contract
+ */
 export class DeployTransaction extends TransactionContext {
   factory: ContractFactory;
   events: EventEmitter<DeployEvents> | undefined;

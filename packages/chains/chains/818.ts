@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 818,
   "rpc": [
-    "https://beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.beonechain.com",
     "https://dataseed2.beonechain.com",

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 32520,
   "rpc": [
-    "https://bitgert.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://32520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.icecreamswap.com",
     "https://mainnet-rpc.brisescan.com",

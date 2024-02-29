@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 9999,
   "rpc": [
-    "https://myown-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.dev.bccloud.net"
   ],

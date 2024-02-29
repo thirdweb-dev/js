@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 28945486,
   "rpc": [
-    "https://auxilium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://28945486.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.auxilium.global"
   ],

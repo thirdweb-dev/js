@@ -21,7 +21,6 @@ export default {
   "networkId": 61514,
   "redFlags": [],
   "rpc": [
-    "https://qi011624i1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://61514.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/e81adde6-3c1b-46ce-8dfe-e7a689f8c7eb"
   ],

@@ -28,7 +28,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://securechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://34.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.scai.network"
   ],

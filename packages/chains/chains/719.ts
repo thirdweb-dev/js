@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 719,
   "rpc": [
-    "https://shibarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://719.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://puppynet.shibrpc.com"
   ],

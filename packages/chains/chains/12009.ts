@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 12009,
   "rpc": [
-    "https://satoshichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12009.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.satoshichain.io"
   ],

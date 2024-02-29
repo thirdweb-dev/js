@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 428,
   "rpc": [
-    "https://geso-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://428.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.verse.gesoten.com/"
   ],

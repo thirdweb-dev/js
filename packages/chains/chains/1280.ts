@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1280,
   "rpc": [
-    "https://halo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodes.halo.land"
   ],

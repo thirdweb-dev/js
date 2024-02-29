@@ -2,9 +2,19 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
   "chainId": 103454,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Masa Testnet Explorer",
+      "url": "https://subnets-test.avax.network/masatestnet",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
-  "features": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
   "icon": {
     "url": "https://images.ctfassets.net/9bazykntljf6/62CceHSYsRS4D9fgDSkLRB/877cb8f26954e1743ff535fd7fdaf78f/avacloud-placeholder.svg",
     "width": 256,
@@ -21,7 +31,6 @@ export default {
   "networkId": 103454,
   "redFlags": [],
   "rpc": [
-    "https://masa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://103454.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/masatestne/testnet/rpc"
   ],

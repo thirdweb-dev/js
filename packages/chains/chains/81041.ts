@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 81041,
   "rpc": [
-    "https://nordek.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://81041.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.nordekscan.com"
   ],

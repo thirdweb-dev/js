@@ -1,5 +1,8 @@
 import { FeatureWithEnabled } from "../../constants/contract-features";
 
+/**
+ * @internal
+ */
 export function extractFeatures(
   input: Record<string, FeatureWithEnabled>,
   enabledExtensions: FeatureWithEnabled[],

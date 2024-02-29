@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 91715,
   "rpc": [
-    "https://combo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://91715.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-rpc.combonetwork.io"
   ],

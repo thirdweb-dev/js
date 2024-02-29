@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 305,
   "rpc": [
-    "https://zksats.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://305.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.zksats.io"
   ],

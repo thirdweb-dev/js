@@ -21,7 +21,6 @@ export default {
   "networkId": 7865,
   "redFlags": [],
   "rpc": [
-    "https://st-02-07.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7865.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],

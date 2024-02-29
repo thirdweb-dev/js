@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 11119,
   "rpc": [
-    "https://hashbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11119.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hashbit.org",
     "https://rpc.hashbit.org"

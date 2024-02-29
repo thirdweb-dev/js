@@ -19,8 +19,8 @@ export default {
   "infoURL": "https://karak.network",
   "name": "Karak Mainnet",
   "nativeCurrency": {
-    "name": "Karak",
-    "symbol": "KRK",
+    "name": "Ether",
+    "symbol": "ETH",
     "decimals": 18
   },
   "networkId": 2410,
@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-1"
   },
   "rpc": [
-    "https://karak.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2410.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.karak.network"
   ],

@@ -34,7 +34,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://nativ3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctest.nativ3.network",
     "wss://wstest.nativ3.network"

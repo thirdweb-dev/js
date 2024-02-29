@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 155,
   "rpc": [
-    "https://tenet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://155.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.tenet.org"
   ],

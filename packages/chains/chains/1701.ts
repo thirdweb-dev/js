@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 1701,
   "rpc": [
-    "https://anytype-evm-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.anytype.io"
   ],

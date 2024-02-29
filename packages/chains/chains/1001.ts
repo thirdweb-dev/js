@@ -23,7 +23,6 @@ export default {
   "networkId": 1001,
   "redFlags": [],
   "rpc": [
-    "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://klaytn-baobab.blockpi.network/v1/rpc/public",
     "https://api.baobab.klaytn.net:8651"
@@ -31,5 +30,5 @@ export default {
   "shortName": "Baobab",
   "slip44": 1,
   "slug": "klaytn-testnet-baobab",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

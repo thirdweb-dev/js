@@ -1,9 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
-  "chainId": 12611,
-  "explorers": [],
+  "chainId": 3776,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://astar-zkevm.explorer.startale.com/",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmRySLe3su59dE5x5JPm2b1GeZfz6DR9qUzcbp3rt4SD3A",
     "width": 300,
@@ -17,14 +24,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "networkId": 12611,
+  "networkId": 3776,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
-    "bridges": []
+    "bridges": [
+      {
+        "url": "https://bridge.gelato.network/bridge/astar-zkevm"
+      }
+    ]
   },
+  "redFlags": [],
   "rpc": [],
-  "shortName": "astrzk",
+  "shortName": "astarzk",
   "slug": "astar-zkevm",
   "status": "incubating",
   "testnet": false,

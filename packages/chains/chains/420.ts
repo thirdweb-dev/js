@@ -33,11 +33,10 @@ export default {
   "networkId": 420,
   "redFlags": [],
   "rpc": [
-    "https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.optimism.io",
-    "https://optimism-goerli.publicnode.com",
-    "wss://optimism-goerli.publicnode.com",
+    "https://optimism-goerli-rpc.publicnode.com",
+    "wss://optimism-goerli-rpc.publicnode.com",
     "https://optimism-goerli.gateway.tenderly.co",
     "wss://optimism-goerli.gateway.tenderly.co"
   ],

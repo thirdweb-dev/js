@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2203,
   "rpc": [
-    "https://bitcoin-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2203.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.bitcoinevm.com"
   ],

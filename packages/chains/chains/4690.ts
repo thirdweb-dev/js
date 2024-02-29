@@ -29,7 +29,6 @@ export default {
   "networkId": 4690,
   "redFlags": [],
   "rpc": [
-    "https://iotex-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4690.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.testnet.iotex.io"
   ],

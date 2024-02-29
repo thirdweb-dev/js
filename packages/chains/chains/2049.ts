@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2049,
   "rpc": [
-    "https://movo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2049.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://msc-rpc.movoscan.com",
     "https://msc-rpc.movochain.org",

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 432204,
   "rpc": [
-    "https://dexalot-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://432204.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/dexalot/mainnet/rpc"
   ],

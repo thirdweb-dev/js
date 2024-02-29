@@ -42,7 +42,6 @@ export default {
   },
   "networkId": 50,
   "rpc": [
-    "https://xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc.xinfin.network",
     "https://rpc.xinfin.network",

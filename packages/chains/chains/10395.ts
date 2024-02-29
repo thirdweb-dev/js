@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 10395,
   "rpc": [
-    "https://worldland-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwangju.worldland.foundation"
   ],

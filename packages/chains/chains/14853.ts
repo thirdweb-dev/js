@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 14853,
   "rpc": [
-    "https://humanode-testnet-5-israfel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://14853.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://explorer-rpc-http.testnet5.stages.humanode.io"
   ],

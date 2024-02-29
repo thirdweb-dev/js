@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 0,
   "rpc": [
-    "https://top-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://980.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethapi.topnetwork.org"
   ],

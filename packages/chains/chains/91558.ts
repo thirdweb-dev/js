@@ -21,7 +21,6 @@ export default {
   "networkId": 91558,
   "redFlags": [],
   "rpc": [
-    "https://shelby-s-testnet-1-18.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://91558.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],

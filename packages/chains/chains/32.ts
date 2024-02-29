@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 32,
   "rpc": [
-    "https://gooddata-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://32.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test2.goodata.io"
   ],

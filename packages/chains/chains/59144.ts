@@ -58,7 +58,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://linea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://59144.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://linea-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "wss://linea-mainnet.infura.io/ws/v3/${INFURA_API_KEY}",

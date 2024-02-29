@@ -42,12 +42,12 @@ export default {
   "networkId": 369,
   "redFlags": [],
   "rpc": [
-    "https://pulsechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://369.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pulsechain.publicnode.com",
     "https://rpc.pulsechain.com",
     "wss://rpc.pulsechain.com",
-    "wss://pulsechain.publicnode.com",
+    "https://pulsechain-rpc.publicnode.com",
+    "wss://pulsechain-rpc.publicnode.com",
     "https://rpc-pulsechain.g4mm4.io",
     "wss://rpc-pulsechain.g4mm4.io"
   ],

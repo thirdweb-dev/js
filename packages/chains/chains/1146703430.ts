@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1146703430,
   "rpc": [
-    "https://cyberdecknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1146703430.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://cybeth1.cyberdeck.eu:8545"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 90,
   "rpc": [
-    "https://garizon-stage0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://90.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s0.garizon.net/rpc"
   ],

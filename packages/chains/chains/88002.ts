@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 88002,
   "rpc": [
-    "https://nautilus-proteus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://88002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.proteus.nautchain.xyz/solana"
   ],

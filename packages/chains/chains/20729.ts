@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 79,
   "rpc": [
-    "https://callisto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20729.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.callisto.network/"
   ],

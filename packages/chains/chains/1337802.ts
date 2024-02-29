@@ -37,7 +37,6 @@ export default {
   "networkId": 1337802,
   "redFlags": [],
   "rpc": [
-    "https://kiln.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1337802.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kiln.themerge.dev"
   ],

@@ -53,7 +53,6 @@ export default {
   },
   "networkId": 295,
   "rpc": [
-    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.hashio.io/api"
   ],

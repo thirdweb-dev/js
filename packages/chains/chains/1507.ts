@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1507,
   "rpc": [
-    "https://sherpax-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sherpax-testnet.chainx.org/rpc"
   ],

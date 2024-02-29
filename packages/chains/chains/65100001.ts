@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 65100001,
   "rpc": [
-    "https://autonity-piccadilly-barada-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://65100001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.piccadilly.autonity.org/",
     "wss://rpc1.piccadilly.autonity.org/ws/"

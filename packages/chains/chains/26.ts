@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 26,
   "rpc": [
-    "https://genesis-l1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://26.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.genesisl1.org"
   ],

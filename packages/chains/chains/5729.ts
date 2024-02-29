@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 5729,
   "rpc": [
-    "https://hika-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5729.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.hika.network/"
   ],

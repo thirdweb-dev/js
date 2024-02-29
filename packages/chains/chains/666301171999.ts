@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 666301171999,
   "rpc": [
-    "https://pdc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://666301171999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.ipdc.io/"
   ],

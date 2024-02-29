@@ -5,7 +5,7 @@ export default {
   "explorers": [],
   "faucets": [],
   "infoURL": "https://docs.thefirechain.com/",
-  "name": "Firechain zkEVM Ghostrider",
+  "name": "Firechain zkEVM Testnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -13,12 +13,11 @@ export default {
   },
   "networkId": 3885,
   "rpc": [
-    "https://firechain-zkevm-ghostrider.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3885.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.zkevm.ghostrider.thefirechain.com"
+    "https://rpc-zkevm-ghostrider.thefirechain.com"
   ],
   "shortName": "firechain-zkEVM-ghostrider",
-  "slug": "firechain-zkevm-ghostrider",
-  "testnet": false,
+  "slug": "firechain-zkevm-testnet",
+  "testnet": true,
   "title": "Firechain zkEVM Ghostrider"
 } as const satisfies Chain;

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 888888888,
   "rpc": [
-    "https://ancient8.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://888888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ancient8.gg"
   ],

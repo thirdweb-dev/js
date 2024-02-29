@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 3501,
   "rpc": [
-    "https://jfin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jfinchain.com"
   ],

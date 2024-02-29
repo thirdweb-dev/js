@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 210,
   "rpc": [
-    "https://bitnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://210.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitnet.money",
     "https://rpc.btnscan.com"

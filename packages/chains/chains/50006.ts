@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://yooldo-verse-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50006.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.yooldo-verse.xyz/"
   ],

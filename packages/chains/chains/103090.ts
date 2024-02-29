@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://crystaleum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://103090.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cryptocurrencydevs.org",
     "https://rpc.crystaleum.org"

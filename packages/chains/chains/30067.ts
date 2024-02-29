@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 30067,
   "rpc": [
-    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://30067.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc0.piecenetwork.com"
   ],

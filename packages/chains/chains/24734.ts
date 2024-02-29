@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 37480,
   "rpc": [
-    "https://mintme-com-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://24734.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.mintme.com"
   ],

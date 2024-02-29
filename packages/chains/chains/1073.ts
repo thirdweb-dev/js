@@ -28,7 +28,6 @@ export default {
   },
   "networkId": 1073,
   "rpc": [
-    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1073.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.evm.testnet.shimmer.network"
   ],

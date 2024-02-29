@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 322,
   "rpc": [
-    "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://322.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.kcc.network"
   ],

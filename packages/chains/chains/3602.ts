@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 3602,
   "rpc": [
-    "https://pandoproject-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3602.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.ethrpc.pandoproject.org/rpc"
   ],

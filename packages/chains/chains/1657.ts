@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1657,
   "rpc": [
-    "https://btachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1657.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.btachain.com/"
   ],

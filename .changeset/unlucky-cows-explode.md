@@ -2,4 +2,4 @@
 "@thirdweb-dev/unity-js-bridge": patch
 ---
 
-Unity 4.6.4
+Unity 4.7.1

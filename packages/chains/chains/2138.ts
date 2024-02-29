@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 21,
   "rpc": [
-    "https://defi-oracle-meta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2138.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.public-2138.defi-oracle.io",
     "wss://rpc.public-2138.defi-oracle.io"

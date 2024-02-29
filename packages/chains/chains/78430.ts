@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 78430,
   "rpc": [
-    "https://amplify-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78430.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/amplify/testnet/rpc"
   ],

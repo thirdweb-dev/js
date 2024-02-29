@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2022,
   "rpc": [
-    "https://beresheet-bereevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2022.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beresheet-evm.jelliedowl.net",
     "wss://beresheet.jelliedowl.net"

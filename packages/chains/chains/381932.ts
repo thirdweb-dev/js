@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 381932,
   "rpc": [
-    "https://metal-tahoe-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://381932.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tahoe.metalblockchain.org/ext/bc/C/rpc"
   ],

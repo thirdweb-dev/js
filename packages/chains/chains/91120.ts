@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 91120,
   "rpc": [
-    "https://metadap-enterprise.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://91120.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chain.metadap.io",
     "wss://rpc-ws.chain.metadap.io"

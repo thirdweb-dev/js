@@ -18,7 +18,6 @@ export default {
   },
   "networkId": 1951,
   "rpc": [
-    "https://d-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1951.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.d-chain.network/ext/bc/2ZiR1Bro5E59siVuwdNuRFzqL95NkvkbzyLBdrsYR9BLSHV7H4/rpc"
   ],

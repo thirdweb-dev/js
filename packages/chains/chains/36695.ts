@@ -21,7 +21,6 @@ export default {
   "networkId": 36695,
   "redFlags": [],
   "rpc": [
-    "https://cohan-yolo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://36695.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/c033f73a-70ff-463d-b121-81b9542e11a1"
   ],

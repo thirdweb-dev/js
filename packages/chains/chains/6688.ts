@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 6688,
   "rpc": [
-    "https://irishub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmrpc.irishub-1.irisnet.org",
     "https://iris-evm.publicnode.com",

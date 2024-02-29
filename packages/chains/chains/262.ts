@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://sur-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://262.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sur.nilin.org"
   ],

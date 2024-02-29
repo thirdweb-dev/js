@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.18
+
+### Patch Changes
+
+- [#2318](https://github.com/thirdweb-dev/js/pull/2318) [`42d7510`](https://github.com/thirdweb-dev/js/commit/42d7510daf4c04017490de4b55ef43937979b859) Thanks [@gerrysaporito](https://github.com/gerrysaporito)! - fix: respect usage limits
+
 ## 0.4.17
 
 ### Patch Changes

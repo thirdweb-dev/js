@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 927,
   "rpc": [
-    "https://yidark-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://927.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.yidark.io"
   ],

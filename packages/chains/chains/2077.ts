@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2077,
   "rpc": [
-    "https://quokkacoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2077.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qkacoin.org"
   ],

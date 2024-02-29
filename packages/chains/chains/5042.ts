@@ -21,7 +21,6 @@ export default {
   "networkId": 5042,
   "redFlags": [],
   "rpc": [
-    "https://omochi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5042.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/omochi/testnet/rpc"
   ],

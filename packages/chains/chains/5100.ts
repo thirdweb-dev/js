@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 5100,
   "rpc": [
-    "https://syndicate-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.syndicate.io"
   ],

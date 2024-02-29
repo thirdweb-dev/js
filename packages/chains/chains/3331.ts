@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 3331,
   "rpc": [
-    "https://zcore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.zcore.cash"
   ],

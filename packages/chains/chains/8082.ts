@@ -30,7 +30,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://shardeum-sphinx-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8082.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sphinx.shardeum.org/"
   ],

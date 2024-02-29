@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 23118,
   "rpc": [
-    "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23118.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.opside.network"
   ],

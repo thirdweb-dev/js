@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 7771,
   "rpc": [
-    "https://bitrock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7771.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bit-rock.io"
   ],
