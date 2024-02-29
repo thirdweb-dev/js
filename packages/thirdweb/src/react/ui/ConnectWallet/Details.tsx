@@ -61,6 +61,7 @@ import {
 } from "../../../wallets/smart/index.js";
 import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index.js";
 import { localWalletMetadata } from "../../../wallets/local/index.js";
+import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -508,7 +509,7 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
           {/* Export  Wallet */}
-          {/* {activeWallet?.walletId === walletIds.localWallet && (
+          {activeWallet?.metadata.id === localWalletMetadata.id && (
             <div>
               <MenuButton
                 onClick={() => {
@@ -522,7 +523,7 @@ export const ConnectedWalletDetails: React.FC<{
                 <Text color="primaryText">{locale.backupWallet}</Text>
               </MenuButton>
             </div>
-          )} */}
+          )}
 
           {props.detailsModal?.footer && (
             <props.detailsModal.footer close={() => setIsOpen(false)} />
@@ -586,24 +587,18 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  }
-  // else if (screen === "export") {
-  //   content = (
-  //     <ExportLocalWallet
-  //       modalSize="compact"
-  //       localWalletConfig={activeWalletConfig as LocalWalletConfig}
-  //       onExport={() => {
-  //         setIsOpen(false);
-  //       }}
-  //       walletAddress={address}
-  //       walletInstance={activeWallet}
-  //       onBack={() => {
-  //         setScreen("main");
-  //       }}
-  //     />
-  //   );
-  // }
-  else if (screen === "send") {
+  } else if (screen === "export") {
+    content = (
+      <ExportLocalWallet
+        onExport={() => {
+          setIsOpen(false);
+        }}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  } else if (screen === "send") {
     content = (
       <SendFunds
         supportedTokens={props.supportedTokens}
