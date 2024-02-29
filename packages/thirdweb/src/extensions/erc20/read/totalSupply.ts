@@ -1,6 +1,5 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
 /**
  * Retrieves the total supply of ERC20 tokens.
  * @param options - The transaction options.
@@ -15,6 +14,14 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 export function totalSupply(options: BaseTransactionOptions): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function totalSupply() returns (uint256)",
+    method: [
+  "0x18160ddd",
+  [],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
   });
 }

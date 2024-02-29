@@ -1,7 +1,9 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
-
+/**
+ * Represents the parameters for transferring an ERC721 token from one address to another.
+ */
 export type TransferFromParams = {
   from: Address;
   to: Address;
@@ -32,7 +34,21 @@ export function transferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: "function transferFrom(address, address, uint256)",
+    method: [
+  "0x23b872dd",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "address"
+    },
+    {
+      "type": "uint256"
+    }
+  ],
+  []
+],
     params: [options.from, options.to, options.tokenId],
   });
 }

@@ -23,7 +23,22 @@ export function allowance(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function allowance(address, address) returns (uint256)",
+    method: [
+  "0xdd62ed3e",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "address"
+    }
+  ],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
     params: [options.owner, options.spender],
   });
 }

@@ -3,68 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
-
-const CLAIM_ABI = {
-  inputs: [
-    {
-      internalType: "address",
-      name: "receiver",
-      type: "address",
-    },
-    {
-      internalType: "uint256",
-      name: "quantity",
-      type: "uint256",
-    },
-    {
-      internalType: "address",
-      name: "currency",
-      type: "address",
-    },
-    {
-      internalType: "uint256",
-      name: "pricePerToken",
-      type: "uint256",
-    },
-    {
-      components: [
-        {
-          internalType: "bytes32[]",
-          name: "proof",
-          type: "bytes32[]",
-        },
-        {
-          internalType: "uint256",
-          name: "quantityLimitPerWallet",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "pricePerToken",
-          type: "uint256",
-        },
-        {
-          internalType: "address",
-          name: "currency",
-          type: "address",
-        },
-      ],
-      internalType: "struct IDrop.AllowlistProof",
-      name: "allowlistProof",
-      type: "tuple",
-    },
-    {
-      internalType: "bytes",
-      name: "data",
-      type: "bytes",
-    },
-  ],
-  name: "claim",
-  outputs: [],
-  stateMutability: "payable",
-  type: "function",
-} as const;
-
+/**
+ * Represents the parameters for claiming an ERC721 token.
+ */
 export type ClaimToParams = {
   to: Address;
   quantity: bigint;
@@ -89,7 +30,64 @@ export type ClaimToParams = {
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: CLAIM_ABI,
+    method: [
+  "0x84bb1e42",
+  [
+    {
+      "internalType": "address",
+      "name": "receiver",
+      "type": "address"
+    },
+    {
+      "internalType": "uint256",
+      "name": "quantity",
+      "type": "uint256"
+    },
+    {
+      "internalType": "address",
+      "name": "currency",
+      "type": "address"
+    },
+    {
+      "internalType": "uint256",
+      "name": "pricePerToken",
+      "type": "uint256"
+    },
+    {
+      "components": [
+        {
+          "internalType": "bytes32[]",
+          "name": "proof",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quantityLimitPerWallet",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pricePerToken",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        }
+      ],
+      "internalType": "struct IDrop.AllowlistProof",
+      "name": "allowlistProof",
+      "type": "tuple"
+    },
+    {
+      "internalType": "bytes",
+      "name": "data",
+      "type": "bytes"
+    }
+  ],
+  []
+],
     params: async () => {
       const cc = await getActiveClaimCondition({
         contract: options.contract,
@@ -115,12 +113,4 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
       ] as const;
     },
   });
-}
-
-/**
- * @internal
- */
-// TODO: implement this
-export function parseClaimToLogs() {
-  throw new Error("Not implemented");
 }

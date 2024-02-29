@@ -1,6 +1,5 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
 /**
  * Retrieves the starting token ID for the ERC721 contract.
  * @param options - The transaction options.
@@ -15,6 +14,14 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 export function startTokenId(options: BaseTransactionOptions): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function startTokenId() returns (uint256)",
+    method: [
+  "0xe6798baa",
+  [],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
   });
 }

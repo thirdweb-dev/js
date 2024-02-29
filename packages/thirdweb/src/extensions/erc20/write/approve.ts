@@ -3,7 +3,9 @@ import { toUnits } from "../../../utils/units.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
-
+/**
+ * Represents the parameters for the `approve` function.
+ */
 export type ApproveParams = Prettify<
   { spender: Address } & (
     | {
@@ -33,7 +35,22 @@ export type ApproveParams = Prettify<
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
   return prepareContractCall({
     ...options,
-    method: "function approve(address, uint256) returns (bool)",
+    method: [
+  "0x095ea7b3",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "uint256"
+    }
+  ],
+  [
+    {
+      "type": "bool"
+    }
+  ]
+],
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

@@ -2,10 +2,11 @@ import type { AbiFunction } from "abitype";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import { toFunctionSelector } from "viem";
+import type { PreparedMethod } from "../abi/prepare-method.js";
 
 type DetectExtensionOptions = {
   contract: ThirdwebContract;
-  method: string | AbiFunction;
+  method: string | AbiFunction | PreparedMethod<AbiFunction>;
 };
 
 /**
@@ -30,7 +31,7 @@ export async function detectMethod(
 
 type DetectExtensionInBytecodeOptions = {
   bytecode: string;
-  method: string | AbiFunction;
+  method: string | AbiFunction | PreparedMethod<AbiFunction>;
 };
 /**
  * Detects if a specific method is present in the bytecode of a contract.
@@ -44,7 +45,9 @@ function detectMethodInBytecode(options: DetectExtensionInBytecodeOptions) {
     return false;
   }
   // we strip the leading `0x` from the function selector
-  const fnSelector = toFunctionSelector(options.method).slice(2);
+  const fnSelector = Array.isArray(options.method)
+    ? options.method[0]
+    : toFunctionSelector(options.method).slice(2);
   // indexOf is slightly faster than includes
   return options.bytecode.indexOf(fnSelector) > -1;
 }

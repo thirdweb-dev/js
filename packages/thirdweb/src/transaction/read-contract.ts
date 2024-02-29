@@ -4,46 +4,55 @@ import {
   type AbiFunction,
   type AbiParametersToPrimitiveTypes,
   type ExtractAbiFunctionNames,
+  type AbiParameter,
 } from "abitype";
-import type { Hex, TransactionRequest } from "viem";
+import { concatHex, decodeAbiParameters, type TransactionRequest } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isAbiFunction } from "./utils.js";
-import { decodeFunctionResult } from "../abi/decode.js";
+
 import type {
   BaseTransactionOptions,
   ParamsOption,
   ParseMethod,
 } from "./types.js";
 import type { PrepareTransactionOptions } from "./prepare-transaction.js";
-import { encodeAbiFunction } from "../abi/encode.js";
+
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
+import {
+  prepareMethod,
+  type PreparedMethod,
+} from "../utils/abi/prepare-method.js";
+import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 
-export type ReadContractResult<abiFn extends AbiFunction> = // if the outputs are 0 length, return never, invalid case
-  abiFn["outputs"] extends { length: 0 }
+export type ReadContractResult<outputs extends readonly AbiParameter[]> = // if the outputs are 0 length, return never, invalid case
+  outputs extends { length: 0 }
     ? never
-    : abiFn["outputs"] extends { length: 1 }
+    : outputs extends { length: 1 }
       ? // if the outputs are 1 length, we'll always return the first element
-        AbiParametersToPrimitiveTypes<abiFn["outputs"]>[0]
+        AbiParametersToPrimitiveTypes<outputs>[0]
       : // otherwise we'll return the array
-        AbiParametersToPrimitiveTypes<abiFn["outputs"]>;
+        AbiParametersToPrimitiveTypes<outputs>;
 
 export type ReadContractOptions<
-  abi extends Abi = [],
-  method extends
+  TAbi extends Abi = [],
+  TMethod extends
     | AbiFunction
     | string
     | ((
-        contract: ThirdwebContract<abi>,
-      ) => Promise<AbiFunction>) = abi extends { length: 0 }
+        contract: ThirdwebContract<TAbi>,
+      ) => Promise<AbiFunction>) = TAbi extends { length: 0 }
     ? AbiFunction | string
-    : ExtractAbiFunctionNames<abi>,
+    : ExtractAbiFunctionNames<TAbi>,
+  TPreparedMethod extends PreparedMethod<
+    ParseMethod<TAbi, TMethod>
+  > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 > = BaseTransactionOptions<
   Omit<TransactionRequest, "from" | "to" | "data"> & {
-    method: method;
-  } & ParamsOption<ParseMethod<abi, method>> &
+    method: TMethod | TPreparedMethod;
+  } & ParamsOption<TPreparedMethod[1]> &
     Omit<PrepareTransactionOptions, "to" | "data" | "chain" | "client">,
-  abi
+  TAbi
 >;
 
 /**
@@ -70,29 +79,36 @@ export async function readContract<
         | `function ${string}`
         | ((contract: ThirdwebContract<TAbi>) => Promise<AbiFunction>)
     : ExtractAbiFunctionNames<TAbi>,
+  const TPreparedMethod extends PreparedMethod<
+    ParseMethod<TAbi, TMethod>
+  > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 >(
-  options: ReadContractOptions<TAbi, TMethod>,
-): Promise<ReadContractResult<ParseMethod<TAbi, TMethod>>> {
+  options: ReadContractOptions<TAbi, TMethod, TPreparedMethod>,
+): Promise<ReadContractResult<TPreparedMethod[2]>> {
+  type ParsedMethod_ = ParseMethod<TAbi, TMethod>;
+  type PreparedMethod_ = PreparedMethod<ParsedMethod_>;
   const { contract, method, params } = options;
-  let abiFnPromise: Promise<ParseMethod<TAbi, TMethod>>;
-  // this will be resolved exactly once, see the cache above 👆
-  async function resolveAbiFunction_(): Promise<ParseMethod<TAbi, TMethod>> {
-    if (abiFnPromise) {
-      return abiFnPromise;
+
+  const resolvePreparedMethod = async () => {
+    if (Array.isArray(method)) {
+      return method as PreparedMethod_;
     }
     if (isAbiFunction(method)) {
-      return method as ParseMethod<TAbi, TMethod>;
+      return prepareMethod(method as ParsedMethod_) as PreparedMethod_;
     }
+
     if (typeof method === "function") {
-      // @ts-expect-error -- to complicated
-      return (await method(contract)) as ParseMethod<TAbi, TMethod>;
+      return prepareMethod(
+        // @ts-expect-error - we're sure it's a function
+        (await method(contract)) as ParsedMethod_,
+      ) as PreparedMethod_;
     }
     // if the method starts with the string `function ` we always will want to try to parse it
     if (typeof method === "string" && method.startsWith("function ")) {
       // @ts-expect-error - method *is* string in this case
       const abiItem = parseAbiItem(method);
       if (abiItem.type === "function") {
-        return abiItem as ParseMethod<TAbi, TMethod>;
+        return prepareMethod(abiItem as ParsedMethod_) as PreparedMethod_;
       }
       throw new Error(`"method" passed is not of type "function"`);
     }
@@ -104,28 +120,30 @@ export async function readContract<
       );
       // if we were able to find it -> return it
       if (abiFunction) {
-        return abiFunction as ParseMethod<TAbi, TMethod>;
+        return prepareMethod(abiFunction as ParsedMethod_) as PreparedMethod_;
       }
     }
     throw new Error(`Could not resolve method "${method}".`);
-  }
+  };
 
-  let encodedDataPromise: Promise<Hex | undefined>;
-  // this will be resolved exactly once, see the cache above 👆
-  async function encodeData_(): Promise<Hex | undefined> {
-    if (encodedDataPromise) {
-      return encodedDataPromise;
-    }
-    return (encodedDataPromise = resolveAbiFunction_().then(
-      // @ts-expect-error - too complicated
-      (abiFn) => encodeAbiFunction(abiFn, params ?? []),
-    ));
-  }
-
-  const [resolvedAbiFunction, encodedData] = await Promise.all([
-    resolveAbiFunction_(),
-    encodeData_(),
+  // resolve in parallel
+  const [resolvedPreparedMethod, resolvedParams] = await Promise.all([
+    resolvePreparedMethod(),
+    typeof params === "function" ? params() : params,
   ]);
+
+  let encodedData;
+
+  // if we have no inputs, we know it's just the signature
+  if (resolvedPreparedMethod[1].length === 0) {
+    encodedData = resolvedPreparedMethod[0];
+  } else {
+    encodedData = concatHex([
+      resolvedPreparedMethod[0],
+      // @ts-expect-error - we're sure it's an array
+      encodeAbiParameters(resolvedPreparedMethod[1], resolvedParams ?? []),
+    ]);
+  }
 
   const rpcRequest = getRpcClient({
     chain: contract.chain,
@@ -136,10 +154,11 @@ export async function readContract<
     data: encodedData,
     to: contract.address,
   });
-  const decoded = decodeFunctionResult(resolvedAbiFunction, result);
+  // use the prepared method to decode the result
+  const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);
   if (Array.isArray(decoded) && decoded.length === 1) {
     return decoded[0];
   }
 
-  return decoded as ReadContractResult<ParseMethod<TAbi, TMethod>>;
+  return decoded as ReadContractResult<TPreparedMethod[2]>;
 }

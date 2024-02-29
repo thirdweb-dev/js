@@ -2,11 +2,6 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { detectMethod } from "../../../utils/bytecode/detectExtension.js";
-
-const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();
-
-const METHOD = "function decimals() returns (uint8)" as const;
-
 /**
  * Detects if the contract has a function to retrieve the number of decimals.
  * @param contract The ThirdwebContract instance representing the contract.
@@ -22,7 +17,15 @@ export async function detectDecimals(
 ): Promise<boolean> {
   return detectMethod({
     contract,
-    method: METHOD,
+    method: [
+  "0x313ce567",
+  [],
+  [
+    {
+      "type": "uint8"
+    }
+  ]
+],
   });
 }
 
@@ -45,8 +48,18 @@ export function decimals(options: BaseTransactionOptions): Promise<number> {
   }
   const prom = readContract({
     ...options,
-    method: METHOD,
+    method: [
+  "0x313ce567",
+  [],
+  [
+    {
+      "type": "uint8"
+    }
+  ]
+],
   });
   cache.set(options.contract, prom);
   return prom;
 }
+
+const cache = new WeakMap<ThirdwebContract<any>, Promise<number>>();

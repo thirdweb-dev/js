@@ -5,8 +5,7 @@ import {
   type AbiParametersToPrimitiveTypes,
   type ExtractAbiFunctionNames,
 } from "abitype";
-import type { TransactionRequest, Hex } from "viem";
-import { encodeAbiFunction } from "../abi/encode.js";
+import { type TransactionRequest, concatHex } from "viem";
 import { isAbiFunction } from "./utils.js";
 import {
   prepareTransaction,
@@ -19,24 +18,33 @@ import type {
 } from "./types.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { ThirdwebContract } from "../contract/contract.js";
+import {
+  prepareMethod,
+  type PreparedMethod,
+} from "../utils/abi/prepare-method.js";
+import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+import type { Hex } from "../utils/encoding/hex.js";
 
 export type PrepareContractCallOptions<
-  abi extends Abi = [],
-  method extends
+  TAbi extends Abi = [],
+  TMethod extends
     | AbiFunction
     | string
     | ((
-        contract: ThirdwebContract<abi>,
-      ) => Promise<AbiFunction>) = abi extends { length: 0 }
+        contract: ThirdwebContract<TAbi>,
+      ) => Promise<AbiFunction>) = TAbi extends { length: 0 }
     ? AbiFunction | string
-    : ExtractAbiFunctionNames<abi>,
+    : ExtractAbiFunctionNames<TAbi>,
+  TPreparedMethod extends PreparedMethod<
+    ParseMethod<TAbi, TMethod>
+  > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 > = BaseTransactionOptions<
   Omit<TransactionRequest, "from" | "to" | "data"> & {
-    contract: ThirdwebContract<abi>;
-    method: method;
-  } & ParamsOption<ParseMethod<abi, method>> &
+    contract: ThirdwebContract<TAbi>;
+    method: TMethod | TPreparedMethod;
+  } & ParamsOption<TPreparedMethod[1]> &
     Omit<PrepareTransactionOptions, "to" | "data" | "chain" | "client">,
-  abi
+  TAbi
 >;
 
 /**
@@ -100,29 +108,39 @@ export function prepareContractCall<
         | `function ${string}`
         | ((contract: ThirdwebContract<TAbi>) => Promise<AbiFunction>)
     : ExtractAbiFunctionNames<TAbi>,
->(options: PrepareContractCallOptions<TAbi, TMethod>) {
+  const TPreparedMethod extends PreparedMethod<
+    ParseMethod<TAbi, TMethod>
+  > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
+>(options: PrepareContractCallOptions<TAbi, TMethod, TPreparedMethod>) {
+  type ParsedMethod_ = ParseMethod<TAbi, TMethod>;
+  type PreparedMethod_ = PreparedMethod<ParsedMethod_>;
   const { contract, method, params, ...rest } = options;
-  let abiFnPromise: Promise<ParseMethod<TAbi, TMethod>>;
+  let preparedMethodPromise: Promise<PreparedMethod_>;
   // this will be resolved exactly once, see the cache above 👆
-  async function resolveAbiFunction_(): Promise<ParseMethod<TAbi, TMethod>> {
-    if (abiFnPromise) {
-      return abiFnPromise;
+  async function resolvePreparedMethod(): Promise<PreparedMethod_> {
+    if (preparedMethodPromise) {
+      return preparedMethodPromise;
     }
     const prom = (async () => {
+      if (Array.isArray(method)) {
+        return method as PreparedMethod_;
+      }
       if (isAbiFunction(method)) {
-        return method as ParseMethod<TAbi, TMethod>;
+        return prepareMethod(method as ParsedMethod_) as PreparedMethod_;
       }
 
       if (typeof method === "function") {
-        // @ts-expect-error -- to complicated
-        return (await method(contract)) as ParseMethod<TAbi, TMethod>;
+        return prepareMethod(
+          // @ts-expect-error - method *is* function in this case
+          (await method(contract)) as ParsedMethod_,
+        ) as PreparedMethod_;
       }
       // if the method starts with the string `function ` we always will want to try to parse it
       if (typeof method === "string" && method.startsWith("function ")) {
         // @ts-expect-error - method *is* string in this case
         const abiItem = parseAbiItem(method);
         if (abiItem.type === "function") {
-          return abiItem as ParseMethod<TAbi, TMethod>;
+          return prepareMethod(abiItem as ParsedMethod_) as PreparedMethod_;
         }
         throw new Error(`"method" passed is not of type "function"`);
       }
@@ -134,12 +152,12 @@ export function prepareContractCall<
         );
         // if we were able to find it -> return it
         if (abiFunction) {
-          return abiFunction as ParseMethod<TAbi, TMethod>;
+          return prepareMethod(abiFunction as ParsedMethod_) as PreparedMethod_;
         }
       }
       throw new Error(`Could not resolve method "${method}".`);
     })();
-    return (abiFnPromise = prom);
+    return (preparedMethodPromise = prom);
   }
 
   let resolvedParamsPromise: Promise<
@@ -167,12 +185,21 @@ export function prepareContractCall<
       return encodedDataPromise;
     }
     const prom = (async () => {
-      const [rAbiFn, rParams] = await Promise.all([
-        resolveAbiFunction_(),
+      const [preparedM, rParams] = await Promise.all([
+        resolvePreparedMethod(),
         resolveParams_(),
       ]);
-      // @ts-expect-error -- to complicated
-      return encodeAbiFunction(rAbiFn, rParams);
+
+      if (preparedM[1].length === 0) {
+        // just return the fn sig directly -> no params
+        return preparedM[0];
+      }
+
+      return concatHex([
+        preparedM[0],
+        // @ts-expect-error - trust
+        encodeAbiParameters(preparedM[1], rParams ?? []),
+      ]);
     })();
     return (encodedDataPromise = prom);
   }
@@ -186,7 +213,7 @@ export function prepareContractCall<
       data: encodeData_,
     },
     {
-      abi: resolveAbiFunction_,
+      preparedMethod: resolvePreparedMethod,
       contract: contract,
     },
   );

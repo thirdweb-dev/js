@@ -4,11 +4,19 @@ import { name } from "../../common/read/name.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toTokens } from "../../../utils/units.js";
+/**
+ * Represents the parameters for retrieving the balance of an address.
+ */
+type BalanceOfParams = {
+  /**
+   * The address for which to retrieve the balance.
+   */
+  address: string;
+};
 
-const METHOD = "function balanceOf(address) returns (uint256)" as const;
-
-type BalanceOfParams = { address: string };
-
+/**
+ * Represents the result of a balance query for an ERC20 token.
+ */
 type BalanceOfResult = {
   value: bigint;
   decimals: number;
@@ -35,7 +43,19 @@ export async function balanceOf(
   const [balanceWei, decimals_, symbol_, name_] = await Promise.all([
     readContract({
       ...options,
-      method: METHOD,
+      method: [
+  "0x70a08231",
+  [
+    {
+      "type": "address"
+    }
+  ],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
       params: [options.address],
     }),
     decimals(options),
