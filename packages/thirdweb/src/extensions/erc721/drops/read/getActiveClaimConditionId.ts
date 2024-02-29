@@ -1,6 +1,5 @@
 import { readContract } from "../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-
 /**
  * Retrieves the active claim condition ID.
  * @param options - The transaction options.
@@ -17,6 +16,14 @@ export async function getActiveClaimConditionId(
 ) {
   return readContract({
     ...options,
-    method: "function getActiveClaimConditionId() returns (uint256)",
+    method: [
+  "0xc68907de",
+  [],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
   });
 }

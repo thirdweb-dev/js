@@ -1,6 +1,7 @@
 import type {
   Abi,
   AbiFunction,
+  AbiParameter,
   AbiParametersToPrimitiveTypes,
   ExtractAbiFunction,
   ParseAbiItem,
@@ -22,18 +23,17 @@ export type TransactionOrUserOpHash =
 
 export type TransactionReceipt = ViemTransactionReceipt;
 
-export type ParamsOption<abiFn extends AbiFunction> = abiFn["inputs"] extends {
-  length: 0;
-}
-  ? // allow omitting "params" if there are no inputs
-    { params?: readonly unknown[] }
-  : {
-      params:
-        | Readonly<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>
-        | (() => Promise<
-            Readonly<AbiParametersToPrimitiveTypes<abiFn["inputs"]>>
-          >);
-    };
+export type ParamsOption<inputs extends readonly AbiParameter[]> =
+  inputs extends {
+    length: 0;
+  }
+    ? // allow omitting "params" if there are no inputs
+      { params?: readonly unknown[] }
+    : {
+        params:
+          | Readonly<AbiParametersToPrimitiveTypes<inputs>>
+          | (() => Promise<Readonly<AbiParametersToPrimitiveTypes<inputs>>>);
+      };
 
 export type BaseTransactionOptions<
   T extends object = object,

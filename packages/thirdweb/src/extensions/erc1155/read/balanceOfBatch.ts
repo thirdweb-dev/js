@@ -1,6 +1,8 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
+/**
+ * Represents the parameters for the balanceOfBatch function.
+ */
 export type BalanceOfBatchParams = {
   owners: readonly string[];
   tokenIds: readonly bigint[];
@@ -22,7 +24,22 @@ export function balanceOfBatch(
 ): Promise<readonly bigint[]> {
   return readContract({
     ...options,
-    method: "function balanceOfBatch(address[], uint256[]) returns (uint256[])",
+    method: [
+  "0x4e1273f4",
+  [
+    {
+      "type": "address[]"
+    },
+    {
+      "type": "uint256[]"
+    }
+  ],
+  [
+    {
+      "type": "uint256[]"
+    }
+  ]
+],
     params: [options.owners, options.tokenIds],
   });
 }

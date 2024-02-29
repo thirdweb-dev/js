@@ -1,68 +1,8 @@
 import { readContract } from "../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-
-const ABI = {
-  name: "claimCondition",
-  outputs: [
-    {
-      components: [
-        {
-          internalType: "uint256",
-          name: "startTimestamp",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "maxClaimableSupply",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "supplyClaimed",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "quantityLimitPerWallet",
-          type: "uint256",
-        },
-        {
-          internalType: "bytes32",
-          name: "merkleRoot",
-          type: "bytes32",
-        },
-        {
-          internalType: "uint256",
-          name: "pricePerToken",
-          type: "uint256",
-        },
-        {
-          internalType: "address",
-          name: "currency",
-          type: "address",
-        },
-        {
-          internalType: "string",
-          name: "metadata",
-          type: "string",
-        },
-      ],
-      internalType: "struct IClaimCondition.ClaimCondition",
-      name: "condition",
-      type: "tuple",
-    },
-  ],
-  inputs: [
-    {
-      internalType: "uint256",
-      name: "tokenId",
-      type: "uint256",
-    },
-  ],
-  stateMutability: "view",
-  type: "function",
-} as const;
-
+/**
+ * Represents the parameters required for a claim condition.
+ */
 export type ClaimConditionParams = { tokenId: bigint };
 
 /**
@@ -81,7 +21,65 @@ export async function claimCondition(
 ) {
   return readContract({
     ...options,
-    method: ABI,
+    method: [
+  "0xe9703d25",
+  [
+    {
+      "internalType": "uint256",
+      "name": "tokenId",
+      "type": "uint256"
+    }
+  ],
+  [
+    {
+      "components": [
+        {
+          "internalType": "uint256",
+          "name": "startTimestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxClaimableSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "supplyClaimed",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quantityLimitPerWallet",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pricePerToken",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        }
+      ],
+      "internalType": "struct IClaimCondition.ClaimCondition",
+      "name": "condition",
+      "type": "tuple"
+    }
+  ]
+],
     params: [options.tokenId],
   });
 }

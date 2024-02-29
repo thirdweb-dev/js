@@ -1,6 +1,8 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
+/**
+ * Represents the parameters for the `ownerOf` function.
+ */
 export type OwnerOfParams = { tokenId: bigint };
 
 /**
@@ -19,7 +21,19 @@ export function ownerOf(
 ): Promise<string> {
   return readContract({
     ...options,
-    method: "function ownerOf(uint256) returns (address)",
+    method: [
+  "0x6352211e",
+  [
+    {
+      "type": "uint256"
+    }
+  ],
+  [
+    {
+      "type": "address"
+    }
+  ]
+],
     params: [BigInt(options.tokenId)],
   });
 }

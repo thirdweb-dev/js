@@ -17,6 +17,7 @@ import {
   type ReadContractResult,
 } from "../../../transaction/read-contract.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import type { PreparedMethod } from "../../../utils/abi/prepare-method.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
@@ -39,7 +40,9 @@ export function useReadContract<
   options: PrepareContractCallOptions<abi, method> & {
     queryOptions?: PickedQueryOptions;
   },
-): UseQueryResult<ReadContractResult<ParseMethod<abi, method>>>;
+): UseQueryResult<
+  ReadContractResult<PreparedMethod<ParseMethod<abi, method>>[2]>
+>;
 /**
  * A hook to read from a contract.
  * @param extension - An extension to call.

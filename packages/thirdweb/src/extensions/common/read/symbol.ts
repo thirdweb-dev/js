@@ -1,9 +1,6 @@
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
-const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();
-
 /**
  * Retrieves the symbol of a contract.
  * @param options - The transaction options.
@@ -23,8 +20,18 @@ export function symbol(options: BaseTransactionOptions): Promise<string> {
   }
   const prom = readContract({
     ...options,
-    method: "function symbol() view returns (string)",
+    method: [
+  "0x95d89b41",
+  [],
+  [
+    {
+      "type": "string"
+    }
+  ]
+],
   });
   cache.set(options.contract, prom);
   return prom;
 }
+
+const cache = new WeakMap<ThirdwebContract<any>, Promise<string>>();

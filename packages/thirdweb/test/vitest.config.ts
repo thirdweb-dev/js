@@ -3,8 +3,10 @@ import { defineConfig } from "vitest/config";
 // @ts-expect-error - no types
 import codspeedPlugin from "@codspeed/vitest-plugin";
 
+const plugins = process.env.CI ? [codspeedPlugin()] : [];
+
 export default defineConfig({
-  plugins: [codspeedPlugin()],
+  plugins,
   test: {
     alias: {
       "~test": join(__dirname, "./src"),

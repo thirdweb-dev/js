@@ -1,15 +1,15 @@
-import { formatTransactionRequest } from "viem";
+import { decodeAbiParameters, formatTransactionRequest } from "viem";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { Abi, AbiFunction } from "abitype";
 import type { ReadContractResult } from "../read-contract.js";
-import { decodeFunctionResult } from "../../abi/decode.js";
 import { extractError } from "../extract-error.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { eth_call } from "../../rpc/actions/eth_call.js";
 import { encode } from "./encode.js";
+import type { PreparedMethod } from "../../utils/abi/prepare-method.js";
 
 export type SimulateOptions<
   abi extends Abi,
@@ -82,19 +82,19 @@ export async function simulateTransaction<
   try {
     const result = await eth_call(rpcRequest, serializedTx);
 
-    if (!options.transaction.__abi) {
+    if (!options.transaction.__preparedMethod) {
       return result;
     }
 
-    const abiFnResolved = await options.transaction.__abi();
+    const prepared = await options.transaction.__preparedMethod();
 
-    const decoded = decodeFunctionResult(abiFnResolved, result);
+    const decoded = decodeAbiParameters(prepared[2], result);
 
     if (Array.isArray(decoded) && decoded.length === 1) {
       return decoded[0];
     }
 
-    return decoded as ReadContractResult<abiFn>;
+    return decoded as ReadContractResult<PreparedMethod<abiFn>[2]>;
   } catch (error) {
     throw await extractError({
       error,

@@ -26,6 +26,7 @@ const jsdocRuleOverrides = {
     "error",
     {
       definedTags: [
+        "macro",
         "contract",
         "wallet",
         "extension",
