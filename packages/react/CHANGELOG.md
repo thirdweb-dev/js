@@ -1,5 +1,25 @@
 # @thirdweb-dev/react
 
+## 4.4.10
+
+### Patch Changes
+
+- [#2354](https://github.com/thirdweb-dev/js/pull/2354) [`cff6ef2`](https://github.com/thirdweb-dev/js/commit/cff6ef2c973cd8a8c20db1a0f3b3c0f19c61ecf8) Thanks [@MananTank](https://github.com/MananTank)! - Remove const enums to object to fix issues with Next.js <13.5
+
+- [#2348](https://github.com/thirdweb-dev/js/pull/2348) [`a50d3b0`](https://github.com/thirdweb-dev/js/commit/a50d3b04f6aa7244027c0597c096efcedf4e71f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update code snippet for XDEFI wallet
+
+- [#2347](https://github.com/thirdweb-dev/js/pull/2347) [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Magic Eden wallet
+
+- [#2375](https://github.com/thirdweb-dev/js/pull/2375) [`553f7fd`](https://github.com/thirdweb-dev/js/commit/553f7fda4739b440fc62c3f34f2dad14a022371c) Thanks [@MananTank](https://github.com/MananTank)! - Remove unnecessary ConnectModal auto opening.
+
+  This also fixes the issue where Connect Modal opens on page load when `ThirdwebProvider` is dynamically imported and rendered in the app.
+
+- Updated dependencies [[`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa), [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89), [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819), [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b), [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53), [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d), [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/sdk@4.0.37
+  - @thirdweb-dev/react-core@4.4.10
+  - @thirdweb-dev/wallets@2.4.12
+  - @thirdweb-dev/chains@0.1.74
+
 ## 4.4.9
 
 ### Patch Changes

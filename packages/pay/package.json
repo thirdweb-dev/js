@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/pay",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/thirdweb-dev-pay.cjs.js",
   "module": "dist/thirdweb-dev-pay.esm.js",
   "exports": {

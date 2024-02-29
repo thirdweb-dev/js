@@ -1,5 +1,11 @@
 # @thirdweb-dev/pay
 
+## 0.1.5
+
+### Patch Changes
+
+- [#2374](https://github.com/thirdweb-dev/js/pull/2374) [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92) Thanks [@MananTank](https://github.com/MananTank)! - Use `private foo` instead of `#foo` for making the members private in classes
+
 ## 0.1.4
 
 ### Patch Changes
