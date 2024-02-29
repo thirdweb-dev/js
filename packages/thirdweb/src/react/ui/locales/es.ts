@@ -273,6 +273,8 @@ export function esDefault(): ThirdwebLocale {
           warning:
             "Tu cartera actual se eliminará si creas una nueva. Haz una copia de seguridad de la cartera en tu dispositivo antes de crear una nueva",
           backupWallet: "Copia de seguridad de la cartera",
+          // TODO: translate
+          skip: "Skip",
         },
         reconnectScreen: {
           title: "Conectar a cartera guardada",
@@ -288,10 +290,11 @@ export function esDefault(): ThirdwebLocale {
           connecting: "Conectando",
         },
         exportScreen: {
-          description1:
-            "Esto descargará un archivo JSON que contiene la información de la cartera en tu dispositivo cifrado con la contraseña",
-          description2:
-            "Puedes usar este archivo JSON para importar la cuenta en MetaMask usando la misma contraseña",
+          // TODO: translate
+          downloadMessage:
+            "This will download a text file containing the wallet private key onto your device",
+          decryptMessage:
+            "Enter the password of this wallet to decrypt the private key",
           walletAddress: "Dirección de la cartera",
           download: "Descargar",
           title: "Respaldar cartera",
@@ -302,9 +305,14 @@ export function esDefault(): ThirdwebLocale {
             "La aplicación puede autorizar cualquier transacción en nombre de la cartera sin ninguna aprobación",
           description2:
             "Recomendamos conectar solo con aplicaciones de confianza",
+          // TODO: translate
+          passwordDescription:
+            "Choose a password to encrypt the private key. Encrypted private key will be stored in browser",
           import: "Importar",
           uploadJSON: "Por favor sube un archivo JSON",
           uploadedSuccessfully: "Subido con éxito",
+          // TODO
+          invalidPrivateKey: "Invalid Private Key",
         },
       },
       frameWallet: {

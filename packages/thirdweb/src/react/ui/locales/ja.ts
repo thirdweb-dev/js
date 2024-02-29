@@ -268,6 +268,8 @@ export function jaDefault(): ThirdwebLocale {
           warning:
             "新しいウォレットを作成すると、現在のウォレットは削除されます。新しいウォレットを作成する前に、ウォレットのバックアップをデバイスに保存してください",
           backupWallet: "ウォレットのバックアップ",
+          // TODO: translate
+          skip: "Skip",
         },
         reconnectScreen: {
           title: "保存されたウォレットへの接続",
@@ -283,10 +285,11 @@ export function jaDefault(): ThirdwebLocale {
           connecting: "接続中",
         },
         exportScreen: {
-          description1:
-            "この操作は、ウォレット情報を含む、パスワードで暗号化されたJSONファイルをデバイスにダウンロードします",
-          description2:
-            "このJSONファイルを使用して、同じパスワードでMetaMaskにアカウントをインポートすることができます",
+          // TODO: translate
+          downloadMessage:
+            "This will download a text file containing the wallet private key onto your device",
+          decryptMessage:
+            "Enter the password of this wallet to decrypt the private key",
           walletAddress: "ウォレットアドレス",
           download: "ダウンロード",
           title: "ウォレットのバックアップ",
@@ -297,9 +300,14 @@ export function jaDefault(): ThirdwebLocale {
             "アプリケーションは、ウォレットの代わりに任意の取引を承認なしで認証することができます",
           description2:
             "信頼できるアプリケーションにのみ接続することをお勧めします",
+          // TODO: translate
+          passwordDescription:
+            "Choose a password to encrypt the private key. Encrypted private key will be stored in browser",
           import: "インポート",
           uploadJSON: "JSONファイルをアップロードしてください",
           uploadedSuccessfully: "正常にアップロードされました",
+          // TODO
+          invalidPrivateKey: "Invalid Private Key",
         },
       },
       frameWallet: {

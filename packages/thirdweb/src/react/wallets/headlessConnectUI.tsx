@@ -13,7 +13,7 @@ import { Text } from "../ui/components/text.js";
  */
 export const HeadlessConnectUI = (props: ConnectUIProps) => {
   const { walletConfig, screenConfig } = props;
-  const { done, createInstance } = props.connection;
+  const { done, createInstance, chain } = props.connection;
 
   const prompted = useRef(false);
   const [connectionFailed, setConnectionFailed] = useState(false);
@@ -25,7 +25,7 @@ export const HeadlessConnectUI = (props: ConnectUIProps) => {
       await wait(1000);
       setModalVisibility(false);
       const wallet = createInstance();
-      await wallet.connect();
+      await wallet.connect({ chain });
       setModalVisibility(true);
       done(wallet);
     } catch (e) {
@@ -33,7 +33,7 @@ export const HeadlessConnectUI = (props: ConnectUIProps) => {
       setModalVisibility(true);
       console.error(e);
     }
-  }, [createInstance, done, setModalVisibility]);
+  }, [createInstance, done, setModalVisibility, chain]);
 
   useEffect(() => {
     if (prompted.current) {

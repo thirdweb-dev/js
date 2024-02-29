@@ -166,8 +166,8 @@ export type ThirdwebLocale = {
       };
       enterYourPassword: string;
       exportScreen: {
-        description1: string;
-        description2: string;
+        downloadMessage: string;
+        decryptMessage: string;
         download: string;
         title: string;
         walletAddress: string;
@@ -175,10 +175,12 @@ export type ThirdwebLocale = {
       importScreen: {
         description1: string;
         description2: string;
+        passwordDescription: string;
         import: string;
         title: string;
         uploadJSON: string;
         uploadedSuccessfully: string;
+        invalidPrivateKey: string;
       };
       passwordLabel: string;
       reconnectScreen: {
@@ -191,6 +193,7 @@ export type ThirdwebLocale = {
         backupWallet: string;
         title: string;
         warning: string;
+        skip: string;
       };
     };
     magicLink: {
