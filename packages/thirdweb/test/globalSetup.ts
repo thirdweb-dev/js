@@ -8,7 +8,7 @@ const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
 const clientId = SECRET_KEY
   ? // eslint-disable-next-line no-restricted-globals
-    Buffer.from(sha256(SECRET_KEY)).toString("utf-8").slice(0, 32)
+    Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
   : "";
 
 export default async function globalSetup() {
