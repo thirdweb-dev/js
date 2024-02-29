@@ -2,7 +2,9 @@ import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-
+/**
+ * Represents the input data for creating an NFT (Non-Fungible Token).
+ */
 type NFTInput = Prettify<
   {
     name?: string;
@@ -45,7 +47,18 @@ export type MintToParams = {
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: "function mintTo(address, string)",
+    method: [
+  "0x0075a317",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "string"
+    }
+  ],
+  []
+],
     params: async () => {
       let tokenUri: string;
 

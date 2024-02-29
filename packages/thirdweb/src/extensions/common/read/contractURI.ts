@@ -1,6 +1,5 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
 /**
  * Retrieves the contract URI for a given transaction options.
  * @param options The transaction options.
@@ -15,7 +14,14 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 export function contractURI(options: BaseTransactionOptions): Promise<string> {
   return readContract({
     ...options,
-    method: "function contractURI() returns (string)",
-    params: [],
+    method: [
+  "0xe8a3d485",
+  [],
+  [
+    {
+      "type": "string"
+    }
+  ]
+],
   });
 }

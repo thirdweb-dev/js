@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { PromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import type { Chain } from "../chains/types.js";
+import type { PreparedMethod } from "../utils/abi/prepare-method.js";
 
 export type PrepareTransactionOptions = {
   accessList?: PromisedValue<AccessList | undefined>;
@@ -25,7 +26,7 @@ type Additional<
   abi extends Abi = [],
   abiFn extends AbiFunction = AbiFunction,
 > = {
-  abi: () => Promise<abiFn>;
+  preparedMethod: () => Promise<PreparedMethod<abiFn>>;
   contract: ThirdwebContract<abi>;
 };
 
@@ -33,7 +34,7 @@ export type PreparedTransaction<
   abi extends Abi = [],
   abiFn extends AbiFunction = AbiFunction,
 > = Readonly<PrepareTransactionOptions> & {
-  __abi?: () => Promise<abiFn>;
+  __preparedMethod?: () => Promise<PreparedMethod<abiFn>>;
   __contract?: ThirdwebContract<abi>;
 };
 
@@ -61,7 +62,7 @@ export function prepareTransaction<
 >(options: PrepareTransactionOptions, info?: Additional<abi, abiFn>) {
   return {
     ...options,
-    __abi: info?.abi,
+    __preparedMethod: info?.preparedMethod,
     __contract: info?.contract,
   } as PreparedTransaction<abi, abiFn>;
 }

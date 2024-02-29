@@ -1,4 +1,4 @@
-name: Build, Lint & Test
+name: Build, Lint & Test & Benchmark
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
   # trigger on merge group as well (merge queue)
   merge_group:
     types: [checks_requested]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -158,3 +159,35 @@ jobs:
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
           CLI_E2E_API_KEY: ${{ secrets.CLI_E2E_API_KEY }}
+
+  benchmark:
+    timeout-minutes: 15
+    name: "Benchmark"
+    runs-on: ubuntu-latest-16
+    needs: build
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          check-latest: true
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/cache@v3
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
+
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v2
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: "pnpm bench"

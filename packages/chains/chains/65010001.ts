@@ -26,13 +26,10 @@ export default {
     "decimals": 18
   },
   "networkId": 65010001,
-  "rpc": [
-    "https://65010001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.bakerloo.autonity.org/",
-    "wss://rpc1.bakerloo.autonity.org/ws/"
-  ],
+  "rpc": [],
   "shortName": "bakerloo-01",
   "slip44": 1,
   "slug": "autonity-bakerloo-barada-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

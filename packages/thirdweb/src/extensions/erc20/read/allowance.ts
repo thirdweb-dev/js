@@ -1,7 +1,9 @@
 import type { Address } from "abitype";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
+/**
+ * Represents the parameters for the `allowance` function.
+ */
 export type AllowanceParams = {
   owner: Address;
   spender: Address;
@@ -23,7 +25,22 @@ export function allowance(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function allowance(address, address) returns (uint256)",
+    method: [
+      "0xdd62ed3e",
+      [
+        {
+          type: "address",
+        },
+        {
+          type: "address",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.owner, options.spender],
   });
 }

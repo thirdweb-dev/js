@@ -3,7 +3,9 @@ import { toUnits } from "../../../utils/units.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-
+/**
+ * Represents the parameters for the `transferFrom` function.
+ */
 export type TransferFromParams = Prettify<
   { to: Address; from: Address } & (
     | {
@@ -37,7 +39,21 @@ export function transferFrom(
 ) {
   return prepareContractCall({
     ...options,
-    method: "function transferFrom(address, address, uint256)",
+    method: [
+  "0x23b872dd",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "address"
+    },
+    {
+      "type": "uint256"
+    }
+  ],
+  []
+],
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

@@ -14,6 +14,7 @@
     "test": "turbo run test --filter=./packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
+    "bench": "turbo run bench",
     "typedoc": "turbo run typedoc",
     "generate-snippets": "node ./scripts/generate-snippets/index.mjs",
     "build:release": "turbo run build --force --filter=./packages/*",
@@ -59,6 +60,8 @@
   },
   "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
   "devDependencies": {
+    "@codspeed/vitest-plugin": "^3.1.0",
+    "@hazae41/saumon": "^0.2.7",
     "@size-limit/preset-big-lib": "11.0.2",
     "@tanstack/eslint-plugin-query": "5.20.1",
     "@types/bun": "1.0.6",

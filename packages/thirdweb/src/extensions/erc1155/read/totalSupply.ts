@@ -1,6 +1,8 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
+/**
+ * Represents the parameters for retrieving the total supply of a specific token.
+ */
 export type TotalSupplyParams = { tokenId: bigint };
 
 /**
@@ -19,7 +21,19 @@ export function totalSupply(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function totalSupply(uint256) returns (uint256)",
+    method: [
+  "0xbd85b039",
+  [
+    {
+      "type": "uint256"
+    }
+  ],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
     params: [options.tokenId],
   });
 }

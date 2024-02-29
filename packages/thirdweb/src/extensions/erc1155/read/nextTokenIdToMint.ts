@@ -1,6 +1,5 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
 /**
  * Retrieves the next token ID to be minted in an ERC1155 contract.
  * @param options - The transaction options.
@@ -17,6 +16,14 @@ export function nextTokenIdToMint(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function nextTokenIdToMint() returns (uint256)",
+    method: [
+  "0x3b1475a7",
+  [],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
   });
 }

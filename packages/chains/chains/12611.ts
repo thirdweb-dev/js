@@ -4,6 +4,7 @@ export default {
   "chainId": 12611,
   "explorers": [],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmRySLe3su59dE5x5JPm2b1GeZfz6DR9qUzcbp3rt4SD3A",
     "width": 300,
@@ -11,7 +12,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://astar.network",
-  "name": "Astar zkEVM",
+  "name": "Astar zkEVM (deprecated)",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -23,9 +24,10 @@ export default {
     "chain": "eip155-1",
     "bridges": []
   },
+  "redFlags": [],
   "rpc": [],
   "shortName": "astrzk",
-  "slug": "astar-zkevm",
+  "slug": "astar-zkevm-deprecated",
   "status": "incubating",
   "testnet": false,
   "title": "Astar zkEVM Mainnet"

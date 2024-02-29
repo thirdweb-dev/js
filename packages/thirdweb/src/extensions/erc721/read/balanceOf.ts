@@ -1,7 +1,14 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
-export type BalanceOfParams = { address: string };
+/**
+ * Represents the parameters for the balanceOf function.
+ */
+export type BalanceOfParams = {
+  /**
+   * The address for which the balance is being queried.
+   */
+  address: string;
+};
 
 /**
  * Retrieves the balance of tokens owned by a specific address.
@@ -19,7 +26,19 @@ export function balanceOf(
 ): Promise<bigint> {
   return readContract({
     ...options,
-    method: "function balanceOf(address) returns (uint256)",
+    method: [
+  "0x70a08231",
+  [
+    {
+      "type": "address"
+    }
+  ],
+  [
+    {
+      "type": "uint256"
+    }
+  ]
+],
     params: [options.address],
   });
 }

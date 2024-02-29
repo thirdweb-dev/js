@@ -2,7 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { toUnits } from "../../../utils/units.js";
-
+/**
+ * Represents the parameters for the `mintTo` function.
+ */
 export type MintToParams = Prettify<
   { to: string } & (
     | {
@@ -32,7 +34,18 @@ export type MintToParams = Prettify<
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     ...options,
-    method: "function mintTo(address, uint256)",
+    method: [
+  "0x449a52f8",
+  [
+    {
+      "type": "address"
+    },
+    {
+      "type": "uint256"
+    }
+  ],
+  []
+],
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {

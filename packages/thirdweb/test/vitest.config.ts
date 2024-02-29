@@ -1,15 +1,17 @@
 import { join } from "node:path";
 import { defineConfig } from "vitest/config";
+// @ts-expect-error - no types
+import codspeedPlugin from "@codspeed/vitest-plugin";
+
+const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
 export default defineConfig({
+  plugins,
   test: {
     alias: {
       "~test": join(__dirname, "./src"),
     },
-    benchmark: {
-      outputFile: "./bench/report.json",
-      reporters: process.env.CI ? ["json"] : ["verbose"],
-    },
+    benchmark: {},
     coverage: {
       all: true,
       provider: "v8",

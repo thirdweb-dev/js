@@ -1,6 +1,8 @@
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
+/**
+ * Represents the parameters for retrieving the URI of a token.
+ */
 export type TokenUriParams = { tokenId: bigint };
 
 /**
@@ -19,7 +21,19 @@ export function uri(
 ): Promise<string> {
   return readContract({
     ...options,
-    method: "function uri(uint256) returns (string)",
+    method: [
+  "0x0e89341c",
+  [
+    {
+      "type": "uint256"
+    }
+  ],
+  [
+    {
+      "type": "string"
+    }
+  ]
+],
     params: [options.tokenId],
   });
 }
