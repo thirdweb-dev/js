@@ -47,7 +47,8 @@ function detectMethodInBytecode(options: DetectExtensionInBytecodeOptions) {
   // we strip the leading `0x` from the function selector
   const fnSelector = Array.isArray(options.method)
     ? options.method[0]
-    : toFunctionSelector(options.method).slice(2);
+    : toFunctionSelector(options.method);
+
   // indexOf is slightly faster than includes
-  return options.bytecode.indexOf(fnSelector) > -1;
+  return options.bytecode.indexOf(fnSelector.slice(2)) > -1;
 }

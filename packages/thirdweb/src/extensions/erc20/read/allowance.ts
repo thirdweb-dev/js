@@ -1,7 +1,6 @@
 import type { Address } from "abitype";
 import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-
 export type AllowanceParams = {
   owner: Address;
   spender: Address;
