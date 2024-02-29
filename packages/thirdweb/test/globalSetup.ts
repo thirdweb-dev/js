@@ -5,8 +5,11 @@ import { createAnvil } from "@viem/anvil";
 require("dotenv-mono").load();
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
-// eslint-disable-next-line no-restricted-globals
-const clientId = Buffer.from(sha256(SECRET_KEY)).toString("utf-8").slice(0, 32);
+
+const clientId = SECRET_KEY
+  ? // eslint-disable-next-line no-restricted-globals
+    Buffer.from(sha256(SECRET_KEY)).toString("utf-8").slice(0, 32)
+  : "";
 
 export default async function globalSetup() {
   const anvil = createAnvil({
