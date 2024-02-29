@@ -273,6 +273,8 @@ export function tlDefault(): ThirdwebLocale {
           warning:
             "Ang kasalukuyang wallet mo ay mabubura kapag lumikha ka ng bagong wallet. I-backup ang wallet sa iyong device bago lumikha ng bagong wallet",
           backupWallet: "I-backup ang Wallet",
+          // TODO: translate
+          skip: "Skip",
         },
         reconnectScreen: {
           title: "Kumonekta sa na-save na wallet",
@@ -288,10 +290,11 @@ export function tlDefault(): ThirdwebLocale {
           connecting: "Kumokonekta",
         },
         exportScreen: {
-          description1:
-            "Ito ay magdo-download ng isang JSON file na naglalaman ng impormasyon ng wallet sa iyong device na naka-encrypt gamit ang password",
-          description2:
-            "Maaari mong gamitin ang JSON file na ito para i-import ang account sa MetaMask gamit ang parehong password",
+          // TODO: translate
+          downloadMessage:
+            "This will download a text file containing the wallet private key onto your device",
+          decryptMessage:
+            "Enter the password of this wallet to decrypt the private key",
           walletAddress: "Address ng Wallet",
           download: "I-download",
           title: "Backup Wallet",
@@ -302,9 +305,14 @@ export function tlDefault(): ThirdwebLocale {
             "Ang application ay maaaring mag-authorize ng anumang mga transaksyon sa ngalan ng wallet nang walang anumang mga approval",
           description2:
             "Minumungkahi naming kumonekta lamang sa mga pinagkakatiwalaang application",
+          // TODO: translate
+          passwordDescription:
+            "Choose a password to encrypt the private key. Encrypted private key will be stored in browser",
           import: "Mag-import",
           uploadJSON: "Mangyaring mag-upload ng isang JSON file",
           uploadedSuccessfully: "Matagumpay na na-upload",
+          // TODO
+          invalidPrivateKey: "Invalid Private Key",
         },
       },
       frameWallet: {

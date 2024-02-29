@@ -237,7 +237,7 @@ export class LocalWallet implements Wallet {
    * Refer to [`LocalWalletLoadOrCreateOptions`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletLoadOrCreateOptions) for more details.
    */
   async loadOrCreate(options: LocalWalletLoadOrCreateOptions) {
-    if (await this.getSavedData(options.storage)) {
+    if (await LocalWallet.getSavedData(options.storage)) {
       await this.load(options);
     } else {
       await this.generate();
@@ -357,7 +357,7 @@ export class LocalWallet implements Wallet {
       throw new Error("wallet is already initialized");
     }
 
-    const walletData = await this.getSavedData();
+    const walletData = await LocalWallet.getSavedData();
 
     if (!walletData) {
       throw new Error("No Saved wallet found in storage");
@@ -478,7 +478,7 @@ export class LocalWallet implements Wallet {
     }
 
     try {
-      const data = await this.getSavedData();
+      const data = await LocalWallet.getSavedData();
       if (data?.address === this.account.address) {
         return true;
       }
@@ -553,7 +553,7 @@ export class LocalWallet implements Wallet {
    * @returns `Promise` which resolves to a `LocalWalletStorageData` object or `null` if no wallet data is found in storage.
    * Refer to [`LocalWalletStorageData`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletStorageData) for more details.
    */
-  async getSavedData(
+  static async getSavedData(
     storage?: AsyncStorage,
   ): Promise<LocalWalletStorageData | null> {
     try {

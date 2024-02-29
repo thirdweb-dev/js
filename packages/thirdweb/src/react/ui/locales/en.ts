@@ -266,6 +266,7 @@ export function enDefault(): ThirdwebLocale {
           warning:
             "Your current wallet will be deleted if you create a new wallet. Backup wallet to your device before creating a new wallet",
           backupWallet: "Backup Wallet",
+          skip: "Skip",
         },
         reconnectScreen: {
           title: "Connect to saved wallet",
@@ -281,10 +282,10 @@ export function enDefault(): ThirdwebLocale {
           connecting: "Connecting",
         },
         exportScreen: {
-          description1:
-            "This will download a JSON file containing the wallet information onto your device encrypted with the password",
-          description2:
-            "You can use this JSON file to import the account in MetaMask using the same password",
+          downloadMessage:
+            "This will download a text file containing the wallet private key onto your device",
+          decryptMessage:
+            "Enter the password of this wallet to decrypt the private key",
           walletAddress: "Wallet Address",
           download: "Download",
           title: "Backup Wallet",
@@ -294,9 +295,12 @@ export function enDefault(): ThirdwebLocale {
           description1:
             "The application can authorize any transactions on behalf of the wallet without any approvals",
           description2: "We recommend only connecting to trusted applications",
+          passwordDescription:
+            "Choose a password to encrypt the private key. Encrypted private key will be stored in browser",
           import: "Import",
           uploadJSON: "Please upload a JSON file",
           uploadedSuccessfully: "Uploaded successfully",
+          invalidPrivateKey: "Invalid Private Key",
         },
       },
       frameWallet: {

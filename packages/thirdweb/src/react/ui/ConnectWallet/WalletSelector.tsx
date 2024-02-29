@@ -29,14 +29,12 @@ import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { useScreenContext } from "./Modal/screen.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
+import { localWalletMetadata } from "../../../wallets/local/index.js";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
   connection: Omit<SelectUIProps["connection"], "createInstance">;
 };
-
-// temp
-const LocalWalletId = "localWallet";
 
 /**
  * @internal
@@ -57,11 +55,11 @@ export const WalletSelector: React.FC<{
   const locale = useTWLocale().connectWallet;
 
   const localWalletConfig = props.walletConfigs.find(
-    (w) => w.metadata.id === LocalWalletId,
+    (w) => w.metadata.id === localWalletMetadata.id,
   );
 
   const nonLocalWalletConfigs = props.walletConfigs.filter(
-    (w) => w.metadata.id !== LocalWalletId,
+    (w) => w.metadata.id !== localWalletMetadata.id,
   );
 
   const socialWallets = nonLocalWalletConfigs.filter(

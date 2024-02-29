@@ -1,0 +1,156 @@
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import type { LocalWallet } from "../../../../../wallets/local/index.js";
+import { useTWLocale } from "../../../../providers/locale-provider.js";
+import type { ConnectUIProps } from "../../../../types/wallets.js";
+import { Spacer } from "../../../../ui/components/Spacer.js";
+import {
+  Container,
+  ModalHeader,
+  Line,
+} from "../../../../ui/components/basic.js";
+import { Button } from "../../../../ui/components/buttons.js";
+import {
+  FormField,
+  FormFieldWithIconButton,
+} from "../../../../ui/components/formFields.js";
+import { Text } from "../../../../ui/components/text.js";
+import { usePassword } from "../../utils/usePassword.js";
+import { isValidPrivateKey } from "../../../../../wallets/local/utils.js";
+
+/**
+ * Show UI to initiate the wallet by entering the private key
+ * @internal
+ */
+export const ImportLocalWallet: React.FC<{
+  goBack: () => void;
+  persist: boolean;
+  connectUIProps: ConnectUIProps;
+}> = (props) => {
+  const locale = useTWLocale().wallets.localWallet;
+  const { createInstance, chain, done } = props.connectUIProps.connection;
+
+  const [privateKeyInput, setPrivateKeyInput] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const [errorImporting, setErrorImporting] = useState(false);
+
+  const { password, setPassword, showPassword, setShowPassword } =
+    usePassword();
+
+  const importDisabled = !privateKeyInput || !password;
+
+  async function handleImport() {
+    setErrorImporting(false);
+    const localWallet = createInstance() as LocalWallet;
+
+    try {
+      await localWallet.import({
+        privateKey: privateKeyInput,
+        encryption: false,
+      });
+
+      await localWallet.connect({ chain });
+
+      await localWallet.save({
+        strategy: "privateKey",
+        encryption: {
+          password,
+        },
+      });
+
+      done(localWallet);
+    } catch (e) {
+      console.error(e);
+      setErrorImporting(true);
+      return;
+    }
+  }
+
+  return (
+    <Container animate="fadein">
+      <Container p="lg">
+        <ModalHeader onBack={props.goBack} title={locale.importScreen.title} />
+      </Container>
+      <Line />
+
+      <Container p="lg">
+        <Text multiline>{locale.importScreen.description1}</Text>
+        <Spacer y="xs" />
+        <Text multiline>{locale.importScreen.description2}</Text>
+        <Spacer y="xs" />
+        <Text multiline>{locale.importScreen.passwordDescription}</Text>
+        <Spacer y="lg" />
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleImport();
+          }}
+        >
+          <FormField
+            type="text"
+            id="private-key"
+            autocomplete="off"
+            label="Private Key"
+            name="private-key"
+            value={privateKeyInput}
+            onChange={(value) => {
+              setPrivateKeyInput(value);
+              setIsValid(isValidPrivateKey(value));
+            }}
+            errorMessage={
+              privateKeyInput && !isValid
+                ? locale.importScreen.invalidPrivateKey
+                : undefined
+            }
+            required
+          />
+
+          <Spacer y="lg" />
+
+          {/* Password */}
+          <FormFieldWithIconButton
+            required
+            noSave={true}
+            name="password"
+            autocomplete="off"
+            id="password"
+            onChange={(value) => {
+              setPassword(value);
+              setErrorImporting(false);
+            }}
+            right={{
+              onClick: () => setShowPassword(!showPassword),
+              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+            }}
+            label={locale.passwordLabel}
+            type={showPassword ? "text" : "password"}
+            value={password}
+          />
+          <Spacer y="xl" />
+
+          {errorImporting && <Text color="danger">{`Failed to Import`}</Text>}
+
+          <Container
+            flex="row"
+            style={{
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              variant="accent"
+              type="submit"
+              disabled={importDisabled}
+              style={{
+                minWidth: "110px",
+                opacity: importDisabled ? 0.5 : 1,
+              }}
+            >
+              {locale.importScreen.import}
+            </Button>
+          </Container>
+        </form>
+      </Container>
+    </Container>
+  );
+};

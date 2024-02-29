@@ -21,28 +21,6 @@ export const ModalTitle = /* @__PURE__ */ StyledH2(
   },
 );
 
-// UNUSED
-// type ModalDescriptionProps = {
-//   centerOnMobile?: boolean;
-//   sm?: boolean;
-// };
-
-// const ModalDescription = /* @__PURE__ */ StyledP(
-//   (props: ModalDescriptionProps) => {
-//     const theme = useCustomTheme();
-//     return {
-//       all: "unset",
-//       display: "block",
-//       fontSize: props.sm ? fontSize.sm : fontSize.md,
-//       color: theme.colors.secondaryText,
-//       lineHeight: 1.5,
-//       [media.mobile]: {
-//         textAlign: props.centerOnMobile ? "center" : "left",
-//       },
-//     };
-//   },
-// );
-
 /**
  * @internal
  */

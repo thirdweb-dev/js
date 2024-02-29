@@ -1,0 +1,168 @@
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import type { LocalWallet } from "../../../../../wallets/local/index.js";
+import { useTWLocale } from "../../../../providers/locale-provider.js";
+import type { ConnectUIProps } from "../../../../types/wallets.js";
+import { Spacer } from "../../../../ui/components/Spacer.js";
+import { Spinner } from "../../../../ui/components/Spinner.js";
+import {
+  Container,
+  ModalHeader,
+  Line,
+} from "../../../../ui/components/basic.js";
+import { Button } from "../../../../ui/components/buttons.js";
+import { Label } from "../../../../ui/components/formElements.js";
+import { FormFieldWithIconButton } from "../../../../ui/components/formFields.js";
+import { spacing } from "../../../../ui/design-system/index.js";
+import { shortenString } from "../../../../utils/addresses.js";
+import { usePassword } from "../../utils/usePassword.js";
+import type { LocalWalletStorageData } from "../../../../../wallets/local/types.js";
+import { Text } from "../../../../ui/components/text.js";
+
+/**
+ * Connect to saved local wallet
+ * - Get a password from the user
+ * - Get the saved encrypted private key from local storage
+ * - initiate the wallet
+ * @internal
+ */
+export function LocalWallet_ConnectToSaved(props: {
+  connectUIProps: ConnectUIProps;
+  persist: boolean;
+  savedData: LocalWalletStorageData;
+  onBackupWallet: () => void;
+}) {
+  const { createInstance, done, chain } = props.connectUIProps.connection;
+  const locale = useTWLocale().wallets.localWallet;
+
+  // form state
+  const {
+    password,
+    setPassword,
+    showPassword,
+    setShowPassword,
+    isWrongPassword,
+    setIsWrongPassword,
+  } = usePassword();
+
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const handleConnect = async () => {
+    setIsConnecting(true);
+    const wallet = createInstance() as LocalWallet;
+
+    try {
+      // initialize wallet from saved encrypted private key from local storage
+      await wallet.load({
+        strategy: "privateKey",
+        encryption: {
+          password,
+        },
+      });
+
+      await wallet.connect({ chain });
+      done(wallet);
+    } catch (e) {
+      setIsWrongPassword(true);
+    }
+
+    setIsConnecting(false);
+  };
+
+  return (
+    <Container animate="fadein" flex="column" fullHeight>
+      <Container p="lg">
+        <ModalHeader
+          onBack={props.connectUIProps.screenConfig.goBack}
+          title={props.connectUIProps.walletConfig.metadata.name}
+        />
+      </Container>
+      <Line />
+
+      <Container p="lg" expand>
+        <Text multiline size="lg" color="primaryText">
+          {locale.reconnectScreen.title}
+        </Text>
+
+        <Spacer y="xl" />
+
+        <Label>{locale.reconnectScreen.savedWallet}</Label>
+        <Spacer y="sm" />
+
+        <Text>{shortenString(props.savedData.address)}</Text>
+
+        <Spacer y="xl" />
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleConnect();
+          }}
+        >
+          {/* Hidden Account Address as Username */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="off"
+            value={props.savedData.address}
+            disabled
+            style={{ display: "none" }}
+          />
+
+          {/* Password */}
+          <FormFieldWithIconButton
+            required
+            name="current-password"
+            autocomplete="current-password"
+            id="current-password"
+            onChange={(value) => {
+              setPassword(value);
+              setIsWrongPassword(false);
+            }}
+            right={{
+              onClick: () => setShowPassword(!showPassword),
+              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+            }}
+            label={locale.passwordLabel}
+            type={showPassword ? "text" : "password"}
+            value={password}
+            error={isWrongPassword ? "Wrong Password" : ""}
+            dataTest="current-password"
+            placeholder={locale.enterYourPassword}
+          />
+
+          <Spacer y="md" />
+
+          {/* Connect Button */}
+          <Button
+            variant="accent"
+            type="submit"
+            fullWidth
+            style={{
+              display: "flex",
+              gap: spacing.sm,
+            }}
+          >
+            {locale.reconnectScreen.continue}
+            {isConnecting && <Spinner size="sm" color="accentButtonText" />}
+          </Button>
+        </form>
+      </Container>
+
+      <Spacer y="sm" />
+      <Line />
+      <Container p="lg">
+        <Button
+          variant="link"
+          fullWidth
+          style={{
+            textAlign: "center",
+          }}
+          onClick={props.onBackupWallet}
+        >
+          {locale.reconnectScreen.createNewWallet}
+        </Button>
+      </Container>
+    </Container>
+  );
+}

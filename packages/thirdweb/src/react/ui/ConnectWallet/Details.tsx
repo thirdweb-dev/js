@@ -60,9 +60,7 @@ import {
   smartWalletMetadata,
 } from "../../../wallets/smart/index.js";
 import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index.js";
-
-// TEMP
-const LocalWalletId = "localWallet";
+import { localWalletMetadata } from "../../../wallets/local/index.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -215,7 +213,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.metadata.id === LocalWalletId ? (
+        {activeWallet?.metadata.id === localWalletMetadata.id ? (
           <Text
             color="danger"
             size="xs"
