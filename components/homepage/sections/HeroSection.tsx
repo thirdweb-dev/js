@@ -28,13 +28,13 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
         <Flex flexDir="column" gap={{ base: 6, md: 8 }}>
           <Flex flexDir="column" gap={4}>
             <Heading as="h1" size="display.sm" px={{ base: 2, md: 0 }} mr={6}>
-              Build web3 apps fast, on any EVM chain.
+              Full-Stack Web3 Developer Platform
             </Heading>
           </Flex>
           <Text size="body.xl" mr={6}>
-            The full stack web3 development platform. Onboard users with
-            wallets, build & deploy smart contracts, accept fiat with payments,
-            and scale apps with infrastructure.
+            Build web3 apps on any EVM chain. Onboard users with wallets, deploy
+            smart contracts, accept fiat & crypto payments, and scale with
+            production-grade infrastructure.
           </Text>
           <LandingCTAButtons
             ctaText="Get started"
