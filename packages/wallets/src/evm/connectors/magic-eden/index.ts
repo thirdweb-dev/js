@@ -9,34 +9,25 @@ import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
 import type { Chain } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
-import { getInjectedPhantomProvider } from "./getInjectedPhantomProvider";
+import { getInjectedMagicEdenProvider } from "./getInjectedMagicEdenProvider";
 
-export type PhantomConnectorOptions = Pick<
-  InjectedConnectorOptions,
-  "shimDisconnect"
-> & {
-  /**
-   * While "disconnected" with `shimDisconnect`, allows user to select a different Phantom account (than the currently connected account) when trying to connect.
-   */
-  UNSTABLE_shimOnConnectSelectAccount?: boolean;
-};
+export type MagicEdenConnectorOptions = InjectedConnectorOptions;
 
-type PhantomConnectorConstructorArg = {
+type MagicEdenConnectorConstructorArg = {
   chains?: Chain[];
   connectorStorage: AsyncStorage;
-  options?: PhantomConnectorOptions;
+  options?: MagicEdenConnectorOptions;
 };
 
-export class PhantomConnector extends InjectedConnector {
-  readonly id = walletIds.phantom;
-  private _UNSTABLE_shimOnConnectSelectAccount: PhantomConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
+export class MagicEdenConnector extends InjectedConnector {
+  readonly id = walletIds.magicEden;
 
-  constructor(arg: PhantomConnectorConstructorArg) {
+  constructor(arg: MagicEdenConnectorConstructorArg) {
     const defaultOptions = {
-      name: "Phantom",
+      name: "Magic Eden",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
-      getProvider: getInjectedPhantomProvider,
+      getProvider: getInjectedMagicEdenProvider,
     };
 
     const options = {
@@ -49,13 +40,10 @@ export class PhantomConnector extends InjectedConnector {
       options,
       connectorStorage: arg.connectorStorage,
     });
-
-    this._UNSTABLE_shimOnConnectSelectAccount =
-      options.UNSTABLE_shimOnConnectSelectAccount;
   }
 
   /**
-   * Connect to injected Phantom provider
+   * Connect to injected MagicEden Wallet provider
    */
   async connect(options: { chainId?: number } = {}) {
     try {
@@ -73,7 +61,6 @@ export class PhantomConnector extends InjectedConnector {
       // `shimDisconnect` is active and account is in disconnected state (flag in storage)
       let account: string | null = null;
       if (
-        this._UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
         !Boolean(this.connectorStorage.getItem(this.shimDisconnectKey))
       ) {
@@ -87,6 +74,7 @@ export class PhantomConnector extends InjectedConnector {
               params: [{ eth_accounts: {} }],
             });
           } catch (error) {
+            // Not all injected providers support `wallet_requestPermissions` (e.g. iOS).
             // Only bubble up error if user rejects request
             if (this.isUserRejectedRequestError(error)) {
               throw new UserRejectedRequestError(error);
@@ -143,13 +131,5 @@ export class PhantomConnector extends InjectedConnector {
       }
       throw error;
     }
-  }
-
-  async switchAccount() {
-    const provider = await this.getProvider();
-    await provider.request({
-      method: "wallet_requestPermissions",
-      params: [{ eth_accounts: {} }],
-    });
   }
 }

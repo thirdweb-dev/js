@@ -175,6 +175,13 @@
       },
       "default": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.cjs.js"
     },
+    "./evm/wallets/magic-eden": {
+      "module": {
+        "browser": "./evm/wallets/magic-eden/dist/thirdweb-dev-wallets-evm-wallets-magic-eden.browser.esm.js",
+        "default": "./evm/wallets/magic-eden/dist/thirdweb-dev-wallets-evm-wallets-magic-eden.esm.js"
+      },
+      "default": "./evm/wallets/magic-eden/dist/thirdweb-dev-wallets-evm-wallets-magic-eden.cjs.js"
+    },
     "./evm/wallets/core-wallet": {
       "module": {
         "browser": "./evm/wallets/core-wallet/dist/thirdweb-dev-wallets-evm-wallets-core-wallet.browser.esm.js",
@@ -377,6 +384,13 @@
         "default": "./evm/wallets/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.esm.js"
       },
       "default": "./evm/wallets/crypto-defi-wallet/dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.cjs.js"
+    },
+    "./evm/connectors/magic-eden": {
+      "module": {
+        "browser": "./evm/connectors/magic-eden/dist/thirdweb-dev-wallets-evm-connectors-magic-eden.browser.esm.js",
+        "default": "./evm/connectors/magic-eden/dist/thirdweb-dev-wallets-evm-connectors-magic-eden.esm.js"
+      },
+      "default": "./evm/connectors/magic-eden/dist/thirdweb-dev-wallets-evm-connectors-magic-eden.cjs.js"
     },
     "./evm/wallets/aws-secrets-manager": {
       "module": {

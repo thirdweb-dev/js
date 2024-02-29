@@ -1,25 +1,25 @@
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { walletIds } from "../constants/walletIds";
-import { getInjectedXDEFIProvider } from "../connectors/xdefi/getInjectedXDEFIProvider";
+import { getInjectedMagicEdenProvider } from "../connectors/magic-eden/getInjectedMagicEdenProvider";
 
-export type XDEFIOptions = WalletOptions;
+export type MagicEdenOptions = WalletOptions;
 
 /**
- * Wallet interface to connect [XDEFI](https://xdefi.io/) extension or mobile app
+ * Wallet interface to connect [Magic Eden](https://wallet.magiceden.io/) extension or mobile app
  *
  * @example
  * ```ts
- * import { XDEFIWallet } from "@thirdweb-dev/wallets";
+ * import { MagicEdenWallet } from "@thirdweb-dev/wallets";
  *
- * const wallet = new XDEFIWallet();
+ * const wallet = new MagicEdenWallet();
  *
  * wallet.connect();
  * ```
  *
  * @wallet
  */
-export class XDEFIWallet extends AbstractClientWallet {
+export class MagicEdenWallet extends AbstractClientWallet {
   /**
    * @internal
    */
@@ -31,16 +31,16 @@ export class XDEFIWallet extends AbstractClientWallet {
   /**
    * @internal
    */
-  static id = walletIds.xdefi as string;
+  static id = walletIds.magicEden as string;
   /**
    * @internal
    */
   public get walletName() {
-    return "XDEFI" as const;
+    return "Magic Eden" as const;
   }
 
   /**
-   * Create instance of `XDEFIWallet`
+   * Create instance of `MagicEdenWallet`
    *
    * @param options - The `options` object contains the following properties:
    * ### clientId (recommended)
@@ -62,9 +62,9 @@ export class XDEFIWallet extends AbstractClientWallet {
    * Must be an object containing `name`, `url`, and optionally `description` and `logoUrl` properties.
    *
    * ```javascript
-   * import { XDEFIWallet } from "@thirdweb-dev/wallets";
+   * import { MagicEdenWallet } from "@thirdweb-dev/wallets";
    *
-   * const wallet = new XDEFIWallet({
+   * const wallet = new MagicEdenWallet({
    *   dappMetadata: {
    *     name: "thirdweb powered dApp",
    *     url: "https://thirdweb.com",
@@ -74,15 +74,15 @@ export class XDEFIWallet extends AbstractClientWallet {
    * });
    * ```
    */
-  constructor(options: XDEFIOptions) {
-    super(XDEFIWallet.id, options);
-    this.isInjected = !!getInjectedXDEFIProvider();
+  constructor(options: MagicEdenOptions) {
+    super(MagicEdenWallet.id, options);
+    this.isInjected = !!getInjectedMagicEdenProvider();
   }
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      const { XDEFIConnector } = await import("../connectors/xdefi");
-      const connector = new XDEFIConnector({
+      const { MagicEdenConnector } = await import("../connectors/magic-eden");
+      const connector = new MagicEdenConnector({
         chains: this.chains,
         connectorStorage: this.walletStorage,
         options: {

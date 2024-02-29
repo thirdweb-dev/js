@@ -78,9 +78,9 @@ export class WalletConnectConnector extends WagmiConnector<
   readonly name = "WalletConnect";
   readonly ready = true;
 
-  #provider?: WalletConnectProvider;
-  #initProviderPromise?: Promise<void>;
-  #storage: AsyncStorage;
+  private _provider?: WalletConnectProvider;
+  private _initProviderPromise?: Promise<void>;
+  private _storage: AsyncStorage;
   filteredChains: Chain[];
   showWalletConnectModal: boolean;
 
@@ -89,8 +89,8 @@ export class WalletConnectConnector extends WagmiConnector<
       ...config,
       options: { isNewChainsStale: true, ...config.options },
     });
-    this.#storage = config.options.storage;
-    this.#createProvider();
+    this._storage = config.options.storage;
+    this._createProvider();
 
     this.filteredChains =
       this.chains.length > 50
@@ -106,9 +106,8 @@ export class WalletConnectConnector extends WagmiConnector<
     try {
       let targetChainId = chainIdP;
       if (!targetChainId) {
-        const lastUsedChainIdStr = await this.#storage.getItem(
-          LAST_USED_CHAIN_ID,
-        );
+        const lastUsedChainIdStr =
+          await this._storage.getItem(LAST_USED_CHAIN_ID);
         const lastUsedChainId = lastUsedChainIdStr
           ? parseInt(lastUsedChainIdStr)
           : undefined;
@@ -125,7 +124,7 @@ export class WalletConnectConnector extends WagmiConnector<
       const provider = await this.getProvider();
       this.setupListeners();
 
-      const isChainsStale = await this.#isChainsStale();
+      const isChainsStale = await this._isChainsStale();
 
       // If there is an active session with stale chains, disconnect the current session.
       if (provider.session && isChainsStale) {
@@ -147,7 +146,7 @@ export class WalletConnectConnector extends WagmiConnector<
             optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
-        await this.#setRequestedChainsIds(
+        await this._setRequestedChainsIds(
           this.filteredChains.map(({ chainId }) => chainId),
         );
       }
@@ -198,8 +197,8 @@ export class WalletConnectConnector extends WagmiConnector<
           throw error;
         }
       } finally {
-        this.#removeListeners();
-        await this.#setRequestedChainsIds([]);
+        this._removeListeners();
+        await this._setRequestedChainsIds([]);
         cleanup();
       }
     };
@@ -221,17 +220,17 @@ export class WalletConnectConnector extends WagmiConnector<
   }
 
   async getProvider({ chainId }: { chainId?: number } = {}) {
-    if (!this.#provider) {
-      await this.#createProvider();
+    if (!this._provider) {
+      await this._createProvider();
     }
     if (chainId) {
       await this.switchChain(chainId);
     }
-    if (!this.#provider) {
+    if (!this._provider) {
       throw new Error("No provider found.");
     }
 
-    return this.#provider;
+    return this._provider;
   }
 
   async getSigner({ chainId }: { chainId?: number } = {}) {
@@ -248,7 +247,7 @@ export class WalletConnectConnector extends WagmiConnector<
         this.getAccount(),
         this.getProvider(),
       ]);
-      const isChainsStale = await this.#isChainsStale();
+      const isChainsStale = await this._isChainsStale();
 
       // If an account does not exist on the session, then the connector is unauthorized.
       if (!account) {
@@ -280,8 +279,8 @@ export class WalletConnectConnector extends WagmiConnector<
 
     try {
       const provider = await this.getProvider();
-      const namespaceChains = this.#getNamespaceChainsIds();
-      const namespaceMethods = this.#getNamespaceMethods();
+      const namespaceChains = this._getNamespaceChainsIds();
+      const namespaceMethods = this._getNamespaceMethods();
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
@@ -301,9 +300,9 @@ export class WalletConnectConnector extends WagmiConnector<
             },
           ],
         });
-        const requestedChains = await this.#getRequestedChainsIds();
+        const requestedChains = await this._getRequestedChainsIds();
         requestedChains.push(chainId);
-        await this.#setRequestedChainsIds(requestedChains);
+        await this._setRequestedChainsIds(requestedChains);
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
@@ -324,11 +323,11 @@ export class WalletConnectConnector extends WagmiConnector<
     }
   }
 
-  async #createProvider() {
-    if (!this.#initProviderPromise && typeof window !== "undefined") {
-      this.#initProviderPromise = this.initProvider();
+  async _createProvider() {
+    if (!this._initProviderPromise && typeof window !== "undefined") {
+      this._initProviderPromise = this.initProvider();
     }
-    return this.#initProviderPromise;
+    return this._initProviderPromise;
   }
 
   async initProvider() {
@@ -343,7 +342,7 @@ export class WalletConnectConnector extends WagmiConnector<
 
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
-      this.#provider = await EthereumProvider.init({
+      this._provider = await EthereumProvider.init({
         showQrModal: this.showWalletConnectModal,
         projectId: this.options.projectId,
         optionalMethods: OPTIONAL_METHODS,
@@ -391,8 +390,8 @@ export class WalletConnectConnector extends WagmiConnector<
    *
    * Also check that dapp supports at least 1 chain from previously approved session.
    */
-  async #isChainsStale() {
-    const namespaceMethods = this.#getNamespaceMethods();
+  async _isChainsStale() {
+    const namespaceMethods = this._getNamespaceMethods();
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       return false;
     }
@@ -400,9 +399,9 @@ export class WalletConnectConnector extends WagmiConnector<
       return false;
     }
 
-    const requestedChains = await this.#getRequestedChainsIds();
+    const requestedChains = await this._getRequestedChainsIds();
     const connectorChains = this.filteredChains.map(({ chainId }) => chainId);
-    const namespaceChains = this.#getNamespaceChainsIds();
+    const namespaceChains = this._getNamespaceChainsIds();
 
     if (
       namespaceChains.length &&
@@ -415,54 +414,54 @@ export class WalletConnectConnector extends WagmiConnector<
   }
 
   async setupListeners() {
-    if (!this.#provider) {
+    if (!this._provider) {
       return;
     }
-    this.#removeListeners();
-    this.#provider.on("accountsChanged", this.onAccountsChanged);
-    this.#provider.on("chainChanged", this.onChainChanged);
-    this.#provider.on("disconnect", this.onDisconnect);
-    this.#provider.on("session_delete", this.onDisconnect);
-    this.#provider.on("display_uri", this.onDisplayUri);
-    this.#provider.on("connect", this.onConnect);
+    this._removeListeners();
+    this._provider.on("accountsChanged", this.onAccountsChanged);
+    this._provider.on("chainChanged", this.onChainChanged);
+    this._provider.on("disconnect", this.onDisconnect);
+    this._provider.on("session_delete", this.onDisconnect);
+    this._provider.on("display_uri", this.onDisplayUri);
+    this._provider.on("connect", this.onConnect);
   }
 
-  #removeListeners() {
-    if (!this.#provider) {
+  private _removeListeners() {
+    if (!this._provider) {
       return;
     }
-    this.#provider.removeListener("accountsChanged", this.onAccountsChanged);
-    this.#provider.removeListener("chainChanged", this.onChainChanged);
-    this.#provider.removeListener("disconnect", this.onDisconnect);
-    this.#provider.removeListener("session_delete", this.onDisconnect);
-    this.#provider.removeListener("display_uri", this.onDisplayUri);
-    this.#provider.removeListener("connect", this.onConnect);
+    this._provider.removeListener("accountsChanged", this.onAccountsChanged);
+    this._provider.removeListener("chainChanged", this.onChainChanged);
+    this._provider.removeListener("disconnect", this.onDisconnect);
+    this._provider.removeListener("session_delete", this.onDisconnect);
+    this._provider.removeListener("display_uri", this.onDisplayUri);
+    this._provider.removeListener("connect", this.onConnect);
   }
 
-  async #setRequestedChainsIds(chains: number[]) {
-    await this.#storage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains));
+  async _setRequestedChainsIds(chains: number[]) {
+    await this._storage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains));
   }
 
-  async #getRequestedChainsIds(): Promise<number[]> {
-    const data = await this.#storage.getItem(REQUESTED_CHAINS_KEY);
+  async _getRequestedChainsIds(): Promise<number[]> {
+    const data = await this._storage.getItem(REQUESTED_CHAINS_KEY);
     return data ? JSON.parse(data) : [];
   }
 
-  #getNamespaceChainsIds() {
-    if (!this.#provider) {
+  private _getNamespaceChainsIds() {
+    if (!this._provider) {
       return [];
     }
-    const chainIds = this.#provider.session?.namespaces[NAMESPACE]?.chains?.map(
+    const chainIds = this._provider.session?.namespaces[NAMESPACE]?.chains?.map(
       (chain) => parseInt(chain.split(":")[1] || ""),
     );
     return chainIds ?? [];
   }
 
-  #getNamespaceMethods() {
-    if (!this.#provider) {
+  private _getNamespaceMethods() {
+    if (!this._provider) {
       return [];
     }
-    const methods = this.#provider.session?.namespaces[NAMESPACE]?.methods;
+    const methods = this._provider.session?.namespaces[NAMESPACE]?.methods;
     return methods ?? [];
   }
 
@@ -479,13 +478,13 @@ export class WalletConnectConnector extends WagmiConnector<
   protected onChainChanged = async (chainId: number | string) => {
     const id = Number(chainId);
     const unsupported = this.isChainUnsupported(id);
-    await this.#storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
+    await this._storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
     this.emit("change", { chain: { id, unsupported } });
   };
 
   protected onDisconnect = async () => {
-    await this.#setRequestedChainsIds([]);
-    await this.#storage.removeItem(LAST_USED_CHAIN_ID);
+    await this._setRequestedChainsIds([]);
+    await this._storage.removeItem(LAST_USED_CHAIN_ID);
     this.emit("disconnect");
   };
 
@@ -494,6 +493,6 @@ export class WalletConnectConnector extends WagmiConnector<
   };
 
   protected onConnect = () => {
-    this.emit("connect", { provider: this.#provider });
+    this.emit("connect", { provider: this._provider });
   };
 }

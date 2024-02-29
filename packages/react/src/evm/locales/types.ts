@@ -242,6 +242,7 @@ export type ThirdwebLocale = {
       signIn: string;
       submitEmail: string;
     };
+    magicEdenWallet: ExtensionAndQRScreensLocale;
     metamaskWallet: ExtensionAndQRScreensLocale;
     okxWallet: ExtensionAndQRScreensLocale;
     oneKeyWallet: ExtensionAndQRScreensLocale;

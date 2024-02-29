@@ -41,8 +41,8 @@ export class CoinbaseWalletConnector extends WagmiConnector<
   readonly name = "Coinbase Wallet";
   readonly ready = true;
 
-  #client?: CoinbaseWalletSDK;
-  #provider?: CoinbaseWalletProvider;
+  private _client?: CoinbaseWalletSDK;
+  private _provider?: CoinbaseWalletProvider;
 
   constructor({ chains, options }: { chains?: Chain[]; options: Options }) {
     super({
@@ -100,7 +100,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
   }
 
   async disconnect() {
-    if (!this.#provider) {
+    if (!this._provider) {
       return;
     }
 
@@ -132,7 +132,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
   }
 
   async getProvider() {
-    if (!this.#provider) {
+    if (!this._provider) {
       let CoinbaseWalletSDK = (await import("@coinbase/wallet-sdk")).default;
       // Workaround for Vite dev import errors
       // https://github.com/vitejs/vite/issues/7112
@@ -145,7 +145,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
           CoinbaseWalletSDK as unknown as { default: typeof CoinbaseWalletSDK }
         ).default;
       }
-      this.#client = new CoinbaseWalletSDK(this.options);
+      this._client = new CoinbaseWalletSDK(this.options);
 
       /**
        * Mock implementations to retrieve private `walletExtension` method
@@ -160,7 +160,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
         abstract get walletExtension(): WalletProvider | undefined;
       }
       const walletExtensionChainId = (
-        this.#client as unknown as Client
+        this._client as unknown as Client
       ).walletExtension?.getChainId();
 
       const chain =
@@ -172,9 +172,9 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       const chainId = this.options.chainId || chain?.chainId;
       const jsonRpcUrl = this.options.jsonRpcUrl || chain?.rpc[0];
 
-      this.#provider = this.#client.makeWeb3Provider(jsonRpcUrl, chainId);
+      this._provider = this._client.makeWeb3Provider(jsonRpcUrl, chainId);
     }
-    return this.#provider;
+    return this._provider;
   }
 
   async getSigner({ chainId }: { chainId?: number } = {}) {
@@ -241,14 +241,14 @@ export class CoinbaseWalletConnector extends WagmiConnector<
           });
           return chain;
         } catch (addError) {
-          if (this.#isUserRejectedRequestError(addError)) {
+          if (this._isUserRejectedRequestError(addError)) {
             throw new UserRejectedRequestError(addError);
           }
           throw new AddChainError();
         }
       }
 
-      if (this.#isUserRejectedRequestError(error)) {
+      if (this._isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error);
       }
       throw new SwitchChainError(error);
@@ -273,7 +273,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
     this.emit("disconnect");
   };
 
-  #isUserRejectedRequestError(error: unknown) {
+  private _isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
   }
 
@@ -287,9 +287,9 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
   async getQrUrl() {
     await this.getProvider();
-    if (!this.#client) {
+    if (!this._client) {
       throw new Error("Coinbase Wallet SDK not initialized");
     }
-    return this.#client.getQrUrl();
+    return this._client.getQrUrl();
   }
 }

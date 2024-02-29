@@ -9,6 +9,7 @@ import type {
   EmbeddedWallet,
   FrameWallet,
   LocalWallet,
+  MagicEdenWallet,
   MagicLink,
   MetaMaskWallet,
   OKXWallet,
@@ -56,6 +57,7 @@ export type WalletIdToWalletTypeMap = {
   cryptoDefiWallet: CryptoDefiWallet;
   rabby: RabbyWallet;
   xdefi: XDEFIWallet;
+  magicEden: MagicEdenWallet
 };
 
 /**

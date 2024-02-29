@@ -26,10 +26,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   ready = true;
 
   private user: InitializedUser | null = null;
-  #embeddedWalletSdk?: EmbeddedWalletSdk;
+  private _embeddedWalletSdk?: EmbeddedWalletSdk;
   private options: EmbeddedWalletConnectorOptions;
-
-  #signer?: Signer;
+  private _signer?: Signer;
 
   constructor(options: EmbeddedWalletConnectorOptions) {
     super();
@@ -37,14 +36,14 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   getEmbeddedWalletSDK(): EmbeddedWalletSdk {
-    if (!this.#embeddedWalletSdk) {
-      this.#embeddedWalletSdk = new EmbeddedWalletSdk({
+    if (!this._embeddedWalletSdk) {
+      this._embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
         chain: "Ethereum",
         onAuthSuccess: this.options.onAuthSuccess,
       });
     }
-    return this.#embeddedWalletSdk;
+    return this._embeddedWalletSdk;
   }
 
   async connect(args?: EmbeddedWalletConnectionArgs): Promise<string> {
@@ -78,10 +77,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async disconnect(): Promise<void> {
-    const paper = this.#embeddedWalletSdk;
+    const paper = this._embeddedWalletSdk;
     await paper?.auth.logout();
-    this.#signer = undefined;
-    this.#embeddedWalletSdk = undefined;
+    this._signer = undefined;
+    this._embeddedWalletSdk = undefined;
     this.user = null;
   }
 
@@ -110,8 +109,8 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   public async getSigner(): Promise<Signer> {
-    if (this.#signer) {
-      return this.#signer;
+    if (this._signer) {
+      return this._signer;
     }
 
     const user = await this.getUser();
@@ -123,7 +122,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("Signer not found");
     }
 
-    this.#signer = signer;
+    this._signer = signer;
 
     return signer;
   }
@@ -142,7 +141,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       // update chain in wallet
       await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
       // update signer
-      this.#signer = await this.user?.wallet.getEthersJsSigner({
+      this._signer = await this.user?.wallet.getEthersJsSigner({
         rpcEndpoint: chain.rpc[0] || "",
       });
       this.emit("change", { chain: { id: chainId, unsupported: false } });

@@ -1,19 +1,19 @@
 class TextProcessorCache {
-  #encoder: TextEncoder | undefined;
-  #decoder: TextDecoder | undefined;
+  private _encoder: TextEncoder | undefined;
+  private _decoder: TextDecoder | undefined;
 
   get encoder(): TextEncoder {
-    if (!this.#encoder) {
-      this.#encoder = new TextEncoder();
+    if (!this._encoder) {
+      this._encoder = new TextEncoder();
     }
-    return this.#encoder;
+    return this._encoder;
   }
 
   get decoder(): TextDecoder {
-    if (!this.#decoder) {
-      this.#decoder = new TextDecoder();
+    if (!this._decoder) {
+      this._decoder = new TextDecoder();
     }
-    return this.#decoder;
+    return this._decoder;
   }
 }
 

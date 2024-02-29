@@ -21,8 +21,8 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   readonly name: string = "Local Wallet";
   options: LocalWalletConnectorOptions;
 
-  #provider?: providers.Provider;
-  #signer?: Signer;
+  private _provider?: providers.Provider;
+  private _signer?: Signer;
 
   protected shimDisconnectKey = "localWallet.shimDisconnect";
 
@@ -42,8 +42,8 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   }
 
   async disconnect() {
-    this.#provider = undefined;
-    this.#signer = undefined;
+    this._provider = undefined;
+    this._signer = undefined;
   }
 
   async getAddress(): Promise<string> {
@@ -64,24 +64,24 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   }
 
   async getProvider() {
-    if (!this.#provider) {
-      this.#provider = getChainProvider(this.options.chain, {
+    if (!this._provider) {
+      this._provider = getChainProvider(this.options.chain, {
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
       });
     }
-    return this.#provider;
+    return this._provider;
   }
 
   async getSigner() {
-    if (!this.#signer) {
+    if (!this._signer) {
       const provider = await this.getProvider();
-      this.#signer = getSignerFromEthersWallet(
+      this._signer = getSignerFromEthersWallet(
         this.options.ethersWallet,
         provider,
       );
     }
-    return this.#signer;
+    return this._signer;
   }
 
   async switchChain(chainId: number): Promise<void> {
@@ -92,13 +92,13 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
       );
     }
 
-    this.#provider = getChainProvider(chain, {
+    this._provider = getChainProvider(chain, {
       clientId: this.options.clientId,
       secretKey: this.options.secretKey,
     });
-    this.#signer = getSignerFromEthersWallet(
+    this._signer = getSignerFromEthersWallet(
       this.options.ethersWallet,
-      this.#provider,
+      this._provider,
     );
     this.onChainChanged(chainId);
   }

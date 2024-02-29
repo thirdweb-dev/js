@@ -34,8 +34,8 @@ export type AwsSecretsManagerWalletOptions = {
  * @wallet
  */
 export class AwsSecretsManagerWallet extends AbstractWallet {
-  #signer?: Promise<Signer>;
-  #options: AwsSecretsManagerWalletOptions;
+  private _signer?: Promise<Signer>;
+  private _options: AwsSecretsManagerWalletOptions;
 
   /**
    * Create an instance of `AwsSecretsManagerWallet`
@@ -52,64 +52,58 @@ export class AwsSecretsManagerWallet extends AbstractWallet {
    */
   constructor(options: AwsSecretsManagerWalletOptions) {
     super();
-    this.#options = options;
+    this._options = options;
   }
 
   /**
    * Get [ethers signer](https://docs.ethers.io/v5/api/signer/) of the connected wallet
    */
   async getSigner(): Promise<Signer> {
-    if (!this.#signer) {
+    if (!this._signer) {
       // construct our promise that will resolve to a signer (eventually)
-      this.#signer = new Promise(async (resolve, reject) => {
+      this._signer = new Promise(async (resolve, reject) => {
         try {
           const { GetSecretValueCommand, SecretsManagerClient } = await import(
             "@aws-sdk/client-secrets-manager"
           );
           const client = new SecretsManagerClient(
-            this.#options.awsConfig || {},
+            this._options.awsConfig || {},
           );
           const res = await client.send(
             new GetSecretValueCommand({
-              SecretId: this.#options.secretId,
+              SecretId: this._options.secretId,
               VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
             }),
           );
           if (!res || !res.SecretString) {
-            throw new Error(`No secret found at ${this.#options.secretId}`);
+            throw new Error(`No secret found at ${this._options.secretId}`);
           }
 
           let privateKey;
           try {
             privateKey = JSON.parse(res.SecretString)[
-              this.#options.secretKeyName
+              this._options.secretKeyName
             ];
           } catch {
             throw new Error(
-              `Secret ${
-                this.#options.secretId
-              } is not a valid JSON object! Please convert secret to a JSON object with key ${
-                this.#options.secretKeyName
-              }.`,
+              `Secret ${this._options.secretId} is not a valid JSON object! Please convert secret to a JSON object with key ${this._options.secretKeyName}.`,
             );
           }
 
           if (!privateKey) {
             throw new Error(
-              `Secret ${this.#options.secretId} does not have key ${
-                this.#options.secretKeyName
-              }`,
+              `Secret ${this._options.secretId} does not have key ${this._options.secretKeyName}`,
             );
           }
 
           resolve(new Wallet(privateKey));
         } catch (err) {
           // remove the cached promise so we can try again
-          this.#signer = undefined;
+          this._signer = undefined;
           reject(err);
         }
       });
     }
-    return this.#signer;
+    return this._signer;
   }
 }
