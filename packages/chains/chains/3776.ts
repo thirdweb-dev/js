@@ -38,6 +38,7 @@ export default {
   "rpc": [],
   "shortName": "astarzk",
   "slug": "astar-zkevm",
+  "status": "incubating",
   "testnet": false,
   "title": "Astar zkEVM Mainnet"
 } as const satisfies Chain;
