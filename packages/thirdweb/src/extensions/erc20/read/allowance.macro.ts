@@ -7,6 +7,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareMethod } from "../../../utils/abi/prepare-method.js";
 import { $run$ } from "@hazae41/saumon";
 
+/**
+ * Represents the parameters for the `allowance` function.
+ */
 export type AllowanceParams = {
   owner: Address;
   spender: Address;
