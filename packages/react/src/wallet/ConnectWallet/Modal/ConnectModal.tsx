@@ -9,7 +9,6 @@ import {
   useDisconnect,
   useThirdwebAuthContext,
   useUser,
-  useWallet,
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
