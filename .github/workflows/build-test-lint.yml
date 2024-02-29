@@ -183,6 +183,9 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
