@@ -243,9 +243,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           recoveryCode: params.recoveryCode,
         });
       }
-      // case "phone_number_verification": {
-      // return await ewSDK.auth.verifySmsLoginOtp({
-      // }
+      case "phone_number_verification": {
+        return await ewSDK.auth.verifySmsLoginOtp({
+          phoneNumber: params.phoneNumber,
+          otp: params.verificationCode,
+          recoveryCode: params.recoveryCode,
+        });
+      }
       case "apple":
       case "facebook":
       case "google": {

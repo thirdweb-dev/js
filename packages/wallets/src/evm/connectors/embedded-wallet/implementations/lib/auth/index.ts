@@ -205,6 +205,10 @@ export class Auth {
     return this.BaseLogin.verifyEmailLoginOtp(args);
   }
 
+  async verifySmsLoginOtp(args: Parameters<BaseLogin["verifySmsLoginOtp"]>[0]) {
+    return this.BaseLogin.verifySmsLoginOtp(args);
+  }
+
   /**
    * Logs any existing user out of their wallet.
    * @returns `{{success: boolean}}` true if a user is successfully logged out. false if there's no user currently logged in.

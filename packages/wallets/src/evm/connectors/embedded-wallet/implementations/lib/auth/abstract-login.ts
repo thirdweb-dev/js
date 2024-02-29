@@ -20,6 +20,11 @@ export type LoginQuerierTypes = {
     otp: string;
     recoveryCode?: string;
   };
+  verifyThirdwebSmsLoginOtp: {
+    phoneNumber: string;
+    otp: string;
+    recoveryCode?: string;
+  };
   injectDeveloperClientId: void;
   getHeadlessOauthLoginLink: { authProvider: AuthProvider };
 };
@@ -104,4 +109,9 @@ export abstract class AbstractLogin<
   abstract verifyEmailLoginOtp(
     args: EMAIL_VERIFICATION,
   ): Promise<AuthLoginReturnType>;
+  abstract verifySmsLoginOtp(args: {
+    phoneNumber: string;
+    otp: string;
+    recoveryCode?: string;
+  }): Promise<AuthLoginReturnType>;
 }
