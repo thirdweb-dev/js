@@ -91,6 +91,32 @@ export class EmbeddedWallet extends AbstractClientWallet<
   }
 
   /**
+   * Sends a verification sms to the provider phone number.
+   *
+   * @param phoneNumber - The phone number to which the verification sms will be sent. The phone number must contain the country code.
+   * @param clientId - Your thirdweb client ID
+   * @returns Information on the user's status and whether they are a new user.
+   *
+   * @example
+   * ```typescript
+   * const result = await EmbeddedWallet.sendVerificationEmail({
+   *  phoneNumber: '+1234567890',
+   *  clientId: 'yourClientId'
+   * });
+   * ```
+   */
+  static async sendVerificationSms(options: {
+    phoneNumber: string;
+    clientId: string;
+  }) {
+    const wallet = new EmbeddedWallet({
+      chain: Ethereum,
+      clientId: options.clientId,
+    });
+    return wallet.sendVerificationSms({ phoneNumber: options.phoneNumber });
+  }
+
+  /**
    * @internal
    */
   public get walletName() {
@@ -260,6 +286,52 @@ export class EmbeddedWallet extends AbstractClientWallet<
     const { email } = options;
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.sendVerificationEmail({ email });
+  }
+
+  /**
+   * Send a verification code to the user's phone number for verification. The phone number must contain the country code.
+   * Use this as a pre-step before calling `authenticate` with the `phone_number_verification` strategy.
+   *
+   * ```js
+   * const result = await wallet.sendVerificationSms({
+   *   phoneNumber: "+1234567890",
+   * });
+   * ```
+   *
+   * This method is also available as a static method on the `EmbeddedWallet` class.
+   * ```javascript
+   * const result = await EmbeddedWallet.sendVerificationSms({
+   *   phoneNumber: "+1234567890",
+   * });
+   * ```
+   *
+   * @param options - The `options` object contains the following properties:
+   * ### phoneNumber (required)
+   * The phone number to send verification SMS to. The phone number must contain the country code.
+   *
+   * @returns object containing below properties:
+   *
+   * ```ts
+   * {
+   *  isNewDevice: boolean;
+   *  isNewUser: boolean;
+   *  recoveryShareManagement: "USER_MANAGED" | "AWS_MANAGED";
+   * }
+   * ```
+   *
+   * ### isNewDevice
+   * If user has not logged in from this device before, this will be true.
+   *
+   * ### isNewUser
+   * If user is logging in for the first time, this will be true.
+   *
+   * ### recoveryShareManagement
+   * Recovery share management type. Can be either `USER_MANAGED` or `AWS_MANAGED`.
+   */
+  async sendVerificationSms(options: { phoneNumber: string }) {
+    const { phoneNumber } = options;
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.sendVerificationSms({ phoneNumber });
   }
 
   /**

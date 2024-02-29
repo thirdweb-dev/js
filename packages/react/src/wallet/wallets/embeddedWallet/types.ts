@@ -3,7 +3,7 @@ import type {
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
 
-export type AuthOption = EmbeddedWalletOauthStrategy | "email";
+export type AuthOption = EmbeddedWalletOauthStrategy | "email" | "phone";
 
 /**
  * @wallet
@@ -35,4 +35,5 @@ export type EmbeddedWalletConfigOptions = Omit<
 
 export type EmbeddedWalletLoginType =
   | { email: string }
+  | { phone: string }
   | EmbeddedWalletOauthStrategy;

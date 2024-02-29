@@ -217,13 +217,23 @@ export function esDefault(): ThirdwebLocale {
         emailRequired: "Se requiere dirección de correo electrónico",
         invalidEmail: "Dirección de correo electrónico inválida",
         maxAccountsExceeded: "Número máximo de cuentas alcanzado",
+        invalidPhone: "Número de teléfono inválido",
+        invalidEmailOrPhone:
+          "Dirección de correo electrónico o número de teléfono inválido",
+        countryCodeMissing: "Phone number must start with a country code",
+        emailOrPhoneRequired:
+          "Se requiere correo electrónico o número de teléfono",
+        loginWithEmailOrPhone:
+          "Iniciar sesión con correo electrónico o número de teléfono",
+        loginWithPhone: "Iniciar sesión con número de teléfono",
+        phoneRequired: "Se requiere número de teléfono",
         socialLoginScreen: {
           title: "Iniciar sesión",
           instruction: "Inicie sesión en su cuenta en la ventana abierta",
           failed: "Error al iniciar sesión",
           retry: "Reintentar",
         },
-        emailLoginScreen: {
+        otpLoginScreen: {
           title: "Iniciar sesión",
           enterCodeSendTo: "Ingresa el código de verificación enviado a",
           newDeviceDetected: "Nuevo dispositivo detectado",

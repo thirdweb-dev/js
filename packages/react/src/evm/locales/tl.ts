@@ -219,13 +219,20 @@ export function tlDefault(): ThirdwebLocale {
         emailRequired: "Kinakailangan ang email address",
         invalidEmail: "Hindi wastong email address",
         maxAccountsExceeded: "Naabot mo na ang maximum na bilang ng accounts",
+        invalidPhone: "Hindi wastong numero ng telepono",
+        invalidEmailOrPhone: "Hindi wastong email address o numero ng telepono",
+        countryCodeMissing: "Phone number must start with a country code",
+        emailOrPhoneRequired: "Kinakailangan ang email o numero ng telepono",
+        loginWithEmailOrPhone: "Mag-login gamit ang email o numero ng telepono",
+        loginWithPhone: "Mag-login gamit ang numero ng telepono",
+        phoneRequired: "Kinakailangan ang numero ng telepono",
         socialLoginScreen: {
           title: "Mag-sign in",
           instruction: "Mag-sign in sa iyong account sa pop-up",
           failed: "Hindi nagawa ang pag-sign in",
           retry: "Subukan muli",
         },
-        emailLoginScreen: {
+        otpLoginScreen: {
           title: "Mag-sign in",
           enterCodeSendTo: "Ilagay ang verification code na ipinadala sa",
           newDeviceDetected: "Natuklasan ang bagong device",

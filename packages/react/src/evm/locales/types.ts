@@ -131,7 +131,7 @@ export type ThirdwebLocale = {
         submitButton: string;
         title: string;
       };
-      emailLoginScreen: {
+      otpLoginScreen: {
         enterCodeSendTo: string;
         enterRecoveryCode: string;
         failedToSendCode: string;
@@ -153,6 +153,13 @@ export type ThirdwebLocale = {
         wrongPassword: string;
       };
       invalidEmail: string;
+      invalidEmailOrPhone: string;
+      invalidPhone: string;
+      countryCodeMissing: string;
+      loginWithEmailOrPhone: string;
+      emailOrPhoneRequired: string;
+      loginWithPhone: string;
+      phoneRequired: string;
       signIn: string;
       signInWithApple: string;
       signInWithFacebook: string;

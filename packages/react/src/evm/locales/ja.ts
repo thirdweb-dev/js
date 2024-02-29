@@ -216,13 +216,20 @@ export function jaDefault(): ThirdwebLocale {
         invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
         maxAccountsExceeded: "アカウントの最大数を超えました",
+        invalidPhone: "無効な電話番号",
+        invalidEmailOrPhone: "無効なメールアドレスまたは電話番号",
+        countryCodeMissing: "Phone number must start with a country code",
+        emailOrPhoneRequired: "メールアドレスまたは電話番号が必要です",
+        loginWithEmailOrPhone: "メールアドレスまたは電話番号でログイン",
+        loginWithPhone: "電話番号でログイン",
+        phoneRequired: "電話番号が必要です",
         socialLoginScreen: {
           title: "サインイン",
           instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct
           failed: "サインインに失敗しました",
           retry: "再試行",
         },
-        emailLoginScreen: {
+        otpLoginScreen: {
           title: "サインイン",
           enterCodeSendTo: "送信された確認コードを入力してください",
           newDeviceDetected: "新しいデバイスが検出されました",

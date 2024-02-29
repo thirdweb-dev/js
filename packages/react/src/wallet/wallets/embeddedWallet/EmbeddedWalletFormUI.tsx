@@ -21,6 +21,7 @@ import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { TOS } from "../../ConnectWallet/Modal/TOS";
+import { validateEmail } from "../../utils/validateEmail";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -45,10 +46,24 @@ export const EmbeddedWalletFormUI = (props: {
     apple: locale.signInWithApple,
   };
 
-  const enableEmailLogin = props.authOptions.includes("email");
+  const isEmailEnabled = props.authOptions.includes("email");
+  const isPhoneEnabled = props.authOptions.includes("phone");
+
+  let placeholder = locale.loginWithEmailOrPhone;
+  let type = "text";
+  let emptyErrorMessage = locale.emailOrPhoneRequired;
+  if (isEmailEnabled && !isPhoneEnabled) {
+    placeholder = locale.emailPlaceholder;
+    emptyErrorMessage = locale.emailRequired;
+    type = "email";
+  } else if (!isEmailEnabled && isPhoneEnabled) {
+    placeholder = locale.loginWithPhone;
+    emptyErrorMessage = locale.phoneRequired;
+    type = "tel";
+  }
 
   const socialLogins = props.authOptions.filter(
-    (x) => x !== "email",
+    (x) => x !== "email" && x !== "phone",
   ) as EmbeddedWalletOauthStrategy[];
 
   const hasSocialLogins = socialLogins.length > 0;
@@ -81,6 +96,7 @@ export const EmbeddedWalletFormUI = (props: {
   };
 
   const showOnlyIcons = socialLogins.length > 1;
+  const showInputUI = isEmailEnabled || isPhoneEnabled;
 
   return (
     <Container flex="column" gap="lg">
@@ -120,27 +136,51 @@ export const EmbeddedWalletFormUI = (props: {
         </Container>
       )}
 
-      {props.modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
+      {props.modalSize === "wide" && hasSocialLogins && isEmailEnabled && (
         <TextDivider text={twLocale.connectWallet.or} />
       )}
 
       {/* Email Login */}
-      {enableEmailLogin && (
+      {showInputUI && (
         <InputSelectionUI
-          onSelect={(email) => props.onSelect({ email })}
-          placeholder={locale.emailPlaceholder}
-          name="email"
-          type="email"
-          errorMessage={(_input) => {
-            const input = _input.replace(/\+/g, "").toLowerCase();
-            const emailRegex =
-              /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-            const isValidEmail = emailRegex.test(input);
-            if (!isValidEmail) {
-              return locale.invalidEmail;
+          type={type}
+          onSelect={(value) => {
+            const isEmail = validateEmail(value);
+            if (isEmail) {
+              props.onSelect({ email: value });
+            } else {
+              props.onSelect({ phone: value });
             }
           }}
-          emptyErrorMessage={locale.emailRequired}
+          placeholder={placeholder}
+          name="emailOrPhone"
+          errorMessage={(_input) => {
+            const input = _input.toLowerCase();
+            const isEmail = input.includes("@");
+            const isPhone = Number.isInteger(Number(input[input.length - 1]));
+
+            if (isEmail && isEmailEnabled) {
+              const isValidEmail = validateEmail(input);
+              if (!isValidEmail) {
+                return locale.invalidEmail;
+              }
+            } else if (isPhone && isPhoneEnabled) {
+              if (!input.startsWith("+")) {
+                return locale.countryCodeMissing;
+              }
+            } else {
+              if (isEmailEnabled && isPhoneEnabled) {
+                return locale.invalidEmailOrPhone;
+              }
+              if (isEmailEnabled) {
+                return locale.invalidEmail;
+              }
+              if (isPhoneEnabled) {
+                return locale.invalidPhone;
+              }
+            }
+          }}
+          emptyErrorMessage={emptyErrorMessage}
           submitButtonText={locale.submitEmail}
         />
       )}
@@ -158,7 +198,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
   setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }> = (props) => {
-  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
+  const locale = useTWLocale().wallets.embeddedWallet.otpLoginScreen;
   const isCompact = props.modalSize === "compact";
   const { initialScreen, screen } = useScreenContext();
   const modalConfig = useContext(ModalConfigCtx);

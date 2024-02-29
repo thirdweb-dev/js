@@ -215,13 +215,20 @@ export function enDefault(): ThirdwebLocale {
         invalidEmail: "Invalid email address",
         maxAccountsExceeded:
           "Maximum number of accounts exceeded. Please notify the app developer.",
+        invalidPhone: "Invalid phone number",
+        invalidEmailOrPhone: "Invalid email address or phone number",
+        countryCodeMissing: "Phone number must start with a country code",
+        emailOrPhoneRequired: "email or phone number is required",
+        loginWithEmailOrPhone: "Login with email or phone number",
+        loginWithPhone: "Login with phone number",
+        phoneRequired: "phone number is required",
         socialLoginScreen: {
           title: "Sign in",
           instruction: "Sign into your account in the pop-up",
           failed: "Failed to sign in",
           retry: "Retry",
         },
-        emailLoginScreen: {
+        otpLoginScreen: {
           title: "Sign in",
           enterCodeSendTo: "Enter the verification code sent to",
           newDeviceDetected: "New device detected",
