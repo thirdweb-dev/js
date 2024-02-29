@@ -10,19 +10,19 @@ export interface AsyncWalletOptions {
  * @internal
  */
 export class AsyncWallet extends AbstractWallet {
-  #signer?: Signer;
-  #options: AsyncWalletOptions;
+  private _signer?: Signer;
+  private _options: AsyncWalletOptions;
 
   constructor(options: AsyncWalletOptions) {
     super();
-    this.#options = options;
+    this._options = options;
   }
 
   async getSigner(): Promise<Signer> {
-    if (!this.#signer || !this.#options.cacheSigner) {
-      this.#signer = await this.#options.getSigner();
+    if (!this._signer || !this._options.cacheSigner) {
+      this._signer = await this._options.getSigner();
     }
 
-    return this.#signer;
+    return this._signer;
   }
 }
