@@ -21,12 +21,12 @@ import { AbstractWallet } from "../../evm/wallets/abstract";
 import { formatJsonRpcResult } from "@walletconnect/jsonrpc-utils";
 
 export class WalletConnectV2Handler extends WalletConnectHandler {
-  #core: ICore;
-  #wcWallet: IWeb3Wallet | undefined;
-  #session: SessionTypes.Struct | undefined;
-  #wcMetadata: WCMetadata;
-  #activeProposal: Web3WalletTypes.SessionProposal | undefined;
-  #activeRequestEvent: Web3WalletTypes.SessionRequest | undefined;
+  private _core: ICore;
+  private _wcWallet: IWeb3Wallet | undefined;
+  private _session: SessionTypes.Struct | undefined;
+  private _wcMetadata: WCMetadata;
+  private _activeProposal: Web3WalletTypes.SessionProposal | undefined;
+  private _activeRequestEvent: Web3WalletTypes.SessionRequest | undefined;
 
   constructor(options: WalletConnectReceiverConfig, wallet: AbstractWallet) {
     super(wallet);
@@ -45,50 +45,50 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         : options?.walletConnectReceiver),
     };
 
-    this.#wcMetadata = defaultWCReceiverConfig.walletConnectWalletMetadata;
+    this._wcMetadata = defaultWCReceiverConfig.walletConnectWalletMetadata;
 
-    this.#core = new Core({
+    this._core = new Core({
       projectId: defaultWCReceiverConfig.walletConnectV2ProjectId,
       relayUrl: defaultWCReceiverConfig.walletConnectV2RelayUrl,
     });
   }
 
   async init() {
-    this.#wcWallet = await Web3Wallet.init({
-      core: this.#core,
-      metadata: this.#wcMetadata,
+    this._wcWallet = await Web3Wallet.init({
+      core: this._core,
+      metadata: this._wcMetadata,
     });
 
-    const sessions = this.#wcWallet.getActiveSessions();
+    const sessions = this._wcWallet.getActiveSessions();
     const keys = Object.keys(sessions);
     if (keys[0]) {
-      this.#session = sessions[keys[0]];
+      this._session = sessions[keys[0]];
     }
 
-    this.#setupWalletConnectEventsListeners();
+    this._setupWalletConnectEventsListeners();
   }
 
   async connectApp(wcUri: string) {
-    if (!this.#wcWallet) {
+    if (!this._wcWallet) {
       throw new Error("Please, init the wallet before connecting an app.");
     }
-    await this.#wcWallet.core.pairing.pair({ uri: wcUri });
+    await this._wcWallet.core.pairing.pair({ uri: wcUri });
   }
 
   async approveSession() {
-    if (!this.#wcWallet) {
+    if (!this._wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    if (!this.#activeProposal) {
+    if (!this._activeProposal) {
       throw new Error("Please, pass a valid proposal.");
     }
 
     const account = await this.wallet.getAddress();
 
-    const { id, params } = this.#activeProposal;
+    const { id, params } = this._activeProposal;
     const { requiredNamespaces, relays } = params;
 
     const namespaces: SessionTypes.Namespaces = {};
@@ -107,7 +107,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       }
     });
 
-    this.#session = await this.#wcWallet.approveSession({
+    this._session = await this._wcWallet.approveSession({
       id,
       relayProtocol: relays[0]?.protocol,
       namespaces,
@@ -117,18 +117,18 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   }
 
   async rejectSession() {
-    if (!this.#wcWallet) {
+    if (!this._wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    if (!this.#activeProposal) {
+    if (!this._activeProposal) {
       throw new Error("Please, pass a valid proposal.");
     }
 
-    const { id } = this.#activeProposal;
-    await this.#wcWallet.rejectSession({
+    const { id } = this._activeProposal;
+    await this._wcWallet.rejectSession({
       id,
       reason: {
         message: "User rejected methods.",
@@ -138,17 +138,17 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   }
 
   async approveEIP155Request() {
-    if (!this.#activeRequestEvent) {
+    if (!this._activeRequestEvent) {
       return;
     }
-    const { topic, params, id } = this.#activeRequestEvent;
+    const { topic, params, id } = this._activeRequestEvent;
     const { request } = params;
 
     let response;
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
-        const message = this.#getSignParamsMessage(request.params);
+        const message = this._getSignParamsMessage(request.params);
         const signedMessage = await this.wallet.signMessage(message || ""); // TODO: handle empty message
 
         response = formatJsonRpcResult(id, signedMessage);
@@ -191,20 +191,20 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
             code: 1002,
           },
         };
-        return this.#wcWallet?.respondSessionRequest({
+        return this._wcWallet?.respondSessionRequest({
           topic,
           response: error,
         });
     }
 
-    return this.#wcWallet?.respondSessionRequest({ topic, response });
+    return this._wcWallet?.respondSessionRequest({ topic, response });
   }
 
   async rejectEIP155Request() {
-    if (!this.#activeRequestEvent) {
+    if (!this._activeRequestEvent) {
       return;
     }
-    const { topic, id } = this.#activeRequestEvent;
+    const { topic, id } = this._activeRequestEvent;
 
     const response = {
       id,
@@ -215,15 +215,15 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       },
     };
 
-    return this.#wcWallet?.respondSessionRequest({ topic, response });
+    return this._wcWallet?.respondSessionRequest({ topic, response });
   }
 
   getActiveSessions(): WCSession[] {
-    if (!this.#wcWallet) {
+    if (!this._wcWallet) {
       throw new Error("Please, init the wallet before getting sessions.");
     }
 
-    const sessions = this.#wcWallet.getActiveSessions();
+    const sessions = this._wcWallet.getActiveSessions();
 
     const sessionKeys = Object.keys(sessions);
     if (!sessions || sessionKeys.length === 0) {
@@ -251,36 +251,36 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   }
 
   disconnectSession(): Promise<void> {
-    if (!this.#wcWallet) {
+    if (!this._wcWallet) {
       throw new Error("Please, init the wallet before disconnecting sessions.");
     }
 
-    if (!this.#session) {
+    if (!this._session) {
       return Promise.resolve();
     }
 
     const params = {
-      topic: this.#session.topic,
+      topic: this._session.topic,
       reason: {
         message: "User disconnected.",
         code: 6000,
       },
     };
 
-    return this.#wcWallet?.disconnectSession(params);
+    return this._wcWallet?.disconnectSession(params);
   }
 
-  #setupWalletConnectEventsListeners() {
-    if (!this.#wcWallet) {
+  private _setupWalletConnectEventsListeners() {
+    if (!this._wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    this.#wcWallet.on(
+    this._wcWallet.on(
       "session_proposal",
       (proposal: Web3WalletTypes.SessionProposal) => {
-        this.#activeProposal = proposal;
+        this._activeProposal = proposal;
 
         this.emit("session_proposal", {
           proposer: {
@@ -290,20 +290,20 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       },
     );
 
-    this.#wcWallet.on(
+    this._wcWallet.on(
       "session_delete",
       (session: SignClientTypes.EventArguments["session_delete"]) => {
-        this.#session = undefined;
-        this.#activeProposal = undefined;
+        this._session = undefined;
+        this._activeProposal = undefined;
 
         this.emit("session_delete", { topic: session.topic });
       },
     );
 
-    this.#wcWallet.on(
+    this._wcWallet.on(
       "session_request",
       async (requestEvent: Web3WalletTypes.SessionRequest) => {
-        if (!this.#session) {
+        if (!this._session) {
           return;
         }
         const { params: requestParams } = requestEvent;
@@ -313,7 +313,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
           case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-            this.#activeRequestEvent = requestEvent;
+            this._activeRequestEvent = requestEvent;
 
             const message = params[0];
             const decodedMessage = new TextDecoder().decode(
@@ -324,23 +324,23 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
             paramsCopy[0] = decodedMessage;
 
             this.emit("session_request", {
-              topic: this.#session.topic,
+              topic: this._session.topic,
               params: paramsCopy,
               peer: {
-                metadata: this.#session.peer.metadata,
+                metadata: this._session.peer.metadata,
               },
               method: request.method,
             });
             return;
           case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
           case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-            this.#activeRequestEvent = requestEvent;
+            this._activeRequestEvent = requestEvent;
 
             this.emit("session_request", {
-              topic: this.#session.topic,
+              topic: this._session.topic,
               params: requestEvent.params.request.params,
               peer: {
-                metadata: this.#session.peer.metadata,
+                metadata: this._session.peer.metadata,
               },
               method: request.method,
             });
@@ -357,7 +357,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
    * a value that is not an address (thus is a message).
    * If it is a hex string, it gets converted to utf8 string
    */
-  #getSignParamsMessage(params: string[]) {
+  private _getSignParamsMessage(params: string[]) {
     const message = params.filter((p) => !utils.isAddress(p))[0] || ""; // TODO: handle empty message
 
     if (utils.isHexString(message)) {

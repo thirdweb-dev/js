@@ -9,14 +9,14 @@ import { AbstractWallet } from "./abstract";
  * @wallet
  */
 export class EngineWallet extends AbstractWallet {
-  #signer: EngineSigner;
+  private _signer: EngineSigner;
 
   constructor(config: EngineSignerConfiguration) {
     super();
-    this.#signer = new EngineSigner(config);
+    this._signer = new EngineSigner(config);
   }
 
   async getSigner(): Promise<Signer> {
-    return this.#signer;
+    return this._signer;
   }
 }

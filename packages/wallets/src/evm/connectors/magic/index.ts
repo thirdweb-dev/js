@@ -129,8 +129,8 @@ export class MagicAuthConnector extends MagicBaseConnector {
     string,
     MagicSDKExtensionsOption<OAuthExtension["name"]>
   >;
-  #connectedChainId?: number;
-  #type?: "connect" | "auth";
+  private _connectedChainId?: number;
+  private _type?: "connect" | "auth";
 
   oauthProviders: OAuthProvider[];
   oauthRedirectURI?: string;
@@ -138,7 +138,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
     super(config);
     this.magicSdkConfiguration = config.options.magicSdkConfiguration;
-    this.#type = config.options.type;
+    this._type = config.options.type;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
     this.oauthRedirectURI = config.options.oauthOptions?.redirectURI;
   }
@@ -166,7 +166,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
         chainId = 0;
       }
 
-      this.#connectedChainId = chainId;
+      this._connectedChainId = chainId;
 
       // if there is a user logged in, return the user
       if (isAuthenticated) {
@@ -182,7 +182,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
 
       const magic = this.getMagicSDK();
 
-      if (this.#type === "connect") {
+      if (this._type === "connect") {
         if ("email" in options || "phoneNumber" in options) {
           console.warn(
             "Passing email or phoneNumber is not required for Magic Connect",
@@ -298,7 +298,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
       throw new Error("Chain not found");
     }
 
-    if (this.#connectedChainId !== chainId) {
+    if (this._connectedChainId !== chainId) {
       this.initializeMagicSDK({ chainId });
     }
 
