@@ -9,10 +9,13 @@ interface ITimeLeft {
   seconds: number;
 }
 
-const Timer: React.FC = () => {
+interface TimerProps {
+  dateStr: string;
+}
+
+const Timer = ({ dateStr }: TimerProps) => {
   const calculateTimeLeft = () => {
-    const difference =
-      Number(new Date("2024-02-16T09:00:00-08:00")) - Number(new Date());
+    const difference = Number(new Date(dateStr)) - Number(new Date());
     let timeLeft = {
       days: 0,
       hours: 0,
@@ -41,6 +44,7 @@ const Timer: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const items = [

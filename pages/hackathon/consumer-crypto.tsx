@@ -122,7 +122,7 @@ const Hackathon = () => {
               FEBRUARY 16 - 18
             </Heading>
 
-            <Timer />
+            <Timer dateStr="2024-02-16T09:00:00-08:00" />
 
             <LinkButton
               href="https://forms.gle/e7rsvAR2zbfimar78"

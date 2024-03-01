@@ -96,7 +96,8 @@ export enum PageId {
 
   // thirdweb.com/build-base
   BuildBaseLanding = "build-base-landing",
-
+  // thirdweb.com/hackathon/earn
+  HackathonEarnLanding = "earn-thirdweb-hacakthon",
   // thirdweb.com/bear-market-airdrop
   BearMarketAirdrop = "bear-market-airdrop",
   // drops
