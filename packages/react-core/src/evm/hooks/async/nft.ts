@@ -1,4 +1,8 @@
-import type { BasicNFTInput } from "@thirdweb-dev/sdk";
+import type {
+  BasicNFTInput,
+  NFTMetadata,
+  NFTMetadataOrUri,
+} from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
@@ -335,7 +339,7 @@ export function useTotalCirculatingSupply(
  * @param ownerWalletAddress -
  * The wallet address to get owned tokens for. Likely, you will want to view the connected wallet’s NFTs. use the `useAddress` hook to get this value.
  *
- * @param queryParams - 
+ * @param queryParams -
  * Paginate the results by providing a `queryParams` object as an argument.
  *
  * ```jsx
@@ -354,7 +358,7 @@ export function useTotalCirculatingSupply(
  *   );
  * }
  * ```
- * 
+ *
  * @returns Query result object that includes the list of owned `NFT` objects
  *
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
@@ -1039,6 +1043,44 @@ export function useSetSharedMetadata<TContract extends NFTContract>(
     async (data: BasicNFTInput) => {
       if (erc721) {
         return await erc721.sharedMetadata.set(data);
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Update nft metadata
+ * @param contract - Instance of a `NFTContract`
+ * @param tokenId - The token ID of the NFT you want to fetch.
+ * @public
+ * @twfeature ERC721UpdatableMetadata | ERC1155UpdatableMetadata
+ * @nft
+ */
+export function useUpdateNFTMetadata<TContract extends NFTContract>(
+  contract: RequiredParam<TContract>,
+) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const { erc721, erc1155 } = getErcs(contract);
+
+  return useMutation(
+    async (data: { tokenId: BigNumberish; metadata: NFTMetadata }) => {
+      const { tokenId, metadata } = data;
+      if (erc721) {
+        return await erc721.updateMetadata(tokenId, metadata);
+      }
+      if (erc1155) {
+        return await erc1155.updateMetadata(tokenId, metadata);
       }
       invariant(false, "Unknown NFT type");
     },
