@@ -381,6 +381,7 @@ class ThirdwebBridge implements TWBridge {
           personalWallet,
           authOptions,
         );
+        await this.switchNetwork(chainId); // workaround for polygon/mumbai
         if (this.activeWallet) {
           // Pass EOA and reconnect to initialize smart wallet
           await this.initializeSmartWallet(
@@ -513,7 +514,10 @@ class ThirdwebBridge implements TWBridge {
           // ccipReadEnabled: txInput.ccipReadEnabled,
         });
 
-        if (routeArgs[2].includes("send")) {
+        if (routeArgs[2].includes("sign")) {
+          const result = await tx.sign();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("send")) {
           tx.setGaslessOptions(
             routeArgs[2] === "sendGasless"
               ? this.activeSDK.options.gasless
