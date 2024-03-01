@@ -49,6 +49,28 @@ The best place to discuss your ideas, ask questions, and troubleshoot issues is 
 
 <br/>
 
+## Library Comparison
+
+|  | thirdweb | Wagmi | Viem | Ethers@6 |
+| --- | --- | --- | --- | --- |
+| Contract interaction API | ✅ | ✅ | ✅ | ✅ |
+| Wallet interaction API | ✅ | ✅ | ✅ | ✅ |
+| EVM utils | ✅ | ❌ | ✅ | ✅ |
+| Integrated Pro RPC for any EVM | ✅  | ⚠️ public RPC only | ⚠️ public RPC only | ❌ |
+| Integrated IPFS (Upload/Download) | ✅ | ❌ | ❌ | ❌ |
+| Integrated embedded wallet (email/ social login)  | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
+| Integrated account abstraction (ERC4337) support | ✅ | ⚠️ via 3rd party | ⚠️ via 3rd party | ❌ |
+| Web3 wallet connectors | ✅ | ✅ | ❌ | ❌ |
+| Local wallet creation | ✅ | ❌ | ✅ | ✅ |
+| Integrated auth (SIWE) support | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
+| Extensions functions for common standards | ✅ | ❌ | ❌ | ❌ |
+| React Hooks | ✅ | ✅ | ❌ | ❌ |
+| React UI components | ✅ | ❌ | ❌ | ❌ |
+| React Native Hooks | ✅ | ❌ | ❌ | ❌ |
+| React Native UI Components | ✅ | ❌ | ❌ | ❌ |
+| Automatic ABI Resolution | ✅ | ❌ | ❌ | ❌ |
+|  |  |  |  |  |
+
 ## Security
 
 If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `security@thirdweb.com`.
