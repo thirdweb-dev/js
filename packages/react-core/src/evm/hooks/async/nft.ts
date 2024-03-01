@@ -1,8 +1,4 @@
-import type {
-  BasicNFTInput,
-  NFTMetadata,
-  NFTMetadataOrUri,
-} from "@thirdweb-dev/sdk";
+import type { BasicNFTInput, NFTMetadata } from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
