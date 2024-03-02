@@ -1,7 +1,10 @@
 import { Text } from "./text";
-import { Badge as ChakraBadge, LightMode, forwardRef } from "@chakra-ui/react";
-// eslint-disable-next-line no-duplicate-imports
-import type { BadgeProps as ChakraBadgeProps } from "@chakra-ui/react";
+import {
+  Badge as ChakraBadge,
+  LightMode,
+  forwardRef,
+  type BadgeProps as ChakraBadgeProps,
+} from "@chakra-ui/react";
 import type { TextSizes } from "theme/typography";
 
 export interface BadgeProps extends ChakraBadgeProps {

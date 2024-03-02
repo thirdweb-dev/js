@@ -1,6 +1,4 @@
-import { ButtonGroup, Icon } from "@chakra-ui/react";
-// eslint-disable-next-line no-duplicate-imports
-import type { ButtonGroupProps } from "@chakra-ui/react";
+import { ButtonGroup, Icon, type ButtonGroupProps } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiFacebook } from "@react-icons/all-files/si/SiFacebook";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";

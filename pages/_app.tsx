@@ -6,7 +6,10 @@ import { ProgressBar } from "components/shared/ProgressBar";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
-import { IBM_Plex_Mono, Inter } from "next/font/google";
+import {
+  IBM_Plex_Mono as ibmPlexMonoConstructor,
+  Inter as interConstructor,
+} from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import posthogOpenSource from "posthog-js-opensource";
@@ -17,16 +20,14 @@ import type { ThirdwebNextPage } from "utils/types";
 import "../css/swagger-ui.css";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 
-// eslint-disable-next-line new-cap
-const inter = Inter({
+const inter = interConstructor({
   subsets: ["latin"],
   display: "swap",
   fallback: ["system-ui", "Helvetica Neue", "Arial", "sans-serif"],
   adjustFontFallback: true,
 });
 
-// eslint-disable-next-line new-cap
-const ibmPlexMono = IBM_Plex_Mono({
+const ibmPlexMono = ibmPlexMonoConstructor({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",

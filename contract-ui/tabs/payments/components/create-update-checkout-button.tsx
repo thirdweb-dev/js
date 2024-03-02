@@ -398,7 +398,10 @@ export const CreateUpdateCheckoutButton: React.FC<
       currencySymbol:
         checkout?.contract_args?.mintMethod?.payment?.currency || "ETH",
     },
-    mintFunctionName: checkout?.contract_args?.mintMethod?.name || "",
+    mintFunctionName:
+      checkout?.contract_args?.mintMethod?.name ||
+      defaultMintFunctionName ||
+      "",
     mintFunctionArgs: checkout?.contract_args?.mintMethod?.args || {},
   };
 
@@ -757,8 +760,7 @@ export const CreateUpdateCheckoutButton: React.FC<
                                 />
                               </Box>
                             ) : field.type === "abiSelector" ? (
-                              <PaymentsMintMethodInput
-                                defaultValue={defaultMintFunctionName}
+                                    <PaymentsMintMethodInput
                                 form={form}
                                 abi={contract?.abi as Abi}
                               />

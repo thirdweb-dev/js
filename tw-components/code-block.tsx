@@ -113,11 +113,9 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           )}
           <Box as="span" display="block" my={1} color="heading" h="full">
             {tokens.map((line, i) => (
-              // eslint-disable-next-line react/jsx-key
-              <Box {...getLineProps({ line, key: i })}>
+              <Box {...getLineProps({ line, key: i })} key={i}>
                 {line.map((token, key) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <span {...getTokenProps({ token, key })} />
+                  <span {...getTokenProps({ token, key })} key={key} />
                 ))}
               </Box>
             ))}

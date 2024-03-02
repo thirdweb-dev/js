@@ -58,10 +58,10 @@ export const PropertiesFormControl = <
   });
 
   useEffect(() => {
-    append({ trait_type: "", value: "" } as any, { shouldFocus: false });
-    // should only run on mount to set a first property
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (fields.length === 0) {
+      append({ trait_type: "", value: "" } as any, { shouldFocus: false });
+    }
+  }, [fields, append]);
 
   return (
     <Stack spacing={4}>

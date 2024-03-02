@@ -40,16 +40,16 @@ export const SettingsPrimarySale = <
   const trackEvent = useTrack();
   const query = usePrimarySaleRecipient(contract);
   const mutation = useUpdatePrimarySaleRecipient(contract);
+
+  const transformedQueryData = {
+    primary_sale_recipient: query.data,
+  };
+
   const form = useForm<z.input<typeof CommonPrimarySaleSchema>>({
     resolver: zodResolver(CommonPrimarySaleSchema),
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
   });
-
-  useEffect(() => {
-    if (query.data && !form.formState.isDirty) {
-      form.reset({ primary_sale_recipient: query.data });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Primary sale address updated",

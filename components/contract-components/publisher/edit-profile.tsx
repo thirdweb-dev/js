@@ -16,7 +16,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect, useId } from "react";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { BiImage } from "react-icons/bi";
 import { FiEdit, FiGlobe } from "react-icons/fi";
@@ -39,14 +39,17 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 }) => {
   const FORM_ID = useId();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const {
     register,
     handleSubmit,
-    reset,
     setValue,
     watch,
-    formState: { errors, isDirty },
-  } = useForm<ProfileMetadataInput>();
+    formState: { errors },
+  } = useForm<ProfileMetadataInput>({
+    defaultValues: publisherProfile,
+    values: publisherProfile,
+  });
 
   const imageUrl = useImageFileOrUrl(watch("avatar"));
 
@@ -58,15 +61,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   );
 
   const trackEvent = useTrack();
-
-  useEffect(() => {
-    if (!isDirty) {
-      reset({
-        ...publisherProfile,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publisherProfile]);
 
   return (
     <>

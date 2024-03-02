@@ -178,12 +178,14 @@ export const PublishedContractTable: ComponentWithChildren<
       )}
       <Table {...tableInstance.getTableProps()}>
         <Thead>
-          {tableInstance.headerGroups.map((headerGroup) => (
-            // eslint-disable-next-line react/jsx-key
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // eslint-disable-next-line react/jsx-key
-                <Th {...column.getHeaderProps()} border="none">
+          {tableInstance.headerGroups.map((headerGroup, headerGroupIndex) => (
+            <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+              {headerGroup.headers.map((column, columnIndex) => (
+                <Th
+                  {...column.getHeaderProps()}
+                  border="none"
+                  key={columnIndex}
+                >
                   <Text as="label" size="label.sm" color="faded">
                     {column.render("Header")}
                   </Text>

@@ -198,33 +198,29 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         )}
         <Table {...getTableProps()}>
           <Thead>
-            {headerGroups.map((headerGroup) => (
-              // eslint-disable-next-line react/jsx-key
-              <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} border="none">
+            {headerGroups.map((headerGroup, headerGroupIndex) => (
+              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <Th {...column.getHeaderProps()} border="none" key={columnIndex}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
                 ))}
-                {/* // Need to add an empty header for the drawer button */}
+                {/* Need to add an empty header for the drawer button */}
                 <Th border="none" />
               </Tr>
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()} position="relative">
-            {page.map((row) => {
+            {page.map((row, rowIndex) => {
               const failedToLoad = !row.original.tokenURI;
               prepareRow(row);
               return (
-                // eslint-disable-next-line react/jsx-key
                 <Tr
                   {...row.getRowProps()}
                   role="group"
                   _hover={{ bg: "accent.100" }}
-                  // this is a hack to get around the fact that safari does not handle position: relative on table rows
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     router.push(
@@ -235,21 +231,21 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                       },
                     );
                   }}
-                  // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
                   pointerEvents={failedToLoad ? "none" : "auto"}
                   opacity={failedToLoad ? 0.3 : 1}
                   cursor={failedToLoad ? "not-allowed" : "pointer"}
                   borderColor="borderColor"
+                  key={rowIndex}
                 >
-                  {row.cells.map((cell) => (
-                    // eslint-disable-next-line react/jsx-key
+                  {row.cells.map((cell, cellIndex) => (
                     <Td
                       {...cell.getCellProps()}
                       borderBottomWidth="inherit"
                       borderColor="borderColor"
                       maxW="sm"
+                      key={cellIndex}
                     >
                       {cell.render("Cell")}
                     </Td>

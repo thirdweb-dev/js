@@ -111,7 +111,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         chainId,
         StorageSingleton,
       );
-    } catch (error) {} // eslint-disable-line no-empty
+    } catch (error) {
+      console.error("Error fetching contract metadata", error);
+    }
 
     const guid = await verify(
       contractAddress,

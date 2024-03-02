@@ -63,20 +63,19 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
     }, 100);
   };
 
-  const updateOffset = () => {
-    const el = triggerRef.current;
-
-    if (el && isOpen) {
-      const { right } = el.getBoundingClientRect();
-      const isOverflowing = right + WIDTH > window.innerWidth;
-      const newOffset = isOverflowing
-        ? window.innerWidth - (right + WIDTH)
-        : DEFAULT_OFFSET;
-      setOffset(newOffset);
-    }
-  };
-
   useEffect(() => {
+    const updateOffset = () => {
+      const el = triggerRef.current;
+      if (el && isOpen) {
+        const { right } = el.getBoundingClientRect();
+        const isOverflowing = right + WIDTH > window.innerWidth;
+        const newOffset = isOverflowing
+          ? window.innerWidth - (right + WIDTH)
+          : DEFAULT_OFFSET;
+        setOffset(newOffset);
+      }
+    };
+
     updateOffset();
 
     if (typeof window !== "undefined") {
@@ -86,8 +85,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
         window.removeEventListener("resize", updateOffset);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, triggerRef, setOffset]);
 
   return (
     <Box onMouseLeave={handleBoxLeave}>

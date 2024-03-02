@@ -28,18 +28,22 @@ export const Permissions = <TContract extends ContractWithRoles>({
   const trackEvent = useTrack();
   const allRoleMembers = useAllRoleMembers(contract);
   const setAllRoleMembers = useSetAllRoleMembers(contract);
-  const form = useForm({});
+
+  const transformedQueryData = useMemo(() => {
+    if (!allRoleMembers.data) {
+      return {};
+    }
+    return allRoleMembers.data as PermissionFormContext<TContract>;
+  }, [allRoleMembers.data]);
+
+  const form = useForm({
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
+  });
 
   const { data: contractType } = useContractType(contract.getAddress());
   const contractData =
     BuiltinContractMap[contractType as keyof typeof BuiltinContractMap];
-
-  useEffect(() => {
-    if (allRoleMembers.data && !form.formState.isDirty) {
-      form.reset(allRoleMembers.data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allRoleMembers.data]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Permissions updated",

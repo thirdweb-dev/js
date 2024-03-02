@@ -193,79 +193,34 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
         />
         <Table {...getTableProps()}>
           <Thead>
-            {headerGroups.map((headerGroup) => (
-              // eslint-disable-next-line react/jsx-key
-              <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} border="none">
+            {headerGroups.map((headerGroup, headerGroupIndex) => (
+              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <Th {...column.getHeaderProps()} border="none" key={columnIndex}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
                 ))}
-                {/* // Need to add an empty header for the drawer button */}
                 <Th border="none" />
               </Tr>
             ))}
           </Thead>
-          <Tbody {...getTableBodyProps()} position="relative">
-            {page.map((row) => {
+          <Tbody {...getTableBodyProps()}>
+            {page.map((row, rowIndex) => {
               prepareRow(row);
               return (
-                // eslint-disable-next-line react/jsx-key
-                <Tr
-                  {...row.getRowProps()}
-                  role="group"
-                  _hover={{ bg: "accent.100" }}
-                  // this is a hack to get around the fact that safari does not handle position: relative on table rows
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setTokenRow(row.original)}
-                  // end hack
-                  borderBottomWidth={1}
-                  borderColor="borderColor"
-                  _last={{ borderBottomWidth: 0 }}
-                >
-                  {row.cells.map((cell) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <Td
-                      {...cell.getCellProps()}
-                      borderBottomWidth="inherit"
-                      borderColor="borderColor"
-                    >
-                      {cell.render("Cell")}
-                    </Td>
-                  ))}
-                  <Td borderBottomWidth="inherit" borderColor="borderColor">
-                    <Icon as={FiArrowRight} />
-                  </Td>
+                <Tr {...row.getRowProps()} key={rowIndex}>
+                  {row.cells.map((cell, cellIndex) => {
+                    return (
+                      <Td {...cell.getCellProps()} borderColor="borderColor" key={cellIndex}>
+                        {cell.render("Cell")}
+                      </Td>
+                    );
+                  })}
                 </Tr>
               );
             })}
-            {((listingsToShow === "all" && getAllQueryResult.isPreviousData) ||
-              (listingsToShow === "active" &&
-                getActiveQueryResult.isPreviousData)) && (
-              <Flex
-                zIndex="above"
-                position="absolute"
-                top={0}
-                bottom={0}
-                left={0}
-                right={0}
-                backdropFilter="blur(5px)"
-                bg="blackAlpha.100"
-                _dark={{ bg: "whiteAlpha.50" }}
-                borderRadius="md"
-                align="flex-end"
-                justify="center"
-                p={8}
-              >
-                <Flex align="center" gap={4}>
-                  <Spinner size="sm" />
-                  <Heading size="label.lg">Fetching new page</Heading>
-                </Flex>
-              </Flex>
-            )}
           </Tbody>
         </Table>
       </TableContainer>

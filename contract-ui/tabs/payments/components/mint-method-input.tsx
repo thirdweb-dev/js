@@ -25,22 +25,14 @@ import {
 interface PaymentsMintMethodInputProps {
   abi: Abi;
   form: UseFormReturn<any, any>;
-  defaultValue?: string;
 }
 
 export const PaymentsMintMethodInput: React.FC<
   PaymentsMintMethodInputProps
-> = ({ abi, form, defaultValue }) => {
+> = ({ abi, form }) => {
   const filteredAbi = abi.filter((f) =>
     f.inputs.some((i) => i.type === "address"),
   );
-
-  useEffect(() => {
-    if (defaultValue) {
-      form.setValue("mintFunctionName", defaultValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Flex flexDir="column" gap={2} w="full">

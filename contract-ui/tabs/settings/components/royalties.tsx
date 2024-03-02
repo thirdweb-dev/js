@@ -37,16 +37,13 @@ export const SettingsRoyalties = <
   const trackEvent = useTrack();
   const query = useRoyaltySettings(contract);
   const mutation = useUpdateRoyaltySettings(contract);
+
   const form = useForm<z.input<typeof CommonRoyaltySchema>>({
     resolver: zodResolver(CommonRoyaltySchema),
+    defaultValues: query.data,
+    values: query.data,
   });
   const address = useAddress();
-  useEffect(() => {
-    if (query.data && !form.formState.isDirty) {
-      form.reset(query.data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, form.formState.isDirty]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Royalty settings updated",

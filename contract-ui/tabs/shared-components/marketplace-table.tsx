@@ -219,12 +219,14 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         />
         <Table {...getTableProps()}>
           <Thead>
-            {headerGroups.map((headerGroup) => (
-              // eslint-disable-next-line react/jsx-key
-              <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} border="none">
+            {headerGroups.map((headerGroup, headerGroupIndex) => (
+              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <Th
+                    {...column.getHeaderProps()}
+                    border="none"
+                    key={columnIndex}
+                  >
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
@@ -236,28 +238,26 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()} position="relative">
-            {page.map((row) => {
+            {page.map((row, rowIndex) => {
               prepareRow(row);
               return (
-                // eslint-disable-next-line react/jsx-key
                 <Tr
                   {...row.getRowProps()}
                   role="group"
                   _hover={{ bg: "accent.100" }}
-                  // this is a hack to get around the fact that safari does not handle position: relative on table rows
                   style={{ cursor: "pointer" }}
                   onClick={() => setTokenRow(row.original)}
-                  // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
                   borderColor="borderColor"
+                  key={rowIndex}
                 >
-                  {row.cells.map((cell) => (
-                    // eslint-disable-next-line react/jsx-key
+                  {row.cells.map((cell, cellIndex) => (
                     <Td
                       {...cell.getCellProps()}
                       borderBottomWidth="inherit"
                       borderColor="borderColor"
+                      key={cellIndex}
                     >
                       {cell.render("Cell")}
                     </Td>

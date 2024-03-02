@@ -79,7 +79,6 @@ function getStorage() {
     },
     setItem: set,
     removeItem: del,
-    // eslint-disable-next-line prettier/prettier
   } as AsyncStorage;
   return currStorage;
 }

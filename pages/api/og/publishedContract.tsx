@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/forbid-dom-props */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 import { PublishedContractOG } from "og-lib/url-utils";
@@ -198,19 +199,18 @@ export default async function handler(req: NextRequest) {
     (
       <div
         tw="w-full h-full flex justify-center py-20 px-16"
-        // eslint-disable-next-line react/forbid-dom-props
         style={{
           background: "#0D0D12",
           fontFamily: "Inter",
         }}
       >
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <img
           // @ts-expect-error - this works fine
           src={imageData}
           width="1200px"
           height="630px"
           tw="absolute"
+          alt=""
         />
         {/* the actual component starts here */}
 
@@ -258,7 +258,6 @@ export default async function handler(req: NextRequest) {
           <div tw="flex justify-between w-full items-end">
             <ul
               tw="flex-col text-white font-medium text-2xl max-w-4xl"
-              // eslint-disable-next-line react/forbid-dom-props
               style={{
                 fontFamily: "IBM Plex Mono",
               }}
@@ -266,7 +265,6 @@ export default async function handler(req: NextRequest) {
               {publishedContractData.extension?.length ? (
                 <li
                   tw="flex flex-row items-center overflow-hidden w-full"
-                  // eslint-disable-next-line react/forbid-dom-props
                   style={{ whiteSpace: "nowrap" }}
                 >
                   <PackageIcon />

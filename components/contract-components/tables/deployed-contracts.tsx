@@ -3,6 +3,7 @@ import { ShowMoreButton } from "./show-more-button";
 import { useAllContractList } from "@3rdweb-sdk/react";
 import { useRemoveContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
+  Box,
   ButtonGroup,
   Center,
   Flex,
@@ -464,17 +465,15 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       )}
       <Table {...getTableProps()}>
         <Thead>
-          {headerGroups.map((headerGroup) => (
-            // eslint-disable-next-line react/jsx-key
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // eslint-disable-next-line react/jsx-key
-                <Th {...column.getHeaderProps()} border="none">
+          {headerGroups.map((headerGroup, index) => (
+            <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, i) => (
+                <Th {...column.getHeaderProps()} border="none" key={i}>
                   <Text as="label" size="label.sm" color="faded">
                     {column.render("Header")}
-                    <div>
+                    <Box>
                       {column.canFilter ? column.render("Filter") : null}
-                    </div>
+                    </Box>
                   </Text>
                 </Th>
               ))}
@@ -523,13 +522,13 @@ const ContractTableRow = memo(({ row }: { row: Row<ContractWithMetadata> }) => {
       borderBottomWidth={1}
       _last={{ borderBottomWidth: 0 }}
     >
-      {row.cells.map((cell) => {
+      {row.cells.map((cell, cellIndex) => {
         return (
-          // eslint-disable-next-line react/jsx-key
           <Td
             borderBottomWidth="inherit"
             borderBottomColor="borderColor"
             {...cell.getCellProps()}
+            key={cellIndex}
           >
             {cell.render("Cell")}
           </Td>

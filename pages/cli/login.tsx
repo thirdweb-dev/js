@@ -38,8 +38,7 @@ const LoginPage: ThirdwebNextPage = () => {
   const [hasRemovedShield, setHasRemovedShield] = useState<boolean>(false);
 
   const detectBrave = async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - brave is not in the types
+    // @ts-expect-error - brave is not in the types
     return (navigator?.brave && (await navigator?.brave.isBrave())) || false;
   };
 

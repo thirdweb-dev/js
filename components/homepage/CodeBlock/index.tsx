@@ -211,21 +211,21 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
               h="full"
             >
               <Box>
-                <Box as="span" display="block" my={1} color="heading">
-                  {tokens.map((line, i) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <Box {...getLineProps({ line, key: i })}>
-                      <LineNumbers
-                        lineNumber={i + 1}
-                        lineHeight={chakraTheme.sizes["5"]}
-                        totalLines={tokens.length}
-                      />
-                      {line.map((token, key) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <span {...getTokenProps({ token, key })} />
-                      ))}
-                    </Box>
-                  ))}
+                <Box>
+                  <Box as="span" display="block" my={1} color="heading">
+                    {tokens.map((line, i) => (
+                      <Box key={i} {...getLineProps({ line })}>
+                        <LineNumbers
+                          lineNumber={i + 1}
+                          lineHeight={chakraTheme.sizes["5"]}
+                          totalLines={tokens.length}
+                        />
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token })} />
+                        ))}
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
               </Box>
             </Box>

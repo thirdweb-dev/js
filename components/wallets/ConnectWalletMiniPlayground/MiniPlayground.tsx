@@ -28,20 +28,21 @@ import {
 } from "../ConnectWalletPlayground/walletInfoRecord";
 import { replaceIpfsUrl } from "lib/sdk";
 
-import { Londrina_Solid, Source_Serif_4 } from "next/font/google";
+import {
+  Londrina_Solid as londrinaSolidConstructor,
+  Source_Serif_4 as sourceSerif4Constructor,
+} from "next/font/google";
 import { ChakraNextImage } from "components/Image";
 import { FiChevronRight } from "react-icons/fi";
 import { useTrack } from "hooks/analytics/useTrack";
 
 // If loading a variable font, you don't need to specify the font weight
-// eslint-disable-next-line new-cap
-const nounsDaoFont = Londrina_Solid({
+const nounsDaoFont = londrinaSolidConstructor({
   subsets: ["latin"],
   weight: ["900", "400"],
 });
 
-// eslint-disable-next-line new-cap
-const web3WarriorsFont = Source_Serif_4({
+const web3WarriorsFont = sourceSerif4Constructor({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });

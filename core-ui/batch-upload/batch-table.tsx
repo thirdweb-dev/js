@@ -162,12 +162,10 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       <TableContainer maxW="100%">
         <Table {...getTableProps()}>
           <Thead>
-            {headerGroups.map((headerGroup) => (
-              // eslint-disable-next-line react/jsx-key
-              <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} border="none">
+            {headerGroups.map((headerGroup, index) => (
+              <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                {headerGroup.headers.map((column, i) => (
+                  <Th {...column.getHeaderProps()} border="none" key={i}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
@@ -177,22 +175,22 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
-            {page.map((row) => {
+            {page.map((row, rowIndex) => {
               prepareRow(row);
               return (
-                // eslint-disable-next-line react/jsx-key
                 <Tr
                   {...row.getRowProps()}
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  key={rowIndex}
                 >
-                  {row.cells.map((cell) => {
+                  {row.cells.map((cell, cellIndex) => {
                     return (
-                      // eslint-disable-next-line react/jsx-key
                       <Td
                         {...cell.getCellProps()}
                         borderBottomWidth="inherit"
                         borderColor="borderColor"
+                        key={cellIndex}
                       >
                         {cell.render("Cell")}
                       </Td>

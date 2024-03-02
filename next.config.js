@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const ContentSecurityPolicy = `
   default-src 'self';
   img-src * data: blob:;
@@ -35,7 +37,6 @@ const securityHeaders = [
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const redirects = require("./redirects");
 
 /**
@@ -130,15 +131,12 @@ const moduleExports = {
   productionBrowserSourceMaps: true,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withPlausibleProxy } = require("next-plausible");
 
 // we only want sentry on production environments
