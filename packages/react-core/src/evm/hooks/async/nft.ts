@@ -1,4 +1,8 @@
-import type { BasicNFTInput, NFTMetadata } from "@thirdweb-dev/sdk";
+import type {
+  BasicNFTInput,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
@@ -1070,7 +1074,7 @@ export function useUpdateNFTMetadata<TContract extends NFTContract>(
   const { erc721, erc1155 } = getErcs(contract);
 
   return useMutation(
-    async (data: { tokenId: BigNumberish; metadata: NFTMetadata }) => {
+    async (data: { tokenId: BigNumberish; metadata: NFTMetadataInput }) => {
       const { tokenId, metadata } = data;
       if (erc721) {
         return await erc721.updateMetadata(tokenId, metadata);
