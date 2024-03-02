@@ -111,6 +111,9 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
       - run: pnpm test
 
       - name: Upload coverage reports to Codecov

@@ -69,7 +69,7 @@
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
     "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json nyc --reporter lcovonly --report-dir ./coverage/evm mocha --config './test/evm/.mocharc.json' --timeout 90000 --parallel './test/evm/**/*.test.ts'",
-    "test": "make test-evm",
+    "test": "pnpm test:all",
     "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
@@ -94,6 +94,7 @@
     "@types/uuid": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.19.1",
+    "@viem/anvil": "^0.0.7",
     "chai": "^4.3.6",
     "deep-equal-in-any-order": "^1.1.18",
     "dotenv-mono": "^1.3.10",

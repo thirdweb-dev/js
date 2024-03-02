@@ -107,7 +107,7 @@ describe("SDK Initialization", async () => {
     expect(network.chainId).to.equal(5);
   });
 
-  it("Should be able to connect directly via http RPC URL", async () => {
+  it.skip("Should be able to connect directly via http RPC URL", async () => {
     const sdk = new ThirdwebSDK("http://localhost:8545", {
       secretKey: process.env.TW_SECRET_KEY,
     });

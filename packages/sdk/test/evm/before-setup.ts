@@ -77,6 +77,10 @@ import {
   ExtensionFunction,
   ExtensionMetadata,
 } from "../../src/evm/types/extensions";
+import { startProxy } from "@viem/anvil";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("dotenv-mono").load();
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -121,7 +125,7 @@ let thirdwebFactory: TWFactory;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
-  await defaultProvider.send("evm_mine", [now + timeInSeconds]);
+  await jsonProvider.send("anvil_mine", [now + timeInSeconds]);
 };
 
 export const expectError = (e: unknown, message: string) => {
@@ -136,7 +140,18 @@ export const expectError = (e: unknown, message: string) => {
 
 export const mochaHooks = {
   beforeAll: async () => {
-    require("dotenv-mono").load();
+    try {
+      await startProxy({
+        port: 8545,
+        options: {
+          chainId: 31337,
+        },
+      });
+    } catch (e) {
+      // assume already in use -> do nothing
+    }
+
+    // this should still work because the private keys are the same(?)
     signers = await hardhatEthers.getSigners();
     implementations = {};
 
@@ -144,7 +159,6 @@ export const mochaHooks = {
 
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
-    await jsonProvider.send("hardhat_reset", []);
 
     await uploadAutoFactoryInfra();
 

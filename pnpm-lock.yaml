@@ -1199,6 +1199,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.19.1
         version: 6.19.1(eslint@8.56.0)(typescript@5.3.3)
+      '@viem/anvil':
+        specifier: ^0.0.7
+        version: 0.0.7
       chai:
         specifier: ^4.3.6
         version: 4.3.7
@@ -13267,6 +13270,19 @@ packages:
       wonka: 4.0.15
     dev: false
 
+  /@viem/anvil@0.0.7:
+    resolution: {integrity: sha512-F+3ljCT1bEt8T4Fzm9gWpIgO3Dc7bzG1TtUtkStkJFMuummqZ8kvYc3UFMo5j3F51fSWZZvEkjs3+i7qf0AOqQ==}
+    dependencies:
+      execa: 7.2.0
+      get-port: 6.1.2
+      http-proxy: 1.18.1
+      ws: 8.13.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
+    dev: true
+
   /@vitejs/plugin-react@2.2.0(vite@3.2.8):
     resolution: {integrity: sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -18789,6 +18805,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -18862,6 +18879,21 @@ packages:
       onetime: 5.1.2
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
+
+  /execa@7.2.0:
+    resolution: {integrity: sha512-UduyVP7TLB5IcAQl+OzLyLcS/l32W/GLg+AhHJ+ow40FOk2U3SAllPwR44v4vmdFwIWqpdwxxpQbF1n5ta9seA==}
+    engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
+    dependencies:
+      cross-spawn: 7.0.3
+      get-stream: 6.0.1
+      human-signals: 4.3.1
+      is-stream: 3.0.0
+      merge-stream: 2.0.0
+      npm-run-path: 5.1.0
+      onetime: 6.0.0
+      signal-exit: 3.0.7
+      strip-final-newline: 3.0.0
+    dev: true
 
   /execa@8.0.1:
     resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
@@ -19972,6 +20004,11 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
+  /get-port@6.1.2:
+    resolution: {integrity: sha512-BrGGraKm2uPqurfGVj/z97/zv8dPleC6x9JBNRTrDNtCkkRF4rPwrQXFgL7+I+q8QSdU4ntLQX2D7KIxSy8nGw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: true
+
   /get-stream@3.0.0:
     resolution: {integrity: sha512-GlhdIUuVakc8SJ6kK0zAFbiGzRFzNnY4jUuEbV9UROo4Y+0Ny4fjvcZFVTeDA4odpFyOQzaw6hXukJSq/f28sQ==}
     engines: {node: '>=4'}
@@ -20721,7 +20758,6 @@ packages:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
-    dev: false
 
   /http2-wrapper@1.0.3:
     resolution: {integrity: sha512-V+23sDMr12Wnz7iTcDeJr3O6AIxlnvT/bmaAAAP/Xda35C90p9599p0F1eHR/N1KILWSoWVAiOMFjBBXaXSMxg==}
@@ -20758,6 +20794,11 @@ packages:
   /human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
+
+  /human-signals@4.3.1:
+    resolution: {integrity: sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==}
+    engines: {node: '>=14.18.0'}
+    dev: true
 
   /human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
@@ -27461,7 +27502,6 @@ packages:
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-    dev: false
 
   /requizzle@0.2.4:
     resolution: {integrity: sha512-JRrFk1D4OQ4SqovXOgdav+K8EAhSB/LJZqCz8tbX0KObcdeM15Ss59ozWMBWmmINMagCwmqn4ZNryUGpBsl6Jw==}
