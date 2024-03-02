@@ -143,8 +143,9 @@ describe("Accounts with account factory", function () {
         "Correct admin for account.",
       );
 
-      const associatedAccounts =
-        await accountFactory.getAssociatedAccounts(admin);
+      const associatedAccounts = await accountFactory.getAssociatedAccounts(
+        admin,
+      );
 
       assert.isTrue(
         associatedAccounts.length === 1,
@@ -187,7 +188,6 @@ describe("Accounts with account factory", function () {
       );
 
       account = (await sdk.getContract(accountAddress)).account;
-      await account.sign("0x1234"); // force deploy
     });
 
     it("Should be able to add another admin to the account.", async () => {
