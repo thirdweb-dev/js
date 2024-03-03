@@ -22,6 +22,7 @@ import {
 } from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { simulateTransaction } from "../../exports/thirdweb.js";
 
 /**
  * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
@@ -238,6 +239,11 @@ async function smartAccount(
         options,
         transaction,
       });
+      // simulate before sending
+      await simulateTransaction({
+        transaction: executeTx,
+        account: options.personalAccount,
+      });
       return _sendUserOp({
         factoryContract,
         accountContract,
@@ -251,6 +257,11 @@ async function smartAccount(
         options,
         transactions,
       });
+      // simulate before sending
+      await simulateTransaction({
+        transaction: executeTx,
+        account: options.personalAccount,
+      });
       return _sendUserOp({
         factoryContract,
         accountContract,
@@ -259,11 +270,10 @@ async function smartAccount(
       });
     },
     async signMessage({ message }) {
-      // TODO optionally deploy on sign
+      // TODO EIP712 domain separator
       return options.personalAccount.signMessage({ message });
     },
     async signTypedData(typedData) {
-      // TODO optionally deploy on sign
       return options.personalAccount.signTypedData(typedData);
     },
   };
