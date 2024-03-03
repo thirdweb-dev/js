@@ -21,23 +21,22 @@ npm install thirdweb@beta
 
 |  | thirdweb | Wagmi | Viem | Ethers@6 |
 | --- | --- | --- | --- | --- |
-| Contract interaction API | ✅ | ✅ | ✅ | ✅ |
-| Wallet interaction API | ✅ | ✅ | ✅ | ✅ |
+| Type safe contract API | ✅ | ✅ | ✅ | ✅ |
+| Type safe wallet API | ✅ | ✅ | ✅ | ✅ |
 | EVM utils | ✅ | ❌ | ✅ | ✅ |
-| Integrated Pro RPC for any EVM | ✅  | ⚠️ public RPC only | ⚠️ public RPC only | ❌ |
-| Integrated IPFS (Upload/Download) | ✅ | ❌ | ❌ | ❌ |
-| Integrated embedded wallet (email/ social login)  | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
-| Integrated account abstraction (ERC4337) support | ✅ | ⚠️ via 3rd party | ⚠️ via 3rd party | ❌ |
+| RPC for any EVM | ✅  | ⚠️ public RPC only | ⚠️ public RPC only | ❌ |
+| Automatic ABI Resolution | ✅ | ❌ | ❌ | ❌ |
+| IPFS Upload/Download | ✅ | ❌ | ❌ | ❌ |
+| Embedded wallet (email/ social login)  | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
+| Account abstraction (ERC4337) support | ✅ | ⚠️ via 3rd party | ⚠️ via 3rd party | ❌ |
 | Web3 wallet connectors | ✅ | ✅ | ❌ | ❌ |
 | Local wallet creation | ✅ | ❌ | ✅ | ✅ |
-| Integrated auth (SIWE) support | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
+| Auth (SIWE) | ✅ | ⚠️ via 3rd party | ❌ | ❌ |
 | Extensions functions for common standards | ✅ | ❌ | ❌ | ❌ |
 | React Hooks | ✅ | ✅ | ❌ | ❌ |
 | React UI components | ✅ | ❌ | ❌ | ❌ |
 | React Native Hooks | ✅ | ❌ | ❌ | ❌ |
 | React Native UI Components | ✅ | ❌ | ❌ | ❌ |
-| Automatic ABI Resolution | ✅ | ❌ | ❌ | ❌ |
-|  |  |  |  |  |
 
 ## Documentation
 
