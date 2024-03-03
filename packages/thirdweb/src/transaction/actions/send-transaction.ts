@@ -1,5 +1,8 @@
 import type { TransactionSerializable } from "viem";
-import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
+import {
+  waitForReceipt,
+  type WaitForReceiptOptions,
+} from "./wait-for-tx-receipt.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
@@ -8,10 +11,12 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { encode } from "./encode.js";
 import { estimateGas } from "./estimate-gas.js";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
+import type { TransactionReceipt } from "../types.js";
 
 export type SendTransactionOptions = Prettify<
   {
     transaction: PreparedTransaction<any>;
+    waitForReceipt?: boolean;
   } & (
     | {
         account?: never;
@@ -24,10 +29,18 @@ export type SendTransactionOptions = Prettify<
   )
 >;
 
+// Define overloads for optional waitForReceipt parameter
+export async function sendTransaction(
+  options: SendTransactionOptions & { waitForReceipt: true },
+): Promise<TransactionReceipt>;
+export async function sendTransaction(
+  options: SendTransactionOptions,
+): Promise<WaitForReceiptOptions>;
+
 /**
  * Sends a transaction using the provided wallet.
  * @param options - The options for sending the transaction.
- * @returns A promise that resolves to the transaction hash.
+ * @returns A promise that resolves to the transaction hash or the transaction receipt, depending on the waitForReceipt flag.
  * @throws An error if the wallet is not connected.
  * @transaction
  * @example
@@ -41,7 +54,7 @@ export type SendTransactionOptions = Prettify<
  */
 export async function sendTransaction(
   options: SendTransactionOptions,
-): Promise<WaitForReceiptOptions> {
+): Promise<WaitForReceiptOptions | TransactionReceipt> {
   const account = options.account ?? options.wallet.getAccount();
   if (!account) {
     throw new Error("not connected");
@@ -94,5 +107,13 @@ export async function sendTransaction(
     value,
     ...feeData,
   } satisfies TransactionSerializable);
+
+  if (options.waitForReceipt) {
+    return await waitForReceipt({
+      ...result,
+      transaction: options.transaction,
+    });
+  }
+
   return { ...result, transaction: options.transaction };
 }

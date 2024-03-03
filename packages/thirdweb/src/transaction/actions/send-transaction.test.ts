@@ -1,9 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
 import { sendTransaction } from "./send-transaction.js";
 import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { transfer } from "../../extensions/erc20/write/transfer.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
+import * as waitForReceiptExports from "./wait-for-tx-receipt.js";
+import type { TransactionReceipt } from "../types.js";
 
 const MOCK_TX_HASH =
   "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
@@ -44,10 +46,40 @@ const TX_RESULT = {
   to: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   value: undefined,
 };
+
+const MOCK_SUCCESS_RECEIPT: TransactionReceipt = {
+  transactionHash: MOCK_TX_HASH,
+  blockNumber: 1234n,
+  status: "success",
+  blockHash: "0xabcdef1234567890",
+  contractAddress: "0x1234567890abcdef",
+  cumulativeGasUsed: 123456n,
+  from: "0xabcdef1234567890",
+  gasUsed: 123456n,
+  logs: [],
+  logsBloom: "0xabcdef1234567890",
+  to: "0x1234567890abcdef",
+  transactionIndex: 1234,
+  effectiveGasPrice: 123456n,
+  type: "legacy",
+  root: "0xabcdef1234567890",
+  blobGasPrice: 123456n,
+  blobGasUsed: 123456n,
+};
+
+vi.spyOn(waitForReceiptExports, "waitForReceipt").mockResolvedValueOnce(
+  MOCK_SUCCESS_RECEIPT,
+);
+
 describe("sendTransaction", () => {
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
   describe("account", () => {
     it("should send a transaction", async () => {
       const res = await sendTransaction({
@@ -59,6 +91,16 @@ describe("sendTransaction", () => {
       expect(mockAccount.sendTransaction.mock.lastCall[0]).toMatchObject(
         TX_RESULT,
       );
+    });
+
+    it("should await receipt if waitForReceipt is true", async () => {
+      const res = await sendTransaction({
+        account: mockAccount,
+        transaction: TRANSACTION,
+        waitForReceipt: true,
+      });
+      expect(res).toEqual(MOCK_SUCCESS_RECEIPT);
+      expect(waitForReceiptExports.waitForReceipt).toHaveBeenCalledTimes(1);
     });
   });
 
