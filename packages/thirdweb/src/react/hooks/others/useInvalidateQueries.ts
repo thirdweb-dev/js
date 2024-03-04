@@ -3,13 +3,13 @@ import { useQueryClient } from "@tanstack/react-query";
 /**
  * @internal
  */
-export function useInvalidateContractQuery(
-  chainId: number,
-  contractAddress: string,
-) {
+export function useInvalidateContractQuery() {
   const queryClient = useQueryClient();
 
-  return () => {
+  return (
+    chainId: number,
+    contractAddress: string,
+  ) => {
     queryClient.invalidateQueries({
       predicate: (query) => {
         const [queryType, queriedChainId, queriedContractAddress] =
