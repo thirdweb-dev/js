@@ -45,18 +45,11 @@ export function useSwapStatus(swapStatusParams: SwapStatusParams | undefined) {
         throw new Error("Missing swap status params");
       }
 
-      try {
-        const swapStatus_ = await getSwapStatus(swapStatusParams);
-        if (swapStatus_.status === 2) {
-          setRefetchInterval(0);
-        }
-        return swapStatus_;
-      } catch (error) {
-        debugger;
+      const swapStatus_ = await getSwapStatus(swapStatusParams);
+      if (swapStatus_.status === 2) {
         setRefetchInterval(0);
-        console.error({ error });
-        throw error;
       }
+      return swapStatus_;
     },
     enabled: !!swapStatusParams,
     refetchInterval: refetchInterval,

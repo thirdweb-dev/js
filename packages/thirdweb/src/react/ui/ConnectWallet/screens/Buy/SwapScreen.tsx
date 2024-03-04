@@ -298,8 +298,6 @@ export function SwapScreenContent(props: {
     ).toString();
   }
 
-  console.log("quote", swapQuoteQuery.data);
-
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -725,9 +723,6 @@ function WaitingForConfirmation(props: {
   const screenLocale = locale.connectWallet.swapScreen;
   const swapStatus = useSwapStatus(props.sentSwap);
 
-  console.log("sent swap info", props.sentSwap);
-  console.log("swapStatus", swapStatus.data);
-
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -744,9 +739,9 @@ function WaitingForConfirmation(props: {
           color="success"
         >
           {swapStatus.data ? (
-            <CheckCircledIcon width={iconSize.xxl} height={iconSize.xxl} />
+            <CheckCircledIcon width={iconSize.xl} height={iconSize.xl} />
           ) : (
-            <Spinner size="xxl" color="accentText" />
+            <Spinner size="xl" color="accentText" />
           )}
 
           <Text color={swapStatus.data ? "success" : "primaryText"}>
