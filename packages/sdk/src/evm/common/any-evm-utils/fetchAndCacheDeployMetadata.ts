@@ -2,6 +2,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchExtendedReleaseMetadata } from "../feature-detection/fetchExtendedReleaseMetadata";
 import { fetchPreDeployMetadata } from "../feature-detection/fetchPreDeployMetadata";
 import type { DeployMetadata } from "../../types/deploy/deploy-options";
+import { CompilerOptions } from "../../types/compiler/compiler-options";
+
 import { createLruCache } from "../utils";
 import {
   FullPublishMetadata,
@@ -22,14 +24,26 @@ const deployMetadataCache =
 export async function fetchAndCacheDeployMetadata(
   publishMetadataUri: string,
   storage: ThirdwebStorage,
+  compilerOptions?: CompilerOptions,
 ): Promise<DeployMetadata> {
-  const cached = deployMetadataCache.get(publishMetadataUri);
+  let compiler = compilerOptions
+    ? `${compilerOptions.compilerType}_${
+        compilerOptions.compilerVersion || ""
+      }_${compilerOptions.evmVersion || ""}
+      `
+    : "default";
+
+  const cacheKey = `${compiler} - ${publishMetadataUri}`;
+
+  const cached = deployMetadataCache.get(cacheKey);
   if (cached) {
     return cached;
   }
+
   const compilerMetadata = await fetchPreDeployMetadata(
     publishMetadataUri,
     storage,
+    compilerOptions,
   );
   let extendedMetadata;
   try {
@@ -44,6 +58,7 @@ export async function fetchAndCacheDeployMetadata(
     compilerMetadata,
     extendedMetadata,
   };
-  deployMetadataCache.put(publishMetadataUri, data);
+
+  deployMetadataCache.put(cacheKey, data);
   return data;
 }

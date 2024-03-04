@@ -487,6 +487,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         bytecodeUri: predeployMetadata.bytecodeUri,
         name: predeployMetadata.name,
         analytics: predeployMetadata.analytics,
+        compilers: predeployMetadata.compilers,
         publisher,
       });
       const fullMetadataUri = await this.storage.upload(fullMetadata);
