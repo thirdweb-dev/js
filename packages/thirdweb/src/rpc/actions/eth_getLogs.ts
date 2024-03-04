@@ -103,6 +103,7 @@ export async function eth_getLogs(
           ? numberToHex(params.toBlock)
           : params.toBlock;
     }
+
     logs = await request({
       method: "eth_getLogs",
       params: [param],
