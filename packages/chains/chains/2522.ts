@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FRAX",
   "chainId": 2522,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "fraxscan",
+      "url": "https://holesky.fraxscan.com",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {

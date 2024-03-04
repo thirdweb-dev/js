@@ -167,6 +167,7 @@ export function jaDefault(): ThirdwebLocale {
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
+      magicEdenWallet: extensionAndQRScanScreens("Magic Eden"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       coreWallet: extensionAndQRScanScreens("Core"),

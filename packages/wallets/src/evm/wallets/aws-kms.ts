@@ -23,8 +23,8 @@ import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * @wallet
  */
 export class AwsKmsWallet extends AbstractWallet {
-  #signer?: Promise<Signer>;
-  #options: AwsKmsSignerCredentials;
+  private _signer?: Promise<Signer>;
+  private _options: AwsKmsSignerCredentials;
 
   /**
    * Create instance of `AwsKmsWallet`
@@ -33,18 +33,18 @@ export class AwsKmsWallet extends AbstractWallet {
    */
   constructor(options: AwsKmsSignerCredentials) {
     super();
-    this.#options = options;
+    this._options = options;
   }
 
   /**
    * Get [ethers signer](https://docs.ethers.io/v5/api/signer/) of the connected wallet
    */
   async getSigner(): Promise<Signer> {
-    if (!this.#signer) {
-      this.#signer = new Promise(async (resolve, reject) => {
+    if (!this._signer) {
+      this._signer = new Promise(async (resolve, reject) => {
         try {
           const { AwsKmsSigner } = await import("ethers-aws-kms-signer");
-          const signer = new AwsKmsSigner(this.#options);
+          const signer = new AwsKmsSigner(this._options);
 
           // Need to add this because ethers-aws-kms-signer doesn't support
           (signer as any)._signTypedData = async function (
@@ -63,11 +63,11 @@ export class AwsKmsWallet extends AbstractWallet {
           resolve(signer);
         } catch (err) {
           // remove the cached promise so we can try again
-          this.#signer = undefined;
+          this._signer = undefined;
           reject(err);
         }
       });
     }
-    return this.#signer;
+    return this._signer;
   }
 }
