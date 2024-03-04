@@ -22,7 +22,7 @@ import {
 } from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import { simulateTransaction } from "../../exports/thirdweb.js";
+import { simulateTransaction } from "../../transaction/actions/simulate.js";
 
 /**
  * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
