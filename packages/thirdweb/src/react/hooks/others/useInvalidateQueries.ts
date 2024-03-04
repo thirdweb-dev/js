@@ -6,20 +6,15 @@ import { useQueryClient } from "@tanstack/react-query";
 export function useInvalidateContractQuery() {
   const queryClient = useQueryClient();
 
-  return (
-    chainId: number,
-    contractAddress: string,
-  ) => {
+  return ({
+    chainId,
+    contractAddress,
+  }: {
+    chainId: number;
+    contractAddress: string;
+  }) => {
     queryClient.invalidateQueries({
-      predicate: (query) => {
-        const [queryType, queriedChainId, queriedContractAddress] =
-          query.queryKey;
-        return (
-          queryType === "readContract" &&
-          queriedChainId === chainId &&
-          queriedContractAddress === contractAddress
-        );
-      },
+      queryKey: ["readContract", chainId, contractAddress],
     });
   };
 }
