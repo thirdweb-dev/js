@@ -173,6 +173,7 @@ export {
   useBurnNFT,
   useSharedMetadata,
   useSetSharedMetadata,
+  useUpdateNFTMetadata,
 } from "./hooks/async/nft";
 
 // roles
