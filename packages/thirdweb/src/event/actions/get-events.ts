@@ -85,16 +85,23 @@ export async function getContractEvents<
     }
   }
 
-  const eventsTopics = events?.flatMap((e) => e.topics);
-  const ethLogsParams: GetLogsParams = {
-    ...restParams,
-    address: contract?.address,
-    topics: eventsTopics,
-  };
+  const logsParams: GetLogsParams[] =
+    events && events.length > 0
+      ? // if we have events passed in then we use those
+        events.map((e) => ({
+          ...restParams,
+          address: contract?.address,
+          topics: e.topics,
+        }))
+      : // otherwise we want "all" events (aka not pass any topics at all)
+        [{ ...restParams, address: contract?.address }];
+
   const rpcRequest = getRpcClient(contract);
-  const logs = await eth_getLogs(rpcRequest, ethLogsParams);
+  const logs = await Promise.all(
+    logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
+  );
   return parseEventLogs({
-    logs,
+    logs: logs.flatMap((log) => log),
     events: resolvedEvents,
   });
 }

@@ -29,8 +29,7 @@ describe("getEvents", () => {
     expect(events.length).toBe(2);
   });
 
-  // TODO make this test pass
-  it.todo("should get specified events", async () => {
+  it("should get specified events", async () => {
     const events = await getContractEvents({
       contract: USDC_CONTRACT,
       fromBlock: 19139495n - 10n,
