@@ -58,6 +58,14 @@ const filterOut = [
   "saminacodes",
   "shift4id",
   "warengonzaga",
+  "kien-ngo",
+  "easyrun42",
+  "elasticbottle",
+  "IDubuque",
+  "rahul-thirdweb",
+  "gerrysaporito",
+  "edwardysun",
+  "mmeigoni",
 ];
 
 const repositories = [
@@ -80,9 +88,9 @@ const repositories = [
       "TypeScript, React and Wallet SDKs, CLI, Auth, Storage, and more.",
   },
   {
-    id: "python-sdk",
-    name: "Python SDK",
-    description: "Create web3 backend applications using Python.",
+    id: "engine",
+    name: "Engine",
+    description: "Backend HTTP server that calls smart contracts",
   },
   {
     id: "unity-sdk",
@@ -90,12 +98,7 @@ const repositories = [
     description: "Create web-based or native web3 games using Unity.",
   },
   {
-    id: "go-sdk",
-    name: "Go SDK",
-    description: "Create web3 backend applications using Go.",
-  },
-  {
-    id: "docs",
+    id: "docs-v2",
     name: "Portal",
     description: "Documentation, templates, and guides for developers.",
   },
