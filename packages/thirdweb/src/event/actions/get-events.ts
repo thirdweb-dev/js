@@ -85,7 +85,7 @@ export async function getContractEvents<
     }
   }
 
-  const eventsTopics = resolvedEvents.flatMap((e) => e.topics) ?? [];
+  const eventsTopics = events?.flatMap((e) => e.topics);
   const ethLogsParams: GetLogsParams = {
     ...restParams,
     address: contract?.address,

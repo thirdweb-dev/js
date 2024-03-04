@@ -18,7 +18,7 @@ type UseContractEventsOptions<
   abi extends Abi,
   abiEvent extends AbiEvent,
 > = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onEvents"> & {
-  limit?: number;
+  blockRange?: number;
   enabled?: boolean;
   watch?: boolean;
 };
@@ -42,7 +42,7 @@ export function useContractEvents<
   const {
     contract,
     events,
-    limit = 1000,
+    blockRange = 2000,
     enabled = true,
     watch = true,
   } = options;
@@ -72,15 +72,9 @@ export function useContractEvents<
       const initialEvents = await getContractEvents({
         contract,
         events: events,
-        toBlock: currentBlockNumber,
-        // get events from the "limit / 10" blocks
-        // TODO: is this good enough or should we go back further?
-        // this is likely highly chain & contract dependent? (USDC has 10k+ events in last 100 blocks) which breaks many RPCs
-        // right now we just go back 10% of the limit (assuming the limit is 1000, we go back 100 blocks)
-        fromBlock: currentBlockNumber - BigInt(limit) / 10n,
+        fromBlock: currentBlockNumber - BigInt(blockRange),
       });
-      // take the last events from the initial events (based on limits)
-      return initialEvents.slice(-limit);
+      return initialEvents;
     },
     enabled,
   });
@@ -96,13 +90,12 @@ export function useContractEvents<
       onEvents: (newEvents) => {
         queryClient.setQueryData(queryKey, (oldEvents: any = []) => {
           const newLogs = [...oldEvents, ...newEvents];
-          // take the last events from the new logs (based on "limit")
-          return newLogs.slice(-limit);
+          return newLogs;
         });
       },
       events,
     });
-  }, [contract, enabled, events, limit, queryClient, queryKey, watch]);
+  }, [contract, enabled, events, blockRange, queryClient, queryKey, watch]);
 
   return query;
 }
