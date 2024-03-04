@@ -30,6 +30,7 @@ export {
   sendTransaction,
   type SendTransactionOptions,
 } from "../transaction/actions/send-transaction.js";
+export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 export {
   sendBatchTransaction,
   type SendBatchTransactionOptions,

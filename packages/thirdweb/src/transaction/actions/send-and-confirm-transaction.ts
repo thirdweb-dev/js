@@ -14,8 +14,9 @@ import {
  * @example
  * ```ts
  * import { sendAndConfirmTransaction } from "thirdweb";
+ *
  * const transactionReceipt = await sendAndConfirmTransaction({
- *  account,
+ *  wallet,
  *  transaction
  * });
  * ```
