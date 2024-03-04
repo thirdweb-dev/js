@@ -218,6 +218,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
+    await this.approveIfNeeded();
     const signer = await this.getSigner();
     const { tx, batchData } = await this.prepareBatchTx(transactions);
     return await signer.sendTransaction(
@@ -258,6 +259,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
+    await this.approveIfNeeded();
     const signer = await this.getSigner();
     return signer.sendTransaction(transaction, options);
   }
@@ -280,6 +282,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
+    await this.approveIfNeeded();
     const signer = await this.getSigner();
     const batch = await this.prepareBatchRaw(transactions);
     return signer.sendTransaction(
