@@ -320,7 +320,7 @@ export function SwapScreenContent(props: {
             swapQuoteQuery.data?.swapDetails.estimated.fromAmountUSDCents
           }
           onChainClick={() => setScreen("select-from-chain")}
-          isInput={tokenAmount.type === "source"}
+          checkBalance={true}
         />
 
         <ToggleButton
@@ -354,7 +354,8 @@ export function SwapScreenContent(props: {
             swapQuoteQuery.data?.swapDetails.estimated.toAmountMinUSDCents
           }
           onChainClick={() => setScreen("select-to-chain")}
-          isInput={tokenAmount.type === "destination"}
+          // we don't care about the "to" balance - because that's what we want
+          checkBalance={false}
         />
 
         {swapQuoteQuery.data && (
@@ -441,7 +442,7 @@ function SwapInput(props: {
   chain: Chain;
   token?: TokenInfo | { nativeToken: true };
   estimatedValue?: number;
-  isInput: boolean;
+  checkBalance: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -459,7 +460,7 @@ function SwapInput(props: {
   const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
 
   const isNotEnoughBalance =
-    props.isInput &&
+    props.checkBalance &&
     balanceQuery.data &&
     Number(balanceQuery.data.displayValue) < Number(props.value);
 
