@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useSwapStatus, type SwapStatusParams } from "./useSwapStatus.js";
+import type { SwapStatusParams } from "./useSwapStatus.js";
 import { useMutation } from "@tanstack/react-query";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
 import type { SwapRoute } from "../../../pay/swap/actions/getSwap.js";
@@ -25,40 +24,13 @@ export type { SwapRoute } from "./useSwapRoute.js";
  */
 export function useSendSwap() {
   const wallet = useActiveWallet();
-  const [swapStatusParams, setSwapStatusParams] = useState<
-    SwapStatusParams | undefined
-  >(undefined);
-
-  // Use the useSwapStatus hook for polling
-  const {
-    swapStatus,
-    isFetching,
-    error: pollError,
-  } = useSwapStatus(swapStatusParams);
-
-  const {
-    mutate: sendSwapMutation,
-    status: sendStatus,
-    error: sendError,
-  } = useMutation<SwapStatusParams, Error, SwapRoute>({
+  return useMutation<SwapStatusParams, Error, SwapRoute>({
     mutationFn: async (swapRoute: SwapRoute) => {
       if (!wallet) {
-        throw new Error("Wallet not found");
+        throw new Error("Wallet not connected");
       }
-      const swapStatusParams_ = await sendSwap(wallet, swapRoute);
 
-      setSwapStatusParams(swapStatusParams_);
-      return swapStatusParams_;
+      return sendSwap(wallet, swapRoute);
     },
   });
-
-  const combinedError = sendError || pollError;
-
-  return {
-    sendSwap: sendSwapMutation,
-    swapStatus,
-    sendStatus,
-    isFetching,
-    error: combinedError,
-  };
 }

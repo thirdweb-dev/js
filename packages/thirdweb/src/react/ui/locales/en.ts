@@ -25,6 +25,7 @@ export function enDefault(): ThirdwebLocale {
       guest: "Guest",
       send: "Send",
       receive: "Receive",
+      swap: "Swap",
       currentNetwork: "Current network",
       switchAccount: "Switch Account",
       requestTestnetFunds: "Request Testnet Funds",
@@ -74,6 +75,9 @@ export function enDefault(): ThirdwebLocale {
       receiveFundsScreen: {
         title: "Receive Funds",
         instruction: "Copy the wallet address to send funds to this wallet",
+      },
+      swapScreen: {
+        title: "Swap",
       },
       sendFundsScreen: {
         title: "Send Funds",

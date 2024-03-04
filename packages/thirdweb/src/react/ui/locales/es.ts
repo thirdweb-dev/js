@@ -25,6 +25,8 @@ export function esDefault(): ThirdwebLocale {
       guest: "Invitado",
       send: "Enviar",
       receive: "Recibir",
+      // TODO: translate
+      swap: "Swap",
       currentNetwork: "Red actual",
       switchAccount: "Cambiar cuenta",
       requestTestnetFunds: "Solicitar fondos de Testnet",
@@ -55,6 +57,10 @@ export function esDefault(): ThirdwebLocale {
         termsOfService: "Términos de servicio",
         and: "y",
         privacyPolicy: "Política de privacidad",
+      },
+      // TODO: translate
+      swapScreen: {
+        title: "Swap",
       },
       networkSelector: {
         title: "Seleccionar red",

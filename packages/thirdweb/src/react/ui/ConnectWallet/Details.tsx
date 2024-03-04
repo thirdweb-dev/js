@@ -5,6 +5,7 @@ import {
   EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
+  UpdateIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
@@ -62,6 +63,7 @@ import {
 import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index.js";
 import { localWalletMetadata } from "../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
+import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -72,6 +74,7 @@ type WalletDetailsModalScreen =
   | "export"
   | "send"
   | "receive"
+  | "swap"
   | "network-switcher";
 
 /**
@@ -106,21 +109,11 @@ export const ConnectedWalletDetails: React.FC<{
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const [isOpen, setIsOpen] = useState(false);
 
-  // const activeWalletConfig = undefined;
-  // const activeWalletConfig = useWalletConfig();
   // const ensQuery = useENS();
-
-  // const walletContext = useWalletContext();
-
-  // const wrapperWallet = activeWallet
-  //   ? walletContext.getWrapperWallet(activeWallet)
-  //   : undefined;
 
   // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
   //   string | undefined
   // >(undefined);
-
-  // const sdk = useSDK();
 
   const personalWallet = (activeWallet as WalletWithPersonalWallet)
     ?.personalWallet;
@@ -130,8 +123,6 @@ export const ConnectedWalletDetails: React.FC<{
     : undefined;
 
   const disableSwitchChain = !activeWallet?.switchChain;
-
-  // const disableSwitchChain = !!personalWallet;
 
   // const isActuallyMetaMask =
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
@@ -359,11 +350,11 @@ export const ConnectedWalletDetails: React.FC<{
         <ConnectedToSmartWallet />
         <EmbeddedWalletEmail />
 
-        {/* Send and Receive */}
+        {/* Send, Receive, Swap */}
         <Container
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: "1fr 1fr 1fr",
             gap: spacing.sm,
           }}
         >
@@ -405,6 +396,23 @@ export const ConnectedWalletDetails: React.FC<{
           >
             <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
             {locale.receive}{" "}
+          </Button>
+
+          <Button
+            variant="outline"
+            style={{
+              fontSize: fontSize.sm,
+              display: "flex",
+              gap: spacing.xs,
+              alignItems: "center",
+              padding: spacing.sm,
+            }}
+            onClick={() => {
+              setScreen("swap");
+            }}
+          >
+            <UpdateIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            {locale.swap}{" "}
           </Button>
         </Container>
       </Container>
@@ -587,7 +595,10 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "export") {
+  }
+
+  // export local wallet
+  else if (screen === "export") {
     content = (
       <ExportLocalWallet
         onExport={() => {
@@ -598,7 +609,10 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "send") {
+  }
+
+  // send funds
+  else if (screen === "send") {
     content = (
       <SendFunds
         supportedTokens={props.supportedTokens}
@@ -607,13 +621,26 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "receive") {
+  }
+
+  // receive funds
+  else if (screen === "receive") {
     content = (
       <ReceiveFunds
         iconUrl={avatarOrWalletIconUrl}
         onBack={() => {
           setScreen("main");
         }}
+      />
+    );
+  }
+
+  // swap tokens
+  else if (screen === "swap") {
+    content = (
+      <SwapScreen
+        onBack={() => setScreen("main")}
+        supportedTokens={props.supportedTokens}
       />
     );
   }

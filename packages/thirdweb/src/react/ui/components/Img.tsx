@@ -13,6 +13,7 @@ export const Img: React.FC<{
   loading?: "eager" | "lazy";
   className?: string;
   style?: React.CSSProperties;
+  fallbackImage?: string;
 }> = (props) => {
   const { client } = useThirdwebProviderProps();
 
@@ -27,11 +28,14 @@ export const Img: React.FC<{
     }
   };
 
+  const src = getSrc();
+
   return (
     <img
+      key={src}
       width={props.width}
       height={props.height}
-      src={getSrc()}
+      src={src}
       alt={props.alt || ""}
       loading={props.loading}
       decoding="async"
@@ -43,6 +47,14 @@ export const Img: React.FC<{
       }}
       draggable={false}
       className={props.className}
+      onError={(e) => {
+        if (
+          props.fallbackImage &&
+          e.currentTarget.src !== props.fallbackImage
+        ) {
+          e.currentTarget.src = props.fallbackImage;
+        }
+      }}
     />
   );
 };

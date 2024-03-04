@@ -23,8 +23,8 @@ export type SwapStatus = {
   transactionType: string;
   source: TransactionDetails;
   destination?: TransactionDetails;
-  status: string;
-  subStatus: string;
+  status: number;
+  subStatus: number;
   fromAddress: string;
   toAddress: string;
   failureMessage?: string;

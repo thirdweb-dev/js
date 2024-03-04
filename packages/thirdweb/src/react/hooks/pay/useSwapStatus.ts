@@ -33,11 +33,7 @@ export function useSwapStatus(swapStatusParams: SwapStatusParams | undefined) {
     DEFAULT_POLL_INTERVAL,
   );
 
-  const {
-    data: swapStatus,
-    isFetching,
-    error,
-  } = useQuery<SwapStatus, Error>({
+  return useQuery<SwapStatus, Error>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "swapStatus",
@@ -49,17 +45,22 @@ export function useSwapStatus(swapStatusParams: SwapStatusParams | undefined) {
         throw new Error("Missing swap status params");
       }
 
-      const swapStatus_ = await getSwapStatus(swapStatusParams);
-      if (swapStatus_.status === "DONE") {
+      try {
+        const swapStatus_ = await getSwapStatus(swapStatusParams);
+        if (swapStatus_.status === 2) {
+          setRefetchInterval(0);
+        }
+        return swapStatus_;
+      } catch (error) {
+        debugger;
         setRefetchInterval(0);
+        console.error({ error });
+        throw error;
       }
-      return swapStatus_;
     },
     enabled: !!swapStatusParams,
     refetchInterval: refetchInterval,
     refetchIntervalInBackground: true,
     retry: true,
   });
-
-  return { swapStatus, isFetching, error };
 }

@@ -208,3 +208,5 @@ export {
   type Address,
   type AddressInput,
 } from "../utils/address.js";
+
+export { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "../constants/addresses.js";

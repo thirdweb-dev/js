@@ -65,6 +65,9 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
     "&:focus": {
       boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
     },
+    "&[data-focus='false']:focus": {
+      boxShadow: "none",
+    },
     "&:not([type='password'])": {
       overflow: "hidden",
       textOverflow: "ellipsis",

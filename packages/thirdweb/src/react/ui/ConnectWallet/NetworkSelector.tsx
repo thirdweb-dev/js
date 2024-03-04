@@ -624,7 +624,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
               <ChainButton
                 chain={chain}
                 confirming={confirming}
-                handleSwitch={handleSwitch}
+                onClick={() => handleSwitch(chain)}
                 switchingFailed={switchingFailed}
               />
             )}
@@ -635,15 +635,15 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   );
 } as React.FC<NetworkListProps>);
 
-const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
+export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   chain: Chain;
-  handleSwitch: (chain: Chain) => void;
+  onClick: () => void;
   confirming: boolean;
   switchingFailed: boolean;
 }) {
   const twLocale = useTWLocale();
   const locale = twLocale.connectWallet.networkSelector;
-  const { chain, handleSwitch, confirming, switchingFailed } = props;
+  const { chain, confirming, switchingFailed } = props;
   const activeChain = useActiveWalletChain();
   const apiChainQuery = useChainQuery(chain);
 
@@ -655,9 +655,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   return (
     <NetworkButton
       data-active={activeChain?.id === chain.id}
-      onClick={() => {
-        handleSwitch(chain);
-      }}
+      onClick={props.onClick}
     >
       {apiChainQuery.data ? (
         <ChainIcon

@@ -6,28 +6,36 @@ import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
 import { getContract } from "../../../contract/contract.js";
 import { defineChain } from "../../../chains/utils.js";
 
+// Ethereum, Optimism, Polygon, Arbitrum
+export const swapSupportedChains = [1, 10, 137, 42161] as const;
+
+export type SwapSupportChainId = (typeof swapSupportedChains)[number];
+
 export type SwapRouteParams = {
   client: ThirdwebClient;
+  // from
   fromAddress: string;
-  fromChainId: number;
+  fromChainId: SwapSupportChainId;
   fromTokenAddress: string;
   fromAmountWei?: string;
+  // to
   toAddress?: string;
-  toChainId: number;
+  toChainId: SwapSupportChainId;
   toTokenAddress: string;
   toAmountWei?: string;
+  // others
   maxSlippageBPS?: number;
 };
 
 type Approval = {
-  chainId: number;
+  chainId: SwapSupportChainId;
   tokenAddress: string;
   spenderAddress: string;
   amountWei: string;
 };
 
 export type SwapToken = {
-  chainId: number;
+  chainId: SwapSupportChainId;
   tokenAddress: string;
   decimals: number;
   priceUSDCents: number;
@@ -45,7 +53,7 @@ type TransactionRequest = {
   to: string;
   value: string;
   from: string;
-  chainId: number;
+  chainId: SwapSupportChainId;
   gasPrice: string;
   gasLimit: string;
 };
@@ -129,7 +137,32 @@ export async function getSwapRoute(
   params: SwapRouteParams,
 ): Promise<SwapRoute> {
   try {
-    const queryString = new URLSearchParams(params as any).toString();
+    const urlParamsObj: Record<string, string> = {
+      client: JSON.stringify(params.client),
+      fromAddress: params.fromAddress,
+      fromChainId: params.fromChainId.toString(),
+      fromTokenAddress: params.fromTokenAddress,
+      toChainId: params.toChainId.toString(),
+      toTokenAddress: params.toTokenAddress,
+    };
+
+    if (params.fromAmountWei) {
+      urlParamsObj.fromAmountWei = params.fromAmountWei;
+    }
+
+    if (params.toAmountWei) {
+      urlParamsObj.toAmountWei = params.toAmountWei;
+    }
+
+    if (params.maxSlippageBPS) {
+      urlParamsObj.maxSlippageBPS = params.maxSlippageBPS.toString();
+    }
+
+    if (params.toAddress) {
+      urlParamsObj.toAddress = params.toAddress;
+    }
+
+    const queryString = new URLSearchParams(urlParamsObj).toString();
     const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);

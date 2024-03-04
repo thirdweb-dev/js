@@ -45,6 +45,7 @@ export type ThirdwebLocale = {
     or: string;
     personalWallet: string;
     receive: string;
+    swap: string;
     receiveFundsScreen: { instruction: string; title: string };
     recommended: string;
     requestTestnetFunds: string;
@@ -64,6 +65,9 @@ export type ThirdwebLocale = {
       token: string;
       transactionFailed: string;
       transactionRejected: string;
+    };
+    swapScreen: {
+      title: string;
     };
     signIn: string;
     signatureScreen: {
