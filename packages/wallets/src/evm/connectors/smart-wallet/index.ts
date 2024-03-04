@@ -183,7 +183,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     transaction: Transaction,
     options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
-    await this.approveIfNeeded();
     const signer = await this.getSigner();
     return signer.sendTransaction(
       {
@@ -218,7 +217,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    await this.approveIfNeeded();
     const signer = await this.getSigner();
     const { tx, batchData } = await this.prepareBatchTx(transactions);
     return await signer.sendTransaction(
@@ -259,7 +257,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    await this.approveIfNeeded();
     const signer = await this.getSigner();
     return signer.sendTransaction(transaction, options);
   }
@@ -282,7 +279,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    await this.approveIfNeeded();
     const signer = await this.getSigner();
     const batch = await this.prepareBatchRaw(transactions);
     return signer.sendTransaction(
@@ -447,30 +443,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const isDeployed = await this.isDeployed();
     if (!isDeployed) {
       await this.deploy(options);
-    }
-  }
-
-  async isApproved(): Promise<boolean> {
-    if (!this.accountApi) {
-      throw new Error("Personal wallet not connected");
-    }
-    return await this.accountApi.isAccountApproved();
-  }
-
-  async approveIfNeeded(): Promise<void> {
-    const isApproved = await this.isApproved();
-    if (!isApproved && !this.approving) {
-      this.approving = true;
-      console.log("Approving Smart Wallet ERC20 for ERC20Paymaster Spending");
-      try {
-        await this.accountApi?.approve();
-        this.approving = false;
-      } catch (e) {
-        this.approving = false;
-        throw e;
-      }
-    } else {
-      console.log("Smart Wallet already approved for ERC20Paymaster Spending");
     }
   }
 

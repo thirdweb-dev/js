@@ -164,7 +164,7 @@ export class AccountAPI extends BaseAccountAPI {
     return allowance.toNumber().toString() !== "0";
   }
 
-  async approve() {
+  async approveIfNeeded(): Promise<void> {
     if (await this.isAccountApproved()) {
       return;
     }
@@ -183,9 +183,6 @@ export class AccountAPI extends BaseAccountAPI {
     ]);
 
     const receipt = await tx.execute();
-
     console.log("Approved ERC20 token for paymaster", receipt);
-
-    return receipt;
   }
 }

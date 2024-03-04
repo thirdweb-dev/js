@@ -43,6 +43,7 @@ export class ERC4337EthersSigner extends Signer {
     transaction: utils.Deferrable<providers.TransactionRequest>,
     options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
+    await this.smartAccountAPI.approveIfNeeded();
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 

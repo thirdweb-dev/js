@@ -119,6 +119,8 @@ export abstract class BaseAccountAPI {
 
   abstract isAccountApproved(): Promise<boolean>;
 
+  abstract approveIfNeeded(): Promise<void>;
+
   /**
    * return initCode value to into the UserOp.
    * (either deployment code, or empty hex if contract already deployed)
