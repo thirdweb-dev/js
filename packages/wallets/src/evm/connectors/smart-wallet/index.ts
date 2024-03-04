@@ -35,6 +35,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
   chainId?: number;
+  approving?: boolean;
 
   constructor(config: SmartWalletConfig) {
     super();
@@ -75,7 +76,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
       secretKey: config.secretKey,
+      erc20PaymasterAddress: config.erc20PaymasterAddress,
+      erc20TokenAddress: config.erc20TokenAddress,
     };
+    this.approving = false;
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = create4337Provider(
@@ -179,6 +183,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     transaction: Transaction,
     options?: TransactionOptions,
   ): Promise<providers.TransactionResponse> {
+    await this.approveIfNeeded();
     const signer = await this.getSigner();
     return signer.sendTransaction(
       {
@@ -442,6 +447,30 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     }
   }
 
+  async isApproved(): Promise<boolean> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    return await this.accountApi.isAccountApproved();
+  }
+
+  async approveIfNeeded(): Promise<void> {
+    const isApproved = await this.isApproved();
+    if (!isApproved && !this.approving) {
+      this.approving = true;
+      console.log("Approving Smart Wallet ERC20 for ERC20Paymaster Spending");
+      try {
+        await this.accountApi?.approve();
+        this.approving = false;
+      } catch (e) {
+        this.approving = false;
+        throw e;
+      }
+    } else {
+      console.log("Smart Wallet already approved for ERC20Paymaster Spending");
+    }
+  }
+
   //// PERMISSIONS
 
   async grantPermissions(
@@ -581,6 +610,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       this.getProvider(),
       this.isDeployed(),
     ]);
+
     if (!isDeployed) {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }

@@ -43,6 +43,8 @@ export abstract class BaseAccountAPI {
   paymasterAPI: PaymasterAPI;
   accountAddress?: string;
   gasless?: boolean;
+  erc20PaymasterAddress?: string;
+  erc20TokenAddress?: string;
 
   /**
    * base constructor.
@@ -54,6 +56,8 @@ export abstract class BaseAccountAPI {
     this.accountAddress = params.accountAddress;
     this.paymasterAPI = params.paymasterAPI;
     this.gasless = params.gasless;
+    this.erc20PaymasterAddress = params.erc20PaymasterAddress;
+    this.erc20TokenAddress = params.erc20TokenAddress;
 
     // factory "connect" define the contract address. the contract "connect" defines the "from" address.
     this.entryPointView = EntryPoint__factory.connect(
@@ -112,6 +116,8 @@ export abstract class BaseAccountAPI {
     }
     return this.isPhantom;
   }
+
+  abstract isAccountApproved(): Promise<boolean>;
 
   /**
    * return initCode value to into the UserOp.
@@ -230,7 +236,33 @@ export abstract class BaseAccountAPI {
     // paymaster data + maybe used for estimation as well
     const gasless =
       options?.gasless !== undefined ? options.gasless : this.gasless;
-    if (gasless) {
+    const useErc20Paymaster =
+      this.erc20PaymasterAddress &&
+      this.erc20TokenAddress &&
+      (await this.isAccountApproved());
+    console.log("sponsorship params", {
+      gasless,
+      useErc20Paymaster,
+      erc20PaymasterAddress: this.erc20PaymasterAddress,
+      erc20TokenAddress: this.erc20TokenAddress,
+      isApproved: await this.isAccountApproved(),
+    });
+    if (useErc20Paymaster) {
+      partialOp.paymasterAndData = this.erc20PaymasterAddress as string;
+      let estimates;
+      try {
+        estimates = await httpRpcClient.estimateUserOpGas(partialOp);
+      } catch (error: any) {
+        throw this.unwrapBundlerError(error);
+      }
+      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+      partialOp.verificationGasLimit = BigNumber.from(
+        estimates.verificationGasLimit,
+      );
+      partialOp.preVerificationGas = BigNumber.from(
+        estimates.preVerificationGas,
+      );
+    } else if (gasless) {
       const paymasterResult =
         await this.paymasterAPI.getPaymasterAndData(partialOp);
       const paymasterAndData = paymasterResult.paymasterAndData;

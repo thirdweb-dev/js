@@ -244,6 +244,9 @@ class ThirdwebBridge implements TWBridge {
             paymasterUrl: sdkOptions.smartWalletConfig?.paymasterUrl,
             // paymasterAPI: sdkOptions.smartWalletConfig?.paymasterAPI,
             entryPointAddress: sdkOptions.smartWalletConfig?.entryPointAddress,
+            erc20PaymasterAddress:
+              sdkOptions.smartWalletConfig?.erc20PaymasterAddress,
+            erc20TokenAddress: sdkOptions.smartWalletConfig?.erc20TokenAddress,
           };
           walletInstance = new SmartWallet(config);
           break;

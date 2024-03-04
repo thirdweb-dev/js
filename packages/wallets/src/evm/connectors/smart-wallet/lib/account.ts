@@ -143,4 +143,49 @@ export class AccountAPI extends BaseAccountAPI {
   async isAcountDeployed() {
     return !(await this.checkAccountPhantom());
   }
+
+  async isAccountApproved() {
+    if (!this.params.erc20PaymasterAddress || !this.params.erc20TokenAddress) {
+      return true;
+    }
+
+    const swAddress = await this.getCounterFactualAddress();
+    const erc20Token = await this.sdk.getContract(
+      this.params.erc20TokenAddress,
+    );
+
+    const allowance = await erc20Token.call("allowance", [
+      swAddress,
+      this.params.erc20PaymasterAddress,
+    ]);
+
+    console.log("Allowance for paymaster", allowance.toNumber().toString());
+
+    return allowance.toNumber().toString() !== "0";
+  }
+
+  async approve() {
+    if (await this.isAccountApproved()) {
+      return;
+    }
+
+    console.log("Approving ERC20 token for paymaster...");
+
+    const erc20Token = await this.sdk.getContract(
+      this.params.erc20TokenAddress as string,
+    );
+
+    const amountToApprove = 2 ** 96 - 1;
+
+    const tx = erc20Token.prepare("approve", [
+      this.params.erc20PaymasterAddress,
+      amountToApprove,
+    ]);
+
+    const receipt = await tx.execute();
+
+    console.log("Approved ERC20 token for paymaster", receipt);
+
+    return receipt;
+  }
 }
