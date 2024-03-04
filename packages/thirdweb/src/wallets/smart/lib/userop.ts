@@ -78,7 +78,6 @@ export async function createUnsignedUserOp(args: {
       userOp: partialOp,
       options,
     });
-    console.log("PM", paymasterResult);
     const paymasterAndData = paymasterResult.paymasterAndData;
     if (paymasterAndData && paymasterAndData !== "0x") {
       partialOp.paymasterAndData = paymasterAndData as Hex;

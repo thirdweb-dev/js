@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/crypto",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/thirdweb-dev-crypto.cjs.js",
   "module": "dist/thirdweb-dev-crypto.esm.js",
   "exports": {

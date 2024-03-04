@@ -8,7 +8,7 @@ export default {
   "name": "Swan Saturn Testnet",
   "nativeCurrency": {
     "name": "SWANETH",
-    "symbol": "SWAN",
+    "symbol": "sETH",
     "decimals": 18
   },
   "networkId": 2024,

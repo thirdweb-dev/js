@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FRAX",
   "chainId": 252,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "fraxscan",
+      "url": "https://fraxscan.com",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -12,7 +18,7 @@ export default {
     "format": "PNG"
   },
   "infoURL": "https://mainnet.frax.com",
-  "name": "Fraxtal Mainnet",
+  "name": "Fraxtal",
   "nativeCurrency": {
     "name": "Frax Ether",
     "symbol": "frxETH",
@@ -20,9 +26,12 @@ export default {
   },
   "networkId": 252,
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://252.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.frax.com"
+  ],
   "shortName": "fraxtal",
   "slug": "fraxtal",
-  "status": "incubating",
+  "status": "active",
   "testnet": false
 } as const satisfies Chain;

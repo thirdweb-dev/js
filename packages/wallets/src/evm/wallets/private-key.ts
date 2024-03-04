@@ -17,7 +17,7 @@ import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk";
  * @wallet
  */
 export class PrivateKeyWallet extends AbstractWallet {
-  #signer: ethers.Signer;
+  private _signer: ethers.Signer;
 
   /**
    * Create instance of `PrivateKeyWallet`
@@ -34,7 +34,7 @@ export class PrivateKeyWallet extends AbstractWallet {
   constructor(privateKey: string, chain?: ChainOrRpcUrl, secretKey?: string) {
     super();
 
-    this.#signer = new ethers.Wallet(
+    this._signer = new ethers.Wallet(
       privateKey,
       chain
         ? getChainProvider(chain, {
@@ -48,6 +48,6 @@ export class PrivateKeyWallet extends AbstractWallet {
    * Get the [ethers.js signer](https://docs.ethers.io/v5/api/signer/) object used by the wallet
    */
   async getSigner(): Promise<ethers.Signer> {
-    return this.#signer;
+    return this._signer;
   }
 }

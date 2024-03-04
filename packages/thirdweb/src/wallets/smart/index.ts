@@ -259,11 +259,10 @@ async function smartAccount(
       });
     },
     async signMessage({ message }) {
-      // TODO optionally deploy on sign
+      // TODO EIP712 domain separator
       return options.personalAccount.signMessage({ message });
     },
     async signTypedData(typedData) {
-      // TODO optionally deploy on sign
       return options.personalAccount.signTypedData(typedData);
     },
   };

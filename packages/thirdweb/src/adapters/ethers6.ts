@@ -10,7 +10,7 @@ import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
 
 type Ethers6 = typeof ethers6;
 
@@ -45,7 +45,7 @@ function assertEthers6(
 
 export const ethers6Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
-  assertEthers6(ethers);
+
   return {
     provider: {
       /**
@@ -59,8 +59,10 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const provider = ethers6Adapter.provider.toEthers(client, chainId);
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain) =>
-        toEthersProvider(ethers, client, chain),
+      toEthers: (client: ThirdwebClient, chain: Chain) => {
+        assertEthers6(ethers);
+        return toEthersProvider(ethers, client, chain);
+      },
     },
     contract: {
       /**
@@ -73,8 +75,10 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const ethersContract = await ethers6Adapter.contract.toEthers(twContract);
        * ```
        */
-      toEthers: (twContract: ThirdwebContract) =>
-        toEthersContract(ethers, twContract),
+      toEthers: (twContract: ThirdwebContract) => {
+        assertEthers6(ethers);
+        return toEthersContract(ethers, twContract);
+      },
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
        * @param options - The options for creating the ThirdwebContract instance.
@@ -90,8 +94,10 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * });
        * ```
        */
-      fromEthers: (options: FromEthersContractOptions) =>
-        fromEthersContract(options),
+      fromEthers: (options: FromEthersContractOptions) => {
+        assertEthers6(ethers);
+        return fromEthersContract(options);
+      },
     },
     signer: {
       /**
@@ -104,7 +110,10 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const wallet = await ethers6Adapter.signer.fromEthersSigner(signer);
        * ```
        */
-      fromEthers: (signer: ethers6.Signer) => fromEthersSigner(signer),
+      fromEthers: (signer: ethers6.Signer) => {
+        assertEthers6(ethers);
+        return fromEthersSigner(signer);
+      },
 
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
@@ -117,8 +126,10 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
        * ```
        */
-      toEthers: (client: ThirdwebClient, wallet: Wallet) =>
-        toEthersSigner(ethers, client, wallet),
+      toEthers: (client: ThirdwebClient, wallet: Wallet) => {
+        assertEthers6(ethers);
+        return toEthersSigner(ethers, client, wallet);
+      },
     },
   };
 })();
@@ -253,7 +264,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
  * @returns A promise that resolves to an ethers.js signer.
  * @internal
  */
-async function toEthersSigner(
+export async function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
   wallet: Wallet,
@@ -270,19 +281,23 @@ async function toEthersSigner(
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     private address: string;
     override provider: ethers6.ethers.JsonRpcProvider;
+    // eslint-disable-next-line jsdoc/require-jsdoc
     constructor(provider: ethers6.JsonRpcProvider, address: string) {
       super(provider);
       this.address = address;
       this.provider = provider;
     }
 
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override async getAddress(): Promise<string> {
       // needs to be a promise because ethers6 returns a promise
       return this.address;
     }
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override connect(): ethers6.ethers.Signer {
       return this;
     }
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override async sendTransaction(
       tx: ethers6.ethers.TransactionRequest & { chainId: number },
     ): Promise<ethers6.ethers.TransactionResponse> {
@@ -309,6 +324,7 @@ async function toEthersSigner(
 
       return new ethers.TransactionResponse(txResponseParams, this.provider);
     }
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override async signTransaction(
       tx: ethers6.ethers.TransactionRequest,
     ): Promise<string> {
@@ -322,6 +338,7 @@ async function toEthersSigner(
 
       return account.signTransaction(viemTx);
     }
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override signMessage(message: string | Uint8Array): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
@@ -331,6 +348,7 @@ async function toEthersSigner(
           typeof message === "string" ? message : uint8ArrayToHex(message),
       });
     }
+    // eslint-disable-next-line jsdoc/require-jsdoc
     override signTypedData(
       domain: ethers6.ethers.TypedDataDomain,
       types: Record<string, ethers6.ethers.TypedDataField[]>,
@@ -339,12 +357,24 @@ async function toEthersSigner(
       if (!account) {
         throw new Error("Account not found");
       }
-      return account.signTypedData({
-        // @ts-expect-error - types don't fully align here but works fine?
-        domain: domain ?? undefined,
-        types: types ?? undefined,
+      const typedDataEncoder = new ethers.TypedDataEncoder(types);
+
+      const typedData = {
+        primaryType: typedDataEncoder.primaryType,
+        domain: {
+          chainId: domain.chainId
+            ? bigNumberIshToNumber(domain.chainId)
+            : undefined,
+          name: domain.name ?? undefined,
+          salt: domain.salt ? toHex(domain.salt) : undefined,
+          verifyingContract: domain.verifyingContract ?? undefined,
+          version: domain.version ?? undefined,
+        },
+        types,
         message: value,
-      });
+      };
+
+      return account.signTypedData(typedData);
     }
   }
   return new ThirdwebAdapterSigner(
@@ -473,4 +503,8 @@ function bigNumberIshToBigint(value: ethers6.BigNumberish): bigint {
     return value;
   }
   return BigInt(value);
+}
+
+function bigNumberIshToNumber(value: ethers6.BigNumberish): number {
+  return Number(bigNumberIshToBigint(value));
 }

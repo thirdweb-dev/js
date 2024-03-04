@@ -9,7 +9,6 @@ import {
   useDisconnect,
   useThirdwebAuthContext,
   useUser,
-  useWallet,
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
@@ -241,40 +240,7 @@ export const ConnectModal = () => {
     });
   }, [initialScreen, setIsWalletModalOpen, setScreen]);
 
-  const [prevConnectionStatus, setPrevConnectionStatus] =
-    useState(connectionStatus);
-
-  useEffect(() => {
-    setPrevConnectionStatus(connectionStatus);
-  }, [connectionStatus]);
-
   const disconnect = useDisconnect();
-
-  const wallet = useWallet();
-  const isWrapperConnected = !!wallet?.getPersonalWallet();
-
-  const isWrapperScreen =
-    typeof screen !== "string" && !!screen.personalWallets;
-
-  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
-  useEffect(() => {
-    if (
-      !isWrapperConnected &&
-      isWrapperScreen &&
-      !isWalletModalOpen &&
-      connectionStatus === "connected" &&
-      prevConnectionStatus === "connecting"
-    ) {
-      setIsWalletModalOpen(true);
-    }
-  }, [
-    isWalletModalOpen,
-    connectionStatus,
-    setIsWalletModalOpen,
-    isWrapperScreen,
-    isWrapperConnected,
-    prevConnectionStatus,
-  ]);
 
   useEffect(() => {
     if (!isWalletModalOpen) {

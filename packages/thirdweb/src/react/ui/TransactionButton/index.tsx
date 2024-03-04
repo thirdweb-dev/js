@@ -17,7 +17,9 @@ export type TransactionButtonProps<TWaitForReceipt extends boolean> = {
   /**
    * The a function returning a prepared transaction of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
-  transaction: () => PreparedTransaction | Promise<PreparedTransaction>;
+  transaction: () =>
+    | PreparedTransaction<any>
+    | Promise<PreparedTransaction<any>>;
   /**
    * Whether to wait for the transaction receipt after sending the transaction
    */

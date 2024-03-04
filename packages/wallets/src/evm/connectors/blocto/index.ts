@@ -30,11 +30,11 @@ export class BloctoConnector extends WagmiConnector<
   readonly name = "Blocto";
   readonly ready = true;
 
-  #provider?: BloctoProvider;
+  private _provider?: BloctoProvider;
 
-  #onAccountsChangedBind: typeof this.onAccountsChanged;
-  #onChainChangedBind: typeof this.onChainChanged;
-  #onDisconnectBind: typeof this.onDisconnect;
+  private _onAccountsChangedBind: typeof this.onAccountsChanged;
+  private _onChainChangedBind: typeof this.onChainChanged;
+  private _onDisconnectBind: typeof this.onDisconnect;
 
   constructor({
     chains,
@@ -48,9 +48,9 @@ export class BloctoConnector extends WagmiConnector<
       options,
     });
 
-    this.#onAccountsChangedBind = this.onAccountsChanged.bind(this);
-    this.#onChainChangedBind = this.onChainChanged.bind(this);
-    this.#onDisconnectBind = this.onDisconnect.bind(this);
+    this._onAccountsChangedBind = this.onAccountsChanged.bind(this);
+    this._onChainChangedBind = this.onChainChanged.bind(this);
+    this._onDisconnectBind = this.onDisconnect.bind(this);
   }
 
   async connect(config?: {
@@ -75,8 +75,8 @@ export class BloctoConnector extends WagmiConnector<
         provider,
       };
     } catch (error: unknown) {
-      this.#handleConnectReset();
-      if (this.#isUserRejectedRequestError(error)) {
+      this._handleConnectReset();
+      if (this._isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error as Error);
       }
       throw error;
@@ -87,7 +87,7 @@ export class BloctoConnector extends WagmiConnector<
     const provider = await this.getProvider();
     await provider.request({ method: "wallet_disconnect" });
     this.removeListeners();
-    this.#handleConnectReset();
+    this._handleConnectReset();
   }
 
   async getAccount(): Promise<string> {
@@ -112,22 +112,22 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   getProvider({ chainId }: { chainId?: number } = {}): Promise<BloctoProvider> {
-    if (!this.#provider) {
+    if (!this._provider) {
       const _chainId =
         chainId ?? this.options.chainId ?? this.chains[0]?.chainId ?? 1;
       const _rpc = this.chains.find((x) => x.chainId === _chainId)?.rpc[0];
 
-      this.#provider = new BloctoSDK({
+      this._provider = new BloctoSDK({
         ethereum: { chainId: _chainId, rpc: _rpc },
         appId: this.options.appId,
       })?.ethereum;
     }
 
-    if (!this.#provider) {
+    if (!this._provider) {
       throw new ConnectorNotFoundError();
     }
 
-    return Promise.resolve(this.#provider);
+    return Promise.resolve(this._provider);
   }
 
   async getSigner({
@@ -145,7 +145,7 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   async isAuthorized(): Promise<boolean> {
-    return !!this.#provider?._blocto?.sessionKey ?? false;
+    return !!this._provider?._blocto?.sessionKey ?? false;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
@@ -181,7 +181,7 @@ export class BloctoConnector extends WagmiConnector<
 
       return chain;
     } catch (error: unknown) {
-      if (this.#isUserRejectedRequestError(error)) {
+      if (this._isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error as Error);
       }
       throw new SwitchChainError(error as Error);
@@ -206,24 +206,24 @@ export class BloctoConnector extends WagmiConnector<
   async setupListeners(): Promise<void> {
     const provider = await this.getProvider();
 
-    provider.on("accountsChanged", this.#onAccountsChangedBind);
-    provider.on("chainChanged", this.#onChainChangedBind);
-    provider.on("disconnect", this.#onDisconnectBind);
+    provider.on("accountsChanged", this._onAccountsChangedBind);
+    provider.on("chainChanged", this._onChainChangedBind);
+    provider.on("disconnect", this._onDisconnectBind);
   }
 
   async removeListeners(): Promise<void> {
     const provider = await this.getProvider();
 
-    provider.off("accountsChanged", this.#onAccountsChangedBind);
-    provider.off("chainChanged", this.#onChainChangedBind);
-    provider.off("disconnect", this.#onDisconnectBind);
+    provider.off("accountsChanged", this._onAccountsChangedBind);
+    provider.off("chainChanged", this._onChainChangedBind);
+    provider.off("disconnect", this._onDisconnectBind);
   }
 
-  #isUserRejectedRequestError(error: unknown) {
+  private _isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
   }
 
-  #handleConnectReset() {
-    this.#provider = undefined;
+  private _handleConnectReset() {
+    this._provider = undefined;
   }
 }
