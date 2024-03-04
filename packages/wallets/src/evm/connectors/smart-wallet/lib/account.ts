@@ -175,7 +175,7 @@ export class AccountAPI extends BaseAccountAPI {
       this.params.erc20TokenAddress as string,
     );
 
-    const amountToApprove = BigNumber.from(2 ** 96 - 1);
+    const amountToApprove = BigNumber.from(2).pow(96).sub(1);
 
     const tx = erc20Token.prepare("approve", [
       this.params.erc20PaymasterAddress,
