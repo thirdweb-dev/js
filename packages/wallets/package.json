@@ -537,7 +537,7 @@
     "eventemitter3": "^5.0.1",
     "key-encoder": "2.0.3",
     "magic-sdk": "^13.6.2",
-    "web3-core": "1.5.2"
+    "web3-core": "4.3.2"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
