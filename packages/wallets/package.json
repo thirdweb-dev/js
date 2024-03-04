@@ -511,7 +511,7 @@
     "@google-cloud/kms": "3.0.1",
     "@magic-ext/connect": "^6.7.2",
     "@magic-ext/oauth": "^7.6.2",
-    "@magic-sdk/provider": "^13.6.2",
+    "@magic-sdk/provider": "^25.0.0",
     "@metamask/eth-sig-util": "^4.0.0",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@paperxyz/sdk-common-utilities": "^0.1.0",
