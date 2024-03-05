@@ -40,7 +40,6 @@ export function SwapInput(props: {
   chain: Chain;
   token?: TokenInfo | NativeToken;
   estimatedValue?: number;
-  checkBalance: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -56,11 +55,6 @@ export function SwapInput(props: {
 
   const tokenIcon = token?.icon || chainQuery.data?.icon?.url;
   const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
-
-  const isNotEnoughBalance =
-    props.checkBalance &&
-    balanceQuery.data &&
-    Number(balanceQuery.data.displayValue) < Number(props.value);
 
   return (
     <SwapInputContainer>
@@ -138,7 +132,7 @@ export function SwapInput(props: {
 
               <Input
                 type="number"
-                inputMode="numeric"
+                inputMode="decimal"
                 placeholder={props.valueIsLoading ? "" : "0"}
                 variant="transparent"
                 data-focus="false"
@@ -219,21 +213,15 @@ export function SwapInput(props: {
               justifyContent: "space-between",
             }}
           >
-            {isNotEnoughBalance ? (
-              <Text color="danger" size="xs">
-                Exceeds balance
-              </Text>
-            ) : (
-              <Text size="xs" color="secondaryText">
-                {props.estimatedValue ? (
-                  `$${props.estimatedValue / 100}`
-                ) : props.valueIsLoading ? (
-                  <Skeleton width="70px" height={fontSize.xs} />
-                ) : (
-                  "$0.0"
-                )}
-              </Text>
-            )}
+            <Text size="xs" color="secondaryText">
+              {props.estimatedValue ? (
+                `$${props.estimatedValue / 100}`
+              ) : props.valueIsLoading ? (
+                <Skeleton width="70px" height={fontSize.xs} />
+              ) : (
+                "$0.0"
+              )}
+            </Text>
 
             <Container flex="row" gap="xs" color="secondaryText">
               <div

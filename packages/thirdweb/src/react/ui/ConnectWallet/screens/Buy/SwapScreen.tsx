@@ -40,7 +40,13 @@ import { Spinner } from "../../../components/Spinner.js";
 import { ArrowTopBottom } from "../../icons/ArrowTopBottom.js";
 import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
 import { SwapInput } from "./swap/SwapInput.js";
-import { NATIVE_TOKEN, type NativeToken } from "../nativeToken.js";
+import {
+  NATIVE_TOKEN,
+  isNativeToken,
+  type NativeToken,
+} from "../nativeToken.js";
+import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
+import { WalletIcon } from "../../icons/WalletIcon.js";
 
 // TODO: change ZERO_ADDRESS to NATIVE_TOKEN_ADDRESS when the change is done in backend
 
@@ -87,6 +93,7 @@ export function SwapScreenContent(props: {
   const locale = useTWLocale();
   const screenLocale = locale.connectWallet.swapScreen;
   const sendSwapMutation = useSendSwap();
+  const [sentSwap, setSentSwap] = useState<SwapStatusParams | undefined>();
 
   // screens
   const [screen, setScreen] = useState<
@@ -161,11 +168,14 @@ export function SwapScreenContent(props: {
 
       return getSwapRoute(convertedParams);
     },
-    retry: false,
     enabled: !!swapParams,
   });
 
-  const [sentSwap, setSentSwap] = useState<SwapStatusParams | undefined>();
+  const fromTokenBalanceQuery = useWalletBalance({
+    account: account,
+    chain: fromChain,
+    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
+  });
 
   if (sentSwap) {
     return (
@@ -274,6 +284,11 @@ export function SwapScreenContent(props: {
     ).toString();
   }
 
+  const isNotEnoughBalance =
+    !!sourceTokenAmount &&
+    !!fromTokenBalanceQuery.data &&
+    Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
+
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -296,7 +311,6 @@ export function SwapScreenContent(props: {
             swapQuoteQuery.data?.swapDetails.estimated.fromAmountUSDCents
           }
           onChainClick={() => setScreen("select-from-chain")}
-          checkBalance={true}
         />
 
         <ToggleButton
@@ -330,7 +344,6 @@ export function SwapScreenContent(props: {
             swapQuoteQuery.data?.swapDetails.estimated.toAmountMinUSDCents
           }
           onChainClick={() => setScreen("select-to-chain")}
-          checkBalance={false}
         />
 
         {swapQuoteQuery.data && (
@@ -357,12 +370,27 @@ export function SwapScreenContent(props: {
           </div>
         )}
 
+        {isNotEnoughBalance && (
+          <div>
+            <Spacer y="lg" />
+            <Container flex="row" gap="xs" center="y" color="danger">
+              <WalletIcon size={iconSize.sm} />
+              <Text color="danger" size="sm">
+                Exceeds balance
+              </Text>
+            </Container>
+          </div>
+        )}
+
         <Spacer y="lg" />
 
         <Button
           variant="accent"
           fullWidth
-          disabled={!swapQuoteQuery.isFetching && !swapQuoteQuery.data}
+          disabled={
+            (!swapQuoteQuery.isFetching && !swapQuoteQuery.data) ||
+            isNotEnoughBalance
+          }
           onClick={async () => {
             if (swapQuoteQuery.data) {
               const res = await sendSwapMutation.mutateAsync(
