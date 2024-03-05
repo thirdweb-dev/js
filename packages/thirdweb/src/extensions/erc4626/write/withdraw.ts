@@ -27,7 +27,7 @@ export type WithdrawParams = {
  * });
  * ```
  */
-export function deposit(options: BaseTransactionOptions<WithdrawParams>) {
+export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
   return prepareContractCall({
     ...options,
     method: [
