@@ -29,7 +29,7 @@ export type MaxDepositParams = {
 export async function maxDeposit(
   options: BaseTransactionOptions<MaxDepositParams>,
 ): Promise<bigint> {
-  const max = await readContract({
+  const maxAssets = await readContract({
     ...options,
     method: $run$(() =>
       prepareMethod("function maxDeposit(address) returns (uint256)"),
@@ -37,5 +37,5 @@ export async function maxDeposit(
     params: [options.receiver],
   });
 
-  return max;
+  return maxAssets;
 }

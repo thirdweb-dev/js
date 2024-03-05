@@ -12,7 +12,7 @@ export type MaxDepositParams = {
 /**
  * Returns the maximum amount of the underlying token that can be deposited into the Vault for the receiver, through a deposit call.
  * @param options - The transaction options including the receiver to check.
- * @returns Maximum number of underlying tokens that can be deposited by the provided address.
+ * @returns Maximum number of underlying tokens that can be sent to the provided address via a deposit.
  * @extension ERC4626
  * @example
  * ```ts
@@ -24,7 +24,7 @@ export type MaxDepositParams = {
 export async function maxDeposit(
   options: BaseTransactionOptions<MaxDepositParams>,
 ): Promise<bigint> {
-  const max = await readContract({
+  const maxAssets = await readContract({
     ...options,
     method: [
       "0x402d267d",
@@ -42,5 +42,5 @@ export async function maxDeposit(
     params: [options.receiver],
   });
 
-  return max;
+  return maxAssets;
 }
