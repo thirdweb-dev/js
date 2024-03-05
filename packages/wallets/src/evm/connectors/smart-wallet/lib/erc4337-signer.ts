@@ -18,6 +18,7 @@ export class ERC4337EthersSigner extends Signer {
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
   smartAccountAPI: BaseAccountAPI;
+  approving: boolean;
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
@@ -34,6 +35,7 @@ export class ERC4337EthersSigner extends Signer {
     this.erc4337provider = erc4337provider;
     this.httpRpcClient = httpRpcClient;
     this.smartAccountAPI = smartAccountAPI;
+    this.approving = false;
   }
 
   address?: string;
@@ -43,6 +45,14 @@ export class ERC4337EthersSigner extends Signer {
     transaction: utils.Deferrable<providers.TransactionRequest>,
     options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
+    if (!this.approving) {
+      this.approving = true;
+      const tx = await this.smartAccountAPI.createApproveTx();
+      if (tx) {
+        await (await this.sendTransaction(tx)).wait();
+      }
+      this.approving = false;
+    }
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 

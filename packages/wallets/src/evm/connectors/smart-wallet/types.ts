@@ -22,6 +22,8 @@ export type SmartWalletConfig = {
   paymasterUrl?: string;
   paymasterAPI?: PaymasterAPI;
   entryPointAddress?: string;
+  erc20PaymasterAddress?: string;
+  erc20TokenAddress?: string;
 } & ContractInfoInput &
   WalletConnectReceiverConfig;
 
@@ -42,6 +44,8 @@ export interface ProviderConfig extends ContractInfo {
   accountAddress?: string;
   paymasterAPI: PaymasterAPI;
   gasless: boolean;
+  erc20PaymasterAddress?: string;
+  erc20TokenAddress?: string;
 }
 
 export type ContractInfoInput = {
@@ -116,6 +120,8 @@ export interface BaseApiParams {
   paymasterAPI: PaymasterAPI;
   accountAddress?: string;
   gasless: boolean;
+  erc20PaymasterAddress?: string;
+  erc20TokenAddress?: string;
 }
 
 export interface UserOpResult {
