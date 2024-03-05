@@ -6,7 +6,7 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareMethod } from "../../../utils/abi/prepare-method.js";
 import { $run$ } from "@hazae41/saumon";
 
-type ConvertToAssetsParams = {
+export type ConvertToAssetsParams = {
   /**
    * The number of shares to convert to assets.
    */
