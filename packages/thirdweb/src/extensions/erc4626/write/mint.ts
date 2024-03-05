@@ -1,12 +1,13 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `mint` function
  */
 export type MintParams = {
   shares: bigint;
-  receiver: string;
+  receiver: Address;
 };
 
 /**

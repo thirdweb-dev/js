@@ -1,5 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { Address } from "abitype";
 /**
  * @macro delete-next-lines
  */
@@ -11,7 +12,7 @@ import { $run$ } from "@hazae41/saumon";
  */
 export type DepositParams = {
   assets: bigint;
-  receiver: string;
+  receiver: Address;
 };
 
 /**
