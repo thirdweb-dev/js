@@ -8,3 +8,15 @@ export {
   setContractURI,
   type SetContractURIParams,
 } from "../../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
+
+export {
+  setOwner,
+  type SetOwnerParams,
+} from "../../extensions/common/__generated__/IOwnable/write/setOwner.js";
+
+// events
+
+export {
+  ownerUpdatedEvent,
+  type OwnerUpdatedEventFilters,
+} from "../../extensions/common/__generated__/IOwnable/events/OwnerUpdated.js";
