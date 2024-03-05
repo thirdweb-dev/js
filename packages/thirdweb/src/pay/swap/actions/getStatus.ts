@@ -28,7 +28,7 @@ export type SwapStatus = {
   transactionType: string;
   source: SwapTransactionDetails;
   destination?: SwapTransactionDetails;
-  status: number;
+  status: "DONE" | "FAILED" | "PENDING";
   subStatus: number;
   fromAddress: string;
   toAddress: string;
