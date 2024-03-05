@@ -46,10 +46,10 @@ export async function getTokenBalance(
   // erc20 case
   if (tokenAddress) {
     // load balanceOf dynamically to avoid circular dependency
-    const { balanceOf } = await import(
-      "../../extensions/erc20/read/balanceOf.js"
+    const { getBalance } = await import(
+      "../../extensions/erc20/read/getBalance.js"
     );
-    return balanceOf({
+    return getBalance({
       contract: getContract({ client, chain, address: tokenAddress }),
       address: account.address,
     });

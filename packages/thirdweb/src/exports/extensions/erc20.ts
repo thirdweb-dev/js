@@ -1,14 +1,20 @@
 // read
-export { balanceOf } from "../../extensions/erc20/read/balanceOf.js";
 export {
-  detectDecimals,
-  decimals,
-} from "../../extensions/erc20/read/decimals.js";
-export { totalSupply } from "../../extensions/erc20/read/totalSupply.js";
+  getBalance,
+  type GetBalanceParams,
+  type GetBalanceResult,
+} from "../../extensions/erc20/read/getBalance.js";
+export {
+  balanceOf,
+  type BalanceOfParams,
+} from "../../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
+export { decimals } from "../../extensions/erc20/__generated__/IERC20Metadata/read/decimals.js";
+export { totalSupply } from "../../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
 export {
   allowance,
   type AllowanceParams,
-} from "../../extensions/erc20/read/allowance.js";
+} from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+
 // write
 export {
   mintTo,
@@ -26,3 +32,11 @@ export {
   approve,
   type ApproveParams,
 } from "../../extensions/erc20/write/approve.js";
+export {
+  burn,
+  type BurnParams,
+} from "../../extensions/erc20/__generated__/IBurnableERC20/write/burn.js";
+export {
+  burnFrom,
+  type BurnFromParams,
+} from "../../extensions/erc20/__generated__/IBurnableERC20/write/burnFrom.js";

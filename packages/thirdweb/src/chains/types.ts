@@ -36,7 +36,7 @@ type ChainExplorer = {
   standard: string;
 };
 
-export type ApiChain = {
+export type ChainMetadata = {
   name: string;
   title?: string;
   chain: string;

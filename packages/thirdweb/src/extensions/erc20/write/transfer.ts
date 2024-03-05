@@ -35,22 +35,24 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return prepareContractCall({
     contract: options.contract,
     method: [
-  "0xa9059cbb",
-  [
-    {
-      "type": "address"
-    },
-    {
-      "type": "uint256"
-    }
-  ],
-  []
-],
+      "0xa9059cbb",
+      [
+        {
+          type: "address",
+        },
+        {
+          type: "uint256",
+        },
+      ],
+      [],
+    ],
     params: async () => {
       let amount: bigint;
       if ("amount" in options) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
-        const { decimals } = await import("../read/decimals.js");
+        const { decimals } = await import(
+          "../__generated__/IERC20Metadata/read/decimals.js"
+        );
         // if this fails we fall back to `18` decimals
         const d = await decimals(options).catch(() => 18);
         // turn ether into gwei

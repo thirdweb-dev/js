@@ -18,6 +18,7 @@ const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 
 const client = createThirdwebClient({
   secretKey: SECRET_KEY,
+  config: { rpc: { maxBatchSize: 1 } },
 });
 
 const TEST_CHAIN = defineChain({

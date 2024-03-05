@@ -1,4 +1,4 @@
-import type { ApiChain } from "../../chains/types.js";
+import type { ChainMetadata } from "../../chains/types.js";
 
 // TODO - move this to chains subfolder
 
@@ -6,7 +6,7 @@ import type { ApiChain } from "../../chains/types.js";
  * Remove client id from RPC url for given chain
  * @internal
  */
-export function getValidPublicRPCUrl(chain: ApiChain) {
+export function getValidPublicRPCUrl(chain: ChainMetadata) {
   return getValidChainRPCs(chain).map((rpc) => {
     try {
       const url = new URL(rpc);
@@ -28,7 +28,7 @@ export function getValidPublicRPCUrl(chain: ApiChain) {
  * @internal
  */
 function getValidChainRPCs(
-  chain: Pick<ApiChain, "rpc" | "chainId">,
+  chain: Pick<ChainMetadata, "rpc" | "chainId">,
   clientId?: string,
   mode: "http" | "ws" = "http",
 ): string[] {

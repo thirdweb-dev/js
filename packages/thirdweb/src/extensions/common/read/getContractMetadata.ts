@@ -1,8 +1,8 @@
 import { fetchContractMetadata } from "../../../utils/contract/fetchContractMetadata.js";
-import { contractURI } from "./contractURI.js";
-import { name } from "./name.js";
-import { symbol } from "./symbol.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { contractURI } from "../__generated__/IContractMetadata/read/contractURI.js";
+import { symbol } from "../../erc20/__generated__/IERC20Metadata/read/symbol.js";
+import { name } from "../../erc20/__generated__/IERC20Metadata/read/name.js";
 
 /**
  * Retrieves the contract metadata including name and symbol.

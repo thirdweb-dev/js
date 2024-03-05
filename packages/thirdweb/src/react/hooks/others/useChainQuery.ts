@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { getChainDataForChain } from "../../../chains/utils.js";
+import { getChainMetadata } from "../../../chains/utils.js";
 import type { Chain } from "../../../chains/types.js";
 import { useMemo } from "react";
 import { pLimit } from "../../../utils/promise/p-limit.js";
@@ -22,7 +22,7 @@ export function useChainQuery(chain?: Chain) {
       if (!chain) {
         throw new Error("chainId is required");
       }
-      return getChainDataForChain(chain);
+      return getChainMetadata(chain);
     },
   });
 }
@@ -38,7 +38,7 @@ export function useChainsQuery(chains: Chain[], maxConcurrency: number) {
     return chains.map((chain) => {
       return {
         ...getQueryOptions(chain),
-        queryFn: () => limit(() => getChainDataForChain(chain)),
+        queryFn: () => limit(() => getChainMetadata(chain)),
       };
     });
   }, [chains, maxConcurrency]);

@@ -18,7 +18,7 @@ import type {
 } from "../interfaces/wallet.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
-import { defineChain, getChainDataForChain } from "../../chains/utils.js";
+import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
 import {
   isHex,
@@ -243,7 +243,7 @@ export class InjectedWallet implements Wallet {
     } catch (e: any) {
       // if chain does not exist, add the chain
       if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-        const apiChain = await getChainDataForChain(chain);
+        const apiChain = await getChainMetadata(chain);
         await this.provider.request({
           method: "wallet_addEthereumChain",
           params: [
