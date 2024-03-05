@@ -355,7 +355,7 @@ export const ConnectedWalletDetails: React.FC<{
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
-            gap: spacing.sm,
+            gap: spacing.xs,
           }}
         >
           <Button
@@ -371,13 +371,16 @@ export const ConnectedWalletDetails: React.FC<{
               setScreen("send");
             }}
           >
-            <PaperPlaneIcon
-              width={iconSize.sm}
-              height={iconSize.sm}
-              style={{
-                transform: "translateY(-10%) rotate(-45deg) ",
-              }}
-            />
+            <Container color="secondaryText" flex="row" center="both">
+              <PaperPlaneIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  transform: "translateY(-10%) rotate(-45deg) ",
+                }}
+              />
+            </Container>
+
             {locale.send}
           </Button>
 
@@ -394,7 +397,9 @@ export const ConnectedWalletDetails: React.FC<{
               setScreen("receive");
             }}
           >
-            <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            <Container color="secondaryText" flex="row" center="both">
+              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            </Container>
             {locale.receive}{" "}
           </Button>
 
@@ -411,7 +416,9 @@ export const ConnectedWalletDetails: React.FC<{
               setScreen("swap");
             }}
           >
-            <UpdateIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            <Container color="secondaryText" flex="row" center="both">
+              <UpdateIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
             {locale.swap}{" "}
           </Button>
         </Container>
