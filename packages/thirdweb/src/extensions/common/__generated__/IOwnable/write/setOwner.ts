@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "setOwner" function.
  */
 export type SetOwnerParams = {
-  newOwner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_newOwner";
-    type: "address";
-  }>;
+  newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 };
 
 /**
@@ -38,9 +34,8 @@ export function setOwner(options: BaseTransactionOptions<SetOwnerParams>) {
       "0x13af4035",
       [
         {
-          internalType: "address",
-          name: "_newOwner",
           type: "address",
+          name: "_newOwner",
         },
       ],
       [],

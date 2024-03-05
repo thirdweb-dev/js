@@ -22,8 +22,6 @@ export async function accountImplementation(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

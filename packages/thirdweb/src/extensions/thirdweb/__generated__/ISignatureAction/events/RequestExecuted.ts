@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RequestExecutedEventFilters = Partial<{
   user: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "user";
     type: "address";
+    name: "user";
+    indexed: true;
   }>;
   signer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "signer";
     type: "address";
+    name: "signer";
+    indexed: true;
   }>;
 }>;
 

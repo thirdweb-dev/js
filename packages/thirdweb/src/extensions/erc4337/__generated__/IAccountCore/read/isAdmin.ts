@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "isAdmin" function.
  */
 export type IsAdminParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
 /**
@@ -35,15 +31,12 @@ export async function isAdmin(options: BaseTransactionOptions<IsAdminParams>) {
       "0x24d7806c",
       [
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

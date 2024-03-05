@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "transfer" function.
  */
 export type TransferParams = {
-  to: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "to";
-    type: "address";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
 /**
@@ -44,20 +36,16 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
       "0xa9059cbb",
       [
         {
-          internalType: "address",
-          name: "to",
           type: "address",
+          name: "to",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

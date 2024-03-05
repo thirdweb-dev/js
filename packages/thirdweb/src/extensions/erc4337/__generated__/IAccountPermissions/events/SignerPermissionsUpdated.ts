@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SignerPermissionsUpdatedEventFilters = Partial<{
   authorizingSigner: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "authorizingSigner";
     type: "address";
+    name: "authorizingSigner";
+    indexed: true;
   }>;
   targetSigner: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "targetSigner";
     type: "address";
+    name: "targetSigner";
+    indexed: true;
   }>;
 }>;
 

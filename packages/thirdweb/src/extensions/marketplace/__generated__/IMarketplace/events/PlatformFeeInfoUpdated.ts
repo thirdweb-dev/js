@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PlatformFeeInfoUpdatedEventFilters = Partial<{
   platformFeeRecipient: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "platformFeeRecipient";
     type: "address";
+    name: "platformFeeRecipient";
+    indexed: true;
   }>;
 }>;
 

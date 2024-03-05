@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "approve" function.
  */
 export type ApproveParams = {
-  spender: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "spender";
-    type: "address";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
 /**
@@ -44,20 +36,16 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
       "0x095ea7b3",
       [
         {
-          internalType: "address",
-          name: "spender",
           type: "address",
+          name: "spender",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

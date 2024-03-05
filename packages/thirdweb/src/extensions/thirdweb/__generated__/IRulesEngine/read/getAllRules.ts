@@ -22,46 +22,38 @@ export async function getAllRules(options: BaseTransactionOptions) {
       [],
       [
         {
+          type: "tuple[]",
+          name: "rules",
           components: [
             {
-              internalType: "bytes32",
-              name: "ruleId",
               type: "bytes32",
+              name: "ruleId",
             },
             {
-              internalType: "address",
-              name: "token",
               type: "address",
+              name: "token",
             },
             {
-              internalType: "enum IRulesEngine.TokenType",
+              type: "uint8",
               name: "tokenType",
-              type: "uint8",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "balance",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "score",
-              type: "uint256",
             },
             {
-              internalType: "enum IRulesEngine.RuleType",
-              name: "ruleType",
               type: "uint8",
+              name: "ruleType",
             },
           ],
-          internalType: "struct IRulesEngine.RuleWithId[]",
-          name: "rules",
-          type: "tuple[]",
         },
       ],
     ],

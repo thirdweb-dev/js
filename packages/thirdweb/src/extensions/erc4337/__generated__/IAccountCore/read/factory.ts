@@ -22,8 +22,6 @@ export async function factory(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

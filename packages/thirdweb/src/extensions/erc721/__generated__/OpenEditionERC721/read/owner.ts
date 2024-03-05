@@ -22,8 +22,6 @@ export async function owner(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

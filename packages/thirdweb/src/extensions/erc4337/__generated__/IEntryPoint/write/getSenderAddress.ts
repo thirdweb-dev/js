@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getSenderAddress" function.
  */
 export type GetSenderAddressParams = {
-  initCode: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "initCode";
-    type: "bytes";
-  }>;
+  initCode: AbiParameterToPrimitiveType<{ type: "bytes"; name: "initCode" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function getSenderAddress(
       "0x9b249f69",
       [
         {
-          internalType: "bytes",
-          name: "initCode",
           type: "bytes",
+          name: "initCode",
         },
       ],
       [],

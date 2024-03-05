@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CancelledOfferEventFilters = Partial<{
   offeror: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "offeror";
     type: "address";
+    name: "offeror";
+    indexed: true;
   }>;
   offerId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "offerId";
     type: "uint256";
+    name: "offerId";
+    indexed: true;
   }>;
 }>;
 

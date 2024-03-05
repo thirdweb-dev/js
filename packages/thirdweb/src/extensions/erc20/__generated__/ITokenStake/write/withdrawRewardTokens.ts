@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "withdrawRewardTokens" function.
  */
 export type WithdrawRewardTokensParams = {
-  amount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_amount";
-    type: "uint256";
-  }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function withdrawRewardTokens(
       "0xcb43b2dd",
       [
         {
-          internalType: "uint256",
-          name: "_amount",
           type: "uint256",
+          name: "_amount",
         },
       ],
       [],

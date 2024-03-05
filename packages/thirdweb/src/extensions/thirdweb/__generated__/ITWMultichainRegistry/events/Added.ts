@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AddedEventFilters = Partial<{
   deployer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "deployer";
     type: "address";
+    name: "deployer";
+    indexed: true;
   }>;
   deployment: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "deployment";
     type: "address";
+    name: "deployment";
+    indexed: true;
   }>;
   chainId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "chainId";
     type: "uint256";
+    name: "chainId";
+    indexed: true;
   }>;
 }>;
 

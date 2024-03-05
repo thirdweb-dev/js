@@ -7,52 +7,33 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type HandleAggregatedOpsParams = {
   opsPerAggregator: AbiParameterToPrimitiveType<{
+    type: "tuple[]";
+    name: "opsPerAggregator";
     components: [
       {
-        components: [
-          { internalType: "address"; name: "sender"; type: "address" },
-          { internalType: "uint256"; name: "nonce"; type: "uint256" },
-          { internalType: "bytes"; name: "initCode"; type: "bytes" },
-          { internalType: "bytes"; name: "callData"; type: "bytes" },
-          { internalType: "uint256"; name: "callGasLimit"; type: "uint256" },
-          {
-            internalType: "uint256";
-            name: "verificationGasLimit";
-            type: "uint256";
-          },
-          {
-            internalType: "uint256";
-            name: "preVerificationGas";
-            type: "uint256";
-          },
-          { internalType: "uint256"; name: "maxFeePerGas"; type: "uint256" },
-          {
-            internalType: "uint256";
-            name: "maxPriorityFeePerGas";
-            type: "uint256";
-          },
-          { internalType: "bytes"; name: "paymasterAndData"; type: "bytes" },
-          { internalType: "bytes"; name: "signature"; type: "bytes" },
-        ];
-        internalType: "struct UserOperation[]";
-        name: "userOps";
         type: "tuple[]";
+        name: "userOps";
+        components: [
+          { type: "address"; name: "sender" },
+          { type: "uint256"; name: "nonce" },
+          { type: "bytes"; name: "initCode" },
+          { type: "bytes"; name: "callData" },
+          { type: "uint256"; name: "callGasLimit" },
+          { type: "uint256"; name: "verificationGasLimit" },
+          { type: "uint256"; name: "preVerificationGas" },
+          { type: "uint256"; name: "maxFeePerGas" },
+          { type: "uint256"; name: "maxPriorityFeePerGas" },
+          { type: "bytes"; name: "paymasterAndData" },
+          { type: "bytes"; name: "signature" },
+        ];
       },
-      {
-        internalType: "contract IAggregator";
-        name: "aggregator";
-        type: "address";
-      },
-      { internalType: "bytes"; name: "signature"; type: "bytes" },
+      { type: "address"; name: "aggregator" },
+      { type: "bytes"; name: "signature" },
     ];
-    internalType: "struct IEntryPoint.UserOpsPerAggregator[]";
-    name: "opsPerAggregator";
-    type: "tuple[]";
   }>;
   beneficiary: AbiParameterToPrimitiveType<{
-    internalType: "address payable";
-    name: "beneficiary";
     type: "address";
+    name: "beneficiary";
   }>;
 };
 
@@ -84,88 +65,72 @@ export function handleAggregatedOps(
       "0x4b1d7cf5",
       [
         {
+          type: "tuple[]",
+          name: "opsPerAggregator",
           components: [
             {
+              type: "tuple[]",
+              name: "userOps",
               components: [
                 {
-                  internalType: "address",
-                  name: "sender",
                   type: "address",
+                  name: "sender",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "nonce",
-                  type: "uint256",
                 },
                 {
-                  internalType: "bytes",
+                  type: "bytes",
                   name: "initCode",
-                  type: "bytes",
                 },
                 {
-                  internalType: "bytes",
+                  type: "bytes",
                   name: "callData",
-                  type: "bytes",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "callGasLimit",
-                  type: "uint256",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "verificationGasLimit",
-                  type: "uint256",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "preVerificationGas",
-                  type: "uint256",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "maxFeePerGas",
-                  type: "uint256",
                 },
                 {
-                  internalType: "uint256",
+                  type: "uint256",
                   name: "maxPriorityFeePerGas",
-                  type: "uint256",
                 },
                 {
-                  internalType: "bytes",
+                  type: "bytes",
                   name: "paymasterAndData",
-                  type: "bytes",
                 },
                 {
-                  internalType: "bytes",
-                  name: "signature",
                   type: "bytes",
+                  name: "signature",
                 },
               ],
-              internalType: "struct UserOperation[]",
-              name: "userOps",
-              type: "tuple[]",
             },
             {
-              internalType: "contract IAggregator",
-              name: "aggregator",
               type: "address",
+              name: "aggregator",
             },
             {
-              internalType: "bytes",
-              name: "signature",
               type: "bytes",
+              name: "signature",
             },
           ],
-          internalType: "struct IEntryPoint.UserOpsPerAggregator[]",
-          name: "opsPerAggregator",
-          type: "tuple[]",
         },
         {
-          internalType: "address payable",
-          name: "beneficiary",
           type: "address",
+          name: "beneficiary",
         },
       ],
       [],

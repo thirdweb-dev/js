@@ -6,21 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "claim" function.
  */
 export type ClaimParams = {
-  receiver: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_receiver";
-    type: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_quantity";
-    type: "uint256";
-  }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "_receiver" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
 /**
@@ -50,19 +38,16 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       "0x2bc43fd9",
       [
         {
-          internalType: "address",
-          name: "_receiver",
           type: "address",
+          name: "_receiver",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_tokenId",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "_quantity",
           type: "uint256",
+          name: "_quantity",
         },
       ],
       [],

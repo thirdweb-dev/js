@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DefaultRoyaltyEventFilters = Partial<{
   newRoyaltyRecipient: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "newRoyaltyRecipient";
     type: "address";
+    name: "newRoyaltyRecipient";
+    indexed: true;
   }>;
 }>;
 

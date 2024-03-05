@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "depositTo" function.
  */
 export type DepositToParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
 /**
@@ -38,9 +34,8 @@ export function depositTo(options: BaseTransactionOptions<DepositToParams>) {
       "0xb760faf9",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
       [],

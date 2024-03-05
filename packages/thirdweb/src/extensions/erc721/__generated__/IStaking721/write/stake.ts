@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type StakeParams = {
   tokenIds: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "tokenIds";
     type: "uint256[]";
+    name: "tokenIds";
   }>;
 };
 
@@ -38,9 +37,8 @@ export function stake(options: BaseTransactionOptions<StakeParams>) {
       "0x0fbf0a93",
       [
         {
-          internalType: "uint256[]",
-          name: "tokenIds",
           type: "uint256[]",
+          name: "tokenIds",
         },
       ],
       [],

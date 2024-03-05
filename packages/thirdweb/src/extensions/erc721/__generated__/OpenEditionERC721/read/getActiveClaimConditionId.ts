@@ -24,8 +24,6 @@ export async function getActiveClaimConditionId(
       [],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

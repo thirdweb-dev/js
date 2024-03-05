@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "balanceOf" function.
  */
 export type BalanceOfParams = {
-  address: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "address";
-    type: "address";
-  }>;
+  address: AbiParameterToPrimitiveType<{ type: "address"; name: "_address" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function balanceOf(
       "0x70a08231",
       [
         {
-          internalType: "address",
-          name: "address",
           type: "address",
+          name: "_address",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

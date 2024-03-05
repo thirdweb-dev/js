@@ -6,25 +6,15 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "add" function.
  */
 export type AddParams = {
-  deployer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployer";
-    type: "address";
-  }>;
+  deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployment";
     type: "address";
+    name: "_deployment";
   }>;
-  chainId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_chainId";
-    type: "uint256";
-  }>;
+  chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
   metadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "metadataUri";
     type: "string";
+    name: "metadataUri";
   }>;
 };
 
@@ -56,24 +46,20 @@ export function add(options: BaseTransactionOptions<AddParams>) {
       "0x26c5b516",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "_deployer",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_deployment",
-          type: "address",
         },
         {
-          internalType: "uint256",
-          name: "_chainId",
           type: "uint256",
+          name: "_chainId",
         },
         {
-          internalType: "string",
-          name: "metadataUri",
           type: "string",
+          name: "metadataUri",
         },
       ],
       [],

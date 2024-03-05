@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "delegates" function.
  */
 export type DelegatesParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function delegates(
       "0x587cde1e",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

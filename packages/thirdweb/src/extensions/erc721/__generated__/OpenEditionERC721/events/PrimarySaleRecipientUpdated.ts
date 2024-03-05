@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PrimarySaleRecipientUpdatedEventFilters = Partial<{
   recipient: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "recipient";
     type: "address";
+    name: "recipient";
+    indexed: true;
   }>;
 }>;
 

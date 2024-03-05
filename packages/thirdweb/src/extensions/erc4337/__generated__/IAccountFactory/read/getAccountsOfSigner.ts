@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getAccountsOfSigner" function.
  */
 export type GetAccountsOfSignerParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
 /**
@@ -37,16 +33,14 @@ export async function getAccountsOfSigner(
       "0x0e6254fd",
       [
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
       ],
       [
         {
-          internalType: "address[]",
-          name: "accounts",
           type: "address[]",
+          name: "accounts",
         },
       ],
     ],

@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getOffer" function.
  */
 export type GetOfferParams = {
-  offerId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_offerId";
-    type: "uint256";
-  }>;
+  offerId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_offerId" }>;
 };
 
 /**
@@ -37,68 +33,56 @@ export async function getOffer(
       "0x4579268a",
       [
         {
-          internalType: "uint256",
-          name: "_offerId",
           type: "uint256",
+          name: "_offerId",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "offer",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "offerId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "totalPrice",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "expirationTimestamp",
-              type: "uint256",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "offeror",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "currency",
-              type: "address",
             },
             {
-              internalType: "enum IOffers.TokenType",
+              type: "uint8",
               name: "tokenType",
-              type: "uint8",
             },
             {
-              internalType: "enum IOffers.Status",
-              name: "status",
               type: "uint8",
+              name: "status",
             },
           ],
-          internalType: "struct IOffers.Offer",
-          name: "offer",
-          type: "tuple",
         },
       ],
     ],

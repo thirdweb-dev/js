@@ -25,31 +25,26 @@ export function claimRewards(options: BaseTransactionOptions) {
       [],
       [
         {
+          type: "tuple[]",
+          name: "rewardUnits",
           components: [
             {
-              internalType: "address",
-              name: "assetContract",
               type: "address",
+              name: "assetContract",
             },
             {
-              internalType: "enum ITokenBundle.TokenType",
-              name: "tokenType",
               type: "uint8",
+              name: "tokenType",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "totalAmount",
               type: "uint256",
+              name: "totalAmount",
             },
           ],
-          internalType: "struct ITokenBundle.Token[]",
-          name: "rewardUnits",
-          type: "tuple[]",
         },
       ],
     ],

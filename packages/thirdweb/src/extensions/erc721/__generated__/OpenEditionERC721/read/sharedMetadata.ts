@@ -22,24 +22,20 @@ export async function sharedMetadata(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "string",
+          type: "string",
           name: "name",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "description",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "imageURI",
-          type: "string",
         },
         {
-          internalType: "string",
-          name: "animationURI",
           type: "string",
+          name: "animationURI",
         },
       ],
     ],

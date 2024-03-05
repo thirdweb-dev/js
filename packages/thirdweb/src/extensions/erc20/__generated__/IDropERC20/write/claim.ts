@@ -6,44 +6,22 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "claim" function.
  */
 export type ClaimParams = {
-  receiver: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "receiver";
-    type: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "quantity";
-    type: "uint256";
-  }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "currency";
-    type: "address";
-  }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "currency" }>;
   pricePerToken: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "pricePerToken";
     type: "uint256";
+    name: "pricePerToken";
   }>;
   allowlistProof: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "bytes32[]"; name: "proof"; type: "bytes32[]" },
-      {
-        internalType: "uint256";
-        name: "maxQuantityInAllowlist";
-        type: "uint256";
-      },
-    ];
-    internalType: "struct IDropERC20.AllowlistProof";
-    name: "allowlistProof";
     type: "tuple";
+    name: "allowlistProof";
+    components: [
+      { type: "bytes32[]"; name: "proof" },
+      { type: "uint256"; name: "maxQuantityInAllowlist" },
+    ];
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -76,46 +54,38 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       "0x5ab31c1a",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "receiver",
-          type: "address",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "quantity",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "currency",
           type: "address",
+          name: "currency",
         },
         {
-          internalType: "uint256",
-          name: "pricePerToken",
           type: "uint256",
+          name: "pricePerToken",
         },
         {
+          type: "tuple",
+          name: "allowlistProof",
           components: [
             {
-              internalType: "bytes32[]",
-              name: "proof",
               type: "bytes32[]",
+              name: "proof",
             },
             {
-              internalType: "uint256",
-              name: "maxQuantityInAllowlist",
               type: "uint256",
+              name: "maxQuantityInAllowlist",
             },
           ],
-          internalType: "struct IDropERC20.AllowlistProof",
-          name: "allowlistProof",
-          type: "tuple",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [],

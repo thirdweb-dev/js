@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getAllValidAuctions" function.
  */
 export type GetAllValidAuctionsParams = {
-  startId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_startId";
-    type: "uint256";
-  }>;
-  endId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_endId";
-    type: "uint256";
-  }>;
+  startId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_startId" }>;
+  endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
 /**
@@ -43,93 +35,76 @@ export async function getAllValidAuctions(
       "0x7b063801",
       [
         {
-          internalType: "uint256",
-          name: "_startId",
           type: "uint256",
+          name: "_startId",
         },
         {
-          internalType: "uint256",
-          name: "_endId",
           type: "uint256",
+          name: "_endId",
         },
       ],
       [
         {
+          type: "tuple[]",
+          name: "auctions",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "auctionId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "minimumBidAmount",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "buyoutBidAmount",
-              type: "uint256",
             },
             {
-              internalType: "uint64",
+              type: "uint64",
               name: "timeBufferInSeconds",
-              type: "uint64",
             },
             {
-              internalType: "uint64",
+              type: "uint64",
               name: "bidBufferBps",
-              type: "uint64",
             },
             {
-              internalType: "uint64",
+              type: "uint64",
               name: "startTimestamp",
-              type: "uint64",
             },
             {
-              internalType: "uint64",
+              type: "uint64",
               name: "endTimestamp",
-              type: "uint64",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "auctionCreator",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "currency",
-              type: "address",
             },
             {
-              internalType: "enum IEnglishAuctions.TokenType",
+              type: "uint8",
               name: "tokenType",
-              type: "uint8",
             },
             {
-              internalType: "enum IEnglishAuctions.Status",
-              name: "status",
               type: "uint8",
+              name: "status",
             },
           ],
-          internalType: "struct IEnglishAuctions.Auction[]",
-          name: "auctions",
-          type: "tuple[]",
         },
       ],
     ],

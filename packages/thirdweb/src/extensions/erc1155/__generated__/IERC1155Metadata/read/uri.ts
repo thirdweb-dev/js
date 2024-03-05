@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "uri" function.
  */
 export type UriParams = {
-  id: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_id";
-    type: "uint256";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
 };
 
 /**
@@ -35,15 +31,12 @@ export async function uri(options: BaseTransactionOptions<UriParams>) {
       "0x0e89341c",
       [
         {
-          internalType: "uint256",
-          name: "_id",
           type: "uint256",
+          name: "_id",
         },
       ],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

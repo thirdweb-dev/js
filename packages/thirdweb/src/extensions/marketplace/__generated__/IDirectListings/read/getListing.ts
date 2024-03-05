@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
 };
 
@@ -37,78 +36,64 @@ export async function getListing(
       "0x107a274a",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "listing",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "listingId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "pricePerToken",
-              type: "uint256",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "startTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "endTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "listingCreator",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "currency",
-              type: "address",
             },
             {
-              internalType: "enum IDirectListings.TokenType",
+              type: "uint8",
               name: "tokenType",
-              type: "uint8",
             },
             {
-              internalType: "enum IDirectListings.Status",
+              type: "uint8",
               name: "status",
-              type: "uint8",
             },
             {
-              internalType: "bool",
-              name: "reserved",
               type: "bool",
+              name: "reserved",
             },
           ],
-          internalType: "struct IDirectListings.Listing",
-          name: "listing",
-          type: "tuple",
         },
       ],
     ],

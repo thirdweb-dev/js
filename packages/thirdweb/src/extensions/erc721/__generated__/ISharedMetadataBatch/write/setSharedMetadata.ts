@@ -7,21 +7,16 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetSharedMetadataParams = {
   metadata: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "string"; name: "name"; type: "string" },
-      { internalType: "string"; name: "description"; type: "string" },
-      { internalType: "string"; name: "imageURI"; type: "string" },
-      { internalType: "string"; name: "animationURI"; type: "string" },
-    ];
-    internalType: "struct ISharedMetadataBatch.SharedMetadataInfo";
-    name: "metadata";
     type: "tuple";
+    name: "metadata";
+    components: [
+      { type: "string"; name: "name" },
+      { type: "string"; name: "description" },
+      { type: "string"; name: "imageURI" },
+      { type: "string"; name: "animationURI" },
+    ];
   }>;
-  id: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "id";
-    type: "bytes32";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
 /**
@@ -52,36 +47,30 @@ export function setSharedMetadata(
       "0x696b0c1a",
       [
         {
+          type: "tuple",
+          name: "metadata",
           components: [
             {
-              internalType: "string",
+              type: "string",
               name: "name",
-              type: "string",
             },
             {
-              internalType: "string",
+              type: "string",
               name: "description",
-              type: "string",
             },
             {
-              internalType: "string",
+              type: "string",
               name: "imageURI",
-              type: "string",
             },
             {
-              internalType: "string",
-              name: "animationURI",
               type: "string",
+              name: "animationURI",
             },
           ],
-          internalType: "struct ISharedMetadataBatch.SharedMetadataInfo",
-          name: "metadata",
-          type: "tuple",
         },
         {
-          internalType: "bytes32",
-          name: "id",
           type: "bytes32",
+          name: "id",
         },
       ],
       [],

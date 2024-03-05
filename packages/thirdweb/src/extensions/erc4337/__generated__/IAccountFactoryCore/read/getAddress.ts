@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetAddressParams = {
   adminSigner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "adminSigner";
     type: "address";
+    name: "adminSigner";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -43,20 +38,16 @@ export async function getAddress(
       "0x8878ed33",
       [
         {
-          internalType: "address",
-          name: "adminSigner",
           type: "address",
+          name: "adminSigner",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

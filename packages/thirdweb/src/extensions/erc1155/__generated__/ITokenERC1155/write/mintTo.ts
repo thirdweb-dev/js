@@ -6,26 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "mintTo" function.
  */
 export type MintToParams = {
-  to: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "to";
-    type: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
-  uri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "uri";
-    type: "string";
-  }>;
-  amount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amount";
-    type: "uint256";
-  }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
+  uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
 /**
@@ -56,24 +40,20 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       "0xb03f4528",
       [
         {
-          internalType: "address",
-          name: "to",
           type: "address",
+          name: "to",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "tokenId",
-          type: "uint256",
         },
         {
-          internalType: "string",
-          name: "uri",
           type: "string",
+          name: "uri",
         },
         {
-          internalType: "uint256",
-          name: "amount",
           type: "uint256",
+          name: "amount",
         },
       ],
       [],

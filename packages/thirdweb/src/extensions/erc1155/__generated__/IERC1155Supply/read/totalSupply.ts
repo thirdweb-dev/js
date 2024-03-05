@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "totalSupply" function.
  */
 export type TotalSupplyParams = {
-  id: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "id";
-    type: "uint256";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function totalSupply(
       "0xbd85b039",
       [
         {
-          internalType: "uint256",
-          name: "id",
           type: "uint256",
+          name: "id",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

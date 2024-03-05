@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RevealParams = {
   identifier: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "identifier";
     type: "uint256";
+    name: "identifier";
   }>;
-  key: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "key";
-    type: "bytes";
-  }>;
+  key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
 /**
@@ -44,21 +39,18 @@ export function reveal(options: BaseTransactionOptions<RevealParams>) {
       "0xce805642",
       [
         {
-          internalType: "uint256",
-          name: "identifier",
           type: "uint256",
+          name: "identifier",
         },
         {
-          internalType: "bytes",
-          name: "key",
           type: "bytes",
+          name: "key",
         },
       ],
       [
         {
-          internalType: "string",
-          name: "revealedURI",
           type: "string",
+          name: "revealedURI",
         },
       ],
     ],

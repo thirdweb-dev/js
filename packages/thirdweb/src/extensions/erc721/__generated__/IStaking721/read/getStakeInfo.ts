@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getStakeInfo" function.
  */
 export type GetStakeInfoParams = {
-  staker: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "staker";
-    type: "address";
-  }>;
+  staker: AbiParameterToPrimitiveType<{ type: "address"; name: "staker" }>;
 };
 
 /**
@@ -37,21 +33,18 @@ export async function getStakeInfo(
       "0xc3453153",
       [
         {
-          internalType: "address",
-          name: "staker",
           type: "address",
+          name: "staker",
         },
       ],
       [
         {
-          internalType: "uint256[]",
-          name: "_tokensStaked",
           type: "uint256[]",
+          name: "_tokensStaked",
         },
         {
-          internalType: "uint256",
-          name: "_rewards",
           type: "uint256",
+          name: "_rewards",
         },
       ],
     ],

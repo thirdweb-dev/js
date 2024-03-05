@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CancelListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function cancelListing(
       "0x305a67a8",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
       ],
       [],

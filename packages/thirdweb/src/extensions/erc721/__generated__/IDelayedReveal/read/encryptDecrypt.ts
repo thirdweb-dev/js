@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "encryptDecrypt" function.
  */
 export type EncryptDecryptParams = {
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
-  key: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "key";
-    type: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
+  key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
 /**
@@ -43,21 +35,18 @@ export async function encryptDecrypt(
       "0xe7150322",
       [
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
         {
-          internalType: "bytes",
-          name: "key",
           type: "bytes",
+          name: "key",
         },
       ],
       [
         {
-          internalType: "bytes",
-          name: "result",
           type: "bytes",
+          name: "result",
         },
       ],
     ],

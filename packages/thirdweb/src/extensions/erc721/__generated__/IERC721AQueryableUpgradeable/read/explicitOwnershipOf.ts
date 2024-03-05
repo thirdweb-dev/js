@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "explicitOwnershipOf" function.
  */
 export type ExplicitOwnershipOfParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -37,38 +33,31 @@ export async function explicitOwnershipOf(
       "0xc23dc68f",
       [
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
       ],
       [
         {
+          type: "tuple",
           components: [
             {
-              internalType: "address",
-              name: "addr",
               type: "address",
+              name: "addr",
             },
             {
-              internalType: "uint64",
-              name: "startTimestamp",
               type: "uint64",
+              name: "startTimestamp",
             },
             {
-              internalType: "bool",
-              name: "burned",
               type: "bool",
+              name: "burned",
             },
             {
-              internalType: "uint24",
-              name: "extraData",
               type: "uint24",
+              name: "extraData",
             },
           ],
-          internalType: "struct IERC721AUpgradeable.TokenOwnership",
-          name: "",
-          type: "tuple",
         },
       ],
     ],

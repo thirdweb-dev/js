@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "stake" function.
  */
 export type StakeParams = {
-  amount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amount";
-    type: "uint256";
-  }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
 /**
@@ -38,9 +34,8 @@ export function stake(options: BaseTransactionOptions<StakeParams>) {
       "0xa694fc3a",
       [
         {
-          internalType: "uint256",
-          name: "amount",
           type: "uint256",
+          name: "amount",
         },
       ],
       [],

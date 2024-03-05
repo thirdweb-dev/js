@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type ContractDeployedEventFilters = Partial<{
   deployer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "deployer";
     type: "address";
+    name: "deployer";
+    indexed: true;
   }>;
   publisher: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
+    indexed: true;
   }>;
 }>;
 

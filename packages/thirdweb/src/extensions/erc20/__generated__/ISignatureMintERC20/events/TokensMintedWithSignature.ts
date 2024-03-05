@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokensMintedWithSignatureEventFilters = Partial<{
   signer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "signer";
     type: "address";
+    name: "signer";
+    indexed: true;
   }>;
   mintedTo: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "mintedTo";
     type: "address";
+    name: "mintedTo";
+    indexed: true;
   }>;
 }>;
 

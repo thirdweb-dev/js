@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AdminUpdatedEventFilters = Partial<{
   signer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "signer";
     type: "address";
+    name: "signer";
+    indexed: true;
   }>;
 }>;
 

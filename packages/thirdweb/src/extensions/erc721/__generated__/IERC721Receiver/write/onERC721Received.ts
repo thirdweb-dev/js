@@ -6,26 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "onERC721Received" function.
  */
 export type OnERC721ReceivedParams = {
-  operator: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "operator";
-    type: "address";
-  }>;
-  from: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "from";
-    type: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -58,30 +42,24 @@ export function onERC721Received(
       "0x150b7a02",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "operator",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "from",
-          type: "address",
         },
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [
         {
-          internalType: "bytes4",
-          name: "",
           type: "bytes4",
         },
       ],

@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CancelDirectListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function cancelDirectListing(
       "0x7506c84a",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
       ],
       [],

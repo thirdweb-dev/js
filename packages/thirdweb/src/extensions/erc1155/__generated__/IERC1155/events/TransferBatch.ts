@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TransferBatchEventFilters = Partial<{
   _operator: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "_operator";
     type: "address";
+    name: "_operator";
+    indexed: true;
   }>;
   _from: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "_from";
     type: "address";
+    name: "_from";
+    indexed: true;
   }>;
   _to: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "_to";
     type: "address";
+    name: "_to";
+    indexed: true;
   }>;
 }>;
 

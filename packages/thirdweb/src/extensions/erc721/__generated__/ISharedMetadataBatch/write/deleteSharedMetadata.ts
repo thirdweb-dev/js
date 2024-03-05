@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "deleteSharedMetadata" function.
  */
 export type DeleteSharedMetadataParams = {
-  id: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "id";
-    type: "bytes32";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function deleteSharedMetadata(
       "0x1ebb2422",
       [
         {
-          internalType: "bytes32",
-          name: "id",
           type: "bytes32",
+          name: "id",
         },
       ],
       [],

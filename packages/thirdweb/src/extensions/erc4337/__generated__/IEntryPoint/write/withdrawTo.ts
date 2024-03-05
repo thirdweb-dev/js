@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type WithdrawToParams = {
   withdrawAddress: AbiParameterToPrimitiveType<{
-    internalType: "address payable";
-    name: "withdrawAddress";
     type: "address";
+    name: "withdrawAddress";
   }>;
   withdrawAmount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "withdrawAmount";
     type: "uint256";
+    name: "withdrawAmount";
   }>;
 };
 
@@ -44,14 +42,12 @@ export function withdrawTo(options: BaseTransactionOptions<WithdrawToParams>) {
       "0x205c2878",
       [
         {
-          internalType: "address payable",
-          name: "withdrawAddress",
           type: "address",
+          name: "withdrawAddress",
         },
         {
-          internalType: "uint256",
-          name: "withdrawAmount",
           type: "uint256",
+          name: "withdrawAmount",
         },
       ],
       [],

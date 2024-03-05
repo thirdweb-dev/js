@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getDepositInfo" function.
  */
 export type GetDepositInfoParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
 /**
@@ -37,43 +33,36 @@ export async function getDepositInfo(
       "0x5287ce12",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "info",
           components: [
             {
-              internalType: "uint112",
+              type: "uint112",
               name: "deposit",
-              type: "uint112",
             },
             {
-              internalType: "bool",
-              name: "staked",
               type: "bool",
+              name: "staked",
             },
             {
-              internalType: "uint112",
-              name: "stake",
               type: "uint112",
+              name: "stake",
             },
             {
-              internalType: "uint32",
-              name: "unstakeDelaySec",
               type: "uint32",
+              name: "unstakeDelaySec",
             },
             {
-              internalType: "uint48",
-              name: "withdrawTime",
               type: "uint48",
+              name: "withdrawTime",
             },
           ],
-          internalType: "struct IStakeManager.DepositInfo",
-          name: "info",
-          type: "tuple",
         },
       ],
     ],

@@ -6,21 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "transferFrom" function.
  */
 export type TransferFromParams = {
-  from: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "from";
-    type: "address";
-  }>;
-  to: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "to";
-    type: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -52,19 +40,16 @@ export function transferFrom(
       "0x23b872dd",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "from",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "to",
-          type: "address",
         },
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
       ],
       [],

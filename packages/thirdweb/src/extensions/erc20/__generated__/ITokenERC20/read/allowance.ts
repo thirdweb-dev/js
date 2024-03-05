@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "allowance" function.
  */
 export type AllowanceParams = {
-  owner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "owner";
-    type: "address";
-  }>;
-  spender: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "spender";
-    type: "address";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
+  spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
 };
 
 /**
@@ -43,20 +35,16 @@ export async function allowance(
       "0xdd62ed3e",
       [
         {
-          internalType: "address",
-          name: "owner",
           type: "address",
+          name: "owner",
         },
         {
-          internalType: "address",
-          name: "spender",
           type: "address",
+          name: "spender",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

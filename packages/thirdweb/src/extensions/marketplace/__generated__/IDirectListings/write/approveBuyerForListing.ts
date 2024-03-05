@@ -7,20 +7,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type ApproveBuyerForListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
-  buyer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_buyer";
-    type: "address";
-  }>;
-  toApprove: AbiParameterToPrimitiveType<{
-    internalType: "bool";
-    name: "_toApprove";
-    type: "bool";
-  }>;
+  buyer: AbiParameterToPrimitiveType<{ type: "address"; name: "_buyer" }>;
+  toApprove: AbiParameterToPrimitiveType<{ type: "bool"; name: "_toApprove" }>;
 };
 
 /**
@@ -52,19 +43,16 @@ export function approveBuyerForListing(
       "0x48dd77df",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
         {
-          internalType: "address",
-          name: "_buyer",
           type: "address",
+          name: "_buyer",
         },
         {
-          internalType: "bool",
-          name: "_toApprove",
           type: "bool",
+          name: "_toApprove",
         },
       ],
       [],

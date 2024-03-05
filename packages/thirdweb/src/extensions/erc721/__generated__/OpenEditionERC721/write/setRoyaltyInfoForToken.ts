@@ -6,21 +6,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
  */
 export type SetRoyaltyInfoForTokenParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_recipient";
     type: "address";
+    name: "_recipient";
   }>;
-  bps: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_bps";
-    type: "uint256";
-  }>;
+  bps: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_bps" }>;
 };
 
 /**
@@ -52,19 +43,16 @@ export function setRoyaltyInfoForToken(
       "0x9bcf7a15",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_tokenId",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_recipient",
           type: "address",
+          name: "_recipient",
         },
         {
-          internalType: "uint256",
-          name: "_bps",
           type: "uint256",
+          name: "_bps",
         },
       ],
       [],

@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type StakeUnlockedEventFilters = Partial<{
   account: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "account";
     type: "address";
+    name: "account";
+    indexed: true;
   }>;
 }>;
 

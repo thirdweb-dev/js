@@ -6,21 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "tokensOfOwnerIn" function.
  */
 export type TokensOfOwnerInParams = {
-  owner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "owner";
-    type: "address";
-  }>;
-  start: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "start";
-    type: "uint256";
-  }>;
-  stop: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "stop";
-    type: "uint256";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
+  start: AbiParameterToPrimitiveType<{ type: "uint256"; name: "start" }>;
+  stop: AbiParameterToPrimitiveType<{ type: "uint256"; name: "stop" }>;
 };
 
 /**
@@ -49,25 +37,20 @@ export async function tokensOfOwnerIn(
       "0x99a2557a",
       [
         {
-          internalType: "address",
-          name: "owner",
           type: "address",
+          name: "owner",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "start",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "stop",
           type: "uint256",
+          name: "stop",
         },
       ],
       [
         {
-          internalType: "uint256[]",
-          name: "",
           type: "uint256[]",
         },
       ],

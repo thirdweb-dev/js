@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AirdropFailedEventFilters = Partial<{
   tokenAddress: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "tokenAddress";
     type: "address";
+    name: "tokenAddress";
+    indexed: true;
   }>;
   tokenOwner: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "tokenOwner";
     type: "address";
+    name: "tokenOwner";
+    indexed: true;
   }>;
   recipient: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "recipient";
     type: "address";
+    name: "recipient";
+    indexed: true;
   }>;
 }>;
 

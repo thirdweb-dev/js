@@ -22,8 +22,6 @@ export async function totalSupply(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type WithdrawParams = {
   tokenIds: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "tokenIds";
     type: "uint256[]";
+    name: "tokenIds";
   }>;
 };
 
@@ -38,9 +37,8 @@ export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
       "0x983d95ce",
       [
         {
-          internalType: "uint256[]",
-          name: "tokenIds",
           type: "uint256[]",
+          name: "tokenIds",
         },
       ],
       [],

@@ -7,28 +7,22 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetClaimConditionsParams = {
   phase: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "uint256"; name: "startTimestamp"; type: "uint256" },
-      { internalType: "uint256"; name: "maxClaimableSupply"; type: "uint256" },
-      { internalType: "uint256"; name: "supplyClaimed"; type: "uint256" },
-      {
-        internalType: "uint256";
-        name: "quantityLimitPerWallet";
-        type: "uint256";
-      },
-      { internalType: "bytes32"; name: "merkleRoot"; type: "bytes32" },
-      { internalType: "uint256"; name: "pricePerToken"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-      { internalType: "string"; name: "metadata"; type: "string" },
-    ];
-    internalType: "struct IClaimCondition.ClaimCondition";
-    name: "phase";
     type: "tuple";
+    name: "phase";
+    components: [
+      { type: "uint256"; name: "startTimestamp" },
+      { type: "uint256"; name: "maxClaimableSupply" },
+      { type: "uint256"; name: "supplyClaimed" },
+      { type: "uint256"; name: "quantityLimitPerWallet" },
+      { type: "bytes32"; name: "merkleRoot" },
+      { type: "uint256"; name: "pricePerToken" },
+      { type: "address"; name: "currency" },
+      { type: "string"; name: "metadata" },
+    ];
   }>;
   resetClaimEligibility: AbiParameterToPrimitiveType<{
-    internalType: "bool";
-    name: "resetClaimEligibility";
     type: "bool";
+    name: "resetClaimEligibility";
   }>;
 };
 
@@ -60,56 +54,46 @@ export function setClaimConditions(
       "0x426cfaf3",
       [
         {
+          type: "tuple",
+          name: "phase",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "startTimestamp",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "maxClaimableSupply",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "supplyClaimed",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantityLimitPerWallet",
-              type: "uint256",
             },
             {
-              internalType: "bytes32",
-              name: "merkleRoot",
               type: "bytes32",
+              name: "merkleRoot",
             },
             {
-              internalType: "uint256",
-              name: "pricePerToken",
               type: "uint256",
+              name: "pricePerToken",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
             {
-              internalType: "string",
-              name: "metadata",
               type: "string",
+              name: "metadata",
             },
           ],
-          internalType: "struct IClaimCondition.ClaimCondition",
-          name: "phase",
-          type: "tuple",
         },
         {
-          internalType: "bool",
-          name: "resetClaimEligibility",
           type: "bool",
+          name: "resetClaimEligibility",
         },
       ],
       [],

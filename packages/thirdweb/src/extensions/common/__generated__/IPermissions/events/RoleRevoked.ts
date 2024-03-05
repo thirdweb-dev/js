@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RoleRevokedEventFilters = Partial<{
   role: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "role";
     type: "bytes32";
+    name: "role";
+    indexed: true;
   }>;
   account: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "account";
     type: "address";
+    name: "account";
+    indexed: true;
   }>;
   sender: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "sender";
     type: "address";
+    name: "sender";
+    indexed: true;
   }>;
 }>;
 

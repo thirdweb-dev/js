@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "tokenByIndex" function.
  */
 export type TokenByIndexParams = {
-  index: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_index";
-    type: "uint256";
-  }>;
+  index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function tokenByIndex(
       "0x4f6ccce7",
       [
         {
-          internalType: "uint256",
-          name: "_index",
           type: "uint256",
+          name: "_index",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

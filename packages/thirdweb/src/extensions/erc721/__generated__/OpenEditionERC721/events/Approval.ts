@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type ApprovalEventFilters = Partial<{
   owner: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "owner";
     type: "address";
+    name: "owner";
+    indexed: true;
   }>;
   approved: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "approved";
     type: "address";
+    name: "approved";
+    indexed: true;
   }>;
   tokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "tokenId";
     type: "uint256";
+    name: "tokenId";
+    indexed: true;
   }>;
 }>;
 

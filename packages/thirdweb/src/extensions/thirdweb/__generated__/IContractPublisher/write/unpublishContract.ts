@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type UnpublishContractParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
   contractId: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "contractId";
     type: "string";
+    name: "contractId";
   }>;
 };
 
@@ -46,14 +44,12 @@ export function unpublishContract(
       "0x06eb56cc",
       [
         {
-          internalType: "address",
-          name: "publisher",
           type: "address",
+          name: "publisher",
         },
         {
-          internalType: "string",
-          name: "contractId",
           type: "string",
+          name: "contractId",
         },
       ],
       [],

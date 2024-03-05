@@ -22,8 +22,6 @@ export async function contractType(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "bytes32",
-          name: "",
           type: "bytes32",
         },
       ],

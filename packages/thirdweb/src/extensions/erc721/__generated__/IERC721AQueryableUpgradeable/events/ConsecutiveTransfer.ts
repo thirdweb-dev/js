@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type ConsecutiveTransferEventFilters = Partial<{
   fromTokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "fromTokenId";
     type: "uint256";
+    name: "fromTokenId";
+    indexed: true;
   }>;
   from: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "from";
     type: "address";
+    name: "from";
+    indexed: true;
   }>;
   to: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "to";
     type: "address";
+    name: "to";
+    indexed: true;
   }>;
 }>;
 

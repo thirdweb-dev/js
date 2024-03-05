@@ -22,8 +22,6 @@ export async function getAllAccounts(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address[]",
-          name: "",
           type: "address[]",
         },
       ],

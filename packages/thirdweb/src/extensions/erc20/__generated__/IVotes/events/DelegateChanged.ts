@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DelegateChangedEventFilters = Partial<{
   delegator: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "delegator";
     type: "address";
+    name: "delegator";
+    indexed: true;
   }>;
   fromDelegate: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "fromDelegate";
     type: "address";
+    name: "fromDelegate";
+    indexed: true;
   }>;
   toDelegate: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "toDelegate";
     type: "address";
+    name: "toDelegate";
+    indexed: true;
   }>;
 }>;
 

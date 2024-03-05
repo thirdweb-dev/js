@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getActiveClaimConditionId" function.
  */
 export type GetActiveClaimConditionIdParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function getActiveClaimConditionId(
       "0x5ab063e8",
       [
         {
-          internalType: "uint256",
-          name: "_tokenId",
           type: "uint256",
+          name: "_tokenId",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

@@ -7,34 +7,22 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DeployInstanceParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
   contractBytecode: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "contractBytecode";
     type: "bytes";
+    name: "contractBytecode";
   }>;
   constructorArgs: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "constructorArgs";
     type: "bytes";
+    name: "constructorArgs";
   }>;
-  salt: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "salt";
-    type: "bytes32";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  salt: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "salt" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
   publishMetadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "publishMetadataUri";
     type: "string";
+    name: "publishMetadataUri";
   }>;
 };
 
@@ -70,41 +58,34 @@ export function deployInstance(
       "0x28f84d4c",
       [
         {
-          internalType: "address",
-          name: "publisher",
           type: "address",
+          name: "publisher",
         },
         {
-          internalType: "bytes",
+          type: "bytes",
           name: "contractBytecode",
-          type: "bytes",
         },
         {
-          internalType: "bytes",
+          type: "bytes",
           name: "constructorArgs",
-          type: "bytes",
         },
         {
-          internalType: "bytes32",
-          name: "salt",
           type: "bytes32",
+          name: "salt",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
         {
-          internalType: "string",
-          name: "publishMetadataUri",
           type: "string",
+          name: "publishMetadataUri",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "deployedAddress",
           type: "address",
+          name: "deployedAddress",
         },
       ],
     ],

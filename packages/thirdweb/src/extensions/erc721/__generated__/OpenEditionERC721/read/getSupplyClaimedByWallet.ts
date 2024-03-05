@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetSupplyClaimedByWalletParams = {
   conditionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_conditionId";
     type: "uint256";
+    name: "_conditionId";
   }>;
-  claimer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_claimer";
-    type: "address";
-  }>;
+  claimer: AbiParameterToPrimitiveType<{ type: "address"; name: "_claimer" }>;
 };
 
 /**
@@ -43,21 +38,18 @@ export async function getSupplyClaimedByWallet(
       "0xad1eefc5",
       [
         {
-          internalType: "uint256",
-          name: "_conditionId",
           type: "uint256",
+          name: "_conditionId",
         },
         {
-          internalType: "address",
-          name: "_claimer",
           type: "address",
+          name: "_claimer",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "supplyClaimedByWallet",
           type: "uint256",
+          name: "supplyClaimedByWallet",
         },
       ],
     ],

@@ -7,35 +7,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DelegateBySigParams = {
   delegatee: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "delegatee";
     type: "address";
+    name: "delegatee";
   }>;
-  nonce: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "nonce";
-    type: "uint256";
-  }>;
-  expiry: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "expiry";
-    type: "uint256";
-  }>;
-  v: AbiParameterToPrimitiveType<{
-    internalType: "uint8";
-    name: "v";
-    type: "uint8";
-  }>;
-  r: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "r";
-    type: "bytes32";
-  }>;
-  s: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "s";
-    type: "bytes32";
-  }>;
+  nonce: AbiParameterToPrimitiveType<{ type: "uint256"; name: "nonce" }>;
+  expiry: AbiParameterToPrimitiveType<{ type: "uint256"; name: "expiry" }>;
+  v: AbiParameterToPrimitiveType<{ type: "uint8"; name: "v" }>;
+  r: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "r" }>;
+  s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
 /**
@@ -70,34 +49,28 @@ export function delegateBySig(
       "0xc3cda520",
       [
         {
-          internalType: "address",
-          name: "delegatee",
           type: "address",
+          name: "delegatee",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "nonce",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "expiry",
-          type: "uint256",
         },
         {
-          internalType: "uint8",
-          name: "v",
           type: "uint8",
+          name: "v",
         },
         {
-          internalType: "bytes32",
+          type: "bytes32",
           name: "r",
-          type: "bytes32",
         },
         {
-          internalType: "bytes32",
-          name: "s",
           type: "bytes32",
+          name: "s",
         },
       ],
       [],

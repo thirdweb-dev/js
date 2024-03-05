@@ -22,14 +22,12 @@ export async function claimCondition(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "uint256",
-          name: "currentStartId",
           type: "uint256",
+          name: "currentStartId",
         },
         {
-          internalType: "uint256",
-          name: "count",
           type: "uint256",
+          name: "count",
         },
       ],
     ],

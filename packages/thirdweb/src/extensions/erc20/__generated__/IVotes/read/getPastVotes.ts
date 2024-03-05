@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getPastVotes" function.
  */
 export type GetPastVotesParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
   blockNumber: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "blockNumber";
     type: "uint256";
+    name: "blockNumber";
   }>;
 };
 
@@ -43,20 +38,16 @@ export async function getPastVotes(
       "0x3a46b1a8",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
         {
-          internalType: "uint256",
-          name: "blockNumber",
           type: "uint256",
+          name: "blockNumber",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

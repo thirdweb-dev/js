@@ -6,20 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "openPackAndClaimRewards" function.
  */
 export type OpenPackAndClaimRewardsParams = {
-  packId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_packId";
-    type: "uint256";
-  }>;
+  packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_amountToOpen";
     type: "uint256";
+    name: "_amountToOpen";
   }>;
   callBackGasLimit: AbiParameterToPrimitiveType<{
-    internalType: "uint32";
-    name: "_callBackGasLimit";
     type: "uint32";
+    name: "_callBackGasLimit";
   }>;
 };
 
@@ -52,25 +46,20 @@ export function openPackAndClaimRewards(
       "0xac296b3f",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_packId",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_amountToOpen",
-          type: "uint256",
         },
         {
-          internalType: "uint32",
-          name: "_callBackGasLimit",
           type: "uint32",
+          name: "_callBackGasLimit",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

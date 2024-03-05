@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PackRandomnessFulfilledEventFilters = Partial<{
   packId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "packId";
     type: "uint256";
+    name: "packId";
+    indexed: true;
   }>;
   requestId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "requestId";
     type: "uint256";
+    name: "requestId";
+    indexed: true;
   }>;
 }>;
 

@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokensMintedEventFilters = Partial<{
   mintedTo: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "mintedTo";
     type: "address";
+    name: "mintedTo";
+    indexed: true;
   }>;
   tokenIdMinted: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "tokenIdMinted";
     type: "uint256";
+    name: "tokenIdMinted";
+    indexed: true;
   }>;
 }>;
 

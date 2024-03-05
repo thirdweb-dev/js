@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RoleAdminChangedEventFilters = Partial<{
   role: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "role";
     type: "bytes32";
+    name: "role";
+    indexed: true;
   }>;
   previousAdminRole: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "previousAdminRole";
     type: "bytes32";
+    name: "previousAdminRole";
+    indexed: true;
   }>;
   newAdminRole: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "newAdminRole";
     type: "bytes32";
+    name: "newAdminRole";
+    indexed: true;
   }>;
 }>;
 

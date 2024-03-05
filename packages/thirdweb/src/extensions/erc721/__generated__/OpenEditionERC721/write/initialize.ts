@@ -7,44 +7,30 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type InitializeParams = {
   defaultAdmin: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_defaultAdmin";
     type: "address";
+    name: "_defaultAdmin";
   }>;
-  name: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "_name";
-    type: "string";
-  }>;
-  symbol: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "_symbol";
-    type: "string";
-  }>;
+  name: AbiParameterToPrimitiveType<{ type: "string"; name: "_name" }>;
+  symbol: AbiParameterToPrimitiveType<{ type: "string"; name: "_symbol" }>;
   contractURI: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "_contractURI";
     type: "string";
+    name: "_contractURI";
   }>;
   trustedForwarders: AbiParameterToPrimitiveType<{
-    internalType: "address[]";
-    name: "_trustedForwarders";
     type: "address[]";
+    name: "_trustedForwarders";
   }>;
   saleRecipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_saleRecipient";
     type: "address";
+    name: "_saleRecipient";
   }>;
   royaltyRecipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_royaltyRecipient";
     type: "address";
+    name: "_royaltyRecipient";
   }>;
   royaltyBps: AbiParameterToPrimitiveType<{
-    internalType: "uint128";
-    name: "_royaltyBps";
     type: "uint128";
+    name: "_royaltyBps";
   }>;
 };
 
@@ -80,44 +66,36 @@ export function initialize(options: BaseTransactionOptions<InitializeParams>) {
       "0x49c5c5b6",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "_defaultAdmin",
-          type: "address",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "_name",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "_symbol",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "_contractURI",
-          type: "string",
         },
         {
-          internalType: "address[]",
-          name: "_trustedForwarders",
           type: "address[]",
+          name: "_trustedForwarders",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_saleRecipient",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_royaltyRecipient",
-          type: "address",
         },
         {
-          internalType: "uint128",
-          name: "_royaltyBps",
           type: "uint128",
+          name: "_royaltyBps",
         },
       ],
       [],

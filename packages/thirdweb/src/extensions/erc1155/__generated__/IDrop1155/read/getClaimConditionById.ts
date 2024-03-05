@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getClaimConditionById" function.
  */
 export type GetClaimConditionByIdParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   conditionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_conditionId";
     type: "uint256";
+    name: "_conditionId";
   }>;
 };
 
@@ -43,63 +38,52 @@ export async function getClaimConditionById(
       "0xd45b28d7",
       [
         {
-          internalType: "uint256",
-          name: "_tokenId",
           type: "uint256",
+          name: "_tokenId",
         },
         {
-          internalType: "uint256",
-          name: "_conditionId",
           type: "uint256",
+          name: "_conditionId",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "condition",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "startTimestamp",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "maxClaimableSupply",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "supplyClaimed",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantityLimitPerWallet",
-              type: "uint256",
             },
             {
-              internalType: "bytes32",
-              name: "merkleRoot",
               type: "bytes32",
+              name: "merkleRoot",
             },
             {
-              internalType: "uint256",
-              name: "pricePerToken",
               type: "uint256",
+              name: "pricePerToken",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
             {
-              internalType: "string",
-              name: "metadata",
               type: "string",
+              name: "metadata",
             },
           ],
-          internalType: "struct IClaimCondition.ClaimCondition",
-          name: "condition",
-          type: "tuple",
         },
       ],
     ],

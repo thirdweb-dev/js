@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SignerRemovedEventFilters = Partial<{
   account: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "account";
     type: "address";
+    name: "account";
+    indexed: true;
   }>;
   signer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "signer";
     type: "address";
+    name: "signer";
+    indexed: true;
   }>;
 }>;
 

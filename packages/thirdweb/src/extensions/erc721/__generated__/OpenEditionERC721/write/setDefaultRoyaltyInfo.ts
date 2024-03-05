@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetDefaultRoyaltyInfoParams = {
   royaltyRecipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_royaltyRecipient";
     type: "address";
+    name: "_royaltyRecipient";
   }>;
   royaltyBps: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_royaltyBps";
     type: "uint256";
+    name: "_royaltyBps";
   }>;
 };
 
@@ -46,14 +44,12 @@ export function setDefaultRoyaltyInfo(
       "0x600dd5ea",
       [
         {
-          internalType: "address",
-          name: "_royaltyRecipient",
           type: "address",
+          name: "_royaltyRecipient",
         },
         {
-          internalType: "uint256",
-          name: "_royaltyBps",
           type: "uint256",
+          name: "_royaltyBps",
         },
       ],
       [],

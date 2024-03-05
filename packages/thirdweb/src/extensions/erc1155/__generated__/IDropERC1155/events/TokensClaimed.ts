@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokensClaimedEventFilters = Partial<{
   claimConditionIndex: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "claimConditionIndex";
     type: "uint256";
+    name: "claimConditionIndex";
+    indexed: true;
   }>;
   tokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "tokenId";
     type: "uint256";
+    name: "tokenId";
+    indexed: true;
   }>;
   claimer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "claimer";
     type: "address";
+    name: "claimer";
+    indexed: true;
   }>;
 }>;
 

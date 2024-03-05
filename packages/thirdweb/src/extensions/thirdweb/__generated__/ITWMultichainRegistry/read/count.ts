@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "count" function.
  */
 export type CountParams = {
-  deployer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployer";
-    type: "address";
-  }>;
+  deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
 /**
@@ -35,16 +31,14 @@ export async function count(options: BaseTransactionOptions<CountParams>) {
       "0x05d85eda",
       [
         {
-          internalType: "address",
-          name: "_deployer",
           type: "address",
+          name: "_deployer",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "deploymentCount",
           type: "uint256",
+          name: "deploymentCount",
         },
       ],
     ],

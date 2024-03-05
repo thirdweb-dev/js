@@ -22,19 +22,16 @@ export async function token(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "chainId",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "tokenContract",
           type: "address",
+          name: "tokenContract",
         },
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
       ],
     ],

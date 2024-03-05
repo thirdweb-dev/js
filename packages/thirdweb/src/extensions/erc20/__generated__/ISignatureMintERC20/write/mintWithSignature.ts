@@ -7,37 +7,20 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type MintWithSignatureParams = {
   req: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "to"; type: "address" },
-      {
-        internalType: "address";
-        name: "primarySaleRecipient";
-        type: "address";
-      },
-      { internalType: "uint256"; name: "quantity"; type: "uint256" },
-      { internalType: "uint256"; name: "price"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-      {
-        internalType: "uint128";
-        name: "validityStartTimestamp";
-        type: "uint128";
-      },
-      {
-        internalType: "uint128";
-        name: "validityEndTimestamp";
-        type: "uint128";
-      },
-      { internalType: "bytes32"; name: "uid"; type: "bytes32" },
-    ];
-    internalType: "struct ISignatureMintERC20.MintRequest";
-    name: "req";
     type: "tuple";
+    name: "req";
+    components: [
+      { type: "address"; name: "to" },
+      { type: "address"; name: "primarySaleRecipient" },
+      { type: "uint256"; name: "quantity" },
+      { type: "uint256"; name: "price" },
+      { type: "address"; name: "currency" },
+      { type: "uint128"; name: "validityStartTimestamp" },
+      { type: "uint128"; name: "validityEndTimestamp" },
+      { type: "bytes32"; name: "uid" },
+    ];
   }>;
-  signature: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "signature";
-    type: "bytes";
-  }>;
+  signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
 /**
@@ -68,63 +51,52 @@ export function mintWithSignature(
       "0x8f0fefbb",
       [
         {
+          type: "tuple",
+          name: "req",
           components: [
             {
-              internalType: "address",
+              type: "address",
               name: "to",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "primarySaleRecipient",
-              type: "address",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "price",
-              type: "uint256",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "validityStartTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "validityEndTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "bytes32",
-              name: "uid",
               type: "bytes32",
+              name: "uid",
             },
           ],
-          internalType: "struct ISignatureMintERC20.MintRequest",
-          name: "req",
-          type: "tuple",
         },
         {
-          internalType: "bytes",
-          name: "signature",
           type: "bytes",
+          name: "signature",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
       ],
     ],

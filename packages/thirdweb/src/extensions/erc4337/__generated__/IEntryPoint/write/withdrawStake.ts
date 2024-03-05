@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type WithdrawStakeParams = {
   withdrawAddress: AbiParameterToPrimitiveType<{
-    internalType: "address payable";
-    name: "withdrawAddress";
     type: "address";
+    name: "withdrawAddress";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function withdrawStake(
       "0xc23a5cea",
       [
         {
-          internalType: "address payable",
-          name: "withdrawAddress",
           type: "address",
+          name: "withdrawAddress",
         },
       ],
       [],

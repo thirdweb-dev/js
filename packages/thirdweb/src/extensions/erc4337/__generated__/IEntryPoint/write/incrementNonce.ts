@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "incrementNonce" function.
  */
 export type IncrementNonceParams = {
-  key: AbiParameterToPrimitiveType<{
-    internalType: "uint192";
-    name: "key";
-    type: "uint192";
-  }>;
+  key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function incrementNonce(
       "0x0bd28e3b",
       [
         {
-          internalType: "uint192",
-          name: "key",
           type: "uint192",
+          name: "key",
         },
       ],
       [],

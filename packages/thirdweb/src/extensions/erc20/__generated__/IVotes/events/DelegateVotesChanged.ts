@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DelegateVotesChangedEventFilters = Partial<{
   delegate: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "delegate";
     type: "address";
+    name: "delegate";
+    indexed: true;
   }>;
 }>;
 

@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getAll" function.
  */
 export type GetAllParams = {
-  deployer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployer";
-    type: "address";
-  }>;
+  deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
 /**
@@ -35,28 +31,24 @@ export async function getAll(options: BaseTransactionOptions<GetAllParams>) {
       "0xeb077342",
       [
         {
-          internalType: "address",
-          name: "_deployer",
           type: "address",
+          name: "_deployer",
         },
       ],
       [
         {
+          type: "tuple[]",
+          name: "allDeployments",
           components: [
             {
-              internalType: "address",
-              name: "deploymentAddress",
               type: "address",
+              name: "deploymentAddress",
             },
             {
-              internalType: "uint256",
-              name: "chainId",
               type: "uint256",
+              name: "chainId",
             },
           ],
-          internalType: "struct ITWRegistry.Deployment[]",
-          name: "allDeployments",
-          type: "tuple[]",
         },
       ],
     ],

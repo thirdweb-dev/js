@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type BalanceOfBatchParams = {
   accounts: AbiParameterToPrimitiveType<{
-    internalType: "address[]";
-    name: "accounts";
     type: "address[]";
+    name: "accounts";
   }>;
-  ids: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "ids";
-    type: "uint256[]";
-  }>;
+  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
 };
 
 /**
@@ -43,20 +38,16 @@ export async function balanceOfBatch(
       "0x4e1273f4",
       [
         {
-          internalType: "address[]",
-          name: "accounts",
           type: "address[]",
+          name: "accounts",
         },
         {
-          internalType: "uint256[]",
-          name: "ids",
           type: "uint256[]",
+          name: "ids",
         },
       ],
       [
         {
-          internalType: "uint256[]",
-          name: "",
           type: "uint256[]",
         },
       ],

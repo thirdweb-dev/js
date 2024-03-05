@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "royaltyInfo" function.
  */
 export type RoyaltyInfoParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   salePrice: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "salePrice";
     type: "uint256";
+    name: "salePrice";
   }>;
 };
 
@@ -43,26 +38,22 @@ export async function royaltyInfo(
       "0x2a55205a",
       [
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
         {
-          internalType: "uint256",
-          name: "salePrice",
           type: "uint256",
+          name: "salePrice",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "receiver",
           type: "address",
+          name: "receiver",
         },
         {
-          internalType: "uint256",
-          name: "royaltyAmount",
           type: "uint256",
+          name: "royaltyAmount",
         },
       ],
     ],

@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetPrimarySaleRecipientParams = {
   saleRecipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_saleRecipient";
     type: "address";
+    name: "_saleRecipient";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function setPrimarySaleRecipient(
       "0x6f4f2837",
       [
         {
-          internalType: "address",
-          name: "_saleRecipient",
           type: "address",
+          name: "_saleRecipient",
         },
       ],
       [],

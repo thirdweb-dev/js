@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PackCreatedEventFilters = Partial<{
   packId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "packId";
     type: "uint256";
+    name: "packId";
+    indexed: true;
   }>;
 }>;
 

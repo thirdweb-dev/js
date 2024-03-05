@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "renounceRole" function.
  */
 export type RenounceRoleParams = {
-  role: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "role";
-    type: "bytes32";
-  }>;
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
 /**
@@ -46,14 +38,12 @@ export function renounceRole(
       "0x36568abe",
       [
         {
-          internalType: "bytes32",
-          name: "role",
           type: "bytes32",
+          name: "role",
         },
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
       [],

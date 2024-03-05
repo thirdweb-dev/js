@@ -7,28 +7,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CreateListingParams = {
   params: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "assetContract"; type: "address" },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "startTime"; type: "uint256" },
-      { internalType: "uint256"; name: "secondsUntilEndTime"; type: "uint256" },
-      { internalType: "uint256"; name: "quantityToList"; type: "uint256" },
-      { internalType: "address"; name: "currencyToAccept"; type: "address" },
-      {
-        internalType: "uint256";
-        name: "reservePricePerToken";
-        type: "uint256";
-      },
-      { internalType: "uint256"; name: "buyoutPricePerToken"; type: "uint256" },
-      {
-        internalType: "enum IMarketplace.ListingType";
-        name: "listingType";
-        type: "uint8";
-      },
-    ];
-    internalType: "struct IMarketplace.ListingParameters";
-    name: "_params";
     type: "tuple";
+    name: "_params";
+    components: [
+      { type: "address"; name: "assetContract" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "startTime" },
+      { type: "uint256"; name: "secondsUntilEndTime" },
+      { type: "uint256"; name: "quantityToList" },
+      { type: "address"; name: "currencyToAccept" },
+      { type: "uint256"; name: "reservePricePerToken" },
+      { type: "uint256"; name: "buyoutPricePerToken" },
+      { type: "uint8"; name: "listingType" },
+    ];
   }>;
 };
 
@@ -59,56 +50,46 @@ export function createListing(
       "0x296f4e16",
       [
         {
+          type: "tuple",
+          name: "_params",
           components: [
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "startTime",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "secondsUntilEndTime",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantityToList",
-              type: "uint256",
             },
             {
-              internalType: "address",
-              name: "currencyToAccept",
               type: "address",
+              name: "currencyToAccept",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "reservePricePerToken",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "buyoutPricePerToken",
-              type: "uint256",
             },
             {
-              internalType: "enum IMarketplace.ListingType",
-              name: "listingType",
               type: "uint8",
+              name: "listingType",
             },
           ],
-          internalType: "struct IMarketplace.ListingParameters",
-          name: "_params",
-          type: "tuple",
         },
       ],
       [],

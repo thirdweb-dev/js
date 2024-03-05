@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "openPack" function.
  */
 export type OpenPackParams = {
-  packId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "packId";
-    type: "uint256";
-  }>;
+  packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amountToOpen";
     type: "uint256";
+    name: "amountToOpen";
   }>;
 };
 
@@ -44,21 +39,18 @@ export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
       "0x914e126a",
       [
         {
-          internalType: "uint256",
-          name: "packId",
           type: "uint256",
+          name: "packId",
         },
         {
-          internalType: "uint256",
-          name: "amountToOpen",
           type: "uint256",
+          name: "amountToOpen",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "requestId",
           type: "uint256",
+          name: "requestId",
         },
       ],
     ],

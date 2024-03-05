@@ -22,8 +22,6 @@ export async function symbol(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

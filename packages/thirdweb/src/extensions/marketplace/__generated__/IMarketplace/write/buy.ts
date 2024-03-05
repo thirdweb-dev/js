@@ -7,29 +7,15 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type BuyParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
+    type: "uint256";
     name: "_listingId";
-    type: "uint256";
   }>;
-  buyFor: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_buyFor";
-    type: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_quantity";
-    type: "uint256";
-  }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currency";
-    type: "address";
-  }>;
+  buyFor: AbiParameterToPrimitiveType<{ type: "address"; name: "_buyFor" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "_currency" }>;
   totalPrice: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_totalPrice";
     type: "uint256";
+    name: "_totalPrice";
   }>;
 };
 
@@ -62,29 +48,24 @@ export function buy(options: BaseTransactionOptions<BuyParams>) {
       "0x7687ab02",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_listingId",
-          type: "uint256",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_buyFor",
-          type: "address",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_quantity",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_currency",
           type: "address",
+          name: "_currency",
         },
         {
-          internalType: "uint256",
-          name: "_totalPrice",
           type: "uint256",
+          name: "_totalPrice",
         },
       ],
       [],

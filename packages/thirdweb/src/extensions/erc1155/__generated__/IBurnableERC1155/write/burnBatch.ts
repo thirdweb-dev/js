@@ -6,21 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "burnBatch" function.
  */
 export type BurnBatchParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
-  ids: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "ids";
-    type: "uint256[]";
-  }>;
-  values: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "values";
-    type: "uint256[]";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
+  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
+  values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
 };
 
 /**
@@ -50,19 +38,16 @@ export function burnBatch(options: BaseTransactionOptions<BurnBatchParams>) {
       "0x6b20c454",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
         {
-          internalType: "uint256[]",
+          type: "uint256[]",
           name: "ids",
-          type: "uint256[]",
         },
         {
-          internalType: "uint256[]",
-          name: "values",
           type: "uint256[]",
+          name: "values",
         },
       ],
       [],

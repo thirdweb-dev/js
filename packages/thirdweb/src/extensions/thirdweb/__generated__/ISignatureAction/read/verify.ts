@@ -7,29 +7,16 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type VerifyParams = {
   req: AbiParameterToPrimitiveType<{
-    components: [
-      {
-        internalType: "uint128";
-        name: "validityStartTimestamp";
-        type: "uint128";
-      },
-      {
-        internalType: "uint128";
-        name: "validityEndTimestamp";
-        type: "uint128";
-      },
-      { internalType: "bytes32"; name: "uid"; type: "bytes32" },
-      { internalType: "bytes"; name: "data"; type: "bytes" },
-    ];
-    internalType: "struct ISignatureAction.GenericRequest";
-    name: "req";
     type: "tuple";
+    name: "req";
+    components: [
+      { type: "uint128"; name: "validityStartTimestamp" },
+      { type: "uint128"; name: "validityEndTimestamp" },
+      { type: "bytes32"; name: "uid" },
+      { type: "bytes"; name: "data" },
+    ];
   }>;
-  signature: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "signature";
-    type: "bytes";
-  }>;
+  signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
 /**
@@ -55,48 +42,40 @@ export async function verify(options: BaseTransactionOptions<VerifyParams>) {
       "0xc4376dd7",
       [
         {
+          type: "tuple",
+          name: "req",
           components: [
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "validityStartTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "validityEndTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "bytes32",
-              name: "uid",
               type: "bytes32",
+              name: "uid",
             },
             {
-              internalType: "bytes",
-              name: "data",
               type: "bytes",
+              name: "data",
             },
           ],
-          internalType: "struct ISignatureAction.GenericRequest",
-          name: "req",
-          type: "tuple",
         },
         {
-          internalType: "bytes",
-          name: "signature",
           type: "bytes",
+          name: "signature",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "success",
           type: "bool",
+          name: "success",
         },
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
       ],
     ],

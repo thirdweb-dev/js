@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SharedMetadataUpdatedEventFilters = Partial<{
   id: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "id";
     type: "bytes32";
+    name: "id";
+    indexed: true;
   }>;
 }>;
 

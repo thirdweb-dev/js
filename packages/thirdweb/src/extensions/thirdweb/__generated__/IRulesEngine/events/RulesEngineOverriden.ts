@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RulesEngineOverridenEventFilters = Partial<{
   newRulesEngine: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "newRulesEngine";
     type: "address";
+    name: "newRulesEngine";
+    indexed: true;
   }>;
 }>;
 

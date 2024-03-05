@@ -22,8 +22,6 @@ export async function name(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

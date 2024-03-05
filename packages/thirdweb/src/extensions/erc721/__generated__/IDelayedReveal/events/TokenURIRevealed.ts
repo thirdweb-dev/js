@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokenURIRevealedEventFilters = Partial<{
   index: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "index";
     type: "uint256";
+    name: "index";
+    indexed: true;
   }>;
 }>;
 

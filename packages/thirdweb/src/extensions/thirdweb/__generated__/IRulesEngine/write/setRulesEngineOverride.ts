@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetRulesEngineOverrideParams = {
   rulesEngineAddress: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_rulesEngineAddress";
     type: "address";
+    name: "_rulesEngineAddress";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function setRulesEngineOverride(
       "0x0eb0adb6",
       [
         {
-          internalType: "address",
-          name: "_rulesEngineAddress",
           type: "address",
+          name: "_rulesEngineAddress",
         },
       ],
       [],

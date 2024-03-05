@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "ownerOf" function.
  */
 export type OwnerOfParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -35,15 +31,12 @@ export async function ownerOf(options: BaseTransactionOptions<OwnerOfParams>) {
       "0x6352211e",
       [
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

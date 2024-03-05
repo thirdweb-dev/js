@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getRoyaltyInfoForToken" function.
  */
 export type GetRoyaltyInfoForTokenParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
 /**
@@ -37,20 +33,15 @@ export async function getRoyaltyInfoForToken(
       "0x4cc157df",
       [
         {
-          internalType: "uint256",
-          name: "_tokenId",
           type: "uint256",
+          name: "_tokenId",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
         {
-          internalType: "uint16",
-          name: "",
           type: "uint16",
         },
       ],

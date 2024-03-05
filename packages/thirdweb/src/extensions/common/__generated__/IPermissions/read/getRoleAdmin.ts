@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getRoleAdmin" function.
  */
 export type GetRoleAdminParams = {
-  role: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "role";
-    type: "bytes32";
-  }>;
+  role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function getRoleAdmin(
       "0x248a9ca3",
       [
         {
-          internalType: "bytes32",
-          name: "role",
           type: "bytes32",
+          name: "role",
         },
       ],
       [
         {
-          internalType: "bytes32",
-          name: "",
           type: "bytes32",
         },
       ],

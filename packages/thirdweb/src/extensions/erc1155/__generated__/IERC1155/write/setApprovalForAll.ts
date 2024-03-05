@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "setApprovalForAll" function.
  */
 export type SetApprovalForAllParams = {
-  operator: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_operator";
-    type: "address";
-  }>;
-  approved: AbiParameterToPrimitiveType<{
-    internalType: "bool";
-    name: "_approved";
-    type: "bool";
-  }>;
+  operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
+  approved: AbiParameterToPrimitiveType<{ type: "bool"; name: "_approved" }>;
 };
 
 /**
@@ -46,14 +38,12 @@ export function setApprovalForAll(
       "0xa22cb465",
       [
         {
-          internalType: "address",
-          name: "_operator",
           type: "address",
+          name: "_operator",
         },
         {
-          internalType: "bool",
-          name: "_approved",
           type: "bool",
+          name: "_approved",
         },
       ],
       [],

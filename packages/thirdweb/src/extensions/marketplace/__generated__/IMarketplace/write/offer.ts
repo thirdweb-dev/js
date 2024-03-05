@@ -7,29 +7,21 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type OfferParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
   quantityWanted: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
+    type: "uint256";
     name: "_quantityWanted";
-    type: "uint256";
   }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currency";
-    type: "address";
-  }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "_currency" }>;
   pricePerToken: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_pricePerToken";
     type: "uint256";
+    name: "_pricePerToken";
   }>;
   expirationTimestamp: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_expirationTimestamp";
     type: "uint256";
+    name: "_expirationTimestamp";
   }>;
 };
 
@@ -62,29 +54,24 @@ export function offer(options: BaseTransactionOptions<OfferParams>) {
       "0x5fef45e7",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_listingId",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_quantityWanted",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_currency",
           type: "address",
+          name: "_currency",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_pricePerToken",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "_expirationTimestamp",
           type: "uint256",
+          name: "_expirationTimestamp",
         },
       ],
       [],

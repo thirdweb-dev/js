@@ -22,13 +22,9 @@ export async function getDefaultRoyaltyInfo(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
         {
-          internalType: "uint16",
-          name: "",
           type: "uint16",
         },
       ],

@@ -6,38 +6,24 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "setClaimConditions" function.
  */
 export type SetClaimConditionsParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   phases: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "uint256"; name: "startTimestamp"; type: "uint256" },
-      { internalType: "uint256"; name: "maxClaimableSupply"; type: "uint256" },
-      { internalType: "uint256"; name: "supplyClaimed"; type: "uint256" },
-      {
-        internalType: "uint256";
-        name: "quantityLimitPerWallet";
-        type: "uint256";
-      },
-      {
-        internalType: "uint256";
-        name: "waitTimeInSecondsBetweenClaims";
-        type: "uint256";
-      },
-      { internalType: "bytes32"; name: "merkleRoot"; type: "bytes32" },
-      { internalType: "uint256"; name: "pricePerToken"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-    ];
-    internalType: "struct IDropClaimCondition.ClaimCondition[]";
-    name: "phases";
     type: "tuple[]";
+    name: "phases";
+    components: [
+      { type: "uint256"; name: "startTimestamp" },
+      { type: "uint256"; name: "maxClaimableSupply" },
+      { type: "uint256"; name: "supplyClaimed" },
+      { type: "uint256"; name: "quantityLimitPerWallet" },
+      { type: "uint256"; name: "waitTimeInSecondsBetweenClaims" },
+      { type: "bytes32"; name: "merkleRoot" },
+      { type: "uint256"; name: "pricePerToken" },
+      { type: "address"; name: "currency" },
+    ];
   }>;
   resetClaimEligibility: AbiParameterToPrimitiveType<{
-    internalType: "bool";
-    name: "resetClaimEligibility";
     type: "bool";
+    name: "resetClaimEligibility";
   }>;
 };
 
@@ -70,61 +56,50 @@ export function setClaimConditions(
       "0xab073c22",
       [
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
         {
+          type: "tuple[]",
+          name: "phases",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "startTimestamp",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "maxClaimableSupply",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "supplyClaimed",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantityLimitPerWallet",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "waitTimeInSecondsBetweenClaims",
-              type: "uint256",
             },
             {
-              internalType: "bytes32",
-              name: "merkleRoot",
               type: "bytes32",
+              name: "merkleRoot",
             },
             {
-              internalType: "uint256",
-              name: "pricePerToken",
               type: "uint256",
+              name: "pricePerToken",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
           ],
-          internalType: "struct IDropClaimCondition.ClaimCondition[]",
-          name: "phases",
-          type: "tuple[]",
         },
         {
-          internalType: "bool",
-          name: "resetClaimEligibility",
           type: "bool",
+          name: "resetClaimEligibility",
         },
       ],
       [],

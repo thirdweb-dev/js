@@ -6,21 +6,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "onSignerAdded" function.
  */
 export type OnSignerAddedParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "creatorAdmin";
     type: "address";
+    name: "creatorAdmin";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -52,19 +43,16 @@ export function onSignerAdded(
       "0x9ddbb9d8",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "signer",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "creatorAdmin",
-          type: "address",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [],

@@ -6,31 +6,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "onERC1155BatchReceived" function.
  */
 export type OnERC1155BatchReceivedParams = {
-  operator: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "operator";
-    type: "address";
-  }>;
-  from: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "from";
-    type: "address";
-  }>;
-  ids: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "ids";
-    type: "uint256[]";
-  }>;
-  values: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "values";
-    type: "uint256[]";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
+  values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -64,35 +44,28 @@ export function onERC1155BatchReceived(
       "0xbc197c81",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "operator",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "from",
-          type: "address",
         },
         {
-          internalType: "uint256[]",
+          type: "uint256[]",
           name: "ids",
-          type: "uint256[]",
         },
         {
-          internalType: "uint256[]",
+          type: "uint256[]",
           name: "values",
-          type: "uint256[]",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [
         {
-          internalType: "bytes4",
-          name: "",
           type: "bytes4",
         },
       ],

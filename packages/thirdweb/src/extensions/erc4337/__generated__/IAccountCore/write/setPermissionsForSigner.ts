@@ -7,46 +7,21 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetPermissionsForSignerParams = {
   req: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "signer"; type: "address" },
-      { internalType: "uint8"; name: "isAdmin"; type: "uint8" },
-      { internalType: "address[]"; name: "approvedTargets"; type: "address[]" },
-      {
-        internalType: "uint256";
-        name: "nativeTokenLimitPerTransaction";
-        type: "uint256";
-      },
-      {
-        internalType: "uint128";
-        name: "permissionStartTimestamp";
-        type: "uint128";
-      },
-      {
-        internalType: "uint128";
-        name: "permissionEndTimestamp";
-        type: "uint128";
-      },
-      {
-        internalType: "uint128";
-        name: "reqValidityStartTimestamp";
-        type: "uint128";
-      },
-      {
-        internalType: "uint128";
-        name: "reqValidityEndTimestamp";
-        type: "uint128";
-      },
-      { internalType: "bytes32"; name: "uid"; type: "bytes32" },
-    ];
-    internalType: "struct IAccountPermissions.SignerPermissionRequest";
-    name: "req";
     type: "tuple";
+    name: "req";
+    components: [
+      { type: "address"; name: "signer" },
+      { type: "uint8"; name: "isAdmin" },
+      { type: "address[]"; name: "approvedTargets" },
+      { type: "uint256"; name: "nativeTokenLimitPerTransaction" },
+      { type: "uint128"; name: "permissionStartTimestamp" },
+      { type: "uint128"; name: "permissionEndTimestamp" },
+      { type: "uint128"; name: "reqValidityStartTimestamp" },
+      { type: "uint128"; name: "reqValidityEndTimestamp" },
+      { type: "bytes32"; name: "uid" },
+    ];
   }>;
-  signature: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "signature";
-    type: "bytes";
-  }>;
+  signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
 /**
@@ -77,61 +52,50 @@ export function setPermissionsForSigner(
       "0x5892e236",
       [
         {
+          type: "tuple",
+          name: "req",
           components: [
             {
-              internalType: "address",
-              name: "signer",
               type: "address",
+              name: "signer",
             },
             {
-              internalType: "uint8",
-              name: "isAdmin",
               type: "uint8",
+              name: "isAdmin",
             },
             {
-              internalType: "address[]",
-              name: "approvedTargets",
               type: "address[]",
+              name: "approvedTargets",
             },
             {
-              internalType: "uint256",
-              name: "nativeTokenLimitPerTransaction",
               type: "uint256",
+              name: "nativeTokenLimitPerTransaction",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "permissionStartTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "permissionEndTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "reqValidityStartTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "reqValidityEndTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "bytes32",
-              name: "uid",
               type: "bytes32",
+              name: "uid",
             },
           ],
-          internalType: "struct IAccountPermissions.SignerPermissionRequest",
-          name: "req",
-          type: "tuple",
         },
         {
-          internalType: "bytes",
-          name: "signature",
           type: "bytes",
+          name: "signature",
         },
       ],
       [],

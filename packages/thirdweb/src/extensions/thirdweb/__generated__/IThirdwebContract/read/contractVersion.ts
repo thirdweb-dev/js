@@ -22,8 +22,6 @@ export async function contractVersion(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "uint8",
-          name: "",
           type: "uint8",
         },
       ],

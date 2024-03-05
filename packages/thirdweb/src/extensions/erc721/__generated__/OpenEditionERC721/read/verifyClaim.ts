@@ -7,44 +7,25 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type VerifyClaimParams = {
   conditionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
+    type: "uint256";
     name: "_conditionId";
-    type: "uint256";
   }>;
-  claimer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_claimer";
-    type: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_quantity";
-    type: "uint256";
-  }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currency";
-    type: "address";
-  }>;
+  claimer: AbiParameterToPrimitiveType<{ type: "address"; name: "_claimer" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "_currency" }>;
   pricePerToken: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_pricePerToken";
     type: "uint256";
+    name: "_pricePerToken";
   }>;
   allowlistProof: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "bytes32[]"; name: "proof"; type: "bytes32[]" },
-      {
-        internalType: "uint256";
-        name: "quantityLimitPerWallet";
-        type: "uint256";
-      },
-      { internalType: "uint256"; name: "pricePerToken"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-    ];
-    internalType: "struct IDrop.AllowlistProof";
-    name: "_allowlistProof";
     type: "tuple";
+    name: "_allowlistProof";
+    components: [
+      { type: "bytes32[]"; name: "proof" },
+      { type: "uint256"; name: "quantityLimitPerWallet" },
+      { type: "uint256"; name: "pricePerToken" },
+      { type: "address"; name: "currency" },
+    ];
   }>;
 };
 
@@ -77,63 +58,52 @@ export async function verifyClaim(
       "0x23a2902b",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_conditionId",
-          type: "uint256",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_claimer",
-          type: "address",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_quantity",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_currency",
           type: "address",
+          name: "_currency",
         },
         {
-          internalType: "uint256",
-          name: "_pricePerToken",
           type: "uint256",
+          name: "_pricePerToken",
         },
         {
+          type: "tuple",
+          name: "_allowlistProof",
           components: [
             {
-              internalType: "bytes32[]",
-              name: "proof",
               type: "bytes32[]",
+              name: "proof",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantityLimitPerWallet",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "pricePerToken",
-              type: "uint256",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
           ],
-          internalType: "struct IDrop.AllowlistProof",
-          name: "_allowlistProof",
-          type: "tuple",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "isOverride",
           type: "bool",
+          name: "isOverride",
         },
       ],
     ],

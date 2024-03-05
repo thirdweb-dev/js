@@ -7,34 +7,22 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DeployInstanceProxyParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
   implementation: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "implementation";
     type: "address";
+    name: "implementation";
   }>;
   initializeData: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "initializeData";
     type: "bytes";
+    name: "initializeData";
   }>;
-  salt: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "salt";
-    type: "bytes32";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  salt: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "salt" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
   publishMetadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "publishMetadataUri";
     type: "string";
+    name: "publishMetadataUri";
   }>;
 };
 
@@ -70,41 +58,34 @@ export function deployInstanceProxy(
       "0x9e69e62f",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "publisher",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "implementation",
-          type: "address",
         },
         {
-          internalType: "bytes",
-          name: "initializeData",
           type: "bytes",
+          name: "initializeData",
         },
         {
-          internalType: "bytes32",
-          name: "salt",
           type: "bytes32",
+          name: "salt",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
         {
-          internalType: "string",
-          name: "publishMetadataUri",
           type: "string",
+          name: "publishMetadataUri",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "deployedAddress",
           type: "address",
+          name: "deployedAddress",
         },
       ],
     ],

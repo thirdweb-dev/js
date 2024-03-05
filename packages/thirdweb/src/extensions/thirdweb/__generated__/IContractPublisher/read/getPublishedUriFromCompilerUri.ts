@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetPublishedUriFromCompilerUriParams = {
   compilerMetadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "compilerMetadataUri";
     type: "string";
+    name: "compilerMetadataUri";
   }>;
 };
 
@@ -37,16 +36,14 @@ export async function getPublishedUriFromCompilerUri(
       "0x819e992f",
       [
         {
-          internalType: "string",
-          name: "compilerMetadataUri",
           type: "string",
+          name: "compilerMetadataUri",
         },
       ],
       [
         {
-          internalType: "string[]",
-          name: "publishedMetadataUris",
           type: "string[]",
+          name: "publishedMetadataUris",
         },
       ],
     ],

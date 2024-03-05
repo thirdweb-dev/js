@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SignatureAggregatorChangedEventFilters = Partial<{
   aggregator: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "aggregator";
     type: "address";
+    name: "aggregator";
+    indexed: true;
   }>;
 }>;
 

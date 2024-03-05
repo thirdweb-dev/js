@@ -7,44 +7,31 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CreatePackParams = {
   contents: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "assetContract"; type: "address" },
-      {
-        internalType: "enum ITokenBundle.TokenType";
-        name: "tokenType";
-        type: "uint8";
-      },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "totalAmount"; type: "uint256" },
-    ];
-    internalType: "struct ITokenBundle.Token[]";
-    name: "contents";
     type: "tuple[]";
+    name: "contents";
+    components: [
+      { type: "address"; name: "assetContract" },
+      { type: "uint8"; name: "tokenType" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "totalAmount" },
+    ];
   }>;
   numOfRewardUnits: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "numOfRewardUnits";
     type: "uint256[]";
+    name: "numOfRewardUnits";
   }>;
-  packUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "packUri";
-    type: "string";
-  }>;
+  packUri: AbiParameterToPrimitiveType<{ type: "string"; name: "packUri" }>;
   openStartTimestamp: AbiParameterToPrimitiveType<{
-    internalType: "uint128";
-    name: "openStartTimestamp";
     type: "uint128";
+    name: "openStartTimestamp";
   }>;
   amountDistributedPerOpen: AbiParameterToPrimitiveType<{
-    internalType: "uint128";
-    name: "amountDistributedPerOpen";
     type: "uint128";
+    name: "amountDistributedPerOpen";
   }>;
   recipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "recipient";
     type: "address";
+    name: "recipient";
   }>;
 };
 
@@ -78,68 +65,56 @@ export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
       "0x092e6075",
       [
         {
+          type: "tuple[]",
+          name: "contents",
           components: [
             {
-              internalType: "address",
-              name: "assetContract",
               type: "address",
+              name: "assetContract",
             },
             {
-              internalType: "enum ITokenBundle.TokenType",
-              name: "tokenType",
               type: "uint8",
+              name: "tokenType",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "totalAmount",
               type: "uint256",
+              name: "totalAmount",
             },
           ],
-          internalType: "struct ITokenBundle.Token[]",
-          name: "contents",
-          type: "tuple[]",
         },
         {
-          internalType: "uint256[]",
-          name: "numOfRewardUnits",
           type: "uint256[]",
+          name: "numOfRewardUnits",
         },
         {
-          internalType: "string",
-          name: "packUri",
           type: "string",
+          name: "packUri",
         },
         {
-          internalType: "uint128",
+          type: "uint128",
           name: "openStartTimestamp",
-          type: "uint128",
         },
         {
-          internalType: "uint128",
+          type: "uint128",
           name: "amountDistributedPerOpen",
-          type: "uint128",
         },
         {
-          internalType: "address",
-          name: "recipient",
           type: "address",
+          name: "recipient",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "packId",
           type: "uint256",
+          name: "packId",
         },
         {
-          internalType: "uint256",
-          name: "packTotalSupply",
           type: "uint256",
+          name: "packTotalSupply",
         },
       ],
     ],

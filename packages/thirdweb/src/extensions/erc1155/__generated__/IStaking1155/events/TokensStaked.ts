@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokensStakedEventFilters = Partial<{
   staker: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "staker";
     type: "address";
+    name: "staker";
+    indexed: true;
   }>;
   tokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "tokenId";
     type: "uint256";
+    name: "tokenId";
+    indexed: true;
   }>;
 }>;
 

@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetPlatformFeeInfoParams = {
   platformFeeRecipient: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_platformFeeRecipient";
     type: "address";
+    name: "_platformFeeRecipient";
   }>;
   platformFeeBps: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_platformFeeBps";
     type: "uint256";
+    name: "_platformFeeBps";
   }>;
 };
 
@@ -46,14 +44,12 @@ export function setPlatformFeeInfo(
       "0x1e7ac488",
       [
         {
-          internalType: "address",
-          name: "_platformFeeRecipient",
           type: "address",
+          name: "_platformFeeRecipient",
         },
         {
-          internalType: "uint256",
-          name: "_platformFeeBps",
           type: "uint256",
+          name: "_platformFeeBps",
         },
       ],
       [],

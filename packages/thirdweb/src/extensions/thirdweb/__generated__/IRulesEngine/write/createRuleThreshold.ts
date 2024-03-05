@@ -7,20 +7,15 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CreateRuleThresholdParams = {
   rule: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "token"; type: "address" },
-      {
-        internalType: "enum IRulesEngine.TokenType";
-        name: "tokenType";
-        type: "uint8";
-      },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "balance"; type: "uint256" },
-      { internalType: "uint256"; name: "score"; type: "uint256" },
-    ];
-    internalType: "struct IRulesEngine.RuleTypeThreshold";
-    name: "rule";
     type: "tuple";
+    name: "rule";
+    components: [
+      { type: "address"; name: "token" },
+      { type: "uint8"; name: "tokenType" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "balance" },
+      { type: "uint256"; name: "score" },
+    ];
   }>;
 };
 
@@ -51,43 +46,36 @@ export function createRuleThreshold(
       "0x1022a25e",
       [
         {
+          type: "tuple",
+          name: "rule",
           components: [
             {
-              internalType: "address",
-              name: "token",
               type: "address",
+              name: "token",
             },
             {
-              internalType: "enum IRulesEngine.TokenType",
-              name: "tokenType",
               type: "uint8",
+              name: "tokenType",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "balance",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "score",
               type: "uint256",
+              name: "score",
             },
           ],
-          internalType: "struct IRulesEngine.RuleTypeThreshold",
-          name: "rule",
-          type: "tuple",
         },
       ],
       [
         {
-          internalType: "bytes32",
-          name: "ruleId",
           type: "bytes32",
+          name: "ruleId",
         },
       ],
     ],

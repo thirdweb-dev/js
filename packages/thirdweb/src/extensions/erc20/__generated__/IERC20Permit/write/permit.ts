@@ -6,41 +6,13 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "permit" function.
  */
 export type PermitParams = {
-  owner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "owner";
-    type: "address";
-  }>;
-  spender: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "spender";
-    type: "address";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
-  deadline: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "deadline";
-    type: "uint256";
-  }>;
-  v: AbiParameterToPrimitiveType<{
-    internalType: "uint8";
-    name: "v";
-    type: "uint8";
-  }>;
-  r: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "r";
-    type: "bytes32";
-  }>;
-  s: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "s";
-    type: "bytes32";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
+  spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
+  deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
+  v: AbiParameterToPrimitiveType<{ type: "uint8"; name: "v" }>;
+  r: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "r" }>;
+  s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
 /**
@@ -74,39 +46,32 @@ export function permit(options: BaseTransactionOptions<PermitParams>) {
       "0xd505accf",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "owner",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "spender",
-          type: "address",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "value",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "deadline",
-          type: "uint256",
         },
         {
-          internalType: "uint8",
-          name: "v",
           type: "uint8",
+          name: "v",
         },
         {
-          internalType: "bytes32",
+          type: "bytes32",
           name: "r",
-          type: "bytes32",
         },
         {
-          internalType: "bytes32",
-          name: "s",
           type: "bytes32",
+          name: "s",
         },
       ],
       [],

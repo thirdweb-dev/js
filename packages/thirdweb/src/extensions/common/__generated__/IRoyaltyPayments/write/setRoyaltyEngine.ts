@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetRoyaltyEngineParams = {
   royaltyEngineAddress: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_royaltyEngineAddress";
     type: "address";
+    name: "_royaltyEngineAddress";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function setRoyaltyEngine(
       "0x21ede032",
       [
         {
-          internalType: "address",
-          name: "_royaltyEngineAddress",
           type: "address",
+          name: "_royaltyEngineAddress",
         },
       ],
       [],

@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getContractDeployer" function.
  */
 export type GetContractDeployerParams = {
-  contract: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_contract";
-    type: "address";
-  }>;
+  contract: AbiParameterToPrimitiveType<{ type: "address"; name: "_contract" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function getContractDeployer(
       "0xbf775fb2",
       [
         {
-          internalType: "address",
-          name: "_contract",
           type: "address",
+          name: "_contract",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

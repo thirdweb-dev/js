@@ -7,24 +7,22 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type UpdateListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
   params: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "assetContract"; type: "address" },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "quantity"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-      { internalType: "uint256"; name: "pricePerToken"; type: "uint256" },
-      { internalType: "uint128"; name: "startTimestamp"; type: "uint128" },
-      { internalType: "uint128"; name: "endTimestamp"; type: "uint128" },
-      { internalType: "bool"; name: "reserved"; type: "bool" },
-    ];
-    internalType: "struct IDirectListings.ListingParameters";
-    name: "_params";
     type: "tuple";
+    name: "_params";
+    components: [
+      { type: "address"; name: "assetContract" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "quantity" },
+      { type: "address"; name: "currency" },
+      { type: "uint256"; name: "pricePerToken" },
+      { type: "uint128"; name: "startTimestamp" },
+      { type: "uint128"; name: "endTimestamp" },
+      { type: "bool"; name: "reserved" },
+    ];
   }>;
 };
 
@@ -56,56 +54,46 @@ export function updateListing(
       "0x07b67758",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
         {
+          type: "tuple",
+          name: "_params",
           components: [
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
             {
-              internalType: "uint256",
-              name: "pricePerToken",
               type: "uint256",
+              name: "pricePerToken",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "startTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "endTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "bool",
-              name: "reserved",
               type: "bool",
+              name: "reserved",
             },
           ],
-          internalType: "struct IDirectListings.ListingParameters",
-          name: "_params",
-          type: "tuple",
         },
       ],
       [],

@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type UpdatedListingEventFilters = Partial<{
   listingCreator: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "listingCreator";
     type: "address";
+    name: "listingCreator";
+    indexed: true;
   }>;
   listingId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "listingId";
     type: "uint256";
+    name: "listingId";
+    indexed: true;
   }>;
   assetContract: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "assetContract";
     type: "address";
+    name: "assetContract";
+    indexed: true;
   }>;
 }>;
 

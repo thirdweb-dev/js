@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AddStakeParams = {
   unstakeDelaySec: AbiParameterToPrimitiveType<{
-    internalType: "uint32";
-    name: "_unstakeDelaySec";
     type: "uint32";
+    name: "_unstakeDelaySec";
   }>;
 };
 
@@ -38,9 +37,8 @@ export function addStake(options: BaseTransactionOptions<AddStakeParams>) {
       "0x0396cb60",
       [
         {
-          internalType: "uint32",
-          name: "_unstakeDelaySec",
           type: "uint32",
+          name: "_unstakeDelaySec",
         },
       ],
       [],

@@ -7,34 +7,28 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PublishContractParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
   contractId: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "contractId";
     type: "string";
+    name: "contractId";
   }>;
   publishMetadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "publishMetadataUri";
     type: "string";
+    name: "publishMetadataUri";
   }>;
   compilerMetadataUri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "compilerMetadataUri";
     type: "string";
+    name: "compilerMetadataUri";
   }>;
   bytecodeHash: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "bytecodeHash";
     type: "bytes32";
+    name: "bytecodeHash";
   }>;
   implementation: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "implementation";
     type: "address";
+    name: "implementation";
   }>;
 };
 
@@ -70,34 +64,28 @@ export function publishContract(
       "0xd50299e6",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "publisher",
-          type: "address",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "contractId",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "publishMetadataUri",
-          type: "string",
         },
         {
-          internalType: "string",
+          type: "string",
           name: "compilerMetadataUri",
-          type: "string",
         },
         {
-          internalType: "bytes32",
-          name: "bytecodeHash",
           type: "bytes32",
+          name: "bytecodeHash",
         },
         {
-          internalType: "address",
-          name: "implementation",
           type: "address",
+          name: "implementation",
         },
       ],
       [],

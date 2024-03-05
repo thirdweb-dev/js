@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "tokenURI" function.
  */
 export type TokenURIParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function tokenURI(
       "0xc87b56dd",
       [
         {
-          internalType: "uint256",
-          name: "_tokenId",
           type: "uint256",
+          name: "_tokenId",
         },
       ],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

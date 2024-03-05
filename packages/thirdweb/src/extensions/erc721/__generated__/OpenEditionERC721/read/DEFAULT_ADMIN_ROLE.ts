@@ -22,8 +22,6 @@ export async function DEFAULT_ADMIN_ROLE(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "bytes32",
-          name: "",
           type: "bytes32",
         },
       ],

@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "lazyMint" function.
  */
 export type LazyMintParams = {
-  amount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amount";
-    type: "uint256";
-  }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
   baseURIForTokens: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "baseURIForTokens";
     type: "string";
+    name: "baseURIForTokens";
   }>;
 };
 
@@ -44,14 +39,12 @@ export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
       "0x47158264",
       [
         {
-          internalType: "uint256",
-          name: "amount",
           type: "uint256",
+          name: "amount",
         },
         {
-          internalType: "string",
-          name: "baseURIForTokens",
           type: "string",
+          name: "baseURIForTokens",
         },
       ],
       [],

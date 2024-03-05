@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type URIEventFilters = Partial<{
   _id: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "_id";
     type: "uint256";
+    name: "_id";
+    indexed: true;
   }>;
 }>;
 

@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TransferSingleEventFilters = Partial<{
   operator: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "operator";
     type: "address";
+    name: "operator";
+    indexed: true;
   }>;
   from: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "from";
     type: "address";
+    name: "from";
+    indexed: true;
   }>;
   to: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "to";
     type: "address";
+    name: "to";
+    indexed: true;
   }>;
 }>;
 

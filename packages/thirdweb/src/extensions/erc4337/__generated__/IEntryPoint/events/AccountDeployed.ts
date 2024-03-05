@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AccountDeployedEventFilters = Partial<{
   userOpHash: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "userOpHash";
     type: "bytes32";
+    name: "userOpHash";
+    indexed: true;
   }>;
   sender: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "sender";
     type: "address";
+    name: "sender";
+    indexed: true;
   }>;
 }>;
 
