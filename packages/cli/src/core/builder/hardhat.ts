@@ -1,4 +1,5 @@
 import { findFiles } from "../../common/file-helper";
+import { Link, linkLibrary } from "../../common/link-lib-helper";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
 import { ContractPayload } from "../interfaces/ContractPayload";
@@ -85,6 +86,22 @@ export class HardhatBuilder extends BaseBuilder {
 
       const contractBuildOutputs = buildJson.output.contracts;
 
+      let libraries: any = {};
+      if (Array.isArray(options.linkLib) && options.linkLib.length > 0) {
+        for (const [contractPath, contractInfos] of Object.entries(
+          contractBuildOutputs,
+        )) {
+          const contractNames = Object.keys(contractInfos as any);
+          const lib = options.linkLib.forEach((link: Link) => {
+            if (contractNames.includes(link.library)) {
+              const key = `${contractPath}:${link.library}`;
+              libraries[key] = link.address;
+            }
+          });
+        }
+        logger.debug(`Found libraries to link: ${libraries}`);
+      }
+
       for (const [contractPath, contractInfos] of Object.entries(
         contractBuildOutputs,
       )) {
@@ -109,9 +126,13 @@ export class HardhatBuilder extends BaseBuilder {
             continue;
           }
 
-          const bytecode = info.evm.bytecode.object;
-          const deployedBytecode =
-            info.evm.deployedBytecode?.object || bytecode;
+          let bytecode = info.evm.bytecode.object;
+          let deployedBytecode = info.evm.deployedBytecode?.object || bytecode;
+
+          // link external libraries if any
+          bytecode = linkLibrary(bytecode, libraries);
+          deployedBytecode = linkLibrary(deployedBytecode, libraries);
+
           const { metadata, abi } = info;
 
           const meta = metadata.solc_metadata

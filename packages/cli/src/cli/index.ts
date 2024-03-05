@@ -20,6 +20,7 @@ import { generate } from "../generate/command";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { install } from "../install";
 import { upload } from "../storage/command";
+import { parseLinkLibOption } from "../common/link-lib-helper";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -331,7 +332,14 @@ const main = async () => {
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
     .option("--zksync", "Deploy on ZKSync")
+    .option(
+      "--link-lib <library:address...>",
+      "Specify library names and addresses",
+      parseLinkLibOption,
+      [],
+    )
     .option("-k, --key <key>", "API secret key to authorize usage")
+    .parse(process.argv)
     .action(async (options) => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -370,7 +378,14 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option(
+      "--link-lib <library:address...>",
+      "Specify library names and addresses",
+      parseLinkLibOption,
+      [],
+    )
     .option("-k, --key <key>", "API secret key to authorize usage")
+    .parse(process.argv)
     .action(async (options) => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
