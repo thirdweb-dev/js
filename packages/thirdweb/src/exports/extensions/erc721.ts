@@ -36,6 +36,10 @@ export {
   transferFrom,
   type TransferFromParams,
 } from "../../extensions/erc721/__generated__/IERC721A/write/transferFrom.js";
+export {
+  burn,
+  type BurnParams,
+} from "../../extensions/erc721/__generated__/IBurnableERC721/write/burn.js";
 
 /**
  * EVENTS extension for ERC721
