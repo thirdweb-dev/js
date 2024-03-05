@@ -21,4 +21,6 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.BinanceSmartChainTestnet,
   ChainId.Hardhat,
   ChainId.Localhost,
+  ChainId.Holesky,
+  ChainId.Katla,
 ];

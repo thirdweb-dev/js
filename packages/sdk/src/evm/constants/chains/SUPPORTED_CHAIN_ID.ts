@@ -19,4 +19,6 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.BinanceSmartChainMainnet
   | ChainId.BinanceSmartChainTestnet
   | ChainId.Hardhat
-  | ChainId.Localhost;
+  | ChainId.Localhost
+  | ChainId.Holesky
+  | ChainId.Katla;
