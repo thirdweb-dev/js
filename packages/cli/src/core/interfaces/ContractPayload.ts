@@ -26,4 +26,7 @@ export interface ContractPayload {
    * The source file paths
    */
   sources: string[];
+
+  compilerVersion: string;
+  evmVersion: string;
 }

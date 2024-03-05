@@ -363,6 +363,16 @@ export async function processProject(
           metadataUri: metadataURIs[i],
           bytecodeUri: bytecodeURIs[i],
           analytics,
+          compilers: {
+            solc: [
+              {
+                compilerVersion: compiledResult.contracts[0].compilerVersion,
+                evmVersion: compiledResult.contracts[0].evmVersion,
+                metadataUri: metadataURIs[i],
+                bytecodeUri: bytecodeURIs[i],
+              },
+            ],
+          },
         };
       });
     }
@@ -413,8 +423,18 @@ export async function processProject(
           compilers: {
             zksolc: [
               {
+                compilerVersion: zkCompiledResult.contracts[0].compilerVersion,
+                evmVersion: zkCompiledResult.contracts[0].evmVersion,
                 metadataUri: zkMetadataURIs[i],
                 bytecodeUri: zkBytecodeURIs[i],
+              },
+            ],
+            solc: [
+              {
+                compilerVersion: compiledResult.contracts[0].compilerVersion,
+                evmVersion: compiledResult.contracts[0].evmVersion,
+                metadataUri: metadataURIs[i],
+                bytecodeUri: bytecodeURIs[i],
               },
             ],
           },

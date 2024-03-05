@@ -34,7 +34,7 @@ export class HardhatBuilder extends BaseBuilder {
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
-    await execute("npx hardhat clean", options.projectPath);
+    // await execute("npx hardhat clean", options.projectPath);
     await execute(`npx hardhat compile`, options.projectPath);
 
     const solcConfigs = actualHardhatConfig.solidity.compilers;
@@ -99,6 +99,10 @@ export class HardhatBuilder extends BaseBuilder {
           const { metadata, abi } = info;
 
           const meta = JSON.parse(metadata);
+
+          const evmVersion = meta.settings?.evmVersion || "";
+          const compilerVersion = meta.compiler?.version || "";
+
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -133,6 +137,8 @@ export class HardhatBuilder extends BaseBuilder {
               name: contractName,
               fileName,
               sources,
+              compilerVersion,
+              evmVersion,
             });
           }
         }

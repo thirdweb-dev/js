@@ -34,7 +34,7 @@ export class ZKHardhatBuilder extends BaseBuilder {
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
-    await execute("npx hardhat clean", options.projectPath);
+    // await execute("npx hardhat clean", options.projectPath);
 
     let ignoreIpfsHash = false;
     // if (options.zksync) {
@@ -123,6 +123,9 @@ export class ZKHardhatBuilder extends BaseBuilder {
           const meta = metadata.solc_metadata
             ? JSON.parse(metadata.solc_metadata)
             : JSON.parse(metadata);
+
+          const evmVersion = meta.settings?.evmVersion || "";
+          const compilerVersion = meta.compiler?.version || "";
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -164,6 +167,8 @@ export class ZKHardhatBuilder extends BaseBuilder {
               name: contractName,
               fileName,
               sources,
+              compilerVersion,
+              evmVersion,
             });
           }
         }
