@@ -2,7 +2,7 @@ import { readContract } from "../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 /**
- * Represents the parameters for the `PreviewMintParams` function.
+ * Represents the parameters for the `previewMint` function.
  */
 export type PreviewMintParams = {
   shares: bigint;
