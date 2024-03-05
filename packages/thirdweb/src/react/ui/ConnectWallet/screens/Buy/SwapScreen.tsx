@@ -294,7 +294,7 @@ export function SwapScreenContent(props: {
       <Container p="lg">
         <ModalHeader title={screenLocale.title} onBack={props.onBack} />
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         {/* From */}
         <SwapInput
@@ -348,7 +348,7 @@ export function SwapScreenContent(props: {
 
         {swapQuoteQuery.data && (
           <div>
-            <Spacer y="xl" />
+            <Spacer y="lg" />
             <Text color="primaryText">Fee Breakdown</Text>
             <Spacer y="xs" />
             <Fees
