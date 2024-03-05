@@ -149,8 +149,6 @@ export function SwapScreenContent(props: {
 
   const swapQuoteQuery = useSwapQuote(swapParams);
 
-  console.log(swapQuoteQuery.data);
-
   const fromTokenBalanceQuery = useWalletBalance({
     account: account,
     chain: fromChain,
@@ -468,7 +466,6 @@ function WaitingForConfirmation(props: {
   const locale = useTWLocale();
   const screenLocale = locale.connectWallet.swapScreen;
   const swapStatus = useSwapStatus(props.swapTx);
-  console.log("sent swap", props.swapTx);
 
   return (
     <Container animate="fadein">
