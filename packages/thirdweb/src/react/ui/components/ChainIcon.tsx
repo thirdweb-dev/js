@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import type { ApiChain } from "../../../chains/types.js";
+import type { ChainMetadata } from "../../../chains/types.js";
 import { resolveScheme } from "../../../utils/ipfs.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import { StyledDiv } from "../design-system/elements.js";
@@ -13,7 +13,7 @@ const defaultChainIcon =
  * @internal
  */
 export const ChainIcon: React.FC<{
-  chain: ApiChain;
+  chain: ChainMetadata;
   size: string;
   active?: boolean;
   className?: string;

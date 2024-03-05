@@ -1,7 +1,7 @@
 // chain type
 export type { Chain } from "../chains/types.js";
-// define chain
-export { defineChain } from "../chains/utils.js";
+// define chain, chainMetadata
+export { defineChain, getChainMetadata } from "../chains/utils.js";
 
 /**
  * PRE_DEFINED CHAINS

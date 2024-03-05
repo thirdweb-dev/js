@@ -37,7 +37,7 @@ import {
 } from "../../hooks/others/useChainQuery.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
-import type { ApiChain, Chain } from "../../../chains/types.js";
+import type { ChainMetadata, Chain } from "../../../chains/types.js";
 import { convertApiChainToChain } from "../../../chains/utils.js";
 
 type NetworkSelectorChainProps = {
@@ -98,9 +98,9 @@ export type NetworkSelectorProps = {
 
 let fuseInstances:
   | {
-      all: Fuse<ApiChain>;
-      popular: Fuse<ApiChain>;
-      recent: Fuse<ApiChain>;
+      all: Fuse<ChainMetadata>;
+      popular: Fuse<ChainMetadata>;
+      recent: Fuse<ChainMetadata>;
     }
   | undefined = undefined;
 
@@ -136,9 +136,9 @@ function initializeFuseInstances() {
 }
 
 type ChainData = {
-  allChains: ApiChain[];
-  popularChains: ApiChain[];
-  recentChains: ApiChain[];
+  allChains: ChainMetadata[];
+  popularChains: ChainMetadata[];
+  recentChains: ChainMetadata[];
   isLoading: boolean;
 };
 
@@ -152,8 +152,8 @@ function useLoadChains(
   const isLoading = chainsQueries.some((q) => q.isLoading);
 
   const { allChains, chainsMap } = useMemo(() => {
-    const _chains: ApiChain[] = [];
-    const _chainsMap = new Map<number, ApiChain>();
+    const _chains: ChainMetadata[] = [];
+    const _chainsMap = new Map<number, ChainMetadata>();
 
     if (isLoading) {
       return { allChains: [], chainsMap: _chainsMap };
@@ -162,7 +162,7 @@ function useLoadChains(
     for (const chainQuery of chainsQueries) {
       _chains.push({
         ...chainQuery.data,
-      } as ApiChain);
+      } as ChainMetadata);
     }
 
     for (const chain of _chains) {
@@ -176,7 +176,7 @@ function useLoadChains(
     if (!recentChainIds) {
       return [];
     }
-    const _recentChains: ApiChain[] = [];
+    const _recentChains: ChainMetadata[] = [];
     for (const chainId of recentChainIds) {
       const _chain = chainsMap.get(chainId);
       if (_chain) {
@@ -190,7 +190,7 @@ function useLoadChains(
     if (!popularChainIds) {
       return [];
     }
-    const _popularChains: ApiChain[] = [];
+    const _popularChains: ChainMetadata[] = [];
     for (const chainId of popularChainIds) {
       const _chain = chainsMap.get(chainId);
       if (_chain) {
@@ -467,7 +467,7 @@ function NetworkSelectorContentInner(
  * @internal
  */
 const filterChainByType = (
-  chains: ApiChain[],
+  chains: ChainMetadata[],
   type: "testnet" | "mainnet" | "all",
 ) => {
   if (type === "all") {

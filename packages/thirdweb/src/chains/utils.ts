@@ -1,7 +1,12 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
-import type { ApiChain, Chain, ChainOptions, LegacyChain } from "./types.js";
+import type {
+  ChainMetadata,
+  Chain,
+  ChainOptions,
+  LegacyChain,
+} from "./types.js";
 import type { Chain as ViemChain } from "viem";
 
 /**
@@ -132,7 +137,7 @@ export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
  */
 export async function getChainSymbol(chain: Chain): Promise<string> {
   if (!chain.nativeCurrency?.symbol) {
-    return getChainDataForChain(chain)
+    return getChainMetadata(chain)
       .then((data) => data.nativeCurrency.symbol)
       .catch(() => {
         // if we fail to fetch the chain data, return "ETH" as a fallback
@@ -152,7 +157,7 @@ export async function getChainSymbol(chain: Chain): Promise<string> {
  */
 export async function getChainDecimals(chain: Chain): Promise<number> {
   if (!chain.nativeCurrency?.decimals) {
-    return getChainDataForChain(chain)
+    return getChainMetadata(chain)
       .then((data) => data.nativeCurrency.decimals)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
@@ -175,7 +180,7 @@ export async function getChainNativeCurrencyName(
   chain: Chain,
 ): Promise<string> {
   if (!chain.nativeCurrency?.name) {
-    return getChainDataForChain(chain)
+    return getChainMetadata(chain)
       .then((data) => data.nativeCurrency.name)
       .catch(() => {
         // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
@@ -188,7 +193,7 @@ export async function getChainNativeCurrencyName(
 
 type FetchChainResponse =
   | {
-      data: ApiChain;
+      data: ChainMetadata;
       error?: never;
     }
   | {
@@ -197,9 +202,18 @@ type FetchChainResponse =
     };
 
 /**
- * @internal
+ * Retrieves chain data for a given chain.
+ * @param chain - The chain object containing the chain ID.
+ * @returns A Promise that resolves to the chain data.
+ * @throws If there is an error fetching the chain data.
+ * @example
+ * ```ts
+ * const chain = defineChain({ id: 1 });
+ * const chainData = await getChainMetadata(chain);
+ * console.log(chainData);
+ * ```
  */
-export function getChainDataForChain(chain: Chain): Promise<ApiChain> {
+export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
   const chainId = chain.id;
   return withCache(
     async () => {
@@ -254,7 +268,7 @@ export function getChainDataForChain(chain: Chain): Promise<ApiChain> {
  * Convert `ApiChain` to `Chain` object
  * @internal
  */
-export function convertApiChainToChain(apiChain: ApiChain): Chain {
+export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
   return {
     id: apiChain.chainId,
     name: apiChain.name,
