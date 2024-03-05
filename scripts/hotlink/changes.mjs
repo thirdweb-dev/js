@@ -64,7 +64,6 @@ export const changes = [
     entry: "./src/index.ts",
     exports: {
       ".": "./src/exports/thirdweb.ts",
-      "./adapters": "./src/exports/adapters.ts",
       "./chains": "./src/exports/chains.ts",
       "./contract": "./src/exports/contract.ts",
       "./event": "./src/exports/event.ts",
@@ -75,8 +74,9 @@ export const changes = [
       "./rpc": "./src/exports/rpc.ts",
       "./transaction": "./src/exports/transaction.ts",
       "./wallets": "./src/exports/wallets.ts",
-      // "./wallets/*": - TODO figure out
-      // "extensions/*" - TODO figure out
+      "./adapters/*": "./src/exports/adapters/*.ts",
+      "./wallets/*": "./src/exports/wallets/*.ts",
+      "./extensions/*": "./src/exports/extensions/*.ts",
     },
   },
 ];
