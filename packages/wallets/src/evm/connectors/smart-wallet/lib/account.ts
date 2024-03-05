@@ -13,7 +13,7 @@ import {
   providers,
   Contract,
 } from "ethers";
-import { ProviderConfig, UserOpOptions } from "../types";
+import { ProviderConfig } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { ACCOUNT_CORE_ABI } from "./constants";
 
