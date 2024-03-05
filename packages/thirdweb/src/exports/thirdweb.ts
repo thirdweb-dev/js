@@ -111,18 +111,22 @@ export type { NFT } from "../utils/nft/parseNft.js";
 export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 
 export {
-  getSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
+  getSwapQuote,
+  type SwapQuote,
+  type GetSwapQuoteParams,
+  type SwapTokenInfo,
 } from "../pay/swap/actions/getSwap.js";
 
 export {
   getSwapStatus,
+  type SwapTransaction,
   type SwapStatus,
-  type SwapStatusParams,
+  type SwapTransactionDetails,
 } from "../pay/swap/actions/getStatus.js";
 
-export { sendSwap } from "../pay/swap/actions/sendSwap.js";
+export { sendSwapTransaction } from "../pay/swap/actions/sendSwap.js";
+
+export type { SwapSupportedChainId } from "../pay/swap/supportedChains.js";
 
 // ------------------------------------------------
 // encoding

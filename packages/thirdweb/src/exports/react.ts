@@ -102,19 +102,9 @@ export {
 export type { SupportedTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
 
-export { useSendSwap } from "../react/hooks/pay/useSendSwap.js";
-
-export {
-  useSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
-} from "../react/hooks/pay/useSwapRoute.js";
-
-export {
-  useSwapStatus,
-  type SwapStatus,
-  type SwapStatusParams,
-} from "../react/hooks/pay/useSwapStatus.js";
+export { useSwapQuote } from "../react/hooks/pay/useSwapQuote.js";
+export { useSwapStatus } from "../react/hooks/pay/useSwapStatus.js";
+export { useSendSwapTransaction } from "../react/hooks/pay/useSendSwapTransaction.js";
 
 export { defaultWallets } from "../react/wallets/defaultWallets.js";
 

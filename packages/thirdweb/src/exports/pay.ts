@@ -1,13 +1,17 @@
 export {
-  getSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
+  getSwapQuote,
+  type SwapQuote,
+  type GetSwapQuoteParams,
+  type SwapTokenInfo,
 } from "../pay/swap/actions/getSwap.js";
 
 export {
   getSwapStatus,
-  type SwapStatusParams,
+  type SwapTransaction,
   type SwapStatus,
+  type SwapTransactionDetails,
 } from "../pay/swap/actions/getStatus.js";
 
-export { sendSwap } from "../pay/swap/actions/sendSwap.js";
+export { sendSwapTransaction } from "../pay/swap/actions/sendSwap.js";
+
+export type { SwapSupportedChainId } from "../pay/swap/supportedChains.js";

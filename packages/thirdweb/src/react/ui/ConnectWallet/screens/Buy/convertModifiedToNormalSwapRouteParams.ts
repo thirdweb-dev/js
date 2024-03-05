@@ -5,9 +5,9 @@ import {
   getContract,
   type ThirdwebContract,
 } from "../../../../../contract/contract.js";
+import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
 import { decimals } from "../../../../../extensions/erc20/__generated__/IERC20Metadata/read/decimals.js";
-import type { SwapRouteParams } from "../../../../../pay/swap/actions/getSwap.js";
-import type { SwapSupportChainId } from "../../../../../pay/swap/actions/getSwap.js";
+import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
 import { toUnits } from "../../../../../utils/units.js";
 
 // TODO: remove this once the server takes the amount instead of wei for token amount
@@ -16,20 +16,22 @@ export type ModifiedSwapRouteParams = {
   client: ThirdwebClient;
   // from
   fromAddress: string;
-  fromChainId: SwapSupportChainId;
+  fromChainId: SwapSupportedChainId;
   fromTokenAddress: string;
   fromTokenAmount?: string; // this is modified
   // to
   toAddress?: string;
-  toChainId: SwapSupportChainId;
+  toChainId: SwapSupportedChainId;
   toTokenAddress: string;
   toTokenAmount?: string; // this is modified
   // others
   maxSlippageBPS?: number;
 };
 
-const createContractCacheKey = (address: string, chainId: SwapSupportChainId) =>
-  `${address}-${chainId}`;
+const createContractCacheKey = (
+  address: string,
+  chainId: SwapSupportedChainId,
+) => `${address}-${chainId}`;
 
 // contract address + chainId as key
 const contractCache = new Map<string, ThirdwebContract>();
@@ -41,7 +43,7 @@ const nativeTokenDecimals = 18;
 export async function convertModifiedToNormalSwapRouteParams(
   modifiedParams: ModifiedSwapRouteParams,
 ) {
-  const swapRouteParams: SwapRouteParams = {
+  const swapRouteParams: GetSwapQuoteParams = {
     client: modifiedParams.client,
     fromAddress: modifiedParams.fromAddress,
     fromChainId: modifiedParams.fromChainId,
@@ -53,7 +55,7 @@ export async function convertModifiedToNormalSwapRouteParams(
   async function convertAmount(
     amount: string,
     tokenAddress: string,
-    chainId: SwapSupportChainId,
+    chainId: SwapSupportedChainId,
   ) {
     const _decimals = await getDecimals(
       tokenAddress,
@@ -87,7 +89,7 @@ export async function convertModifiedToNormalSwapRouteParams(
 
 async function getDecimals(
   tokenAddress: string,
-  chainId: SwapSupportChainId,
+  chainId: SwapSupportedChainId,
   client: ThirdwebClient,
 ) {
   if (tokenAddress === ZERO_ADDRESS) {

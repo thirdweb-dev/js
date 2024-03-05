@@ -1,28 +1,33 @@
 import { getClientFetch } from "../../../utils/fetch.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { THIRDWEB_PAY_SWAP_STATUS_ENDPOINT } from "../utils/definitions.js";
-import type { SwapToken } from "./getSwap.js";
+import type { SwapTokenInfo } from "./getSwap.js";
 
-type TransactionDetails = {
+// TODO: add JSDoc description for all properties
+
+export type SwapTransactionDetails = {
   transactionHash: string;
-  token: SwapToken;
+  token: SwapTokenInfo;
   amountWei: string;
   amountUSDCents: number;
   completedAt?: number;
   explorerLink?: string;
 };
 
-export type SwapStatusParams = {
+export type SwapTransaction = {
   client: ThirdwebClient;
   transactionId: string;
   transactionHash: string;
 };
 
+/**
+ * The object returned by the [`getSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/getSwapStatus) function to represent the status of a token swap transaction
+ */
 export type SwapStatus = {
   transactionId: string;
   transactionType: string;
-  source: TransactionDetails;
-  destination?: TransactionDetails;
+  source: SwapTransactionDetails;
+  destination?: SwapTransactionDetails;
   status: number;
   subStatus: number;
   fromAddress: string;
@@ -32,32 +37,37 @@ export type SwapStatus = {
 };
 
 /**
- * Gets the status of a swap transaction
- * @param params - The SwapStatus params
- * @returns a status object of the swap transaction
+ * Gets the status of a token swap transaction
+ * @param swapTransaction - Object of type [`TokenSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/TokenSwapTransaction)
  * @example
  *
  * ```ts
- * import { getSwapStatus, type SwapStatus } from "thirdweb/pay";
+ * import { getSwapStatus } from "thirdweb/pay";
  *
- * const swapStatus: SwapStatus = await getSwapStatus({
- *   client,
- *   transactionId: "1234", // transactionId returned from getRoute
- *   transactionHash: "0x...", // transactionHash returned from sendSwap or sendTransaction
- * });
+ * // get a quote for a token swap
+ * const quote = await getTokenSwapQuote()
+ *
+ * // send the swap transaction
+ * const swapTransaction = await sendTokenSwapTransaction(quote);
+ *
+ * // get the status of the swap transaction
+ * // you should poll this function at some intervals until the status shows that the transaction was successful or failed
+ * const status = await getSwapStatus(swapTransaction);
  * ```
+ * @returns Object of type [`TokenSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/TokenSwapStatus)
  */
 export async function getSwapStatus(
-  params: SwapStatusParams,
+  swapTransaction: SwapTransaction,
 ): Promise<SwapStatus> {
   try {
     const queryString = new URLSearchParams({
-      transactionId: params.transactionId,
-      transactionHash: params.transactionHash,
+      transactionId: swapTransaction.transactionId,
+      transactionHash: swapTransaction.transactionHash,
     }).toString();
+
     const url = `${THIRDWEB_PAY_SWAP_STATUS_ENDPOINT}?${queryString}`;
 
-    const response = await getClientFetch(params.client)(url);
+    const response = await getClientFetch(swapTransaction.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {

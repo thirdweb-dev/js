@@ -18,11 +18,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { toTokens } from "../../../../../utils/units.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
-import {
-  getSwapRoute,
-  swapSupportedChains,
-} from "../../../../../pay/swap/actions/getSwap.js";
-import type { SwapSupportChainId } from "../../../../../pay/swap/actions/getSwap.js";
+import { getSwapQuote } from "../../../../../pay/swap/actions/getSwap.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import {
   convertModifiedToNormalSwapRouteParams,
@@ -32,10 +28,7 @@ import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { ZERO_ADDRESS } from "../../../../../constants/addresses.js";
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
-import {
-  useSendSwap,
-  type SwapStatusParams,
-} from "../../../../hooks/pay/useSendSwap.js";
+import { useSendSwapTransaction } from "../../../../hooks/pay/useSendSwapTransaction.js";
 import { Spinner } from "../../../components/Spinner.js";
 import { ArrowTopBottom } from "../../icons/ArrowTopBottom.js";
 import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
@@ -47,6 +40,9 @@ import {
 } from "../nativeToken.js";
 import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
 import { WalletIcon } from "../../icons/WalletIcon.js";
+import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
+import type { SwapTransaction } from "../../../../../pay/swap/actions/getStatus.js";
+import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
 
 // TODO: change ZERO_ADDRESS to NATIVE_TOKEN_ADDRESS when the change is done in backend
 
@@ -92,8 +88,8 @@ export function SwapScreenContent(props: {
   const { activeChain, account } = props;
   const locale = useTWLocale();
   const screenLocale = locale.connectWallet.swapScreen;
-  const sendSwapMutation = useSendSwap();
-  const [sentSwap, setSentSwap] = useState<SwapStatusParams | undefined>();
+  const sendSwapMutation = useSendSwapTransaction();
+  const [swapTx, setswapTx] = useState<SwapTransaction | undefined>();
 
   // screens
   const [screen, setScreen] = useState<
@@ -138,10 +134,10 @@ export function SwapScreenContent(props: {
           // wallet
           fromAddress: account.address,
           // from token
-          fromChainId: fromChain.id as SwapSupportChainId,
+          fromChainId: fromChain.id as SwapSupportedChainId,
           fromTokenAddress:
             "nativeToken" in fromToken ? ZERO_ADDRESS : fromToken.address,
-          toChainId: toChain.id as SwapSupportChainId,
+          toChainId: toChain.id as SwapSupportedChainId,
           fromTokenAmount:
             tokenAmount.type === "source"
               ? deferredTokenAmount.value
@@ -166,7 +162,7 @@ export function SwapScreenContent(props: {
       const convertedParams =
         await convertModifiedToNormalSwapRouteParams(swapParams);
 
-      return getSwapRoute(convertedParams);
+      return getSwapQuote(convertedParams);
     },
     enabled: !!swapParams,
   });
@@ -177,14 +173,14 @@ export function SwapScreenContent(props: {
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
   });
 
-  if (sentSwap) {
+  if (swapTx) {
     return (
       <WaitingForConfirmation
         onBack={() => {
-          setSentSwap(undefined);
+          setswapTx(undefined);
           setScreen("main");
         }}
-        sentSwap={sentSwap}
+        swapTx={swapTx}
       />
     );
   }
@@ -396,7 +392,7 @@ export function SwapScreenContent(props: {
               const res = await sendSwapMutation.mutateAsync(
                 swapQuoteQuery.data,
               );
-              setSentSwap(res);
+              setswapTx(res);
             }
           }}
           gap="sm"
@@ -489,11 +485,12 @@ const ToggleButtonContainer = /* @__PURE__ */ StyledDiv(() => {
 
 function WaitingForConfirmation(props: {
   onBack: () => void;
-  sentSwap: SwapStatusParams;
+  swapTx: SwapTransaction;
 }) {
   const locale = useTWLocale();
   const screenLocale = locale.connectWallet.swapScreen;
-  const swapStatus = useSwapStatus(props.sentSwap);
+  const swapStatus = useSwapStatus(props.swapTx);
+  console.log("sent swap", props.swapTx);
 
   return (
     <Container animate="fadein">
