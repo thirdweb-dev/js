@@ -4,7 +4,7 @@ import {
   DOODLES_CONTRACT,
   USDC_CONTRACT,
 } from "../../../test/src/test-contracts.js";
-import { transferEvent } from "../../extensions/erc721/events/transfer.js";
+import { transferEvent } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
 import { prepareEvent } from "../prepare-event.js";
 
 describe("getEvents", () => {

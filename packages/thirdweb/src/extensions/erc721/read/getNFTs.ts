@@ -1,10 +1,10 @@
-import { startTokenId } from "./startTokenId.js";
-import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { getNFT } from "./getNFT.js";
-import { totalSupply } from "./totalSupply.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { min } from "../../../utils/bigint.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { totalSupply } from "../__generated__/IERC721A/read/totalSupply.js";
+import { startTokenId } from "../__generated__/OpenEditionERC721/read/startTokenId.js";
+import { nextTokenIdToMint } from "../__generated__/OpenEditionERC721/read/nextTokenIdToMint.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

@@ -1,9 +1,9 @@
-import { nextTokenIdToMint } from "./nextTokenIdToMint.js";
 import { getNFT } from "./getNFT.js";
-import { balanceOfBatch } from "./balanceOfBatch.js";
 import type { Address } from "abitype";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { balanceOfBatch } from "../__generated__/ITokenERC1155/read/balanceOfBatch.js";
+import { nextTokenIdToMint } from "../__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
 
@@ -56,8 +56,8 @@ export async function getOwnedNFTs(
 
   const balances = await balanceOfBatch({
     ...options,
-    owners,
-    tokenIds,
+    accounts: owners,
+    ids: tokenIds,
   });
 
   let ownedBalances = balances
@@ -76,9 +76,7 @@ export async function getOwnedNFTs(
   }
 
   const nfts = await Promise.all(
-    ownedBalances.map((ob) =>
-      getNFT({ ...options, tokenId: BigInt(ob.tokenId) }),
-    ),
+    ownedBalances.map((ob) => getNFT({ ...options, id: BigInt(ob.tokenId) })),
   );
 
   return nfts.map((nft, index) => ({
