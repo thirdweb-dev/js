@@ -1,0 +1,89 @@
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
+
+/**
+ * Represents the parameters for the "openPack" function.
+ */
+export type OpenPackParams = {
+  packId: AbiParameterToPrimitiveType<{
+    internalType: "uint256";
+    name: "packId";
+    type: "uint256";
+  }>;
+  amountToOpen: AbiParameterToPrimitiveType<{
+    internalType: "uint256";
+    name: "amountToOpen";
+    type: "uint256";
+  }>;
+};
+
+/**
+ * Calls the openPack function on the contract.
+ * @param options - The options for the openPack function.
+ * @returns A prepared transaction object.
+ * @extension IPACK
+ * @example
+ * ```
+ * import { openPack } from "thirdweb/extensions/IPack";
+ *
+ * const transaction = openPack({
+ *  packId: ...,
+ *  amountToOpen: ...,
+ * });
+ *
+ * // Send the transaction
+ * ...
+ *
+ * ```
+ */
+export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
+  return prepareContractCall({
+    contract: options.contract,
+    method: [
+      "0x914e126a",
+      [
+        {
+          internalType: "uint256",
+          name: "packId",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "amountToOpen",
+          type: "uint256",
+        },
+      ],
+      [
+        {
+          components: [
+            {
+              internalType: "address",
+              name: "assetContract",
+              type: "address",
+            },
+            {
+              internalType: "enum ITokenBundle.TokenType",
+              name: "tokenType",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalAmount",
+              type: "uint256",
+            },
+          ],
+          internalType: "struct ITokenBundle.Token[]",
+          name: "",
+          type: "tuple[]",
+        },
+      ],
+    ],
+    params: [options.packId, options.amountToOpen],
+  });
+}

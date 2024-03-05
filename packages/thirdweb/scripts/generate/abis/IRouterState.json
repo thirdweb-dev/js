@@ -1,0 +1,56 @@
+[
+  {
+    "inputs": [],
+    "name": "getAllExtensions",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "metadataURI",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "implementation",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IExtension.ExtensionMetadata",
+            "name": "metadata",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes4",
+                "name": "functionSelector",
+                "type": "bytes4"
+              },
+              {
+                "internalType": "string",
+                "name": "functionSignature",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IExtension.ExtensionFunction[]",
+            "name": "functions",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IExtension.Extension[]",
+        "name": "allExtensions",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
