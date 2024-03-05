@@ -1882,7 +1882,7 @@
   ],
   "ERC721UpdatableMetadata": [
     {
-      "name": "update",
+      "name": "updateMetadata",
       "summary": "Update the metadata of an NFT\n\n",
       "remarks": "\n\nUpdate the metadata of an NFT\n\n",
       "examples": {
