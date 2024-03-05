@@ -2,16 +2,25 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { mkdir, rmdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { Abi, AbiFunction, AbiEvent, formatAbiItem } from "abitype";
+import {
+  Abi,
+  AbiFunction,
+  AbiEvent,
+  formatAbiItem,
+  parseAbiItem,
+} from "abitype";
 import { prepareMethod } from "../../src/utils/abi/prepare-method";
 import { format } from "prettier";
 
 export async function generateFromAbi(
-  abi: Abi,
+  abi: Abi | string[],
   outFolder: string,
   extensionFileName: string,
   extensionName: string,
 ) {
+  // turn any human readable abi into a proper abi object
+  abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
+
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];
 
   const functions = abi.filter((x) => x.type === "function") as AbiFunction[];
