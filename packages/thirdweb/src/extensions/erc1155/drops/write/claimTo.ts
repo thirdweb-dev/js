@@ -125,11 +125,3 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
     },
   });
 }
-
-/**
- * @internal
- */
-// TODO: implement this
-export function parseClaimToLogs() {
-  throw new Error("Not implemented");
-}

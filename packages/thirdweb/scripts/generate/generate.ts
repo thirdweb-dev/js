@@ -9,6 +9,7 @@ import { format } from "prettier";
 export async function generateFromAbi(
   abi: Abi,
   outFolder: string,
+  extensionFileName: string,
   extensionName: string,
 ) {
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];
@@ -27,14 +28,14 @@ export async function generateFromAbi(
 
   if (events.length) {
     // make a folder for the events
-    await mkdir(join(outFolder, extensionName, "./events"), {
+    await mkdir(join(outFolder, extensionFileName, "./events"), {
       recursive: true,
     });
     // process every event
     await Promise.all(
       events.map(async (e) => {
         await writeFile(
-          join(outFolder, extensionName, "./events", `${e.name}.ts`),
+          join(outFolder, extensionFileName, "./events", `${e.name}.ts`),
           await format(generateEvent(e, extensionName), {
             parser: "babel-ts",
           }),
@@ -45,12 +46,14 @@ export async function generateFromAbi(
   }
   if (readFunctions.length) {
     // make a folder for the read functions
-    await mkdir(join(outFolder, extensionName, "./read"), { recursive: true });
+    await mkdir(join(outFolder, extensionFileName, "./read"), {
+      recursive: true,
+    });
     // process every read function
     await Promise.all(
       readFunctions.map(async (f) => {
         await writeFile(
-          join(outFolder, extensionName, "./read", `${f.name}.ts`),
+          join(outFolder, extensionFileName, "./read", `${f.name}.ts`),
           await format(generateReadFunction(f, extensionName), {
             parser: "babel-ts",
           }),
@@ -61,12 +64,14 @@ export async function generateFromAbi(
   }
   if (writeFunctions.length) {
     // make a folder for the write functions
-    await mkdir(join(outFolder, extensionName, "./write"), { recursive: true });
+    await mkdir(join(outFolder, extensionFileName, "./write"), {
+      recursive: true,
+    });
     // process every write function
     await Promise.all(
       writeFunctions.map(async (f) => {
         await writeFile(
-          join(outFolder, extensionName, "./write", `${f.name}.ts`),
+          join(outFolder, extensionFileName, "./write", `${f.name}.ts`),
           await format(generateWriteFunction(f, extensionName), {
             parser: "babel-ts",
           }),
@@ -78,8 +83,8 @@ export async function generateFromAbi(
 }
 
 function generateWriteFunction(f: AbiFunction, extensionName: string): string {
-  return `import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
+  return `import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
     ? `import type { AbiParameterToPrimitiveType } from "abitype";`
@@ -103,8 +108,8 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
 }
 
 /**
- * Calls the ${f.name} function on the contract.
- * @param options - The options for the ${f.name} function.
+ * Calls the "${f.name}" function on the contract.
+ * @param options - The options for the "${f.name}" function.
  * @returns A prepared transaction object.
  * @extension ${extensionName.toUpperCase()}
  * @example
@@ -141,8 +146,8 @@ export function ${f.name}(
 }
 
 function generateReadFunction(f: AbiFunction, extensionName: string): string {
-  return `import { readContract } from "../../../../transaction/read-contract.js";
-import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+  return `import { readContract } from "../../../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 ${
   f.inputs.length > 0
     ? `import type { AbiParameterToPrimitiveType } from "abitype";`
@@ -168,7 +173,7 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
 }
 
 /**
- * Calls the ${f.name} function on the contract.
+ * Calls the "${f.name}" function on the contract.
  * @param options - The options for the ${f.name} function.
  * @returns The parsed result of the function call.
  * @extension ${extensionName.toUpperCase()}
@@ -205,7 +210,7 @@ export async function ${f.name}(
 function generateEvent(e: AbiEvent, extensionName: string): string {
   const indexedInputs = e.inputs.filter((x) => x.indexed);
 
-  return `import { prepareEvent } from "../../../../event/prepare-event.js";
+  return `import { prepareEvent } from "../../../../../event/prepare-event.js";
 ${
   indexedInputs.length > 0
     ? `import type { AbiParameterToPrimitiveType } from "abitype";`
@@ -217,16 +222,11 @@ ${
     ? `/**
  * Represents the filters for the "${e.name}" event.
  */
-export type ${uppercaseFirstLetter(e.name)}Filters = {
+export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
   ${indexedInputs
-    .map(
-      (x) =>
-        `${removeLeadingUnderscore(
-          x.name,
-        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
-    )
+    .map((x) => `${x.name}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`)
     .join("\n")}
-};`
+}>;`
     : ""
 }
 
@@ -245,7 +245,7 @@ export type ${uppercaseFirstLetter(e.name)}Filters = {
  *  ${eventNameToPreparedEventName(e.name)}(${
    indexedInputs.length > 0
      ? `{\n * ${indexedInputs
-         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+         .map((x) => ` ${x.name}: ...,`)
          .join("\n * ")}\n * }`
      : ""
  })
@@ -253,7 +253,7 @@ export type ${uppercaseFirstLetter(e.name)}Filters = {
  * });
  * \`\`\`
  */ 
-export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length > 0 ? `filters: ${uppercaseFirstLetter(e.name)}Filters = {}` : ""}) {
+export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length > 0 ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}` : ""}) {
   return prepareEvent({
     signature: "${formatAbiItem(e)}",${indexedInputs.length > 0 ? `\n    filters,` : ""}
   });
@@ -279,24 +279,33 @@ function eventNameToPreparedEventName(name: string) {
   return `${lowercaseFirstLetter(name)}Event`;
 }
 
+//custom script (will not be part of CLI)
+
 const ABI_FOLDER = join(import.meta.dirname, "./abis");
-const OUT_FOLDER = join(
-  import.meta.dirname,
-  "../../src/extensions/__generated__",
-);
+const EXTENSIONS_FOLDER = join(import.meta.dirname, "../../src/extensions");
 
 async function main() {
-  await rmdir(OUT_FOLDER, { recursive: true });
-  await mkdir(OUT_FOLDER, { recursive: true });
+  const filesAndFolders = await readdir(ABI_FOLDER);
+  const folders = filesAndFolders.filter((x) => !x.includes("."));
+  // for each folder in the abi folder find all files
+  for (const folder of folders) {
+    const OUT_PATH = join(EXTENSIONS_FOLDER, folder, "__generated__");
+    // delete the "__generated__" folder inside the extension folder
+    await rmdir(OUT_PATH, { recursive: true });
 
-  const files = await readdir(ABI_FOLDER);
-  for (const file of files) {
-    if (!file.endsWith(".json")) {
-      continue;
+    // create the "__generated__" folder inside the extension folder
+    await mkdir(OUT_PATH, { recursive: true });
+    const files = await readdir(join(ABI_FOLDER, folder));
+    for (const file of files) {
+      if (!file.endsWith(".json")) {
+        continue;
+      }
+      const extensionName = file.replace(".json", "");
+      const abi = JSON.parse(
+        await readFile(join(ABI_FOLDER, folder, file), "utf-8"),
+      );
+      await generateFromAbi(abi, OUT_PATH, extensionName, folder);
     }
-    const extensionName = file.replace(".json", "");
-    const abi = JSON.parse(await readFile(join(ABI_FOLDER, file), "utf-8"));
-    await generateFromAbi(abi, OUT_FOLDER, extensionName);
   }
 }
 

@@ -1,10 +1,11 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { getClaimConditionById } from "./claimConditionById.js";
-import { claimCondition } from "./claimCondition.js";
-import { getActiveClaimConditionId } from "./getActiveClaimConditionId.js";
+import {
+  getActiveClaimConditionId,
+  type GetActiveClaimConditionIdParams,
+} from "../../__generated__/IDrop1155/read/getActiveClaimConditionId.js";
+import { getClaimConditionById } from "../../__generated__/IDrop1155/read/getClaimConditionById.js";
 
-export type GetActiveClaimConditionParams = { tokenId: bigint };
-
+export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
 /**
  * Retrieves the active claim condition.
  * @param options - The transaction options.
@@ -20,19 +21,6 @@ export type GetActiveClaimConditionParams = { tokenId: bigint };
 export async function getActiveClaimCondition(
   options: BaseTransactionOptions<GetActiveClaimConditionParams>,
 ) {
-  const [cc, cId] = await Promise.allSettled([
-    claimCondition(options),
-    getActiveClaimConditionId(options),
-  ]);
-  // if we have the claimcondition immediately -> return it
-  if (cc.status === "fulfilled") {
-    return cc.value;
-  }
-  // otherwise we need to get the claimcondition by id
-  if (cId.status === "fulfilled") {
-    return getClaimConditionById({ ...options, conditionId: cId.value });
-  }
-  // otherwise we have an "unsupported" error
-  // TODO: potentially support more types?
-  throw new Error("Unsupported claim condition");
+  const conditionId = await getActiveClaimConditionId(options);
+  return getClaimConditionById({ ...options, conditionId });
 }

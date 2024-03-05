@@ -2,13 +2,16 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import { tokenURI, type TokenUriParams } from "./tokenURI.js";
+import {
+  tokenURI,
+  type TokenURIParams,
+} from "../__generated__/IERC721A/read/tokenURI.js";
 
 /**
  * Parameters for getting an NFT.
  */
 export type GetNFTParams = Prettify<
-  TokenUriParams & {
+  TokenURIParams & {
     /**
      * Whether to include the owner of the NFT.
      */
@@ -36,7 +39,9 @@ export async function getNFT(
   const [uri, owner] = await Promise.all([
     tokenURI(options).catch(() => null),
     options.includeOwner
-      ? import("./ownerOf.js").then((m) => m.ownerOf(options)).catch(() => null)
+      ? import("../__generated__/IERC721A/read/ownerOf.js")
+          .then((m) => m.ownerOf(options))
+          .catch(() => null)
       : null,
   ]);
 
