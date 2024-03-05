@@ -1,28 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "ETHF",
+  "chain": "DIS",
   "chainId": 513100,
   "explorers": [
     {
-      "name": "etherfair",
-      "url": "https://www.oklink.com/ethf",
+      "name": "DisChain",
+      "url": "https://www.oklink.com/dis",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "infoURL": "https://etherfair.org",
-  "name": "ethereum Fair",
+  "infoURL": "https://dischain.xyz",
+  "name": "DisChain",
   "nativeCurrency": {
-    "name": "EthereumFair",
-    "symbol": "ETHF",
+    "name": "DisChain",
+    "symbol": "DIS",
     "decimals": 18
   },
   "networkId": 513100,
   "rpc": [
     "https://513100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.etherfair.org"
+    "https://rpc.dischain.xyz"
   ],
-  "shortName": "ethf",
-  "slug": "ethereum-fair",
+  "shortName": "dis",
+  "slug": "dischain",
   "testnet": false
 } as const satisfies Chain;
