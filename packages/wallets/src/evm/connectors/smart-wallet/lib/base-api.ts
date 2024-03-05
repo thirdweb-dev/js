@@ -119,7 +119,7 @@ export abstract class BaseAccountAPI {
 
   abstract isAccountApproved(): Promise<boolean>;
 
-  abstract approveIfNeeded(): Promise<void>;
+  abstract createApproveTx(): Promise<providers.TransactionRequest | undefined>;
 
   /**
    * return initCode value to into the UserOp.
@@ -242,13 +242,6 @@ export abstract class BaseAccountAPI {
       this.erc20PaymasterAddress &&
       this.erc20TokenAddress &&
       (await this.isAccountApproved());
-    console.log("sponsorship params", {
-      gasless,
-      useErc20Paymaster,
-      erc20PaymasterAddress: this.erc20PaymasterAddress,
-      erc20TokenAddress: this.erc20TokenAddress,
-      isApproved: await this.isAccountApproved(),
-    });
     if (useErc20Paymaster) {
       partialOp.paymasterAndData = this.erc20PaymasterAddress as string;
       let estimates;

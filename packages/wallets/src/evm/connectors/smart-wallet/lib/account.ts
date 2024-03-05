@@ -4,8 +4,16 @@ import {
   ThirdwebSDK,
   Transaction,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber, ethers, utils, BytesLike } from "ethers";
-import { ProviderConfig } from "../types";
+import {
+  BigNumberish,
+  BigNumber,
+  ethers,
+  utils,
+  BytesLike,
+  providers,
+  Contract,
+} from "ethers";
+import { ProviderConfig, UserOpOptions } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { ACCOUNT_CORE_ABI } from "./constants";
 
@@ -59,21 +67,11 @@ export class AccountAPI extends BaseAccountAPI {
 
   async getAccountInitCode(): Promise<string> {
     const factory = await this.getFactoryContract();
-    console.log("Deploying smart wallet via factory");
     const localSigner = await this.params.localSigner.getAddress();
     const tx = await this.params.factoryInfo.createAccount(
       factory,
       localSigner,
     );
-    try {
-      console.log(
-        "Cost to deploy smart wallet: ",
-        (await tx.estimateGasCost()).ether,
-        "ETH",
-      );
-    } catch (e) {
-      console.error("Cost to deploy smart wallet: unknown", e);
-    }
     return utils.hexConcat([factory.getAddress(), tx.encode()]);
   }
 
@@ -159,30 +157,33 @@ export class AccountAPI extends BaseAccountAPI {
       this.params.erc20PaymasterAddress,
     ]);
 
-    console.log("Allowance for paymaster", allowance.toNumber().toString());
-
-    return allowance.toNumber().toString() !== "0";
+    return allowance.gte(BigNumber.from(2).pow(96).sub(1));
   }
 
-  async approveIfNeeded(): Promise<void> {
+  async createApproveTx(): Promise<providers.TransactionRequest | undefined> {
     if (await this.isAccountApproved()) {
-      return;
+      return undefined;
     }
 
-    console.log("Approving ERC20 token for paymaster...");
-
-    const erc20Token = await this.sdk.getContract(
-      this.params.erc20TokenAddress as string,
-    );
-
     const amountToApprove = BigNumber.from(2).pow(96).sub(1);
+    const ethersSigner = new ethers.Wallet(LOCAL_NODE_PKEY, this.provider);
+    const erc20Contract = new Contract(
+      this.params.erc20TokenAddress as string,
+      [
+        "function approve(address spender, uint256 amount) public returns (bool)",
+      ],
+      ethersSigner,
+    );
+    const tx: ethers.providers.TransactionRequest = {
+      to: this.params.erc20TokenAddress,
+      from: await this.getAccountAddress(),
+      value: 0,
+      data: erc20Contract.interface.encodeFunctionData("approve", [
+        this.params.erc20PaymasterAddress,
+        amountToApprove,
+      ]),
+    };
 
-    const tx = erc20Token.prepare("approve", [
-      this.params.erc20PaymasterAddress,
-      amountToApprove,
-    ]);
-
-    const receipt = await tx.execute();
-    console.log("Approved ERC20 token for paymaster", receipt);
+    return tx;
   }
 }
