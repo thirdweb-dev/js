@@ -18,4 +18,6 @@ export enum ChainId {
   ArbitrumGoerli = 421613,
   BinanceSmartChainMainnet = 56,
   BinanceSmartChainTestnet = 97,
+  Holesky = 17000,
+  Katla = 167008,  
 }
