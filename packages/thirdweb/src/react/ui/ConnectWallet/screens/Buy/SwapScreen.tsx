@@ -444,7 +444,7 @@ function ToggleButton(props: { onClick: () => void }) {
         data-animate={animate}
         style={{
           borderRadius: "50%",
-          padding: spacing.xxs,
+          padding: spacing.xs,
         }}
         onClick={() => {
           props.onClick();
