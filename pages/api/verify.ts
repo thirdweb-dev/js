@@ -5,9 +5,10 @@ import {
   getEncodedConstructorParamsForThirdwebContract,
   verify,
 } from "@thirdweb-dev/sdk";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { apiKeyMap, apiMap } from "lib/maps";
 import { getDashboardChainRpc } from "lib/rpc";
-import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
+import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { fetchAllChains } from "utils/fetchChain";
 
@@ -97,19 +98,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+    const sdk = getThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
 
     let encodedArgs;
     try {
       const metadata = await fetchContractMetadataFromAddress(
         contractAddress,
         sdk.getProvider(),
-        StorageSingleton,
+        StorageSingleton as ThirdwebStorage,
       );
       encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
         metadata.name,
         chainId,
-        StorageSingleton,
+        StorageSingleton as ThirdwebStorage,
       );
     } catch (error) {
       console.error("Error fetching contract metadata", error);
@@ -120,7 +121,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       chainId,
       apiMap[chainId],
       apiKeyMap[chainId],
-      StorageSingleton,
+      StorageSingleton as ThirdwebStorage,
       encodedArgs?.toString().replace("0x", ""),
     );
 

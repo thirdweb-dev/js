@@ -6,7 +6,7 @@ import {
 } from "components/contract-components/utils";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
 
 type RemoveContractParams = {
@@ -41,7 +41,7 @@ export function useRemoveContractMutation() {
           throw new Error("chain not found");
         }
 
-        const sdk = getEVMThirdwebSDK(
+        const sdk = getThirdwebSDK(
           chainId,
           getDashboardChainRpc(chain),
           undefined,

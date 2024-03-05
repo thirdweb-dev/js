@@ -4,15 +4,18 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Box,
   Divider,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
+  Image,
   FormControl,
   Input,
   Stack,
   Textarea,
   useModalContext,
+  Flex,
 } from "@chakra-ui/react";
 import { UseMutationResult } from "@tanstack/react-query";
 import {
@@ -20,6 +23,7 @@ import {
   useAddress,
   useMintNFT,
   useSetSharedMetadata,
+  useUpdateNFTMetadata,
 } from "@thirdweb-dev/react";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
@@ -30,7 +34,9 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { type NFT } from "thirdweb";
 import {
   Button,
   FormErrorMessage,
@@ -38,6 +44,7 @@ import {
   FormLabel,
   Heading,
 } from "tw-components";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
 
@@ -50,6 +57,8 @@ type NFTMintForm =
 
       lazyMintMutation?: undefined;
       sharedMetadataMutation?: undefined;
+      nft?: undefined;
+      updateMetadataMutation?: undefined;
     }
   | {
       contract?: NFTContract;
@@ -60,12 +69,24 @@ type NFTMintForm =
       >;
       mintMutation?: undefined;
       sharedMetadataMutation?: undefined;
+      nft?: undefined;
+      updateMetadataMutation?: undefined;
     }
   | {
       contract?: NFTContract;
       sharedMetadataMutation: ReturnType<typeof useSetSharedMetadata>;
       mintMutation?: undefined;
       lazyMintMutation?: undefined;
+      nft?: undefined;
+      updateMetadataMutation?: undefined;
+    }
+  | {
+      contract?: NFTContract;
+      sharedMetadataMutation?: undefined;
+      mintMutation?: undefined;
+      lazyMintMutation?: undefined;
+      nft: NFT;
+      updateMetadataMutation: ReturnType<typeof useUpdateNFTMetadata>;
     };
 
 export const NFTMintForm: React.FC<NFTMintForm> = ({
@@ -73,11 +94,33 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   lazyMintMutation,
   mintMutation,
   sharedMetadataMutation,
+  nft,
+  updateMetadataMutation,
 }) => {
   const trackEvent = useTrack();
   const address = useAddress();
+  const mutation =
+    mintMutation ||
+    lazyMintMutation ||
+    sharedMetadataMutation ||
+    updateMetadataMutation;
 
-  const mutation = mintMutation || lazyMintMutation || sharedMetadataMutation;
+  const transformedQueryData = useMemo(() => {
+    return {
+      name: nft?.metadata.name || "",
+      description: nft?.metadata.description || "",
+      external_url: nft?.metadata.external_url || "",
+      background_color: nft?.metadata.background_color || "",
+      attributes: nft?.metadata.attributes || [],
+      // We override these in the submit if they haven't been changed
+      image: nft?.metadata.image || null,
+      animation_url: nft?.metadata.animation_url || null,
+      // No need for these, but we need to pass them to the form
+      supply: 0,
+      customImage: "",
+      customAnimationUrl: "",
+    };
+  }, [nft]);
 
   const {
     setValue,
@@ -92,17 +135,24 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       customImage: string;
       customAnimationUrl: string;
     }
-  >();
+  >({
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
+  });
 
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
     sharedMetadataMutation
       ? "NFT Metadata set successfully"
-      : "NFT minted successfully",
+      : updateMetadataMutation
+        ? "NFT Metadata updated successfully"
+        : "NFT minted successfully",
     sharedMetadataMutation
       ? "Failed to set NFT Metadata"
-      : "Failed to mint NFT",
+      : updateMetadataMutation
+        ? "Failed to update NFT Metadata"
+        : "Failed to mint NFT",
   );
 
   const setFile = (file: File) => {
@@ -175,7 +225,11 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     <>
       <DrawerHeader>
         <Heading>
-          {sharedMetadataMutation ? "Set NFT Metadata" : "Mint NFT"}
+          {sharedMetadataMutation
+            ? "Set NFT Metadata"
+            : updateMetadataMutation
+              ? "Update NFT Metadata"
+              : "Mint NFT"}
         </Heading>
       </DrawerHeader>
       <DrawerBody>
@@ -191,12 +245,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
 
             const dataWithCustom = {
               ...data,
-              ...(data.customImage && {
-                image: data.customImage,
-              }),
-              ...(data.customAnimationUrl && {
-                animation_url: data.customAnimationUrl,
-              }),
+              image: data.image || data.customImage,
+              animation_url: data.animation_url || data.customAnimationUrl,
             };
 
             if (lazyMintMutation) {
@@ -294,6 +344,47 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 },
               });
             }
+
+            if (updateMetadataMutation && nft) {
+              trackEvent({
+                category: "nft",
+                action: "update-metadata",
+                label: "attempt",
+              });
+              updateMetadataMutation.mutate(
+                {
+                  metadata: parseAttributes({
+                    ...data,
+                    image: data.image || data.customImage || nft.metadata.image,
+                    animation_url:
+                      data.animation_url ||
+                      data.customAnimationUrl ||
+                      nft.metadata.animation_url,
+                  }),
+                  tokenId: nft.id.toString(),
+                },
+                {
+                  onSuccess: () => {
+                    trackEvent({
+                      category: "nft",
+                      action: "update-metadata",
+                      label: "success",
+                    });
+                    onSuccess();
+                    modalContext.onClose();
+                  },
+                  onError: (error: any) => {
+                    trackEvent({
+                      category: "nft",
+                      action: "update-metadata",
+                      label: "error",
+                      error,
+                    });
+                    onError(error);
+                  },
+                },
+              );
+            }
           })}
         >
           <Stack>
@@ -309,17 +400,32 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           </FormControl>
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
-            <FileInput
-              maxContainerWidth={"200px"}
-              value={mediaFileUrl}
-              showUploadButton
-              setValue={setFile}
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              transition="all 200ms ease"
-              _hover={{ shadow: "sm" }}
-            />
+            {nft?.metadata && !mediaFileUrl && (
+              <Flex>
+                <NFTMediaWithEmptyState
+                  // @ts-expect-error types are not up to date
+                  metadata={nft.metadata}
+                  width="200px"
+                  height="200px"
+                />
+              </Flex>
+            )}
+            <Box>
+              <FileInput
+                maxContainerWidth={"200px"}
+                value={mediaFileUrl}
+                showUploadButton
+                showPreview={!!mediaFileUrl}
+                setValue={setFile}
+                border="1px solid"
+                borderColor="gray.200"
+                borderRadius="md"
+                transition="all 200ms ease"
+                selectOrUpload="Upload"
+                helperText={nft?.metadata ? "Replacer Media" : "Media"}
+                _hover={{ shadow: "sm" }}
+              />
+            </Box>
             <FormHelperText>
               You can upload image, audio, video, html, text, pdf, and 3d model
               files here.
@@ -473,7 +579,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             ? "Set NFT Metadata"
             : lazyMintMutation
               ? "Lazy Mint NFT"
-              : "Mint NFT"}
+              : updateMetadataMutation && nft
+                ? "Update NFT"
+                : "Mint NFT"}
         </TransactionButton>
       </DrawerFooter>
     </>

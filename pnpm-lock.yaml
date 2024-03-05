@@ -59,17 +59,20 @@ dependencies:
     specifier: ^8.12.0
     version: 8.12.0(react-dom@18.2.0)(react@18.2.0)
   '@thirdweb-dev/chains':
-    specifier: 0.0.0-dev-a02ccbc-20240227163149
-    version: 0.0.0-dev-a02ccbc-20240227163149
+    specifier: 0.1.75-nightly-e87292ab6-20240229231231
+    version: 0.1.75-nightly-e87292ab6-20240229231231
   '@thirdweb-dev/react':
-    specifier: 0.0.0-dev-a02ccbc-20240227163149
-    version: 0.0.0-dev-a02ccbc-20240227163149(@babel/core@7.23.9)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@0.0.0-dev-a02ccbc-20240227163149)(@types/react-dom@18.2.19)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+    specifier: 4.4.12-nightly-7d8697ec3-20240304194900
+    version: 4.4.12-nightly-7d8697ec3-20240304194900(@babel/core@7.23.9)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.39-nightly-7d8697ec3-20240304194900)(@types/react-dom@18.2.19)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
   '@thirdweb-dev/sdk':
-    specifier: 0.0.0-dev-a02ccbc-20240227163149
-    version: 0.0.0-dev-a02ccbc-20240227163149(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
+    specifier: 4.0.39-nightly-7d8697ec3-20240304194900
+    version: 4.0.39-nightly-7d8697ec3-20240304194900(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
   '@thirdweb-dev/service-utils':
     specifier: ^0.4.18
     version: 0.4.18
+  '@thirdweb-dev/storage':
+    specifier: 2.0.10
+    version: 2.0.10
   '@trytrench/sdk':
     specifier: ^0.0.5
     version: 0.0.5
@@ -209,7 +212,7 @@ devDependencies:
     version: 2.4.1
   '@graphql-codegen/cli':
     specifier: ^5.0.2
-    version: 5.0.2(@types/node@20.11.24)(graphql@16.8.1)(typescript@5.3.3)
+    version: 5.0.2(@types/node@20.11.20)(graphql@16.8.1)(typescript@5.3.3)
   '@graphql-codegen/typescript':
     specifier: ^4.0.6
     version: 4.0.6(graphql@16.8.1)
@@ -221,13 +224,10 @@ devDependencies:
     version: 4.3.0(graphql-tag@2.12.6)(graphql@16.8.1)
   '@next/bundle-analyzer':
     specifier: ^14.1.1
-    version: 14.1.1
-  '@thirdweb-dev/storage':
-    specifier: 2.0.9
-    version: 2.0.9
+    version: 14.1.2
   '@thirdweb-dev/wallets':
-    specifier: 0.0.0-dev-a02ccbc-20240227163149
-    version: 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+    specifier: 2.4.14-nightly-7d8697ec3-20240304194900
+    version: 2.4.14-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
   '@types/airtable':
     specifier: ^0.10.1
     version: 0.10.1
@@ -290,7 +290,7 @@ devDependencies:
     version: 7.34.0(eslint@8.57.0)
   knip:
     specifier: ^5.0.2
-    version: 5.0.2(@types/node@20.11.24)(typescript@5.3.3)
+    version: 5.0.2(@types/node@20.11.20)(typescript@5.3.3)
   next-sitemap:
     specifier: ^4.2.3
     version: 4.2.3(next@14.1.2)
@@ -915,13 +915,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
-
-  /@babel/runtime@7.24.0:
-    resolution: {integrity: sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.14.1
-    dev: true
 
   /@babel/template@7.23.9:
     resolution: {integrity: sha512-+xrD2BWLpvHKNmX2QbpdpsBaWnRxahMwJjO+KZk2JOElj5nSmKezyS1B4u+QbHMTX69t4ukm6hh9lsYQ7GHCKA==}
@@ -2966,7 +2959,7 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@graphql-codegen/cli@5.0.2(@types/node@20.11.24)(graphql@16.8.1)(typescript@5.3.3):
+  /@graphql-codegen/cli@5.0.2(@types/node@20.11.20)(graphql@16.8.1)(typescript@5.3.3):
     resolution: {integrity: sha512-MBIaFqDiLKuO4ojN6xxG9/xL9wmfD3ZjZ7RsPjwQnSHBCUXnEkdKvX+JVpx87Pq29Ycn8wTJUguXnTZ7Di0Mlw==}
     hasBin: true
     peerDependencies:
@@ -2985,12 +2978,12 @@ packages:
       '@graphql-tools/apollo-engine-loader': 8.0.1(graphql@16.8.1)
       '@graphql-tools/code-file-loader': 8.1.1(graphql@16.8.1)
       '@graphql-tools/git-loader': 8.0.5(graphql@16.8.1)
-      '@graphql-tools/github-loader': 8.0.1(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/github-loader': 8.0.1(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/graphql-file-loader': 8.0.1(graphql@16.8.1)
       '@graphql-tools/json-file-loader': 8.0.1(graphql@16.8.1)
       '@graphql-tools/load': 8.0.2(graphql@16.8.1)
-      '@graphql-tools/prisma-loader': 8.0.3(@types/node@20.11.24)(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/prisma-loader': 8.0.3(@types/node@20.11.20)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
@@ -2998,7 +2991,7 @@ packages:
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.8.1
-      graphql-config: 5.0.3(@types/node@20.11.24)(graphql@16.8.1)(typescript@5.3.3)
+      graphql-config: 5.0.3(@types/node@20.11.20)(graphql@16.8.1)(typescript@5.3.3)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -3325,7 +3318,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/executor-http@1.0.9(@types/node@20.11.24)(graphql@16.8.1):
+  /@graphql-tools/executor-http@1.0.9(@types/node@20.11.20)(graphql@16.8.1):
     resolution: {integrity: sha512-+NXaZd2MWbbrWHqU4EhXcrDbogeiCDmEbrAN+rMn4Nu2okDjn2MTFDbTIab87oEubQCH4Te1wDkWPKrzXup7+Q==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -3336,7 +3329,7 @@ packages:
       '@whatwg-node/fetch': 0.9.16
       extract-files: 11.0.0
       graphql: 16.8.1
-      meros: 1.3.0(@types/node@20.11.24)
+      meros: 1.3.0(@types/node@20.11.20)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -3391,14 +3384,14 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-tools/github-loader@8.0.1(@types/node@20.11.24)(graphql@16.8.1):
+  /@graphql-tools/github-loader@8.0.1(@types/node@20.11.20)(graphql@16.8.1):
     resolution: {integrity: sha512-W4dFLQJ5GtKGltvh/u1apWRFKBQOsDzFxO9cJkOYZj1VzHCpRF43uLST4VbCfWve+AwBqOuKr7YgkHoxpRMkcg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/executor-http': 1.0.9(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/executor-http': 1.0.9(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/graphql-tag-pluck': 8.3.0(graphql@16.8.1)
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       '@whatwg-node/fetch': 0.9.16
@@ -3511,13 +3504,13 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@graphql-tools/prisma-loader@8.0.3(@types/node@20.11.24)(graphql@16.8.1):
+  /@graphql-tools/prisma-loader@8.0.3(@types/node@20.11.20)(graphql@16.8.1):
     resolution: {integrity: sha512-oZhxnMr3Jw2WAW1h9FIhF27xWzIB7bXWM8olz4W12oII4NiZl7VRkFw9IT50zME2Bqi9LGh9pkmMWkjvbOpl+Q==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       '@types/js-yaml': 4.0.9
       '@types/json-stable-stringify': 1.0.36
@@ -3586,7 +3579,7 @@ packages:
       value-or-promise: 1.0.12
     dev: true
 
-  /@graphql-tools/url-loader@8.0.2(@types/node@20.11.24)(graphql@16.8.1):
+  /@graphql-tools/url-loader@8.0.2(@types/node@20.11.20)(graphql@16.8.1):
     resolution: {integrity: sha512-1dKp2K8UuFn7DFo1qX5c1cyazQv2h2ICwA9esHblEqCYrgf69Nk8N7SODmsfWg94OEaI74IqMoM12t7eIGwFzQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -3595,7 +3588,7 @@ packages:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/delegate': 10.0.4(graphql@16.8.1)
       '@graphql-tools/executor-graphql-ws': 1.1.2(graphql@16.8.1)
-      '@graphql-tools/executor-http': 1.0.9(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/executor-http': 1.0.9(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/executor-legacy-ws': 1.0.6(graphql@16.8.1)
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       '@graphql-tools/wrap': 10.0.2(graphql@16.8.1)
@@ -4041,8 +4034,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@next/bundle-analyzer@14.1.1:
-    resolution: {integrity: sha512-vM8PLggRNodmJo8FJy6+Bnv4jWsVtOuH87naJA7/sdmBUZrBk2fj3xkI1zwarWzDAYzNYTxiMRGVioyNPxBvXg==}
+  /@next/bundle-analyzer@14.1.2:
+    resolution: {integrity: sha512-d/fjpUtW5iUQV6cHkrnBDyEK/yabmrk6jl05Evz9te0JG4AYNfQnBfXkzAlHaCkmXJ1YkCuo/LgduVQ05JRoHQ==}
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
@@ -4355,6 +4348,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -4682,7 +4676,7 @@ packages:
   /@radix-ui/react-context@1.0.1(@types/react@18.2.63)(react@18.2.0):
     resolution: {integrity: sha512-ebbrdFoYTcuZ0v4wG5tedGnp9tzcV8awzsxYph7gXUyvnNLuTIcCk1q17JEbnVhXAKG9oX3KtchwiMIAYp9NLg==}
     peerDependencies:
-      '@types/react': '*'
+      '@types/react': ^18.0.26
       react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
@@ -4814,7 +4808,7 @@ packages:
   /@radix-ui/react-id@1.0.1(@types/react@18.2.63)(react@18.2.0):
     resolution: {integrity: sha512-tI7sT/kqYp8p96yGWY1OAnLHrqDgzHefRBKQ2YAkBS5ja7QLcZ9Z/uY7bEjPUatf8RomoXM8/1sMj1IJaE5UzQ==}
     peerDependencies:
-      '@types/react': '*'
+      '@types/react': ^18.0.26
       react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
@@ -4937,8 +4931,8 @@ packages:
   /@radix-ui/react-primitive@1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-yi58uVyoAcK/Nq1inRY56ZSjKypBNKTa/1mcL8qdl6oJeEaDbOldlzrGn7P6Q3Id5d+SYNGc5AJgc4vGhjs5+g==}
     peerDependencies:
-      '@types/react': '*'
-      '@types/react-dom': '*'
+      '@types/react': ^18.0.26
+      '@types/react-dom': ^18
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
@@ -5076,7 +5070,7 @@ packages:
   /@radix-ui/react-use-controllable-state@1.0.1(@types/react@18.2.63)(react@18.2.0):
     resolution: {integrity: sha512-Svl5GY5FQeN758fWKrjM6Qb7asvXeiZltlT4U2gVfl8Gx5UAv2sMR0LWo8yhsIZh2oQ0eFdZ59aoOOMV7b47VA==}
     peerDependencies:
-      '@types/react': '*'
+      '@types/react': ^18.0.26
       react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
@@ -5106,7 +5100,7 @@ packages:
   /@radix-ui/react-use-layout-effect@1.0.1(@types/react@18.2.63)(react@18.2.0):
     resolution: {integrity: sha512-v/5RegiJWYdoCvMnITBkNNx6bCj20fiaJnWtRkU18yITptraXjffz5Qbn05uOiQnOvi+dbkznkoaMltz1GnszQ==}
     peerDependencies:
-      '@types/react': '*'
+      '@types/react': ^18.0.26
       react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
@@ -6162,8 +6156,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /@thirdweb-dev/auth@0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
-    resolution: {integrity: sha512-Ksj4KyG/KR8tJPxjXzCNeMPBWbHWGIVaEZFgZs9Fzvh+ObRkfE3pn3cZ/89oxKOf2x1rz9hnQUdHNNeTL7pXIA==}
+  /@thirdweb-dev/auth@4.1.36-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
+    resolution: {integrity: sha512-b0nW9SNxQL8SMcYP97aoJqfk6hHrz0WP5onARIf836Wao2aIGITjq1SKKZCk2XVfftSl4z1wtyyUDEIN8Y4Zew==}
     engines: {node: '>=18'}
     peerDependencies:
       cookie-parser: ^1.4.6
@@ -6187,11 +6181,11 @@ packages:
         optional: true
     dependencies:
       '@fastify/cookie': 9.3.1
-      '@thirdweb-dev/wallets': 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/wallets': 2.4.14-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
       cookie: 0.5.0
       ethers: 5.7.2
-      fastify: 4.26.2
-      fastify-type-provider-zod: 1.1.9(fastify@4.26.2)(zod@3.22.4)
+      fastify: 4.26.1
+      fastify-type-provider-zod: 1.1.9(fastify@4.26.1)(zod@3.22.4)
       next: 14.1.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
       uuid: 9.0.1
       zod: 3.22.4
@@ -6231,9 +6225,14 @@ packages:
       - zksync-web3
     dev: false
 
-  /@thirdweb-dev/chains@0.0.0-dev-a02ccbc-20240227163149:
-    resolution: {integrity: sha512-cOo7qcomJePH2IaUlaFXMeRxIi6YAQ41QmRq3+kPMLK7EhAL4aalZBEQQ/BYIghsVIdXGUclHQlYu3ffAjFFdQ==}
+  /@thirdweb-dev/chains@0.1.75:
+    resolution: {integrity: sha512-xnjnz/TY4J4xifSbFDgvowTk0nLIZTYUxtyaXS6z+zl73z56FndkGhJyDehXyNroErT9vcaU2GGoOegGkdfBaQ==}
     engines: {node: '>=18'}
+
+  /@thirdweb-dev/chains@0.1.75-nightly-e87292ab6-20240229231231:
+    resolution: {integrity: sha512-GNSq8cwQaVb92DzhIGe/bVqk7+I3+2R4wKeftHl4DQnioWyQoK+5q2rVfQzrUGZUygYmXkWVQGVwKlyLGcJkEw==}
+    engines: {node: '>=18'}
+    dev: false
 
   /@thirdweb-dev/contracts-js@1.3.16(ethers@5.7.2):
     resolution: {integrity: sha512-EpLcD5mdm8b+tvSO7gD9cxSAqjLRr7ygktMp4Pe7Wvobl5ffq8O95futxdVsYc5pyciPZYr8apHUJFYMDlaTqA==}
@@ -6260,8 +6259,8 @@ packages:
       - ethers
       - utf-8-validate
 
-  /@thirdweb-dev/crypto@0.2.0:
-    resolution: {integrity: sha512-hQwSCL/imqSCcnUXlGqJi6dfs4UOcJ91Eq/t1cPXyAb6nwvyaePZPVFqGDglZMQvkS/NWZhifXZINRiCfazn2w==}
+  /@thirdweb-dev/crypto@0.2.1:
+    resolution: {integrity: sha512-SYEkdtdhTOAcgGklqPrKgyIftA2x0WBTtpAEyJBTLCL1z+2IKvExWZyZn3Mx2cZ8skO3iAfGzC4Si2ORWBcS2g==}
     engines: {node: '>=18'}
     dependencies:
       '@noble/hashes': 1.3.3
@@ -6274,11 +6273,11 @@ packages:
   /@thirdweb-dev/generated-abis@0.0.1:
     resolution: {integrity: sha512-vO9/3lSLO8smyyH1QVeYravSTzFwV1nf1C/Im1NBDPdH8//YvcbhtETGGiNfHWpyCvSi0vRYwvf+/7FKdwpDGQ==}
 
-  /@thirdweb-dev/merkletree@0.2.0:
-    resolution: {integrity: sha512-4KoH2EOCWKiaHfhDO5Tnf1HjeCXKVfLt31y0kcSG5C0gCldnhm7i1fGUB8e0hW3trfyPQAuSgyP67Ep3UwzClg==}
+  /@thirdweb-dev/merkletree@0.2.1:
+    resolution: {integrity: sha512-NQEo+KlwQFWr0z4+OlD5WJ9GZEFOrVufvjG2zcn2eylFZacJq5GvRz04Yan9eMR844M7LNx5godA5B7DAinqKg==}
     engines: {node: '>=18'}
     dependencies:
-      '@thirdweb-dev/crypto': 0.2.0
+      '@thirdweb-dev/crypto': 0.2.1
       buffer: 6.0.3
       buffer-reverse: 1.0.1
       treeify: 1.1.0
@@ -6292,20 +6291,20 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@thirdweb-dev/react-core@0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
-    resolution: {integrity: sha512-SDm2hLpRA9jH1ASUUiSmi6itkCaGMz1hjLseMFTdrnoUy5PFj0manDhrITeqYKFNuKaVVlrUl6RX3OI+7YDtaQ==}
+  /@thirdweb-dev/react-core@4.4.12-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
+    resolution: {integrity: sha512-LZNhcVNPonxNOrRmlvFQAsV1PEofoKvbnO4AqLigyK54dxmuWbuLZ/Qw67lYaeGJ9dTUT+0fnTK1jnnZH+9nLw==}
     engines: {node: '>=18'}
     peerDependencies:
       ethers: '>=5.5.1'
       react: '>=18.0.0'
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-      '@thirdweb-dev/auth': 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
-      '@thirdweb-dev/chains': 0.0.0-dev-a02ccbc-20240227163149
+      '@thirdweb-dev/auth': 4.1.36-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/chains': 0.1.75
       '@thirdweb-dev/generated-abis': 0.0.1
-      '@thirdweb-dev/sdk': 0.0.0-dev-a02ccbc-20240227163149(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
-      '@thirdweb-dev/storage': 2.0.9
-      '@thirdweb-dev/wallets': 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/sdk': 4.0.39-nightly-7d8697ec3-20240304194900(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/storage': 2.0.10
+      '@thirdweb-dev/wallets': 2.4.14-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
       ethers: 5.7.2
       mime: 3.0.0
       react: 18.2.0
@@ -6352,11 +6351,11 @@ packages:
       - zksync-web3
     dev: false
 
-  /@thirdweb-dev/react@0.0.0-dev-a02ccbc-20240227163149(@babel/core@7.23.9)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@0.0.0-dev-a02ccbc-20240227163149)(@types/react-dom@18.2.19)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
-    resolution: {integrity: sha512-EcNR9wXBqJNNTdO2W3CmS/2u5HG4Q7sSbeCYcplNA9zQr6T/TBoVl5h9q7erqMi1A/vgSyzCbc2JMC9ENHCp2w==}
+  /@thirdweb-dev/react@4.4.12-nightly-7d8697ec3-20240304194900(@babel/core@7.23.9)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.39-nightly-7d8697ec3-20240304194900)(@types/react-dom@18.2.19)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
+    resolution: {integrity: sha512-YVSM6/tAy0cZDmC4F5y7bCJR9l2BkKVcG8DK5CeQtyCpGfVJp2JHq1Wn9LfRFW/kPMbSeNzS0oQKmTgcWY8Zfw==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@thirdweb-dev/sdk': ^0.0.0-dev-a02ccbc-20240227163149
+      '@thirdweb-dev/sdk': ^4.0.39-nightly-7d8697ec3-20240304194900
       ethers: '>=5.5.1'
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -6374,11 +6373,11 @@ packages:
       '@radix-ui/react-tabs': 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-tooltip': 1.0.7(@types/react-dom@18.2.19)(@types/react@18.2.63)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-      '@thirdweb-dev/chains': 0.0.0-dev-a02ccbc-20240227163149
+      '@thirdweb-dev/chains': 0.1.75
       '@thirdweb-dev/payments': 1.0.2
-      '@thirdweb-dev/react-core': 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
-      '@thirdweb-dev/sdk': 0.0.0-dev-a02ccbc-20240227163149(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
-      '@thirdweb-dev/wallets': 0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/react-core': 4.4.12-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/sdk': 4.0.39-nightly-7d8697ec3-20240304194900(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/wallets': 2.4.14-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
       buffer: 6.0.3
       copy-to-clipboard: 3.3.3
       detect-browser: 5.3.0
@@ -6431,8 +6430,8 @@ packages:
       - zksync-web3
     dev: false
 
-  /@thirdweb-dev/sdk@0.0.0-dev-a02ccbc-20240227163149(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4):
-    resolution: {integrity: sha512-+MKmf0cZSgLGVJXTrCwj+VOye2iwTL+928fhvvjca5KK4p5Dve49DrDeTVor4Ddyfj6X20FctqY4zJfhNkffwQ==}
+  /@thirdweb-dev/sdk@4.0.39-nightly-7d8697ec3-20240304194900(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4):
+    resolution: {integrity: sha512-9BLQS9Ciso7C+M/yBFULhfl+alDsr9gPUBU+RJvR5B0n5OjIVExJKRHMDeNAhflLrlr5Bgb/J9uoDiRFelu+UA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-secrets-manager': ^3.215.0
@@ -6447,12 +6446,12 @@ packages:
       zksync-web3:
         optional: true
     dependencies:
-      '@thirdweb-dev/chains': 0.0.0-dev-a02ccbc-20240227163149
+      '@thirdweb-dev/chains': 0.1.75
       '@thirdweb-dev/contracts-js': 1.3.16(ethers@5.7.2)
-      '@thirdweb-dev/crypto': 0.2.0
+      '@thirdweb-dev/crypto': 0.2.1
       '@thirdweb-dev/generated-abis': 0.0.1
-      '@thirdweb-dev/merkletree': 0.2.0
-      '@thirdweb-dev/storage': 2.0.9
+      '@thirdweb-dev/merkletree': 0.2.1
+      '@thirdweb-dev/storage': 2.0.10
       abitype: 0.2.5(typescript@5.3.3)(zod@3.22.4)
       bn.js: 5.2.1
       bs58: 5.0.0
@@ -6478,17 +6477,17 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@thirdweb-dev/storage@2.0.9:
-    resolution: {integrity: sha512-KpttP1g0YBLv1NKqAr4xe9Pqey++tGBzgPbLzvBqNLXYa6BAuxtb01eTeWDsyLIx+WAWy0COBhqDQd4YNRawyQ==}
+  /@thirdweb-dev/storage@2.0.10:
+    resolution: {integrity: sha512-i7JrggQzlU97bHdGQ6cOhx1ojYUFyFsfc5MLT47pfCQxeFlUtGmWYNZ09mPPQoCgyoxFNJm5I5QLhnMrNMJtIQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@thirdweb-dev/crypto': 0.2.0
+      '@thirdweb-dev/crypto': 0.2.1
       cid-tool: 3.0.0
       form-data: 4.0.0
       uuid: 9.0.1
 
-  /@thirdweb-dev/wallets@0.0.0-dev-a02ccbc-20240227163149(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
-    resolution: {integrity: sha512-cJobG+tTz8NitFh3ic3+y4EZtIcCqqhfkRYxgjrUNdCUVqdUU4RzxdYNAKzzZC72SqE7FVnPDKvlIdujy47FtA==}
+  /@thirdweb-dev/wallets@2.4.14-nightly-7d8697ec3-20240304194900(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react@18.2.63)(ethers@5.7.2)(localforage@1.10.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4):
+    resolution: {integrity: sha512-BYqcId6L1+JcviuogHZeCWAtkuXL5wIjUQlFkkzidrjKnCvKNQdKRnpFGgsrqcjgYPDQLn6HaorumZ8cYxReHg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-secrets-manager': ^3.256.0
@@ -6524,10 +6523,10 @@ packages:
       '@safe-global/safe-core-sdk': 3.3.5(ethers@5.7.2)
       '@safe-global/safe-ethers-adapters': 0.1.0-alpha.17(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2)
       '@safe-global/safe-ethers-lib': 1.9.4
-      '@thirdweb-dev/chains': 0.0.0-dev-a02ccbc-20240227163149
+      '@thirdweb-dev/chains': 0.1.75
       '@thirdweb-dev/contracts-js': 1.3.16(ethers@5.7.2)
-      '@thirdweb-dev/crypto': 0.2.0
-      '@thirdweb-dev/sdk': 0.0.0-dev-a02ccbc-20240227163149(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
+      '@thirdweb-dev/crypto': 0.2.1
+      '@thirdweb-dev/sdk': 4.0.39-nightly-7d8697ec3-20240304194900(ethers@5.7.2)(typescript@5.3.3)(zksync-web3@0.14.4)
       '@walletconnect/core': 2.11.2
       '@walletconnect/ethereum-provider': 2.11.2(@types/react@18.2.63)(react@18.2.0)
       '@walletconnect/jsonrpc-utils': 1.0.8
@@ -6777,12 +6776,6 @@ packages:
     resolution: {integrity: sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==}
     dependencies:
       undici-types: 5.26.5
-
-  /@types/node@20.11.24:
-    resolution: {integrity: sha512-Kza43ewS3xoLgCEpQrsT+xRo/EJej1y0kVYGiLFE1NEODXGzTfwiC6tXTLMQskn1X4/Rjlh0MQUvx9W+L9long==}
-    dependencies:
-      undici-types: 5.26.5
-    dev: true
 
   /@types/papaparse@5.3.14:
     resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
@@ -8609,7 +8602,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001594
+      caniuse-lite: 1.0.30001589
       electron-to-chromium: 1.4.681
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
@@ -8723,8 +8716,8 @@ packages:
     resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
     dev: false
 
-  /caniuse-lite@1.0.30001594:
-    resolution: {integrity: sha512-VblSX6nYqyJVs8DKFMldE2IVCJjZ225LW00ydtUWwh5hk9IfkTOffO6r8gJNsH0qqqeAF8KrbMYA2VEwTlGW5g==}
+  /caniuse-lite@1.0.30001589:
+    resolution: {integrity: sha512-vNQWS6kI+q6sBlHbh71IIeC+sRwK2N3EDySc/updIGhIee2x5z00J4c1242/5/d6EpEMdOnk/m+6tuk4/tcsqg==}
 
   /capital-case@1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
@@ -9890,8 +9883,8 @@ packages:
       tapable: 1.1.3
     dev: true
 
-  /enhanced-resolve@5.15.1:
-    resolution: {integrity: sha512-3d3JRbwsCLJsYgvb6NuWEG44jjPSOMuS73L/6+7BZuoKm3W+qXnSoIYVHi8dG7Qcg4inAY4jbzkZ7MnskePeDg==}
+  /enhanced-resolve@5.15.0:
+    resolution: {integrity: sha512-LXYT42KJ7lpIKECr2mAXIaMldcNCh/7E0KBKOu4KSfkHmP+mZmSs+8V5gBAqisWBy0OO4W5Oyys0GO1Y8KtdKg==}
     engines: {node: '>=10.13.0'}
     dependencies:
       graceful-fs: 4.2.11
@@ -10190,9 +10183,9 @@ packages:
       eslint-plugin-import: '*'
     dependencies:
       debug: 4.3.4
-      enhanced-resolve: 5.15.1
+      enhanced-resolve: 5.15.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
@@ -10260,36 +10253,6 @@ packages:
       debug: 3.2.7
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /eslint-module-utils@2.8.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
-    resolution: {integrity: sha512-rXDXR3h7cs7dy9RNpUlQf80nX31XWJEyGq1tRMo+6GsO5VmTe4UTwtmonAD4ZkAsrfMVDA2wlGJ3790Ys+D49Q==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint:
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.3.3)
-      debug: 3.2.7
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10376,7 +10339,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.23.9
       aria-query: 5.3.0
       array-includes: 3.1.7
       array.prototype.flatmap: 1.3.2
@@ -10907,19 +10870,19 @@ packages:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
     dev: false
 
-  /fastify-type-provider-zod@1.1.9(fastify@4.26.2)(zod@3.22.4):
+  /fastify-type-provider-zod@1.1.9(fastify@4.26.1)(zod@3.22.4):
     resolution: {integrity: sha512-Ztnu1ZWJEKJouZvdTyfgjuVqS+A4JLoCbWBvFqFhfnrg6YQvEvW+5cJvP98kNbuV5gjfpWmHSOTi3BpkidJPQg==}
     peerDependencies:
       fastify: ^4.0.0
       zod: ^3.19.1
     dependencies:
-      fastify: 4.26.2
+      fastify: 4.26.1
       zod: 3.22.4
       zod-to-json-schema: 3.22.4(zod@3.22.4)
     dev: false
 
-  /fastify@4.26.2:
-    resolution: {integrity: sha512-90pjTuPGrfVKtdpLeLzND5nyC4woXZN5VadiNQCicj/iJU4viNHKhsAnb7jmv1vu2IzkLXyBiCzdWuzeXgQ5Ug==}
+  /fastify@4.26.1:
+    resolution: {integrity: sha512-tznA/G55dsxzM5XChBfcvVSloG2ejeeotfPPJSFaWmHyCDVGMpvf3nRNbsCb/JTBF9RmQFBfuujWt3Nphjesng==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.4.1
@@ -11035,7 +10998,7 @@ packages:
       app-module-path: 2.2.0
       commander: 2.20.3
       debug: 4.3.4
-      enhanced-resolve: 5.15.1
+      enhanced-resolve: 5.15.0
       is-relative-path: 1.0.2
       module-definition: 3.4.0
       module-lookup-amd: 7.0.1
@@ -11493,7 +11456,7 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /graphql-config@5.0.3(@types/node@20.11.24)(graphql@16.8.1)(typescript@5.3.3):
+  /graphql-config@5.0.3(@types/node@20.11.20)(graphql@16.8.1)(typescript@5.3.3):
     resolution: {integrity: sha512-BNGZaoxIBkv9yy6Y7omvsaBUHOzfFcII3UN++tpH8MGOKFPFkCPZuwx09ggANMt8FgyWP1Od8SWPmrUEZca4NQ==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
@@ -11507,7 +11470,7 @@ packages:
       '@graphql-tools/json-file-loader': 8.0.1(graphql@16.8.1)
       '@graphql-tools/load': 8.0.2(graphql@16.8.1)
       '@graphql-tools/merge': 9.0.3(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.24)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.2(@types/node@20.11.20)(graphql@16.8.1)
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       cosmiconfig: 8.3.6(typescript@5.3.3)
       graphql: 16.8.1
@@ -12613,7 +12576,7 @@ packages:
     dependencies:
       graceful-fs: 4.2.11
 
-  /knip@5.0.2(@types/node@20.11.24)(typescript@5.3.3):
+  /knip@5.0.2(@types/node@20.11.20)(typescript@5.3.3):
     resolution: {integrity: sha512-ylmXi/CaR1rjOl8KqLsei7075cCsHttMNFwoYlBM7WMvd2Rd4oOfic9KqJFkDONXedsEsiiwnI3+u6GT6KOUuw==}
     engines: {node: '>=18.6.0'}
     hasBin: true
@@ -12628,7 +12591,7 @@ packages:
       '@pnpm/logger': 5.0.0
       '@pnpm/workspace.pkgs-graph': 2.0.15(@pnpm/logger@5.0.0)
       '@snyk/github-codeowners': 1.1.0
-      '@types/node': 20.11.24
+      '@types/node': 20.11.20
       '@types/picomatch': 2.3.3
       easy-table: 1.2.0
       fast-glob: 3.3.2
@@ -13281,7 +13244,7 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /meros@1.3.0(@types/node@20.11.24):
+  /meros@1.3.0(@types/node@20.11.20):
     resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
     engines: {node: '>=13'}
     peerDependencies:
@@ -13290,7 +13253,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@types/node': 20.11.24
+      '@types/node': 20.11.20
     dev: true
 
   /micro-ftch@0.3.1:
@@ -13801,6 +13764,9 @@ packages:
     dev: false
     optional: true
 
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -13887,7 +13853,7 @@ packages:
       '@next/env': 14.1.2
       '@swc/helpers': 0.5.2
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001594
+      caniuse-lite: 1.0.30001589
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0

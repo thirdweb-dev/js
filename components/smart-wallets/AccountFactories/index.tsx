@@ -2,7 +2,7 @@ import { ContractWithMetadata, useSupportedChains } from "@thirdweb-dev/react";
 import { Polygon } from "@thirdweb-dev/chains";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Spinner } from "@chakra-ui/react";
@@ -22,7 +22,7 @@ const useFactories = () => {
     ],
     async () => {
       invariant(user?.address, "user should be logged in");
-      const polygonSDK = getEVMThirdwebSDK(
+      const polygonSDK = getThirdwebSDK(
         Polygon.chainId,
         getDashboardChainRpc(Polygon),
       );

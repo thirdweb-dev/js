@@ -9,7 +9,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 
 export function detectFeatures<TContract extends ValidContractInstance | null>(
   contract: ValidContractInstance | null | undefined,
@@ -37,7 +37,7 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 }
 
 export function getGaslessPolygonSDK(signer?: Signer) {
-  const polygonSDK = getEVMThirdwebSDK(
+  const polygonSDK = getThirdwebSDK(
     Polygon.chainId,
     getDashboardChainRpc(Polygon),
     {

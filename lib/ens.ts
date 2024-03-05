@@ -1,4 +1,4 @@
-import { getEVMThirdwebSDK } from "./sdk";
+import { getThirdwebSDK } from "./sdk";
 import { Ethereum } from "@thirdweb-dev/chains";
 import { utils, type providers } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -10,7 +10,7 @@ function getMainnetProvider(): providers.Provider {
   if (THIRDWEB_PROVIDER) {
     return THIRDWEB_PROVIDER;
   }
-  THIRDWEB_PROVIDER = getEVMThirdwebSDK(
+  THIRDWEB_PROVIDER = getThirdwebSDK(
     Ethereum.chainId,
     getDashboardChainRpc(Ethereum),
   ).getProvider();

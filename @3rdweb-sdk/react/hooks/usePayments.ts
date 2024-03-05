@@ -51,7 +51,7 @@ import {
   WebhooksBySellerIdQueryVariables,
   useWebhooksBySellerIdLazyQuery,
 } from "graphql/generated";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
 import { OtherAddressZero } from "utils/zeroAddress";
 import { paymentsKeys } from "../cache-keys";
@@ -327,7 +327,7 @@ export function usePaymentsRegisterContract() {
       invariant(token, "No token found");
       invariant(address, "No wallet address found");
       invariant(input.chain, "No chain found");
-      const sdk = getEVMThirdwebSDK(
+      const sdk = getThirdwebSDK(
         parseInt(input.chain),
         `https://${input.chain}.rpc.${PROD_OR_DEV_URL}`,
       );

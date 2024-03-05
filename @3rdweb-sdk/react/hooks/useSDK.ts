@@ -21,7 +21,7 @@ import {
   useSupportedChainsRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -36,7 +36,7 @@ export function useContractList(
       if (!walletAddress || !chainId) {
         return [];
       }
-      const sdk = getEVMThirdwebSDK(chainId, rpcUrl);
+      const sdk = getThirdwebSDK(chainId, rpcUrl);
       const contractList = await sdk.getContractList(walletAddress);
       return [...contractList].reverse();
     },
@@ -52,7 +52,7 @@ export function useMultiChainRegContractList(walletAddress?: string) {
     ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {
       invariant(walletAddress, "walletAddress is required");
-      const polygonSDK = getEVMThirdwebSDK(
+      const polygonSDK = getThirdwebSDK(
         Polygon.chainId,
         getDashboardChainRpc(Polygon),
       );

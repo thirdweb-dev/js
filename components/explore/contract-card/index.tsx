@@ -15,7 +15,7 @@ import {
 import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
+import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
 import invariant from "tiny-invariant";
@@ -211,7 +211,7 @@ async function publishedContractQueryFn(
   version = "latest",
   queryClient: QueryClient,
 ) {
-  const polygonSdk = getEVMThirdwebSDK(
+  const polygonSdk = getThirdwebSDK(
     Polygon.chainId,
     getDashboardChainRpc(Polygon),
   );

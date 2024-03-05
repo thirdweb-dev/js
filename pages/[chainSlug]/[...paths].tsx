@@ -27,7 +27,7 @@ import {
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -405,7 +405,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   if (chain && chain.chainId) {
     try {
       // create the SDK on the chain
-      const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+      const sdk = getThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
       // get the contract
       const contract = await sdk.getContract(address);
       // extract the abi to detect extensions

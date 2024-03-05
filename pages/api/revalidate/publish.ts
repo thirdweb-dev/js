@@ -6,7 +6,7 @@ import {
 } from "components/contract-components/hooks";
 import { ENSResolveResult } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSingleQueryValue } from "utils/router";
 
@@ -43,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // if we don't have a specific contractName we have to actually fetch all the contracts for the address
   if (!contractName) {
-    const polygonSdk = getEVMThirdwebSDK(
+    const polygonSdk = getThirdwebSDK(
       Polygon.chainId,
       getDashboardChainRpc(Polygon),
     );

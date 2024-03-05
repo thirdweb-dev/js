@@ -58,7 +58,7 @@ import { providers, utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
-import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
+import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -164,7 +164,7 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
       invariant(address, "address is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
-      const sdk = getEVMThirdwebSDK(
+      const sdk = getThirdwebSDK(
         Polygon.chainId,
         getDashboardChainRpc(Polygon),
       );
@@ -201,7 +201,7 @@ async function fetchFullPublishMetadata(
 // Metadata POST publish, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
-  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
+  const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
 
   return useQuery(
@@ -223,7 +223,7 @@ export function useContractFullPublishMetadata(uri: string) {
 }
 
 async function fetchPublisherProfile(publisherAddress?: string | null) {
-  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
+  const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   invariant(publisherAddress, "address is not defined");
   return await sdk.getPublisher().getPublisherProfile(publisherAddress);
 }
@@ -284,7 +284,7 @@ export function useAllVersions(
   publisherAddress?: string,
   contractName?: string,
 ) {
-  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
+  const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   return useQuery(
     ["all-releases", publisherAddress, contractName],
     () => fetchAllVersions(sdk, publisherAddress, contractName),
@@ -314,13 +314,13 @@ export function usePublishedContractsFromDeploy(
       const rpcUrl = chainInfo ? getDashboardChainRpc(chainInfo) : undefined;
 
       invariant(rpcUrl, "rpcUrl not defined");
-      const sdk = getEVMThirdwebSDK(cId, rpcUrl);
+      const sdk = getThirdwebSDK(cId, rpcUrl);
 
       const contractUri = await sdk
         .getPublisher()
         .resolveContractUriFromAddress(contractAddress);
 
-      const polygonSdk = getEVMThirdwebSDK(
+      const polygonSdk = getThirdwebSDK(
         Polygon.chainId,
         getDashboardChainRpc(Polygon),
       );
@@ -346,7 +346,7 @@ export async function fetchPublishedContractInfo(
 }
 
 export function usePublishedContractInfo(contract: PublishedContract) {
-  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
+  const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   return useQuery(
     ["released-contract", contract],
     () => fetchPublishedContractInfo(sdk, contract),
@@ -784,7 +784,7 @@ export type PublishedContractDetails = Awaited<
 >[number];
 
 export function usePublishedContractsQuery(address?: string) {
-  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
+  const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
   return useQuery<PublishedContractDetails[]>(
     ["published-contracts", address],
@@ -935,7 +935,7 @@ export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
     ["custom-factory-abi", { contractAddress, chainId }],
     async () => {
       const chain = getChainByChainId(chainId);
-      const sdk = getEVMThirdwebSDK(chainId, getDashboardChainRpc(chain));
+      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chain));
       invariant(sdk, "sdk is not defined");
 
       return (await sdk.getContract(contractAddress)).abi;
