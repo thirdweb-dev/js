@@ -32,3 +32,11 @@ export {
   approve,
   type ApproveParams,
 } from "../../extensions/erc20/write/approve.js";
+export {
+  burn,
+  type BurnParams,
+} from "../../extensions/erc20/__generated__/IBurnableERC20/write/burn.js";
+export {
+  burnFrom,
+  type BurnFromParams,
+} from "../../extensions/erc20/__generated__/IBurnableERC20/write/burnFrom.js";
