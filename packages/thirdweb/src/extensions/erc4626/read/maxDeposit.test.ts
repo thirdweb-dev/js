@@ -12,7 +12,7 @@ describe("erc4626.maxDeposit", () => {
   it("should return the maxDeposit result", async () => {
     const shares = await maxDeposit({
       contract: FRAX_ETHER_CONTRACT,
-      address: VITALIK_WALLET,
+      receiver: VITALIK_WALLET,
     });
     expect(shares).toMatchInlineSnapshot(
       `115792089237316195423570985008687907853269984665640564039457584007913129639935n`,
