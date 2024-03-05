@@ -15,15 +15,15 @@ export type MaxMintParams = {
 };
 
 /**
- * Returns the maximum amount of shares that can be minted from the Vault for the receiver, through a mint call.
+ * Returns the maximum number of shares that can be minted from the Vault for the receiver, through a mint call.
  * @param options - The transaction options including the address to check.
  * @returns Maximum number of shares that can be minted to the provided address.
  * @extension ERC4626
  * @example
  * ```ts
- * import { maxDeposit } from "thirdweb/extensions/erc4626";
+ * import { maxMint } from "thirdweb/extensions/erc4626";
  *
- * const max = await maxMint({ contract, receiver: "0x..." });
+ * const maxShares = await maxMint({ contract, receiver: "0x..." });
  * ```
  */
 export async function maxMint(
