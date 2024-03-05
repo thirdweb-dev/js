@@ -148,8 +148,12 @@ export class AccountAPI extends BaseAccountAPI {
     }
 
     const swAddress = await this.getCounterFactualAddress();
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20Token = await this.sdk.getContract(
       this.params.erc20TokenAddress,
+      ERC20Abi,
     );
 
     const allowance = await erc20Token.call("allowance", [

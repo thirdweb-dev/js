@@ -49,12 +49,7 @@ export class ERC4337EthersSigner extends Signer {
       this.approving = true;
       const tx = await this.smartAccountAPI.createApproveTx();
       if (tx) {
-        console.log("Requires approval transaction...");
-        const approveReceipt = await (await this.sendTransaction(tx)).wait();
-        console.log(
-          "Approved tokens for spending!",
-          approveReceipt.transactionHash,
-        );
+        await (await this.sendTransaction(tx)).wait();
       }
       this.approving = false;
     }
