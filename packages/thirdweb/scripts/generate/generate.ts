@@ -13,16 +13,27 @@ export async function generateFromAbi(
   extensionName: string,
 ) {
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];
+
   const functions = abi.filter((x) => x.type === "function") as AbiFunction[];
 
+  const overloadedReads = new Set<string>();
+  const overloadedWrites = new Set<string>();
   // split functions into read and write
   const readFunctions: AbiFunction[] = [];
   const writeFunctions: AbiFunction[] = [];
   for (const f of functions) {
     if (f.stateMutability === "view" || f.stateMutability === "pure") {
+      if (overloadedReads.has(f.name)) {
+        continue;
+      }
       readFunctions.push(f);
+      overloadedReads.add(f.name);
     } else {
+      if (overloadedWrites.has(f.name)) {
+        continue;
+      }
       writeFunctions.push(f);
+      overloadedWrites.add(f.name);
     }
   }
 

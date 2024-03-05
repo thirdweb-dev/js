@@ -21,11 +21,6 @@ export type SafeTransferFromParams = {
     name: "tokenId";
     type: "uint256";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "_data";
-    type: "bytes";
-  }>;
 };
 
 /**
@@ -41,7 +36,6 @@ export type SafeTransferFromParams = {
  *  from: ...,
  *  to: ...,
  *  tokenId: ...,
- *  data: ...,
  * });
  *
  * // Send the transaction
@@ -55,7 +49,7 @@ export function safeTransferFrom(
   return prepareContractCall({
     contract: options.contract,
     method: [
-      "0xb88d4fde",
+      "0x42842e0e",
       [
         {
           internalType: "address",
@@ -72,14 +66,9 @@ export function safeTransferFrom(
           name: "tokenId",
           type: "uint256",
         },
-        {
-          internalType: "bytes",
-          name: "_data",
-          type: "bytes",
-        },
       ],
       [],
     ],
-    params: [options.from, options.to, options.tokenId, options.data],
+    params: [options.from, options.to, options.tokenId],
   });
 }
