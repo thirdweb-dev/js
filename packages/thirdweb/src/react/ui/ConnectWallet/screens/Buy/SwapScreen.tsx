@@ -680,7 +680,7 @@ function ToggleButton(props: { onClick: () => void }) {
         data-animate={animate}
         style={{
           borderRadius: "50%",
-          padding: spacing.xs,
+          padding: spacing.xxs,
         }}
         onClick={() => {
           props.onClick();
@@ -690,7 +690,9 @@ function ToggleButton(props: { onClick: () => void }) {
           }, 400);
         }}
       >
-        <ArrowTopBottom size={iconSize.sm} />{" "}
+        <Container color="secondaryText" flex="row" center="both">
+          <ArrowTopBottom size={iconSize.sm} />
+        </Container>
       </Button>
     </ToggleButtonContainer>
   );
@@ -699,15 +701,20 @@ function ToggleButton(props: { onClick: () => void }) {
 const ToggleButtonContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    margin: "-8px 0",
+    margin: "-9px 0",
     display: "flex",
     justifyContent: "center",
     button: {
-      transition: "transform 0.3s",
+      transition: "transform 0.3s, color 0.3s",
       backgroundColor: theme.colors.modalBg,
     },
     "button:hover": {
-      transform: `scale(1.2)`,
+      transform: `scale(1.15)`,
+      backgroundColor: theme.colors.primaryButtonBg,
+      borderColor: theme.colors.primaryButtonBg,
+      svg: {
+        color: theme.colors.primaryButtonText,
+      },
     },
     "button[data-animate='true'] svg": {
       transition: "transform 0.3s",
