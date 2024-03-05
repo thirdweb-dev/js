@@ -47,13 +47,13 @@ export type GetSwapQuoteParams = {
   fromTokenAddress: string;
 
   /**
-   * The amount of source token to be swapped in wei. This is useful if you want to swap a certain amount of source token
+   * The amount of source token to be swapped. This is useful if you want to swap a certain amount of source token
    *
-   * If you want a certain amount of destination token, you can provide `toAmountWei` instead of `fromAmountWei`.
+   * If you want a certain amount of destination token, you can provide `toAmount` instead of `fromAmount`.
    *
-   * Either `fromAmountWei` or `toAmountWei` must be provided and not both.
+   * Either `fromAmount` or `toAmount` must be provided and not both.
    */
-  fromAmountWei?: string;
+  fromAmount?: string;
   // to
 
   /**
@@ -70,10 +70,10 @@ export type GetSwapQuoteParams = {
    * The amount of destination token to be received in wei.
    * This is useful if you want to get a certain amount of destination token.
    *
-   * If you want to swap a certain amount of source token, you can provide `fromAmountWei` instead of `toAmountWei`.
-   * Either `fromAmountWei` or `toAmountWei`  must be provided to get a swap quote and not both.
+   * If you want to swap a certain amount of source token, you can provide `fromAmount` instead of `toAmount`.
+   * Either `fromAmount` or `toAmount`  must be provided to get a swap quote and not both.
    */
-  toAmountWei?: string;
+  toAmount?: string;
 
   /**
    * The maximum slippage in basis points (bps) allowed for the swap.
@@ -120,8 +120,10 @@ type SwapRouteResponse = {
   toAddress: string;
   fromToken: SwapTokenInfo;
   toToken: SwapTokenInfo;
+  fromAmount: string;
   fromAmountWei: string;
   toAmountMinWei: string;
+  toAmount: string;
   toAmountWei: string;
   requiredTokens: SwapPaymentToken[];
 
@@ -145,8 +147,10 @@ export type SwapQuote = {
     toAddress: string;
     fromToken: SwapTokenInfo;
     toToken: SwapTokenInfo;
+    fromAmount: string;
     fromAmountWei: string;
     toAmountMinWei: string;
+    toAmount: string;
     toAmountWei: string;
 
     estimated: {
@@ -183,8 +187,8 @@ export type SwapQuote = {
  *  fromAddress: "0x...", // wallet address
  *  fromChainId: 137, // chain id of the source token
  *  fromTokenAddress: "0x...", // token address of the source token
- *  fromAmountWei: "1000000", // amount of source token to swap
- *  // optionally, you can use `toAmountWei` instead if you only want a certain amount of destination token
+ *  fromAmount: "10", // amount of source token to swap
+ *  // optionally, you can use `toAmount` instead if you only want a certain amount of destination token
  *  toChainId: 10, // chain id of the destination token
  *  toTokenAddress: "0x...", // token address of the destination token
  *  toAddress: "0x...", // optional: send the tokens to a different address
@@ -204,12 +208,12 @@ export async function getSwapQuote(
       toTokenAddress: params.toTokenAddress,
     };
 
-    if (params.fromAmountWei) {
-      urlParamsObj.fromAmountWei = params.fromAmountWei;
+    if (params.fromAmount) {
+      urlParamsObj.fromAmount = params.fromAmount;
     }
 
-    if (params.toAmountWei) {
-      urlParamsObj.toAmountWei = params.toAmountWei;
+    if (params.toAmount) {
+      urlParamsObj.toAmount = params.toAmount;
     }
 
     if (params.maxSlippageBPS) {
@@ -252,10 +256,11 @@ export async function getSwapQuote(
         toAddress: data.toAddress,
         fromToken: data.fromToken,
         toToken: data.toToken,
-        fromAmountWei: data.fromAmountWei,
+        fromAmount: data.fromAmount,
         toAmountMinWei: data.toAmountMinWei,
+        toAmount: data.toAmount,
+        fromAmountWei: data.fromAmount,
         toAmountWei: data.toAmountWei,
-
         estimated: data.estimated,
       },
 

@@ -41,11 +41,15 @@ import {
  * }
  * ```
  */
-export function useSwapQuote(swapParams: GetSwapQuoteParams) {
+export function useSwapQuote(swapParams?: GetSwapQuoteParams) {
   return useQuery({
     queryKey: ["swapQuote", swapParams],
     queryFn: () => {
+      if (!swapParams) {
+        throw new Error("Swap params are required");
+      }
       return getSwapQuote(swapParams);
     },
+    enabled: !!swapParams,
   });
 }

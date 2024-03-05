@@ -15,18 +15,12 @@ import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
-import { useQuery } from "@tanstack/react-query";
-import { toTokens } from "../../../../../utils/units.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
-import { getSwapQuote } from "../../../../../pay/swap/actions/getSwap.js";
+import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
-import {
-  convertModifiedToNormalSwapRouteParams,
-  type ModifiedSwapRouteParams,
-} from "./convertModifiedToNormalSwapRouteParams.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import { defineChain } from "../../../../../chains/utils.js";
-import { ZERO_ADDRESS } from "../../../../../constants/addresses.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { useSendSwapTransaction } from "../../../../hooks/pay/useSendSwapTransaction.js";
 import { Spinner } from "../../../components/Spinner.js";
@@ -43,8 +37,7 @@ import { WalletIcon } from "../../icons/WalletIcon.js";
 import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
 import type { SwapTransaction } from "../../../../../pay/swap/actions/getStatus.js";
 import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
-
-// TODO: change ZERO_ADDRESS to NATIVE_TOKEN_ADDRESS when the change is done in backend
+import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -126,7 +119,7 @@ export function SwapScreenContent(props: {
 
   const { client } = useThirdwebProviderProps();
 
-  const swapParams: ModifiedSwapRouteParams | undefined =
+  const swapParams: GetSwapQuoteParams | undefined =
     deferredTokenAmount.value &&
     !(fromChain === toChain && fromToken === toToken)
       ? {
@@ -135,37 +128,28 @@ export function SwapScreenContent(props: {
           fromAddress: account.address,
           // from token
           fromChainId: fromChain.id as SwapSupportedChainId,
-          fromTokenAddress:
-            "nativeToken" in fromToken ? ZERO_ADDRESS : fromToken.address,
+          fromTokenAddress: isNativeToken(fromToken)
+            ? NATIVE_TOKEN_ADDRESS
+            : fromToken.address,
           toChainId: toChain.id as SwapSupportedChainId,
-          fromTokenAmount:
+          fromAmount:
             tokenAmount.type === "source"
               ? deferredTokenAmount.value
               : undefined,
           // to
-          toTokenAddress:
-            "nativeToken" in toToken ? ZERO_ADDRESS : toToken.address,
-          toTokenAmount:
+          toTokenAddress: isNativeToken(toToken)
+            ? NATIVE_TOKEN_ADDRESS
+            : toToken.address,
+          toAmount:
             tokenAmount.type === "destination"
               ? deferredTokenAmount.value
               : undefined,
         }
       : undefined;
 
-  const swapQuoteQuery = useQuery({
-    queryKey: ["swapQuote", swapParams],
-    queryFn: async () => {
-      if (!swapParams) {
-        throw new Error("Swap params are not set");
-      }
+  const swapQuoteQuery = useSwapQuote(swapParams);
 
-      const convertedParams =
-        await convertModifiedToNormalSwapRouteParams(swapParams);
-
-      return getSwapQuote(convertedParams);
-    },
-    enabled: !!swapParams,
-  });
+  console.log(swapQuoteQuery.data);
 
   const fromTokenBalanceQuery = useWalletBalance({
     account: account,
@@ -262,10 +246,7 @@ export function SwapScreenContent(props: {
   // if quote is loaded and
   if (swapQuoteQuery.data && !sourceTokenAmount) {
     // amount in # of tokens
-    sourceTokenAmount = toTokens(
-      BigInt(swapQuoteQuery.data.swapDetails.fromAmountWei), // amount in wei
-      swapQuoteQuery.data.swapDetails.fromToken.decimals, // decimals
-    ).toString();
+    sourceTokenAmount = swapQuoteQuery.data.swapDetails.fromAmount;
   }
 
   // DESTINATION TOKEN ----
@@ -274,10 +255,7 @@ export function SwapScreenContent(props: {
     tokenAmount.type === "destination" ? tokenAmount.value : "";
 
   if (swapQuoteQuery.data && !destinationTokenAmount) {
-    destinationTokenAmount = toTokens(
-      BigInt(swapQuoteQuery.data.swapDetails.toAmountWei),
-      swapQuoteQuery.data.swapDetails.toToken.decimals,
-    ).toString();
+    destinationTokenAmount = swapQuoteQuery.data.swapDetails.toAmount;
   }
 
   const isNotEnoughBalance =
