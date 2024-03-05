@@ -58,6 +58,9 @@ import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
 
 // TODO: change ZERO_ADDRESS to NATIVE_TOKEN_ADDRESS when the change is done in backend
 
+const supportedChainsObj = /* @__PURE__ */ (() =>
+  swapSupportedChains.map(defineChain))();
+
 /**
  * @internal
  */
@@ -95,6 +98,7 @@ export function SwapScreenContent(props: {
   const { activeChain, account } = props;
   const locale = useTWLocale();
   const screenLocale = locale.connectWallet.swapScreen;
+  const sendSwapMutation = useSendSwap();
 
   // screens
   const [screen, setScreen] = useState<
@@ -139,7 +143,7 @@ export function SwapScreenContent(props: {
   const { client } = useThirdwebProviderProps();
 
   const swapParams: ModifiedSwapRouteParams | undefined =
-    // both token should be set, a value for token amount should be set and the conversion should be between same chain+token
+    // both token should be set, a value for token amount should be set and the conversion should not be between same chain+token
     fromToken &&
     toToken &&
     deferredTokenAmount.value &&
@@ -186,8 +190,6 @@ export function SwapScreenContent(props: {
     retry: false,
     enabled: !!swapParams,
   });
-
-  const sendSwapMutation = useSendSwap();
 
   const [sentSwap, setSentSwap] = useState<SwapStatusParams | undefined>();
 
@@ -241,7 +243,7 @@ export function SwapScreenContent(props: {
       <NetworkSelectorContent
         onBack={() => setScreen("main")}
         // pass swap supported chains
-        chains={swapSupportedChains.map(defineChain)}
+        chains={supportedChainsObj}
         closeModal={() => setScreen("main")}
         networkSelector={{
           renderChain(renderChainProps) {
@@ -256,7 +258,7 @@ export function SwapScreenContent(props: {
                     setFromChain(chain);
                     setFromToken({ nativeToken: true });
                   } else {
-                    setToChain(renderChainProps.chain);
+                    setToChain(chain);
                     setToToken({ nativeToken: true });
                   }
                   setScreen("main");
@@ -354,7 +356,6 @@ export function SwapScreenContent(props: {
             swapQuoteQuery.data?.swapDetails.estimated.toAmountMinUSDCents
           }
           onChainClick={() => setScreen("select-to-chain")}
-          // we don't care about the "to" balance - because that's what we want
           checkBalance={false}
         />
 

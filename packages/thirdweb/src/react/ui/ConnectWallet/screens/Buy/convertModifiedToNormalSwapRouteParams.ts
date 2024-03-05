@@ -1,4 +1,4 @@
-import { defineChain, getChainMetadata } from "../../../../../chains/utils.js";
+import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { ZERO_ADDRESS } from "../../../../../constants/addresses.js";
 import {
@@ -33,6 +33,7 @@ const createContractCacheKey = (address: string, chainId: SwapSupportChainId) =>
 
 // contract address + chainId as key
 const contractCache = new Map<string, ThirdwebContract>();
+const nativeTokenDecimals = 18;
 
 /**
  * @internal
@@ -40,15 +41,6 @@ const contractCache = new Map<string, ThirdwebContract>();
 export async function convertModifiedToNormalSwapRouteParams(
   modifiedParams: ModifiedSwapRouteParams,
 ) {
-  let chainDecimals = 18;
-  try {
-    chainDecimals = (
-      await getChainMetadata(defineChain(modifiedParams.fromChainId))
-    ).nativeCurrency.decimals;
-  } catch {
-    // ignore
-  }
-
   const swapRouteParams: SwapRouteParams = {
     client: modifiedParams.client,
     fromAddress: modifiedParams.fromAddress,
@@ -58,75 +50,68 @@ export async function convertModifiedToNormalSwapRouteParams(
     toTokenAddress: modifiedParams.toTokenAddress,
   };
 
+  async function convertAmount(
+    amount: string,
+    tokenAddress: string,
+    chainId: SwapSupportChainId,
+  ) {
+    const _decimals = await getDecimals(
+      tokenAddress,
+      chainId,
+      modifiedParams.client,
+    );
+
+    return toUnits(amount, _decimals).toString();
+  }
+
+  // convert fromTokenAmount to fromAmountWei
   if (modifiedParams.fromTokenAmount) {
-    if (modifiedParams.fromTokenAddress === ZERO_ADDRESS) {
-      swapRouteParams.fromAmountWei = toUnits(
-        modifiedParams.fromTokenAmount,
-        chainDecimals,
-      ).toString();
-    } else {
-      const key = createContractCacheKey(
-        modifiedParams.fromTokenAddress,
-        modifiedParams.fromChainId,
-      );
+    swapRouteParams.fromAmountWei = await convertAmount(
+      modifiedParams.fromTokenAmount,
+      modifiedParams.fromTokenAddress,
+      modifiedParams.fromChainId,
+    );
+  }
 
-      let _contract = contractCache.get(key);
-
-      if (!_contract) {
-        _contract = getContract({
-          address: modifiedParams.fromTokenAddress,
-          chain: defineChain(modifiedParams.fromChainId),
-          client: modifiedParams.client,
-        });
-
-        contractCache.set(key, _contract);
-      }
-
-      // get the decimals of this contract
-      const _decimals = await decimals({
-        contract: _contract,
-      });
-
-      swapRouteParams.fromAmountWei = toUnits(
-        modifiedParams.fromTokenAmount,
-        _decimals,
-      ).toString();
-    }
-  } else if (modifiedParams.toTokenAmount) {
-    if (modifiedParams.toTokenAddress === ZERO_ADDRESS) {
-      swapRouteParams.toAmountWei = toUnits(
-        modifiedParams.toTokenAmount,
-        chainDecimals,
-      ).toString();
-    } else {
-      const key = createContractCacheKey(
-        modifiedParams.toTokenAddress,
-        modifiedParams.toChainId,
-      );
-
-      let _contract = contractCache.get(key);
-
-      if (!_contract) {
-        _contract = getContract({
-          address: modifiedParams.toTokenAddress,
-          chain: defineChain(modifiedParams.toChainId),
-          client: modifiedParams.client,
-        });
-
-        contractCache.set(key, _contract);
-      }
-
-      // get the decimals of this contract
-      const _decimals = await decimals({
-        contract: _contract,
-      });
-
-      swapRouteParams.toAmountWei = toUnits(
-        modifiedParams.toTokenAmount,
-        _decimals,
-      ).toString();
-    }
+  // convert toTokenAmount to toAmountWei
+  else if (modifiedParams.toTokenAmount) {
+    swapRouteParams.toAmountWei = await convertAmount(
+      modifiedParams.toTokenAmount,
+      modifiedParams.toTokenAddress,
+      modifiedParams.toChainId,
+    );
   }
 
   return swapRouteParams;
+}
+
+async function getDecimals(
+  tokenAddress: string,
+  chainId: SwapSupportChainId,
+  client: ThirdwebClient,
+) {
+  if (tokenAddress === ZERO_ADDRESS) {
+    return nativeTokenDecimals;
+  }
+
+  const key = createContractCacheKey(tokenAddress, chainId);
+
+  let _contract = contractCache.get(key);
+
+  if (!_contract) {
+    _contract = getContract({
+      address: tokenAddress,
+      chain: defineChain(chainId),
+      client: client,
+    });
+
+    contractCache.set(key, _contract);
+  }
+
+  // get the decimals of this contract
+  const _decimals = await decimals({
+    contract: _contract,
+  });
+
+  return _decimals;
 }
