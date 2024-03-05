@@ -1,6 +1,7 @@
 // read
 export { contractURI } from "../../extensions/common/__generated__/IContractMetadata/read/contractURI.js";
 export { getContractMetadata } from "../../extensions/common/read/getContractMetadata.js";
+export { owner } from "../../extensions/common/__generated__/IOwnable/read/owner.js";
 
 // write
 export {
