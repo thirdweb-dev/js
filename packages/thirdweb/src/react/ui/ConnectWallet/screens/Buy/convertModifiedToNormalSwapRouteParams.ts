@@ -1,14 +1,11 @@
-import {
-  defineChain,
-  getChainDataForChain,
-} from "../../../../../chains/utils.js";
+import { defineChain, getChainMetadata } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { ZERO_ADDRESS } from "../../../../../constants/addresses.js";
 import {
   getContract,
   type ThirdwebContract,
 } from "../../../../../contract/contract.js";
-import { decimals } from "../../../../../extensions/erc20/read/decimals.js";
+import { decimals } from "../../../../../extensions/erc20/__generated__/IERC20Metadata/read/decimals.js";
 import type { SwapRouteParams } from "../../../../../pay/swap/actions/getSwap.js";
 import type { SwapSupportChainId } from "../../../../../pay/swap/actions/getSwap.js";
 import { toUnits } from "../../../../../utils/units.js";
@@ -46,7 +43,7 @@ export async function convertModifiedToNormalSwapRouteParams(
   let chainDecimals = 18;
   try {
     chainDecimals = (
-      await getChainDataForChain(defineChain(modifiedParams.fromChainId))
+      await getChainMetadata(defineChain(modifiedParams.fromChainId))
     ).nativeCurrency.decimals;
   } catch {
     // ignore
