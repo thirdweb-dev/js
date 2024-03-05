@@ -30,7 +30,7 @@ export type MintParams = {
  * });
  * ```
  */
-export function deposit(options: BaseTransactionOptions<MintParams>) {
+export function mint(options: BaseTransactionOptions<MintParams>) {
   return prepareContractCall({
     ...options,
     method: $run$(() =>
