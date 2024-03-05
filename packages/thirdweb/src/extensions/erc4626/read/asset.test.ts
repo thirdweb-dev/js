@@ -9,7 +9,7 @@ describe("erc4626.asset", () => {
   afterEach(() => {
     fetchSpy.mockClear();
   });
-  it("should return the balanceOf result", async () => {
+  it("should return the assets result", async () => {
     const underlyingAsset = await asset({
       contract: FRAX_ETHER_CONTRACT,
     });
