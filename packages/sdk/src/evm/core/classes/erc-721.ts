@@ -21,6 +21,7 @@ import { type QueryAllParams } from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
+  NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
@@ -750,7 +751,10 @@ export class Erc721<
    * @twfeature ERC721UpdatableMetadata
    */
   updateMetadata = /* @__PURE__ */ buildTransactionFunction(
-    async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
+    async (tokenId: BigNumberish, metadata: NFTMetadataInput) => {
+      if (this.lazyMintable) {
+        return this.lazyMintable.updateMetadata.prepare(tokenId, metadata);
+      }
       return assertEnabled(
         this.updatableMetadata,
         FEATURE_NFT_UPDATABLE_METADATA,
@@ -759,7 +763,7 @@ export class Erc721<
   );
 
   // alias for backwards compat
-  async update(tokenId: BigNumberish, metadata: NFTMetadataOrUri) {
+  async update(tokenId: BigNumberish, metadata: NFTMetadataInput) {
     return this.updateMetadata(tokenId, metadata);
   }
 
