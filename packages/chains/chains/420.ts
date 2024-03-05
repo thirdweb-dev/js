@@ -43,5 +43,6 @@ export default {
   "shortName": "ogor",
   "slip44": 1,
   "slug": "optimism-goerli",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;
