@@ -17,7 +17,7 @@ import {
  * @returns A React Query object which contains the data of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote)
  * @example
  * ```tsx
- * import { useSendSwap } from "thirdweb/react";
+ * import { useSendSwapTransaction, useSwapStatus, useSwapQuote } from "thirdweb/react";
  * import type { SwapTransaction } from "thirdweb";
  *
  * function Component() {

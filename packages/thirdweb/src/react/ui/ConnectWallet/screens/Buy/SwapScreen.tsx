@@ -467,6 +467,9 @@ function WaitingForConfirmation(props: {
   const screenLocale = locale.connectWallet.swapScreen;
   const swapStatus = useSwapStatus(props.swapTx);
 
+  const isSuccess = swapStatus.data?.status === "DONE";
+  const isFailed = swapStatus.data?.status === "FAILED";
+
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -480,19 +483,25 @@ function WaitingForConfirmation(props: {
           style={{
             minHeight: "240px",
           }}
-          color="success"
+          color={isSuccess ? "success" : isFailed ? "danger" : "accentText"}
         >
-          {swapStatus.data ? (
+          {isSuccess ? (
             <CheckCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          ) : isFailed ? (
+            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
           ) : (
             <Spinner size="xl" color="accentText" />
           )}
 
-          <Text color={swapStatus.data ? "success" : "primaryText"}>
+          <Text
+            color={isSuccess ? "success" : isFailed ? "danger" : "primaryText"}
+          >
             {" "}
-            {swapStatus.data
+            {isSuccess
               ? "Swapped Successfully"
-              : "Waiting for confirmation"}{" "}
+              : isFailed
+                ? "Swap Failed"
+                : "Waiting for confirmation"}{" "}
           </Text>
         </Container>
 

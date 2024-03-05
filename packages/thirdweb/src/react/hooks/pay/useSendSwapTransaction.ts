@@ -12,7 +12,7 @@ import type { SwapTransaction } from "../../../pay/swap/actions/getStatus.js";
  * This mutation function returns a promise that resolves to object of type [`SwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/SwapTransaction)
  * @example
  * ```tsx
- * import { useSendSwap } from "thirdweb/react";
+ * import { useSendSwapTransaction, useSwapStatus, useSwapQuote } from "thirdweb/react";
  * import type { SwapTransaction } from "thirdweb";
  *
  * function Component() {

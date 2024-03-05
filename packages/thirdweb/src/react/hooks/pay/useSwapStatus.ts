@@ -15,7 +15,7 @@ const DEFAULT_POLL_INTERVAL = 5000;
  * @returns A react query object which contains the data of type [`SwapStatus`](https://portal.thirdweb.com/references/typescript/v5/SwapStatus)
  * @example
  * ```tsx
- * import { useSendSwap } from "thirdweb/react";
+ * import { useSendSwapTransaction, useSwapStatus, useSwapQuote } from "thirdweb/react";
  * import type { SwapTransaction } from "thirdweb";
  *
  * function Component() {
@@ -57,7 +57,7 @@ export function useSwapStatus(swapStatusParams: SwapTransaction | undefined) {
       }
 
       const swapStatus_ = await getSwapStatus(swapStatusParams);
-      if (swapStatus_.status === "DONE") {
+      if (swapStatus_.status === "DONE" || swapStatus_.status === "FAILED") {
         setRefetchInterval(0);
       }
       return swapStatus_;
