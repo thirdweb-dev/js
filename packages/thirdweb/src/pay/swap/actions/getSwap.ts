@@ -259,7 +259,7 @@ export async function getSwapQuote(
         fromAmount: data.fromAmount,
         toAmountMinWei: data.toAmountMinWei,
         toAmount: data.toAmount,
-        fromAmountWei: data.fromAmount,
+        fromAmountWei: data.fromAmountWei,
         toAmountWei: data.toAmountWei,
         estimated: data.estimated,
       },
