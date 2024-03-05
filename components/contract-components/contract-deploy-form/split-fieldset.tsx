@@ -13,7 +13,6 @@ import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
-import { useEffect } from "react";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 
@@ -31,12 +30,6 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
     name: "recipients",
     control: form.control,
   });
-
-  useEffect(() => {
-    if (fields.length === 0) {
-      append({ address: "", sharesBps: 10000 }, { shouldFocus: false });
-    }
-  }, [fields, append]);
 
   const totalShares =
     form

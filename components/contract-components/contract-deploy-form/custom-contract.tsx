@@ -52,6 +52,7 @@ import {
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { Chain } from "@thirdweb-dev/chains";
+import { useMemo } from "react";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -120,32 +121,52 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     !isFactoryDeployment &&
     (fullPublishMetadata.data?.name.includes("AccountFactory") || false);
 
-  const parseDeployParams = {
-    ...deployParams.reduce(
-      (acc, param) => {
-        if (!param.name) {
-          param.name = "*";
-        }
+  const parsedDeployParams = useMemo(
+    () => ({
+      ...deployParams.reduce(
+        (acc, param) => {
+          if (!param.name) {
+            param.name = "*";
+          }
 
-        acc[param.name] = replaceTemplateValues(
-          fullPublishMetadata.data?.constructorParams?.[param.name]
-            ?.defaultValue
-            ? fullPublishMetadata.data?.constructorParams?.[param.name]
-                ?.defaultValue || ""
-            : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
-              ? "0"
-              : "",
-          param.type,
-          {
-            connectedWallet,
-            chainId: selectedChain,
-          },
-        );
-        return acc;
-      },
-      {} as Record<string, string>,
-    ),
-  };
+          acc[param.name] = replaceTemplateValues(
+            fullPublishMetadata.data?.constructorParams?.[param.name]
+              ?.defaultValue
+              ? fullPublishMetadata.data?.constructorParams?.[param.name]
+                  ?.defaultValue || ""
+              : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
+                ? "0"
+                : "",
+            param.type,
+            {
+              connectedWallet,
+              chainId: selectedChain,
+            },
+          );
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+    }),
+    [
+      deployParams,
+      fullPublishMetadata.data?.constructorParams,
+      connectedWallet,
+      selectedChain,
+    ],
+  );
+
+  const transformedQueryData = useMemo(
+    () => ({
+      addToDashboard: true,
+      deployDeterministic: isAccountFactory,
+      saltForCreate2: "",
+      signerAsSalt: true,
+      deployParams: parsedDeployParams,
+      recipients: [{ address: connectedWallet || "", sharesBps: 10000 }],
+    }),
+    [parsedDeployParams, isAccountFactory, connectedWallet],
+  );
 
   const form = useForm<{
     addToDashboard: boolean;
@@ -161,20 +182,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     };
     recipients?: Recipient[];
   }>({
-    defaultValues: {
-      addToDashboard: true,
-      deployDeterministic: isAccountFactory,
-      saltForCreate2: "",
-      signerAsSalt: true,
-      deployParams: parseDeployParams,
-    },
-    values: {
-      addToDashboard: true,
-      deployDeterministic: isAccountFactory,
-      saltForCreate2: "",
-      signerAsSalt: true,
-      deployParams: parseDeployParams,
-    },
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,

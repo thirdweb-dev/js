@@ -39,7 +39,9 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
     if (validValue && validValue.length) {
       onChange(Math.floor(parseFloat(validValue[0] || "0") * 100));
     }
-  }, [stringValue, onChange]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stringValue]);
 
   return (
     <InputGroup {...restInputProps}>
