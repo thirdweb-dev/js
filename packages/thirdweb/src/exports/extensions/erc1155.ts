@@ -33,6 +33,17 @@ export {
   type BalanceOfParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 
+//WRITE
+
+export {
+  burn,
+  type BurnParams,
+} from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burn.js";
+export {
+  burnBatch,
+  type BurnBatchParams,
+} from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burnBatch.js";
+
 /**
  * DROPS extension for ERC1155
  */
