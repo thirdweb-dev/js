@@ -18,13 +18,14 @@ import type { TokenInfo } from "../defaultTokens.js";
 import { Text } from "../../components/text.js";
 import styled from "@emotion/styled";
 import type { Chain } from "../../../../chains/types.js";
+import { NATIVE_TOKEN, type NativeToken } from "./nativeToken.js";
 
 /**
  *
  * @internal
  */
 export function TokenSelector(props: {
-  onTokenSelect: (token?: TokenInfo | { nativeToken: true }) => void;
+  onTokenSelect: (token: TokenInfo | NativeToken) => void;
   onBack: () => void;
   tokenList: TokenInfo[];
   chain: Chain;
@@ -100,7 +101,7 @@ export function TokenSelector(props: {
           {!input && (
             <SelectTokenButton
               onClick={() => {
-                props.onTokenSelect({ nativeToken: true });
+                props.onTokenSelect(NATIVE_TOKEN);
               }}
               chain={props.chain}
             />

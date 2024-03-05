@@ -26,6 +26,7 @@ import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { isAddress } from "../../../../utils/address.js";
 import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
+import type { NativeToken } from "./nativeToken.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -57,9 +58,9 @@ export function SendFunds(props: {
     }
   }
 
-  const [token, setToken] = useState<
-    TokenInfo | undefined | { nativeToken: true }
-  >(defaultToken);
+  const [token, setToken] = useState<TokenInfo | undefined | NativeToken>(
+    defaultToken,
+  );
   const [receiverAddress, setReceiverAddress] = useState("");
   const [amount, setAmount] = useState("0");
 
@@ -104,7 +105,7 @@ export function SendFunds(props: {
  */
 function SendFundsForm(props: {
   onTokenSelect: () => void;
-  token?: TokenInfo | { nativeToken: true };
+  token?: TokenInfo | NativeToken;
   receiverAddress: string;
   setReceiverAddress: (value: string) => void;
   amount: string;

@@ -1,34 +1,20 @@
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Container, ModalHeader } from "../../../components/basic.js";
 import { useTWLocale } from "../../../../providers/locale-provider.js";
-import { Input } from "../../../components/formElements.js";
 import { Button } from "../../../components/buttons.js";
 import { StyledDiv } from "../../../design-system/elements.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../design-system/index.js";
-import { Skeleton } from "../../../components/Skeleton.js";
+import { iconSize, spacing } from "../../../design-system/index.js";
 import { Text } from "../../../components/text.js";
 import { useDeferredValue, useMemo, useState } from "react";
-import {
-  CheckCircledIcon,
-  ChevronDownIcon,
-  CrossCircledIcon,
-} from "@radix-ui/react-icons";
-import { TokenSelector, formatTokenBalance } from "../TokenSelector.js";
+import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { TokenSelector } from "../TokenSelector.js";
 import type { SupportedTokens, TokenInfo } from "../../defaultTokens.js";
 import type { Chain } from "../../../../../chains/types.js";
-import { Img } from "../../../components/Img.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
-import { useChainQuery } from "../../../../hooks/others/useChainQuery.js";
-import { ChainIcon, fallbackChainIcon } from "../../../components/ChainIcon.js";
 import { useQuery } from "@tanstack/react-query";
 import { toTokens } from "../../../../../utils/units.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
@@ -44,8 +30,6 @@ import {
 } from "./convertModifiedToNormalSwapRouteParams.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import { defineChain } from "../../../../../chains/utils.js";
-import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
-import { WalletIcon } from "../../icons/WalletIcon.js";
 import { ZERO_ADDRESS } from "../../../../../constants/addresses.js";
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import {
@@ -55,6 +39,8 @@ import {
 import { Spinner } from "../../../components/Spinner.js";
 import { ArrowTopBottom } from "../../icons/ArrowTopBottom.js";
 import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
+import { SwapInput } from "./swap/SwapInput.js";
+import { NATIVE_TOKEN, type NativeToken } from "../nativeToken.js";
 
 // TODO: change ZERO_ADDRESS to NATIVE_TOKEN_ADDRESS when the change is done in backend
 
@@ -84,6 +70,8 @@ type TokenAmountState = {
   value: string;
   type: "source" | "destination";
 };
+
+type SelectedToken = TokenInfo | NativeToken;
 
 /**
  *
@@ -124,34 +112,20 @@ export function SwapScreenContent(props: {
     [activeChain.id],
   );
 
-  const [fromChain, setFromChain] = useState<Chain>(
-    isChainSupported ? activeChain : ethereum,
-  );
-
-  const [toChain, setToChain] = useState<Chain>(
-    isChainSupported ? activeChain : ethereum,
-  );
+  // selected chain
+  const defaultChain = isChainSupported ? activeChain : ethereum;
+  const [fromChain, setFromChain] = useState<Chain>(defaultChain);
+  const [toChain, setToChain] = useState<Chain>(defaultChain);
 
   // selected tokens
-  const [fromToken, setFromToken] = useState<
-    TokenInfo | { nativeToken: true } | undefined
-  >({ nativeToken: true });
-  const [toToken, setToToken] = useState<
-    TokenInfo | { nativeToken: true } | undefined
-  >({ nativeToken: true });
+  const [fromToken, setFromToken] = useState<SelectedToken>(NATIVE_TOKEN);
+  const [toToken, setToToken] = useState<SelectedToken>(NATIVE_TOKEN);
 
   const { client } = useThirdwebProviderProps();
 
   const swapParams: ModifiedSwapRouteParams | undefined =
-    // both token should be set, a value for token amount should be set and the conversion should not be between same chain+token
-    fromToken &&
-    toToken &&
     deferredTokenAmount.value &&
-    !(
-      fromChain === toChain &&
-      (fromToken === toToken ||
-        ("nativeToken" in fromToken && "nativeToken" in toToken))
-    )
+    !(fromChain === toChain && fromToken === toToken)
       ? {
           client: client,
           // wallet
@@ -256,10 +230,10 @@ export function SwapScreenContent(props: {
                   const chain = renderChainProps.chain;
                   if (screen === "select-from-chain") {
                     setFromChain(chain);
-                    setFromToken({ nativeToken: true });
+                    setFromToken(NATIVE_TOKEN);
                   } else {
                     setToChain(chain);
-                    setToToken({ nativeToken: true });
+                    setToToken(NATIVE_TOKEN);
                   }
                   setScreen("main");
                 }}
@@ -432,245 +406,6 @@ function Fees(props: { label: string; amount: string }) {
     </div>
   );
 }
-
-function SwapInput(props: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  valueIsLoading: boolean;
-  onTokenClick: () => void;
-  onChainClick: () => void;
-  chain: Chain;
-  token?: TokenInfo | { nativeToken: true };
-  estimatedValue?: number;
-  checkBalance: boolean;
-}) {
-  const chainQuery = useChainQuery(props.chain);
-  const activeAccount = useActiveAccount();
-
-  const token =
-    props.token && !("nativeToken" in props.token) ? props.token : undefined;
-
-  const balanceQuery = useWalletBalance({
-    account: activeAccount,
-    chain: props.chain,
-    tokenAddress: token?.address,
-  });
-
-  const tokenIcon = token?.icon || chainQuery.data?.icon?.url;
-  const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
-
-  const isNotEnoughBalance =
-    props.checkBalance &&
-    balanceQuery.data &&
-    Number(balanceQuery.data.displayValue) < Number(props.value);
-
-  return (
-    <SwapInputContainer>
-      <Container>
-        {/* Header row */}
-        <Container
-          flex="row"
-          gap="sm"
-          center="y"
-          style={{
-            justifyContent: "space-between",
-            paddingBlock: spacing.xs,
-            paddingRight: spacing.sm,
-            paddingLeft: spacing.md,
-          }}
-        >
-          <Text size="sm">{props.label}</Text>
-
-          {/* Chain selector */}
-          <Button
-            variant="outline"
-            style={{
-              borderColor: "transparent",
-              paddingBlock: spacing.xs,
-              paddingInline: spacing.sm,
-              paddingRight: 0,
-              fontSize: fontSize.sm,
-            }}
-            gap="xxs"
-            onClick={props.onChainClick}
-          >
-            <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
-            {chainQuery.data?.name || (
-              <Skeleton width="90px" height={fontSize.xs} />
-            )}
-            <Container color="secondaryText">
-              <ChevronDownIcon />
-            </Container>
-          </Button>
-        </Container>
-        <Line />
-        <div
-          style={{
-            padding: spacing.sm,
-          }}
-        >
-          {/* Row 1 */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              gap: spacing.xxs,
-              alignItems: "center",
-            }}
-          >
-            {/* Input */}
-            <div
-              style={{
-                position: "relative",
-              }}
-            >
-              {props.valueIsLoading && (
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: "50%",
-                    zIndex: 1,
-                    transform: "translateY(-50%)",
-                  }}
-                >
-                  <Skeleton width="120px" height={fontSize.xl} />
-                </div>
-              )}
-
-              <Input
-                type="number"
-                inputMode="numeric"
-                placeholder={props.valueIsLoading ? "" : "0"}
-                variant="transparent"
-                data-focus="false"
-                style={{
-                  height: "100%",
-                  fontSize: fontSize.xl,
-                  paddingBlock: spacing.xxs,
-                  paddingInline: spacing.xxs,
-                  paddingLeft: 0,
-                }}
-                value={props.value}
-                onChange={(e) => {
-                  props.onChange(e.target.value);
-                }}
-              />
-            </div>
-
-            {/* Token Selector */}
-            <Button
-              variant="outline"
-              style={{
-                borderColor: "transparent",
-                justifyContent: "flex-start",
-                padding: spacing.xxs,
-                paddingRight: 0,
-              }}
-              gap="xxs"
-              onClick={props.onTokenClick}
-            >
-              {props.token ? (
-                <>
-                  <Container flex="row" center="y" gap="xs">
-                    {tokenIcon ? (
-                      <Img
-                        src={tokenIcon}
-                        width={iconSize.md}
-                        height={iconSize.md}
-                        fallbackImage={fallbackChainIcon}
-                      />
-                    ) : (
-                      <Skeleton
-                        width={iconSize.md + "px"}
-                        height={iconSize.md + "px"}
-                      />
-                    )}
-
-                    {tokenSymbol ? (
-                      <Text color="primaryText" size="sm">
-                        {tokenSymbol}
-                      </Text>
-                    ) : (
-                      <Skeleton width="70px" height={fontSize.sm} />
-                    )}
-                  </Container>
-
-                  <Container color="secondaryText">
-                    <ChevronDownIcon />
-                  </Container>
-                </>
-              ) : (
-                <Container flex="row" center="y" gap="xs" color="secondaryText">
-                  <Text size="sm"> Select token </Text>
-                  <ChevronDownIcon />
-                </Container>
-              )}
-            </Button>
-          </div>
-
-          <Spacer y="sm" />
-
-          {/* Row 2 */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "nowrap",
-              gap: spacing.xs,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {isNotEnoughBalance ? (
-              <Text color="danger" size="xs">
-                Exceeds balance
-              </Text>
-            ) : (
-              <Text size="xs" color="secondaryText">
-                {props.estimatedValue ? (
-                  `$${props.estimatedValue / 100}`
-                ) : props.valueIsLoading ? (
-                  <Skeleton width="70px" height={fontSize.xs} />
-                ) : (
-                  "$0.0"
-                )}
-              </Text>
-            )}
-
-            <Container flex="row" gap="xs" color="secondaryText">
-              <div
-                title="Wallet Balance"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <WalletIcon size={iconSize.xs} />
-              </div>
-              {balanceQuery.data ? (
-                <Text size="xs" color="secondaryText">
-                  {formatTokenBalance(balanceQuery.data)}
-                </Text>
-              ) : (
-                <Skeleton width="70px" height={fontSize.xs} />
-              )}
-            </Container>
-          </div>
-        </div>
-      </Container>
-    </SwapInputContainer>
-  );
-}
-
-const SwapInputContainer = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.lg,
-  };
-});
 
 function ToggleButton(props: { onClick: () => void }) {
   const [animate, setAnimate] = useState(false);
