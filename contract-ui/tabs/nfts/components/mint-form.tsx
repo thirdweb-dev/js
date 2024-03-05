@@ -422,7 +422,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 borderRadius="md"
                 transition="all 200ms ease"
                 selectOrUpload="Upload"
-                helperText={nft?.metadata ? "Replacer Media" : "Media"}
+                helperText={nft?.metadata ? "New Media" : "Media"}
                 _hover={{ shadow: "sm" }}
               />
             </Box>
