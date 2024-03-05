@@ -33,7 +33,9 @@ export type MintParams = {
 export function deposit(options: BaseTransactionOptions<MintParams>) {
   return prepareContractCall({
     ...options,
-    method: $run$(() => prepareMethod("function mint(uint256, address)")),
+    method: $run$(() =>
+      prepareMethod("function mint(uint256, address) returns (uint256)"),
+    ),
     params: [options.shares, options.receiver],
   });
 }

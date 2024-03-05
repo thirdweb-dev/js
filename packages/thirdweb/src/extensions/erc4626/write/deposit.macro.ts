@@ -33,7 +33,9 @@ export type DepositParams = {
 export function deposit(options: BaseTransactionOptions<DepositParams>) {
   return prepareContractCall({
     ...options,
-    method: $run$(() => prepareMethod("function deposit(uint256, address)")),
+    method: $run$(() =>
+      prepareMethod("function deposit(uint256, address) returns (uint256)"),
+    ),
     params: [options.assets, options.receiver],
   });
 }
