@@ -16,3 +16,21 @@ The send transaction benchmark measures sending native tokens (ETH) to another a
 **Summary for transfer native tokens:**
 
 - **thirdweb** is 1.32x faster than viem and 5.1x faster than ethers.
+
+### Running benchmarks
+
+To run the benchmarks, clone the repository and run the following commands:
+
+```bash
+# install dependencies
+pnpm i
+# cd into the thirdweb package
+cd packages/thirdweb
+# run the benchmark
+pnpm run bench:compare
+```
+
+**Prerequisites:**
+
+- `bun` installed (https://bun.sh)
+- `anvil` installed (https://book.getfoundry.sh/getting-started/installation)

@@ -182,6 +182,7 @@
     }
   },
   "scripts": {
+    "bench:compare": "bun run ./benchmarks/run.ts",
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
