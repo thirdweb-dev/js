@@ -7,7 +7,6 @@ import {
   CarbonDocumentAudio,
   CarbonDocumentUnknown,
 } from "./icons.js";
-import { shouldRenderVideoTag, shouldRenderAudioTag } from "./utils.js";
 import { useResolvedMediaType } from "./useResolvedMediaType.js";
 
 /**
@@ -127,7 +126,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         //  video
-        else if (shouldRenderVideoTag(mediaInfo.mimeType)) {
+        else if (mediaInfo.mimeType.startsWith("video")) {
           return (
             <VideoPlayer
               style={mergedStyle}
@@ -140,7 +139,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         // audio
-        else if (shouldRenderAudioTag(mediaInfo.mimeType)) {
+        else if (mediaInfo.mimeType.startsWith("audio")) {
           return (
             <AudioPlayer
               style={mergedStyle}
@@ -251,6 +250,7 @@ const VideoPlayer = /* @__PURE__ */ (() =>
     const videoRef = useRef<HTMLVideoElement>(null);
     const [playing, setPlaying] = useState(!requireInteraction);
     const [muted, setMuted] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
       if (videoRef.current) {
@@ -271,6 +271,18 @@ const VideoPlayer = /* @__PURE__ */ (() =>
       }
     }, [playing]);
 
+    if (error) {
+      return (
+        <LinkPlayer
+          style={style}
+          src={src}
+          alt={alt}
+          ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+          {...restProps}
+        />
+      );
+    }
+
     return (
       <div style={{ position: "relative", ...style }} {...restProps}>
         <video
@@ -286,6 +298,9 @@ const VideoPlayer = /* @__PURE__ */ (() =>
             if (playing) {
               videoRef.current?.play();
             }
+          }}
+          onError={() => {
+            setError(true);
           }}
           width={width}
           height={height}
@@ -348,6 +363,7 @@ const AudioPlayer = /* @__PURE__ */ (() =>
     const audioRef = useRef<HTMLAudioElement>(null);
     const [playing, setPlaying] = useState(false);
     const [muted, setMuted] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
       if (audioRef.current) {
@@ -359,6 +375,18 @@ const AudioPlayer = /* @__PURE__ */ (() =>
         }
       }
     }, [playing]);
+
+    if (error) {
+      return (
+        <LinkPlayer
+          style={style}
+          src={src}
+          alt={alt}
+          ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+          {...restProps}
+        />
+      );
+    }
 
     return (
       <div style={{ position: "relative", ...style }} {...restProps}>
@@ -412,6 +440,9 @@ const AudioPlayer = /* @__PURE__ */ (() =>
             pointerEvents: "none",
             zIndex: -1,
             visibility: "hidden",
+          }}
+          onError={() => {
+            setError(true);
           }}
         />
       </div>
