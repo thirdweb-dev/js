@@ -4,10 +4,16 @@ import { $ } from "bun";
 import { readdir } from "fs/promises";
 import { join } from "path";
 
+const forkHeader = {};
+if (process.env.TW_SECRET_KEY) {
+  forkHeader["x-secret-key"] = process.env.TW_SECRET_KEY;
+}
+
 const anvil = createAnvil({
   port: 8545,
   chainId: 1,
   forkUrl: `https://1.rpc.thirdweb.com`,
+  forkHeader,
   forkChainId: 1,
   forkBlockNumber: 19139495n,
   noMining: true,
