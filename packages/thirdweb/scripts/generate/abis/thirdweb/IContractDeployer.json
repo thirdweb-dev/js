@@ -1,7 +1,0 @@
-[
-  "event ContractDeployed(address indexed deployer, address indexed publisher, address deployedContract)",
-  "event Paused(bool isPaused)",
-  "function deployInstance(address publisher, bytes contractBytecode, bytes constructorArgs, bytes32 salt, uint256 value, string publishMetadataUri) returns (address deployedAddress)",
-  "function deployInstanceProxy(address publisher, address implementation, bytes initializeData, bytes32 salt, uint256 value, string publishMetadataUri) returns (address deployedAddress)",
-  "function getContractDeployer(address _contract) view returns (address)"
-]

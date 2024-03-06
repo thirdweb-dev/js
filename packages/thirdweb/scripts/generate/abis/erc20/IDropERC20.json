@@ -1,16 +1,6 @@
 [
-  "event Approval(address indexed owner, address indexed spender, uint256 value)",
   "event ClaimConditionsUpdated((uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, uint256 waitTimeInSecondsBetweenClaims, bytes32 merkleRoot, uint256 pricePerToken, address currency)[] claimConditions)",
-  "event ContractURIUpdated(string prevURI, string newURI)",
-  "event MaxTotalSupplyUpdated(uint256 maxTotalSupply)",
   "event TokensClaimed(uint256 indexed claimConditionIndex, address indexed claimer, address indexed receiver, uint256 quantityClaimed)",
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
-  "function allowance(address owner, address spender) view returns (uint256)",
-  "function approve(address spender, uint256 amount) returns (bool)",
-  "function balanceOf(address account) view returns (uint256)",
   "function claim(address receiver, uint256 quantity, address currency, uint256 pricePerToken, (bytes32[] proof, uint256 maxQuantityInAllowlist) allowlistProof, bytes data) payable",
-  "function setClaimConditions((uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, uint256 waitTimeInSecondsBetweenClaims, bytes32 merkleRoot, uint256 pricePerToken, address currency)[] phases, bool resetClaimEligibility)",
-  "function totalSupply() view returns (uint256)",
-  "function transfer(address to, uint256 amount) returns (bool)",
-  "function transferFrom(address from, address to, uint256 amount) returns (bool)"
+  "function setClaimConditions((uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, uint256 waitTimeInSecondsBetweenClaims, bytes32 merkleRoot, uint256 pricePerToken, address currency)[] phases, bool resetClaimEligibility)"
 ]

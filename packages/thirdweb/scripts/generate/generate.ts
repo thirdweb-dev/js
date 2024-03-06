@@ -301,8 +301,8 @@ function eventNameToPreparedEventName(name: string) {
 
 //custom script (will not be part of CLI)
 
-const ABI_FOLDER = join(import.meta.dirname, "./abis");
-const EXTENSIONS_FOLDER = join(import.meta.dirname, "../../src/extensions");
+const ABI_FOLDER = join(__dirname, "./abis");
+const EXTENSIONS_FOLDER = join(__dirname, "../../src/extensions");
 
 async function main() {
   const filesAndFolders = await readdir(ABI_FOLDER);
