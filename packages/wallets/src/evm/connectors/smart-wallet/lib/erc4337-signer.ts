@@ -11,6 +11,8 @@ import {
   checkContractWalletSignature,
   chainIdToThirdwebRpc,
 } from "../../../wallets/abstract";
+import { setAnalyticsHeaders } from "../../../utils/headers";
+import { isTwUrl } from "../../../utils/url";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -103,7 +105,7 @@ export class ERC4337EthersSigner extends Signer {
           errorIn.reason;
 
         if (failedOpMessage?.includes("FailedOp")) {
-          let paymasterInfo: string = "";
+          let paymasterInfo = "";
           // TODO: better error extraction methods will be needed
           const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
 
@@ -179,9 +181,58 @@ Code: ${errorCode}`;
     let factorySupports712: boolean;
     let signature: string;
 
+    const rpcUrl = chainIdToThirdwebRpc(chainId, this.config.clientId);
+
+    const headers: Record<string, string> = {};
+
+    if (isTwUrl(rpcUrl)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+
+      if (this.config.secretKey) {
+        headers["x-secret-key"] = this.config.secretKey;
+      } else if (this.config.clientId) {
+        headers["x-client-id"] = this.config.clientId;
+
+        if (bundleId) {
+          headers["x-bundle-id"] = bundleId;
+        }
+      }
+
+      // Dashboard token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
+
+      // CLI token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
+        headers["x-authorize-wallet"] = "true";
+      }
+
+      setAnalyticsHeaders(headers);
+    }
+
     try {
-      const provider = new providers.JsonRpcProvider(
-        chainIdToThirdwebRpc(chainId, this.config.clientId),
+      const provider = new providers.StaticJsonRpcProvider(
+        {
+          url: chainIdToThirdwebRpc(chainId, this.config.clientId),
+          headers,
+        },
         chainId,
       );
       const walletContract = new Contract(
@@ -222,6 +273,8 @@ Code: ${errorCode}`;
       signature,
       address,
       chainId,
+      this.config.clientId,
+      this.config.secretKey,
     );
 
     if (isValid) {
