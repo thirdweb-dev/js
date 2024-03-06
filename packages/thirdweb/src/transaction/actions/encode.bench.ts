@@ -6,7 +6,7 @@ import {
 } from "../../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { encode } from "./encode.js";
-import { resolveMethod } from "../resolve-method.js";
+
 import { prepareMethod } from "../../utils/abi/prepare-method.js";
 
 bench("encode tx (human readable)", async () => {
@@ -40,16 +40,6 @@ bench("encode tx (contract abi)", async () => {
   const tx = prepareContractCall({
     contract: { ...USDC_CONTRACT_WITH_ABI },
     method: "transfer",
-    params: [VITALIK_WALLET, 100n],
-  });
-  await encode(tx);
-});
-
-bench("encode tx (auto-abi)", async () => {
-  const tx = prepareContractCall({
-    // fresh contract every time otherwise we'll just hit cache
-    contract: { ...USDC_CONTRACT },
-    method: resolveMethod("transfer"),
     params: [VITALIK_WALLET, 100n],
   });
   await encode(tx);
