@@ -6,5 +6,8 @@
   "function balanceOf(address _address) view returns (uint256)",
   "function totalSupply() view returns (uint256)",
   "function transfer(address to, uint256 value) returns (bool)",
-  "function transferFrom(address from, address to, uint256 value) returns (bool)"
+  "function transferFrom(address from, address to, uint256 value) returns (bool)",
+  "function decimals() view returns (uint8)",
+  "function name() view returns (string)",
+  "function symbol() view returns (string)"
 ]

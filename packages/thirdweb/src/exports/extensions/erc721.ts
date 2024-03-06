@@ -9,12 +9,12 @@ export {
   getNFTs,
   type GetNFTsParams,
 } from "../../extensions/erc721/read/getNFTs.js";
-export { nextTokenIdToMint } from "../../extensions/erc721/__generated__/OpenEditionERC721/read/nextTokenIdToMint.js";
+export { nextTokenIdToMint } from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 export {
   ownerOf,
   type OwnerOfParams,
 } from "../../extensions/erc721/__generated__/IERC721A/read/ownerOf.js";
-export { startTokenId } from "../../extensions/erc721/__generated__/OpenEditionERC721/read/startTokenId.js";
+export { startTokenId } from "../../extensions/erc721/__generated__/IERC721A/read/startTokenId.js";
 export {
   tokenURI,
   type TokenURIParams,

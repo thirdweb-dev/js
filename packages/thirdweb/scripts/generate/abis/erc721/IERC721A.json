@@ -27,5 +27,6 @@
   "function symbol() view returns (string)",
   "function tokenURI(uint256 _tokenId) view returns (string)",
   "function totalSupply() view returns (uint256)",
-  "function transferFrom(address from, address to, uint256 tokenId)"
+  "function transferFrom(address from, address to, uint256 tokenId)",
+  "function startTokenId() view returns (uint256)"
 ]

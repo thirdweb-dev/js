@@ -8,5 +8,7 @@
   "function isApprovedForAll(address _owner, address _operator) view returns (bool)",
   "function safeBatchTransferFrom(address _from, address _to, uint256[] _ids, uint256[] _values, bytes _data)",
   "function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes _data)",
-  "function setApprovalForAll(address _operator, bool _approved)"
+  "function setApprovalForAll(address _operator, bool _approved)",
+  "function uri(uint256 _id) view returns (string)",
+  "function totalSupply(uint256 id) view returns (uint256)"
 ]
