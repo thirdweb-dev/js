@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 2.4.15
+
+### Patch Changes
+
+- [#2414](https://github.com/thirdweb-dev/js/pull/2414) [`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f) Thanks [@jnsdls](https://github.com/jnsdls)! - properly pass through clientId and secretKey variables to verifySignature functions
+
+- Updated dependencies [[`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/sdk@4.0.40
+
 ## 2.4.14
 
 ### Patch Changes
