@@ -144,11 +144,10 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.7.5";
+      (globalThis as any).X_SDK_VERSION = "4.7.6";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
-    console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
     let supportedChains;
     if (sdkOptions?.supportedChains) {
@@ -167,7 +166,7 @@ class ThirdwebBridge implements TWBridge {
         supportedChains = defaultChains;
       }
     } else {
-      console.debug("no supportedChains passed, using default chains");
+      console.warn("no supportedChains passed, using default chains");
       supportedChains = defaultChains;
     }
     sdkOptions.supportedChains = supportedChains;
@@ -446,7 +445,7 @@ class ThirdwebBridge implements TWBridge {
         return arg;
       }
     });
-    console.debug("thirdwebSDK call:", route, parsedArgs);
+    // console.debug("thirdwebSDK call:", route, parsedArgs);
 
     // wallet call
     if (addrOrSDK.startsWith("sdk")) {
@@ -601,14 +600,6 @@ class ThirdwebBridge implements TWBridge {
       }
     });
 
-    console.debug(
-      "thirdwebSDK invoke listener:",
-      taskId,
-      route,
-      parsedFnArgs,
-      action,
-    );
-
     // contract call
     if (addrOrSDK.startsWith("0x")) {
       let typeOrAbi: string | ContractInterface | undefined;
@@ -673,14 +664,6 @@ class ThirdwebBridge implements TWBridge {
     personalWallet: AbstractClientWallet,
     accountAddress?: string,
   ) {
-    if (accountAddress) {
-      console.debug(
-        "Initializing smart wallet with account address override:",
-        accountAddress,
-      );
-    }
-    const personalWalletAddress = await personalWallet.getAddress();
-    console.debug("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
       accountAddress: accountAddress,
@@ -808,6 +791,9 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async getEmail() {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
     const embeddedWallet = this.walletMap.get(
       walletIds.embeddedWallet,
     ) as EmbeddedWallet;
@@ -825,9 +811,6 @@ class ThirdwebBridge implements TWBridge {
       const res = await signer?.getAddress();
       return JSON.stringify({ result: res }, bigNumberReplacer);
     } catch {
-      console.debug(
-        "Could not find a smart wallet, defaulting to normal signer",
-      );
       const signer = await this.activeWallet.getSigner();
       const res = await signer.getAddress();
       return JSON.stringify({ result: res }, bigNumberReplacer);
