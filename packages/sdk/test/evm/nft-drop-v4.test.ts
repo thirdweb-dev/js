@@ -40,9 +40,11 @@ describe("NFT Drop Contract (v4)", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       },
-      await sdk.deployer.getLatestBuiltInContractVersion(
-        NFTDropInitializer.contractType,
-      ),
+      (
+        await sdk.deployer.getLatestBuiltInContractVersion(
+          NFTDropInitializer.contractType,
+        )
+      ).toString(),
     );
     dropContract = await sdk.getNFTDrop(address);
   });
@@ -357,8 +359,8 @@ describe("NFT Drop Contract (v4)", async () => {
         i % 3 === 0
           ? w.address.toLowerCase()
           : i % 3 === 1
-          ? w.address.toUpperCase().replace("0X", "0x")
-          : w.address,
+            ? w.address.toUpperCase().replace("0X", "0x")
+            : w.address,
       )
       .map((a) => ({
         address: a,
@@ -1287,6 +1289,102 @@ describe("NFT Drop Contract (v4)", async () => {
 
       // original password should work
       await dropContract.revealer.reveal(1, "my secret password");
+    });
+  });
+
+  describe("Update metadata", () => {
+    it("should update metadata", async () => {
+      const tokens = [
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+        {
+          name: "test 2",
+        },
+        {
+          name: "test 3",
+        },
+        {
+          name: "test 4",
+        },
+      ];
+      const result = await dropContract.createBatch(tokens);
+      assert.lengthOf(result, tokens.length);
+      for (const token of tokens) {
+        const found = result.find(
+          async (t) => (await t.data()).name === token.name,
+        );
+        assert.isDefined(found);
+      }
+
+      const token = await dropContract.get(1);
+      expect(token.metadata.name).to.eq("test 1");
+      await dropContract.erc721.updateMetadata(1, {
+        name: "test 123",
+      });
+      const token2 = await dropContract.get(1);
+      expect(token2.metadata.name).to.eq("test 123");
+    });
+
+    it("should update metadata from diff batch", async () => {
+      const tokens = [
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+        {
+          name: "test 2",
+        },
+      ];
+      const result = await dropContract.createBatch(tokens);
+      assert.lengthOf(result, tokens.length);
+
+      const tokens2 = [
+        {
+          name: "test 3",
+        },
+        {
+          name: "test 4",
+        },
+      ];
+      const result2 = await dropContract.createBatch(tokens2);
+      assert.lengthOf(result2, tokens2.length);
+
+      let token = await dropContract.get("3");
+      expect(token.metadata.name).to.eq("test 3");
+      await dropContract.erc721.updateMetadata(3, {
+        name: "test 123",
+      });
+      token = await dropContract.get("3");
+      expect(token.metadata.name).to.eq("test 123");
+    });
+
+    it("metadata update after reveal correctly", async () => {
+      await dropContract.revealer.createDelayedRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [{ name: "NFT #1" }, { name: "NFT #2" }],
+        "my secret password",
+      );
+
+      expect((await dropContract.get("0")).metadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+
+      await dropContract.revealer.reveal(0, "my secret password");
+      await dropContract.erc721.updateMetadata(0, {
+        name: "NFT 123",
+      });
+
+      expect((await dropContract.get("0")).metadata.name).to.be.equal(
+        "NFT 123",
+      );
     });
   });
 });

@@ -35,7 +35,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
   chainId?: number;
-  approving?: boolean;
 
   constructor(config: SmartWalletConfig) {
     super();
@@ -79,7 +78,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       erc20PaymasterAddress: config.erc20PaymasterAddress,
       erc20TokenAddress: config.erc20TokenAddress,
     };
-    this.approving = false;
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = create4337Provider(
