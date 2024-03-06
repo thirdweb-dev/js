@@ -6,6 +6,7 @@ import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
 import { checkContractWalletSignature } from "../src/evm/wallets/abstract";
 
 require("dotenv-mono").load();
+
 jest.setTimeout(240_000);
 
 let smartWallet: SmartWallet;
@@ -29,7 +30,9 @@ beforeAll(async () => {
     secretKey: process.env.TW_SECRET_KEY,
   });
   smartWalletAddress = await smartWallet.connect({ personalWallet });
-  const sdk = await ThirdwebSDK.fromWallet(smartWallet, chain);
+  const sdk = await ThirdwebSDK.fromWallet(smartWallet, chain, {
+    secretKey: process.env.TW_SECRET_KEY,
+  });
   contract = await sdk.getContract(
     "0xD170A53dADb19f62C78AB9982236857B71dbc83A", // mumbai edition drop
   );
