@@ -111,6 +111,12 @@ export function getRpcClient(
   }
 
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
+    // we can do this upfront because it cannot change later
+    const rpcUrl = getRpcUrlForChain({
+      client: options.client,
+      chain: options.chain,
+    });
+
     const batchSize =
       // look at the direct options passed
       options.config?.maxBatchSize ??
@@ -124,8 +130,10 @@ export function getRpcClient(
       // look at the client options
       options.client.config?.rpc?.batchTimeoutMs ??
       DEFAULT_BATCH_TIMEOUT_MS;
+
     // inflight requests
     const inflightRequests = new Map<string, Promise<any>>();
+
     let pendingBatch: Array<{
       request: {
         method: string;
@@ -150,20 +158,22 @@ export function getRpcClient(
         pendingBatchTimeout = null;
       }
 
-      // assign ids to each request
+      // prepare the requests array (we know the size)
+      const requests = new Array(pendingBatch.length);
       const activeBatch = pendingBatch.slice().map((inflight, index) => {
         // assign the id to the request
         inflight.request.id = index;
         // also assign the jsonrpc version
         inflight.request.jsonrpc = "2.0";
+        // assing the request to the requests array (so we don't have to map it again later)
+        requests[index] = inflight.request;
         return inflight;
       });
       // reset pendingBatch to empty
       pendingBatch = [];
 
-      fetchRpc(options.client, {
-        requests: activeBatch.map((inflight) => inflight.request),
-        chain: options.chain,
+      fetchRpc(rpcUrl, options.client, {
+        requests,
         requestTimeoutMs: options.config?.requestTimeoutMs,
       })
         .then((responses) => {
@@ -199,6 +209,28 @@ export function getRpcClient(
         });
     }
 
+    // shortcut everything if we do not need to batch
+    if (batchSize === 1) {
+      return async function (request) {
+        // we can hard-code the id and jsonrpc version
+        // we also mutate the request object here to avoid copying it
+        (request as any).id = 1;
+        (request as any).jsonrpc = "2.0";
+        const rpcResponse = await fetchSingleRpc(rpcUrl, options.client, {
+          request: request,
+          requestTimeoutMs: options.config?.requestTimeoutMs,
+        });
+
+        if (!rpcResponse) {
+          throw new Error("No response");
+        }
+        if ("error" in rpcResponse) {
+          throw rpcResponse.error;
+        }
+        return rpcResponse.result;
+      };
+    }
+
     return async function (request) {
       const requestKey = rpcRequestKey(request);
       // if the request for this key is already inflight, return the promise directly
@@ -215,12 +247,16 @@ export function getRpcClient(
       inflightRequests.set(requestKey, promise);
       // @ts-expect-error - they *are* definitely assgined within the promise constructor
       pendingBatch.push({ request, resolve, reject, requestKey });
-      // if there is no timeout, set one
-      if (!pendingBatchTimeout) {
-        pendingBatchTimeout = setTimeout(sendPendingBatch, batchTimeoutMs);
-      }
-      // if the batch is full, send it
-      if (pendingBatch.length >= batchSize) {
+      if (batchSize > 1) {
+        // if there is no timeout, set one
+        if (!pendingBatchTimeout) {
+          pendingBatchTimeout = setTimeout(sendPendingBatch, batchTimeoutMs);
+        }
+        // if the batch is full, send it
+        if (pendingBatch.length >= batchSize) {
+          sendPendingBatch();
+        }
+      } else {
         sendPendingBatch();
       }
       return promise;
@@ -233,7 +269,6 @@ export function getRpcClient(
 
 type FetchRpcOptions = {
   requests: RpcRequest[];
-  chain: Chain;
   requestTimeoutMs?: number;
 };
 
@@ -241,17 +276,54 @@ type FetchRpcOptions = {
  * @internal
  */
 async function fetchRpc(
+  rpcUrl: string,
   client: ThirdwebClient,
   options: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
-  const rpcUrl = getRpcUrlForChain({ client, chain: options.chain });
-
   const response = await getClientFetch(client)(rpcUrl, {
     headers: {
+      ...client.config?.rpc?.fetch?.headers,
       "Content-Type": "application/json",
-      ...(client.config?.rpc?.fetch?.headers || {}),
     },
     body: stringify(options.requests),
+    method: "POST",
+    requestTimeoutMs:
+      options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
+    keepalive: client.config?.rpc?.fetch?.keepalive,
+  });
+
+  if (!response.ok) {
+    response.body?.cancel();
+    throw new Error(`RPC request failed with status ${response.status}`);
+  }
+
+  let result;
+
+  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
+    result = await response.json();
+  } else {
+    result = await response.text();
+  }
+
+  return result;
+}
+
+type FetchSingleRpcOptions = {
+  request: RpcRequest;
+  requestTimeoutMs?: number;
+};
+
+async function fetchSingleRpc(
+  rpcUrl: string,
+  client: ThirdwebClient,
+  options: FetchSingleRpcOptions,
+): Promise<RpcResponse> {
+  const response = await getClientFetch(client)(rpcUrl, {
+    headers: {
+      ...(client.config?.rpc?.fetch?.headers || {}),
+      "Content-Type": "application/json",
+    },
+    body: stringify(options.request),
     method: "POST",
     requestTimeoutMs:
       options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,

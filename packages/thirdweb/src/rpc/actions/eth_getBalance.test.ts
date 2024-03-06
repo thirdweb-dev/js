@@ -44,19 +44,8 @@ describe("eth_getBalance", () => {
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "http://localhost:8555",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify([
-          {
-            method: "eth_getBalance",
-            params: [VITALIK_WALLET, "latest"],
-            id: 0,
-            jsonrpc: "2.0",
-          },
-        ]),
-      }),
+    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
+      `"[{"method":"eth_getBalance","params":["0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B","latest"],"id":0,"jsonrpc":"2.0"}]"`,
     );
   });
 
@@ -88,33 +77,8 @@ describe("eth_getBalance", () => {
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "http://localhost:8555",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify([
-          // this should be deduped
-          {
-            method: "eth_getBalance",
-            params: [VITALIK_WALLET, "latest"],
-            id: 0,
-            jsonrpc: "2.0",
-          },
-          // but then there are 2 more in the batch because they are different addresses
-          {
-            method: "eth_getBalance",
-            params: [ZERO_ADDRESS, "latest"],
-            id: 1,
-            jsonrpc: "2.0",
-          },
-          {
-            method: "eth_getBalance",
-            params: [UNCLAIMED_ADDRESS, "latest"],
-            id: 2,
-            jsonrpc: "2.0",
-          },
-        ]),
-      }),
+    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
+      `"[{"method":"eth_getBalance","params":["0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B","latest"],"id":0,"jsonrpc":"2.0"},{"method":"eth_getBalance","params":["0x0000000000000000000000000000000000000000","latest"],"id":1,"jsonrpc":"2.0"},{"method":"eth_getBalance","params":["0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef","latest"],"id":2,"jsonrpc":"2.0"}]"`,
     );
   });
 });

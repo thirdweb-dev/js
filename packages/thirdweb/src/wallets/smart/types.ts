@@ -1,10 +1,11 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { SendTransactionOption, Wallet } from "../interfaces/wallet.js";
-import type { Address, Hex } from "viem";
+import type { Hex } from "viem";
 import type { WalletMetadata } from "../types.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { Chain } from "../../chains/types.js";
+import type { Address } from "abitype";
 
 export type SmartWalletOptions = {
   client: ThirdwebClient;
