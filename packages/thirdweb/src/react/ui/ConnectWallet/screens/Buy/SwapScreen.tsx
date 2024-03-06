@@ -203,6 +203,7 @@ export function SwapScreenContent(props: {
   if (screen === "select-from-chain" || screen === "select-to-chain") {
     return (
       <NetworkSelectorContent
+        showTabs={false}
         onBack={() => setScreen("main")}
         // pass swap supported chains
         chains={supportedChainsObj}

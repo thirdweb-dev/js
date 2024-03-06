@@ -213,6 +213,7 @@ type NetworkSelectorContentProps = {
   closeModal: () => void;
   chains: Chain[];
   networkSelector?: NetworkSelectorProps;
+  showTabs?: boolean;
 };
 
 /**
@@ -363,29 +364,38 @@ function NetworkSelectorContentInner(
           <ModalTitle>{locale.title}</ModalTitle>
         )}
       </Container>
-      <Container px="lg">
-        <Container flex="row" gap="xxs">
-          <TabButton
-            onClick={() => setSelectedTab("all")}
-            data-active={selectedTab === "all"}
-          >
-            {locale.allNetworks}
-          </TabButton>
-          <TabButton
-            onClick={() => setSelectedTab("mainnet")}
-            data-active={selectedTab === "mainnet"}
-          >
-            {locale.mainnets}
-          </TabButton>
-          <TabButton
-            onClick={() => setSelectedTab("testnet")}
-            data-active={selectedTab === "testnet"}
-          >
-            {locale.testnets}
-          </TabButton>
-        </Container>
-      </Container>
-      <Spacer y="lg" />
+
+      {/* Tabs */}
+      {props.showTabs !== false && (
+        <>
+          <Container px="lg">
+            <Container flex="row" gap="xxs">
+              <TabButton
+                onClick={() => setSelectedTab("all")}
+                data-active={selectedTab === "all"}
+              >
+                {locale.allNetworks}
+              </TabButton>
+              <TabButton
+                onClick={() => setSelectedTab("mainnet")}
+                data-active={selectedTab === "mainnet"}
+              >
+                {locale.mainnets}
+              </TabButton>
+              <TabButton
+                onClick={() => setSelectedTab("testnet")}
+                data-active={selectedTab === "testnet"}
+              >
+                {locale.testnets}
+              </TabButton>
+            </Container>
+          </Container>
+          <Spacer y="lg" />
+        </>
+      )}
+
+      {props.showTabs === false && <Spacer y="xxs" />}
+
       <Container px="lg">
         {/* Search */}
         <div
