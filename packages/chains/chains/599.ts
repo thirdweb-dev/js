@@ -44,5 +44,6 @@ export default {
   "shortName": "metis-goerli",
   "slip44": 1,
   "slug": "metis-goerli-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

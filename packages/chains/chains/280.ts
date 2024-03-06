@@ -16,6 +16,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
     "width": 512,
@@ -39,6 +40,7 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.era.zksync.dev"
