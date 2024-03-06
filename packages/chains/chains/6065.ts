@@ -18,12 +18,6 @@ export default {
   "faucets": [
     "http://faucet.tresleches.finance:8080"
   ],
-  "icon": {
-    "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://treschain.com",
   "name": "Tres Testnet",
   "nativeCurrency": {
