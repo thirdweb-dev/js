@@ -97,7 +97,7 @@ export function useNFTDrawerTabs({
       "ERC721UpdatableMetadata",
       "ERC1155UpdatableMetadata",
       "ERC1155LazyMintableV2",
-      // TODO support ERC721LazyMintableV2 too
+      "ERC721LazyMintable",
     ]);
 
     const isOwner =
