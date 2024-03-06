@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.3
+
+### Patch Changes
+
+- [#2415](https://github.com/thirdweb-dev/js/pull/2415) [`a3f6878`](https://github.com/thirdweb-dev/js/commit/a3f6878649345ea7b647d085d5d7d536af82948f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Remove unnecessary logs, add getEmail check
+
+- Updated dependencies [[`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f), [`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/wallets@2.4.15
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/auth@4.1.37
+  - @thirdweb-dev/sdk@4.0.40
+
 ## 0.4.2
 
 ### Patch Changes
