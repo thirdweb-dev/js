@@ -1,5 +1,19 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.2
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2388](https://github.com/thirdweb-dev/js/pull/2388) [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] ERC20Paymaster Generic Support
+
+- Updated dependencies [[`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022), [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d), [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f), [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af), [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825)]:
+  - @thirdweb-dev/wallets@2.4.14
+  - @thirdweb-dev/sdk@4.0.39
+  - @thirdweb-dev/chains@0.1.76
+  - @thirdweb-dev/auth@4.1.36
+
 ## 0.4.1
 
 ### Patch Changes
