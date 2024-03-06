@@ -11,7 +11,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { mainnet } from "viem/chains";
 import * as ethers from "ethers6";
 
-const LOCAL_RPC = `http://127.0.0.1:8555`;
+const LOCAL_RPC = `http://127.0.0.1:8545`;
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 
 const client = createThirdwebClient({

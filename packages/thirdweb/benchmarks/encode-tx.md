@@ -28,3 +28,16 @@ The RPC benchmark measures encoding an ERC20 `transfer` call.
 **Summary for encode transfer (cold cache):**
 
 - **thirdweb** is 3.15x faster than viem and 17.47x faster than ethers.
+
+### Running benchmarks
+
+To run the benchmarks, clone the repository and run the following commands:
+
+```bash
+# install dependencies
+pnpm i
+# cd into the thirdweb package
+cd packages/thirdweb
+# run the benchmark
+pnpm run bench:compare
+```

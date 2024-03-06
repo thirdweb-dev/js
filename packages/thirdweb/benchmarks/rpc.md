@@ -28,3 +28,16 @@ The RPC benchmark measures un-cached calls to a local anvil node using the `eth_
 **Summary for rpc (batching enabled):**
 
 - **thirdweb** is 1.17x faster than viem and 1.32x faster than ethers.
+
+### Running benchmarks
+
+To run the benchmarks, clone the repository and run the following commands:
+
+```bash
+# install dependencies
+pnpm i
+# cd into the thirdweb package
+cd packages/thirdweb
+# run the benchmark
+pnpm run bench:compare
+```

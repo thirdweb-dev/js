@@ -9,7 +9,7 @@ import * as viem from "viem";
 import * as ethers from "ethers6";
 import assert from "assert";
 
-const LOCAL_RPC = `http://127.0.0.1:8555`;
+const LOCAL_RPC = `http://127.0.0.1:8545`;
 
 const clientNoBatching = createThirdwebClient({
   clientId: "BENCH",
@@ -47,22 +47,18 @@ const publicClientBatching = viem.createPublicClient({
 });
 
 // ethers setup
-const ethersProviderNoBatching = new ethers.JsonRpcProvider(
-  "http://127.0.0.1:8555",
-  1,
-  { staticNetwork: true, batchMaxCount: 1, cacheTimeout: 0 },
-);
+const ethersProviderNoBatching = new ethers.JsonRpcProvider(LOCAL_RPC, 1, {
+  staticNetwork: true,
+  batchMaxCount: 1,
+  cacheTimeout: 0,
+});
 
-const ethersProviderBatching = new ethers.JsonRpcProvider(
-  "http://127.0.0.1:8555",
-  1,
-  {
-    staticNetwork: true,
-    batchMaxCount: 100,
-    batchStallTime: 0,
-    cacheTimeout: 0,
-  },
-);
+const ethersProviderBatching = new ethers.JsonRpcProvider(LOCAL_RPC, 1, {
+  staticNetwork: true,
+  batchMaxCount: 100,
+  batchStallTime: 0,
+  cacheTimeout: 0,
+});
 
 group("rpc (batching disabled)", () => {
   bench("thirdweb", async () => {

@@ -12,7 +12,7 @@ import { ethers } from "ethers6";
 import * as viem from "viem";
 import assert from "assert";
 
-const LOCAL_RPC = `http://127.0.0.1:8555`;
+const LOCAL_RPC = `http://127.0.0.1:8545`;
 const USDC_CONTRACT_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 
