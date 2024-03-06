@@ -10,7 +10,6 @@ import type {
   IAccountPermissions_V1,
 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
-import { detectContractFeature } from "../../../../common/feature-detection/detectContractFeature";
 import { resolveAddress } from "../../../../common/ens/resolveAddress";
 import { resolveOrGenerateId } from "../../../../common/signature-minting";
 import { buildTransactionFunction } from "../../../../common/transactions";
@@ -94,37 +93,6 @@ export class AccountPermissions implements DetectableFeature {
     permissions: SignerPermissionsOutput,
     adminFlag: AdminFlag,
   ): Promise<Transaction> {
-    if (
-      detectContractFeature<IAccountPermissions_V1>(
-        this.contractWrapper,
-        "AccountPermissionsV1",
-      )
-    ) {
-      // legacy account permissions contract
-      // admin is set only via EOA
-      // signer permissions are set via EOA or admin but no wildcard
-      if (
-        adminFlag === AdminFlag.AddAdmin ||
-        adminFlag === AdminFlag.RemoveAdmin
-      ) {
-        return Transaction.fromContractWrapper({
-          contractWrapper: this.contractWrapper,
-          method: "setAdmin",
-          args: [signerAddress, adminFlag === AdminFlag.AddAdmin],
-        });
-      } else {
-        const { payload, signature } = await this.generateLegacyPayload(
-          signerAddress,
-          permissions,
-        );
-        return Transaction.fromContractWrapper({
-          contractWrapper: this.contractWrapper,
-          method: "setPermissionsForSigner",
-          args: [payload, signature],
-        });
-      }
-    }
-
     const { payload, signature } = await this.generatePayload(
       signerAddress,
       permissions,
@@ -435,21 +403,8 @@ export class AccountPermissions implements DetectableFeature {
       permissions: SignerPermissionsInput,
     ): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot grant permissions to an existing admin.",
-        );
-      }
-
-      if (await this.isSigner(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer already has permissions. Cannot grant permissions to an existing signer. You can update permissions using `updatePermissions`.",
-        );
-      }
+      const resolvedPermissions =
+        await SignerPermissionsSchema.parseAsync(permissions);
 
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
@@ -481,9 +436,8 @@ export class AccountPermissions implements DetectableFeature {
       permissions: SignerPermissionsInput,
     ): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
+      const resolvedPermissions =
+        await SignerPermissionsSchema.parseAsync(permissions);
 
       if (await this.isAdmin(resolvedSignerAddress)) {
         throw new Error(
@@ -523,18 +477,6 @@ export class AccountPermissions implements DetectableFeature {
   revokeAccess = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot revoke permissions of an admin.",
-        );
-      }
-
-      if (!(await this.isSigner(resolvedSignerAddress))) {
-        throw new Error(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
 
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
@@ -693,9 +635,8 @@ export class AccountPermissions implements DetectableFeature {
     async (
       permissionSnapshot: PermissionSnapshotInput,
     ): Promise<Transaction> => {
-      const resolvedSnapshot = await PermissionSnapshotSchema.parseAsync(
-        permissionSnapshot,
-      );
+      const resolvedSnapshot =
+        await PermissionSnapshotSchema.parseAsync(permissionSnapshot);
 
       /**
        * All cases

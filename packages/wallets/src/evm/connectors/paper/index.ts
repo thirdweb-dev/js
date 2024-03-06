@@ -27,7 +27,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
   paper?: Promise<PaperEmbeddedWalletSdk>;
   private options: PaperWalletConnectorOptions;
 
-  #signer?: Signer;
+  private _signer?: Signer;
 
   constructor(options: PaperWalletConnectorOptions) {
     super();
@@ -149,7 +149,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
   async disconnect(): Promise<void> {
     const paper = await this.paper;
     await paper?.auth.logout();
-    this.#signer = undefined;
+    this._signer = undefined;
     this.user = null;
   }
 
@@ -176,8 +176,8 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
   }
 
   public async getSigner(): Promise<Signer> {
-    if (this.#signer) {
-      return this.#signer;
+    if (this._signer) {
+      return this._signer;
     }
 
     if (!this.user) {
@@ -199,7 +199,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
       throw new Error("Signer not found");
     }
 
-    this.#signer = signer;
+    this._signer = signer;
 
     return signer;
   }
@@ -218,7 +218,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
 
     // update signer
-    this.#signer = await this.user?.wallet.getEthersJsSigner({
+    this._signer = await this.user?.wallet.getEthersJsSigner({
       rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 

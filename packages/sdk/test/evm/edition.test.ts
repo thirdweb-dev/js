@@ -54,6 +54,47 @@ describe("Edition Contract", async () => {
     expect(limit.toNumber()).gt(0);
   });
 
+  it("should update metadata", async () => {
+    const tokens = [
+      {
+        metadata: { name: "test 0" },
+        supply: 10,
+      },
+      {
+        metadata: { name: "test 1" },
+        supply: 10,
+      },
+      {
+        metadata: { name: "test 2" },
+        supply: 10,
+      },
+      {
+        metadata: { name: "test 3" },
+        supply: 10,
+      },
+      {
+        metadata: { name: "test 4" },
+        supply: 10,
+      },
+    ];
+    const result = await bundleContract.mintBatch(tokens);
+    assert.lengthOf(result, tokens.length);
+    for (const token of tokens) {
+      const found = result.find(
+        async (t) => (await t.data()).metadata.name === token.metadata.name,
+      );
+      assert.isDefined(found);
+    }
+
+    const token = await bundleContract.get(1);
+    expect(token.metadata.name).to.eq("test 1");
+    await bundleContract.erc1155.updateMetadata(1, {
+      name: "test 123",
+    });
+    const token2 = await bundleContract.get(1);
+    expect(token2.metadata.name).to.eq("test 123");
+  });
+
   it("should respect pagination", async () => {
     const nfts = [] as { metadata: { name: string }; supply: number }[];
     for (let i = 0; i < 100; i++) {

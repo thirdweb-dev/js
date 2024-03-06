@@ -37,7 +37,7 @@ export default {
   },
   "rpc": [
     "https://3993.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://exp-testnet.apexlayer.xyz"
+    "https://rpc-testnet.apexlayer.xyz"
   ],
   "shortName": "apexsep",
   "slip44": 1,

@@ -30,7 +30,7 @@ export class SignerWallet extends AbstractClientWallet<
   connector?: Connector;
   options: WalletOptions<SignerWalletAdditionalOptions>;
   signer?: Signer;
-  #storage: AsyncStorage;
+  private _storage: AsyncStorage;
 
   constructor(options: WalletOptions<SignerWalletAdditionalOptions>) {
     super("signerWallet", options);
@@ -41,7 +41,7 @@ export class SignerWallet extends AbstractClientWallet<
 
     this.options = options;
     this.signer = options.signer;
-    this.#storage =
+    this._storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
 

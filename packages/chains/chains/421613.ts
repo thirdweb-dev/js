@@ -44,6 +44,7 @@ export default {
   "shortName": "arb-goerli",
   "slip44": 1,
   "slug": "arbitrum-goerli",
+  "status": "deprecated",
   "testnet": true,
   "title": "Arbitrum Goerli Rollup Testnet"
 } as const satisfies Chain;

@@ -42,6 +42,7 @@ import {
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
   FEATURE_EDITION_SUPPLY,
+  FEATURE_EDITION_UPDATABLE_METADATA,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { Address } from "../../schema/shared/Address";
@@ -988,11 +989,22 @@ export class Erc1155<
    */
   updateMetadata = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, metadata: NFTMetadataInput) => {
-      // TODO handle updating regular TokenERC1155 metadata
-      return assertEnabled(
-        this.lazyMintable,
-        FEATURE_EDITION_LAZY_MINTABLE_V2,
-      ).updateMetadata.prepare(tokenId, metadata);
+      if (this.lazyMintable) {
+        return this.lazyMintable.updateMetadata.prepare(tokenId, metadata);
+      } else if (
+        detectContractFeature(this.contractWrapper, "ERC1155UpdatableMetadata")
+      ) {
+        const uri = await this.storage.upload(metadata);
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setTokenURI",
+          args: [tokenId, uri],
+        });
+      } else {
+        throw new ExtensionNotImplementedError(
+          FEATURE_EDITION_UPDATABLE_METADATA,
+        );
+      }
     },
   );
 
