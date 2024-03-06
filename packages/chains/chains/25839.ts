@@ -6,12 +6,24 @@ export default {
     {
       "name": "AlveyScan Testnet",
       "url": "https://alveytestnet.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
+        "width": 2048,
+        "height": 1538,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.alveytestnet.com"
   ],
+  "icon": {
+    "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
+    "width": 2048,
+    "height": 1538,
+    "format": "png"
+  },
   "infoURL": "https://alveychain.com/",
   "name": "AlveyChain Testnet",
   "nativeCurrency": {
