@@ -86,7 +86,7 @@ export class HardhatBuilder extends BaseBuilder {
 
       const contractBuildOutputs = buildJson.output.contracts;
 
-      const libraries: any = {};
+      const libraries: { [key: string]: string } = {};
       if (Array.isArray(options.linkLib) && options.linkLib.length > 0) {
         for (const [contractPath, contractInfos] of Object.entries(
           contractBuildOutputs,
@@ -99,7 +99,7 @@ export class HardhatBuilder extends BaseBuilder {
             }
           });
         }
-        logger.debug(`Found libraries to link: ${libraries}`);
+        logger.debug(`Found libraries to link: ${JSON.stringify(libraries)}`);
       }
 
       for (const [contractPath, contractInfos] of Object.entries(
