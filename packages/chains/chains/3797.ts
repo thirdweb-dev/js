@@ -6,22 +6,10 @@ export default {
     {
       "name": "AlveyScan",
       "url": "https://alveyscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
-        "width": 2048,
-        "height": 1538,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTuY2Goyxpuy5GmA32EMYZBwxRcGsahiMFgfeBixSk7rb",
-    "width": 2048,
-    "height": 1538,
-    "format": "png"
-  },
   "infoURL": "https://alveychain.com/",
   "name": "AlveyChain Mainnet",
   "nativeCurrency": {
