@@ -66,7 +66,8 @@ export type GetSwapQuoteParams = {
 } & (
   | {
       /**
-       * The amount of source token to be swapped. This is useful if you want to swap a certain amount of source token
+       * The amount of source token to be swapped.
+       * This is useful if you want to swap a certain amount of source token
        *
        * If you want a certain amount of destination token, you can provide `toAmount` instead of `fromAmount`.
        */
@@ -75,7 +76,7 @@ export type GetSwapQuoteParams = {
     }
   | {
       /**
-       * The amount of destination token to be received in wei.
+       * The amount of destination token to be received.
        * This is useful if you want to get a certain amount of destination token.
        *
        * If you want to swap a certain amount of source token, you can provide `fromAmount` instead of `toAmount`.
